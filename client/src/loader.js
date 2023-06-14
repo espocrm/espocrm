@@ -69,7 +69,6 @@
      * @property {string|null} exportsTo
      * @property {string|null} exportsAs
      * @property {string} [url]
-     * @property {boolean} [noAppCache]
      * @property {boolean} [useCache]
      * @property {boolean} [suppressAmd]
      */
@@ -81,12 +80,10 @@
     class Loader {
 
         /**
-         * @param {module:cache|null} [cache=null]
          * @param {int|null} [_cacheTimestamp=null]
          */
-        constructor(cache, _cacheTimestamp) {
+        constructor(_cacheTimestamp) {
             this._cacheTimestamp = _cacheTimestamp || null;
-            this._cache = cache || null;
             /** @type {Object.<string, Loader~libData>} */
             this._libsConfig = {};
             this._loadCallbacks = {};
@@ -107,7 +104,6 @@
 
             this._isDeveloperModeIsSet = false;
             this._basePathIsSet = false;
-            this._cacheIsSet = false;
             this._responseCacheIsSet = false;
             this._internalModuleListIsSet = false;
             this._bundleFileMap = {};
@@ -157,18 +153,6 @@
          */
         setCacheTimestamp(cacheTimestamp) {
             this._cacheTimestamp = cacheTimestamp;
-        }
-
-        /**
-         * @param {module:cache} cache
-         */
-        setCache(cache) {
-            if (this._cacheIsSet) {
-                throw new Error('Cache is already set');
-            }
-
-            this._cache = cache;
-            this._cacheIsSet = true;
         }
 
         /**
@@ -388,11 +372,7 @@
             let value = callback.apply(root, args);
 
             if (typeof value === 'undefined' && indexOfExports === -1 && id) {
-                if (this._cache) {
-                    this._cache.clear('a', id);
-                }
-
-                throw new Error("Could not load '" + id + "'");
+                throw new Error(`Could not load '${id}'.`);
             }
 
             if (indexOfExports !== -1) {
@@ -599,7 +579,6 @@
             let dataType, type, path, exportsTo, exportsAs;
 
             let realName = id;
-            let noAppCache = false;
             let suppressAmd = false;
 
             if (id.indexOf('lib!') === 0) {
@@ -644,8 +623,6 @@
 
                     throw new Error();
                 }
-
-                noAppCache = true;
 
                 let obj = void 0;
 
@@ -725,7 +702,6 @@
                 id: id,
                 type: type,
                 dataType: dataType,
-                noAppCache: noAppCache,
                 path: path,
                 callback: callback,
                 errorCallback: errorCallback,
@@ -733,16 +709,6 @@
                 exportsTo: exportsTo,
                 suppressAmd: suppressAmd,
             };
-
-            if (this._cache && !this._responseCache) {
-                let cached = this._cache.get('a', id);
-
-                if (cached) {
-                    this._processCached(dto, cached);
-
-                    return;
-                }
-            }
 
             if (path in this._pathsBeingLoaded) {
                 this._addLoadCallback(id, callback);
@@ -783,11 +749,8 @@
                         return;
                     }
 
-                    response
-                        .text()
-                        .then(cached => {
-                            this._handleResponse(dto, cached);
-                        });
+                    response.text()
+                        .then(text => this._handleResponseText(dto, text));
                 });
         }
 
@@ -891,79 +854,29 @@
 
         /**
          * @private
-         */
-        _processCached(dto, cached) {
-            let id = dto.id;
-            let callback = dto.callback;
-            let type = dto.type;
-            let dataType = dto.dataType;
-            let exportsAs = dto.exportsAs;
-            let exportsTo = dto.exportsTo;
-
-            if (type === 'amd') {
-                this._contextId = id;
-            }
-
-            if (dataType === 'script') {
-                this._execute(cached, id, dto.path);
-            }
-
-            if (type === 'amd') {
-                let value = this._get(id);
-
-                if (typeof value !== 'undefined') {
-                    callback(value);
-
-                    return;
-                }
-
-                this._addLoadCallback(id, callback);
-
-                return;
-            }
-
-            let data = cached;
-
-            if (exportsTo && exportsAs) {
-                data = this._fetchObject(exportsTo, exportsAs);
-            }
-
-            this._dataLoaded[id] = data;
-
-            callback(data);
-        }
-
-        /**
-         * @private
          * @param {Loader~dto} dto
          */
         _processRequest(dto) {
-            let id = dto.id;
             let url = dto.url;
             let errorCallback = dto.errorCallback;
             let path = dto.path;
             let useCache = dto.useCache;
-            let noAppCache = dto.noAppCache;
 
-            // @todo Use `fetch`.
-            $.ajax({
-                type: 'GET',
-                cache: useCache,
-                dataType: 'text',
-                mimeType: 'text/plain',
-                local: true,
-                url: url,
-            })
+            let urlObj = new URL(this._baseUrl + url);
+
+            if (!useCache) {
+                urlObj.searchParams.append('_', Date.now().toString())
+            }
+
+            fetch(urlObj)
                 .then(response => {
-                    if (this._cache && !noAppCache && !this._responseCache) {
-                        this._cache.set('a', id, response);
-                    }
+                    response.text().then(text => {
+                        if (this._responseCache) {
+                            this._responseCache.put(url, new Response(text));
+                        }
 
-                    if (this._responseCache) {
-                        this._responseCache.put(url, new Response(response));
-                    }
-
-                    this._handleResponse(dto, response);
+                        this._handleResponseText(dto, text);
+                    });
                 })
                 .catch(() => {
                     if (typeof errorCallback === 'function') {
@@ -972,16 +885,16 @@
                         return;
                     }
 
-                    throw new Error("Could not load file '" + path + "'");
+                    throw new Error(`Could not fetch asset '${path}'.`);
                 });
         }
 
         /**
          * @private
          * @param {Loader~dto} dto
-         * @param {string} response
+         * @param {string} text
          */
-        _handleResponse(dto, response) {
+        _handleResponseText(dto, text) {
             let id = dto.id;
             let callback = dto.callback;
             let type = dto.type;
@@ -1001,34 +914,34 @@
             }
 
             if (dataType === 'script') {
-                this._execute(response, id, dto.path);
+                this._execute(text, id, dto.path);
             }
 
             if (suppressAmd) {
                 define.amd = true;
             }
 
-            let result;
+            let value;
 
             if (type === 'amd') {
-                result = this._get(id);
+                value = this._get(id);
 
-                if (typeof result !== 'undefined') {
-                    this._executeLoadCallback(id, result);
+                if (typeof value !== 'undefined') {
+                    this._executeLoadCallback(id, value);
                 }
 
                 return;
             }
 
-            result = response;
+            value = text;
 
             if (exportsTo && exportsAs) {
-                result = this._fetchObject(exportsTo, exportsAs);
+                value = this._fetchObject(exportsTo, exportsAs);
             }
 
-            this._dataLoaded[id] = result;
+            this._dataLoaded[id] = value;
 
-            this._executeLoadCallback(id, result);
+            this._executeLoadCallback(id, value);
         }
 
         /**
@@ -1147,14 +1060,6 @@
          */
         setCacheTimestamp: function (cacheTimestamp) {
             loader.setCacheTimestamp(cacheTimestamp);
-        },
-
-        /**
-         * @param {module:cache} cache
-         * @internal
-         */
-        setCache: function (cache) {
-            loader.setCache(cache);
         },
 
         /**

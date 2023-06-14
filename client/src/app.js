@@ -373,7 +373,6 @@ class App  {
          */
         this.loader = Espo.loader;
 
-        this.loader.setCache(this.cache);
         this.loader.setResponseCache(this.responseCache);
 
         if (this.useCache && !this.loader.getCacheTimestamp() && options.cacheTimestamp) {
