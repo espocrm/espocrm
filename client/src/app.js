@@ -498,31 +498,25 @@ class App  {
 
             if (!this.themeManager.isApplied() && this.themeManager.isUserTheme()) {
                 promiseList.push(
-                    // @todo Refactor.
                     new Promise(resolve => {
-                        (function check (i) {
-                            i = i || 0;
-
-                            if (!this.themeManager.isApplied()) {
-                                if (i === 50) {
-                                    resolve();
-
-                                    return;
-                                }
-
-                                setTimeout(check.bind(this, i + 1), 10);
+                        const check = i => {
+                            if (this.themeManager.isApplied() || i === 50) {
+                                resolve();
 
                                 return;
                             }
 
-                            resolve();
-                        }).call(this);
+                            i = i || 0;
+
+                            setTimeout(() => check(i + 1), 10);
+                        }
+
+                        check();
                     })
                 );
             }
 
-            Promise
-                .all(promiseList)
+            Promise.all(promiseList)
                 .then(() => {
                     this.acl.implementationClassMap = aclImplementationClassMap;
 
