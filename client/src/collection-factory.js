@@ -31,7 +31,7 @@
 /**
  * A collection factory.
  */
-class Class {
+class CollectionFactory {
     /**
      * @param {module:model-factory} modelFactory
      * @param {module:models/settings} config
@@ -93,4 +93,4 @@ class Class {
     }
 }
 
-export default Class;
+export default CollectionFactory;

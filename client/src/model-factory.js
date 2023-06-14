@@ -31,7 +31,7 @@
 /**
  * A model factory.
  */
-class Class {
+class ModelFactory {
     /**
      * @param {module:metadata} metadata
      */
@@ -89,4 +89,4 @@ class Class {
     }
 }
 
-export default Class;
+export default ModelFactory;
