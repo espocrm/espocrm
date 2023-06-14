@@ -303,7 +303,7 @@ module.exports = grunt => {
     });
 
     grunt.registerTask('transpile', () => {
-        cp.execSync("node js/scripts/transpile");
+        cp.execSync("node js/transpile");
     });
 
     grunt.registerTask('chmod-folders', () => {

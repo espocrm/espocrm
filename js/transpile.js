@@ -26,11 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-const Transpiler = require('../../js/transpiler');
+const Transpiler = require('./transpiler/transpiler');
 
-(new Transpiler({})).process();
+let file;
 
-(new Transpiler({
+let fIndex = process.argv.findIndex(item => item === '-f');
+
+if (fIndex > 0) {
+    file = process.argv.at(fIndex + 1);
+
+    if (!file) {
+        throw new Error(`No file specified.`);
+    }
+}
+
+const transpiler1 = new Transpiler({
+    file: file,
+});
+
+const transpiler2 = new Transpiler({
     mod: 'crm',
     path: 'client/modules/crm',
-})).process();
+    file: file,
+});
+
+const result1 = transpiler1.process();
+const result2 = transpiler2.process();
+
+let count = result1.transpiled.length + result2.transpiled.length;
+let copiedCount = result1.copied.length + result2.copied.length;
+
+console.log(`\n  transpiled: ${count}, copied: ${copiedCount}`)

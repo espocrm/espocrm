@@ -37,25 +37,53 @@ class Transpiler {
      *     path?: string,
      *     destDir?: string,
      *     mod?: string,
+     *     file?: string,
      * }} config
      */
     constructor(config) {
         this.path = (config.path ?? 'client') + '/src';
         this.destDir = config.destDir || 'client/lib/transpiled';
         this.mod = config.mod;
+        this.file = config.file;
 
         this.contentsCache = {};
     }
 
+    /**
+     * @return {{
+     *     transpiled: string[],
+     *     copied: string[],
+     * }}
+     */
     process() {
         let allFiles = globSync(this.path + '/**/*.js')
             .map(file => file.replaceAll('\\', '/'));
 
+        if (this.file) {
+            let file = this.file.replaceAll('\\', '/');
+
+            if (!allFiles.includes(file)) {
+                return {
+                    transpiled: [],
+                    copied: [],
+                };
+            }
+
+            allFiles = [file];
+        }
+
         let files = allFiles.filter(file => this.#isToBeTranspiled(file));
-        let otherFiles = allFiles.filter(file => !files.includes(file));
+
+        let otherFiles = !this.file ?
+            allFiles.filter(file => !files.includes(file)) : [];
 
         files.forEach(file => this.#processFile(file));
         otherFiles.forEach(file => this.#copyFile(file));
+
+        return {
+            transpiled: files,
+            copied: otherFiles,
+        };
     }
 
     /**
