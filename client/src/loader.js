@@ -60,6 +60,23 @@
      */
 
     /**
+     * @typedef Loader~dto
+     * @type {{
+     *     path?: string|null,
+     *     callback: function(value): void,
+     *     errorCallback?: function|null,
+     *     dataType: 'script'|'text',
+     *     id: string,
+     *     type: 'amd'|'lib'|'res',
+     *     exportsTo: string|null,
+     *     exportsAs: string|null,
+     *     url?: string,
+     *     noAppCache: boolean,
+     *     useCache?: boolean,
+     * }}
+     */
+
+    /**
      * A loader. Used for loading and defining AMD modules, resource loading.
      * Handles caching.
      */
@@ -354,7 +371,7 @@
             let indexOfExports = dependencyIds.indexOf('exports');
 
             if (Array.isArray(dependencyIds)) {
-                dependencyIds = dependencyIds.map(item => this._normalizePath(item, id));
+                dependencyIds = dependencyIds.map(depId => this._normalizeIdPath(depId, id));
             }
 
             this.require(dependencyIds, (...args) => {
@@ -471,25 +488,25 @@
         }
 
         /**
-         * @param {string} path
          * @param {string} id
+         * @param {string} subjectId
          * @private
          */
-        _normalizePath(path, id) {
-            if (path.at(0) !== '.') {
-                return path;
+        _normalizeIdPath(id, subjectId) {
+            if (id.at(0) !== '.') {
+                return id;
             }
 
-            if (path.slice(0, 2) !== './' && path.slice(0, 3) !== '../') {
-                return path;
+            if (id.slice(0, 2) !== './' && id.slice(0, 3) !== '../') {
+                return id;
             }
 
-            let outputPath = path;
+            let outputPath = id;
 
-            let dirParts = id.split('/').slice(0, -1);
+            let dirParts = subjectId.split('/').slice(0, -1);
 
-            if (path.slice(0, 2) === './') {
-                outputPath = dirParts.join('/') + '/' + path.slice(2);
+            if (id.slice(0, 2) === './') {
+                outputPath = dirParts.join('/') + '/' + id.slice(2);
             }
 
             let parts = outputPath.split('/');
@@ -596,7 +613,6 @@
                 exportsTo = 'window';
                 exportsAs = null;
 
-
                 let isDefinedLib = realName in this._libsConfig;
 
                 if (isDefinedLib) {
@@ -630,7 +646,6 @@
                 if (exportsTo && exportsAs) {
                     obj = this._fetchObject(exportsTo, exportsAs);
                 }
-
 
                 if (typeof obj === 'undefined' && id in this._definedMap) {
                     obj = this._definedMap[id];
@@ -699,6 +714,7 @@
                 return;
             }
 
+            /** @type {Loader~dto} */
             let dto = {
                 id: id,
                 type: type,
@@ -909,6 +925,7 @@
 
         /**
          * @private
+         * @param {Loader~dto} dto
          */
         _processRequest(dto) {
             let id = dto.id;
@@ -951,6 +968,8 @@
 
         /**
          * @private
+         * @param {Loader~dto} dto
+         * @param {string} response
          */
         _handleResponse(dto, response) {
             let id = dto.id;
