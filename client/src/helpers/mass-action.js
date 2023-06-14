@@ -29,7 +29,8 @@
 /**
  * A mass-action helper.
  */
-export default class {
+class MassActionHelper {
+
     /**
      * @param {module:view} view A view.
      */
@@ -103,3 +104,5 @@ export default class {
         });
     }
 }
+
+export default MassActionHelper;

@@ -29,6 +29,7 @@
 /** @module helpers/misc/foreign-field */
 
 export default class {
+
     /**
      * @param {module:views/fields/base} view A field view.
      */

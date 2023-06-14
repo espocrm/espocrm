@@ -29,7 +29,8 @@
 /**
  * An export helper.
  */
-export default class {
+class ExportHelper {
+
     /**
      * @param {module:view} view A view.
      */
@@ -93,3 +94,5 @@ export default class {
         });
     }
 }
+
+export default ExportHelper;

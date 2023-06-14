@@ -29,7 +29,8 @@
 /**
  * A regular expression pattern helper.
  */
-export default class {
+class RegExpPatternHelper {
+
     /**
      * @param {module:metadata} metadata
      * @param {module:language} language
@@ -88,3 +89,5 @@ export default class {
         return {message: message};
     }
 }
+
+export default RegExpPatternHelper;

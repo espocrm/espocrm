@@ -31,7 +31,8 @@
 /**
  * A file-upload helper.
  */
-export default class {
+class FileUploadExport {
+
     /**
      * @param {module:models/settings} config A config.
      */
@@ -194,3 +195,5 @@ export default class {
         return (this.config.get('attachmentUploadChunkSize') || 0) * 1024 * 1024;
     }
 }
+
+export default FileUploadExport;

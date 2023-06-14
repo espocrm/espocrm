@@ -28,7 +28,7 @@
 
 /** @module helpers/action-item-setup */
 
-export default class {
+class ActionItemSetupHelper {
     /**
      * @param {module:metadata} metadata
      * @param {module:view-helper} viewHelper
@@ -166,3 +166,5 @@ export default class {
         view.listenTo(view.model, 'sync', () => onSync());
     }
 }
+
+export default ActionItemSetupHelper;
