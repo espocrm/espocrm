@@ -50,14 +50,10 @@ module.exports = grunt => {
         ...buildUtils.getPreparedBundleLibList(libs),
     ];
 
-    let bundleFileMap = {'client/lib/espo-libs.min.js': libsBundleFileList};
+    let bundleFileMap = {'client/lib/espo.min.js': libsBundleFileList};
 
     for (let name in bundleConfig.chunks) {
         let namePart = 'espo-' + name;
-
-        if (name === 'main') {
-            namePart = 'espo';
-        }
 
         bundleFileMap[`client/lib/${namePart}.min.js`] = originalLibDir + `/${namePart}.js`
     }
@@ -291,8 +287,6 @@ module.exports = grunt => {
 
             if (name === 'main') {
                 contents += '\n' + (new LayoutTypeBundler()).bundle();
-
-                key = 'espo';
             }
 
             writeOriginalLib(key, contents);

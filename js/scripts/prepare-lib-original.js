@@ -43,7 +43,7 @@ const originalLibCrmDir = './client/modules/crm/lib/original';
 
 let bundleFiles = Object.keys(bundleConfig.chunks)
     .map(name => {
-        let namePart = name === 'main' ? 'espo' : 'espo-' + name;
+        let namePart = 'espo-' + name;
 
         return namePart + '.js';
     });
