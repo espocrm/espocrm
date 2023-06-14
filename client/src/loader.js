@@ -36,7 +36,7 @@
 
     /**
      * A callback with resolved dependencies passed as parameters.
-     *   Should return a value to define a module.
+     * Should return a value to define a module.
      *
      * @callback Loader~requireCallback
      * @param {...any} arguments Resolved dependencies.
@@ -326,7 +326,7 @@
          */
         define(id, dependencyIds, callback) {
             if (id) {
-                id = this._normalizeClassName(id);
+                id = this._normalizeId(id);
             }
 
             if (this._contextId) {
@@ -407,11 +407,11 @@
                 list = id;
 
                 list.forEach((item, i) => {
-                    list[i] = this._normalizeClassName(item);
+                    list[i] = this._normalizeId(item);
                 });
             }
             else if (id) {
-                id = this._normalizeClassName(id);
+                id = this._normalizeId(id);
 
                 list = [id];
             }
@@ -431,9 +431,9 @@
                 let readyCount = 0;
                 let loaded = {};
 
-                list.forEach(name => {
-                    this._load(name, c => {
-                        loaded[name] = c;
+                list.forEach(depId => {
+                    this._load(depId, c => {
+                        loaded[depId] = c;
 
                         readyCount++;
 
@@ -516,21 +516,18 @@
         /**
          * @private
          */
-        _normalizeClassName(name) {
-            if (name in this._aliasMap) {
-                name = this._aliasMap[name];
+        _normalizeId(id) {
+            if (id in this._aliasMap) {
+                id = this._aliasMap[id];
             }
 
-            if (~name.indexOf('.') && !~name.indexOf('!') && !name.slice(-3) === '.js') {
-                console.warn(
-                    name + ': ' +
-                    'class name should use slashes for a directory separator and hyphen format.'
-                );
+            if (~id.indexOf('.') && !~id.indexOf('!') && id.slice(-3) !== '.js') {
+                console.warn(`${id}: module ID should use slashes instead of dots and hyphen instead of CamelCase.`);
             }
 
-            if (!!/[A-Z]/.exec(name[0])) {
-                if (name.indexOf(':') !== -1) {
-                    let arr = name.split(':');
+            if (!!/[A-Z]/.exec(id[0])) {
+                if (id.indexOf(':') !== -1) {
+                    let arr = id.split(':');
                     let modulePart = arr[0];
                     let namePart = arr[1];
 
@@ -540,41 +537,41 @@
                             .join('/');
                 }
 
-                return this._convertCamelCaseToHyphen(name).split('.').join('/');
+                return this._convertCamelCaseToHyphen(id).split('.').join('/');
             }
 
-            if (name.startsWith('modules/')) {
-                name = name.slice(8);
+            if (id.startsWith('modules/')) {
+                id = id.slice(8);
 
-                let index = name.indexOf('/');
+                let index = id.indexOf('/');
 
                 if (index > 0) {
-                    let mod = name.slice(0, index);
-                    name = name.slice(index + 1);
+                    let mod = id.slice(0, index);
+                    id = id.slice(index + 1);
 
-                    return mod + ':' + name;
+                    return mod + ':' + id;
                 }
             }
 
-            return name;
+            return id;
         }
 
         /**
          * @private
          */
-        _addLoadCallback(name, callback) {
-            if (!(name in this._loadCallbacks)) {
-                this._loadCallbacks[name] = [];
+        _addLoadCallback(id, callback) {
+            if (!(id in this._loadCallbacks)) {
+                this._loadCallbacks[id] = [];
             }
 
-            this._loadCallbacks[name].push(callback);
+            this._loadCallbacks[id].push(callback);
         }
 
         /**
          * @private
          */
-        _load(name, callback, errorCallback) {
-            if (name === 'exports') {
+        _load(id, callback, errorCallback) {
+            if (id === 'exports') {
                 callback({});
 
                 return;
@@ -582,14 +579,14 @@
 
             let dataType, type, path, exportsTo, exportsAs;
 
-            let realName = name;
+            let realName = id;
             let noAppCache = false;
 
-            if (name.indexOf('lib!') === 0) {
+            if (id.indexOf('lib!') === 0) {
                 dataType = 'script';
                 type = 'lib';
 
-                realName = name.substr(4);
+                realName = id.substr(4);
                 path = realName;
 
                 exportsTo = 'window';
@@ -631,8 +628,8 @@
                 }
 
 
-                if (typeof obj === 'undefined' && name in this._definedMap) {
-                    obj = this._definedMap[name];
+                if (typeof obj === 'undefined' && id in this._definedMap) {
+                    obj = this._definedMap[id];
                 }
 
                 if (typeof obj !== 'undefined') {
@@ -641,11 +638,11 @@
                     return;
                 }
             }
-            else if (name.indexOf('res!') === 0) {
+            else if (id.indexOf('res!') === 0) {
                 dataType = 'text';
                 type = 'res';
 
-                realName = name.substr(4);
+                realName = id.substr(4);
                 path = realName;
 
                 if (path.indexOf(':') !== -1) {
@@ -658,11 +655,11 @@
                 dataType = 'script';
                 type = 'amd';
 
-                if (!name || name === '') {
+                if (!id || id === '') {
                     throw new Error("Can not load empty class name");
                 }
 
-                let classObj = this._get(name);
+                let classObj = this._get(id);
 
                 if (typeof classObj !== 'undefined') {
                     callback(classObj);
@@ -670,14 +667,14 @@
                     return;
                 }
 
-                if (name in this._bundleMapping) {
-                    let bundleName = this._bundleMapping[name];
+                if (id in this._bundleMapping) {
+                    let bundleName = this._bundleMapping[id];
 
                     this._requireBundle(bundleName).then(() => {
-                        let classObj = this._get(name);
+                        let classObj = this._get(id);
 
                         if (typeof classObj === 'undefined') {
-                            let msg = `Could not obtain class '${name}' from bundle '${bundleName}'.`;
+                            let msg = `Could not obtain class '${id}' from bundle '${bundleName}'.`;
                             console.error(msg);
 
                             throw new Error(msg);
@@ -689,17 +686,17 @@
                     return;
                 }
 
-                path = this._idToPath(name);
+                path = this._idToPath(id);
             }
 
-            if (name in this._dataLoaded) {
-                callback(this._dataLoaded[name]);
+            if (id in this._dataLoaded) {
+                callback(this._dataLoaded[id]);
 
                 return;
             }
 
             let dto = {
-                name: name,
+                id: id,
                 type: type,
                 dataType: dataType,
                 noAppCache: noAppCache,
@@ -711,7 +708,7 @@
             };
 
             if (this._cache && !this._responseCache) {
-                let cached = this._cache.get('a', name);
+                let cached = this._cache.get('a', id);
 
                 if (cached) {
                     this._processCached(dto, cached);
@@ -721,7 +718,7 @@
             }
 
             if (path in this._pathsBeingLoaded) {
-                this._addLoadCallback(name, callback);
+                this._addLoadCallback(id, callback);
 
                 return;
             }
@@ -866,7 +863,7 @@
          * @private
          */
         _processCached(dto, cached) {
-            let id = dto.name;
+            let id = dto.id;
             let callback = dto.callback;
             let type = dto.type;
             let dataType = dto.dataType;
@@ -910,7 +907,7 @@
          * @private
          */
         _processRequest(dto) {
-            let id = dto.name;
+            let id = dto.id;
             let url = dto.url;
             let errorCallback = dto.errorCallback;
             let path = dto.path;
@@ -952,7 +949,7 @@
          * @private
          */
         _handleResponse(dto, response) {
-            let id = dto.name;
+            let id = dto.id;
             let callback = dto.callback;
             let type = dto.type;
             let dataType = dto.dataType;
@@ -1280,6 +1277,16 @@
             return;
         }
 
+        /**
+         * @type {{
+         *     cacheTimestamp?: int,
+         *     basePath?: string,
+         *     internalModuleList?: [],
+         *     transpiledModuleList?: [],
+         *     libsConfig?: Object.<string, Loader~libData>,
+         *     aliasMap?: Object.<string, *>,
+         * }}
+         */
         const params = JSON.parse(loaderParamsTag.textContent);
 
         loader.setCacheTimestamp(params.cacheTimestamp);
