@@ -623,7 +623,6 @@
                         path = libData.devPath;
                     }
 
-                    path = (this._isDeveloperMode ? libData.devPath : libData.path) || path;
                     exportsTo = libData.exportsTo || null;
                     exportsAs = libData.exportsAs || null;
                 }
@@ -685,10 +684,10 @@
                     throw new Error("Can't load with empty module ID.");
                 }
 
-                let classObj = this._get(id);
+                let value = this._get(id);
 
-                if (typeof classObj !== 'undefined') {
-                    callback(classObj);
+                if (typeof value !== 'undefined') {
+                    callback(value);
 
                     return;
                 }
@@ -697,16 +696,16 @@
                     let bundleName = this._bundleMapping[id];
 
                     this._requireBundle(bundleName).then(() => {
-                        let classObj = this._get(id);
+                        let value = this._get(id);
 
-                        if (typeof classObj === 'undefined') {
-                            let msg = `Could not obtain class '${id}' from bundle '${bundleName}'.`;
+                        if (typeof value === 'undefined') {
+                            let msg = `Could not obtain module '${id}' from bundle '${bundleName}'.`;
                             console.error(msg);
 
                             throw new Error(msg);
                         }
 
-                        callback(classObj);
+                        callback(value);
                     });
 
                     return;
@@ -865,6 +864,7 @@
 
         /**
          * @private
+         * @return {*}
          */
         _fetchObject(exportsTo, exportsAs) {
             let from = root;
@@ -877,7 +877,7 @@
                     from = from[item];
 
                     if (typeof from === 'undefined') {
-                        return null;
+                        return void 0;
                     }
                 }
             }
@@ -885,6 +885,8 @@
             if (exportsAs in from) {
                 return from[exportsAs];
             }
+
+            return void 0;
         }
 
         /**
