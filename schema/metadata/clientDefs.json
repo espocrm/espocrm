@@ -119,7 +119,6 @@
             "description": "A list of bool filters.",
             "type": "array",
             "items": {
-                "type": "string",
                 "anyOf": [
                     {"const": "__APPEND__"},
                     {"type": "string"},
