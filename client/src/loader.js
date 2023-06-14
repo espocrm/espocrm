@@ -34,6 +34,10 @@
         root.Espo = {};
     }
 
+    if (root.Espo.loader) {
+        throw new Error("Loader was already loaded.");
+    }
+
     /**
      * A callback with resolved dependencies passed as parameters.
      * Should return a value to define a module.

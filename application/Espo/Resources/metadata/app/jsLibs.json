@@ -46,10 +46,6 @@
         "exportsAs": "Flotr",
         "sourceMap": true
     },
-    "Base64": {
-        "exportsTo": "window",
-        "exportsAs": "Base64"
-    },
     "espo-funnel-chart": {
         "path": "client/lib/espo-funnel-chart.js",
         "exportsTo": "window",

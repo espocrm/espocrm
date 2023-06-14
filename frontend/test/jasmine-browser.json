@@ -1,9 +1,8 @@
 {
     "srcDir": ".",
     "srcFiles": [
-        "client/lib/espo-libs.min.js",
-        "client/lib/transpiled/src/loader.js",
-        "frontend/test/loader-init-libs.js",
+        "frontend/test/init.js",
+        "client/lib/espo.min.js",
         "client/lib/transpiled/src/exceptions.js",
         "client/lib/transpiled/src/utils.js",
         "client/lib/transpiled/src/ajax.js",
