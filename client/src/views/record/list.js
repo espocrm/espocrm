@@ -1221,7 +1221,7 @@ class ListRecordView extends View {
         let proceed = () => {
             if (acl || aclScope) {
                 if (!this.getAcl().check(aclScope || this.scope, acl)) {
-                    this.notify('Access denied', 'error');
+                    Espo.Ui.error(this.translate('Access denied'));
 
                     return;
                 }
@@ -1603,18 +1603,18 @@ class ListRecordView extends View {
 
     massActionMerge() {
         if (!this.getAcl().check(this.entityType, 'edit')) {
-            this.notify('Access denied', 'error');
+            Espo.Ui.error(this.translate('Access denied'));
 
             return false;
         }
 
         if (this.checkedList.length < 2) {
-            this.notify('Select 2 or more records', 'error');
+            Espo.Ui.error(this.translate('Select 2 or more records'));
 
             return;
         }
         if (this.checkedList.length > 4) {
-            this.notify('Select not more than 4 records', 'error');
+            Espo.Ui.error(this.translate('Select not more than 4 records'));
 
             return;
         }
@@ -1633,7 +1633,7 @@ class ListRecordView extends View {
 
     massActionMassUpdate() {
         if (!this.getAcl().check(this.entityType, 'edit')) {
-            this.notify('Access denied', 'error');
+            Espo.Ui.error(this.translate('Access denied'));
 
             return false;
         }
@@ -1737,7 +1737,7 @@ class ListRecordView extends View {
 
             Espo.Ajax.deleteRequest(this.collection.url, {ids: this.checkedList})
                 .then(() => {
-                    this.notify('Unlinked', 'success');
+                    Espo.Ui.success(this.translate('Unlinked'));
 
                     this.collection.fetch();
 
