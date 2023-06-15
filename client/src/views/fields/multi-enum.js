@@ -28,47 +28,43 @@
 
 /** @module views/fields/multi-enum */
 
-import Dep from 'views/fields/array';
+import ArrayFieldView from 'views/fields/array';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import MultiSelect from 'ui/multi-select';
 
 /**
  * A multi-enum field.
- *
- * @class
- * @name Class
- * @extends module:views/fields/array
  */
-export default Dep.extend(/** @lends Class# */{
+class MultiEnumFieldView extends ArrayFieldView {
 
-    type: 'multiEnum',
+    type = 'multiEnum'
 
-    listTemplate: 'fields/array/list',
-    detailTemplate: 'fields/array/detail',
-    editTemplate: 'fields/multi-enum/edit',
+    listTemplate = 'fields/array/list'
+    detailTemplate = 'fields/array/detail'
+    editTemplate = 'fields/multi-enum/edit'
 
     /** @const */
-    MAX_ITEM_LENGTH: 100,
+    MAX_ITEM_LENGTH = 100
 
     /**
      * @protected
      * @type {boolean}
      */
-    restoreOnBackspace: false,
+    restoreOnBackspace = false
 
-    validationElementSelector: '.selectize-control',
+    validationElementSelector = '.selectize-control'
 
-    events: {},
+    events = {}
 
     /** @inheritDoc */
-    data: function () {
+    data() {
         return {
+            ...super.data(),
             optionList: this.params.options || [],
-            ...Dep.prototype.data.call(this),
         };
-    },
+    }
 
-    getTranslatedOptions: function () {
+    getTranslatedOptions() {
         return (this.params.options || []).map(item => {
             if (this.translatedOptions !== null) {
                 if (item in this.translatedOptions) {
@@ -78,9 +74,9 @@ export default Dep.extend(/** @lends Class# */{
 
             return item;
         });
-    },
+    }
 
-    translateValueToEditLabel: function (value) {
+    translateValueToEditLabel(value) {
         let label = value;
 
         if (~(this.params.options || []).indexOf(value)) {
@@ -98,9 +94,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return label;
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         if (this.isSearchMode()) {
             this.renderSearch();
 
@@ -151,6 +147,7 @@ export default Dep.extend(/** @lends Class# */{
                 matchAnyWord: this.matchAnyWord,
                 draggable: true,
                 allowCustomOptions: this.allowCustomOptions,
+                restoreOnBackspace: this.restoreOnBackspace,
                 create: input => this.createCustomOptionCallback(input),
             };
 
@@ -160,14 +157,14 @@ export default Dep.extend(/** @lends Class# */{
                 this.trigger('change');
             });
         }
-    },
+    }
 
     /**
      * @protected
      * @param {string} input
      * @return {{text: string, value: string}|null}
      */
-    createCustomOptionCallback: function (input) {
+    createCustomOptionCallback(input) {
         if (input.length > this.MAX_ITEM_LENGTH) {
             let message = this.translate('arrayItemMaxLength', 'messages')
                 .replace('{max}', this.MAX_ITEM_LENGTH.toString())
@@ -193,13 +190,13 @@ export default Dep.extend(/** @lends Class# */{
             value: input,
             text: input,
         };
-    },
+    }
 
-    focusOnInlineEdit: function () {
+    focusOnInlineEdit() {
         MultiSelect.focus(this.$element);
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let list = this.$element.val().split(this.itemDelimiter);
 
         if (list.length === 1 && list[0] === '') {
@@ -224,9 +221,9 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = list;
 
         return data;
-    },
+    }
 
-    validateRequired: function () {
+    validateRequired() {
         if (!this.isRequired()) {
             return;
         }
@@ -241,9 +238,9 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
+    }
 
-    validateMaxCount: function () {
+    validateMaxCount() {
         if (!this.params.maxCount) {
             return;
         }
@@ -260,5 +257,7 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
-});
+    }
+}
+
+export default MultiEnumFieldView;

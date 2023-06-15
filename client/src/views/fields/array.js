@@ -28,31 +28,27 @@
 
 /** @module views/fields/array */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 import MultiSelect from 'ui/multi-select';
 
 /**
  * An array field.
- *
- * @class
- * @name Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
+class ArrayFieldView extends BaseFieldView {
 
-    type: 'array',
+    type = 'array'
 
-    listTemplate: 'fields/array/list',
-    listLinkTemplate: 'fields/array/list-link',
-    detailTemplate: 'fields/array/detail',
-    editTemplate: 'fields/array/edit',
-    searchTemplate: 'fields/array/search',
+    listTemplate = 'fields/array/list'
+    listLinkTemplate = 'fields/array/list-link'
+    detailTemplate = 'fields/array/detail'
+    editTemplate = 'fields/array/edit'
+    searchTemplate = 'fields/array/search'
 
-    searchTypeList: ['anyOf', 'noneOf', 'allOf', 'isEmpty', 'isNotEmpty'],
-    maxItemLength: null,
-    validations: ['required', 'maxCount'],
-    MAX_ITEM_LENGTH: 100,
+    searchTypeList = ['anyOf', 'noneOf', 'allOf', 'isEmpty', 'isNotEmpty']
+    maxItemLength = null
+    validations = ['required', 'maxCount']
+    MAX_ITEM_LENGTH = 100
 
     /**
      * An add-item model view.
@@ -60,32 +56,33 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string}
      */
-    addItemModalView: 'views/modals/array-field-add',
+    addItemModalView = 'views/modals/array-field-add'
     /**
      * @protected
      * @type {string}
      */
-    itemDelimiter: ':,:',
+    itemDelimiter = ':,:'
     /**
      * @protected
      * @type {boolean}
      */
-    matchAnyWord: true,
+    matchAnyWord = true
     /**
      * @protected
      * @type {Object|null}
      */
-    translatedOptions: null,
+    translatedOptions = null
 
     /** @inheritDoc */
-    data: function () {
+    data() {
         let itemHtmlList = [];
 
         (this.selected || []).forEach(value => {
             itemHtmlList.push(this.getItemHtml(value));
         });
 
-        return _.extend({
+        return {
+            ...super.data(),
             selected: this.selected,
             translatedOptions: this.translatedOptions,
             hasOptions: !!this.params.options,
@@ -94,27 +91,26 @@ export default Dep.extend(/** @lends Class# */{
             valueIsSet: this.model.has(this.name),
             maxItemLength: this.maxItemLength || this.MAX_ITEM_LENGTH,
             allowCustomOptions: this.allowCustomOptions,
-        }, Dep.prototype.data.call(this));
-    },
+        };
+    }
 
-    /**
-     * @inheritDoc
-     */
-    events: {
+    /** @inheritDoc */
+    events = {
+        /** @this ArrayFieldView */
         'click [data-action="removeValue"]': function (e) {
             let value = $(e.currentTarget).attr('data-value').toString();
 
             this.removeValue(value);
-
             this.focusOnElement();
         },
+        /** @this ArrayFieldView */
         'click [data-action="showAddModal"]': function () {
             this.actionAddItem();
         },
-    },
+    }
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
         this.noEmptyString = this.params.noEmptyString;
 
@@ -175,9 +171,9 @@ export default Dep.extend(/** @lends Class# */{
         if (this.params.allowCustomOptions || !this.params.options) {
             this.allowCustomOptions = true;
         }
-    },
+    }
 
-    focusOnElement: function () {
+    focusOnElement() {
         let $button = this.$el.find('button[data-action="showAddModal"]');
 
         if ($button[0]) {
@@ -191,15 +187,15 @@ export default Dep.extend(/** @lends Class# */{
         if ($input[0]) {
             $input[0].focus({preventScroll: true});
         }
-    },
+    }
 
-    setupSearch: function () {
+    setupSearch() {
         this.events['change select.search-type'] = e => {
             this.handleSearchType($(e.currentTarget).val());
         };
-    },
+    }
 
-    handleSearchType: function (type) {
+    handleSearchType(type) {
         let $inputContainer = this.$el.find('div.input-container');
 
         if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
@@ -207,9 +203,9 @@ export default Dep.extend(/** @lends Class# */{
         } else {
             $inputContainer.addClass('hidden');
         }
-    },
+    }
 
-    setupTranslation: function () {
+    setupTranslation() {
         let t = {};
 
         let translation = this.params.translation;
@@ -254,11 +250,11 @@ export default Dep.extend(/** @lends Class# */{
 
             this.translatedOptions = translatedOptions;
         }
-    },
+    }
 
-    setupOptions: function () {},
+    setupOptions() {}
 
-    setOptionList: function (optionList, silent) {
+    setOptionList(optionList, silent) {
         let previousOptions = this.params.options;
 
         if (!this.originalOptionList) {
@@ -291,13 +287,13 @@ export default Dep.extend(/** @lends Class# */{
                 });
             }
         }
-    },
+    }
 
-    setTranslatedOptions: function (translatedOptions) {
+    setTranslatedOptions(translatedOptions) {
         this.translatedOptions = translatedOptions;
-    },
+    }
 
-    resetOptionList: function () {
+    resetOptionList() {
         if (!this.originalOptionList) {
             return;
         }
@@ -315,9 +311,9 @@ export default Dep.extend(/** @lends Class# */{
         if (this.isRendered()) {
             this.reRender();
         }
-    },
+    }
 
-    controlAddItemButton: function () {
+    controlAddItemButton() {
         let $select = this.$select;
 
         if (!$select) {
@@ -336,9 +332,9 @@ export default Dep.extend(/** @lends Class# */{
         else {
             this.$addButton.removeClass('disabled').removeAttr('disabled');
         }
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         if (this.isEditMode()) {
             this.$list = this.$el.find('.list-group');
 
@@ -384,12 +380,12 @@ export default Dep.extend(/** @lends Class# */{
         if (this.isSearchMode()) {
             this.renderSearch();
         }
-    },
+    }
 
     /**
      * @param {string} value
      */
-    addValueFromUi: function (value) {
+    addValueFromUi(value) {
         value = value.trim();
 
         if (this.noEmptyString && value === '') {
@@ -413,9 +409,9 @@ export default Dep.extend(/** @lends Class# */{
         this.$select.val('');
 
         this.controlAddItemButton();
-    },
+    }
 
-    renderSearch: function () {
+    renderSearch() {
         this.$element = this.$el.find('.main-element');
 
         let valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
@@ -481,9 +477,9 @@ export default Dep.extend(/** @lends Class# */{
         this.$element.on('change', () => {
             this.trigger('change');
         });
-    },
+    }
 
-    fetchFromDom: function () {
+    fetchFromDom() {
         let selected = [];
 
         this.$el.find('.list-group .list-group-item').each((i, el) => {
@@ -493,9 +489,9 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         this.selected = selected;
-    },
+    }
 
-    getValueForDisplay: function () {
+    getValueForDisplay() {
         // Do not use the `html` method to avoid XSS.
 
         /** @var {string[]} */
@@ -564,9 +560,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return list.join(', ');
-    },
+    }
 
-    getItemHtml: function (value) {
+    getItemHtml(value) {
         // Do not use the `html` method to avoid XSS.
 
         if (this.translatedOptions !== null) {
@@ -608,9 +604,9 @@ export default Dep.extend(/** @lends Class# */{
             .append('')
             .get(0)
             .outerHTML;
-    },
+    }
 
-    addValue: function (value) {
+    addValue(value) {
         if (this.selected.indexOf(value) === -1) {
             let html = this.getItemHtml(value);
 
@@ -618,9 +614,9 @@ export default Dep.extend(/** @lends Class# */{
             this.selected.push(value);
             this.trigger('change');
         }
-    },
+    }
 
-    removeValue: function (value) {
+    removeValue(value) {
         let valueInternal = value.replace(/"/g, '\\"');
 
         this.$list.children('[data-value="' + valueInternal + '"]').remove();
@@ -629,9 +625,9 @@ export default Dep.extend(/** @lends Class# */{
 
         this.selected.splice(index, 1);
         this.trigger('change');
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let data = {};
 
         let list = Espo.Utils.clone(this.selected || []);
@@ -646,9 +642,9 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = list;
 
         return data;
-    },
+    }
 
-    fetchSearch: function () {
+    fetchSearch() {
         let type = this.$el.find('select.search-type').val() || 'anyOf';
 
         let valueList;
@@ -755,9 +751,9 @@ export default Dep.extend(/** @lends Class# */{
                 },
             };
         }
-    },
+    }
 
-    validateRequired: function () {
+    validateRequired() {
         if (this.isRequired()) {
             let value = this.model.get(this.name);
 
@@ -772,9 +768,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
+    }
 
-    validateMaxCount: function () {
+    validateMaxCount() {
         if (this.params.maxCount) {
             let itemList = this.model.get(this.name) || [];
 
@@ -791,13 +787,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
+    }
 
-    getSearchType: function () {
+    getSearchType() {
         return this.getSearchParamsData().type || 'anyOf';
-    },
+    }
 
-    getAddItemModalOptions: function () {
+    getAddItemModalOptions() {
         let options = [];
 
         this.params.options.forEach(item => {
@@ -810,9 +806,9 @@ export default Dep.extend(/** @lends Class# */{
             options: options,
             translatedOptions: this.translatedOptions,
         };
-    },
+    }
 
-    actionAddItem: function () {
+    actionAddItem() {
         this.createView('addModal', this.addItemModalView, this.getAddItemModalOptions(), view => {
             view.render();
 
@@ -826,5 +822,7 @@ export default Dep.extend(/** @lends Class# */{
                 view.close();
             });
         });
-    },
-});
+    }
+}
+
+export default ArrayFieldView;
