@@ -26,186 +26,186 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:view-setup-handlers/document/record-list-drag-n-drop', [], function () {
+import _ from 'lib!underscore';
+import {Events as BullEvents} from 'lib!bullbone';
 
-    let Handler = function (view) {
-        this.view = view;
-    };
+let Handler = function (view) {
+    this.view = view;
+};
 
-    _.extend(Handler.prototype, {
+_.extend(Handler.prototype, {
 
-        process: function () {
-            this.listenTo(this.view, 'after:render', () => this.initDragDrop());
-            this.listenTo(this.view, 'remove', () => this.disable());
-        },
+    process: function () {
+        this.listenTo(this.view, 'after:render', () => this.initDragDrop());
+        this.listenTo(this.view, 'remove', () => this.disable());
+    },
 
-        disable: function () {
-            let $el = this.view.$el.parent();
-            /** @type {Element} */
-            let el = $el.get(0);
+    disable: function () {
+        let $el = this.view.$el.parent();
+        /** @type {Element} */
+        let el = $el.get(0);
 
-            $el.off('drop');
+        $el.off('drop');
 
-            if (!el) {
+        if (!el) {
+            return;
+        }
+
+        if (!this.onDragoverBind) {
+            return;
+        }
+
+        el.removeEventListener('dragover', this.onDragoverBind);
+        el.removeEventListener('dragenter', this.onDragenterBind);
+        el.removeEventListener('dragleave', this.onDragleaveBind);
+    },
+
+    initDragDrop: function () {
+        this.disable();
+
+        let $el = this.view.$el.parent();
+        let el = $el.get(0);
+
+        $el.on('drop', e => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            e = e.originalEvent;
+
+            if (
+                e.dataTransfer &&
+                e.dataTransfer.files &&
+                e.dataTransfer.files.length === 1 &&
+                this.dropEntered
+            ) {
+                this.removeDrop();
+
+                this.create(e.dataTransfer.files[0]);
+
                 return;
             }
 
-            if (!this.onDragoverBind) {
-                return;
-            }
+            this.removeDrop($el);
+        });
 
-            el.removeEventListener('dragover', this.onDragoverBind);
-            el.removeEventListener('dragenter', this.onDragenterBind);
-            el.removeEventListener('dragleave', this.onDragleaveBind);
-        },
 
-        initDragDrop: function () {
-            this.disable();
+        this.dropEntered = false;
 
-            let $el = this.view.$el.parent();
-            let el = $el.get(0);
+        this.onDragoverBind = this.onDragover.bind(this);
+        this.onDragenterBind = this.onDragenter.bind(this);
+        this.onDragleaveBind = this.onDragleave.bind(this);
 
-            $el.on('drop', e => {
-                e.preventDefault();
-                e.stopPropagation();
+        el.addEventListener('dragover', this.onDragoverBind);
+        el.addEventListener('dragenter', this.onDragenterBind);
+        el.addEventListener('dragleave', this.onDragleaveBind);
+    },
 
-                e = e.originalEvent;
+    renderDrop: function () {
+        this.dropEntered = true;
 
-                if (
-                    e.dataTransfer &&
-                    e.dataTransfer.files &&
-                    e.dataTransfer.files.length === 1 &&
-                    this.dropEntered
-                ) {
-                    this.removeDrop();
+        let $backdrop =
+            $('<div class="dd-backdrop">')
+                .css('pointer-events', 'none')
+                .append('<span class="fas fa-paperclip"></span>')
+                .append(' ')
+                .append(
+                    $('<span>')
+                        .text(this.view.getLanguage().translate('Create Document', 'labels', 'Document'))
+                );
 
-                    this.create(e.dataTransfer.files[0]);
+        this.view.$el.append($backdrop);
+    },
+
+    removeDrop: function () {
+        this.view.$el.find('> .dd-backdrop').remove();
+
+        this.dropEntered = false;
+    },
+
+    create: function (file) {
+        this.view
+            .actionQuickCreate()
+            .then(view => {
+                let fileView = view.getRecordView().getFieldView('file');
+
+                if (!fileView) {
+                    let msg = "No 'file' field on the layout.";
+
+                    Espo.Ui.error(msg);
+                    console.error(msg);
 
                     return;
                 }
 
-                this.removeDrop($el);
-            });
+                if (fileView.isRendered()) {
+                    fileView.uploadFile(file);
 
+                    return;
+                }
 
-            this.dropEntered = false;
-
-            this.onDragoverBind = this.onDragover.bind(this);
-            this.onDragenterBind = this.onDragenter.bind(this);
-            this.onDragleaveBind = this.onDragleave.bind(this);
-
-            el.addEventListener('dragover', this.onDragoverBind);
-            el.addEventListener('dragenter', this.onDragenterBind);
-            el.addEventListener('dragleave', this.onDragleaveBind);
-        },
-
-        renderDrop: function () {
-            this.dropEntered = true;
-
-            let $backdrop =
-                $('<div class="dd-backdrop">')
-                    .css('pointer-events', 'none')
-                    .append('<span class="fas fa-paperclip"></span>')
-                    .append(' ')
-                    .append(
-                        $('<span>')
-                            .text(this.view.getLanguage().translate('Create Document', 'labels', 'Document'))
-                    );
-
-            this.view.$el.append($backdrop);
-        },
-
-        removeDrop: function () {
-            this.view.$el.find('> .dd-backdrop').remove();
-
-            this.dropEntered = false;
-        },
-
-        create: function (file) {
-            this.view
-                .actionQuickCreate()
-                .then(view => {
-                    let fileView = view.getRecordView().getFieldView('file');
-
-                    if (!fileView) {
-                        let msg = "No 'file' field on the layout.";
-
-                        Espo.Ui.error(msg);
-                        console.error(msg);
-
-                        return;
-                    }
-
-                    if (fileView.isRendered()) {
-                        fileView.uploadFile(file);
-
-                        return;
-                    }
-
-                    this.listenToOnce(fileView, 'after:render', () => {
-                        fileView.uploadFile(file);
-                    });
+                this.listenToOnce(fileView, 'after:render', () => {
+                    fileView.uploadFile(file);
                 });
-        },
+            });
+    },
 
-        /**
-         * @param {DragEvent} e
-         */
-        onDragover: function (e) {
-            e.preventDefault();
-        },
+    /**
+     * @param {DragEvent} e
+     */
+    onDragover: function (e) {
+        e.preventDefault();
+    },
 
-        /**
-         * @param {DragEvent} e
-         */
-        onDragenter: function (e) {
-            e.preventDefault();
+    /**
+     * @param {DragEvent} e
+     */
+    onDragenter: function (e) {
+        e.preventDefault();
 
-            if (!e.dataTransfer.types || !e.dataTransfer.types.length) {
-                return;
-            }
+        if (!e.dataTransfer.types || !e.dataTransfer.types.length) {
+            return;
+        }
 
-            if (!~e.dataTransfer.types.indexOf('Files')) {
-                return;
-            }
+        if (!~e.dataTransfer.types.indexOf('Files')) {
+            return;
+        }
 
-            if (!this.dropEntered) {
-                this.renderDrop();
-            }
-        },
+        if (!this.dropEntered) {
+            this.renderDrop();
+        }
+    },
 
-        /**
-         * @param {DragEvent} e
-         */
-        onDragleave: function (e) {
-            e.preventDefault();
+    /**
+     * @param {DragEvent} e
+     */
+    onDragleave: function (e) {
+        e.preventDefault();
 
-            if (!this.dropEntered) {
-                return;
-            }
+        if (!this.dropEntered) {
+            return;
+        }
 
-            let fromElement = e.fromElement || e.relatedTarget;
+        let fromElement = e.fromElement || e.relatedTarget;
 
-            if (
-                fromElement &&
-                $.contains(this.view.$el.parent().get(0), fromElement)
-            ) {
-                return;
-            }
+        if (
+            fromElement &&
+            $.contains(this.view.$el.parent().get(0), fromElement)
+        ) {
+            return;
+        }
 
-            if (
-                fromElement &&
-                fromElement.parentNode &&
-                fromElement.parentNode.toString() === '[object ShadowRoot]'
-            ) {
-                return;
-            }
+        if (
+            fromElement &&
+            fromElement.parentNode &&
+            fromElement.parentNode.toString() === '[object ShadowRoot]'
+        ) {
+            return;
+        }
 
-            this.removeDrop();
-        },
-    });
-
-    _.extend(Handler.prototype, Bull.Events);
-
-    return Handler;
+        this.removeDrop();
+    },
 });
+
+_.extend(Handler.prototype, BullEvents);
+
+export default Handler;
