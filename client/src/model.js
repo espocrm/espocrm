@@ -998,7 +998,7 @@ class Model {
     }
 
     /**
-     * @deprecated Use `getClonedAttributesInstead`.
+     * @deprecated Use `getClonedAttributes`.
      * @return {Object.<string, *>}
      */
     toJSON() {
