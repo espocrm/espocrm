@@ -73,9 +73,7 @@ class Transpiler {
         }
 
         let files = allFiles.filter(file => this.#isToBeTranspiled(file));
-
-        let otherFiles = !this.file ?
-            allFiles.filter(file => !files.includes(file)) : [];
+        let otherFiles = allFiles.filter(file => !files.includes(file));
 
         files.forEach(file => this.#processFile(file));
         otherFiles.forEach(file => this.#copyFile(file));
