@@ -28,25 +28,21 @@
 
 /** @module views/fields/datetime */
 
-import Dep from 'views/fields/date';
+import DateFieldView from 'views/fields/date';
 import moment from 'lib!moment';
 
 /**
  * A date-time field.
- *
- * @class
- * @name Class
- * @extends module:views/fields/date
  */
-export default Dep.extend(/** @lends Class# */{
+class DatetimeFieldView extends DateFieldView {
 
-    type: 'datetime',
+    type = 'datetime'
 
-    editTemplate: 'fields/datetime/edit',
+    editTemplate = 'fields/datetime/edit'
 
-    validations: ['required', 'datetime', 'after', 'before'],
+    validations = ['required', 'datetime', 'after', 'before']
 
-    searchTypeList: [
+    searchTypeList = [
         'lastSevenDays',
         'ever',
         'isEmpty',
@@ -68,18 +64,18 @@ export default Dep.extend(/** @lends Class# */{
         'after',
         'before',
         'between',
-    ],
+    ]
 
-    timeFormatMap: {
+    timeFormatMap = {
         'HH:mm': 'H:i',
         'hh:mm A': 'h:i A',
         'hh:mm a': 'h:i a',
         'hh:mmA': 'h:iA',
         'hh:mma': 'h:ia',
-    },
+    }
 
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         data.date = data.time = '';
 
@@ -93,9 +89,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    getDateStringValue: function () {
+    getDateStringValue() {
         if (this.mode === this.MODE_DETAIL && !this.model.has(this.name)) {
             return -1;
         }
@@ -161,9 +157,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return this.getDateTime().toDisplay(value);
-    },
+    }
 
-    initTimepicker: function () {
+    initTimepicker() {
         let $time = this.$time;
 
         $time.timepicker({
@@ -178,9 +174,9 @@ export default Dep.extend(/** @lends Class# */{
             .on('click', () => {
                 $time.timepicker('show');
             });
-    },
+    }
 
-    setDefaultTime: function () {
+    setDefaultTime() {
         let dtString = moment('2014-01-01 00:00').format(this.getDateTime().getDateTimeFormat()) || '';
 
         let pair = this.splitDatetime(dtString);
@@ -188,32 +184,32 @@ export default Dep.extend(/** @lends Class# */{
         if (pair.length === 2) {
             this.$time.val(pair[1]);
         }
-    },
+    }
 
-    splitDatetime: function (value) {
+    splitDatetime(value) {
         let m = moment(value, this.getDateTime().getDateTimeFormat());
 
         let dateValue = m.format(this.getDateTime().getDateFormat());
         let timeValue = value.substr(dateValue.length + 1);
 
         return [dateValue, timeValue];
-    },
+    }
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
         this.on('remove', () => this.destroyTimepicker());
         this.on('mode-changed', () => this.destroyTimepicker());
-    },
+    }
 
-    destroyTimepicker: function () {
+    destroyTimepicker() {
         if (this.$time && this.$time[0]) {
             this.$time.timepicker('remove');
         }
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.mode !== this.MODE_EDIT) {
             return;
@@ -264,13 +260,13 @@ export default Dep.extend(/** @lends Class# */{
 
             setTimeout(() => isTimeFormatError = false, 50);
         });
-    },
+    }
 
-    parse: function (string) {
+    parse(string) {
         return this.getDateTime().fromDisplay(string);
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let data = {};
 
         let date = this.$date.val();
@@ -285,9 +281,9 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = value;
 
         return data;
-    },
+    }
 
-    validateDatetime: function () {
+    validateDatetime() {
         if (this.model.get(this.name) === -1) {
             let msg = this.translate('fieldShouldBeDatetime', 'messages')
                 .replace('{field}', this.getLabelText());
@@ -296,15 +292,18 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
+    }
 
-    fetchSearch: function () {
-        let data = Dep.prototype.fetchSearch.call(this);
+    /** @inheritDoc */
+    fetchSearch() {
+        let data = super.fetchSearch();
 
         if (data) {
             data.dateTime = true;
         }
 
         return data;
-    },
-});
+    }
+}
+
+export default DatetimeFieldView;

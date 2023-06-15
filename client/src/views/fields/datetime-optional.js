@@ -28,27 +28,24 @@
 
 /** @module views/fields/datetime-optional */
 
-import Dep from 'views/fields/datetime';
+import DatetimeFieldView from 'views/fields/datetime';
 import moment from 'lib!moment';
 
 /**
  * A date-time or date.
- *
- * @class Class
- * @extends module:views/fields/datetime
  */
-export default Dep.extend(/** @lends Class# */{
+class DatetimeOptionalFieldView extends DatetimeFieldView {
 
-    type: 'datetimeOptional',
+    type = 'datetimeOptional'
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
         this.noneOption = this.translate('None');
         this.nameDate = this.name + 'Date';
-    },
+    }
 
-    isDate: function () {
+    isDate() {
         let dateValue = this.model.get(this.nameDate);
 
         if (dateValue && dateValue !== '') {
@@ -56,10 +53,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
+    }
 
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         if (this.isDate()) {
             let dateValue = this.model.get(this.nameDate);
@@ -69,23 +66,23 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    getDateStringValue: function () {
+    getDateStringValue() {
         if (this.isDate()) {
             var dateValue = this.model.get(this.nameDate);
 
             return this.stringifyDateValue(dateValue);
         }
 
-        return Dep.prototype.getDateStringValue.call(this);
-    },
+        return super.getDateStringValue();
+    }
 
-    setDefaultTime: function () {
+    setDefaultTime() {
         this.$time.val(this.noneOption);
-    },
+    }
 
-    initTimepicker: function () {
+    initTimepicker() {
         let $time = this.$time;
 
         let o = {
@@ -107,9 +104,9 @@ export default Dep.extend(/** @lends Class# */{
         $time.parent().find('button.time-picker-btn').on('click', () => {
             $time.timepicker('show');
         });
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let data = {};
 
         let date = this.$date.val();
@@ -147,9 +144,9 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = null;
 
         return data;
-    },
+    }
 
-    validateAfter: function () {
+    validateAfter() {
         let field = this.model.getFieldParam(this.name, 'after');
 
         if (!field) {
@@ -177,9 +174,9 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
+    }
 
-    validateBefore: function () {
+    validateBefore() {
         var field = this.model.getFieldParam(this.name, 'before');
 
         if (!field) {
@@ -203,9 +200,9 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
+    }
 
-    validateRequired: function () {
+    validateRequired() {
         if (!this.isRequired()) {
             return;
         }
@@ -218,5 +215,7 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
-});
+    }
+}
+
+export default DatetimeOptionalFieldView;

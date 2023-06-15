@@ -28,25 +28,21 @@
 
 /** @module views/fields/varchar */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
 
 /**
  * A varchar field.
- *
- * @class
- * @name Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
+class VarcharFieldView extends BaseFieldView {
 
-    type: 'varchar',
+    type = 'varchar'
 
-    listTemplate: 'fields/varchar/list',
-    detailTemplate: 'fields/varchar/detail',
-    searchTemplate: 'fields/varchar/search',
+    listTemplate = 'fields/varchar/list'
+    detailTemplate = 'fields/varchar/detail'
+    searchTemplate = 'fields/varchar/search'
 
-    searchTypeList: [
+    searchTypeList = [
         'startsWith',
         'contains',
         'equals',
@@ -57,13 +53,13 @@ export default Dep.extend(/** @lends Class# */{
         'notLike',
         'isEmpty',
         'isNotEmpty',
-    ],
+    ]
 
     /** @inheritDoc */
-    validations: [
+    validations = [
         'required',
         'pattern',
-    ],
+    ]
 
     /**
      * Use an autocomplete requesting data from the backend.
@@ -71,7 +67,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    useAutocompleteUrl: false,
+    useAutocompleteUrl = false
 
     /**
      * No spell-check.
@@ -79,9 +75,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    noSpellCheck: false,
+    noSpellCheck = false
 
-    setup: function () {
+    setup() {
         this.setupOptions();
 
         this.noSpellCheck = this.noSpellCheck || this.params.noSpellCheck;
@@ -100,19 +96,19 @@ export default Dep.extend(/** @lends Class# */{
                 this.events['click [data-action="copyToClipboard"]'] = () => this.copyToClipboard();
             }
         }
-    },
+    }
 
     /**
      * Set up options.
      */
-    setupOptions: function () {},
+    setupOptions() {}
 
     /**
      * Set options.
      *
      * @param {string[]} optionList Options.
      */
-    setOptionList: function (optionList) {
+    setOptionList(optionList) {
         if (!this.originalOptionList) {
             this.originalOptionList = this.params.options || [];
         }
@@ -124,12 +120,12 @@ export default Dep.extend(/** @lends Class# */{
                 this.reRender();
             }
         }
-    },
+    }
 
     /**
      * Reset options.
      */
-    resetOptionList: function () {
+    resetOptionList() {
         if (this.originalOptionList) {
             this.params.options = Espo.Utils.clone(this.originalOptionList);
         }
@@ -139,18 +135,18 @@ export default Dep.extend(/** @lends Class# */{
                 this.reRender();
             }
         }
-    },
+    }
 
     /**
      * @protected
      */
-    copyToClipboard: function () {
+    copyToClipboard() {
         let value = this.model.get(this.name);
 
         navigator.clipboard.writeText(value).then(() => {
             Espo.Ui.success(this.translate('Copied to clipboard'));
         });
-    },
+    }
 
     /**
      * Compose an autocomplete URL.
@@ -158,11 +154,11 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} q A query.
      * @return {string}
      */
-    getAutocompleteUrl: function (q) {
+    getAutocompleteUrl(q) {
         return '';
-    },
+    }
 
-    transformAutocompleteResult: function (response) {
+    transformAutocompleteResult(response) {
         let responseParsed = JSON.parse(response);
 
         let list = [];
@@ -180,19 +176,18 @@ export default Dep.extend(/** @lends Class# */{
         return {
             suggestions: list,
         };
-    },
+    }
 
-    setupSearch: function () {
-        this.events = _.extend({
-            'change select.search-type': function (e) {
-                var type = $(e.currentTarget).val();
-                this.handleSearchType(type);
-            },
-        }, this.events || {});
-    },
+    setupSearch() {
+        this.events['change select.search-type'] = e => {
+            let type = $(e.currentTarget).val();
 
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+            this.handleSearchType(type);
+        };
+    }
+
+    data() {
+        let data = super.data()
 
         if (
             this.model.get(this.name) !== null &&
@@ -214,9 +209,9 @@ export default Dep.extend(/** @lends Class# */{
         data.copyToClipboard = this.params.copyToClipboard;
 
         return data;
-    },
+    }
 
-    handleSearchType: function (type) {
+    handleSearchType(type) {
         if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
             this.$el.find('input.main-element').addClass('hidden');
 
@@ -224,10 +219,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.$el.find('input.main-element').removeClass('hidden');
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.isSearchMode()) {
             let type = this.$el.find('select.search-type').val();
@@ -251,7 +246,7 @@ export default Dep.extend(/** @lends Class# */{
                         $c.addClass('small');
                     }
                 },
-                formatResult: (suggestion) => {
+                formatResult: suggestion => {
                     return this.getHelper().escapeString(suggestion.value);
                 },
                 lookupFilter: (suggestion, query, queryLowerCase) => {
@@ -300,13 +295,13 @@ export default Dep.extend(/** @lends Class# */{
                 this.trigger('change');
             });
         }
-    },
+    }
 
-    validatePattern: function () {
+    validatePattern() {
         let pattern = this.params.pattern;
 
         return this.fieldValidatePattern(this.name, pattern);
-    },
+    }
 
     /**
      * Used by other field views.
@@ -314,7 +309,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name
      * @param {string} [pattern]
      */
-    fieldValidatePattern: function (name, pattern) {
+    fieldValidatePattern(name, pattern) {
         pattern = pattern || this.model.getFieldParam(name, 'pattern');
         /** @var {string|null} value */
         let value = this.model.get(name);
@@ -334,9 +329,9 @@ export default Dep.extend(/** @lends Class# */{
         this.showValidationMessage(result.message, '[data-name="' + name + '"]');
 
         return true;
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let data = {};
 
         let value = this.$element.val().trim();
@@ -344,9 +339,9 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = value || null;
 
         return data;
-    },
+    }
 
-    fetchSearch: function () {
+    fetchSearch() {
         let type = this.fetchSearchType() || 'startsWith';
 
         if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
@@ -362,7 +357,7 @@ export default Dep.extend(/** @lends Class# */{
                             type: 'equals',
                             field: this.name,
                             value: '',
-                        }
+                        },
                     ],
                     data: {
                         type: type,
@@ -404,10 +399,12 @@ export default Dep.extend(/** @lends Class# */{
                 type: type,
             },
         };
-    },
+    }
 
-    getSearchType: function () {
+    getSearchType() {
         return this.getSearchParamsData().type || this.searchParams.typeFront ||
             this.searchParams.type;
-    },
-});
+    }
+}
+
+export default VarcharFieldView;

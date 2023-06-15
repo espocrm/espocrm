@@ -28,38 +28,34 @@
 
 /** @module views/fields/date */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import moment from 'lib!moment';
 
 /**
  * A date field.
- *
- * @class
- * @name Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
+class DateFieldView extends BaseFieldView {
 
-    type: 'date',
+    type = 'date'
 
-    listTemplate: 'fields/date/list',
-    listLinkTemplate: 'fields/date/list-link',
-    detailTemplate: 'fields/date/detail',
-    editTemplate: 'fields/date/edit',
-    searchTemplate: 'fields/date/search',
+    listTemplate = 'fields/date/list'
+    listLinkTemplate = 'fields/date/list-link'
+    detailTemplate = 'fields/date/detail'
+    editTemplate = 'fields/date/edit'
+    searchTemplate = 'fields/date/search'
 
-    validations: ['required', 'date', 'after', 'before'],
+    validations = ['required', 'date', 'after', 'before']
 
-    searchTypeList: [
+    searchTypeList = [
         'lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'nextMonth', 'currentQuarter',
         'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays',
         'olderThanXDays', 'afterXDays', 'on', 'after', 'before', 'between',
-    ],
+    ]
 
-    initialSearchIsNotIdle: true,
+    initialSearchIsNotIdle = true
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+       super.setup();
 
         if (this.getConfig().get('fiscalYearShift')) {
             this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
@@ -72,10 +68,10 @@ export default Dep.extend(/** @lends Class# */{
             this.searchTypeList.push('currentFiscalYear');
             this.searchTypeList.push('lastFiscalYear');
         }
-    },
+    }
 
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         data.dateValue = this.getDateStringValue();
 
@@ -101,9 +97,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    setupSearch: function () {
+    setupSearch() {
         this.events = _.extend({
             'change select.search-type': (e) => {
                 let type = $(e.currentTarget).val();
@@ -111,9 +107,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.handleSearchType(type);
             },
         }, this.events || {});
-    },
+    }
 
-    stringifyDateValue: function (value) {
+    stringifyDateValue(value) {
         if (!value) {
             if (
                 this.mode === this.MODE_EDIT ||
@@ -136,9 +132,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return this.getDateTime().toDisplayDate(value);
-    },
+    }
 
-    convertDateValueForDetail: function (value) {
+    convertDateValueForDetail(value) {
         if (this.getConfig().get('readableDateFormatDisabled') || this.params.useNumericFormat) {
             return this.getDateTime().toDisplayDate(value);
         }
@@ -179,9 +175,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return dateTime.format(readableFormat + ', YYYY');
-    },
+    }
 
-    getDateStringValue: function () {
+    getDateStringValue() {
         if (this.mode === this.MODE_DETAIL && !this.model.has(this.name)) {
             return -1;
         }
@@ -189,9 +185,9 @@ export default Dep.extend(/** @lends Class# */{
         var value = this.model.get(this.name);
 
         return this.stringifyDateValue(value);
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         if (this.mode === this.MODE_EDIT || this.mode === this.MODE_SEARCH) {
             this.$element = this.$el.find('[data-name="' + this.name + '"]');
 
@@ -290,9 +286,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.handleSearchType($searchType.val());
             }
         }
-    },
+    }
 
-    handleSearchType: function (type) {
+    handleSearchType(type) {
         this.$el.find('div.primary').addClass('hidden');
         this.$el.find('div.additional').addClass('hidden');
         this.$el.find('div.additional-number').addClass('hidden');
@@ -307,25 +303,27 @@ export default Dep.extend(/** @lends Class# */{
             this.$el.find('div.primary').removeClass('hidden');
             this.$el.find('div.additional').removeClass('hidden');
         }
-    },
+    }
 
-    parseDate: function (string) {
+    parseDate(string) {
         return this.getDateTime().fromDisplayDate(string);
-    },
+    }
 
-    parse: function (string) {
+    parse(string) {
         return this.parseDate(string);
-    },
+    }
 
-    fetch: function () {
+    /** @inheritDoc */
+    fetch() {
         let data = {};
 
         data[this.name] = this.parse(this.$element.val());
 
         return data;
-    },
+    }
 
-    fetchSearch: function () {
+    /** @inheritDoc */
+    fetchSearch() {
         let value = this.parseDate(this.$element.val());
 
         let type = this.fetchSearchType();
@@ -386,13 +384,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    getSearchType: function () {
+    getSearchType() {
         return this.getSearchParamsData().type || this.searchParams.typeFront || this.searchParams.type;
-    },
+    }
 
-    validateRequired: function () {
+    validateRequired() {
         if (!this.isRequired()) {
             return;
         }
@@ -405,9 +403,9 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
+    }
 
-    validateDate: function () {
+    validateDate() {
         if (this.model.get(this.name) === -1) {
             let msg = this.translate('fieldShouldBeDate', 'messages')
                 .replace('{field}', this.getLabelText());
@@ -416,9 +414,9 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
+    }
 
-    validateAfter: function () {
+    validateAfter() {
         let field = this.model.getFieldParam(this.name, 'after');
 
         if (!field) {
@@ -441,9 +439,9 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
+    }
 
-    validateBefore: function () {
+    validateBefore() {
         let field = this.model.getFieldParam(this.name, 'before');
 
         if (!field) {
@@ -466,6 +464,7 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
-});
+    }
+}
 
+export default DateFieldView;
