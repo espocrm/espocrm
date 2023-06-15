@@ -980,19 +980,40 @@ Espo.Ui = {
     },
 
     /**
+     * Notify options.
+     *
+     * @typedef {Object} Espo.Ui~NotifyOptions
+     * @property {boolean} [closeButton] A close button.
+     * @property {boolean} [suppress] Suppress other warning alerts while this is displayed.
+     */
+
+    /**
      * Show a notify-message.
      *
      * @param {string|false} message A message. False removes an already displayed message.
      * @param {'warning'|'danger'|'success'|'info'} [type='warning'] A type.
      * @param {number} [timeout] Microseconds. If empty, then won't be hidden.
      *   Should be hidden manually or by displaying another message.
-     * @param {boolean} [closeButton] A close button.
+     * @param {Espo.Ui~NotifyOptions} [options] Options.
      */
-    notify: function (message, type, timeout, closeButton) {
+    notify: function (message, type, timeout, options) {
+        type = type || 'warning';
+        options = {...options};
+
+        if (type === 'warning' && notifySuppressed) {
+            return;
+        }
+
         $('#notification').remove();
 
         if (!message) {
             return;
+        }
+
+        if (options.suppress && timeout) {
+            notifySuppressed = true;
+
+            setTimeout(() => notifySuppressed = false, timeout)
         }
 
         let parsedMessage = message.indexOf('\n') !== -1 ?
@@ -1001,8 +1022,7 @@ Espo.Ui = {
 
         let sanitizedMessage = DOMPurify.sanitize(parsedMessage).toString();
 
-        type = type || 'warning';
-        closeButton = closeButton || false;
+        let closeButton = options.closeButton || false;
 
         if (type === 'error') {
             // For bc.
@@ -1059,18 +1079,20 @@ Espo.Ui = {
      * Show a warning message.
      *
      * @param {string} message A message.
+     * @param {Espo.Ui~NotifyOptions} [options] Options.
      */
-    warning: function (message) {
-        Espo.Ui.notify(message, 'warning', 2000);
+    warning: function (message, options) {
+        Espo.Ui.notify(message, 'warning', 2000, options);
     },
 
     /**
      * Show a success message.
      *
      * @param {string} message A message.
+     * @param {Espo.Ui~NotifyOptions} [options] Options.
      */
-    success: function (message) {
-        Espo.Ui.notify(message, 'success', 2000);
+    success: function (message, options) {
+        Espo.Ui.notify(message, 'success', 2000, options);
     },
 
     /**
@@ -1083,18 +1105,21 @@ Espo.Ui = {
         closeButton = closeButton || false;
         let timeout = closeButton ? 0 : 4000;
 
-        Espo.Ui.notify(message, 'danger', timeout, closeButton);
+        Espo.Ui.notify(message, 'danger', timeout, {closeButton: closeButton});
     },
 
     /**
      * Show an info message.
      *
      * @param {string} message A message.
+     * @param {Espo.Ui~NotifyOptions} [options] Options.
      */
-    info: function (message) {
-        Espo.Ui.notify(message, 'info', 2000);
+    info: function (message, options) {
+        Espo.Ui.notify(message, 'info', 2000, options);
     },
 };
+
+let notifySuppressed = false;
 
 /**
  * @deprecated Use `Espo.Ui`.

@@ -1603,7 +1603,7 @@ class DetailRecordView extends BaseRecordView {
 
                     this.model.set('deleted', true, {silent: true});
 
-                    Espo.Ui.success(this.translate('Removed'));
+                    Espo.Ui.success(this.translate('Removed'), {suppress: true});
 
                     this.trigger('after:delete');
                     this.exit('delete');
