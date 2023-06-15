@@ -28,33 +28,45 @@
 
 /** @module views/fields/wysiwyg */
 
-import Dep from 'views/fields/text';
+import TextFieldView from 'views/fields/text';
 
 /**
  * A wysiwyg field.
- *
- * @class Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
+class WysiwygFieldView extends TextFieldView {
 
-    type: 'wysiwyg',
+    type = 'wysiwyg'
 
-    listTemplate: 'fields/wysiwyg/detail',
-    detailTemplate: 'fields/wysiwyg/detail',
-    editTemplate: 'fields/wysiwyg/edit',
+    listTemplate = 'fields/wysiwyg/detail'
+    detailTemplate = 'fields/wysiwyg/detail'
+    editTemplate = 'fields/wysiwyg/edit'
 
-    height: 250,
-    rowsDefault: 10000,
-    fallbackBodySideMargin: 5,
-    fallbackBodyTopMargin: 4,
-    seeMoreDisabled: true,
-    fetchEmptyValueAsNull: false,
-    validationElementSelector: '.note-editor',
-    htmlPurificationDisabled: false,
+    height = 250
+    rowsDefault = 10000
+    fallbackBodySideMargin = 5
+    fallbackBodyTopMargin = 4
+    seeMoreDisabled = true
+    fetchEmptyValueAsNull = false
+    validationElementSelector = '.note-editor'
+    htmlPurificationDisabled = false
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    events = {
+        /** @this WysiwygFieldView */
+        'click .note-editable': function () {
+            this.fixPopovers();
+        },
+        /** @this WysiwygFieldView */
+        'focus .note-editable': function () {
+            this.$noteEditor.addClass('in-focus');
+        },
+        /** @this WysiwygFieldView */
+        'blur .note-editable': function () {
+            this.$noteEditor.removeClass('in-focus');
+        },
+    }
+
+    setup() {
+        super.setup();
 
         this.wait(
             Espo.loader.requirePromise('lib!Summernote')
@@ -142,30 +154,18 @@ export default Dep.extend(/** @lends Class# */{
                 this.$scrollable.off('scroll.' + this.cid + '-edit');
             }
         });
-    },
+    }
 
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         data.useIframe = this.useIframe;
         data.isPlain = this.isPlain();
 
         return data;
-    },
+    }
 
-    events: {
-        'click .note-editable': function () {
-            this.fixPopovers();
-        },
-        'focus .note-editable': function () {
-            this.$noteEditor.addClass('in-focus');
-        },
-        'blur .note-editable': function () {
-            this.$noteEditor.removeClass('in-focus');
-        },
-    },
-
-    setupToolbar: function () {
+    setupToolbar() {
         this.buttons = {};
 
         this.toolbar = this.params.toolbar || this.toolbar || [
@@ -208,27 +208,27 @@ export default Dep.extend(/** @lends Class# */{
 
             return button.render();
         };
-    },
+    }
 
-    isPlain: function () {
+    isPlain() {
         return this.model.has('isHtml') && !this.model.get('isHtml');
-    },
+    }
 
-    fixPopovers: function () {
+    fixPopovers() {
         $('body > .note-popover').removeClass('hidden');
-    },
+    }
 
-    getValueForDisplay: function () {
-        let value = Dep.prototype.getValueForDisplay.call(this);
+    getValueForDisplay() {
+        let value = super.getValueForDisplay();
 
         if (this.isPlain()) {
             return value;
         }
 
         return this.sanitizeHtml(value);
-    },
+    }
 
-    sanitizeHtml: function (value) {
+    sanitizeHtml(value) {
         if (value) {
             if (!this.htmlPurificationDisabled) {
                 value = this.getHelper().sanitizeHtml(value);
@@ -238,13 +238,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return value || '';
-    },
+    }
 
-    sanitizeHtmlLight: function (value) {
+    sanitizeHtmlLight(value) {
        return this.getHelper().moderateSanitizeHtml(value);
-    },
+    }
 
-    getValueForEdit: function () {
+    getValueForEdit() {
         let value = this.model.get(this.name) || '';
 
         if (this.htmlPurificationForEditDisabled) {
@@ -252,10 +252,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return this.sanitizeHtml(value);
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.isEditMode()) {
             this.$summernote = this.$el.find('.summernote');
@@ -279,9 +279,9 @@ export default Dep.extend(/** @lends Class# */{
         if (this.isReadMode()) {
             this.renderDetail();
         }
-    },
+    }
 
-    renderDetail: function () {
+    renderDetail() {
         if (this.model.has('isHtml') && !this.model.get('isHtml')) {
             this.$el.find('.plain').removeClass('hidden');
 
@@ -512,9 +512,9 @@ export default Dep.extend(/** @lends Class# */{
                 windowWidth = $(window).width();
             }
         });
-    },
+    }
 
-    enableWysiwygMode: function () {
+    enableWysiwygMode() {
         if (!this.$element) {
             return;
         }
@@ -574,7 +574,7 @@ export default Dep.extend(/** @lends Class# */{
                     }
                 },
             },
-            onCreateLink: function (link) {
+            onCreateLink(link) {
                 return link;
             },
             toolbar: toolbar,
@@ -614,9 +614,9 @@ export default Dep.extend(/** @lends Class# */{
         this.$area = this.$el.find('.note-editing-area');
 
         this.$noteEditor = this.$el.find('> .note-editor');
-    },
+    }
 
-    focusOnInlineEdit: function () {
+    focusOnInlineEdit() {
         if (this.$noteEditor)  {
             this.$summernote.summernote('focus');
 
@@ -624,9 +624,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         Dep.prototype.focusOnInlineEdit.call(this);
-    },
+    }
 
-    uploadInlineAttachment: function (file) {
+    uploadInlineAttachment(file) {
         return new Promise((resolve, reject) => {
             this.getModelFactory().create('Attachment', attachment => {
                 let fileReader = new FileReader();
@@ -655,22 +655,22 @@ export default Dep.extend(/** @lends Class# */{
                 fileReader.readAsDataURL(file);
             });
         });
-    },
+    }
 
-    destroySummernote: function () {
+    destroySummernote() {
         if (this.summernoteIsInitialized && this.$summernote) {
             this.$summernote.summernote('destroy');
             this.summernoteIsInitialized = false;
         }
-    },
+    }
 
-    plainToHtml: function (html) {
+    plainToHtml(html) {
         html = html || '';
 
         return html.replace(/\n/g, '<br>');
-    },
+    }
 
-    htmlToPlain: function (text) {
+    htmlToPlain(text) {
         text = text || '';
 
         let value = text
@@ -685,9 +685,9 @@ export default Dep.extend(/** @lends Class# */{
         value =  $div.text();
 
         return value;
-    },
+    }
 
-    disableWysiwygMode: function () {
+    disableWysiwygMode() {
         this.destroySummernote();
 
         this.$noteEditor = null;
@@ -701,9 +701,9 @@ export default Dep.extend(/** @lends Class# */{
         if (this.$scrollable) {
             this.$scrollable.off('scroll.' + this.cid + '-edit');
         }
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let data = {};
 
         if (!this.model.has('isHtml') || this.model.get('isHtml')) {
@@ -742,9 +742,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    onScrollEdit: function (e) {
+    onScrollEdit(e) {
         let $target = $(e.target);
         let toolbarHeight = this.$toolbar.height();
         let toolbarWidth = this.$toolbar.parent().width();
@@ -803,15 +803,15 @@ export default Dep.extend(/** @lends Class# */{
         this.$area.css({
             marginTop: '',
         });
-    },
+    }
 
-    attachFile: function () {
+    attachFile() {
         let $form = this.$el.closest('.record');
 
         $form.find('.field[data-name="' + this.params.attachmentField + '"] input.file').click();
-    },
+    }
 
-    initEspoPlugin: function () {
+    initEspoPlugin() {
         let langSets = this.getLanguage().get('Global', 'sets', 'summernote') || {
             image: {},
             link: {},
@@ -844,7 +844,7 @@ export default Dep.extend(/** @lends Class# */{
                     let button = ui.button({
                         contents: options.espoImage.icon,
                         tooltip: options.espoImage.tooltip,
-                        click: function () {
+                        click() {
                             context.invoke('espoImage.show');
                         },
                     });
@@ -939,7 +939,7 @@ export default Dep.extend(/** @lends Class# */{
                     let button = ui.button({
                         contents: options.espoLink.icon,
                         tooltip: options.espoLink.tooltip + ' (' + (isMacLike ? 'CMD+K': 'CTRL+K') +')',
-                        click: function () {
+                        click() {
                             context.invoke('espoLink.show');
                         },
                     });
@@ -1087,9 +1087,9 @@ export default Dep.extend(/** @lends Class# */{
                 };
             },
         });
-    },
+    }
 
-    htmlHasColors: function (string) {
+    htmlHasColors(string) {
         if (~string.indexOf('background-color:')) {
             return true;
         }
@@ -1103,5 +1103,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
-});
+    }
+}
+
+export default WysiwygFieldView;
