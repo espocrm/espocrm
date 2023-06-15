@@ -26,23 +26,124 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'views/fields/varchar';
+import VarcharFieldView from 'views/fields/varchar';
 
-/**
- * @class Class
- * @extends module:views/fields/varchar
- */
-export default Dep.extend(/** @lends Class# */{
+class EmailFieldView extends VarcharFieldView {
 
-    type: 'email',
+    type = 'email'
 
-    editTemplate: 'fields/email/edit',
-    detailTemplate: 'fields/email/detail',
-    listTemplate: 'fields/email/list',
+    editTemplate = 'fields/email/edit'
+    detailTemplate = 'fields/email/detail'
+    listTemplate = 'fields/email/list'
 
-    validations: ['required', 'emailData'],
+    validations = ['required', 'emailData']
 
-    validateEmailData: function () {
+    events = {
+        /** @this EmailFieldView */
+        'click [data-action="mailTo"]': function (e) {
+            this.mailTo($(e.currentTarget).data('email-address'));
+        },
+        /** @this EmailFieldView */
+        'click [data-action="switchEmailProperty"]': function (e) {
+            let $target = $(e.currentTarget);
+            let $block = $(e.currentTarget).closest('div.email-address-block');
+            let property = $target.data('property-type');
+
+            if (property === 'primary') {
+                if (!$target.hasClass('active')) {
+                    if ($block.find('input.email-address').val() !== '') {
+                        this.$el.find('button.email-property[data-property-type="primary"]')
+                            .removeClass('active').children().addClass('text-muted');
+
+                        $target.addClass('active').children().removeClass('text-muted');
+                    }
+                }
+            } else {
+                if ($target.hasClass('active')) {
+                    $target.removeClass('active').children().addClass('text-muted');
+                } else {
+                    $target.addClass('active').children().removeClass('text-muted');
+                }
+            }
+
+            this.trigger('change');
+        },
+        /** @this EmailFieldView */
+        'click [data-action="removeEmailAddress"]': function (e) {
+            let $block = $(e.currentTarget).closest('div.email-address-block');
+
+            this.removeEmailAddress($block);
+
+            let $last = this.$el.find('.email-address').last();
+
+            if ($last.length) {
+                $last[0].focus({preventScroll: true});
+            }
+        },
+        /** @this EmailFieldView */
+        'change input.email-address': function (e) {
+            let $input = $(e.currentTarget);
+            let $block = $input.closest('div.email-address-block');
+
+            if (this._itemJustRemoved) {
+                return;
+            }
+
+            if ($input.val() === '' && $block.length) {
+                this.removeEmailAddress($block);
+            }
+            else {
+                this.trigger('change');
+            }
+
+            this.trigger('change');
+
+            this.manageAddButton();
+        },
+        /** @this EmailFieldView */
+        'keypress input.email-address': function () {
+            this.manageAddButton();
+        },
+        /** @this EmailFieldView */
+        'paste input.email-address': function () {
+            setTimeout(() => this.manageAddButton(), 10);
+        },
+        /** @this EmailFieldView */
+        'click [data-action="addEmailAddress"]': function () {
+            this.addEmailAddress();
+        },
+        /** @this EmailFieldView */
+        'keydown input.email-address': function (e) {
+            let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+            let $target = $(e.currentTarget);
+
+            if (key === 'Enter') {
+                if (!this.$el.find('[data-action="addEmailAddress"]').hasClass('disabled')) {
+                    this.addEmailAddress();
+
+                    e.stopPropagation();
+                }
+
+                return;
+            }
+
+            if (key === 'Backspace' && $target.val() === '') {
+                let $block = $target.closest('div.email-address-block');
+
+                this._itemJustRemoved = true;
+                setTimeout(() => this._itemJustRemoved = false, 100);
+
+                e.stopPropagation();
+
+                this.removeEmailAddress($block);
+
+                setTimeout(() => this.focusOnLast(true), 50);
+            }
+        },
+    }
+
+    validateEmailData() {
         let data = this.model.get(this.dataFieldName);
 
         if (!data || !data.length) {
@@ -94,9 +195,9 @@ export default Dep.extend(/** @lends Class# */{
         if (notValid) {
             return true;
         }
-    },
+    }
 
-    validateRequired: function () {
+    validateRequired() {
         if (this.isRequired()) {
             if (!this.model.get(this.name)) {
                 let msg = this.translate('fieldIsRequired', 'messages')
@@ -107,9 +208,9 @@ export default Dep.extend(/** @lends Class# */{
                 return true;
             }
         }
-    },
+    }
 
-    data: function () {
+    data() {
         let emailAddressData;
 
         if (this.mode === this.MODE_EDIT) {
@@ -157,9 +258,10 @@ export default Dep.extend(/** @lends Class# */{
             });
         }
 
-        let data = _.extend({
+        let data = {
+            ...super.data(),
             emailAddressData: emailAddressData,
-        }, Dep.prototype.data.call(this));
+        };
 
         if (this.isReadMode()) {
             data.isOptedOut = this.model.get(this.isOptedOutFieldName);
@@ -175,114 +277,19 @@ export default Dep.extend(/** @lends Class# */{
         data.itemMaxLength = this.itemMaxLength;
 
         return data;
-    },
+    }
 
-    getAutocompleteMaxCount: function () {
+    getAutocompleteMaxCount() {
         if (this.autocompleteMaxCount) {
             return this.autocompleteMaxCount;
         }
 
         return this.getConfig().get('recordsPerPage');
-    },
+    }
 
-    events: {
-        'click [data-action="mailTo"]': function (e) {
-            this.mailTo($(e.currentTarget).data('email-address'));
-        },
-        'click [data-action="switchEmailProperty"]': function (e) {
-            let $target = $(e.currentTarget);
-            let $block = $(e.currentTarget).closest('div.email-address-block');
-            let property = $target.data('property-type');
 
-            if (property === 'primary') {
-                if (!$target.hasClass('active')) {
-                    if ($block.find('input.email-address').val() !== '') {
-                        this.$el.find('button.email-property[data-property-type="primary"]')
-                            .removeClass('active').children().addClass('text-muted');
 
-                        $target.addClass('active').children().removeClass('text-muted');
-                    }
-                }
-            } else {
-                if ($target.hasClass('active')) {
-                    $target.removeClass('active').children().addClass('text-muted');
-                } else {
-                    $target.addClass('active').children().removeClass('text-muted');
-                }
-            }
-
-            this.trigger('change');
-        },
-        'click [data-action="removeEmailAddress"]': function (e) {
-            let $block = $(e.currentTarget).closest('div.email-address-block');
-
-            this.removeEmailAddress($block);
-
-            let $last = this.$el.find('.email-address').last();
-
-            if ($last.length) {
-                $last[0].focus({preventScroll: true});
-            }
-        },
-        'change input.email-address': function (e) {
-            let $input = $(e.currentTarget);
-            let $block = $input.closest('div.email-address-block');
-
-            if (this._itemJustRemoved) {
-                return;
-            }
-
-            if ($input.val() === '' && $block.length) {
-                this.removeEmailAddress($block);
-            }
-            else {
-                this.trigger('change');
-            }
-
-            this.trigger('change');
-
-            this.manageAddButton();
-        },
-        'keypress input.email-address': function () {
-            this.manageAddButton();
-        },
-        'paste input.email-address': function () {
-            setTimeout(() => this.manageAddButton(), 10);
-        },
-        'click [data-action="addEmailAddress"]': function () {
-            this.addEmailAddress();
-        },
-        'keydown input.email-address': function (e) {
-            let key = Espo.Utils.getKeyFromKeyEvent(e);
-
-            let $target = $(e.currentTarget);
-
-            if (key === 'Enter') {
-                if (!this.$el.find('[data-action="addEmailAddress"]').hasClass('disabled')) {
-                    this.addEmailAddress();
-
-                    e.stopPropagation();
-                }
-
-                return;
-            }
-
-            if (key === 'Backspace' && $target.val() === '') {
-                let $block = $target.closest('div.email-address-block');
-
-                this._itemJustRemoved = true;
-                setTimeout(() => this._itemJustRemoved = false, 100);
-
-                e.stopPropagation();
-
-                this.removeEmailAddress($block);
-
-                setTimeout(() => this.focusOnLast(true), 50);
-            }
-        },
-    },
-
-    focusOnLast: function (cursorAtEnd) {
+    focusOnLast(cursorAtEnd) {
         let $item = this.$el.find('input.form-control').last();
 
         $item.focus();
@@ -291,9 +298,9 @@ export default Dep.extend(/** @lends Class# */{
             // Not supported for email inputs.
             // $item[0].setSelectionRange($item[0].value.length, $item[0].value.length);
         }
-    },
+    }
 
-    removeEmailAddress: function ($block) {
+    removeEmailAddress($block) {
         if ($block.parent().children().length === 1) {
             $block.find('input.email-address').val('');
         } else {
@@ -301,9 +308,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.trigger('change');
-    },
+    }
 
-    addEmailAddress: function () {
+    addEmailAddress() {
         let data = Espo.Utils.cloneDeep(this.fetchEmailAddressData());
 
         let o = {
@@ -320,9 +327,9 @@ export default Dep.extend(/** @lends Class# */{
 
         this.reRender()
             .then(() => this.focusOnLast());
-    },
+    }
 
-    removeEmailAddressBlock: function ($block) {
+    removeEmailAddressBlock($block) {
         let changePrimary = false;
 
         if ($block.find('button[data-property-type="primary"]').hasClass('active')) {
@@ -338,10 +345,10 @@ export default Dep.extend(/** @lends Class# */{
 
         this.manageButtonsVisibility();
         this.manageAddButton();
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         this.manageButtonsVisibility();
         this.manageAddButton();
@@ -385,9 +392,9 @@ export default Dep.extend(/** @lends Class# */{
                 },
             });
         }
-    },
+    }
 
-    manageAddButton: function () {
+    manageAddButton() {
         let $input = this.$el.find('input.email-address');
         let c = 0;
 
@@ -408,9 +415,9 @@ export default Dep.extend(/** @lends Class# */{
         this.$el.find('[data-action="addEmailAddress"]')
             .addClass('disabled')
             .attr('disabled', 'disabled');
-    },
+    }
 
-    manageButtonsVisibility: function () {
+    manageButtonsVisibility() {
         let $primary = this.$el.find('button[data-property-type="primary"]');
         let $remove = this.$el.find('button[data-action="removeEmailAddress"]');
 
@@ -421,9 +428,9 @@ export default Dep.extend(/** @lends Class# */{
             $primary.addClass('hidden');
             $remove.addClass('hidden');
         }
-    },
+    }
 
-    mailTo: function (emailAddress) {
+    mailTo(emailAddress) {
         let attributes = {
             status: 'Draft',
             to: emailAddress
@@ -507,14 +514,14 @@ export default Dep.extend(/** @lends Class# */{
             view.render();
             view.notify(false);
         });
-    },
+    }
 
-    checkParentTypeAvailability: function (parentType) {
+    checkParentTypeAvailability(parentType) {
         return ~(this.getMetadata()
             .get(['entityDefs', 'Email', 'fields', 'parent', 'entityList']) || []).indexOf(parentType);
-    },
+    }
 
-    setup: function () {
+    setup() {
         this.dataFieldName = this.name + 'Data';
         this.isOptedOutFieldName = this.name + 'IsOptedOut';
         this.isInvalidFieldName = this.name + 'IsInvalid';
@@ -525,9 +532,9 @@ export default Dep.extend(/** @lends Class# */{
 
         this.itemMaxLength = this.getMetadata()
             .get(['entityDefs', 'EmailAddress', 'fields', 'name', 'maxLength']) || 255;
-    },
+    }
 
-    fetchEmailAddressData: function () {
+    fetchEmailAddressData() {
         let data = [];
 
         let $list = this.$el.find('div.email-address-block');
@@ -553,10 +560,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
 
-    fetch: function () {
+    fetch() {
         let data = {};
 
         let addressData = this.fetchEmailAddressData() || [];
@@ -597,5 +604,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
-});
+    }
+}
+
+export default EmailFieldView;
