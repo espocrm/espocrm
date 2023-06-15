@@ -452,9 +452,7 @@ class BaseFieldView extends View {
         $cell.removeClass('hidden-cell');
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     data() {
         let data = {
             scope: this.model.name,
@@ -655,9 +653,7 @@ class BaseFieldView extends View {
         return this.prepare();
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     init() {
         this.validations = Espo.Utils.clone(this.validations);
 
@@ -860,9 +856,7 @@ class BaseFieldView extends View {
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     setupFinal() {
         this.wait(
             this._onModeSet()
@@ -1054,9 +1048,7 @@ class BaseFieldView extends View {
         }
     }
 
-    /**
-     * @inheritDoc
-     */
+    /** @inheritDoc */
     afterRender() {
         if (this.isEditMode() || this.isSearchMode()) {
             this.initElement();

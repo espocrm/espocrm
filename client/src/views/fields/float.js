@@ -28,30 +28,24 @@
 
 /** @module views/fields/float */
 
-import Dep from 'views/fields/int';
+import IntFieldView from 'views/fields/int';
 
 /**
  * A float field.
- *
- * @class
- * @name Class
- * @extends module:views/fields/int
  */
-export default Dep.extend(/** @lends Class# */{
+class FloatFieldView extends IntFieldView {
 
-    type: 'float',
+    type = 'float'
 
-    editTemplate: 'fields/float/edit',
+    editTemplate = 'fields/float/edit'
 
-    decimalMark: '.',
-    validations: ['required', 'float', 'range'],
-    decimalPlacesRawValue: 10,
+    decimalMark = '.'
+    validations = ['required', 'float', 'range']
+    decimalPlacesRawValue = 10
 
-    /**
-     * @inheritDoc
-     */
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    /** @inheritDoc */
+    setup() {
+        super.setup();
 
         if (this.getPreferences().has('decimalMark')) {
             this.decimalMark = this.getPreferences().get('decimalMark');
@@ -67,12 +61,10 @@ export default Dep.extend(/** @lends Class# */{
         if (this.decimalMark === this.thousandSeparator) {
             this.thousandSeparator = '';
         }
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    setupAutoNumericOptions: function () {
+    /** @inheritDoc */
+    setupAutoNumericOptions() {
         this.autoNumericOptions = {
             digitGroupSeparator: this.thousandSeparator || '',
             decimalCharacter: this.decimalMark,
@@ -84,28 +76,28 @@ export default Dep.extend(/** @lends Class# */{
             showWarnings: false,
             formulaMode: true,
         };
-    },
+    }
 
-    getValueForDisplay: function () {
-        var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
+    getValueForDisplay() {
+        let value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
 
         return this.formatNumber(value);
-    },
+    }
 
-    formatNumber: function (value) {
+    formatNumber(value) {
         if (this.disableFormatting) {
             return value;
         }
 
         return this.formatNumberDetail(value);
-    },
+    }
 
-    formatNumberDetail: function (value) {
+    formatNumberDetail(value) {
         if (value === null) {
             return '';
         }
 
-        var decimalPlaces = this.params.decimalPlaces;
+        let decimalPlaces = this.params.decimalPlaces;
 
         if (decimalPlaces === 0) {
             value = Math.round(value);
@@ -116,7 +108,7 @@ export default Dep.extend(/** @lends Class# */{
             );
         }
 
-        var parts = value.toString().split(".");
+        let parts = value.toString().split(".");
 
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
 
@@ -142,24 +134,24 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return parts.join(this.decimalMark);
-    },
+    }
 
-    setupMaxLength: function () {
-    },
+    setupMaxLength() {}
 
-    validateFloat: function () {
-        var value = this.model.get(this.name);
+    validateFloat() {
+        let value = this.model.get(this.name);
 
         if (isNaN(value)) {
-            var msg = this.translate('fieldShouldBeFloat', 'messages').replace('{field}', this.getLabelText());
+            let msg = this.translate('fieldShouldBeFloat', 'messages')
+                .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);
 
             return true;
         }
-    },
+    }
 
-    parse: function (value) {
+    parse(value) {
         value = (value !== '') ? value : null;
 
         if (value === null) {
@@ -173,9 +165,9 @@ export default Dep.extend(/** @lends Class# */{
             .join('.');
 
         return parseFloat(value);
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let value = this.$element.val();
         value = this.parse(value);
 
@@ -183,5 +175,7 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = value;
 
         return data;
-    },
-});
+    }
+}
+
+export default FloatFieldView;

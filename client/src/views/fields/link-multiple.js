@@ -28,23 +28,20 @@
 
 /** @module views/fields/link-multiple */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
 
 /**
  * A link-multiple field (for has-many relations).
- *
- * @class Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
+class LinkMultipleFieldView extends BaseFieldView {
 
-    type: 'linkMultiple',
+    type = 'linkMultiple'
 
-    listTemplate: 'fields/link-multiple/list',
-    detailTemplate: 'fields/link-multiple/detail',
-    editTemplate: 'fields/link-multiple/edit',
-    searchTemplate: 'fields/link-multiple/search',
+    listTemplate = 'fields/link-multiple/list'
+    detailTemplate = 'fields/link-multiple/detail'
+    editTemplate = 'fields/link-multiple/edit'
+    searchTemplate = 'fields/link-multiple/search'
 
     /**
      * A name-hash attribute name.
@@ -52,7 +49,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string}
      */
-    nameHashName: null,
+    nameHashName = null
 
     /**
      * A IDs attribute name.
@@ -60,19 +57,19 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string}
      */
-    idsName: null,
+    idsName = null
 
     /**
      * @protected
      * @type {Object.<string,string>|null}
      */
-    nameHash: null,
+    nameHash = null
 
     /**
      * @protected
      * @type {string[]|null}
      */
-    ids: null,
+    ids = null
 
     /**
      * A foreign entity type.
@@ -80,7 +77,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string}
      */
-    foreignScope: null,
+    foreignScope = null
 
     /**
      * Autocomplete disabled.
@@ -88,7 +85,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    autocompleteDisabled: false,
+    autocompleteDisabled = false
 
     /**
      * A select-record view.
@@ -96,7 +93,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string}
      */
-    selectRecordsView: 'views/modals/select-records',
+    selectRecordsView = 'views/modals/select-records'
 
     /**
      * Create disabled.
@@ -104,7 +101,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    createDisabled: false,
+    createDisabled = false
 
     /**
      * Force create button even is disabled in clientDefs > relationshipPanels.
@@ -112,13 +109,13 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    forceCreateButton: false,
+    forceCreateButton = false
 
     /**
      * @protected
      * @type {boolean}
      */
-    sortable: false,
+    sortable = false
 
     /**
      * A search type list.
@@ -126,13 +123,13 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]}
      */
-    searchTypeList: [
+    searchTypeList = [
         'anyOf',
         'isEmpty',
         'isNotEmpty',
         'noneOf',
         'allOf',
-    ],
+    ]
 
     /**
      * A primary filter list that will be available when selecting a record.
@@ -140,7 +137,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]|null}
      */
-    selectFilterList: null,
+    selectFilterList = null
 
     /**
      * A select bool filter list.
@@ -148,7 +145,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]|null}
      */
-    selectBoolFilterList: null,
+    selectBoolFilterList = null
 
     /**
      * A select primary filter.
@@ -156,7 +153,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string|null}
      */
-    selectPrimaryFilterName: null,
+    selectPrimaryFilterName = null
 
     /**
      * An autocomplete max record number.
@@ -164,7 +161,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {number|null}
      */
-    autocompleteMaxCount: null,
+    autocompleteMaxCount = null
 
     /**
      * Select all attributes.
@@ -172,22 +169,17 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    forceSelectAllAttributes: false,
+    forceSelectAllAttributes = false
 
     /**
      * @protected
      * @type {string}
      */
-    iconHtml: '',
+    iconHtml = ''
 
-    /**
-     * @inheritDoc
-     */
-    events: {
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this module:views/fields/link-multiple
-         */
+    /** @inheritDoc */
+    events = {
+        /** @this LinkMultipleFieldView */
         'auxclick a[href]:not([role="button"])': function (e) {
             if (!this.isReadMode()) {
                 return;
@@ -210,33 +202,32 @@ export default Dep.extend(/** @lends Class# */{
 
             this.quickView(id);
         },
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    data: function () {
+    /** @inheritDoc */
+    data() {
         let ids = this.model.get(this.idsName);
 
-        return _.extend({
+        return {
+            ...super.data(),
             idValues: this.model.get(this.idsName),
             idValuesString: ids ? ids.join(',') : '',
             nameHash: this.model.get(this.nameHashName),
             foreignScope: this.foreignScope,
             valueIsSet: this.model.has(this.idsName),
-        }, Dep.prototype.data.call(this));
-    },
+        };
+    }
 
     /**
      * Get advanced filters (field filters) to be applied when select a record.
      * Can be extended.
      *
      * @protected
-     * @return {Object.<string,module:search-manager~advancedFilter>|null}
+     * @return {Object.<string, module:search-manager~advancedFilter>|null}
      */
-    getSelectFilters: function () {
+    getSelectFilters() {
         return null;
-    },
+    }
 
     /**
      * Get a select bool filter list. Applied when select a record.
@@ -245,9 +236,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {string[]|null}
      */
-    getSelectBoolFilterList: function () {
+    getSelectBoolFilterList() {
         return this.selectBoolFilterList;
-    },
+    }
 
     /**
      * Get a select primary filter. Applied when select a record.
@@ -256,9 +247,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {string|null}
      */
-    getSelectPrimaryFilterName: function () {
+    getSelectPrimaryFilterName() {
         return this.selectPrimaryFilterName;
-    },
+    }
 
     /**
      * Get a primary filter list that will be available when selecting a record.
@@ -266,9 +257,9 @@ export default Dep.extend(/** @lends Class# */{
      *
      * @return {string[]|null}
      */
-    getSelectFilterList: function () {
+    getSelectFilterList() {
         return this.selectFilterList;
-    },
+    }
 
     /**
      * Attributes to pass to a model when creating a new record.
@@ -276,7 +267,7 @@ export default Dep.extend(/** @lends Class# */{
      *
      * @return {Object.<string, *>|null}
      */
-    getCreateAttributes: function () {
+    getCreateAttributes() {
         let attributeMap = this.getMetadata()
             .get(['clientDefs', this.entityType, 'relationshipPanels', this.name, 'createAttributeMap']) || {};
 
@@ -285,12 +276,10 @@ export default Dep.extend(/** @lends Class# */{
         Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
 
         return attributes;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    setup: function () {
+    /** @inheritDoc */
+    setup() {
         this.nameHashName = this.name + 'Names';
         this.idsName = this.name + 'Ids';
 
@@ -333,15 +322,15 @@ export default Dep.extend(/** @lends Class# */{
                 this.$element.get(0).focus({preventScroll: true});
             };
         }
-    },
+    }
 
     /**
      * Copy values from a model to view properties.
      */
-    copyValuesFromModel: function () {
+    copyValuesFromModel() {
         this.ids = Espo.Utils.clone(this.model.get(this.idsName) || []);
         this.nameHash = Espo.Utils.clone(this.model.get(this.nameHashName) || {});
-    },
+    }
 
     /**
      * Handle a search type.
@@ -349,19 +338,17 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @param {string} type A type.
      */
-    handleSearchType: function (type) {
+    handleSearchType(type) {
         if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
             this.$el.find('div.link-group-container').removeClass('hidden');
         }
         else {
             this.$el.find('div.link-group-container').addClass('hidden');
         }
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    setupSearch: function () {
+    /** @inheritDoc */
+    setupSearch() {
         this.events = _.extend({
             'change select.search-type': (e) => {
                 let type = $(e.currentTarget).val();
@@ -369,7 +356,7 @@ export default Dep.extend(/** @lends Class# */{
                 this.handleSearchType(type);
             },
         }, this.events || {});
-    },
+    }
 
     /**
      * Get an autocomplete max record number. Can be extended.
@@ -377,13 +364,13 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {number}
      */
-    getAutocompleteMaxCount: function () {
+    getAutocompleteMaxCount() {
         if (this.autocompleteMaxCount) {
             return this.autocompleteMaxCount;
         }
 
         return this.getConfig().get('recordsPerPage');
-    },
+    }
 
     /**
      * Compose an autocomplete URL. Can be extended.
@@ -391,7 +378,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {string}
      */
-    getAutocompleteUrl: function () {
+    getAutocompleteUrl() {
         let url = this.foreignScope + '?&maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.forceSelectAllAttributes) {
@@ -424,12 +411,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return url;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    afterRender: function () {
+    /** @inheritDoc */
+    afterRender() {
         if (this.isEditMode() || this.isSearchMode()) {
             this.$element = this.$el.find('input.main-element');
 
@@ -521,18 +506,18 @@ export default Dep.extend(/** @lends Class# */{
                 });
             }
         }
-    },
+    }
 
     /**
      * Render items.
      *
      * @protected
      */
-    renderLinks: function () {
+    renderLinks() {
         this.ids.forEach(id => {
             this.addLinkHtml(id, this.nameHash[id]);
         });
-    },
+    }
 
     /**
      * Delete an item.
@@ -540,7 +525,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @param {string} id An ID.
      */
-    deleteLink: function (id) {
+    deleteLink(id) {
         this.trigger('delete-link', id);
         this.trigger('delete-link:' + id);
 
@@ -556,7 +541,7 @@ export default Dep.extend(/** @lends Class# */{
 
         this.afterDeleteLink(id);
         this.trigger('change');
-    },
+    }
 
     /**
      * Add an item.
@@ -565,7 +550,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} id An ID.
      * @param {string} name A name.
      */
-    addLink: function (id, name) {
+    addLink(id, name) {
         if (!~this.ids.indexOf(id)) {
             this.ids.push(id);
 
@@ -579,27 +564,27 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.trigger('change');
-    },
+    }
 
     /**
      * @protected
      * @param {string} id An ID.
      */
-    afterDeleteLink: function (id) {},
+    afterDeleteLink(id) {}
 
     /**
      * @protected
      * @param {string} id An ID.
      */
-    afterAddLink: function (id) {},
+    afterAddLink(id) {}
 
     /**
      * @protected
      * @param {string} id An ID.
      */
-    deleteLinkHtml: function (id) {
+    deleteLinkHtml(id) {
         this.$el.find('.link-' + id).remove();
-    },
+    }
 
     /**
      * Add an item for edit mode.
@@ -609,7 +594,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A name.
      * @return {JQuery|null}
      */
-    addLinkHtml: function (id, name) {
+    addLinkHtml(id, name) {
         // Do not use the `html` method to avoid XSS.
 
         name = name || id;
@@ -638,15 +623,15 @@ export default Dep.extend(/** @lends Class# */{
         $container.append($el);
 
         return $el;
-    },
+    }
 
     /**
      * @param {string} id An ID.
      * @return {string|null}
      */
-    getIconHtml: function (id) {
+    getIconHtml(id) {
         return this.iconHtml;
-    },
+    }
 
     /**
      * Get an item HTML for detail mode.
@@ -654,7 +639,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} id An ID.
      * @return {string}
      */
-    getDetailLinkHtml: function (id) {
+    getDetailLinkHtml(id) {
         // Do not use the `html` method to avoid XSS.
 
         let name = this.nameHash[id] || id;
@@ -676,21 +661,19 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return $a.get(0).outerHTML;
-    },
+    }
 
     /**
      * @protected
      * @param {string} id An ID.
      * @return {string}
      */
-    getUrl: function (id) {
+    getUrl(id) {
         return '#' + this.foreignScope + '/view/' + id;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    getValueForDisplay: function () {
+    /** @inheritDoc */
+    getValueForDisplay() {
         if (!this.isDetailMode() && !this.isListMode()) {
             return null;
         }
@@ -712,12 +695,10 @@ export default Dep.extend(/** @lends Class# */{
                 .wrap('<div />').parent().html()
             )
             .join('');
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    validateRequired: function () {
+    /** @inheritDoc */
+    validateRequired() {
         if (!this.isRequired()) {
             return false;
         }
@@ -734,24 +715,20 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    fetch: function () {
+    /** @inheritDoc */
+    fetch() {
         let data = {};
 
         data[this.idsName] = Espo.Utils.clone(this.ids);
         data[this.nameHashName] = Espo.Utils.clone(this.nameHash);
 
         return data;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    fetchFromDom: function () {
+    /** @inheritDoc */
+    fetchFromDom() {
         this.ids = [];
 
         this.$el.find('.link-container').children().each((i, li) => {
@@ -763,12 +740,10 @@ export default Dep.extend(/** @lends Class# */{
 
             this.ids.push(id);
         });
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    fetchSearch: function () {
+    /** @inheritDoc */
+    fetchSearch() {
         let type = this.$el.find('select.search-type').val();
         let idList = this.ids || [];
 
@@ -848,22 +823,20 @@ export default Dep.extend(/** @lends Class# */{
 
             return data;
         }
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    getSearchType: function () {
+    /** @inheritDoc */
+    getSearchType() {
         return this.getSearchParamsData().type ||
             this.searchParams.typeFront ||
             this.searchParams.type || 'anyOf';
-    },
+    }
 
     /**
      * @protected
      * @param {string} id
      */
-    quickView: function (id) {
+    quickView(id) {
         let entityType = this.foreignScope;
 
         let helper = new RecordModal(this.getMetadata(), this.getAcl());
@@ -872,12 +845,12 @@ export default Dep.extend(/** @lends Class# */{
             id: id,
             scope: entityType,
         });
-    },
+    }
 
     /**
      * @protected
      */
-    actionSelect: function () {
+    actionSelect() {
         Espo.Ui.notify(' ... ');
 
         /** @var {Object.<string, *>} */
@@ -971,5 +944,7 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         });
-    },
-});
+    }
+}
+
+export default LinkMultipleFieldView;

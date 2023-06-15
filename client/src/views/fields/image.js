@@ -26,18 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'views/fields/file';
+import FileFieldView from 'views/fields/file';
 
-/**
- * @class Class
- * @extends module:views/fields/file
- */
-export default Dep.extend(/** @lends Class# */{
+class ImageFieldView extends FileFieldView {
 
-    type: 'image',
+    type = 'image'
 
-    showPreview: true,
-    accept: ['image/*'],
-    defaultType: 'image/jpeg',
-    previewSize: 'small',
-});
+    showPreview = true
+    accept = ['image/*']
+    defaultType = 'image/jpeg'
+    previewSize = 'small'
+}
+
+export default ImageFieldView;

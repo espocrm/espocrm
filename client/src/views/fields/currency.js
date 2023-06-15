@@ -28,48 +28,45 @@
 
 /** @module views/fields/currency */
 
-import Dep from 'views/fields/float';
+import FloatFieldView from 'views/fields/float';
 import Select from 'ui/select';
 
 /**
- * @class
- * @name Class
- * @extends module:views/fields/float
+ * A currency field.
  */
-export default Dep.extend(/** @lends Class# */{
+class CurrencyFieldView extends FloatFieldView {
 
-    type: 'currency',
+    type = 'currency'
 
-    editTemplate: 'fields/currency/edit',
-    detailTemplate: 'fields/currency/detail',
-    detailTemplate1: 'fields/currency/detail-1',
-    detailTemplate2: 'fields/currency/detail-2',
-    detailTemplate3: 'fields/currency/detail-3',
-    listTemplate: 'fields/currency/list',
-    listTemplate1: 'fields/currency/list-1',
-    listTemplate2: 'fields/currency/list-2',
-    listTemplate3: 'fields/currency/list-3',
-    detailTemplateNoCurrency: 'fields/currency/detail-no-currency',
+    editTemplate = 'fields/currency/edit'
+    detailTemplate = 'fields/currency/detail'
+    detailTemplate1 = 'fields/currency/detail-1'
+    detailTemplate2 = 'fields/currency/detail-2'
+    detailTemplate3 = 'fields/currency/detail-3'
+    listTemplate = 'fields/currency/list'
+    listTemplate1 = 'fields/currency/list-1'
+    listTemplate2 = 'fields/currency/list-2'
+    listTemplate3 = 'fields/currency/list-3'
+    detailTemplateNoCurrency = 'fields/currency/detail-no-currency'
 
-    maxDecimalPlaces: 3,
+    maxDecimalPlaces = 3
 
-    validations: [
+    validations = [
         'required',
         'number',
         'range',
-    ],
+    ]
 
-    /**
-     * @inheritDoc
-     */
-    data: function () {
+    /** @inheritDoc */
+    data() {
         let currencyValue = this.model.get(this.currencyFieldName) ||
             this.getPreferences().get('defaultCurrency') ||
             this.getConfig().get('defaultCurrency');
 
         let multipleCurrencies = !this.isSingleCurrency || currencyValue !== this.defaultCurrency;
 
-        return _.extend({
+        return {
+            ...super.data(),
             currencyFieldName: this.currencyFieldName,
             currencyValue: currencyValue,
             currencyOptions: this.currencyOptions,
@@ -77,14 +74,12 @@ export default Dep.extend(/** @lends Class# */{
             currencySymbol: this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || '',
             multipleCurrencies: multipleCurrencies,
             defaultCurrency: this.defaultCurrency,
-        }, Dep.prototype.data.call(this));
-    },
+        };
+    }
 
-    /**
-     * @inheritDoc
-     */
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    /** @inheritDoc */
+    setup() {
+        super.setup();
 
         this.currencyFieldName = this.name + 'Currency';
         this.defaultCurrency = this.getConfig().get('defaultCurrency');
@@ -104,12 +99,10 @@ export default Dep.extend(/** @lends Class# */{
             this.currencyList = Espo.Utils.clone(this.currencyList);
             this.currencyList.push(currencyValue);
         }
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    setupAutoNumericOptions: function () {
+    /** @inheritDoc */
+    setupAutoNumericOptions() {
         this.autoNumericOptions = {
             digitGroupSeparator: this.thousandSeparator || '',
             decimalCharacter: this.decimalMark,
@@ -126,13 +119,13 @@ export default Dep.extend(/** @lends Class# */{
             this.autoNumericOptions.decimalPlacesRawValue = this.decimalPlacesRawValue;
             this.autoNumericOptions.allowDecimalPadding = false;
         }
-    },
+    }
 
-    getCurrencyFormat: function () {
+    getCurrencyFormat() {
         return this.getConfig().get('currencyFormat') || 1;
-    },
+    }
 
-    _getTemplateName: function () {
+    _getTemplateName() {
         if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
             var prop;
 
@@ -152,14 +145,14 @@ export default Dep.extend(/** @lends Class# */{
             }
         }
 
-        return Dep.prototype._getTemplateName.call(this);
-    },
+        return super._getTemplateName();
+    }
 
-    formatNumber: function (value) {
+    formatNumber(value) {
         return this.formatNumberDetail(value);
-    },
+    }
 
-    formatNumberDetail: function (value) {
+    formatNumberDetail(value) {
         if (value !== null) {
             let currencyDecimalPlaces = this.decimalPlaces;
 
@@ -206,9 +199,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return '';
-    },
+    }
 
-    parse: function (value) {
+    parse(value) {
         value = (value !== '') ? value : null;
 
         if (value === null) {
@@ -223,10 +216,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return value;
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.mode === this.MODE_EDIT) {
             this.$currency = this.$el.find('[data-name="' + this.currencyFieldName + '"]');
@@ -237,9 +230,9 @@ export default Dep.extend(/** @lends Class# */{
 
             Select.init(this.$currency);
         }
-    },
+    }
 
-    validateNumber: function () {
+    validateNumber() {
         if (!this.params.decimal) {
             return this.validateFloat();
         }
@@ -253,9 +246,9 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let value = this.$element.val().trim();
 
         value = this.parse(value);
@@ -274,5 +267,7 @@ export default Dep.extend(/** @lends Class# */{
         data[this.currencyFieldName] = currencyValue;
 
         return data;
-    },
-});
+    }
+}
+
+export default FloatFieldView;

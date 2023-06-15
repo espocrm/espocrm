@@ -28,60 +28,57 @@
 
 /** @module views/fields/link-parent */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
 import Select from 'ui/select';
 
 /**
  * A link-parent field (belongs-to-parent relation).
- *
- * @class Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
+class LinkParentFieldView extends BaseFieldView {
 
-    type: 'linkParent',
+    type = 'linkParent'
 
-    listTemplate: 'fields/link-parent/list',
-    detailTemplate: 'fields/link-parent/detail',
-    editTemplate: 'fields/link-parent/edit',
-    searchTemplate: 'fields/link-parent/search',
-    listLinkTemplate: 'fields/link-parent/list-link',
+    listTemplate = 'fields/link-parent/list'
+    detailTemplate = 'fields/link-parent/detail'
+    editTemplate = 'fields/link-parent/edit'
+    searchTemplate = 'fields/link-parent/search'
+    listLinkTemplate = 'fields/link-parent/list-link'
 
     /**
      * A name attribute name.
      *
      * @type {string}
      */
-    nameName: null,
+    nameName = null
 
     /**
      * An ID attribute name.
      *
      * @type {string}
      */
-    idName: null,
+    idName = null
 
     /**
      * A type attribute name.
      *
      * @type {string}
      */
-    typeName: null,
+    typeName = null
 
     /**
      * A current foreign entity type.
      *
      * @type {string|null}
      */
-    foreignScope: null,
+    foreignScope = null
 
     /**
      * A foreign entity type list.
      *
      * @type {string[]}
      */
-    foreignScopeList: null,
+    foreignScopeList = null
 
     /**
      * Autocomplete disabled.
@@ -89,7 +86,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    autocompleteDisabled: false,
+    autocompleteDisabled = false
 
     /**
      * A select-record view.
@@ -97,7 +94,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string}
      */
-    selectRecordsView: 'views/modals/select-records',
+    selectRecordsView = 'views/modals/select-records'
 
     /**
      * Create disabled.
@@ -105,7 +102,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    createDisabled: false,
+    createDisabled = false
 
     /**
      * A search type list.
@@ -113,19 +110,11 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]}
      */
-    searchTypeList: [
+    searchTypeList = [
         'is',
         'isEmpty',
         'isNotEmpty',
-    ],
-
-    /**
-     * A primary filter list that will be available when selecting a record.
-     *
-     * @protected
-     * @type {string[]|null}
-     */
-    selectFilterList: null,
+    ]
 
     /**
      * A select primary filter.
@@ -133,7 +122,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string|null}
      */
-    selectPrimaryFilterName: null,
+    selectPrimaryFilterName = null
 
     /**
      * A select bool filter list.
@@ -141,7 +130,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]|null}
      */
-    selectBoolFilterList: null,
+    selectBoolFilterList = null
 
     /**
      * An autocomplete max record number.
@@ -149,7 +138,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {number|null}
      */
-    autocompleteMaxCount: null,
+    autocompleteMaxCount = null
 
     /**
      * Select all attributes.
@@ -157,7 +146,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    forceSelectAllAttributes: false,
+    forceSelectAllAttributes = false
 
     /**
      * Mandatory select attributes.
@@ -165,21 +154,14 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]|null}
      */
-    mandatorySelectAttributeList: null,
+    mandatorySelectAttributeList = null
 
-    /**
-     * @inheritDoc
-     */
-    initialSearchIsNotIdle: true,
+    /** @inheritDoc */
+    initialSearchIsNotIdle = true
 
-    /**
-     * @inheritDoc
-     */
-    events: {
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this module:views/fields/link-parent.Class
-         */
+    /** @inheritDoc */
+    events = {
+        /** @this LinkParentFieldView */
         'auxclick a[href]:not([role="button"])': function (e) {
             if (!this.isReadMode()) {
                 return;
@@ -196,16 +178,16 @@ export default Dep.extend(/** @lends Class# */{
 
             this.quickView();
         },
-    },
+    }
 
-    data: function () {
-        var nameValue = this.model.get(this.nameName);
+    data() {
+        let nameValue = this.model.get(this.nameName);
 
         if (!nameValue && this.model.get(this.idName) && this.model.get(this.typeName)) {
             nameValue = this.translate(this.model.get(this.typeName), 'scopeNames');
         }
 
-        var iconHtml = null;
+        let iconHtml = null;
 
         if (
             (
@@ -217,7 +199,8 @@ export default Dep.extend(/** @lends Class# */{
             iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
         }
 
-        return _.extend({
+        return {
+            ...super.data(),
             idName: this.idName,
             nameName: this.nameName,
             typeName: this.typeName,
@@ -229,8 +212,8 @@ export default Dep.extend(/** @lends Class# */{
             valueIsSet: this.model.has(this.idName) || this.model.has(this.typeName),
             iconHtml: iconHtml,
             displayEntityType: this.displayEntityType && this.model.get(this.typeName),
-        }, Dep.prototype.data.call(this));
-    },
+        };
+    }
 
     /**
      * Get advanced filters (field filters) to be applied when select a record.
@@ -239,9 +222,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {Object.<string,module:search-manager~advancedFilter>|null}
      */
-    getSelectFilters: function () {
+    getSelectFilters() {
         return null;
-    },
+    }
 
     /**
      * Get a select bool filter list. Applied when select a record.
@@ -250,9 +233,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {string[]|null}
      */
-    getSelectBoolFilterList: function () {
+    getSelectBoolFilterList() {
         return this.selectBoolFilterList;
-    },
+    }
 
     /**
      * Get a select primary filter. Applied when select a record.
@@ -261,9 +244,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {string|null}
      */
-    getSelectPrimaryFilterName: function () {
+    getSelectPrimaryFilterName() {
         return this.selectPrimaryFilterName;
-    },
+    }
 
     /**
      * Attributes to pass to a model when creating a new record.
@@ -271,14 +254,12 @@ export default Dep.extend(/** @lends Class# */{
      *
      * @return {Object.<string,*>|null}
      */
-    getCreateAttributes: function () {
+    getCreateAttributes() {
         return null;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    setup: function () {
+    /** @inheritDoc */
+    setup() {
         this.nameName = this.name + 'Name';
         this.typeName = this.name + 'Type';
         this.idName = this.name + 'Id';
@@ -358,13 +339,11 @@ export default Dep.extend(/** @lends Class# */{
                 this.$elementId.val('');
             };
         }
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    setupSearch: function () {
-        var type = this.getSearchParamsData().type;
+    /** @inheritDoc */
+    setupSearch() {
+        let type = this.getSearchParamsData().type;
 
         if (type === 'is' || !type) {
             this.searchData.idValue = this.getSearchParamsData().idValue ||
@@ -375,13 +354,12 @@ export default Dep.extend(/** @lends Class# */{
                 this.searchParams.valueType;
         }
 
-        this.events = _.extend({
-            'change select.search-type': (e) => {
-                var type = $(e.currentTarget).val();
-                this.handleSearchType(type);
-            },
-        }, this.events || {});
-    },
+        this.events['change select.search-type'] = e => {
+            let type = $(e.currentTarget).val();
+
+            this.handleSearchType(type);
+        };
+    }
 
     /**
      * Handle a search type.
@@ -389,13 +367,13 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @param {string} type A type.
      */
-    handleSearchType: function (type) {
+    handleSearchType(type) {
         if (~['is'].indexOf(type)) {
             this.$el.find('div.primary').removeClass('hidden');
         } else {
             this.$el.find('div.primary').addClass('hidden');
         }
-    },
+    }
 
     /**
      * Select.
@@ -403,12 +381,12 @@ export default Dep.extend(/** @lends Class# */{
      * @param {module:model} model A model.
      * @protected
      */
-    select: function (model) {
+    select(model) {
         this.$elementName.val(model.get('name') || model.id);
         this.$elementId.val(model.get('id'));
 
         this.trigger('change');
-    },
+    }
 
     /**
      * Attributes to select regardless availability on a list layout.
@@ -417,9 +395,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {string[]|null}
      */
-    getMandatorySelectAttributeList: function () {
+    getMandatorySelectAttributeList() {
         return this.mandatorySelectAttributeList;
-    },
+    }
 
     /**
      * Select all attributes. Can be extended.
@@ -427,9 +405,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {boolean}
      */
-    isForceSelectAllAttributes: function () {
+    isForceSelectAllAttributes() {
         return this.forceSelectAllAttributes;
-    },
+    }
 
     /**
      * Get an autocomplete max record number. Can be extended.
@@ -437,13 +415,13 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {number}
      */
-    getAutocompleteMaxCount: function () {
+    getAutocompleteMaxCount() {
         if (this.autocompleteMaxCount) {
             return this.autocompleteMaxCount;
         }
 
         return this.getConfig().get('recordsPerPage');
-    },
+    }
 
     /**
      * Compose an autocomplete URL. Can be extended.
@@ -451,11 +429,11 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {string}
      */
-    getAutocompleteUrl: function () {
-        var url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
+    getAutocompleteUrl() {
+        let url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.isForceSelectAllAttributes()) {
-            var select = ['id', 'name'];
+            let select = ['id', 'name'];
 
             if (this.getMandatorySelectAttributeList()) {
                 select = select.concat(this.getMandatorySelectAttributeList());
@@ -464,22 +442,22 @@ export default Dep.extend(/** @lends Class# */{
             url += '&select=' + select.join(',');
         }
 
-        var boolList = this.getSelectBoolFilterList();
+        let boolList = this.getSelectBoolFilterList();
 
         if (boolList) {
             url += '&' + $.param({'boolFilterList': boolList});
         }
 
-        var primary = this.getSelectPrimaryFilterName();
+        let primary = this.getSelectPrimaryFilterName();
 
         if (primary) {
             url += '&' + $.param({'primaryFilter': primary});
         }
 
         return url;
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         if (this.isEditMode() || this.isSearchMode()) {
             this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
             this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
@@ -533,7 +511,7 @@ export default Dep.extend(/** @lends Class# */{
                     },
                     transformResult: (response) => {
                         response = JSON.parse(response);
-                        var list = [];
+                        let list = [];
 
                         response.list.forEach(item => {
                             list.push({
@@ -565,7 +543,7 @@ export default Dep.extend(/** @lends Class# */{
                 Select.init(this.$elementType, {});
             }
 
-            var $elementName = this.$elementName;
+            let $elementName = this.$elementName;
 
             this.once('render', () => {
                 $elementName.autocomplete('dispose');
@@ -577,7 +555,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         if (this.mode === 'search') {
-            var type = this.$el.find('select.search-type').val();
+            let type = this.$el.find('select.search-type').val();
 
             this.handleSearchType(type);
 
@@ -585,22 +563,18 @@ export default Dep.extend(/** @lends Class# */{
                 this.trigger('change');
             });
         }
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    getValueForDisplay: function () {
+    /** @inheritDoc */
+    getValueForDisplay() {
         return this.model.get(this.nameName);
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    validateRequired: function () {
+    /** @inheritDoc */
+    validateRequired() {
         if (this.isRequired()) {
             if (this.model.get(this.idName) === null || !this.model.get(this.typeName)) {
-                var msg = this.translate('fieldIsRequired', 'messages')
+                let msg = this.translate('fieldIsRequired', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
@@ -608,13 +582,11 @@ export default Dep.extend(/** @lends Class# */{
                 return true;
             }
         }
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    fetch: function () {
-        var data = {};
+    /** @inheritDoc */
+    fetch() {
+        let data = {};
 
         data[this.typeName] = this.$elementType.val() || null;
         data[this.nameName] = this.$elementName.val() || null;
@@ -625,12 +597,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    fetchSearch: function () {
+    /** @inheritDoc */
+    fetchSearch() {
         let type = this.$el.find('select.search-type').val();
 
         if (type === 'isEmpty') {
@@ -705,19 +675,17 @@ export default Dep.extend(/** @lends Class# */{
                 typeValue: entityType,
             }
         };
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    getSearchType: function () {
+    /** @inheritDoc */
+    getSearchType() {
         return this.getSearchParamsData().type || this.searchParams.typeFront;
-    },
+    }
 
     /**
      * @protected
      */
-    quickView: function () {
+    quickView() {
         let id = this.model.get(this.idName);
         let entityType = this.model.get(this.typeName);
 
@@ -731,5 +699,7 @@ export default Dep.extend(/** @lends Class# */{
             id: id,
             scope: entityType,
         });
-    },
-});
+    }
+}
+
+export default LinkParentFieldView;

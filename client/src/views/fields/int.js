@@ -28,28 +28,25 @@
 
 /** @module views/fields/int */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import AutoNumeric from 'lib!autonumeric';
 
 /**
  * An integer field.
- *
- * @class Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** Class# */{
+class IntFieldView extends BaseFieldView {
 
-    type: 'int',
+    type = 'int'
 
-    listTemplate: 'fields/int/list',
-    detailTemplate: 'fields/int/detail',
-    editTemplate: 'fields/int/edit',
-    searchTemplate: 'fields/int/search',
-    validations: ['required', 'int', 'range'],
+    listTemplate = 'fields/int/list'
+    detailTemplate = 'fields/int/detail'
+    editTemplate = 'fields/int/edit'
+    searchTemplate = 'fields/int/search'
+    validations = ['required', 'int', 'range']
 
-    thousandSeparator: ',',
+    thousandSeparator = ','
 
-    searchTypeList: [
+    searchTypeList = [
         'isNotEmpty',
         'isEmpty',
         'equals',
@@ -59,22 +56,22 @@ export default Dep.extend(/** Class# */{
         'greaterThanOrEquals',
         'lessThanOrEquals',
         'between',
-    ],
+    ]
 
     /**
      * @type {Object.<string, *>|null}
      * @protected
      */
-    autoNumericOptions: null,
+    autoNumericOptions = null
 
     /**
      * @type {?AutoNumeric}
      * @protected
      */
-    autoNumericInstance: null,
+    autoNumericInstance = null
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
         this.setupMaxLength();
 
@@ -88,18 +85,18 @@ export default Dep.extend(/** Class# */{
         if (this.params.disableFormatting) {
             this.disableFormatting = true;
         }
-    },
+    }
 
-    setupFinal: function () {
-        Dep.prototype.setupFinal.call(this);
+    setupFinal() {
+        super.setupFinal();
 
         this.setupAutoNumericOptions();
-    },
+    }
 
     /**
      * @protected
      */
-    setupAutoNumericOptions: function () {
+    setupAutoNumericOptions() {
         let separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
         let decimalCharacter = '.';
 
@@ -115,20 +112,19 @@ export default Dep.extend(/** Class# */{
             selectOnFocus: false,
             formulaMode: true,
         };
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.mode === this.MODE_EDIT) {
-
             if (this.autoNumericOptions) {
                 this.autoNumericInstance = new AutoNumeric(this.$element.get(0), this.autoNumericOptions);
             }
         }
 
         if (this.mode === this.MODE_SEARCH) {
-            var $searchType = this.$el.find('select.search-type');
+            let $searchType = this.$el.find('select.search-type');
 
             this.handleSearchType($searchType.val());
 
@@ -151,10 +147,10 @@ export default Dep.extend(/** Class# */{
                 new AutoNumeric($inputAdditional.get(0), this.autoNumericOptions);
             }
         }
-    },
+    }
 
-    data: function () {
-        var data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         if (this.model.get(this.name) !== null && typeof this.model.get(this.name) !== 'undefined') {
             data.isNotEmpty = true;
@@ -176,23 +172,23 @@ export default Dep.extend(/** Class# */{
         }
 
         return data;
-    },
+    }
 
-    getValueForDisplay: function () {
-        var value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
+    getValueForDisplay() {
+        let value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
 
         return this.formatNumber(value);
-    },
+    }
 
-    formatNumber: function (value) {
+    formatNumber(value) {
         if (this.disableFormatting) {
             return value;
         }
 
         return this.formatNumberDetail(value);
-    },
+    }
 
-    formatNumberDetail: function (value) {
+    formatNumberDetail(value) {
         if (value === null) {
             return '';
         }
@@ -202,17 +198,15 @@ export default Dep.extend(/** Class# */{
         stringValue = stringValue.replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
 
         return stringValue;
-    },
+    }
 
-    setupSearch: function () {
-        this.events = _.extend({
-            'change select.search-type': (e) => {
-                this.handleSearchType($(e.currentTarget).val());
-            },
-        }, this.events || {});
-    },
+    setupSearch() {
+        this.events['change select.search-type'] = e => {
+            this.handleSearchType($(e.currentTarget).val());
+        };
+    }
 
-    handleSearchType: function (type) {
+    handleSearchType(type) {
         var $additionalInput = this.$el.find('input.additional');
 
         var $input = this.$el.find('input[data-name="'+this.name+'"]');
@@ -229,9 +223,9 @@ export default Dep.extend(/** Class# */{
             $additionalInput.addClass('hidden');
             $input.removeClass('hidden');
         }
-    },
+    }
 
-    getMaxValue: function () {
+    getMaxValue() {
         var maxValue = this.model.getFieldParam(this.name, 'max') || null;
 
         if (!maxValue && maxValue !== 0) {
@@ -243,9 +237,9 @@ export default Dep.extend(/** Class# */{
         }
 
         return maxValue;
-    },
+    }
 
-    getMinValue: function () {
+    getMinValue() {
         var minValue = this.model.getFieldParam(this.name, 'min');
 
         if (!minValue && minValue !== 0) {
@@ -257,9 +251,9 @@ export default Dep.extend(/** Class# */{
         }
 
         return minValue;
-    },
+    }
 
-    setupMaxLength: function () {
+    setupMaxLength() {
         var maxValue = this.getMaxValue();
 
         if (typeof max !== 'undefined' && max !== null) {
@@ -267,21 +261,21 @@ export default Dep.extend(/** Class# */{
 
             this.params.maxLength = maxValue.toString().length;
         }
-    },
+    }
 
-    validateInt: function () {
-        var value = this.model.get(this.name);
+    validateInt() {
+        let value = this.model.get(this.name);
 
         if (isNaN(value)) {
-            var msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
+            let msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);
 
             return true;
         }
-    },
+    }
 
-    validateRange: function () {
+    validateRange() {
         let value = this.model.get(this.name);
 
         if (value === null) {
@@ -326,9 +320,9 @@ export default Dep.extend(/** Class# */{
                 }
             }
         }
-    },
+    }
 
-    validateRequired: function () {
+    validateRequired() {
         if (this.isRequired()) {
             let value = this.model.get(this.name);
 
@@ -341,9 +335,9 @@ export default Dep.extend(/** Class# */{
                 return true;
             }
         }
-    },
+    }
 
-    parse: function (value) {
+    parse(value) {
         value = (value !== '') ? value : null;
 
         if (value === null) {
@@ -359,9 +353,9 @@ export default Dep.extend(/** Class# */{
         }
 
         return parseInt(value);
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let value = this.$element.val();
         value = this.parse(value);
 
@@ -370,9 +364,9 @@ export default Dep.extend(/** Class# */{
         data[this.name] = value;
 
         return data;
-    },
+    }
 
-    fetchSearch: function () {
+    fetchSearch() {
         let value = this.parse(this.$element.val());
 
         let type = this.fetchSearchType();
@@ -422,9 +416,11 @@ export default Dep.extend(/** Class# */{
         }
 
         return data;
-    },
+    }
 
-    getSearchType: function () {
+    getSearchType() {
         return this.searchParams.typeFront || this.searchParams.type;
-    },
-});
+    }
+}
+
+export default IntFieldView;

@@ -28,37 +28,37 @@
 
 /** @module views/fields/attachment-multiple */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import FileUpload from 'helpers/file-upload';
 
 /**
- * @class Class
- * @extends module:views/fields/base
+ * An attachment-multiple field.
  */
-export default Dep.extend(/** @lends Class# */{
+class AttachmentMultipleFieldView extends BaseFieldView {
 
-    type: 'attachmentMultiple',
+    type = 'attachmentMultiple'
 
-    listTemplate: 'fields/attachments-multiple/list',
-    detailTemplate: 'fields/attachments-multiple/detail',
-    editTemplate: 'fields/attachments-multiple/edit',
-    searchTemplate: 'fields/link-multiple/search',
+    listTemplate = 'fields/attachments-multiple/list'
+    detailTemplate = 'fields/attachments-multiple/detail'
+    editTemplate = 'fields/attachments-multiple/edit'
+    searchTemplate = 'fields/link-multiple/search'
 
-    previewSize: 'medium',
-    nameHashName: null,
-    idsName: null,
-    nameHash: null,
-    foreignScope: null,
-    showPreviews: true,
-    accept: null,
-    validations: ['ready', 'required'],
-    searchTypeList: ['isNotEmpty', 'isEmpty'],
+    previewSize = 'medium'
+    nameHashName = null
+    idsName = null
+    nameHash = null
+    foreignScope = null
+    showPreviews = true
+    accept = null
+    validations = ['ready', 'required']
+    searchTypeList = ['isNotEmpty', 'isEmpty']
 
-    events: {
+    events = {
+        /** @this AttachmentMultipleFieldView */
         'click a.remove-attachment': function (e) {
-            var $div = $(e.currentTarget).parent();
+            let $div = $(e.currentTarget).parent();
 
-            var id = $div.attr('data-id');
+            let id = $div.attr('data-id');
 
             if (id) {
                 this.deleteAttachment(id);
@@ -70,6 +70,7 @@ export default Dep.extend(/** @lends Class# */{
 
             setTimeout(() => this.focusOnUploadButton(), 10);
         },
+        /** @this AttachmentMultipleFieldView */
         'change input.file': function (e) {
             let $file = $(e.currentTarget);
             let files = e.currentTarget.files;
@@ -80,19 +81,22 @@ export default Dep.extend(/** @lends Class# */{
 
             $file.replaceWith($file.clone(true));
         },
+        /** @this AttachmentMultipleFieldView */
         'click a.action[data-action="insertFromSource"]': function (e) {
-            var name = $(e.currentTarget).data('name');
+            let name = $(e.currentTarget).data('name');
+
             this.insertFromSource(name);
         },
+        /** @this AttachmentMultipleFieldView */
         'click a[data-action="showImagePreview"]': function (e) {
             e.preventDefault();
 
-            var id = $(e.currentTarget).data('id');
+            let id = $(e.currentTarget).data('id');
 
-            var attachmentIdList = this.model.get(this.idsName) || [];
-            var typeHash = this.model.get(this.typeHashName) || {};
+            let attachmentIdList = this.model.get(this.idsName) || [];
+            let typeHash = this.model.get(this.typeHashName) || {};
 
-            var imageIdList = [];
+            let imageIdList = [];
 
             attachmentIdList.forEach(cId => {
                 if (!this.isTypeIsImage(typeHash[cId])) {
@@ -102,7 +106,7 @@ export default Dep.extend(/** @lends Class# */{
                 imageIdList.push(cId);
             });
 
-            var imageList = [];
+            let imageList = [];
 
             imageIdList.forEach((cId) => {
                 imageList.push({
@@ -115,11 +119,12 @@ export default Dep.extend(/** @lends Class# */{
                 id: id,
                 model: this.model,
                 name: this.nameHash[id],
-                imageList: imageList
-            }, (view) => {
+                imageList: imageList,
+            }, view => {
                 view.render();
             });
         },
+        /** @this AttachmentMultipleFieldView */
         'keydown label.attach-file-label': function (e) {
             let key = Espo.Utils.getKeyFromKeyEvent(e);
 
@@ -127,19 +132,20 @@ export default Dep.extend(/** @lends Class# */{
                 this.$el.find('input.file').get(0).click();
             }
         },
-    },
+    }
 
-    data: function () {
-        var ids = this.model.get(this.idsName);
+    data() {
+        let ids = this.model.get(this.idsName);
 
-        var data = _.extend({
+        let data = {
+            ...super.data(),
             idValues: this.model.get(this.idsName),
             idValuesString: ids ? ids.join(',') : '',
             nameHash: this.model.get(this.nameHashName),
             foreignScope: this.foreignScope,
             valueIsSet: this.model.has(this.idsName),
             acceptAttribute: this.acceptAttribute,
-        }, Dep.prototype.data.call(this));
+        };
 
         if (this.mode === this.MODE_EDIT) {
             data.fileSystem = ~this.sourceList.indexOf('FileSystem');
@@ -147,9 +153,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    setup: function () {
+    setup() {
         this.nameHashName = this.name + 'Names';
         this.typeHashName = this.name + 'Types';
         this.idsName = this.name + 'Ids';
@@ -174,7 +180,7 @@ export default Dep.extend(/** @lends Class# */{
             this.acceptAttribute = this.accept.join(', ');
         }
 
-        var sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};
+        let sourceDefs = this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs']) || {};
 
         this.sourceList = Espo.Utils.clone(this.params.sourceList || []);
 
@@ -186,7 +192,7 @@ export default Dep.extend(/** @lends Class# */{
                 return self.indexOf(item) === i;
             })
             .filter((item) => {
-                var defs = sourceDefs[item] || {};
+                let defs = sourceDefs[item] || {};
 
                 if (defs.accessDataList) {
                     if (
@@ -199,7 +205,7 @@ export default Dep.extend(/** @lends Class# */{
                 }
 
                 if (defs.configCheck) {
-                    var arr = defs.configCheck.split('.');
+                    let arr = defs.configCheck.split('.');
 
                     if (!this.getConfig().getByPath(arr)) {
                         return false;
@@ -222,39 +228,37 @@ export default Dep.extend(/** @lends Class# */{
         this.on('inline-edit-off', () => {
             this.isUploading = false;
         });
-    },
+    }
 
-    setupSearch: function () {
-        this.events = _.extend({
-            'change select.search-type': (e) => {
-                var type = $(e.currentTarget).val();
+    setupSearch() {
+        this.events['change select.search-type'] = e => {
+            let type = $(e.currentTarget).val();
 
-                this.handleSearchType(type);
-            },
-        }, this.events || {});
-    },
+            this.handleSearchType(type);
+        };
+    }
 
-    focusOnInlineEdit: function () {
+    focusOnInlineEdit() {
         this.focusOnUploadButton();
-    },
+    }
 
-    focusOnUploadButton: function () {
+    focusOnUploadButton() {
         this.$el.find('.attach-file-label').focus();
-    },
+    }
 
-    empty: function () {
+    empty() {
         this.clearIds();
 
         this.$attachments.empty();
-    },
+    }
 
-    handleResize: function () {
-        var width = this.$el.width();
+    handleResize() {
+        let width = this.$el.width();
 
         this.$el.find('img.image-preview').css('maxWidth', width + 'px');
-    },
+    }
 
-    deleteAttachment: function (id) {
+    deleteAttachment(id) {
         this.removeId(id);
 
         if (this.model.isNew()) {
@@ -263,10 +267,10 @@ export default Dep.extend(/** @lends Class# */{
                 attachment.destroy();
             });
         }
-    },
+    }
 
-    getImageUrl: function (id, size) {
-        var url = this.getBasePath() + '?entryPoint=image&id=' + id;
+    getImageUrl(id, size) {
+        let url = this.getBasePath() + '?entryPoint=image&id=' + id;
 
         if (size) {
             url += '&size=' + size;
@@ -277,9 +281,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return url;
-    },
+    }
 
-    getDownloadUrl: function (id) {
+    getDownloadUrl(id) {
         let url = this.getBasePath() + '?entryPoint=download&id=' + id;
 
         if (this.getUser().get('portalId')) {
@@ -287,56 +291,56 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return url;
-    },
+    }
 
-    removeId: function (id) {
-        var arr = _.clone(this.model.get(this.idsName) || []);
-        var i = arr.indexOf(id);
+    removeId(id) {
+        let arr = _.clone(this.model.get(this.idsName) || []);
+        let i = arr.indexOf(id);
 
         arr.splice(i, 1);
 
         this.model.set(this.idsName, arr);
 
-        var nameHash = _.clone(this.model.get(this.nameHashName) || {});
+        let nameHash = _.clone(this.model.get(this.nameHashName) || {});
         delete nameHash[id];
 
         this.model.set(this.nameHashName, nameHash);
 
-        var typeHash = _.clone(this.model.get(this.typeHashName) || {});
+        let typeHash = _.clone(this.model.get(this.typeHashName) || {});
         delete typeHash[id];
 
         this.model.set(this.typeHashName, typeHash);
-    },
+    }
 
-    clearIds: function (silent) {
+    clearIds(silent) {
         silent = silent || false;
 
         this.model.set(this.idsName, [], {silent: silent});
         this.model.set(this.nameHashName, {}, {silent: silent});
         this.model.set(this.typeHashName, {}, {silent: silent})
-    },
+    }
 
-    pushAttachment: function (attachment, link, ui) {
-        var arr = _.clone(this.model.get(this.idsName) || []);
+    pushAttachment(attachment, link, ui) {
+        let arr = _.clone(this.model.get(this.idsName) || []);
 
         arr.push(attachment.id);
 
         this.model.set(this.idsName, arr, {ui: ui});
 
-        var typeHash = _.clone(this.model.get(this.typeHashName) || {});
+        let typeHash = _.clone(this.model.get(this.typeHashName) || {});
 
         typeHash[attachment.id] = attachment.get('type');
 
         this.model.set(this.typeHashName, typeHash, {ui: ui});
 
-        var nameHash = _.clone(this.model.get(this.nameHashName) || {});
+        let nameHash = _.clone(this.model.get(this.nameHashName) || {});
 
         nameHash[attachment.id] = attachment.get('name');
 
         this.model.set(this.nameHashName, nameHash, {ui: ui});
-    },
+    }
 
-    getEditPreview: function (name, type, id) {
+    getEditPreview(name, type, id) {
         if (!~this.previewTypeList.indexOf(type)) {
             return null;
         }
@@ -351,9 +355,9 @@ export default Dep.extend(/** @lends Class# */{
             })
             .get(0)
             .outerHTML;
-    },
+    }
 
-    getBoxPreviewHtml: function (name, type, id) {
+    getBoxPreviewHtml(name, type, id) {
         let $text = $('<span>').text(name);
 
         if (!id) {
@@ -375,9 +379,9 @@ export default Dep.extend(/** @lends Class# */{
             .attr('target', '_BLANK')
             .text(name)
             .get(0).outerHTML;
-    },
+    }
 
-    addAttachmentBox: function (name, type, id) {
+    addAttachmentBox(name, type, id) {
         let $attachments = this.$attachments;
 
         let $remove = $('<a>')
@@ -430,20 +434,20 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return $att;
-    },
+    }
 
-    showValidationMessage: function (msg, selector) {
-        var $label = this.$el.find('label');
-        var title = $label.attr('title');
+    showValidationMessage(msg, selector) {
+        let $label = this.$el.find('label');
+        let title = $label.attr('title');
 
         $label.attr('title', '');
 
-        Dep.prototype.showValidationMessage.call(this, msg, selector);
+        super.showValidationMessage(msg, selector);
 
         $label.attr('title', title);
-    },
+    }
 
-    getMaxFileSize: function () {
+    getMaxFileSize() {
         let maxFileSize = this.params.maxFileSize || 0;
 
         let noChunk = !this.getConfig().get('attachmentUploadChunkSize');
@@ -459,9 +463,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return maxFileSize;
-    },
+    }
 
-    uploadFiles: function (files) {
+    uploadFiles(files) {
         let uploadedCount = 0;
         let totalCount = 0;
 
@@ -597,11 +601,11 @@ export default Dep.extend(/** @lends Class# */{
                     });
             });
         });
-    },
+    }
 
-    afterAttachmentsUploaded: function () {},
+    afterAttachmentsUploaded() {}
 
-    afterRender: function () {
+    afterRender() {
         if (this.mode === this.MODE_EDIT) {
             this.$attachments = this.$el.find('div.attachments');
 
@@ -663,20 +667,20 @@ export default Dep.extend(/** @lends Class# */{
                 });
             }
         }
-    },
+    }
 
-    isTypeIsImage: function (type) {
+    isTypeIsImage(type) {
         if (~this.previewTypeList.indexOf(type)) {
             return true;
         }
 
         return false;
-    },
+    }
 
     /**
      * @return {string}
      */
-    getDetailPreview: function (name, type, id) {
+    getDetailPreview(name, type, id) {
         if (!this.isTypeIsImage(type)) {
             return $('<span>')
                 .text(name)
@@ -700,9 +704,9 @@ export default Dep.extend(/** @lends Class# */{
             )
             .get(0)
             .outerHTML;
-    },
+    }
 
-    getValueForDisplay: function () {
+    getValueForDisplay() {
         if (this.isDetailMode() || this.isListMode()) {
             let nameHash = this.nameHash;
             let typeHash = this.model.get(this.typeHashName) || {};
@@ -770,10 +774,10 @@ export default Dep.extend(/** @lends Class# */{
 
             return $container.get(0).innerHTML;
         }
-    },
+    }
 
-    insertFromSource: function (source) {
-        var viewName =
+    insertFromSource(source) {
+        let viewName =
             this.getMetadata().get(['clientDefs', 'Attachment', 'sourceDefs', source, 'insertModalView']) ||
             this.getMetadata().get(['clientDefs', source, 'modalViews', 'select']) ||
             'views/modals/select-records';
@@ -781,7 +785,7 @@ export default Dep.extend(/** @lends Class# */{
         if (viewName) {
             Espo.Ui.notify(' ... ');
 
-            var filters = null;
+            let filters = null;
 
             if (('getSelectFilters' + source) in this) {
                 filters = this['getSelectFilters' + source]();
@@ -803,14 +807,14 @@ export default Dep.extend(/** @lends Class# */{
                 }
             }
 
-            var boolFilterList = this.getMetadata()
+            let boolFilterList = this.getMetadata()
                 .get(['clientDefs', 'Attachment', 'sourceDefs', source, 'boolFilterList']);
 
             if (('getSelectBoolFilterList' + source) in this) {
                 boolFilterList = this['getSelectBoolFilterList' + source]();
             }
 
-            var primaryFilterName = this.getMetadata()
+            let primaryFilterName = this.getMetadata()
                 .get(['clientDefs', 'Attachment', 'sourceDefs', source, 'primaryFilter']);
 
             if (('getSelectPrimaryFilterName' + source) in this) {
@@ -824,7 +828,7 @@ export default Dep.extend(/** @lends Class# */{
                 boolFilterList: boolFilterList,
                 primaryFilterName: primaryFilterName,
                 multiple: true,
-            }, (view) => {
+            }, view => {
                 view.render();
 
                 Espo.Ui.notify(false);
@@ -860,12 +864,12 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         }
-    },
+    }
 
-    validateRequired: function () {
+    validateRequired() {
         if (this.isRequired()) {
             if ((this.model.get(this.idsName) || []).length === 0) {
-                var msg = this.translate('fieldIsRequired', 'messages')
+                let msg = this.translate('fieldIsRequired', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, 'label');
@@ -873,32 +877,32 @@ export default Dep.extend(/** @lends Class# */{
                 return true;
             }
         }
-    },
+    }
 
-    validateReady: function () {
+    validateReady() {
         if (this.isUploading) {
-            var msg = this.translate('fieldIsUploading', 'messages')
+            let msg = this.translate('fieldIsUploading', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg, 'label');
 
             return true;
         }
-    },
+    }
 
-    fetch: function () {
-        var data = {};
+    fetch() {
+        let data = {};
 
         data[this.idsName] = this.model.get(this.idsName) || [];
 
         return data;
-    },
+    }
 
-    handleSearchType: function (type) {
+    handleSearchType(type) {
         this.$el.find('div.link-group-container').addClass('hidden');
-    },
+    }
 
-    fetchSearch: function () {
+    fetchSearch() {
         let type = this.$el.find('select.search-type').val();
 
         if (type === 'isEmpty') {
@@ -920,5 +924,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return null;
-    },
-});
+    }
+}
+
+export default AttachmentMultipleFieldView;

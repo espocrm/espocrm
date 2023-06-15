@@ -26,13 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'views/fields/link';
+import LinkFieldView from 'views/fields/link';
 
-export default Dep.extend({
+class LinkOneFieldView extends LinkFieldView {
 
-    searchTypeList: ['is', 'isEmpty', 'isNotEmpty', 'isOneOf'],
+    searchTypeList = ['is', 'isEmpty', 'isNotEmpty', 'isOneOf']
 
-    fetchSearch: function () {
+    fetchSearch() {
         let type = this.$el.find('select.search-type').val();
         let value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
@@ -79,5 +79,7 @@ export default Dep.extend({
                 },
             };
         }
-    },
-});
+    }
+}
+
+export default LinkOneFieldView;
