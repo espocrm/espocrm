@@ -28,32 +28,29 @@
 
 /** @module views/fields/text */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 
 /**
  * A text field.
- *
- * @class Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
+class TextFieldView extends BaseFieldView {
 
-    type: 'text',
+    type = 'text'
 
-    listTemplate: 'fields/text/list',
-    detailTemplate: 'fields/text/detail',
-    editTemplate: 'fields/text/edit',
-    searchTemplate: 'fields/text/search',
+    listTemplate = 'fields/text/list'
+    detailTemplate = 'fields/text/detail'
+    editTemplate = 'fields/text/edit'
+    searchTemplate = 'fields/text/search'
 
-    seeMoreText: false,
-    rowsDefault: 10,
-    rowsMin: 2,
-    seeMoreDisabled: false,
-    cutHeight: 200,
-    noResize: false,
-    changeInterval: 5,
+    seeMoreText = false
+    rowsDefault = 10
+    rowsMin = 2
+    seeMoreDisabled = false
+    cutHeight = 200
+    noResize = false
+    changeInterval = 5
 
-    searchTypeList: [
+    searchTypeList = [
         'contains',
         'startsWith',
         'equals',
@@ -63,21 +60,23 @@ export default Dep.extend(/** @lends Class# */{
         'notLike',
         'isEmpty',
         'isNotEmpty',
-    ],
+    ]
 
-    events: {
+    events = {
+        /** @this TextFieldView */
         'click a[data-action="seeMoreText"]': function () {
             this.seeMoreText = true;
 
             this.reRender();
         },
+        /** @this TextFieldView */
         'click [data-action="mailTo"]': function (e) {
             this.mailTo($(e.currentTarget).data('email-address'));
         },
-    },
+    }
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
         this.params.rows = this.params.rows || this.rowsDefault;
         this.noResize = this.options.noResize || this.params.noResize || this.noResize;
@@ -98,20 +97,18 @@ export default Dep.extend(/** @lends Class# */{
         this.on('remove', () => {
             $(window).off('resize.see-more-' + this.cid);
         });
-    },
+    }
 
-    setupSearch: function () {
-        this.events = _.extend({
-            'change select.search-type': function (e) {
-                let type = $(e.currentTarget).val();
+    setupSearch() {
+        this.events['change select.search-type'] = e => {
+            let type = $(e.currentTarget).val();
 
-                this.handleSearchType(type);
-            },
-        }, this.events || {});
-    },
+            this.handleSearchType(type);
+        };
+    }
 
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         if (
             this.model.get(this.name) !== null &&
@@ -150,23 +147,23 @@ export default Dep.extend(/** @lends Class# */{
         data.noResize = this.noResize;
 
         return data;
-    },
+    }
 
-    handleSearchType: function (type) {
+    handleSearchType(type) {
         if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
             this.$el.find('input.main-element').addClass('hidden');
         } else {
             this.$el.find('input.main-element').removeClass('hidden');
         }
-    },
+    }
 
-    getValueForDisplay: function () {
-        var text = this.model.get(this.name);
+    getValueForDisplay() {
+        let text = this.model.get(this.name);
 
         return text || '';
-    },
+    }
 
-    controlTextareaHeight: function (lastHeight) {
+    controlTextareaHeight(lastHeight) {
         var scrollHeight = this.$element.prop('scrollHeight');
         var clientHeight = this.$element.prop('clientHeight');
 
@@ -194,13 +191,13 @@ export default Dep.extend(/** @lends Class# */{
         if (this.$element.val().length === 0) {
             this.$element.attr('rows', this.rowsMin);
         }
-    },
+    }
 
-    isCut: function () {
+    isCut() {
         return !this.seeMoreText && !this.seeMoreDisabled;
-    },
+    }
 
-    controlSeeMore: function () {
+    controlSeeMore() {
         if (!this.isCut()) {
             return;
         }
@@ -212,10 +209,10 @@ export default Dep.extend(/** @lends Class# */{
             this.$seeMoreContainer.addClass('hidden');
             this.$textContainer.removeClass('cut');
         }
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.isReadMode()) {
             $(window).off('resize.see-more-' + this.cid);
@@ -280,9 +277,9 @@ export default Dep.extend(/** @lends Class# */{
                 }
             });
         }
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let data = {};
 
         let value = this.$element.val() || null;
@@ -294,9 +291,9 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = value
 
         return data;
-    },
+    }
 
-    fetchSearch: function () {
+    fetchSearch() {
         let type = this.fetchSearchType() || 'startsWith';
 
         if (type === 'isEmpty') {
@@ -350,14 +347,14 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return false;
-    },
+    }
 
-    getSearchType: function () {
+    getSearchType() {
         return this.getSearchParamsData().type || this.searchParams.typeFront ||
             this.searchParams.type;
-    },
+    }
 
-    mailTo: function (emailAddress) {
+    mailTo(emailAddress) {
         let attributes = {
             status: 'Draft',
             to: emailAddress,
@@ -389,5 +386,7 @@ export default Dep.extend(/** @lends Class# */{
             view.render();
             view.notify(false);
         });
-    },
-});
+    }
+}
+
+export default TextFieldView;

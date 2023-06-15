@@ -28,52 +28,46 @@
 
 /** @module views/fields/link */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
 
 /**
  * A link field (belongs-to relation).
- *
- * @class
- * @name Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
-
-    /**
-     * @inheritDoc
-     */
-    type: 'link',
+class LinkFieldView extends BaseFieldView {
 
     /** @inheritDoc */
-    listTemplate: 'fields/link/list',
+    type = 'link'
+
     /** @inheritDoc */
-    detailTemplate: 'fields/link/detail',
+    listTemplate = 'fields/link/list'
     /** @inheritDoc */
-    editTemplate: 'fields/link/edit',
+    detailTemplate = 'fields/link/detail'
     /** @inheritDoc */
-    searchTemplate: 'fields/link/search',
+    editTemplate = 'fields/link/edit'
+    /** @inheritDoc */
+    searchTemplate = 'fields/link/search'
 
     /**
      * A name attribute name.
      *
      * @type {string}
      */
-    nameName: null,
+    nameName = null
 
     /**
      * An ID attribute name.
      *
      * @type {string}
      */
-    idName: null,
+    idName = null
 
     /**
      * A foreign entity type.
      *
      * @type {string}
      */
-    foreignScope: null,
+    foreignScope = null
 
     /**
      * A select-record view.
@@ -81,7 +75,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string}
      */
-    selectRecordsView: 'views/modals/select-records',
+    selectRecordsView = 'views/modals/select-records'
 
     /**
      * Autocomplete disabled.
@@ -89,7 +83,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    autocompleteDisabled: false,
+    autocompleteDisabled = false
 
     /**
      * Create disabled.
@@ -97,7 +91,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    createDisabled: false,
+    createDisabled = false
 
     /**
      * Force create button even is disabled in clientDefs > relationshipPanels.
@@ -105,7 +99,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    forceCreateButton: false,
+    forceCreateButton = false
 
     /**
      * A search type list.
@@ -113,14 +107,14 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]}
      */
-    searchTypeList: [
+    searchTypeList = [
         'is',
         'isEmpty',
         'isNotEmpty',
         'isNot',
         'isOneOf',
         'isNotOneOf',
-    ],
+    ]
 
     /**
      * A primary filter list that will be available when selecting a record.
@@ -128,7 +122,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]|null}
      */
-    selectFilterList: null,
+    selectFilterList = null
 
     /**
      * A select primary filter.
@@ -136,7 +130,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string|null}
      */
-    selectPrimaryFilterName: null,
+    selectPrimaryFilterName = null
 
     /**
      * A select bool filter list.
@@ -144,7 +138,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {string[]|null}
      */
-    selectBoolFilterList: null,
+    selectBoolFilterList = null
 
     /**
      * An autocomplete max record number.
@@ -152,7 +146,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {number|null}
      */
-    autocompleteMaxCount: null,
+    autocompleteMaxCount = null
 
     /**
      * Select all attributes.
@@ -160,22 +154,19 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @type {boolean}
      */
-    forceSelectAllAttributes: false,
+    forceSelectAllAttributes = false
 
     /**
      * @protected
      * @type {string[]|null}
      */
-    mandatorySelectAttributeList: null,
+    mandatorySelectAttributeList = null
 
-    /**
-     * @inheritDoc
-     */
-    events: {
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this module:views/fields/link
-         */
+    getEmptyAutocompleteResult = null
+
+    /** @inheritDoc */
+    events = {
+        /** @this LinkFieldView */
         'auxclick a[href]:not([role="button"])': function (e) {
             if (!this.isReadMode()) {
                 return;
@@ -192,13 +183,11 @@ export default Dep.extend(/** @lends Class# */{
 
             this.quickView();
         },
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    data: function () {
-        var nameValue = this.model.has(this.nameName) ?
+    /** @inheritDoc */
+    data() {
+        let nameValue = this.model.has(this.nameName) ?
             this.model.get(this.nameName) :
             this.model.get(this.idName);
 
@@ -210,13 +199,14 @@ export default Dep.extend(/** @lends Class# */{
             nameValue = this.translate(this.foreignScope, 'scopeNames');
         }
 
-        var iconHtml = null;
+        let iconHtml = null;
 
         if (this.isDetailMode()) {
             iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
         }
 
-        return _.extend({
+        return {
+            ...super.data(),
             idName: this.idName,
             nameName: this.nameName,
             idValue: this.model.get(this.idName),
@@ -225,16 +215,14 @@ export default Dep.extend(/** @lends Class# */{
             valueIsSet: this.model.has(this.idName),
             iconHtml: iconHtml,
             url: this.getUrl(),
-        }, Dep.prototype.data.call(this));
-    },
-
-    getEmptyAutocompleteResult: null,
+        };
+    }
 
     /**
      * @protected
      * @return {?string}
      */
-    getUrl: function () {
+    getUrl() {
         let id = this.model.get(this.idName);
 
         if (!id) {
@@ -242,7 +230,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return '#' + this.foreignScope + '/view/' + id;
-    },
+    }
 
     /**
      * Get advanced filters (field filters) to be applied when select a record.
@@ -251,9 +239,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {Object.<string,module:search-manager~advancedFilter>|null}
      */
-    getSelectFilters: function () {
+    getSelectFilters() {
         return null;
-    },
+    }
 
     /**
      * Get a select bool filter list. Applied when select a record.
@@ -262,9 +250,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {string[]|null}
      */
-    getSelectBoolFilterList: function () {
+    getSelectBoolFilterList() {
         return this.selectBoolFilterList;
-    },
+    }
 
     /**
      * Get a select primary filter. Applied when select a record.
@@ -273,9 +261,9 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {string|null}
      */
-    getSelectPrimaryFilterName: function () {
+    getSelectPrimaryFilterName() {
         return this.selectPrimaryFilterName;
-    },
+    }
 
     /**
      * Get a primary filter list that will be available when selecting a record.
@@ -283,9 +271,9 @@ export default Dep.extend(/** @lends Class# */{
      *
      * @return {string[]|null}
      */
-    getSelectFilterList: function () {
+    getSelectFilterList() {
         return this.selectFilterList;
-    },
+    }
 
     /**
      * Attributes to pass to a model when creating a new record.
@@ -293,7 +281,7 @@ export default Dep.extend(/** @lends Class# */{
      *
      * @return {Object.<string,*>|null}
      */
-    getCreateAttributes: function () {
+    getCreateAttributes() {
         let attributeMap = this.getMetadata()
             .get(['clientDefs', this.entityType, 'relationshipPanels', this.name, 'createAttributeMap']) || {};
 
@@ -302,12 +290,10 @@ export default Dep.extend(/** @lends Class# */{
         Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
 
         return attributes;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    setup: function () {
+    /** @inheritDoc */
+    setup() {
         this.nameName = this.name + 'Name';
         this.idName = this.name + 'Id';
 
@@ -334,7 +320,7 @@ export default Dep.extend(/** @lends Class# */{
                 this.deleteLinkOneOf(id);
             };
         }
-    },
+    }
 
     /**
      * Select.
@@ -342,7 +328,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {module:model} model A model.
      * @protected
      */
-    select: function (model) {
+    select(model) {
         this.$elementName.val(model.get('name') || model.id);
         this.$elementId.val(model.get('id'));
 
@@ -352,21 +338,20 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.trigger('change');
-    },
+    }
 
     /**
      * Clear.
      */
-    clearLink: function () {
+    clearLink() {
         this.$elementName.val('');
         this.$elementId.val('');
-        this.trigger('change');
-    },
 
-    /**
-     * @inheritDoc
-     */
-    setupSearch: function () {
+        this.trigger('change');
+    }
+
+    /** @inheritDoc */
+    setupSearch() {
         this.searchData.oneOfIdList = this.getSearchParamsData().oneOfIdList ||
             this.searchParams.oneOfIdList || [];
 
@@ -381,13 +366,12 @@ export default Dep.extend(/** @lends Class# */{
                 this.searchParams.nameValue || this.searchParams.valueName;
         }
 
-        this.events = _.extend({
-            'change select.search-type': function (e) {
-                var type = $(e.currentTarget).val();
-                this.handleSearchType(type);
-            },
-        }, this.events || {});
-    },
+        this.events['change select.search-type'] = e => {
+            let type = $(e.currentTarget).val();
+
+            this.handleSearchType(type);
+        };
+    }
 
     /**
      * Handle a search type.
@@ -395,7 +379,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @param {string} type A type.
      */
-    handleSearchType: function (type) {
+    handleSearchType(type) {
         if (~['is', 'isNot', 'isNotAndIsNotEmpty'].indexOf(type)) {
             this.$el.find('div.primary').removeClass('hidden');
         }
@@ -409,7 +393,7 @@ export default Dep.extend(/** @lends Class# */{
         else {
             this.$el.find('div.one-of-container').addClass('hidden');
         }
-    },
+    }
 
     /**
      * Get an autocomplete max record number. Can be extended.
@@ -417,13 +401,13 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {number}
      */
-    getAutocompleteMaxCount: function () {
+    getAutocompleteMaxCount() {
         if (this.autocompleteMaxCount) {
             return this.autocompleteMaxCount;
         }
 
         return this.getConfig().get('recordsPerPage');
-    },
+    }
 
     /**
      * Compose an autocomplete URL. Can be extended.
@@ -431,7 +415,7 @@ export default Dep.extend(/** @lends Class# */{
      * @protected
      * @return {string}
      */
-    getAutocompleteUrl: function () {
+    getAutocompleteUrl() {
         var url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.forceSelectAllAttributes) {
@@ -457,12 +441,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return url;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    afterRender: function () {
+    /** @inheritDoc */
+    afterRender() {
         if (this.isEditMode() || this.isSearchMode()) {
             this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
             this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
@@ -629,12 +611,12 @@ export default Dep.extend(/** @lends Class# */{
                 });
             }
         }
-    },
+    }
 
     /**
      * @private
      */
-    _transformAutocompleteResult: function (response) {
+    _transformAutocompleteResult(response) {
         let list = [];
 
         response.list.forEach(item => {
@@ -648,19 +630,15 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return {suggestions: list};
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    getValueForDisplay: function () {
+    /** @inheritDoc */
+    getValueForDisplay() {
         return this.model.get(this.nameName);
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    validateRequired: function () {
+    /** @inheritDoc */
+    validateRequired() {
         if (this.isRequired()) {
             if (this.model.get(this.idName) == null) {
                 var msg = this.translate('fieldIsRequired', 'messages')
@@ -671,14 +649,14 @@ export default Dep.extend(/** @lends Class# */{
                 return true;
             }
         }
-    },
+    }
 
     /**
      * Delete a one-of item. For search mode.
      *
      * @param {string} id An ID.
      */
-    deleteLinkOneOf: function (id) {
+    deleteLinkOneOf(id) {
         this.deleteLinkOneOfHtml(id);
 
         var index = this.searchData.oneOfIdList.indexOf(id);
@@ -690,7 +668,7 @@ export default Dep.extend(/** @lends Class# */{
         delete this.searchData.oneOfNameHash[id];
 
         this.trigger('change');
-    },
+    }
 
     /**
      * Add a one-of item. For search mode.
@@ -698,7 +676,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} id An ID.
      * @param {string} name A name.
      */
-    addLinkOneOf: function (id, name) {
+    addLinkOneOf(id, name) {
         if (!~this.searchData.oneOfIdList.indexOf(id)) {
             this.searchData.oneOfIdList.push(id);
             this.searchData.oneOfNameHash[id] = name;
@@ -706,15 +684,15 @@ export default Dep.extend(/** @lends Class# */{
 
             this.trigger('change');
         }
-    },
+    }
 
     /**
      * @protected
      * @param {string} id An ID.
      */
-    deleteLinkOneOfHtml: function (id) {
+    deleteLinkOneOfHtml(id) {
         this.$el.find('.link-one-of-container .link-' + id).remove();
-    },
+    }
 
     /**
      * @protected
@@ -722,7 +700,7 @@ export default Dep.extend(/** @lends Class# */{
      * @param {string} name A name.
      * @return {JQuery}
      */
-    addLinkOneOfHtml: function (id, name) {
+    addLinkOneOfHtml(id, name) {
         let $container = this.$el.find('.link-one-of-container');
 
         let $el = $('<div>')
@@ -745,24 +723,20 @@ export default Dep.extend(/** @lends Class# */{
         $container.append($el);
 
         return $el;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    fetch: function () {
+    /** @inheritDoc */
+    fetch() {
         var data = {};
 
         data[this.nameName] = this.$el.find('[data-name="'+this.nameName+'"]').val() || null;
         data[this.idName] = this.$el.find('[data-name="'+this.idName+'"]').val() || null;
 
         return data;
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    fetchSearch: function () {
+    /** @inheritDoc */
+    fetchSearch() {
         var type = this.$el.find('select.search-type').val();
         var value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
@@ -907,21 +881,19 @@ export default Dep.extend(/** @lends Class# */{
                 nameValue: nameValue,
             }
         };
-    },
+    }
 
-    /**
-     * @inheritDoc
-     */
-    getSearchType: function () {
+    /** @inheritDoc */
+    getSearchType() {
         return this.getSearchParamsData().type ||
             this.searchParams.typeFront ||
             this.searchParams.type;
-    },
+    }
 
     /**
      * @protected
      */
-    quickView: function () {
+    quickView() {
         let id = this.model.get(this.idName);
 
         if (!id) {
@@ -936,12 +908,12 @@ export default Dep.extend(/** @lends Class# */{
             id: id,
             scope: entityType,
         });
-    },
+    }
 
     /**
      * @protected
      */
-    actionSelect: function () {
+    actionSelect() {
         Espo.Ui.notify(' ... ');
 
         /** @var {Object.<string, *>} */
@@ -1028,9 +1000,9 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         });
-    },
+    }
 
-    actionSelectOneOf: function () {
+    actionSelectOneOf() {
         Espo.Ui.notify(' ... ');
 
         let viewName = this.getMetadata()
@@ -1061,5 +1033,7 @@ export default Dep.extend(/** @lends Class# */{
                 });
             });
         });
-    },
-});
+    }
+}
+
+export default LinkFieldView;

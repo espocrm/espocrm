@@ -28,45 +28,42 @@
 
 /** @module views/fields/enum */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import MultiSelect from 'ui/multi-select';
 import Select from 'ui/select'
 
 /**
  * An enum field (select-box).
- *
- * @class
- * @name Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
+class EnumFieldView extends BaseFieldView {
 
-    type: 'enum',
+    type = 'enum'
 
-    listTemplate: 'fields/enum/list',
-    listLinkTemplate: 'fields/enum/list-link',
-    detailTemplate: 'fields/enum/detail',
-    editTemplate: 'fields/enum/edit',
-    searchTemplate: 'fields/enum/search',
+    listTemplate = 'fields/enum/list'
+    listLinkTemplate = 'fields/enum/list-link'
+    detailTemplate = 'fields/enum/detail'
+    editTemplate = 'fields/enum/edit'
+    searchTemplate = 'fields/enum/search'
 
-    translatedOptions: null,
+    translatedOptions = null
 
     /**
      * @todo Remove? Always treat as true.
      */
-    fetchEmptyValueAsNull: true,
+    fetchEmptyValueAsNull = true
 
-    searchTypeList: [
+    searchTypeList = [
         'anyOf',
         'noneOf',
         'isEmpty',
         'isNotEmpty',
-    ],
+    ]
 
-    validationElementSelector: '.selectize-control',
+    validationElementSelector = '.selectize-control'
 
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+    /** @inheritDoc */
+    data() {
+        let data = super.data();
 
         data.translatedOptions = this.translatedOptions;
 
@@ -108,9 +105,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    setup: function () {
+    setup() {
         if (!this.params.options) {
             let methodName = 'get' + Espo.Utils.upperCaseFirst(this.name) + 'Options';
 
@@ -168,9 +165,9 @@ export default Dep.extend(/** @lends Class# */{
         if (this.options.customOptionList) {
             this.setOptionList(this.options.customOptionList);
         }
-    },
+    }
 
-    setupTranslation: function () {
+    setupTranslation() {
         let translation = this.params.translation;
         /** @type {?string} */
         let optionsReference = this.params.optionsReference;
@@ -230,19 +227,19 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         this.translatedOptions = translatedOptions;
-    },
+    }
 
     /**
      * Set up options.
      */
-    setupOptions: function () {},
+    setupOptions() {}
 
     /**
      * Set an option list.
      *
      * @param {string[]} optionList An option list.
      */
-    setOptionList: function (optionList) {
+    setOptionList(optionList) {
         let previousOptions = this.params.options;
 
         if (!this.originalOptionList) {
@@ -274,12 +271,12 @@ export default Dep.extend(/** @lends Class# */{
                     this.trigger('change');
                 }
             });
-    },
+    }
 
     /**
      * Reset a previously set option list.
      */
-    resetOptionList: function () {
+    resetOptionList() {
         if (!this.originalOptionList) {
             return;
         }
@@ -297,17 +294,17 @@ export default Dep.extend(/** @lends Class# */{
         if (this.isRendered()) {
             this.reRender();
         }
-    },
+    }
 
-    setupSearch: function () {
+    setupSearch() {
         this.events = _.extend({
             'change select.search-type': (e) => {
                 this.handleSearchType($(e.currentTarget).val());
             },
         }, this.events || {});
-    },
+    }
 
-    handleSearchType: function (type) {
+    handleSearchType(type) {
         var $inputContainer = this.$el.find('div.input-container');
 
         if (~['anyOf', 'noneOf'].indexOf(type)) {
@@ -315,10 +312,10 @@ export default Dep.extend(/** @lends Class# */{
         } else {
             $inputContainer.addClass('hidden');
         }
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.isSearchMode()) {
             this.$element = this.$el.find('.main-element');
@@ -369,13 +366,13 @@ export default Dep.extend(/** @lends Class# */{
         if (this.isEditMode() || this.isSearchMode()) {
             Select.init(this.$element, {matchAnyWord: true});
         }
-    },
+    }
 
-    focusOnInlineEdit: function () {
+    focusOnInlineEdit() {
         Select.focus(this.$element);
-    },
+    }
 
-    validateRequired: function () {
+    validateRequired() {
         if (this.isRequired()) {
             if (!this.model.get(this.name)) {
                 let msg = this.translate('fieldIsRequired', 'messages')
@@ -386,9 +383,9 @@ export default Dep.extend(/** @lends Class# */{
                 return true;
             }
         }
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let value = this.$element.val();
 
         if (this.fetchEmptyValueAsNull && !value) {
@@ -400,13 +397,13 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = value;
 
         return data;
-    },
+    }
 
-    parseItemForSearch: function (item) {
+    parseItemForSearch(item) {
         return item;
-    },
+    }
 
-    fetchSearch: function () {
+    fetchSearch() {
         let type = this.fetchSearchType();
 
         let list = this.$element.val().split(':,:');
@@ -510,9 +507,11 @@ export default Dep.extend(/** @lends Class# */{
                 },
             };
         }
-    },
+    }
 
-    getSearchType: function () {
+    getSearchType() {
         return this.getSearchParamsData().type || 'anyOf';
-    },
-});
+    }
+}
+
+export default EnumFieldView;
