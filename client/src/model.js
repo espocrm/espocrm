@@ -1008,8 +1008,8 @@ class Model {
     }
 }
 
-Model.extend = BullView.extend;
+Object.assign(Model.prototype, Events);
 
-_.extend(Model.prototype, Events);
+Model.extend = BullView.extend;
 
 export default Model;

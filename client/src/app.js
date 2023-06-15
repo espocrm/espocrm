@@ -31,7 +31,6 @@
 import Espo from 'lib!espo';
 import $ from 'lib!jquery';
 import Backbone from 'lib!backbone';
-import _ from 'lib!underscore';
 import {Events, View as BullView, Factory as BullFactory} from 'lib!bullbone';
 import Base64 from 'lib!base64';
 import Ui from 'ui';
@@ -1393,7 +1392,7 @@ class App  {
  * @property {Number|null} [cacheTimestamp] A cache timestamp.
  */
 
-_.extend(App.prototype, Events);
+Object.assign(App.prototype, Events);
 
 App.extend = BullView.extend;
 

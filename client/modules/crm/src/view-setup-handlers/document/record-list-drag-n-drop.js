@@ -27,7 +27,7 @@
  ************************************************************************/
 
 import _ from 'lib!underscore';
-import {Events as BullEvents} from 'lib!bullbone';
+import {Events} from 'lib!bullbone';
 
 let Handler = function (view) {
     this.view = view;
@@ -206,6 +206,6 @@ _.extend(Handler.prototype, {
     },
 });
 
-_.extend(Handler.prototype, BullEvents);
+Object.assign(Handler.prototype, Events);
 
 export default Handler;

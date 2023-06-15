@@ -30,7 +30,6 @@
 
 import Exceptions from 'exceptions';
 import {Events, View as BullView} from 'lib!bullbone';
-import _ from 'lib!underscore';
 
 /**
  * @callback module:controller~viewCallback
@@ -611,9 +610,9 @@ class Controller {
     }
 }
 
+Object.assign(Controller.prototype, Events);
+
 /** For backward compatibility. */
 Controller.extend = BullView.extend;
-
-_.extend(Controller.prototype, Events);
 
 export default Controller;

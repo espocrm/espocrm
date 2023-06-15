@@ -261,6 +261,6 @@ class Metadata {
     }
 }
 
-_.extend(Metadata.prototype, Events);
+Object.assign(Metadata.prototype, Events);
 
 export default Metadata;

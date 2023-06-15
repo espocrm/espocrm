@@ -49,6 +49,6 @@ class WorkingTimeRangeHandler {
     }
 }
 
-_.extend(WorkingTimeRangeHandler.prototype, Events);
+Object.assign(WorkingTimeRangeHandler.prototype, Events);
 
 export default WorkingTimeRangeHandler;

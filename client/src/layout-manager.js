@@ -276,6 +276,6 @@ class LayoutManager {
     }
 }
 
-_.extend(LayoutManager.prototype, Events);
+Object.assign(LayoutManager.prototype, Events);
 
 export default LayoutManager;

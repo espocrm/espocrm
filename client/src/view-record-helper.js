@@ -207,6 +207,6 @@ class ViewRecordHelper {
     }
 }
 
-_.extend(ViewRecordHelper.prototype, Events);
+Object.assign(ViewRecordHelper.prototype, Events);
 
 export default ViewRecordHelper;

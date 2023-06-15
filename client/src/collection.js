@@ -29,7 +29,7 @@
 /** @module collection */
 
 import Model from 'model';
-import {Events as BullEvents, View as BullView} from 'lib!bullbone';
+import {Events, View as BullView} from 'lib!bullbone';
 import _ from 'lib!underscore';
 
 /**
@@ -1037,8 +1037,9 @@ class Collection {
     }
 }
 
+Object.assign(Collection.prototype, Events);
+
 Collection.extend = BullView.extend;
-_.extend(Collection.prototype, BullEvents);
 
 const setOptions = {
     add: true,

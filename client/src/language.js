@@ -322,6 +322,6 @@ class Language {
     }
 }
 
-_.extend(Language.prototype, Events);
+Object.assign(Language.prototype, Events);
 
 export default Language;
