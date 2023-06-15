@@ -98,6 +98,11 @@ describe('collection', () => {
 
         expect(collection.length).toBe(2);
         expect(collection.get('2')).toBeUndefined();
+
+        collection.remove('1');
+
+        expect(collection.length).toBe(1);
+        expect(collection.get('1')).toBeUndefined();
     });
 
     it('should push', () => {

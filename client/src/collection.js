@@ -233,7 +233,7 @@ class Collection {
     /**
      * Remove models or a model.
      *
-     * @param {Model[]|Model} models Models ar a model.
+     * @param {Model[]|Model|string} models Models, a model or a model ID.
      * @param {{
      *     silent?: boolean,
      * }} [options] Options.
