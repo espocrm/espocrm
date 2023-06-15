@@ -28,50 +28,50 @@
 
 /** @module views/fields/address */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import Varchar from 'views/fields/varchar';
 
 /**
  * An address field.
- *
- * @class Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
+class AddressFieldView extends BaseFieldView {
 
-    type: 'address',
+    type = 'address'
 
-    listTemplate: 'fields/address/detail',
-    detailTemplate: 'fields/address/detail',
-    editTemplate: 'fields/address/edit',
-    editTemplate1: 'fields/address/edit-1',
-    editTemplate2: 'fields/address/edit-2',
-    editTemplate3: 'fields/address/edit-3',
-    editTemplate4: 'fields/address/edit-4',
-    searchTemplate: 'fields/address/search',
+    listTemplate = 'fields/address/detail'
+    detailTemplate = 'fields/address/detail'
+    editTemplate = 'fields/address/edit'
+    editTemplate1 = 'fields/address/edit-1'
+    editTemplate2 = 'fields/address/edit-2'
+    editTemplate3 = 'fields/address/edit-3'
+    editTemplate4 = 'fields/address/edit-4'
+    searchTemplate = 'fields/address/search'
 
-    /**
-     * @inheritDoc
-     */
-    validations: [
+    postalCodeField
+    streetField
+    cityField
+    stateField
+    countryField
+
+    /** @inheritDoc */
+    validations = [
         'required',
         'pattern',
-    ],
+    ]
 
-    /**
-     * @inheritDoc
-     */
-    events: {
+    /** @inheritDoc */
+    events = {
+        /** @this AddressFieldView */
         'click [data-action="viewMap"]': function (e) {
             e.preventDefault();
             e.stopPropagation();
 
             this.viewMapAction();
         },
-    },
+    }
 
-    data: function () {
-        var data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         data.ucName = Espo.Utils.upperCaseFirst(this.name);
 
@@ -108,26 +108,26 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    setupSearch: function () {
+    setupSearch() {
         this.searchData.value = this.getSearchParamsData().value || this.searchParams.additionalValue;
-    },
+    }
 
-    canBeDisplayedOnMap: function () {
+    canBeDisplayedOnMap() {
         return !!this.model.get(this.name + 'City') || !!this.model.get(this.name + 'PostalCode');
-    },
+    }
 
-    getFormattedAddress: function () {
-        var isNotEmpty = false;
-        var isSet = false;
+    getFormattedAddress() {
+        let isNotEmpty = false;
+        let isSet = false;
 
         this.addressAttributeList.forEach(attribute => {
             isNotEmpty = isNotEmpty || this.model.get(attribute);
             isSet = isSet || this.model.has(attribute);
         });
 
-        var isEmpty = !isNotEmpty;
+        let isEmpty = !isNotEmpty;
 
         if (isEmpty) {
             if (this.mode === this.MODE_LIST) {
@@ -141,21 +141,21 @@ export default Dep.extend(/** @lends Class# */{
             return null;
         }
 
-        var methodName = 'getFormattedAddress' + this.getAddressFormat().toString();
+        let methodName = 'getFormattedAddress' + this.getAddressFormat().toString();
 
         if (methodName in this) {
             return this[methodName]();
         }
-    },
+    }
 
-    getFormattedAddress1: function () {
-        var postalCodeValue = this.model.get(this.postalCodeField);
-        var streetValue = this.model.get(this.streetField);
-        var cityValue = this.model.get(this.cityField);
-        var stateValue = this.model.get(this.stateField);
-        var countryValue = this.model.get(this.countryField);
+    getFormattedAddress1() {
+        let postalCodeValue = this.model.get(this.postalCodeField);
+        let streetValue = this.model.get(this.streetField);
+        let cityValue = this.model.get(this.cityField);
+        let stateValue = this.model.get(this.stateField);
+        let countryValue = this.model.get(this.countryField);
 
-        var html = '';
+        let html = '';
 
         if (streetValue) {
             html += streetValue;
@@ -193,16 +193,16 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return html;
-    },
+    }
 
-    getFormattedAddress2: function () {
-        var postalCodeValue = this.model.get(this.postalCodeField);
-        var streetValue = this.model.get(this.streetField);
-        var cityValue = this.model.get(this.cityField);
-        var stateValue = this.model.get(this.stateField);
-        var countryValue = this.model.get(this.countryField);
+    getFormattedAddress2() {
+        let postalCodeValue = this.model.get(this.postalCodeField);
+        let streetValue = this.model.get(this.streetField);
+        let cityValue = this.model.get(this.cityField);
+        let stateValue = this.model.get(this.stateField);
+        let countryValue = this.model.get(this.countryField);
 
-        var html = '';
+        let html = '';
 
         if (streetValue) {
             html += streetValue;
@@ -245,16 +245,16 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return html;
-    },
+    }
 
-    getFormattedAddress3: function () {
-        var postalCodeValue = this.model.get(this.postalCodeField);
-        var streetValue = this.model.get(this.streetField);
-        var cityValue = this.model.get(this.cityField);
-        var stateValue = this.model.get(this.stateField);
-        var countryValue = this.model.get(this.countryField);
+    getFormattedAddress3() {
+        let postalCodeValue = this.model.get(this.postalCodeField);
+        let streetValue = this.model.get(this.streetField);
+        let cityValue = this.model.get(this.cityField);
+        let stateValue = this.model.get(this.stateField);
+        let countryValue = this.model.get(this.countryField);
 
-        var html = '';
+        let html = '';
 
         if (countryValue) {
             html += countryValue;
@@ -292,16 +292,16 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return html;
-    },
+    }
 
-    getFormattedAddress4: function () {
-        var postalCodeValue = this.model.get(this.postalCodeField);
-        var streetValue = this.model.get(this.streetField);
-        var cityValue = this.model.get(this.cityField);
-        var stateValue = this.model.get(this.stateField);
-        var countryValue = this.model.get(this.countryField);
+    getFormattedAddress4() {
+        let postalCodeValue = this.model.get(this.postalCodeField);
+        let streetValue = this.model.get(this.streetField);
+        let cityValue = this.model.get(this.cityField);
+        let stateValue = this.model.get(this.stateField);
+        let countryValue = this.model.get(this.countryField);
 
-        var html = '';
+        let html = '';
 
         if (streetValue) {
             html += streetValue;
@@ -342,25 +342,25 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return html;
-    },
+    }
 
-    _getTemplateName: function () {
+    _getTemplateName() {
         if (this.mode === this.MODE_EDIT) {
-            var prop = 'editTemplate' + this.getAddressFormat().toString();
+            let prop = 'editTemplate' + this.getAddressFormat().toString();
 
             if (prop in this) {
                 return this[prop];
             }
         }
 
-        return Dep.prototype._getTemplateName.call(this);
-    },
+        return super._getTemplateName();
+    }
 
-    getAddressFormat: function () {
+    getAddressFormat() {
         return this.getConfig().get('addressFormat') || 1;
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         if (this.mode === this.MODE_EDIT) {
             this.$street = this.$el.find('[data-name="' + this.streetField + '"]');
             this.$postalCode = this.$el.find('[data-name="' + this.postalCodeField + '"]');
@@ -388,7 +388,7 @@ export default Dep.extend(/** @lends Class# */{
                 this.trigger('change');
             });
 
-            var countryList = this.getConfig().get('addressCountryList') || [];
+            let countryList = this.getConfig().get('addressCountryList') || [];
 
             if (countryList.length) {
                 this.$country.autocomplete({
@@ -435,7 +435,7 @@ export default Dep.extend(/** @lends Class# */{
                 this.$country.attr('autocomplete', 'espo-country');
             }
 
-            var cityList = this.getConfig().get('addressCityList') || [];
+            let cityList = this.getConfig().get('addressCityList') || [];
 
             if (cityList.length) {
                 this.$city.autocomplete({
@@ -482,7 +482,7 @@ export default Dep.extend(/** @lends Class# */{
                 this.$city.attr('autocomplete', 'espo-city');
             }
 
-            var stateList = this.getConfig().get('addressStateList') || [];
+            let stateList = this.getConfig().get('addressStateList') || [];
 
             if (stateList.length) {
                 this.$state.autocomplete({
@@ -535,11 +535,11 @@ export default Dep.extend(/** @lends Class# */{
                 this.controlStreetTextareaHeight();
             });
         }
-    },
+    }
 
-    controlStreetTextareaHeight: function (lastHeight) {
-        var scrollHeight = this.$street.prop('scrollHeight');
-        var clientHeight = this.$street.prop('clientHeight');
+    controlStreetTextareaHeight(lastHeight) {
+        let scrollHeight = this.$street.prop('scrollHeight');
+        let clientHeight = this.$street.prop('clientHeight');
 
         if (typeof lastHeight === 'undefined' && clientHeight === 0) {
             setTimeout(this.controlStreetTextareaHeight.bind(this), 10);
@@ -550,7 +550,7 @@ export default Dep.extend(/** @lends Class# */{
         if (clientHeight === lastHeight) return;
 
         if (scrollHeight > clientHeight + 1) {
-            var rows = this.$street.prop('rows');
+            let rows = this.$street.prop('rows');
             this.$street.attr('rows', rows + 1);
 
             this.controlStreetTextareaHeight(clientHeight);
@@ -559,17 +559,18 @@ export default Dep.extend(/** @lends Class# */{
         if (this.$street.val().length === 0) {
             this.$street.attr('rows', 1);
         }
-    },
+    }
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-        var actualAttributePartList = this.getMetadata().get(['fields', this.type, 'actualFields']) || [];
+        let actualAttributePartList = this.getMetadata().get(['fields', this.type, 'actualFields']) || [];
+
         this.addressAttributeList = [];
         this.addressPartList = [];
 
         actualAttributePartList.forEach(item => {
-            var attribute = this.name + Espo.Utils.upperCaseFirst(item);
+            let attribute = this.name + Espo.Utils.upperCaseFirst(item);
 
             this.addressAttributeList.push(attribute);
             this.addressPartList.push(item);
@@ -579,13 +580,13 @@ export default Dep.extend(/** @lends Class# */{
             this[item + 'MaxLength'] =
                 this.getMetadata().get(['entityDefs', this.model.name, 'fields', attribute, 'maxLength']);
         });
-    },
+    }
 
-    validateRequired: function () {
-        var validate = name => {
+    validateRequired() {
+        let validate = name => {
             if (this.model.isRequired(name)) {
                 if (this.model.get(name) === '') {
-                    var msg = this.translate('fieldIsRequired', 'messages')
+                    let msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.translate(name, 'fields', this.model.name));
 
                     this.showValidationMessage(msg, '[data-name="'+name+'"]');
@@ -595,7 +596,7 @@ export default Dep.extend(/** @lends Class# */{
             }
         };
 
-        var result = false;
+        let result = false;
 
         result = validate(this.postalCodeField) || result;
         result = validate(this.streetField) || result;
@@ -604,17 +605,17 @@ export default Dep.extend(/** @lends Class# */{
         result = validate(this.countryField) || result;
 
         return result;
-    },
+    }
 
-    isRequired: function () {
+    isRequired() {
         return this.model.getFieldParam(this.postalCodeField, 'required') ||
             this.model.getFieldParam(this.streetField, 'required') ||
             this.model.getFieldParam(this.stateField, 'required') ||
             this.model.getFieldParam(this.cityField, 'required') ||
             this.model.getFieldParam(this.countryField, 'required');
-    },
+    }
 
-    validatePattern: function () {
+    validatePattern() {
         let fieldList = [
             this.postalCodeField,
             this.stateField,
@@ -629,10 +630,10 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return result;
-    },
+    }
 
-    fetch: function () {
-        var data = {};
+    fetch() {
+        let data = {};
 
         data[this.postalCodeField] = this.$postalCode.val().toString().trim();
         data[this.streetField] = this.$street.val().toString().trim();
@@ -655,59 +656,59 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return data;
-    },
+    }
 
-    fetchSearch: function () {
-        var value = this.$el.find('input.main-element')
+    fetchSearch() {
+        let value = this.$el.find('input.main-element')
             .val()
             .toString()
             .trim();
 
-        if (value) {
-            var data = {
-                type: 'or',
-                value: [
-                    {
-                        type: 'like',
-                        field: this.postalCodeField,
-                        value: value + '%'
-                    },
-                    {
-                        type: 'like',
-                        field: this.streetField,
-                        value: value + '%'
-                    },
-                    {
-                        type: 'like',
-                        field: this.cityField,
-                        value: value + '%'
-                    },
-                    {
-                        type: 'like',
-                        field: this.stateField,
-                        value: value + '%'
-                    },
-                        {
-                        type: 'like',
-                        field: this.countryField,
-                        value: value + '%'
-                    }
-                ],
-                data: {
-                    value: value
-                }
-            };
-
-            return data;
+        if (!value) {
+            return null;
         }
 
-        return false;
-    },
+        return {
+            type: 'or',
+            value: [
+                {
+                    type: 'like',
+                    field: this.postalCodeField,
+                    value: value + '%'
+                },
+                {
+                    type: 'like',
+                    field: this.streetField,
+                    value: value + '%'
+                },
+                {
+                    type: 'like',
+                    field: this.cityField,
+                    value: value + '%'
+                },
+                {
+                    type: 'like',
+                    field: this.stateField,
+                    value: value + '%'
+                },
+                {
+                    type: 'like',
+                    field: this.countryField,
+                    value: value + '%'
+                }
+            ],
+            data: {
+                value: value
+            }
+        };
+    }
 
-    viewMapAction: function () {
+    viewMapAction() {
         this.createView('mapDialog', 'views/modals/view-map', {
             model: this.model,
             field: this.name,
         }, view => view.render());
-    },
-});
+    }
+}
+
+export default AddressFieldView;

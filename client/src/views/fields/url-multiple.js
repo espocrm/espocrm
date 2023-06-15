@@ -26,30 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'views/fields/array';
+import ArrayFieldView from 'views/fields/array';
 
 /**
  * An Url-Multiple field.
- *
- * @class Class
- * @extends module:views/fields/array
  */
-export default Dep.extend(/** @lends Class# */{
+class UrlMultipleFieldView extends ArrayFieldView {
 
-    type: 'urlMultiple',
+    type = 'urlMultiple'
 
-    maxItemLength: 255,
-    displayAsList: true,
-    defaultProtocol: 'https:',
+    maxItemLength = 255
+    displayAsList = true
+    defaultProtocol = 'https:'
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
         this.noEmptyString = true;
         this.params.pattern = '$uriOptionalProtocol';
-    },
+    }
 
-    addValueFromUi: function (value) {
+    addValueFromUi(value) {
         value = value.trim();
 
         if (this.params.strip) {
@@ -60,14 +57,14 @@ export default Dep.extend(/** @lends Class# */{
             value = encodeURI(value);
         }
 
-        Dep.prototype.addValueFromUi.call(this, value);
-    },
+        super.addValueFromUi(value);
+    }
 
     /**
      * @param {string} value
      * @return {string}
      */
-    strip: function (value) {
+    strip(value) {
         if (value.indexOf('//') !== -1) {
             value = value.substring(value.indexOf('//') + 2);
         }
@@ -75,17 +72,17 @@ export default Dep.extend(/** @lends Class# */{
         value = value.replace(/\/+$/, '');
 
         return value;
-    },
+    }
 
-    prepareUrl: function (url) {
+    prepareUrl(url) {
         if (url.indexOf('//') === -1) {
             url = this.defaultProtocol + '//' + url;
         }
 
         return url;
-    },
+    }
 
-    getValueForDisplay: function () {
+    getValueForDisplay() {
         /** @type {JQuery[]} */
         let $list = this.selected.map(value => {
             return $('<a>')
@@ -102,10 +99,10 @@ export default Dep.extend(/** @lends Class# */{
                     .get(0).outerHTML
             )
             .join('');
-    },
+    }
 
-    getItemHtml: function (value) {
-        let html = Dep.prototype.getItemHtml.call(this, value);
+    getItemHtml(value) {
+        let html = super.getItemHtml(value);
 
         let $item = $(html);
 
@@ -118,5 +115,7 @@ export default Dep.extend(/** @lends Class# */{
         );
 
         return $item.get(0).outerHTML;
-    },
-});
+    }
+}
+
+export default UrlMultipleFieldView;

@@ -26,11 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+class ForeignFieldView extends BaseFieldView {
+    type = 'foreign'
+}
 
-        type: 'foreign',
-    });
-});
-
+export default ForeignFieldView;
