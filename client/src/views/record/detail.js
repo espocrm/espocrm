@@ -453,6 +453,9 @@ class DetailRecordView extends BaseRecordView {
      */
     $detailButtonContainer = null
 
+    /** @private */
+    blockUpdateWebSocketPeriod = 500
+
     /**
      * A Ctrl+Enter shortcut action.
      *
@@ -2426,10 +2429,10 @@ class DetailRecordView extends BaseRecordView {
 
     afterSave() {
         if (this.isNew) {
-            this.notify('Created', 'success');
+            Espo.Ui.success(this.translate('Created'));
         }
         else {
-            this.notify('Saved', 'success');
+            Espo.Ui.success(this.translate('Saved'));
         }
 
         this.enableActionItems();
@@ -2438,7 +2441,7 @@ class DetailRecordView extends BaseRecordView {
 
         setTimeout(() => {
             this.unblockUpdateWebSocket();
-        }, this.blockUpdateWebSocketPeriod || 500);
+        }, this.blockUpdateWebSocketPeriod);
     }
 
     beforeSave() {
@@ -2458,26 +2461,26 @@ class DetailRecordView extends BaseRecordView {
     afterNotModified() {
         let msg = this.translate('notModified', 'messages');
 
-        Espo.Ui.warning(msg, 'warning');
+        Espo.Ui.warning(msg);
 
         this.enableActionItems();
         this.setIsNotChanged();
     }
 
     afterNotValid() {
-        this.notify('Not valid', 'error');
+        Espo.Ui.error(this.translate('Not valid'))
 
         this.enableActionItems();
     }
 
     errorHandlerDuplicate(duplicates) {
-        this.notify(false);
+        Espo.Ui.notify(false);
 
         this.createView('duplicate', 'views/modals/duplicate', {
             scope: this.entityType,
             duplicates: duplicates,
             model: this.model,
-        }, (view) => {
+        }, view => {
             view.render();
 
             this.listenToOnce(view, 'save', () => {
@@ -3407,7 +3410,7 @@ class DetailRecordView extends BaseRecordView {
         if (toUnblock) {
             setTimeout(() => {
                 this.unblockUpdateWebSocket();
-            }, this.blockUpdateWebSocketPeriod || 500);
+            }, this.blockUpdateWebSocketPeriod);
         }
     }
 

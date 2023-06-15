@@ -273,7 +273,7 @@ define('views/user/record/detail', ['views/record/detail'], function (Dep) {
                 userId: this.model.id
             }, (view) => {
                 view.render();
-                this.notify(false);
+                Espo.Ui.notify(false);
 
                 this.listenToOnce(view, 'changed', () => {
                     setTimeout(() => {
@@ -303,7 +303,7 @@ define('views/user/record/detail', ['views/record/detail'], function (Dep) {
                     aclData: aclData,
                     model: this.model,
                 }, (view) => {
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     view.render();
                 });

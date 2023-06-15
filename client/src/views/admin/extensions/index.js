@@ -218,7 +218,7 @@ export default Dep.extend({
                     this.$el.find('.list-container').removeClass('hidden');
                     this.$el.find('.panel.upload').removeClass('hidden');
 
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     view.render();
                 });

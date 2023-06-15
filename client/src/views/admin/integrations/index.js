@@ -33,7 +33,6 @@ define('views/admin/integrations/index', ['view'], function (Dep) {
         template: 'admin/integrations/index',
 
         integrationList: null,
-
         integration: null,
 
         data: function () {
@@ -45,7 +44,8 @@ define('views/admin/integrations/index', ['view'], function (Dep) {
 
         events: {
             'click #integrations-menu a.integration-link': function (e) {
-                var name = $(e.currentTarget).data('name');
+                let name = $(e.currentTarget).data('name');
+
                 this.openIntegration(name);
             },
         },
@@ -59,7 +59,7 @@ define('views/admin/integrations/index', ['view'], function (Dep) {
 
             this.integration = this.options.integration || null;
 
-            this.on('after:render', function () {
+            this.on('after:render', () => {
                 this.renderHeader();
 
                 if (!this.integration) {
@@ -84,24 +84,26 @@ define('views/admin/integrations/index', ['view'], function (Dep) {
             this.createView('content', viewName, {
                 el: '#integration-content',
                 integration: integration,
-            }, function (view) {
+            }, view => {
                 this.renderHeader();
 
                 view.render();
 
-                this.notify(false);
+                Espo.Ui.notify(false);
 
                 $(window).scrollTop(0);
-            }.bind(this));
+            });
         },
 
         renderDefaultPage: function () {
             $('#integration-header').html('').hide();
 
+            let msg;
+
             if (this.integrationList.length) {
-            	var msg = this.translate('selectIntegration', 'messages', 'Integration');
+                msg = this.translate('selectIntegration', 'messages', 'Integration');
             } else {
-            	var msg = '<p class="lead">' + this.translate('noIntegrations', 'messages', 'Integration') + '</p>';
+                msg = '<p class="lead">' + this.translate('noIntegrations', 'messages', 'Integration') + '</p>';
             }
 
             $('#integration-content').html(msg);

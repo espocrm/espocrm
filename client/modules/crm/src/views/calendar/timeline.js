@@ -1074,7 +1074,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
 
                 callback(convertedEventList);
 
-                this.notify(false);
+                Espo.Ui.notify(false);
             });
         },
 
@@ -1119,7 +1119,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
                 multiple: true,
             }, view => {
                 view.render();
-                this.notify(false);
+                Espo.Ui.notify(false);
 
                 this.listenToOnce(view, 'select', modelList => {
                     modelList.forEach(model => {

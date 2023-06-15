@@ -58,8 +58,8 @@ define('views/email-account/fields/folder', ['views/fields/base'], function (Dep
                 Espo.Ajax.postRequest(this.getFoldersUrl, data).then(folders => {
                     this.createView('modal', 'views/email-account/modals/select-folder', {
                         folders: folders
-                    }, (view) => {
-                        this.notify(false);
+                    }, view => {
+                        Espo.Ui.notify(false);
 
                         view.render();
 
@@ -70,7 +70,7 @@ define('views/email-account/fields/folder', ['views/fields/base'], function (Dep
                         });
                     });
                 })
-                .catch(() => {
+                .catch(xhr => {
                     Espo.Ui.error(this.translate('couldNotConnectToImap', 'messages', 'EmailAccount'));
 
                     xhr.errorIsHandled = true;

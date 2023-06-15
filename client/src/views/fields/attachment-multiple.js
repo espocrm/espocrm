@@ -827,7 +827,7 @@ export default Dep.extend(/** @lends Class# */{
             }, (view) => {
                 view.render();
 
-                this.notify(false);
+                Espo.Ui.notify(false);
 
                 this.listenToOnce(view, 'select', (modelList) =>{
                     if (Object.prototype.toString.call(modelList) !== '[object Array]') {

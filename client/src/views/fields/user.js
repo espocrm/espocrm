@@ -62,7 +62,7 @@ define('views/fields/user',[ 'views/fields/link'], function (Dep) {
                 }, (view) => {
                     view.render();
 
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     this.listenToOnce(view, 'select', models => {
                         if (Object.prototype.toString.call(models) !== '[object Array]') {

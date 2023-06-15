@@ -128,7 +128,7 @@ define('crm:views/lead/convert', ['view'], function (Dep) {
 
                                     if (i === scopeList.length) {
                                         this.wait(false);
-                                        this.notify(false);
+                                        Espo.Ui.notify(false);
                                     }
                                 });
                             });

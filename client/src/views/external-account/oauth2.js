@@ -271,7 +271,7 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
                 }
             }, function (res) {
                 if (res.error) {
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     return;
                 }

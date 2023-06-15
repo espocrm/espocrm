@@ -128,7 +128,7 @@ define('views/admin/field-manager/index', ['view'], function (Dep) {
             }, (view) => {
                 view.render();
 
-                this.notify(false);
+                Espo.Ui.notify(false);
 
                 $(window).scrollTop(0);
             });
@@ -152,7 +152,7 @@ define('views/admin/field-manager/index', ['view'], function (Dep) {
             }, (view) => {
                 view.render();
 
-                this.notify(false);
+                Espo.Ui.notify(false);
 
                 $(window).scrollTop(0);
 
@@ -178,7 +178,7 @@ define('views/admin/field-manager/index', ['view'], function (Dep) {
             }, (view) => {
                 view.render();
 
-                this.notify(false);
+                Espo.Ui.notify(false);
 
                 $(window).scrollTop(0);
 

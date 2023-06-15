@@ -88,12 +88,13 @@ define('views/external-account/index', ['view'], function (Dep) {
                 el: '#external-account-content',
                 id: id,
                 integration: integration
-            }, function (view) {
+            }, view => {
                 this.renderHeader();
                 view.render();
-                this.notify(false);
+                Espo.Ui.notify(false);
+
                 $(window).scrollTop(0);
-            }.bind(this));
+            });
         },
 
         renderDefaultPage: function () {
@@ -106,6 +107,7 @@ define('views/external-account/index', ['view'], function (Dep) {
                 $('#external-account-header').html('');
                 return;
             }
+
             $('#external-account-header').show().html(this.integration);
         },
 
