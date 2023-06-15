@@ -28,39 +28,35 @@
 
 /** @module views/fields/bool */
 
-import Dep from 'views/fields/base';
+import BaseFieldView from 'views/fields/base';
 import Select from 'ui/select';
 
 /**
  * A boolean field (checkbox).
- *
- * @class
- * @name Class
- * @extends module:views/fields/base
  */
-export default Dep.extend(/** @lends Class# */{
+class BoolFieldView extends BaseFieldView {
 
-    type: 'bool',
+    type = 'bool'
 
-    listTemplate: 'fields/bool/list',
-    detailTemplate: 'fields/bool/detail',
-    editTemplate: 'fields/bool/edit',
-    searchTemplate: 'fields/bool/search',
+    listTemplate = 'fields/bool/list'
+    detailTemplate = 'fields/bool/detail'
+    editTemplate = 'fields/bool/edit'
+    searchTemplate = 'fields/bool/search'
 
-    validations: [],
+    validations = []
+    initialSearchIsNotIdle = true
 
-    initialSearchIsNotIdle: true,
-
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+    /** @inheritDoc */
+    data() {
+        let data = super.data();
 
         data.valueIsSet = this.model.has(this.name);
 
         return data;
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.mode === this.MODE_SEARCH) {
             this.$element.on('change', () => {
@@ -69,9 +65,9 @@ export default Dep.extend(/** @lends Class# */{
 
             Select.init(this.$element);
         }
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let value = this.$element.get(0).checked;
 
         let data = {};
@@ -79,9 +75,9 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = value;
 
         return data;
-    },
+    }
 
-    fetchSearch: function () {
+    fetchSearch() {
         let type = this.$element.val();
 
         if (!type) {
@@ -114,9 +110,13 @@ export default Dep.extend(/** @lends Class# */{
                 type: type,
             },
         };
-    },
+    }
 
-    getSearchType: function () {
-        return this.getSearchParamsData().type || this.searchParams.type || 'isTrue';
-    },
-});
+    getSearchType() {
+        return this.getSearchParamsData().type ||
+            this.searchParams.type ||
+            'isTrue';
+    }
+}
+
+export default BoolFieldView;
