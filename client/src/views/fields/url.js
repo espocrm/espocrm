@@ -28,44 +28,36 @@
 
 /** @module views/fields/url */
 
-import Dep from 'views/fields/varchar';
+import VarcharFieldView from 'views/fields/varchar';
 
-/**
- * @class Class
- * @extends module:views/fields/varchar
- */
-export default Dep.extend(/** @lends Class# */{
+class UrlFieldView extends VarcharFieldView {
 
-    type: 'url',
+    type = 'url'
 
-    listTemplate: 'fields/url/list',
-    detailTemplate: 'fields/url/detail',
-    defaultProtocol: 'https:',
+    listTemplate = 'fields/url/list'
+    detailTemplate = 'fields/url/detail'
+    defaultProtocol = 'https:'
 
-    validations: [
+    validations = [
         'required',
         'valid',
         'maxLength',
-    ],
+    ]
 
-    noSpellCheck: true,
+    noSpellCheck = true
 
-    DEFAULT_MAX_LENGTH: 255,
+    DEFAULT_MAX_LENGTH =255
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
-    },
-
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         data.url = this.getUrl();
 
         return data;
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.isEditMode()) {
             this.$element.on('change', () => {
@@ -82,19 +74,19 @@ export default Dep.extend(/** @lends Class# */{
                 this.$element.val(decoded);
             });
         }
-    },
+    }
 
-    getValueForDisplay: function () {
+    getValueForDisplay() {
         let value = this.model.get(this.name);
 
         return value ? decodeURI(value) : null;
-    },
+    }
 
     /**
      * @param {string} value
      * @return {string}
      */
-    parse: function (value) {
+    parse(value) {
         value = value.trim();
 
         if (this.params.strip) {
@@ -106,13 +98,13 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return value;
-    },
+    }
 
     /**
      * @param {string} value
      * @return {string}
      */
-    strip: function (value) {
+    strip(value) {
         if (value.indexOf('//') !== -1) {
             value = value.substr(value.indexOf('//') + 2);
         }
@@ -120,9 +112,9 @@ export default Dep.extend(/** @lends Class# */{
         value = value.replace(/\/+$/, '');
 
         return value;
-    },
+    }
 
-    getUrl: function () {
+    getUrl() {
         let url = this.model.get(this.name);
 
         if (url && url !== '') {
@@ -134,9 +126,9 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return url;
-    },
+    }
 
-    validateValid: function () {
+    validateValid() {
         let value = this.model.get(this.name);
 
         if (!value) {
@@ -158,9 +150,9 @@ export default Dep.extend(/** @lends Class# */{
         this.showValidationMessage(msg);
 
         return true;
-    },
+    }
 
-    validateMaxLength: function () {
+    validateMaxLength() {
         let maxLength = this.params.maxLength || this.DEFAULT_MAX_LENGTH;
 
         let value = this.model.get(this.name);
@@ -180,10 +172,10 @@ export default Dep.extend(/** @lends Class# */{
         this.showValidationMessage(msg);
 
         return true;
-    },
+    }
 
-    fetch: function () {
-        let data = Dep.prototype.fetch.call(this);
+    fetch() {
+        let data = super.fetch();
 
         let value = data[this.name];
 
@@ -194,5 +186,7 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = this.parse(value);
 
         return data;
-    },
-});
+    }
+}
+
+export default UrlFieldView;
