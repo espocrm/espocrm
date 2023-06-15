@@ -55,24 +55,25 @@ class Bundler {
      * Bundles Espo js files into chunks.
      *
      * @param {{
-     *   name: string,
-     *   files?: string[],
-     *   patterns: string[],
-     *   ignoreFiles?: string[],
-     *   lookupPatterns?: string[],
-     *   ignoreFullPathFiles?: string[],
-     *   dependentOn?: string[],
-     *   libs: {
-     *     src?: string,
-     *     bundle?: boolean,
-     *     key?: string,
-     *   }[],
+     *     name: string,
+     *     files?: string[],
+     *     patterns: string[],
+     *     ignoreFiles?: string[],
+     *     lookupPatterns?: string[],
+     *     ignoreFullPathFiles?: string[],
+     *     dependentOn?: string[],
+     *     libs: {
+     *         src?: string,
+     *         bundle?: boolean,
+     *         key?: string,
+     *     }[],
      * }} params
      * @return {{
-     *   contents: string,
-     *   files: string[],
-     *   modules: string[],
-     *   notBundledModules: string[],
+     *     contents: string,
+     *     files: string[],
+     *     modules: string[],
+     *     notBundledModules: string[],
+     *     dependencyModules: string[],
      * }}
      */
     bundle(params) {
@@ -95,7 +96,7 @@ class Bundler {
 
         let notBundledModules = [];
 
-        let sortedFiles = this.#sortFiles(
+        let {files: sortedFiles, depModules} = this.#sortFiles(
             params.name,
             fullPathFiles,
             allFiles,
@@ -117,6 +118,7 @@ class Bundler {
             files: sortedFiles,
             modules: modules,
             notBundledModules: notBundledModules,
+            dependencyModules: depModules,
         };
     }
 
@@ -166,7 +168,10 @@ class Bundler {
      * @param {string[]} ignoreFiles
      * @param {string[]} notBundledModules
      * @param {string[]|null} dependentOn
-     * @return {string[]}
+     * @return {{
+     *     files: string[],
+     *     depModules: string[],
+     * }}
      */
     #sortFiles(
         name,
@@ -207,18 +212,22 @@ class Bundler {
         });
 
         let depModules = [];
+        let allDepModules = [];
 
         modules
             .forEach(name => {
                 let deps = this.#obtainAllDeps(name, map);
 
                 deps
+                    .filter(item => !modules.includes(item))
+                    .filter(item => !allDepModules.includes(item))
+                    .forEach(item => allDepModules.push(item));
+
+                deps
                     .filter(item => !item.includes('!'))
                     .filter(item => !modules.includes(item))
                     .filter(item => !depModules.includes(item))
-                    .forEach(item => {
-                        depModules.push(item);
-                    });
+                    .forEach(item => depModules.push(item));
             });
 
         modules = modules
@@ -264,7 +273,10 @@ class Bundler {
             return moduleFileMap[name];
         });
 
-        return standalonePathList.concat(modulePaths);
+        return {
+            files: standalonePathList.concat(modulePaths),
+            depModules: allDepModules,
+        };
     }
 
     /**

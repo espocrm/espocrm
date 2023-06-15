@@ -44,6 +44,7 @@ class BundlerGeneral {
      *     noDuplicates?: boolean,
      *     dependentOn?: string[],
      *     requires?: string[],
+     *     mapDependencies?: boolean,
      *   }>,
      *   modulePaths?: Record.<string, string>,
      *   lookupPatterns: string[],
@@ -93,6 +94,8 @@ class BundlerGeneral {
             notBundledMap[name] = data.notBundledModules;
             result[name] = data.contents;
 
+            console.log(`  Chunk '${name}' done, ${data.files.length} files.`)
+
             if (i === 0 && this.config.mainChunk) {
                 return;
             }
@@ -101,9 +104,13 @@ class BundlerGeneral {
 
             let bundleFile = this.filePattern.replace('{*}', name);
 
-            let requires = this.config.chunks[name].requires;
+            let requires = [].concat(this.config.chunks[name].requires ?? []);
 
-            if (requires) {
+            if (this.config.chunks[name].mapDependencies) {
+                requires = requires.concat(data.dependencyModules);
+            }
+
+            if (requires.length) {
                 let part = JSON.stringify(requires);
 
                 result[mainName] += `Espo.loader.mapBundleDependencies('${name}', ${part});\n`;
@@ -144,12 +151,13 @@ class BundlerGeneral {
      *   files: string[],
      *   templateFiles: string[],
      *   notBundledModules: string[],
+     *   dependencyModules: [],
      * }}
      */
     #bundleChunk(name, isMain, alreadyBundled) {
         let contents = '';
-
         let modules = [];
+        let dependencyModules = [];
 
         let params = this.config.chunks[name];
 
@@ -197,6 +205,7 @@ class BundlerGeneral {
             bundledFiles = data.files;
 
             notBundledModules = data.notBundledModules;
+            dependencyModules = data.dependencyModules;
         }
 
         // Pre-compiled templates turned out to be slower if too many are bundled.
@@ -220,6 +229,7 @@ class BundlerGeneral {
             files: bundledFiles,
             templateFiles: bundledTemplateFiles,
             notBundledModules: notBundledModules,
+            dependencyModules: dependencyModules,
         };
     }
 }
