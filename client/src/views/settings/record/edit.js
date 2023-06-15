@@ -52,7 +52,7 @@ define('views/settings/record/edit', ['views/record/edit'], function (Dep) {
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'after:save', () => {
-                this.getConfig().set(this.model.toJSON());
+                this.getConfig().set(this.model.getClonedAttributes());
             });
         },
 

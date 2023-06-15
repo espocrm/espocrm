@@ -123,7 +123,7 @@ define('views/user/record/detail', ['views/record/detail'], function (Dep) {
 
             if (this.model.id === this.getUser().id) {
                 this.listenTo(this.model, 'after:save', () => {
-                    this.getUser().set(this.model.toJSON());
+                    this.getUser().set(this.model.getClonedAttributes());
                 });
             }
 

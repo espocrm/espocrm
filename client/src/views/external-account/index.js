@@ -48,16 +48,18 @@ define('views/external-account/index', ['view'], function (Dep) {
         },
 
         setup: function () {
-            this.externalAccountList = this.collection.toJSON();
+            this.externalAccountList = this.collection.models.map(model => model.getClonedAttributes());
 
             this.userId = this.getUser().id;
             this.id = this.options.id || null;
+
             if (this.id) {
                 this.userId = this.id.split('__')[1];
             }
 
             this.on('after:render', function () {
                 this.renderHeader();
+
                 if (!this.id) {
                     this.renderDefaultPage();
                 } else {

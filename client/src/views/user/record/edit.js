@@ -39,7 +39,7 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
 
             if (this.model.id === this.getUser().id) {
                 this.listenTo(this.model, 'after:save', () => {
-                    this.getUser().set(this.model.toJSON());
+                    this.getUser().set(this.model.getClonedAttributes());
                 });
             }
 
