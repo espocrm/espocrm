@@ -1531,7 +1531,7 @@ class ListRecordView extends View {
                         }
 
                         Espo.Ui.success(
-                            this.translate(msg, 'messages').replace('{count}', resultCount)
+                            this.translate(msg, 'messages').replace('{count}', resultCount.toString())
                         );
 
                         return;
