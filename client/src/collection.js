@@ -220,7 +220,7 @@ class Collection {
      *     merge?: boolean,
      *     at?: number,
      *     silent?: boolean,
-     * }} options Options. `at` – position; `merge` – merge existing models, otherwise, they are ignored.
+     * }} [options] Options. `at` – position; `merge` – merge existing models, otherwise, they are ignored.
      * @return {this}
      * @fires Collection#update
      */
@@ -236,7 +236,7 @@ class Collection {
      * @param {Model[]|Model} models Models ar a model.
      * @param {{
      *     silent?: boolean,
-     * }} options Options.
+     * }} [options] Options.
      * @return {this}
      * @fires Collection#update
      */
@@ -273,7 +273,7 @@ class Collection {
      *     merge?: boolean,
      *     remove?: boolean,
      *     index?: number,
-     * }} options
+     * }} [options]
      * @return {Model[]}
      */
     set(models, options) {
@@ -461,7 +461,7 @@ class Collection {
      * @param {Model} model A model.
      * @param {{
      *     silent?: boolean,
-     * }} options Options
+     * }} [options] Options
      * @return {this}
      */
     push(model, options) {
@@ -475,7 +475,7 @@ class Collection {
      *
      * @param {{
      *     silent?: boolean,
-     * }} options Options
+     * }} [options] Options
      * @return {Model|null}
      */
     pop(options) {
@@ -496,7 +496,7 @@ class Collection {
      * @param {Model} model A model.
      * @param {{
      *     silent?: boolean,
-     * }} options Options
+     * }} [options] Options
      * @return {this}
      */
     unshift(model, options) {
@@ -510,7 +510,7 @@ class Collection {
      *
      * @param {{
      *     silent?: boolean,
-     * }} options Options
+     * }} [options] Options
      * @return {Model|null}
      */
     shift(options) {
