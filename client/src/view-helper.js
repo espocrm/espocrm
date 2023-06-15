@@ -34,227 +34,223 @@ import Handlebars from "lib!handlebars";
 
 /**
  * A view helper.
- *
- * @class
  */
-const ViewHelper = function () {
-    this._registerHandlebarsHelpers();
+class ViewHelper {
 
-    /**
-     * @private
-     */
-    this.mdBeforeList = [
-        {
-            regex: /&#x60;&#x60;&#x60;\n?([\s\S]*?)&#x60;&#x60;&#x60;/g,
-            value: function (s, string) {
-                return '<pre><code>' +string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') +
-                    '</code></pre>';
-            }
-        },
-        {
-            regex: /&#x60;([\s\S]*?)&#x60;/g,
-            value: function (s, string) {
-                return '<code>' + string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') + '</code>';
-            }
-        }
-    ];
+    constructor() {
+        this._registerHandlebarsHelpers();
 
-    marked.setOptions({
-        breaks: true,
-        tables: false,
-    });
+        /** @private */
+        this.mdBeforeList = [
+            {
+                regex: /&#x60;&#x60;&#x60;\n?([\s\S]*?)&#x60;&#x60;&#x60;/g,
+                value: function (s, string) {
+                    return '<pre><code>' +string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') +
+                        '</code></pre>';
+                }
+            },
+            {
+                regex: /&#x60;([\s\S]*?)&#x60;/g,
+                value: function (s, string) {
+                    return '<code>' + string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') + '</code>';
+                }
+            }
+        ];
 
-    DOMPurify.addHook('beforeSanitizeAttributes', function (node) {
-        if (node instanceof HTMLAnchorElement) {
-            if (node.getAttribute('target')) {
-                node.targetBlank = true;
-            }
-            else {
-                node.targetBlank = false;
-            }
-        }
-    });
+        marked.setOptions({
+            breaks: true,
+            tables: false,
+        });
 
-    DOMPurify.addHook('afterSanitizeAttributes', function (node) {
-        if (node instanceof HTMLAnchorElement) {
-            if (node.targetBlank) {
-                node.setAttribute('target', '_blank');
-                node.setAttribute('rel', 'noopener noreferrer');
+        DOMPurify.addHook('beforeSanitizeAttributes', function (node) {
+            if (node instanceof HTMLAnchorElement) {
+                if (node.getAttribute('target')) {
+                    node.targetBlank = true;
+                }
+                else {
+                    node.targetBlank = false;
+                }
             }
-            else {
-                node.removeAttribute('rel');
-            }
-        }
-    });
-};
+        });
 
-_.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
+        DOMPurify.addHook('afterSanitizeAttributes', function (node) {
+            if (node instanceof HTMLAnchorElement) {
+                if (node.targetBlank) {
+                    node.setAttribute('target', '_blank');
+                    node.setAttribute('rel', 'noopener noreferrer');
+                }
+                else {
+                    node.removeAttribute('rel');
+                }
+            }
+        });
+    }
 
     /**
      * A layout manager.
      *
      * @type {module:layout-manager}
      */
-    layoutManager: null,
+    layoutManager = null
 
     /**
      * A config.
      *
      * @type {module:models/settings}
      */
-    settings: null,
+    settings = null
 
     /**
      * A config.
      *
      * @type {module:models/settings}
      */
-    config: null,
+    config = null
 
     /**
      * A current user.
      *
      * @type {module:models/user}
      */
-    user: null,
+    user = null
 
     /**
      * A preferences.
      *
      * @type {module:models/preferences}
      */
-    preferences: null,
+    preferences = null
 
     /**
      * An ACL manager.
      *
      * @type {module:acl-manager}
      */
-    acl: null,
+    acl = null
 
     /**
      * A model factory.
      *
      * @type {module:model-factory}
      */
-    modelFactory: null,
+    modelFactory = null
 
     /**
      * A collection factory.
      *
      * @type {module:collection-factory}
      */
-    collectionFactory: null,
+    collectionFactory = null
 
     /**
      * A router.
      *
      * @type {module:router}
      */
-    router: null,
+    router = null
 
     /**
      * A storage.
      *
      * @type {module:storage}
      */
-    storage: null,
+    storage = null
 
     /**
      * A session storage.
      *
      * @type {module:session-storage}
      */
-    sessionStorage: null,
+    sessionStorage = null
 
     /**
      * A date-time util.
      *
      * @type {module:date-time}
      */
-    dateTime: null,
+    dateTime = null
 
     /**
      * A language.
      *
      * @type {module:language}
      */
-    language: null,
+    language = null
 
     /**
      * A metadata.
      *
      * @type {module:metadata}
      */
-    metadata: null,
+    metadata = null
 
     /**
      * A field-manager util.
      *
      * @type {module:field-manager}
      */
-    fieldManager: null,
+    fieldManager = null
 
     /**
      * A cache.
      *
      * @type {module:cache}
      */
-    cache: null,
+    cache = null
 
     /**
      * A theme manager.
      *
      * @type {module:theme-manager}
      */
-    themeManager: null,
+    themeManager = null
 
     /**
      * A web-socket manager. Null if not enabled.
      *
      * @type {?module:web-socket-manager}
      */
-    webSocketManager: null,
+    webSocketManager = null
 
     /**
      * A number util.
      *
      * @type {module:number}
      */
-    numberUtil: null,
+    numberUtil = null
 
     /**
      * A page-title util.
      *
      * @type {module:page-title}
      */
-    pageTitle: null,
+    pageTitle = null
 
     /**
      * A broadcast channel.
      *
      * @type {?module:broadcast-channel}
      */
-    broadcastChannel: null,
+    broadcastChannel = null
 
     /**
      * A base path.
      *
      * @type {string}
      */
-    basePath: '',
+    basePath = ''
 
     /**
      * Application parameters.
      *
      * @type {Object}
      */
-    appParams: null,
+    appParams = null
 
     /**
      * @private
      */
-    _registerHandlebarsHelpers: function () {
+    _registerHandlebarsHelpers() {
         Handlebars.registerHelper('img', img => {
             return new Handlebars.SafeString("<img src=\"img/" + img + "\">");
         });
@@ -593,7 +589,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
         Handlebars.registerHelper('basePath', () => {
             return this.basePath || '';
         });
-    },
+    }
 
     /**
      * Get an application parameter.
@@ -601,9 +597,9 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {string} name
      * @returns {*}
      */
-    getAppParam: function (name) {
+    getAppParam(name) {
         return (this.appParams || {})[name];
-    },
+    }
 
     /**
      * Strip tags.
@@ -612,7 +608,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {string} text
      * @returns {string}
      */
-    stripTags: function (text) {
+    stripTags(text) {
         text = text || '';
 
         if (typeof text === 'string' || text instanceof String) {
@@ -620,7 +616,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
         }
 
         return text;
-    },
+    }
 
     /**
      * Escape a string.
@@ -628,9 +624,9 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {string} text A string.
      * @returns {string}
      */
-    escapeString: function (text) {
+    escapeString(text) {
         return Handlebars.Utils.escapeExpression(text);
-    },
+    }
 
     /**
      * Get a user avatar HTML.
@@ -641,7 +637,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {string} [additionalClassName]  An additional class-name.
      * @returns {string}
      */
-    getAvatarHtml: function (id, size, width, additionalClassName) {
+    getAvatarHtml(id, size, width, additionalClassName) {
         if (this.config.get('avatarsDisabled')) {
             return '';
         }
@@ -663,7 +659,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
             .addClass(className)
             .attr('width', width.toString())
             .get(0).outerHTML;
-    },
+    }
 
     /**
      * A Markdown text to HTML (one-line).
@@ -671,9 +667,9 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {string} text A text.
      * @returns {string} HTML.
      */
-    transformMarkdownInlineText: function (text) {
+    transformMarkdownInlineText(text) {
         return this.transformMarkdownText(text, {inline: true});
-    },
+    }
 
     /**
      * A Markdown text to HTML.
@@ -682,7 +678,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {{inline?: boolean, linksInNewTab?: boolean}} [options] Options.
      * @returns {Handlebars.SafeString} HTML.
      */
-    transformMarkdownText: function (text, options) {
+    transformMarkdownText(text, options) {
         text = text || '';
 
         text = Handlebars.Utils.escapeExpression(text).replace(/&gt;+/g, '>');
@@ -712,7 +708,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
         );
 
         return new Handlebars.SafeString(text);
-    },
+    }
 
     /**
      * Get a color-icon HTML for a scope.
@@ -722,7 +718,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {string} [additionalClassName] An additional class-name.
      * @returns {string}
      */
-    getScopeColorIconHtml: function (scope, noWhiteSpace, additionalClassName) {
+    getScopeColorIconHtml(scope, noWhiteSpace, additionalClassName) {
         if (this.config.get('scopeColorsDisabled') || this.preferences.get('scopeColorsDisabled')) {
             return '';
         }
@@ -750,7 +746,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
         }
 
         return html;
-    },
+    }
 
     /**
      * Sanitize HTML.
@@ -759,9 +755,9 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {Object} [options] Options.
      * @returns {string}
      */
-    sanitizeHtml: function (text, options) {
+    sanitizeHtml(text, options) {
         return DOMPurify.sanitize(text, options);
-    },
+    }
 
     /**
      * Moderately sanitize HTML.
@@ -769,7 +765,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {string} value HTML.
      * @returns {string}
      */
-    moderateSanitizeHtml: function (value) {
+    moderateSanitizeHtml(value) {
         value = value || '';
         value = value.replace(/<\/?(base)[^><]*>/gi, '');
         value = value.replace(/<\/?(object)[^><]*>/gi, '');
@@ -800,7 +796,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
         });
 
         return value;
-    },
+    }
 
     /**
      * Strip event handlers in HTML.
@@ -808,7 +804,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {string} html HTML.
      * @returns {string}
      */
-    stripEventHandlersInHtml: function (html) {
+    stripEventHandlersInHtml(html) {
         let j; // @todo Revise.
 
         function stripHTML() {
@@ -862,7 +858,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
         }
 
         return html;
-    },
+    }
 
     /**
      * Calculate a content container height.
@@ -870,7 +866,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {JQuery} $el Element.
      * @returns {number}
      */
-    calculateContentContainerHeight: function ($el) {
+    calculateContentContainerHeight($el) {
         let smallScreenWidth = this.themeManager.getParam('screenWidthXs');
 
         let $window = $(window);
@@ -894,7 +890,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
         let spaceHeight = top + footerHeight;
 
         return $window.height() - spaceHeight - 20;
-    },
+    }
 
     /**
      * Process view-setup-handlers.
@@ -903,7 +899,7 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
      * @param {string} type A view-setup-handler type.
      * @param {string} [scope] A scope.
      */
-    processSetupHandlers: function (view, type, scope) {
+    processSetupHandlers(view, type, scope) {
         scope = scope || view.scope;
 
         let handlerList = this.metadata.get(['clientDefs', 'Global', 'viewSetupHandlers', type]) || [];
@@ -938,23 +934,23 @@ _.extend(ViewHelper.prototype, /** @lends ViewHelper# */{
 
             view.wait(promise);
         }
-    },
+    }
 
     /**
      * @deprecated Use `transformMarkdownText`.
      * @internal Used in extensions.
      */
-    transfromMarkdownText: function (text, options) {
+    transfromMarkdownText(text, options) {
         return this.transformMarkdownText(text, options);
-    },
+    }
 
     /**
      * @deprecated Use `transformMarkdownInlineText`.
      * @internal Used in extensions.
      */
-    transfromMarkdownInlineText: function (text) {
+    transfromMarkdownInlineText(text) {
         return this.transformMarkdownInlineText(text);
-    },
-});
+    }
+}
 
 export default ViewHelper;
