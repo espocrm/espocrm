@@ -10,6 +10,7 @@
     ],
     "basePath": "client",
     "transpiledPath": "client/lib/transpiled",
+    "mainChunk": true,
     "chunks": {
         "main": {
             "files": [

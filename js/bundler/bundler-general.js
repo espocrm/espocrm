@@ -48,6 +48,7 @@ class BundlerGeneral {
      *   modulePaths?: Record.<string, string>,
      *   lookupPatterns: string[],
      *   order: string[],
+     *   mainChunk?: boolean,
      * }} config
      * @param {{
      *    src?: string,
@@ -92,7 +93,7 @@ class BundlerGeneral {
             notBundledMap[name] = data.notBundledModules;
             result[name] = data.contents;
 
-            if (i === 0) {
+            if (i === 0 && this.config.mainChunk) {
                 return;
             }
 
