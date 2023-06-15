@@ -1099,13 +1099,16 @@ Espo.Ui = {
      * Show an error message.
      *
      * @param {string} message A message.
-     * @param {boolean} [closeButton] A close button.
+     * @param {Espo.Ui~NotifyOptions|true} [options] Options. If true, then only closeButton option will be applied.
      */
-    error: function (message, closeButton) {
-        closeButton = closeButton || false;
-        let timeout = closeButton ? 0 : 4000;
+    error: function (message, options) {
+        options = typeof options === 'boolean' ?
+            {closeButton: options} :
+            {...options};
 
-        Espo.Ui.notify(message, 'danger', timeout, {closeButton: closeButton});
+        let timeout = options.closeButton ? 0 : 4000;
+
+        Espo.Ui.notify(message, 'danger', timeout, options);
     },
 
     /**
