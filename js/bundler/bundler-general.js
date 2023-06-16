@@ -49,7 +49,6 @@ class BundlerGeneral {
      *   modulePaths?: Record.<string, string>,
      *   lookupPatterns: string[],
      *   order: string[],
-     *   mainChunk?: boolean,
      * }} config
      * @param {{
      *    src?: string,
@@ -66,6 +65,10 @@ class BundlerGeneral {
         this.libs = libs;
         this.mainBundleFiles = [];
         this.filePattern = filePattern || 'client/lib/espo-{*}.min.js';
+
+        if (!this.config.order.length) {
+            throw new Error(`No chunks specified in 'order' param.`);
+        }
     }
 
     /**
@@ -96,7 +99,7 @@ class BundlerGeneral {
 
             console.log(`  Chunk '${name}' done, ${data.files.length} files.`)
 
-            if (i === 0 && this.config.mainChunk) {
+            if (i === 0 && this.config.order.length > 1) {
                 return;
             }
 
