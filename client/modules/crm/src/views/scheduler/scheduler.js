@@ -48,13 +48,9 @@ define('crm:views/scheduler/scheduler', ['view', 'lib!vis'], function (Dep, Vis)
             this.endField = this.options.endField || 'dateEnd';
             this.assignedUserField = this.options.assignedUserField || 'assignedUser';
 
-            this.colors = Espo.Utils.clone(
-                this.getMetadata().get('clientDefs.Calendar.colors') || {});
+            this.colors = Espo.Utils.clone(this.getMetadata().get('clientDefs.Calendar.colors') || {});
 
-            this.colors = _.extend(
-                this.colors,
-                Espo.Utils.clone(this.getHelper().themeManager.getParam('calendarColors') || {}),
-            );
+            this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
 
             let usersFieldDefault = 'users';
 

@@ -56,9 +56,9 @@ define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
                 this.getModelFactory().create(this.scope, model => {
                     model.populateDefaults();
 
-                    var attributes = this.getRecordView().fetch();
+                    let attributes = this.getRecordView().fetch();
 
-                    attributes = _.extend(attributes, this.getRecordView().model.getClonedAttributes());
+                    attributes = {...attributes, ...this.getRecordView().model.getClonedAttributes()};
 
                     this.filterAttributesForEntityType(attributes, scope);
 

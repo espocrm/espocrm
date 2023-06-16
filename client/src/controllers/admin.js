@@ -44,10 +44,10 @@ class AdminController extends Controller {
         let page = options.page;
 
         if (options.options) {
-            options = _.extend(
-                Espo.Utils.parseUrlOptionsParam(options.options),
-                options
-            );
+            options = {
+                ...Espo.Utils.parseUrlOptionsParam(options.options),
+                ...options,
+            };
 
             delete options.options;
         }

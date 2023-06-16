@@ -727,10 +727,11 @@ class ListView extends MainView {
 
         this.prepareCreateReturnDispatchParams(returnDispatchParams);
 
-        _.extend(options, {
+        options = {
+            ...options,
             returnUrl: this.getRouter().getCurrentUrl(),
             returnDispatchParams: returnDispatchParams,
-        });
+        };
 
         return this.createView('quickCreate', viewName, options, (view) => {
             view.render();
@@ -773,10 +774,11 @@ class ListView extends MainView {
 
         this.prepareCreateReturnDispatchParams(returnDispatchParams);
 
-        _.extend(options, {
+        options = {
+            ...options,
             returnUrl: this.getRouter().getCurrentUrl(),
-            returnDispatchParams: returnDispatchParams
-        });
+            returnDispatchParams: returnDispatchParams,
+        };
 
         router.navigate(url, {trigger: false});
         router.dispatch(this.scope, 'create', options);

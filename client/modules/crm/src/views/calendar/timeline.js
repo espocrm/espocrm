@@ -139,10 +139,7 @@ define('crm:views/calendar/timeline', ['view', 'lib!vis'], function (Dep, Vis) {
             this.allDayScopeList = this.getMetadata()
                 .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList || [];
 
-            this.colors = _.extend(
-                this.colors,
-                Espo.Utils.clone(this.getHelper().themeManager.getParam('calendarColors') || {}),
-            );
+            this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
 
             this.isCustomViewAvailable = this.getAcl().get('userPermission') !== 'no';
 

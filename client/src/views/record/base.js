@@ -1200,7 +1200,7 @@ class BaseRecordView extends View {
             }
 
             if (!view.disabled && !view.readOnly && view.isFullyRendered()) {
-                _.extend(data, view.fetch());
+                data = {...data, ...view.fetch()};
             }
         }
 

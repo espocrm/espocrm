@@ -352,7 +352,7 @@ class EditModalView extends ModalView {
             attributes = this.getRecordView().fetch();
             model = this.getRecordView().model;
 
-            attributes = _.extend(attributes, model.getClonedAttributes());
+            attributes = {...attributes, ...model.getClonedAttributes()};
 
             options = {
                 attributes: attributes,
@@ -376,7 +376,7 @@ class EditModalView extends ModalView {
             attributes = this.getRecordView().fetch();
             model = this.getRecordView().model;
 
-            attributes = _.extend(attributes, model.getClonedAttributes());
+            attributes = {...attributes, ...model.getClonedAttributes()};
 
             options = {
                 attributes: attributes,
