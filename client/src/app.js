@@ -1370,7 +1370,6 @@ class App  {
     }
 }
 
-
 /**
  * @callback module:app~callback
  *
