@@ -230,9 +230,7 @@
                 return 'client/lib/transpiled/src/' + id + '.js';
             }
 
-            let arr = id.split(':');
-            let namePart = arr[1];
-            let mod = arr[0];
+            let [mod, namePart] = id.split(':');
 
             if (mod === 'custom') {
                 return 'client/custom/src/' + namePart + '.js';
