@@ -16,14 +16,14 @@
             "type": "enum",
             "options": ["not-set", "yes", "no"],
             "default": "not-set",
-            "tooltip": true,
+            "tooltip": "Role.exportPermission",
             "translation": "Role.options.levelList"
         },
         "massUpdatePermission": {
             "type": "enum",
             "options": ["not-set", "yes", "no"],
             "default": "not-set",
-            "tooltip": true,
+            "tooltip": "Role.massUpdatePermission",
             "translation": "Role.options.levelList"
         },
         "createdAt": {
