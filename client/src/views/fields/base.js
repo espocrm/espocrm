@@ -888,7 +888,11 @@ class BaseFieldView extends View {
             let tooltipText = this.options.tooltipText || this.tooltipText;
 
             if (!tooltipText && typeof this.tooltip === 'string') {
-                tooltipText = this.translate(this.tooltip, 'tooltips', this.model.name);
+                let [scope, field] = this.tooltip.includes('.') ?
+                    this.tooltip.split('.') :
+                    [this.model.entityType, this.tooltip];
+
+                tooltipText = this.translate(field, 'tooltips', scope);
             }
 
             tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name) || '';
