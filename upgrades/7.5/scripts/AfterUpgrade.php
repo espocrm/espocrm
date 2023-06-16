@@ -61,7 +61,7 @@ class AfterUpgrade
                 continue;
             }
 
-            $data1 = $metadata->getCustom('selectDefs', $entityType);
+            $data1 = $metadata->getCustom('selectDefs', $entityType) ?? (object) [];
             $data1->primaryFilterClassNameMap = $primaryFilterClassNameMap;
 
             $metadata->saveCustom('selectDefs', $entityType, $data1);
