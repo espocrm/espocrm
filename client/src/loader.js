@@ -870,6 +870,16 @@
 
             fetch(urlObj)
                 .then(response => {
+                    if (!response.ok) {
+                        if (typeof errorCallback === 'function') {
+                            errorCallback();
+
+                            return;
+                        }
+
+                        throw new Error(`Could not fetch asset '${path}'.`);
+                    }
+
                     response.text().then(text => {
                         if (this._responseCache) {
                             this._responseCache.put(url, new Response(text));
