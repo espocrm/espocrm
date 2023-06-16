@@ -32,6 +32,7 @@ namespace Espo\Core\Utils;
 use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Utils\Client\DevModeJsFileListProvider;
+use Espo\Core\Utils\Client\LoaderParamsProvider;
 use Espo\Core\Utils\File\Manager as FileManager;
 
 use Slim\Psr7\Response as Psr7Response;
@@ -57,7 +58,8 @@ class ClientManager
         private Metadata $metadata,
         private FileManager $fileManager,
         private DevModeJsFileListProvider $devModeJsFileListProvider,
-        private Module $module
+        private Module $module,
+        private LoaderParamsProvider $loaderParamsProvider
     ) {
         $this->nonce = Util::generateKey();
     }
@@ -167,7 +169,6 @@ class ClientManager
         $linkList = $this->metadata->get(['app', 'client', 'linkList'], []);
         $favicon196Path = $this->metadata->get(['app', 'client', 'favicon196']) ?? $this->favicon196;
         $faviconPath = $this->metadata->get(['app', 'client', 'favicon']) ?? $this->favicon;
-        $jsLibs = $this->metadata->get(['app', 'jsLibs'], []);
 
         $scriptsHtml = implode('',
             array_map(fn ($file) => $this->getScriptItemHtml($file, $appTimestamp), $jsFileList)
@@ -211,8 +212,8 @@ class ClientManager
                 'cacheTimestamp' => $loaderCacheTimestamp,
                 'internalModuleList' => $internalModuleList,
                 'transpiledModuleList' => $this->getTranspiledModuleList(),
-                'libsConfig' => (object) $jsLibs,
-                'aliasMap' => $this->getAliasMap(),
+                'libsConfig' => $this->loaderParamsProvider->getLibsConfig(),
+                'aliasMap' => $this->loaderParamsProvider->getAliasMap(),
             ]),
         ];
 
@@ -358,20 +359,5 @@ class ClientManager
             fn ($item) => Util::fromCamelCase($item, '-'),
             $modules
         );
-    }
-
-    private function getAliasMap(): object
-    {
-        $map = (object) [];
-
-        foreach ($this->metadata->get(['app', 'jsLibs'], []) as $key => $item) {
-            $id = $item['amdId'] ?? null;
-
-            if ($id) {
-                $map->$id = 'lib!' . $key;
-            }
-        }
-
-        return $map;
     }
 }

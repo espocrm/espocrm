@@ -27,6 +27,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+use Espo\Core\Utils\Client\LoaderParamsProvider;
+use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Client\DevModeJsFileListProvider;
 use Espo\Core\Utils\File\Manager as FileManager;
@@ -202,9 +204,11 @@ if (Utils::checkActionExists($action)) {
     include $actionFile;
 }
 
+$loaderParamsProvider = $installer->getInjectableFactory()->create(LoaderParamsProvider::class);
+
 if (!empty($actionFile) && file_exists('install/core/tpl/' . $tplName)) {
     /* check if EspoCRM is built */
-    $isBuilt = file_exists('client/lib/espo-libs.min.js');
+    $isBuilt = file_exists('client/lib/espo.min.js');
 
     $smarty->assign('isBuilt', $isBuilt);
 
@@ -213,6 +217,14 @@ if (!empty($actionFile) && file_exists('install/core/tpl/' . $tplName)) {
         (new DevModeJsFileListProvider(new FileManager()))->get();
 
     $smarty->assign('libFileList', $libFileList);
+
+    $loaderParams = Json::encode([
+        'basePath' => '../',
+        'libsConfig' => $loaderParamsProvider->getLibsConfig(),
+        'aliasMap' => $loaderParamsProvider->getAliasMap(),
+    ]);
+
+    $smarty->assign('loaderParams', $loaderParams);
 
     $smarty->display('index.tpl');
 }
