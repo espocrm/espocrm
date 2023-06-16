@@ -30,32 +30,20 @@
 namespace Espo\Tools\EmailNotification;
 
 use Espo\ORM\Entity;
-
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Config;
 use Espo\Core\ApplicationState;
 use Espo\Core\Job\QueueName;
 use Espo\Core\Job\JobSchedulerFactory;
-
 use Espo\Tools\EmailNotification\Jobs\NotifyAboutAssignment;
 
 class HookProcessor
 {
-    private $config;
-
-    private $applicationState;
-
-    private $jobSchedulerFactory;
-
     public function __construct(
-        Config $config,
-        ApplicationState $applicationState,
-        JobSchedulerFactory $jobSchedulerFactory
-    ) {
-        $this->config = $config;
-        $this->applicationState = $applicationState;
-        $this->jobSchedulerFactory = $jobSchedulerFactory;
-    }
+        private Config $config,
+        private ApplicationState $applicationState,
+        private JobSchedulerFactory $jobSchedulerFactory
+    ) {}
 
     public function afterSave(Entity $entity): void
     {
@@ -131,7 +119,7 @@ class HookProcessor
                 return $assignedUserId !== $entity->get('createdById');
             }
 
-            return $isNotSelfAssignment = $assignedUserId !== $entity->get('modifiedById');
+            return $assignedUserId !== $entity->get('modifiedById');
         }
 
         return $assignedUserId !== $this->applicationState->getUserId();
