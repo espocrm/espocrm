@@ -82,6 +82,8 @@ class Merger
 
         $entity->set($clonedData);
 
+        $this->unsetNotActualAttributes($entity);
+
         if (!$service->checkAssignment($entity)) {
             throw new Forbidden("Assignment permission failure.");
         }
@@ -363,5 +365,21 @@ class Merger
         }
 
         $data->emailAddressData = $emailAddressData;
+    }
+
+    private function unsetNotActualAttributes(Entity $entity): void
+    {
+        $fieldDefsList = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->getFieldList();
+
+        foreach ($fieldDefsList as $fieldDefs) {
+            $field = $fieldDefs->getName();
+
+            if ($fieldDefs->getType() === 'link' && $entity->isAttributeChanged($field . 'Id')) {
+                $entity->clear($field . 'Name');
+            }
+        }
     }
 }
