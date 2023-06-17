@@ -65,8 +65,6 @@ class Language {
         this.name = 'default';
     }
 
-
-
     /**
      * Whether an item is set in language data.
      *
