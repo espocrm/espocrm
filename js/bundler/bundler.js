@@ -451,7 +451,7 @@ class Bundler {
                         return;
                     }
 
-                    let dep = this.#normalizeModModuleName(node.text);
+                    let dep = this.#normalizeModModuleId(node.text);
 
                     deps.push(dep);
                 });
@@ -466,31 +466,77 @@ class Bundler {
 
     /**
      * @param {string} sourceFile
-     * @param {string} mod
+     * @param {string} subjectId
      * @return {string[]}
      */
-    #obtainModuleDeps(sourceFile, mod) {
+    #obtainModuleDeps(sourceFile, subjectId) {
         return sourceFile.statements
             .filter(item => item.importClause && item.moduleSpecifier)
             .map(item => item.moduleSpecifier.text)
-            .map(/** string */item => {
+            .map(/** string */id => {
+                id = this.#normalizeIdPath(id, subjectId);
 
-                // @todo Normalize relative path.
-
-                return this.#normalizeModModuleName(item);
+                return this.#normalizeModModuleId(id);
             });
     }
 
     /**
-     * @param {string} module
-     * @return {string}
+     * @param {string} id
+     * @param {string} subjectId
+     * @private
      */
-    #normalizeModModuleName(module) {
-        if (!module.includes(':')) {
-            return module;
+    #normalizeIdPath(id, subjectId) {
+        if (id.at(0) !== '.') {
+            return id;
         }
 
-        let [mod, part] = module.split(':');
+        if (id.slice(0, 2) !== './' && id.slice(0, 3) !== '../') {
+            return id;
+        }
+
+        let outputPath = id;
+
+        let dirParts = subjectId.split('/').slice(0, -1);
+
+        if (id.slice(0, 2) === './') {
+            outputPath = dirParts.join('/') + '/' + id.slice(2);
+        }
+
+        let parts = outputPath.split('/');
+
+        let up = 0;
+
+        for (let part of parts) {
+            if (part === '..') {
+                up++;
+
+                continue;
+            }
+
+            break;
+        }
+
+        if (!up) {
+            return outputPath;
+        }
+
+        if (up) {
+            outputPath = dirParts.slice(0, -up).join('/') + '/' + outputPath.slice(3 * up);
+        }
+
+        return outputPath;
+    }
+
+    /**
+     * @param {string} id
+     * @return {string}
+     */
+    #normalizeModModuleId(id) {
+        if (!id.includes(':')) {
+            return id;
+        }
+
+        let [mod, part] = id.split(':');
 
         return `modules/${mod}/` + part;
     }
