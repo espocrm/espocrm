@@ -555,6 +555,8 @@
 
         /**
          * @private
+         * @param {string} id
+         * @param {function(*)} callback
          */
         _addLoadCallback(id, callback) {
             if (!(id in this._loadCallbacks)) {
@@ -566,6 +568,9 @@
 
         /**
          * @private
+         * @param {string} id
+         * @param {function(*)} callback
+         * @param {function()} [errorCallback]
          */
         _load(id, callback, errorCallback) {
             if (id === 'exports') {
@@ -583,7 +588,7 @@
                 dataType = 'script';
                 type = 'lib';
 
-                realName = id.substr(4);
+                realName = id.slice(4);
                 path = realName;
 
                 exportsTo = 'window';
@@ -642,7 +647,7 @@
                 dataType = 'text';
                 type = 'res';
 
-                realName = id.substr(4);
+                realName = id.slice(4);
                 path = realName;
 
                 if (path.indexOf(':') !== -1) {
