@@ -39,12 +39,12 @@ const {globSync} = require('glob');
 class Bundler {
 
     /**
-     * @param {Object.<string, string>} modulePaths
+     * @param {Object.<string, string>} modPaths
      * @param {string} [basePath]
      * @param {string} [transpiledPath]
      */
-    constructor(modulePaths, basePath, transpiledPath) {
-        this.modulePaths = modulePaths;
+    constructor(modPaths, basePath, transpiledPath) {
+        this.modPaths = modPaths;
         this.basePath = basePath ?? 'client';
         this.transpiledPath = transpiledPath ?? 'client/lib/transpiled';
 
@@ -386,11 +386,11 @@ class Bundler {
      * @return string
      */
     #obtainModuleName(file) {
-        for (let mod in this.modulePaths) {
-            let part = this.basePath + '/' + this.modulePaths[mod] + '/src/';
+        for (let mod in this.modPaths) {
+            let part = this.basePath + '/' + this.modPaths[mod] + '/src/';
 
             if (file.indexOf(part) === 0) {
-                return mod + ':' + file.substring(part.length, file.length - 3);
+                return `modules/${mod}/` + file.substring(part.length, file.length - 3);
             }
         }
 
@@ -436,7 +436,7 @@ class Bundler {
 
             return {
                 name: moduleName,
-                deps: this.#obtainModuleDeps(tsSourceFile),
+                deps: this.#obtainModuleDeps(tsSourceFile, moduleName),
             };
         }
 
@@ -451,7 +451,9 @@ class Bundler {
                         return;
                     }
 
-                    deps.push(node.text);
+                    let dep = this.#normalizeModModuleName(node.text);
+
+                    deps.push(dep);
                 });
             }
         }
@@ -463,24 +465,34 @@ class Bundler {
     }
 
     /**
-     * @param sourceFile
+     * @param {string} sourceFile
+     * @param {string} mod
      * @return {string[]}
      */
-    #obtainModuleDeps(sourceFile) {
+    #obtainModuleDeps(sourceFile, mod) {
         return sourceFile.statements
-            .filter(item => item.importClause)
             .filter(item => item.importClause && item.moduleSpecifier)
             .map(item => item.moduleSpecifier.text)
-            .map(item => {
-                if (!item.startsWith('modules/')) {
-                    return item;
-                }
+            .map(/** string */item => {
 
-                let mod = item.split('/')[1];
-                let part = item.split('/').slice(2).join('/');
+                // @todo Normalize relative path.
 
-                return mod + ':' + part;
+                return this.#normalizeModModuleName(item);
             });
+    }
+
+    /**
+     * @param {string} module
+     * @return {string}
+     */
+    #normalizeModModuleName(module) {
+        if (!module.includes(':')) {
+            return module;
+        }
+
+        let [mod, part] = module.split(':');
+
+        return `modules/${mod}/` + part;
     }
 
     /**
@@ -494,8 +506,8 @@ class Bundler {
 
         let startParts = [this.#getSrcPath()];
 
-        for (let mod in this.modulePaths) {
-            let modPath = this.basePath + '/' + this.modulePaths[mod] + '/src/';
+        for (let mod in this.modPaths) {
+            let modPath = this.basePath + '/' + this.modPaths[mod] + '/src/';
 
             startParts.push(modPath);
         }

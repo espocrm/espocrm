@@ -147,6 +147,18 @@ class Transpiler {
 
             path = itemPath;
         }
+        else if (module.startsWith('modules/')) {
+            let items = module.split('/');
+
+            if (items.length < 2) {
+                throw new Error(`Bad module name ${module}.`);
+            }
+
+            let mod = items[1];
+
+            part = 'modules/' + mod + '/' + part;
+            path = items.slice(2).join('/');
+        }
 
         destDir += '/' + part + '/' + path.split('/').slice(0, -1).join('/');
 
@@ -185,7 +197,7 @@ class Transpiler {
      */
     #obtainModuleName(file) {
         if (this.mod) {
-            return this.mod + ':' + file.slice(this.path.length + 1, -3);
+            return `modules/${this.mod}/` + file.slice(this.path.length + 1, -3);
         }
 
         return file.slice(this.path.length + 1, -3);
