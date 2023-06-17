@@ -206,7 +206,7 @@ class ArrayFieldView extends BaseFieldView {
     }
 
     setupTranslation() {
-        let t = {};
+        let obj = {};
 
         let translation = this.params.translation;
         /** @type {?string} */
@@ -218,38 +218,29 @@ class ArrayFieldView extends BaseFieldView {
             translation = `${refEntityType}.options.${refField}`;
         }
 
-        if (translation) {
-            let arr = translation.split('.');
-
-            let pointer = this.getLanguage().data;
-
-            arr.forEach(key => {
-                if (key in pointer) {
-                    pointer = pointer[key];
-
-                    t = pointer;
-                }
-            });
-        }
-        else {
-            t = this.translate(this.name, 'options', this.model.name);
-        }
-
         this.translatedOptions = null;
 
-        let translatedOptions = {};
-
-        if (this.params.options) {
-            this.params.options.forEach((o) => {
-                if (typeof t === 'object' && o in t) {
-                    translatedOptions[o] = t[o];
-                } else {
-                    translatedOptions[o] = o;
-                }
-            });
-
-            this.translatedOptions = translatedOptions;
+        if (!this.params.options) {
+            return;
         }
+
+        obj = translation ?
+            this.getLanguage().translatePath(translation) :
+            this.translate(this.name, 'options', this.model.name);
+
+        let map = {};
+
+        this.params.options.forEach(o => {
+            if (typeof obj === 'object' && o in obj) {
+                map[o] = obj[o];
+
+                return;
+            }
+
+            map[o] = o;
+        });
+
+        this.translatedOptions = map;
     }
 
     setupOptions() {}

@@ -182,51 +182,45 @@ class EnumFieldView extends BaseFieldView {
             return;
         }
 
-        let translationObj;
-
-        let arr = translation.split('.');
-        let pointer = this.getLanguage().data;
-
-        arr.forEach(key => {
-            if (key in pointer) {
-                pointer = pointer[key];
-                translationObj = pointer;
-            }
-        });
-
         this.translatedOptions = null;
-
-        let translatedOptions = {};
 
         if (!this.params.options) {
             return;
         }
 
+        let obj = this.getLanguage().translatePath(translation);
+
+        let map = {};
+
         this.params.options.forEach(item => {
-            if (typeof translationObj === 'object' && item in translationObj) {
-                translatedOptions[item] = translationObj[item];
+            if (typeof obj === 'object' && item in obj) {
+                map[item] = obj[item];
+
+                return;
             }
-            else if (
-                Array.isArray(translationObj) &&
+
+            if (
+                Array.isArray(obj) &&
                 typeof item === 'number' &&
-                typeof translationObj[item] !== 'undefined'
+                typeof obj[item] !== 'undefined'
             ) {
-                translatedOptions[item.toString()] = translationObj[item];
+                map[item.toString()] = obj[item];
+
+                return;
             }
-            else {
-                translatedOptions[item] = item;
-            }
+
+            map[item] = item;
         });
 
         let value = this.model.get(this.name);
 
-        if ((value || value === '') && !(value in translatedOptions)) {
-            if (typeof translationObj === 'object' && value in translationObj) {
-                translatedOptions[value] = translationObj[value];
+        if ((value || value === '') && !(value in map)) {
+            if (typeof obj === 'object' && value in obj) {
+                map[value] = obj[value];
             }
         }
 
-        this.translatedOptions = translatedOptions;
+        this.translatedOptions = map;
     }
 
     /**
