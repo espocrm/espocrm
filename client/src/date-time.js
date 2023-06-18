@@ -86,13 +86,13 @@ class DateTime {
      */
     weekStart = 1
 
-    /** @private  */
+    /** @private */
     readableDateFormatMap = {
         'DD.MM.YYYY': 'DD MMM',
         'DD/MM/YYYY': 'DD MMM',
     }
 
-    /** @private  */
+    /** @private */
     readableShortDateFormatMap = {
         'DD.MM.YYYY': 'D MMM',
         'DD/MM/YYYY': 'D MMM',
