@@ -29,7 +29,7 @@
 /** @module ajax */
 
 /**
- * Ajax request functions.
+ * Functions for API HTTP requests.
  */
 const Ajax = Espo.Ajax = {
 
@@ -51,7 +51,7 @@ const Ajax = Espo.Ajax = {
      *
      * @param {string} url An URL.
      * @param {string} method An HTTP method.
-     * @param {any} [data] Data.
+     * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
      * @returns {AjaxPromise<any>}
      */
@@ -97,8 +97,8 @@ const Ajax = Espo.Ajax = {
      * POST request.
      *
      * @param {string} url An URL.
-     * @param {any} [data] Data.
-     * @param {Espo.Ajax~Options} [options] Options.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
      * @returns {Promise<any>}
      */
     postRequest: function (url, data, options) {
@@ -113,8 +113,8 @@ const Ajax = Espo.Ajax = {
      * PATCH request.
      *
      * @param {string} url An URL.
-     * @param {any} [data] Data.
-     * @param {Espo.Ajax~Options} [options] Options.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
      * @returns {Promise<any>}
      */
     patchRequest: function (url, data, options) {
@@ -129,8 +129,8 @@ const Ajax = Espo.Ajax = {
      * PUT request.
      *
      * @param {string} url An URL.
-     * @param {any} [data] Data.
-     * @param {Espo.Ajax~Options} [options] Options.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
      * @returns {Promise<any>}
      */
     putRequest: function (url, data, options) {
@@ -145,8 +145,8 @@ const Ajax = Espo.Ajax = {
      * DELETE request.
      *
      * @param {string} url An URL.
-     * @param {any} [data] Data.
-     * @param {Espo.Ajax~Options} [options] Options.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
      * @returns {Promise<any>}
      */
     deleteRequest: function (url, data, options) {
@@ -161,8 +161,8 @@ const Ajax = Espo.Ajax = {
      * GET request.
      *
      * @param {string} url An URL.
-     * @param {any} [data] Data.
-     * @param {Espo.Ajax~Options} [options] Options.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
      * @returns {Promise<any>}
      */
     getRequest: function (url, data, options) {

@@ -41,7 +41,7 @@ import Selectize from "lib!Selectize";
  * @property {boolean} [selectOnTab=false]
  * @property {boolean} [matchAnyWord=false]
  * @property {boolean} [allowCustomOptions=false]
- * @property {function (string): {value: string, text: string}|null} create
+ * @property {function (string): {value: string, text: string}|null} [create]
  */
 
 /**

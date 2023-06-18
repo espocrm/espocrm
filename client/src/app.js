@@ -242,7 +242,7 @@ class App  {
     viewFactory = null
 
     /**
-     * @type {Function}
+     * @type function(string, function(Bull.View))
      * @private
      */
     viewLoader = null
@@ -804,7 +804,6 @@ class App  {
         };
 
         this.viewFactory = new BullFactory({
-            useCache: false,
             defaultViewName: 'views/base',
             helper: helper,
             viewLoader: this.viewLoader,
@@ -968,9 +967,9 @@ class App  {
     setCookieAuth(username, token) {
         let date = new Date();
 
-        date.setTime(date.getTime() + (1000 * 24*60*60*1000));
+        date.setTime(date.getTime() + (1000 * 24 * 60 * 60 * 1000));
 
-        document.cookie = 'auth-token='+token+'; SameSite=Lax; expires='+date.toGMTString()+'; path=/';
+        document.cookie = 'auth-token=' + token + '; SameSite=Lax; expires=' + date.toUTCString() + '; path=/';
     }
 
     /**
@@ -1067,7 +1066,7 @@ class App  {
      */
     setupAjax() {
         $.ajaxSetup({
-            beforeSend: (xhr, options) => {
+            beforeSend: (xhr, /** JQueryAjaxSettings & Object.<string, *> */ options) => {
                 if (!options.local && this.apiUrl) {
                     options.url = Utils.trimSlash(this.apiUrl) + '/' + options.url;
                 }
@@ -1240,6 +1239,7 @@ class App  {
         }
 
         if (!isMessageDone && xhr.responseText && xhr.responseText[0] === '{') {
+            /** @type {Object.<string, *>|null} */
             let data = null;
 
             try {
@@ -1298,7 +1298,7 @@ class App  {
 
             if (event.data === 'update:all') {
                 this.metadata.loadSkipCache();
-                this.settings.loadSkipCache();
+                this.settings.load();
                 this.language.loadSkipCache();
                 this.viewHelper.layoutManager.clearLoadedData();
 
