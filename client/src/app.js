@@ -55,7 +55,7 @@ import SessionStorage from 'session-storage';
 import ViewHelper from 'view-helper';
 import WebSocketManager from 'web-socket-manager';
 import Ajax from 'ajax';
-import NumberUtil from 'number';
+import NumberUtil from 'number-util';
 import PageTitle from 'page-title';
 import BroadcastChannel from 'broadcast-channel';
 
@@ -281,7 +281,7 @@ class App  {
 
     /**
      * @private
-     * @type {NumberUtil|null}
+     * @type {module:number-util|null}
      */
     numberUtil = null
 
