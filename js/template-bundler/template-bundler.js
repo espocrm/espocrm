@@ -39,7 +39,7 @@ class TemplateBundler {
      * }} config
      */
     constructor(config) {
-        this.dirs = this.dirs ?? ['client/res/templates'];
+        this.dirs = config.dirs ?? ['client/res/templates'];
         this.dest = config.dest ?? 'client/lib/templates.tpl';
         this.clientDir = config.clientDir ?? 'client';
     }
