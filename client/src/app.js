@@ -1395,11 +1395,11 @@ class App  {
         let files = ['client/lib/templates.tpl'];
 
         this.bundledModuleList.forEach(mod => {
-            let modPath = this.internalModuleList.includes(mod) ?
-                `client/modules/${mod}/` :
-                `client/custom/modules/${mod}/`;
+            let file = this.internalModuleList.includes(mod) ?
+                `client/modules/${mod}/lib/templates.tpl` :
+                `client/custom/modules/${mod}/lib/templates.tpl`;
 
-            files.push(modPath + 'templates.tpl');
+            files.push(file);
         });
 
         let baseUrl = window.location.origin + window.location.pathname;
