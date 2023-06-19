@@ -1688,12 +1688,19 @@ class EntityManager
     {
         $templateType = $this->metadata->get(['scopes', $entityType, 'type']);
 
-        /** @var array<string, array<string, mixed>> $params */
-        $params = [
-            ...($this->metadata->get(['app', 'entityManagerParams', 'Global']) ?? []),
-            ...($this->metadata->get(['app', 'entityManagerParams', '@' . ($templateType ?? '_')]) ?? []),
-            ...($this->metadata->get(['app', 'entityManagerParams', $entityType]) ?? []),
-        ];
+        $map1 = $this->metadata->get(['app', 'entityManagerParams', 'Global']) ?? [];
+        $map2 = $this->metadata->get(['app', 'entityManagerParams', '@' . ($templateType ?? '_')]) ?? [];
+        $map3 = $this->metadata->get(['app', 'entityManagerParams', $entityType]) ?? [];
+
+        if (version_compare(PHP_VERSION, '8.1.0') < 0) {
+            // @todo Remove.
+            /** @var array<string, array<string, mixed>> $params */
+            $params = array_merge($map1, $map2, $map3);
+        }
+        else {
+            /** @var array<string, array<string, mixed>> $params */
+            $params = [...$map1, ...$map2, ...$map3];
+        }
 
         $result = [];
 
