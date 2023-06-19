@@ -270,4 +270,4 @@ class CurrencyFieldView extends FloatFieldView {
     }
 }
 
-export default FloatFieldView;
+export default CurrencyFieldView;
