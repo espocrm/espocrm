@@ -114,6 +114,16 @@ class App  {
          */
         this.internalModuleList = options.internalModuleList || [];
 
+        /**
+         * A list of bundled modules.
+         *
+         * @private
+         * @type {string[]}
+         */
+        this.bundledModuleList = options.bundledModuleList || [];
+
+        this.appTimestamp = options.appTimestamp;
+
         this.initCache(options)
             .then(() => this.init(options, callback));
 
@@ -292,8 +302,10 @@ class App  {
     webSocketManager = null
 
     /**
+     * An application timestamp. Used for asset cache busting and update detection.
+     *
      * @private
-     * @type {?int}
+     * @type {Number|null}
      */
     appTimestamp = null
 
@@ -305,54 +317,46 @@ class App  {
 
     /**
      * @private
+     * @param {module:app~Options} options
+     * @return Promise
      */
     initCache(options) {
-        let cacheTimestamp = options.cacheTimestamp || null;
-        let storedCacheTimestamp = null;
-
-        if (this.useCache) {
-            this.cache = new Cache(cacheTimestamp);
-
-            storedCacheTimestamp = this.cache.getCacheTimestamp();
-
-            if (cacheTimestamp) {
-                this.cache.handleActuality(cacheTimestamp);
-            }
-            else {
-                this.cache.storeTimestamp();
-            }
+        if (!this.useCache) {
+            return Promise.resolve();
         }
 
-        let handleActuality = () => {
-            if (
-                !cacheTimestamp ||
-                !storedCacheTimestamp ||
-                cacheTimestamp !== storedCacheTimestamp
-            ) {
-                return caches.delete('espo');
-            }
+        let cacheTimestamp = options.cacheTimestamp || null;
 
-            return new Promise(resolve => resolve());
-        };
+        this.cache = new Cache(cacheTimestamp);
+
+        let storedCacheTimestamp = this.cache.getCacheTimestamp();
+
+        cacheTimestamp ?
+            this.cache.handleActuality(cacheTimestamp) :
+            this.cache.storeTimestamp();
+
+        if (!window.caches) {
+            return Promise.resolve();
+        }
 
         return new Promise(resolve => {
-            if (!this.useCache) {
-                resolve();
-            }
+            let deleteCache = !cacheTimestamp ||
+                !storedCacheTimestamp ||
+                cacheTimestamp !== storedCacheTimestamp;
 
-            if (!window.caches) {
-                resolve();
-            }
-
-            handleActuality()
+            (
+                deleteCache ?
+                    caches.delete('espo') :
+                    Promise.resolve()
+            )
                 .then(() => caches.open('espo'))
-                .then(responseCache => {
-                    this.responseCache = responseCache;
+                .then(cache => {
+                    this.responseCache = cache;
 
                     resolve();
                 })
                 .catch(() => {
-                    console.error("Could not open `espo` cache.");
+                    console.error(`Could not open 'espo' cache.`);
                     resolve();
                 });
         });
@@ -360,6 +364,8 @@ class App  {
 
     /**
      * @private
+     * @param {module:app~Options} options
+     * @param {function} [callback]
      */
     init(options, callback) {
         /** @type {Object.<string, *>} */
@@ -393,7 +399,8 @@ class App  {
         Promise
             .all([
                 this.settings.load(),
-                this.language.loadDefault()
+                this.language.loadDefault(),
+                this.initTemplateBundles(),
             ])
             .then(() => {
                 this.loader.setIsDeveloperMode(this.settings.get('isDeveloperMode'));
@@ -411,8 +418,6 @@ class App  {
                 this.themeManager = new ThemeManager(this.settings, this.preferences, this.metadata);
                 this.modelFactory = new ModelFactory(this.metadata);
                 this.collectionFactory = new CollectionFactory(this.modelFactory, this.settings, this.metadata);
-
-                this.appTimestamp = this.settings.get('appTimestamp') || null;
 
                 if (this.settings.get('useWebSocket')) {
                     this.webSocketManager = new WebSocketManager(this.settings);
@@ -1349,6 +1354,9 @@ class App  {
         });
     }
 
+    /**
+     * @private
+     */
     initDomEventListeners() {
         $(document).on('keydown.espo.button', e => {
             if (
@@ -1368,11 +1376,94 @@ class App  {
             e.preventDefault();
         });
     }
+
+    /**
+     * @private
+     * @return {Promise}
+     */
+    initTemplateBundles() {
+        if (!this.responseCache) {
+            return Promise.resolve();
+        }
+
+        const key = 'templateBundlesCached';
+
+        if (this.cache.get('app', key)) {
+            return Promise.resolve();
+        }
+
+        let files = ['client/lib/templates.tpl'];
+
+        this.bundledModuleList.forEach(mod => {
+            let modPath = this.internalModuleList.includes(mod) ?
+                `client/modules/${mod}/` :
+                `client/custom/modules/${mod}/`;
+
+            files.push(modPath + 'templates.tpl');
+        });
+
+        let baseUrl = window.location.origin + window.location.pathname;
+        let timestamp = this.loader.getCacheTimestamp();
+
+        let promiseList = files.map(file => {
+            let url = new URL(baseUrl + this.basePath + file);
+            url.searchParams.append('t', this.appTimestamp);
+
+            return new Promise(resolve => {
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            console.error(`Could not fetch ${url}.`);
+                            resolve();
+
+                            return;
+                        }
+
+                        let promiseList = [];
+
+                        response.text().then(text => {
+                            let index = text.indexOf('\n');
+
+                            if (index <= 0) {
+                                resolve();
+
+                                return;
+                            }
+
+                            let delimiter = text.slice(0, index + 1);
+                            text = text.slice(index + 1);
+
+                            text.split(delimiter).forEach(item => {
+                                let index = item.indexOf('\n');
+
+                                let file = item.slice(0, index);
+                                let content = item.slice(index + 1);
+
+                                let url = baseUrl + this.basePath + 'client/' + file;
+
+                                let urlObj = new URL(url);
+                                urlObj.searchParams.append('r', timestamp);
+
+                                promiseList.push(
+                                    this.responseCache.put(urlObj, new Response(content))
+                                );
+                            });
+                        });
+
+                        Promise.all(promiseList).then(() => resolve());
+                    });
+            });
+        });
+
+        return Promise.all(promiseList)
+            .then(() => {
+                this.cache.set('app', key, true);
+            });
+    }
 }
 
 /**
  * @callback module:app~callback
- *
  * @param {App} app A created application instance.
  */
 
@@ -1380,7 +1471,6 @@ class App  {
  * Application options.
  *
  * @typedef {Object} module:app~Options
- *
  * @property {string} [id] An application ID.
  * @property {string} [basePath] A base path.
  * @property {boolean} [useCache] Use cache.
@@ -1388,7 +1478,9 @@ class App  {
  * @property {Number} [ajaxTimeout] A default ajax request timeout.
  * @property {string} [internalModuleList] A list of internal modules.
  *   Internal modules located in the `client/modules` directory.
+ * @property {string} [bundledModuleList] A list of bundled modules.
  * @property {Number|null} [cacheTimestamp] A cache timestamp.
+ * @property {Number|null} [appTimestamp] An application timestamp.
  */
 
 Object.assign(App.prototype, Events);

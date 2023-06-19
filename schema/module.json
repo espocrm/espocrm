@@ -12,6 +12,10 @@
         "jsTranspiled": {
             "type": "boolean",
             "description": "Indicates that JS files in the module are transpiled."
+        },
+        "bundled": {
+            "type": "boolean",
+            "description": "Indicates that frontend files in the module are bundled."
         }
     }
 }

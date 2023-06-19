@@ -192,6 +192,7 @@ class ClientManager
             'apiUrl' => 'api/v1',
             'applicationName' => $this->config->get('applicationName', 'EspoCRM'),
             'cacheTimestamp' => $cacheTimestamp,
+            'appTimestamp' => $appTimestamp,
             'loaderCacheTimestamp' => Json::encode($loaderCacheTimestamp),
             'stylesheet' => $this->themeManager->getStylesheet(),
             'runScript' => $runScript,
@@ -205,6 +206,7 @@ class ClientManager
             'faviconPath' => $faviconPath,
             'ajaxTimeout' => $this->config->get('ajaxTimeout') ?? 60000,
             'internalModuleList' => Json::encode($internalModuleList),
+            'bundledModuleList' => Json::encode($this->getBundledModuleList()),
             'applicationDescription' => $this->config->get('applicationDescription') ?? self::APP_DESCRIPTION,
             'nonce' => $this->nonce,
             'loaderParams' => Json::encode([
@@ -353,6 +355,26 @@ class ClientManager
         $modules = array_values(array_filter(
             $this->module->getList(),
             fn ($item) => $this->module->get([$item, 'jsTranspiled'])
+        ));
+
+        return array_map(
+            fn ($item) => Util::fromCamelCase($item, '-'),
+            $modules
+        );
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getBundledModuleList(): array
+    {
+        if (!$this->isDeveloperMode()) {
+            return [];
+        }
+
+        $modules = array_values(array_filter(
+            $this->module->getList(),
+            fn ($item) => $this->module->get([$item, 'bundled'])
         ));
 
         return array_map(

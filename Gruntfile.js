@@ -35,6 +35,7 @@ const path = require('path');
 const buildUtils = require('./js/build-utils');
 const BundlerGeneral = require("./js/bundler/bundler-general");
 const LayoutTypeBundler = require('./js/layout-template-bundler');
+const TemplateBundler = require('./js/template-bundler/template-bundler');
 const bundleConfig = require('./frontend/bundle-config.json');
 const libs = require('./frontend/libs.json');
 
@@ -293,6 +294,17 @@ module.exports = grunt => {
         }
     });
 
+    grunt.registerTask('bundle-templates', () => {
+        let templateBundler = new TemplateBundler({
+            dirs: [
+                'client/res/templates',
+                'client/modules/crm/res/templates',
+            ],
+        });
+
+        templateBundler.process();
+    });
+
     grunt.registerTask('prepare-lib-original', () => {
         // Even though `npm ci` runs the same script, 'clean:start' deletes files.
         cp.execSync("node js/scripts/prepare-lib-original");
@@ -482,6 +494,7 @@ module.exports = grunt => {
         'prepare-lib-original',
         'transpile',
         'bundle',
+        'bundle-templates',
         'uglify:bundle',
         'copy:frontendLib',
         'prepare-lib',
