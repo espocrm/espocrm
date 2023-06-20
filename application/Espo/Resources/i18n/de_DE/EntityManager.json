@@ -33,7 +33,8 @@
     "countDisabled": "Deaktivieren der Datensatzzählung",
     "parentEntityTypeList": "Übergeordnete Entitätstypen",
     "foreignLinkEntityTypeList": "Fremde Links",
-    "entity": "Eintrag"
+    "entity": "Eintrag",
+    "optimisticConcurrencyControl": "Optimistische Nebenläufigkeitssteuerung"
   },
   "options": {
     "type": {
@@ -73,6 +74,7 @@
     "linkMultipleField": "verlinken mehrere Felder bietet eine praktische Möglichkeit Beziehungen zu bearbeiten. Nicht benutzen wenn Sie eine große Anzahl von Verknüpfungen haben.",
     "entityType": "Base Plus - enthält Aktivitäten, Verlaufs- und Aufgabenfelder. \n\nEvent - verfügbar im Fenster \"Kalender und Aktivitäten\".",
     "fullTextSearch": "Ausführung der Wiederherstellung ist erforderlich.",
-    "countDisabled": "Die Gesamtzahl wird in der Listenansicht nicht angezeigt. Dies verringert die Ladezeit, wenn die DB-Tabelle sehr groß ist."
+    "countDisabled": "Die Gesamtzahl wird in der Listenansicht nicht angezeigt. Dies verringert die Ladezeit, wenn die DB-Tabelle sehr groß ist.",
+    "optimisticConcurrencyControl": "Verhindert Schreibkonflikte."
   }
 }

@@ -42,8 +42,8 @@ class Opportunities
     }
 
     /**
-     * @param array<string,mixed> $options
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $options
+     * @param array<string, mixed> $data
      */
     public function afterRelate(Entity $entity, array $options = [], array $data = []): void
     {
@@ -61,8 +61,8 @@ class Opportunities
     }
 
     /**
-     * @param array<string,mixed> $options
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $options
+     * @param array<string, mixed> $data
      */
     public function afterUnrelate(Entity $entity, array $options = [], array $data = []): void
     {

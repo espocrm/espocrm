@@ -1,0 +1,25 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/consoleCommands",
+    "$id": "https://www.espocrm.com/schema/metadata/app/containerServices.json",
+    "title": "app/containerServices",
+    "description": "Definitions of container services. https://docs.espocrm.com/development/di/#container-services",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A service name.",
+        "properties": {
+            "className": {
+                "type": "string",
+                "description": "A service class."
+            },
+            "loaderClassName": {
+                "type": "string",
+                "description": "A service loader class. Should implement Espo\\Core\\Container\\Loader interface."
+            },
+            "settable": {
+                "type": "boolean",
+                "description": "Whether the service can be set to the container externally (with the `set` method)."
+            }
+        }
+    }
+}

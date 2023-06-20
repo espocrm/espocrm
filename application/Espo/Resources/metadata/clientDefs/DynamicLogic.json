@@ -247,6 +247,10 @@
         "checklist": {
             "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
             "typeList": ["isEmpty", "isNotEmpty", "has", "notHas"]
+        },
+        "urlMultiple": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
+            "typeList": ["isEmpty", "isNotEmpty"]
         }
     },
     "conditionTypes": {

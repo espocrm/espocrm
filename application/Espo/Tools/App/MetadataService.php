@@ -31,23 +31,18 @@ namespace Espo\Tools\App;
 
 use Espo\Core\Acl;
 use Espo\Core\Utils\Metadata as MetadataUtil;
-
 use Espo\Entities\User;
-
+use Espo\Tools\App\Metadata\AclDependencyProvider;
 use stdClass;
 
 class MetadataService
 {
-    private Acl $acl;
-    private MetadataUtil $metadata;
-    private User $user;
-
-    public function __construct(Acl $acl, MetadataUtil $metadata, User $user)
-    {
-        $this->acl = $acl;
-        $this->metadata = $metadata;
-        $this->user = $user;
-    }
+    public function __construct(
+        private Acl $acl,
+        private MetadataUtil $metadata,
+        private User $user,
+        private AclDependencyProvider $aclDependencyProvider
+    ) {}
 
     public function getDataForFrontend(): stdClass
     {
@@ -164,37 +159,26 @@ class MetadataService
         unset($data->authenticationMethods);
         unset($data->formula);
 
-        foreach (($this->metadata->get(['app', 'metadata', 'aclDependencies']) ?? []) as $target => $item) {
-            $targetArr = explode('.', $target);
+        foreach ($this->aclDependencyProvider->get() as $dependencyItem) {
+            $aclScope = $dependencyItem->getScope();
+            $aclField = $dependencyItem->getField();
 
-            if (is_string($item)) {
-                $depArr = explode('.', $item);
-                $pointer = $data;
-
-                foreach ($depArr as $k) {
-                    if (!isset($pointer->$k)) {
-                        continue 2;
-                    }
-
-                    $pointer = $pointer->$k;
-                }
+            if (!$aclScope) {
+                continue;
             }
-            else if (is_array($item)) {
-                $aclScope = $item['scope'] ?? null;
-                $aclField = $item['field'] ?? null;
 
-                if (!$aclScope) {
-                    continue;
-                }
-
-                if (!$this->acl->tryCheck($aclScope)) {
-                    continue;
-                }
-
-                if ($aclField && in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))) {
-                    continue;
-                }
+            if (!$this->acl->tryCheck($aclScope)) {
+                continue;
             }
+
+            if (
+                $aclField &&
+                in_array($aclField, $this->acl->getScopeForbiddenFieldList($aclScope))
+            ) {
+                continue;
+            }
+
+            $targetArr = explode('.', $dependencyItem->getTarget());
 
             $pointer = $data;
 

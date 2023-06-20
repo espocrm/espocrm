@@ -31,7 +31,7 @@ define('views/import-error/fields/validation-failures', ['views/fields/base'], (
     /**
      * @class
      * @name Class
-     * @extends module:views/fields/base.Class
+     * @extends module:views/fields/base
      * @memberOf module:views/import-error/fields/validation-failures
      */
     return Dep.extend(/** @lends module:views/import-error/fields/validation-failures.Class# */{

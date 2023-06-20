@@ -35,6 +35,7 @@ use Exception;
 
 /**
  * A forbidden exception. Main purpose is for the 403 Forbidden HTTP error.
+ * If uncaught within an API request, the message will be printed to the X-Status-Reason header.
  */
 class Forbidden extends Exception implements HasBody, HasLogLevel
 {
@@ -53,7 +54,6 @@ class Forbidden extends Exception implements HasBody, HasLogLevel
     public static function createWithBody(string $message, string $body): self
     {
         $exception = new static($message);
-
         $exception->body = $body;
 
         return $exception;

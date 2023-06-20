@@ -1,0 +1,35 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/orm.json",
+    "title": "app/orm",
+    "description": "ORM definitions.",
+    "type": "object",
+    "properties": {
+        "platforms": {
+            "type": "object",
+            "description": "Platforms.",
+            "additionalProperties": {
+                "type": "object",
+                "description": "A platform name.",
+                "properties": {
+                    "queryComposerClassName": {
+                        "type": "string",
+                        "description": "A query composer. Should implement Espo\\ORM\\QueryComposer\\QueryComposer."
+                    },
+                    "pdoFactoryClassName": {
+                        "type": "string",
+                        "description": "A PDF factory. Should implement Espo\\ORM\\PDO\\PDOFactory."
+                    },
+                    "functionConverterClassNameMap": {
+                        "type": "object",
+                        "description": "Function converters. Should implement Espo\\ORM\\QueryComposer\\Part\\FunctionConverter.",
+                        "additionalProperties": {
+                            "description": "A function name. Only upper case letters and _ are allowed.",
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

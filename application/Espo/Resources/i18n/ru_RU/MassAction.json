@@ -6,9 +6,9 @@
   "options": {
     "status": {
       "Pending": "В ожидании",
-      "Running": "Бег",
-      "Success": "Успех",
-      "Failed": "Не удалось"
+      "Running": "Работает",
+      "Success": "Выполнено",
+      "Failed": "Неудачно"
     }
   },
   "messages": {

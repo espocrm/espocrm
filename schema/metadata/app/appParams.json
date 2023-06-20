@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/appParams.json",
+    "title": "app/appParams",
+    "description": "AppParams framework definitions. A name => Object map. https://docs.espocrm.com/development/app-params/",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A parameter name.",
+        "properties": {
+            "className": {
+                "type": "string",
+                "description": "An implementation class name. Should implement Espo\\Tools\\App\\AppParam interface."
+            }
+        }
+    }
+}

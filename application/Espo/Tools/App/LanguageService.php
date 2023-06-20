@@ -33,8 +33,8 @@ use Espo\Core\Utils\Language as LanguageUtil;
 use Espo\Core\Acl;
 use Espo\Core\Container;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\User;
+use Espo\Tools\App\Language\AclDependencyProvider;
 
 class LanguageService
 {
@@ -42,6 +42,7 @@ class LanguageService
         private Metadata $metadata,
         private Acl $acl,
         private User $user,
+        private AclDependencyProvider $aclDependencyProvider,
         private Container $container
     ) {}
 
@@ -204,9 +205,12 @@ class LanguageService
             ],
         ];
 
-        $aclDependencies = $this->metadata->get(['app', 'language', 'aclDependencies']) ?? [];
+        foreach ($this->aclDependencyProvider->get() as $dependencyItem) {
+            $target = $dependencyItem->getTarget();
+            $aclScope = $dependencyItem->getScope();
+            $aclField = $dependencyItem->getField();
+            $anyScopeList = $dependencyItem->getAnyScopeList();
 
-        foreach ($aclDependencies as $target => $item) {
             $targetArr = explode('.', $target);
 
             $isFullScope = !str_contains($target, '.');
@@ -214,10 +218,6 @@ class LanguageService
             if ($isFullScope && isset($data[$target])) {
                 continue;
             }
-
-            $aclScope = $item['scope'] ?? null;;
-            $aclField = $item['field'] ?? null;
-            $anyScopeList = $item['anyScopeList'] ?? null;
 
             if ($anyScopeList) {
                 $skip = true;

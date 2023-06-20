@@ -1,16 +1,18 @@
 {
-    "functionConverterClassNameMap_Mysql": {
-        "ABS": "Espo\\Core\\ORM\\QueryComposer\\Part\\FunctionConverters\\Abs"
-    },
-    "functionConverterClassNameMap_Postgresql": {
-        "ABS": "Espo\\Core\\ORM\\QueryComposer\\Part\\FunctionConverters\\Abs"
-    },
-    "queryComposerClassNameMap": {
-        "Mysql": "Espo\\ORM\\QueryComposer\\MysqlQueryComposer",
-        "Postgresql": "Espo\\ORM\\QueryComposer\\PostgresqlQueryComposer"
-    },
-    "pdoFactoryClassNameMap": {
-        "Mysql": "Espo\\ORM\\PDO\\MysqlPDOFactory",
-        "Postgresql": "Espo\\ORM\\PDO\\PostgresqlPDOFactory"
+    "platforms": {
+        "Mysql": {
+            "queryComposerClassName": "Espo\\ORM\\QueryComposer\\MysqlQueryComposer",
+            "pdoFactoryClassName": "Espo\\ORM\\PDO\\MysqlPDOFactory",
+            "functionConverterClassNameMap": {
+                "ABS": "Espo\\Core\\ORM\\QueryComposer\\Part\\FunctionConverters\\Abs"
+            }
+        },
+        "Postgresql": {
+            "queryComposerClassName": "Espo\\ORM\\QueryComposer\\PostgresqlQueryComposer",
+            "pdoFactoryClassName": "Espo\\ORM\\PDO\\PostgresqlPDOFactory",
+            "functionConverterClassNameMap": {
+                "ABS": "Espo\\Core\\ORM\\QueryComposer\\Part\\FunctionConverters\\Abs"
+            }
+        }
     }
 }

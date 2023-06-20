@@ -458,10 +458,7 @@ class SendingProcessor
         }
 
         if ($campaign) {
-            $email->setLinkMultipleIdList(
-                'teams',
-                $campaign->getLinkMultipleIdList('teams') ?? []
-            );
+            $email->setLinkMultipleIdList('teams', $campaign->getLinkMultipleIdList('teams'));
         }
 
         $senderParams = $senderParams->withFromAddress(

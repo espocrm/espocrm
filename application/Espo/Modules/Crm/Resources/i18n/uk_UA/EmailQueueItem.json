@@ -7,7 +7,7 @@
     "attemptCount": "Спроби",
     "emailAddress": "Електронна адреса",
     "massEmail": "Масова розсилка",
-    "isTest": "Перевірка"
+    "isTest": "Тестовий"
   },
   "links": {
     "target": "Ціль",
@@ -15,15 +15,15 @@
   },
   "options": {
     "status": {
-      "Pending": "В очікуванні",
+      "Pending": "Очікується",
       "Sent": "Надісланий",
-      "Failed": "Не вдалося",
+      "Failed": "Невдало",
       "Sending": "Відправлення"
     }
   },
   "presetFilters": {
-    "pending": "В очікуванні",
+    "pending": "Очікується",
     "sent": "Надісланий",
-    "failed": "Не вдалося"
+    "failed": "Невдало"
   }
 }

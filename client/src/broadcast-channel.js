@@ -26,52 +26,49 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('broadcast-channel', [], function () {
+/** @module broadcast-channel */
 
-    /**
-     * @memberOf module:broadcast-channel
-     */
-    class Class {
-        constructor() {
-            this.object = null;
+class BroadcastChannel {
 
-            if (window.BroadcastChannel) {
-                this.object = new BroadcastChannel('app');
-            }
-        }
+    constructor() {
+        this.object = null;
 
-        /**
-         * Post a message.
-         *
-         * @param {string} message A message.
-         */
-        postMessage(message) {
-            if (!this.object) {
-                return;
-            }
-
-            this.object.postMessage(message);
-        }
-
-        /**
-         * @callback module:broadcast-channel.Class~callback
-         *
-         * @param {MessageEvent} event An event. A message can be obtained from the `data` property.
-         */
-
-        /**
-         * Subscribe to a message.
-         *
-         * @param {module:broadcast-channel.Class~callback} callback A callback.
-         */
-        subscribe(callback) {
-            if (!this.object) {
-                return;
-            }
-
-            this.object.addEventListener('message', callback);
+        if (window.BroadcastChannel) {
+            this.object = new window.BroadcastChannel('app');
         }
     }
 
-    return Class;
-});
+    /**
+     * Post a message.
+     *
+     * @param {string} message A message.
+     */
+    postMessage(message) {
+        if (!this.object) {
+            return;
+        }
+
+        this.object.postMessage(message);
+    }
+
+    /**
+     * @callback module:broadcast-channel~callback
+     *
+     * @param {MessageEvent} event An event. A message can be obtained from the `data` property.
+     */
+
+    /**
+     * Subscribe to a message.
+     *
+     * @param {module:broadcast-channel~callback} callback A callback.
+     */
+    subscribe(callback) {
+        if (!this.object) {
+            return;
+        }
+
+        this.object.addEventListener('message', callback);
+    }
+}
+
+export default BroadcastChannel;

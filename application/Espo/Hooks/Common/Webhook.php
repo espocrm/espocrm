@@ -32,27 +32,19 @@ namespace Espo\Hooks\Common;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 
-use Espo\Core\{
-    ORM\Repository\Option\SaveOption,
-    Utils\Metadata,
-    Webhook\Manager as WebhookManager};
+use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Webhook\Manager as WebhookManager;
 
 class Webhook
 {
     public static int $order = 101;
 
-    private Metadata $metadata;
-
-    private WebhookManager $webhookManager;
-
-    public function __construct(Metadata $metadata, WebhookManager $webhookManager)
-    {
-        $this->metadata = $metadata;
-        $this->webhookManager = $webhookManager;
-    }
+    public function __construct(private Metadata $metadata, private WebhookManager $webhookManager)
+    {}
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterSave(Entity $entity, array $options): void
     {
@@ -77,7 +69,7 @@ class Webhook
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterRemove(Entity $entity, array $options): void
     {

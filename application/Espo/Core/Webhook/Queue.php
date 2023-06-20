@@ -29,24 +29,18 @@
 
 namespace Espo\Core\Webhook;
 
-use Espo\Entities\{
-    Webhook,
-    WebhookQueueItem,
-    WebhookEventQueueItem,
-    User,
-};
+use Espo\Entities\User;
+use Espo\Entities\Webhook;
+use Espo\Entities\WebhookEventQueueItem;
+use Espo\Entities\WebhookQueueItem;
 
-use Espo\Core\{
-    AclManager,
-    Utils\Config,
-    Utils\DateTime as DateTimeUtil,
-    Utils\Log,
-};
+use Espo\Core\AclManager;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+use Espo\Core\Utils\Log;
 
-use Espo\ORM\{
-    EntityManager,
-    Query\Part\Condition as Cond,
-};
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Condition as Cond;
 
 use Exception;
 use DateTime;
@@ -59,38 +53,18 @@ use stdClass;
 class Queue
 {
     private const EVENT_PORTION_SIZE = 20;
-
     private const PORTION_SIZE = 20;
-
     private const BATCH_SIZE = 50;
-
     private const MAX_ATTEMPT_NUMBER = 4;
-
     private const FAIL_ATTEMPT_PERIOD = '10 minutes';
 
-    private $sender;
-
-    private $config;
-
-    private $entityManager;
-
-    private $aclManager;
-
-    private $log;
-
     public function __construct(
-        Sender $sender,
-        Config $config,
-        EntityManager $entityManager,
-        AclManager $aclManager,
-        Log $log
-    ) {
-        $this->sender = $sender;
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->aclManager = $aclManager;
-        $this->log = $log;
-    }
+        private Sender $sender,
+        private Config $config,
+        private EntityManager $entityManager,
+        private AclManager $aclManager,
+        private Log $log
+    ) {}
 
     public function process(): void
     {

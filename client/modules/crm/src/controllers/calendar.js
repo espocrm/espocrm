@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:controllers/calendar', 'controller', function (Dep) {
+define('crm:controllers/calendar', ['controller'], function (Dep) {
 
     return Dep.extend({
 

@@ -56,11 +56,13 @@ class Users implements BeforeSave
     {
         if (!$this->config->get('eventAssignedUserIsAttendeeDisabled')) {
             if ($entity->hasLinkMultipleField('assignedUsers')) {
-                $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers') ?? [];
+                $assignedUserIdList = $entity->getLinkMultipleIdList('assignedUsers');
 
                 foreach ($assignedUserIdList as $assignedUserId) {
                     $entity->addLinkMultipleId('users', $assignedUserId);
-                    $entity->setLinkMultipleName('users', $assignedUserId,
+                    $entity->setLinkMultipleName(
+                        'users',
+                        $assignedUserId,
                         $entity->getLinkMultipleName('assignedUsers', $assignedUserId)
                     );
                 }

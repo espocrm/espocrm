@@ -2,9 +2,9 @@
   "fields": {
     "name": "Ім'я",
     "description": "Опис",
-    "entryCount": "Облік записа",
+    "entryCount": "Кількість записів",
     "campaigns": "Кампанії",
-    "endDate": "Дата Закінчення",
+    "endDate": "Дата закінчення",
     "targetLists": "Цільові списки",
     "includingActionList": "Включаючи",
     "excludingActionList": "Виключаючи",
@@ -21,7 +21,7 @@
   },
   "options": {
     "type": {
-      "Email": "Емейл",
+      "Email": "Електронна пошта",
       "Web": "Веб",
       "Television": "Телебачення",
       "Radio": "Радіо",

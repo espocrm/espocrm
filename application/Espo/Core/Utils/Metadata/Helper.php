@@ -44,7 +44,7 @@ class Helper
      *
      * @var string[]
      */
-    private $copiedDefParams = [
+    private array $copiedDefParams = [
         'readOnly',
         'disabled',
         'notStorable',
@@ -98,8 +98,8 @@ class Helper
      * Variables should be defined into fieldDefs (in 'entityDefs' metadata).
      *
      * @param string $entityType
-     * @param array<string,mixed> $defs
-     * @return ?array<string,mixed>
+     * @param array<string, mixed> $defs
+     * @return ?array<string, mixed>
      */
     public function getLinkDefsInFieldMeta($entityType, $defs)
     {

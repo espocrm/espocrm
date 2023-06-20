@@ -31,9 +31,9 @@ namespace Espo\Core\FieldValidation\Exceptions;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error\Body;
-
 use Espo\Core\Exceptions\HasLogMessage;
 use Espo\Core\FieldValidation\Failure;
+
 use LogicException;
 
 class ValidationError extends BadRequest implements HasLogMessage

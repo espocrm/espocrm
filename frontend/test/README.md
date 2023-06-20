@@ -10,9 +10,9 @@ Starting a server (`http://localhost:8888/`):
 npx jasmine-browser-runner serve --config=frontend/test/jasmine-browser.json
 ```
 
+Requires *Chromedriver*.
 
-Requires a chromedriver.
-
-Run `grunt internal` before running tests to build a source bundle.
+Run `grunt internal` before running tests to build a lib bundle. Then run `grunt transpile` after changes in
+source files, before running tests.
 
 To test a module that is not in the bundle add it to the `srcFiles` parameter in the `jasmine-browser.json`.

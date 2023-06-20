@@ -29,19 +29,15 @@
 
 namespace tests\unit\Espo\Core\Select\Primary;
 
-use Espo\Core\{
-    Select\Primary\FilterFactory as PrimaryFilterFactory,
-    Select\Primary\Filters\Followed,
-    Utils\Metadata,
-    InjectableFactory,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Primary\FilterFactory as PrimaryFilterFactory;
+use Espo\Core\Select\Primary\Filters\Followed;
+use Espo\Core\Utils\Metadata;
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Entities\User;
 
 class FilterFactoryTest extends \PHPUnit\Framework\TestCase
 {
@@ -89,7 +85,8 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
         $binder
             ->bindInstance(User::class, $this->user)
             ->for($className)
-            ->bindValue('$entityType', $entityType);
+            ->bindValue('$entityType', $entityType)
+            ->bindValue('$name', $name);
 
         $bindingContainer = new BindingContainer($bindingData);
 

@@ -1,0 +1,31 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/clientRoutes.json",
+    "title": "app/clientRoutes",
+    "description": "Frontend routes.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A route. Example: `Account/test/:id`.",
+        "properties": {
+            "params": {
+                "type": "object",
+                "description": "Parameters.",
+                "properties": {
+                    "controller": {
+                        "type": "string",
+                        "description": "A controller name."
+                    },
+                    "action": {
+                        "type": "string",
+                        "description": "An action name. Corresponds to the controller method `action{ActionName}`."
+                    }
+                }
+            },
+            "order": {
+                "type": "integer",
+                "description": "A route order."
+            }
+        }
+    }
+}

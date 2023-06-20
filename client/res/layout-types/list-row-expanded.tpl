@@ -1,4 +1,3 @@
-
 <% if (layout.right) { %>
 <div class="pull-right right cell" data-name="buttons">
     {{{<%= layout.right.name %>}}}

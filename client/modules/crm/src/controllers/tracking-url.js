@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:controllers/tracking-url', 'controller', function (Dep) {
+define('crm:controllers/tracking-url', ['controller'], function (Dep) {
 
     return Dep.extend({
 
@@ -36,10 +36,9 @@ define('crm:controllers/tracking-url', 'controller', function (Dep) {
             this.entire(viewName, {
                 message: data.message,
                 template: data.template,
-            }, function (view) {
+            }, view => {
                 view.render();
             });
         },
-
     });
 });

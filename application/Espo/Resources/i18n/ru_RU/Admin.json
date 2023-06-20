@@ -77,10 +77,13 @@
     "Phone Numbers": "Телефонные номера",
     "Layout Sets": "Наборы макетов",
     "Messaging": "Обмен сообщениями",
-    "Job Settings": "Параметры работы",
+    "Misc": "Прочее",
+    "Job Settings": "Параметры обработки для \"crone\"",
     "Configuration Instructions": "Инструкции по настройке",
-    "Formula Sandbox": "Формула песочницы",
-    "Working Time Calendars": "Календари рабочего времени"
+    "Formula Sandbox": "Песочница скриптов",
+    "Working Time Calendars": "Календари рабочего времени",
+    "Group Email Folders": "Групповые папки эл. почты",
+    "Authentication Providers": "Поставщики аутентификации"
   },
   "layouts": {
     "list": "Список",
@@ -214,8 +217,9 @@
     "dynamicLogicInvalid": "Условия, делающие поле недействительным",
     "conversionDisabled": "Отключить преобразование",
     "decimalPlaces": "Десятичные знаки",
-    "pattern": "Узор",
-    "globalRestrictions": "Глобальные ограничения"
+    "pattern": "Шаблон",
+    "globalRestrictions": "Глобальные ограничения",
+    "decimal": "Десятичная дробь"
   },
   "messages": {
     "selectEntityType": "Выберите тип объекта в левом меню.",
@@ -248,8 +252,8 @@
     "users": "Управление пользователями.",
     "teams": "Управление группами.",
     "roles": "Управление ролями.",
-    "portals": "Управление порталами",
-    "portalRoles": "Управление ролями для порталов",
+    "portals": "Управление порталами.",
+    "portalRoles": "Управление ролями для порталов.",
     "outboundEmails": "Настройки SMTP для исходящих сообщений эл. почты.",
     "groupEmailAccounts": "Учетные записи эл. почты групп (IMAP). Импортирование сообщений эл. почты и автоматическая конвертация входящих эл. писем в обращения (Email-to-Case).",
     "personalEmailAccounts": "Учетные записи эл. почты пользователей.",
@@ -285,7 +289,9 @@
     "jobsSettings": "Настройки обработки заданий. Задания выполняют задачи в фоновом режиме.",
     "sms": "Настройки SMS.",
     "formulaSandbox": "Написание и тестирование скриптов формул.",
-    "workingTimeCalendars": "График работы."
+    "workingTimeCalendars": "График работы.",
+    "groupEmailFolders": "Общие папки эл. писем для групп.",
+    "authenticationProviders": "Дополнительные поставщики аутентификации для порталов."
   },
   "options": {
     "previewSize": {

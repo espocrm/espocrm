@@ -33,7 +33,7 @@ function (Dep, /** module:ui/select*/Select) {
      * @class
      * @name Class
      * @memberOf module:views/fields/duration
-     * @extends module:views/fields/enum.Class
+     * @extends module:views/fields/enum
      */
     return Dep.extend(/** @lends module:views/fields/duration.Class# */{
 
@@ -181,6 +181,10 @@ function (Dep, /** module:ui/select*/Select) {
 
                     setTimeout(() => this.updateDuration(), 50);
 
+                    return;
+                }
+
+                if (!this.isEditMode() && o.xhr) {
                     return;
                 }
 

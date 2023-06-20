@@ -37,12 +37,8 @@ use Espo\Tools\EmailNotification\AssignmentProcessorData;
 
 class NotifyAboutAssignment implements Job
 {
-    private $assignmentProcessor;
-
-    public function __construct(AssignmentProcessor $assignmentProcessor)
-    {
-        $this->assignmentProcessor = $assignmentProcessor;
-    }
+    public function __construct(private AssignmentProcessor $assignmentProcessor)
+    {}
 
     public function run(Data $data): void
     {

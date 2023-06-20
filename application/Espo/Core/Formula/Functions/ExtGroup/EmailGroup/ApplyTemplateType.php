@@ -128,8 +128,7 @@ class ApplyTemplateType extends BaseFunction implements
 
         $emailData = $processor->process($emailTemplate, $params, $data);
 
-        /** @var string[] $attachmentsIdList */
-        $attachmentsIdList = $email->getLinkMultipleIdList('attachments') ?? [];
+        $attachmentsIdList = $email->getLinkMultipleIdList('attachments');
 
         $attachmentsIdList = array_merge(
             $attachmentsIdList,

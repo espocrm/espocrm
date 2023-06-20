@@ -34,15 +34,10 @@ use Espo\Core\Utils\Module;
 class PathProvider
 {
     private string $corePath = 'application/Espo/';
-
     private string $customPath = 'custom/Espo/Custom/';
 
-    private Module $module;
-
-    public function __construct(Module $module)
-    {
-        $this->module = $module;
-    }
+    public function __construct(private Module $module)
+    {}
 
     public function getCore(): string
     {

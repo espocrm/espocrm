@@ -30,18 +30,13 @@
 namespace Espo\Repositories;
 
 use Espo\ORM\Entity;
-
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Repositories\Database;
-use Espo\Core\Utils\Json;
-
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\UserData;
 use Espo\Entities\User as UserEntity;
 
 /**
- * @extends Database<\Espo\Entities\User>
+ * @extends Database<UserEntity>
  */
 class User extends Database
 {
@@ -51,8 +46,6 @@ class User extends Database
      * @param UserEntity $entity
      * @param array<string, mixed> $options
      * @return void
-     * @throws Conflict
-     * @throws Error
      */
     protected function beforeSave(Entity $entity, array $options = [])
     {
@@ -90,53 +83,6 @@ class User extends Database
             $entity->set('teamsNames', (object) []);
             $entity->set('defaultTeamId', null);
             $entity->set('defaultTeamName', null);
-        }
-
-        if ($entity->isNew()) {
-            $userName = $entity->getUserName();
-
-            if (empty($userName)) {
-                throw new Error("Username can't be empty.");
-            }
-
-            $this->entityManager->getLocker()->lockExclusive($this->entityType);
-
-            $user = $this
-                ->select(['id'])
-                ->where([
-                    'userName' => $userName,
-                ])
-                ->findOne();
-
-            if ($user) {
-                $this->entityManager->getLocker()->rollback();
-
-                throw new Conflict(Json::encode(['reason' => 'userNameExists']));
-            }
-        } else {
-            if ($entity->isAttributeChanged('userName')) {
-                $userName = $entity->getUserName();
-
-                if (empty($userName)) {
-                    throw new Error("Username can't be empty.");
-                }
-
-                $this->entityManager->getLocker()->lockExclusive($this->entityType);
-
-                $user = $this
-                    ->select(['id'])
-                    ->where([
-                        'userName' => $userName,
-                        'id!=' => $entity->getId(),
-                    ])
-                    ->findOne();
-
-                if ($user) {
-                    $this->entityManager->getLocker()->rollback();
-
-                    throw new Conflict(Json::encode(['reason' => 'userNameExists']));
-                }
-            }
         }
     }
 

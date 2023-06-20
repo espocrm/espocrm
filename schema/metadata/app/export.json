@@ -1,0 +1,82 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/export.json",
+    "title": "app/export",
+    "description": "Definitions for the Export framework.",
+    "type": "object",
+    "properties": {
+        "formatList": {
+            "type": "array",
+            "description": "Available export formats.",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
+            }
+        },
+        "formatDefs": {
+            "type": "object",
+            "description": "Definitions for export formats. You can define here also custom params specific to your custom format.",
+            "additionalProperties": {
+                "type": "object",
+                "description": "A format.",
+                "additionalProperties": true,
+                "properties": {
+                    "processorClassName": {
+                        "type": "string",
+                        "description": "A main processing class. Should implement Espo\\Tools\\Export\\Processor."
+                    },
+                    "additionalFieldsLoaderClassName": {
+                        "type": "string",
+                        "description": "An additional field loader class. Should implement Espo\\Tools\\Export\\AdditionalFieldsLoader."
+                    },
+                    "mimeType": {
+                        "type": "string",
+                        "pattern": "^[-\\w.]+/[-\\w.+]+$",
+                        "description": "A mime type of export files."
+                    },
+                    "fileExtension": {
+                        "type": "string",
+                        "pattern": "^[a-z]+$",
+                        "description": "An extension of export files."
+                    },
+                    "params": {
+                        "type": "object",
+                        "description": "Parameters.",
+                        "properties": {
+                            "fields": {
+                                "type": "object",
+                                "description": "Fields.",
+                                "additionalProperties": {
+                                    "description": "A parameter name.",
+                                    "$ref": "./../entityDefs.json#/definitions/fieldDefs"
+                                }
+                            },
+                            "layout": {
+                                "description": "A layout.",
+                                "type": "array",
+                                "items": {
+                                    "$ref": "./../../layouts/detail.json#/definitions/row"
+                                }
+                            },
+                            "dynamicLogic": {
+                                "description": "Dynamic logic.",
+                                "additionalProperties": {
+                                    "description": "A field.",
+                                    "type": "object",
+                                    "properties": {
+                                        "visible": {
+                                            "description": "Conditions making the parameter visible.",
+                                            "$ref": "./../clientDefs.json#/definitions/dynamicLogicVisible"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

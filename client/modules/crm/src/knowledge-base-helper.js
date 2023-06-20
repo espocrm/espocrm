@@ -26,44 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:knowledge-base-helper', ['ajax'], function (Ajax) {
+import Ajax from 'ajax';
 
-    var KnowledgeBaseHelper = function (language) {
+export default class {
+
+    /**
+     * @param {module:language} language
+     */
+    constructor(language) {
         this.language = language;
     }
 
-    _.extend(KnowledgeBaseHelper.prototype, {
+    getAttributesForEmail(model, attributes, callback) {
+        attributes = attributes || {};
+        attributes.body = model.get('body');
 
-        getLanguage: function () {
-            return this.language;
-        },
+        if (attributes.name) {
+            attributes.name = attributes.name + ' ';
+        } else {
+            attributes.name = '';
+        }
 
-        getAttributesForEmail: function (model, attributes, callback) {
-            attributes = attributes || {};
-            attributes.body = model.get('body');
+        attributes.name += this.language.translate('KnowledgeBaseArticle', 'scopeNames') + ': ' +
+            model.get('name');
 
-            if (attributes.name) {
-                attributes.name = attributes.name + ' ';
-            } else {
-                attributes.name = '';
-            }
+        Ajax.postRequest('KnowledgeBaseArticle/action/getCopiedAttachments', {
+            id: model.id,
+            parentType: 'Email',
+            field : 'attachments',
+        }).then(data => {
+            attributes.attachmentsIds = data.ids;
+            attributes.attachmentsNames = data.names;
+            attributes.isHtml = true;
 
-            attributes.name += this.getLanguage().translate('KnowledgeBaseArticle', 'scopeNames') + ': ' +
-                model.get('name');
-
-            Ajax.postRequest('KnowledgeBaseArticle/action/getCopiedAttachments', {
-                id: model.id,
-                parentType: 'Email',
-                field : 'attachments',
-            }).then(data => {
-                attributes.attachmentsIds = data.ids;
-                attributes.attachmentsNames = data.names;
-                attributes.isHtml = true;
-
-                callback(attributes);
-            });
-        },
-    });
-
-    return KnowledgeBaseHelper;
-});
+            callback(attributes);
+        });
+    }
+}

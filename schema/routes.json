@@ -1,0 +1,58 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/routes.json",
+    "title": "routes",
+    "description": "Backend API routes.",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "description": "A route.",
+        "properties": {
+            "route": {
+                "type": "string",
+                "description": "A route path. Example: `/MyScope/:id/myAction`."
+            },
+            "method": {
+                "type": "string",
+                "enum": [
+                    "get",
+                    "post",
+                    "put",
+                    "delete",
+                    "options",
+                    "patch"
+                ],
+                "description": "An HTTP method."
+            },
+            "noAuth": {
+                "type": "boolean",
+                "description": "Makes the route not requiring authentication."
+            },
+            "actionClassName": {
+                "type": "string",
+                "description": "An action class. Should implement the interface Espo\\Core\\Api\\Action."
+            },
+            "params": {
+                "type": "object",
+                "description": "Parameters. If starts with a colon, then will be parsed from the URI. Example: `:id`.",
+                "additionalProperties": {
+                    "type": "string"
+                },
+                "properties": {
+                    "controller": {
+                        "type": "string",
+                        "description": "A controller name."
+                    },
+                    "action": {
+                        "type": "string",
+                        "description": "A controller action name."
+                    }
+                }
+            }
+        },
+        "required": [
+            "route",
+            "method"
+        ]
+    }
+}

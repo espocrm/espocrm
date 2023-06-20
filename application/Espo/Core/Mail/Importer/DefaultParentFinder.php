@@ -48,19 +48,11 @@ class DefaultParentFinder implements ParentFinder
     /** @var string[] */
     private array $entityTypeList;
 
-    private EntityManager $entityManager;
-    private Config $config;
-    private Metadata $metadata;
-
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        Metadata $metadata
+        private EntityManager $entityManager,
+        private Config $config,
+        private Metadata $metadata
     ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->metadata = $metadata;
-
         $this->entityTypeList = $this->entityManager
             ->getDefs()
             ->getEntity(Email::ENTITY_TYPE)
@@ -158,9 +150,7 @@ class DefaultParentFinder implements ParentFinder
         if ($this->isEntityTypeAllowed(Lead::ENTITY_TYPE)) {
             $lead = $this->entityManager
                 ->getRDBRepository(Lead::ENTITY_TYPE)
-                ->where([
-                    'emailAddress' => $emailAddress
-                ])
+                ->where(['emailAddress' => $emailAddress])
                 ->findOne();
 
             if ($lead) {

@@ -50,7 +50,7 @@ class Util
     /**
      * A grouping-by with distinct will give wrong results. Need to use sub-query.
      *
-     * @param array<mixed ,mixed> $whereClause
+     * @param array<string|int, mixed> $whereClause
      */
     public function handleDistinctReportQueryBuilder(SelectBuilder $queryBuilder, array $whereClause): void
     {

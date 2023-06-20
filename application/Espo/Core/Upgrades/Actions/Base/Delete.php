@@ -34,7 +34,7 @@ use Espo\Core\Exceptions\Error;
 class Delete extends \Espo\Core\Upgrades\Actions\Base
 {
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return void
      * @throws Error
      */

@@ -29,20 +29,14 @@
 
 namespace Espo\Classes\Select\ActionHistoryRecord\AccessControlFilters;
 
-use Espo\{
-    Core\Select\AccessControl\Filter,
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
+use Espo\Core\Select\AccessControl\Filter;
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class OnlyOwn implements Filter
 {
-    private $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user)
+    {}
 
     public function apply(QueryBuilder $queryBuilder): void
     {

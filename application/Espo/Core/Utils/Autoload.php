@@ -37,7 +37,7 @@ use Exception;
 
 class Autoload
 {
-    /** @var ?array<string,mixed> */
+    /** @var ?array<string, mixed> */
     private $data = null;
 
     private string $cacheKey = 'autoload';
@@ -53,7 +53,7 @@ class Autoload
     ) {}
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function getData(): array
     {
@@ -71,7 +71,7 @@ class Autoload
         $useCache = $this->config->get('useCache');
 
         if ($useCache && $this->dataCache->has($this->cacheKey)) {
-            /** @var ?array<string,mixed> $data */
+            /** @var ?array<string, mixed> $data */
             $data = $this->dataCache->get($this->cacheKey);
 
             $this->data = $data;
@@ -87,7 +87,7 @@ class Autoload
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function loadData(): array
     {
@@ -113,7 +113,7 @@ class Autoload
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws \JsonException
      */
     private function loadDataFromFile(string $filePath): array
@@ -130,8 +130,8 @@ class Autoload
     }
 
     /**
-     * @param array<string,mixed> $data
-     * @return array<string,mixed>
+     * @param array<string, mixed> $data
+     * @return array<string, mixed>
      */
     private function normalizeData(array $data): array
     {

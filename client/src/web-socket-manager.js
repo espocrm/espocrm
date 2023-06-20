@@ -26,21 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('web-socket-manager', [], function () {
+/** @module web-socket-manager */
+
+import Base64 from 'lib!base64';
+
+/**
+ * A web-socket manager.
+ */
+class WebSocketManager {
 
     /**
-     * A web-socket manager.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:web-socket-manager
-     *
-     * @param {module:models/settings.Class} config A config.
+     * @param {module:models/settings} config A config.
      */
-    let WebSocketManager = function (config) {
+    constructor(config) {
         /**
          * @private
-         * @type {module:models/settings.Class}
+         * @type {module:models/settings}
          */
         this.config = config;
 
@@ -116,140 +117,132 @@ define('web-socket-manager', [], function () {
                 this.url += '/wss';
             }
         }
-    };
+    }
 
-    _.extend(WebSocketManager.prototype, /** @lends module:web-socket-manager.Class# */{
+    /**
+     * Connect.
+     *
+     * @param {string} auth An auth string.
+     * @param {string} userId A user ID.
+     */
+    connect(auth, userId) {
+        let authArray = Base64.decode(auth).split(':');
 
-        /**
-         * Connect.
-         *
-         * @param {string} auth An auth string.
-         * @param {string} userId A user ID.
-         */
-        connect: function (auth, userId) {
-            let authArray = Base64.decode(auth).split(':');
+        let authToken = authArray[1];
 
-            let authToken = authArray[1];
+        let url = this.protocolPart + this.url;
 
-            let url = this.protocolPart + this.url;
+        url += '?authToken=' + authToken + '&userId=' + userId;
 
-            url += '?authToken=' + authToken + '&userId=' + userId;
+        try {
+            this.connection = new ab.Session(
+                url,
+                () => {
+                    this.isConnected = true;
 
-            try {
-                this.connection = new ab.Session(
-                    url,
-                    () => {
-                        this.isConnected = true;
+                    this.subscribeQueue.forEach(item => {
+                        this.subscribe(item.category, item.callback);
+                    });
 
-                        this.subscribeQueue.forEach(item => {
-                            this.subscribe(item.category, item.callback);
-                        });
-
+                    this.subscribeQueue = [];
+                },
+                e => {
+                    if (e === ab.CONNECTION_CLOSED) {
                         this.subscribeQueue = [];
-                    },
-                    e => {
-                        if (e === ab.CONNECTION_CLOSED) {
-                            this.subscribeQueue = [];
-                        }
+                    }
 
-                        if (e === ab.CONNECTION_LOST || e === ab.CONNECTION_UNREACHABLE) {
-                            setTimeout(
-                                () => {
-                                    this.connect(auth, userId);
-                                },
-                                3000
-                            );
-                        }
-                    },
-                    {skipSubprotocolCheck: true}
-                );
-            }
-            catch (e) {
-                console.error(e.message);
+                    if (e === ab.CONNECTION_LOST || e === ab.CONNECTION_UNREACHABLE) {
+                        setTimeout(() => this.connect(auth, userId), 3000);
+                    }
+                },
+                {skipSubprotocolCheck: true}
+            );
+        }
+        catch (e) {
+            console.error(e.message);
 
-                this.connection = null;
-            }
-        },
+            this.connection = null;
+        }
+    }
 
-        /**
-         * Subscribe to a topic.
-         *
-         * @param {string} category A topic.
-         * @param {Function} callback A callback.
-         */
-        subscribe: function (category, callback) {
-            if (!this.connection) {
-                return;
-            }
+    /**
+     * Subscribe to a topic.
+     *
+     * @param {string} category A topic.
+     * @param {Function} callback A callback.
+     */
+    subscribe(category, callback) {
+        if (!this.connection) {
+            return;
+        }
 
-            if (!this.isConnected) {
-                this.subscribeQueue.push({
-                    category: category,
-                    callback: callback,
-                });
-
-                return;
-            }
-
-            try {
-                this.connection.subscribe(category, callback);
-            }
-            catch (e) {
-                if (e.message) {
-                    console.error(e.message);
-                }
-                else {
-                    console.error("WebSocket: Could not subscribe to "+category+".");
-                }
-            }
-        },
-
-        /**
-         * Unsubscribe.
-         *
-         * @param {string} category A topic.
-         * @param {Function} [callback] A callback.
-         */
-        unsubscribe: function (category, callback) {
-            if (!this.connection) {
-                return;
-            }
-
-            this.subscribeQueue = this.subscribeQueue.filter(item => {
-                return item.category !== category && item.callback !== callback;
+        if (!this.isConnected) {
+            this.subscribeQueue.push({
+                category: category,
+                callback: callback,
             });
 
-            try {
-                this.connection.unsubscribe(category, callback);
-            }
-            catch (e) {
-                if (e.message) {
-                    console.error(e.message);
-                }
-                else {
-                    console.error("WebSocket: Could not unsubscribe from "+category+".");
-                }
-            }
-        },
+            return;
+        }
 
-        /**
-         * Close a connection.
-         */
-        close: function () {
-            if (!this.connection) {
-                return;
-            }
-
-            try {
-                this.connection.close();
-            }
-            catch (e) {
+        try {
+            this.connection.subscribe(category, callback);
+        }
+        catch (e) {
+            if (e.message) {
                 console.error(e.message);
             }
+            else {
+                console.error("WebSocket: Could not subscribe to "+category+".");
+            }
+        }
+    }
 
-            this.isConnected = false;
-        },
-    });
+    /**
+     * Unsubscribe.
+     *
+     * @param {string} category A topic.
+     * @param {Function} [callback] A callback.
+     */
+    unsubscribe(category, callback) {
+        if (!this.connection) {
+            return;
+        }
 
-    return WebSocketManager;
-});
+        this.subscribeQueue = this.subscribeQueue.filter(item => {
+            return item.category !== category && item.callback !== callback;
+        });
+
+        try {
+            this.connection.unsubscribe(category, callback);
+        }
+        catch (e) {
+            if (e.message) {
+                console.error(e.message);
+            }
+            else {
+                console.error("WebSocket: Could not unsubscribe from "+category+".");
+            }
+        }
+    }
+
+    /**
+     * Close a connection.
+     */
+    close() {
+        if (!this.connection) {
+            return;
+        }
+
+        try {
+            this.connection.close();
+        }
+        catch (e) {
+            console.error(e.message);
+        }
+
+        this.isConnected = false;
+    }
+}
+
+export default WebSocketManager;

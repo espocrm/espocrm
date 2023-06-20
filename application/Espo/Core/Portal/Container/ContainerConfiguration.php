@@ -29,9 +29,7 @@
 
 namespace Espo\Core\Portal\Container;
 
-use Espo\Core\{
-    Container\ContainerConfiguration as BaseContainerConfiguration,
-};
+use Espo\Core\Container\ContainerConfiguration as BaseContainerConfiguration;
 
 class ContainerConfiguration extends BaseContainerConfiguration
 {
@@ -45,7 +43,7 @@ class ContainerConfiguration extends BaseContainerConfiguration
         try {
             $className = $this->metadata->get(['app', 'portalContainerServices', $name, 'loaderClassName']);
         }
-        catch (\Exception $e) {}
+        catch (\Exception) {}
 
         if ($className && class_exists($className)) {
             return $className;
@@ -68,11 +66,8 @@ class ContainerConfiguration extends BaseContainerConfiguration
      */
     public function getServiceClassName(string $name): ?string
     {
-        $className =
-            $this->metadata->get(['app', 'portalContainerServices', $name, 'className']) ??
+        return $this->metadata->get(['app', 'portalContainerServices', $name, 'className']) ??
             parent::getServiceClassName($name);
-
-        return $className;
     }
 
     /**

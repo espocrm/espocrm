@@ -45,7 +45,10 @@ interface Parser
 
     public function getAddressNameMap(Message $message): stdClass;
 
-    public function getAddressData(Message $message, string $type): ?stdClass;
+    /**
+     * @return ?object{address: string, name: string}
+     */
+    public function getAddressData(Message $message, string $type): ?object;
 
     /**
      * @return string[]

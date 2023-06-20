@@ -31,15 +31,14 @@ namespace Espo\Controllers;
 
 use Espo\Tools\Notification\RecordService as Service;
 
-use Espo\Core\{
-    Controllers\RecordBase,
-    Api\Request,
-    Api\Response,
-    Exceptions\BadRequest,
-    Exceptions\Error,
-    Exceptions\Forbidden,
-    Select\SearchParams,
-    Select\Where\Item as WhereItem};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Controllers\RecordBase;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Select\SearchParams;
+use Espo\Core\Select\Where\Item as WhereItem;
 
 use stdClass;
 

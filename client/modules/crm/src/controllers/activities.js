@@ -31,7 +31,7 @@ define('crm:controllers/activities', ['controller'], function (Dep) {
     /**
      * @class
      * @name Class
-     * @extends module:controller.Class
+     * @extends module:controller
      * @memberOf module:crm:controllers/activities
      */
     return Dep.extend(/** @lends module:crm:controllers/activities~Class# */{

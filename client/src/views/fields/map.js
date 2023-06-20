@@ -113,7 +113,7 @@ define('views/fields/map', ['views/fields/base'], function (Dep) {
                         .get(['clientDefs', 'AddressMap', 'implementations', this.provider]);
 
                     if (implClassName) {
-                        require(implClassName, impl => {
+                        Espo.loader.require(implClassName, impl => {
                             impl.render(this);
                         });
                     }

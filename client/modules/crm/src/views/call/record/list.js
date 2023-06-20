@@ -57,7 +57,7 @@ define('crm:views/call/record/list', ['views/record/list'], function (Dep) {
             model.set('status', 'Held');
 
             this.listenToOnce(model, 'sync', () => {
-                this.notify(false);
+                Espo.Ui.notify(false);
 
                 this.collection.fetch();
             });
@@ -83,11 +83,11 @@ define('crm:views/call/record/list', ['views/record/list'], function (Dep) {
             model.set('status', 'Not Held');
 
             this.listenToOnce(model, 'sync', () => {
-                this.notify(false);
+                Espo.Ui.notify(false);
                 this.collection.fetch();
             });
 
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
 
             model.save();
         },

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/task/fields/priority-for-dashlet', 'views/fields/enum', function (Dep) {
+define('crm:views/task/fields/priority-for-dashlet', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 

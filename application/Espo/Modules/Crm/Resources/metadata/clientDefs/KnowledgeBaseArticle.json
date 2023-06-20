@@ -16,13 +16,21 @@
     "filterList": [
         {
             "name": "published",
-            "inPortalDisabled": true
+            "accessDataList": [
+                {
+                    "inPortalDisabled": true
+                }
+            ]
         }
     ],
     "boolFilterList": [
         {
             "name": "onlyMy",
-            "inPortalDisabled": true
+            "accessDataList": [
+                {
+                    "inPortalDisabled": true
+                }
+            ]
         }
     ],
     "relationshipPanels": {

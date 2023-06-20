@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/integrations.json",
+    "title": "integrations",
+    "description": "Integrations.",
+    "type": "object",
+    "properties": {
+        "fields": {
+            "$ref": "./entityDefs.json#/properties/fields",
+            "description": "Field definitions for the integration (to be available at Administration > Integrations)."
+        },
+        "allowUserAccounts": {
+            "type": "boolean",
+            "description": "Whether the integration supposes that users have their own accounts (at User > External Accounts)."
+        },
+        "userAccountAclScope": {
+            "type": "string",
+            "description": "A scope name, a user should have access to to be able to use the integration."
+        },
+        "view": {
+            "type": "string",
+            "description": "A front-end view for the integration page (at Administration > Integrations)."
+        },
+        "userView": {
+            "type": "string",
+            "description": "A front-end view for the external account page (at User > External Accounts)."
+        },
+        "params": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Any params needed for the integration."
+        },
+        "externalAccountSecretAttributeList": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
+            },
+            "description": "External account attributes to be hidden from the front-end."
+        }
+    }
+}

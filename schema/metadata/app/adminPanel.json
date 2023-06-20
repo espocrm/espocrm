@@ -1,0 +1,55 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/adminPanel.json",
+    "title": "app/adminPanel",
+    "description": "Defines what to display on the Administration page.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A panel name.",
+        "properties": {
+            "label": {
+                "type": "string",
+                "description": "A panel label. A translation path: Admin > labels > {label}."
+            },
+            "order": {
+                "type": "integer",
+                "description": "Used for ordering panels on the page."
+            },
+            "itemList": {
+                "type": "array",
+                "description": "Items.",
+                "items": {
+                    "anyOf": [
+                        {"const": "__APPEND__"},
+                        {
+                            "type": "object",
+                            "properties": {
+                                "url": {
+                                    "type": "string",
+                                    "description": "A link URL. You can use an URL like #Admin/{myName}, in this case you also need to define a recordView."
+                                },
+                                "label": {
+                                    "type": "string",
+                                    "description": "An item (link) label. A translation path: Admin > labels > {label}."
+                                },
+                                "iconClass": {
+                                    "type": "string",
+                                    "description": "A CSS class for the icon."
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "description": "A translation key for a description text. A translation page: Admin > descriptions > {description}."
+                                },
+                                "recordView": {
+                                    "type": "string",
+                                    "description": "A record view. Optional. Needed if you defined the URL like #Admin/{myName}. The record view displays settings fields. https://docs.espocrm.com/development/custom-config-parameters/"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

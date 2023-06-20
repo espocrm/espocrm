@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/currencyConversion.json",
+    "title": "app/currencyConversion",
+    "description": "Currency conversion.",
+    "type": "object",
+    "properties": {
+        "entityConverterClassNameMap": {
+            "type": "object",
+            "description": "Currency converters.",
+            "additionalProperties": {
+                "type": "string",
+                "description": "An entity currency converter. Should implement Espo\\Tools\\Currency\\Conversion\\EntityConverter."
+            }
+        }
+    }
+}

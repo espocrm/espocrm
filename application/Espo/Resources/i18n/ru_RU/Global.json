@@ -54,10 +54,12 @@
     "Currency": "Валюта",
     "LayoutSet": "Набор макетов",
     "Mass Action": "Массовое действие",
-    "Note": "Примечание",
+    "Note": "Заметка",
     "ImportError": "Ошибка импорта",
     "WorkingTimeCalendar": "Календарь рабочего времени",
-    "WorkingTimeRange": "Диапазон рабочего времени"
+    "WorkingTimeRange": "Диапазон рабочего времени",
+    "GroupEmailFolder": "Папка групповой эл. почты",
+    "AuthenticationProvider": "Поставщик аутентификации"
   },
   "scopeNamesPlural": {
     "Email": "Эл. письма",
@@ -102,10 +104,12 @@
     "PhoneNumber": "Телефонные номера",
     "Currency": "Валюта",
     "LayoutSet": "Наборы макетов",
-    "Note": "Примечания",
+    "Note": "Заметки",
     "ImportError": "Ошибки импорта",
     "WorkingTimeCalendar": "Календари рабочего времени",
-    "WorkingTimeRange": "Диапазоны рабочего времени"
+    "WorkingTimeRange": "Диапазоны рабочего времени",
+    "GroupEmailFolder": "Групповые папки эл. почты",
+    "AuthenticationProvider": "Поставщики аутентификации"
   },
   "labels": {
     "Misc": "Разное",
@@ -122,7 +126,6 @@
     "Loading...": "Загрузка...",
     "Uploading...": "Загружается...",
     "Sending...": "Отправляется...",
-    "Merging...": "Объединияется...",
     "Merged": "Объединено",
     "Removed": "Удалено",
     "Posted": "Добавлено",
@@ -136,14 +139,10 @@
     "Record has been removed": "Запись была удалена",
     "Wrong username/password": "Неверное имя пользователя/пароль",
     "Post cannot be empty": "Сообщение не может быть пустым",
-    "Removing...": "Удаляется...",
-    "Unlinking...": "Ссылка убирается...",
-    "Posting...": "Размещается...",
     "Username can not be empty!": "Имя пользователя не может быть пустым!",
     "Cache is not enabled": "Кэш не подключен",
     "Cache has been cleared": "Кэш был очищен",
     "Rebuild has been done": "Перестройка ПО была выполнена",
-    "Saving...": "Сохраняется...",
     "Modified": "Изменено",
     "Created": "Создано",
     "Create": "Создать",
@@ -270,7 +269,7 @@
     "Preview": "Предварительный просмотр",
     "Up": "Вверх",
     "Save & Continue Editing": "Сохранить и продолжить редактирование",
-    "Save & New": "Экономия и новизна",
+    "Save & New": "Сохранить и создать новую запись",
     "Field": "Поле",
     "Resolution": "Разрешение",
     "Resolve Conflict": "Разрешить конфликт",
@@ -279,7 +278,9 @@
     "Log in": "Войти",
     "Log in as": "Войдите в систему как",
     "Sign in": "Войти",
-    "Global Search": "Глобальный поиск"
+    "Global Search": "Глобальный поиск",
+    "Show Navigation Panel": "Показать панель навигации",
+    "Hide Navigation Panel": "Скрыть панель навигации"
   },
   "messages": {
     "pleaseWait": "Пожалуйста, подождите...",
@@ -332,8 +333,6 @@
     "loading": "Загрузка ...",
     "saving": "Сохраняется ...",
     "fieldMaxFileSizeError": "Размер файла не должен превышать {max} Мб.",
-    "fieldShouldBeLess": "{field} должно быть меньше чем {value}",
-    "fieldShouldBeGreater": "{field} должно быть больше чем {value}",
     "fieldIsUploading": "Выполняется загрузка",
     "erasePersonalDataConfirmation": "Отмеченные поля будут стерты навсегда. Вы уверены?",
     "massPrintPdfMaxCountError": "Невозможно напечатать больше {maxCount} записей.",
@@ -345,7 +344,7 @@
     "maintenanceMode": "В настоящее время приложение находится в режиме обслуживания. Только администраторы имеют доступ.\n\nРежим обслуживания можно отключить в разделе Администрирование → Настройки.",
     "fieldInvalid": "{field} недопустимое значение",
     "resolveSaveConflict": "Запись была изменена. Вам необходимо разрешить конфликт, прежде чем сохранять запись.",
-    "massActionProcessed": "Массовая акция была обработана.",
+    "massActionProcessed": "Массовое действие было обработано.",
     "fieldUrlExceedsMaxLength": "Кодированный URL превышает максимальную длину {maxLength}",
     "fieldNotMatchingPattern": "{поле} не соответствует шаблону `{шаблон}`",
     "fieldNotMatchingPattern$noBadCharacters": "{поле} содержит недопустимые символы",
@@ -357,10 +356,23 @@
     "fieldNotMatchingPattern$digits": "{поле} может содержать только цифры",
     "fieldPhoneInvalidCharacters": "Разрешены только цифры, латинские буквы и символы `-+_@:#().`.",
     "arrayItemMaxLength": "Длина элемента не должна превышать {max} символов",
-    "validationFailure": "Сбой проверки бэкенда.\n\nПоле: `{поле}}\nВалидация: `{тип}`",
+    "validationFailure": "Сбой проверки бэкенда.\n\nПоле: `{field}`\nВалидация: `{type}`",
     "confirmAppRefresh": "Приложение было обновлено. Рекомендуется обновить страницу для обеспечения правильного функционирования.",
     "error404": "Запрошенный вами url не может быть обработан.",
-    "error403": "У вас нет доступа к этой области."
+    "error403": "У вас нет доступа к этой области.",
+    "extensionLicenseInvalid": "Недопустимая лицензия расширения '{name}'.",
+    "extensionLicenseExpired": "Срок действия подписки на лицензию расширения '{name}' истек.",
+    "extensionLicenseSoftExpired": "Срок действия подписки на лицензию расширения '{name}' истек.",
+    "loggedOutLeaveOut": "Вышел из системы. Сессия неактивна. Вы можете потерять несохраненные данные формы после обновления страницы. Вам может понадобиться сделать копию.",
+    "noAccessToRecord": "Операция требует `{действие}` доступа к записи.",
+    "noAccessToForeignRecord": "Операция требует доступа `{action}` к посторонней записи.",
+    "fieldShouldBeNumber": "{поле} должно быть допустимым числом",
+    "maintenanceModeError": "В настоящее время приложение находится в режиме обслуживания.",
+    "noLinkAccess": "Нет доступа к операции связывания для конкретной записи.",
+    "cannotRelateNonExisting": "Невозможно установить связь с несуществующей записью {foreignEntityType}.",
+    "cannotRelateForbidden": "Невозможно установить связь с запрещенной записью {foreignEntityType}. Требуется доступ к `{action}`.",
+    "cannotRelateForbiddenLink": "Нет доступа к ссылке '{link}'.",
+    "emptyMassUpdate": "Нет полей, доступных для массового обновления."
   },
   "boolFilters": {
     "onlyMy": "Только мои",
@@ -382,7 +394,8 @@
     "printPdf": "Распечатать в PDF",
     "unlink": "Убрать ссылку",
     "recalculateFormula": "Пересчитать формулу",
-    "update": "Обновление"
+    "update": "Обновить",
+    "delete": "Удалить"
   },
   "fields": {
     "name": "Название",
@@ -419,7 +432,9 @@
     "type": "Тип",
     "phoneNumberIsOptedOut": "Номер телефона не участвует в звонках",
     "types": "Типы",
-    "middleName": "Отчество"
+    "middleName": "Отчество",
+    "emailAddressIsInvalid": "Адрес электронной почты недействителен",
+    "phoneNumberIsInvalid": "Номер телефона недействителен"
   },
   "links": {
     "assignedUser": "Ответственный",
@@ -496,7 +511,9 @@
     "assignThisVoid": "{user} не назначил это {entityType}",
     "assignVoid": "{user} неназначенный {entityType} {entity}",
     "assignThisSelf": "{user} назначил {entityType} на себя",
-    "assignSelf": "{user} назначил {entityType} {entity} на себя"
+    "assignSelf": "{user} назначил {entityType} {entity} на себя",
+    "unrelate": "{user} отсоединил {relatedEntityType} {relatedEntity} от {entityType} {entity}",
+    "unrelateThis": "{user} отсоединил {relatedEntityType} {relatedEntity} от этого {entityType}"
   },
   "lists": {
     "monthNames": [
@@ -767,9 +784,10 @@
     "kanban": "Канбан"
   },
   "themes": {
-    "Dark": "Темный",
+    "Dark": "Тёмный",
     "Sakura": "Сакура",
-    "Violet": "Виолетта",
+    "Violet": "Фиолетовый",
+    "Hazyblue": "Дымчато-голубой",
     "Glass": "Стекло"
   },
   "themeNavbars": {
@@ -777,7 +795,7 @@
     "top": "Верхняя панель навигации"
   },
   "fieldValidations": {
-    "required": "Требуется",
+    "required": "Обязательное для заполнения",
     "maxCount": "Максимальное количество",
     "maxLength": "Максимальная длина",
     "pattern": "Сопоставление шаблонов",
@@ -789,5 +807,18 @@
     "noEmptyString": "Нет пустой строки",
     "max": "Максимальное значение",
     "min": "Минимальное значение"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Недопустимое значение URL.",
+    "currency_valid": "Недопустимое значение суммы.",
+    "currency_validCurrency": "Значение кода валюты недопустимо или не разрешено.",
+    "varchar_pattern": "Вероятно, значение содержит недопустимые символы.",
+    "email_emailAddress": "Недопустимое значение адреса электронной почты.",
+    "phone_phoneNumber": "Недопустимое значение номера телефона.",
+    "dateTimeOptional_valid": "Недопустимое значение даты и времени.",
+    "dateTime_valid": "Недопустимое значение даты и времени.",
+    "date_valid": "Недопустимое значение даты.",
+    "enum_valid": "Недопустимое значение перечисления. Значение должно быть одним из определенных параметров перечисления. Пустое значение допускается только в том случае, если поле имеет пустую опцию.",
+    "multiEnum_valid": "Недопустимое значение множественного перечисления. Значения должны быть одним из определенных параметров поля."
   }
 }

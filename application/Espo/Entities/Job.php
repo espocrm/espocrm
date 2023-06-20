@@ -29,7 +29,10 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Job\Job\Status;
 use Espo\Core\ORM\Entity;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
+
 use stdClass;
 
 class Job extends Entity
@@ -170,5 +173,47 @@ class Job extends Entity
     public function getFailedAttempts(): int
     {
         return $this->get('failedAttempts') ?? 0;
+    }
+
+    /**
+     * Set status.
+     *
+     * @param Status::* $status
+     */
+    public function setStatus(string $status): self
+    {
+        $this->set('status', $status);
+
+        return $this;
+    }
+
+    /**
+     * Set PID.
+     */
+    public function setPid(?int $pid): self
+    {
+        $this->set('pid', $pid);
+
+        return $this;
+    }
+
+    /**
+     * Set started-at to now.
+     */
+    public function setStartedAtNow(): self
+    {
+        $this->set('startedAt', DateTimeUtil::getSystemNowString());
+
+        return $this;
+    }
+
+    /**
+     * Set executed-at to now.
+     */
+    public function setExecutedAtNow(): self
+    {
+        $this->set('executedAt', DateTimeUtil::getSystemNowString());
+
+        return $this;
     }
 }

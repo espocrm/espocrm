@@ -26,23 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('layout-manager', [], function () {
+/** @module layout-manager */
+
+import {Events} from 'lib!bullbone';
+
+/**
+ * A layout manager.
+ *
+ * @mixes Bull.Events
+ */
+class LayoutManager {
 
     /**
-     * A layout manager.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:layout-manager
-     *
-     * @param {module:cache.Class|null} [cache] A cache.
+     * @param {module:cache|null} [cache] A cache.
      * @param {string} [applicationId] An application ID.
      * @param {string} [userId] A user ID.
      */
-    let LayoutManager = function (cache, applicationId, userId) {
+    constructor(cache, applicationId, userId) {
+
         /**
          * @private
-         * @type {module:cache.Class|null}
+         * @type {module:cache|null}
          */
         this.cache = cache || null;
 
@@ -64,218 +68,214 @@ define('layout-manager', [], function () {
          */
         this.data = {};
 
-        /**
-         * @private
-         */
+        /** @private */
         this.ajax = Espo.Ajax;
-    };
+    }
 
-    _.extend(LayoutManager.prototype, /** @lends module:layout-manager.Class# */{
+    /**
+     * Set a user ID. To be used for the cache purpose.
+     *
+     * @param {string} userId A user ID.
+     *
+     * @todo Throw an exception if already set.
+     */
+    setUserId(userId) {
+        this.userId = userId
+    }
 
-        /**
-         * Set a user ID. To be used for the cache purpose.
-         *
-         * @param {string} userId A user ID.
-         *
-         * @todo Throw an exception if already set.
-         */
-        setUserId: function (userId) {
-            this.userId = userId
-        },
+    /**
+     * @private
+     * @param {string} scope
+     * @param {string} type
+     * @returns {string}
+     */
+    getKey(scope, type) {
+        if (this.userId) {
+            return this.applicationId + '-' + this.userId + '-' + scope + '-' + type;
+        }
 
-        /**
-         * @private
-         * @param {string} scope
-         * @param {string} type
-         * @returns {string}
-         */
-        getKey: function (scope, type) {
-            if (this.userId) {
-                return this.applicationId + '-' + this.userId + '-' + scope + '-' + type;
-            }
+        return this.applicationId + '-' + scope + '-' + type;
+    }
 
-            return this.applicationId + '-' + scope + '-' + type;
-        },
+    /**
+     * @private
+     * @param {string} scope
+     * @param {string} type
+     * @param {string} [setId]
+     * @returns {string}
+     */
+    getUrl(scope, type, setId) {
+        let url = scope + '/layout/' + type;
 
-        /**
-         * @private
-         * @param {string} scope
-         * @param {string} type
-         * @param {string} [setId]
-         * @returns {string}
-         */
-        getUrl: function (scope, type, setId) {
-            let url = scope + '/layout/' + type;
+        if (setId) {
+            url += '/' + setId;
+        }
 
-            if (setId) {
-                url += '/' + setId;
-            }
+        return url;
+    }
 
-            return url;
-        },
+    /**
+     * @callback module:layout-manager~getCallback
+     *
+     * @param {*} layout A layout.
+     */
 
-        /**
-         * @callback module:layout-manager~getCallback
-         *
-         * @param {*} layout A layout.
-         */
+    /**
+     * Get a layout.
+     *
+     * @param {string} scope A scope (entity type).
+     * @param {string} type A layout type (name).
+     * @param {module:layout-manager~getCallback} callback
+     * @param {boolean} [cache=true] Use cache.
+     */
+    get(scope, type, callback, cache) {
+        if (typeof cache === 'undefined') {
+            cache = true;
+        }
 
-        /**
-         * Get a layout.
-         *
-         * @param {string} scope A scope (entity type).
-         * @param {string} type A layout type (name).
-         * @param {module:layout-manager~getCallback} callback
-         * @param {boolean} [cache=true] Use cache.
-         */
-        get: function (scope, type, callback, cache) {
-            if (typeof cache === 'undefined') {
-                cache = true;
-            }
+        let key = this.getKey(scope, type);
 
-            let key = this.getKey(scope, type);
-
-            if (cache) {
-                if (key in this.data) {
-                    if (typeof callback === 'function') {
-                        callback(this.data[key]);
-                    }
-
-                    return;
+        if (cache) {
+            if (key in this.data) {
+                if (typeof callback === 'function') {
+                    callback(this.data[key]);
                 }
+
+                return;
             }
+        }
 
-            if (this.cache && cache) {
-                let cached = this.cache.get('app-layout', key);
+        if (this.cache && cache) {
+            let cached = this.cache.get('app-layout', key);
 
-                if (cached) {
-                    if (typeof callback === 'function') {
-                        callback(cached);
-                    }
-
-                    this.data[key] = cached;
-
-                    return;
+            if (cached) {
+                if (typeof callback === 'function') {
+                    callback(cached);
                 }
+
+                this.data[key] = cached;
+
+                return;
             }
+        }
 
-            this.ajax
-                .getRequest(this.getUrl(scope, type))
-                .then(
-                    layout => {
-                        if (typeof callback === 'function') {
-                            callback(layout);
-                        }
-
-                        this.data[key] = layout;
-
-                        if (this.cache) {
-                            this.cache.set('app-layout', key, layout);
-                        }
+        this.ajax
+            .getRequest(this.getUrl(scope, type))
+            .then(
+                layout => {
+                    if (typeof callback === 'function') {
+                        callback(layout);
                     }
-                );
-        },
 
-        /**
-         * Get an original layout.
-         *
-         * @param {string} scope A scope (entity type).
-         * @param {string} type A layout type (name).
-         * @param {string} [setId]
-         * @param {module:layout-manager~getCallback} callback
-         */
-        getOriginal: function (scope, type, setId, callback) {
-            let url = 'Layout/action/getOriginal?scope='+scope+'&name='+type;
+                    this.data[key] = layout;
 
-            if (setId) {
-                url += '&setId=' + setId;
-            }
-
-            Espo.Ajax
-                .getRequest(url)
-                .then(
-                    layout => {
-                        if (typeof callback === 'function') {
-                            callback(layout);
-                        }
+                    if (this.cache) {
+                        this.cache.set('app-layout', key, layout);
                     }
-                );
-        },
+                }
+            );
+    }
 
-        /**
-         * Store and set a layout.
-         *
-         * @param {string} scope A scope (entity type).
-         * @param {string} type A type (name).
-         * @param {*} layout A layout.
-         * @param {Function} callback A callback.
-         * @param {string} [setId] A set ID.
-         * @returns {Promise}
-         */
-        set: function (scope, type, layout, callback, setId) {
-            return Espo.Ajax
-                .putRequest(this.getUrl(scope, type, setId), layout)
-                .then(
-                    () => {
-                        let key = this.getKey(scope, type);
+    /**
+     * Get an original layout.
+     *
+     * @param {string} scope A scope (entity type).
+     * @param {string} type A layout type (name).
+     * @param {string} [setId]
+     * @param {module:layout-manager~getCallback} callback
+     */
+    getOriginal(scope, type, setId, callback) {
+        let url = 'Layout/action/getOriginal?scope='+scope+'&name='+type;
 
-                        if (this.cache && key) {
-                            this.cache.clear('app-layout', key);
-                        }
+        if (setId) {
+            url += '&setId=' + setId;
+        }
 
-                        delete this.data[key];
-
-                        this.trigger('sync');
-
-                        if (typeof callback === 'function') {
-                            callback();
-                        }
+        Espo.Ajax
+            .getRequest(url)
+            .then(
+                layout => {
+                    if (typeof callback === 'function') {
+                        callback(layout);
                     }
-                );
-        },
+                }
+            );
+    }
 
-        /**
-         * Reset a layout to default.
-         *
-         * @param {string} scope A scope (entity type).
-         * @param {string} type A type (name).
-         * @param {Function} callback A callback.
-         * @param {string} [setId] A set ID.
-         */
-        resetToDefault: function (scope, type, callback, setId) {
-            Espo.Ajax
-                .postRequest('Layout/action/resetToDefault', {
-                    scope: scope,
-                    name: type,
-                    setId: setId,
-                })
-                .then(
-                    () => {
-                        let key = this.getKey(scope, type);
+    /**
+     * Store and set a layout.
+     *
+     * @param {string} scope A scope (entity type).
+     * @param {string} type A type (name).
+     * @param {*} layout A layout.
+     * @param {Function} callback A callback.
+     * @param {string} [setId] A set ID.
+     * @returns {Promise}
+     */
+    set(scope, type, layout, callback, setId) {
+        return Espo.Ajax
+            .putRequest(this.getUrl(scope, type, setId), layout)
+            .then(
+                () => {
+                    let key = this.getKey(scope, type);
 
-                        if (this.cache) {
-                            this.cache.clear('app-layout', key);
-                        }
-
-                        delete this.data[key];
-
-                        this.trigger('sync');
-
-                        if (typeof callback === 'function') {
-                            callback();
-                        }
+                    if (this.cache && key) {
+                        this.cache.clear('app-layout', key);
                     }
-                );
-        },
 
-        /**
-         * Clear loaded data.
-         */
-        clearLoadedData: function () {
-            this.data = {};
-        },
+                    delete this.data[key];
 
-    }, Backbone.Events);
+                    this.trigger('sync');
 
-    return LayoutManager;
-});
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }
+            );
+    }
+
+    /**
+     * Reset a layout to default.
+     *
+     * @param {string} scope A scope (entity type).
+     * @param {string} type A type (name).
+     * @param {Function} callback A callback.
+     * @param {string} [setId] A set ID.
+     */
+    resetToDefault(scope, type, callback, setId) {
+        Espo.Ajax
+            .postRequest('Layout/action/resetToDefault', {
+                scope: scope,
+                name: type,
+                setId: setId,
+            })
+            .then(
+                () => {
+                    let key = this.getKey(scope, type);
+
+                    if (this.cache) {
+                        this.cache.clear('app-layout', key);
+                    }
+
+                    delete this.data[key];
+
+                    this.trigger('sync');
+
+                    if (typeof callback === 'function') {
+                        callback();
+                    }
+                }
+            );
+    }
+
+    /**
+     * Clear loaded data.
+     */
+    clearLoadedData() {
+        this.data = {};
+    }
+}
+
+Object.assign(LayoutManager.prototype, Events);
+
+export default LayoutManager;

@@ -270,7 +270,7 @@ define('views/modals/mass-update', ['views/modal', 'helpers/mass-action'], funct
                 return;
             }
 
-            Espo.Ui.notify(this.translate('Saving...'));
+            Espo.Ui.notify(this.translate('saving', 'messages'));
 
             Espo.Ajax
                 .postRequest('MassAction', {

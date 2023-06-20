@@ -119,6 +119,18 @@
         },
         "oidcLogoutUrl": {
             "level": "admin"
+        },
+        "apiCorsAllowedMethodList": {
+            "level": "admin"
+        },
+        "apiCorsAllowedHeaderList": {
+            "level": "admin"
+        },
+        "apiCorsAllowedOriginList": {
+            "level": "admin"
+        },
+        "apiCorsMaxAge": {
+            "level": "admin"
         }
     }
 }

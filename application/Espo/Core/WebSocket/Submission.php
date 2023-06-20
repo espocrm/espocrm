@@ -37,15 +37,10 @@ use Throwable;
 
 class Submission
 {
-    private $sender;
-
-    private $log;
-
-    public function __construct(Sender $sender, Log $log)
-    {
-        $this->sender = $sender;
-        $this->log = $log;
-    }
+    public function __construct(
+        private Sender $sender,
+        private Log $log
+    ) {}
 
     /**
      * Submit to a web-socket server.

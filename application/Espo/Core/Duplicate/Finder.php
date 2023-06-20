@@ -29,47 +29,30 @@
 
 namespace Espo\Core\Duplicate;
 
-use Espo\Core\{
-    Select\SelectBuilderFactory,
-};
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Select\SelectBuilderFactory;
 
-use Espo\ORM\{
-    EntityManager,
-    Entity,
-    Collection,
-    Query\Part\WhereItem,
-    Query\Part\Condition as Cond,
-};
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\WhereItem;
+use RuntimeException;
 
 class Finder
 {
-    protected const LIMIT = 10;
+    private const LIMIT = 10;
 
-    /**
-     * @var string[]
-     */
-    protected $selectAttributeList = ['id', 'name'];
-
-    private EntityManager $entityManager;
-
-    private SelectBuilderFactory $selectBuilderFactory;
-
-    private WhereBuilderFactory $whereBuilderFactory;
-
-    /**
-     * @var array<string,?WhereBuilder<Entity>>
-     */
-    private $whereBuilderMap = [];
+    /** @var array<string, ?WhereBuilder<Entity>> */
+    private array $whereBuilderMap = [];
 
     public function __construct(
-        EntityManager $entityManager,
-        SelectBuilderFactory $selectBuilderFactory,
-        WhereBuilderFactory $whereBuilderFactory
-    ) {
-        $this->entityManager = $entityManager;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->whereBuilderFactory = $whereBuilderFactory;
-    }
+        private EntityManager $entityManager,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private WhereBuilderFactory $whereBuilderFactory
+    ) {}
 
     /**
      * Check whether an entity has a duplicate.
@@ -146,15 +129,20 @@ class Finder
             );
         }
 
-        $query = $this->selectBuilderFactory
-            ->create()
-            ->from($entityType)
-            ->withStrictAccessControl()
-            ->buildQueryBuilder()
-            ->where($where)
-            ->select($this->getSelect($entity))
-            ->limit(0, self::LIMIT)
-            ->build();
+        try {
+            $query = $this->selectBuilderFactory
+                ->create()
+                ->from($entityType)
+                ->withStrictAccessControl()
+                ->buildQueryBuilder()
+                ->where($where)
+                ->select(['id'])
+                ->limit(0, self::LIMIT)
+                ->build();
+        }
+        catch (Error|Forbidden|BadRequest $e) {
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
 
         $builder = $this->entityManager
             ->getRDBRepository($entityType)
@@ -164,23 +152,7 @@ class Finder
             return null;
         }
 
-        return $builder->find();
-    }
-
-    /**
-     * @return string[]
-     */
-    private function getSelect(Entity $entity): array
-    {
-        $select = $this->selectAttributeList;
-
-        foreach ($select as $item) {
-            if (!$entity->hasAttribute($item)) {
-                unset($select[$item]);
-            }
-        }
-
-        return array_values($select);
+        return $builder->select(['*'])->find();
     }
 
     private function getWhere(Entity $entity): ?WhereItem
@@ -193,11 +165,7 @@ class Finder
 
         $builder = $this->whereBuilderMap[$entityType];
 
-        if (!$builder) {
-            return null;
-        }
-
-        return $builder->build($entity);
+        return $builder?->build($entity);
     }
 
     /**

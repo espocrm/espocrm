@@ -26,21 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/document/list', 'views/list-with-categories', function (Dep) {
+define('crm:views/document/list', ['views/list-with-categories'], function (Dep) {
 
     return Dep.extend({
 
         quickCreate: true,
 
         currentCategoryId: null,
-
         currentCategoryName: '',
 
         categoryScope: 'DocumentFolder',
-
         categoryField: 'folder',
-
         categoryFilterType: 'inCategory',
-
     });
 });

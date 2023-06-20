@@ -40,15 +40,15 @@ class Event implements Item
     private ?DateTime $start;
     private ?DateTime $end;
     private string $entityType;
-    /** @var array<string,mixed> */
+    /** @var array<string, mixed> */
     private array $attributes;
     /** @var string[] */
     private array $userIdList = [];
-    /** @var array<string,string> */
+    /** @var array<string, string> */
     private array $userNameMap = [];
 
     /**
-     * @param array<string,mixed> $attributes
+     * @param array<string, mixed> $attributes
      */
     public function __construct(?DateTime $start, ?DateTime $end, string $entityType, array $attributes)
     {
@@ -62,8 +62,8 @@ class Event implements Item
     {
         $obj = (object) [
             'scope' => $this->entityType,
-            'dateStart' => $this->start ? $this->start->getString() : null,
-            'dateEnd' => $this->end ? $this->end->getString() : null,
+            'dateStart' => $this->start?->getString(),
+            'dateEnd' => $this->end?->getString(),
         ];
 
         if ($this->userIdList !== []) {
@@ -89,6 +89,14 @@ class Event implements Item
         return $obj;
     }
 
+    public function withId(string $id): self
+    {
+        $obj = clone $this;
+        $obj->attributes['id'] = $id;
+
+        return $obj;
+    }
+
     public function withUserIdAdded(string $userId): self
     {
         $obj = clone $this;
@@ -98,7 +106,7 @@ class Event implements Item
     }
 
     /**
-     * @param array<string,string> $userNameMap
+     * @param array<string, string> $userNameMap
      */
     public function withUserNameMap(array $userNameMap): self
     {
@@ -135,7 +143,7 @@ class Event implements Item
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getAttributes(): array
     {

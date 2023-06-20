@@ -67,6 +67,7 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
                     this.decimalMark = this.getConfig().get('decimalMark')
                 }
             }
+
             if (this.getPreferences().has('thousandSeparator')) {
                 this.thousandSeparator = this.getPreferences().get('thousandSeparator')
             } else {
@@ -75,35 +76,45 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
                 }
             }
 
-            this.on('resize', function () {
-                if (!this.isRendered()) return;
-                setTimeout(function () {
-                    this.adjustContainer();
-                    if (this.isNoData()) {
-                        this.showNoData();
-                        return;
-                    }
-                    this.draw();
-                }.bind(this), 50);
-            }, this);
-
-            $(window).on('resize.chart' + this.id, function () {
-                this.adjustContainer();
-                if (this.isNoData()) {
-                    this.showNoData();
+            this.on('resize', () => {
+                if (!this.isRendered()) {
                     return;
                 }
-                this.draw();
-            }.bind(this));
 
-            this.once('remove', function () {
+                setTimeout(() => {
+                    this.adjustContainer();
+
+                    if (this.isNoData()) {
+                        this.showNoData();
+
+                        return;
+                    }
+
+                    this.draw();
+                }, 50);
+            });
+
+            $(window).on('resize.chart' + this.id, () => {
+                this.adjustContainer();
+
+                if (this.isNoData()) {
+                    this.showNoData();
+
+                    return;
+                }
+
+                this.draw();
+            });
+
+            this.once('remove', () => {
                 $(window).off('resize.chart' + this.id)
-            }, this);
+            });
         },
 
         formatNumber: function (value, isCurrency, useSiMultiplier) {
             if (value !== null) {
                 let maxDecimalPlaces = 2;
+
                 var currencyDecimalPlaces = this.getConfig().get('currencyDecimalPlaces');
 
                 var siSuffix = '';
@@ -155,7 +166,8 @@ define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib
 
                         if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
                             var limit = currencyDecimalPlaces - decimalPartLength;
-                            for (var i = 0; i < limit; i++) {
+
+                            for (let i = 0; i < limit; i++) {
                                 parts[1] += '0';
                             }
                         }

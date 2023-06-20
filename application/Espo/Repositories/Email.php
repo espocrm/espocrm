@@ -45,6 +45,7 @@ use Espo\Core\Di;
 use Espo\Entities\Email as EmailEntity;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
+use stdClass;
 
 /**
  * @extends Database<EmailEntity>
@@ -138,50 +139,58 @@ class Email extends Database implements
     public function loadToField(EmailEntity $entity): void
     {
         $entity->loadLinkMultipleField('toEmailAddresses');
-
+        /** @var ?stdClass $names */
         $names = $entity->get('toEmailAddressesNames');
 
-        if (!empty($names)) {
-            $arr = [];
-
-            foreach ($names as $address) {
-                $arr[] = $address;
-            }
-
-            $entity->set('to', implode(';', $arr));
+        if ($names === null) {
+            return;
         }
+
+        $arr = [];
+
+        foreach (get_object_vars($names) as $address) {
+            $arr[] = $address;
+        }
+
+        $entity->set('to', implode(';', $arr));
     }
 
     public function loadCcField(EmailEntity $entity): void
     {
         $entity->loadLinkMultipleField('ccEmailAddresses');
+        /** @var ?stdClass $names */
         $names = $entity->get('ccEmailAddressesNames');
 
-        if (!empty($names)) {
-            $arr = [];
-
-            foreach ($names as $address) {
-                $arr[] = $address;
-            }
-
-            $entity->set('cc', implode(';', $arr));
+        if ($names === null) {
+            return;
         }
+
+        $arr = [];
+
+        foreach (get_object_vars($names) as $address) {
+            $arr[] = $address;
+        }
+
+        $entity->set('cc', implode(';', $arr));
     }
 
     public function loadBccField(EmailEntity $entity): void
     {
         $entity->loadLinkMultipleField('bccEmailAddresses');
+        /** @var ?stdClass $names */
         $names = $entity->get('bccEmailAddressesNames');
 
-        if (!empty($names)) {
-            $arr = [];
-
-            foreach ($names as $address) {
-                $arr[] = $address;
-            }
-
-            $entity->set('bcc', implode(';', $arr));
+        if ($names === null) {
+            return;
         }
+
+        $arr = [];
+
+        foreach (get_object_vars($names) as $address) {
+            $arr[] = $address;
+        }
+
+        $entity->set('bcc', implode(';', $arr));
     }
 
     public function loadReplyToField(EmailEntity $entity): void
@@ -432,36 +441,36 @@ class Email extends Database implements
 
     public function applyUsersFilters(EmailEntity $entity): void
     {
-        /** @var string[] $userIdList */
         $userIdList = $entity->getLinkMultipleIdList('users');
 
         foreach ($userIdList as $userId) {
-            if ($entity->getStatus() === EmailEntity::STATUS_SENT) {
-                if ($entity->get('sentById') && $entity->get('sentById') === $userId) {
-                    continue;
-                }
+            if (
+                $entity->getStatus() === EmailEntity::STATUS_SENT &&
+                $entity->getSentBy()?->getId() === $userId
+            ) {
+                continue;
             }
 
             $filter = $this->emailFilterManager->getMatchingFilter($entity, $userId);
 
-            if ($filter) {
-                $action = $filter->getAction();
+            if (!$filter) {
+                continue;
+            }
 
-                if ($action === EmailFilter::ACTION_SKIP) {
-                    $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IN_TRASH, $userId, true);
-                }
-                else if ($action === EmailFilter::ACTION_MOVE_TO_FOLDER) {
-                    $folderId = $filter->getEmailFolderId();
+            if ($filter->getAction() === EmailFilter::ACTION_SKIP) {
+                $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IN_TRASH, $userId, true);
+            }
+            else if ($filter->getAction() === EmailFilter::ACTION_MOVE_TO_FOLDER) {
+                $folderId = $filter->getEmailFolderId();
 
-                    if ($folderId) {
-                        $entity
-                            ->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_FOLDER_ID, $userId, $folderId);
-                    }
+                if ($folderId) {
+                    $entity
+                        ->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_FOLDER_ID, $userId, $folderId);
                 }
+            }
 
-                if ($filter->markAsRead()) {
-                    $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IS_READ, $userId, true);
-                }
+            if ($filter->markAsRead()) {
+                $entity->setLinkMultipleColumn('users', EmailEntity::USERS_COLUMN_IS_READ, $userId, true);
             }
         }
     }

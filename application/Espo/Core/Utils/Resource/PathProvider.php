@@ -33,12 +33,8 @@ use Espo\Core\Utils\Module\PathProvider as ModulePathProvider;
 
 class PathProvider
 {
-    private $provider;
-
-    public function __construct(ModulePathProvider $provider)
-    {
-        $this->provider = $provider;
-    }
+    public function __construct(private ModulePathProvider $provider)
+    {}
 
     public function getCore(): string
     {

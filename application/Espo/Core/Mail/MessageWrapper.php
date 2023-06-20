@@ -36,23 +36,17 @@ use RuntimeException;
 
 class MessageWrapper implements Message
 {
-    private int $id;
-    private ?Storage $storage;
-    private ?Parser $parser;
     private ?string $rawHeader = null;
     private ?string $rawContent = null;
-    private ?string $fullRawContent = null;
 
-    /**
-     * @var ?string[]
-     */
+    /** @var ?string[] */
     private ?array $flagList = null;
 
     public function __construct(
-        int $id,
-        ?Storage $storage = null,
-        ?Parser $parser = null,
-        ?string $fullRawContent = null
+        private int $id,
+        private ?Storage $storage = null,
+        private ?Parser $parser = null,
+        private ?string $fullRawContent = null
     ) {
         if ($storage) {
             $data = $storage->getHeaderAndFlags($id);
@@ -61,11 +55,6 @@ class MessageWrapper implements Message
             $this->flagList = $data['flags'];
         }
 
-        $this->id = $id;
-        $this->storage = $storage;
-        $this->parser = $parser;
-        $this->fullRawContent = $fullRawContent;
-
         if (
             !$storage &&
             $this->fullRawContent
@@ -73,10 +62,10 @@ class MessageWrapper implements Message
             $rawHeader = null;
             $rawBody = null;
 
-            if (strpos($this->fullRawContent, "\r\n\r\n") !== false) {
+            if (str_contains($this->fullRawContent, "\r\n\r\n")) {
                 [$rawHeader, $rawBody] = explode("\r\n\r\n", $this->fullRawContent, 2);
             }
-            else if (strpos($this->fullRawContent, "\n\n") !== false) {
+            else if (str_contains($this->fullRawContent, "\n\n")) {
                 [$rawHeader, $rawBody] = explode("\n\n", $this->fullRawContent, 2);
             }
 

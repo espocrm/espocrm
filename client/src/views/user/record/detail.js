@@ -26,12 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/detail', 'views/record/detail', function (Dep) {
+define('views/user/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
         sideView: 'views/user/record/detail-side',
-
         bottomView: 'views/user/record/detail-bottom',
 
         editModeDisabled: true,
@@ -124,7 +123,7 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
             if (this.model.id === this.getUser().id) {
                 this.listenTo(this.model, 'after:save', () => {
-                    this.getUser().set(this.model.toJSON());
+                    this.getUser().set(this.model.getClonedAttributes());
                 });
             }
 
@@ -274,7 +273,7 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                 userId: this.model.id
             }, (view) => {
                 view.render();
-                this.notify(false);
+                Espo.Ui.notify(false);
 
                 this.listenToOnce(view, 'changed', () => {
                     setTimeout(() => {
@@ -304,7 +303,7 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
                     aclData: aclData,
                     model: this.model,
                 }, (view) => {
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     view.render();
                 });
@@ -382,7 +381,7 @@ define('views/user/record/detail', 'views/record/detail', function (Dep) {
 
         actionGenerateNewApiKey: function () {
             this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.ajaxPostRequest('UserSecurity/apiKey/generate', {id: this.model.id})
+                Espo.Ajax.postRequest('UserSecurity/apiKey/generate', {id: this.model.id})
                     .then((data) => {
                         this.model.set(data);
                     });

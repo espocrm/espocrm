@@ -356,7 +356,7 @@ class Config
 
     /**
      * @deprecated As of 7.0. Use ConfigWriter instead.
-     * @return ?array<string,int>
+     * @return ?array<string, int>
      */
     public function updateCacheTimestamp(bool $returnOnlyValue = false)
     {

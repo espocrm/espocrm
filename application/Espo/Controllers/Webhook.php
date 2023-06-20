@@ -29,11 +29,9 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    Controllers\RecordBase,
-    Api\Request,
-    Api\Response,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Controllers\RecordBase;
 
 use stdClass;
 

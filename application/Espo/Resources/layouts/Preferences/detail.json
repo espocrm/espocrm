@@ -46,7 +46,9 @@
                 }
             ],
             [
-                false,
+                {
+                    "name": "textSearchStoringDisabled"
+                },
                 {
                     "name": "followCreatedEntityTypeList"
                 }

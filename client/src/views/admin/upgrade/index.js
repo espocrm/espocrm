@@ -111,7 +111,7 @@ define('views/admin/upgrade/index', ['view'], function (Dep) {
                         return;
                     }
 
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     this.createView('popup', 'views/admin/upgrade/ready', {
                         upgradeData: data,
@@ -145,7 +145,8 @@ define('views/admin/upgrade/index', ['view'], function (Dep) {
         run: function (id, version) {
             let msg = this.translate('Upgrading...', 'labels', 'Admin');
 
-            this.notify('Please wait...');
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
             this.textNotification(msg);
 
             Espo.Ajax

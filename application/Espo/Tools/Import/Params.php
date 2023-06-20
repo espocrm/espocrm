@@ -253,7 +253,7 @@ class Params
     }
 
     /**
-     * @param stdClass|array<string,mixed>|null $defaultValues
+     * @param stdClass|array<string, mixed>|null $defaultValues
      */
     public function withDefaultValues($defaultValues): self
     {
@@ -318,7 +318,7 @@ class Params
     }
 
     /**
-     * @param stdClass|array<string,mixed>|null $params
+     * @param stdClass|array<string, mixed>|null $params
      */
     public static function fromRaw($params): self
     {
@@ -349,7 +349,7 @@ class Params
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getRaw(): array
     {

@@ -26,96 +26,97 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/bool', ['views/fields/base', 'ui/select'], function (Dep, /** module:ui/select*/Select) {
+/** @module views/fields/bool */
 
-    /**
-     * A boolean field (checkbox).
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/bool
-     */
-    return Dep.extend(/** @lends module:views/fields/bool.Class# */{
+import BaseFieldView from 'views/fields/base';
+import Select from 'ui/select';
 
-        type: 'bool',
+/**
+ * A boolean field (checkbox).
+ */
+class BoolFieldView extends BaseFieldView {
 
-        listTemplate: 'fields/bool/list',
-        detailTemplate: 'fields/bool/detail',
-        editTemplate: 'fields/bool/edit',
-        searchTemplate: 'fields/bool/search',
+    type = 'bool'
 
-        validations: [],
+    listTemplate = 'fields/bool/list'
+    detailTemplate = 'fields/bool/detail'
+    editTemplate = 'fields/bool/edit'
+    searchTemplate = 'fields/bool/search'
 
-        initialSearchIsNotIdle: true,
+    validations = []
+    initialSearchIsNotIdle = true
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+    /** @inheritDoc */
+    data() {
+        let data = super.data();
 
-            data.valueIsSet = this.model.has(this.name);
+        data.valueIsSet = this.model.has(this.name);
 
-            return data;
-        },
+        return data;
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
-            if (this.mode === this.MODE_SEARCH) {
-                this.$element.on('change', () => {
-                    this.trigger('change');
-                });
+        if (this.mode === this.MODE_SEARCH) {
+            this.$element.on('change', () => {
+                this.trigger('change');
+            });
 
-                Select.init(this.$element);
-            }
-        },
+            Select.init(this.$element);
+        }
+    }
 
-        fetch: function () {
-            let value = this.$element.get(0).checked;
+    fetch() {
+        let value = this.$element.get(0).checked;
 
-            let data = {};
+        let data = {};
 
-            data[this.name] = value;
+        data[this.name] = value;
 
-            return data;
-        },
+        return data;
+    }
 
-        fetchSearch: function () {
-            let type = this.$element.val();
+    fetchSearch() {
+        let type = this.$element.val();
 
-            if (!type) {
-                return;
-            }
+        if (!type) {
+            return;
+        }
 
-            if (type === 'any') {
-                return {
-                    type: 'or',
-                    value: [
-                        {
-                            type: 'isTrue',
-                            attribute: this.name,
-
-                        },
-                        {
-                            type: 'isFalse',
-                            attribute: this.name,
-                        },
-                    ],
-                    data: {
-                        type: type,
-                    },
-                };
-            }
-
+        if (type === 'any') {
             return {
-                type: type,
+                type: 'or',
+                value: [
+                    {
+                        type: 'isTrue',
+                        attribute: this.name,
+
+                    },
+                    {
+                        type: 'isFalse',
+                        attribute: this.name,
+                    },
+                ],
                 data: {
                     type: type,
                 },
             };
-        },
+        }
 
-        getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.type || 'isTrue';
-        },
-    });
-});
+        return {
+            type: type,
+            data: {
+                type: type,
+            },
+        };
+    }
+
+    getSearchType() {
+        return this.getSearchParamsData().type ||
+            this.searchParams.type ||
+            'isTrue';
+    }
+}
+
+export default BoolFieldView;

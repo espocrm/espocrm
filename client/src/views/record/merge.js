@@ -116,7 +116,7 @@ define('views/record/merge', ['view'], function (Dep) {
                     });
                 });
 
-                this.notify('Merging...');
+                Espo.Ui.notify(' ... ');
 
                 let sourceIdList =
                     this.models
@@ -140,12 +140,9 @@ define('views/record/merge', ['view'], function (Dep) {
                         },
                     })
                     .then(() => {
-                        this.notify('Merged', 'success');
+                        Espo.Ui.success(this.translate('Merged'));
 
-                        this.getRouter().navigate(
-                            '#' + this.scope + '/view/' + model.id,
-                            {trigger: true}
-                        );
+                        this.getRouter().navigate('#' + this.scope + '/view/' + model.id, {trigger: true});
 
                         if (this.collection) {
                             this.collection.fetch();

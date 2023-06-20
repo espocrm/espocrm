@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 use Espo\Core\Di;
 
@@ -74,28 +72,28 @@ class RelateType extends BaseFunction implements
             $this->throwError("Repository does not exist.");
         }
 
-        $entity = $em->getEntity($entityType, $id);
+        $entity = $em->getEntityById($entityType, $id);
 
         if (!$entity) {
             return null;
         }
 
+        $relation = $em->getRDBRepository($entityType)->getRelation($entity, $link);
+
         if (is_array($foreignId)) {
             foreach ($foreignId as $itemId) {
-                $em->getRDBRepository($entityType)->relate($entity, $link, $itemId);
+                $relation->relateById($itemId);
             }
 
             return true;
         }
 
-        if (is_string($foreignId)) {
-            if ($em->getRDBRepository($entityType)->isRelated($entity, $link, $foreignId)) {
-                return true;
-            }
-
-            return $em->getRDBRepository($entityType)->relate($entity, $link, $foreignId);
+        if (!is_string($foreignId)) {
+            $this->throwError("foreignId type is wrong.");
         }
 
-        $this->throwError("foreignId type is wrong.");
+        $relation->relateById($foreignId);
+
+        return true;
     }
 }

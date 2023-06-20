@@ -36,14 +36,10 @@ use Espo\Core\Utils\File\Manager as FileManager;
  */
 class DevModeJsFileListProvider
 {
-    private FileManager $fileManager;
-
     private const LIBS_FILE = 'frontend/libs.json';
 
-    public function __construct(FileManager $fileManager)
-    {
-        $this->fileManager = $fileManager;
-    }
+    public function __construct(private FileManager $fileManager)
+    {}
 
     /**
      * @return string[]

@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Створити календар",
+    "Ranges": "Діапазони"
+  },
+  "fields": {
+    "timeZone": "Часовий пояс",
+    "timeRanges": "Розклад робочого дня",
+    "weekday0": "Нд",
+    "weekday1": "Пн",
+    "weekday2": "Вт",
+    "weekday3": "Ср",
+    "weekday4": "Чт",
+    "weekday5": "Пт",
+    "weekday6": "Сб",
+    "weekday0TimeRanges": "Розклад Нд",
+    "weekday1TimeRanges": "Розклад Пн",
+    "weekday2TimeRanges": "Розклад Вт",
+    "weekday3TimeRanges": "Розклад Ср",
+    "weekday4TimeRanges": "Розклад Чт",
+    "weekday5TimeRanges": "Розклад Пт",
+    "weekday6TimeRanges": "Розклад Сб"
+  },
+  "links": {
+    "ranges": "Діапазони"
+  }
+}

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/label-manager/category', 'view', function (Dep) {
+define('views/admin/label-manager/category', ['view'], function (Dep) {
 
     return Dep.extend({
 
@@ -34,13 +34,11 @@ define('views/admin/label-manager/category', 'view', function (Dep) {
 
         data: function () {
             return {
-                categoryDataList: this.getCategotyDataList()
+                categoryDataList: this.getCategoryDataList()
             };
         },
 
-        events: {
-
-        },
+        events: {},
 
         setup: function () {
             this.scope = this.options.scope;
@@ -48,16 +46,16 @@ define('views/admin/label-manager/category', 'view', function (Dep) {
             this.categoryData = this.options.categoryData;
         },
 
-        getCategotyDataList: function () {
+        getCategoryDataList: function () {
             var labelList = Object.keys(this.categoryData);
 
-            labelList.sort(function (v1, v2) {
+            labelList.sort((v1, v2) => {
                 return v1.localeCompare(v2);
-            }.bind(this));
+            });
 
             var categoryDataList = [];
 
-            labelList.forEach(function (name) {
+            labelList.forEach(name => {
                 var value = this.categoryData[name];
 
                 if (value === null) {
@@ -67,22 +65,20 @@ define('views/admin/label-manager/category', 'view', function (Dep) {
                 if (value.replace) {
                     value = value.replace(/\n/i, '\\n');
                 }
+
                 var o = {
                     name: name,
-                    value: value
+                    value: value,
                 };
+
                 var arr = name.split('[.]');
 
-                var label = arr.slice(1).join(' . ');
+                o.label = arr.slice(1).join(' . ');
 
-                o.label = label;
                 categoryDataList.push(o);
-            }, this);
+            });
 
             return categoryDataList;
-        }
-
+        },
     });
 });
-
-

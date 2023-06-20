@@ -32,10 +32,7 @@ namespace Espo\Core\Mail\Account\Hook;
 class BeforeFetchResult
 {
     private bool $toSkip = false;
-
-    /**
-     * @var array<string,mixed>
-     */
+    /** @var array<string, mixed> */
     private array $data = [];
 
     public static function create(): self
@@ -51,10 +48,7 @@ class BeforeFetchResult
         return $obj;
     }
 
-    /**
-     * @param mixed $value
-     */
-    public function with(string $name, $value): self
+    public function with(string $name, mixed $value): self
     {
         $obj = clone $this;
         $obj->data[$name] = $value;
@@ -67,10 +61,7 @@ class BeforeFetchResult
         return $this->toSkip;
     }
 
-    /**
-     * @return mixed
-     */
-    public function get(string $name)
+    public function get(string $name): mixed
     {
         return $this->data[$name] ?? null;
     }

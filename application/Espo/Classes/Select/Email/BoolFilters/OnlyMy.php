@@ -29,26 +29,17 @@
 
 namespace Espo\Classes\Select\Email\BoolFilters;
 
-use Espo\{
-    Core\Select\Bool\Filter,
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereClause,
-    ORM\Query\Part\Where\OrGroupBuilder,
-    Classes\Select\Email\Helpers\JoinHelper,
-    Entities\User,
-};
+use Espo\Classes\Select\Email\Helpers\JoinHelper;
+use Espo\Core\Select\Bool\Filter;
+use Espo\Entities\User;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
 class OnlyMy implements Filter
 {
-    private $user;
-
-    private $joinHelper;
-
-    public function __construct(User $user, JoinHelper $joinHelper)
-    {
-        $this->user = $user;
-        $this->joinHelper = $joinHelper;
-    }
+    public function __construct(private User $user, private JoinHelper $joinHelper)
+    {}
 
     public function apply(QueryBuilder $queryBuilder, OrGroupBuilder $orGroupBuilder): void
     {

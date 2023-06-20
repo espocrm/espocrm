@@ -10,7 +10,9 @@
   },
   "fields": {
     "exportPermission": "Права за експортиране",
-    "massUpdatePermission": "Права за масови обновления"
+    "massUpdatePermission": "Права за масови обновления",
+    "data": "Данни",
+    "fieldData": "Данни на полето"
   },
   "tooltips": {
     "exportPermission": "Определя дали потребителите на портала имат възможност да експортират записи.",

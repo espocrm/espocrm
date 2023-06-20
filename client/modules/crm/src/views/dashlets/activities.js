@@ -26,16 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'crm:views/dashlets/activities',
-    ['views/dashlets/abstract/base', 'multi-collection'],
-    function (Dep, MultiCollection) {
+define('crm:views/dashlets/activities',
+['views/dashlets/abstract/base', 'multi-collection'], function (Dep, MultiCollection) {
 
     return Dep.extend({
 
         name: 'Activities',
 
-        _template: '<div class="list-container">{{{list}}}</div>',
+        templateContent: '<div class="list-container">{{{list}}}</div>',
 
         rowActionsView: 'crm:views/record/row-actions/activities-dashlet',
 
@@ -46,8 +44,8 @@ define(
                         name: 'ico',
                         view: 'crm:views/fields/ico',
                         params: {
-                            notRelationship: true
-                        }
+                            notRelationship: true,
+                        },
                     },
                     {
                         name: 'name',
@@ -55,9 +53,9 @@ define(
                     },
                 ],
                 [
-                    {name: 'dateStart'}
-                ]
-            ]
+                    {name: 'dateStart'},
+                ],
+            ],
         },
 
         listLayoutEntityTypeMap: {
@@ -69,7 +67,7 @@ define(
                             view: 'crm:views/fields/ico',
                             params: {
                                 notRelationship: true
-                            }
+                            },
                         },
                         {
                             name: 'name',
@@ -81,8 +79,8 @@ define(
                         {
                             name: 'priority',
                             view: 'crm:views/task/fields/priority-for-dashlet',
-                        }
-                    ]
+                        },
+                    ],
                 ]
             }
         },
@@ -111,8 +109,8 @@ define(
             this.wait(true);
             var i = 0;
 
-            this.scopeList.forEach((scope) => {
-                this.getModelFactory().getSeed(scope, (seed) => {
+            this.scopeList.forEach(scope => {
+                this.getModelFactory().create(scope, seed => {
                     this.seeds[scope] = seed;
 
                     i++;
@@ -123,7 +121,7 @@ define(
                 });
             });
 
-            this.scopeList.slice(0).reverse().forEach((scope) => {
+            this.scopeList.slice(0).reverse().forEach(scope => {
                 if (this.getAcl().checkScope(scope, 'create')) {
                     this.actionList.unshift({
                         name: 'createActivity',
@@ -131,8 +129,8 @@ define(
                         iconHtml: '<span class="fas fa-plus"></span>',
                         url: '#' + scope + '/create',
                         data: {
-                            scope: scope
-                        }
+                            scope: scope,
+                        },
                     });
                 }
             });
@@ -156,7 +154,7 @@ define(
                     checkboxes: false,
                     collection: this.collection,
                     listLayout: this.listLayout,
-                }, (view) => {
+                }, view => {
                     view.render();
                 });
             });
@@ -185,7 +183,7 @@ define(
             this.createView('quickCreate', viewName, {
                 scope: scope,
                 attributes: attributes,
-            }, (view) => {
+            }, view => {
                 view.render();
                 view.notify(false);
 
@@ -207,7 +205,7 @@ define(
             this.createView('quickCreate', viewName, {
                 scope: 'Meeting',
                 attributes: attributes,
-            }, (view) => {
+            }, view => {
                 view.render();
                 view.notify(false);
 
@@ -229,7 +227,7 @@ define(
             this.createView('quickCreate', viewName, {
                 scope: 'Call',
                 attributes: attributes,
-            }, (view) => {
+            }, view => {
                 view.render();
                 view.notify(false);
 

@@ -33,6 +33,7 @@ use Espo\Core\Binding\Factory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\InjectableFactory;
+
 use RuntimeException;
 
 /**
@@ -40,19 +41,11 @@ use RuntimeException;
  */
 class SenderFactory implements Factory
 {
-    private Config $config;
-    private Metadata $metadata;
-    private InjectableFactory $injectableFactory;
-
     public function __construct(
-        Config $config,
-        Metadata $metadata,
-        InjectableFactory $injectableFactory
-    ) {
-       $this->config = $config;
-       $this->metadata = $metadata;
-       $this->injectableFactory = $injectableFactory;
-    }
+        private Config $config,
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     public function create(): Sender
     {

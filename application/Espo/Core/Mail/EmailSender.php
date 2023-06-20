@@ -72,7 +72,7 @@ class EmailSender
     /**
      * With parameters.
      *
-     * @param SenderParams|array<string,mixed> $params
+     * @param SenderParams|array<string, mixed> $params
      */
     public function withParams($params): Sender
     {
@@ -82,7 +82,7 @@ class EmailSender
     /**
      * With specific SMTP parameters.
      *
-     * @param SmtpParams|array<string,mixed> $params
+     * @param SmtpParams|array<string, mixed> $params
      */
     public function withSmtpParams($params): Sender
     {
@@ -102,7 +102,7 @@ class EmailSender
     /**
      * With envelope options.
      *
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function withEnvelopeOptions(array $options): Sender
     {

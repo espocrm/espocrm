@@ -1,7 +1,6 @@
 {
     "controller":"controllers/email",
     "acl":"acl/email",
-    "model":"models/email",
     "views":{
         "list":"views/email/list",
         "detail":"views/email/detail"

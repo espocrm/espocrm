@@ -30,14 +30,20 @@
 namespace Espo\Modules\Crm\Classes\Select\Meeting\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Query\SelectBuilder;
 
 class Held implements Filter
 {
+    public function __construct(
+        private string $entityType,
+        private Metadata $metadata
+    ) {}
+
     public function apply(SelectBuilder $queryBuilder): void
     {
-        $queryBuilder->where([
-            'status' => 'Held',
-        ]);
+        $statusList = $this->metadata->get(['scopes', $this->entityType, 'completedStatusList']) ?? [];
+
+        $queryBuilder->where(['status' => $statusList]);
     }
 }

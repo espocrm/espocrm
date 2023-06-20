@@ -1,0 +1,54 @@
+{
+    "params": [
+        {
+            "name": "required",
+            "type": "bool",
+            "default": false
+        },
+        {
+            "name": "maxCount",
+            "type": "int",
+            "min": 1,
+            "tooltip": true
+        },
+        {
+            "name": "strip",
+            "type": "bool",
+            "default": false,
+            "tooltip": "urlStrip"
+        },
+        {
+            "name": "audited",
+            "type": "bool"
+        },
+        {
+            "name": "readOnly",
+            "type": "bool"
+        }
+    ],
+    "validationList": [
+        "required",
+        "maxCount"
+    ],
+    "mandatoryValidationList": [
+        "array",
+        "arrayOfString",
+        "valid",
+        "maxItemLength",
+        "pattern",
+        "noEmptyString"
+    ],
+    "filter": true,
+    "notCreatable": false,
+    "notSortable": true,
+    "fieldDefs": {
+        "type": "jsonArray",
+        "storeArrayValues": true
+    },
+    "personalData": true,
+    "massUpdateActionList": [
+        "update",
+        "add",
+        "remove"
+    ]
+}

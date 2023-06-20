@@ -34,12 +34,8 @@ use Espo\Core\Mail\SmtpParams;
 
 class HandlerProcessor
 {
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     /**
      * @param class-string<object> $className

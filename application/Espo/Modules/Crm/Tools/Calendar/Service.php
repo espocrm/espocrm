@@ -62,6 +62,8 @@ use RuntimeException;
 class Service
 {
     private const BUSY_RANGES_MAX_RANGE_DAYS = 10;
+    /** @var array<string, string[]> */
+    private array $entityTypeCanceledStatusListCacheMap = [];
 
     public function __construct(
         private EntityManager $entityManager,
@@ -579,7 +581,7 @@ class Service
         }
 
         if ($this->acl->getPermissionLevel('userPermission') === Table::LEVEL_TEAM) {
-            $userTeamIdList = $this->user->getLinkMultipleIdList('teams') ?? [];
+            $userTeamIdList = $this->user->getLinkMultipleIdList('teams');
 
             foreach ($teamIdList as $teamId) {
                 if (!in_array($teamId, $userTeamIdList)) {
@@ -736,11 +738,11 @@ class Service
     }
 
     /**
-    * @param Event[] $ignoreEventList
-    * @return BusyRange[]
-    * @throws NotFound
-    * @throws Forbidden
-    */
+     * @param Event[] $ignoreEventList
+     * @return BusyRange[]
+     * @throws NotFound
+     * @throws Forbidden
+     */
     public function fetchBusyRanges(string $userId, FetchParams $fetchParams, array $ignoreEventList = []): array
     {
         $rangeList = [];
@@ -750,14 +752,12 @@ class Service
         $ignoreHash = (object) [];
 
         foreach ($ignoreEventList as $event) {
-            $id = $event->getAttribute('id');
+            $id = $event->getId();
 
             if ($id) {
                 $ignoreHash->$id = true;
             }
         }
-
-        $canceledStatusList = $this->metadata->get(['app', 'calendar', 'canceledStatusList']) ?? [];
 
         foreach ($eventList as $event) {
             if (!$event instanceof Event) {
@@ -767,13 +767,13 @@ class Service
             $start = $event->getStart();
             $end = $event->getEnd();
             $status = $event->getAttribute('status');
-            $id = $event->getAttribute('id');
+            $id = $event->getId();
 
             if (!$start || !$end) {
                 continue;
             }
 
-            if (in_array($status, $canceledStatusList)) {
+            if (in_array($status, $this->getEntityTypeCanceledStatusList($event->getEntityType()))) {
                 continue;
             }
 
@@ -782,7 +782,7 @@ class Service
             }
 
             try {
-                foreach ($rangeList as &$range) {
+                foreach ($rangeList as $range) {
                     if (
                         $start->getTimestamp() < $range->start->getTimestamp() &&
                         $end->getTimestamp() > $range->end->getTimestamp()
@@ -850,7 +850,18 @@ class Service
     }
 
     /**
-     * @return array<int,WorkingRange|NonWorkingRange>
+     * @return string[]
+     */
+    private function getEntityTypeCanceledStatusList(string $entityType): array
+    {
+        $this->entityTypeCanceledStatusListCacheMap[$entityType] ??=
+            $this->metadata->get(['scopes', $entityType, 'canceledStatusList']) ?? [];
+
+        return $this->entityTypeCanceledStatusListCacheMap[$entityType];
+    }
+
+    /**
+     * @return array<int, WorkingRange|NonWorkingRange>
      */
     private function getWorkingRangeList(WorkingCalendar $calendar, FetchParams $fetchParams): array
     {

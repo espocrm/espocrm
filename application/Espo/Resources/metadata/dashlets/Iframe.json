@@ -2,8 +2,7 @@
     "options": {
         "fields": {
             "title": {
-                "type": "varchar",
-                "trim": true
+                "type": "varchar"
             },
             "autorefreshInterval": {
                 "type": "enumFloat",

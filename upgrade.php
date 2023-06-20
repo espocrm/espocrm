@@ -31,17 +31,15 @@
  * @deprecated Use `php command.php upgrade`.
  */
 
-if (substr(php_sapi_name(), 0, 3) !== 'cli') {
+if (!str_starts_with(php_sapi_name(), 'cli')) {
     exit;
 }
 
 include "bootstrap.php";
 
-use Espo\Core\{
-    Application,
-    ApplicationRunners\Rebuild,
-    Upgrades\UpgradeManager,
-};
+use Espo\Core\Application;
+use Espo\Core\ApplicationRunners\Rebuild;
+use Espo\Core\Upgrades\UpgradeManager;
 
 $arg = isset($_SERVER['argv'][1]) ? trim($_SERVER['argv'][1]) : '';
 

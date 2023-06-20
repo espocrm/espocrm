@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "status": {
@@ -13,7 +12,8 @@
             "style": {
                 "Held": "success"
             },
-            "audited": true
+            "audited": true,
+            "customizationOptionsReferenceDisabled": true
         },
         "dateStart": {
             "type": "datetimeOptional",
@@ -89,6 +89,7 @@
             "customizationIsSortedDisabled": true,
             "customizationReadOnlyDisabled": true,
             "customizationAuditedDisabled": true,
+            "customizationOptionsReferenceDisabled": true,
             "where": {
                 "=": {
                     "whereClause": {

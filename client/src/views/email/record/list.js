@@ -32,7 +32,7 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
      * @class
      * @name Class
      * @memberOf module:views/email/record/list
-     * @extends module:views/record/list.Class
+     * @extends module:views/record/list
      */
     return Dep.extend(/** @lends module:views/email/record/list.Class# */{
 

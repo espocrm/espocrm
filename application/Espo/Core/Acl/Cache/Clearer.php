@@ -39,14 +39,8 @@ use Espo\ORM\EntityManager;
  */
 class Clearer
 {
-    private FileManager $fileManager;
-    private EntityManager $entityManager;
-
-    public function __construct(FileManager $fileManager, EntityManager $entityManager)
-    {
-        $this->fileManager = $fileManager;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private FileManager $fileManager, private EntityManager $entityManager)
+    {}
 
     public function clearForAllInternalUsers(): void
     {

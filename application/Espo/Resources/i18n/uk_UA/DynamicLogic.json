@@ -1,7 +1,7 @@
 {
   "options": {
     "operators": {
-      "equals": "Так само",
+      "equals": "Дорівнює",
       "notEquals": "Не дорівнює",
       "greaterThan": "Більше ніж",
       "lessThan": "Менше ніж",
@@ -15,11 +15,14 @@
       "isTrue": "Правда",
       "isFalse": "Хибно",
       "isEmpty": "Пусто",
-      "isNotEmpty": "Не порожній",
+      "isNotEmpty": "Не пусто",
       "contains": "Містить",
       "has": "Містить",
       "notContains": "Не містить",
-      "notHas": "Не містить"
+      "notHas": "Не містить",
+      "startsWith": "Починається з",
+      "endsWith": "Закінчується на",
+      "matches": "Співпадає (регулярний вираз)"
     }
   },
   "labels": {

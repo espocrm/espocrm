@@ -33,6 +33,7 @@ use Throwable;
 
 /**
  * An exception for 500 Internal Server Error.
+ * If uncaught within an API request, the message will be printed to the X-Status-Reason header.
  */
 class Error extends InternalServerError implements HasBody
 {
@@ -49,7 +50,6 @@ class Error extends InternalServerError implements HasBody
     public static function createWithBody(string $message, string $body): self
     {
         $exception = new static($message);
-
         $exception->body = $body;
 
         return $exception;

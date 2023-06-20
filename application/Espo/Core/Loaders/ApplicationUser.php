@@ -29,20 +29,14 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    InjectableFactory,
-    ApplicationUser as Service,
-};
+use Espo\Core\ApplicationUser as Service;
+use Espo\Core\Container\Loader;
+use Espo\Core\InjectableFactory;
 
 class ApplicationUser implements Loader
 {
-    private $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     public function load(): Service
     {

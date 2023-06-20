@@ -30,6 +30,7 @@
 namespace Espo\Core\WebSocket;
 
 use Ratchet\ConnectionInterface;
+use Ratchet\Wamp\Topic;
 use Ratchet\Wamp\WampServerInterface;
 
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -39,47 +40,25 @@ use RuntimeException;
 
 class Pusher implements WampServerInterface
 {
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $categoryList;
-
-    /**
-     * @var array<string,array<string,mixed>>
-     */
+    /** @var array<string, array<string, mixed>> */
     protected $categoriesData;
-
     protected bool $isDebugMode = false;
-
-    /**
-     * @var array<string,string>
-     */
+    /** @var array<string, string> */
     protected $connectionIdUserIdMap = [];
-
-    /**
-     * @var array<string,string[]>
-     */
+    /** @var array<string, string[]> */
     protected $userIdConnectionIdListMap = [];
-
-    /**
-     * @var array<string,string[]>
-     */
+    /** @var array<string, string[]> */
     protected $connectionIdTopicIdListMap = [];
-
-    /**
-     * @var array<string,ConnectionInterface>
-     */
+    /** @var array<string, ConnectionInterface> */
     protected $connections = [];
-
-    /**
-     * @var array<string,\Ratchet\Wamp\Topic<object>>
-     */
+    /** @var array<string, Topic<object>> */
     protected $topicHash = [];
-
     private string $phpExecutablePath;
 
     /**
-     * @param array<string,array<string,mixed>> $categoriesData
+     * @param array<string, array<string, mixed>> $categoriesData
      */
     public function __construct(
         array $categoriesData = [],
@@ -106,7 +85,7 @@ class Pusher implements WampServerInterface
     }
 
     /**
-     * @param \Ratchet\Wamp\Topic<object> $topic
+     * @param Topic<object> $topic
      * @return void
      */
     public function onSubscribe(ConnectionInterface $connection, $topic)
@@ -165,7 +144,7 @@ class Pusher implements WampServerInterface
     }
 
     /**
-     * @param \Ratchet\Wamp\Topic<object> $topic
+     * @param Topic<object> $topic
      * @return void
      */
     public function onUnSubscribe(ConnectionInterface $connection, $topic)
@@ -208,7 +187,7 @@ class Pusher implements WampServerInterface
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     protected function getCategoryData(string $topicId): array
     {
@@ -230,7 +209,7 @@ class Pusher implements WampServerInterface
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     protected function getParamsFromTopicId(string $topicId): array
     {
@@ -256,7 +235,7 @@ class Pusher implements WampServerInterface
     }
 
     /**
-     * @param \Ratchet\Wamp\Topic<object> $topic
+     * @param Topic<object> $topic
      */
     protected function getAccessCheckCommandForTopic(ConnectionInterface $connection, $topic): ?string
     {
@@ -291,7 +270,7 @@ class Pusher implements WampServerInterface
     }
 
     /**
-     * @param \Ratchet\Wamp\Topic<object> $topic
+     * @param Topic<object> $topic
      * @return string
      */
     protected function getTopicCategory($topic)
@@ -486,8 +465,8 @@ class Pusher implements WampServerInterface
 
     /**
      * @param string $id
-     * @param \Ratchet\Wamp\Topic<object> $topic
-     * @param array<string,mixed> $params
+     * @param Topic<object> $topic
+     * @param array<string, mixed> $params
      * @return void
      */
     public function onCall(ConnectionInterface $connection, $id, $topic, array $params)
@@ -502,10 +481,10 @@ class Pusher implements WampServerInterface
     }
 
     /**
-     * @param \Ratchet\Wamp\Topic<object> $topic
+     * @param Topic<object> $topic
      * @param string $event
-     * @param array<mixed,mixed> $exclude
-     * @param array<mixed,mixed> $eligible
+     * @param array<mixed, mixed> $exclude
+     * @param array<mixed, mixed> $eligible
      * @return void
      */
     public function onPublish(ConnectionInterface $connection, $topic, $event, array $exclude, array $eligible)

@@ -38,8 +38,6 @@ class NotPortalUsers implements Filter
     {
         $queryBuilder
             ->leftJoin('portalUser', 'portalUserFilter')
-            ->where([
-                'portalUserFilter.id' => null
-            ]);
+            ->where(['portalUserFilter.id' => null]);
     }
 }

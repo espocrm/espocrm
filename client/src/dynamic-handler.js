@@ -26,22 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('dynamic-handler', [], function () {
+/** @module dynamic-handler */
+
+import {View as BullView} from 'lib!bullbone';
+
+/**
+ * A dynamic handler. To be extended by a specific handler.
+ */
+class DynamicHandler {
 
     /**
-     * A dynamic handler. To be extended by a specific handler.
-     *
-     * @class
-     * @name Class
-     * @param {module:views/record/detail.Class} recordView A record view.
-     * @memberOf module:dynamic-handler
+     * @param {module:views/record/detail} recordView A record view.
      */
-    let DynamicHandler = function (recordView) {
+    constructor(recordView) {
+
         /**
          * A record view.
          *
          * @protected
-         * @type {module:views/record/detail.Class}
+         * @type {module:views/record/detail}
          */
         this.recordView = recordView;
 
@@ -49,41 +52,38 @@ define('dynamic-handler', [], function () {
          * A model.
          *
          * @protected
-         * @type {module:model.Class}
+         * @type {module:model}
          */
         this.model = recordView.model;
-    };
+    }
 
-    _.extend(DynamicHandler.prototype, /** @lends module:dynamic-handler.Class# */{
+    /**
+     * Initialization logic. To be extended.
+     *
+     * @protected
+     */
+    init() {}
 
-        /**
-         * Initialization logic. To be extended.
-         *
-         * @protected
-         */
-        init: function () {},
+    /**
+     * Called on model change. To be extended.
+     *
+     * @protected
+     * @param {module:views/record/detail} model A model.
+     * @param {Object} o Options.
+     */
+    onChange(model, o) {}
 
-        /**
-         * Called on model change. To be extended.
-         *
-         * @protected
-         * @param {module:views/record/detail.Class} model A model.
-         * @param {Object} o Options.
-         */
-        onChange: function (model, o) {},
+    /**
+     * Get a metadata.
+     *
+     * @protected
+     * @returns {module:metadata}
+     */
+    getMetadata() {
+        return this.recordView.getMetadata()
+    }
+}
 
-        /**
-         * Get a metadata.
-         *
-         * @protected
-         * @returns {module:metadata.Class}
-         */
-        getMetadata: function () {
-            return this.recordView.getMetadata()
-        },
-    });
+DynamicHandler.extend = BullView.extend;
 
-    DynamicHandler.extend = Backbone.Router.extend;
-
-    return DynamicHandler;
-});
+export default DynamicHandler;

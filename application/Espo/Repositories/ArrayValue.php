@@ -30,19 +30,21 @@
 namespace Espo\Repositories;
 
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Entities\ArrayValue as ArrayValueEntity;
 use Espo\ORM\Entity;
-
 use Espo\Core\Repositories\Database;
 
 use RuntimeException;
 use LogicException;
 
 /**
- * @extends Database<\Espo\Entities\ArrayValue>
+ * @extends Database<ArrayValueEntity>
  */
 class ArrayValue extends Database
 {
     protected $hooksDisabled = true;
+
+    private const ITEM_MAX_LENGTH = 100;
 
     public function storeEntityAttribute(CoreEntity $entity, string $attribute, bool $populateMode = false): void
     {
@@ -73,7 +75,6 @@ class ArrayValue extends Database
         }
 
         $valueList = array_unique($valueList);
-
         $toSkipValueList = [];
 
         $isTransaction = false;
@@ -104,6 +105,12 @@ class ArrayValue extends Database
             }
         }
 
+        $itemMaxLength = $this->entityManager
+            ->getDefs()
+            ->getEntity(ArrayValueEntity::ENTITY_TYPE)
+            ->getField('value')
+            ->getParam('maxLength') ?? self::ITEM_MAX_LENGTH;
+
         foreach ($valueList as $value) {
             if (in_array($value, $toSkipValueList)) {
                 continue;
@@ -111,6 +118,10 @@ class ArrayValue extends Database
 
             if (!is_string($value)) {
                 continue;
+            }
+
+            if (strlen($value) > $itemMaxLength) {
+                $value = substr($value, 0, $itemMaxLength);
             }
 
             $arrayValue = $this->getNew();

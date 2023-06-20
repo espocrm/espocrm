@@ -100,4 +100,12 @@ class EmailFilter extends Entity
     {
         return $this->get('bodyContains') ?? [];
     }
+
+    /**
+     * @return string[]
+     */
+    public function getBodyContainsAll(): array
+    {
+        return $this->get('bodyContainsAll') ?? [];
+    }
 }

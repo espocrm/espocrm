@@ -1,0 +1,27 @@
+{
+  "labels": {
+    "Create WorkingTimeCalendar": "Създаване на календар",
+    "Ranges": "Диапазони"
+  },
+  "fields": {
+    "timeZone": "Времева зона",
+    "timeRanges": "График на работния ден",
+    "weekday0": "Неделя",
+    "weekday1": "Понеделник",
+    "weekday2": "Вторник",
+    "weekday3": "Сряда",
+    "weekday4": "Четвъртък",
+    "weekday5": "Петък",
+    "weekday6": "Събота",
+    "weekday0TimeRanges": "График за неделя",
+    "weekday1TimeRanges": "График за понеделник",
+    "weekday2TimeRanges": "График за вторник",
+    "weekday3TimeRanges": "График за Сряда",
+    "weekday4TimeRanges": "График за четвъртък",
+    "weekday5TimeRanges": "График за петък",
+    "weekday6TimeRanges": "График за Събота"
+  },
+  "links": {
+    "ranges": "Диапазони"
+  }
+}

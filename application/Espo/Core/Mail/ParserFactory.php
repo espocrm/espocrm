@@ -36,12 +36,8 @@ class ParserFactory
 {
     protected const DEFAULT_PARSER_CLASS_NAME = MailMimeParser::class;
 
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     public function create(): Parser
     {

@@ -26,21 +26,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/busy-ranges-entity-list', 'views/fields/entity-type-list', function (Dep) {
+define('views/settings/fields/busy-ranges-entity-list', ['views/fields/entity-type-list'], function (Dep) {
 
     return Dep.extend({
 
         setupOptions: function () {
             Dep.prototype.setupOptions.call(this);
 
-            this.params.options = this.params.options.filter(function (scope) {
-                if (this.getMetadata().get(['scopes', scope, 'disabled'])) return;
-                if (!this.getMetadata().get(['scopes', scope, 'object'])) return;
-                if (!this.getMetadata().get(['scopes', scope, 'calendar'])) return;
+            this.params.options = this.params.options.filter(scope => {
+                if (this.getMetadata().get(['scopes', scope, 'disabled'])) {
+                    return;
+                }
+
+                if (!this.getMetadata().get(['scopes', scope, 'object'])) {
+                    return;
+                }
+
+                if (!this.getMetadata().get(['scopes', scope, 'calendar'])) {
+                    return;
+                }
 
                 return true;
-            }, this)
+            })
         },
-
     });
 });

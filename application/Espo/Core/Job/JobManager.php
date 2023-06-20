@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\Utils\Config;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Job\QueueProcessor\Params;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
 use Espo\Entities\Job as JobEntity;
+
 use RuntimeException;
 use Throwable;
 
@@ -42,43 +44,23 @@ use Throwable;
 class JobManager
 {
     private bool $useProcessPool = false;
-
     protected string $lastRunTimeFile = 'data/cache/application/cronLastRunTime.php';
 
-    private Config $config;
-    private FileManager $fileManager;
-    private JobRunner $jobRunner;
-    private Log $log;
-    private ScheduleProcessor $scheduleProcessor;
-    private QueueUtil $queueUtil;
-    private AsyncPoolFactory $asyncPoolFactory;
-    private QueueProcessorFactory $queueProcessorFactory;
-
     public function __construct(
-        Config $config,
-        FileManager $fileManager,
-        JobRunner $jobRunner,
-        Log $log,
-        ScheduleProcessor $scheduleProcessor,
-        QueueUtil $queueUtil,
-        AsyncPoolFactory $asyncPoolFactory,
-        QueueProcessorFactory $queueProcessorFactory
+        private FileManager $fileManager,
+        private JobRunner $jobRunner,
+        private Log $log,
+        private ScheduleProcessor $scheduleProcessor,
+        private QueueUtil $queueUtil,
+        private AsyncPoolFactory $asyncPoolFactory,
+        private QueueProcessor $queueProcessor,
+        private ConfigDataProvider $configDataProvider
     ) {
-        $this->config = $config;
-        $this->fileManager = $fileManager;
-        $this->jobRunner = $jobRunner;
-        $this->log = $log;
-        $this->scheduleProcessor = $scheduleProcessor;
-        $this->queueUtil = $queueUtil;
-        $this->asyncPoolFactory = $asyncPoolFactory;
-        $this->queueProcessorFactory = $queueProcessorFactory;
-
-        if ($this->config->get('jobRunInParallel')) {
+        if ($this->configDataProvider->runInParallel()) {
             if ($this->asyncPoolFactory->isSupported()) {
                 $this->useProcessPool = true;
-            }
-            else {
-                $this->log->warning("JobManager: useProcessPool requires pcntl and posix extensions.");
+            } else {
+                $this->log->warning("Enabled `jobRunInParallel` parameter requires pcntl and posix extensions.");
             }
         }
     }
@@ -96,14 +78,10 @@ class JobManager
         }
 
         $this->updateLastRunTime();
-
         $this->queueUtil->markJobsFailed();
         $this->queueUtil->updateFailedJobAttempts();
-
         $this->scheduleProcessor->process();
-
         $this->queueUtil->removePendingJobDuplicates();
-
         $this->processMainQueue();
     }
 
@@ -112,16 +90,14 @@ class JobManager
      */
     public function processQueue(string $queue, int $limit): void
     {
-        $params = QueueProcessorParams
+        $params = Params
             ::create()
             ->withQueue($queue)
             ->withLimit($limit)
             ->withUseProcessPool(false)
             ->withNoLock(true);
 
-        $processor = $this->queueProcessorFactory->create($params);
-
-        $processor->process();
+        $this->queueProcessor->process($params);
     }
 
     /**
@@ -129,37 +105,30 @@ class JobManager
      */
     public function processGroup(string $group, int $limit): void
     {
-        $params = QueueProcessorParams
+        $params = Params
             ::create()
             ->withGroup($group)
             ->withLimit($limit)
             ->withUseProcessPool(false)
             ->withNoLock(true);
 
-        $processor = $this->queueProcessorFactory->create($params);
-
-        $processor->process();
+        $this->queueProcessor->process($params);
     }
 
     private function processMainQueue(): void
     {
-        $limit = (int) $this->config->get('jobMaxPortion', 0);
+        $limit = $this->configDataProvider->getMaxPortion();
 
-        $params = QueueProcessorParams
+        $params = Params
             ::create()
             ->withUseProcessPool($this->useProcessPool)
             ->withLimit($limit);
 
-        $processor = $this->queueProcessorFactory->create($params);
-
-        $processor->process();
+        $this->queueProcessor->process($params);
     }
 
     /**
      * Run a specific job by ID. A job status should be set to 'Ready'.
-     *
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws Throwable
      */
     public function runJobById(string $id): void
     {
@@ -185,7 +154,7 @@ class JobManager
             try {
                 $data = $this->fileManager->getPhpContents($this->lastRunTimeFile);
             }
-            catch (RuntimeException $e) {
+            catch (RuntimeException) {
                 $data = null;
             }
 
@@ -194,7 +163,7 @@ class JobManager
             }
         }
 
-        return time() - intval($this->config->get('cronMinInterval', 0)) - 1;
+        return time() - $this->configDataProvider->getCronMinInterval() - 1;
     }
 
     /**
@@ -202,9 +171,7 @@ class JobManager
      */
     private function updateLastRunTime(): void
     {
-        $data = [
-            'time' => time(),
-        ];
+        $data = ['time' => time()];
 
         $this->fileManager->putPhpContents($this->lastRunTimeFile, $data, false, true);
     }
@@ -214,7 +181,7 @@ class JobManager
         $currentTime = time();
         $lastRunTime = $this->getLastRunTime();
 
-        $cronMinInterval = $this->config->get('cronMinInterval', 0);
+        $cronMinInterval = $this->configDataProvider->getCronMinInterval();
 
         if ($currentTime > ($lastRunTime + $cronMinInterval)) {
             return true;

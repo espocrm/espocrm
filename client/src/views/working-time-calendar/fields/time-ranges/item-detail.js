@@ -30,7 +30,7 @@ define('views/working-time-calendar/fields/time-ranges/item-detail', ['view', 'l
 (Dep, /** @param {moment} */moment) => {
 
     /**
-     * @extends module:view.Class
+     * @extends module:view
      */
     class Class extends Dep
     {

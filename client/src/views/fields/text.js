@@ -26,387 +26,367 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/text', ['views/fields/base'], function (Dep) {
+/** @module views/fields/text */
 
-    /**
-     * A text field.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/text
-     */
-    return Dep.extend(/** @lends module:views/fields/text.Class# */{
+import BaseFieldView from 'views/fields/base';
 
-        type: 'text',
+/**
+ * A text field.
+ */
+class TextFieldView extends BaseFieldView {
 
-        listTemplate: 'fields/text/list',
+    type = 'text'
 
-        detailTemplate: 'fields/text/detail',
+    listTemplate = 'fields/text/list'
+    detailTemplate = 'fields/text/detail'
+    editTemplate = 'fields/text/edit'
+    searchTemplate = 'fields/text/search'
 
-        editTemplate: 'fields/text/edit',
+    seeMoreText = false
+    rowsDefault = 10
+    rowsMin = 2
+    seeMoreDisabled = false
+    cutHeight = 200
+    noResize = false
+    changeInterval = 5
 
-        searchTemplate: 'fields/text/search',
+    searchTypeList = [
+        'contains',
+        'startsWith',
+        'equals',
+        'endsWith',
+        'like',
+        'notContains',
+        'notLike',
+        'isEmpty',
+        'isNotEmpty',
+    ]
 
-        seeMoreText: false,
+    events = {
+        /** @this TextFieldView */
+        'click a[data-action="seeMoreText"]': function () {
+            this.seeMoreText = true;
 
-        rowsDefault: 10,
-
-        rowsMin: 2,
-
-        seeMoreDisabled: false,
-
-        cutHeight: 200,
-
-        searchTypeList: [
-            'contains',
-            'startsWith',
-            'equals',
-            'endsWith',
-            'like',
-            'notContains',
-            'notLike',
-            'isEmpty',
-            'isNotEmpty',
-        ],
-
-        noResize: false,
-
-        changeInterval: 5,
-
-        events: {
-            'click a[data-action="seeMoreText"]': function (e) {
-                this.seeMoreText = true;
-                this.reRender();
-            },
-            'click [data-action="mailTo"]': function (e) {
-                this.mailTo($(e.currentTarget).data('email-address'));
-            },
+            this.reRender();
         },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.params.rows = this.params.rows || this.rowsDefault;
-            this.noResize = this.options.noResize || this.params.noResize || this.noResize;
-            this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
-            this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled ||
-                this.autoHeightDisabled;
-
-            if (this.params.cutHeight) {
-                this.cutHeight = this.params.cutHeight;
-            }
-
-            this.rowsMin = this.options.rowsMin || this.params.rowsMin || this.rowsMin;
-
-            if (this.params.rows < this.rowsMin) {
-                this.rowsMin = this.params.rows;
-            }
-
-            this.on('remove', () => {
-                $(window).off('resize.see-more-' + this.cid);
-            });
+        /** @this TextFieldView */
+        'click [data-action="mailTo"]': function (e) {
+            this.mailTo($(e.currentTarget).data('email-address'));
         },
+    }
 
-        setupSearch: function () {
-            this.events = _.extend({
-                'change select.search-type': function (e) {
-                    var type = $(e.currentTarget).val();
-                    this.handleSearchType(type);
-                },
-            }, this.events || {});
-        },
+    setup() {
+        super.setup();
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+        this.params.rows = this.params.rows || this.rowsDefault;
+        this.noResize = this.options.noResize || this.params.noResize || this.noResize;
+        this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
+        this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled ||
+            this.autoHeightDisabled;
 
-            if (
-                this.model.get(this.name) !== null &&
-                this.model.get(this.name) !== '' &&
-                this.model.has(this.name)
-            ) {
-                data.isNotEmpty = true;
+        if (this.params.cutHeight) {
+            this.cutHeight = this.params.cutHeight;
+        }
+
+        this.rowsMin = this.options.rowsMin || this.params.rowsMin || this.rowsMin;
+
+        if (this.params.rows < this.rowsMin) {
+            this.rowsMin = this.params.rows;
+        }
+
+        this.on('remove', () => {
+            $(window).off('resize.see-more-' + this.cid);
+        });
+    }
+
+    setupSearch() {
+        this.events['change select.search-type'] = e => {
+            let type = $(e.currentTarget).val();
+
+            this.handleSearchType(type);
+        };
+    }
+
+    data() {
+        let data = super.data();
+
+        if (
+            this.model.get(this.name) !== null &&
+            this.model.get(this.name) !== '' &&
+            this.model.has(this.name)
+        ) {
+            data.isNotEmpty = true;
+        }
+
+        if (this.mode === this.MODE_SEARCH) {
+            if (typeof this.searchParams.value === 'string') {
+                this.searchData.value = this.searchParams.value;
             }
+        }
 
-            if (this.mode === this.MODE_SEARCH) {
-                if (typeof this.searchParams.value === 'string') {
-                    this.searchData.value = this.searchParams.value;
-                }
-            }
-
-            if (this.mode === this.MODE_EDIT) {
-                if (this.autoHeightDisabled) {
-                    data.rows = this.params.rows;
-                } else {
-                    data.rows = this.rowsMin;
-                }
-            }
-
-            data.valueIsSet = this.model.has(this.name);
-
-            if (this.isReadMode()) {
-                data.isCut = this.isCut();
-
-                if (data.isCut) {
-                    data.cutHeight = this.cutHeight;
-                }
-
-                data.displayRawText = this.params.displayRawText;
-            }
-
-            data.noResize = this.noResize;
-
-            return data;
-        },
-
-        handleSearchType: function (type) {
-            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                this.$el.find('input.main-element').addClass('hidden');
+        if (this.mode === this.MODE_EDIT) {
+            if (this.autoHeightDisabled) {
+                data.rows = this.params.rows;
             } else {
-                this.$el.find('input.main-element').removeClass('hidden');
+                data.rows = this.rowsMin;
             }
-        },
+        }
 
-        getValueForDisplay: function () {
-            var text = this.model.get(this.name);
+        data.valueIsSet = this.model.has(this.name);
 
-            return text || '';
-        },
+        if (this.isReadMode()) {
+            data.isCut = this.isCut();
 
-        controlTextareaHeight: function (lastHeight) {
-            var scrollHeight = this.$element.prop('scrollHeight');
-            var clientHeight = this.$element.prop('clientHeight');
+            if (data.isCut) {
+                data.cutHeight = this.cutHeight;
+            }
 
-            if (typeof lastHeight === 'undefined' && clientHeight === 0) {
-                setTimeout(this.controlTextareaHeight.bind(this), 10);
+            data.displayRawText = this.params.displayRawText;
+        }
 
+        data.noResize = this.noResize;
+
+        return data;
+    }
+
+    handleSearchType(type) {
+        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+            this.$el.find('input.main-element').addClass('hidden');
+        } else {
+            this.$el.find('input.main-element').removeClass('hidden');
+        }
+    }
+
+    getValueForDisplay() {
+        let text = this.model.get(this.name);
+
+        return text || '';
+    }
+
+    controlTextareaHeight(lastHeight) {
+        var scrollHeight = this.$element.prop('scrollHeight');
+        var clientHeight = this.$element.prop('clientHeight');
+
+        if (typeof lastHeight === 'undefined' && clientHeight === 0) {
+            setTimeout(this.controlTextareaHeight.bind(this), 10);
+
+            return;
+        }
+
+        if (clientHeight === lastHeight) {
+            return;
+        }
+
+        if (scrollHeight > clientHeight + 1) {
+            var rows = this.$element.prop('rows');
+
+            if (this.params.rows && rows >= this.params.rows) {
                 return;
             }
 
-            if (clientHeight === lastHeight) {
-                return;
-            }
+            this.$element.attr('rows', rows + 1);
+            this.controlTextareaHeight(clientHeight);
+        }
 
-            if (scrollHeight > clientHeight + 1) {
-                var rows = this.$element.prop('rows');
+        if (this.$element.val().length === 0) {
+            this.$element.attr('rows', this.rowsMin);
+        }
+    }
 
-                if (this.params.rows && rows >= this.params.rows) {
-                    return;
+    isCut() {
+        return !this.seeMoreText && !this.seeMoreDisabled;
+    }
+
+    controlSeeMore() {
+        if (!this.isCut()) {
+            return;
+        }
+
+        if (this.$text.height() > this.cutHeight) {
+            this.$seeMoreContainer.removeClass('hidden');
+            this.$textContainer.addClass('cut');
+        } else {
+            this.$seeMoreContainer.addClass('hidden');
+            this.$textContainer.removeClass('cut');
+        }
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.isReadMode()) {
+            $(window).off('resize.see-more-' + this.cid);
+
+            this.$textContainer = this.$el.find('> .complex-text-container');
+            this.$text = this.$textContainer.find('> .complex-text');
+            this.$seeMoreContainer = this.$el.find('> .see-more-container');
+
+            if (this.isCut()) {
+                this.controlSeeMore();
+
+                if (this.model.get(this.name) && this.$text.height() === 0) {
+                    this.$textContainer.addClass('cut');
+
+                    setTimeout(this.controlSeeMore.bind(this), 50);
                 }
 
-                this.$element.attr('rows', rows + 1);
-                this.controlTextareaHeight(clientHeight);
-            }
+                this.listenTo(this.recordHelper, 'panel-show', () => this.controlSeeMore());
+                this.on('panel-show-propagated', () => this.controlSeeMore());
 
-            if (this.$element.val().length === 0) {
-                this.$element.attr('rows', this.rowsMin);
-            }
-        },
-
-        isCut: function () {
-            return !this.seeMoreText && !this.seeMoreDisabled;
-        },
-
-        controlSeeMore: function () {
-            if (!this.isCut()) {
-                return;
-            }
-
-            if (this.$text.height() > this.cutHeight) {
-                this.$seeMoreContainer.removeClass('hidden');
-                this.$textContainer.addClass('cut');
-            } else {
-                this.$seeMoreContainer.addClass('hidden');
-                this.$textContainer.removeClass('cut');
-            }
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.isReadMode()) {
-                $(window).off('resize.see-more-' + this.cid);
-
-                this.$textContainer = this.$el.find('> .complex-text-container');
-                this.$text = this.$textContainer.find('> .complex-text');
-                this.$seeMoreContainer = this.$el.find('> .see-more-container');
-
-                if (this.isCut()) {
+                $(window).on('resize.see-more-' + this.cid, () => {
                     this.controlSeeMore();
-
-                    if (this.model.get(this.name) && this.$text.height() === 0) {
-                        this.$textContainer.addClass('cut');
-
-                        setTimeout(this.controlSeeMore.bind(this), 50);
-                    }
-
-                    this.listenTo(this.recordHelper, 'panel-show', () => this.controlSeeMore());
-                    this.on('panel-show-propagated', () => this.controlSeeMore());
-
-                    $(window).on('resize.see-more-' + this.cid, () => {
-                        this.controlSeeMore();
-                    });
-                }
-            }
-
-            if (this.mode === this.MODE_EDIT) {
-                var text = this.getValueForDisplay();
-                if (text) {
-                    this.$element.val(text);
-                }
-            }
-
-            if (this.mode === this.MODE_SEARCH) {
-                var type = this.$el.find('select.search-type').val();
-
-                this.handleSearchType(type);
-
-                this.$el.find('select.search-type').on('change', () => {
-                    this.trigger('change');
-                });
-
-                this.$element.on('input', () => {
-                    this.trigger('change');
                 });
             }
+        }
 
-            if (this.mode === this.MODE_EDIT && !this.autoHeightDisabled) {
-                this.controlTextareaHeight();
-
-                this.$element.on('input', () => {
-                    this.controlTextareaHeight();
-                });
-
-                let lastChangeKeydown = new Date();
-                const changeKeydownInterval = this.changeInterval * 1000;
-
-                this.$element.on('keydown', () => {
-                    if (Date.now() - lastChangeKeydown > changeKeydownInterval) {
-                        this.trigger('change');
-                        lastChangeKeydown = Date.now();
-                    }
-                });
+        if (this.mode === this.MODE_EDIT) {
+            var text = this.getValueForDisplay();
+            if (text) {
+                this.$element.val(text);
             }
-        },
+        }
 
-        fetch: function () {
-            let data = {};
+        if (this.mode === this.MODE_SEARCH) {
+            var type = this.$el.find('select.search-type').val();
 
-            let value = this.$element.val() || null;
+            this.handleSearchType(type);
 
-            if (value && value.trim() === '') {
-                value = '';
-            }
-
-            data[this.name] = value
-
-            return data;
-        },
-
-        fetchSearch: function () {
-            var type = this.fetchSearchType() || 'startsWith';
-
-            var data;
-
-            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                if (type === 'isEmpty') {
-                    data = {
-                        type: 'or',
-                        value: [
-                            {
-                                type: 'isNull',
-                                field: this.name,
-                            },
-                            {
-                                type: 'equals',
-                                field: this.name,
-                                value: ''
-                            }
-                        ],
-                        data: {
-                            type: type
-                        }
-                    };
-                } else {
-                    data = {
-                        type: 'and',
-                        value: [
-                            {
-                                type: 'notEquals',
-                                field: this.name,
-                                value: ''
-                            },
-                            {
-                                type: 'isNotNull',
-                                field: this.name,
-                                value: null
-                            }
-                        ],
-                        data: {
-                            type: type
-                        }
-                    };
-                }
-
-                return data;
-            }
-            else {
-                var value = this.$element.val().toString().trim();
-
-                value = value.trim();
-
-                if (value) {
-                    data = {
-                        value: value,
-                        type: type
-                    };
-
-                    return data;
-                }
-            }
-
-            return false;
-        },
-
-        getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.typeFront ||
-                this.searchParams.type;
-        },
-
-        mailTo: function (emailAddress) {
-            var attributes = {
-                status: 'Draft',
-                to: emailAddress
-            };
-
-            if (
-                this.getConfig().get('emailForceUseExternalClient') ||
-                this.getPreferences().get('emailUseExternalClient') ||
-                !this.getAcl().checkScope('Email', 'create')
-            ) {
-                require('email-helper', (EmailHelper) => {
-                    var emailHelper = new EmailHelper();
-
-                    var link = emailHelper
-                        .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
-
-                    document.location.href = link;
-                });
-
-                return;
-            }
-
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
-                'views/modals/compose-email';
-
-            Espo.Ui.notify(' ... ');
-
-            this.createView('quickCreate', viewName, {
-                attributes: attributes,
-            }, (view) => {
-                view.render();
-                view.notify(false);
+            this.$el.find('select.search-type').on('change', () => {
+                this.trigger('change');
             });
-        },
-    });
-});
+
+            this.$element.on('input', () => {
+                this.trigger('change');
+            });
+        }
+
+        if (this.mode === this.MODE_EDIT && !this.autoHeightDisabled) {
+            this.controlTextareaHeight();
+
+            this.$element.on('input', () => {
+                this.controlTextareaHeight();
+            });
+
+            let lastChangeKeydown = new Date();
+            const changeKeydownInterval = this.changeInterval * 1000;
+
+            this.$element.on('keydown', () => {
+                if (Date.now() - lastChangeKeydown > changeKeydownInterval) {
+                    this.trigger('change');
+                    lastChangeKeydown = Date.now();
+                }
+            });
+        }
+    }
+
+    fetch() {
+        let data = {};
+
+        let value = this.$element.val() || null;
+
+        if (value && value.trim() === '') {
+            value = '';
+        }
+
+        data[this.name] = value
+
+        return data;
+    }
+
+    fetchSearch() {
+        let type = this.fetchSearchType() || 'startsWith';
+
+        if (type === 'isEmpty') {
+            return  {
+                type: 'or',
+                value: [
+                    {
+                        type: 'isNull',
+                        field: this.name,
+                    },
+                    {
+                        type: 'equals',
+                        field: this.name,
+                        value: ''
+                    }
+                ],
+                data: {
+                    type: type,
+                },
+            };
+        }
+
+        if (type === 'isNotEmpty') {
+            return  {
+                type: 'and',
+                value: [
+                    {
+                        type: 'notEquals',
+                        field: this.name,
+                        value: '',
+                    },
+                    {
+                        type: 'isNotNull',
+                        field: this.name,
+                        value: null,
+                    }
+                ],
+                data: {
+                    type: type,
+                },
+            };
+        }
+
+        let value = this.$element.val().toString().trim();
+
+        if (value) {
+            return {
+                value: value,
+                type: type,
+            };
+        }
+
+        return false;
+    }
+
+    getSearchType() {
+        return this.getSearchParamsData().type || this.searchParams.typeFront ||
+            this.searchParams.type;
+    }
+
+    mailTo(emailAddress) {
+        let attributes = {
+            status: 'Draft',
+            to: emailAddress,
+        };
+
+        if (
+            this.getConfig().get('emailForceUseExternalClient') ||
+            this.getPreferences().get('emailUseExternalClient') ||
+            !this.getAcl().checkScope('Email', 'create')
+        ) {
+            Espo.loader.require('email-helper', EmailHelper => {
+                let emailHelper = new EmailHelper();
+
+                document.location.href = emailHelper
+                    .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+            });
+
+            return;
+        }
+
+        let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
+            'views/modals/compose-email';
+
+        Espo.Ui.notify(' ... ');
+
+        this.createView('quickCreate', viewName, {
+            attributes: attributes,
+        }, view => {
+            view.render();
+            view.notify(false);
+        });
+    }
+}
+
+export default TextFieldView;

@@ -1,4 +1,3 @@
-
 <% _.each(layout, function (defs, key) { %>
     <%
         var width = null;

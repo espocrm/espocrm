@@ -44,7 +44,7 @@ class FieldDefs
     {}
 
     /**
-     * @param array<string,mixed> $raw
+     * @param array<string, mixed> $raw
      */
     public static function fromRaw(array $raw, string $name): self
     {

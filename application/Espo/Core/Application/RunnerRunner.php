@@ -42,19 +42,11 @@ use ReflectionClass;
  */
 class RunnerRunner
 {
-    private Log $log;
-    private ApplicationUser $applicationUser;
-    private InjectableFactory $injectableFactory;
-
     public function __construct(
-        Log $log,
-        ApplicationUser $applicationUser,
-        InjectableFactory $injectableFactory
-    ) {
-        $this->log = $log;
-        $this->applicationUser = $applicationUser;
-        $this->injectableFactory = $injectableFactory;
-    }
+        private Log $log,
+        private ApplicationUser $applicationUser,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * @param class-string<Runner|RunnerParameterized> $className
@@ -72,7 +64,7 @@ class RunnerRunner
 
         if (
             $class->getStaticPropertyValue('cli', false) &&
-            substr(php_sapi_name() ?: '', 0, 3) !== 'cli'
+            !str_starts_with(php_sapi_name() ?: '', 'cli')
         ) {
             throw new RunnerException("Can be run only via CLI.");
         }
@@ -83,19 +75,12 @@ class RunnerRunner
 
         $runner = $this->injectableFactory->create($className);
 
-        if ($runner instanceof Runner) {
-            $runner->run();
-
-            return;
-        }
-
         if ($runner instanceof RunnerParameterized) {
             $runner->run($params ?? Params::create());
 
             return;
         }
 
-        /** @phpstan-ignore-next-line */
-        throw new RunnerException("Class should implement Runner or RunnerParameterized interface.");
+        $runner->run();
     }
 }

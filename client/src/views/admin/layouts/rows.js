@@ -26,24 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/rows',
-['views/admin/layouts/base', 'res!client/css/misc/layout-manager-rows.css'],
-function (Dep, styleCss) {
+define('views/admin/layouts/rows', ['views/admin/layouts/base'], function (Dep) {
 
     return Dep.extend({
 
         template: 'admin/layouts/rows',
 
-        events: _.extend({
-            'click a[data-action="editItem"]': function (e) {
-                this.editRow($(e.target).closest('li').data('name'));
-            },
-        }, Dep.prototype.events),
-
         dataAttributeList: null,
-
         dataAttributesDefs: {},
-
         editable: false,
 
         data: function () {
@@ -62,13 +52,22 @@ function (Dep, styleCss) {
 
         setup: function () {
             this.itemsData = {};
+
             Dep.prototype.setup.call(this);
+
+            this.events['click a[data-action="editItem"]'] = e => {
+                let name = $(e.target).closest('li').data('name');
+
+                this.editRow(name);
+            };
 
             this.on('update-item', (name, attributes) => {
                 this.itemsData[name] = Espo.Utils.cloneDeep(attributes);
             });
 
-            this.$style = $('<style>').html(styleCss).appendTo($('body'));
+            Espo.loader.require('res!client/css/misc/layout-manager-rows.css', styleCss => {
+                this.$style = $('<style>').html(styleCss).appendTo($('body'));
+            });
         },
 
         onRemove: function () {

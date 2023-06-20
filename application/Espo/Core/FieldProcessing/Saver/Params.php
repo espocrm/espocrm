@@ -35,7 +35,7 @@ namespace Espo\Core\FieldProcessing\Saver;
 class Params
 {
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private $options = [];
 
@@ -57,7 +57,7 @@ class Params
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getRawOptions(): array
     {
@@ -65,7 +65,7 @@ class Params
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
       */
     public function withRawOptions(array $options): self
     {

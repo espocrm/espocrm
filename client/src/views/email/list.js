@@ -32,7 +32,7 @@ define('views/email/list', ['views/list'], function (Dep) {
      * @class
      * @name Class
      * @memberOf module:views/email/list
-     * @extends module:views/list.Class
+     * @extends module:views/list
      */
     return Dep.extend(/** @lends module:views/email/list.Class# */{
 
@@ -305,7 +305,7 @@ define('views/email/list', ['views/list'], function (Dep) {
          * @inheritDoc
          */
         createSearchView: function () {
-            /** @type {Promise<module:view.Class>}*/
+            /** @type {Promise<module:view>}*/
             let promise = Dep.prototype.createSearchView.call(this);
 
             promise.then(view => {

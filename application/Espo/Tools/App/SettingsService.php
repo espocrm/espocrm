@@ -90,8 +90,6 @@ class SettingsService
     {
         $data = (object) [];
 
-        $data->jsLibs = $this->metadata->get(['app', 'jsLibs']);
-
         unset($data->loginView);
 
         $loginView = $this->metadata->get(['clientDefs', 'App', 'loginView']);

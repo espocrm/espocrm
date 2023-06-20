@@ -184,7 +184,8 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
                 }
             });
 
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
+
             this.model.save();
         },
 
@@ -270,7 +271,7 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
                 }
             }, function (res) {
                 if (res.error) {
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     return;
                 }

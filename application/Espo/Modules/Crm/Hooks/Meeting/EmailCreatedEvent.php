@@ -44,7 +44,7 @@ class EmailCreatedEvent
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function afterRemove(Entity $entity, array $options): void
     {

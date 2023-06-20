@@ -31,13 +31,13 @@ namespace Espo\Hooks\Common;
 
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\Option\SaveOptions;
-
 use Espo\Core\Hook\Hook\BeforeSave;
 use Espo\Core\Formula\Manager as FormulaManager;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
 
 use Exception;
+use stdClass;
 
 /**
  * @implements BeforeSave<Entity>
@@ -63,12 +63,7 @@ class Formula implements BeforeSave
         $variables = (object) [];
 
         foreach ($scriptList as $script) {
-            try {
-                $this->formulaManager->run($script, $entity, $variables);
-            }
-            catch (Exception $e) {
-                $this->log->error('Before-save formula script failed: ' . $e->getMessage());
-            }
+            $this->runScript($script, $entity, $variables);;
         }
 
         $customScript = $this->metadata->get(['formula', $entity->getEntityType(), 'beforeSaveCustomScript']);
@@ -77,8 +72,13 @@ class Formula implements BeforeSave
             return;
         }
 
+        $this->runScript($customScript, $entity, $variables);;
+    }
+
+    private function runScript(string $script, Entity $entity, stdClass $variables): void
+    {
         try {
-            $this->formulaManager->run($customScript, $entity, $variables);
+            $this->formulaManager->run($script, $entity, $variables);
         }
         catch (Exception $e) {
             $this->log->error('Before-save formula script failed: ' . $e->getMessage());

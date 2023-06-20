@@ -29,19 +29,20 @@
 
 namespace Espo\Core\Formula\Functions\DatetimeGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\ExecutionException;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 use DateTime;
 
 class DiffType extends BaseFunction
 {
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
-    protected $intevalTypePropertyMap = [
+    protected $intervalTypePropertyMap = [
         'years' => 'y',
         'months' => 'm',
         'days' => 'd',
@@ -52,8 +53,9 @@ class DiffType extends BaseFunction
 
     /**
      * @return ?int
-     * @throws \Espo\Core\Formula\Exceptions\TooFewArguments
-     * @throws \Espo\Core\Formula\Exceptions\Error
+     * @throws TooFewArguments
+     * @throws Error
+     * @throws ExecutionException
      */
     public function process(ArgumentList $args)
     {
@@ -92,7 +94,7 @@ class DiffType extends BaseFunction
             $this->throwBadArgumentType(3, 'string');
         }
 
-        if (!array_key_exists($intervalType, $this->intevalTypePropertyMap)) {
+        if (!array_key_exists($intervalType, $this->intervalTypePropertyMap)) {
             $this->throwBadArgumentValue(3, "not supported interval type '{$intervalType}'");
         }
 
@@ -124,7 +126,7 @@ class DiffType extends BaseFunction
         } else if ($intervalType === 'days') {
             $number = floor($secondsDiff / (60 * 60 * 24));
         } else {
-            $property = $this->intevalTypePropertyMap[$intervalType];
+            $property = $this->intervalTypePropertyMap[$intervalType];
             $interval = $dateTime2->diff($dateTime1);
             $number = $interval->$property;
 

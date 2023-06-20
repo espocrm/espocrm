@@ -29,22 +29,18 @@
 
 namespace tests\unit\Espo\Core\Select\Where;
 
-use Espo\Core\{
-    Select\Where\ConverterFactory,
-    Select\Where\Converter,
-    Select\Where\DateTimeItemTransformer,
-    Select\Where\ItemGeneralConverter,
-    Select\Where\ItemConverter,
-    Utils\Metadata,
-    InjectableFactory,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Where\Converter;
+use Espo\Core\Select\Where\ConverterFactory;
+use Espo\Core\Select\Where\DateTimeItemTransformer;
+use Espo\Core\Select\Where\ItemConverter;
+use Espo\Core\Select\Where\ItemGeneralConverter;
+use Espo\Core\Utils\Metadata;
 
-use Espo\{
-    Entities\User,
-};
+use Espo\Entities\User;
 
 class ConverterFactoryTest extends \PHPUnit\Framework\TestCase
 {

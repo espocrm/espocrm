@@ -58,9 +58,11 @@ class Call extends Entity
         return $this->getValueObject('dateStart');
     }
 
-    public function setDateStart(?DateTime $dateStart): void
+    public function setDateStart(?DateTime $dateStart): self
     {
         $this->setValueObject('dateStart', $dateStart);
+
+        return $this;
     }
 
     public function getDateEnd(): ?DateTime
@@ -69,9 +71,18 @@ class Call extends Entity
         return $this->getValueObject('dateEnd');
     }
 
-    public function setDateEnd(?DateTime $dateEnd): void
+    public function setDateEnd(?DateTime $dateEnd): self
     {
         $this->setValueObject('dateEnd', $dateEnd);
+
+        return $this;
+    }
+
+    public function setAssignedUserId(?string $assignedUserId): self
+    {
+        $this->set('assignedUserId', $assignedUserId);
+
+        return $this;
     }
 
     public function getCreatedBy(): ?Link

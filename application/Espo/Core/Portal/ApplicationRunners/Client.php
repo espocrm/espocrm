@@ -29,26 +29,19 @@
 
 namespace Espo\Core\Portal\ApplicationRunners;
 
-use Espo\Core\{
-    Application\Runner,
-    Utils\ClientManager,
-    ApplicationState,
-};
+use Espo\Core\Application\Runner;
+use Espo\Core\ApplicationState;
+use Espo\Core\Utils\ClientManager;
 
 /**
  * Displays the main HTML page for a portal.
  */
 class Client implements Runner
 {
-    private $clientManager;
-
-    private $applicationState;
-
-    public function __construct(ClientManager $clientManager, ApplicationState $applicationState)
-    {
-        $this->clientManager = $clientManager;
-        $this->applicationState = $applicationState;
-    }
+    public function __construct(
+        private ClientManager $clientManager,
+        private ApplicationState $applicationState
+    ) {}
 
     public function run(): void
     {

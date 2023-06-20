@@ -33,7 +33,6 @@ use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Reminder;
 use Espo\ORM\Entity;
-
 use Espo\Core\Di;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 

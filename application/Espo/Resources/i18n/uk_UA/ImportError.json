@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "type": "Тип",
+    "validationFailures": "Помилки валідації",
+    "import": "Імпорт",
+    "rowIndex": "Індекс рядка",
+    "exportRowIndex": "Індекс рядка експорту",
+    "lineNumber": "Номер рядка",
+    "exportLineNumber": "Номер рядка експорту",
+    "row": "Рядок",
+    "entityType": "Тип сутності"
+  },
+  "options": {
+    "type": {
+      "Validation": "Валідація",
+      "Access": "Доступ",
+      "Not-Found": "Не знайдено"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "Номер рядка в оригінальному файлі CSV.",
+    "exportLineNumber": "Номер рядка в експортованому файлі CSV."
+  }
+}

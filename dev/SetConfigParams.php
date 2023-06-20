@@ -30,19 +30,21 @@
 namespace EspoDev;
 
 use Espo\Core\Application;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Config\ConfigWriterFileManager;
 use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Core\Utils\Json;
 
 /**
- * Creates the config file if does not exists. Sets the 'version' from the `package.json` in the config.
+ * Creates the config file if it does not exist. Sets the 'version' from the `package.json` in the config.
  */
 class SetConfigParams
 {
     public static function process(): void
     {
-        if (substr(php_sapi_name(), 0, 3) !== 'cli') {
+        if (!str_starts_with(php_sapi_name(), 'cli')) {
             return;
         }
 
@@ -68,21 +70,16 @@ class SetConfigParams
 
         $app = new Application();
 
-        /** @var \Espo\Core\InjectableFactory $injectableFactory */
-        $injectableFactory = $app->getContainer()->get('injectableFactory');
-
-        /** @var \Espo\Core\Utils\Config $config */
-        $config = $app->getContainer()->get('config');
+        $injectableFactory = $app->getContainer()->getByClass(InjectableFactory::class);
+        $config = $app->getContainer()->getByClass(Config::class);
 
         if ($config->get('version') === $version) {
             return;
         }
 
-        /** @var ConfigWriter $configWriter */
         $configWriter = $injectableFactory->create(ConfigWriter::class);
 
         $configWriter->set('version', $version);
-
         $configWriter->save();
     }
 }

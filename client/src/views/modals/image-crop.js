@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function (Dep, Cropper) {
+define('views/modals/image-crop', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -40,7 +40,7 @@ define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function (Dep,
             },
             'click [data-action="zoomOut"]': function () {
                 this.$img.cropper('zoom', -0.1);
-            }
+            },
         },
 
         setup: function () {
@@ -56,6 +56,8 @@ define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function (Dep,
                 },
             ];
 
+            this.wait(Espo.loader.requirePromise('lib!Cropper'));
+
             this.on('remove', () => {
                 if (this.$img.length) {
                     this.$img.cropper('destroy');
@@ -65,13 +67,13 @@ define('views/modals/image-crop', ['views/modal', 'lib!Cropper'], function (Dep,
         },
 
         afterRender: function () {
-            var $img = this.$img = $('<img>')
+            let $img = this.$img = $('<img>')
                 .attr('src', this.options.contents)
                 .addClass('hidden');
 
             this.$el.find('.image-container').append($img);
 
-            setTimeout(function () {
+            setTimeout(() => {
                 $img.cropper({
                     aspectRatio: 1,
                     movable: true,

@@ -27,7 +27,7 @@
       "None": "Nessuno",
       "Accepted": "Accettato",
       "Declined": "Rifiutato",
-      "Tentative": "Provvisorio"
+      "Tentative": "Incerto"
     }
   },
   "massActions": {

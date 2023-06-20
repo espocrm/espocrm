@@ -1,0 +1,54 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/jsLibs.json",
+    "title": "app/jsLibs",
+    "description": "JS libraries definitions for the loader.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A lib name.",
+        "properties": {
+            "path": {
+                "type": "string",
+                "description": "A path to the lib file.",
+                "examples": [
+                    "client/custom/modules/my-module/lib/some-lib.js"
+                ]
+            },
+            "devPath": {
+                "type": "string",
+                "description": "A path to the lib file for the developer mode.",
+                "examples": [
+                    "client/custom/modules/my-module/lib/original/some-lib.js"
+                ]
+            },
+            "exportsTo": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["window", "$.fn"]}
+                ],
+                "description": "If the lib exposes itself w/o a module, to where the lib is exported. Use dots to define a path."
+            },
+            "exportsAs": {
+                "type": "string",
+                "description": "A key name by which the lib is available in a containing object."
+            },
+            "sourceMap": {
+                "type": "boolean",
+                "description": "Whether the source map file is available."
+            },
+            "expose": {
+                "type": "boolean",
+                "description": "To expose to the window global. To be used for backward compatibility reasons."
+            },
+            "exposeAs": {
+                "type": "string",
+                "description": "A name to expose by. By default, matches the lib name."
+            },
+            "amdId": {
+                "type": "string",
+                "description": "An AMD ID. Needs to be specified if the module uses a named define function or other 3rd party modules require that ID."
+            }
+        }
+    }
+}

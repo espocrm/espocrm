@@ -30,18 +30,15 @@
 namespace Espo\Modules\Crm\Classes\Select\KnowledgeBaseArticle\AccessControlFilters;
 
 use Espo\Core\Select\AccessControl\Filter;
+use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\ORM\Query\SelectBuilder;
 
 use Espo\Entities\User;
 
 class Mandatory implements Filter
 {
-    private $user;
-
-    public function __construct(User $user)
-    {
-        $this->user = $user;
-    }
+    public function __construct(private User $user)
+    {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {
@@ -51,12 +48,12 @@ class Mandatory implements Filter
 
         $queryBuilder
             ->where([
-                'status' => 'Published',
+                'status' => KnowledgeBaseArticle::STATUS_PUBLISHED,
             ])
             ->distinct()
             ->leftJoin('portals', 'portalsAccess')
             ->where([
-                'portalsAccess.id' => $this->user->get('portalId'),
+                'portalsAccess.id' => $this->user->getPortalId(),
             ]);
     }
 }

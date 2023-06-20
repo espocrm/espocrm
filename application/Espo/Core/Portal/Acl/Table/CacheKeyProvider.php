@@ -29,26 +29,15 @@
 
 namespace Espo\Core\Portal\Acl\Table;
 
-use Espo\Entities\{
-    User,
-    Portal,
-};
+use Espo\Entities\Portal;
+use Espo\Entities\User;
 
-use Espo\Core\{
-    Acl\Table\CacheKeyProvider as CacheKeyProviderInterface,
-};
+use Espo\Core\Acl\Table\CacheKeyProvider as CacheKeyProviderInterface;
 
 class CacheKeyProvider implements CacheKeyProviderInterface
 {
-    private $user;
-
-    private $portal;
-
-    public function __construct(User $user, Portal $portal)
-    {
-        $this->user = $user;
-        $this->portal = $portal;
-    }
+    public function __construct(private User $user, private Portal $portal)
+    {}
 
     public function get(): string
     {

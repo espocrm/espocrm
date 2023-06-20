@@ -35,7 +35,6 @@ use Throwable;
 
 class Permission
 {
-    private Manager $fileManager;
 
     /**
      * Last permission error.
@@ -45,12 +44,12 @@ class Permission
     protected $permissionError = [];
 
     /**
-     * @var ?array<string,mixed>
+     * @var ?array<string, mixed>
      */
     protected $permissionErrorRules = null;
 
     /**
-     * @var array<string,array<string,mixed>>
+     * @var array<string, array<string, mixed>>
      */
     protected $writableMap = [
         'data' => [
@@ -97,12 +96,10 @@ class Permission
     ];
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
-    public function __construct(Manager $fileManager, array $params = null)
+    public function __construct(private Manager $fileManager, array $params = null)
     {
-        $this->fileManager = $fileManager;
-
         if ($params) {
             foreach ($params as $paramName => $paramValue) {
                 switch ($paramName) {
@@ -131,7 +128,7 @@ class Permission
     }
 
     /**
-     * @return array<string,array<string,mixed>>
+     * @return array<string, array<string, mixed>>
      */
     public function getWritableMap(): array
     {
@@ -218,7 +215,7 @@ class Permission
      * Change permissions.
      *
      * @param string $path
-     * @param int|array<int|string,string|int|null>|string $octal Ex. `0755`, `[0644, 0755]`, `['file' => 0644, 'dir' => 0755]`.
+     * @param int|array<int|string, string|int|null>|string $octal Ex. `0755`, `[0644, 0755]`, `['file' => 0644, 'dir' => 0755]`.
      * @param bool $recurse
      */
     public function chmod(string $path, $octal, bool $recurse = false): bool
@@ -563,7 +560,7 @@ class Permission
     /**
      * Get last permission error rules.
      *
-     * @return ?array<string,array<string,string>>
+     * @return ?array<string, array<string, string>>
      */
     public function getLastErrorRules()
     {
@@ -609,7 +606,7 @@ class Permission
     }
 
     /**
-     * Get count of a search string in a array.
+     * Get count of a search string in an array.
      *
      * @param string $search
      * @param string[] $array

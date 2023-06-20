@@ -32,13 +32,61 @@ define('views/admin/entity-manager/record/edit-formula', ['views/record/base'], 
 
         template: 'admin/entity-manager/record/edit-formula',
 
+        data: function () {
+            return {
+                field: this.field,
+                fieldKey: this.field + 'Field',
+            };
+        },
+
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.createField('beforeSaveCustomScript', 'views/fields/formula', {
-                targetEntityType: this.options.targetEntityType,
-                height: 500
-            }, 'edit');
+            this.field = this.options.type;
+
+            let additionalFunctionDataList = null;
+
+            if (this.options.type === 'beforeSaveApiScript') {
+                additionalFunctionDataList = this.getRecordServiceFunctionDataList();
+            }
+
+            this.createField(
+                this.field,
+                'views/fields/formula',
+                {
+                    targetEntityType: this.options.targetEntityType,
+                    height: 500,
+                },
+                'edit',
+                false,
+                {additionalFunctionDataList: additionalFunctionDataList}
+            );
+        },
+
+        getRecordServiceFunctionDataList: function () {
+            return [
+                {
+                    name: 'recordService\\skipDuplicateCheck',
+                    insertText: 'recordService\\skipDuplicateCheck()',
+                    returnType: 'bool'
+                },
+                {
+                    name: 'recordService\\throwDuplicateConflict',
+                    insertText: 'recordService\\throwDuplicateConflict(RECORD_ID)',
+                },
+                {
+                    name: 'recordService\\throwBadRequest',
+                    insertText: 'recordService\\throwBadRequest(MESSAGE)',
+                },
+                {
+                    name: 'recordService\\throwForbidden',
+                    insertText: 'recordService\\throwForbidden(MESSAGE)',
+                },
+                {
+                    name: 'recordService\\throwConflict',
+                    insertText: 'recordService\\throwConflict(MESSAGE)',
+                },
+            ];
         },
     });
 });

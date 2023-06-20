@@ -32,7 +32,7 @@ namespace Espo\Core\Utils\Resource\Reader;
 class Params
 {
     private bool $noCustom = false;
-    /** @var array<int,string[]> */
+    /** @var array<int, string[]> */
     private array $forceAppendPathList = [];
 
     public static function create(): self
@@ -49,7 +49,7 @@ class Params
     }
 
     /**
-     * @param array<int,string[]> $forceAppendPathList
+     * @param array<int, string[]> $forceAppendPathList
      */
     public function withForceAppendPathList(array $forceAppendPathList): self
     {
@@ -65,7 +65,7 @@ class Params
     }
 
     /**
-     * @return array<int,string[]>
+     * @return array<int, string[]>
      */
     public function getForceAppendPathList(): array
     {

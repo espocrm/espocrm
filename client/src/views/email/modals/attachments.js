@@ -31,7 +31,7 @@ define('views/email/modals/attachments', ['views/modal'], function (Dep) {
     /**
      * @class
      * @name Class
-     * @extends module:views/modal.Class
+     * @extends module:views/modal
      * @memberOf module:views/email/modals/attachments
      */
     return Dep.extend(/** @lends module:views/email/modals/attachments.Class# */{

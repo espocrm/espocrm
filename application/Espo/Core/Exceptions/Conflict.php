@@ -34,6 +34,7 @@ use Throwable;
 
 /**
  * A conflict exception. Main purpose is for the 409 Conflict HTTP error.
+ * If uncaught within an API request, the message will be printed to the X-Status-Reason header.
  */
 class Conflict extends Exception implements HasBody
 {
@@ -52,7 +53,6 @@ class Conflict extends Exception implements HasBody
     public static function createWithBody(string $reason, string $body): self
     {
         $exception = new static($reason);
-
         $exception->body = $body;
 
         return $exception;

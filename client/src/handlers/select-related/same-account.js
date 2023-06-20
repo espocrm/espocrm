@@ -30,7 +30,7 @@ define('handlers/select-related/same-account', ['handlers/select-related'], Dep 
 
     return class extends Dep {
         /**
-         * @param {module:model.Class} model
+         * @param {module:model} model
          * @return {Promise<module:handlers/select-related~filters>}
          */
         getFilters(model) {

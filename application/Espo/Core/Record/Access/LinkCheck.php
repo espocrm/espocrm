@@ -172,7 +172,7 @@ class LinkCheck
 
         if (!$foreignEntity) {
             throw ForbiddenSilent::createWithBody(
-                "Can't relate with non-existing record.",
+                "Can't relate with non-existing record. entity type: $entityType, link: $link.",
                 ErrorBody::create()
                     ->withMessageTranslation(
                         'cannotRelateNonExisting', null, ['foreignEntityType' => $foreignEntityType])

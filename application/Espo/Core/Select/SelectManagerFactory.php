@@ -31,11 +31,9 @@ namespace Espo\Core\Select;
 
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
-use Espo\Core\{
-    InjectableFactory,
-    Acl,
-    Utils\ClassFinder,
-};
+use Espo\Core\Acl;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\ClassFinder;
 
 use Espo\Entities\User;
 

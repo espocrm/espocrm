@@ -29,23 +29,15 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\{
-    Core\Container\Loader,
-};
-
-use Espo\{
-    ORM\Defs,
-    ORM\EntityManager,
-};
+use Espo\Core\Container\Loader;
+use Espo\ORM\Defs;
+use Espo\ORM\EntityManager;
 
 class OrmDefs implements Loader
 {
-    private $entityManager;
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function load(): Defs
     {

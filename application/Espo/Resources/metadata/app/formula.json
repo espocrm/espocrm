@@ -309,6 +309,11 @@
             "returnType": "string[]"
         },
         {
+            "name": "record\\fetch",
+            "insertText": "record\\fetch(ENTITY_TYPE, ID)",
+            "returnType": "?object"
+        },
+        {
             "name": "record\\relate",
             "insertText": "record\\relate(ENTITY_TYPE, ID, LINK, FOREIGN_ID)"
         },
@@ -346,6 +351,11 @@
         {
             "name": "util\\generateId",
             "insertText": "util\\generateId()",
+            "returnType": "string"
+        },
+        {
+            "name": "util\\generateRecordId",
+            "insertText": "util\\generateRecordId()",
             "returnType": "string"
         },
         {

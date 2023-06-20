@@ -26,24 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/grid',
-['views/admin/layouts/base', 'res!client/css/misc/layout-manager-grid.css'],
-function (Dep, styleCss) {
+define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) {
 
     return Dep.extend({
 
         template: 'admin/layouts/grid',
 
         dataAttributeList: null,
-
         panels: null,
-
         columnCount: 2,
-
         panelDataAttributeList: ['panelName', 'style'],
-
         panelDataAttributesDefs: {},
-
         panelDynamicLogicDefs: null,
 
         data: function () {
@@ -64,7 +57,7 @@ function (Dep, styleCss) {
             '<a role="button" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
             '</li>',
 
-        events: _.extend({
+        additionalEvents: {
             'click #layout a[data-action="addPanel"]': function () {
                 this.addPanel();
                 this.setIsChanged();
@@ -235,19 +228,25 @@ function (Dep, styleCss) {
                     });
                 });
             }
-        }, Dep.prototype.events),
+        },
 
         normalizeDisabledItemList: function () {
-            $('#layout ul.cells.disabled > li').each((i, el) => {
-            });
+            //$('#layout ul.cells.disabled > li').each((i, el) => {});
         },
 
         setup: function () {
             Dep.prototype.setup.call(this);
 
+            this.events = {
+                ...this.additionalEvents,
+                ...this.events,
+            };
+
             this.panelsData = {};
 
-            this.$style = $('<style>').html(styleCss).appendTo($('body'));
+            Espo.loader.require('res!client/css/misc/layout-manager-grid.css', styleCss => {
+                this.$style = $('<style>').html(styleCss).appendTo($('body'));
+            });
         },
 
         onRemove: function () {

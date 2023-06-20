@@ -1,0 +1,9 @@
+{
+    "manifest": {
+        "delete": [
+            "client/lib/original/espo.js",
+            "client/lib/original/espo.js",
+            "client/cfg/pre-load.json"
+        ]
+    }
+}

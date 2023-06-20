@@ -37,7 +37,6 @@ use Espo\ORM\Entity;
 class EnumType
 {
     private Metadata $metadata;
-
     private Defs $defs;
 
     private const DEFAULT_MAX_LENGTH = 255;
@@ -65,6 +64,14 @@ class EnumType
 
         /** @var ?string $path */
         $path = $fieldDefs->getParam('optionsPath');
+        /** @var ?string $path */
+        $ref = $fieldDefs->getParam('optionsReference');
+
+        if (!$path && $ref && str_contains($ref, '.')) {
+            [$refEntityType, $refField] = explode('.', $ref);
+
+            $path = "entityDefs.{$refEntityType}.fields.{$refField}.options";
+        }
 
         /** @var string[]|null|false $optionList */
         $optionList = $path ?

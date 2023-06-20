@@ -26,10 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'crm:views/target-list/record/panels/opted-out',
-    ['views/record/panels/relationship', 'multi-collection'],
-    function (Dep, MultiCollection) {
+define('crm:views/target-list/record/panels/opted-out',  ['views/record/panels/relationship', 'multi-collection'],
+function (Dep, MultiCollection) {
 
     return Dep.extend({
 
@@ -85,8 +83,8 @@ define(
 
                 var i = 0;
 
-                this.scopeList.forEach((scope) => {
-                    this.getModelFactory().getSeed(scope, (seed) => {
+                this.scopeList.forEach(scope => {
+                    this.getModelFactory().create(scope, seed => {
                         this.seeds[scope] = seed;
 
                         i++;
@@ -125,7 +123,7 @@ define(
                     checkboxes: false,
                     collection: this.collection,
                     listLayout: this.listLayout,
-                }, (view) => {
+                }, view => {
                     view.render();
                 });
             });

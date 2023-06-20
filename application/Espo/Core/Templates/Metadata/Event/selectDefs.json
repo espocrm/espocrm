@@ -7,5 +7,10 @@
         "dateStart": [
             "dateEnd"
         ]
+    },
+    "primaryFilterClassNameMap": {
+        "planned": "Espo\\Classes\\Select\\Event\\PrimaryFilters\\Planned",
+        "held": "Espo\\Classes\\Select\\Event\\PrimaryFilters\\Held",
+        "todays": "Espo\\Classes\\Select\\Event\\PrimaryFilters\\Todays"
     }
 }

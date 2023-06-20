@@ -26,79 +26,78 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('collections/tree', ['collection'], function (Dep) {
+import Collection from 'collection';
 
-    return Dep.extend({
+class TreeCollection extends Collection {
 
-        createSeed: function () {
-            let seed = new this.constructor();
+    createSeed() {
+        let seed = new this.constructor();
 
-            seed.url = this.url;
-            seed.model = this.model;
-            seed._user = this._user;
-            seed.name = this.name;
+        seed.url = this.url;
+        seed.model = this.model;
+        seed.name = this.name;
+        seed.entityType = this.entityType;
 
-            return seed;
-        },
+        return seed;
+    }
 
-        parse: function (response) {
-            let list = Dep.prototype.parse.call(this, response);
+    prepareAttributes(response, options) {
+        let list = super.prepareAttributes(response, options);
 
-            let seed = this.clone();
+        let seed = this.clone();
 
-            seed.reset();
+        seed.reset();
 
-            this.path = response.path;
+        this.path = response.path;
+        this.categoryData = response.data || null;
 
-            this.categoryData = response.data || null;
+        let f = (l, depth) => {
+            l.forEach((d) => {
+                d.depth = depth;
 
-            let f = (l, depth) => {
-                l.forEach((d) => {
-                    d.depth = depth;
+                let c = this.createSeed();
 
-                    let c = this.createSeed();
-
-                    if (d.childList) {
-                        if (d.childList.length) {
-                            f(d.childList, depth + 1);
-                            c.set(d.childList);
-                            d.childCollection = c;
-
-                            return;
-                        }
-
+                if (d.childList) {
+                    if (d.childList.length) {
+                        f(d.childList, depth + 1);
+                        c.set(d.childList);
                         d.childCollection = c;
-
-                        return;
-                    }
-
-                    if (d.childList === null) {
-                        d.childCollection = null;
 
                         return;
                     }
 
                     d.childCollection = c;
 
-                });
-            };
+                    return;
+                }
 
-            f(list, 0);
+                if (d.childList === null) {
+                    d.childCollection = null;
 
-            return list;
-        },
+                    return;
+                }
 
-        fetch: function (options) {
-            options = options || {};
-            options.data = options.data || {};
+                d.childCollection = c;
+            });
+        };
 
-            if (this.parentId) {
-                options.data.parentId = this.parentId;
-            }
+        f(list, 0);
 
-            options.data.maxDepth = this.maxDepth;
+        return list;
+    }
 
-            return Dep.prototype.fetch.call(this, options);
-        },
-    });
-});
+    fetch(options) {
+        options = options || {};
+        options.data = options.data || {};
+
+        if (this.parentId) {
+            options.data.parentId = this.parentId;
+        }
+
+        options.data.maxDepth = this.maxDepth;
+
+        return super.fetch(options);
+    }
+}
+
+export default TreeCollection;

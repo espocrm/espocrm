@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "number": {
@@ -26,7 +25,8 @@
                     "view": "views/admin/field-manager/fields/not-actual-options"
                 }
             ],
-            "notActualOptions": ["Closed", "Rejected", "Duplicate"]
+            "notActualOptions": ["Closed", "Rejected", "Duplicate"],
+            "customizationOptionsReferenceDisabled": true
         },
         "priority": {
             "type": "enum",
@@ -37,12 +37,14 @@
                 "High": "warning",
                 "Urgent": "danger"
             },
-            "audited": true
+            "audited": true,
+            "customizationOptionsReferenceDisabled": true
         },
         "type": {
             "type": "enum",
             "options": ["", "Question", "Incident", "Problem"],
-            "audited": true
+            "audited": true,
+            "customizationOptionsReferenceDisabled": true
         },
         "description": {
             "type": "text"

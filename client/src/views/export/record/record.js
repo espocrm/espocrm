@@ -32,7 +32,7 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
      * @class
      * @name Class
      * @memberOf module:views/export/record/record
-     * @extends module:views/record/edit-for-modal.Class
+     * @extends module:views/record/edit-for-modal
      */
     return Dep.extend(/** @lends module:views/export/record/record.Class# */{
 

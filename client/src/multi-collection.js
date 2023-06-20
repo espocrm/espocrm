@@ -26,61 +26,57 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('multi-collection', ['collection'], function (Collection) {
+/** @module multi-collection */
+
+import Collection from 'collection';
+
+/**
+ * A collection that can contain entities of different entity types.
+ */
+class MultiCollection extends Collection {
 
     /**
-     * A collection that can contain entities of different entity types.
+     * A model seed map.
      *
-     * @class
-     * @name Class
-     * @extends module:collection.Class
-     * @memberOf module:multi-collection
+     * @public
+     * @type {Object.<string, module:model>}
      */
-    return Collection.extend(/** @lends module:multi-collection.Class# */{
+    seeds = null
 
-        /**
-         * A model seed map.
-         *
-         * @public
-         * @type {Object.<string, module:model.Class>}
-         */
-        seeds: null,
+    /** @inheritDoc */
+    prepareAttributes(response, options) {
+        this.total = response.total;
 
-        /**
-         * @inheritDoc
-         */
-        initialize: function (models, options) {
-            options = options || {};
+        if (!('list' in response)) {
+            throw new Error("No 'list' in response.");
+        }
 
-            this.data = {};
+        return response.list.map(attributes => {
+            let entityType = attributes._scope;
 
-            Backbone.Collection.prototype.initialize.call(this, options);
-        },
+            if (!entityType) {
+                throw new Error("No '_scope' attribute.");
+            }
 
-        /**
-         * @inheritDoc
-         */
-        parse: function (resp, options) {
-            this.total = resp.total;
+            attributes = _.clone(attributes);
+            delete attributes['_scope'];
 
-            return resp.list.map(attributes => {
-                let a = _.clone(attributes);
+            let model = this.seeds[entityType].clone();
 
-                delete a['_scope'];
+            model.set(attributes);
 
-                return new this.seeds[attributes._scope](a, options);
-            });
-        },
+            return model;
+        });
+    }
 
-        /**
-         * @inheritDoc
-         */
-        clone: function () {
-            let collection = Collection.prototype.clone.call(this);
+    /** @inheritDoc */
+    clone() {
+        let collection = super.clone();
 
-            collection.seeds = this.seeds;
+        collection.seeds = this.seeds;
 
-            return collection;
-        },
-    });
-});
+        return collection;
+    }
+}
+
+export default MultiCollection;

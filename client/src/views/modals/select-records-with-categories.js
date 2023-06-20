@@ -26,107 +26,100 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/select-records-with-categories',
-['views/modals/select-records', 'views/list-with-categories'],
-function (Dep, List) {
+import SelectRecordsModal from 'views/modals/select-records';
+import ListWithCategories from 'views/list-with-categories';
 
-    return Dep.extend({
+class SelectRecordsWithCategoriesModal extends SelectRecordsModal {
 
-        template: 'modals/select-records-with-categories',
+    template = 'modals/select-records-with-categories'
 
-        categoryScope: null,
+    categoryScope = ''
+    categoryField = 'category'
+    categoryFilterType = 'inCategory'
+    isExpanded = true
 
-        categoryField: 'category',
+    data() {
+        return {
+            ...super.data(),
+            categoriesDisabled: this.categoriesDisabled,
+        };
+    }
 
-        categoryFilterType: 'inCategory',
+    setup() {
+        this.scope = this.entityType = this.options.scope || this.scope;
+        this.categoryScope = this.categoryScope || this.scope + 'Category';
 
-        isExpanded: true,
+        this.categoriesDisabled = this.categoriesDisabled ||
+           this.getMetadata().get(['scopes',  this.categoryScope, 'disabled']) ||
+           !this.getAcl().checkScope(this.categoryScope);
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+        super.setup();
+    }
 
-            data.categoriesDisabled = this.categoriesDisabled;
+    loadList() {
+        if (!this.categoriesDisabled) {
+            this.loadCategories();
+        }
 
-            return data;
-        },
+        super.loadList();
+    }
 
-        setup: function () {
-            this.scope = this.entityType = this.options.scope || this.scope;
-            this.categoryScope = this.categoryScope || this.scope + 'Category';
+    loadCategories() {
+        this.getCollectionFactory().create(this.categoryScope, (collection) => {
+            collection.url = collection.name + '/action/listTree';
+            collection.data.onlyNotEmpty = true;
 
-            this.categoriesDisabled = this.categoriesDisabled ||
-               this.getMetadata().get('scopes.' + this.categoryScope + '.disabled') ||
-               !this.getAcl().checkScope(this.categoryScope);
+            this.listenToOnce(collection, 'sync', () => {
+                this.createView('categories', 'views/record/list-tree', {
+                    collection: collection,
+                    el: this.options.el + ' .categories-container',
+                    selectable: true,
+                    readOnly: true,
+                    showRoot: true,
+                    rootName: this.translate(this.scope, 'scopeNamesPlural'),
+                    buttonsDisabled: true,
+                    checkboxes: false,
+                    isExpanded: this.isExpanded,
+                }, view => {
+                    if (this.isRendered()) {
+                        view.render();
+                    } else {
+                        this.listenToOnce(this, 'after:render', () => view.render());
+                    }
 
-            Dep.prototype.setup.call(this);
-        },
+                    this.listenTo(view, 'select', model => {
+                        this.currentCategoryId = null;
+                        this.currentCategoryName = '';
 
-        loadList: function () {
-            if (!this.categoriesDisabled) {
-                this.loadCategories();
-            }
-
-            Dep.prototype.loadList.call(this);
-        },
-
-        loadCategories: function () {
-            this.getCollectionFactory().create(this.categoryScope, (collection) => {
-                collection.url = collection.name + '/action/listTree';
-
-                collection.data.onlyNotEmpty = true;
-
-                this.listenToOnce(collection, 'sync', () => {
-                    this.createView('categories', 'views/record/list-tree', {
-                        collection: collection,
-                        el: this.options.el + ' .categories-container',
-                        selectable: true,
-                        readOnly: true,
-                        showRoot: true,
-                        rootName: this.translate(this.scope, 'scopeNamesPlural'),
-                        buttonsDisabled: true,
-                        checkboxes: false,
-                        isExpanded: this.isExpanded,
-                    }, (view) => {
-                        if (this.isRendered()) {
-                            view.render();
-                        } else {
-                            this.listenToOnce(this, 'after:render', () => {
-                                view.render();
-                            });
+                        if (model && model.id) {
+                            this.currentCategoryId = model.id;
+                            this.currentCategoryName = model.get('name');
                         }
 
-                        this.listenTo(view, 'select', (model) => {
-                            this.currentCategoryId = null;
-                            this.currentCategoryName = '';
+                        this.applyCategoryToCollection();
 
-                            if (model && model.id) {
-                                this.currentCategoryId = model.id;
-                                this.currentCategoryName = model.get('name');
-                            }
+                        Espo.Ui.notify(' ... ');
 
-                            this.applyCategoryToCollection();
-
-                            Espo.Ui.notify(' ... ');
-
-                            this.listenToOnce(this.collection, 'sync', () => {
-                                this.notify(false);
-                            });
-
-                            this.collection.fetch();
+                        this.listenToOnce(this.collection, 'sync', () => {
+                            Espo.Ui.notify(false);
                         });
+
+                        this.collection.fetch();
                     });
                 });
-
-                collection.fetch();
             });
-        },
 
-        applyCategoryToCollection: function () {
-            List.prototype.applyCategoryToCollection.call(this);
-        },
+            collection.fetch();
+        });
+    }
 
-        isCategoryMultiple: function () {
-            List.prototype.isCategoryMultiple.call(this);
-        },
-    });
-});
+    applyCategoryToCollection() {
+        ListWithCategories.prototype.applyCategoryToCollection.call(this);
+    }
+
+    isCategoryMultiple() {
+        ListWithCategories.prototype.isCategoryMultiple.call(this);
+    }
+}
+
+export default SelectRecordsWithCategoriesModal;

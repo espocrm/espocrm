@@ -30,31 +30,19 @@
 namespace Espo\Core\Utils\DateTime;
 
 use Espo\Core\Utils\DateTime;
-
 use Espo\Core\InjectableFactory;
 use Espo\ORM\EntityManager;
 use Espo\Core\Utils\Config;
-
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
 
 class DateTimeFactory
 {
-    private $injectableFactory;
-
-    private $entityManager;
-
-    private $config;
-
     public function __construct(
-        InjectableFactory $injectableFactory,
-        EntityManager $entityManager,
-        Config $config
-    ) {
-        $this->injectableFactory = $injectableFactory;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-    }
+        private InjectableFactory $injectableFactory,
+        private EntityManager $entityManager,
+        private Config $config
+    ) {}
 
     public function createWithUserTimeZone(User $user): DateTime
     {

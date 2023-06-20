@@ -44,14 +44,14 @@ class Data
     private int $blockParams;
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private $context;
 
     private string $name;
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private $rootContext;
 
@@ -67,8 +67,8 @@ class Data
 
     /**
      * @param mixed[] $argumentList
-     * @param array<string,mixed> $context
-     * @param array<string,mixed> $rootContext
+     * @param array<string, mixed> $context
+     * @param array<string, mixed> $rootContext
      * @param int $blockParams
      */
     public function __construct(
@@ -97,7 +97,7 @@ class Data
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getContext(): array
     {
@@ -105,7 +105,7 @@ class Data
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     public function getRootContext(): array
     {

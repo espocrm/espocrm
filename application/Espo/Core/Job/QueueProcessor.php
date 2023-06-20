@@ -29,137 +29,104 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\ORM\EntityManager;
-use Espo\Core\Utils\DateTime as DateTimeUtil;
-use Espo\Core\Utils\System;
 use Espo\Entities\Job as JobEntity;
+use Espo\Core\Job\QueueProcessor\Params;
+use Espo\Core\ORM\EntityManager;
+use Espo\Core\Utils\System;
 use Espo\Core\Job\Job\Status;
 
 use Spatie\Async\Pool as AsyncPool;
 
 class QueueProcessor
 {
-    private QueueProcessorParams $params;
-    private QueueUtil $queueUtil;
-    private JobRunner $jobRunner;
-    private AsyncPoolFactory $asyncPoolFactory;
-    private EntityManager $entityManager;
+    private bool $noTableLocking;
 
     public function __construct(
-        QueueProcessorParams $params,
-        QueueUtil $queueUtil,
-        JobRunner $jobRunner,
-        AsyncPoolFactory $asyncPoolFactory,
-        EntityManager $entityManager
+        private QueueUtil $queueUtil,
+        private JobRunner $jobRunner,
+        private AsyncPoolFactory $asyncPoolFactory,
+        private EntityManager $entityManager,
+        ConfigDataProvider $configDataProvider
     ) {
-        $this->params = $params;
-        $this->queueUtil = $queueUtil;
-        $this->jobRunner = $jobRunner;
-        $this->asyncPoolFactory = $asyncPoolFactory;
-        $this->entityManager = $entityManager;
+        $this->noTableLocking = $configDataProvider->noTableLocking();
     }
 
-    public function process(): void
+    public function process(Params $params): void
     {
-        $pool = null;
-
-        if ($this->params->useProcessPool()) {
-            $pool = $this->asyncPoolFactory->create();
-        }
+        $pool = $params->useProcessPool() ?
+            $this->asyncPoolFactory->create() :
+            null;
 
         $pendingJobList = $this->queueUtil->getPendingJobList(
-            $this->params->getQueue(),
-            $this->params->getGroup(),
-            $this->params->getLimit()
+            $params->getQueue(),
+            $params->getGroup(),
+            $params->getLimit()
         );
 
         foreach ($pendingJobList as $job) {
-            $this->processJob($job, $pool);
+            $this->processJob($params, $job, $pool);
         }
 
-        if ($pool) {
-            $pool->wait();
-        }
+        $pool?->wait();
     }
 
-    private function processJob(JobEntity $job, ?AsyncPool $pool = null): void
+    private function processJob(Params $params, JobEntity $job, ?AsyncPool $pool = null): void
     {
-        $useProcessPool = $this->params->useProcessPool();
+        $noLock = $params->noLock();
+        $lockTable = $job->getScheduledJobId() && !$noLock && !$this->noTableLocking;
 
-        $noLock = $this->params->noLock();
-
-        $lockTable = (bool) $job->getScheduledJobId() && !$noLock;
-
-        $skip = false;
-
-        if (!$noLock) {
-            if ($lockTable) {
-                // MySQL doesn't allow to lock non-existent rows. We resort to locking an entire table.
-                $this->entityManager->getLocker()->lockExclusive(JobEntity::ENTITY_TYPE);
-            }
-            else {
-                $this->entityManager->getTransactionManager()->start();
-            }
+        if ($lockTable) {
+            // MySQL doesn't allow to lock non-existent rows. We resort to locking an entire table.
+            $this->entityManager->getLocker()->lockExclusive(JobEntity::ENTITY_TYPE);
         }
 
-        if ($noLock || $this->queueUtil->isJobPending($job->getId())) {
-            if (
-                $job->getScheduledJobId() &&
-                $this->queueUtil->isScheduledJobRunning(
-                    $job->getScheduledJobId(),
-                    $job->getTargetId(),
-                    $job->getTargetType(),
-                    $job->getTargetGroup()
-                )
-            ) {
-                $skip = true;
-            }
-        } else {
+        $skip = !$noLock && !$this->queueUtil->isJobPending($job->getId());
+
+        if (
+            !$skip &&
+            $job->getScheduledJobId() &&
+            $this->queueUtil->isScheduledJobRunning(
+                $job->getScheduledJobId(),
+                $job->getTargetId(),
+                $job->getTargetType(),
+                $job->getTargetGroup()
+            )
+        ) {
             $skip = true;
         }
 
-        if ($skip && !$noLock) {
-            if ($lockTable) {
-                $this->entityManager->getLocker()->rollback();
-            }
-            else {
-                $this->entityManager->getTransactionManager()->rollback();
-            }
+        if ($skip && $lockTable) {
+            $this->entityManager->getLocker()->rollback();
         }
 
         if ($skip) {
             return;
         }
 
-        $job->set('startedAt', date(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT));
+        $job->setStartedAtNow();
 
-        if ($useProcessPool) {
-            $job->set('status', Status::READY);
+        if ($pool) {
+            $job->setStatus(Status::READY);
         }
         else {
-            $job->set('status', Status::RUNNING);
-            $job->set('pid', System::getPid());
+            $job->setStatus(Status::RUNNING);
+            $job->setPid(System::getPid());
         }
 
         $this->entityManager->saveEntity($job);
 
-        if (!$noLock) {
-            if ($lockTable) {
-                $this->entityManager->getLocker()->commit();
-            }
-            else {
-                $this->entityManager->getTransactionManager()->commit();
-            }
+        if ($lockTable) {
+            $this->entityManager->getLocker()->commit();
         }
 
-        if ($useProcessPool && $pool) {
-            $task = new JobTask($job->getId());
-
-            $pool->add($task);
+        if (!$pool) {
+            $this->jobRunner->run($job);
 
             return;
         }
 
-        $this->jobRunner->run($job);
+        $task = new JobTask($job->getId());
+
+        $pool->add($task);
     }
 }

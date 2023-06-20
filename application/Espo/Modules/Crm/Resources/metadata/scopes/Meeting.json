@@ -14,5 +14,8 @@
     "object": true,
     "activityStatusList": ["Planned"],
     "historyStatusList": ["Held", "Not Held"],
-    "statusField": "status"
+    "completedStatusList": ["Held"],
+    "canceledStatusList": ["Not Held"],
+    "statusField": "status",
+    "statusFieldLocked": true
 }

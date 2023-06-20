@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/not-actual-options', 'views/fields/multi-enum', function (Dep) {
+define('views/admin/field-manager/fields/not-actual-options', ['views/fields/multi-enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,12 +35,11 @@ define('views/admin/field-manager/fields/not-actual-options', 'views/fields/mult
 
             this.params.options = Espo.Utils.clone(this.model.get('options')) || [];
 
-            this.listenTo(this.model, 'change:options', function (m, v, o) {
+            this.listenTo(this.model, 'change:options', (m, v, o) => {
                 this.params.options = Espo.Utils.clone(m.get('options')) || [];
 
                 this.reRender();
-            }, this);
+            });
         },
-
     });
 });

@@ -13,9 +13,5 @@
         "Create PortalRole": "Create Portal Role",
         "Scope Level": "Scope Level",
         "Field Level": "Field Level"
-    },
-    "tooltips": {
-        "exportPermission": "Defines whether portal users have an ability to export records.",
-        "massUpdatePermission": "Defines whether portal users have an ability to do mass update of records."
     }
 }

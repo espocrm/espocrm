@@ -40,12 +40,12 @@ class Data
     private stdClass $values;
 
     /**
-     * @var array<string,Action::*>
+     * @var array<string, Action::*>
      */
     private array $actions;
 
     /**
-     * @param array<string,Action::*> $actions
+     * @param array<string, Action::*> $actions
      */
     private function __construct(stdClass $values, array $actions)
     {

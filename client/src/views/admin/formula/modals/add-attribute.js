@@ -30,7 +30,7 @@ define('views/admin/formula/modals/add-attribute', ['views/modal', 'model'], fun
 
     return Dep.extend({
 
-        _template: '<div class="attribute" data-name="attribute">{{{attribute}}}</div>',
+        templateContent: '<div class="attribute" data-name="attribute">{{{attribute}}}</div>',
 
         backdrop: true,
 

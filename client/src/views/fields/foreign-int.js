@@ -41,6 +41,10 @@ define('views/fields/foreign-int',
 
             let foreignParams = helper.getForeignParams();
 
+            for (let param in foreignParams) {
+                this.params[param] = foreignParams[param];
+            }
+
             this.disableFormatting = foreignParams.disableFormatting;
         },
     });

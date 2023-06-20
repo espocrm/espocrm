@@ -39,7 +39,7 @@ use Espo\ORM\Mapper\BaseMapper;
 class CategoryTree extends Database
 {
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @return void
      */
     protected function afterSave(Entity $entity, array $options = [])

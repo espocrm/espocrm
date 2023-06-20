@@ -36,6 +36,7 @@
         "array",
         "multiEnum",
         "checklist",
+        "urlMultiple",
         "currencyConverted"
     ],
     "fieldTypeViewMap": {
@@ -56,6 +57,7 @@
         "array": "views/fields/foreign-array",
         "checklist": "views/fields/foreign-checklist",
         "multiEnum": "views/fields/foreign-multi-enum",
+        "urlMultiple": "views/fields/foreign-url-multiple",
         "currencyConverted": "views/fields/foreign-currency-converted"
     },
     "filter": true,

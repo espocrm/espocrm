@@ -1,0 +1,30 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/fieldProcessing.json",
+    "title": "app/fieldProcessing",
+    "description": "Definitions for the Field Processing framework.",
+    "type": "object",
+    "properties": {
+        "readLoaderClassNameList": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "A list of loader classes. Load additional fields when reading a record. Applied globally for all entity types. Should implement Espo\\Core\\FieldProcessing\\Loader."
+        },
+        "listLoaderClassNameList": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "A list of loader classes for lists. Load additional fields when reading a list of record. Applied globally for all entity types. Should implement Espo\\Core\\FieldProcessing\\Loader."
+        },
+        "saverClassNameList": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "description": "A list of saver classes. Save additional fields. Applied globally for all entity types. Should implement Espo\\Core\\FieldProcessing\\Saver."
+        }
+    }
+}

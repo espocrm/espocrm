@@ -31,6 +31,7 @@ namespace Espo\Core\Controllers;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
@@ -77,6 +78,7 @@ class Record extends RecordBase
      * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
+     * @throws Error
      */
     public function postActionCreateLink(Request $request): bool
     {

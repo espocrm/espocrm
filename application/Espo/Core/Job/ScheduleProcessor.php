@@ -58,28 +58,14 @@ class ScheduleProcessor
         '* * * * * *',
     ];
 
-    private Log $log;
-    private EntityManager $entityManager;
-    private QueueUtil $queueUtil;
-    private ScheduleUtil $scheduleUtil;
-    private PreparatorFactory $preparatorFactory;
-    private MetadataProvider $metadataProvider;
-
     public function __construct(
-        Log $log,
-        EntityManager $entityManager,
-        QueueUtil $queueUtil,
-        ScheduleUtil $scheduleUtil,
-        PreparatorFactory $preparatorFactory,
-        MetadataProvider $metadataProvider
-    ) {
-        $this->log = $log;
-        $this->entityManager = $entityManager;
-        $this->queueUtil = $queueUtil;
-        $this->scheduleUtil = $scheduleUtil;
-        $this->preparatorFactory = $preparatorFactory;
-        $this->metadataProvider = $metadataProvider;
-    }
+        private Log $log,
+        private EntityManager $entityManager,
+        private QueueUtil $queueUtil,
+        private ScheduleUtil $scheduleUtil,
+        private PreparatorFactory $preparatorFactory,
+        private MetadataProvider $metadataProvider
+    ) {}
 
     public function process(): void
     {
@@ -181,8 +167,7 @@ class ScheduleProcessor
         catch (Exception $e) {
             $this->log->error(
                 "Scheduled Job '{$id}': Scheduling expression error: " .
-                $e->getMessage() . '.'
-            );
+                $e->getMessage() . '.');
 
             return null;
         }
@@ -190,7 +175,7 @@ class ScheduleProcessor
         try {
             return $cronExpression->getNextRunDate()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
-        catch (Exception $e) {
+        catch (Exception) {
             $this->log->error("Scheduled Job '{$id}': Unsupported scheduling expression '{$scheduling}'.");
 
             return null;

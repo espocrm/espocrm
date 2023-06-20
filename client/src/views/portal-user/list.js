@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/portal-user/list', 'views/list', function (Dep) {
+define('views/portal-user/list', ['views/list'], function (Dep) {
 
     return Dep.extend({
 
@@ -39,8 +39,6 @@ define('views/portal-user/list', 'views/list', function (Dep) {
         },
 
         actionCreate: function () {
-            var viewName = this.getMetadata().get('clientDefs.Contact.modalViews.select') || 'views/modals/select-records';
-
             var viewName = 'crm:views/contact/modals/select-for-portal-user';
 
             this.createView('modal', viewName, {
@@ -56,12 +54,12 @@ define('views/portal-user/list', 'views/list', function (Dep) {
                     'emailAddress',
                     'emailAddressData',
                     'phoneNumber',
-                    'phoneNumberData'
+                    'phoneNumberData',
                 ]
-            }, function (view) {
+            }, view => {
                 view.render();
 
-                this.listenToOnce(view, 'select', function (model) {
+                this.listenToOnce(view, 'select', model => {
                     var attributes = {};
 
                     attributes.contactId = model.id;
@@ -96,23 +94,25 @@ define('views/portal-user/list', 'views/list', function (Dep) {
                     router.dispatch(this.scope, 'create', {
                         attributes: attributes
                     });
-                    router.navigate(url, {trigger: false});
-                }, this);
 
-                this.listenToOnce(view, 'skip', function (model) {
+                    router.navigate(url, {trigger: false});
+                });
+
+                this.listenToOnce(view, 'skip', () => {
                     var attributes = {
-                        type: 'portal'
+                        type: 'portal',
                     };
 
                     var router = this.getRouter();
                     var url = '#' + this.scope + '/create';
+
                     router.dispatch(this.scope, 'create', {
                         attributes: attributes
                     });
-                    router.navigate(url, {trigger: false});
-                }, this);
-            }, this);
-        }
 
+                    router.navigate(url, {trigger: false});
+                });
+            });
+        },
     });
 });

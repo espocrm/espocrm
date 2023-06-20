@@ -622,7 +622,7 @@ class Service
     }
 
     /**
-     * @param array<string,Select|array<string,mixed>> $parts
+     * @param array<string,Select|array<string, mixed>> $parts
      * @return RecordCollection<Entity>
      */
     protected function getResultFromQueryParts(array $parts, string $scope, FetchParams $params): RecordCollection
@@ -1276,7 +1276,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     protected function getUpcomingActivitiesEntityTypeQuery(
         string $entityType,

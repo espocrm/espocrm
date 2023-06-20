@@ -29,36 +29,25 @@
 
 namespace Espo\Core\Portal\Acl\OwnershipChecker;
 
-use Espo\Core\{
-    Utils\Metadata,
-    InjectableFactory,
-    Acl\Exceptions\NotImplemented,
-    Acl\OwnershipChecker,
-    Portal\AclManager as PortalAclManager,
-    Portal\Acl\DefaultOwnershipChecker,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Acl\Exceptions\NotImplemented;
+use Espo\Core\Acl\OwnershipChecker;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Portal\Acl\DefaultOwnershipChecker;
+use Espo\Core\Portal\AclManager as PortalAclManager;
+use Espo\Core\Utils\Metadata;
 
 class OwnershipCheckerFactory
 {
-    /**
-     * @var class-string<OwnershipChecker>
-     */
+    /** @var class-string<OwnershipChecker> */
     private $defaultClassName = DefaultOwnershipChecker::class;
 
-    private Metadata $metadata;
-
-    private InjectableFactory $injectableFactory;
-
     public function __construct(
-        Metadata $metadata,
-        InjectableFactory $injectableFactory
-    ) {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * Create an ownership checker.

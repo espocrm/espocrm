@@ -26,33 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/email-address', ['views/fields/varchar'], function (Dep) {
+import Dep from 'views/fields/varchar';
 
-    return Dep.extend({
+export default Dep.extend({
 
-        editTemplate: 'fields/email-address/edit',
+    editTemplate: 'fields/email-address/edit',
 
-        validations: ['required', 'emailAddress'],
+    validations: ['required', 'emailAddress'],
 
-        emailAddressRe: /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/,
+    emailAddressRe: new RegExp(
+        /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*/.source +
+        /@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/.source
+    ),
 
-        validateEmailAddress: function () {
-            let value = this.model.get(this.name);
+    validateEmailAddress: function () {
+        let value = this.model.get(this.name);
 
-            if (!value) {
-                return false;
-            }
-
-            if (value !== '' && !this.emailAddressRe.test(value)) {
-                let msg = this.translate('fieldShouldBeEmail', 'messages')
-                    .replace('{field}', this.getLabelText());
-
-                this.showValidationMessage(msg);
-
-                return true;
-            }
-
+        if (!value) {
             return false;
-        },
-    });
+        }
+
+        if (value !== '' && !this.emailAddressRe.test(value)) {
+            let msg = this.translate('fieldShouldBeEmail', 'messages')
+                .replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg);
+
+            return true;
+        }
+
+        return false;
+    },
 });

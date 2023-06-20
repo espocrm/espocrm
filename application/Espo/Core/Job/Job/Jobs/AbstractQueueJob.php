@@ -37,15 +37,10 @@ abstract class AbstractQueueJob implements JobDataLess
 {
     protected string $queue;
 
-    private JobManager $jobManager;
-
-    private QueuePortionNumberProvider $portionNumberProvider;
-
-    public function __construct(JobManager $jobManager, QueuePortionNumberProvider $portionNumberProvider)
-    {
-        $this->jobManager = $jobManager;
-        $this->portionNumberProvider = $portionNumberProvider;
-    }
+    public function __construct(
+        private JobManager $jobManager,
+        private QueuePortionNumberProvider $portionNumberProvider)
+    {}
 
     public function run(): void
     {

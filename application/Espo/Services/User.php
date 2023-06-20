@@ -30,6 +30,8 @@
 namespace Espo\Services;
 
 use Espo\Core\Authentication\Logins\Hmac;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Entities\Team as TeamEntity;
 use Espo\Entities\User as UserEntity;
@@ -46,6 +48,7 @@ use Espo\Core\Utils\ApiKey as ApiKeyUtil;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\UserSecurity\Password\Checker as PasswordChecker;
 use Espo\Tools\UserSecurity\Password\Sender as PasswordSender;
 use Espo\Tools\UserSecurity\Password\Service as PasswordService;
@@ -276,8 +279,24 @@ class User extends Record implements
     }
 
     /**
+     * @throws Conflict
+     */
+    private function processUserExistsChecking(UserEntity $user): void
+    {
+        $existing = $this->getRepository()
+            ->select('id')
+            ->where(['userName' => $user->getUserName()])
+            ->findOne();
+
+        if ($existing) {
+            throw new Conflict('userNameExists');
+        }
+    }
+
+    /**
      * @param UserEntity $entity
      * @throws Forbidden
+     * @throws Conflict
      */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
@@ -309,6 +328,8 @@ class User extends Record implements
             }
         }
 
+        $this->processUserExistsChecking($entity);
+
         if ($entity->isApi()) {
             $entity->set('apiKey', Util::generateApiKey());
 
@@ -331,6 +352,7 @@ class User extends Record implements
     /**
      * @param UserEntity $entity
      * @throws Forbidden
+     * @throws Conflict
      */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
@@ -390,6 +412,10 @@ class User extends Record implements
             if ($portalUserCount >= $portalUserLimit) {
                 throw new Forbidden("Portal user limit {$portalUserLimit} is reached.");
             }
+        }
+
+        if ($entity->isAttributeChanged('userName')) {
+            $this->processUserExistsChecking($entity);
         }
 
         if (
@@ -472,6 +498,38 @@ class User extends Record implements
 
                 $this->entityManager->saveEntity($contact);
             }
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws Conflict
+     */
+    public function restoreDeleted(string $id): void
+    {
+        $entity = $this->getRepository()
+            ->clone(
+                SelectBuilder::create()
+                    ->from(UserEntity::ENTITY_TYPE)
+                    ->withDeleted()
+                    ->build()
+            )
+            ->where(['id' => $id])
+            ->findOne();
+
+        if ($entity) {
+            $this->processUserExistsChecking($entity);
+        }
+
+        parent::restoreDeleted($id);
+
+        $entity = $this->getRepository()->getById($id);
+
+        if ($entity) {
+            $entity->set('deleteId', '0');
+
+            $this->getRepository()->save($entity);
         }
     }
 

@@ -29,18 +29,15 @@
 
 namespace Espo\Entities;
 
-use Espo\Core\ApplicationUser;
 use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Utils\Util;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Field\DateTime;
-
-use Espo\Repositories\Email as EmailRepository;
-
 use Espo\Core\Field\LinkParent;
 use Espo\Core\Field\Link;
-
+use Espo\Repositories\Email as EmailRepository;
 use Espo\Tools\Email\Util as EmailUtil;
+
 use RuntimeException;
 
 class Email extends Entity
@@ -174,7 +171,7 @@ class Email extends Entity
      */
     public function isManuallyArchived(): bool
     {
-        if ($this->getStatus() !== self::STATUS_ARCHIVED) {
+        if ($this->getStatus() !== Email::STATUS_ARCHIVED) {
             return false;
         }
 
@@ -183,6 +180,7 @@ class Email extends Entity
 
     /**
      * @todo Revise.
+     * @deprecated
      */
     public function addAttachment(Attachment $attachment): void
     {
@@ -191,7 +189,7 @@ class Email extends Entity
         }
 
         $attachment->set('parentId', $this->id);
-        $attachment->set('parentType', self::ENTITY_TYPE);
+        $attachment->set('parentType', Email::ENTITY_TYPE);
 
         if (!$this->entityManager) {
             throw new RuntimeException();
@@ -347,7 +345,7 @@ class Email extends Entity
     }
 
     /**
-     * @param self::STATUS_* $status
+     * @param Email::STATUS_* $status
      */
     public function setStatus(string $status): self
     {
@@ -385,6 +383,13 @@ class Email extends Entity
         return $this;
     }
 
+    public function setBodyPlain(?string $bodyPlain): self
+    {
+        $this->set('bodyPlain', $bodyPlain);
+
+        return $this;
+    }
+
     public function isHtml(): ?bool
     {
         return $this->get('isHtml');
@@ -412,6 +417,46 @@ class Email extends Entity
     public function setFromAddress(?string $address): self
     {
         $this->set('from', $address);
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $addressList
+     */
+    public function setToAddressList(array $addressList): self
+    {
+        $this->set('to', implode(';', $addressList));
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $addressList
+     */
+    public function setCcAddressList(array $addressList): self
+    {
+        $this->set('cc', implode(';', $addressList));
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $addressList
+     */
+    public function setBccAddressList(array $addressList): self
+    {
+        $this->set('bcc', implode(';', $addressList));
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $addressList
+     */
+    public function setReplyToAddressList(array $addressList): self
+    {
+        $this->set('replyTo', implode(';', $addressList));
 
         return $this;
     }
@@ -604,6 +649,12 @@ class Email extends Entity
         return $this->getValueObject('createdBy');
     }
 
+    public function getSentBy(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('sentBy');
+    }
+
     public function getGroupFolder(): ?Link
     {
         /** @var ?Link */
@@ -632,6 +683,69 @@ class Email extends Entity
         }
 
         /** @var EmailRepository */
-        return $this->entityManager->getRepository(self::ENTITY_TYPE);
+        return $this->entityManager->getRepository(Email::ENTITY_TYPE);
+    }
+
+    public function setRepliedId(?string $repliedId): self
+    {
+        $this->set('repliedId', $repliedId);
+
+        return $this;
+    }
+
+    public function setMessageId(?string $messageId): self
+    {
+        $this->set('messageId', $messageId);
+
+        return $this;
+    }
+
+    public function setGroupFolderId(?string $groupFolderId): self
+    {
+        $this->set('groupFolderId', $groupFolderId);
+
+        return $this;
+    }
+
+    public function setDateSent(?DateTime $dateSent): self
+    {
+        $this->setValueObject('dateSent', $dateSent);
+
+        return $this;
+    }
+
+    public function setAssignedUserId(?string $assignedUserId): self
+    {
+        $this->set('assignedUserId', $assignedUserId);
+
+        return $this;
+    }
+
+    public function addAssignedUserId(string $assignedUserId): self
+    {
+        $this->addLinkMultipleId('assignedUsers', $assignedUserId);
+
+        return $this;
+    }
+
+    public function addUserId(string $userId): self
+    {
+        $this->addLinkMultipleId('users', $userId);
+
+        return $this;
+    }
+
+    public function addTeamId(string $teamId): self
+    {
+        $this->addLinkMultipleId('teams', $teamId);
+
+        return $this;
+    }
+
+    public function setTeams(LinkMultiple $teams): self
+    {
+        $this->setValueObject('teams', $teams);
+
+        return $this;
     }
 }

@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\MassUpdate;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\FieldProcessing\LinkMultiple\ListLoader as LinkMultipleLoader;
 use Espo\Core\FieldProcessing\Loader\Params as LoaderParams;
 use Espo\Core\MassAction\QueryBuilder;
@@ -44,6 +46,7 @@ use Espo\Core\Record\Service;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Exceptions\Forbidden;
 
+use Espo\Entities\ActionHistoryRecord;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
 
@@ -72,7 +75,9 @@ class Processor
     ) {}
 
     /**
+     * @throws BadRequest
      * @throws Forbidden
+     * @throws Error
      */
     public function process(Params $params, Data $data): Result
     {
@@ -193,7 +198,7 @@ class Processor
             'modifiedById' => $this->user->getId(),
         ]);
 
-        $service->processActionHistoryRecord('update', $entity);
+        $service->processActionHistoryRecord(ActionHistoryRecord::ACTION_UPDATE, $entity);
 
         return true;
     }

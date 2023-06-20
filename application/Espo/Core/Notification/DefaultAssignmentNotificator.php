@@ -56,12 +56,8 @@ class DefaultAssignmentNotificator implements AssignmentNotificator
         if ($entity->hasLinkMultipleField('assignedUsers')) {
             /** @var string[] $userIdList */
             $userIdList = $entity->getLinkMultipleIdList('assignedUsers');
-            /** @var ?string[] $fetchedAssignedUserIdList */
-            $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds');
-
-            if (!is_array($fetchedAssignedUserIdList)) {
-                $fetchedAssignedUserIdList = [];
-            }
+            /** @var string[] $fetchedAssignedUserIdList */
+            $fetchedAssignedUserIdList = $entity->getFetched('assignedUsersIds') ?? [];
 
             foreach ($userIdList as $userId) {
                 if (in_array($userId, $fetchedAssignedUserIdList)) {

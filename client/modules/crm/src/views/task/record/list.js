@@ -48,11 +48,11 @@ define('crm:views/task/record/list', ['views/record/list'], function (Dep) {
             model.set('status', 'Completed');
 
             this.listenToOnce(model, 'sync', () => {
-                this.notify(false);
+                Espo.Ui.notify(false);
                 this.collection.fetch();
             });
 
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
             model.save();
         },
     });

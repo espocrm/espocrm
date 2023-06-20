@@ -34,7 +34,7 @@ define('crm:views/meeting/modals/send-invitations', ['views/modal', 'collection'
     /**
      * @class
      * @name Class
-     * @extends module:views/modal.Class
+     * @extends module:views/modal
      * @memberOf module:crm_views/meeting/modals/send-invitations
      */
     return Dep.extend(/** @lends module:crm_views/meeting/modals/send-invitations.Class# */{
@@ -158,7 +158,7 @@ define('crm:views/meeting/modals/send-invitations', ['views/modal', 'collection'
         },
 
         /**
-         * @return {module:views/record/list.Class}
+         * @return {module:views/record/list}
          */
         getListView: function () {
             return this.getView('list');

@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "description": {
@@ -91,6 +90,13 @@
         },
         "assignedUser": {
             "columns": ["assignedUserId", "deleted"]
+        },
+        "createdAt": {
+            "columns": ["createdAt"]
+        },
+        "createdAtId": {
+            "unique": true,
+            "columns": ["createdAt", "id"]
         }
     }
 }

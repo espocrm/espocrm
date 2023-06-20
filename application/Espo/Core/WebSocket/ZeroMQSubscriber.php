@@ -40,14 +40,10 @@ use ZMQ;
 
 class ZeroMQSubscriber implements Subscriber
 {
-    private $config;
-
     private const DSN = 'tcp://127.0.0.1:5555';
 
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function subscribe(Pusher $pusher, LoopInterface $loop): void
     {

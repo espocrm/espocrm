@@ -1,14 +1,14 @@
 {
   "fields": {
     "name": "Ім'я",
-    "emailAddress": "Емейл",
+    "emailAddress": "Електронна пошта",
     "website": "Вебсайт",
     "phoneNumber": "Телефон",
     "billingAddress": "Платіжна адреса",
     "shippingAddress": "Поштова адреса",
     "description": "Опис",
     "sicCode": "Код SIC",
-    "industry": "Промисловість",
+    "industry": "Індустрія",
     "type": "Тип",
     "contactRole": "Посада",
     "campaign": "Кампанія",
@@ -27,10 +27,11 @@
     "tasksPrimary": "Завдання (розширено)",
     "emailsPrimary": "Електронні листи (розширено)",
     "targetLists": "Цільові списки",
-    "campaignLogRecords": "Лоґ кампанії",
+    "campaignLogRecords": "Журнал кампанії",
     "campaign": "Кампанія",
     "portalUsers": "Користувачі порталу",
-    "originalLead": "Початковий лід"
+    "originalLead": "Початковий лід",
+    "contactsPrimary": "Контакти (Основні)"
   },
   "options": {
     "type": {
@@ -44,14 +45,14 @@
       "Advertising": "Реклама",
       "Apparel & Accessories": "Одяг та аксесуари",
       "Automotive": "Автомобільні",
-      "Banking": "Банкінг",
+      "Banking": "Банківська справа",
       "Biotechnology": "Біотехнології",
       "Building Materials & Equipment": "Будівельні матеріали й устаткування",
-      "Chemical": "Хемія",
+      "Chemical": "Хімія",
       "Computer": "Комп'ютери",
       "Education": "Освіта",
       "Electronics": "Електроніка",
-      "Energy": "Енергія",
+      "Energy": "Енергетика",
       "Entertainment & Leisure": "Розваги та дозвілля",
       "Finance": "Фінанси",
       "Food & Beverage": "Їжа та напої",
@@ -100,6 +101,6 @@
   },
   "presetFilters": {
     "customers": "Замовники",
-    "recentlyCreated": "Нещодавно Створений"
+    "recentlyCreated": "Нещодавно створений"
   }
 }

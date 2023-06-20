@@ -182,3 +182,16 @@
   border-color: @border;
   color: @text-color;
 }
+
+.list-with-border-radius() {
+    border-radius: var(--panel-border-radius);
+
+    > table {
+        border-radius: var(--panel-border-radius);
+    }
+
+    > .show-more > a {
+        border-bottom-left-radius: var(--panel-border-radius);
+        border-bottom-right-radius: var(--panel-border-radius);
+    }
+}

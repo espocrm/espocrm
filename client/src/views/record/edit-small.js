@@ -26,10 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/edit-small', ['views/record/edit'], function (Dep) {
+import EditRecordView from 'views/record/edit';
 
-    return Dep.extend({
+class EditSmallRecordView extends EditRecordView {
 
-        bottomView: null,
-    });
-});
+    bottomView = null
+}
+
+export default EditSmallRecordView;

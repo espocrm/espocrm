@@ -1,0 +1,11 @@
+{
+    "Global": {
+        "optimisticConcurrencyControl": {
+            "location": "entityDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
+    }
+}

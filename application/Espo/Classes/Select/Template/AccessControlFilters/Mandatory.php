@@ -29,33 +29,21 @@
 
 namespace Espo\Classes\Select\Template\AccessControlFilters;
 
-use Espo\ORM\{
-    Query\SelectBuilder,
-    Defs,
-};
-
-use Espo\Core\{
-    Select\AccessControl\Filter,
-    AclManager,
-    Acl\Exceptions\NotImplemented,
-};
+use Espo\ORM\Defs;
+use Espo\ORM\Query\SelectBuilder;
+use Espo\Core\Acl\Exceptions\NotImplemented;
+use Espo\Core\AclManager;
+use Espo\Core\Select\AccessControl\Filter;
 
 use Espo\Entities\User;
 
 class Mandatory implements Filter
 {
-    private $user;
-
-    private $defs;
-
-    private $aclManager;
-
-    public function __construct(User $user, Defs $defs, AclManager $aclManager)
-    {
-        $this->user = $user;
-        $this->defs = $defs;
-        $this->aclManager = $aclManager;
-    }
+    public function __construct(
+        private User $user,
+        private Defs $defs,
+        private AclManager $aclManager
+    ) {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {

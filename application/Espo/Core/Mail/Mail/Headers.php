@@ -36,13 +36,5 @@
 
 namespace Espo\Core\Mail\Mail;
 
-use ArrayIterator;
-use Countable;
-use Iterator;
-use Traversable;
-use Laminas\Loader\PluginClassLocator;
-
 class Headers extends \Laminas\Mail\Headers
-{
-
-}
+{}

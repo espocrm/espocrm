@@ -32,6 +32,6 @@ define('controllers/home', ['controller'], function (Dep) {
 
         actionIndex: function () {
             this.main('views/home', null);
-        }
+        },
     });
 });

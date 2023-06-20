@@ -37,7 +37,7 @@ class UpgradeManager extends Base
     protected $name = 'Upgrade';
 
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     protected $params = [
         'packagePath' => 'data/upload/upgrades',

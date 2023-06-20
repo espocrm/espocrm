@@ -1,0 +1,16 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/rebuild.json",
+    "title": "app/rebuild",
+    "description": "Rebuild definitions.",
+    "type": "object",
+    "properties": {
+        "actionClassNameList": {
+            "type": "array",
+            "description": "Array of class names. Actions being processed when the application is being rebuilt. Should implement Espo\\Core\\Rebuild\\RebuildAction.",
+            "items": {
+                "type": "string"
+            }
+        }
+    }
+}

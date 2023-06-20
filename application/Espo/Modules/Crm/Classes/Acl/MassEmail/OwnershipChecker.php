@@ -30,33 +30,23 @@
 namespace Espo\Modules\Crm\Classes\Acl\MassEmail;
 
 use Espo\Entities\User;
-
+use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\ORM\Entity;
-
-use Espo\Core\{
-    Acl\OwnershipOwnChecker,
-    Acl\OwnershipTeamChecker,
-    AclManager,
-    ORM\EntityManager,
-};
+use Espo\Core\Acl\OwnershipOwnChecker;
+use Espo\Core\Acl\OwnershipTeamChecker;
+use Espo\Core\AclManager;
+use Espo\Core\ORM\EntityManager;
 
 /**
- * @implements OwnershipOwnChecker<\Espo\Modules\Crm\Entities\MassEmail>
- * @implements OwnershipTeamChecker<\Espo\Modules\Crm\Entities\MassEmail>
+ * @implements OwnershipOwnChecker<MassEmail>
+ * @implements OwnershipTeamChecker<MassEmail>
  */
 class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 {
-    private $aclManager;
-
-    private $entityManager;
-
     public function __construct(
-        AclManager $aclManager,
-        EntityManager $entityManager
-    ) {
-        $this->aclManager = $aclManager;
-        $this->entityManager = $entityManager;
-    }
+        private AclManager $aclManager,
+        private EntityManager $entityManager
+    ) {}
 
     public function checkOwn(User $user, Entity $entity): bool
     {

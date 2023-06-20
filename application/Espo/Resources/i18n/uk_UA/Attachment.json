@@ -10,7 +10,8 @@
     "field": "Поле",
     "sourceId": "ID Джерела",
     "storage": "Сховище",
-    "size": "Розмір (bytes)"
+    "size": "Розмір (bytes)",
+    "isBeingUploaded": "Завантажується"
   },
   "options": {
     "role": {

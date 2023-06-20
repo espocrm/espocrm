@@ -62,7 +62,7 @@ class FieldManager
     }
 
     /**
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      * @throws BadRequest
      * @throws Error
      */

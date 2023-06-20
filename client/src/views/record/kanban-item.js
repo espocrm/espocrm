@@ -26,77 +26,77 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/kanban-item', 'view', function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class KanbanRecordItem extends View {
 
-        template: 'record/kanban-item',
+    template = 'record/kanban-item'
 
+    data() {
+        return {
+            layoutDataList: this.layoutDataList,
+            rowActionsDisabled: this.rowActionsDisabled,
+        };
+    }
 
-        data: function () {
-            return {
-                layoutDataList: this.layoutDataList,
-                rowActionsDisabled: this.rowActionsDisabled
+    events = {}
+
+    setup() {
+        this.itemLayout = this.options.itemLayout;
+        this.rowActionsView = this.options.rowActionsView;
+        this.rowActionsDisabled = this.options.rowActionsDisabled;
+
+        this.layoutDataList = [];
+
+        this.itemLayout.forEach((item, i) => {
+            let name = item.name;
+            let key = name + 'Field';
+
+            let o = {
+                name: name,
+                isAlignRight: item.align === 'right',
+                isLarge: item.isLarge,
+                isFirst: i === 0,
+                key: key,
             };
-        },
 
-        events: {
+            this.layoutDataList.push(o);
 
-        },
-
-        setup: function () {
-            this.itemLayout = this.options.itemLayout;
-            this.rowActionsView = this.options.rowActionsView;
-            this.rowActionsDisabled = this.options.rowActionsDisabled;
-
-            this.layoutDataList = [];
-
-            this.itemLayout.forEach(function (item, i) {
-                var name = item.name;
-                var key = name + 'Field';
-                var o = {
-                    name: name,
-                    isAlignRight: item.align === 'right',
-                    isLarge: item.isLarge,
-                    isFirst: i === 0,
-                    key: key
-                };
-                this.layoutDataList.push(o);
-
-                var viewName = item.view || this.model.getFieldParam(name, 'view');
-                if (!viewName) {
-                    var type = this.model.getFieldType(name) || 'base';
-                    viewName = this.getFieldManager().getViewName(type);
-                }
-
-                var mode = 'list';
-                if (item.link) {
-                    mode = 'listLink';
-                }
-
-                this.createView(key, viewName, {
-                    model: this.model,
-                    name: name,
-                    mode: mode,
-                    readOnly: true,
-                    el: this.getSelector() + ' .field[data-name="'+name+'"]'
-                });
-
-            }, this);
-
-            if (!this.rowActionsDisabled) {
-                var acl =  {
-                    edit: this.getAcl().checkModel(this.model, 'edit'),
-                    delete: this.getAcl().checkModel(this.model, 'delete')
-                };
-                this.createView('itemMenu', this.rowActionsView, {
-                    el: this.getSelector() + ' .item-menu-container',
-                    model: this.model,
-                    acl: acl,
-                    statusFieldIsEditable: this.options.statusFieldIsEditable
-                });
+            var viewName = item.view || this.model.getFieldParam(name, 'view');
+            if (!viewName) {
+                var type = this.model.getFieldType(name) || 'base';
+                viewName = this.getFieldManager().getViewName(type);
             }
-        }
 
-    });
-});
+            let mode = 'list';
+
+            if (item.link) {
+                mode = 'listLink';
+            }
+
+            this.createView(key, viewName, {
+                model: this.model,
+                name: name,
+                mode: mode,
+                readOnly: true,
+                el: this.getSelector() + ' .field[data-name="'+name+'"]',
+            });
+        });
+
+        if (!this.rowActionsDisabled) {
+            let acl =  {
+                edit: this.getAcl().checkModel(this.model, 'edit'),
+                delete: this.getAcl().checkModel(this.model, 'delete'),
+            };
+
+            this.createView('itemMenu', this.rowActionsView, {
+                el: this.getSelector() + ' .item-menu-container',
+                model: this.model,
+                acl: acl,
+                statusFieldIsEditable: this.options.statusFieldIsEditable,
+            });
+        }
+    }
+}
+
+export default KanbanRecordItem;

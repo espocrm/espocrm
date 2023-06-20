@@ -31,7 +31,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
     /**
      * @class
      * @name Class
-     * @extends module:view.Class
+     * @extends module:view
      * @memberOf module:views/admin/field-manager/edit
      */
     return Dep.extend(/** @lends module:views/admin/field-manager/edit.Class# */{
@@ -182,9 +182,10 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                     this.hasPersonalData = true;
                 }
 
-                this.hasInlineEditDisabled = this.type !== 'foreign' &&
-                    !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field,
-                        'customizationInlineEditDisabledDisabled']);
+                this.hasInlineEditDisabled = !['foreign', 'autoincrement'].includes(this.type) &&
+                    !this.getMetadata()
+                        .get(['entityDefs', this.scope, 'fields', this.field,
+                            'customizationInlineEditDisabledDisabled']);
 
                 this.hasTooltipText = !this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field,
                     'customizationTooltipTextDisabled']);
@@ -196,7 +197,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         return;
                     }
 
-                    this.ajaxGetRequest('Admin/fieldManager/' + this.scope + '/' + this.field)
+                    Espo.Ajax.getRequest('Admin/fieldManager/' + this.scope + '/' + this.field)
                         .then(data => {
                             this.defs = data;
 
@@ -692,7 +693,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.broadcastUpdate();
             });
 
-            this.notify('Saving...');
+            Espo.Ui.notify(this.translate('saving', 'messages'));
 
             if (this.isNew) {
                 this.model

@@ -92,7 +92,8 @@
     "optionsArray": "Un elenco di possibili valori e delle rispettive etichette. Se vuoto, il campo consente di inserire valori personalizzati.",
     "maxCount": "Numero massimo di elementi selezionabili.",
     "displayAsList": "Ogni elemento è inserito in una nuova riga.",
-    "optionsVarchar": "Un elenco di valori per il completamento automatico."
+    "optionsVarchar": "Un elenco di valori per il completamento automatico.",
+    "currencyDecimal": "Usa il DB di tipo Decimale. Nell'applicazione, i valori saranno rappresentati come stringhe. Selezionare questo parametro se è richiesta maggiore precisione."
   },
   "fieldParts": {
     "address": {

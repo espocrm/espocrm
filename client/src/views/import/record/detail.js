@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/import/record/detail', 'views/record/detail', function (Dep) {
+define('views/import/record/detail', ['views/record/detail'], function (Dep) {
 
     return Dep.extend({
 
@@ -35,8 +35,9 @@ define('views/import/record/detail', 'views/record/detail', function (Dep) {
         returnUrl: '#Import/list',
 
         checkInterval: 5,
-
         resultPanelFetchLimit: 10,
+
+        duplicateAction: false,
 
         setup: function () {
             Dep.prototype.setup.call(this);

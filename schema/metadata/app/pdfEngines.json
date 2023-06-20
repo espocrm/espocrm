@@ -1,0 +1,39 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/pdfEngines.json",
+    "title": "app/pdfEngines",
+    "description": "PDF printing engines.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "An engine name.",
+        "properties": {
+            "implementationClassNameMap": {
+                "type": "object",
+                "description": "Implementations.",
+                "properties": {
+                    "entity": {
+                        "type": "string",
+                        "description": "An entity printer. Should implement Espo\\Tools\\Pdf\\EntityPrinter."
+                    },
+                    "collection": {
+                        "type": "string",
+                        "description": "An entity printer. Should implement Espo\\Tools\\Pdf\\CollectionPrinter."
+                    }
+                }
+            },
+            "fontFaceList": {
+                "type": "array",
+                "description": "A list of fonts available for the engine.",
+                "items": {
+                    "anyOf": [
+                        {"const": "__APPEND__"},
+                        {
+                            "type": "string"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

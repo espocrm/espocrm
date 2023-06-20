@@ -32,6 +32,7 @@ namespace Espo\Core\Utils;
 use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Utils\Client\DevModeJsFileListProvider;
+use Espo\Core\Utils\Client\LoaderParamsProvider;
 use Espo\Core\Utils\File\Manager as FileManager;
 
 use Slim\Psr7\Response as Psr7Response;
@@ -42,14 +43,14 @@ use Slim\ResponseEmitter;
  */
 class ClientManager
 {
-    protected string $mainHtmlFilePath = 'html/main.html';
-    protected string $runScript = "app.start();";
+    private string $mainHtmlFilePath = 'html/main.html';
+    private string $runScript = "app.start();";
+    private string $favicon = 'client/img/favicon.ico';
+    private string $favicon196 = 'client/img/favicon196x196.png';
     private string $basePath = '';
-    private string $libsConfigPath = 'client/cfg/libs.json';
-
     private string $nonce;
 
-    private const APP_DESCRIPTION = "EspoCRM - Open Source CRM application.";
+    private const APP_DESCRIPTION = "EspoCRM – Open Source CRM application.";
 
     public function __construct(
         private Config $config,
@@ -57,9 +58,9 @@ class ClientManager
         private Metadata $metadata,
         private FileManager $fileManager,
         private DevModeJsFileListProvider $devModeJsFileListProvider,
-        private Module $module
+        private Module $module,
+        private LoaderParamsProvider $loaderParamsProvider
     ) {
-
         $this->nonce = Util::generateKey();
     }
 
@@ -71,15 +72,6 @@ class ClientManager
     public function getBasePath(): string
     {
         return $this->basePath;
-    }
-
-    protected function getCacheTimestamp(): int
-    {
-        if (!$this->config->get('useCache')) {
-            return time();
-        }
-
-        return $this->config->get('cacheTimestamp', 0);
     }
 
     /**
@@ -138,7 +130,7 @@ class ClientManager
     }
 
     /**
-     * @param array<string,mixed> $vars
+     * @param array<string, mixed> $vars
      */
     public function display(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): void
     {
@@ -153,81 +145,45 @@ class ClientManager
     }
 
     /**
-     * @param array<string,mixed> $vars
+     * @param array<string, mixed> $vars
      */
     public function render(?string $runScript = null, ?string $htmlFilePath = null, array $vars = []): string
     {
-        if (is_null($runScript)) {
-            $runScript = $this->runScript;
-        }
-
-        if (is_null($htmlFilePath)) {
-            $htmlFilePath = $this->mainHtmlFilePath;
-        }
+        $runScript ??= $this->runScript;
+        $htmlFilePath ??= $this->mainHtmlFilePath;
 
         $cacheTimestamp = $this->getCacheTimestamp();
         $jsFileList = $this->getJsFileList();
+        $appTimestamp = $this->getAppTimestamp();
 
-        if ($this->config->get('isDeveloperMode')) {
-            $useCache = $this->config->get('useCacheInDeveloperMode');
-            $loaderCacheTimestamp = 'null';
+        if ($this->isDeveloperMode()) {
+            $useCache = $this->useCacheInDeveloperMode();
+            $loaderCacheTimestamp = null;
         }
         else {
-            $useCache = $this->config->get('useCache');
-            $loaderCacheTimestamp = $cacheTimestamp;
+            $useCache = $this->useCache();
+            $loaderCacheTimestamp = $appTimestamp;
         }
 
         $cssFileList = $this->metadata->get(['app', 'client', 'cssList'], []);
         $linkList = $this->metadata->get(['app', 'client', 'linkList'], []);
+        $favicon196Path = $this->metadata->get(['app', 'client', 'favicon196']) ?? $this->favicon196;
+        $faviconPath = $this->metadata->get(['app', 'client', 'favicon']) ?? $this->favicon;
 
-        $scriptsHtml = '';
+        $scriptsHtml = implode('',
+            array_map(fn ($file) => $this->getScriptItemHtml($file, $appTimestamp), $jsFileList)
+        );
 
-        foreach ($jsFileList as $jsFile) {
-            $src = $this->basePath . $jsFile . '?r=' . $cacheTimestamp;
+        $additionalStyleSheetsHtml = implode('',
+            array_map(fn ($file) => $this->getCssItemHtml($file, $appTimestamp), $cssFileList)
+        );
 
-            $scriptsHtml .= "\n        " .
-                "<script type=\"text/javascript\" src=\"{$src}\" data-base-path=\"{$this->basePath}\"></script>";
-        }
-
-        $additionalStyleSheetsHtml = '';
-
-        foreach ($cssFileList as $cssFile) {
-            $src = $this->basePath . $cssFile . '?r=' . $cacheTimestamp;
-
-            $additionalStyleSheetsHtml .= "\n        <link rel=\"stylesheet\" href=\"{$src}\">";
-        }
-
-        $linksHtml = '';
-
-        foreach ($linkList as $item) {
-            $href = $this->basePath . $item['href'];
-
-            if (empty($item['noTimestamp'])) {
-                $href .= '?r=' . $cacheTimestamp;
-            }
-
-            $as = $item['as'] ?? '';
-            $rel = $item['rel'] ?? '';
-            $type = $item['type'] ?? '';
-            $additionalPlaceholder = '';
-
-            if (!empty($item['crossorigin'])) {
-                $additionalPlaceholder .= ' crossorigin';
-            }
-
-            $linksHtml .= "\n        " .
-                "<link rel=\"{$rel}\" href=\"{$href}\" as=\"{$as}\" as=\"{$type}\"{$additionalPlaceholder}>";
-        }
-
-        $favicon196Path = $this->metadata->get(['app', 'client', 'favicon196']) ??
-            'client/img/favicon196x196.png';
-
-        $faviconPath = $this->metadata->get(['app', 'client', 'favicon']) ?? 'client/img/favicon.ico';
+        $linksHtml = implode('',
+            array_map(fn ($item) => $this->getLinkItemHtml($item, $appTimestamp), $linkList)
+        );
 
         $internalModuleList = array_map(
-            function (string $moduleName): string {
-                return Util::fromCamelCase($moduleName, '-');
-            },
+            fn ($moduleName) => Util::fromCamelCase($moduleName, '-'),
             $this->module->getInternalList()
         );
 
@@ -236,7 +192,8 @@ class ClientManager
             'apiUrl' => 'api/v1',
             'applicationName' => $this->config->get('applicationName', 'EspoCRM'),
             'cacheTimestamp' => $cacheTimestamp,
-            'loaderCacheTimestamp' => $loaderCacheTimestamp,
+            'appTimestamp' => $appTimestamp,
+            'loaderCacheTimestamp' => Json::encode($loaderCacheTimestamp),
             'stylesheet' => $this->themeManager->getStylesheet(),
             'runScript' => $runScript,
             'basePath' => $this->basePath,
@@ -248,16 +205,24 @@ class ClientManager
             'favicon196Path' => $favicon196Path,
             'faviconPath' => $faviconPath,
             'ajaxTimeout' => $this->config->get('ajaxTimeout') ?? 60000,
-            'libsConfigPath' => $this->libsConfigPath,
             'internalModuleList' => Json::encode($internalModuleList),
+            'bundledModuleList' => Json::encode($this->getBundledModuleList()),
             'applicationDescription' => $this->config->get('applicationDescription') ?? self::APP_DESCRIPTION,
             'nonce' => $this->nonce,
+            'loaderParams' => Json::encode([
+                'basePath' => $this->basePath,
+                'cacheTimestamp' => $loaderCacheTimestamp,
+                'internalModuleList' => $internalModuleList,
+                'transpiledModuleList' => $this->getTranspiledModuleList(),
+                'libsConfig' => $this->loaderParamsProvider->getLibsConfig(),
+                'aliasMap' => $this->loaderParamsProvider->getAliasMap(),
+            ]),
         ];
 
         $html = $this->fileManager->getContents($htmlFilePath);
 
         foreach ($vars as $key => $value) {
-            $html = str_replace('{{'.$key.'}}', $value, $html);
+            $html = str_replace('{{' . $key . '}}', $value, $html);
         }
 
         foreach ($data as $key => $value) {
@@ -265,7 +230,7 @@ class ClientManager
                 continue;
             }
 
-            $html = str_replace('{{'.$key.'}}', $value, $html);
+            $html = str_replace('{{' . $key . '}}', $value, $html);
         }
 
         return $html;
@@ -276,10 +241,10 @@ class ClientManager
      */
     private function getJsFileList(): array
     {
-        if ($this->config->get('isDeveloperMode')) {
+        if ($this->isDeveloperMode()) {
             return array_merge(
-                $this->getDeveloperModeBundleLibFileList(),
                 $this->metadata->get(['app', 'client', 'developerModeScriptList']) ?? [],
+                $this->getDeveloperModeBundleLibFileList(),
             );
         }
 
@@ -292,5 +257,129 @@ class ClientManager
     private function getDeveloperModeBundleLibFileList(): array
     {
         return $this->devModeJsFileListProvider->get();
+    }
+
+    private function isDeveloperMode(): bool
+    {
+        return (bool) $this->config->get('isDeveloperMode');
+    }
+
+    private function useCache(): bool
+    {
+        return (bool) $this->config->get('useCache');
+    }
+
+    private function useCacheInDeveloperMode(): bool
+    {
+        return (bool) $this->config->get('useCacheInDeveloperMode');
+    }
+
+    private function getCacheTimestamp(): int
+    {
+        if (!$this->useCache()) {
+            return time();
+        }
+
+        return $this->config->get('cacheTimestamp', 0);
+    }
+
+    private function getAppTimestamp(): int
+    {
+        if (!$this->useCache()) {
+            return time();
+        }
+
+        return $this->config->get('appTimestamp', 0);
+    }
+
+    private function getScriptItemHtml(string $file, int $appTimestamp): string
+    {
+        $src = $this->basePath . $file . '?r=' . $appTimestamp;
+
+        return $this->getTabHtml() .
+            "<script type=\"text/javascript\" src=\"$src\" data-base-path=\"$this->basePath\"></script>";
+    }
+
+    private function getCssItemHtml(string $file, int $appTimestamp): string
+    {
+        $src = $this->basePath . $file . '?r=' . $appTimestamp;
+
+        return $this->getTabHtml() . "<link rel=\"stylesheet\" href=\"$src\">";
+    }
+
+    /**
+     * @param array{
+     *     href: string,
+     *     noTimestamp?: bool,
+     *     as?: string,
+     *     rel?: string,
+     *     type?: string,
+     *     crossorigin?: bool,
+     * } $item
+     */
+    private function getLinkItemHtml(array $item, int $appTimestamp): string
+    {
+        $href = $this->basePath . $item['href'];
+
+        if (empty($item['noTimestamp'])) {
+            $href .= '?r=' . $appTimestamp;
+        }
+
+        $as = $item['as'] ?? '';
+        $rel = $item['rel'] ?? '';
+        $type = $item['type'] ?? '';
+        $part = '';
+
+        if ($item['crossorigin'] ?? false) {
+            $part .= ' crossorigin';
+        }
+
+        return $this->getTabHtml() .
+            "<link rel=\"$rel\" href=\"$href\" as=\"$as\" as=\"$type\"$part>";
+    }
+
+    private function getTabHtml(): string
+    {
+        return "\n        ";
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getTranspiledModuleList(): array
+    {
+        if (!$this->isDeveloperMode()) {
+            return [];
+        }
+
+        $modules = array_values(array_filter(
+            $this->module->getList(),
+            fn ($item) => $this->module->get([$item, 'jsTranspiled'])
+        ));
+
+        return array_map(
+            fn ($item) => Util::fromCamelCase($item, '-'),
+            $modules
+        );
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getBundledModuleList(): array
+    {
+        if (!$this->isDeveloperMode()) {
+            return [];
+        }
+
+        $modules = array_values(array_filter(
+            $this->module->getList(),
+            fn ($item) => $this->module->get([$item, 'bundled'])
+        ));
+
+        return array_map(
+            fn ($item) => Util::fromCamelCase($item, '-'),
+            $modules
+        );
     }
 }

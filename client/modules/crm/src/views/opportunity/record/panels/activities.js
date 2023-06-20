@@ -36,7 +36,7 @@ define('crm:views/opportunity/record/panels/activities', ['crm:views/record/pane
             Espo.Ui.notify(' ... ');
 
             Dep.prototype.getComposeEmailAttributes.call(this, scope, data, (attributes) => {
-                this.ajaxGetRequest('Opportunity/action/emailAddressList?id=' + this.model.id).then(list => {
+                Espo.Ajax.getRequest('Opportunity/action/emailAddressList?id=' + this.model.id).then(list => {
                     attributes.to = '';
                     attributes.cc = '';
                     attributes.nameHash = {};

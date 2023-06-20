@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 use Espo\Core\Di;
 
@@ -74,17 +72,15 @@ class UnrelateType extends BaseFunction implements
             $this->throwError("Repository does not exist.");
         }
 
-        $entity = $em->getEntity($entityType, $id);
+        $entity = $em->getEntityById($entityType, $id);
 
         if (!$entity) {
             return null;
         }
 
-        if (!$em->getRDBRepository($entityType)->isRelated($entity, $link, $foreignId)) {
-            return true;
-        }
-
-        $em->getRDBRepository($entityType)->unrelate($entity, $link, $foreignId);
+        $em->getRDBRepository($entityType)
+            ->getRelation($entity, $link)
+            ->unrelateById($foreignId);
 
         return true;
     }

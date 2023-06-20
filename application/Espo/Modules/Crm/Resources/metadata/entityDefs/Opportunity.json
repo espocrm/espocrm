@@ -3,7 +3,6 @@
         "name": {
             "type": "varchar",
             "required": true,
-            "trim": true,
             "pattern": "$noBadCharacters"
         },
         "amount": {
@@ -183,13 +182,15 @@
                     "name": "probabilityMap",
                     "view": "crm:views/opportunity/admin/field-manager/fields/probability-map"
                 }
-            ]
+            ],
+            "customizationOptionsReferenceDisabled": true
         },
         "lastStage": {
             "type": "enum",
             "view": "crm:views/opportunity/fields/last-stage",
             "customizationOptionsDisabled": true,
-            "customizationDefaultDisabled": true
+            "customizationDefaultDisabled": true,
+            "customizationOptionsReferenceDisabled": true
         },
         "probability": {
             "type": "int",
@@ -201,8 +202,7 @@
             "type": "enum",
             "view": "crm:views/opportunity/fields/lead-source",
             "customizationOptionsDisabled": true,
-            "optionsPath": "entityDefs.Lead.fields.source.options",
-            "translation": "Lead.options.source"
+            "optionsReference": "Lead.source"
         },
         "closeDate": {
             "type": "date",

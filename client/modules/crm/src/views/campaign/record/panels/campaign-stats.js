@@ -26,44 +26,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/campaign/record/panels/campaign-stats', 'views/record/panels/side', function (Dep) {
+define('crm:views/campaign/record/panels/campaign-stats', ['views/record/panels/side'], function (Dep) {
 
     return Dep.extend({
 
     	controlStatsFields: function () {
     		var type = this.model.get('type');
-            var fieldList = [];
+            var fieldList;
+
     		switch (type) {
     			case 'Email':
     			case 'Newsletter':
-    				fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
+                    fieldList = [
+                        'sentCount',
+                        'openedCount',
+                        'clickedCount',
+                        'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
     				break;
+
     			case 'Web':
                     fieldList = ['leadCreatedCount', 'optedInCount', 'revenue'];
+
                     break;
+
     			case 'Television':
     			case 'Radio':
     				fieldList = ['leadCreatedCount', 'revenue'];
+
     				break;
+
     			case 'Mail':
     				fieldList = ['sentCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
+
     				break;
+
     			default:
     				fieldList = ['leadCreatedCount', 'revenue'];
     		}
 
             if (!this.getConfig().get('massEmailOpenTracking')) {
                 var i = fieldList.indexOf('openedCount')
-                if (~i) fieldList.splice(i, 1);
+
+                if (~i) {
+                    fieldList.splice(i, 1);
+                }
             }
 
-            this.statsFieldList.forEach(function (item) {
+            this.statsFieldList.forEach(item => {
                 this.options.recordViewObject.hideField(item);
-            }, this);
+            });
 
-            fieldList.forEach(function (item) {
+            fieldList.forEach(item => {
                 this.options.recordViewObject.showField(item);
-            }, this);
+            });
 
             if (!this.getAcl().checkScope('Lead')) {
                 this.options.recordViewObject.hideField('leadCreatedCount');
@@ -75,7 +90,11 @@ define('crm:views/campaign/record/panels/campaign-stats', 'views/record/panels/s
     	},
 
     	setupFields: function () {
-    		this.fieldList = ['sentCount', 'openedCount', 'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
+            this.fieldList = [
+                'sentCount',
+                'openedCount',
+                'clickedCount', 'optedOutCount', 'bouncedCount', 'leadCreatedCount', 'optedInCount', 'revenue'];
+
             this.statsFieldList = this.fieldList;
     	},
 
@@ -83,14 +102,14 @@ define('crm:views/campaign/record/panels/campaign-stats', 'views/record/panels/s
             Dep.prototype.setup.call(this);
 
             this.controlStatsFields();
-            this.listenTo(this.model, 'change:type', function () {
+
+            this.listenTo(this.model, 'change:type', () => {
                 this.controlStatsFields();
-            }, this);
+            });
         },
 
         actionRefresh: function () {
             this.model.fetch();
-        }
-
+        },
     });
 });

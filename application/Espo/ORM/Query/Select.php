@@ -175,12 +175,17 @@ class Select implements SelectingQuery
             return null;
         }
 
-        /** @phpstan-ignore-next-line */
-        return WhereClause::fromRaw($havingClause);
+        $having = WhereClause::fromRaw($havingClause);
+
+        if (!$having instanceof WhereClause) {
+            throw new RuntimeException();
+        }
+
+        return $having;
     }
 
     /**
-     * @param array<string,mixed> $params
+     * @param array<string, mixed> $params
      */
     private function validateRawParams(array $params): void
     {

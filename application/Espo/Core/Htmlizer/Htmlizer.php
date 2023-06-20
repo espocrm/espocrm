@@ -29,10 +29,10 @@
 
 namespace Espo\Core\Htmlizer;
 
+use Closure;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Entities\Attachment;
 use Espo\Repositories\Attachment as AttachmentRepository;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
 use Espo\Core\InjectableFactory;
@@ -48,8 +48,10 @@ use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
+use LightnCandy\Flags;
 use LightnCandy\LightnCandy as LightnCandy;
 
+use RuntimeException;
 use stdClass;
 
 use const JSON_PRESERVE_ZERO_FRACTION;
@@ -63,52 +65,26 @@ class Htmlizer
 {
     private const LINK_LIMIT = 100;
 
-    /** @phpstan-ignore-next-line */
-    private $fileManager;
-    private $dateTime;
-    private $number;
-    private $config;
-    private $acl;
-    private $entityManager;
-    private $metadata;
-    private $language;
-    private $serviceFactory;
-    private $log;
-    private $injectableFactory;
-
     public function __construct(
-        FileManager $fileManager,
-        DateTime $dateTime,
-        NumberUtil $number,
-        ?Acl $acl = null,
-        ?EntityManager $entityManager = null,
-        ?Metadata $metadata = null,
-        ?Language $language = null,
-        ?Config $config = null,
-        ?ServiceFactory $serviceFactory = null,
-        ?Log $log = null,
-        ?InjectableFactory $injectableFactory = null
-    ) {
-        $this->fileManager = $fileManager;
-        $this->dateTime = $dateTime;
-        $this->number = $number;
-        $this->acl = $acl;
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-        $this->language = $language;
-        $this->config = $config;
-        $this->serviceFactory = $serviceFactory;
-        $this->log = $log;
-        $this->injectableFactory = $injectableFactory;
-    }
+        private FileManager $fileManager, /** @phpstan-ignore-line  */
+        private DateTime $dateTime,
+        private NumberUtil $number,
+        private ?Acl $acl = null,
+        private ?EntityManager $entityManager = null,
+        private ?Metadata $metadata = null,
+        private ?Language $language = null,
+        private ?Config $config = null,
+        private ?ServiceFactory $serviceFactory = null,
+        private ?Log $log = null,
+        private ?InjectableFactory $injectableFactory = null
+    ) {}
 
     /**
      * Generate an HTML for entity by a given template.
      *
      * @param ?string $cacheId @deprecated To be skipped.
-     * @param ?array<string,mixed> $additionalData Data will be passed to the template.
+     * @param ?array<string, mixed> $additionalData Data will be passed to the template.
      * @param bool $skipLinks Do not process related records.
-     * @throws Error
      */
     public function render(
         ?Entity $entity,
@@ -121,24 +97,22 @@ class Htmlizer
 
         $template = str_replace('<tcpdf ', '', $template);
 
-        $helpers = $this->getHelpers();
-
         $code = LightnCandy::compile($template, [
-            'flags' => LightnCandy::FLAG_HANDLEBARSJS | LightnCandy::FLAG_ERROR_EXCEPTION,
+            'flags' => Flags::FLAG_HANDLEBARSJS | Flags::FLAG_ERROR_EXCEPTION,
             'helpers' => $this->getHelpers(),
         ]);
 
         if ($code === false) {
-            throw new Error("Template compile error.");
+            throw new RuntimeException("Template compile error.");
         }
 
         /**
-         * @var \Closure|false $renderer
+         * @var Closure|false $renderer
          */
         $renderer = LightnCandy::prepare($code);
 
         if ($renderer === false) {
-            throw new Error("Template compile error.");
+            throw new RuntimeException("Template compile error.");
         }
 
         if ($additionalData === null) {
@@ -167,7 +141,7 @@ class Htmlizer
         $data['__language'] = $this->language;
         $data['__serviceFactory'] = $this->serviceFactory;
         $data['__log'] = $this->log;
-        $data['__entityType'] = $entity ? $entity->getEntityType() : null;
+        $data['__entityType'] = $entity?->getEntityType();
 
         $html = $renderer($data);
 
@@ -188,6 +162,7 @@ class Htmlizer
 
                     assert($this->entityManager !== null);
 
+                    /** @var Attachment $attachment */
                     $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
 
                     if (!$attachment) {
@@ -206,11 +181,7 @@ class Htmlizer
         return $html;
     }
 
-    /**
-     * @param mixed $value
-     * @return mixed
-     */
-    private function format($value)
+    private function format(mixed $value): mixed
     {
         if (is_float($value)) {
             return $this->number->format($value, 2);
@@ -532,7 +503,7 @@ class Htmlizer
     }
 
     /**
-     * @return array<string,callable>
+     * @return array<string, callable>
      */
     private function getHelpers(): array
     {
@@ -763,6 +734,7 @@ class Htmlizer
 
             $className = $metadata->get(['app', 'templateHelpers', $name]);
 
+            // Not using FQN deliberately.
             $data = new \Espo\Core\Htmlizer\Helper\Data(
                 $name,
                 $argumentList,
@@ -791,7 +763,7 @@ class Htmlizer
             $additionalHelpers = array_filter(
                 $this->metadata->get(['app', 'templateHelpers']) ?? [],
                 function (string $item) {
-                    return strpos($item, '::') !== false;
+                    return str_contains($item, '::');
                 }
             );
 
@@ -801,7 +773,7 @@ class Htmlizer
                 array_filter(
                     $this->metadata->get(['app', 'templateHelpers']) ?? [],
                     function (string $item) {
-                        return strpos($item, '::') == false;
+                        return !str_contains($item, '::');
                     }
                 )
             );
@@ -814,10 +786,7 @@ class Htmlizer
         return $helpers;
     }
 
-    /**
-     * @return ?string
-     */
-    private function getFieldType(string $entityType, string $field)
+    private function getFieldType(string $entityType, string $field): ?string
     {
         if (!$this->metadata) {
             return null;

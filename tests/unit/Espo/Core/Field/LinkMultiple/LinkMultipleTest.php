@@ -29,10 +29,8 @@
 
 namespace tests\unit\Espo\Core\Field\LinkMultiple;
 
-use Espo\Core\{
-    Field\LinkMultiple,
-    Field\LinkMultipleItem,
-};
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Field\LinkMultipleItem;
 
 use RuntimeException;
 
@@ -85,6 +83,22 @@ class LinkMultipleTest extends \PHPUnit\Framework\TestCase
             ->withAddedId('2');
 
         $this->assertEquals(2, $group->getCount());
+
+        $this->assertEquals('1', $group->getList()[0]->getId());
+        $this->assertEquals('test-1', $group->getList()[0]->getName());
+
+        $this->assertEquals('2', $group->getList()[1]->getId());
+    }
+
+    public function testWithAddedIdList(): void
+    {
+        $item = LinkMultipleItem::create('1')->withName('test-1');
+
+        $group = LinkMultiple
+            ::create([$item])
+            ->withAddedIdList(['2', '3']);
+
+        $this->assertEquals(3, $group->getCount());
 
         $this->assertEquals('1', $group->getList()[0]->getId());
         $this->assertEquals('test-1', $group->getList()[0]->getName());

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication\Ldap;
 
+use Espo\Core\Api\Util;
 use Espo\Core\FieldProcessing\Relation\LinkMultipleSaver;
 use Espo\Core\FieldProcessing\EmailAddress\Saver as EmailAddressSaver;
 use Espo\Core\FieldProcessing\PhoneNumber\Saver as PhoneNumberSaver;
@@ -56,50 +57,30 @@ class LdapLogin implements Login
 {
     private LDAPUtils $utils;
     private ?Client $client = null;
-    private bool $isPortal;
 
-    private Config $config;
-    private EntityManager $entityManager;
-    private PasswordHash $passwordHash;
     private Language $language;
-    private Log $log;
-    private Espo $baseLogin;
-    private ClientFactory $clientFactory;
-    private LinkMultipleSaver $linkMultipleSaver;
-    private EmailAddressSaver $emailAddressSaver;
-    private PhoneNumberSaver $phoneNumberSaver;
 
     public function __construct(
-        Config $config,
-        EntityManager $entityManager,
-        PasswordHash $passwordHash,
+        private Config $config,
+        private EntityManager $entityManager,
+        private PasswordHash $passwordHash,
         Language $defaultLanguage,
-        Log $log,
-        Espo $baseLogin,
-        ClientFactory $clientFactory,
-        LinkMultipleSaver $linkMultipleSaver,
-        EmailAddressSaver $emailAddressSaver,
-        PhoneNumberSaver $phoneNumberSaver,
-        bool $isPortal = false
+        private Log $log,
+        private Espo $baseLogin,
+        private ClientFactory $clientFactory,
+        private LinkMultipleSaver $linkMultipleSaver,
+        private EmailAddressSaver $emailAddressSaver,
+        private PhoneNumberSaver $phoneNumberSaver,
+        private Util $util,
+        private bool $isPortal = false
     ) {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->passwordHash = $passwordHash;
         $this->language = $defaultLanguage;
-        $this->log = $log;
-        $this->baseLogin = $baseLogin;
-        $this->clientFactory = $clientFactory;
-        $this->linkMultipleSaver = $linkMultipleSaver;
-        $this->emailAddressSaver = $emailAddressSaver;
-        $this->phoneNumberSaver = $phoneNumberSaver;
-
-        $this->isPortal = $isPortal;
 
         $this->utils = new LDAPUtils($config);
     }
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $ldapFieldMap = [
         'userName' => 'userNameAttribute',
@@ -111,7 +92,7 @@ class LdapLogin implements Login
     ];
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $userFieldMap = [
         'teamsIds' => 'userTeamsIds',
@@ -119,7 +100,7 @@ class LdapLogin implements Login
     ];
 
     /**
-     * @var array<string,string>
+     * @var array<string, string>
      */
     private $portalUserFieldMap = [
         'portalsIds' => 'portalUserPortalsIds',
@@ -135,7 +116,7 @@ class LdapLogin implements Login
         $isPortal = $this->isPortal;
 
         if ($authToken) {
-            $user = $this->loginByToken($username, $authToken);
+            $user = $this->loginByToken($username, $authToken, $request);
 
             if ($user) {
                 return Result::success($user);
@@ -278,9 +259,9 @@ class LdapLogin implements Login
     /**
      * Login by authorization token.
      */
-    private function loginByToken(?string $username, AuthToken $authToken = null): ?User
+    private function loginByToken(?string $username, AuthToken $authToken, Request $request): ?User
     {
-        if (!isset($authToken) || $username === null) {
+        if ($username === null) {
             return null;
         }
 
@@ -296,11 +277,9 @@ class LdapLogin implements Login
         $tokenUsername = $user->getUserName() ?? '';
 
         if (strtolower($username) !== strtolower($tokenUsername)) {
-            $ip = $_SERVER['REMOTE_ADDR'] ?? '';
+            $ip = $this->util->obtainIpFromRequest($request);
 
-            $this->log->alert(
-                'Unauthorized access attempt for user [' . $username . '] from IP [' . $ip . ']'
-            );
+            $this->log->alert('Unauthorized access attempt for user [' . $username . '] from IP [' . $ip . ']');
 
             return null;
         }
@@ -331,7 +310,7 @@ class LdapLogin implements Login
     /**
      * Create Espo user with data gets from LDAP server.
      *
-     * @param array<string,mixed> $userData
+     * @param array<string, mixed> $userData
      */
     private function createUser(array $userData, bool $isPortal = false): ?User
     {
@@ -415,7 +394,7 @@ class LdapLogin implements Login
             '(' . $options['userNameAttribute'] . '=' . $username . ')' .
             $loginFilterString . ')';
 
-        /** @var array<int,array{dn: string}> $result */
+        /** @var array<int, array{dn: string}> $result */
         $result = $ldapClient->search($searchString, null, Client::SEARCH_SCOPE_SUB);
 
         $this->log->debug('LDAP: user search string: "' . $searchString . '"');
@@ -448,7 +427,7 @@ class LdapLogin implements Login
     /**
      * Load fields for a user.
      *
-     * @return array<string,mixed>
+     * @return array<string, mixed>
      */
     private function loadFields(string $type): array
     {

@@ -37,6 +37,9 @@ class Document extends Entity
 {
     public const ENTITY_TYPE = 'Document';
 
+    public const STATUS_ACTIVE = 'Active';
+    public const STATUS_DRAFT = 'Draft';
+
     public function getName(): ?string
     {
         return $this->get('name');

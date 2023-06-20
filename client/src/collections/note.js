@@ -26,58 +26,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('collections/note', ['collection'], function (Dep) {
+import Collection from 'collection';
+
+class NoteCollection extends Collection {
+
+    /** @inheritDoc */
+    prepareAttributes(response, params) {
+        let total = this.total;
+
+        let list = super.prepareAttributes(response, params);
+
+        if (params.data && params.data.after) {
+            if (total >= 0 && response.total >= 0) {
+                this.total = total + response.total;
+            } else {
+                this.total = total;
+            }
+        }
+
+        return list;
+    }
 
     /**
-     * @class
-     * @name Class
-     * @extends module:collection.Class
-     * @memberOf module:collections/note
+     * Fetch new records.
+     *
+     * @param {Object} options Options.
+     * @returns {Promise}
      */
-    return Dep.extend(/** @lends module:collections/note.Class# */{
+    fetchNew(options) {
+        options = options || {};
 
-        /**
-         * @inheritDoc
-         */
-        parse: function (response, params) {
-            var total = this.total;
+        options.data = options.data || {};
+        options.fetchNew = true;
+        options.noRebuild = true;
+        options.lengthBeforeFetch = this.length;
 
-            var list = Dep.prototype.parse.call(this, response, params);
+        if (this.length) {
+            options.data.after = this.models[0].get('createdAt');
+            options.remove = false;
+            options.at = 0;
+            options.maxSize = null;
+        }
 
-            if (params.data && params.data.after) {
-                if (total >= 0 && response.total >= 0) {
-                    this.total = total + response.total;
-                } else {
-                    this.total = total;
-                }
-            }
+        return this.fetch(options);
+    }
+}
 
-            return list;
-        },
-
-        /**
-         * Fetch new records.
-         *
-         * @param {Object} options Options.
-         * @returns {Promise}
-         */
-        fetchNew: function (options) {
-            options = options || {};
-
-            options.data = options.data || {};
-
-            options.fetchNew = true;
-            options.noRebuild = true;
-            options.lengthBeforeFetch = this.length;
-
-            if (this.length) {
-                options.data.after = this.models[0].get('createdAt');
-                options.remove = false;
-                options.at = 0;
-                options.maxSize = null;
-            }
-
-            return this.fetch(options);
-        },
-    });
-});
+export default NoteCollection;

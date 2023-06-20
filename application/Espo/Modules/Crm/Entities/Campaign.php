@@ -41,6 +41,8 @@ class Campaign extends Entity
     public const TYPE_EMAIL = 'Email';
     public const TYPE_MAIL = 'Mail';
 
+    public const TYPE_ACTIVE = 'Active';
+
     public function getName(): ?string
     {
         return $this->get('name');

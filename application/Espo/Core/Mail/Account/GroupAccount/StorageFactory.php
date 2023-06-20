@@ -35,7 +35,6 @@ use Espo\Core\Mail\Account\StorageFactory as StorageFactoryInterface;
 use Espo\Core\Mail\Account\Storage\LaminasStorage;
 use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Mail\Mail\Storage\Imap;
-
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
 
@@ -43,16 +42,10 @@ use Throwable;
 
 class StorageFactory implements StorageFactoryInterface
 {
-    private Log $log;
-    private InjectableFactory $injectableFactory;
-
     public function __construct(
-        Log $log,
-        InjectableFactory $injectableFactory
-    ) {
-        $this->log = $log;
-        $this->injectableFactory = $injectableFactory;
-    }
+        private Log $log,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * @throws NoImap
@@ -104,9 +97,7 @@ class StorageFactory implements StorageFactoryInterface
                 $handler = $this->injectableFactory->create($handlerClassName);
             }
             catch (Throwable $e) {
-                $this->log->error(
-                    "InboundEmail: Could not create Imap Handler. Error: " . $e->getMessage()
-                );
+                $this->log->error("InboundEmail: Could not create Imap Handler. Error: " . $e->getMessage());
             }
 
             if ($handler && method_exists($handler, 'prepareProtocol')) {
@@ -131,8 +122,6 @@ class StorageFactory implements StorageFactoryInterface
             }
         }
 
-        return new LaminasStorage(
-            new Imap($imapParams)
-        );
+        return new LaminasStorage(new Imap($imapParams));
     }
 }

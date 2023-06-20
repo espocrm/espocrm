@@ -27,37 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Acl;
+namespace tests\unit\Espo\Core\Acl\Map;
 
 use Espo\Entities\User;
 
-use Espo\Core\{
-    Acl\Map\Map,
-    Acl\Map\DataBuilder,
-    Acl\Map\MetadataProvider,
-    Acl\Map\CacheKeyProvider,
-    Acl\Table,
-    Acl\ScopeData,
-    Acl\FieldData,
-    Utils\Config,
-    Utils\FieldUtil,
-    Utils\DataCache,
-};
+use Espo\Core\Acl\FieldData;
+use Espo\Core\Acl\Map\CacheKeyProvider;
+use Espo\Core\Acl\Map\DataBuilder;
+use Espo\Core\Acl\Map\Map;
+use Espo\Core\Acl\Map\MetadataProvider;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Table;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\FieldUtil;
 
-use StdClass;
+use stdClass;
 
 class MapTest extends \PHPUnit\Framework\TestCase
 {
     private $fieldUtil;
-
     private $config;
-
     private $table;
-
-    private $user;
-
     private $metadataProvider;
-
     private $cacheKeyProvider;
 
     protected function setUp(): void
@@ -65,7 +57,6 @@ class MapTest extends \PHPUnit\Framework\TestCase
         $this->config = $this->createMock(Config::class);
         $this->fieldUtil = $this->createMock(FieldUtil::class);
         $this->table = $this->createMock(Table::class);
-        $this->user = $this->createMock(User::class);
         $this->dataCache = $this->createMock(DataCache::class);
         $this->metadataProvider = $this->createMock(MetadataProvider::class);
         $this->cacheKeyProvider = $this->createMock(CacheKeyProvider::class);
@@ -76,11 +67,6 @@ class MapTest extends \PHPUnit\Framework\TestCase
             ->willReturnMap([
                 ['useCache', false]
             ]);
-
-        $this->user
-            ->expects($this->any())
-            ->method('getId')
-            ->willReturn('user-id');
     }
 
     private function mockTableData(array $scopeData, array $fieldData, array $permissionData): void
@@ -218,7 +204,6 @@ class MapTest extends \PHPUnit\Framework\TestCase
         $expectedData = $this->getExpectedRawData();
 
         $map = new Map(
-            $this->user,
             $this->table,
             $dataBuilder,
             $this->config,
@@ -269,7 +254,7 @@ class MapTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    private function getExpectedRawData(): StdClass
+    private function getExpectedRawData(): stdClass
     {
         return (object) [
           'table' => (object) [

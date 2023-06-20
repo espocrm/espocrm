@@ -53,7 +53,7 @@ class StreamNotesAcl
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      * @throws \Espo\Core\Exceptions\Error
      */
     public function afterSave(Entity $entity, array $options): void

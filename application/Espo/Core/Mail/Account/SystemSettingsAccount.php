@@ -32,7 +32,6 @@ namespace Espo\Core\Mail\Account;
 use Espo\Core\Field\Date;
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
-
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Utils\Config;
@@ -41,12 +40,8 @@ use Espo\Entities\Settings;
 
 class SystemSettingsAccount implements Account
 {
-    private Config $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function updateFetchData(FetchData $fetchData): void {}
 
@@ -56,6 +51,7 @@ class SystemSettingsAccount implements Account
     {
         return 0;
     }
+
     public function isAvailableForFetching(): bool
     {
         return false;

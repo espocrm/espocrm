@@ -29,11 +29,9 @@
 
 namespace Espo\Core\ApplicationRunners;
 
-use Espo\Core\{
-    Application\Runner,
-    DataManager,
-    Exceptions\Error,
-};
+use Espo\Core\Application\Runner;
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
 
 /**
  * Clears an application cache.
@@ -42,12 +40,8 @@ class ClearCache implements Runner
 {
     use Cli;
 
-    private DataManager $dataManager;
-
-    public function __construct(DataManager $dataManager)
-    {
-        $this->dataManager = $dataManager;
-    }
+    public function __construct(private DataManager $dataManager)
+    {}
 
     /**
      * @throws Error

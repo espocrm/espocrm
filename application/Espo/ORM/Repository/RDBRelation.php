@@ -351,7 +351,7 @@ class RDBRelation
      * Usage example:
      * `->columnsWhere(['column' => $value])`
      *
-     * @param WhereItem|array<mixed,mixed> $clause Where clause.
+     * @param WhereItem|array<string|int, mixed> $clause Where clause.
      */
     public function columnsWhere($clause): Builder
     {
@@ -436,8 +436,8 @@ class RDBRelation
     /**
      * Relate with an entity by ID.
      *
-     * @param array<string,mixed>|null $columnData Role values.
-     * @param array<string,mixed> $options
+     * @param array<string, mixed>|null $columnData Role values.
+     * @param array<string, mixed> $options
      */
     public function relateById(string $id, ?array $columnData = null, array $options = []): void
     {

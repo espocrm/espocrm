@@ -71,8 +71,8 @@ let BuildUtils = {
      *   src: string,
      *   dest: string,
      *   originalDest: string|null,
-     *   minify: boolean
-     *   }[]}
+     *   minify: boolean,
+     * }[]}
      */
     getCopyLibDataList: function (libs) {
         let list = [];

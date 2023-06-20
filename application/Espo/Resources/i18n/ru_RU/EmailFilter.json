@@ -6,7 +6,9 @@
     "bodyContains": "Текст письма содержит",
     "action": "Действие",
     "isGlobal": "Глобальный",
-    "emailFolder": "Папка"
+    "emailFolder": "Папка",
+    "groupEmailFolder": "Папка групповой эл. почты",
+    "markAsRead": "Отметить как прочитанное"
   },
   "labels": {
     "Create EmailFilter": "Создать фильтр эл. почты",
@@ -23,7 +25,13 @@
   "options": {
     "action": {
       "Skip": "Пропускать",
-      "Move to Folder": "Положить в папку"
+      "Move to Folder": "Положить в папку",
+      "None": "Нет",
+      "Move to Group Folder": "Положить в групповую папку"
     }
+  },
+  "links": {
+    "emailFolder": "Папка",
+    "groupEmailFolder": "Папка групповой эл. почты"
   }
 }

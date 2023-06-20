@@ -29,32 +29,20 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    Utils\Config,
-    Utils\Language as LanguageService,
-    InjectableFactory,
-};
+use Espo\Core\Container\Loader;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language as LanguageService;
 
 use Espo\Entities\Preferences;
 
 class Language implements Loader
 {
-    private $injectableFactory;
-
-    private $config;
-
-    private $preferences;
-
     public function __construct(
-        InjectableFactory $injectableFactory,
-        Config $config,
-        Preferences $preferences
-    ) {
-        $this->injectableFactory = $injectableFactory;
-        $this->config = $config;
-        $this->preferences = $preferences;
-    }
+        private InjectableFactory $injectableFactory,
+        private Config $config,
+        private Preferences $preferences
+    ) {}
 
     public function load(): LanguageService
     {

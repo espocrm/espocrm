@@ -38,17 +38,12 @@ use RuntimeException;
  */
 class LinkMultiple
 {
-    private $list = [];
-
     /**
      * @param LinkMultipleItem[] $list
-     *
      * @throws RuntimeException
      */
-    public function __construct(array $list = [])
+    public function __construct(private array $list = [])
     {
-        $this->list = $list;
-
         $this->validateList();
     }
 
@@ -125,6 +120,22 @@ class LinkMultiple
     public function withAddedId(string $id): self
     {
         return $this->withAdded(LinkMultipleItem::create($id));
+    }
+
+    /**
+     * Clone with an added IDs.
+     *
+     * @param string[] $idList IDs.
+     */
+    public function withAddedIdList(array $idList): self
+    {
+        $obj = $this;
+
+        foreach ($idList as $id) {
+            $obj = $obj->withAddedId($id);
+        }
+
+        return $obj;
     }
 
     /**

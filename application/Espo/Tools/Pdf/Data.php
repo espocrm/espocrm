@@ -34,7 +34,7 @@ use stdClass;
 class Data
 {
     /**
-     * @var array<string,mixed>
+     * @var array<string, mixed>
      */
     private $additionalTemplateData = [];
 

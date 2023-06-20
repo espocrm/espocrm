@@ -26,194 +26,187 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('handlers/login/oidc', ['handlers/login'], function (Dep) {
+import Dep from 'handlers/login';
+import Base64 from 'lib!base64';
 
-    /**
-     * Custom login handling. To be extended.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:handlers/login/oidc
-     * @extends module:handlers/login.Class
-     */
-    class Class extends Dep {
+class Handler extends Dep {
 
-        process() {
-            Espo.Ui.notify(' ... ');
+    /** @inheritDoc */
+    process() {
+        Espo.Ui.notify(' ... ');
 
-            return new Promise((resolve, reject) => {
-                Espo.Ajax.getRequest('Oidc/authorizationData')
-                    .then(data => {
-                        Espo.Ui.notify(false);
+        return new Promise((resolve, reject) => {
+            Espo.Ajax.getRequest('Oidc/authorizationData')
+                .then(data => {
+                    Espo.Ui.notify(false);
 
-                        this.processWithData(data)
-                            .then((code, nonce) => {
-                                let authString = Base64.encode('**oidc:' + code);
+                    this.processWithData(data)
+                        .then((code, nonce) => {
+                            let authString = Base64.encode('**oidc:' + code);
 
-                                let headers = {
-                                    'Espo-Authorization': authString,
-                                    'Authorization': 'Basic ' + authString,
-                                    'X-Oidc-Authorization-Nonce': nonce,
-                                };
+                            let headers = {
+                                'Espo-Authorization': authString,
+                                'Authorization': 'Basic ' + authString,
+                                'X-Oidc-Authorization-Nonce': nonce,
+                            };
 
-                                resolve(headers);
-                            })
-                            .catch(() => {
-                                reject();
-                            });
-                    })
-                    .catch(() => {
-                        Espo.Ui.notify(false)
-
-                        reject();
-                    });
-            });
-        }
-
-        /**
-         * @private
-         * @param {{
-         *  endpoint: string,
-         *  clientId: string,
-         *  redirectUri: string,
-         *  scopes: string[],
-         *  claims: ?string,
-         *  prompt: 'login'|'consent'|'select_account',
-         *  maxAge: ?Number,
-         * }} data
-         * @return {Promise}
-         */
-        processWithData(data) {
-            let state = (Math.random() + 1).toString(36).substring(7);
-            let nonce = (Math.random() + 1).toString(36).substring(7);
-
-            let params = {
-                client_id: data.clientId,
-                redirect_uri: data.redirectUri,
-                response_type: 'code',
-                scope: data.scopes.join(' '),
-                state: state,
-                nonce: nonce,
-                prompt: data.prompt,
-            };
-
-            if (data.maxAge || data.maxAge === 0) {
-                params.max_age = data.maxAge;
-            }
-
-            if (data.claims) {
-                params.claims = data.claims;
-            }
-
-            let partList = Object.entries(params)
-                .map(([key, value]) => {
-                    return key + '=' + encodeURIComponent(value);
-                });
-
-            let url = data.endpoint + '?' + partList.join('&');
-
-            return this.processWindow(url, state, nonce);
-        }
-
-        /**
-         * @private
-         * @param {string} url
-         * @param {string} state
-         * @param {string} nonce
-         * @return {Promise}
-         */
-        processWindow(url, state, nonce) {
-            let proxy = window.open(url, 'ConnectWithOAuth', 'location=0,status=0,width=800,height=800');
-
-            return new Promise((resolve, reject) => {
-                let fail = () => {
-                    window.clearInterval(interval);
-
-                    if (!proxy.closed) {
-                        proxy.close();
-                    }
+                            resolve(headers);
+                        })
+                        .catch(() => {
+                            reject();
+                        });
+                })
+                .catch(() => {
+                    Espo.Ui.notify(false)
 
                     reject();
-                };
-
-                let interval = window.setInterval(() => {
-                    if (proxy.closed) {
-                        fail();
-
-                        return;
-                    }
-
-                    let url;
-
-                    try {
-                        url = proxy.location.href;
-                    }
-                    catch (e) {
-                        return;
-                    }
-
-                    if (!url) {
-                        return;
-                    }
-
-                    let parsedData = this.parseWindowUrl(url);
-
-                    if (!parsedData) {
-                        fail();
-                        Espo.Ui.error('Could not parse URL', true);
-
-                        return;
-                    }
-
-                    if ((parsedData.error || parsedData.code) && parsedData.state !== state) {
-                        fail();
-                        Espo.Ui.error('State mismatch', true);
-
-                        return;
-                    }
-
-                    if (parsedData.error) {
-                        fail();
-                        Espo.Ui.error(parsedData.errorDescription || this.loginView.translate('Error'), true);
-
-                        return;
-                    }
-
-                    if (parsedData.code) {
-                        window.clearInterval(interval);
-                        proxy.close();
-
-                        resolve(parsedData.code, nonce);
-                    }
-                }, 300);
-            });
-        }
-
-        /**
-         * @param {string} url
-         * @return {?{
-         *     code: ?string,
-         *     state: ?string,
-         *     error: ?string,
-         *     errorDescription: ?string,
-         * }}
-         */
-        parseWindowUrl(url) {
-            try {
-                let params = new URL(url).searchParams;
-
-                return {
-                    code: params.get('code'),
-                    state: params.get('state'),
-                    error: params.get('error'),
-                    errorDescription: params.get('errorDescription'),
-                };
-            }
-            catch(e) {
-                return null;
-            }
-        }
+                });
+        });
     }
 
-    return Class;
-});
+    /**
+     * @private
+     * @param {{
+     *  endpoint: string,
+     *  clientId: string,
+     *  redirectUri: string,
+     *  scopes: string[],
+     *  claims: ?string,
+     *  prompt: 'login'|'consent'|'select_account',
+     *  maxAge: ?Number,
+     * }} data
+     * @return {Promise}
+     */
+    processWithData(data) {
+        let state = (Math.random() + 1).toString(36).substring(7);
+        let nonce = (Math.random() + 1).toString(36).substring(7);
+
+        let params = {
+            client_id: data.clientId,
+            redirect_uri: data.redirectUri,
+            response_type: 'code',
+            scope: data.scopes.join(' '),
+            state: state,
+            nonce: nonce,
+            prompt: data.prompt,
+        };
+
+        if (data.maxAge || data.maxAge === 0) {
+            params.max_age = data.maxAge;
+        }
+
+        if (data.claims) {
+            params.claims = data.claims;
+        }
+
+        let partList = Object.entries(params)
+            .map(([key, value]) => {
+                return key + '=' + encodeURIComponent(value);
+            });
+
+        let url = data.endpoint + '?' + partList.join('&');
+
+        return this.processWindow(url, state, nonce);
+    }
+
+    /**
+     * @private
+     * @param {string} url
+     * @param {string} state
+     * @param {string} nonce
+     * @return {Promise}
+     */
+    processWindow(url, state, nonce) {
+        let proxy = window.open(url, 'ConnectWithOAuth', 'location=0,status=0,width=800,height=800');
+
+        return new Promise((resolve, reject) => {
+            let fail = () => {
+                window.clearInterval(interval);
+
+                if (!proxy.closed) {
+                    proxy.close();
+                }
+
+                reject();
+            };
+
+            let interval = window.setInterval(() => {
+                if (proxy.closed) {
+                    fail();
+
+                    return;
+                }
+
+                let url;
+
+                try {
+                    url = proxy.location.href;
+                }
+                catch (e) {
+                    return;
+                }
+
+                if (!url) {
+                    return;
+                }
+
+                let parsedData = this.parseWindowUrl(url);
+
+                if (!parsedData) {
+                    fail();
+                    Espo.Ui.error('Could not parse URL', true);
+
+                    return;
+                }
+
+                if ((parsedData.error || parsedData.code) && parsedData.state !== state) {
+                    fail();
+                    Espo.Ui.error('State mismatch', true);
+
+                    return;
+                }
+
+                if (parsedData.error) {
+                    fail();
+                    Espo.Ui.error(parsedData.errorDescription || this.loginView.translate('Error'), true);
+
+                    return;
+                }
+
+                if (parsedData.code) {
+                    window.clearInterval(interval);
+                    proxy.close();
+
+                    resolve(parsedData.code, nonce);
+                }
+            }, 300);
+        });
+    }
+
+    /**
+     * @param {string} url
+     * @return {?{
+     *     code: ?string,
+     *     state: ?string,
+     *     error: ?string,
+     *     errorDescription: ?string,
+     * }}
+     */
+    parseWindowUrl(url) {
+        try {
+            let params = new URL(url).searchParams;
+
+            return {
+                code: params.get('code'),
+                state: params.get('state'),
+                error: params.get('error'),
+                errorDescription: params.get('errorDescription'),
+            };
+        }
+        catch(e) {
+            return null;
+        }
+    }
+}
+
+export default Handler;

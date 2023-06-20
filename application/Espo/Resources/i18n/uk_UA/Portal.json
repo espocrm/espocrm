@@ -5,29 +5,31 @@
     "companyLogo": "Лого",
     "portalRoles": "Ролі",
     "isActive": "Активний",
-    "isDefault": "Чи за замовчуванням",
-    "tabList": "Список меню",
+    "isDefault": "За замовчуванням",
+    "tabList": "Список вкладок",
     "quickCreateList": "Список для швидкого створення",
     "theme": "Тема",
     "language": "Мова",
     "dashboardLayout": "Макет панелі дашлетів",
     "dateFormat": "Формат дати",
     "timeFormat": "Формат часу",
-    "timeZone": "Часова зона",
+    "timeZone": "Часовий пояс",
     "weekStart": "Перший день тижня",
     "defaultCurrency": "Валюта за замовчуванням",
-    "customUrl": "Призначений для користувача URL",
-    "customId": "Призначений для користувача  ID",
-    "layoutSet": "Набір макетів"
+    "customUrl": "Власний URL",
+    "customId": "Власний ID",
+    "layoutSet": "Набір макетів",
+    "authenticationProvider": "Провайдер автентифікації"
   },
   "links": {
     "users": "Користувачі",
     "portalRoles": "Ролі",
     "notes": "Примітки",
-    "layoutSet": "Набір макетів"
+    "layoutSet": "Набір макетів",
+    "authenticationProvider": "Провайдер автентифікації"
   },
   "tooltips": {
-    "portalRoles": "Вказані ролі порталу будуть застосовуватись до всіх користувачів цього порталу",
+    "portalRoles": "Вказані ролі порталу будуть застосовуватись до всіх користувачів цього порталу.",
     "layoutSet": "Надає можливість мати макети, що відрізняються від стандартних."
   },
   "labels": {

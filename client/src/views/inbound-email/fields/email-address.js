@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/inbound-email/fields/email-address', 'views/fields/email-address', function (Dep) {
+define('views/inbound-email/fields/email-address', ['views/fields/email-address'], function (Dep) {
 
     return Dep.extend({
 
@@ -43,6 +43,5 @@ define('views/inbound-email/fields/email-address', 'views/fields/email-address',
                 }
             });
         },
-
     });
 });

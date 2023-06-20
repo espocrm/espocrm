@@ -1,0 +1,67 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/entityAcl.json",
+    "title": "entityAcl",
+    "description": "ACL definitions for fields and links of an entity type.",
+    "type": "object",
+    "properties": {
+        "fields": {
+            "description": "Fields.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "forbidden": {
+                        "description": "Totally forbidden.",
+                        "type": "boolean"
+                    },
+                    "internal": {
+                        "description": "Reading forbidden, writing allowed.",
+                        "type": "boolean"
+                    },
+                    "onlyAdmin": {
+                        "description": "Forbidden for non admin users.",
+                        "type": "boolean"
+                    },
+                    "readOnly": {
+                        "description": "Read-only for all users.",
+                        "type": "boolean"
+                    },
+                    "nonAdminReadOnly": {
+                        "description": "Read-only for non-admin users.",
+                        "type": "boolean"
+                    }
+                }
+            }
+        },
+        "links": {
+            "description": "Links.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "forbidden": {
+                        "description": "Totally forbidden.",
+                        "type": "boolean"
+                    },
+                    "internal": {
+                        "description": "Reading forbidden, writing allowed.",
+                        "type": "boolean"
+                    },
+                    "onlyAdmin": {
+                        "description": "Forbidden for non admin users.",
+                        "type": "boolean"
+                    },
+                    "readOnly": {
+                        "description": "Read-only for all users.",
+                        "type": "boolean"
+                    },
+                    "nonAdminReadOnly": {
+                        "description": "Read-only for non-admin users.",
+                        "type": "boolean"
+                    }
+                }
+            }
+        }
+    }
+}

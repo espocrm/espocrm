@@ -29,9 +29,9 @@
 
 namespace Espo\Modules\Crm\Classes\Select\Task\PrimaryFilters;
 
+use Espo\Modules\Crm\Entities\Task;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\Part\Condition as Cond;
-
 use Espo\Core\Select\Primary\Filter;
 
 class Deferred implements Filter
@@ -41,7 +41,7 @@ class Deferred implements Filter
         $queryBuilder->where(
             Cond::equal(
                 Cond::column('status'),
-                'Deferred'
+                Task::STATUS_DEFERRED
             )
         );
     }

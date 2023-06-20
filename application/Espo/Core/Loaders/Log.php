@@ -29,20 +29,14 @@
 
 namespace Espo\Core\Loaders;
 
-use Espo\Core\{
-    Container\Loader,
-    Log\LogLoader,
-    Utils\Log as LogService,
-};
+use Espo\Core\Container\Loader;
+use Espo\Core\Log\LogLoader;
+use Espo\Core\Utils\Log as LogService;
 
 class Log implements Loader
 {
-    private $logLoader;
-
-    public function __construct(LogLoader $logLoader)
-    {
-        $this->logLoader = $logLoader;
-    }
+    public function __construct(private LogLoader $logLoader)
+    {}
 
     public function load(): LogService
     {

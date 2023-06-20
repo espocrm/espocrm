@@ -33,50 +33,38 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\System;
-
 use Espo\Core\Job\Job\Data;
 use Espo\Core\Job\Job\Status;
-
 use Espo\Entities\Job as JobEntity;
 
+use LogicException;
+use RuntimeException;
 use Throwable;
 
 class JobRunner
 {
-    private JobFactory $jobFactory;
-    private ScheduleUtil $scheduleUtil;
-    private EntityManager $entityManager;
-    private ServiceFactory $serviceFactory;
-    private Log $log;
-    private Config $config;
-
     public function __construct(
-        JobFactory $jobFactory,
-        ScheduleUtil $scheduleUtil,
-        EntityManager $entityManager,
-        ServiceFactory $serviceFactory,
-        Log $log,
-        Config $config
-    ) {
-        $this->jobFactory = $jobFactory;
-        $this->scheduleUtil = $scheduleUtil;
-        $this->entityManager = $entityManager;
-        $this->serviceFactory = $serviceFactory;
-        $this->log = $log;
-        $this->config = $config;
-    }
+        private JobFactory $jobFactory,
+        private ScheduleUtil $scheduleUtil,
+        private EntityManager $entityManager,
+        private ServiceFactory $serviceFactory,
+        private Log $log,
+        private Config $config
+    ) {}
 
     /**
      * Run a job entity. Does not throw exceptions.
-     *
-     * @throws Throwable
      */
     public function run(JobEntity $jobEntity): void
     {
-        $this->runInternal($jobEntity, false);
+        try {
+            $this->runInternal($jobEntity);
+        }
+        catch (Throwable $e) {
+            throw new LogicException($e->getMessage());
+        }
     }
 
     /**
@@ -92,25 +80,22 @@ class JobRunner
     /**
      * Run a job by ID. A job must have status 'Ready'.
      * Used when running jobs in parallel processes.
-     *
-     * @throws Error
-     * @throws Throwable
      */
     public function runById(string $id): void
     {
         if ($id === '') {
-            throw new Error();
+            throw new RuntimeException("Empty job ID.");
         }
 
-        /** @var JobEntity|null $jobEntity */
-        $jobEntity = $this->entityManager->getEntity(JobEntity::ENTITY_TYPE, $id);
+        /** @var ?JobEntity $jobEntity */
+        $jobEntity = $this->entityManager->getEntityById(JobEntity::ENTITY_TYPE, $id);
 
         if (!$jobEntity) {
-            throw new Error("Job '{$id}' not found.");
+            throw new RuntimeException("Job '{$id}' not found.");
         }
 
         if ($jobEntity->getStatus() !== Status::READY) {
-            throw new Error("Can't run job '{$id}' with no status Ready.");
+            throw new RuntimeException("Can't run job '{$id}' with not Ready status.");
         }
 
         $this->setJobRunning($jobEntity);
@@ -124,7 +109,6 @@ class JobRunner
     private function runInternal(JobEntity $jobEntity, bool $throwException = false): void
     {
         $isSuccess = true;
-
         $exception = null;
 
         if ($jobEntity->getStatus() !== Status::RUNNING) {
@@ -171,10 +155,10 @@ class JobRunner
 
         $status = $isSuccess ? Status::SUCCESS : Status::FAILED;
 
-        $jobEntity->set('status', $status);
+        $jobEntity->setStatus($status);
 
         if ($isSuccess) {
-            $jobEntity->set('executedAt', DateTimeUtil::getSystemNowString());
+            $jobEntity->setExecutedAtNow();
         }
 
         $this->entityManager->saveEntity($jobEntity);
@@ -210,14 +194,15 @@ class JobRunner
         $this->runJob($job, $jobEntity);
     }
 
+    /**
+     * @throws Error
+     */
     private function runScheduledJob(JobEntity $jobEntity): void
     {
         $jobName = $jobEntity->getScheduledJobJob();
 
         if (!$jobName) {
-            throw new Error(
-                "Can't run job '" . $jobEntity->getId() . "'. Not a scheduled job."
-            );
+            throw new Error("Can't run job '" . $jobEntity->getId() . "'. Not a scheduled job.");
         }
 
         $job = $this->jobFactory->create($jobName);
@@ -284,11 +269,11 @@ class JobRunner
     private function setJobRunning(JobEntity $jobEntity): void
     {
         if (!$jobEntity->getStartedAt()) {
-            $jobEntity->set('startedAt', DateTimeUtil::getSystemNowString());
+            $jobEntity->setStartedAtNow();
         }
 
-        $jobEntity->set('status', Status::RUNNING);
-        $jobEntity->set('pid', System::getPid());
+        $jobEntity->setStatus(Status::RUNNING);
+        $jobEntity->setPid(System::getPid());
 
         $this->entityManager->saveEntity($jobEntity);
     }

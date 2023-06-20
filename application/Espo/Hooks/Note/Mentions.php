@@ -46,7 +46,7 @@ class Mentions
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function beforeSave(Entity $entity, array $options): void
     {

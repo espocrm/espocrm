@@ -33,12 +33,8 @@ use Espo\Core\Utils\Metadata;
 
 class MetadataProvider
 {
-    private Metadata $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     /**
      * @return string[]
@@ -85,7 +81,7 @@ class MetadataProvider
      */
     public function getScheduledJobNameList(): array
     {
-        /** @var array<string,mixed> $items */
+        /** @var array<string, mixed> $items */
         $items = $this->metadata->get(['app', 'scheduledJobs']) ?? [];
 
         return array_keys($items);

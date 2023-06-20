@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep) {
+define('views/modals/image-preview', ['views/modal'], function (Dep) {
 
     return Dep.extend({
 
@@ -82,6 +82,8 @@ define('views/modals/image-preview', ['views/modal', 'lib!exif'], function (Dep)
             this.once('remove', () => {
                 $(window).off('resize.image-review');
             });
+
+            this.wait(Espo.loader.requirePromise('lib!exif'));
         },
 
         getImageUrl: function () {

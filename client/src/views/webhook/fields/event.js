@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/webhook/fields/event', 'views/fields/varchar', function (Dep) {
+define('views/webhook/fields/event', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
@@ -47,6 +47,5 @@ define('views/webhook/fields/event', 'views/fields/varchar', function (Dep) {
 
             this.params.options = itemList;
         },
-
     });
 });

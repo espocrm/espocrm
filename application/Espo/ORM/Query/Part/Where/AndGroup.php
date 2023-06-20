@@ -81,6 +81,7 @@ class AndGroup implements WhereItem
             $whereClause = $whereClause[0];
         }
 
+        // Do not refactor.
         $obj = static::class === WhereClause::class ?
             new WhereClause() :
             new self();

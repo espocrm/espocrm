@@ -1,0 +1,168 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/recordDefs.json",
+    "title": "recordDefs",
+    "description": "Record framework definitions for a scope.",
+    "type": "object",
+    "properties": {
+        "duplicateWhereBuilderClassName": {
+            "description": "A class for building a where clause for duplicate checking. Should implement Espo\\Core\\Duplicate\\WhereBuilder interface.",
+            "type": "string"
+        },
+        "readLoaderClassNameList": {
+            "description": "Classes to load additional fields for an entity. Should implement Espo\\Core\\FieldProcessing\\Loader interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "listLoaderClassNameList": {
+            "description": "Classes to load additional fields for an entity for the list view. Should implement Espo\\Core\\FieldProcessing\\Loader interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "saverClassNameList": {
+            "description": "Classes to save additional fields. Should implement Espo\\Core\\FieldProcessing\\Saver interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "selectApplierClassNameList": {
+            "description": "Classes for additional handling of a select query. Should implement Espo\\Core\\Select\\Applier\\AdditionalApplier interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "actions": {
+            "description": "Actions. E.g. merge, convertCurrency.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "disabled": {
+                        "description": "Disables the action.",
+                        "type": "boolean"
+                    },
+                    "allowed": {
+                        "description": "Allows the action for non-object scopes.",
+                        "type": "boolean"
+                    },
+                    "implementationClassName": {
+                        "description": "A class name, should implement Espo\\Core\\Action\\Action interface.",
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "massActions": {
+            "description": "Mass actions. E.g. update, delete, convertCurrency, follow, unfollow, recalculateFormula.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "disabled": {
+                        "description": "Disables the action.",
+                        "type": "boolean"
+                    },
+                    "allowed": {
+                        "description": "Allows the action for non-object scopes.",
+                        "type": "boolean"
+                    },
+                    "implementationClassName": {
+                        "description": "A class name, should implement Espo\\Core\\MassAction\\MassAction interface.",
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "actionsDisabled": {
+            "description": "Disable actions in the back-end.",
+            "type": "boolean"
+        },
+        "massActionsDisabled": {
+            "description": "Disable mass actions in the back-end.",
+            "type": "boolean"
+        },
+        "exportDisabled": {
+            "description": "Disable export regardless ACL.",
+            "type": "boolean"
+        },
+        "updateDuplicateCheck": {
+            "description": "If true, then duplicate checking will be processed while updating a record.",
+            "type": "boolean"
+        },
+        "relationships": {
+            "description": "Relationship parameters. Key-object pairs, where keys are link names.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "linkRequiredAccess": {
+                        "description": "Access to a current record that is needed to be able to link and unlink records.",
+                        "type": "string",
+                        "enum": ["create", "read", "edit", "delete", "stream"]
+                    },
+                    "linkRequiredForeignAccess": {
+                        "description": "Access to a foreign record that is needed to be able to link and unlink.",
+                        "type": "string",
+                        "enum": ["create", "read", "edit", "delete", "stream"]
+                    },
+                    "linkForeignAccessCheckDisabled": {
+                        "description": "Disable foreign record access check when linking.",
+                        "type": "boolean"
+                    },
+                    "linkCheckDisabled": {
+                        "description": "Disable a link-check functionallity linking through link-multiple field.",
+                        "type": "boolean"
+                    }
+                }
+            }
+        },
+        "beforeReadHookClassNameList": {
+            "description": "Before-read hooks. Should implement the Espo\\Core\\Record\\Hook\\ReadHook interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "beforeCreateHookClassNameList": {
+            "description": "Before-create hooks. Should implement the Espo\\Core\\Record\\Hook\\CreateHook interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "beforeUpdateHookClassNameList": {
+            "description": "Before-update hooks. Should implement the Espo\\Core\\Record\\Hook\\UpdateHook interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "beforeDeleteHookClassNameList": {
+            "description": "Before-delete hooks. Should implement the Espo\\Core\\Record\\Hook\\DeleteHook interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "beforeLinkHookClassNameList": {
+            "description": "Before-link hooks. Should implement the Espo\\Core\\Record\\Hook\\LinkHook interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "beforeUnlinkHookClassNameList": {
+            "description": "Before-unlink hooks. Should implement the Espo\\Core\\Record\\Hook\\UnlinkHook interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        }
+    }
+}

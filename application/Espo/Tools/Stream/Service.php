@@ -29,7 +29,6 @@
 
 namespace Espo\Tools\Stream;
 
-use Espo\Core\ApplicationUser;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
@@ -66,9 +65,9 @@ use LogicException;
 
 class Service
 {
-    /** @var ?array<string,string> */
+    /** @var ?array<string, string> */
     private $statusStyles = null;
-    /** @var ?array<string,string> */
+    /** @var ?array<string, string> */
     private $statusFields = null;
     /** @var string[] */
     private $successDefaultStyleList = [
@@ -146,7 +145,7 @@ class Service
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     private function getStatusStyles(): array
     {
@@ -158,14 +157,14 @@ class Service
     }
 
     /**
-     * @return array<string,string>
+     * @return array<string, string>
      */
     private function getStatusFields(): array
     {
         if (is_null($this->statusFields)) {
             $this->statusFields = [];
 
-            /** @var array<string,array<string,mixed>> $scopes */
+            /** @var array<string, array<string, mixed>> $scopes */
             $scopes = $this->metadata->get('scopes', []);
 
             foreach ($scopes as $scope => $data) {
@@ -596,7 +595,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function noteCreate(Entity $entity, array $options = []): void
     {
@@ -681,7 +680,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function noteCreateRelated(
         Entity $entity,
@@ -720,7 +719,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function noteRelate(Entity $entity, string $parentType, string $parentId, array $options = []): void
     {
@@ -810,7 +809,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function noteAssign(Entity $entity, array $options = []): void
     {
@@ -858,7 +857,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function noteStatus(Entity $entity, string $field, array $options = []): void
     {
@@ -921,7 +920,7 @@ class Service
             return $this->auditedFieldsCache[$entityType];
         }
 
-        /** @var array<string,array<string,mixed>> $fields */
+        /** @var array<string, array<string, mixed>> $fields */
         $fields = $this->metadata->get(['entityDefs', $entityType, 'fields']);
 
         $auditedFields = [];
@@ -959,7 +958,7 @@ class Service
     }
 
     /**
-     * @param array<string,mixed> $options
+     * @param array<string, mixed> $options
      */
     public function handleAudited(Entity $entity, array $options = []): void
     {
@@ -1305,7 +1304,7 @@ class Service
 
             if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
                 if ($fieldDefs->getType() === 'linkMultiple') {
-                    $userIdList = $entity->getLinkMultipleIdList($ownerUserField) ?? [];
+                    $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
                 }
                 else {
                     $userId = $entity->get($ownerUserIdAttribute);
@@ -1321,7 +1320,7 @@ class Service
             }
 
             if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
-                $teamIdList = $entity->getLinkMultipleIdList('teams') ?? [];
+                $teamIdList = $entity->getLinkMultipleIdList('teams');
             }
         }
 

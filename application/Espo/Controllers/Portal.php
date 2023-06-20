@@ -29,10 +29,8 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    Controllers\Record,
-    Acl\Table,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\Controllers\Record;
 
 class Portal extends Record
 {

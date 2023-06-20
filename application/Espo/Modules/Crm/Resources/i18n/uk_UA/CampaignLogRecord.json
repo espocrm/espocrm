@@ -9,11 +9,11 @@
     "application": "Додаток",
     "queueItem": "Елемент черги",
     "stringData": "Рядок даних",
-    "stringAdditionalData": "Рядок додаткової інформації",
+    "stringAdditionalData": "Рядок додаткових даних",
     "isTest": "Тестовий"
   },
   "links": {
-    "queueItem": "Пункт черги",
+    "queueItem": "Елемент черги",
     "parent": "Батько",
     "object": "Об'єкт",
     "campaign": "Кампанія"
@@ -23,7 +23,7 @@
       "Sent": "Відправлено",
       "Opened": "Відкрито",
       "Opted Out": "Відмовлено",
-      "Bounced": "Відшито",
+      "Bounced": "Відхилено",
       "Clicked": "Клікнуто",
       "Lead Created": "Лід створено",
       "Opted In": "Підписаний"
@@ -36,7 +36,7 @@
     "sent": "Надіслано",
     "opened": "Відкрито",
     "optedOut": "Відмовлено",
-    "bounced": "Відшито",
+    "bounced": "Відхилено",
     "clicked": "Клікнуто",
     "leadCreated": "Лід створено",
     "optedIn": "Підписаний"

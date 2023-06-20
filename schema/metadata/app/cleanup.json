@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/cleanup.json",
+    "title": "app/cleanup",
+    "description": "Defines cleaning up classes. Fired by the Cleanup job.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A name.",
+        "properties": {
+            "className": {
+                "type": "string",
+                "description": "An implementation class. Should implement Espo\\Core\\Cleanup\\Cleanup interface."
+            }
+        }
+    }
+}

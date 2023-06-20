@@ -42,7 +42,7 @@ class Saver implements SaverInterface
 {
     private EntityManager $entityManager;
 
-    /** @var array<string,string[]> */
+    /** @var array<string, string[]> */
     private $fieldListMapCache = [];
 
     public function __construct(EntityManager $entityManager)

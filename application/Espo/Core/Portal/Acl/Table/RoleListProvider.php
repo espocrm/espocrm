@@ -31,32 +31,20 @@ namespace Espo\Core\Portal\Acl\Table;
 
 use Espo\ORM\EntityManager;
 
-use Espo\Entities\{
-    User,
-    Portal,
-    PortalRole,
-};
-
-use Espo\Core\{
-    Acl\Table\RoleListProvider as RoleListProviderInterface,
-    Acl\Table\RoleEntityWrapper,
-    Acl\Table\Role,
-};
+use Espo\Entities\Portal;
+use Espo\Entities\PortalRole;
+use Espo\Entities\User;
+use Espo\Core\Acl\Table\Role;
+use Espo\Core\Acl\Table\RoleEntityWrapper;
+use Espo\Core\Acl\Table\RoleListProvider as RoleListProviderInterface;
 
 class RoleListProvider implements RoleListProviderInterface
 {
-    private $user;
-
-    private $portal;
-
-    private $entityManager;
-
-    public function __construct(User $user, Portal $portal, EntityManager $entityManager)
-    {
-        $this->user = $user;
-        $this->portal = $portal;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private User $user,
+        private Portal $portal,
+        private EntityManager $entityManager
+    ) {}
 
     /**
      * @return Role[]

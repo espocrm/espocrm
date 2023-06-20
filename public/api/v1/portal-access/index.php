@@ -29,11 +29,9 @@
 
 require_once('../../../../bootstrap.php');
 
-use Espo\Core\{
-    Portal\Application,
-    Portal\ApplicationRunners\Api,
-    Portal\Utils\Url,
-};
+use Espo\Core\Portal\Application;
+use Espo\Core\Portal\ApplicationRunners\Api;
+use Espo\Core\Portal\Utils\Url;
 
 $portalId = Url::detectPortalIdForApi();
 

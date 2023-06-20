@@ -6,8 +6,11 @@
     "portalPermission": "Portal Berechtigungen",
     "groupEmailAccountPermission": "Gruppen E-Mail Kontoberechtigung",
     "exportPermission": "Exportberechtigung",
-    "dataPrivacyPermission": "Datenschutz Erlaubnis",
-    "massUpdatePermission": "Massenupdate Erlaubnis"
+    "dataPrivacyPermission": "Datenschutz Berechtigung",
+    "massUpdatePermission": "Massenänderungen Berechtigung",
+    "followerManagementPermission": "Abonnentenverwaltung-Berechtigung",
+    "data": "Daten",
+    "fieldData": "Felddaten"
   },
   "links": {
     "users": "Benutzer"
@@ -19,7 +22,8 @@
     "groupEmailAccountPermission": "Definiert einen Zugriff auf Gruppen E-Mail Konten, die Fähigkeit, E-Mails von Gruppe SMTP zu senden.",
     "dataPrivacyPermission": "Ermöglicht das Anzeigen und Löschen persönlicher Daten.",
     "exportPermission": "Definiert, ob Benutzer Datensätze exportieren können.",
-    "massUpdatePermission": "Bestimmt, ob Benutzer die Massenänderung von Datensätzen durchführen können."
+    "massUpdatePermission": "Bestimmt, ob Benutzer die Massenänderung von Datensätzen durchführen können.",
+    "followerManagementPermission": "Ermöglicht die Verwaltung von Abonnenten bestimmter Datensätze."
   },
   "labels": {
     "Access": "Berechtigungen",

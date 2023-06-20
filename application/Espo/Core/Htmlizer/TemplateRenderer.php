@@ -39,7 +39,7 @@ use LogicException;
 
 class TemplateRenderer
 {
-    /** @var ?array<string,mixed> */
+    /** @var ?array<string, mixed> */
     private $data = null;
     private ?User $user = null;
     private ?Entity $entity = null;
@@ -72,7 +72,7 @@ class TemplateRenderer
     }
 
     /**
-     * @param stdClass|array<string,mixed> $data Additional data.
+     * @param stdClass|array<string, mixed> $data Additional data.
      */
     public function setData($data): self
     {

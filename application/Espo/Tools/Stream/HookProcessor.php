@@ -514,7 +514,7 @@ class HookProcessor
         if (is_null($this->statusFields)) {
             $this->statusFields = [];
 
-            /** @var array<string,array<string, mixed>> $scopes */
+            /** @var array<string, array<string, mixed>> $scopes */
             $scopes = $this->metadata->get('scopes', []);
 
             foreach ($scopes as $scope => $data) {

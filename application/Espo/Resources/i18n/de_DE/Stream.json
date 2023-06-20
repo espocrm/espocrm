@@ -1,7 +1,8 @@
 {
   "messages": {
     "infoMention": "Geben Sie **@username** ein, um den Benutzer im Beitrag zu erwähnen.",
-    "infoSyntax": "Verfügbare Abschriftensyntax"
+    "infoSyntax": "Verfügbare Abschriftensyntax",
+    "couldNotAddFollowerUserHasNoAccessToStream": "Der Benutzer '{userName}' konnte nicht zu den Abonnenten hinzugefügt werden. Der Benutzer hat keinen 'Stream'-Zugriff auf den Datensatz."
   },
   "syntaxItems": {
     "code": "Code",

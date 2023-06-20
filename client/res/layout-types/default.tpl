@@ -1,4 +1,3 @@
-
 <% _.each(layout, function (defs, key) {
         var tag = 'tag' in defs ? defs.tag : 'div';
         print( '<' + tag);

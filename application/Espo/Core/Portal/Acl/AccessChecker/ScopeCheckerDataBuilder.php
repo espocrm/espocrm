@@ -36,11 +36,9 @@ use Closure;
  */
 class ScopeCheckerDataBuilder
 {
-    private $isOwnChecker;
-
-    private $inAccountChecker;
-
-    private $inContactChecker;
+    private Closure $isOwnChecker;
+    private Closure $inAccountChecker;
+    private Closure $inContactChecker;
 
     public function __construct()
     {

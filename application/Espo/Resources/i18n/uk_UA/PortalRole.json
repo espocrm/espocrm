@@ -4,12 +4,15 @@
   },
   "labels": {
     "Access": "Доступ",
-    "Create PortalRole": "Створити Роль порталу",
-    "Scope Level": "Область застосування Рівень"
+    "Create PortalRole": "Створити роль порталу",
+    "Scope Level": "Рівень області дії",
+    "Field Level": "Рівень поля"
   },
   "fields": {
     "exportPermission": "Дозвіл для експорту",
-    "massUpdatePermission": "Дозвіл на масове оновлення"
+    "massUpdatePermission": "Дозвіл на масове оновлення",
+    "data": "Дані",
+    "fieldData": "Дані поля"
   },
   "tooltips": {
     "exportPermission": "Визначає, чи користувачі порталу мають можливість експортувати записи.",

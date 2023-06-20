@@ -42,9 +42,14 @@ define('views/admin/layouts/record/edit-attributes', ['views/record/base'], func
             var list = [];
 
             this.attributeList.forEach(item => {
+                let type = (this.attributeDefs[item] || {}).type;
+
+                let isWide = !['enum', 'bool', 'int', 'float', 'varchar'].includes(type);
+
                 list.push({
                     name: item,
                     viewKey: item + 'Field',
+                    isWide: isWide,
                 });
             });
 

@@ -38,8 +38,6 @@ use RuntimeException;
  */
 class SmtpParams
 {
-    private string $server;
-    private int $port;
     private ?string $fromAddress = null;
     private ?string $fromName = null;
     /** @var ?array<string, mixed> */
@@ -67,11 +65,10 @@ class SmtpParams
         'security',
     ];
 
-    public function __construct(string $server, int $port)
-    {
-        $this->server = $server;
-        $this->port = $port;
-    }
+    public function __construct(
+        private string $server,
+        private int $port
+    ) {}
 
     public static function create(string $server, int $port): self
     {

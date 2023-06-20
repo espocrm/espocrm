@@ -126,7 +126,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if ($entity->getTargetType() === Note::TARGET_TEAMS) {
-            $targetTeamIdList = $entity->getLinkMultipleIdList('teams') ?? [];
+            $targetTeamIdList = $entity->getLinkMultipleIdList('teams');
 
             foreach ($user->getTeamIdList() as $teamId) {
                 if (in_array($teamId, $targetTeamIdList)) {
@@ -138,7 +138,7 @@ class AccessChecker implements AccessEntityCREDChecker
         }
 
         if ($entity->getTargetType() === Note::TARGET_USERS) {
-            return in_array($user->getId(), $entity->getLinkMultipleIdList('users') ?? []);
+            return in_array($user->getId(), $entity->getLinkMultipleIdList('users'));
         }
 
         return false;

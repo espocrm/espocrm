@@ -29,17 +29,20 @@
 
 namespace Espo\Modules\Crm\Entities;
 
-use Espo\Core\{
-    Field\Link,
-    Field\LinkMultiple,
-    ORM\Entity,
-    Field\EmailAddressGroup,
-    Field\PhoneNumberGroup,
-    Field\Address};
+use Espo\Core\Field\Address;
+use Espo\Core\Field\EmailAddressGroup;
+use Espo\Core\Field\Link;
+use Espo\Core\Field\LinkMultiple;
+use Espo\Core\Field\PhoneNumberGroup;
+use Espo\Core\ORM\Entity;
 
 class Account extends Entity
 {
     public const ENTITY_TYPE = 'Account';
+
+    public const TYPE_CUSTOMER = 'Customer';
+    public const TYPE_PARTNER = 'Partner';
+    public const TYPE_RESELLER = 'Reseller';
 
     public function getName(): ?string
     {

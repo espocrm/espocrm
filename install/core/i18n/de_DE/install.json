@@ -113,5 +113,22 @@
     "writable": "Überschreibbar",
     "readable": "Lesbar",
     "requiredMariadbVersion": "MariaDB Version"
+  },
+  "options": {
+    "modRewriteTitle": {
+      "apache": "<h3>API-Fehler:  EspoCRM API ist nicht verfügbar.</h3><br>Führen Sie nur notwendigen Schritte aus. Prüfen Sie nach jedem Schritt, ob das Problem gelöst ist.",
+      "nginx": "<h3>API-Fehler: EspoCRM API ist nicht verfügbar.</h3>",
+      "microsoft-iis": "<h3>API-Fehler: EspoCRM API ist nicht verfügbar.</h3><br> Mögliches Problem: \"URL Rewrite\" ist deaktiviert. Bitte prüfen und aktivieren Sie das Modul \"URL Rewrite\" im IIS-Server",
+      "default": "<h3>API-Fehler: EspoCRM API ist nicht verfügbar.</h3><br> Mögliche Probleme: deaktiviertes Rewrite-Modul. Bitte prüfen und aktivieren Sie das Rewrite-Modul in Ihrem Server (z.B. mod_rewrite in Apache) und die .htaccess Unterstützung."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "<br><br><h4>1. Aktivieren Sie \"mod_rewrite\".</h4>Um <i>mod_rewrite</i>zu aktivieren, führen Sie diese Befehle in einem Terminal aus: <br><br><pre>{APACHE1}</pre><hr><h4>2. Wenn der vorherige Schritt nicht geholfen hat, versuchen Sie, die .htaccess-Unterstützung zu aktivieren.</h4> Fügen Sie die Serverkonfigurationseinstellungen <code>{APACHE2_PATH1}</code> oder <code>{APACHE2_PATH2}</code> (oder <code>{APACHE2_PATH3}</code>):<br><br><pre>{APACHE2} hinzu oder ändern Sie sie.</pre>\n Führen Sie anschließend diesen Befehl in einem Terminal aus:<br><br><pre>{APACHE3}</pre><hr><h4>3. Wenn der vorherige Schritt nicht geholfen hat, versuchen Sie, den RewriteBase-Pfad hinzuzufügen.</h4>Öffnen Sie eine Datei <code>{API_PATH}.htaccess</code> und ersetzen Sie die folgende Zeile:<br><br><pre>{APACHE4}</pre>zu<br><br><pre>{APACHE5}</pre><hr>Weitere Informationen finden Sie im Leitfaden <a href=\"{APACHE_LINK}\" target=\"_blank\">Apache server configuration for EspoCRM</a>.<br><br>",
+        "windows": "<br><br> <h4>1. Suchen Sie die Datei httpd.conf.</h4>Normalerweise befindet sie sich in einem Ordner namens \"conf\", \"config\" oder so ähnlich.<br><br><h4>2. Bearbeiten Sie die Datei httpd.conf.</h4> In der Datei httpd.conf kommentieren Sie die Zeile <code>{WINDOWS_APACHE1}</code> aus (entfernen Sie das Zeichen '#' vor der Zeile).<br><br><h4>3. Überprüfen Sie andere Parameter.</h4>Prüfen Sie auch, ob die Zeile <code>ClearModuleList</code> unkommentiert ist und stellen Sie sicher, dass die Zeile <code>AddModule mod_rewrite.c</code> nicht auskommentiert ist."
+      },
+      "nginx": {
+        "linux": "<br> Fügen Sie diesen Code <code>{NGINX_PATH}</code> in Ihre Nginx-Serverkonfigurationsdatei im Abschnitt \"server\" ein:<br><br><pre>{NGINX}</pre> <br> Für weitere Informationen besuchen Sie bitte den Leitfaden <a href=\"{NGINX_LINK}\" target=\"_blank\">Nginx server configuration for EspoCRM</a>.<br><br>"
+      }
+    }
   }
 }

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/time-format', 'views/fields/enum', function (Dep) {
+define('views/preferences/fields/time-format', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -42,7 +42,5 @@ define('views/preferences/fields/time-format', 'views/fields/enum', function (De
             this.translatedOptions[''] = this.translate('Default') +
                 ' (' + this.getConfig().get('timeFormat') +')';
         },
-
     });
-
 });

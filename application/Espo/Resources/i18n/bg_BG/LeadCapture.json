@@ -19,7 +19,8 @@
     "duplicateCheck": "Проверка за дублиране",
     "skipOptInConfirmationIfSubscribed": "Пропуснете потвърждението, ако потенциалният клиент вече е в целевия списък",
     "smtpAccount": "SMTP профил",
-    "inboundEmail": "Групов имейл акаунт"
+    "inboundEmail": "Групов имейл акаунт",
+    "exampleRequestHeaders": "HTTP Хедъри"
   },
   "links": {
     "targetList": "Целеви списък",

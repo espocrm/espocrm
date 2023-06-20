@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of tтhe "EspoCRM" word.
  ************************************************************************/
 
-define('views/attachment/fields/name', 'views/fields/varchar', function (Dep) {
+define('views/attachment/fields/name', ['views/fields/varchar'], function (Dep) {
 
     return Dep.extend({
 
@@ -36,13 +36,14 @@ define('views/attachment/fields/name', 'views/fields/varchar', function (Dep) {
             var data = Dep.prototype.data.call(this);
 
             var url = this.getBasePath() + '?entryPoint=download&id=' + this.model.id;
+
             if (this.getUser().get('portalId')) {
                 url += '&portalId=' + this.getUser().get('portalId');
             }
 
             data.url = url;
-            return data;
-        }
 
+            return data;
+        },
     });
 });

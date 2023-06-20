@@ -41,44 +41,33 @@ use Espo\Core\Mail\Smtp\HandlerProcessor;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
-
 use Espo\Core\Utils\Crypt;
 use Espo\Entities\EmailAccount;
 use Espo\Entities\User;
 use Espo\Entities\Email;
-
-use Espo\ORM\EntityManager;
-
 use Espo\Core\Mail\Account\Account as AccountInterface;
 use Espo\Core\Mail\Account\FetchData;
+use Espo\ORM\EntityManager;
+
 use RuntimeException;
 
 class Account implements AccountInterface
 {
     private const PORTION_LIMIT = 10;
 
-    private EmailAccount $entity;
-    private EntityManager $entityManager;
     private User $user;
-    private Config $config;
-    private HandlerProcessor $handlerProcessor;
     private Crypt $crypt;
 
     /**
      * @throws Error
      */
     public function __construct(
-        EmailAccount $entity,
-        EntityManager $entityManager,
-        Config $config,
-        HandlerProcessor $handlerProcessor,
+        private EmailAccount $entity,
+        private EntityManager $entityManager,
+        private Config $config,
+        private HandlerProcessor $handlerProcessor,
         Crypt $crypt
     ) {
-        $this->entity = $entity;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->handlerProcessor = $handlerProcessor;
-
         if (!$this->entity->getAssignedUser()) {
             throw new Error("No assigned user.");
         }

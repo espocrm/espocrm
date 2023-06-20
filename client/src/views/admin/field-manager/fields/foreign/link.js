@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/field-manager/fields/foreign/link', 'views/fields/enum', function (Dep) {
+define('views/admin/field-manager/fields/foreign/link', ['views/fields/enum'], function (Dep) {
 
     return Dep.extend({
 
@@ -49,7 +49,7 @@ define('views/admin/field-manager/fields/foreign/link', 'views/fields/enum', fun
                 if (links[item].noJoin) {
                     return;
                 }
-                
+
                 if (links[item].disabled) {
                     return;
                 }

@@ -36,38 +36,30 @@ use Espo\Core\Utils\System;
 use Espo\Core\Job\Job\Status;
 use Espo\Entities\Job as JobEntity;
 use Espo\ORM\Collection;
+
 use DateTime;
+use Exception;
+use LogicException;
 
 class QueueUtil
 {
-    private Config $config;
-    private EntityManager $entityManager;
-    private ScheduleUtil $scheduleUtil;
-    private MetadataProvider $metadataProvider;
-
     private const NOT_EXISTING_PROCESS_PERIOD = 300;
     private const READY_NOT_STARTED_PERIOD = 60;
 
     public function __construct(
-        Config $config,
-        EntityManager $entityManager,
-        ScheduleUtil $scheduleUtil,
-        MetadataProvider $metadataProvider
-    ) {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->scheduleUtil = $scheduleUtil;
-        $this->metadataProvider = $metadataProvider;
-    }
+        private Config $config,
+        private EntityManager $entityManager,
+        private ScheduleUtil $scheduleUtil,
+        private MetadataProvider $metadataProvider
+    ) {}
 
     public function isJobPending(string $id): bool
     {
+        /** @var ?JobEntity $job */
         $job = $this->entityManager
-            ->getRDBRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->select(['id', 'status'])
-            ->where([
-                'id' => $id,
-            ])
+            ->where(['id' => $id])
             ->forUpdate()
             ->findOne();
 
@@ -123,7 +115,10 @@ class QueueUtil
 
         $where = [
             'scheduledJobId' => $scheduledJobId,
-            'status' => [Status::RUNNING, Status::READY],
+            'status' => [
+                Status::RUNNING,
+                Status::READY,
+            ],
         ];
 
         if ($targetId && $targetType) {
@@ -165,7 +160,7 @@ class QueueUtil
             ->find();
 
         foreach ($jobList as $job) {
-            $scheduledJobId =  $job->getScheduledJobId();
+            $scheduledJobId = $job->getScheduledJobId();
 
             if (!$scheduledJobId) {
                 continue;
@@ -179,7 +174,12 @@ class QueueUtil
 
     public function hasScheduledJobOnMinute(string $scheduledJobId, string $time): bool
     {
-        $dateObj = new DateTime($time);
+        try {
+            $dateObj = new DateTime($time);
+        }
+        catch (Exception $e) {
+            throw new LogicException($e->getMessage());
+        }
 
         $fromString = $dateObj->format('Y-m-d H:i:00');
         $toString = $dateObj->format('Y-m-d H:i:59');
@@ -389,7 +389,7 @@ class QueueUtil
     public function removePendingJobDuplicates(): void
     {
         $duplicateJobList = $this->entityManager
-            ->getRDBRepository(JobEntity::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(JobEntity::class)
             ->select(['scheduledJobId'])
             ->leftJoin('scheduledJob')
             ->where([
@@ -444,9 +444,7 @@ class QueueUtil
                 ->getQueryBuilder()
                 ->delete()
                 ->from(JobEntity::ENTITY_TYPE)
-                ->where([
-                    'id' => $jobIdList,
-                ])
+                ->where(['id' => $jobIdList])
                 ->build();
 
             $this->entityManager->getQueryExecutor()->execute($delete);

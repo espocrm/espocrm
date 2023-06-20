@@ -35,7 +35,7 @@ use RuntimeException;
 
 class AttachmentEntityWrapper implements Attachment
 {
-    private $attachment;
+    private AttachmentEntity $attachment;
 
     public function __construct(AttachmentEntity $attachment)
     {

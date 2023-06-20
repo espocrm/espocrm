@@ -31,23 +31,16 @@ namespace Espo\Core\Acl\Map;
 
 use Espo\Entities\User;
 
-use Espo\Core\{
-    InjectableFactory,
-    Acl\Table,
-    Acl\Map\Map,
-    Binding\BindingContainer,
-    Binding\Binder,
-    Binding\BindingData,
-};
+use Espo\Core\Acl\Table;
+use Espo\Core\Binding\Binder;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingData;
+use Espo\Core\InjectableFactory;
 
 class MapFactory
 {
-    private $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     public function create(User $user, Table $table): Map
     {
@@ -61,7 +54,6 @@ class MapFactory
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
-
         $binder
             ->bindInstance(User::class, $user)
             ->bindInstance(Table::class, $table)

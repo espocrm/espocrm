@@ -30,7 +30,6 @@
 namespace Espo\Core\Mail\Account;
 
 use Espo\Core\Mail\Account\Storage\Params;
-use Espo\Core\Mail\Account\Storage;
 
 interface StorageFactory
 {

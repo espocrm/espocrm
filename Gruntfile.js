@@ -33,16 +33,32 @@ const fs = require('fs');
 const cp = require('child_process');
 const path = require('path');
 const buildUtils = require('./js/build-utils');
+const BundlerGeneral = require("./js/bundler/bundler-general");
+const LayoutTypeBundler = require('./js/layout-template-bundler');
+const TemplateBundler = require('./js/template-bundler/template-bundler');
+const bundleConfig = require('./frontend/bundle-config.json');
+const libs = require('./frontend/libs.json');
 
 module.exports = grunt => {
 
     const pkg = grunt.file.readJSON('package.json');
-    const bundleConfig = require('./frontend/bundle-config.json');
-    const libs = require('./frontend/libs.json');
 
     const originalLibDir = 'client/lib/original';
 
-    let bundleJsFileList = buildUtils.getPreparedBundleLibList(libs).concat(originalLibDir + '/espo.js');
+    let libsBundleFileList = [
+        'client/src/namespace.js',
+        'client/src/loader.js',
+        ...buildUtils.getPreparedBundleLibList(libs),
+    ];
+
+    let bundleFileMap = {'client/lib/espo.min.js': libsBundleFileList};
+
+    for (let name in bundleConfig.chunks) {
+        let namePart = 'espo-' + name;
+
+        bundleFileMap[`client/lib/${namePart}.min.js`] = originalLibDir + `/${namePart}.js`
+    }
+
     let copyJsFileList = buildUtils.getCopyLibDataList(libs);
 
     let minifyLibFileList = copyJsFileList
@@ -90,7 +106,7 @@ module.exports = grunt => {
         mkdir: {
             tmp: {
                 options: {
-                    mode: 0755,
+                    mode: 0o755,
                     create: [
                         'build/tmp',
                     ],
@@ -110,9 +126,7 @@ module.exports = grunt => {
             beforeFinal: {
                 src: [
                     'build/tmp/custom/Espo/Custom/*',
-                    'build/tmp/custom/Espo/Modules/*',
                     '!build/tmp/custom/Espo/Custom/.htaccess',
-                    '!build/tmp/custom/Espo/Modules/.htaccess',
                     'build/tmp/install/config.php',
                     'build/tmp/vendor/*/*/.git',
                     'build/tmp/custom/Espo/Custom/*',
@@ -120,6 +134,10 @@ module.exports = grunt => {
                     '!build/tmp/client/custom/modules',
                     'build/tmp/client/custom/modules/*',
                     '!build/tmp/client/custom/modules/dummy.txt',
+                    'build/tmp/client/lib/original/espo.js',
+                    'build/tmp/client/lib/original/espo-*.js',
+                    '!build/tmp/client/lib/original/espo-funnel-chart.js',
+                    'build/tmp/client/lib/transpiled',
                 ]
             },
         },
@@ -144,9 +162,7 @@ module.exports = grunt => {
                 options: {
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
                 },
-                files: {
-                    'client/lib/espo.min.js': bundleJsFileList,
-                },
+                files: bundleFileMap,
             },
             lib: {
                 files: minifyLibFileList,
@@ -164,7 +180,6 @@ module.exports = grunt => {
                     'src/**',
                     'res/**',
                     'fonts/**',
-                    'cfg/**',
                     'modules/**',
                     'img/**',
                     'css/**',
@@ -236,7 +251,7 @@ module.exports = grunt => {
                 options: {
                     patterns: [
                         {
-                            match: /\# \{\#dev\}(.*)\{\/dev\}/gs,
+                            match: /# \{#dev}(.*)\{\/dev}/gs,
                             replacement: '',
                         }
                     ]
@@ -251,16 +266,43 @@ module.exports = grunt => {
         },
     });
 
-    grunt.registerTask('espo-bundle', () => {
-        const Bundler = require('./js/bundler');
-
-        let contents = (new Bundler()).bundle(bundleConfig.jsFiles);
-
+    const writeOriginalLib = (name, contents) => {
         if (!fs.existsSync(originalLibDir)) {
             fs.mkdirSync(originalLibDir);
         }
 
-        fs.writeFileSync(originalLibDir + '/espo.js', contents, 'utf8');
+        let file = originalLibDir + `/${name}.js`;
+
+        fs.writeFileSync(file, contents, 'utf8');
+    };
+
+    grunt.registerTask('bundle', () => {
+        let bundler = new BundlerGeneral(bundleConfig, libs);
+
+        let result = bundler.bundle();
+
+        for (let name in result) {
+            let contents = result[name];
+
+            let key = 'espo-' + name;
+
+            if (name === 'main') {
+                contents += '\n' + (new LayoutTypeBundler()).bundle();
+            }
+
+            writeOriginalLib(key, contents);
+        }
+    });
+
+    grunt.registerTask('bundle-templates', () => {
+        let templateBundler = new TemplateBundler({
+            dirs: [
+                'client/res/templates',
+                'client/modules/crm/res/templates',
+            ],
+        });
+
+        templateBundler.process();
     });
 
     grunt.registerTask('prepare-lib-original', () => {
@@ -270,6 +312,10 @@ module.exports = grunt => {
 
     grunt.registerTask('prepare-lib', () => {
         cp.execSync("node js/scripts/prepare-lib");
+    });
+
+    grunt.registerTask('transpile', () => {
+        cp.execSync("node js/transpile");
     });
 
     grunt.registerTask('chmod-folders', () => {
@@ -445,8 +491,10 @@ module.exports = grunt => {
     grunt.registerTask('internal', [
         'less',
         'cssmin',
-        'espo-bundle',
         'prepare-lib-original',
+        'transpile',
+        'bundle',
+        'bundle-templates',
         'uglify:bundle',
         'copy:frontendLib',
         'prepare-lib',

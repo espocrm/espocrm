@@ -29,34 +29,26 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\{
-    Exceptions\Forbidden,
-    Exceptions\BadRequest,
-    Api\Request,
-    DataManager,
-};
-
-use Espo\{
-    Tools\LabelManager\LabelManager as LabelManagerTool,
-    Entities\User,
-};
+use Espo\Core\Api\Request;
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Entities\User;
+use Espo\Tools\LabelManager\LabelManager as LabelManagerTool;
 
 use stdClass;
 
 class LabelManager
 {
-    private $user;
 
-    private $dataManager;
-
-    private $labelManagerTool;
-
-    public function __construct(User $user, DataManager $dataManager, LabelManagerTool $labelManagerTool)
-    {
-        $this->user = $user;
-        $this->dataManager = $dataManager;
-        $this->labelManagerTool = $labelManagerTool;
-
+    /**
+     * @throws Forbidden
+     */
+    public function __construct(
+        private User $user,
+        private DataManager $dataManager,
+        private LabelManagerTool $labelManagerTool
+    ) {
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }

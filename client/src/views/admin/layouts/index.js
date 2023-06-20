@@ -241,7 +241,8 @@ define('views/admin/layouts/index', ['view'], function (Dep) {
             }, (view) => {
                 this.renderLayoutHeader();
                 view.render();
-                this.notify(false);
+                Espo.Ui.notify(false);
+
                 $(window).scrollTop(0);
             });
         },

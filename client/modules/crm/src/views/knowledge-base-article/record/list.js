@@ -45,12 +45,12 @@ define('crm:views/knowledge-base-article/record/list', ['views/record/list'], fu
                 return;
             }
 
-            this.ajaxPostRequest('knowledgeBaseArticle/action/moveToTop', {
+            Espo.Ajax.postRequest('KnowledgeBaseArticle/action/moveToTop', {
                 id: model.id,
-                where: this.collection.getWhere()
-            }).then(function () {
+                where: this.collection.getWhere(),
+            }).then(() => {
                 this.collection.fetch();
-            }.bind(this));
+            });
         },
 
         actionMoveUp: function (data) {
@@ -66,12 +66,12 @@ define('crm:views/knowledge-base-article/record/list', ['views/record/list'], fu
                 return;
             }
 
-            this.ajaxPostRequest('knowledgeBaseArticle/action/moveUp', {
+            Espo.Ajax.postRequest('KnowledgeBaseArticle/action/moveUp', {
                 id: model.id,
-                where: this.collection.getWhere()
-            }).then(function () {
+                where: this.collection.getWhere(),
+            }).then(() => {
                 this.collection.fetch();
-            }.bind(this));
+            });
         },
 
         actionMoveDown: function (data) {
@@ -87,12 +87,12 @@ define('crm:views/knowledge-base-article/record/list', ['views/record/list'], fu
                 return;
             }
 
-            this.ajaxPostRequest('knowledgeBaseArticle/action/moveDown', {
+            Espo.Ajax.postRequest('KnowledgeBaseArticle/action/moveDown', {
                 id: model.id,
-                where: this.collection.getWhere()
-            }).then(function () {
+                where: this.collection.getWhere(),
+            }).then(() => {
                 this.collection.fetch();
-            }.bind(this));
+            });
         },
 
         actionMoveToBottom: function (data) {
@@ -108,12 +108,12 @@ define('crm:views/knowledge-base-article/record/list', ['views/record/list'], fu
                 return;
             }
 
-            this.ajaxPostRequest('knowledgeBaseArticle/action/moveToBottom', {
+            Espo.Ajax.postRequest('KnowledgeBaseArticle/action/moveToBottom', {
                 id: model.id,
-                where: this.collection.getWhere()
-            }).then(function () {
+                where: this.collection.getWhere(),
+            }).then(() => {
                 this.collection.fetch();
-            }.bind(this));
+            });
         },
     });
 });

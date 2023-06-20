@@ -29,27 +29,17 @@
 
 namespace Espo\Core\Console\Commands;
 
-use Espo\Core\{
-    InjectableFactory,
-    Utils\File\Manager as FileManager,
-    Console\Command,
-    Console\Command\Params,
-    Console\IO,
-};
-
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Util;
 
 class AppInfo implements Command
 {
-    private InjectableFactory $injectableFactory;
-
-    private FileManager $fileManager;
-
-    public function __construct(InjectableFactory $injectableFactory, FileManager $fileManager)
-    {
-        $this->injectableFactory = $injectableFactory;
-        $this->fileManager = $fileManager;
-    }
+    public function __construct(private InjectableFactory $injectableFactory, private FileManager $fileManager)
+    {}
 
     public function run(Params $params, IO $io): void
     {

@@ -156,7 +156,7 @@ class EntityProcessor
 
     /**
      *
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      * @return string
      */
     private function composeBarcodeTag(array $data): string

@@ -18,12 +18,12 @@
         "teams": "Teams"
     },
     "tooltips": {
-        "assignmentPermission": "Allows to restrict an ability to assign records and post messages to other users.\n\nall - no restriction\n\nteam - can assign and post only to teammates\n\nno - can assign and post only to self",
-        "userPermission": "Allows to restrict an ability for users to view activities, calendar and stream of other users.\n\nall - can view all\n\nteam - can view activities of teammates only\n\nno - can't view",
-        "portalPermission": "Defines an access to portal information, ability to post messages to portal users.",
-        "groupEmailAccountPermission": "Defines an access to group email accounts, an ability to send emails from group SMTP.",
-        "exportPermission": "Defines whether users have an ability to export records.",
-        "massUpdatePermission": "Defines whether users have an ability to do mass update of records.",
+        "assignmentPermission": "Allows to assign records to other users.\n\n* all – no restriction\n* team – can assign only to teammates\n* no – can assign only to self",
+        "userPermission": "Allows view activities, calendar and stream of other users.\n\n* all – can view all\n* team – can view activities of teammates only\n* no – can't view",
+        "portalPermission": "Access to portal information, the ability to post messages to portal users.",
+        "groupEmailAccountPermission": "Access to group email accounts, the ability to send emails from group SMTP.",
+        "exportPermission": "Allows to export records.",
+        "massUpdatePermission": "The ability to perform mass update of records.",
         "followerManagementPermission": "Allows to manage followers of specific records.",
         "dataPrivacyPermission": "Allows to view and erase personal data."
     },

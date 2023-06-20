@@ -26,190 +26,250 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module ajax */
+
 /**
- * @module ajax
+ * Functions for API HTTP requests.
  */
-define('ajax', [], function () {
+const Ajax = Espo.Ajax = {
 
     /**
-     * Ajax request functions.
+     * Options.
+     *
+     * @typedef {Object} Espo.Ajax~Options
+     *
+     * @property {Number} [timeout] A timeout.
+     * @property {Object.<string,string>} [headers] A request headers.
+     * @property {'xml'|'json'|'text'} [dataType] A data type.
+     * @property {boolean} [local] If true, the API URL won't be prepended.
+     * @property {string} [contentType] A content type.
+     * @property {boolean} [fullResponse] To resolve with `module:ajax.XhrWrapper`.
      */
-    let Ajax = Espo.Ajax = {
 
-        /**
-         * Options.
-         *
-         * @typedef {Object} Espo.Ajax~Options
-         *
-         * @property {Number} [timeout] A timeout.
-         * @property {Object.<string,string>} [headers] A request headers.
-         * @property {'xml'|'json'|'text'} [dataType] A data type.
-         * @property {boolean} [local] If true, the API URL won't be prepended.
-         * @property {string} [contentType] A content type.
-         * @property {boolean} [fullResponse] To resolve with `module:ajax.XhrWrapper`.
-         */
+    /**
+     * Request.
+     *
+     * @param {string} url An URL.
+     * @param {string} method An HTTP method.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
+     * @returns {AjaxPromise<any>}
+     */
+    request: function (url, method, data, options) {
+        options = options || {};
 
-        /**
-         * Request.
-         *
-         * @param {string} url An URL.
-         * @param {string} type A method.
-         * @param {any} [data] Data.
-         * @param {Espo.Ajax~Options} [options] Options.
-         * @returns {Promise<any>}
-         */
-        request: function (url, type, data, options) {
-            options = options || {};
+        options.type = method;
+        options.url = url;
 
-            options.type = type;
-            options.url = url;
-
-            if (data) {
-                options.data = data;
-            }
-
-            return new AjaxPromise((resolve, reject) => {
-                $.ajax(options)
-                    .then((response, status, xhr) => {
-                        let obj = options.fullResponse ?
-                            new XhrWrapper(xhr) :
-                            response;
-
-                        resolve(obj);
-                    })
-                    .fail(xhr => {
-                        reject(xhr);
-                    });
-            });
-        },
-
-        /**
-         * POST request.
-         *
-         * @param {string} url An URL.
-         * @param {any} [data] Data.
-         * @param {Espo.Ajax~Options} [options] Options.
-         * @returns {Promise<any>}
-         */
-        postRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
-
-            return Ajax.request(url, 'POST', data, options);
-        },
-
-        /**
-         * PATCH request.
-         *
-         * @param {string} url An URL.
-         * @param {any} [data] Data.
-         * @param {Espo.Ajax~Options} [options] Options.
-         * @returns {Promise<any>}
-         */
-        patchRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
-
-            return Ajax.request(url, 'PATCH', data, options);
-        },
-
-        /**
-         * PUT request.
-         *
-         * @param {string} url An URL.
-         * @param {any} [data] Data.
-         * @param {Espo.Ajax~Options} [options] Options.
-         * @returns {Promise<any>}
-         */
-        putRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
-
-            return Ajax.request(url, 'PUT', data, options);
-        },
-
-        /**
-         * DELETE request.
-         *
-         * @param {string} url An URL.
-         * @param {any} [data] Data.
-         * @param {Espo.Ajax~Options} [options] Options.
-         * @returns {Promise<any>}
-         */
-        deleteRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
-
-            return Ajax.request(url, 'DELETE', data, options);
-        },
-
-        /**
-         * GET request.
-         *
-         * @param {string} url An URL.
-         * @param {any} [data] Data.
-         * @param {Espo.Ajax~Options} [options] Options.
-         * @returns {Promise<any>}
-         */
-        getRequest: function (url, data, options) {
-            return Ajax.request(url, 'GET', data, options);
-        },
-    };
-
-    // For bc.
-    class AjaxPromise extends Promise {
-        fail(...args) {
-            return this.catch(args[0]);
+        if (data) {
+            options.data = data;
         }
-        done(...args) {
-            return this.then(args[0]);
+
+        let promiseWrapper = {};
+
+        let promise = new AjaxPromise((resolve, reject) => {
+            let xhr = $.ajax(options);
+
+            xhr
+                .then((response, status, xhr) => {
+                    let obj = options.fullResponse ? new XhrWrapper(xhr) : response;
+
+                    resolve(obj);
+                })
+                .fail(xhr => reject(xhr));
+
+            if (promiseWrapper.promise) {
+                promiseWrapper.promise.xhr = xhr;
+
+                return;
+            }
+
+            promiseWrapper.xhr = xhr;
+        });
+
+        promiseWrapper.promise = promise;
+        promise.xhr = promise.xhr || promiseWrapper.xhr;
+
+        return promise;
+    },
+
+    /**
+     * POST request.
+     *
+     * @param {string} url An URL.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
+     * @returns {Promise<any>}
+     */
+    postRequest: function (url, data, options) {
+        if (data) {
+            data = JSON.stringify(data);
+        }
+
+        return Ajax.request(url, 'POST', data, options);
+    },
+
+    /**
+     * PATCH request.
+     *
+     * @param {string} url An URL.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
+     * @returns {Promise<any>}
+     */
+    patchRequest: function (url, data, options) {
+        if (data) {
+            data = JSON.stringify(data);
+        }
+
+        return Ajax.request(url, 'PATCH', data, options);
+    },
+
+    /**
+     * PUT request.
+     *
+     * @param {string} url An URL.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
+     * @returns {Promise<any>}
+     */
+    putRequest: function (url, data, options) {
+        if (data) {
+            data = JSON.stringify(data);
+        }
+
+        return Ajax.request(url, 'PUT', data, options);
+    },
+
+    /**
+     * DELETE request.
+     *
+     * @param {string} url An URL.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
+     * @returns {Promise<any>}
+     */
+    deleteRequest: function (url, data, options) {
+        if (data) {
+            data = JSON.stringify(data);
+        }
+
+        return Ajax.request(url, 'DELETE', data, options);
+    },
+
+    /**
+     * GET request.
+     *
+     * @param {string} url An URL.
+     * @param {*} [data] Data.
+     * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
+     * @returns {Promise<any>}
+     */
+    getRequest: function (url, data, options) {
+        return Ajax.request(url, 'GET', data, options);
+    },
+};
+
+/**
+ * @memberOf module:ajax
+ */
+class AjaxPromise extends Promise {
+
+    /**
+     * @type {JQueryXHR|null}
+     * @internal
+     */
+    xhr = null
+
+    isAborted = false
+
+    /** @deprecated Use `catch`. */
+    fail(...args) {
+        return this.catch(args[0]);
+    }
+    /** @deprecated Use `then`. */
+    done(...args) {
+        return this.then(args[0]);
+    }
+
+    /**
+     * Abort the request.
+     */
+    abort() {
+        this.isAborted = true;
+
+        if (this.xhr) {
+            this.xhr.abort();
         }
     }
 
     /**
-     * @name module:ajax.XhrWrapper
+     * Get a ready state.
+     *
+     * @return {Number}
      */
-    class XhrWrapper {
-        /**
-         * @param {JQueryXHR} xhr
-         */
-        constructor(xhr) {
-            this.xhr = xhr;
+    getReadyState() {
+        if (!this.xhr) {
+            return 0;
         }
 
-        /**
-         * @param {string} name
-         * @return {string}
-         */
-        getResponseHeader(name) {
-            return this.xhr.getResponseHeader(name);
-        }
-
-        /**
-         * @return {Number}
-         */
-        getStatus() {
-            return this.xhr.status;
-        }
-
-        /**
-         * @return {*}
-         */
-        getResponseParsedBody() {
-            return this.xhr.responseJSON;
-        }
-
-        /**
-         * @return {string}
-         */
-        getResponseBody() {
-            return this.xhr.responseText;
-        }
+        return this.xhr.readyState || 0;
     }
 
-    return Ajax;
-});
+    /**
+     * Get a status code
+     *
+     * @return {Number}
+     */
+    getStatus() {
+        if (!this.xhr) {
+            return 0;
+        }
+
+        return this.xhr.status;
+    }
+}
+
+/**
+ * @name module:ajax.XhrWrapper
+ */
+class XhrWrapper {
+
+    /**
+     * @param {JQueryXHR} xhr
+     */
+    constructor(xhr) {
+        this.xhr = xhr;
+    }
+
+    /**
+     * @param {string} name
+     * @return {string}
+     */
+    getResponseHeader(name) {
+        return this.xhr.getResponseHeader(name);
+    }
+
+    /**
+     * @return {Number}
+     */
+    getStatus() {
+        return this.xhr.status;
+    }
+
+    /**
+     * @return {*}
+     */
+    getResponseParsedBody() {
+        return this.xhr.responseJSON;
+    }
+
+    /**
+     * @return {string}
+     */
+    getResponseBody() {
+        return this.xhr.responseText;
+    }
+}
+
+export default Ajax;

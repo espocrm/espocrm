@@ -29,10 +29,12 @@
 
 namespace Espo\Core\Templates\Services;
 
+use Espo\Services\Record;
+
 /**
- * @extends \Espo\Services\Record<\Espo\Core\Templates\Entities\Event>
+ * @extends Record<\Espo\Core\Templates\Entities\Event>
  */
-class Event extends \Espo\Services\Record
+class Event extends Record
 {
     protected $validateRequiredSkipFieldList = [
         'dateEnd'

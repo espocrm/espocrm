@@ -38,9 +38,8 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\ObjectUtil;
-
+use Espo\Entities\ActionHistoryRecord;
 use Espo\ORM\Entity;
-
 use Espo\Entities\EmailAddress;
 use Espo\Entities\PhoneNumber;
 
@@ -82,6 +81,8 @@ class Merger
         $service->filterUpdateInput($clonedData);
 
         $entity->set($clonedData);
+
+        $this->unsetNotActualAttributes($entity);
 
         if (!$service->checkAssignment($entity)) {
             throw new Forbidden("Assignment permission failure.");
@@ -136,7 +137,7 @@ class Merger
         foreach ($sourceEntityList as $sourceEntity) {
             $this->entityManager->removeEntity($sourceEntity);
 
-            $service->processActionHistoryRecord('delete', $sourceEntity);
+            $service->processActionHistoryRecord(ActionHistoryRecord::ACTION_DELETE, $sourceEntity);
         }
 
         if ($hasPhoneNumber) {
@@ -151,7 +152,7 @@ class Merger
 
         $this->entityManager->saveEntity($entity);
 
-        $service->processActionHistoryRecord('update', $entity);
+        $service->processActionHistoryRecord(ActionHistoryRecord::ACTION_UPDATE, $entity);
     }
 
     /**
@@ -364,5 +365,21 @@ class Merger
         }
 
         $data->emailAddressData = $emailAddressData;
+    }
+
+    private function unsetNotActualAttributes(Entity $entity): void
+    {
+        $fieldDefsList = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->getFieldList();
+
+        foreach ($fieldDefsList as $fieldDefs) {
+            $field = $fieldDefs->getName();
+
+            if ($fieldDefs->getType() === 'link' && $entity->isAttributeChanged($field . 'Id')) {
+                $entity->clear($field . 'Name');
+            }
+        }
     }
 }

@@ -12,6 +12,12 @@
             "tooltip": "optionsArray"
         },
         {
+            "name": "optionsReference",
+            "type": "varchar",
+            "view": "views/admin/field-manager/fields/options-reference",
+            "tooltip": true
+        },
+        {
             "name": "translation",
             "type": "varchar",
             "hidden": true

@@ -41,6 +41,7 @@ use Espo\Core\Formula\Parser\Ast\Variable;
 use Espo\ORM\Entity;
 use Espo\Core\InjectableFactory;
 
+use LogicException;
 use stdClass;
 
 /**
@@ -70,7 +71,6 @@ class Evaluator
      *
      * @throws SyntaxError
      * @throws Error
-     * @throws ExecutionException
      */
     public function process(string $expression, ?Entity $entity = null, ?stdClass $variables = null): mixed
     {
@@ -83,7 +83,14 @@ class Evaluator
         );
 
         $item = $this->getParsedExpression($expression);
-        $result = $processor->process($item);
+
+        try {
+            $result = $processor->process($item);
+        }
+        catch (ExecutionException $e) {
+            throw new LogicException('Unexpected ExecutionException.', 0, $e);
+        }
+
         $this->attributeFetcher->resetRuntimeCache();
 
         return $result;

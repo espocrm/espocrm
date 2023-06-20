@@ -33,24 +33,19 @@ use Espo\Core\Utils\File\Manager as FileManager;
 
 class Loader
 {
-    private NamespaceLoader $namespaceLoader;
-
-    private FileManager $fileManager;
-
-    public function __construct(NamespaceLoader $namespaceLoader, FileManager $fileManager)
-    {
-        $this->namespaceLoader = $namespaceLoader;
-        $this->fileManager = $fileManager;
-    }
+    public function __construct(
+        private NamespaceLoader $namespaceLoader,
+        private FileManager $fileManager
+    ) {}
 
     /**
      *
      * @param array{
-     *   psr-4?: array<string,mixed>,
-     *   psr-0?: array<string,mixed>,
-     *   classmap?: array<string,mixed>,
-     *   autoloadFileList?: array<string,mixed>,
-     *   files?: array<string,mixed>,
+     *   psr-4?: array<string, mixed>,
+     *   psr-0?: array<string, mixed>,
+     *   classmap?: array<string, mixed>,
+     *   autoloadFileList?: array<string, mixed>,
+     *   files?: array<string, mixed>,
      * } $data
      */
     public function register(array $data): void
@@ -66,7 +61,7 @@ class Loader
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     private function registerAutoloadFileList(array $data): void
     {
@@ -84,7 +79,7 @@ class Loader
     }
 
     /**
-     * @param array<string,mixed> $data
+     * @param array<string, mixed> $data
      */
     private function registerFiles(array $data): void
     {

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/dashlets/options/sales-pipeline/fields/team', 'views/fields/link', function (Dep) {
+define('crm:views/dashlets/options/sales-pipeline/fields/team', ['views/fields/link'], function (Dep) {
 
     return Dep.extend({
 

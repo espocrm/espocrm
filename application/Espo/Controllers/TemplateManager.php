@@ -31,33 +31,24 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\TemplateFileManager;
 use Espo\Core\ApplicationState;
-
-use Espo\Core\{
-    Api\Request,
-};
+use Espo\Core\Api\Request;
 
 use stdClass;
 
 class TemplateManager
 {
-    private $metadata;
 
-    private $templateFileManager;
-
-    private $applicationState;
-
+    /**
+     * @throws Forbidden
+     */
     public function __construct(
-        Metadata $metadata,
-        TemplateFileManager $templateFileManager,
-        ApplicationState $applicationState
+        private Metadata $metadata,
+        private TemplateFileManager $templateFileManager,
+        private ApplicationState $applicationState
     ) {
-        $this->metadata = $metadata;
-        $this->templateFileManager = $templateFileManager;
-        $this->applicationState = $applicationState;
 
         if (!$this->applicationState->isAdmin()) {
             throw new Forbidden();

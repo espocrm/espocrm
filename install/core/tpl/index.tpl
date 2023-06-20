@@ -6,9 +6,9 @@
         <meta content="utf-8" http-equiv="encoding">
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
+        <script type="application/json" data-name="loader-params">{$loaderParams}</script>
+
         {if $isBuilt}
-        <script type="text/javascript" src="../client/lib/espo.min.js"></script>
-        {else}
         {foreach from=$libFileList item=file}
         <script type="text/javascript" src="../{$file}"></script>
         {/foreach}

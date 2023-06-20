@@ -37,12 +37,8 @@ use Espo\Core\Utils\Metadata;
 
 class Actual implements Filter
 {
-    private $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {
