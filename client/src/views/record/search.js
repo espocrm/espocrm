@@ -323,7 +323,7 @@ class SearchView extends View {
         }
 
         for (let field in this.advanced) {
-            this.createFilter(field, this.advanced[field], () =>{
+            this.createFilter(field, this.advanced[field], () => {
                 i++;
 
                 if (i === count) {
@@ -351,14 +351,14 @@ class SearchView extends View {
             e.currentTarget.select();
         },
         /** @this SearchView */
-        'click .advanced-filters-apply-container a[data-action="applyFilters"]': function (e) {
+        'click .advanced-filters-apply-container a[data-action="applyFilters"]': function () {
             this.search();
             this.hideApplyFiltersButton();
 
             this.$el.find('button.search').focus();
         },
         /** @this SearchView */
-        'click button[data-action="search"]': function (e) {
+        'click button[data-action="search"]': function () {
             this.search();
             this.hideApplyFiltersButton();
         },
@@ -380,11 +380,11 @@ class SearchView extends View {
             this.removeFilter(name);
         },
         /** @this SearchView */
-        'click button[data-action="reset"]': function (e) {
+        'click button[data-action="reset"]': function () {
             this.resetFilters();
         },
         /** @this SearchView */
-        'click button[data-action="refresh"]': function (e) {
+        'click button[data-action="refresh"]': function () {
             this.refresh();
         },
         /** @this SearchView */
@@ -496,13 +496,13 @@ class SearchView extends View {
 
         this.presetName = this.primary;
 
-        this.createFilter(name, {}, (view) => {
+        this.createFilter(name, {}, view => {
             view.populateDefaults();
 
             this.fetch();
             this.updateSearch();
 
-            if (view.getView('field').initialSearchIsNotIdle) {
+            if (view.getFieldView().initialSearchIsNotIdle) {
                 this.showApplyFiltersButton();
             }
         });
@@ -705,7 +705,7 @@ class SearchView extends View {
             minChars: 0,
             noCache: true,
             triggerSelectOnValidInput: false,
-            beforeRender: ($container) => {
+            beforeRender: $container => {
                 $container.addClass('text-search-suggestions');
 
                 $container.off('mousedown');
@@ -1061,6 +1061,17 @@ class SearchView extends View {
         this.bool = searchData.bool;
     }
 
+    /**
+     * @callback SearchView~createFilterCallback
+     * @param {module:views/search/filter} view
+     */
+
+    /**
+     * @param {string} name
+     * @param {Object.<string, *>} params
+     * @param {SearchView~createFilterCallback} callback
+     * @param {boolean} [noRender]
+     */
     createFilter(name, params, callback, noRender) {
         params = params || {};
 
@@ -1079,7 +1090,7 @@ class SearchView extends View {
             model: this.model,
             params: params,
             el: this.options.el + ' .filter[data-name="' + name + '"]',
-        }, (view) => {
+        }, view => {
             if (typeof callback === 'function') {
                 view.once('after:render', () => {
                     callback(view);

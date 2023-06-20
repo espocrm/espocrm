@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module views/search/filter */
+
 import View from 'view';
 
 class FilterView extends View {
