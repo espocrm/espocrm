@@ -309,7 +309,15 @@ class DateFieldView extends BaseFieldView {
         return this.getDateTime().fromDisplayDate(string);
     }
 
+    /**
+     * @param {string} string
+     * @return {string|-1|null}
+     */
     parse(string) {
+        if (!string) {
+            return null;
+        }
+
         return this.parseDate(string);
     }
 

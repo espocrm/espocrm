@@ -343,7 +343,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
 
         if (model.get('dateSent')) {
             let line = this.getLanguage().translate('dateSent', 'fields', 'Email') + ': ';
-            line += this.getDateTime().toDisplayDateTime(model.get('dateSent'));
+            line += this.getDateTime().toDisplay(model.get('dateSent'));
 
             list.push(line);
         }
@@ -416,7 +416,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
             let name = value.replace(/<(.*)>/, '').trim();
 
             if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
-                name = name.substr(1, name.length - 2);
+                name = name.slice(1, name.length - 2);
             }
 
             return name;
@@ -449,7 +449,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
      * Add body attributes for a reply email.
      *
      * @param {module:model} model An email model.
-     * @param {Object} attributes
+     * @param {Object.<string, *>} attributes
      */
     addReplyBodyAttributes: function (model, attributes) {
         let format = this.getDateTime().getReadableShortDateTimeFormat();
@@ -508,7 +508,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
      * Compose a mailto link.
      *
      * @param {Object} attributes Attributes.
-     * @param {boolean} [bcc=false] To include BCC.
+     * @param {string} [bcc] BCC.
      * @returns {string} A mailto link.
      */
     composeMailToLink: function (attributes, bcc) {
@@ -523,11 +523,12 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
         }
 
         if (attributes.bcc) {
-             if (!bcc) {
+            if (!bcc) {
                 bcc = '';
             } else {
                 bcc += ';';
             }
+
             bcc += attributes.bcc;
         }
 

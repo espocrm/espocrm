@@ -291,7 +291,7 @@ class App  {
 
     /**
      * @private
-     * @type {module:number-util|null}
+     * @type {module:num-util|null}
      */
     numberUtil = null
 

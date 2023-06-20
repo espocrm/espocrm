@@ -38,7 +38,7 @@ class FieldManager {
      *
      * @param {Object} [defs] Field type definitions (metadata > fields).
      * @param {module:metadata} [metadata] Metadata.
-     * @param {modules:acl-manager} [acl] An ACL.
+     * @param {module:acl-manager} [acl] An ACL.
      */
     constructor(defs, metadata, acl) {
 

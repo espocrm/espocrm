@@ -250,7 +250,7 @@ class View extends BullView {
     /**
      * Get the number-util.
      *
-     * @returns {module:number-util}
+     * @returns {module:num-util}
      */
     getNumberUtil() {
         return this._helper.numberUtil;

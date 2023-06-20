@@ -144,7 +144,7 @@ class AclManager {
     getPermissionLevel(permission) {
         let permissionKey = permission;
 
-        if (permission.substr(-10) !== 'Permission') {
+        if (permission.slice(-10) !== 'Permission') {
             permissionKey = permission + 'Permission';
         }
 
@@ -201,7 +201,7 @@ class AclManager {
      * @param {string} scope A scope.
      * @param {module:acl-manager~action|null} [action=null] An action.
      * @param {boolean} [precise=false] Deprecated. Not used.
-     * @returns {boolean} True if has access.
+     * @returns {boolean} True if access allowed.
      */
     checkScope(scope, action, precise) {
         let data = (this.data.table || {})[scope];
@@ -220,7 +220,7 @@ class AclManager {
      * @param {module:acl-manager~action|null} [action=null] An action.
      * @param {boolean} [precise=false] To return `null` if not enough data is set in a model.
      *   E.g. the `teams` field is not yet loaded.
-     * @returns {boolean|null} True if has access, null if not clear.
+     * @returns {boolean|null} True if access allowed, null if not enough data to determine.
      */
     checkModel(model, action, precise) {
         var scope = model.name;
@@ -264,7 +264,7 @@ class AclManager {
      * @param {module:acl-manager~action|null} [action=null] An action.
      * @param {boolean} [precise=false]  To return `null` if not enough data is set in a model.
      *   E.g. the `teams` field is not yet loaded.
-     * @returns {boolean|null} {boolean|null} True if has access, null if not clear.
+     * @returns {boolean|null} True if access allowed, null if not enough data to determine.
      */
     check(subject, action, precise) {
         if (typeof subject === 'string') {
@@ -284,6 +284,7 @@ class AclManager {
         return this.getImplementation(model.name).checkIsOwner(model);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Check if a user in a team of a model.
      *
@@ -298,7 +299,7 @@ class AclManager {
      * Check an assignment permission to a user.
      *
      * @param {module:models/user} user A user.
-     * @returns {boolean} True if has access.
+     * @returns {boolean} True if access allowed.
      */
     checkAssignmentPermission(user) {
         return this.checkPermission('assignmentPermission', user);
@@ -308,7 +309,7 @@ class AclManager {
      * Check a user permission to a user.
      *
      * @param {module:models/user} user A user.
-     * @returns {boolean} True if has access.
+     * @returns {boolean} True if access allowed.
      */
     checkUserPermission(user) {
         return this.checkPermission('userPermission', user);
@@ -319,14 +320,14 @@ class AclManager {
      *
      * @param {string} permission A permission name.
      * @param {module:models/user} user A user.
-     * @returns {boolean} True if has access.
+     * @returns {boolean} True if access allowed.
      */
     checkPermission(permission, user) {
         if (this.getUser().isAdmin()) {
             return true;
         }
 
-        let level = this.get(permission);
+        let level = this.getPermissionLevel(permission);
 
         if (level === 'no') {
             if (user.id === this.getUser().id) {
@@ -458,10 +459,10 @@ class AclManager {
      * Check an assignment permission to a team.
      *
      * @param {string} teamId A team ID.
-     * @returns {boolean} True if has access.
+     * @returns {boolean} True if access allowed.
      */
     checkTeamAssignmentPermission(teamId) {
-        if (this.get('assignmentPermission') === 'all') {
+        if (this.getPermissionLevel('assignmentPermission') === 'all') {
             return true;
         }
 
@@ -473,7 +474,7 @@ class AclManager {
      * @param {string} scope An entity type.
      * @param {string} field A field.
      * @param {'read'|'edit'} [action='read'] An action.
-     * @returns {boolean} True if has access.
+     * @returns {boolean} True if access allowed.
      */
     checkField(scope, field, action) {
         return !~this.getScopeForbiddenFieldList(scope, action).indexOf(field);

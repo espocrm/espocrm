@@ -240,6 +240,7 @@ class Language {
         return this.load(null, true);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Load default-language data from the backend.
      *

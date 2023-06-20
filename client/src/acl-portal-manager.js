@@ -36,6 +36,7 @@ import AclPortal from 'acl-portal';
  */
 class AclPortalManager extends AclManager {
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Check if a user in an account of a model.
      *
@@ -43,9 +44,14 @@ class AclPortalManager extends AclManager {
      * @returns {boolean|null} True if in an account, null if not clear.
      */
     checkInAccount(model) {
-        return this.getImplementation(model.name).checkInAccount(model);
+        const impl =
+            /** @type {module:acl-portal} */
+            this.getImplementation(model.name);
+
+        return impl.checkInAccount(model);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Check if a user is a contact-owner to a model.
      *
@@ -53,7 +59,11 @@ class AclPortalManager extends AclManager {
      * @returns {boolean|null} True if in a contact-owner, null if not clear.
      */
     checkIsOwnContact(model) {
-        return this.getImplementation(model.name).checkIsOwnContact(model);
+        const impl =
+            /** @type {module:acl-portal} */
+            this.getImplementation(model.name);
+
+        return impl.checkIsOwnContact(model);
     }
 
     /**

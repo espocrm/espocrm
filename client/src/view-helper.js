@@ -215,7 +215,7 @@ class ViewHelper {
     /**
      * A number util.
      *
-     * @type {module:number-util}
+     * @type {module:num-util}
      */
     numberUtil = null
 

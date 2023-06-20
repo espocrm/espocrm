@@ -315,7 +315,7 @@ class Controller {
                 continue;
             }
 
-            let key = k.substr(15);
+            let key = k.slice(15);
 
             this.clearStoredMainView(key);
         }

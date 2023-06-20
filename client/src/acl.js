@@ -75,7 +75,7 @@ class Acl {
      * @param {module:acl-manager~action|null} [action=null] An action.
      * @param {boolean} [precise=false] To return `null` if `inTeam == null`.
      * @param {Object|null} [entityAccessData=null] Entity access data. `inTeam`, `isOwner`.
-     * @returns {boolean|null} True if has access.
+     * @returns {boolean|null} True if access allowed.
      */
     checkScope(data, action, precise, entityAccessData) {
         entityAccessData = entityAccessData || {};
@@ -178,7 +178,7 @@ class Acl {
      * @param {module:acl-manager~action|null} [action=null] Action to check.
      * @param {boolean} [precise=false] To return `null` if not enough data is set in a model.
      *   E.g. the `teams` field is not yet loaded.
-     * @returns {boolean|null} True if has access, null if not clear.
+     * @returns {boolean|null} True if access allowed, null if not enough data to determine.
      */
     checkModel(model, data, action, precise) {
         if (this.getUser().isAdmin()) {
@@ -193,6 +193,7 @@ class Acl {
         return this.checkScope(data, action, precise, entityAccessData);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Check `delete` access to model.
      *
@@ -200,7 +201,7 @@ class Acl {
      * @param {Object.<string, string>|string|null} data Access data.
      * @param {boolean} [precise=false] To return `null` if not enough data is set in a model.
      *   E.g. the `teams` field is not yet loaded.
-     * @returns {boolean} True if has access.
+     * @returns {boolean} True if access allowed.
      */
     checkModelDelete(model, data, precise) {
         let result = this.checkModel(model, data, 'delete', precise);
@@ -288,7 +289,7 @@ class Acl {
      * Check if a user in a team of a model.
      *
      * @param {module:model} model A model.
-     * @returns {boolean|null} True if in a team. Null if not clear.
+     * @returns {boolean|null} True if in a team. Null if not enough data to determine.
      */
     checkInTeam(model) {
         var userTeamIdList = this.getUser().getTeamIdList();

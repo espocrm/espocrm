@@ -28,6 +28,8 @@
 
 /** @module ajax */
 
+// noinspection JSUnusedGlobalSymbols
+
 /**
  * Functions for API HTTP requests.
  */
@@ -106,7 +108,7 @@ const Ajax = Espo.Ajax = {
             data = JSON.stringify(data);
         }
 
-        return Ajax.request(url, 'POST', data, options);
+        return /** @type {Promise<any>} */ Ajax.request(url, 'POST', data, options);
     },
 
     /**
@@ -122,7 +124,7 @@ const Ajax = Espo.Ajax = {
             data = JSON.stringify(data);
         }
 
-        return Ajax.request(url, 'PATCH', data, options);
+        return /** @type {Promise<any>} */ Ajax.request(url, 'PATCH', data, options);
     },
 
     /**
@@ -138,7 +140,7 @@ const Ajax = Espo.Ajax = {
             data = JSON.stringify(data);
         }
 
-        return Ajax.request(url, 'PUT', data, options);
+        return /** @type {Promise<any>} */ Ajax.request(url, 'PUT', data, options);
     },
 
     /**
@@ -154,7 +156,7 @@ const Ajax = Espo.Ajax = {
             data = JSON.stringify(data);
         }
 
-        return Ajax.request(url, 'DELETE', data, options);
+        return /** @type {Promise<any>} */ Ajax.request(url, 'DELETE', data, options);
     },
 
     /**
@@ -166,7 +168,7 @@ const Ajax = Espo.Ajax = {
      * @returns {Promise<any>}
      */
     getRequest: function (url, data, options) {
-        return Ajax.request(url, 'GET', data, options);
+        return /** @type {Promise<any>} */ Ajax.request(url, 'GET', data, options);
     },
 };
 
@@ -257,6 +259,7 @@ class XhrWrapper {
         return this.xhr.status;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @return {*}
      */
@@ -264,6 +267,7 @@ class XhrWrapper {
         return this.xhr.responseJSON;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @return {string}
      */

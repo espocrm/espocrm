@@ -86,4 +86,5 @@ class DynamicHandler {
 
 DynamicHandler.extend = BullView.extend;
 
+// noinspection JSUnusedGlobalSymbols
 export default DynamicHandler;

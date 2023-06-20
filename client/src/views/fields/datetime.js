@@ -262,7 +262,15 @@ class DatetimeFieldView extends DateFieldView {
         });
     }
 
+    /**
+     * @param {string} string
+     * @return {string|-1|null}
+     */
     parse(string) {
+        if (!string) {
+            return null;
+        }
+
         return this.getDateTime().fromDisplay(string);
     }
 

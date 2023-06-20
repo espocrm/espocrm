@@ -152,6 +152,7 @@ class DateTime {
         return this.readableShortDateFormatMap[this.getDateFormat()] || 'MMM D';
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Get a readable date-time format.
      *
@@ -177,10 +178,6 @@ class DateTime {
      * @returns {string|-1} A system date value.
      */
     fromDisplayDate(string) {
-        if (!string) {
-            return null;
-        }
-
         let m = moment(string, this.dateFormat);
 
         if (!m.isValid()) {
@@ -222,14 +219,10 @@ class DateTime {
     /**
      * Convert a date-time from system to a display representation.
      *
-     * @param {string} string A system date-tyime value.
+     * @param {string} string A system date-time value.
      * @returns {string|-1} A display date-time value.
      */
     fromDisplay(string) {
-        if (!string) {
-            return null;
-        }
-
         let m;
 
         if (this.timeZone) {
@@ -261,20 +254,6 @@ class DateTime {
     }
 
     /**
-     * @deprecated Use `fromDisplay`.
-     */
-    fromDisplayDateTime(string) {
-        return this.fromDisplay(string);
-    }
-
-    /**
-     * @deprecated Use `toDisplay`.
-     */
-    toDisplayDateTime(string) {
-        return this.toDisplay(string);
-    }
-
-    /**
      * Get a now moment.
      *
      * @returns {moment.Moment}
@@ -303,6 +282,7 @@ class DateTime {
         let m = moment.utc(string, this.internalDateTimeFullFormat);
 
         if (this.timeZone) {
+            // noinspection JSUnresolvedReference
             m = m.tz(this.timeZone);
         }
 
@@ -325,6 +305,7 @@ class DateTime {
         return m.format(this.internalDateTimeFormat);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Convert a date-time value from system to an ISO representation.
      *
@@ -332,10 +313,6 @@ class DateTime {
      * @returns {string} An ISO date-time value.
      */
     toIso(string) {
-        if (!string) {
-            return null;
-        }
-
         return this.toMoment(string).format();
     }
 
@@ -457,11 +434,11 @@ class DateTime {
      */
     setLanguage(language) {
         moment.updateLocale('en', {
-            months: language.translate('monthNames', 'lists'),
-            monthsShort: language.translate('monthNamesShort', 'lists'),
-            weekdays: language.translate('dayNames', 'lists'),
-            weekdaysShort: language.translate('dayNamesShort', 'lists'),
-            weekdaysMin: language.translate('dayNamesMin', 'lists'),
+            months: language.translatePath(['Global', 'lists', 'monthNames']),
+            monthsShort: language.translatePath(['Global', 'lists', 'monthNamesShort']),
+            weekdays: language.translatePath(['Global', 'lists', 'dayNames']),
+            weekdaysShort: language.translatePath(['Global', 'lists', 'dayNamesShort']),
+            weekdaysMin: language.translatePath(['Global', 'lists', 'dayNamesMin']),
         });
 
         moment.locale('en');

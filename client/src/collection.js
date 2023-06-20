@@ -236,7 +236,7 @@ class Collection {
      * @param {Model[]|Model|string} models Models, a model or a model ID.
      * @param {{
      *     silent?: boolean,
-     * }} [options] Options.
+     * } & Object.<string, *>} [options] Options.
      * @return {this}
      * @fires Collection#update
      */
@@ -273,7 +273,7 @@ class Collection {
      *     merge?: boolean,
      *     remove?: boolean,
      *     index?: number,
-     * }} [options]
+     * } & Object.<string, *>} [options]
      * @return {Model[]}
      */
     set(models, options) {
@@ -427,7 +427,7 @@ class Collection {
      * @param {Model[]|null} [models] Models to replace the collection with.
      * @param {{
      *     silent?: boolean,
-     * }} [options]
+     * } & Object.<string, *>} [options]
      * @return {this}
      * @fires Collection#reset
      */
@@ -897,8 +897,9 @@ class Collection {
         return this._prepareModel({});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
-     * Compose a URL for syncing.
+     * Compose a URL for syncing. Called from Model.sync.
      *
      * @protected
      * @return {string}
@@ -1017,6 +1018,7 @@ class Collection {
         this.trigger.apply(this, arguments);
     }
 
+    // noinspection JSDeprecatedSymbols
     /** @private*/
     _prepareModel(attributes) {
         if (this._isModel(attributes)) {
@@ -1027,9 +1029,10 @@ class Collection {
             return attributes;
         }
 
-        const Model = this.model;
+        const ModelClass = this.model;
 
-        return new Model(attributes, {
+        // noinspection JSValidateTypes
+        return new ModelClass(attributes, {
             collection: this,
             entityType: this.entityType || this.name,
             defs: this.defs,

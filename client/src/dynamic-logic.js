@@ -233,7 +233,7 @@ class DynamicLogic {
         let type = defs.type || 'equals';
 
         if (['or', 'and', 'not'].includes(type)) {
-            return this.checkConditionGroup(defs.value, type);
+            return this.checkConditionGroup(defs.value, /** @type {'or'|'and'|'not'} */ type);
         }
 
         let attribute = defs.attribute;
@@ -418,6 +418,7 @@ class DynamicLogic {
         this.recordView.resetFieldOptionList(field);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -426,6 +427,7 @@ class DynamicLogic {
         this.recordView.showField(field);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -434,6 +436,7 @@ class DynamicLogic {
         this.recordView.hideField(field);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -442,6 +445,7 @@ class DynamicLogic {
         this.recordView.setFieldRequired(field);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -450,6 +454,7 @@ class DynamicLogic {
         this.recordView.setFieldNotRequired(field);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -458,6 +463,7 @@ class DynamicLogic {
         this.recordView.setFieldReadOnly(field);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} field
      * @private
@@ -466,6 +472,7 @@ class DynamicLogic {
         this.recordView.setFieldNotReadOnly(field);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} panel
      * @private
@@ -474,6 +481,7 @@ class DynamicLogic {
         this.recordView.showPanel(panel, 'dynamicLogic');
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} panel
      * @private
@@ -482,6 +490,7 @@ class DynamicLogic {
         this.recordView.hidePanel(panel, false, 'dynamicLogic');
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} panel
      * @private
@@ -490,6 +499,7 @@ class DynamicLogic {
         this.recordView.stylePanel(panel);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {string} panel
      * @private
