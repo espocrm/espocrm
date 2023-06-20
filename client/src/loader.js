@@ -374,8 +374,9 @@
             }
 
             if (indexOfExports !== -1) {
-                let exports = args[indexOfExports];
+                let exports =  args[indexOfExports];
 
+                // noinspection JSUnresolvedReference
                 value = ('default' in exports) ? exports.default : exports;
             }
 
@@ -1041,6 +1042,8 @@
     }
 
     let loader = new Loader();
+
+    // noinspection JSUnusedGlobalSymbols
 
     Espo.loader = {
 

@@ -95,9 +95,9 @@ define('views/import-error/fields/validation-failures', ['views/fields/base'], (
 
             if (Array.isArray(itemList)) {
                 itemList.forEach(item => {
-                    /** @var {module:field-manager.Class} */
+                    /** @var {module:field-manager} */
                     let fieldManager = this.getFieldManager();
-                    /** @var {module:language.Class} */
+                    /** @var {module:language} */
                     let language = this.getLanguage();
 
                     let fieldType = fieldManager.getEntityTypeFieldParam(entityType, item.field, 'type');

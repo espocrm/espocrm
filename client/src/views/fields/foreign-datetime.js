@@ -36,7 +36,7 @@ function (Dep, Helper) {
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            /** @var {module:helpers/misc/foreign-field.Class} */
+            /** @var {module:helpers/misc/foreign-field} */
             let helper = new Helper(this);
 
             let foreignParams = helper.getForeignParams();

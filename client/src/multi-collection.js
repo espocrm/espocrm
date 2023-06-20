@@ -51,7 +51,10 @@ class MultiCollection extends Collection {
             throw new Error("No 'list' in response.");
         }
 
-        return response.list.map(attributes => {
+        /** @type {({_scope?: string} & Object.<string, *>)[]} */
+        const list = response.list;
+
+        return list.map(attributes => {
             let entityType = attributes._scope;
 
             if (!entityType) {
@@ -79,4 +82,5 @@ class MultiCollection extends Collection {
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default MultiCollection;

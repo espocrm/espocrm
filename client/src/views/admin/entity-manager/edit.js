@@ -750,7 +750,7 @@ function (Dep, Model) {
                     return false;
                 }
 
-                if (!this.getFieldManager().isScopeFieldAvailable(scope, item)) {
+                if (!this.getFieldManager().isEntityTypeFieldAvailable(scope, item)) {
                     return false;
                 }
 
@@ -802,7 +802,7 @@ function (Dep, Model) {
                             return false;
                         }
 
-                        if (!this.getFieldManager().isScopeFieldAvailable(foreignEntityType, item)) {
+                        if (!this.getFieldManager().isEntityTypeFieldAvailable(foreignEntityType, item)) {
                             return false;
                         }
 

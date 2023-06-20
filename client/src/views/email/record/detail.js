@@ -487,7 +487,7 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
         },
 
         actionPrint: function () {
-            /** @type {module:views/fields/wysiwyg.Class} */
+            /** @type {module:views/fields/wysiwyg} */
             let bodyView = this.getFieldView('body');
 
             if (!bodyView) {

@@ -35,7 +35,7 @@ define('views/fields/foreign-float', ['views/fields/float', 'helpers/misc/foreig
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            /** @var {module:helpers/misc/foreign-field.Class} */
+            /** @var {module:helpers/misc/foreign-field} */
             let helper = new Helper(this);
 
             let foreignParams = helper.getForeignParams();

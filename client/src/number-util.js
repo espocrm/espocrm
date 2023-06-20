@@ -103,6 +103,7 @@ class NumberUtil {
         return stringValue;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Format a float number.
      *

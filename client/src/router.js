@@ -83,6 +83,7 @@ import Backbone from 'lib!backbone';
  * @param {string} event An event.
  */
 
+// noinspection JSUnusedGlobalSymbols
 /**
  * A router.
  *
@@ -561,7 +562,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
     /**
      * Dispatch a controller action.
      *
-     * @param {string} controller A controller.
+     * @param {string|null} [controller] A controller.
      * @param {string|null} [action] An action.
      * @param {Object} [options] Options.
      * @fires module:router#routed

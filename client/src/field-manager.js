@@ -43,11 +43,23 @@ class FieldManager {
     constructor(defs, metadata, acl) {
 
         /**
+         * @typedef {Object} FieldManager~defs
+         * @property {string[]} [actualFields]
+         * @property {string[]} [notActualFields]
+         * @property {'suffix'|'prefix'} [naming]
+         * @property {Object.<string, Object.<string, *>>} [params]
+         * @property {boolean} [filter]
+         * @property {boolean} [notMergeable]
+         * @property {string} [view]
+         */
+
+
+        /**
          * @public
          * @internal
-         * @type {Object}
+         * @type {FieldManager~defs}
          */
-        this.defs = defs || {};
+        this.defs = defs || /** @type {FieldManager~defs} */ {};
 
         /**
          * @public

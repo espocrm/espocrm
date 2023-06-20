@@ -648,6 +648,7 @@ class Model {
         return urlRoot.replace(/[^\/]$/, '$&/') + encodeURIComponent(id);
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * Prepare attributes.
      *
@@ -999,6 +1000,7 @@ class Model {
 
     /**
      * @deprecated Use `getClonedAttributes`.
+     * @todo Remove in v8.0.
      * @return {Object.<string, *>}
      */
     toJSON() {

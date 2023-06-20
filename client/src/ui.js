@@ -54,6 +54,9 @@ import $ from 'lib!jquery';
  * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
  * @property {module:ui.Dialog~Button[]} [buttonList] Buttons.
  * @property {module:ui.Dialog~Button[]} [dropdownItemList] Dropdown action items.
+ * @property {boolean} [fullHeight] Deprecated.
+ * @property {Number} [bodyDiffHeight]
+ * @property {Number} [screenWidthXs]
  */
 
 /**
@@ -84,6 +87,8 @@ class Dialog {
     onRemove
     onClose
     onBackdropClick
+    buttons
+    screenWidthXs
 
     /**
      * @param {module:ui.Dialog~Params} options Options.
@@ -233,6 +238,7 @@ class Dialog {
         if (this.draggable) {
             this.$el.find('header').css('cursor', 'pointer');
 
+            // noinspection JSUnresolvedReference
             this.$el.draggable({
                 handle: 'header',
             });
@@ -557,6 +563,7 @@ class Dialog {
      * Show.
      */
     show() {
+        // noinspection JSUnresolvedReference
         this.$el.modal({
              backdrop: this.backdrop,
              keyboard: this.keyboard,
@@ -642,6 +649,7 @@ class Dialog {
             this.skipRemove = false;
         }, 50);
 
+        // noinspection JSUnresolvedReference
         this.$el.modal('hide');
         this.$el.find('.modal-content').addClass('hidden');
     }
@@ -665,6 +673,7 @@ class Dialog {
      * @return {Element|null}
      */
     _findClosestFocusableElement(element) {
+        // noinspection JSUnresolvedReference
         let isVisible = !!(
             element.offsetWidth ||
             element.offsetHeight ||
@@ -672,6 +681,7 @@ class Dialog {
         );
 
         if (isVisible) {
+            // noinspection JSUnresolvedReference
             element.focus({preventScroll: true});
 
             return element;
@@ -705,6 +715,7 @@ class Dialog {
                     let element = this._findClosestFocusableElement(this.activeElement);
 
                     if (element) {
+                        // noinspection JSUnresolvedReference
                         element.focus({preventScroll: true});
                     }
                 }, 50);
@@ -712,6 +723,7 @@ class Dialog {
         }
 
         this._close();
+        // noinspection JSUnresolvedReference
         this.$el.modal('hide');
         $(this).trigger('dialog:close');
     }
@@ -796,7 +808,7 @@ Espo.Ui = {
         return new Promise(resolve => {
             let dialog = new Dialog({
                 backdrop: backdrop,
-                header: false,
+                header: null,
                 className: 'dialog-confirm',
                 body: '<span class="confirm-message">' + message + '</a>',
                 buttonList: [
@@ -896,6 +908,7 @@ Espo.Ui = {
             container = $modalBody.length ? $modalBody : 'body';
         }
 
+        // noinspection JSUnresolvedReference
         $el
             .popover({
                 placement: o.placement || 'bottom',
@@ -928,6 +941,7 @@ Espo.Ui = {
                     }
 
                     $body.off('click.popover-' + view.cid);
+                    // noinspection JSUnresolvedReference
                     $el.popover('hide');
                 });
 
@@ -945,6 +959,7 @@ Espo.Ui = {
 
         if (!o.noToggleInit) {
             $el.on('click', () => {
+                // noinspection JSUnresolvedReference
                 $el.popover('toggle');
             });
         }
@@ -955,10 +970,12 @@ Espo.Ui = {
                     return;
                 }
 
+                // noinspection JSUnresolvedReference
                 $el.popover('hide');
             };
 
             let destroy = () => {
+                // noinspection JSUnresolvedReference
                 $el.popover('destroy');
                 $body.off('click.popover-' + view.cid);
 
@@ -1020,7 +1037,7 @@ Espo.Ui = {
             marked.parse(message) :
             marked.parseInline(message);
 
-        let sanitizedMessage = DOMPurify.sanitize(parsedMessage).toString();
+        let sanitizedMessage = DOMPurify.sanitize(parsedMessage, {}).toString();
 
         let closeButton = options.closeButton || false;
 
