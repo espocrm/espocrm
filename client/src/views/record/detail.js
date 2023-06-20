@@ -1926,7 +1926,9 @@ class DetailRecordView extends BaseRecordView {
             });
         }
 
-        this.getHelper().processSetupHandlers(this, this.setupHandlerType);
+        this.wait(
+            this.getHelper().processSetupHandlers(this, this.setupHandlerType)
+        );
 
         this.initInlineEditDynamicWithLogicInteroperability();
 

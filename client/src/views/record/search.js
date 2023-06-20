@@ -255,7 +255,9 @@ class SearchView extends View {
             this.controlResetButtonVisibility();
         });
 
-        this.getHelper().processSetupHandlers(this, 'record/search');
+        this.wait(
+            this.getHelper().processSetupHandlers(this, 'record/search')
+        );
     }
 
     setupViewModeDataList() {

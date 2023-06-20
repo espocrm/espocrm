@@ -250,7 +250,9 @@ class ListRelatedView extends MainView {
             this.keepCurrentRootUrl = true;
         }
 
-        this.getHelper().processSetupHandlers(this, 'list');
+        this.wait(
+            this.getHelper().processSetupHandlers(this, 'list')
+        );
     }
 
     /**

@@ -85,7 +85,9 @@ class EditView extends MainView {
     setupFinal() {
         super.setupFinal();
 
-        this.getHelper().processSetupHandlers(this, 'edit');
+        this.wait(
+            this.getHelper().processSetupHandlers(this, 'edit')
+        );
     }
 
     /**

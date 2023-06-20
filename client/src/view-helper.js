@@ -665,7 +665,7 @@ class ViewHelper {
      * A Markdown text to HTML (one-line).
      *
      * @param {string} text A text.
-     * @returns {string} HTML.
+     * @returns {Handlebars.SafeString} HTML.
      */
     transformMarkdownInlineText(text) {
         return this.transformMarkdownText(text, {inline: true});
@@ -751,7 +751,7 @@ class ViewHelper {
     /**
      * Sanitize HTML.
      *
-     * @param {type} text HTML.
+     * @param {string} text HTML.
      * @param {Object} [options] Options.
      * @returns {string}
      */
@@ -898,32 +898,44 @@ class ViewHelper {
      * @param {module:view} view A view.
      * @param {string} type A view-setup-handler type.
      * @param {string} [scope] A scope.
+     * @return Promise
      */
     processSetupHandlers(view, type, scope) {
-        scope = scope || view.scope;
+        scope = scope || view.scope || view.entityType;
 
-        let handlerList = this.metadata.get(['clientDefs', 'Global', 'viewSetupHandlers', type]) || [];
+        let handlerIdList = this.metadata.get(['clientDefs', 'Global', 'viewSetupHandlers', type]) || [];
 
         if (scope) {
-            handlerList = handlerList
+            handlerIdList = handlerIdList
                 .concat(
                     this.metadata.get(['clientDefs', scope, 'viewSetupHandlers', type]) || []
                 );
         }
 
-        if (handlerList.length === 0) {
-            return;
+        if (handlerIdList.length === 0) {
+            return Promise.resolve();
         }
 
-        for (let handlerClassName of handlerList) {
-            let promise = new Promise(function (resolve) {
-                Espo.loader.require(handlerClassName, Handler => {
+        /**
+         * @interface
+         * @name ViewHelper~Handler
+         */
+
+        /**
+         * @function
+         * @name ViewHelper~Handler#process
+         * @param {module:view} [view] Deprecated.
+         */
+
+        let promiseList = [];
+
+        for (let id of handlerIdList) {
+            let promise = new Promise(resolve => {
+                Espo.loader.require(id, /** typeof ViewHelper~Handler */Handler => {
                     let result = (new Handler(view)).process(view);
 
                     if (result && Object.prototype.toString.call(result) === '[object Promise]') {
-                        result.then(() => {
-                            resolve();
-                        });
+                        result.then(() => resolve());
 
                         return;
                     }
@@ -932,8 +944,10 @@ class ViewHelper {
                 });
             });
 
-            view.wait(promise);
+            promiseList.push(promise);
         }
+
+        return Promise.all(promiseList);
     }
 
     /**

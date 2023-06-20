@@ -334,7 +334,9 @@ class KanbanRecordView extends ListRecordView {
 
         this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
 
-        this.getHelper().processSetupHandlers(this, 'record/kanban');
+        this.wait(
+            this.getHelper().processSetupHandlers(this, 'record/kanban')
+        );
     }
 
     afterRender() {

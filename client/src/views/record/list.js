@@ -1952,7 +1952,9 @@ class ListRecordView extends View {
             this.layoutName += 'Portal';
         }
 
-        this.getHelper().processSetupHandlers(this, this.setupHandlerType);
+        this.wait(
+            this.getHelper().processSetupHandlers(this, this.setupHandlerType)
+        );
 
         this.listenTo(this.collection, 'sync', (c, r, options) => {
             if (this.hasView('modal') && this.getView('modal').isRendered()) {

@@ -233,7 +233,9 @@ class ListView extends MainView {
     setupFinal() {
         super.setupFinal();
 
-        this.getHelper().processSetupHandlers(this, 'list');
+        this.wait(
+            this.getHelper().processSetupHandlers(this, 'list')
+        );
     }
 
     /**

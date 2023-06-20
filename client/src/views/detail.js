@@ -107,7 +107,9 @@ class DetailView extends MainView {
     setupFinal() {
         super.setupFinal();
 
-        this.getHelper().processSetupHandlers(this, 'detail');
+        this.wait(
+            this.getHelper().processSetupHandlers(this, 'detail')
+        );
     }
 
     /** @private */
