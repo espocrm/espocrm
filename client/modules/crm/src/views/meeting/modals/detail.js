@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep) {
+define('crm:views/meeting/modals/detail', ['views/modals/detail', 'lib!moment'], function (Dep, moment) {
 
     return Dep.extend({
 
@@ -275,6 +275,15 @@ define('crm:views/meeting/modals/detail', ['views/modals/detail'], function (Dep
 
         isSendInvitationsToBeDisplayed: function () {
             if (~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
+                return false;
+            }
+
+            let dateEnd = this.model.get('dateEnd');
+
+            if (
+                dateEnd &&
+                this.getDateTime().toMoment(dateEnd).isBefore(moment.now())
+            ) {
                 return false;
             }
 
