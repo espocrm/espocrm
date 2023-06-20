@@ -33,6 +33,7 @@ import ViewRecordHelper from 'view-record-helper';
 import DynamicLogic from 'dynamic-logic';
 import _ from 'lib!underscore';
 import $ from 'lib!jquery';
+import DefaultsPopulator from 'helpers/model/defaults-populator';
 
 /**
  * A base record view. To be extended.
@@ -1228,143 +1229,14 @@ class BaseRecordView extends View {
      * Populate defaults.
      */
     populateDefaults() {
-        this.model.populateDefaults();
+        const populator = new DefaultsPopulator(
+            this.getUser(),
+            this.getPreferences(),
+            this.getAcl(),
+            this.getConfig()
+        );
 
-        let defaultHash = {};
-
-        if (!this.getUser().get('portalId')) {
-            if (this.model.hasField('assignedUser') || this.model.hasField('assignedUsers')) {
-                let assignedUserField = 'assignedUser';
-
-                if (this.model.hasField('assignedUsers')) {
-                    assignedUserField = 'assignedUsers';
-                }
-
-                let fillAssignedUser = true;
-
-                if (this.getPreferences().get('doNotFillAssignedUserIfNotRequired')) {
-                    fillAssignedUser = false;
-
-                    if (this.model.getFieldParam(assignedUserField, 'required')) {
-                        fillAssignedUser = true;
-                    }
-                    else if (this.getAcl().get('assignmentPermission') === 'no') {
-                        fillAssignedUser = true;
-                    }
-                    else if (
-                        this.getAcl().get('assignmentPermission') === 'team' &&
-                        !this.getUser().get('defaultTeamId')
-                    ) {
-                        fillAssignedUser = true;
-                    }
-                    else if (
-                        ~this.getAcl()
-                            .getScopeForbiddenFieldList(this.model.name, 'edit').indexOf(assignedUserField)
-                        ) {
-
-                        fillAssignedUser = true;
-                    }
-                }
-
-                if (fillAssignedUser) {
-                    if (assignedUserField === 'assignedUsers') {
-                        defaultHash['assignedUsersIds'] = [this.getUser().id];
-                        defaultHash['assignedUsersNames'] = {};
-
-                        defaultHash['assignedUsersNames'][this.getUser().id] = this.getUser().get('name');
-                    }
-                    else {
-                        defaultHash['assignedUserId'] = this.getUser().id;
-
-                        defaultHash['assignedUserName'] = this.getUser().get('name');
-                    }
-                }
-            }
-
-            let defaultTeamId = this.getUser().get('defaultTeamId');
-
-            if (defaultTeamId) {
-                if (
-                    this.model.hasField('teams') &&
-                    !this.model.getFieldParam('teams', 'default') &&
-                    Espo.Utils
-                        .lowerCaseFirst(this.model.getLinkParam('teams', 'relationName') || '') === 'entityTeam'
-                ) {
-                    defaultHash['teamsIds'] = [defaultTeamId];
-                    defaultHash['teamsNames'] = {};
-                    defaultHash['teamsNames'][defaultTeamId] = this.getUser().get('defaultTeamName');
-                }
-            }
-        }
-
-        if (this.getUser().get('portalId')) {
-            if (
-                this.model.hasField('account') &&
-                ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('account'))
-            ) {
-                if (this.getUser().get('accountId')) {
-                    defaultHash['accountId'] =  this.getUser().get('accountId');
-                    defaultHash['accountName'] = this.getUser().get('accountName');
-                }
-            }
-
-            if (
-                this.model.hasField('contact') &&
-                ~['belongsTo', 'hasOne'].indexOf(this.model.getLinkType('contact'))
-            ) {
-                if (this.getUser().get('contactId')) {
-                    defaultHash['contactId'] = this.getUser().get('contactId');
-                    defaultHash['contactName'] = this.getUser().get('contactName');
-                }
-            }
-
-            if (this.model.hasField('parent') && this.model.getLinkType('parent') === 'belongsToParent') {
-                if (!this.getConfig().get('b2cMode')) {
-                    if (this.getUser().get('accountId')) {
-                        if (~(this.model.getFieldParam('parent', 'entityList') || []).indexOf('Account')) {
-                            defaultHash['parentId'] = this.getUser().get('accountId');
-                            defaultHash['parentName'] = this.getUser().get('accountName');
-                            defaultHash['parentType'] = 'Account';
-                        }
-                    }
-                }
-                else {
-                    if (this.getUser().get('contactId')) {
-                        if (~(this.model.getFieldParam('parent', 'entityList') || []).indexOf('Contact')) {
-                            defaultHash['contactId'] = this.getUser().get('contactId');
-                            defaultHash['parentName'] = this.getUser().get('contactName');
-                            defaultHash['parentType'] = 'Contact';
-                        }
-                    }
-                }
-            }
-
-            if (this.model.hasField('accounts') && this.model.getLinkType('accounts') === 'hasMany') {
-                if (this.getUser().get('accountsIds')) {
-                    defaultHash['accountsIds'] = this.getUser().get('accountsIds');
-                    defaultHash['accountsNames'] = this.getUser().get('accountsNames');
-                }
-            }
-
-            if (this.model.hasField('contacts') && this.model.getLinkType('contacts') === 'hasMany') {
-                if (this.getUser().get('contactId')) {
-                    defaultHash['contactsIds'] = [this.getUser().get('contactId')];
-
-                    let names = {};
-
-                    names[this.getUser().get('contactId')] = this.getUser().get('contactName');
-                    defaultHash['contactsNames'] = names;
-                }
-            }
-        }
-
-        for (let attr in defaultHash) {
-            if (this.model.has(attr)) {
-                delete defaultHash[attr];
-            }
-        }
-
-        this.model.set(defaultHash, {silent: true});
+        populator.populate(this.model);
     }
 
     /**
