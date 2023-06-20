@@ -38,7 +38,8 @@ class SearchView extends View {
 
     template = 'record/search'
 
-    scope = null
+    scope = ''
+    entityType = ''
     /** @type {module:search-manager} */
     searchManager = null
     fieldFilterList = null
@@ -90,7 +91,7 @@ class SearchView extends View {
     }
 
     setup() {
-        this.entityType = this.collection.name;
+        this.entityType = this.collection.entityType;
         this.scope = this.options.scope || this.entityType;
 
         /** @type {module:search-manager} */
