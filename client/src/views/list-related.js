@@ -207,6 +207,7 @@ class ListRelatedView extends MainView {
             this.createButton = false;
         }
 
+        // noinspection JSUnresolvedReference
         if (
             this.panelDefs.create === false ||
             this.panelDefs.createDisabled ||
@@ -215,7 +216,7 @@ class ListRelatedView extends MainView {
             this.createButton = false;
         }
 
-        this.entityType = this.collection.name;
+        this.entityType = this.collection.entityType;
 
         this.headerView = this.options.headerView || this.headerView;
         this.recordView = this.options.recordView || this.recordView;
@@ -288,7 +289,7 @@ class ListRelatedView extends MainView {
                 viewMode = this.defaultViewMode;
             }
 
-            this.viewMode = viewMode;
+            this.viewMode = /** @type {string} */viewMode;
         }
     }
 
@@ -376,7 +377,7 @@ class ListRelatedView extends MainView {
             filterList: filterList,
         }, view => {
             if (this.viewModeList.length > 1) {
-                this.listenTo(view, 'change-view-mode', () => this.switchViewMode());
+                this.listenTo(view, 'change-view-mode', mode => this.switchViewMode(mode));
             }
         });
     }
@@ -413,7 +414,7 @@ class ListRelatedView extends MainView {
         }
 
         if (this.searchView && this.getView('search')) {
-            this.getView('search').setViewMode(mode);
+            this.getSearchView().setViewMode(mode);
         }
 
         let methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
@@ -493,6 +494,7 @@ class ListRelatedView extends MainView {
             this.loadList();
         }
 
+        // noinspection JSUnresolvedReference
         this.$el.get(0).focus({preventScroll: true});
     }
 
@@ -508,7 +510,7 @@ class ListRelatedView extends MainView {
             return;
         }
 
-        if (this.collection.isFetched) {
+        if ('isFetched' in this.collection && this.collection.isFetched) {
             this.createListRecordView(false);
 
             return;
@@ -676,6 +678,7 @@ class ListRelatedView extends MainView {
             });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * An `unlink-related` action.
      *
@@ -693,7 +696,7 @@ class ListRelatedView extends MainView {
             Espo.Ajax
                 .deleteRequest(this.collection.url, {id: id})
                 .then(() => {
-                    this.notify('Unlinked', 'success');
+                    Espo.Ui.success(this.translate('Unlinked'));
 
                     this.collection.fetch();
 
@@ -805,6 +808,7 @@ class ListRelatedView extends MainView {
         $search.focus();
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
@@ -817,6 +821,7 @@ class ListRelatedView extends MainView {
         this.getSearchView().selectPreviousPreset();
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * @protected
      * @param {JQueryKeyEventObject} e

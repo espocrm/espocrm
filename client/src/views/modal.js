@@ -135,7 +135,7 @@ class ModalView extends View {
      * @protected
      * @type {string}
      */
-    containerSelector = null
+    containerSelector = ''
 
     /**
      * A scope name. Used when translating button labels.
@@ -164,7 +164,7 @@ class ModalView extends View {
      * Dropdown action items.
      *
      * @protected
-     * @type {module:views/modal~Button[]}
+     * @type {module:views/modal~Button[]|false}
      */
     dropdownItemList = []
 
@@ -281,7 +281,7 @@ class ModalView extends View {
         this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
         this.dropdownItemList = Espo.Utils.cloneDeep(this.dropdownItemList);
 
-        // @todo Remove it as deprecated.
+        // @todo Remove in v8.0.
         this.buttons = Espo.Utils.cloneDeep(this.buttons);
 
         if (this.shortcutKeys) {
@@ -431,7 +431,7 @@ class ModalView extends View {
             let o = {};
 
             if (typeof item === 'string') {
-                o.name = item;
+                o.name = /** @type string */item;
             } else if (typeof item === 'object') {
                 o = item;
             } else {
@@ -475,7 +475,7 @@ class ModalView extends View {
             var o = {};
 
             if (typeof item === 'string') {
-                o.name = item;
+                o.name = /** @type string */item;
             } else if (typeof item === 'object') {
                 o = item;
             } else {
@@ -656,10 +656,10 @@ class ModalView extends View {
      * @param {boolean} [doNotReRender=false] Do not re-render.
      */
     addDropdownItem(o, toBeginning, doNotReRender) {
-        let method = toBeginning ? 'unshift' : 'push';
-
         if (!o) {
-            this.dropdownItemList[method](false);
+            toBeginning ?
+                this.dropdownItemList.unshift(false) :
+                this.dropdownItemList.push(false);
 
             return;
         }
@@ -676,7 +676,9 @@ class ModalView extends View {
             }
         }
 
-        this.dropdownItemList[method](o);
+        toBeginning ?
+            this.dropdownItemList.unshift(o) :
+            this.dropdownItemList.push(o);
 
         if (!doNotReRender && this.isRendered()) {
             this.reRenderFooter();

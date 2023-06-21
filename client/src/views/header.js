@@ -162,7 +162,7 @@ class HeaderView extends View {
      * @return {module:views/main}
      */
     getParentMainView() {
-        return this.getParentView();
+        return /** @type module:views/main */this.getParentView();
     }
 }
 

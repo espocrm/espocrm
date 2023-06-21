@@ -246,4 +246,5 @@ class LoginSecondStepView extends View {
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default LoginSecondStepView;
