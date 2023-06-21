@@ -140,7 +140,7 @@ define('views/record/merge', ['view'], function (Dep) {
                         },
                     })
                     .then(() => {
-                        Espo.Ui.success(this.translate('Merged'));
+                        Espo.Ui.success(this.translate('Merged'), {suppress: true});
 
                         this.getRouter().navigate('#' + this.scope + '/view/' + model.id, {trigger: true});
 
