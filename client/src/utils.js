@@ -112,6 +112,7 @@ Espo.Utils = {
             $dropdownToggle.removeAttr('disabled').removeClass('disabled');
         }
 
+        // noinspection JSUnresolvedReference
         $dropdownToggle.dropdown('toggle');
 
         $dropdownToggle.focus();
@@ -122,7 +123,7 @@ Espo.Utils = {
     },
 
     /**
-     * @typedef {Object} Espo.Util~ActionAvailabilityDefs
+     * @typedef {Object} Espo.Utils~ActionAvailabilityDefs
      *
      * @property {string|null} [configCheck] A config path to check. Path items are separated
      *   by the dot. If a config value is not empty, then the action is allowed.
@@ -211,7 +212,7 @@ Espo.Utils = {
     },
 
     /**
-     * @typedef {Object} Espo.Util~AccessDefs
+     * @typedef {Object} Espo.Utils~AccessDefs
      *
      * @property {'create'|'read'|'edit'|'stream'|'delete'|null} action An ACL action to check.
      * @property {string|null} [scope] A scope to check.

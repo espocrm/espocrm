@@ -35,10 +35,11 @@ class ViewRecordHelper {
     /**
      * @class
      * @mixes Bull.Events
-     * @param {Object.<string,*>} [defaultFieldStates] Default field states.
-     * @param {Object.<string,*>} [defaultPanelStates] Default panel states.
+     * @param {Object.<string, *>} [defaultFieldStates] Default field states.
+     * @param {Object.<string, *>} [defaultPanelStates] Default panel states.
      */
     constructor(defaultFieldStates, defaultPanelStates) {
+
         /**
          * @private
          * @type {Object}

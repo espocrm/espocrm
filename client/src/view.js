@@ -322,24 +322,28 @@ class View extends BullView {
         return this._helper.basePath || '';
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Ajax request.
      *
      * @deprecated Use `Espo.Ajax`.
+     * @todo Remove in v8.0.
      * @param {string} url An URL.
      * @param {string} type A method.
      * @param {any} [data] Data.
      * @param {Object} [options] Options.
-     * @returns {Promise<any>}
+     * @returns {Promise<*>}
      */
     ajaxRequest(url, type, data, options) {
-        return Espo.Ajax.request(url, type, data, options);
+        return /** @type {Promise<*>} */ Espo.Ajax.request(url, type, data, options);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * POST request.
      *
      * @deprecated Use `Espo.Ajax.postRequest`.
+     * @todo Remove in v8.0.
      * @param {string} url An URL.
      * @param {any} [data] Data.
      * @param {Object} [options] Options.
@@ -349,10 +353,12 @@ class View extends BullView {
         return Espo.Ajax.postRequest(url, data, options);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * GET request.
      *
      * @deprecated Use `Espo.Ajax.getRequest`.
+     * @todo Remove in v8.0.
      * @param {string} url An URL.
      * @param {any} [data] Data.
      * @param {Object} [options] Options.
@@ -387,7 +393,7 @@ class View extends BullView {
         if (typeof o === 'string' || o instanceof String) {
             message = o;
 
-            o = {};
+            o = /** @type {module:view~ConfirmOptions} */{};
         }
         else {
             o = o || {};

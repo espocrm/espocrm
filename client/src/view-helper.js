@@ -252,7 +252,7 @@ class ViewHelper {
      */
     _registerHandlebarsHelpers() {
         Handlebars.registerHelper('img', img => {
-            return new Handlebars.SafeString("<img src=\"img/" + img + "\">");
+            return new Handlebars.SafeString(`<img src="img/${img}" alt="img">`);
         });
 
         Handlebars.registerHelper('prop', (object, name) => {
@@ -280,6 +280,7 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('ifEqual', function (left, right, options) {
+            // noinspection EqualityComparisonWithCoercionJS
             if (left == right) {
                 return options.fn(this);
             }
@@ -288,6 +289,7 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('ifNotEqual', function (left, right, options) {
+            // noinspection EqualityComparisonWithCoercionJS
             if (left != right) {
                 return options.fn(this);
             }
@@ -296,6 +298,7 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('ifPropEquals', function (object, property, value, options) {
+            // noinspection EqualityComparisonWithCoercionJS
             if (object[property] == value) {
                 return options.fn(this);
             }
@@ -304,6 +307,7 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('ifAttrEquals', function (model, attr, value, options) {
+            // noinspection EqualityComparisonWithCoercionJS
             if (model.get(attr) == value) {
                 return options.fn(this);
             }
@@ -471,6 +475,7 @@ class ViewHelper {
             return Espo.Utils.toDom(string);
         });
 
+        // noinspection SpellCheckingInspection
         Handlebars.registerHelper('breaklines', (text) => {
             text = Handlebars.Utils.escapeExpression(text || '');
             text = text.replace(/(\r\n|\n|\r)/gm, '<br>');
@@ -493,7 +498,7 @@ class ViewHelper {
             let translationHash = options.hash.translatedOptions || null;
 
             if (translationHash === null) {
-                translationHash = this.language.translate(field, 'options', scope) || {};
+                translationHash = this.language.translate(/** @type {string} */field, 'options', scope) || {};
 
                 if (typeof translationHash !== 'object') {
                     translationHash = {};
@@ -526,7 +531,7 @@ class ViewHelper {
                 return value === name || !value && !name;
             };
 
-            options.hash = options.hash || {};
+            options.hash = /** @type {Object.<string, *>} */ options.hash || {};
 
             let scope = options.hash.scope || false;
             let category = options.hash.category || false;
@@ -547,7 +552,8 @@ class ViewHelper {
 
             if (translationHash === null) {
                 if (!category && field) {
-                    translationHash = this.language.translate(field, 'options', scope) || {};
+                    translationHash = this.language
+                        .translate(/** @type {string}*/field, 'options', /** @type {string}*/scope) || {};
 
                     if (typeof translationHash !== 'object') {
                         translationHash = {};
@@ -563,7 +569,7 @@ class ViewHelper {
                     return translationHash[name] || name;
                 }
 
-                return this.language.translate(name, category, scope);
+                return this.language.translate(name, category, /** @type {string} */scope);
             };
 
             for (let key in list) {
@@ -602,23 +608,6 @@ class ViewHelper {
     }
 
     /**
-     * Strip tags.
-     *
-     * @deprecated
-     * @param {string} text
-     * @returns {string}
-     */
-    stripTags(text) {
-        text = text || '';
-
-        if (typeof text === 'string' || text instanceof String) {
-            return text.replace(/<\/?[^>]+(>|$)/g, '');
-        }
-
-        return text;
-    }
-
-    /**
      * Escape a string.
      *
      * @param {string} text A string.
@@ -654,8 +643,10 @@ class ViewHelper {
             className += ' ' + additionalClassName;
         }
 
-        return $('<img>')
+        // noinspection RequiredAttributes,HtmlRequiredAltAttribute
+        return $(`<img>`)
             .attr('src', `${basePath}?entryPoint=avatar&size=${size}&id=${id}&t=${t}`)
+            .attr('alt', 'avatar')
             .addClass(className)
             .attr('width', width.toString())
             .get(0).outerHTML;
@@ -822,11 +813,11 @@ class ViewHelper {
         let lastQuote = false;
 
         for (let i = 0; i < html.length; i++){
-            if (html[i] === "<" && html[i + 1] && isValidTagChar(html[i + 1])) {
+            if (html[i] === '<' && html[i + 1] && isValidTagChar(html[i + 1])) {
                 i++;
 
                 for (let j = i; j < html.length; j++){
-                    if (!lastQuote && html[j] === ">"){
+                    if (!lastQuote && html[j] === '>'){
                         if (strip) {
                             stripHTML();
                         }
@@ -836,6 +827,7 @@ class ViewHelper {
                         break;
                     }
 
+                    // noinspection JSIncompatibleTypesComparison
                     if (lastQuote === html[j]){
                         lastQuote = false;
 
@@ -901,6 +893,7 @@ class ViewHelper {
      * @return Promise
      */
     processSetupHandlers(view, type, scope) {
+        // noinspection JSUnresolvedReference
         scope = scope || view.scope || view.entityType;
 
         let handlerIdList = this.metadata.get(['clientDefs', 'Global', 'viewSetupHandlers', type]) || [];
@@ -952,6 +945,7 @@ class ViewHelper {
 
     /**
      * @deprecated Use `transformMarkdownText`.
+     * @todo Remove in v8.0.
      * @internal Used in extensions.
      */
     transfromMarkdownText(text, options) {
@@ -960,6 +954,7 @@ class ViewHelper {
 
     /**
      * @deprecated Use `transformMarkdownInlineText`.
+     * @todo Remove in v8.0.
      * @internal Used in extensions.
      */
     transfromMarkdownInlineText(text) {
