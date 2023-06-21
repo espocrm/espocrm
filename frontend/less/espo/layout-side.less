@@ -61,6 +61,12 @@ body[data-navbar="side"] {
                 .nav > li.more > .dropdown-menu,
                 .nav > li.tab-group > .dropdown-menu {
                     border-left-width: 0;
+                    min-width: @navbar-dropdown-min-width;
+                }
+
+                .nav > li.tab-group > .dropdown-menu {
+                    border-bottom-left-radius: 0;
+                    border-top-right-radius: var(--dropdown-border-radius);
                 }
 
                 .nav > li.more > .dropdown-menu {
