@@ -112,6 +112,8 @@ class MainView extends View {
         },
     }
 
+    lastUrl
+
     /** @inheritDoc */
     init() {
         this.scope = this.options.scope || this.scope;

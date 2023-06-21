@@ -441,7 +441,7 @@ class Controller {
     /**
      * Create a main view in the master.
      *
-     * @param {String} view A view name.
+     * @param {string} view A view name.
      * @param {Object} [options] Options for view.
      * @param {module:controller~viewCallback} [callback] A callback with a created view.
      * @param {boolean} [useStored] Use a stored view if available.
@@ -532,17 +532,26 @@ class Controller {
 
                 let isActual = true;
 
-                if (main && typeof main.isActualForReuse === 'function') {
+                if (
+                    main &&
+                    ('isActualForReuse' in main) &&
+                    typeof main.isActualForReuse === 'function'
+                ) {
                     isActual = main.isActualForReuse();
                 }
 
+                let lastUrl = (main && 'lastUrl' in main) ? main.lastUrl : null;
+
                 if (
-                    (!main.lastUrl || main.lastUrl === this.getRouter().getCurrentUrl()) &&
-                    isActual
+                    isActual &&
+                    (!lastUrl || lastUrl === this.getRouter().getCurrentUrl())
                 ) {
                     process(main);
 
-                    if (main && typeof main.setupReuse === 'function') {
+                    if (
+                        'setupReuse' in main &&
+                        typeof main.setupReuse === 'function'
+                    ) {
                         main.setupReuse(options.params || {});
                     }
 

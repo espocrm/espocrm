@@ -69,6 +69,7 @@ class RecordController extends Controller {
             'views/' + Espo.Utils.camelCaseToHyphen(type);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     beforeList() {
         this.handleCheckAccess('read');
     }
@@ -141,6 +142,7 @@ class RecordController extends Controller {
      */
     prepareModelView(model, options) {}
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {{
      *     model?: module:model,
@@ -235,10 +237,12 @@ class RecordController extends Controller {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     beforeCreate() {
         this.handleCheckAccess('create');
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * @protected
      * @param {module:model} model
@@ -250,7 +254,11 @@ class RecordController extends Controller {
 
             let stored = this.getStoredMainView(key);
 
-            if (stored && !stored.storeViewAfterCreate) {
+            if (!stored) {
+                return;
+            }
+
+            if (!('storeViewAfterCreate' in stored) || !stored.storeViewAfterCreate) {
                 this.clearStoredMainView(key);
             }
         });
@@ -260,11 +268,19 @@ class RecordController extends Controller {
 
             let stored = this.getStoredMainView(key);
 
-            if (stored && stored.storeViewAfterCreate && stored.collection) {
-                this.listenToOnce(stored, 'after:render', () => {
-                    stored.collection.fetch();
-                });
+            if (!stored) {
+                return;
             }
+
+            if (!('storeViewAfterCreate' in stored) || !stored.storeViewAfterCreate) {
+                return;
+            }
+
+            if (!('collection' in stored) || !stored.collection) {
+                return;
+            }
+
+            this.listenToOnce(stored, 'after:render', () => stored.collection.fetch());
         });
     }
 
@@ -304,10 +320,12 @@ class RecordController extends Controller {
         this.create(options);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     beforeEdit() {
         this.handleCheckAccess('edit');
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * @protected
      * @param {module:model} model
@@ -319,7 +337,11 @@ class RecordController extends Controller {
 
             let stored = this.getStoredMainView(key);
 
-            if (stored && !stored.storeViewAfterUpdate) {
+            if (!stored) {
+                return;
+            }
+
+            if (!('storeViewAfterUpdate' in stored) || !stored.storeViewAfterUpdate) {
                 this.clearStoredMainView(key);
             }
         });
@@ -371,10 +393,12 @@ class RecordController extends Controller {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     beforeMerge() {
         this.handleCheckAccess('edit');
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionMerge(options) {
         let ids = options.ids.split(',');
 
@@ -410,6 +434,7 @@ class RecordController extends Controller {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionRelated(options) {
         let id = options.id;
         let link = options.link;

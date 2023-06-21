@@ -670,6 +670,10 @@ class KanbanRecordView extends ListRecordView {
 
         let containerEl = this.$container.get(0);
 
+        if (!containerEl) {
+            return;
+        }
+
         if (containerEl.scrollWidth > containerEl.clientWidth) {
             height -= 18;
         }
