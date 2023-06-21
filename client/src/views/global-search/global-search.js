@@ -57,9 +57,9 @@ define('views/global-search/global-search', ['view'], function (Dep) {
         setup: function () {
             this.wait(true);
 
-            this.getCollectionFactory().create('GlobalSearch', (collection) => {
+            this.getCollectionFactory().create('GlobalSearch', collection => {
                 this.collection = collection;
-                collection.name = 'GlobalSearch';
+                collection.url = 'GlobalSearch';
 
                 this.wait(false);
             });
@@ -70,7 +70,7 @@ define('views/global-search/global-search', ['view'], function (Dep) {
         },
 
         runSearch: function () {
-            var text = this.$input.val().trim();
+            let text = this.$input.val().trim();
 
             if (text !== '' && text.length >= 2) {
                 this.search(text);

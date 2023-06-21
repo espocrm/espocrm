@@ -183,9 +183,7 @@ class ListTreeRecordItemView extends View {
 
     checkLastChildren() {
         Espo.Ajax
-            .getRequest(this.collection.entityType + '/action/lastChildrenIdList', {
-                parentId: this.model.id
-            })
+            .getRequest(this.collection.entityType + '/action/lastChildrenIdList', {parentId: this.model.id})
             .then(idList =>{
                 let childrenView = this.getChildrenView();
 

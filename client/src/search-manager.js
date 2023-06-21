@@ -95,7 +95,7 @@ class SearchManager {
          * @public
          * @type {string}
          */
-        this.scope = collection.entityType || collection.name;
+        this.scope = collection.entityType;
 
         /**
          * @private

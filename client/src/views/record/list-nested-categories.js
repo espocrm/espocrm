@@ -59,7 +59,7 @@ class ListNestedCategoriesRecordView extends View {
             data.list = this.getDataList();
         }
 
-        data.scope = this.collection.entityType || this.collection.name;
+        data.scope = this.collection.entityType;
         data.isLoading = this.isLoading;
         data.currentId = this.collection.currentCategoryId;
         data.currentName = this.collection.currentCategoryName;

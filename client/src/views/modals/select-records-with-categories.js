@@ -65,8 +65,8 @@ class SelectRecordsWithCategoriesModal extends SelectRecordsModal {
     }
 
     loadCategories() {
-        this.getCollectionFactory().create(this.categoryScope, (collection) => {
-            collection.url = collection.name + '/action/listTree';
+        this.getCollectionFactory().create(this.categoryScope, collection => {
+            collection.url = collection.entityType + '/action/listTree';
             collection.data.onlyNotEmpty = true;
 
             this.listenToOnce(collection, 'sync', () => {

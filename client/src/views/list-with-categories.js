@@ -384,19 +384,16 @@ class ListWithCategories extends ListView {
     }
 
     getTreeCollection(callback) {
-        this.getCollectionFactory().create(this.categoryScope, collection => {
-            collection.url = collection.name + '/action/listTree';
+        this.getCollectionFactory().create(this.categoryScope)
+            .then(collection => {
+                collection.url = collection.entityType + '/action/listTree';
+                collection.setOrder(null, null);
 
-            collection.setOrder(null, null);
+                this.collection.treeCollection = collection;
 
-            this.collection.treeCollection = collection;
-
-            this.listenToOnce(collection, 'sync', () => {
-                callback.call(this, collection);
+                collection.fetch()
+                    .then(() => callback.call(this, collection));
             });
-
-            collection.fetch();
-        });
     }
 
     applyCategoryToNestedCategoriesCollection() {
@@ -416,7 +413,7 @@ class ListWithCategories extends ListView {
 
             collection.setOrder(null, null);
 
-            collection.url = collection.name + '/action/listTree';
+            collection.url = collection.entityType + '/action/listTree';
             collection.maxDepth = null;
             collection.data.checkIfEmpty = true;
 
@@ -713,6 +710,7 @@ class ListWithCategories extends ListView {
         this.$listContainer.removeClass('hidden');
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionToggleNavigationPanel() {
         let value = !this.hasNavigationPanel;
 

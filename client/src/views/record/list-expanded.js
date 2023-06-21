@@ -71,7 +71,7 @@ class ListExpandedRecordView extends ListRecordView {
 
         this.layoutIsBeingLoaded = true;
 
-        this._helper.layoutManager.get(this.collection.name, type, (listLayout) => {
+        this._helper.layoutManager.get(this.collection.entityType, type, listLayout => {
             this.layoutLoadCallbackList.forEach(c => {
                 c(listLayout);
 

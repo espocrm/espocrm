@@ -1884,7 +1884,7 @@ class ListRecordView extends View {
 
         this.layoutLoadCallbackList = [];
 
-        this.entityType = this.collection.name || null;
+        this.entityType = this.collection.entityType || null;
         this.scope = this.options.scope || this.entityType;
 
         this.massActionList = Espo.Utils.clone(this.massActionList);
@@ -2268,7 +2268,7 @@ class ListRecordView extends View {
         this.layoutIsBeingLoaded = true;
 
         let layoutName = this.layoutName;
-        let layoutScope = this.layoutScope || this.collection.entityType || this.collection.name;
+        let layoutScope = this.layoutScope || this.collection.entityType;
 
         this.getHelper().layoutManager.get(layoutScope, layoutName, listLayout => {
             let filteredListLayout = this.filterListLayout(listLayout);

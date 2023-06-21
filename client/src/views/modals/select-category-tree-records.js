@@ -94,7 +94,7 @@ define('views/modals/select-category-tree-records', ['views/modals/select-record
             this.waitForView('list');
 
             Espo.loader.require('search-manager', SearchManager => {
-                this.getCollectionFactory().create(this.scope, (collection) => {
+                this.getCollectionFactory().create(this.scope, collection => {
                     collection.maxSize = this.getConfig().get('recordsPerPageSelect') || 5;
 
                     this.collection = collection;
@@ -116,7 +116,7 @@ define('views/modals/select-category-tree-records', ['views/modals/select-record
                     }
 
                     collection.where = searchManager.getWhere();
-                    collection.url = collection.name + '/action/listTree';
+                    collection.url = collection.entityType + '/action/listTree';
 
                     var viewName = this.getMetadata()
                         .get('clientDefs.' + this.scope + '.recordViews.listSelectCategoryTree') ||
@@ -133,8 +133,8 @@ define('views/modals/select-category-tree-records', ['views/modals/select-record
                             searchManager: searchManager,
                             checkAllResultDisabled: true,
                             buttonsDisabled: true,
-                        }, (list) => {
-                            list.once('select', (model) => {
+                        }, listView => {
+                            listView.once('select', model => {
                                 this.trigger('select', model);
                                 this.close();
                             });

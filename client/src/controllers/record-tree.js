@@ -49,7 +49,7 @@ define('controllers/record-tree', ['controllers/record'], function (Dep) {
 
         actionListTree: function () {
             this.getCollection().then(collection => {
-                collection.url = collection.name + '/action/listTree';
+                collection.url = collection.entityType + '/action/listTree';
 
                 this.main(this.getViewName('listTree'), {
                     scope: this.name,

@@ -237,7 +237,7 @@ class KanbanRecordView extends ListRecordView {
 
         this.layoutLoadCallbackList = [];
 
-        this.entityType = this.collection.name || null;
+        this.entityType = this.collection.entityType || null;
         this.scope = this.options.scope || this.entityType;
 
         this.buttonList = Espo.Utils.clone(this.buttonList);
@@ -293,7 +293,7 @@ class KanbanRecordView extends ListRecordView {
         this.seedCollection.reset();
         this.seedCollection.url = this.scope;
         this.seedCollection.maxSize = this.collection.maxSize;
-        this.seedCollection.name = this.collection.name;
+        this.seedCollection.entityType = this.collection.entityType;
         this.seedCollection.orderBy = this.collection.defaultOrderBy;
         this.seedCollection.order = this.collection.defaultOrder;
 
@@ -739,9 +739,9 @@ class KanbanRecordView extends ListRecordView {
                 collection.total = item.total;
 
                 collection.url = this.collection.url;
-
                 collection.where = this.collection.where;
-                collection.name = this.seedCollection.name;
+
+                collection.entityType = this.seedCollection.entityType;
                 collection.maxSize = this.seedCollection.maxSize;
                 collection.orderBy = this.seedCollection.orderBy;
                 collection.order = this.seedCollection.order;
