@@ -56,7 +56,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             widthPx: {
                 type: 'int',
                 min: 0,
-                max: 512,
+                max: 720,
                 tooltip: true
             },
             notSortable: {
@@ -65,7 +65,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             },
             align: {
                 type: 'enum',
-                options: ["left", "right"]
+                options: ['left', 'right']
             },
             view: {
                 type: 'varchar',

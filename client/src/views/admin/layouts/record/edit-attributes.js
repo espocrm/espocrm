@@ -32,6 +32,9 @@ define('views/admin/layouts/record/edit-attributes', ['views/record/base'], func
 
         template: 'admin/layouts/record/edit-attributes',
 
+        /** @internal Important for dynamic logic working. */
+        mode: 'edit',
+
         data: function () {
             return {
                 attributeDataList: this.getAttributeDataList()
