@@ -185,12 +185,12 @@ class ListTreeRecordView extends ListRecordView {
         if (this.collection.length > 0) {
             this.wait(true);
 
-            var modelList = this.collection.models;
-            var count = modelList.length;
-            var built = 0;
+            let modelList = this.collection.models;
+            let count = modelList.length;
+            let built = 0;
 
             modelList.forEach(model => {
-                var key = model.id;
+                let key = model.id;
 
                 this.rowList.push(key);
 
@@ -277,10 +277,12 @@ class ListTreeRecordView extends ListRecordView {
             this.listenToOnce(view, 'after:save', model => {
                 view.close();
 
-                model.set('childCollection', this.collection.createSeed());
+                let collection = /** @type module:collections/tree */ this.collection;
+
+                model.set('childCollection', collection.createSeed());
 
                 if (model.get('parentId') !== attributes.parentId) {
-                    var v = this;
+                    let v = this;
 
                     while (1) {
                         if (v.level) {
