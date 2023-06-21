@@ -10,6 +10,7 @@
         }
     ],
     "notCreatable": true,
+    "notMergeable": true,
     "fieldDefs": {
         "type": "int"
     }
