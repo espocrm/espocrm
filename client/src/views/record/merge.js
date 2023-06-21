@@ -26,261 +26,257 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/merge', ['view'], function (Dep) {
+import View from 'view';
+import $ from 'lib!jquery';
 
-    return Dep.extend({
+class MergeRecordView extends View {
 
-        template: 'record/merge',
+    template = 'record/merge'
 
-        scope: null,
+    scope = ''
 
-        data: function () {
-            let rows = [];
+    events = {
+        /** @this MergeRecordView */
+        'change input[type="radio"][name="check-all"]': function (e) {
+            e.stopPropagation();
 
-            this.fields.forEach(field => {
-                let o = {
-                    name: field,
-                    scope: this.scope,
-                };
+            let id = e.currentTarget.value;
 
-                o.columns = [];
+            $('input[data-id="' + id + '"]').prop('checked', true);
+        },
+        /** @this MergeRecordView */
+        'click button[data-action="cancel"]': function () {
+            this.getRouter().navigate('#' + this.scope, {trigger: true});
+        },
+        /** @this MergeRecordView */
+        'click button[data-action="merge"]': function () {
+            let id = $('input[type="radio"][name="check-all"]:checked').val();
 
-                this.models.forEach((m) => {
-                    o.columns.push({
-                        id: m.id,
-                        fieldVariable: m.id + '-' + field,
-                        isReadOnly: this.readOnlyFields[field] || false,
-                    });
-                });
+            let model;
 
-                rows.push(o);
+            this.models.forEach(m => {
+                if (m.id === id) {
+                    model = m;
+                }
             });
 
-            return {
-                rows: rows,
-                modelList: this.models,
+            let attributes = {};
+
+            $('input.field-radio:checked').each((i, el) => {
+                let field = el.name;
+                let id = $(el).attr('data-id');
+
+                if (model.id === id) {
+                    return;
+                }
+
+                let fieldType = model.getFieldParam(field, 'type');
+                let fields = this.getFieldManager().getActualAttributeList(fieldType, field);
+
+                let modelFrom;
+
+                this.models.forEach(itemModel => {
+                    if (itemModel.id === id) {
+                        modelFrom = itemModel;
+                    }
+                });
+
+                fields.forEach(field => {
+                    attributes[field] = modelFrom.get(field);
+                });
+            });
+
+            Espo.Ui.notify(' ... ');
+
+            let sourceIdList = this.models
+                .filter(m => m.id !== model.id)
+                .map(m => m.id);
+
+            Espo.Ajax
+                .postRequest('Action', {
+                    entityType: this.scope,
+                    action: 'merge',
+                    id: model.id,
+                    data: {
+                        sourceIdList: sourceIdList,
+                        attributes: attributes,
+                    },
+                })
+                .then(() => {
+                    Espo.Ui.success(this.translate('Merged'), {suppress: true});
+
+                    this.getRouter().navigate('#' + this.scope + '/view/' + model.id, {trigger: true});
+
+                    if (this.collection) {
+                        this.collection.fetch();
+                    }
+                });
+        }
+    }
+
+    data() {
+        let rows = [];
+
+        this.fields.forEach(field => {
+            let o = {
+                name: field,
                 scope: this.scope,
-                hasCreatedAt: this.hasCreatedAt,
-                width: Math.round(((80 - this.models.length * 5) / this.models.length * 10)) / 10,
-                dataList: this.getDataList(),
             };
-        },
 
-        events: {
-            'change input[type="radio"][name="check-all"]': function (e) {
-                e.stopPropagation();
-
-                let id = e.currentTarget.value;
-
-                $('input[data-id="'+id+'"]').prop('checked', true);
-            },
-
-            'click button[data-action="cancel"]': function () {
-                this.getRouter().navigate('#' + this.scope, {trigger: true});
-            },
-
-            'click button[data-action="merge"]': function () {
-                let id = $('input[type="radio"][name="check-all"]:checked').val();
-
-                let model;
-
-                this.models.forEach(m => {
-                    if (m.id === id) {
-                        model = m;
-                    }
-                });
-
-                var attributes = {};
-
-                $('input.field-radio:checked').each((i, el) => {
-                    let field = el.name;
-                    let id = $(el).attr('data-id');
-
-                    if (model.id === id) {
-                        return;
-                    }
-
-                    let fieldType = model.getFieldParam(field, 'type');
-                    let fields = this.getFieldManager().getActualAttributeList(fieldType, field);
-
-                    let modelFrom;
-
-                    this.models.forEach(m => {
-                        if (m.id === id) {
-                            modelFrom = m;
-                        }
-                    });
-
-                    fields.forEach(field => {
-                        attributes[field] = modelFrom.get(field);
-                    });
-                });
-
-                Espo.Ui.notify(' ... ');
-
-                let sourceIdList =
-                    this.models
-                        .filter(m => {
-                            if (m.id !== model.id) {
-                                return true;
-                            }
-                        })
-                        .map(m => {
-                            return m.id;
-                        });
-
-                Espo.Ajax
-                    .postRequest('Action', {
-                        entityType: this.scope,
-                        action: 'merge',
-                        id: model.id,
-                        data: {
-                            sourceIdList: sourceIdList,
-                            attributes: attributes,
-                        },
-                    })
-                    .then(() => {
-                        Espo.Ui.success(this.translate('Merged'), {suppress: true});
-
-                        this.getRouter().navigate('#' + this.scope + '/view/' + model.id, {trigger: true});
-
-                        if (this.collection) {
-                            this.collection.fetch();
-                        }
-                    });
-            }
-        },
-
-        afterRender: function () {
-            $('input[data-id="' + this.models[0].id + '"]').prop('checked', true);
-        },
-
-        setup: function () {
-            this.scope = this.options.models[0].name;
-            this.models = this.options.models;
-
-            let fieldManager = this.getFieldManager();
-
-            let differentFieldList = [];
-            let fieldsDefs = this.models[0].defs.fields;
-
-            this.readOnlyFields = {};
-
-            for (let field in fieldsDefs) {
-                let type = fieldsDefs[field].type;
-
-                if (type === 'linkMultiple') {
-                    continue;
-                }
-
-                if (fieldsDefs[field].disabled) {
-                    continue;
-                }
-
-                if (fieldsDefs[field].mergeDisabled) {
-                    continue;
-                }
-
-                if (field === 'createdAt' || field === 'modifiedAt') {
-                    continue;
-                }
-
-                if (fieldManager.isMergeable(type)) {
-                    let actualAttributeList = fieldManager.getActualAttributeList(type, field);
-
-                    let differs = false;
-
-                    actualAttributeList.forEach(field => {
-                        let values = [];
-
-                        this.models.forEach(model => {
-                            values.push(model.get(field));
-                        });
-
-                        let firstValue = values[0];
-
-                        values.forEach(value => {
-                            if (!_.isEqual(firstValue, value)) {
-                                differs = true;
-                            }
-                        });
-                    });
-
-                    if (differs) {
-                        differentFieldList.push(field);
-
-                        if (this.models[0].isFieldReadOnly(field)) {
-                            this.readOnlyFields[field] = true;
-                        }
-                    }
-                }
-            }
-
-            differentFieldList.sort((v1, v2) => {
-                return this.translate(v1, 'fields', this.scope)
-                    .localeCompare(this.translate(v2, 'fields', this.scope));
-            });
-
-            differentFieldList = differentFieldList.sort((v1, v2) => {
-                if (!this.readOnlyFields[v1] && this.readOnlyFields[v2]) {
-                    return -1;
-                }
-
-                return 1;
-            });
-
-            this.fields = differentFieldList;
-
-            this.fields.forEach(field => {
-                let type = this.models[0].getFieldParam(field, 'type');
-
-                this.models.forEach((model) => {
-                    let viewName = model.getFieldParam(field, 'view') ||
-                        this.getFieldManager().getViewName(type);
-
-                    this.createView(model.id + '-' + field, viewName, {
-                        model: model,
-                        el: '.merge [data-id="'+model.id+'"] .field[data-name="' + field + '"]',
-                        defs: {
-                            name: field,
-                        },
-                        mode: 'detail',
-                        readOnly: true,
-                    });
-                });
-            });
-
-            this.hasCreatedAt = this.getMetadata().get(['entityDefs', this.scope, 'fields', 'createdAt']);
-
-            if (this.hasCreatedAt) {
-                this.models.forEach(model => {
-                    this.createView(model.id + '-' + 'createdAt', 'views/fields/datetime', {
-                        model: model,
-                        el: '.merge [data-id="'+model.id+'"] .field[data-name="createdAt"]',
-                        defs: {
-                            name: 'createdAt',
-                        },
-                        mode: 'detail',
-                        readOnly: true,
-                    });
-                });
-            }
-        },
-
-        getDataList: function () {
-            let dataList = [];
+            o.columns = [];
 
             this.models.forEach(model => {
-                var o = {};
-
-                o.id = model.id;
-                o.name = model.get('name');
-                o.createdAtViewName = model.id + '-' + 'createdAt';
-
-                dataList.push(o);
+                o.columns.push({
+                    id: model.id,
+                    fieldVariable: model.id + '-' + field,
+                    isReadOnly: this.readOnlyFields[field] || false,
+                });
             });
 
-            return dataList;
-        },
-    });
-});
+            rows.push(o);
+        });
+
+        return {
+            rows: rows,
+            modelList: this.models,
+            scope: this.scope,
+            hasCreatedAt: this.hasCreatedAt,
+            width: Math.round(((80 - this.models.length * 5) / this.models.length * 10)) / 10,
+            dataList: this.getDataList(),
+        };
+    }
+
+    afterRender() {
+        $('input[data-id="' + this.models[0].id + '"]').prop('checked', true);
+    }
+
+    setup() {
+        this.scope = this.options.models[0].name;
+        this.models = this.options.models;
+
+        let fieldManager = this.getFieldManager();
+
+        let differentFieldList = [];
+        let fieldsDefs = this.models[0].defs.fields;
+
+        this.readOnlyFields = {};
+
+        for (let field in fieldsDefs) {
+            let type = fieldsDefs[field].type;
+
+            if (type === 'linkMultiple') {
+                continue;
+            }
+
+            if (fieldsDefs[field].disabled) {
+                continue;
+            }
+
+            if (fieldsDefs[field].mergeDisabled) {
+                continue;
+            }
+
+            if (field === 'createdAt' || field === 'modifiedAt') {
+                continue;
+            }
+
+            if (fieldManager.isMergeable(type)) {
+                let actualAttributeList = fieldManager.getActualAttributeList(type, field);
+
+                let differs = false;
+
+                actualAttributeList.forEach(field => {
+                    let values = [];
+
+                    this.models.forEach(model => {
+                        values.push(model.get(field));
+                    });
+
+                    let firstValue = values[0];
+
+                    values.forEach(value => {
+                        if (!_.isEqual(firstValue, value)) {
+                            differs = true;
+                        }
+                    });
+                });
+
+                if (differs) {
+                    differentFieldList.push(field);
+
+                    if (this.models[0].isFieldReadOnly(field)) {
+                        this.readOnlyFields[field] = true;
+                    }
+                }
+            }
+        }
+
+        differentFieldList.sort((v1, v2) => {
+            return this.translate(v1, 'fields', this.scope)
+                .localeCompare(this.translate(v2, 'fields', this.scope));
+        });
+
+        differentFieldList = differentFieldList.sort((v1, v2) => {
+            if (!this.readOnlyFields[v1] && this.readOnlyFields[v2]) {
+                return -1;
+            }
+
+            return 1;
+        });
+
+        this.fields = differentFieldList;
+
+        this.fields.forEach(field => {
+            let type = this.models[0].getFieldParam(field, 'type');
+
+            this.models.forEach((model) => {
+                let viewName = model.getFieldParam(field, 'view') ||
+                    this.getFieldManager().getViewName(type);
+
+                this.createView(model.id + '-' + field, viewName, {
+                    model: model,
+                    el: '.merge [data-id="'+model.id+'"] .field[data-name="' + field + '"]',
+                    defs: {
+                        name: field,
+                    },
+                    mode: 'detail',
+                    readOnly: true,
+                });
+            });
+        });
+
+        this.hasCreatedAt = this.getMetadata().get(['entityDefs', this.scope, 'fields', 'createdAt']);
+
+        if (this.hasCreatedAt) {
+            this.models.forEach(model => {
+                this.createView(model.id + '-' + 'createdAt', 'views/fields/datetime', {
+                    model: model,
+                    el: '.merge [data-id="'+model.id+'"] .field[data-name="createdAt"]',
+                    defs: {
+                        name: 'createdAt',
+                    },
+                    mode: 'detail',
+                    readOnly: true,
+                });
+            });
+        }
+    }
+
+    getDataList() {
+        let dataList = [];
+
+        this.models.forEach(model => {
+            var o = {};
+
+            o.id = model.id;
+            o.name = model.get('name');
+            o.createdAtViewName = model.id + '-' + 'createdAt';
+
+            dataList.push(o);
+        });
+
+        return dataList;
+    }
+}
+
+export default MergeRecordView;
