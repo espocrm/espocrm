@@ -26,145 +26,147 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/collapsed-modal-bar', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class CollapsedModalBar extends View {
 
-        maxNumberToDisplay: 3,
+    maxNumberToDisplay = 3
 
-        templateContent: `
-            {{#each dataList}}
-                <div class="collapsed-modal" data-number="{{number}}">{{var key ../this}}</div>
-            {{/each}}
-        `,
+    templateContent = `
+        {{#each dataList}}
+        <div class="collapsed-modal" data-number="{{number}}">{{var key ../this}}</div>
+        {{/each}}
+    `
 
-        data: function () {
-            return {
-                dataList: this.getDataList(),
-            };
-        },
+    data() {
+        return {
+            dataList: this.getDataList(),
+        };
+    }
 
-        init: function () {
-            this.on('render', () => {
-                if ($('.collapsed-modal-bar').length === 0) {
-                    $('<div />')
-                        .addClass('collapsed-modal-bar')
-                        .appendTo('body');
-                }
-            });
-        },
-
-        setup: function () {
-            this.lastNumber = 0;
-            this.numberList = [];
-        },
-
-        getDataList: function () {
-            let list = [];
-
-            let numberList = Espo.Utils.clone(this.numberList);
-
-            if (this.numberList.length > this.maxNumberToDisplay) {
-                numberList = numberList.slice(this.numberList.length - this.maxNumberToDisplay);
+    init() {
+        this.on('render', () => {
+            if ($('.collapsed-modal-bar').length === 0) {
+                $('<div />')
+                    .addClass('collapsed-modal-bar')
+                    .appendTo('body');
             }
+        });
+    }
 
-            numberList
-                .reverse()
-                .forEach((number, i) => {
-                    list.push({
-                        number: number.toString(),
-                        key: 'key-' + number,
-                        index: i,
-                    });
+    setup() {
+        this.lastNumber = 0;
+        this.numberList = [];
+    }
+
+    getDataList() {
+        let list = [];
+
+        let numberList = Espo.Utils.clone(this.numberList);
+
+        if (this.numberList.length > this.maxNumberToDisplay) {
+            numberList = numberList.slice(this.numberList.length - this.maxNumberToDisplay);
+        }
+
+        numberList
+            .reverse()
+            .forEach((number, i) => {
+                list.push({
+                    number: number.toString(),
+                    key: 'key-' + number,
+                    index: i,
                 });
-
-            return list;
-        },
-
-        calculateDuplicateNumber: function (title) {
-            let duplicateNumber = 0;
-
-            this.numberList.forEach(number => {
-                let view = this.getModalViewByNumber(number);
-
-                if (!view) {
-                    return;
-                }
-
-                if (view.title === title) {
-                    duplicateNumber++;
-                }
             });
 
-            if (duplicateNumber === 0) {
-                return null;
+        return list;
+    }
+
+    calculateDuplicateNumber(title) {
+        let duplicateNumber = 0;
+
+        this.numberList.forEach(number => {
+            let view = this.getModalViewByNumber(number);
+
+            if (!view) {
+                return;
             }
 
-            return duplicateNumber;
-        },
+            if (view.title === title) {
+                duplicateNumber++;
+            }
+        });
 
-        getModalViewByNumber: function (number) {
-            let key = 'key-' + number;
+        if (duplicateNumber === 0) {
+            return null;
+        }
 
-            return this.getView(key);
-        },
+        return duplicateNumber;
+    }
 
-        addModalView: function (modalView, options) {
-            let number = this.lastNumber;
+    getModalViewByNumber(number) {
+        let key = 'key-' + number;
 
-            this.numberList.push(this.lastNumber);
+        return this.getView(key);
+    }
 
-            let key = 'key-' + number;
+    addModalView(modalView, options) {
+        let number = this.lastNumber;
 
-            this.createView(key, 'views/collapsed-modal', {
-                title: options.title,
-                duplicateNumber: this.calculateDuplicateNumber(options.title),
-                el: this.getSelector() + ' [data-number="' + number + '"]',
-            })
-            .then(view => {
-                this.listenToOnce(view, 'close', () => {
-                    this.removeModalView(number);
-                });
+        this.numberList.push(this.lastNumber);
 
-                this.listenToOnce(view, 'expand', () => {
-                    this.removeModalView(number, true);
+        let key = 'key-' + number;
 
-                    // Use timeout to prevent DOM being updated after modal is re-rendered.
-                    setTimeout(() => {
-                        let key = 'dialog-' + number;
-
-                        this.setView(key, modalView);
-
-                        modalView.setSelector(modalView.containerSelector);
-
-                        this.getView(key).render();
-                    }, 5);
-                });
-
-                this.reRender(true);
+        this.createView(key, 'views/collapsed-modal', {
+            title: options.title,
+            duplicateNumber: this.calculateDuplicateNumber(options.title),
+            el: this.getSelector() + ' [data-number="' + number + '"]',
+        })
+        .then(view => {
+            this.listenToOnce(view, 'close', () => {
+                this.removeModalView(number);
             });
 
-            this.lastNumber++;
-        },
+            this.listenToOnce(view, 'expand', () => {
+                this.removeModalView(number, true);
 
-        removeModalView: function (number, noReRender) {
-            let key = 'key-' + number;
+                // Use timeout to prevent DOM being updated after modal is re-rendered.
+                setTimeout(() => {
+                    let key = 'dialog-' + number;
 
-            let index = this.numberList.indexOf(number);
+                    this.setView(key, modalView);
 
-            if (~index) {
-                this.numberList.splice(index, 1);
-            }
+                    modalView.setSelector(modalView.containerSelector);
 
-            if (this.isRendered()) {
-                this.$el.find('.collapsed-modal[data-number="' + number + '"]').remove();
-            }
+                    this.getView(key).render();
+                }, 5);
+            });
 
-            if (!noReRender) {
-                this.reRender();
-            }
+            this.reRender(true);
+        });
 
-            this.clearView(key);
-        },
-    });
-});
+        this.lastNumber++;
+    }
+
+    removeModalView(number, noReRender) {
+        let key = 'key-' + number;
+
+        let index = this.numberList.indexOf(number);
+
+        if (~index) {
+            this.numberList.splice(index, 1);
+        }
+
+        if (this.isRendered()) {
+            this.$el.find('.collapsed-modal[data-number="' + number + '"]').remove();
+        }
+
+        if (!noReRender) {
+            this.reRender();
+        }
+
+        this.clearView(key);
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default CollapsedModalBar;

@@ -26,51 +26,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/collapsed-modal', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class CollapsedModalView extends View {
 
-        templateContent: `
-            <div class="title-container">
-                <a role="button" data-action="expand" class="title">{{title}}</a>
-            </div>
-            <div class="close-container">
-                <a role="button" data-action="close"><span class="fas fa-times"></span></a>
-            </div>
-        `,
+    templateContent = `
+        <div class="title-container">
+            <a role="button" data-action="expand" class="title">{{title}}</a>
+        </div>
+        <div class="close-container">
+            <a role="button" data-action="close"><span class="fas fa-times"></span></a>
+        </div>
+    `
 
-        events: {
-            'click [data-action="expand"]': function () {
-                this.expand();
-            },
-            'click [data-action="close"]': function () {
-                this.close();
-            },
+    events = {
+        /** @this CollapsedModalView */
+        'click [data-action="expand"]': function () {
+            this.expand();
         },
-
-        data: function () {
-            let title = this.title;
-
-            if (this.duplicateNumber) {
-                title = this.title + ' ' + this.duplicateNumber;
-            }
-
-            return {
-                title: title,
-            };
+        /** @this CollapsedModalView */
+        'click [data-action="close"]': function () {
+            this.close();
         },
+    }
 
-        setup: function () {
-            this.title = this.options.title || 'no-title';
-            this.duplicateNumber = this.options.duplicateNumber || null;
-        },
+    data() {
+        let title = this.title;
 
-        expand: function () {
-            this.trigger('expand');
-        },
+        if (this.duplicateNumber) {
+            title = this.title + ' ' + this.duplicateNumber;
+        }
 
-        close: function () {
-            this.trigger('close');
-        },
-    });
-});
+        return {
+            title: title,
+        };
+    }
+
+    setup() {
+        this.title = this.options.title || 'no-title';
+        this.duplicateNumber = this.options.duplicateNumber || null;
+    }
+
+    expand() {
+        this.trigger('expand');
+    }
+
+    close() {
+        this.trigger('close');
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default CollapsedModalView;

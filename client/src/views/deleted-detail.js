@@ -26,24 +26,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/deleted-detail', ['views/detail'], function (Dep) {
+import DetailView from 'views/detail';
 
-    return Dep.extend({
+class DeletedDetailView extends DetailView {
 
-        recordView: 'views/record/deleted-detail',
+    recordView = 'views/record/deleted-detail'
 
-        menuDisabled: true,
+    menuDisabled = true
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            if (this.model.get('deleted')) {
-                this.menuDisabled = true;
-            }
-        },
+        if (this.model.get('deleted')) {
+            this.menuDisabled = true;
+        }
+    }
 
-        getRecordViewName: function () {
-            return this.recordView;
-        },
-    });
-});
+    getRecordViewName() {
+        return this.recordView;
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default DeletedDetailView;

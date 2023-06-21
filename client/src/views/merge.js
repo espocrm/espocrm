@@ -26,57 +26,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/merge', ['views/main'], function (Dep) {
+import MainView from 'views/main';
 
-    return Dep.extend({
+class MergeView extends MainView {
 
-        template: 'merge',
+    template = 'merge'
 
-        el: '#main',
+    name = 'Merge'
 
-        scope: null,
+    headerView = 'views/header'
+    recordView = 'views/record/merge'
 
-        name: 'Merge',
+    setup() {
+        this.models = this.options.models;
 
-        headerView: 'views/header',
+        this.setupHeader();
+        this.setupRecord();
+    }
 
-        recordView: 'views/record/merge',
+    setupHeader() {
+        this.createView('header', this.headerView, {
+            model: this.model,
+            el: '#main > .page-header'
+        });
+    }
 
-        setup: function () {
-            this.models = this.options.models;
+    setupRecord() {
+        this.createView('body', this.recordView, {
+            el: '#main > .body',
+            models: this.models,
+            collection: this.collection
+        });
+    }
 
-            this.setupHeader();
-            this.setupRecord();
-        },
+    getHeader() {
+        return this.buildHeaderHtml([
+            $('<a>')
+                .attr('href', '#' + this.models[0].entityType)
+                .text(this.getLanguage().translate(this.models[0].name, 'scopeNamesPlural')),
+            $('<span>')
+                .text(this.getLanguage().translate('Merge'))
+        ]);
+    }
 
-        setupHeader: function () {
-            this.createView('header', this.headerView, {
-                model: this.model,
-                el: '#main > .page-header'
-            });
-        },
+    updatePageTitle() {
+        this.setPageTitle(this.getLanguage().translate('Merge'));
+    }
+}
 
-        setupRecord: function () {
-            this.createView('body', this.recordView, {
-                el: '#main > .body',
-                models: this.models,
-                collection: this.collection
-            });
-        },
-
-        getHeader: function () {
-            return this.buildHeaderHtml([
-                $('<a>')
-                    .attr('href', '#' + this.models[0].entityType)
-                    .text(this.getLanguage().translate(this.models[0].name, 'scopeNamesPlural')),
-                $('<span>')
-                    .text(this.getLanguage().translate('Merge'))
-            ]);
-        },
-
-        updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Merge'));
-        },
-    });
-});
-
+export default MergeView;
