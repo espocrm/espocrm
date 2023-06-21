@@ -451,7 +451,14 @@
                         "properties": {
                             "whereClause": {
                                 "description": "A WHERE clause.",
-                                "$ref": "#/definitions/whereClause"
+                                "anyOf": [
+                                    {"$ref": "#/definitions/whereClause"},
+                                    {
+                                        "type": "array",
+                                        "items": {"$ref": "#/definitions/whereClause"}
+                                    }
+                                ]
+
                             },
                             "leftJoins": {
                                 "description": "LEFT JOINs",
