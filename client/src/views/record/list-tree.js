@@ -239,6 +239,7 @@ class ListTreeRecordView extends ListRecordView {
         return {};
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionCreate(data, e) {
         e.stopPropagation();
 
@@ -304,6 +305,7 @@ class ListTreeRecordView extends ListRecordView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionSelectRoot() {
         this.trigger('select', {id: null});
 
