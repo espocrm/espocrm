@@ -26,19 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/about', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class AboutView extends View {
 
-        template: 'about',
+    template = 'about'
 
-        el: '#main',
+    data() {
+        return {
+            version: this.getConfig().get('version'),
+        };
+    }
+}
 
-        data: function () {
-            return {
-                version: this.getConfig().get('version')
-            };
-        }
-
-    });
-});
+export default AboutView;
