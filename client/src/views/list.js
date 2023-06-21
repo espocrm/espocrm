@@ -530,6 +530,19 @@ class ListView extends MainView {
         return viewName;
     }
 
+    /** @inheritDoc */
+    cancelRender() {
+        if (this.hasView('list')) {
+            this.getRecordView();
+
+            if (this.getRecordView().isBeingRendered()) {
+                this.getRecordView().cancelRender();
+            }
+        }
+
+        super.cancelRender();
+    }
+
     /**
      * @inheritDoc
      */
@@ -548,7 +561,7 @@ class ListView extends MainView {
      * Load a record list view.
      */
     loadList() {
-        var methodName = 'loadList' + Espo.Utils.upperCaseFirst(this.viewMode);
+        let methodName = 'loadList' + Espo.Utils.upperCaseFirst(this.viewMode);
 
         if (this[methodName]) {
             this[methodName]();

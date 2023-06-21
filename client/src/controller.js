@@ -474,15 +474,12 @@ class Controller {
                     this.storeMainView(storedKey, main);
                 }
 
-                main.listenToOnce(this.baseController, 'action', () => {
-                    if (isRendered) {
-                        return;
-                    }
-
+                const onAction = () => {
                     main.cancelRender();
-
                     isCanceled = true;
-                });
+                };
+
+                main.listenToOnce(this.baseController, 'action', onAction);
 
                 if (master.currentViewKey) {
                     this.set('storedScrollTop-' + master.currentViewKey, $(window).scrollTop());
@@ -502,6 +499,8 @@ class Controller {
                 master.setView('main', main);
 
                 let afterRender = () => {
+                    setTimeout(() => main.stopListening(this.baseController, 'action', onAction), 500);
+
                     isRendered = true;
 
                     main.updatePageTitle();
