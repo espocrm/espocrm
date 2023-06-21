@@ -36,18 +36,6 @@ define('views/settings/record/edit', ['views/record/edit'], function (Dep) {
 
         layoutName: 'settings',
 
-        buttons: [
-            {
-                name: 'save',
-                label: 'Save',
-                style: 'primary',
-            },
-            {
-                name: 'cancel',
-                label: 'Cancel',
-            }
-        ],
-
         setup: function () {
             Dep.prototype.setup.call(this);
 

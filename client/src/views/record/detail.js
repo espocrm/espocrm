@@ -1732,7 +1732,6 @@ class DetailRecordView extends BaseRecordView {
 
         this.type = this.options.type || this.type;
 
-        this.buttons = this.options.buttons || this.buttons;
         this.buttonList = this.options.buttonList || this.buttonList;
         this.dropdownItemList = this.options.dropdownItemList || this.dropdownItemList;
 
