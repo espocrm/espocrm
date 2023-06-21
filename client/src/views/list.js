@@ -282,7 +282,7 @@ class ListView extends MainView {
                 viewMode = this.defaultViewMode;
             }
 
-            this.viewMode = viewMode;
+            this.viewMode = /** @type {string} */viewMode;
         }
     }
 
@@ -394,7 +394,7 @@ class ListView extends MainView {
         }
 
         if (this.searchView && this.getView('search')) {
-            this.getView('search').setViewMode(mode);
+            this.getSearchView().setViewMode(mode);
         }
 
         var methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
@@ -417,7 +417,7 @@ class ListView extends MainView {
      * Reset sorting in a storage.
      */
     resetSorting() {
-        this.getStorage().clear('listSorting', this.collection.name);
+        this.getStorage().clear('listSorting', this.collection.entityType);
     }
 
     /**
@@ -520,6 +520,7 @@ class ListView extends MainView {
             this.loadList();
         }
 
+        // noinspection JSUnresolvedReference
         this.$el.get(0).focus({preventScroll: true});
     }
 
@@ -535,7 +536,7 @@ class ListView extends MainView {
             return;
         }
 
-        if (this.collection.isFetched) {
+        if ('isFetched' in this.collection && this.collection.isFetched) {
             this.createListRecordView(false);
 
             return;
@@ -609,7 +610,7 @@ class ListView extends MainView {
 
             if (this.searchPanel) {
                 this.listenTo(view, 'sort', obj => {
-                    this.getStorage().set('listSorting', this.collection.name, obj);
+                    this.getStorage().set('listSorting', this.collection.entityType, obj);
                 });
             }
 
@@ -746,7 +747,7 @@ class ListView extends MainView {
     }
 
     /**
-     * Action `create'.
+     * Action 'create'.
      *
      * @param {Object.<string,*>} [data]
      */
@@ -792,7 +793,7 @@ class ListView extends MainView {
      * @returns {boolean}
      */
     isActualForReuse() {
-        return this.collection.isFetched;
+        return 'isFetched' in this.collection && this.collection.isFetched;
     }
 
     /**
@@ -845,6 +846,7 @@ class ListView extends MainView {
         $search.focus();
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
@@ -857,6 +859,7 @@ class ListView extends MainView {
         this.getSearchView().selectPreviousPreset();
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * @protected
      * @param {JQueryKeyEventObject} e
