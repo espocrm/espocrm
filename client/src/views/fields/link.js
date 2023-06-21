@@ -964,7 +964,7 @@ class LinkFieldView extends BaseFieldView {
 
             Espo.loader.requirePromise(handler)
                 .then(Handler => new Handler(this.getHelper()))
-                .then(handler => {
+                .then(/** module:handlers/select-related */handler => {
                     handler.getFilters(this.model)
                         .then(filters => resolve(filters));
                 });

@@ -42,7 +42,7 @@
  *
  * @abstract
  */
-export default class {
+class SelectRelated {
 
     /**
      * @param {module:view-helper} viewHelper
@@ -63,3 +63,5 @@ export default class {
         return Promise.resolve({});
     }
 }
+
+export default SelectRelated;

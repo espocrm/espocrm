@@ -266,6 +266,7 @@ class DetailView extends MainView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Action 'follow'.
      */
@@ -286,6 +287,7 @@ class DetailView extends MainView {
             });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Action 'unfollow'.
      */
@@ -531,7 +533,7 @@ class DetailView extends MainView {
             }
         }
 
-        let foreignLink = (this.model.defs['links'][link] || {}).foreign;
+        let foreignLink = this.model.getLinkParam(link, 'foreign');
 
         if (foreignLink && scope) {
             // Select only records not related with any.
@@ -600,7 +602,7 @@ class DetailView extends MainView {
 
             Espo.loader.requirePromise(handler)
                 .then(Handler => new Handler(this.getHelper()))
-                .then(handler => {
+                .then(/** module:handlers/select-related */handler => {
                     handler.getFilters(this.model)
                         .then(filters => resolve(filters));
                 });
@@ -670,6 +672,7 @@ class DetailView extends MainView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Action 'duplicate'.
      */

@@ -74,7 +74,7 @@ class MainView extends View {
      * @property {string} [configCheck] A config parameter defining a menu item availability.
      *   If starts with `!`, then the result is negated.
      * @property {module:utils~AccessDefs[]} [accessDataList] Access definitions.
-     * @property {string} initFunction An init function.
+     * @property {string} [initFunction] An init function.
      */
 
     /**
@@ -335,6 +335,7 @@ class MainView extends View {
         return this.getHelper().getScopeColorIconHtml(this.scope);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Action 'showModal'.
      *
@@ -488,6 +489,7 @@ class MainView extends View {
             .removeAttr('disabled');
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Action 'navigateToRoot'.
      *

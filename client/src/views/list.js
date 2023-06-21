@@ -198,7 +198,7 @@ class ListView extends MainView {
             this.createButton = false;
         }
 
-        this.entityType = this.collection.entityType || this.collection.name;
+        this.entityType = this.collection.entityType;
 
         this.headerView = this.options.headerView || this.headerView;
         this.recordView = this.options.recordView || this.recordView;
