@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module views/record/list-tree */
+
 import ListRecordView from 'views/record/list';
 
 class ListTreeRecordView extends ListRecordView {
@@ -149,6 +151,9 @@ class ListTreeRecordView extends ListRecordView {
         }
     }
 
+    /**
+     * @param {string|null} id
+     */
     setSelected(id) {
         if (id === null) {
             this.selectedData.id = null;
@@ -158,7 +163,7 @@ class ListTreeRecordView extends ListRecordView {
         }
 
         this.rowList.forEach(key => {
-            let view = this.getView(key);
+            let view = /** @type module:views/record/list-tree-item */this.getView(key);
 
             if (view.model.id === id) {
                 view.setIsSelected();
@@ -168,7 +173,7 @@ class ListTreeRecordView extends ListRecordView {
             }
 
             if (view.hasView('children')) {
-                view.getView('children').setSelected(id);
+                view.getChildrenView().setSelected(id);
             }
         });
     }
@@ -184,7 +189,7 @@ class ListTreeRecordView extends ListRecordView {
             var count = modelList.length;
             var built = 0;
 
-            modelList.forEach((model, i) => {
+            modelList.forEach(model => {
                 var key = model.id;
 
                 this.rowList.push(key);
@@ -210,7 +215,7 @@ class ListTreeRecordView extends ListRecordView {
                         }
 
                         this.wait(false);
-                    };
+                    }
                 });
             });
 
@@ -257,7 +262,7 @@ class ListTreeRecordView extends ListRecordView {
             attributes.parentName = this.model.get('name');
         }
 
-        let scope = this.collection.name;
+        let scope = this.collection.entityType;
 
         let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
             'views/modals/edit';

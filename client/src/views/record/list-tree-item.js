@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module views/record/list-tree-item */
+
 import View from 'view';
 
 class ListTreeRecordItemView extends View {
@@ -84,7 +86,7 @@ class ListTreeRecordItemView extends View {
             path.unshift(view.model.id);
             names[view.model.id] = view.model.get('name');
 
-            if (view.getParentView().level) {
+            if (view.getParentListView().level) {
                 view = view.getParentView().getParentView();
             } else {
                 break;
@@ -140,8 +142,15 @@ class ListTreeRecordItemView extends View {
         }
 
         this.on('select', o => {
-            this.getParentView().trigger('select', o);
+            this.getParentListView().trigger('select', o);
         });
+    }
+
+    /**
+     * @return {module:views/record/list-tree}
+     */
+    getParentListView() {
+        return /** @type module:views/record/list-tree */this.getParentView();
     }
 
     createChildren() {
@@ -174,11 +183,11 @@ class ListTreeRecordItemView extends View {
 
     checkLastChildren() {
         Espo.Ajax
-            .getRequest(this.collection.name + '/action/lastChildrenIdList', {
+            .getRequest(this.collection.entityType + '/action/lastChildrenIdList', {
                 parentId: this.model.id
             })
             .then(idList =>{
-                let childrenView = this.getView('children');
+                let childrenView = this.getChildrenView();
 
                 idList.forEach(id => {
                     var model = this.model.get('childCollection').get(id);
@@ -205,8 +214,6 @@ class ListTreeRecordItemView extends View {
     unfold() {
         if (this.createDisabled) {
             this.once('children-created', () => {
-                let childrenView = this.getView('children');
-
                 if (!this.model.lastAreChecked) {
                     this.checkLastChildren();
                 }
@@ -333,6 +340,13 @@ class ListTreeRecordItemView extends View {
                 .then(() => this.remove());
 
         });
+    }
+
+    /**
+     * @return module:views/record/list-tree
+     */
+    getChildrenView() {
+        return /** @type module:views/record/list-tree */this.getView('children');
     }
 }
 

@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module collections/tree */
+
 import Collection from 'collection';
 
 class TreeCollection extends Collection {
@@ -49,10 +51,17 @@ class TreeCollection extends Collection {
         seed.reset();
 
         this.path = response.path;
+        /**
+         * @type {{
+         *     name: string,
+         *     upperId?: string,
+         *     upperName?: string,
+         * }|null}
+         */
         this.categoryData = response.data || null;
 
         let f = (l, depth) => {
-            l.forEach((d) => {
+            l.forEach(d => {
                 d.depth = depth;
 
                 let c = this.createSeed();

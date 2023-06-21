@@ -51,6 +51,11 @@ class ListWithCategories extends ListView {
     hasNavigationPanel = false
     /** @private */
     nestedCollectionIsBeingFetched = false
+    /**
+     * @type {module:collections/tree}
+     * @private
+     */
+    nestedCategoriesCollection
 
     data() {
         let data = {};
@@ -227,6 +232,7 @@ class ListWithCategories extends ListView {
         this.$el.focus();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionExpand() {
         this.isExpanded = true;
 
@@ -249,6 +255,7 @@ class ListWithCategories extends ListView {
         this.collection.fetch();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionCollapse() {
         this.isExpanded = false;
         this.setIsExpandedStoredValue(false);
@@ -267,6 +274,7 @@ class ListWithCategories extends ListView {
         this.collection.fetch();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionOpenCategory(data) {
         this.openCategory(data.id || null, data.name);
 
@@ -291,7 +299,7 @@ class ListWithCategories extends ListView {
     }
 
     selectCurrentCategory() {
-        let categoriesView = this.getView('categories');
+        let categoriesView = this.getCategoriesView();
 
         if (categoriesView) {
             categoriesView.setSelected(this.currentCategoryId);
@@ -300,9 +308,9 @@ class ListWithCategories extends ListView {
     }
 
     openCategory(id, name) {
-        this.getView('nestedCategories').isLoading = true;
-        this.getView('nestedCategories').reRender();
-        this.getView('nestedCategories').isLoading = false;
+        this.getNestedCategoriesView().isLoading = true;
+        this.getNestedCategoriesView().reRender();
+        this.getNestedCategoriesView().isLoading = false;
 
         this.nestedCategoriesCollection.reset();
         this.collection.reset();
@@ -327,11 +335,7 @@ class ListWithCategories extends ListView {
 
             Promise
                 .all([
-                    this.nestedCategoriesCollection
-                        .fetch()
-                        .then(() => {
-                            this.updateHeader();
-                        }),
+                    this.nestedCategoriesCollection.fetch().then(() => this.updateHeader()),
                     this.collection.fetch({openCategory: true})
                 ])
                 .then(() => {
@@ -344,8 +348,7 @@ class ListWithCategories extends ListView {
             return;
         }
 
-        this.collection
-            .fetch()
+        this.collection.fetch()
             .then(() => {
                 Espo.Ui.notify(false);
             });
@@ -401,17 +404,10 @@ class ListWithCategories extends ListView {
             return;
         }
 
-        this.nestedCategoriesCollection.where = null;
-
-        let filter;
-
         this.nestedCategoriesCollection.parentId = this.currentCategoryId;
-
         this.nestedCategoriesCollection.currentCategoryId = this.currentCategoryId;
-        this.nestedCategoriesCollection.currentCategoryName = this.currentCategoryName ||
-            this.currentCategoryId;
-
-        this.nestedCategoriesCollection.where = [filter];
+        this.nestedCategoriesCollection.currentCategoryName = this.currentCategoryName || this.currentCategoryId;
+        this.nestedCategoriesCollection.where = [];
     }
 
     getNestedCategoriesCollection(callback) {
@@ -445,6 +441,20 @@ class ListWithCategories extends ListView {
                     callback.call(this, collection);
                 });
         });
+    }
+
+    /**
+     * @return {module:views/record/list-nested-categories}
+     */
+    getNestedCategoriesView() {
+        return /** @type module:views/record/list-nested-categories */this.getView('nestedCategories');
+    }
+
+    /**
+     * @return {module:views/record/list-tree}
+     */
+    getCategoriesView() {
+        return /** @type module:views/record/list-tree */this.getView('categories');
     }
 
     loadNestedCategories() {
@@ -632,6 +642,7 @@ class ListWithCategories extends ListView {
         return this.currentCategoryId;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionManageCategories() {
         this.clearView('categories');
         this.clearView('nestedCategories');
@@ -662,7 +673,6 @@ class ListWithCategories extends ListView {
         let list = [$root];
 
         let currentName = this.nestedCategoriesCollection.categoryData.name;
-
         let upperId = this.nestedCategoriesCollection.categoryData.upperId;
         let upperName = this.nestedCategoriesCollection.categoryData.upperName;
 
