@@ -388,7 +388,7 @@ class ListView extends MainView {
         this.collection.maxSize = this.collectionMaxSize;
 
         if (toStore) {
-            var modeKey = 'listViewMode' + this.scope;
+            let modeKey = 'listViewMode' + this.scope;
 
             this.getStorage().set('state', modeKey, mode);
         }
@@ -397,7 +397,13 @@ class ListView extends MainView {
             this.getSearchView().setViewMode(mode);
         }
 
-        var methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
+        if (this.viewMode === this.MODE_KANBAN) {
+            this.setViewModeKanban();
+
+            return;
+        }
+
+        let methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
 
         if (this[methodName]) {
             this[methodName]();
@@ -499,15 +505,29 @@ class ListView extends MainView {
      * @returns {string}
      */
     getRecordViewName() {
-        if (this.viewMode === this.MODE_LIST) {
-            return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', this.MODE_LIST]) ||
-                this.recordView;
+        let viewName = this.getMetadata().get(['clientDefs', this.scope, 'recordViews', this.viewMode]);
+
+        if (viewName) {
+            return viewName;
         }
 
-        var propertyName = 'record' + Espo.Utils.upperCaseFirst(this.viewMode) + 'View';
+        if (this.viewMode === this.MODE_LIST) {
+            return this.recordView;
+        }
 
-        return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', this.viewMode]) ||
-            this[propertyName];
+        if (this.viewMode === this.MODE_KANBAN) {
+            return this.recordKanbanView;
+        }
+
+        let propertyName = 'record' + Espo.Utils.upperCaseFirst(this.viewMode) + 'View';
+
+        viewName = this[propertyName];
+
+        if (!viewName) {
+            throw new Error("No record view.");
+        }
+
+        return viewName;
     }
 
     /**
