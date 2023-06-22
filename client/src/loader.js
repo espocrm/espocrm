@@ -236,11 +236,18 @@
                 return 'client/custom/src/' + namePart + '.js';
             }
 
-            if (this._transpiledModuleList.includes(mod)) {
-                return `client/lib/transpiled/modules/${mod}/src/${namePart}.js`;
+            const transpiled = this._transpiledModuleList.includes(mod);
+            const internal = this._isModuleInternal(mod);
+
+            if (transpiled && internal) {
+                if (internal) {
+                    return `client/lib/transpiled/modules/${mod}/src/${namePart}.js`;
+                }
+
+                return `client/custom/modules/${mod}/lib/transpiled/src/${namePart}.js`;
             }
 
-            if (this._isModuleInternal(mod)) {
+            if (internal) {
                 return 'client/modules/' + mod + '/src/' + namePart + '.js';
             }
 
