@@ -51,12 +51,12 @@ module.exports = grunt => {
         ...buildUtils.getPreparedBundleLibList(libs),
     ];
 
-    let bundleFileMap = {'client/lib/espo.min.js': libsBundleFileList};
+    let bundleFileMap = {'client/lib/espo.js': libsBundleFileList};
 
     for (let name in bundleConfig.chunks) {
         let namePart = 'espo-' + name;
 
-        bundleFileMap[`client/lib/${namePart}.min.js`] = originalLibDir + `/${namePart}.js`
+        bundleFileMap[`client/lib/${namePart}.js`] = originalLibDir + `/${namePart}.js`
     }
 
     let copyJsFileList = buildUtils.getCopyLibDataList(libs);

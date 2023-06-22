@@ -2,7 +2,7 @@
     "srcDir": ".",
     "srcFiles": [
         "frontend/test/init.js",
-        "client/lib/espo.min.js",
+        "client/lib/espo.js",
         "client/lib/transpiled/src/exceptions.js",
         "client/lib/transpiled/src/utils.js",
         "client/lib/transpiled/src/ajax.js",

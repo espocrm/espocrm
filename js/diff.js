@@ -281,15 +281,15 @@ class Diff
 
             libData.filesToCopy.forEach(item => fileList.push(item));
 
-            fileList.push('client/lib/espo.min.js');
-            fileList.push('client/lib/espo.min.js.map');
+            fileList.push('client/lib/espo.js');
+            fileList.push('client/lib/espo.js.map');
 
             Object.keys(bundleConfig.chunks)
                 .map(name => {
                     let namePart = 'espo-' + name;
 
-                    fileList.push(`client/lib/${namePart}.min.js`);
-                    fileList.push(`client/lib/${namePart}.min.js.map`);
+                    fileList.push(`client/lib/${namePart}.js`);
+                    fileList.push(`client/lib/${namePart}.js.map`);
                 });
 
             fs.readdirSync('client/css/espo/').forEach(file => {

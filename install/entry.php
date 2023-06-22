@@ -208,7 +208,7 @@ $loaderParamsProvider = $installer->getInjectableFactory()->create(LoaderParamsP
 
 if (!empty($actionFile) && file_exists('install/core/tpl/' . $tplName)) {
     /* check if EspoCRM is built */
-    $isBuilt = file_exists('client/lib/espo.min.js');
+    $isBuilt = file_exists('client/lib/espo.js');
 
     $smarty->assign('isBuilt', $isBuilt);
 
