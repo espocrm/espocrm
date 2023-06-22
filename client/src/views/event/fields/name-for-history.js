@@ -37,7 +37,8 @@ define('views/event/fields/name-for-history', ['views/fields/varchar'], function
 
             let status = this.model.get('status');
 
-            let canceledStatusList = this.getMetadata().get(['scopes', this.model.entityType, 'canceledStatusList']);
+            let canceledStatusList = this.getMetadata()
+                .get(['scopes', this.model.entityType, 'canceledStatusList']) || [];
 
             data.strikethrough = canceledStatusList.includes(status);
 
