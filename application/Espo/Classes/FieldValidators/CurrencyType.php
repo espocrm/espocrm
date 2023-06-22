@@ -117,6 +117,14 @@ class CurrencyType extends FloatType
 
         if (
             $currency === null &&
+            !$entity->has($field) &&
+            $entity->isNew()
+        ) {
+            return true;
+        }
+
+        if (
+            $currency === null &&
             $entity->has($field) &&
             $entity->get($field) === null
         ) {
