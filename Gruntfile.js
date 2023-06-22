@@ -33,9 +33,9 @@ const fs = require('fs');
 const cp = require('child_process');
 const path = require('path');
 const buildUtils = require('./js/build-utils');
-const BundlerGeneral = require("./js/bundler/bundler-general");
+const {TemplateBundler, Bundler} = require('espo-frontend-build-tools');
 const LayoutTypeBundler = require('./js/layout-template-bundler');
-const TemplateBundler = require('./js/template-bundler/template-bundler');
+
 const bundleConfig = require('./frontend/bundle-config.json');
 const libs = require('./frontend/libs.json');
 
@@ -277,7 +277,7 @@ module.exports = grunt => {
     };
 
     grunt.registerTask('bundle', () => {
-        let bundler = new BundlerGeneral(bundleConfig, libs);
+        let bundler = new Bundler(bundleConfig, libs);
 
         let result = bundler.bundle();
 

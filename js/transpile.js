@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-const Transpiler = require('./transpiler/transpiler');
+const {Transpiler} = require('espo-frontend-build-tools');
 
 let file;
 
