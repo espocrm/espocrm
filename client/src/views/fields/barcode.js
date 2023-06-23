@@ -126,14 +126,19 @@ define('views/fields/barcode', ['views/fields/varchar'], function (Dep) {
                             size = containerWidth;
                         }
 
-                        new QRCode(this.$el.find('.barcode').get(0), {
-                            text: value,
-                            width: size,
-                            height: size,
-                            colorDark : '#000000',
-                            colorLight : '#ffffff',
-                            correctLevel : QRCode.CorrectLevel.H,
-                        });
+                        try {
+                            new QRCode(this.$el.find('.barcode').get(0), {
+                                text: value,
+                                width: size,
+                                height: size,
+                                colorDark : '#000000',
+                                colorLight : '#ffffff',
+                                correctLevel : QRCode.CorrectLevel.H,
+                            });
+                        }
+                        catch (e) {
+                            console.error(this.name + ': ' + e.message);
+                        }
                     }
                     else {
                         var $barcode = $(this.getSelector() + ' .barcode');
