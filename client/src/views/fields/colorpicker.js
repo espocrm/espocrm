@@ -26,43 +26,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/colorpicker', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+class ColorpickerFieldView extends VarcharFieldView {
 
-        type: 'varchar',
+    type = 'varchar'
 
-        detailTemplate: 'fields/colorpicker/detail',
-        listTemplate: 'fields/colorpicker/detail',
-        editTemplate: 'fields/colorpicker/edit',
+    detailTemplate = 'fields/colorpicker/detail'
+    listTemplate = 'fields/colorpicker/detail'
+    editTemplate = 'fields/colorpicker/edit'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.wait(Espo.loader.requirePromise('lib!Colorpicker'));
-        },
+        this.wait(Espo.loader.requirePromise('lib!Colorpicker'));
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
-            if (this.isEditMode()) {
-                var isModal = !!this.$el.closest('.modal').length;
+        if (this.isEditMode()) {
+            let isModal = !!this.$el.closest('.modal').length;
 
-                this.$element.parent().colorpicker({
-                    format: 'hex',
-                    container: isModal ? this.$el : false,
-                });
+            // noinspection JSUnresolvedReference
+            this.$element.parent().colorpicker({
+                format: 'hex',
+                container: isModal ? this.$el : false,
+            });
 
-                if (isModal) {
-                    this.$el.find('.colorpicker').css('position', 'relative').addClass('pull-right');
-                }
-
-                this.$element.on('change', () => {
-                    if (this.$element.val() === '') {
-                        this.$el.find('.input-group-addon > i').css('background-color', 'transparent');
-                    }
-                });
+            if (isModal) {
+                this.$el.find('.colorpicker')
+                    .css('position', 'relative')
+                    .addClass('pull-right');
             }
-        },
-    });
-});
+
+            this.$element.on('change', () => {
+                if (this.$element.val() === '') {
+                    this.$el.find('.input-group-addon > i').css('background-color', 'transparent');
+                }
+            });
+        }
+    }
+}
+
+export default ColorpickerFieldView;
