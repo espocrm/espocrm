@@ -239,7 +239,7 @@
             const transpiled = this._transpiledModuleList.includes(mod);
             const internal = this._isModuleInternal(mod);
 
-            if (transpiled && internal) {
+            if (transpiled) {
                 if (internal) {
                     return `client/lib/transpiled/modules/${mod}/src/${namePart}.js`;
                 }
