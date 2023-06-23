@@ -348,10 +348,6 @@ class ClientManager
      */
     private function getTranspiledModuleList(): array
     {
-        if (!$this->isDeveloperMode()) {
-            return [];
-        }
-
         $modules = array_values(array_filter(
             $this->module->getList(),
             fn ($item) => $this->module->get([$item, 'jsTranspiled'])
@@ -368,10 +364,6 @@ class ClientManager
      */
     private function getBundledModuleList(): array
     {
-        if (!$this->isDeveloperMode()) {
-            return [];
-        }
-
         $modules = array_values(array_filter(
             $this->module->getList(),
             fn ($item) => $this->module->get([$item, 'bundled'])

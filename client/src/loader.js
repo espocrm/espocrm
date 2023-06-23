@@ -520,6 +520,23 @@
 
         /**
          * @private
+         * @param {string} id
+         * @return {string}
+         */
+        _restoreId(id) {
+            if (!id.includes(':')) {
+                return id;
+            }
+
+            let [mod, part] = id.split(':');
+
+            return `modules/${mod}/${part}`;
+        }
+
+        /**
+         * @private
+         * @param {string} id
+         * @return {string}
          */
         _normalizeId(id) {
             if (id in this._aliasMap) {
@@ -680,14 +697,16 @@
                     return;
                 }
 
-                if (id in this._bundleMapping) {
-                    let bundleName = this._bundleMapping[id];
+                let restoredId = this._restoreId(id);
+
+                if (restoredId in this._bundleMapping) {
+                    let bundleName = this._bundleMapping[restoredId];
 
                     this._requireBundle(bundleName).then(() => {
                         let value = this._get(id);
 
                         if (typeof value === 'undefined') {
-                            let msg = `Could not obtain module '${id}' from bundle '${bundleName}'.`;
+                            let msg = `Could not obtain module '${restoredId}' from bundle '${bundleName}'.`;
                             console.error(msg);
 
                             throw new Error(msg);

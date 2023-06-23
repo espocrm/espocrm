@@ -152,11 +152,13 @@ module.exports = grunt => {
 
         uglify: {
             options: {
-                mangle: true,
                 sourceMap: true,
                 output: {
                     comments: /^!/,
                 },
+                beautify: false,
+                mangle: true,
+                compress: true
             },
             bundle: {
                 options: {
