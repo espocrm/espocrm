@@ -28,7 +28,6 @@
 
 import Controller from 'controller';
 import SearchManager from 'search-manager';
-import _ from 'lib!underscore';
 
 class AdminController extends Controller {
 
@@ -40,6 +39,7 @@ class AdminController extends Controller {
         return false;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionPage(options) {
         let page = options.page;
 
@@ -99,6 +99,7 @@ class AdminController extends Controller {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionIndex(options) {
         let isReturn = options.isReturn;
         let key = this.name + 'Index';
@@ -119,102 +120,127 @@ class AdminController extends Controller {
         }, isReturn, key);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionUsers() {
         this.getRouter().dispatch('User', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionPortalUsers() {
         this.getRouter().dispatch('PortalUser', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionApiUsers() {
         this.getRouter().dispatch('ApiUser', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionTeams() {
         this.getRouter().dispatch('Team', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionRoles() {
         this.getRouter().dispatch('Role', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionPortalRoles() {
         this.getRouter().dispatch('PortalRole', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionPortals() {
         this.getRouter().dispatch('Portal', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionLeadCapture() {
         this.getRouter().dispatch('LeadCapture', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionEmailFilters() {
         this.getRouter().dispatch('EmailFilter', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionGroupEmailFolders() {
         this.getRouter().dispatch('GroupEmailFolder', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionEmailTemplates() {
         this.getRouter().dispatch('EmailTemplate', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionPdfTemplates() {
         this.getRouter().dispatch('Template', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionDashboardTemplates() {
         this.getRouter().dispatch('DashboardTemplate', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionWebhooks() {
         this.getRouter().dispatch('Webhook', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionLayoutSets() {
         this.getRouter().dispatch('LayoutSet', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionWorkingTimeCalendar() {
         this.getRouter().dispatch('WorkingTimeCalendar', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionAttachments() {
         this.getRouter().dispatch('Attachment', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionAuthenticationProviders() {
         this.getRouter().dispatch('AuthenticationProvider', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionEmailAddresses() {
         this.getRouter().dispatch('EmailAddress', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionPhoneNumbers() {
         this.getRouter().dispatch('PhoneNumber', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionPersonalEmailAccounts() {
         this.getRouter().dispatch('EmailAccount', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionGroupEmailAccounts() {
         this.getRouter().dispatch('InboundEmail', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionActionHistory() {
         this.getRouter().dispatch('ActionHistoryRecord', 'list', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionImport() {
         this.getRouter().dispatch('Import', 'index', {fromAdmin: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionLayouts(options) {
         var scope = options.scope || null;
         var type = options.type || null;
@@ -223,6 +249,7 @@ class AdminController extends Controller {
         this.main('views/admin/layouts/index', {scope: scope, type: type, em: em});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionLabelManager(options) {
         var scope = options.scope || null;
         var language = options.language || null;
@@ -230,12 +257,14 @@ class AdminController extends Controller {
         this.main('views/admin/label-manager/index', {scope: scope, language: language});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionTemplateManager(options) {
         var name = options.name || null;
 
         this.main('views/admin/template-manager/index', {name: name});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionFieldManager(options) {
         var scope = options.scope || null;
         var field = options.field || null;
@@ -243,6 +272,7 @@ class AdminController extends Controller {
         this.main('views/admin/field-manager/index', {scope: scope, field: field});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionEntityManager(options) {
         var scope = options.scope || null;
 
@@ -273,12 +303,14 @@ class AdminController extends Controller {
         this.main('views/admin/entity-manager/index');
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionLinkManager(options) {
         var scope = options.scope || null;
 
         this.main('views/admin/link-manager/index', {scope: scope});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionSystemRequirements() {
         this.main('views/admin/system-requirements/index');
     }
@@ -299,6 +331,7 @@ class AdminController extends Controller {
         return model;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionAuthTokens() {
         this.collectionFactory.create('AuthToken', collection => {
             const searchManager = new SearchManager(
@@ -320,6 +353,7 @@ class AdminController extends Controller {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionAuthLog() {
         this.collectionFactory.create('AuthLogRecord', collection => {
             const searchManager = new SearchManager(
@@ -342,6 +376,7 @@ class AdminController extends Controller {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionJobs() {
         this.collectionFactory.create('Job', collection => {
             const searchManager = new SearchManager(
@@ -364,12 +399,14 @@ class AdminController extends Controller {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionIntegrations(options) {
         var integration = options.name || null;
 
         this.main('views/admin/integrations/index', {integration: integration});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionExtensions() {
         this.main('views/admin/extensions/index');
     }

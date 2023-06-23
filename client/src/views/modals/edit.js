@@ -29,7 +29,7 @@
 /** @module views/modals/edit */
 
 import ModalView from 'views/modal';
-import Backbone from 'lib!backbone';
+import Backbone from 'backbone';
 
 /**
  * A quick edit modal.

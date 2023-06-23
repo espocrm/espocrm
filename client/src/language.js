@@ -28,7 +28,7 @@
 
 /** @module language */
 
-import {Events} from 'lib!bullbone';
+import {Events} from 'bullbone';
 
 /**
  * A language.

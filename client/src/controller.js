@@ -29,7 +29,7 @@
 /** @module controller */
 
 import Exceptions from 'exceptions';
-import {Events, View as BullView} from 'lib!bullbone';
+import {Events, View as BullView} from 'bullbone';
 
 /**
  * @callback module:controller~viewCallback

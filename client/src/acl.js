@@ -28,7 +28,7 @@
 
 /** @module acl */
 
-import {View as BullView} from 'lib!bullbone';
+import {View as BullView} from 'bullbone';
 
 /**
  * Internal class for access checking. Can be extended to customize access checking

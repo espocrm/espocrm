@@ -28,7 +28,7 @@
 
 /** @module metadata */
 
-import {Events} from 'lib!bullbone';
+import {Events} from 'bullbone';
 
 /**
  * Application metadata.

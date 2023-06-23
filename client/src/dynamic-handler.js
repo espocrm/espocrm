@@ -28,7 +28,7 @@
 
 /** @module dynamic-handler */
 
-import {View as BullView} from 'lib!bullbone';
+import {View as BullView} from 'bullbone';
 
 /**
  * A dynamic handler. To be extended by a specific handler.

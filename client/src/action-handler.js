@@ -28,7 +28,7 @@
 
 /** @module action-handler */
 
-import {View as BullView} from 'lib!bullbone';
+import {View as BullView} from 'bullbone';
 
 /**
  * An action handler. To be extended by specific action handlers.

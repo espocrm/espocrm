@@ -28,7 +28,7 @@
 
 /** @module layout-manager */
 
-import {Events} from 'lib!bullbone';
+import {Events} from 'bullbone';
 
 /**
  * A layout manager.

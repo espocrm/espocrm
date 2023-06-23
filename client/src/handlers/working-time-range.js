@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import {Events} from 'lib!bullbone';
+import {Events} from 'bullbone';
 
 /**
  * @mixes Bull.Events

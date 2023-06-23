@@ -29,8 +29,8 @@
 /** @module collection */
 
 import Model from 'model';
-import {Events, View as BullView} from 'lib!bullbone';
-import _ from 'lib!underscore';
+import {Events, View as BullView} from 'bullbone';
+import _ from 'underscore';
 
 /**
  * On sync with backend.

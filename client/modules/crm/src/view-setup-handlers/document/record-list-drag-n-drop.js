@@ -26,8 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import _ from 'lib!underscore';
-import {Events} from 'lib!bullbone';
+import _ from 'underscore';
+import {Events} from 'bullbone';
 
 let Handler = function (view) {
     this.view = view;

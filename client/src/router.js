@@ -28,7 +28,7 @@
 
 /** @module router */
 
-import Backbone from 'lib!backbone';
+import Backbone from 'backbone';
 
 /**
  * On route.

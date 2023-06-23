@@ -30,7 +30,7 @@
 
 import ModalView from 'views/modal';
 import ActionItemSetup from 'helpers/action-item-setup';
-import Backbone from 'lib!backbone';
+import Backbone from 'backbone';
 
 /**
  * A quick view modal.

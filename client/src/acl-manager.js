@@ -30,7 +30,7 @@
 
 import Acl from 'acl';
 import Utils from 'utils';
-import {View as BullView} from 'lib!bullbone';
+import {View as BullView} from 'bullbone';
 
 /**
  * An action.

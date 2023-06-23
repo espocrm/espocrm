@@ -28,7 +28,7 @@
 
 /** @module view-record-helper */
 
-import {Events} from 'lib!bullbone';
+import {Events} from 'bullbone';
 
 class ViewRecordHelper {
 
