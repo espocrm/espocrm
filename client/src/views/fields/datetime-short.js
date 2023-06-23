@@ -29,7 +29,7 @@
 /** @module views/fields/datetime-short */
 
 import Dep from 'views/fields/datetime';
-import moment from 'lib!moment';
+import moment from 'moment';
 
 /**
  * @class Class

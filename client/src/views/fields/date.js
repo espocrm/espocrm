@@ -29,7 +29,7 @@
 /** @module views/fields/date */
 
 import BaseFieldView from 'views/fields/base';
-import moment from 'lib!moment';
+import moment from 'moment';
 
 /**
  * A date field.

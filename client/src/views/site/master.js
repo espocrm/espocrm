@@ -27,7 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
-import $ from 'lib!jquery';
+import $ from 'jquery';
 
 class MasterSiteView extends View {
 

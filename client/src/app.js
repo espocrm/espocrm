@@ -29,10 +29,10 @@
 /** @module app */
 
 import Espo from 'lib!espo';
-import $ from 'lib!jquery';
-import Backbone from 'lib!backbone';
-import {Events, View as BullView, Factory as BullFactory} from 'lib!bullbone';
-import Base64 from 'lib!base64';
+import $ from 'jquery';
+import Backbone from 'backbone';
+import {Events, View as BullView, Factory as BullFactory} from 'bullbone';
+import Base64 from 'js-base64';
 import Ui from 'ui';
 import Utils from 'utils';
 import AclManager from 'acl-manager';
@@ -1103,10 +1103,13 @@ class App  {
             if (appTimestampHeader && !appTimestampChangeProcessed) {
                 let appTimestamp = parseInt(appTimestampHeader);
 
+                // noinspection JSUnresolvedReference
+                let bypassAppReload = options.bypassAppReload;
+
                 if (
                     this.appTimestamp &&
                     appTimestamp !== this.appTimestamp &&
-                    !options.bypassAppReload
+                    !bypassAppReload
                 ) {
                     appTimestampChangeProcessed = true;
 
@@ -1133,7 +1136,9 @@ class App  {
 
         $(document).ajaxError((e, xhr, options) => {
             // To process after a promise-catch.
+
             setTimeout(() => {
+                // noinspection JSUnresolvedReference
                 if (xhr.errorIsHandled) {
                     return;
                 }
@@ -1154,6 +1159,7 @@ class App  {
                         break;
 
                     case 401:
+                        // noinspection JSUnresolvedReference
                         if (options.login) {
                             break;
                         }
@@ -1173,6 +1179,7 @@ class App  {
                         }
 
                         if (this.auth) {
+                            // noinspection JSUnresolvedReference
                             let silent = !options.appStart;
 
                             this.logout(true, silent);
@@ -1183,6 +1190,7 @@ class App  {
                         break;
 
                     case 403:
+                        // noinspection JSUnresolvedReference
                         if (options.main) {
                             this.baseController.error403();
 
@@ -1199,6 +1207,7 @@ class App  {
                         break;
 
                     case 404:
+                        // noinspection JSUnresolvedReference
                         if (options.main) {
                             this.baseController.error404();
 

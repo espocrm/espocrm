@@ -28,7 +28,7 @@
 
 /** @module page-title */
 
-import $ from 'lib!jquery';
+import $ from 'jquery';
 
 /**
  * A page-title util.

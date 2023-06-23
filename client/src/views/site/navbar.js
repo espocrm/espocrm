@@ -27,7 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
-import $ from 'lib!jquery';
+import $ from 'jquery';
 
 class NavbarSiteView extends View {
 
@@ -1150,6 +1150,7 @@ class NavbarSiteView extends View {
         this.getRouter().logout();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionShowLastViewed() {
         Espo.Ui.notify(' ... ');
 
@@ -1164,6 +1165,7 @@ class NavbarSiteView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionShowHistory() {
         this.createView('dialog', 'views/modals/action-history', {}, (view) => {
             view.render();

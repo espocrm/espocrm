@@ -27,8 +27,8 @@
  ************************************************************************/
 
 import View from 'view';
-import Base64 from 'lib!base64';
-import $ from 'lib!jquery';
+import Base64 from 'js-base64';
+import $ from 'jquery';
 
 class LoginSecondStepView extends View {
 

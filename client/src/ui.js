@@ -28,9 +28,9 @@
 
 /** @module ui */
 
-import {marked} from 'lib!marked';
-import DOMPurify from 'lib!dompurify';
-import $ from 'lib!jquery';
+import {marked} from 'marked';
+import DOMPurify from 'dompurify';
+import $ from 'jquery';
 
 /**
  * Dialog parameters.
@@ -692,7 +692,9 @@ class Dialog {
         if ($element.closest('.dropdown-menu').length) {
             let $button = $element.closest('.btn-group').find(`[data-toggle="dropdown"]`);
 
+
             if ($button.length) {
+                // noinspection JSUnresolvedReference
                 $button.get(0).focus({preventScroll: true});
 
                 return $button.get(0);

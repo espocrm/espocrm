@@ -10,7 +10,8 @@
     },
     "backbone": {
         "exportsTo": "window",
-        "exportsAs": "Backbone"
+        "exportsAs": "Backbone",
+        "amdId": "backbone"
     },
     "bullbone": {
         "expose": true,
@@ -19,25 +20,31 @@
     },
     "handlebars": {
         "expose": true,
-        "exposeAs": "Handlebars"
+        "exposeAs": "Handlebars",
+        "amdId": "handlebars"
     },
     "underscore": {
         "expose": true,
         "exposeAs": "_",
         "amdId": "underscore"
     },
-    "marked": {},
+    "marked": {
+        "amdId": "marked"
+    },
     "dompurify": {
         "expose": true,
-        "exposeAs": "DOMPurify"
+        "exposeAs": "DOMPurify",
+        "amdId": "dompurify"
     },
     "base64": {
         "exportsTo": "window",
-        "exportsAs": "Base64"
+        "exportsAs": "Base64",
+        "amdId": "js-base64"
     },
     "moment": {
         "exportsTo": "window",
-        "exportsAs": "moment"
+        "exportsAs": "moment",
+        "amdId": "moment"
     },
     "Flotr": {
         "path": "client/lib/flotr2.js",
@@ -80,7 +87,9 @@
         "exportsTo": "window",
         "exportsAs": "Selectize"
     },
-    "autonumeric": {},
+    "autonumeric": {
+        "amdId": "autonumeric"
+    },
     "cronstrue": {
         "path": "client/lib/cronstrue-i18n.js",
         "devPath": "client/lib/original/cronstrue-i18n.js",

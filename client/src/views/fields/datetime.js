@@ -29,7 +29,7 @@
 /** @module views/fields/datetime */
 
 import DateFieldView from 'views/fields/date';
-import moment from 'lib!moment';
+import moment from 'moment';
 
 /**
  * A date-time field.
@@ -291,6 +291,7 @@ class DatetimeFieldView extends DateFieldView {
         return data;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateDatetime() {
         if (this.model.get(this.name) === -1) {
             let msg = this.translate('fieldShouldBeDatetime', 'messages')

@@ -27,7 +27,7 @@
  ************************************************************************/
 
 import Dep from 'handlers/login';
-import Base64 from 'lib!base64';
+import Base64 from 'js-base64';
 
 class Handler extends Dep {
 

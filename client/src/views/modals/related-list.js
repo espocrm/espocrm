@@ -30,7 +30,7 @@
 
 import ModalView from 'views/modal';
 import SearchManager from 'search-manager';
-import $ from 'lib!jquery';
+import $ from 'jquery';
 
 /**
  * A related-list modal.

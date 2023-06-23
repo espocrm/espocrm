@@ -28,7 +28,8 @@
         "src": "node_modules/js-base64/base64.js",
         "bundle": true,
         "key": "Base64",
-        "suppressAmd": true
+        "suppressAmd": true,
+        "amdId": "js-base64"
     },
     {
         "src": "node_modules/moment/moment.js",

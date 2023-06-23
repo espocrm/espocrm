@@ -29,7 +29,7 @@
 /** @module views/fields/datetime-optional */
 
 import DatetimeFieldView from 'views/fields/datetime';
-import moment from 'lib!moment';
+import moment from 'moment';
 
 /**
  * A date-time or date.
@@ -218,4 +218,5 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default DatetimeOptionalFieldView;

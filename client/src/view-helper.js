@@ -28,9 +28,9 @@
 
 /** @module view-helper */
 
-import {marked} from "lib!marked";
-import DOMPurify from "lib!dompurify";
-import Handlebars from "lib!handlebars";
+import {marked} from 'marked';
+import DOMPurify from 'dompurify';
+import Handlebars from 'handlebars';
 
 /**
  * A view helper.

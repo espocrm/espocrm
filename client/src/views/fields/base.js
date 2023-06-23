@@ -30,7 +30,7 @@
 
 import View from 'view';
 import Select from 'ui/select';
-import $ from 'lib!jquery';
+import $ from 'jquery';
 
 /**
  * A base field view. Can be in different modes. Each mode uses a separate template.

@@ -31,8 +31,8 @@
 import View from 'view';
 import ViewRecordHelper from 'view-record-helper';
 import DynamicLogic from 'dynamic-logic';
-import _ from 'lib!underscore';
-import $ from 'lib!jquery';
+import _ from 'underscore';
+import $ from 'jquery';
 import DefaultsPopulator from 'helpers/model/defaults-populator';
 
 /**
@@ -115,6 +115,7 @@ class BaseRecordView extends View {
 
     /** @const */
     TYPE_DETAIL = 'detail'
+    // noinspection JSUnusedGlobalSymbols
     /** @const  */
     TYPE_EDIT = 'edit'
 
@@ -1239,6 +1240,7 @@ class BaseRecordView extends View {
         populator.populate(this.model);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @protected
      * @param duplicates

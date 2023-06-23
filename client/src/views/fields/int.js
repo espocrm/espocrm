@@ -29,7 +29,7 @@
 /** @module views/fields/int */
 
 import BaseFieldView from 'views/fields/base';
-import AutoNumeric from 'lib!autonumeric';
+import AutoNumeric from 'autonumeric';
 
 /**
  * An integer field.

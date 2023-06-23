@@ -27,7 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
-import $ from 'lib!jquery';
+import $ from 'jquery';
 
 class PopupNotificationView extends View {
 
@@ -106,6 +106,7 @@ class PopupNotificationView extends View {
         let $audio = $(html);
 
         $audio.get(0).volume = 0.3;
+        // noinspection JSUnresolvedReference
         $audio.get(0).play();
     }
 

@@ -28,7 +28,7 @@
 
 /** @module date-time */
 
-import moment from 'lib!moment';
+import moment from 'moment';
 
 /**
  * A date-time util.
