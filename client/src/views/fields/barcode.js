@@ -109,39 +109,16 @@ define('views/fields/barcode', ['views/fields/varchar'], function (Dep) {
         afterRender: function () {
             Dep.prototype.afterRender.call(this);
 
-            if (this.mode === 'list' || this.mode === 'detail') {
-                var value = this.model.get(this.name);
+            if (this.isListMode() || this.isDetailMode) {
+                let value = this.model.get(this.name);
 
                 if (value) {
+                    // noinspection SpellCheckingInspection
                     if (this.params.codeType === 'QRcode') {
-                        var size = 128;
-
-                        if (this.isListMode()) {
-                            size = 64;
-                        }
-
-                        var containerWidth = this.$el.width() ;
-
-                        if (containerWidth < size && containerWidth) {
-                            size = containerWidth;
-                        }
-
-                        try {
-                            new QRCode(this.$el.find('.barcode').get(0), {
-                                text: value,
-                                width: size,
-                                height: size,
-                                colorDark : '#000000',
-                                colorLight : '#ffffff',
-                                correctLevel : QRCode.CorrectLevel.H,
-                            });
-                        }
-                        catch (e) {
-                            console.error(this.name + ': ' + e.message);
-                        }
+                        this.initQrcode(value);
                     }
                     else {
-                        var $barcode = $(this.getSelector() + ' .barcode');
+                        let $barcode = $(this.getSelector() + ' .barcode');
 
                         if ($barcode.length) {
                             this.initBarcode(value);
@@ -158,6 +135,53 @@ define('views/fields/barcode', ['views/fields/varchar'], function (Dep) {
                 }
 
                 this.controlWidth();
+            }
+        },
+
+        initQrcode: function (value) {
+            let size = 128;
+
+            if (value.length > 192) {
+                size *= 2;
+            }
+
+            if (this.isListMode()) {
+                size = 64;
+            }
+
+            let containerWidth = this.$el.width() ;
+
+            if (containerWidth < size && containerWidth) {
+                size = containerWidth;
+            }
+
+            let $barcode = this.$el.find('.barcode');
+
+            let init = (level) => {
+                let options = {
+                    text: value,
+                    width: size,
+                    height: size,
+                    colorDark : '#000000',
+                    colorLight : '#ffffff',
+                    correctLevel : level || QRCode.CorrectLevel.H,
+                };
+
+                new QRCode($barcode.get(0), options);
+            };
+
+            try {
+                init();
+            }
+            catch (e) {
+                try {
+                    $barcode.empty();
+
+                    init(QRCode.CorrectLevel.L);
+                }
+                catch (e) {
+                    console.error(this.name + ': ' + e.message);
+                }
             }
         },
 
