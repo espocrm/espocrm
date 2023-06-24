@@ -48,6 +48,13 @@
             "amdId": {
                 "type": "string",
                 "description": "An AMD ID. Needs to be specified if the module uses a named define function or other 3rd party modules require that ID."
+            },
+            "aliases": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "Module IDs the lib will be available by. Can be useful for backward compatibility."
             }
         }
     }

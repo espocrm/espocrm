@@ -48,9 +48,17 @@ class LoaderParamsProvider
 
         foreach ($this->metadata->get(['app', 'jsLibs'], []) as $key => $item) {
             $id = $item['amdId'] ?? null;
+            /** @var ?string[] $aliases */
+            $aliases = $item['aliases'] ?? null;
 
             if ($id) {
                 $map->$id = 'lib!' . $key;
+            }
+
+            if ($aliases) {
+                foreach ($aliases as $alias) {
+                    $map->$alias = 'lib!' . $key;
+                }
             }
         }
 

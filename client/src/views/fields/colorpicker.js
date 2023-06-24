@@ -39,7 +39,7 @@ class ColorpickerFieldView extends VarcharFieldView {
     setup() {
         super.setup();
 
-        this.wait(Espo.loader.requirePromise('lib!Colorpicker'));
+        this.wait(Espo.loader.requirePromise('lib!bootstrap-colorpicker'));
     }
 
     afterRender() {

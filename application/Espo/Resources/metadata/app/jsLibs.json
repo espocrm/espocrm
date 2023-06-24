@@ -115,7 +115,8 @@
         "path": "client/lib/bootstrap-colorpicker.js",
         "exportsTo": "$.fn",
         "exportsAs": "colorpicker",
-        "amdId": "bootstrap-colorpicker"
+        "amdId": "bootstrap-colorpicker",
+        "aliases": ["lib!Colorpicker"]
     },
     "exif-js": {
         "path": "client/lib/exif.js",
