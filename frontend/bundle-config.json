@@ -75,11 +75,11 @@
                 "modules/crm/src/**/*.js"
             ],
             "dependentOn": [
-                "lib!Flotr",
+                "lib!flotr2",
                 "lib!espo-funnel-chart"
             ],
             "requires": [
-                "lib!Flotr",
+                "lib!flotr2",
                 "lib!espo-funnel-chart"
             ],
             "lookupPatterns": [

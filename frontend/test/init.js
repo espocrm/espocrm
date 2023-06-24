@@ -39,44 +39,36 @@ scriptEl.textContent = JSON.stringify({
         },
         "jquery": {
             "expose": true,
-            "exposeAs": "$",
-            "amdId": "jquery"
+            "exposeAs": "$"
         },
         "backbone": {
             "exportsTo": "window",
-            "exportsAs": "Backbone",
-            "amdId": "backbone"
+            "exportsAs": "Backbone"
         },
         "bullbone": {
             "expose": true,
-            "exposeAs": "Bull",
-            "amdId": "bullbone"
+            "exposeAs": "Bull"
         },
         "handlebars": {
             "expose": true,
-            "exposeAs": "Handlebars",
-            "amdId": "handlebars"
+            "exposeAs": "Handlebars"
         },
         "underscore": {
             "expose": true,
-            "exposeAs": "_",
-            "amdId": "underscore"
+            "exposeAs": "_"
         },
         "marked": {},
         "dompurify": {
             "expose": true,
-            "exposeAs": "DOMPurify",
-            "amdId": "dompurify"
+            "exposeAs": "DOMPurify"
         },
         "js-base64": {
             "exportsTo": "window",
-            "exportsAs": "Base64",
-            "amdId": "js-base64"
+            "exportsAs": "Base64"
         },
         "moment": {
             "exportsTo": "window",
-            "exportsAs": "moment",
-            "amdId": "moment"
+            "exportsAs": "moment"
         }
     },
     aliasMap: {

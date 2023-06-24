@@ -27,9 +27,8 @@
     {
         "src": "node_modules/js-base64/base64.js",
         "bundle": true,
-        "key": "Base64",
-        "suppressAmd": true,
-        "amdId": "js-base64"
+        "key": "js-base64",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/moment/moment.js",
@@ -128,7 +127,7 @@
     },
     {
         "src": "node_modules/flotr2/flotr2.js",
-        "key": "Flotr",
+        "key": "flotr2",
         "minify": true
     },
     {

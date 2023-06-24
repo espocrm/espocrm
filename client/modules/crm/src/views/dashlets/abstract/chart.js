@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib!Flotr'], function (Dep, Flotr) {
+define('crm:views/dashlets/abstract/chart', ['views/dashlets/abstract/base','lib!flotr2'], function (Dep, Flotr) {
 
     return Dep.extend({
 

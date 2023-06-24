@@ -5,53 +5,44 @@
     },
     "jquery": {
         "expose": true,
-        "exposeAs": "$",
-        "amdId": "jquery"
+        "exposeAs": "$"
     },
     "backbone": {
         "exportsTo": "window",
-        "exportsAs": "Backbone",
-        "amdId": "backbone"
+        "exportsAs": "Backbone"
     },
     "bullbone": {
         "expose": true,
-        "exposeAs": "Bull",
-        "amdId": "bullbone"
+        "exposeAs": "Bull"
     },
     "handlebars": {
         "expose": true,
-        "exposeAs": "Handlebars",
-        "amdId": "handlebars"
+        "exposeAs": "Handlebars"
     },
     "underscore": {
         "expose": true,
-        "exposeAs": "_",
-        "amdId": "underscore"
+        "exposeAs": "_"
     },
-    "marked": {
-        "amdId": "marked"
-    },
+    "marked": {},
     "dompurify": {
         "expose": true,
-        "exposeAs": "DOMPurify",
-        "amdId": "dompurify"
+        "exposeAs": "DOMPurify"
     },
     "js-base64": {
         "exportsTo": "window",
-        "exportsAs": "Base64",
-        "amdId": "js-base64"
+        "exportsAs": "Base64"
     },
     "moment": {
         "exportsTo": "window",
-        "exportsAs": "moment",
-        "amdId": "moment"
+        "exportsAs": "moment"
     },
-    "Flotr": {
+    "flotr2": {
         "path": "client/lib/flotr2.js",
         "devPath": "client/lib/original/flotr2.js",
         "exportsTo": "window",
         "exportsAs": "Flotr",
-        "sourceMap": true
+        "sourceMap": true,
+        "aliases": ["lib!Flotr"]
     },
     "espo-funnel-chart": {
         "path": "client/lib/espo-funnel-chart.js",
@@ -63,13 +54,11 @@
         "devPath": "client/lib/original/summernote.js",
         "exportsTo": "$.fn",
         "exportsAs": "summernote",
-        "amdId": "summernote",
         "sourceMap": true
     },
     "jquery-textcomplete": {
         "exportsTo": "$.fn",
-        "exportsAs": "textcomplete",
-        "amdId": "jquery-textcomplete"
+        "exportsAs": "textcomplete"
     },
     "autocomplete": {
         "exportsTo": "$.fn",
@@ -87,41 +76,33 @@
         "path": "client/lib/selectize.js",
         "devPath": "client/lib/original/selectize.js",
         "exportsTo": "window",
-        "exportsAs": "Selectize",
-        "amdId": "selectize"
+        "exportsAs": "Selectize"
     },
-    "autonumeric": {
-        "amdId": "autonumeric"
-    },
+    "autonumeric": {},
     "cronstrue": {
         "path": "client/lib/cronstrue-i18n.js",
         "devPath": "client/lib/original/cronstrue-i18n.js",
-        "sourceMap": true,
-        "amdId": "cronstrue"
+        "sourceMap": true
     },
     "cropper": {
         "path": "client/lib/cropper.js",
         "exportsTo": "$.fn",
         "exportsAs": "cropper",
-        "amdId": "cropper",
         "sourceMap": true
     },
     "gridstack": {
         "exportsTo": "window",
-        "exportsAs": "GridStack",
-        "amdId": "gridstack"
+        "exportsAs": "GridStack"
     },
     "bootstrap-colorpicker": {
         "path": "client/lib/bootstrap-colorpicker.js",
         "exportsTo": "$.fn",
         "exportsAs": "colorpicker",
-        "amdId": "bootstrap-colorpicker",
         "aliases": ["lib!Colorpicker"]
     },
     "exif-js": {
         "path": "client/lib/exif.js",
         "devPath": "client/lib/original/exif.js",
-        "amdId": "exif-js",
         "sourceMap": true
     },
     "jsbarcode": {
@@ -129,14 +110,12 @@
         "devPath": "client/lib/original/JsBarcode.all.js",
         "exportsTo": "window",
         "exportsAs": "JsBarcode",
-        "amdId": "jsbarcode",
         "sourceMap": true
     },
     "qrcodejs": {
         "path": "client/lib/qrcode.js",
         "exportsTo": "window",
-        "exportsAs": "QRCode",
-        "amdId": "qrcodejs"
+        "exportsAs": "QRCode"
     },
     "ace": {
         "path": "client/lib/ace.js",

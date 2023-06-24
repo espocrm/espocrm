@@ -46,18 +46,18 @@ class LoaderParamsProvider
     {
         $map = (object) [];
 
-        foreach ($this->metadata->get(['app', 'jsLibs'], []) as $key => $item) {
-            $id = $item['amdId'] ?? null;
+        /** @var array<string, array<string, mixed>> $libs */
+        $libs = $this->metadata->get(['app', 'jsLibs'], []);
+
+        foreach ($libs as $name => $item) {
             /** @var ?string[] $aliases */
             $aliases = $item['aliases'] ?? null;
 
-            if ($id) {
-                $map->$id = 'lib!' . $key;
-            }
+            $map->$name = 'lib!' . $name;
 
             if ($aliases) {
                 foreach ($aliases as $alias) {
-                    $map->$alias = 'lib!' . $key;
+                    $map->$alias = 'lib!' . $name;
                 }
             }
         }

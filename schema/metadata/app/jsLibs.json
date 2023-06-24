@@ -43,18 +43,14 @@
             },
             "exposeAs": {
                 "type": "string",
-                "description": "A name to expose by. By default, matches the lib name."
-            },
-            "amdId": {
-                "type": "string",
-                "description": "An AMD ID. Needs to be specified if the module uses a named define function or other 3rd party modules require that ID."
+                "description": "A name to expose by. By default, matches the lib name. "
             },
             "aliases": {
                 "type": "array",
                 "items": {
                     "type": "string"
                 },
-                "description": "Module IDs the lib will be available by. Can be useful for backward compatibility."
+                "description": "Additional module IDs the lib will be available by. Can be useful for establishing backward compatibility."
             }
         }
     }
