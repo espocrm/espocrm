@@ -27,7 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
-import GridStack from 'lib!gridstack';
+import GridStack from 'gridstack';
 
 class DashboardView extends View {
 

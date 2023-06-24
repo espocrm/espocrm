@@ -108,7 +108,8 @@
     },
     "gridstack": {
         "exportsTo": "window",
-        "exportsAs": "GridStack"
+        "exportsAs": "GridStack",
+        "amdId": "gridstack"
     },
     "bootstrap-colorpicker": {
         "path": "client/lib/bootstrap-colorpicker.js",
