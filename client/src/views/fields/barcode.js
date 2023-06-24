@@ -68,13 +68,13 @@ class BarcodeFieldView extends VarcharFieldView {
             this.isSvg = true;
 
             this.wait(
-                Espo.loader.requirePromise('lib!JsBarcode')
+                Espo.loader.requirePromise('lib!jsbarcode')
                     .then(lib => JsBarcode = lib)
             );
         }
         else {
             this.wait(
-                Espo.loader.requirePromise('lib!qrcode')
+                Espo.loader.requirePromise('lib!qrcodejs')
                     .then(lib => QRCode = lib)
             );
         }

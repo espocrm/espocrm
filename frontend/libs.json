@@ -62,7 +62,7 @@
     {
         "src": "node_modules/jquery-textcomplete/dist/jquery.textcomplete.js",
         "bundle": true,
-        "key": "Textcomplete"
+        "key": "jquery-textcomplete"
     },
     {
         "src": "node_modules/bootstrap/dist/js/bootstrap.js",
@@ -108,7 +108,7 @@
     {
         "src": "node_modules/selectize/dist/js/standalone/selectize.js",
         "bundle": true,
-        "key": "Selectize",
+        "key": "selectize",
         "suppressAmd": true
     },
     {
@@ -118,7 +118,7 @@
     },
     {
         "src": "node_modules/summernote/dist/summernote.js",
-        "key": "Summernote",
+        "key": "summernote",
         "minify": true
     },
     {
@@ -133,11 +133,11 @@
     },
     {
         "src": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js",
-        "key": "Colorpicker"
+        "key": "bootstrap-colorpicker"
     },
     {
         "src": "node_modules/cropper/dist/cropper.js",
-        "key": "Cropper",
+        "key": "cropper",
         "minify": true
     },
     {
@@ -148,16 +148,16 @@
     {
         "src": "node_modules/exif-js/exif.js",
         "minify": true,
-        "key": "exif"
+        "key": "exif-js"
     },
     {
         "src": "node_modules/jsbarcode/dist/JsBarcode.all.js",
         "minify": true,
-        "key": "JsBarcode"
+        "key": "jsbarcode"
     },
     {
         "src": "node_modules/qrcodejs/qrcode.js",
-        "key": "qrcode"
+        "key": "qrcodejs"
     },
     {
         "name": "ace-builds",
@@ -185,7 +185,7 @@
         "src": "node_modules/fullcalendar/dist/fullcalendar.js",
         "dest": "client/modules/crm/lib/fullcalendar.js",
         "minify": true,
-        "key": "full-calendar"
+        "key": "fullcalendar"
     },
     {
         "src": "node_modules/vis/dist/vis.js",

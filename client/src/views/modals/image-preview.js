@@ -83,7 +83,7 @@ define('views/modals/image-preview', ['views/modal'], function (Dep) {
                 $(window).off('resize.image-review');
             });
 
-            this.wait(Espo.loader.requirePromise('lib!exif'));
+            this.wait(Espo.loader.requirePromise('lib!exif-js'));
         },
 
         getImageUrl: function () {

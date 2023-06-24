@@ -69,7 +69,7 @@ class WysiwygFieldView extends TextFieldView {
         super.setup();
 
         this.wait(
-            Espo.loader.requirePromise('lib!Summernote')
+            Espo.loader.requirePromise('lib!summernote')
                 .then(() => {
                     if (!$.summernote.options || 'espoImage' in $.summernote.options) {
                         return;

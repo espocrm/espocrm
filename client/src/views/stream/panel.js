@@ -26,7 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/panel', ['views/record/panels/relationship', 'lib!Textcomplete'], function (Dep, Textcomplete) {
+define('views/stream/panel', ['views/record/panels/relationship', 'lib!jquery-textcomplete'],
+function (Dep, Textcomplete) {
 
     return Dep.extend({
 

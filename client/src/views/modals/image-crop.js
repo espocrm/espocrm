@@ -56,7 +56,7 @@ define('views/modals/image-crop', ['views/modal'], function (Dep) {
                 },
             ];
 
-            this.wait(Espo.loader.requirePromise('lib!Cropper'));
+            this.wait(Espo.loader.requirePromise('lib!cropper'));
 
             this.on('remove', () => {
                 if (this.$img.length) {

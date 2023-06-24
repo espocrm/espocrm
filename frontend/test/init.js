@@ -68,7 +68,7 @@ scriptEl.textContent = JSON.stringify({
             "exposeAs": "DOMPurify",
             "amdId": "dompurify"
         },
-        "base64": {
+        "js-base64": {
             "exportsTo": "window",
             "exportsAs": "Base64",
             "amdId": "js-base64"
@@ -81,10 +81,9 @@ scriptEl.textContent = JSON.stringify({
     },
     aliasMap: {
         "jquery": "lib!jquery",
-        "bullbone": "lib!bullbone",
         "underscore": "lib!underscore",
         "cronstrue": "lib!cronstrue",
-        "exif-js": "lib!exif",
+        "exif-js": "lib!exif-js",
         "moment": "lib!moment",
         "js-base64": "lib!base64",
         "bullbone": "lib!bullbone",

@@ -1,9 +1,10 @@
 {
-    "full-calendar": {
+    "fullcalendar": {
         "path": "client/modules/crm/lib/fullcalendar.js",
         "devPath": "client/modules/crm/lib/original/fullcalendar.js",
         "exportsTo": "$.fn",
         "exportsAs": "fullCalendar",
+        "amdId": "fullcalendar",
         "sourceMap": true
     },
     "vis": {

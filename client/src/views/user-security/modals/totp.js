@@ -115,7 +115,7 @@ define('views/user-security/modals/totp', ['views/modal', 'model'], function (De
                 ],
             });
 
-            Espo.loader.requirePromise('lib!qrcode').then(lib => {
+            Espo.loader.requirePromise('lib!qrcodejs').then(lib => {
                 QRCode = lib;
             })
         },

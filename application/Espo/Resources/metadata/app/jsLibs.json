@@ -36,7 +36,7 @@
         "exposeAs": "DOMPurify",
         "amdId": "dompurify"
     },
-    "base64": {
+    "js-base64": {
         "exportsTo": "window",
         "exportsAs": "Base64",
         "amdId": "js-base64"
@@ -58,16 +58,18 @@
         "exportsTo": "window",
         "exportsAs": "EspoFunnel"
     },
-    "Summernote": {
+    "summernote": {
         "path": "client/lib/summernote.js",
         "devPath": "client/lib/original/summernote.js",
         "exportsTo": "$.fn",
         "exportsAs": "summernote",
+        "amdId": "summernote",
         "sourceMap": true
     },
-    "Textcomplete": {
+    "jquery-textcomplete": {
         "exportsTo": "$.fn",
-        "exportsAs": "textcomplete"
+        "exportsAs": "textcomplete",
+        "amdId": "jquery-textcomplete"
     },
     "autocomplete": {
         "exportsTo": "$.fn",
@@ -81,11 +83,12 @@
         "exportsTo": "$.fn",
         "exportsAs": "datepicker"
     },
-    "Selectize": {
+    "selectize": {
         "path": "client/lib/selectize.js",
         "devPath": "client/lib/original/selectize.js",
         "exportsTo": "window",
-        "exportsAs": "Selectize"
+        "exportsAs": "Selectize",
+        "amdId": "selectize"
     },
     "autonumeric": {
         "amdId": "autonumeric"
@@ -96,39 +99,42 @@
         "sourceMap": true,
         "amdId": "cronstrue"
     },
-    "Cropper": {
+    "cropper": {
         "path": "client/lib/cropper.js",
         "exportsTo": "$.fn",
         "exportsAs": "cropper",
+        "amdId": "cropper",
         "sourceMap": true
     },
     "gridstack": {
         "exportsTo": "window",
         "exportsAs": "GridStack"
     },
-    "Colorpicker": {
+    "bootstrap-colorpicker": {
         "path": "client/lib/bootstrap-colorpicker.js",
         "exportsTo": "$.fn",
-        "exportsAs": "colorpicker"
+        "exportsAs": "colorpicker",
+        "amdId": "bootstrap-colorpicker"
     },
-    "exif": {
+    "exif-js": {
         "path": "client/lib/exif.js",
         "devPath": "client/lib/original/exif.js",
         "amdId": "exif-js",
         "sourceMap": true
     },
-    "JsBarcode": {
+    "jsbarcode": {
         "path": "client/lib/JsBarcode.all.js",
         "devPath": "client/lib/original/JsBarcode.all.js",
         "exportsTo": "window",
         "exportsAs": "JsBarcode",
+        "amdId": "jsbarcode",
         "sourceMap": true
     },
-    "qrcode": {
+    "qrcodejs": {
         "path": "client/lib/qrcode.js",
         "exportsTo": "window",
         "exportsAs": "QRCode",
-        "exportVariable": "QRCode"
+        "amdId": "qrcodejs"
     },
     "ace": {
         "path": "client/lib/ace.js",

@@ -28,7 +28,7 @@
 
 /** @module module:ui/select */
 
-import Selectize from "lib!Selectize";
+import Selectize from 'lib!selectize';
 
 /**
  * @typedef module:ui/select~Options

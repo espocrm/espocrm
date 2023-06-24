@@ -91,10 +91,10 @@
                 "modules/crm/src/**/*.js"
             ],
             "dependentOn": [
-                "lib!full-calendar"
+                "lib!fullcalendar"
             ],
             "requires": [
-                "lib!full-calendar"
+                "lib!fullcalendar"
             ],
             "lookupPatterns": [
                 "modules/crm/src/**/*.js"
