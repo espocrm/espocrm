@@ -29,6 +29,11 @@
 import View from 'view';
 import $ from 'jquery';
 
+/**
+ * To be extended with an own template.
+ *
+ * @abstract
+ */
 class PopupNotificationView extends View {
 
     type = 'default'
@@ -66,7 +71,7 @@ class PopupNotificationView extends View {
 
         this.on('after:render', () => {
             this.$el.find('[data-action="close"]').on('click', () =>{
-                this.cancel();
+                this.resolveCancel();
             });
         });
 
@@ -110,26 +115,58 @@ class PopupNotificationView extends View {
         $audio.get(0).play();
     }
 
+    /**
+     * @protected
+     */
     onShow() {
         if (!this.options.isFirstCheck) {
             this.playSound();
         }
     }
 
+    /**
+     * An on-confirm action. To be extended.
+     *
+     * @protected
+     */
     onConfirm() {}
 
+    /**
+     * An on-cancel action. To be extended.
+     *
+     * @protected
+     */
     onCancel() {}
 
-    confirm() {
+    resolveConfirm() {
         this.onConfirm();
         this.trigger('confirm');
         this.remove();
     }
 
-    cancel() {
+    resolveCancel() {
         this.onCancel();
         this.trigger('cancel');
         this.remove();
+    }
+
+    // noinspection JSCheckFunctionSignatures
+    /**
+     * @deprecated Use `resolveConfirm`.
+     */
+    confirm() {
+        console.warning(`Method 'confirm' in views/popup-notification is deprecated. Use 'resolveConfirm' instead.`);
+
+        this.resolveConfirm();
+    }
+
+    /**
+     * @deprecated Use `resolveCancel`.
+     */
+    cancel() {
+        console.warning(`Method 'cancel' in views/popup-notification is deprecated. Use 'resolveCancel' instead.`);
+
+        this.resolveCancel();
     }
 }
 
