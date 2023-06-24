@@ -38,7 +38,6 @@ scriptEl.textContent = JSON.stringify({
             "exportsAs": "Espo"
         },
         "jquery": {
-            "expose": true,
             "exposeAs": "$"
         },
         "backbone": {
@@ -46,20 +45,16 @@ scriptEl.textContent = JSON.stringify({
             "exportsAs": "Backbone"
         },
         "bullbone": {
-            "expose": true,
             "exposeAs": "Bull"
         },
         "handlebars": {
-            "expose": true,
             "exposeAs": "Handlebars"
         },
         "underscore": {
-            "expose": true,
             "exposeAs": "_"
         },
         "marked": {},
         "dompurify": {
-            "expose": true,
             "exposeAs": "DOMPurify"
         },
         "js-base64": {
