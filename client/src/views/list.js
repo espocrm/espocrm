@@ -439,9 +439,9 @@ class ListView extends MainView {
      * Set up a search manager.
      */
     setupSearchManager() {
-        var collection = this.collection;
+        let collection = this.collection;
 
-        var searchManager = new SearchManager(
+        const searchManager = new SearchManager(
             collection,
             'list',
             this.getStorage(),
@@ -472,7 +472,7 @@ class ListView extends MainView {
      * Apply stored sorting.
      */
     applyStoredSorting() {
-        var sortingParams = this.getStorage().get('listSorting', this.collection.entityType) || {};
+        let sortingParams = this.getStorage().get('listSorting', this.collection.entityType) || {};
 
         if ('orderBy' in sortingParams) {
             this.collection.orderBy = sortingParams.orderBy;

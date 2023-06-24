@@ -375,10 +375,10 @@ class DetailView extends MainView {
      * @param {string} name A relationship name.
      */
     updateRelationshipPanel(name) {
-        var bottom = this.getView('record').getView('bottom');
+        let bottom = this.getView('record').getView('bottom');
 
         if (bottom) {
-            var rel = bottom.getView(name);
+            let rel = bottom.getView(name);
 
             if (rel) {
                 rel.collection.fetch();

@@ -28,13 +28,13 @@
 
 /** @module app-portal */
 
-import Dep from 'app';
+import App from 'app';
 import AclPortalManager from 'acl-portal-manager';
 
 /**
  * A portal application class.
  */
-export default class extends Dep {
+class AppPortal extends App {
 
     aclName = 'aclPortal'
     masterView = 'views/site-portal/master'
@@ -47,3 +47,5 @@ export default class extends Dep {
         );
     }
 }
+
+export default AppPortal
