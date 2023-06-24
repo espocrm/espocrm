@@ -44,7 +44,8 @@ scriptEl.textContent = JSON.stringify({
         },
         "backbone": {
             "exportsTo": "window",
-            "exportsAs": "Backbone"
+            "exportsAs": "Backbone",
+            "amdId": "backbone"
         },
         "bullbone": {
             "expose": true,
@@ -53,7 +54,8 @@ scriptEl.textContent = JSON.stringify({
         },
         "handlebars": {
             "expose": true,
-            "exposeAs": "Handlebars"
+            "exposeAs": "Handlebars",
+            "amdId": "handlebars"
         },
         "underscore": {
             "expose": true,
@@ -63,15 +65,18 @@ scriptEl.textContent = JSON.stringify({
         "marked": {},
         "dompurify": {
             "expose": true,
-            "exposeAs": "DOMPurify"
+            "exposeAs": "DOMPurify",
+            "amdId": "dompurify"
         },
         "base64": {
             "exportsTo": "window",
-            "exportsAs": "Base64"
+            "exportsAs": "Base64",
+            "amdId": "js-base64"
         },
         "moment": {
             "exportsTo": "window",
-            "exportsAs": "moment"
+            "exportsAs": "moment",
+            "amdId": "moment"
         }
     },
     aliasMap: {
@@ -79,7 +84,11 @@ scriptEl.textContent = JSON.stringify({
         "bullbone": "lib!bullbone",
         "underscore": "lib!underscore",
         "cronstrue": "lib!cronstrue",
-        "exif-js": "lib!exif"
+        "exif-js": "lib!exif",
+        "moment": "lib!moment",
+        "js-base64": "lib!base64",
+        "bullbone": "lib!bullbone",
+        "backbone": "lib!backbone"
     }
 });
 
