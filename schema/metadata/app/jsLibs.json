@@ -27,7 +27,7 @@
                     {"type": "string"},
                     {"enum": ["window", "$.fn"]}
                 ],
-                "description": "If the lib exposes itself w/o a module, to where the lib is exported. Use dots to define a path."
+                "description": "If the lib exposes itself w/o a module, an object to which the lib is exported. Use dots to define a path."
             },
             "exportsAs": {
                 "type": "string",
@@ -37,13 +37,9 @@
                 "type": "boolean",
                 "description": "Whether the source map file is available."
             },
-            "expose": {
-                "type": "boolean",
-                "description": "To expose to the window global. To be used for backward compatibility reasons."
-            },
             "exposeAs": {
                 "type": "string",
-                "description": "A name to expose by. By default, matches the lib name. "
+                "description": "If set, the lib will be exposed to the window object. A variable name the lib will be set to. To be used for backward compatibility reasons."
             },
             "aliases": {
                 "type": "array",

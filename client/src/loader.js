@@ -52,7 +52,6 @@
      * @property {string} [exportsTo] Exports to.
      * @property {string} [exportsAs] Exports as.
      * @property {boolean} [sourceMap] Has a source map.
-     * @property {boolean} [expose] To expose to global.
      * @property {string} [exposeAs] To expose to global as.
      * @property {string} [path] A path.
      * @property {string} [devPath] A path in developer mode.
@@ -212,8 +211,8 @@
 
                 const libsData = this._libsConfig[libName];
 
-                if (libsData && libsData.expose) {
-                    let key = libsData.exposeAs || libName;
+                if (libsData && libsData.exposeAs) {
+                    let key = libsData.exposeAs;
 
                     window[key] = value;
                 }
