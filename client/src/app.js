@@ -28,7 +28,6 @@
 
 /** @module app */
 
-import Espo from 'lib!espo';
 import $ from 'jquery';
 import Backbone from 'backbone';
 import {Events, View as BullView, Factory as BullFactory} from 'bullbone';
@@ -64,7 +63,7 @@ import BroadcastChannel from 'broadcast-channel';
  *
  * @mixes Bull.Events
  */
-class App  {
+class App {
 
     /**
      * @param {module:app~Options} options Options.
@@ -1287,8 +1286,6 @@ class App  {
             if (statusReason) {
                 obj.msg += '\n' + statusReason;
                 obj.closeButton = true;
-
-                //isMessageDone = true;
             }
         }
 

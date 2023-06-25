@@ -1,8 +1,4 @@
 {
-    "espo": {
-        "exportsTo": "window",
-        "exportsAs": "Espo"
-    },
     "jquery": {
         "exposeAs": "$"
     },

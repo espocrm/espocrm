@@ -33,10 +33,6 @@ scriptEl.setAttribute('data-name', 'loader-params');
 scriptEl.textContent = JSON.stringify({
     basePath: '../../',
     libsConfig: {
-        "espo": {
-            "exportsTo": "window",
-            "exportsAs": "Espo"
-        },
         "jquery": {
             "exposeAs": "$"
         },
