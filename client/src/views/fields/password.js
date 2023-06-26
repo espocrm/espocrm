@@ -26,64 +26,72 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/password', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+class PasswordFieldView extends BaseFieldView {
 
-        type: 'password',
+    type = 'password'
 
-        detailTemplate: 'fields/password/detail',
+    detailTemplate = 'fields/password/detail'
+    editTemplate = 'fields/password/edit'
 
-        editTemplate: 'fields/password/edit',
+    validations = ['required', 'confirm']
 
-        validations: ['required', 'confirm'],
-
-        events: {
-            'click [data-action="change"]': function (e) {
-                this.changePassword();
-            },
+    events = {
+        /** @this PasswordFieldView */
+        'click [data-action="change"]': function () {
+            this.changePassword();
         },
+    }
 
-        changePassword: function () {
-            this.$el.find('[data-action="change"]').addClass('hidden');
-            this.$element.removeClass('hidden');
-            this.changing = true;
-        },
+    changePassword() {
+        this.$el.find('[data-action="change"]').addClass('hidden');
+        this.$element.removeClass('hidden');
 
-        data: function () {
-            return _.extend({
-                isNew: this.model.isNew(),
-            }, Dep.prototype.data.call(this));
-        },
+        this.changing = true;
+    }
 
-        validateConfirm: function () {
-            if (this.model.has(this.name + 'Confirm')) {
-                if (this.model.get(this.name) != this.model.get(this.name + 'Confirm')) {
-                    var msg = this.translate('fieldBadPasswordConfirm', 'messages')
-                        .replace('{field}', this.getLabelText());
-
-                    this.showValidationMessage(msg);
-
-                    return true;
-                }
-            }
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            this.changing = false;
-
-            if (this.params.readyToChange) {
-                this.changePassword();
-            }
-        },
-
-        fetch: function () {
-            if (!this.model.isNew() && !this.changing) {
-                return {};
-            }
-            return Dep.prototype.fetch.call(this);
+    /** @inheritDoc */
+    data() {
+        return {
+            isNew: this.model.isNew(),
+            ...super.data(),
         }
-    });
-});
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateConfirm() {
+        if (!this.model.has(this.name + 'Confirm')) {
+            return;
+        }
+
+        if (this.model.get(this.name) !== this.model.get(this.name + 'Confirm')) {
+            let msg = this.translate('fieldBadPasswordConfirm', 'messages')
+                .replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg);
+
+            return true;
+        }
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        this.changing = false;
+
+        if (this.params.readyToChange) {
+            this.changePassword();
+        }
+    }
+
+    fetch() {
+        if (!this.model.isNew() && !this.changing) {
+            return {};
+        }
+
+        return super.fetch();
+    }
+}
+
+export default PasswordFieldView;

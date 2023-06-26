@@ -331,6 +331,7 @@ class VarcharFieldView extends BaseFieldView {
         return true;
     }
 
+    /** @inheritDoc */
     fetch() {
         let data = {};
 
@@ -341,6 +342,7 @@ class VarcharFieldView extends BaseFieldView {
         return data;
     }
 
+    /** @inheritDoc */
     fetchSearch() {
         let type = this.fetchSearchType() || 'startsWith';
 

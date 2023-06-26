@@ -26,41 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/assigned-users', ['views/fields/link-multiple'], function (Dep) {
+import LinkMultipleFieldView from 'views/fields/link-multiple';
 
-    return Dep.extend({
+class AssignedUsersFieldView extends LinkMultipleFieldView {
 
-        init: function () {
-            this.assignmentPermission = this.getAcl().get('assignmentPermission');
+    init() {
+        this.assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
 
-            if (this.assignmentPermission === 'no') {
-                this.readOnly = true;
-            }
+        if (this.assignmentPermission === 'no') {
+            this.readOnly = true;
+        }
 
-            Dep.prototype.init.call(this);
-        },
+        super.init();
+    }
 
-        getSelectBoolFilterList: function () {
-            if (this.assignmentPermission === 'team') {
-                return ['onlyMyTeam'];
-            }
-        },
+    getSelectBoolFilterList() {
+        if (this.assignmentPermission === 'team') {
+            return ['onlyMyTeam'];
+        }
+    }
 
-        getSelectPrimaryFilterName: function () {
-            return 'active';
-        },
+    getSelectPrimaryFilterName() {
+        return 'active';
+    }
 
-        getDetailLinkHtml: function (id) {
-            let html = Dep.prototype.getDetailLinkHtml.call(this, id);
+    getDetailLinkHtml(id) {
+        let html = super.getDetailLinkHtml(id);
 
-            let avatarHtml = this.isDetailMode() ?
-                this.getHelper().getAvatarHtml(id, 'small', 14, 'avatar-link') : '';
+        let avatarHtml = this.isDetailMode() ?
+            this.getHelper().getAvatarHtml(id, 'small', 14, 'avatar-link') : '';
 
-            if (!avatarHtml) {
-                return html;
-            }
+        if (!avatarHtml) {
+            return html;
+        }
 
-            return avatarHtml + ' ' + html;
-        },
-    });
-});
+        return avatarHtml + ' ' + html;
+    }
+}
+
+export default AssignedUsersFieldView;

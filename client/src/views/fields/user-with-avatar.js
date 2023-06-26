@@ -26,28 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/user-with-avatar',[ 'views/fields/user'], function (Dep) {
+import UserFieldView from 'views/fields/user';
 
-    return Dep.extend({
+class UserWithAvatarFieldView extends UserFieldView {
 
-        listTemplate: 'fields/user-with-avatar/list',
+    listTemplate = 'fields/user-with-avatar/list'
+    detailTemplate = 'fields/user-with-avatar/detail'
 
-        detailTemplate: 'fields/user-with-avatar/detail',
+    data() {
+        let o = super.data();
 
-        data: function () {
-            var o = _.extend({}, Dep.prototype.data.call(this));
+        if (this.mode === this.MODE_DETAIL) {
+            o.avatar = this.getAvatarHtml();
+            o.isOwn = this.model.get(this.idName) === this.getUser().id;
+        }
 
-            if (this.mode === 'detail') {
-                o.avatar = this.getAvatarHtml();
-                o.isOwn = this.model.get(this.idName) === this.getUser().id;
-            }
+        return o;
+    }
 
-            return o;
-        },
+    getAvatarHtml() {
+        return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 14, 'avatar-link');
+    }
+}
 
-        getAvatarHtml: function () {
-            return this.getHelper()
-                .getAvatarHtml(this.model.get(this.idName), 'small', 14, 'avatar-link');
-        },
-    });
-});
+export default UserWithAvatarFieldView;

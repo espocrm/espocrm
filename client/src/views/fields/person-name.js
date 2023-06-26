@@ -28,33 +28,30 @@
 
 /** @module views/fields/person-name */
 
-import Dep from 'views/fields/varchar';
+import VarcharFieldView from 'views/fields/varchar';
 import Select from 'ui/select';
 
-/**
- * @class Class
- * @extends module:views/fields/varchar
- */
-export default Dep.extend(/** @lends Class# */{
+class PersonNameFieldView extends VarcharFieldView {
 
-    type: 'personName',
+    type = 'personName'
 
-    detailTemplate: 'fields/person-name/detail',
-    editTemplate: 'fields/person-name/edit',
-    editTemplateLastFirst: 'fields/person-name/edit-last-first',
-    editTemplateLastFirstMiddle: 'fields/person-name/edit-last-first-middle',
-    editTemplateFirstMiddleLast: 'fields/person-name/edit-first-middle-last',
+    detailTemplate = 'fields/person-name/detail'
+    editTemplate = 'fields/person-name/edit'
+    // noinspection JSUnusedGlobalSymbols
+    editTemplateLastFirst = 'fields/person-name/edit-last-first'
+    // noinspection JSUnusedGlobalSymbols
+    editTemplateLastFirstMiddle = 'fields/person-name/edit-last-first-middle'
+    // noinspection JSUnusedGlobalSymbols
+    editTemplateFirstMiddleLast = 'fields/person-name/edit-first-middle-last'
 
-    /**
-     * @inheritDoc
-     */
-    validations: [
+    /** @inheritDoc */
+    validations = [
         'required',
         'pattern',
-    ],
+    ]
 
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         data.ucName = Espo.Utils.upperCaseFirst(this.name);
         data.salutationValue = this.model.get(this.salutationField);
@@ -87,20 +84,21 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return data;
-    },
+    }
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-        var ucName = Espo.Utils.upperCaseFirst(this.name)
+        let ucName = Espo.Utils.upperCaseFirst(this.name);
+
         this.salutationField = 'salutation' + ucName;
         this.firstField = 'first' + ucName;
         this.lastField = 'last' + ucName;
         this.middleField = 'middle' + ucName;
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.isEditMode()) {
             this.$salutation = this.$el.find('[data-name="' + this.salutationField + '"]');
@@ -125,9 +123,9 @@ export default Dep.extend(/** @lends Class# */{
 
             Select.init(this.$salutation);
         }
-    },
+    }
 
-    getFormattedValue: function () {
+    getFormattedValue() {
         let salutation = this.model.get(this.salutationField);
         let first = this.model.get(this.firstField);
         let last = this.model.get(this.lastField);
@@ -144,9 +142,9 @@ export default Dep.extend(/** @lends Class# */{
             middle: middle,
             last: last,
         });
-    },
+    }
 
-    _getTemplateName: function () {
+    _getTemplateName() {
         if (this.isEditMode()) {
             let prop = 'editTemplate' + Espo.Utils.upperCaseFirst(this.getFormat().toString());
 
@@ -155,22 +153,22 @@ export default Dep.extend(/** @lends Class# */{
             }
         }
 
-        return Dep.prototype._getTemplateName.call(this);
-    },
+        return super._getTemplateName();
+    }
 
-    getFormat: function () {
+    getFormat() {
         this.format = this.format || this.getConfig().get('personNameFormat') || 'firstLast';
 
         return this.format;
-    },
+    }
 
-    formatHasMiddle: function () {
+    formatHasMiddle() {
         let format = this.getFormat();
 
         return format === 'firstMiddleLast' || format === 'lastFirstMiddle';
-    },
+    }
 
-    validateRequired: function () {
+    validateRequired() {
         let isRequired = this.isRequired();
 
         let validate = (name) => {
@@ -204,9 +202,9 @@ export default Dep.extend(/** @lends Class# */{
         result = validate(this.middleField) || result;
 
         return result;
-    },
+    }
 
-    validatePattern: function () {
+    validatePattern() {
         let result = false;
 
         result = this.fieldValidatePattern(this.firstField) || result;
@@ -214,20 +212,20 @@ export default Dep.extend(/** @lends Class# */{
         result = this.fieldValidatePattern(this.middleField) || result;
 
         return result;
-    },
+    }
 
-    hasRequiredMarker: function () {
+    hasRequiredMarker() {
         if (this.isRequired()) {
             return true;
         }
 
         return this.model.getFieldParam(this.salutationField, 'required') ||
-               this.model.getFieldParam(this.firstField, 'required') ||
-               this.model.getFieldParam(this.middleField, 'required') ||
-               this.model.getFieldParam(this.lastField, 'required');
-    },
+            this.model.getFieldParam(this.firstField, 'required') ||
+            this.model.getFieldParam(this.middleField, 'required') ||
+            this.model.getFieldParam(this.lastField, 'required');
+    }
 
-    fetch: function () {
+    fetch() {
         let data = {};
 
         data[this.salutationField] = this.$salutation.val() || null;
@@ -245,14 +243,14 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return data;
-    },
+    }
 
     /**
      * @param {{first?: string, last?: string, middle?: string, salutation?: string}}data
      * @return {?string}
      */
-    formatName: function (data) {
-        let name = '';
+    formatName(data) {
+        let name;
         let format = this.getFormat();
         let arr = [];
 
@@ -288,5 +286,7 @@ export default Dep.extend(/** @lends Class# */{
         }
 
         return name;
-    },
-});
+    }
+}
+
+export default PersonNameFieldView;

@@ -26,62 +26,65 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/complex-created', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+class ComplexCreatedFieldView extends BaseFieldView {
 
-        detailTemplateContent:
-            `<span data-name="{{baseName}}At" class="field">{{{atField}}}</span> `+
-            `<span class="text-muted chevron-right"</span> `+
-            `<span data-name="{{baseName}}By" class="field">{{{byField}}}</span>`,
+    // language=Handlebars
+    detailTemplateContent =
+        `<span data-name="{{baseName}}At" class="field">{{{atField}}}</span> ` +
+        `<span class="text-muted chevron-right"</span> ` +
+        `<span data-name="{{baseName}}By" class="field">{{{byField}}}</span>`
 
-        baseName: 'created',
+    baseName = 'created'
 
-        getAttributeList: function () {
-            return [this.fieldAt, this.fieldBy];
-        },
+    getAttributeList() {
+        return [this.fieldAt, this.fieldBy];
+    }
 
-        init: function () {
-            this.baseName = this.options.baseName || this.baseName;
-            this.fieldAt = this.baseName + 'At';
-            this.fieldBy = this.baseName + 'By';
+    init() {
+        this.baseName = this.options.baseName || this.baseName;
+        this.fieldAt = this.baseName + 'At';
+        this.fieldBy = this.baseName + 'By';
 
-            Dep.prototype.init.call(this);
-        },
+        super.init();
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.createField('at');
-            this.createField('by');
-        },
+        this.createField('at');
+        this.createField('by');
+    }
 
-        data: function () {
-            return _.extend({
-                baseName: this.baseName,
-            }, Dep.prototype.data.call(this));
-        },
+    data() {
+        return {
+            baseName: this.baseName,
+            ...super.data(),
+        };
+    }
 
-        createField: function (part) {
-            var field = this.baseName + Espo.Utils.upperCaseFirst(part);
+    createField(part) {
+        let field = this.baseName + Espo.Utils.upperCaseFirst(part);
 
-            var type = this.model.getFieldType(field) || 'base';
+        let type = this.model.getFieldType(field) || 'base';
 
-            var viewName = this.model.getFieldParam(field, 'view') ||
-                this.getFieldManager().getViewName(type);
+        let viewName = this.model.getFieldParam(field, 'view') ||
+            this.getFieldManager().getViewName(type);
 
-            this.createView(part + 'Field', viewName, {
-                name: field,
-                model: this.model,
-                mode: 'detail',
-                readOnly: true,
-                readOnlyLocked: true,
-                el: this.getSelector() + ' [data-name="'+field+'"]',
-            });
-        },
+        this.createView(part + 'Field', viewName, {
+            name: field,
+            model: this.model,
+            mode: this.MODE_DETAIL,
+            readOnly: true,
+            readOnlyLocked: true,
+            el: this.getSelector() + ' [data-name="' + field + '"]',
+        });
+    }
 
-        fetch: function () {
-            return {};
-        },
-    });
-});
+    fetch() {
+        return {};
+    }
+}
+
+export default ComplexCreatedFieldView;

@@ -26,201 +26,204 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/user',[ 'views/fields/link'], function (Dep) {
+import LinkFieldView from 'views/fields/link';
 
-    return Dep.extend({
+class UserFieldView extends LinkFieldView {
 
-        searchTemplate: 'fields/user/search',
+    searchTemplate = 'fields/user/search'
 
-        setupSearch: function () {
-            Dep.prototype.setupSearch.call(this);
+    setupSearch() {
+        super.setupSearch();
 
-            this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
-            this.searchTypeList.push('isFromTeams');
+        this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
+        this.searchTypeList.push('isFromTeams');
 
-            this.searchData.teamIdList = this.getSearchParamsData().teamIdList ||
-                this.searchParams.teamIdList || [];
-            this.searchData.teamNameHash = this.getSearchParamsData().teamNameHash ||
-                this.searchParams.teamNameHash || {};
+        this.searchData.teamIdList = this.getSearchParamsData().teamIdList ||
+            this.searchParams.teamIdList || [];
+        this.searchData.teamNameHash = this.getSearchParamsData().teamNameHash ||
+            this.searchParams.teamNameHash || {};
 
-            this.events['click a[data-action="clearLinkTeams"]'] = function (e) {
-                let id = $(e.currentTarget).data('id').toString();
+        this.events['click a[data-action="clearLinkTeams"]'] = e => {
+            let id = $(e.currentTarget).data('id').toString();
 
-                this.deleteLinkTeams(id);
-            };
+            this.deleteLinkTeams(id);
+        };
 
-            this.addActionHandler('selectLinkTeams', function () {
-                Espo.Ui.notify(' ... ');
+        this.addActionHandler('selectLinkTeams', () => {
+            Espo.Ui.notify(' ... ');
 
-                var viewName = this.getMetadata().get('clientDefs.Team.modalViews.select') ||
-                    'views/modals/select-records';
+            let viewName = this.getMetadata().get('clientDefs.Team.modalViews.select') ||
+                'views/modals/select-records';
 
-                this.createView('dialog', viewName, {
-                    scope: 'Team',
-                    createButton: false,
-                    multiple: true,
-                }, (view) => {
-                    view.render();
+            this.createView('dialog', viewName, {
+                scope: 'Team',
+                createButton: false,
+                multiple: true,
+            }, view => {
+                view.render();
 
-                    Espo.Ui.notify(false);
+                Espo.Ui.notify(false);
 
-                    this.listenToOnce(view, 'select', models => {
-                        if (Object.prototype.toString.call(models) !== '[object Array]') {
-                            models = [models];
-                        }
+                this.listenToOnce(view, 'select', models => {
+                    if (Object.prototype.toString.call(models) !== '[object Array]') {
+                        models = [models];
+                    }
 
-                        models.forEach(model => {
-                            this.addLinkTeams(model.id, model.get('name'));
-                        });
+                    models.forEach(model => {
+                        this.addLinkTeams(model.id, model.get('name'));
                     });
                 });
             });
+        });
 
-            this.events['click a[data-action="clearLinkTeams"]'] = function (e) {
-                let id = $(e.currentTarget).data('id').toString();
+        this.events['click a[data-action="clearLinkTeams"]'] = e => {
+            let id = $(e.currentTarget).data('id').toString();
 
-                this.deleteLinkTeams(id);
-            };
-        },
+            this.deleteLinkTeams(id);
+        };
+    }
 
-        handleSearchType: function (type) {
-            Dep.prototype.handleSearchType.call(this, type);
+    handleSearchType(type) {
+        super.handleSearchType(type);
 
-            if (type === 'isFromTeams') {
-                this.$el.find('div.teams-container').removeClass('hidden');
-            }
-            else {
-                this.$el.find('div.teams-container').addClass('hidden');
-            }
-        },
+        if (type === 'isFromTeams') {
+            this.$el.find('div.teams-container').removeClass('hidden');
+        }
+        else {
+            this.$el.find('div.teams-container').addClass('hidden');
+        }
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
-            if (this.mode === 'search') {
-                let $elementTeams = this.$el.find('input.element-teams');
+        if (this.mode === this.MODE_SEARCH) {
+            let $elementTeams = this.$el.find('input.element-teams');
 
-                $elementTeams.autocomplete({
-                    serviceUrl: () => {
-                        return 'Team?&maxSize=' + this.getAutocompleteMaxCount() + '&select=id,name';
-                    },
-                    minChars: 1,
-                    triggerSelectOnValidInput: false,
-                    paramName: 'q',
-                    noCache: true,
-                    formatResult: (suggestion) => {
-                        return this.getHelper().escapeString(suggestion.name);
-                    },
-                    transformResult: (response) => {
-                        response = JSON.parse(response);
-                        let list = [];
+            $elementTeams.autocomplete({
+                serviceUrl: () => {
+                    return 'Team?&maxSize=' + this.getAutocompleteMaxCount() + '&select=id,name';
+                },
+                minChars: 1,
+                triggerSelectOnValidInput: false,
+                paramName: 'q',
+                noCache: true,
+                formatResult: suggestion => {
+                    return this.getHelper().escapeString(suggestion.name);
+                },
+                transformResult: response => {
+                    response = JSON.parse(response);
+                    let list = [];
 
-                        response.list.forEach(item => {
-                            list.push({
-                                id: item.id,
-                                name: item.name,
-                                data: item.id,
-                                value: item.name
-                            });
+                    response.list.forEach(item => {
+                        list.push({
+                            id: item.id,
+                            name: item.name,
+                            data: item.id,
+                            value: item.name,
                         });
-
-                        return {
-                            suggestions: list
-                        };
-                    },
-                    onSelect: (s) => {
-                        this.addLinkTeams(s.id, s.name);
-                        $elementTeams.val('');
-                        $elementTeams.focus();
-                    },
-                });
-
-                $elementTeams.attr('autocomplete', 'espo-' + this.name);
-
-                this.once('render', () => {
-                    $elementTeams.autocomplete('dispose');
-                });
-
-                this.once('remove', () => {
-                    $elementTeams.autocomplete('dispose');
-                });
-
-                let type = this.$el.find('select.search-type').val();
-
-                if (type === 'isFromTeams') {
-                    this.searchData.teamIdList.forEach(id => {
-                        this.addLinkTeamsHtml(id, this.searchData.teamNameHash[id]);
                     });
-                }
-            }
-        },
 
-        deleteLinkTeams: function (id) {
-            this.deleteLinkTeamsHtml(id);
+                    return {suggestions: list};
+                },
+                onSelect: s => {
+                    this.addLinkTeams(s.id, s.name);
 
-            let index = this.searchData.teamIdList.indexOf(id);
+                    $elementTeams.val('');
+                    $elementTeams.focus();
+                },
+            });
 
-            if (index > -1) {
-                this.searchData.teamIdList.splice(index, 1);
-            }
+            $elementTeams.attr('autocomplete', 'espo-' + this.name);
 
-            delete this.searchData.teamNameHash[id];
+            this.once('render', () => {
+                $elementTeams.autocomplete('dispose');
+            });
 
-            this.trigger('change');
-        },
+            this.once('remove', () => {
+                $elementTeams.autocomplete('dispose');
+            });
 
-        addLinkTeams: function (id, name) {
-            this.searchData.teamIdList = this.searchData.teamIdList || [];
-
-            if (!~this.searchData.teamIdList.indexOf(id)) {
-                this.searchData.teamIdList.push(id);
-                this.searchData.teamNameHash[id] = name;
-                this.addLinkTeamsHtml(id, name);
-
-                this.trigger('change');
-            }
-        },
-
-        deleteLinkTeamsHtml: function (id) {
-            this.$el.find('.link-teams-container .link-' + id).remove();
-        },
-
-        addLinkTeamsHtml: function (id, name) {
-            id = Handlebars.Utils.escapeExpression(id);
-            name = Handlebars.Utils.escapeExpression(name);
-
-            let $container = this.$el.find('.link-teams-container');
-            let $el = $('<div />').addClass('link-' + id).addClass('list-group-item');
-
-            $el.html(name + '&nbsp');
-
-            $el.prepend(
-                '<a role="button" class="pull-right" data-id="' + id + '" ' +
-                'data-action="clearLinkTeams"><span class="fas fa-times"></a>'
-            );
-
-            $container.append($el);
-
-            return $el;
-        },
-
-        fetchSearch: function () {
             let type = this.$el.find('select.search-type').val();
 
             if (type === 'isFromTeams') {
-                return {
-                    type: 'isUserFromTeams',
-                    field: this.name,
-                    value: this.searchData.teamIdList,
-                    data: {
-                        type: type,
-                        teamIdList: this.searchData.teamIdList,
-                        teamNameHash: this.searchData.teamNameHash,
-                    },
-                };
+                this.searchData.teamIdList.forEach(id => {
+                    this.addLinkTeamsHtml(id, this.searchData.teamNameHash[id]);
+                });
             }
+        }
+    }
 
-            return Dep.prototype.fetchSearch.call(this);
-        },
-    });
-});
+    deleteLinkTeams(id) {
+        this.deleteLinkTeamsHtml(id);
+
+        let index = this.searchData.teamIdList.indexOf(id);
+
+        if (index > -1) {
+            this.searchData.teamIdList.splice(index, 1);
+        }
+
+        delete this.searchData.teamNameHash[id];
+
+        this.trigger('change');
+    }
+
+    addLinkTeams(id, name) {
+        this.searchData.teamIdList = this.searchData.teamIdList || [];
+
+        if (!~this.searchData.teamIdList.indexOf(id)) {
+            this.searchData.teamIdList.push(id);
+            this.searchData.teamNameHash[id] = name;
+            this.addLinkTeamsHtml(id, name);
+
+            this.trigger('change');
+        }
+    }
+
+    deleteLinkTeamsHtml(id) {
+        this.$el.find('.link-teams-container .link-' + id).remove();
+    }
+
+    addLinkTeamsHtml(id, name) {
+        id = Handlebars.Utils.escapeExpression(id);
+        name = Handlebars.Utils.escapeExpression(name);
+
+        let $container = this.$el.find('.link-teams-container');
+        
+        let $el = $('<div />')
+            .addClass('link-' + id)
+            .addClass('list-group-item');
+
+        $el.html(name + '&nbsp');
+
+        $el.prepend(
+            '<a role="button" class="pull-right" data-id="' + id + '" ' +
+            'data-action="clearLinkTeams"><span class="fas fa-times"></a>'
+        );
+
+        $container.append($el);
+
+        return $el;
+    }
+
+    fetchSearch() {
+        let type = this.$el.find('select.search-type').val();
+
+        if (type === 'isFromTeams') {
+            return {
+                type: 'isUserFromTeams',
+                field: this.name,
+                value: this.searchData.teamIdList,
+                data: {
+                    type: type,
+                    teamIdList: this.searchData.teamIdList,
+                    teamNameHash: this.searchData.teamNameHash,
+                },
+            };
+        }
+
+        return super.fetchSearch();
+    }
+}
+
+export default UserFieldView;

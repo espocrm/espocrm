@@ -26,16 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/address-state', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+class AddressStateFieldView extends VarcharFieldView {
 
-        setupOptions: function () {
-            var stateList = this.getConfig().get('addressStateList') || [];
+    setupOptions() {
+        let stateList = this.getConfig().get('addressStateList') || [];
 
-            if (stateList.length) {
-                this.params.options = Espo.Utils.clone(stateList);
-            }
-        },
-    });
-});
+        if (stateList.length) {
+            this.params.options = Espo.Utils.clone(stateList);
+        }
+    }
+}
+
+export default AddressStateFieldView;
