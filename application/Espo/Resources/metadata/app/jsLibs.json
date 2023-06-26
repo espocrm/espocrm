@@ -47,6 +47,14 @@
         "exportsAs": "summernote",
         "sourceMap": true
     },
+    "jquery-ui": {
+        "exportsTo": "$",
+        "exportsAs": "ui"
+    },
+    "jquery-ui-touch-punch": {
+        "exportsTo": "$",
+        "exportsAs": "ui"
+    },
     "jquery-textcomplete": {
         "exportsTo": "$.fn",
         "exportsAs": "textcomplete"

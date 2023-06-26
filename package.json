@@ -53,7 +53,7 @@
     "flotr2": "github:yurikuzn/flotr2#0.1.3",
     "fullcalendar": "^3.10.5",
     "getobject": ">=1.0.0",
-    "gridstack": "github:yurikuzn/gridstack.js#5.1.1.e2",
+    "gridstack": "github:yurikuzn/gridstack.js#5.1.1.e3",
     "handlebars": "^4.7.7",
     "jquery": "^3.6.0",
     "jquery-textcomplete": "^1.8.5",

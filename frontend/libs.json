@@ -101,8 +101,7 @@
         "name": "gridstack",
         "src": "node_modules/gridstack/dist/gridstack-jq.js",
         "bundle": true,
-        "key": "gridstack",
-        "suppressAmd": true
+        "key": "gridstack"
     },
     {
         "src": "node_modules/selectize/dist/js/standalone/selectize.js",
