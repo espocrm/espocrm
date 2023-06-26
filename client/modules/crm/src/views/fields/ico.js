@@ -30,6 +30,7 @@ define('crm:views/fields/ico', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 
+        // language=Handlebars
         templateContent: `{{! ~}}
             <span
                 class="{{iconClass}} text-muted action icon"

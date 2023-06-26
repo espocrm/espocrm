@@ -30,6 +30,7 @@ define('views/working-time-calendar/fields/time-ranges/item-edit', ['view', 'lib
 
     return Dep.extend({
 
+        // language=Handlebars
         templateContent: `
             <div class="row">
                 <div class="start-container col-xs-5">

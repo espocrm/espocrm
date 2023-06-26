@@ -32,6 +32,7 @@ class CollapsedModalBar extends View {
 
     maxNumberToDisplay = 3
 
+    // language=Handlebars
     templateContent = `
         {{#each dataList}}
         <div class="collapsed-modal" data-number="{{number}}">{{var key ../this}}</div>

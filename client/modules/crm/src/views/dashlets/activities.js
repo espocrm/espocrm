@@ -33,6 +33,7 @@ define('crm:views/dashlets/activities',
 
         name: 'Activities',
 
+        // language=Handlebars
         templateContent: '<div class="list-container">{{{list}}}</div>',
 
         rowActionsView: 'crm:views/record/row-actions/activities-dashlet',
