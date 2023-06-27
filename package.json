@@ -17,7 +17,7 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "archiver": "^5.3.0",
-    "espo-frontend-build-tools": "github:espocrm/frontend-build-tools#0.0.4",
+    "espo-frontend-build-tools": "github:espocrm/frontend-build-tools#0.0.5",
     "fstream": ">=1.0.12",
     "glob": "^10.2.6",
     "grunt": "^1.5.3",

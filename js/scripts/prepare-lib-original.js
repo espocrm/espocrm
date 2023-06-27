@@ -97,11 +97,11 @@ const addSuppressAmd = path => {
 /** @var {string[]} */
 const libSrcList = buildUtils.getBundleLibList(libs);
 
-let keyMap = {};
+let amdIdMap = {};
 let suppressAmdMap = {};
 
 libs.forEach(item => {
-    if (!item.key || !item.bundle || item.files) {
+    if (!item.amdId || !item.bundle || item.files) {
         return;
     }
 
@@ -111,7 +111,7 @@ libs.forEach(item => {
         return;
     }
 
-    keyMap[item.src] = 'lib!' + item.key;
+    amdIdMap[item.src] = 'lib!' + item.amdId;
 });
 
 libSrcList.forEach(src => {
@@ -124,7 +124,7 @@ libSrcList.forEach(src => {
         addSuppressAmd(dest);
     }
 
-    let key = keyMap[src];
+    let key = amdIdMap[src];
 
     if (key) {
         addLoadingSubject(dest, key);
@@ -141,7 +141,7 @@ buildUtils.getCopyLibDataList(libs)
             addSuppressAmd(item.originalDest);
         }
 
-        let key = keyMap[item.src];
+        let key = amdIdMap[item.src];
 
         if (key) {
             addLoadingSubject(item.originalDest, key);
