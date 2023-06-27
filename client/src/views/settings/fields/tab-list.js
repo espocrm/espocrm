@@ -26,221 +26,218 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/tab-list', ['views/fields/array'], function (Dep) {
+import ArrayFieldView from 'views/fields/array';
 
-    return Dep.extend({
+class TabListFieldView extends ArrayFieldView {
 
-        addItemModalView: 'views/settings/modals/tab-list-field-add',
+    addItemModalView = 'views/settings/modals/tab-list-field-add'
 
-        noGroups: false,
+    noGroups = false
+    noDelimiters = false
 
-        noDelimiters: false,
+    setup() {
+        super.setup();
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.selected.forEach(item => {
-                if (item && typeof item === 'object') {
-                    if (!item.id) {
-                        item.id = this.generateItemId();
-                    }
+        this.selected.forEach(item => {
+            if (item && typeof item === 'object') {
+                if (!item.id) {
+                    item.id = this.generateItemId();
                 }
+            }
+        });
+
+        this.events['click [data-action="editGroup"]'] = e => {
+            let id = $(e.currentTarget).parent().data('value').toString();
+
+            this.editGroup(id);
+        };
+    }
+
+    generateItemId() {
+        return Math.floor(Math.random() * 1000000 + 1).toString();
+    }
+
+    setupOptions() {
+        this.params.options = Object.keys(this.getMetadata().get('scopes'))
+            .filter(scope => {
+                if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
+                    return false;
+                }
+
+                if (!this.getAcl().checkScope(scope)) {
+                    return false;
+                }
+
+                return this.getMetadata().get('scopes.' + scope + '.tab');
+            })
+            .sort((v1, v2) => {
+                return this.translate(v1, 'scopeNamesPlural')
+                    .localeCompare(this.translate(v2, 'scopeNamesPlural'));
             });
 
-            this.events['click [data-action="editGroup"]'] = (e) => {
-                var id = $(e.currentTarget).parent().data('value').toString();
+        if (!this.noDelimiters) {
+            this.params.options.push('_delimiter_');
+            this.params.options.push('_delimiter-ext_');
+        }
 
-                this.editGroup(id);
-            };
-        },
+        this.translatedOptions = {};
 
-        generateItemId: function () {
-            return Math.floor(Math.random() * 1000000 + 1).toString();
-        },
+        this.params.options.forEach(item => {
+            this.translatedOptions[item] = this.translate(item, 'scopeNamesPlural');
+        });
 
-        setupOptions: function () {
-            this.params.options = Object.keys(this.getMetadata().get('scopes'))
-                .filter(scope => {
-                    if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
-                        return false;
-                    }
+        this.translatedOptions['_delimiter_'] = '. . .';
+        this.translatedOptions['_delimiter-ext_'] = '. . .';
+    }
 
-                    if (!this.getAcl().checkScope(scope)) {
-                        return false;
-                    }
-
-                    return this.getMetadata().get('scopes.' + scope + '.tab');
-                })
-                .sort((v1, v2) => {
-                    return this.translate(v1, 'scopeNamesPlural')
-                        .localeCompare(this.translate(v2, 'scopeNamesPlural'));
-                });
-
-            if (!this.noDelimiters) {
-                this.params.options.push('_delimiter_');
-                this.params.options.push('_delimiter-ext_');
+    addValue(value) {
+        if (value && typeof value === 'object') {
+            if (!value.id) {
+                value.id = this.generateItemId();
             }
 
-            this.translatedOptions = {};
+            let html = this.getItemHtml(value);
 
-            this.params.options.forEach(item => {
-                this.translatedOptions[item] = this.translate(item, 'scopeNamesPlural');
-            });
+            this.$list.append(html);
+            this.selected.push(value);
 
-            this.translatedOptions['_delimiter_'] = '. . .';
-            this.translatedOptions['_delimiter-ext_'] = '. . .';
-        },
+            this.trigger('change');
 
-        addValue: function (value) {
-            if (value && typeof value === 'object') {
-                if (!value.id) {
-                    value.id = this.generateItemId();
-                }
+            return;
+        }
 
-                var html = this.getItemHtml(value);
+        super.addValue(value);
+    }
 
-                this.$list.append(html);
+    removeValue(value) {
+        let index = this.getGroupIndexById(value);
 
-                this.selected.push(value);
+        if (~index) {
+            this.$list.children('[data-value="' + value + '"]').remove();
 
-                this.trigger('change');
+            this.selected.splice(index, 1);
+            this.trigger('change');
+
+            return;
+        }
+
+        super.removeValue(value);
+    }
+
+    getItemHtml(value) {
+        if (value && typeof value === 'object') {
+            return this.getGroupItemHtml(value);
+        }
+
+        return super.getItemHtml(value);
+    }
+
+    getGroupItemHtml(item) {
+        let label = item.text || '';
+
+        return $('<div>')
+            .addClass('list-group-item')
+            .attr('data-value', item.id)
+            .css('cursor', 'default')
+            .append(
+                $('<a>')
+                    .attr('role', 'button')
+                    .attr('tabindex', '0')
+                    .attr('data-value', item.id)
+                    .attr('data-action', 'editGroup')
+                    .css('margin-right', '7px')
+                    .append(
+                        $('<span>').addClass('fas fa-pencil-alt fa-sm')
+                    ),
+                $('<span>').text(label),
+                '&nbsp;',
+                $('<a>')
+                    .addClass('pull-right')
+                    .attr('role', 'button')
+                    .attr('tabindex', '0')
+                    .attr('data-value', item.id)
+                    .attr('data-action', 'removeValue')
+                    .append(
+                        $('<span>').addClass('fas fa-times')
+                    )
+            )
+            .get(0).outerHTML;
+    }
+
+    fetchFromDom() {
+        let selected = [];
+
+        this.$el.find('.list-group .list-group-item').each((i, el) => {
+            let value = $(el).data('value').toString();
+            let groupItem = this.getGroupValueById(value);
+
+            if (groupItem) {
+                selected.push(groupItem);
 
                 return;
             }
 
-            Dep.prototype.addValue.call(this, value);
-        },
+            selected.push(value);
+        });
 
-        removeValue: function (value) {
-            var index = this.getGroupIndexById(value);
+        this.selected = selected;
+    }
 
-            if (~index) {
-                this.$list.children('[data-value="' + value + '"]').remove();
+    getGroupIndexById(id) {
+        for (let i = 0; i < this.selected.length; i++) {
+            let item = this.selected[i];
 
-                this.selected.splice(index, 1);
-                this.trigger('change');
-
-                return;
+            if (item && typeof item === 'object') {
+                if (item.id === id) {
+                    return i;
+                }
             }
+        }
 
-            Dep.prototype.removeValue.call(this, value);
-        },
+        return -1;
+    }
 
-        getItemHtml: function (value) {
-            if (value && typeof value === 'object') {
-                return this.getGroupItemHtml(value);
+    getGroupValueById(id) {
+        for (let item of this.selected) {
+            if (item && typeof item === 'object') {
+                if (item.id === id) {
+                    return item;
+                }
             }
+        }
 
-            return Dep.prototype.getItemHtml.call(this, value);
-        },
+        return null;
+    }
 
-        getGroupItemHtml: function (item) {
-            let label = item.text || '';
+    editGroup(id) {
+        let item = Espo.Utils.cloneDeep(this.getGroupValueById(id) || {});
 
-            return $('<div>')
-                .addClass('list-group-item')
-                .attr('data-value', item.id)
-                .css('cursor', 'default')
-                .append(
-                    $('<a>')
-                        .attr('role', 'button')
-                        .attr('tabindex', '0')
-                        .attr('data-value', item.id)
-                        .attr('data-action', 'editGroup')
-                        .css('margin-right', '7px')
-                        .append(
-                            $('<span>').addClass('fas fa-pencil-alt fa-sm')
-                        ),
-                    $('<span>').text(label),
-                    '&nbsp;',
-                    $('<a>')
-                        .addClass('pull-right')
-                        .attr('role', 'button')
-                        .attr('tabindex', '0')
-                        .attr('data-value', item.id)
-                        .attr('data-action', 'removeValue')
-                        .append(
-                            $('<span>').addClass('fas fa-times')
-                        )
-                )
-                .get(0).outerHTML;
-        },
+        let index = this.getGroupIndexById(id);
+        let tabList = Espo.Utils.cloneDeep(this.selected);
 
-        fetchFromDom: function () {
-            var selected = [];
+        this.createView('dialog', 'views/settings/modals/edit-tab-group', {
+            itemData: item,
+        }, view => {
+            view.render();
 
-            this.$el.find('.list-group .list-group-item').each((i, el) => {
-                var value = $(el).data('value').toString();
-                var groupItem = this.getGroupValueById(value);
-
-                if (groupItem) {
-                    selected.push(groupItem);
-
-                    return;
+            this.listenToOnce(view, 'apply', (itemData) => {
+                for (let a in itemData) {
+                    tabList[index][a] = itemData[a];
                 }
 
-                selected.push(value);
+                this.model.set(this.name, tabList);
+
+                view.close();
             });
+        });
+    }
 
-            this.selected = selected;
-        },
+    getAddItemModalOptions() {
+        return {
+            ...super.getAddItemModalOptions(),
+            noGroups: this.noGroups,
+        };
+    }
+}
 
-        getGroupIndexById: function (id) {
-            for (var i = 0; i < this.selected.length; i++) {
-                var item = this.selected[i];
-
-                if (item && typeof item === 'object') {
-                    if (item.id === id) {
-                        return i;
-                    }
-                }
-            }
-
-            return -1;
-        },
-
-        getGroupValueById: function (id) {
-            for (let item of this.selected) {
-                if (item && typeof item === 'object') {
-                    if (item.id === id) {
-                        return item;
-                    }
-                }
-            }
-
-            return null;
-        },
-
-        editGroup: function (id) {
-            var item = Espo.Utils.cloneDeep(this.getGroupValueById(id) || {});
-
-            var index = this.getGroupIndexById(id);
-            var tabList = Espo.Utils.cloneDeep(this.selected);
-
-            this.createView('dialog', 'views/settings/modals/edit-tab-group', {
-                itemData: item,
-            }, (view) => {
-                view.render();
-
-                this.listenToOnce(view, 'apply', (itemData) => {
-                    for (var a in itemData) {
-                        tabList[index][a] = itemData[a];
-                    }
-
-                    this.model.set(this.name, tabList);
-
-                    view.close();
-                });
-            });
-        },
-
-        getAddItemModalOptions: function () {
-            return _.extend(
-                Dep.prototype.getAddItemModalOptions.call(this),
-                {
-                    noGroups: this.noGroups,
-                }
-            );
-        },
-    });
-});
+export default TabListFieldView;

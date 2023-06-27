@@ -450,7 +450,8 @@ class NavbarSiteView extends View {
             return false;
         }
 
-        let defs = scopes[scope] || {};
+        let defs = /** @type {{disabled?: boolean, acl?: boolean, tabAclPermission?: string}} */
+            scopes[scope] || {};
 
         if (defs.disabled) {
             return;
@@ -459,6 +460,7 @@ class NavbarSiteView extends View {
         if (defs.acl) {
             return this.getAcl().check(scope);
         }
+
         if (defs.tabAclPermission) {
             let level = this.getAcl().getPermissionLevel(defs.tabAclPermission);
 
@@ -975,22 +977,21 @@ class NavbarSiteView extends View {
 
                     return;
                 }
-                else {
-                    if (i === this.tabList.length - 1) {
-                        return;
-                    }
 
-                    vars.isHidden = true;
-
-                    tabDefsList.push({
-                        name: 'show-more',
-                        isInMore: true,
-                        className: 'show-more',
-                        html: '<span class="fas fa-ellipsis-h more-icon"></span>',
-                    });
-
+                if (i === this.tabList.length - 1) {
                     return;
                 }
+
+                vars.isHidden = true;
+
+                tabDefsList.push({
+                    name: 'show-more',
+                    isInMore: true,
+                    className: 'show-more',
+                    html: '<span class="fas fa-ellipsis-h more-icon"></span>',
+                });
+
+                return;
             }
 
             tabDefsList.push(
@@ -1079,6 +1080,16 @@ class NavbarSiteView extends View {
         return o;
     }
 
+    /**
+     * @typedef {Object} MenuDataItem
+     * @property {string} [link]
+     * @property {string} [html]
+     * @property {true} [divider]
+     */
+
+    /**
+     * @return {MenuDataItem[]}
+     */
     getMenuDataList() {
         let avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 16, 'avatar-link');
 
@@ -1086,6 +1097,7 @@ class NavbarSiteView extends View {
             avatarHtml += ' ';
         }
 
+        /** @type {MenuDataItem[]}*/
         let list = [
             {
                 link: '#User/view/' + this.getUser().id,

@@ -784,6 +784,12 @@ class ArrayFieldView extends BaseFieldView {
         return this.getSearchParamsData().type || 'anyOf';
     }
 
+    /**
+     * @return {{
+     *    translatedOptions: Object.<string, *>|null,
+     *    options: string[],
+     * } | Object.<string, *>}
+     */
     getAddItemModalOptions() {
         let options = [];
 

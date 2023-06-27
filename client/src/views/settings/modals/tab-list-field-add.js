@@ -26,28 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/modals/tab-list-field-add', ['views/modals/array-field-add'], function (Dep) {
+import ArrayFieldAddModalView from 'views/modals/array-field-add';
 
-    return Dep.extend({
+class TabListFieldAddSettingsModalView extends ArrayFieldAddModalView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            if (!this.options.noGroups) {
-                this.buttonList.push({
-                    name: 'addGroup',
-                    text: this.translate('Group Tab', 'labels', 'Settings'),
-                });
-            }
-        },
-
-        actionAddGroup: function () {
-            this.trigger('add', {
-                type: 'group',
+        if (!this.options.noGroups) {
+            this.buttonList.push({
+                name: 'addGroup',
                 text: this.translate('Group Tab', 'labels', 'Settings'),
-                iconClass: null,
-                color: null,
             });
-        },
-    });
-});
+        }
+    }
+
+    actionAddGroup() {
+        this.trigger('add', {
+            type: 'group',
+            text: this.translate('Group Tab', 'labels', 'Settings'),
+            iconClass: null,
+            color: null,
+        });
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default TabListFieldAddSettingsModalView;
