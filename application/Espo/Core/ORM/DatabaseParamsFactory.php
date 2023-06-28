@@ -37,7 +37,6 @@ use RuntimeException;
 class DatabaseParamsFactory
 {
     private const DEFAULT_PLATFORM = 'Mysql';
-    private const DEFAULT_CHARSET = 'utf8';
 
     public function __construct(private Config $config) {}
 
@@ -55,7 +54,7 @@ class DatabaseParamsFactory
             ->withName($config->get('database.dbname'))
             ->withUsername($config->get('database.user'))
             ->withPassword($config->get('database.password'))
-            ->withCharset($config->get('database.charset') ?? self::DEFAULT_CHARSET)
+            ->withCharset($config->get('database.charset'))
             ->withPlatform($config->get('database.platform'))
             ->withSslCa($config->get('database.sslCA'))
             ->withSslCert($config->get('database.sslCert'))
