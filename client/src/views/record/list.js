@@ -766,7 +766,7 @@ class ListRecordView extends View {
         let isSmallWindow = $(window.document).width() < screenWidthXs;
 
         let getOffsetTop = (element) => {
-            let offsetTop = 0;
+            let offsetTop = isModal ? 0 : -3;
 
             let withHeader = !isSmallWindow && !isModal;
 
