@@ -671,6 +671,14 @@ body[data-navbar="side"] {
         }
     }
 
+    .stick-sub {
+        left: @navbar-width;
+    }
+
+    &.minimized .stick-sub {
+        left: @navbar-minimized-width;
+    }
+
     .list-buttons-container .sticked-bar {
         width: calc(~"100% - " @navbar-width);
         left: @navbar-width;
