@@ -9,6 +9,9 @@
             "rowActionsView": "views/record/row-actions/relationship-unlink-only",
             "layout": "listSmall",
             "selectPrimaryFilterName": "activePortal"
+        },
+        "authenticationProvider": {
+            "createDisabled": true
         }
     },
     "searchPanelDisabled": true
