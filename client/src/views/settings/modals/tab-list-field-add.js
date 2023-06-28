@@ -38,6 +38,11 @@ class TabListFieldAddSettingsModalView extends ArrayFieldAddModalView {
                 name: 'addGroup',
                 text: this.translate('Group Tab', 'labels', 'Settings'),
             });
+
+            this.buttonList.push({
+                name: 'addDivider',
+                text: this.translate('Divider', 'labels', 'Settings'),
+            });
         }
     }
 
@@ -47,6 +52,13 @@ class TabListFieldAddSettingsModalView extends ArrayFieldAddModalView {
             text: this.translate('Group Tab', 'labels', 'Settings'),
             iconClass: null,
             color: null,
+        });
+    }
+
+    actionAddDivider() {
+        this.trigger('add', {
+            type: 'divider',
+            text: null,
         });
     }
 }

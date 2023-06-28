@@ -92,6 +92,63 @@ body[data-navbar="side"] {
                     > li.tab-group .group-caret {
                         right: 13px;
                     }
+
+                    > li.tab-divider {
+                        > div {
+                            padding-top: calc(@navbar-tab-vertical-padding + 4px);
+                            padding-bottom: @navbar-tab-vertical-padding;
+                            padding-left: @navbar-tab-left-padding;
+                            padding-right: @navbar-tab-right-padding;
+                            display: block;
+
+                            > .label-text {
+                                color: var(--navbar-inverse-color);
+
+                                &:empty {
+                                    &:before {
+                                        content: "\200b";
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    > li.more {
+                        > ul {
+                            > li.tab-divider {
+                                &:not(:first-child):before {
+                                    height: 1px;
+                                    margin: 9.5px 0;
+                                    overflow: hidden;
+                                    background-color: var(--dropdown-divider-bg);
+                                    display: block;
+                                    content: ' ';
+                                }
+
+                                &:first-child {
+                                    > div {
+                                        padding-top: @navbar-tab-vertical-padding;
+                                    }
+                                }
+
+                                > div {
+                                    &.no-text {
+                                        display: none;
+                                    }
+
+                                    padding-top: calc(@navbar-tab-vertical-padding - 3px);
+                                    padding-bottom: @navbar-tab-vertical-padding;
+                                    padding-left: @navbar-tab-left-padding;
+                                    padding-right: @navbar-tab-right-padding;
+
+                                    > .label-text {
+                                        color: var(--gray-light);
+                                        white-space: nowrap;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
 
                 a.minimizer {
@@ -112,8 +169,8 @@ body[data-navbar="side"] {
 
                 a.side-menu-button {
                     width: @navbar-minimized-width;
-                    padding-top: 9px;
-                    padding-bottom: 9px;
+                    padding-top: @navbar-tab-vertical-padding;
+                    padding-bottom: @navbar-tab-vertical-padding;
                     text-align: center;
                     display: none;
 
@@ -255,8 +312,8 @@ body[data-navbar="side"] {
                     }
 
                     li > a {
-                        padding-top: 9px;
-                        padding-bottom: 9px;
+                        padding-top: @navbar-tab-vertical-padding;
+                        padding-bottom: @navbar-tab-vertical-padding;
                         padding-left: @navbar-tab-left-padding;
                         padding-right: @navbar-tab-right-padding;
                         height: @navbar-logo-height;
@@ -269,8 +326,8 @@ body[data-navbar="side"] {
                 }
 
                 .navbar-form {
-                    margin-top: 0px;
-                    margin-bottom: 0px;
+                    margin-top: 0;
+                    margin-bottom: 0;
                 }
             }
         }
@@ -529,6 +586,38 @@ body[data-navbar="side"] {
                 z-index: 2140;
                 height: 100%;
                 margin-left: @navbar-width;
+            }
+        }
+
+        &.minimized:not(.side-menu-opened) {
+            #navbar {
+                ul.tabs {
+                    > li.tab-divider {
+                        > div {
+                            > .label-text {
+                                display: none;
+                            }
+
+                            &:before {
+                                content: "\200b";
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        &:not(.minimized) {
+            #navbar {
+                ul.tabs.navbar-nav {
+                    > li {
+                        > a {
+                            .short-label {
+                                //color: var(--navbar-inverse-color);
+                            }
+                        }
+                    }
+                }
             }
         }
 

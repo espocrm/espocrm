@@ -135,6 +135,30 @@ class TabListFieldView extends ArrayFieldView {
     getGroupItemHtml(item) {
         let label = item.text || '';
 
+        let $label = $('<span>').text(label);
+
+        let $icon = null;
+
+        if (item.type === 'group') {
+            $icon = $('<span>')
+                .addClass('far fa-list-alt')
+                .addClass('text-muted')
+        }
+
+        if (item.type === 'divider') {
+            $label.addClass('text-soft')
+                .addClass('text-italic');
+        }
+
+        let $item = $('<span>').append($label);
+
+        if ($icon) {
+            $item.prepend(
+                $icon,
+                ' '
+            )
+        }
+
         return $('<div>')
             .addClass('list-group-item')
             .attr('data-value', item.id)
@@ -149,7 +173,7 @@ class TabListFieldView extends ArrayFieldView {
                     .append(
                         $('<span>').addClass('fas fa-pencil-alt fa-sm')
                     ),
-                $('<span>').text(label),
+                $item,
                 '&nbsp;',
                 $('<a>')
                     .addClass('pull-right')
@@ -215,12 +239,14 @@ class TabListFieldView extends ArrayFieldView {
         let index = this.getGroupIndexById(id);
         let tabList = Espo.Utils.cloneDeep(this.selected);
 
-        this.createView('dialog', 'views/settings/modals/edit-tab-group', {
-            itemData: item,
-        }, view => {
+        let view = item.type === 'divider' ?
+            'views/settings/modals/edit-tab-divider' :
+            'views/settings/modals/edit-tab-group';
+
+        this.createView('dialog', view, {itemData: item}, view => {
             view.render();
 
-            this.listenToOnce(view, 'apply', (itemData) => {
+            this.listenToOnce(view, 'apply', itemData => {
                 for (let a in itemData) {
                     tabList[index][a] = itemData[a];
                 }

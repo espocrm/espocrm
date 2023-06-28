@@ -7,14 +7,21 @@
             ><a
                 class="navbar-brand nav-link"
                 href="#"
-            ><img src="{{logoSrc}}" class="logo"></span></a></div>
+            ><img src="{{logoSrc}}" class="logo" alt="logo"></span></a></div>
         <a role="button" class="side-menu-button"><span class="fas fa-bars"></span></a>
     </div>
 
     <div class="navbar-collapse navbar-body">
         <ul class="nav navbar-nav tabs">
             {{#each tabDefsList1}}
-            <li data-name="{{name}}" class="not-in-more tab{{#if isGroup}} tab-group dropdown{{/if}}">
+            <li
+                data-name="{{name}}"
+                class="not-in-more tab{{#if isGroup}} tab-group dropdown{{/if}}{{#if isDivider}} tab-divider{{/if}}"
+            >
+                {{#if isDivider}}
+                <div class="{{aClassName}}"><span class="label-text">{{#if label}}{{label}}{{/if}}</span></div>
+                {{/if}}
+                {{#unless isDivider}}
                 <a
                     {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                     class="{{aClassName}}"
@@ -43,6 +50,7 @@
                     <span class="fas fa-caret-right group-caret"><span>
                     {{/if}}
                 </a>
+                {{/unless}}
                 {{#if isGroup}}
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-tab-group-{{name}}">
                     {{#each itemList}}
@@ -88,8 +96,12 @@
                 {{#each tabDefsList2}}
                     <li
                         data-name="{{name}}"
-                        class="in-more tab{{#if className}} {{className}}{{/if}}{{#if isGroup}} dropdown tab-group{{/if}}"
+                        class="in-more tab{{#if className}} {{className}}{{/if}}{{#if isGroup}} dropdown tab-group{{/if}}{{#if isDivider}} tab-divider{{/if}}"
                     >
+                        {{#if isDivider}}
+                        <div class="{{aClassName}}{{#unless label}} no-text{{/unless}}"><span class="label-text">{{#if label}}{{label}}{{/if}}</span></div>
+                        {{/if}}
+                        {{#unless isDivider}}
                         <a
                             {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
                             tabindex="0"
@@ -119,6 +131,7 @@
                             <span class="fas fa-caret-right group-caret"><span>
                             {{/if}}
                         </a>
+                        {{/unless}}
                         {{#if isGroup}}
                         <ul class="dropdown-menu" role="menu" aria-labelledby="nav-tab-group-{{name}}">
                             {{#each itemList}}

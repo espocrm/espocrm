@@ -938,6 +938,14 @@ class NavbarSiteView extends View {
             }
 
             if (typeof item === 'object') {
+                if (item.type === 'divider') {
+                    if (!this.isSide()) {
+                        return false;
+                    }
+
+                    return true;
+                }
+
                 item.itemList = item.itemList || [];
 
                 item.itemList = item.itemList.filter(item => {
@@ -948,6 +956,42 @@ class NavbarSiteView extends View {
             }
 
             return this.filterTabItem(item);
+        });
+
+        function isMoreDelimiter(item) {
+            return item === '_delimiter_' || item === '_delimiter-ext_';
+        }
+
+        function isDivider(item) {
+            return item === 'object' && item.type === 'divider';
+        }
+
+        //let moreIsMet = false;
+
+        this.tabList = this.tabList.filter((item, i) => {
+            let nextItem = this.tabList[i + 1];
+
+            /*if (isMoreDelimiter(item)) {
+                moreIsMet = true;
+            }*/
+
+            if (!isDivider(item)) {
+                return true;
+            }
+
+            if (!nextItem) {
+                return true;
+            }
+
+            if (isDivider(nextItem)) {
+                return false;
+            }
+
+            /*if (isMoreDelimiter(nextItem) && !moreIsMet) {
+                return false;
+            }*/
+
+            return true;
         });
 
         let tabDefsList = [];
@@ -971,7 +1015,7 @@ class NavbarSiteView extends View {
         };
 
         this.tabList.forEach((tab, i) => {
-            if (tab === '_delimiter_' || tab === '_delimiter-ext_') {
+            if (isMoreDelimiter(tab)) {
                 if (!vars.moreIsMet) {
                     vars.moreIsMet = true;
 
@@ -1009,6 +1053,7 @@ class NavbarSiteView extends View {
         let iconClass = null;
         let color = null;
         let isGroup = false;
+        let isDivider = false;
         let name = tab;
         let aClassName = 'nav-link';
 
@@ -1016,10 +1061,20 @@ class NavbarSiteView extends View {
             label = this.getLanguage().translate(tab);
             link = '#';
         }
+        else if (typeof tab === 'object' && tab.type === 'divider') {
+            isDivider = true;
+            label = tab.text;
+            aClassName = 'nav-divider-text';
+            name = 'divider-' + i;
+
+            if (label && label.indexOf('label@') === 0) {
+                label = this.translate(label.substr(6), 'tabs');
+            }
+        }
         else if (typeof tab === 'object') {
             isGroup = true;
 
-            label = tab.text;
+            label = tab.text || '';
             color = tab.color;
             iconClass = tab.iconClass;
 
@@ -1042,11 +1097,11 @@ class NavbarSiteView extends View {
 
         let shortLabel = label.substring(0, 2);
 
-        if (!params.colorsDisabled && !isGroup) {
+        if (!params.colorsDisabled && !isGroup && !isDivider) {
             color = this.getMetadata().get(['clientDefs', tab, 'color']);
         }
 
-        if (!params.tabIconsDisabled && !isGroup) {
+        if (!params.tabIconsDisabled && !isGroup && !isDivider) {
             iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass'])
         }
 
@@ -1061,6 +1116,7 @@ class NavbarSiteView extends View {
             isAfterShowMore: vars.isHidden,
             aClassName: aClassName,
             isGroup: isGroup,
+            isDivider: isDivider,
         };
 
         if (isGroup) {
