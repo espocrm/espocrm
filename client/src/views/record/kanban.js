@@ -557,12 +557,20 @@ class KanbanRecordView extends ListRecordView {
 
     /**
      * @param {string} group
+     * @param {string} [id] Prepend. To be used after save.
+     * @return {Promise}
      */
-    storeGroupOrder(group) {
-        Espo.Ajax.putRequest('Kanban/order', {
+    storeGroupOrder(group, id) {
+        let ids = this.getGroupOrderFromDom(group);
+
+        if (id) {
+            ids.unshift(id);
+        }
+
+        return Espo.Ajax.putRequest('Kanban/order', {
             entityType: this.entityType,
             group: group,
-            ids: this.getGroupOrderFromDom(group),
+            ids: ids,
         });
     }
 
@@ -1066,7 +1074,14 @@ class KanbanRecordView extends ListRecordView {
             view.render();
 
             this.listenToOnce(view, 'after:save', () => {
-                this.collection.fetch();
+                if (this.orderDisabled) {
+                    this.collection.fetch();
+
+                    return;
+                }
+
+                this.storeGroupOrder(group, view.model.id)
+                    .then(() => this.collection.fetch());
             });
         });
     }
