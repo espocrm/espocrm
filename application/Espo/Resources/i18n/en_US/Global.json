@@ -287,7 +287,6 @@
     },
     "messages": {
         "pleaseWait": "Please wait...",
-        "posting": "Posting...",
         "loading": "Loading...",
         "saving": "Saving...",
         "confirmLeaveOutMessage": "Are you sure you want to leave the form?",
