@@ -26,730 +26,736 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/panel', ['views/record/panels/relationship', 'lib!jquery-textcomplete'],
-function (Dep, Textcomplete) {
+import RelationshipPanelView from 'views/record/panels/relationship';
+// noinspection ES6UnusedImports
+import Textcomplete from 'jquery-textcomplete';
 
-    return Dep.extend({
+class PanelStreamView extends RelationshipPanelView {
 
-        template: 'stream/panel',
+    template = 'stream/panel'
 
-        postingMode: false,
-        postDisabled: false,
-        relatedListFiltersDisabled: true,
-        layoutName: null,
+    postingMode = false
+    postDisabled = false
+    relatedListFiltersDisabled = true
+    layoutName = null
+    filterList = ['all', 'posts', 'updates']
 
-        additionalEvents: {
-            'focus textarea[data-name="post"]': function (e) {
-                this.enablePostingMode(true);
-            },
-            'click button.post': function () {
-                this.post();
-            },
-            'click .action[data-action="switchInternalMode"]': function (e) {
-                this.isInternalNoteMode = !this.isInternalNoteMode;
-
-                var $a = $(e.currentTarget);
-
-                if (this.isInternalNoteMode) {
-                    $a.addClass('enabled');
-                } else {
-                    $a.removeClass('enabled');
-                }
-
-            },
-            'keydown textarea[data-name="post"]': function (e) {
-                if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    this.post();
-                }
-
-                // Don't hide to be able to focus on the upload button.
-                /*if (e.code === 'Tab') {
-                    let $text = $(e.currentTarget);
-
-                    if ($text.val() === '') {
-                        this.disablePostingMode();
-                    }
-                }*/
-            },
-            'input textarea[data-name="post"]': function () {
-                this.controlPreviewButton();
-                this.controlPostButtonAvailability(this.$textarea.val());
-            },
-            'click .action[data-action="preview"]': function () {
-                this.preview();
-            },
+    additionalEvents = {
+        /** @this PanelStreamView */
+        'focus textarea[data-name="post"]': function () {
+            this.enablePostingMode(true);
         },
-
-        data: function () {
-            let data = Dep.prototype.data.call(this);
-
-            data.postDisabled = this.postDisabled;
-            data.placeholderText = this.placeholderText;
-            data.allowInternalNotes = this.allowInternalNotes;
-
-            return data;
+        /** @this PanelStreamView */
+        'click button.post': function () {
+            this.post();
         },
+        /** @this PanelStreamView */
+        'click .action[data-action="switchInternalMode"]': function (e) {
+            this.isInternalNoteMode = !this.isInternalNoteMode;
 
-        controlPreviewButton: function () {
-            this.$previewButton = this.$previewButton || this.$el.find('.stream-post-preview');
+            var $a = $(e.currentTarget);
 
-            if (this.$textarea.val() === '') {
-                this.$previewButton.addClass('hidden');
+            if (this.isInternalNoteMode) {
+                $a.addClass('enabled');
             } else {
-                this.$previewButton.removeClass('hidden');
+                $a.removeClass('enabled');
             }
+
         },
+        /** @this PanelStreamView */
+        'keydown textarea[data-name="post"]': function (e) {
+            if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
+                e.stopPropagation();
+                e.preventDefault();
 
-        enablePostingMode: function (byFocus) {
-            this.$el.find('.buttons-panel').removeClass('hide');
+                this.post();
+            }
 
-            if (!this.postingMode) {
-                if (this.$textarea.val() && this.$textarea.val().length) {
-                    this.getView('postField').controlTextareaHeight();
+            // Don't hide to be able to focus on the upload button.
+            /*if (e.code === 'Tab') {
+                let $text = $(e.currentTarget);
+
+                if ($text.val() === '') {
+                    this.disablePostingMode();
+                }
+            }*/
+        },
+        /** @this PanelStreamView */
+        'input textarea[data-name="post"]': function () {
+            this.controlPreviewButton();
+            this.controlPostButtonAvailability(this.$textarea.val());
+        },
+        /** @this PanelStreamView */
+        'click .action[data-action="preview"]': function () {
+            this.preview();
+        },
+    }
+
+    data() {
+        let data = super.data();
+
+        data.postDisabled = this.postDisabled;
+        data.placeholderText = this.placeholderText;
+        data.allowInternalNotes = this.allowInternalNotes;
+
+        return data;
+    }
+
+    controlPreviewButton() {
+        this.$previewButton = this.$previewButton || this.$el.find('.stream-post-preview');
+
+        if (this.$textarea.val() === '') {
+            this.$previewButton.addClass('hidden');
+        } else {
+            this.$previewButton.removeClass('hidden');
+        }
+    }
+
+    enablePostingMode(byFocus) {
+        this.$el.find('.buttons-panel').removeClass('hide');
+
+        if (!this.postingMode) {
+            if (this.$textarea.val() && this.$textarea.val().length) {
+                this.getView('postField').controlTextareaHeight();
+            }
+
+            var isClicked = false;
+
+            $('body').on('click.stream-panel', (e) => {
+                if (byFocus && !isClicked) {
+                    isClicked = true;
+
+                    return;
                 }
 
-                var isClicked = false;
+                var $target = $(e.target);
 
-                $('body').on('click.stream-panel', (e) => {
-                    if (byFocus && !isClicked) {
-                        isClicked = true;
+                if ($target.parent().hasClass('remove-attachment')) {
+                    return;
+                }
 
-                        return;
-                    }
+                if ($.contains(this.$postContainer.get(0), e.target)) {
+                    return;
+                }
 
-                    var $target = $(e.target);
+                if (this.$textarea.val() !== '') {
+                    return;
+                }
 
-                    if ($target.parent().hasClass('remove-attachment')) {
-                        return;
-                    }
+                if ($(e.target).closest('.popover-content').get(0)) {
+                    return;
+                }
 
-                    if ($.contains(this.$postContainer.get(0), e.target)) {
-                        return;
-                    }
+                var attachmentsIds = this.seed.get('attachmentsIds') || [];
 
-                    if (this.$textarea.val() !== '') {
-                        return;
-                    }
-
-                    if ($(e.target).closest('.popover-content').get(0)) {
-                        return;
-                    }
-
-                    var attachmentsIds = this.seed.get('attachmentsIds') || [];
-
-                    if (
-                        !attachmentsIds.length &&
-                        (!this.getView('attachments') || !this.getView('attachments').isUploading)
-                    ) {
-                        this.disablePostingMode();
-                    }
-                });
-            }
-
-            this.postingMode = true;
-
-            this.controlPreviewButton();
-        },
-
-        disablePostingMode: function () {
-            this.postingMode = false;
-
-            this.$textarea.val('');
-
-            if (this.hasView('attachments')) {
-                this.getView('attachments').empty();
-            }
-
-            this.$el.find('.buttons-panel').addClass('hide');
-
-            $('body').off('click.stream-panel');
-
-            this.$textarea.prop('rows', 1);
-        },
-
-        setup: function () {
-            this.events = {
-                ...this.additionalEvents,
-                ...this.events,
-            };
-
-            this.scope = this.model.name;
-            this.filter = this.getStoredFilter();
-
-            this.setupTitle();
-
-            this.placeholderText = this.translate('writeYourCommentHere', 'messages');
-            this.allowInternalNotes = false;
-
-            if (!this.getUser().isPortal()) {
-                this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.scope, 'allowInternalNotes']);
-            }
-
-            this.isInternalNoteMode = false;
-
-            this.storageTextKey = 'stream-post-' + this.model.name + '-' + this.model.id;
-            this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
-            this.storageIsInernalKey = 'stream-post-is-internal-' + this.model.name + '-' + this.model.id;
-
-            this.on('remove', () => {
-                this.storeControl();
-
-                $(window).off('beforeunload.stream-'+ this.cid);
+                if (
+                    !attachmentsIds.length &&
+                    (!this.getView('attachments') || !this.getView('attachments').isUploading)
+                ) {
+                    this.disablePostingMode();
+                }
             });
+        }
+
+        this.postingMode = true;
+
+        this.controlPreviewButton();
+    }
+
+    disablePostingMode() {
+        this.postingMode = false;
+
+        this.$textarea.val('');
+
+        if (this.hasView('attachments')) {
+            this.getView('attachments').empty();
+        }
+
+        this.$el.find('.buttons-panel').addClass('hide');
+
+        $('body').off('click.stream-panel');
+
+        this.$textarea.prop('rows', 1);
+    }
+
+    setup() {
+        this.events = {
+            ...this.additionalEvents,
+            ...this.events,
+        };
+
+        this.scope = this.model.name;
+        this.filter = this.getStoredFilter();
+
+        this.setupTitle();
+
+        this.placeholderText = this.translate('writeYourCommentHere', 'messages');
+        this.allowInternalNotes = false;
+
+        if (!this.getUser().isPortal()) {
+            this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.scope, 'allowInternalNotes']);
+        }
+
+        this.isInternalNoteMode = false;
+
+        this.storageTextKey = 'stream-post-' + this.model.name + '-' + this.model.id;
+        this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
+        this.storageIsInernalKey = 'stream-post-is-internal-' + this.model.name + '-' + this.model.id;
+
+        this.on('remove', () => {
+            this.storeControl();
 
             $(window).off('beforeunload.stream-'+ this.cid);
+        });
 
-            $(window).on('beforeunload.stream-'+ this.cid, () => {
-                this.storeControl();
+        $(window).off('beforeunload.stream-'+ this.cid);
+
+        $(window).on('beforeunload.stream-'+ this.cid, () => {
+            this.storeControl();
+        });
+
+        var storedAttachments = this.getSessionStorage().get(this.storageAttachmentsKey);
+
+        this.setupActions();
+
+        this.wait(true);
+
+        this.getModelFactory().create('Note', (model) => {
+            this.seed = model;
+
+            if (storedAttachments) {
+                this.hasStoredAttachments = true;
+                this.seed.set({
+                    attachmentsIds: storedAttachments.idList,
+                    attachmentsNames: storedAttachments.names,
+                    attachmentsTypes: storedAttachments.types,
+                });
+            }
+
+            if (this.allowInternalNotes) {
+                if (this.getMetadata().get(['entityDefs', 'Note', 'fields', 'isInternal', 'default'])) {
+                    this.isInternalNoteMode = true;
+                }
+
+                if (this.getSessionStorage().has(this.storageIsInernalKey)) {
+                    this.isInternalNoteMode = this.getSessionStorage().get(this.storageIsInernalKey);
+                }
+            }
+
+            if (this.isInternalNoteMode) {
+                this.seed.set('isInternal', true);
+            }
+
+            this.createView('postField', 'views/note/fields/post', {
+                el: this.getSelector() + ' .textarea-container',
+                name: 'post',
+                mode: 'edit',
+                params: {
+                    required: true,
+                    rowsMin: 1,
+                    rows: 25,
+                },
+                model: this.seed,
+                placeholderText: this.placeholderText,
+                noResize: true,
+            }, view => {
+                this.initPostEvents(view);
             });
 
-            var storedAttachments = this.getSessionStorage().get(this.storageAttachmentsKey);
-
-            this.setupActions();
-
-            this.wait(true);
-
-            this.getModelFactory().create('Note', (model) => {
-                this.seed = model;
-
-                if (storedAttachments) {
-                    this.hasStoredAttachments = true;
-                    this.seed.set({
-                        attachmentsIds: storedAttachments.idList,
-                        attachmentsNames: storedAttachments.names,
-                        attachmentsTypes: storedAttachments.types,
-                    });
-                }
-
-                if (this.allowInternalNotes) {
-                    if (this.getMetadata().get(['entityDefs', 'Note', 'fields', 'isInternal', 'default'])) {
-                        this.isInternalNoteMode = true;
-                    }
-
-                    if (this.getSessionStorage().has(this.storageIsInernalKey)) {
-                        this.isInternalNoteMode = this.getSessionStorage().get(this.storageIsInernalKey);
-                    }
-                }
-
-                if (this.isInternalNoteMode) {
-                    this.seed.set('isInternal', true);
-                }
-
-                this.createView('postField', 'views/note/fields/post', {
-                    el: this.getSelector() + ' .textarea-container',
-                    name: 'post',
-                    mode: 'edit',
-                    params: {
-                        required: true,
-                        rowsMin: 1,
-                        rows: 25,
-                    },
-                    model: this.seed,
-                    placeholderText: this.placeholderText,
-                    noResize: true,
-                }, (view) => {
-                    this.initPostEvents(view);
-                });
-
-                this.createCollection(() => {
-                    this.wait(false);
-                });
-
-                this.listenTo(this.seed, 'change:attachmentsIds', () => {
-                    this.controlPostButtonAvailability();
-                });
+            this.createCollection(() => {
+                this.wait(false);
             });
 
-            if (!this.defs.hidden) {
+            this.listenTo(this.seed, 'change:attachmentsIds', () => {
+                this.controlPostButtonAvailability();
+            });
+        });
+
+        if (!this.defs.hidden) {
+            this.subscribeToWebSocket();
+        }
+
+        this.once('show', () => {
+            if (!this.isSubscribedToWebSocket) {
                 this.subscribeToWebSocket();
             }
+        });
 
-            this.once('show', () => {
-                if (!this.isSubscribedToWebSocket) {
-                    this.subscribeToWebSocket();
-                }
-            });
+        this.once('remove', () => {
+            if (this.isSubscribedToWebSocket) {
+                this.unsubscribeFromWebSocket();
+            }
+        });
+    }
 
-            this.once('remove', () => {
-                if (this.isSubscribedToWebSocket) {
-                    this.unsubscribeFromWebSocket();
-                }
-            });
-        },
+    subscribeToWebSocket() {
+        if (!this.getHelper().webSocketManager) {
+            return;
+        }
 
-        subscribeToWebSocket: function () {
-            if (!this.getHelper().webSocketManager) {
+        if (this.model.entityType === 'User') {
+            return;
+        }
+
+        var topic = 'streamUpdate.' + this.model.entityType + '.' + this.model.id;
+        this.streamUpdateWebSocketTopic = topic;
+
+        this.isSubscribedToWebSocket = true;
+
+        this.getHelper().webSocketManager.subscribe(topic, (t, data) => {
+            if (data.createdById === this.getUser().id) {
                 return;
             }
 
-            if (this.model.entityType === 'User') {
+            if (data.noteId) {
+                let model = this.collection.get(data.noteId);
+
+                if (model) {
+                    model.fetch();
+                }
+
                 return;
             }
 
-            var topic = 'streamUpdate.' + this.model.entityType + '.' + this.model.id;
-            this.streamUpdateWebSocketTopic = topic;
+            this.collection.fetchNew();
+        });
+    }
 
-            this.isSubscribedToWebSocket = true;
+    unsubscribeFromWebSocket() {
+        this.getHelper().webSocketManager.unsubscribe(this.streamUpdateWebSocketTopic);
+    }
 
-            this.getHelper().webSocketManager.subscribe(topic, (t, data) => {
-                if (data.createdById === this.getUser().id) {
-                    return;
-                }
+    setupTitle() {
+        this.title = this.translate('Stream');
 
-                if (data.noteId) {
-                    let model = this.collection.get(data.noteId);
+        this.titleHtml = this.title;
 
-                    if (model) {
-                        model.fetch();
-                    }
+        if (this.filter && this.filter !== 'all') {
+            this.titleHtml += ' &middot; ' + this.translate(this.filter, 'filters', 'Note');
+        }
+    }
 
-                    return;
-                }
+    storeControl() {
+        var isNotEmpty = false;
 
-                this.collection.fetchNew();
-            });
-        },
+        if (this.$textarea && this.$textarea.length) {
+            var text = this.$textarea.val();
 
-        unsubscribeFromWebSocket: function () {
-            this.getHelper().webSocketManager.unsubscribe(this.streamUpdateWebSocketTopic);
-        },
-
-        setupTitle: function () {
-            this.title = this.translate('Stream');
-
-            this.titleHtml = this.title;
-
-            if (this.filter && this.filter !== 'all') {
-                this.titleHtml += ' &middot; ' + this.translate(this.filter, 'filters', 'Note');
-            }
-        },
-
-        storeControl: function () {
-            var isNotEmpty = false;
-
-            if (this.$textarea && this.$textarea.length) {
-                var text = this.$textarea.val();
-
-                if (text.length) {
-                    this.getSessionStorage().set(this.storageTextKey, text);
-
-                    isNotEmpty = true;
-                }
-                else {
-                    if (this.hasStoredText) {
-                        this.getSessionStorage().clear(this.storageTextKey);
-                    }
-                }
-            }
-
-            var attachmetIdList = this.seed.get('attachmentsIds') || [];
-
-            if (attachmetIdList.length) {
-                this.getSessionStorage().set(this.storageAttachmentsKey, {
-                    idList: attachmetIdList,
-                    names: this.seed.get('attachmentsNames') || {},
-                    types: this.seed.get('attachmentsTypes') || {},
-                });
+            if (text.length) {
+                this.getSessionStorage().set(this.storageTextKey, text);
 
                 isNotEmpty = true;
             }
             else {
-                if (this.hasStoredAttachments) {
-                    this.getSessionStorage().clear(this.storageAttachmentsKey);
+                if (this.hasStoredText) {
+                    this.getSessionStorage().clear(this.storageTextKey);
                 }
             }
+        }
 
-            if (isNotEmpty) {
-                this.getSessionStorage().set(this.storageIsInernalKey, this.isInternalNoteMode);
-            }
-            else {
-                this.getSessionStorage().clear(this.storageIsInernalKey);
-            }
-        },
+        var attachmentIdList = this.seed.get('attachmentsIds') || [];
 
-        createCollection: function (callback, context) {
-            this.getCollectionFactory().create('Note', (collection) => {
-                this.collection = collection;
-
-                collection.url = this.model.name + '/' + this.model.id + '/stream';
-                collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
-
-                this.setFilter(this.filter);
-
-                callback.call(context);
-            });
-        },
-
-        initPostEvents: function (view) {
-            this.listenTo(view, 'add-files', (files) => {
-                this.getView('attachments').uploadFiles(files);
-
-                if (!this.postingMode) {
-                    this.enablePostingMode();
-                }
-            });
-        },
-
-        afterRender: function () {
-            this.$textarea = this.$el.find('textarea[data-name="post"]');
-            this.$attachments = this.$el.find('div.attachments');
-            this.$postContainer = this.$el.find('.post-container');
-            this.$postButton = this.$el.find('button.post');
-
-            let storedText = this.getSessionStorage().get(this.storageTextKey);
-
-            if (storedText && storedText.length) {
-                this.hasStoredText = true;
-                this.$textarea.val(storedText);
-            }
-
-            this.controlPostButtonAvailability(storedText);
-
-            if (this.isInternalNoteMode) {
-                this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
-            }
-
-            let collection = this.collection;
-
-            this.listenToOnce(collection, 'sync', () => {
-                this.createView('list', 'views/stream/record/list', {
-                    el: this.options.el + ' > .list-container',
-                    collection: collection,
-                    model: this.model
-                }, (view) => {
-                    view.render();
-                });
-
-                this.stopListening(this.model, 'all');
-                this.stopListening(this.model, 'destroy');
-
-                setTimeout(() => {
-                    this.listenTo(this.model, 'all', event => {
-                        if (!~['sync', 'after:relate'].indexOf(event)) {
-                            return;
-                        }
-
-                        collection.fetchNew();
-                    });
-
-                    this.listenTo(this.model, 'destroy', () => {
-                        this.stopListening(this.model, 'all');
-                    });
-                }, 500);
+        if (attachmentIdList.length) {
+            this.getSessionStorage().set(this.storageAttachmentsKey, {
+                idList: attachmentIdList,
+                names: this.seed.get('attachmentsNames') || {},
+                types: this.seed.get('attachmentsTypes') || {},
             });
 
-            if (!this.defs.hidden) {
-                collection.fetch();
+            isNotEmpty = true;
+        }
+        else {
+            if (this.hasStoredAttachments) {
+                this.getSessionStorage().clear(this.storageAttachmentsKey);
             }
-            else {
-                this.once('show', () => collection.fetch());
+        }
+
+        if (isNotEmpty) {
+            this.getSessionStorage().set(this.storageIsInernalKey, this.isInternalNoteMode);
+        }
+        else {
+            this.getSessionStorage().clear(this.storageIsInernalKey);
+        }
+    }
+
+    createCollection(callback, context) {
+        this.getCollectionFactory().create('Note', (collection) => {
+            this.collection = collection;
+
+            collection.url = this.model.name + '/' + this.model.id + '/stream';
+            collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
+
+            this.setFilter(this.filter);
+
+            callback.call(context);
+        });
+    }
+
+    initPostEvents(view) {
+        this.listenTo(view, 'add-files', (files) => {
+            this.getView('attachments').uploadFiles(files);
+
+            if (!this.postingMode) {
+                this.enablePostingMode();
             }
+        });
+    }
 
-            let assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
+    afterRender() {
+        this.$textarea = this.$el.find('textarea[data-name="post"]');
+        this.$attachments = this.$el.find('div.attachments');
+        this.$postContainer = this.$el.find('.post-container');
+        this.$postButton = this.$el.find('button.post');
 
-            let buildUserListUrl = term => {
-                var url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
+        let storedText = this.getSessionStorage().get(this.storageTextKey);
 
-                if (assignmentPermission === 'team') {
-                    url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
-                }
+        if (storedText && storedText.length) {
+            this.hasStoredText = true;
+            this.$textarea.val(storedText);
+        }
 
-                return url;
-            };
+        this.controlPostButtonAvailability(storedText);
 
-            if (assignmentPermission !== 'no') {
-                this.$textarea.textcomplete([{
-                    match: /(^|\s)@(\w*)$/,
-                    index: 2,
-                    search: (term, callback) => {
-                        if (term.length === 0) {
-                            callback([]);
+        if (this.isInternalNoteMode) {
+            this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
+        }
 
-                            return;
-                        }
+        let collection = this.collection;
 
-                        Espo.Ajax
-                            .getRequest(buildUserListUrl(term))
-                            .then(data => callback(data.list));
-                    },
-                    template: (mention) => {
-                        return this.getHelper()
-                            .escapeString(mention.name) +
-                            ' <span class="text-muted">@' +
-                            this.getHelper().escapeString(mention.userName) + '</span>';
-                    },
-                    replace: (o) => {
-                        return '$1@' + o.userName + '';
-                    },
-                }]);
-
-                this.once('remove', () => {
-                    if (this.$textarea.length) {
-                        this.$textarea.textcomplete('destroy');
-                    }
-                });
-            }
-
-            let $a = this.$el.find('.buttons-panel a.stream-post-info');
-
-            let text1 = this.translate('infoMention', 'messages', 'Stream');
-            let text2 = this.translate('infoSyntax', 'messages', 'Stream');
-
-            let syntaxItemList = [
-                ['code', '`{text}`'],
-                ['multilineCode', '```{text}```'],
-                ['strongText', '**{text}**'],
-                ['emphasizedText', '*{text}*'],
-                ['deletedText', '~~{text}~~'],
-                ['blockquote', '> {text}'],
-                ['link', '[{text}](url)'],
-            ];
-
-            let messageItemList = [];
-
-            syntaxItemList.forEach(item => {
-                let text = this.translate(item[0], 'syntaxItems', 'Stream');
-                let result = item[1].replace('{text}', text);
-
-                messageItemList.push(result);
-            });
-
-            let $ul = $('<ul>')
-                .append(
-                    messageItemList.map(text => $('<li>').text(text))
-                );
-
-            let messageHtml =
-                this.getHelper().transformMarkdownInlineText(text1) + '<br><br>' +
-                this.getHelper().transformMarkdownInlineText(text2) + ':<br>' +
-                $ul.get(0).outerHTML;
-
-            Espo.Ui.popover($a, {
-                content: messageHtml,
-            }, this);
-
-            this.createView('attachments', 'views/stream/fields/attachment-multiple', {
-                model: this.seed,
-                mode: 'edit',
-                el: this.options.el + ' div.attachments-container',
-                defs: {
-                    name: 'attachments',
-                },
-            }, view => {
-                view.render();
-            });
-        },
-
-        afterPost: function () {
-            this.$el.find('textarea.note').prop('rows', 1);
-        },
-
-        post: function () {
-            let message = this.$textarea.val();
-
-            this.disablePostButton();
-            this.$textarea.prop('disabled', true);
-
-            this.getModelFactory().create('Note', model => {
-                if (this.getView('attachments').validateReady()) {
-                    this.$textarea.prop('disabled', false);
-                    this.enablePostButton();
-
-                    return;
-                }
-
-                if (message.trim() === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
-                    this.notify('Post cannot be empty', 'error');
-                    this.$textarea.prop('disabled', false);
-                    this.controlPostButtonAvailability();
-
-                    this.$textarea.focus();
-
-                    return;
-                }
-
-                model.set('post', message);
-                model.set('attachmentsIds', Espo.Utils.clone(this.seed.get('attachmentsIds') || []));
-                model.set('type', 'Post');
-                model.set('isInternal', this.isInternalNoteMode);
-
-                this.prepareNoteForPost(model);
-
-                this.notify('Posting...');
-                Espo.Ui.notify(this.translate('posting', 'messages'));
-
-                model.save(null)
-                    .then(() => {
-                        this.notify('Posted', 'success');
-                        this.collection.fetchNew();
-
-                        this.$textarea.prop('disabled', false);
-                        this.disablePostingMode();
-                        this.afterPost();
-
-                        if (this.getPreferences().get('followEntityOnStreamPost')) {
-                            this.model.set('isFollowed', true);
-                        }
-
-                        this.getSessionStorage().clear(this.storageTextKey);
-                        this.getSessionStorage().clear(this.storageAttachmentsKey);
-                        this.getSessionStorage().clear(this.storageIsInernalKey);
-                    })
-                    .catch(() => {
-                        this.$textarea.prop('disabled', false);
-                        this.controlPostButtonAvailability();
-                    });
-            });
-        },
-
-        prepareNoteForPost: function (model) {
-            model.set('parentId', this.model.id);
-            model.set('parentType', this.model.name);
-        },
-
-        getButtonList: function () {
-            return [];
-        },
-
-        filterList: ['all', 'posts', 'updates'],
-
-        setupActions: function () {
-            this.actionList = [];
-
-            this.actionList.push({
-                action: 'viewPostList',
-                html:
-                    $('<span>')
-                        .append(
-                            $('<span>').text(this.translate('View List')),
-                            ' &middot; ',
-                            $('<span>').text(this.translate('posts', 'filters', 'Note')),
-                        )
-                        .get(0).innerHTML,
-            });
-
-            this.actionList.push(false);
-
-            this.filterList.forEach((item) => {
-                var selected = false;
-
-                if (item === 'all') {
-                    selected = !this.filter;
-                } else {
-                    selected = item === this.filter;
-                }
-
-                this.actionList.push({
-                    action: 'selectFilter',
-                    html:
-                        $('<span>')
-                            .append(
-                                $('<span>')
-                                    .addClass('check-icon fas fa-check pull-right')
-                                    .addClass(!selected ? ' hidden' : ''),
-                                $('<div>')
-                                    .text(this.translate(item, 'filters', 'Note')),
-                            )
-                            .get(0).innerHTML,
-                    data: {
-                        name: item,
-                    },
-                });
-            });
-        },
-
-        actionViewPostList: function () {
-            var url = this.model.name + '/' + this.model.id + '/posts';
-
-            var data = {
-                scope: 'Note',
-                viewOptions: {
-                    url: url,
-                    title: this.translate('Stream') +
-                        ' @right ' + this.translate('posts', 'filters', 'Note'),
-                    forceSelectAllAttributes: true,
-                },
-            };
-
-            this.actionViewRelatedList(data);
-        },
-
-        getStoredFilter: function () {
-            return this.getStorage().get('state', 'streamPanelFilter' + this.scope) || null;
-        },
-
-        storeFilter: function (filter) {
-            if (filter) {
-                this.getStorage().set('state', 'streamPanelFilter' + this.scope, filter);
-            }
-            else {
-                this.getStorage().clear('state', 'streamPanelFilter' + this.scope);
-            }
-        },
-
-        setFilter: function (filter) {
-            this.filter = filter;
-            this.collection.data.filter = null;
-
-            if (filter) {
-                this.collection.data.filter = filter;
-            }
-        },
-
-        actionRefresh: function () {
-            if (this.hasView('list')) {
-                this.getView('list').showNewRecords();
-            }
-        },
-
-        preview: function () {
-            this.createView('dialog', 'views/modal', {
-                templateContent: '<div class="complex-text">' +
-                       '{{complexText viewObject.options.text linksInNewTab=true}}</div>',
-                text: this.$textarea.val(),
-                headerText: this.translate('Preview'),
-                backdrop: true,
+        this.listenToOnce(collection, 'sync', () => {
+            this.createView('list', 'views/stream/record/list', {
+                el: this.options.el + ' > .list-container',
+                collection: collection,
+                model: this.model
             }, (view) => {
                 view.render();
             });
-        },
 
-        controlPostButtonAvailability: function (postEntered) {
-            let attachmentsIdList = this.seed.get('attachmentsIds') || [];
-            let post = this.seed.get('post');
+            this.stopListening(this.model, 'all');
+            this.stopListening(this.model, 'destroy');
 
-            if (typeof postEntered !== 'undefined') {
-                post = postEntered;
+            setTimeout(() => {
+                this.listenTo(this.model, 'all', event => {
+                    if (!~['sync', 'after:relate'].indexOf(event)) {
+                        return;
+                    }
+
+                    collection.fetchNew();
+                });
+
+                this.listenTo(this.model, 'destroy', () => {
+                    this.stopListening(this.model, 'all');
+                });
+            }, 500);
+        });
+
+        if (!this.defs.hidden) {
+            collection.fetch();
+        }
+        else {
+            this.once('show', () => collection.fetch());
+        }
+
+        let assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
+
+        let buildUserListUrl = term => {
+            var url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
+
+            if (assignmentPermission === 'team') {
+                url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
             }
 
-            let isEmpty = !post && !attachmentsIdList.length;
+            return url;
+        };
 
-            if (isEmpty) {
-                if (this.$postButton.hasClass('disabled')) {
-                    return;
+        if (assignmentPermission !== 'no') {
+            this.$textarea.textcomplete([{
+                match: /(^|\s)@(\w*)$/,
+                index: 2,
+                search: (term, callback) => {
+                    if (term.length === 0) {
+                        callback([]);
+
+                        return;
+                    }
+
+                    Espo.Ajax
+                        .getRequest(buildUserListUrl(term))
+                        .then(data => callback(data.list));
+                },
+                template: (mention) => {
+                    return this.getHelper()
+                        .escapeString(mention.name) +
+                        ' <span class="text-muted">@' +
+                        this.getHelper().escapeString(mention.userName) + '</span>';
+                },
+                replace: (o) => {
+                    return '$1@' + o.userName + '';
+                },
+            }]);
+
+            this.once('remove', () => {
+                if (this.$textarea.length) {
+                    this.$textarea.textcomplete('destroy');
                 }
+            });
+        }
 
-                this.disablePostButton();
+        let $a = this.$el.find('.buttons-panel a.stream-post-info');
+
+        let text1 = this.translate('infoMention', 'messages', 'Stream');
+        let text2 = this.translate('infoSyntax', 'messages', 'Stream');
+
+        let syntaxItemList = [
+            ['code', '`{text}`'],
+            ['multilineCode', '```{text}```'],
+            ['strongText', '**{text}**'],
+            ['emphasizedText', '*{text}*'],
+            ['deletedText', '~~{text}~~'],
+            ['blockquote', '> {text}'],
+            ['link', '[{text}](url)'],
+        ];
+
+        let messageItemList = [];
+
+        syntaxItemList.forEach(item => {
+            let text = this.translate(item[0], 'syntaxItems', 'Stream');
+            let result = item[1].replace('{text}', text);
+
+            messageItemList.push(result);
+        });
+
+        let $ul = $('<ul>')
+            .append(
+                messageItemList.map(text => $('<li>').text(text))
+            );
+
+        let messageHtml =
+            this.getHelper().transformMarkdownInlineText(text1) + '<br><br>' +
+            this.getHelper().transformMarkdownInlineText(text2) + ':<br>' +
+            $ul.get(0).outerHTML;
+
+        Espo.Ui.popover($a, {
+            content: messageHtml,
+        }, this);
+
+        this.createView('attachments', 'views/stream/fields/attachment-multiple', {
+            model: this.seed,
+            mode: 'edit',
+            el: this.options.el + ' div.attachments-container',
+            defs: {
+                name: 'attachments',
+            },
+        }, view => {
+            view.render();
+        });
+    }
+
+    afterPost() {
+        this.$el.find('textarea.note').prop('rows', 1);
+    }
+
+    post() {
+        let message = this.$textarea.val();
+
+        this.disablePostButton();
+        this.$textarea.prop('disabled', true);
+
+        this.getModelFactory().create('Note', model => {
+            if (this.getView('attachments').validateReady()) {
+                this.$textarea.prop('disabled', false);
+                this.enablePostButton();
 
                 return;
             }
 
-            if (!this.$postButton.hasClass('disabled')) {
+            if (message.trim() === '' && (this.seed.get('attachmentsIds') || []).length === 0) {
+                this.notify('Post cannot be empty', 'error');
+                this.$textarea.prop('disabled', false);
+                this.controlPostButtonAvailability();
+
+                this.$textarea.focus();
+
                 return;
             }
 
-            this.enablePostButton();
-        },
+            model.set('post', message);
+            model.set('attachmentsIds', Espo.Utils.clone(this.seed.get('attachmentsIds') || []));
+            model.set('type', 'Post');
+            model.set('isInternal', this.isInternalNoteMode);
 
-        disablePostButton: function () {
-            this.$postButton.addClass('disabled').attr('disabled', 'disabled');
-        },
+            this.prepareNoteForPost(model);
 
-        enablePostButton: function () {
-            this.$postButton.removeClass('disabled').removeAttr('disabled');
-        },
-    });
-});
+            Espo.Ui.notify(' ... ');
+
+            model.save(null)
+                .then(() => {
+                    Espo.Ui.success(this.translate('Posted'));
+
+                    this.collection.fetchNew();
+
+                    this.$textarea.prop('disabled', false);
+                    this.disablePostingMode();
+                    this.afterPost();
+
+                    if (this.getPreferences().get('followEntityOnStreamPost')) {
+                        this.model.set('isFollowed', true);
+                    }
+
+                    this.getSessionStorage().clear(this.storageTextKey);
+                    this.getSessionStorage().clear(this.storageAttachmentsKey);
+                    this.getSessionStorage().clear(this.storageIsInernalKey);
+                })
+                .catch(() => {
+                    this.$textarea.prop('disabled', false);
+                    this.controlPostButtonAvailability();
+                });
+        });
+    }
+
+    prepareNoteForPost(model) {
+        model.set('parentId', this.model.id);
+        model.set('parentType', this.model.name);
+    }
+
+    getButtonList() {
+        return [];
+    }
+
+    setupActions() {
+        this.actionList = [];
+
+        this.actionList.push({
+            action: 'viewPostList',
+            html:
+                $('<span>')
+                    .append(
+                        $('<span>').text(this.translate('View List')),
+                        ' &middot; ',
+                        $('<span>').text(this.translate('posts', 'filters', 'Note')),
+                    )
+                    .get(0).innerHTML,
+        });
+
+        this.actionList.push(false);
+
+        this.filterList.forEach((item) => {
+            let selected ;
+
+            selected = item === 'all' ?
+                !this.filter :
+                item === this.filter;
+
+            this.actionList.push({
+                action: 'selectFilter',
+                html:
+                    $('<span>')
+                        .append(
+                            $('<span>')
+                                .addClass('check-icon fas fa-check pull-right')
+                                .addClass(!selected ? ' hidden' : ''),
+                            $('<div>')
+                                .text(this.translate(item, 'filters', 'Note')),
+                        )
+                        .get(0).innerHTML,
+                data: {
+                    name: item,
+                },
+            });
+        });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionViewPostList() {
+        var url = this.model.name + '/' + this.model.id + '/posts';
+
+        var data = {
+            scope: 'Note',
+            viewOptions: {
+                url: url,
+                title: this.translate('Stream') +
+                    ' @right ' + this.translate('posts', 'filters', 'Note'),
+                forceSelectAllAttributes: true,
+            },
+        };
+
+        this.actionViewRelatedList(data);
+    }
+
+    getStoredFilter() {
+        return this.getStorage().get('state', 'streamPanelFilter' + this.scope) || null;
+    }
+
+    storeFilter(filter) {
+        if (filter) {
+            this.getStorage().set('state', 'streamPanelFilter' + this.scope, filter);
+        }
+        else {
+            this.getStorage().clear('state', 'streamPanelFilter' + this.scope);
+        }
+    }
+
+    setFilter(filter) {
+        this.filter = filter;
+        this.collection.data.filter = null;
+
+        if (filter) {
+            this.collection.data.filter = filter;
+        }
+    }
+
+    actionRefresh() {
+        if (this.hasView('list')) {
+            this.getView('list').showNewRecords();
+        }
+    }
+
+    preview() {
+        this.createView('dialog', 'views/modal', {
+            templateContent: '<div class="complex-text">' +
+                   '{{complexText viewObject.options.text linksInNewTab=true}}</div>',
+            text: this.$textarea.val(),
+            headerText: this.translate('Preview'),
+            backdrop: true,
+        }, view => {
+            view.render();
+        });
+    }
+
+    controlPostButtonAvailability(postEntered) {
+        let attachmentsIdList = this.seed.get('attachmentsIds') || [];
+        let post = this.seed.get('post');
+
+        if (typeof postEntered !== 'undefined') {
+            post = postEntered;
+        }
+
+        let isEmpty = !post && !attachmentsIdList.length;
+
+        if (isEmpty) {
+            if (this.$postButton.hasClass('disabled')) {
+                return;
+            }
+
+            this.disablePostButton();
+
+            return;
+        }
+
+        if (!this.$postButton.hasClass('disabled')) {
+            return;
+        }
+
+        this.enablePostButton();
+    }
+
+    disablePostButton() {
+        this.$postButton.addClass('disabled').attr('disabled', 'disabled');
+    }
+
+    enablePostButton() {
+        this.$postButton.removeClass('disabled').removeAttr('disabled');
+    }
+}
+
+export default PanelStreamView;

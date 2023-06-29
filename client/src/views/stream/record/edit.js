@@ -275,7 +275,7 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
         },
 
         beforeSave: function () {
-            Espo.Ui.notify(this.translate('posting', 'messages'));
+            Espo.Ui.notify(' ... ');
         },
 
         afterSave: function () {
