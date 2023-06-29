@@ -459,6 +459,9 @@ class Step1ImportView extends View {
         });
     }
 
+    /**
+     * @param {File} file
+     */
     loadFile(file) {
         let blob = file.slice(0, 1024 * 16);
 
@@ -483,10 +486,20 @@ class Step1ImportView extends View {
                 this.setFileIsLoaded();
 
                 this.getRouter().confirmLeaveOut = true;
+
+                this.setFileName(file.name);
             }
         };
 
         reader.readAsText(file);
+    }
+
+    /**
+     * @param {string} name
+     */
+    setFileName(name) {
+        this.$el.find('.import-file-name').text(name);
+        this.$el.find('.import-file-info').text('');
     }
 
     setFileIsLoaded() {

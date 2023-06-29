@@ -13,9 +13,15 @@
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'File (CSV)' scope='Import'}}</label>
                         <div>
-                            <input type="file" id="import-file" accept=".csv">
+                            <label class="attach-file-label">
+                                <span class="btn btn-default btn-icon">
+                                    <span class="fas fa-paperclip"></span>
+                                </span>
+                                <input type="file" id="import-file" accept=".csv" class="file">
+                            </label>
+                            <div class="import-file-name"></div>
                         </div>
-                        <div class="text-muted small">{{translate 'utf8' category='messages' scope='Import'}}</div>
+                        <div class="text-muted import-file-info">{{translate 'utf8' category='messages' scope='Import'}}</div>
                     </div>
                     <div class="col-sm-4 form-group cell">
                         <label class="control-label">{{translate 'What to do?' scope='Import'}}</label>
