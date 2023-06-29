@@ -58,10 +58,7 @@ class KanbanRecordView extends ListRecordView {
     backDragStarted = true
 
     events = {
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this KanbanRecordView
-         */
+         /** @this KanbanRecordView */
         'click a.link': function (e) {
             if (e.ctrlKey || e.metaKey || e.shiftKey) {
                 return;
@@ -92,10 +89,7 @@ class KanbanRecordView extends ListRecordView {
             this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
             this.getRouter().dispatch(scope, 'view', options);
         },
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this KanbanRecordView
-         */
+        /** @this KanbanRecordView */
         'click [data-action="groupShowMore"]': function (e) {
             let $target = $(e.currentTarget);
 
@@ -103,44 +97,29 @@ class KanbanRecordView extends ListRecordView {
 
             this.groupShowMore(group);
         },
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this KanbanRecordView
-         */
+        /** @this KanbanRecordView */
         'click .action': function (e) {
             Espo.Utils.handleAction(this, e);
         },
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this KanbanRecordView
-         */
+        /** @this KanbanRecordView */
         'mouseenter th.group-header': function (e) {
             let group = $(e.currentTarget).attr('data-name');
 
             this.showPlus(group);
         },
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this KanbanRecordView
-         */
+        /** @this KanbanRecordView */
         'mouseleave th.group-header': function (e) {
             let group = $(e.currentTarget).attr('data-name');
 
             this.hidePlus(group);
         },
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this KanbanRecordView
-         */
+        /** @this KanbanRecordView */
         'click [data-action="createInGroup"]': function (e) {
             let group = $(e.currentTarget).attr('data-group');
 
             this.actionCreateInGroup(group);
         },
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this KanbanRecordView
-         */
+        /** @this KanbanRecordView */
         'mousedown .kanban-columns td': function (e) {
             if ($(e.originalEvent.target).closest('.item').length) {
                 return;
@@ -148,10 +127,7 @@ class KanbanRecordView extends ListRecordView {
 
             this.initBackDrag(e.originalEvent);
         },
-        /**
-         * @param {JQueryMouseEventObject} e
-         * @this KanbanRecordView
-         */
+        /** @this KanbanRecordView */
         'auxclick a.link': function (e) {
             let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
 
@@ -407,7 +383,7 @@ class KanbanRecordView extends ListRecordView {
                 $container.show();
 
                 $container.get(0).scrollLeft = 0;
-                $container.children(0).css('width', '');
+                $container.children().css('width', '');
 
                 return;
             }
@@ -472,13 +448,13 @@ class KanbanRecordView extends ListRecordView {
             cancel: '.btn-group *',
             containment: this.getSelector(),
             scroll: false,
-            over: function (e, ui) {
+            over: function () {
                 $(this).addClass('drop-hover');
             },
-            out: function (e, ui) {
+            out: function () {
                 $(this).removeClass('drop-hover');
             },
-            sort: (e, ui) => {
+            sort: (e) => {
                 if (!this.blockScrollControl) {
                     this.controlHorizontalScroll(e.originalEvent);
                 }
@@ -579,6 +555,9 @@ class KanbanRecordView extends ListRecordView {
         });
     }
 
+    /**
+     * @param {string} group
+     */
     storeGroupOrder(group) {
         Espo.Ajax.putRequest('Kanban/order', {
             entityType: this.entityType,
@@ -587,6 +566,10 @@ class KanbanRecordView extends ListRecordView {
         });
     }
 
+    /**
+     * @param {string} group
+     * @return {string[]}
+     */
     getGroupOrderFromDom(group) {
         let ids = [];
 
@@ -599,6 +582,9 @@ class KanbanRecordView extends ListRecordView {
         return ids;
     }
 
+    /**
+     * @param {string} group
+     */
     reOrderGroup(group) {
         let groupCollection = this.getGroupCollection(group);
         let ids = this.getGroupOrderFromDom(group);
@@ -1003,21 +989,27 @@ class KanbanRecordView extends ListRecordView {
             .get(0).outerHTML;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionMoveOver(data) {
         let model = this.collection.get(data.id);
 
         this.createView('moveOverDialog', 'views/modals/kanban-move-over', {
             model: model,
             statusField: this.statusField,
-        }, (view) => {
+        }, view => {
             view.render();
         });
     }
 
+    /**
+     *
+     * @param {string} group
+     * @return {module:collection}
+     */
     getGroupCollection(group) {
         let collection = null;
 
-        this.collection.subCollectionList.forEach((itemCollection) => {
+        this.collection.subCollectionList.forEach(itemCollection => {
             if (itemCollection.groupName === group) {
                 collection = itemCollection;
             }
@@ -1026,6 +1018,9 @@ class KanbanRecordView extends ListRecordView {
         return collection;
     }
 
+    /**
+     * @param {string} group
+     */
     showPlus(group) {
         let $el = this.plusElementMap[group];
 
@@ -1036,6 +1031,9 @@ class KanbanRecordView extends ListRecordView {
         $el.removeClass('hidden');
     }
 
+    /**
+     * @param {string} group
+     */
     hidePlus(group) {
         let $el = this.plusElementMap[group];
 
@@ -1046,6 +1044,9 @@ class KanbanRecordView extends ListRecordView {
         $el.addClass('hidden');
     }
 
+    /**
+     * @param {string} group
+     */
     actionCreateInGroup(group) {
         let attributes = {};
 
@@ -1059,7 +1060,9 @@ class KanbanRecordView extends ListRecordView {
             scope: this.scope,
         };
 
-        this.createView('quickCreate', viewName, options, (view) => {
+        this.createView('quickCreate', viewName, options, /** module:views/modals/edit */view => {
+            view.getRecordView().setFieldReadOnly(this.statusField, true);
+
             view.render();
 
             this.listenToOnce(view, 'after:save', () => {
