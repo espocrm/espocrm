@@ -880,5 +880,12 @@
         "date_valid": "Invalid date value.",
         "enum_valid": "Invalid enum value. The value must be one of defined enum options. An empty value is allowed only if the field has an empty option.",
         "multiEnum_valid": "Invalid multi-enum value. Values must be one of defined field options."
+    },
+    "navbarTabs": {
+        "Business": "Business",
+        "Marketing": "Marketing",
+        "Support": "Support",
+        "CRM": "CRM",
+        "Activities": "Activities"
     }
 }

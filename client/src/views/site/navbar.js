@@ -1057,6 +1057,14 @@ class NavbarSiteView extends View {
         let name = tab;
         let aClassName = 'nav-link';
 
+        const translateLabel = label => {
+            if (label.indexOf('$') === 0) {
+                return this.translate(label.slice(1), 'navbarTabs');
+            }
+
+            return label;
+        };
+
         if (tab === 'Home') {
             label = this.getLanguage().translate(tab);
             link = '#';
@@ -1067,8 +1075,8 @@ class NavbarSiteView extends View {
             aClassName = 'nav-divider-text';
             name = 'divider-' + i;
 
-            if (label && label.indexOf('label@') === 0) {
-                label = this.translate(label.substr(6), 'tabs');
+            if (label) {
+                label = translateLabel(label);
             }
         }
         else if (typeof tab === 'object') {
@@ -1084,8 +1092,8 @@ class NavbarSiteView extends View {
 
             aClassName = 'nav-link-group';
 
-            if (label.indexOf('label@') === 0) {
-                label = this.translate(label.substr(6), 'tabs');
+            if (label) {
+                label = translateLabel(label);
             }
         }
         else {
