@@ -26,287 +26,289 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/record/edit', ['views/record/base'], function (Dep) {
+import BaseRecordView from 'views/record/base';
 
-    return Dep.extend({
+class EditStreamView extends BaseRecordView {
 
-        template: 'stream/record/edit',
+    template = 'stream/record/edit'
 
-        postingMode: false,
+    postingMode = false
 
-        dependencyDefs: {
-            'targetType': {
-                map: {
-                    'users': [
-                        {
-                            action: 'hide',
-                            fields: ['teams', 'portals']
-                        },
-                        {
-                            action: 'show',
-                            fields: ['users']
-                        },
-                        {
-                            action: 'setNotRequired',
-                            fields: ['teams', 'portals']
-                        },
-                        {
-                            action: 'setRequired',
-                            fields: ['users']
-                        }
-                    ],
-                    'teams': [
-                        {
-                            action: 'hide',
-                            fields: ['users', 'portals']
-                        },
-                        {
-                            action: 'show',
-                            fields: ['teams']
-                        },
-                        {
-                            action: 'setRequired',
-                            fields: ['teams']
-                        },
-                        {
-                            action: 'setNotRequired',
-                            fields: ['users', 'portals']
-                        }
-                    ],
-                    'portals': [
-                        {
-                            action: 'hide',
-                            fields: ['users', 'teams']
-                        },
-                        {
-                            action: 'show',
-                            fields: ['portals']
-                        },
-                        {
-                            action: 'setRequired',
-                            fields: ['portals']
-                        },
-                        {
-                            action: 'setNotRequired',
-                            fields: ['users', 'teams']
-                        }
-                    ]
-                },
-                default: [
+    dependencyDefs = {
+        'targetType': {
+            map: {
+                'users': [
                     {
                         action: 'hide',
-                        fields: ['teams', 'users', 'portals']
+                        fields: ['teams', 'portals']
+                    },
+                    {
+                        action: 'show',
+                        fields: ['users']
                     },
                     {
                         action: 'setNotRequired',
-                        fields: ['teams', 'users', 'portals']
+                        fields: ['teams', 'portals']
+                    },
+                    {
+                        action: 'setRequired',
+                        fields: ['users']
+                    }
+                ],
+                'teams': [
+                    {
+                        action: 'hide',
+                        fields: ['users', 'portals']
+                    },
+                    {
+                        action: 'show',
+                        fields: ['teams']
+                    },
+                    {
+                        action: 'setRequired',
+                        fields: ['teams']
+                    },
+                    {
+                        action: 'setNotRequired',
+                        fields: ['users', 'portals']
+                    }
+                ],
+                'portals': [
+                    {
+                        action: 'hide',
+                        fields: ['users', 'teams']
+                    },
+                    {
+                        action: 'show',
+                        fields: ['portals']
+                    },
+                    {
+                        action: 'setRequired',
+                        fields: ['portals']
+                    },
+                    {
+                        action: 'setNotRequired',
+                        fields: ['users', 'teams']
                     }
                 ]
-            }
-        },
+            },
+            default: [
+                {
+                    action: 'hide',
+                    fields: ['teams', 'users', 'portals']
+                },
+                {
+                    action: 'setNotRequired',
+                    fields: ['teams', 'users', 'portals']
+                }
+            ]
+        }
+    }
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
-            data.interactiveMode = this.options.interactiveMode;
+        data.interactiveMode = this.options.interactiveMode;
 
-            return data;
-        },
+        return data;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.seed = this.model.clone();
+        this.seed = this.model.clone();
 
-            if (this.options.interactiveMode) {
-                this.events['focus textarea[data-name="post"]'] = () => {
-                    this.enablePostingMode();
-                };
+        if (this.options.interactiveMode) {
+            this.events['focus textarea[data-name="post"]'] = () => {
+                this.enablePostingMode();
+            };
 
-                this.events['keydown textarea[data-name="post"]'] = (e) => {
-                    if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
-                        e.stopPropagation();
-                        e.preventDefault();
+            this.events['keydown textarea[data-name="post"]'] = (e) => {
+                if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
+                    e.stopPropagation();
+                    e.preventDefault();
 
-                        this.post();
+                    this.post();
+                }
+
+                // Don't hide to be able to focus on the upload button.
+                /*if (e.code === 'Tab') {
+                    let $text = $(e.currentTarget);
+
+                    if ($text.val() === '') {
+                        this.disablePostingMode();
                     }
+                }*/
+            };
 
-                    // Don't hide to be able to focus on the upload button.
-                    /*if (e.code === 'Tab') {
-                        let $text = $(e.currentTarget);
+            this.events['click button.post'] = () => {
+                this.post();
+            };
+        }
 
-                        if ($text.val() === '') {
+        let optionList = ['self'];
+
+        this.model.set('type', 'Post');
+        this.model.set('targetType', 'self');
+
+        let messagePermission = this.getAcl().getPermissionLevel('message');
+        let portalPermission = this.getAcl().getPermissionLevel('portal');
+
+        if (messagePermission === 'team' || messagePermission === 'all') {
+            optionList.push('users');
+            optionList.push('teams');
+        }
+
+        if (messagePermission === 'all') {
+            optionList.push('all');
+        }
+
+        if (portalPermission === 'yes') {
+            optionList.push('portals');
+
+            if (!~optionList.indexOf('users')) {
+                optionList.push('users');
+            }
+        }
+
+        this.createField('targetType', 'views/fields/enum', {
+            options: optionList,
+        });
+
+        this.createField('users', 'views/note/fields/users', {});
+        this.createField('teams', 'views/fields/teams', {});
+        this.createField('portals', 'views/fields/link-multiple', {});
+        this.createField('post', 'views/note/fields/post', {
+            required: true,
+            rowsMin: 1,
+            rows: 25,
+            noResize: true,
+        });
+
+        this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
+
+        this.listenTo(this.model, 'change', () => {
+            if (this.postingMode) {
+                this.setConfirmLeaveOut(true);
+            }
+        });
+    }
+
+    disablePostingMode() {
+        this.postingMode = false;
+
+        this.$el.find('.post-control').addClass('hidden');
+
+        this.setConfirmLeaveOut(false);
+
+        $('body').off('click.stream-create-post');
+
+        this.getFieldView('post').$element.prop('rows', 1);
+    }
+
+    enablePostingMode() {
+        this.$el.find('.post-control').removeClass('hidden');
+
+        if (!this.postingMode) {
+            let $body = $('body');
+
+            $body.off('click.stream-create-post');
+
+            $body.on('click.stream-create-post', e => {
+                if (
+                    $.contains(window.document.body, e.target) &&
+                    !$.contains(this.$el.get(0), e.target) &&
+                    !$(e.target).closest('.modal-dialog').length
+                ) {
+                    if (this.getFieldView('post') && this.getFieldView('post').$element.val() === '') {
+                        if (!(this.model.get('attachmentsIds') || []).length) {
                             this.disablePostingMode();
                         }
-                    }*/
-                };
+                    }
+                }
+            });
+        }
 
-                this.events['click button.post'] = () => {
-                    this.post();
-                };
-            }
+        this.postingMode = true;
+    }
 
-            let optionList = ['self'];
+    afterRender() {
+        this.$postButton = this.$el.find('button.post');
 
-            this.model.set('type', 'Post');
+        let postView = this.getFieldView('post');
+
+        if (postView) {
+            this.stopListening(postView, 'add-files');
+
+            this.listenTo(postView, 'add-files', (files) => {
+                this.enablePostingMode();
+
+                let attachmentsView = /** @type module:views/fields/attachment-multiple */
+                    this.getFieldView('attachments');
+
+                if (!attachmentsView) {
+                    return;
+                }
+
+                attachmentsView.uploadFiles(files);
+            });
+        }
+    }
+
+    validate() {
+        let notValid = super.validate();
+
+        let message = this.model.get('post') || '';
+
+        if (message.trim() === '' && !(this.model.get('attachmentsIds') || []).length) {
+            notValid = true;
+        }
+
+        return notValid;
+    }
+
+    post() {
+        this.save();
+    }
+
+    beforeBeforeSave() {
+        this.disablePostButton();
+    }
+
+    beforeSave() {
+        Espo.Ui.notify(' ... ');
+    }
+
+    afterSave() {
+        Espo.Ui.success(this.translate('Posted'));
+
+        if (this.options.interactiveMode) {
+            this.model.clear();
             this.model.set('targetType', 'self');
+            this.model.set('type', 'Post');
 
-            let messagePermission = this.getAcl().getPermissionLevel('message');
-            let portalPermission = this.getAcl().getPermissionLevel('portal');
-
-            if (messagePermission === 'team' || messagePermission === 'all') {
-                optionList.push('users');
-                optionList.push('teams');
-            }
-
-            if (messagePermission === 'all') {
-                optionList.push('all');
-            }
-
-            if (portalPermission === 'yes') {
-                optionList.push('portals');
-
-                if (!~optionList.indexOf('users')) {
-                    optionList.push('users');
-                }
-            }
-
-            this.createField('targetType', 'views/fields/enum', {
-                options: optionList,
-            });
-
-            this.createField('users', 'views/note/fields/users', {});
-            this.createField('teams', 'views/fields/teams', {});
-            this.createField('portals', 'views/fields/link-multiple', {});
-            this.createField('post', 'views/note/fields/post', {
-                required: true,
-                rowsMin: 1,
-                rows: 25,
-                noResize: true,
-            });
-
-            this.createField('attachments', 'views/stream/fields/attachment-multiple', {});
-
-            this.listenTo(this.model, 'change', () => {
-                if (this.postingMode) {
-                    this.setConfirmLeaveOut(true);
-                }
-            });
-        },
-
-        disablePostingMode: function () {
-            this.postingMode = false;
-
-            this.$el.find('.post-control').addClass('hidden');
-
-            this.setConfirmLeaveOut(false);
-
-            $('body').off('click.stream-create-post');
+            this.disablePostingMode();
+            this.enablePostButton();
 
             this.getFieldView('post').$element.prop('rows', 1);
-        },
+        }
+    }
 
-        enablePostingMode: function () {
-            this.$el.find('.post-control').removeClass('hidden');
+    afterNotValid() {
+        this.enablePostButton();
+    }
 
-            if (!this.postingMode) {
-                let $body = $('body');
+    disablePostButton() {
+        this.trigger('disable-post-button');
 
-                $body.off('click.stream-create-post');
+        this.$postButton.addClass('disable').attr('disabled', 'disabled');
+    }
 
-                $body.on('click.stream-create-post', e => {
-                    if (
-                        $.contains(window.document.body, e.target) &&
-                        !$.contains(this.$el.get(0), e.target) &&
-                        !$(e.target).closest('.modal-dialog').length
-                    ) {
-                        if (this.getFieldView('post') && this.getFieldView('post').$element.val() === '') {
-                            if (!(this.model.get('attachmentsIds') || []).length) {
-                                this.disablePostingMode();
-                            }
-                        }
-                    }
-                });
-            }
+    enablePostButton() {
+        this.trigger('enable-post-button');
 
-            this.postingMode = true;
-        },
+        this.$postButton.removeClass('disable').removeAttr('disabled');
+    }
+}
 
-        afterRender: function () {
-            this.$postButton = this.$el.find('button.post');
-
-            let postView = this.getFieldView('post');
-
-            if (postView) {
-                this.stopListening(postView, 'add-files');
-
-                this.listenTo(postView, 'add-files', (files) => {
-                    this.enablePostingMode();
-
-                    let attachmentsView = this.getFieldView('attachments');
-
-                    if (!attachmentsView) {
-                        return;
-                    }
-
-                    attachmentsView.uploadFiles(files);
-                });
-            }
-        },
-
-        validate: function () {
-            var notValid = Dep.prototype.validate.call(this);
-
-            let message = this.model.get('post') || '';
-
-            if (message.trim() === '' && !(this.model.get('attachmentsIds') || []).length) {
-                notValid = true;
-            }
-
-            return notValid;
-        },
-
-        post: function () {
-            this.save();
-        },
-
-        beforeBeforeSave: function () {
-            this.disablePostButton();
-        },
-
-        beforeSave: function () {
-            Espo.Ui.notify(' ... ');
-        },
-
-        afterSave: function () {
-            Espo.Ui.success(this.translate('Posted'));
-
-            if (this.options.interactiveMode) {
-                this.model.clear();
-                this.model.set('targetType', 'self');
-                this.model.set('type', 'Post');
-
-                this.disablePostingMode();
-                this.enablePostButton();
-
-                this.getFieldView('post').$element.prop('rows', 1);
-            }
-        },
-
-        afterNotValid: function () {
-            this.enablePostButton();
-        },
-
-        disablePostButton: function () {
-            this.trigger('disable-post-button');
-
-            this.$postButton.addClass('disable').attr('disabled', 'disabled');
-        },
-
-        enablePostButton: function () {
-            this.trigger('enable-post-button');
-
-            this.$postButton.removeClass('disable').removeAttr('disabled');
-        },
-    });
-});
+export default EditStreamView;
