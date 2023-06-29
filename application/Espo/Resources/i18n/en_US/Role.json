@@ -4,6 +4,7 @@
         "roles": "Roles",
         "assignmentPermission": "Assignment Permission",
         "userPermission": "User Permission",
+        "messagePermission": "Message Permission",
         "portalPermission": "Portal Permission",
         "groupEmailAccountPermission": "Group Email Account Permission",
         "exportPermission": "Export Permission",
@@ -18,6 +19,7 @@
         "teams": "Teams"
     },
     "tooltips": {
+        "messagePermission": "Allows to send messages to other users.\n\n* all – can send to all\n* team – can send only to teammates\n* no – cannot send",
         "assignmentPermission": "Allows to assign records to other users.\n\n* all – no restriction\n* team – can assign only to teammates\n* no – can assign only to self",
         "userPermission": "Allows view activities, calendar and stream of other users.\n\n* all – can view all\n* team – can view activities of teammates only\n* no – can't view",
         "portalPermission": "Access to portal information, the ability to post messages to portal users.",

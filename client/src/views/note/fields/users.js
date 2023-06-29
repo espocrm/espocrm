@@ -31,10 +31,10 @@ define('views/note/fields/users', ['views/fields/link-multiple'], function (Dep)
     return Dep.extend({
 
         init: function () {
-            this.assignmentPermission = this.getAcl().get('assignmentPermission');
-            this.portalPermission = this.getAcl().get('portalPermission');
+            this.messagePermission = this.getAcl().getPermissionLevel('message');
+            this.portalPermission = this.getAcl().getPermissionLevel('portal');
 
-            if (this.assignmentPermission === 'no' && this.portalPermission === 'no') {
+            if (this.messagePermission === 'no' && this.portalPermission === 'no') {
                 this.readOnly = true;
             }
 
@@ -42,7 +42,7 @@ define('views/note/fields/users', ['views/fields/link-multiple'], function (Dep)
         },
 
         getSelectBoolFilterList: function () {
-            if (this.assignmentPermission === 'team') {
+            if (this.messagePermission === 'team') {
                 return ['onlyMyTeam'];
             }
 
@@ -52,7 +52,7 @@ define('views/note/fields/users', ['views/fields/link-multiple'], function (Dep)
         },
 
         getSelectPrimaryFilterName: function () {
-            if (this.portalPermission === 'yes' && this.assignmentPermission === 'no') {
+            if (this.portalPermission === 'yes' && this.messagePermission === 'no') {
                 return 'activePortal';
             }
 
@@ -62,7 +62,7 @@ define('views/note/fields/users', ['views/fields/link-multiple'], function (Dep)
         getSelectFilterList: function () {
 
             if (this.portalPermission === 'yes') {
-                if (this.assignmentPermission === 'no') {
+                if (this.messagePermission === 'no') {
                      return ['activePortal'];
                 }
 

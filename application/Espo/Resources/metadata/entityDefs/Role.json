@@ -20,6 +20,13 @@
             "tooltip": true,
             "translation": "Role.options.levelList"
         },
+        "messagePermission": {
+            "type": "enum",
+            "options": ["not-set", "all", "team", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList"
+        },
         "portalPermission": {
             "type": "enum",
             "options": ["not-set", "yes", "no"],

@@ -33,7 +33,7 @@ define('views/user/record/panels/stream', ['views/stream/panel'], function (Dep)
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            var assignmentPermission = this.getAcl().checkAssignmentPermission(this.model);
+            let assignmentPermission = this.getAcl().checkPermission('message', this.model);
 
             if (this.model.id === this.getUser().id) {
                 this.placeholderText = this.translate('writeMessageToSelf', 'messages');
@@ -45,14 +45,14 @@ define('views/user/record/panels/stream', ['views/stream/panel'], function (Dep)
             if (!assignmentPermission) {
                 this.postDisabled = true;
 
-                if (this.getAcl().get('assignmentPermission') === 'team') {
+                if (this.getAcl().getPermissionLevel('message') === 'team') {
                     if (!this.model.has('teamsIds')) {
                         this.listenToOnce(this.model, 'sync', () => {
                             assignmentPermission = this.getAcl().checkUserPermission(this.model);
 
                             if (assignmentPermission) {
                                 this.postDisabled = false;
-                                this.$el.find('.post-container').removeClass('hidden');;
+                                this.$el.find('.post-container').removeClass('hidden');
                             }
                         });
                     }

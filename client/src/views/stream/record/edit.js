@@ -146,20 +146,20 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
                 };
             }
 
-            var optionList = ['self'];
+            let optionList = ['self'];
 
             this.model.set('type', 'Post');
             this.model.set('targetType', 'self');
 
-            var assignmentPermission = this.getAcl().get('assignmentPermission');
-            var portalPermission = this.getAcl().get('portalPermission');
+            let messagePermission = this.getAcl().getPermissionLevel('message');
+            let portalPermission = this.getAcl().getPermissionLevel('portal');
 
-            if (assignmentPermission === 'team' || assignmentPermission === 'all') {
+            if (messagePermission === 'team' || messagePermission === 'all') {
                 optionList.push('users');
                 optionList.push('teams');
             }
 
-            if (assignmentPermission === 'all') {
+            if (messagePermission === 'all') {
                 optionList.push('all');
             }
 
@@ -172,7 +172,7 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
             }
 
             this.createField('targetType', 'views/fields/enum', {
-                options: optionList
+                options: optionList,
             });
 
             this.createField('users', 'views/note/fields/users', {});
@@ -210,9 +210,11 @@ define('views/stream/record/edit', ['views/record/base'], function (Dep) {
             this.$el.find('.post-control').removeClass('hidden');
 
             if (!this.postingMode) {
-                $('body').off('click.stream-create-post');
+                let $body = $('body');
 
-                $('body').on('click.stream-create-post', (e) => {
+                $body.off('click.stream-create-post');
+
+                $body.on('click.stream-create-post', e => {
                     if (
                         $.contains(window.document.body, e.target) &&
                         !$.contains(this.$el.get(0), e.target) &&

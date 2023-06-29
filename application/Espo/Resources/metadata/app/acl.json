@@ -155,6 +155,7 @@
     "valuePermissionList": [
         "assignmentPermission",
         "userPermission",
+        "messagePermission",
         "portalPermission",
         "groupEmailAccountPermission",
         "exportPermission",
@@ -165,6 +166,7 @@
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
         "userPermission": "all",
+        "messagePermission": "all",
         "portalPermission": "yes",
         "groupEmailAccountPermission": "all",
         "exportPermission": "yes",
@@ -175,6 +177,7 @@
     "permissionsStrictDefaults": {
         "assignmentPermission": "no",
         "userPermission": "no",
+        "messagePermission": "no",
         "portalPermission": "no",
         "groupEmailAccountPermission": "no",
         "exportPermission": "no",
