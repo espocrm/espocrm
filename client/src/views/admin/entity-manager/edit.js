@@ -780,6 +780,10 @@ function (Dep, Model) {
                     return;
                 }
 
+                if (foreignEntityType === 'Attachment') {
+                    return;
+                }
+
                 var fields = this.getMetadata().get(['entityDefs', foreignEntityType, 'fields']) || {};
 
                 var fieldList = Object.keys(fields);
