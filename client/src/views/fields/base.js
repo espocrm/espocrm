@@ -1177,7 +1177,7 @@ class BaseFieldView extends View {
         let isInvalid = this.validateCallback ? this.validateCallback() : this.validate();
 
         if (isInvalid) {
-            this.notify('Not valid', 'error');
+            Espo.Ui.error(this.translate('Not valid'));
 
             model.set(prev, {silent: true});
 
@@ -1187,17 +1187,17 @@ class BaseFieldView extends View {
         Espo.Ui.notify(this.translate('saving', 'messages'));
 
         model
-            .save(attrs, {patch: true})
+            .save(/** @type Object */attrs, {patch: true})
             .then(() => {
                 this.trigger('after:inline-save');
                 this.trigger('after:save');
 
                 model.trigger('after:save');
 
-                this.notify('Saved', 'success');
+                Espo.Ui.success(this.translate('Saved'));
             })
             .catch(() => {
-                this.notify('Error occurred', 'error');
+                Espo.Ui.error(this.translate('Error occurred'));
 
                 model.set(prev, {silent: true});
 
