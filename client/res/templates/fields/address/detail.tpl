@@ -11,5 +11,10 @@
 {{/if}}
 
 {{#if viewMap}}
-<div><a href="{{viewMapLink}}" data-action="viewMap" class="small">{{translate 'View on Map'}}</a></div>
+<div><a
+    href="{{viewMapLink}}"
+    data-action="viewMap"
+    class="small"
+    style="user-select: none;"
+>{{translate 'View on Map'}}</a></div>
 {{/if}}

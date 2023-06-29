@@ -732,7 +732,7 @@ class ViewHelper {
 
         if (!noWhiteSpace) {
             if (html) {
-                html += '&nbsp;';
+                html += `<span style="user-select: none;">&nbsp;</span>`;
             }
         }
 
