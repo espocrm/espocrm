@@ -766,7 +766,7 @@ class ListRecordView extends View {
         let isSmallWindow = $(window.document).width() < screenWidthXs;
 
         let getOffsetTop = (element) => {
-            let offsetTop = isModal ? 0 : -3;
+            let offsetTop = 0;
 
             let withHeader = !isSmallWindow && !isModal;
 
@@ -796,6 +796,13 @@ class ListRecordView extends View {
 
         let middleTop = getOffsetTop($middle.get(0));
         let buttonsTop =  getOffsetTop(this.$el.find('.list-buttons-container').get(0));
+
+        if (!isModal) {
+            // padding
+            middleTop -= 5;
+            buttonsTop -= 5;
+        }
+
 
         $scrollable.off('scroll.list-' + this.cid);
         $scrollable.on('scroll.list-' + this.cid, () => controlSticking());

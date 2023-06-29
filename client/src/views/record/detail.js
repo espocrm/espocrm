@@ -1359,7 +1359,7 @@ class DetailRecordView extends BaseRecordView {
         let getOffsetTop = (/** JQuery */$element) => {
             let element = $element.get(0);
 
-            let value = -3;
+            let value = 0;
 
             while (element) {
                 value += !isNaN(element.offsetTop) ? element.offsetTop : 0;
@@ -1376,6 +1376,8 @@ class DetailRecordView extends BaseRecordView {
 
         let stickTop = getOffsetTop($container);
         let blockHeight = $container.outerHeight();
+
+        stickTop -= 5; // padding;
 
         let $block = $('<div>')
             .css('height', blockHeight + 'px')
