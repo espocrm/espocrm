@@ -761,6 +761,8 @@ function (Dep, Model) {
                 return true;
             });
 
+            filtersOptionList.unshift('id');
+
             var linkList = Object.keys(this.getMetadata().get(['entityDefs', scope, 'links']) || {});
 
             linkList.sort((v1, v2) => {
