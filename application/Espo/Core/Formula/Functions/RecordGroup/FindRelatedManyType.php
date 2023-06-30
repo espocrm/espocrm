@@ -30,12 +30,8 @@
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
 use Espo\Core\ORM\Entity as CoreEntity;
-
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
-
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
 
 class FindRelatedManyType extends BaseFunction implements
@@ -98,7 +94,7 @@ class FindRelatedManyType extends BaseFunction implements
         $entity = $entityManager->getEntity($entityType, $id);
 
         if (!$entity) {
-            $this->log("record\\findRelatedMany: Entity {$entity} {$id} not found.", 'notice');
+            $this->log("record\\findRelatedMany: Entity $entityType $id not found.", 'notice');
 
             return [];
         }
@@ -123,19 +119,19 @@ class FindRelatedManyType extends BaseFunction implements
         $relationType = $entity->getRelationParam($link, 'type');
 
         if (in_array($relationType, ['belongsTo', 'hasOne', 'belongsToParent'])) {
-            $this->throwError("Not supported link type '{$relationType}'.");
+            $this->throwError("Not supported link type '$relationType'.");
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
         if (!$foreignEntityType) {
-            $this->throwError("Bad or not supported link '{$link}'.");
+            $this->throwError("Bad or not supported link '$link'.");
         }
 
         $foreignLink = $entity->getRelationParam($link, 'foreign');
 
         if (!$foreignLink) {
-            $this->throwError("Not supported link '{$link}'.");
+            $this->throwError("Not supported link '$link'.");
         }
 
         $builder = $this->selectBuilderFactory
