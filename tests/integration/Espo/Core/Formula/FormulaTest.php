@@ -203,7 +203,7 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $fm = $this->getContainer()->get('formulaManager');
         $em = $this->getContainer()->get('entityManager');
 
-        $m1 =$em->createEntity('Meeting', [
+        $m1 = $em->createEntity('Meeting', [
             'name' => '1',
             'status' => 'Held',
         ]);
@@ -244,6 +244,49 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
         $script = "record\\findOne('Meeting', 'name', 'asc', 'status=', 'Not Held')";
         $result = $fm->run($script);
         $this->assertEquals(null, $result);
+    }
+
+    public function testFindMany(): void
+    {
+        $fm = $this->getContainer()->getByClass(Manager::class);
+        $em = $this->getContainer()->getByClass(EntityManager::class);
+
+        $m1 = $em->createEntity('Meeting', [
+            'name' => '1',
+            'status' => 'Held',
+        ]);
+
+        $m2 = $em->createEntity('Meeting', [
+            'name' => '2',
+            'status' => 'Planned',
+        ]);
+
+        $m3 = $em->createEntity('Meeting', [
+            'name' => '3',
+            'status' => 'Held',
+        ]);
+
+        $m4 = $em->createEntity('Meeting', [
+            'name' => '4',
+            'status' => 'Planned',
+            'assignedUserId' => '1',
+        ]);
+
+        $script = "record\\findMany('Meeting', 2, 'name', null, 'status=', 'Held')";
+        $result = $fm->run($script);
+        $this->assertEquals([$m1->getId(), $m3->getId()], $result);
+
+        $script = "record\\findMany('Meeting', 2, 'name', true, 'status=', 'Held')";
+        $result = $fm->run($script);
+        $this->assertEquals([$m3->getId(), $m1->getId()], $result);
+
+        $script = "record\\findMany('Meeting', 1, 'name', 'desc', 'status=', 'Held')";
+        $result = $fm->run($script);
+        $this->assertEquals([$m3->getId()], $result);
+
+        $script = "record\\findMany('Meeting', 2, 'name', 'ASC', 'planned')";
+        $result = $fm->run($script);
+        $this->assertEquals([$m2->getId(), $m4->getId()], $result);
     }
 
     public function testRecordFindRelatedOne1()
