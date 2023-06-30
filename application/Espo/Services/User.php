@@ -131,17 +131,27 @@ class User extends Record implements
         }
     }
 
+    /**
+     * @throws BadRequest
+     */
+    private function fetchPassword(stdClass $data): ?string
+    {
+        $password = $data->password ?? null;
+
+        if ($password === '') {
+            $password = null;
+        }
+
+        if ($password !== null && !is_string($password)) {
+            throw new BadRequest("Bad password value.");
+        }
+
+        return $password;
+    }
+
     public function create(stdClass $data, CreateParams $params): Entity
     {
-        $newPassword = $data->password ?? null;
-
-        if ($newPassword === '') {
-            $newPassword = null;
-        }
-
-        if ($newPassword !== null && !is_string($newPassword)) {
-            throw new BadRequest();
-        }
+        $newPassword = $this->fetchPassword($data);
 
         if ($newPassword !== null) {
             if (!$this->createPasswordChecker()->checkStrength($newPassword)) {
