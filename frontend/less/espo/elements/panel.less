@@ -287,7 +287,7 @@ body {
         }
     }
 
-    .panel-default {
+    /*.panel-default {
         &.headered {
             background: linear-gradient(
                 to bottom,
@@ -342,179 +342,64 @@ body {
                 }
             }
         }
-    }
+    }*/
 
-    .panel-warning {
-        &.headered {
-            background: linear-gradient(
-                to bottom,
-                var(--panel-warning-bg) 0,
-                var(--panel-warning-bg) 29px,
-                var(--panel-bg) 29px,
-                var(--panel-bg) 100%
-            );
-        }
+    .panel-styled(
+        default;
+        var(--panel-default-bg);
+        var(--panel-bg);
+        var(--panel-default-border);
+        var(--gray-soft);
+        var(--btn-text-color)
+    );
 
-        border-color: var(--panel-warning-border);
-        > .panel-heading {
-            color: var(--panel-warning-text);
-            background-color: var(--panel-warning-bg);
-            border-color: transparent;
-            .btn,
-            .btn-warning {
-                &,
-                &:focus:not(:hover),
-                &:active:not(:hover) {
-                    color: var(--panel-warning-text);
-                    background-color: transparent;
-                    border-color: transparent;
-                    > .fas,
-                    > .far {
-                        color: inherit;
-                    }
-                }
-            }
-            .btn-group,
-            .btn-group.open {
-                .dropdown-toggle.btn {
-                    &,
-                    &:focus {
-                        color: var(--panel-warning-text);
-                        background-color: transparent;
-                        border-color: transparent;
-                    }
-                }
-            }
-        }
-    }
-    .panel-danger {
-        &.headered {
-            background: linear-gradient(
-                to bottom,
-                var(--panel-danger-bg) 0,
-                var(--panel-danger-bg) 29px,
-                var(--panel-bg) 29px,
-                var(--panel-bg) 100%
-            );
-        }
+    .panel-styled(
+        warning;
+        var(--panel-warning-bg);
+        var(--panel-bg);
+        var(--panel-warning-border);
+        var(--panel-warning-text);
+        var(--state-warning-text-10)
+    );
 
-        border-color: var(--panel-danger-border);
-        > .panel-heading {
-            color: var(--panel-danger-text);
-            background-color: var(--panel-danger-bg);
-            border-color: transparent;
-            .btn,
-            .btn-danger {
-                &,
-                &:focus:not(:hover),
-                &:active:not(:hover) {
-                    color: var(--panel-danger-text);
-                    background-color: transparent;
-                    border-color: transparent;
-                    > .fas,
-                    > .far {
-                        color: inherit;
-                    }
-                }
-            }
-            .btn-group,
-            .btn-group.open {
-                .dropdown-toggle.btn {
-                    &,
-                    &:focus {
-                        color: var(--panel-danger-text);
-                        background-color: transparent;
-                        border-color: transparent;
-                    }
-                }
-            }
-        }
-    }
-    .panel-info {
-        &.headered {
-            background: linear-gradient(
-                to bottom,
-                var(--state-info-bg) 0,
-                var(--state-info-bg) 29px,
-                var(--panel-bg) 29px,
-                var(--panel-bg) 100%
-            );
-        }
+    .panel-styled(
+        danger;
+        var(--panel-danger-bg);
+        var(--panel-bg);
+        var(--panel-danger-border);
+        var(--panel-danger-text);
+        var(--state-danger-text-10)
+    );
 
-        border-color: var(--state-info-border);
-        > .panel-heading {
-            color: var(--panel-info-text);
-            background-color: var(--state-info-bg);
-            border-color: transparent;
-            .btn,
-            .btn-info {
-                &,
-                &:focus:not(:hover),
-                &:active:not(:hover) {
-                    color: var(--panel-info-text);
-                    background-color: transparent;
-                    border-color: transparent;
-                    > .fas,
-                    > .far {
-                        color: inherit;
-                    }
-                }
-            }
-            .btn-group.open {
-                .dropdown-toggle.btn {
-                    &,
-                    &:focus {
-                        color: var(--panel-info-text);
-                        background-color: transparent;
-                        border-color: transparent;
-                    }
-                }
-            }
-        }
-    }
-    .panel-success {
-        &.headered {
-            background: linear-gradient(
-                to bottom,
-                var(--panel-success-bg) 0,
-                var(--panel-success-bg) 29px,
-                var(--panel-bg) 29px,
-                var(--panel-bg) 100%
-            );
-        }
+    .panel-styled(
+        success;
+        var(--panel-success-bg);
+        var(--panel-bg);
+        var(--panel-success-border);
+        var(--panel-success-text);
+        var(--state-success-text-10)
+    );
 
-        border-color: var(--panel-success-border);
-        > .panel-heading {
-            color: var(--panel-success-text);
-            background-color: var(--panel-success-bg);
-            border-color: transparent;
-            .btn,
-            .btn-success {
-                &,
-                &:focus:not(:hover),
-                &:active:not(:hover) {
-                    color: var(--panel-success-text);
-                    background-color: transparent;
-                    border-color: transparent;
-                    > .fas,
-                    > .far {
-                        color: inherit;
-                    }
-                }
-            }
-            .btn-group.open {
-                .dropdown-toggle.btn {
-                    &,
-                    &:focus {
-                        color: var(--panel-success-text);
-                        background-color: transparent;
-                        border-color: transparent;
-                    }
-                }
-            }
-        }
-    }
-    .panel-primary {
+    .panel-styled(
+        info;
+        var(--panel-info-bg);
+        var(--panel-bg);
+        var(--panel-info-border);
+        var(--panel-info-text);
+        var(--state-info-text-10)
+    );
+
+    .panel-styled(
+        primary;
+        var(--panel-primary-bg);
+        var(--panel-bg);
+        var(--panel-primary-border);
+        var(--panel-primary-text);
+        var(--gray-lighter)
+    );
+
+
+    /*.panel-primary {
         &.headered {
             background: linear-gradient(
                 to bottom,
@@ -554,7 +439,7 @@ body {
                 }
             }
         }
-    }
+    }*/
 }
 
 .panel {
@@ -674,3 +559,68 @@ body {
     }
 }
 */
+
+.panel-styled(@style; @panel-style-bg; @panel-bg; @panel-style-border; @panel-style-text; @hover-color) {
+    .panel-@{style} {
+        &.headered {
+            background: linear-gradient(
+                to bottom,
+                @panel-style-bg 0,
+                @panel-style-bg 29px,
+                @panel-bg 29px,
+                @panel-bg 100%
+            );
+        }
+
+        border-color: @panel-style-border;
+        > .panel-heading {
+            color: @panel-style-text;
+            background-color: @panel-style-bg;
+            border-color: transparent;
+            .btn,
+            .btn-danger {
+                &,
+                &:focus:not(:hover),
+                &:active:not(:hover) {
+                    color: @panel-style-text;
+                    background-color: transparent;
+                    border-color: transparent;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
+                &:hover {
+                    color: @hover-color;
+                    > .fas,
+                    > .far {
+                        color: inherit;
+                    }
+                }
+            }
+            .btn-group,
+            .btn-group.open {
+                .dropdown-toggle.btn {
+                    &,
+                    &:focus {
+                        color: @panel-style-text;
+                        background-color: transparent;
+                        border-color: transparent;
+                    }
+                    &:hover {
+                        color: @hover-color;
+                    }
+                }
+            }
+            .btn-group.open {
+                .dropdown-toggle.btn {
+                    color: @hover-color;
+                    > .fas,
+                    > .far {
+                        color: @hover-color !important;
+                    }
+                }
+            }
+        }
+    }
+}
