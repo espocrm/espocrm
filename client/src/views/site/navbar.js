@@ -963,17 +963,18 @@ class NavbarSiteView extends View {
         }
 
         function isDivider(item) {
-            return item === 'object' && item.type === 'divider';
+            return typeof item === 'object' && item.type === 'divider';
         }
 
-        //let moreIsMet = false;
+        let moreIsMet = false;
 
         this.tabList = this.tabList.filter((item, i) => {
             let nextItem = this.tabList[i + 1];
+            let prevItem = this.tabList[i - 1];
 
-            /*if (isMoreDelimiter(item)) {
+            if (isMoreDelimiter(item)) {
                 moreIsMet = true;
-            }*/
+            }
 
             if (!isDivider(item)) {
                 return true;
@@ -984,6 +985,10 @@ class NavbarSiteView extends View {
             }
 
             if (isDivider(nextItem)) {
+                return false;
+            }
+
+            if (isDivider(prevItem) && isMoreDelimiter(nextItem) && moreIsMet) {
                 return false;
             }
 
