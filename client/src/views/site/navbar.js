@@ -992,10 +992,6 @@ class NavbarSiteView extends View {
                 return false;
             }
 
-            /*if (isMoreDelimiter(nextItem) && !moreIsMet) {
-                return false;
-            }*/
-
             return true;
         });
 
