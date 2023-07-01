@@ -46,6 +46,7 @@ trait RDBRepositoryDeprecationTrait
 {
     /**
      * @deprecated Use `group` method.
+     * @todo Remove in v9.0.
      * @param Expression|Expression[]|string|string[] $groupBy
      * @return RDBSelectBuilder<TEntity>
      */
@@ -56,6 +57,7 @@ trait RDBRepositoryDeprecationTrait
 
     /**
      * @deprecated As of v7.0. Use the Query Builder instead. Otherwise, code will be not portable.
+     * @todo Remove in v9.0.
      */
     protected function getPDO(): \PDO
     {
@@ -64,6 +66,7 @@ trait RDBRepositoryDeprecationTrait
 
     /**
      * @deprecated Use `$this->entityManager`.
+     * @todo Remove in v9.0.
      */
     protected function getEntityManager(): EntityManager
     {
@@ -89,6 +92,7 @@ trait RDBRepositoryDeprecationTrait
      * Get an entity. If ID is NULL, a new entity is returned.
      *
      * @deprecated Use `getById` and `getNew`.
+     * @todo Remove in v9.0.
      */
     public function get(?string $id = null): ?Entity
     {
@@ -101,6 +105,7 @@ trait RDBRepositoryDeprecationTrait
 
     /**
      * @deprecated As of v6.0. Use `getRelation(...)->find()`.
+     * @todo Remove in v9.0.
      * @param ?array<string, mixed> $params
      * @return Collection<TEntity>|TEntity|null
      */
@@ -168,6 +173,7 @@ trait RDBRepositoryDeprecationTrait
 
     /**
      * @deprecated As of v6.0. Use `getRelation(...)->count()`.
+     * @todo Remove in v9.0.
      * @param ?array<string, mixed> $params
      */
     public function countRelated(Entity $entity, string $relationName, ?array $params = null): int
@@ -284,6 +290,7 @@ trait RDBRepositoryDeprecationTrait
     }
     /**
      * @deprecated As of v6.0. Use `getRelation(...)->isRelated(...)`.
+     * @todo Remove in v9.0.
      * @param TEntity|string $foreign
      */
     public function isRelated(Entity $entity, string $relationName, $foreign): bool
@@ -338,6 +345,7 @@ trait RDBRepositoryDeprecationTrait
     }
     /**
      * @deprecated As of v6.0. Use `getRelation(...)->relate(...)`.
+     * @todo Remove in v9.0.
      * @phpstan-ignore-next-line
      */
     public function relate(Entity $entity, string $relationName, $foreign, $columnData = null, array $options = [])
@@ -401,6 +409,7 @@ trait RDBRepositoryDeprecationTrait
 
     /**
      * @deprecated As of v6.0. Use `getRelation(...)->unrelate(...)`.
+     * @todo Remove in v9.0.
      * @phpstan-ignore-next-line
      */
     public function unrelate(Entity $entity, string $relationName, $foreign, array $options = [])
@@ -456,6 +465,7 @@ trait RDBRepositoryDeprecationTrait
 
     /**
      * @deprecated As of v6.0. Use `getRelation(...)->getColumn(...)`.
+     * @todo Remove in v9.0.
      * @phpstan-ignore-next-line
      */
     public function getRelationColumn(Entity $entity, string $relationName, string $foreignId, string $column)
@@ -465,6 +475,7 @@ trait RDBRepositoryDeprecationTrait
 
     /**
      * @deprecated As of v6.0. Use `getRelation(...)->updateColumns(...)`.
+     * @todo Remove in v9.0.
      * @phpstan-ignore-next-line
      */
     public function updateRelation(Entity $entity, string $relationName, $foreign, $columnData)
@@ -498,6 +509,7 @@ trait RDBRepositoryDeprecationTrait
 
     /**
      * @deprecated As of v6.0. Use `getRelation(...)->massRelate(...)`.
+     * @todo Remove in v9.0.
      * @phpstan-ignore-next-line
      */
     public function massRelate(Entity $entity, string $relationName, array $params = [], array $options = [])
