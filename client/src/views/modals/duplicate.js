@@ -26,76 +26,79 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/duplicate', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class DuplicateModalView extends ModalView {
 
-        cssName: 'duplicate-modal',
+    template = 'modals/duplicate'
 
-        template: 'modals/duplicate',
+    cssName = 'duplicate-modal'
 
-        data: function () {
-            return {
-                scope: this.scope,
-                duplicates: this.duplicates,
-            };
-        },
+    data() {
+        return {
+            scope: this.scope,
+            duplicates: this.duplicates,
+        };
+    }
 
-        setup: function () {
-            let saveLabel = 'Save';
+    setup() {
+        let saveLabel = 'Save';
 
-            if (this.model && this.model.isNew()) {
-                saveLabel = 'Create';
-            }
+        if (this.model && this.model.isNew()) {
+            saveLabel = 'Create';
+        }
 
-            this.buttonList = [
-                {
-                    name: 'save',
-                    label: saveLabel,
-                    style: 'danger',
-                    onClick: dialog => {
-                        this.trigger('save');
-                        dialog.close();
-                    },
+        this.buttonList = [
+            {
+                name: 'save',
+                label: saveLabel,
+                style: 'danger',
+                onClick: dialog => {
+                    this.trigger('save');
+
+                    dialog.close();
                 },
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
-                }
-            ];
-            this.scope = this.options.scope;
-            this.duplicates = this.options.duplicates;
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+            },
+        ];
 
-            if (this.scope) {
-                this.setupRecord();
-            }
-        },
+        this.scope = this.options.scope;
+        this.duplicates = this.options.duplicates;
 
-        setupRecord: function () {
-            let promise = new Promise(resolve => {
-                this.getHelper().layoutManager.get(this.scope, 'listSmall', layout => {
-                    layout = Espo.Utils.cloneDeep(layout);
-                    layout.forEach(item => item.notSortable = true);
+        if (this.scope) {
+            this.setupRecord();
+        }
+    }
 
-                    this.getCollectionFactory().create(this.scope)
-                        .then(collection => {
-                            collection.add(this.duplicates);
+    setupRecord() {
+        let promise = new Promise(resolve => {
+            this.getHelper().layoutManager.get(this.scope, 'listSmall', layout => {
+                layout = Espo.Utils.cloneDeep(layout);
+                layout.forEach(item => item.notSortable = true);
 
-                            this.createView('record', 'views/record/list', {
-                                selector: '.list-container',
-                                collection: collection,
-                                listLayout: layout,
-                                buttonsDisabled: true,
-                                massActionsDisabled: true,
-                                rowActionsDisabled: true,
-                            });
+                this.getCollectionFactory().create(this.scope)
+                    .then(collection => {
+                        collection.add(this.duplicates);
 
-                            resolve();
+                        this.createView('record', 'views/record/list', {
+                            selector: '.list-container',
+                            collection: collection,
+                            listLayout: layout,
+                            buttonsDisabled: true,
+                            massActionsDisabled: true,
+                            rowActionsDisabled: true,
                         });
-                });
-            })
 
-            this.wait(promise);
-        },
-    });
-});
+                        resolve();
+                    });
+            });
+        })
+
+        this.wait(promise);
+    }
+}
+
+export default DuplicateModalView;

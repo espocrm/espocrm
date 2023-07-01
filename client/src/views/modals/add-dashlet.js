@@ -26,136 +26,137 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/add-dashlet', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class AddDashletModalView extends ModalView {
 
-        template: 'modals/add-dashlet',
+    template = 'modals/add-dashlet'
 
-        cssName: 'add-dashlet',
-        backdrop: true,
-        fitHeight: true,
+    cssName = 'add-dashlet'
+    backdrop = true
 
-        data: function () {
-            return {
-                dashletList: this.dashletList,
-            };
+    events = {
+        /** @this AddDashletModalView */
+        'click .add': function (e) {
+            var name = $(e.currentTarget).data('name');
+            this.trigger('add', name);
+            this.close();
         },
-
-        events: {
-            'click .add': function (e) {
-                var name = $(e.currentTarget).data('name');
-                this.trigger('add', name);
-                this.close();
-            },
-            'keyup input[data-name="quick-search"]': function (e) {
-                this.processQuickSearch(e.currentTarget.value);
-            },
+        /** @this AddDashletModalView */
+        'keyup input[data-name="quick-search"]': function (e) {
+            this.processQuickSearch(e.currentTarget.value);
         },
+    }
 
-        setup: function () {
-            this.headerText = this.translate('Add Dashlet');
+    data() {
+        return {
+            dashletList: this.dashletList,
+        };
+    }
 
-            let dashletList = Object.keys(this.getMetadata().get('dashlets') || {})
-                .sort((v1, v2) => {
-                    return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
-                });
+    setup() {
+        this.headerText = this.translate('Add Dashlet');
 
+        let dashletList = Object.keys(this.getMetadata().get('dashlets') || {})
+            .sort((v1, v2) => {
+                return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
+            });
 
-            this.translations = {};
+        this.translations = {};
 
-            this.dashletList = dashletList.filter(item => {
-                let aclScope = this.getMetadata().get(['dashlets', item, 'aclScope']) || null;
-                let accessDataList = this.getMetadata().get(['dashlets', item, 'accessDataList']) || null;
+        this.dashletList = dashletList.filter(item => {
+            let aclScope = this.getMetadata().get(['dashlets', item, 'aclScope']) || null;
+            let accessDataList = this.getMetadata().get(['dashlets', item, 'accessDataList']) || null;
 
-                if (this.options.parentType === 'Settings') {
-                    return true;
+            if (this.options.parentType === 'Settings') {
+                return true;
+            }
+
+            if (this.options.parentType === 'Portal') {
+                if (accessDataList && accessDataList.find(item => item.inPortalDisabled)) {
+                    return false;
                 }
-
-                if (this.options.parentType === 'Portal') {
-                    if (accessDataList && accessDataList.find(item => item.inPortalDisabled)) {
-                        return false;
-                    }
-
-                    return true;
-                }
-
-                if (aclScope) {
-                    if (!this.getAcl().check(aclScope)) {
-                        return false;
-                    }
-                }
-
-                if (accessDataList) {
-                    if (!Espo.Utils.checkAccessDataList(accessDataList, this.getAcl(), this.getUser())) {
-                        return false;
-                    }
-                }
-
-                this.translations[item] = this.translate(item, 'dashlets');
 
                 return true;
-            });
-        },
-
-        afterRender: function () {
-            this.$noData = this.$el.find('.no-data');
-
-            setTimeout(() => {
-                this.$el.find('input[data-name="quick-search"]').focus()
-            }, 100);
-        },
-
-        processQuickSearch: function (text) {
-            text = text.trim();
-
-            let $noData = this.$noData;
-
-            $noData.addClass('hidden');
-
-            if (!text) {
-                this.$el.find('ul .list-group-item').removeClass('hidden');
-
-                return;
             }
 
-            let matchedList = [];
-
-            let lowerCaseText = text.toLowerCase();
-
-            this.dashletList.forEach(item => {
-                let label = this.translations[item].toLowerCase();
-
-                for (let word of label.split(' ')) {
-                    let matched = word.indexOf(lowerCaseText) === 0;
-
-                    if (matched) {
-                        matchedList.push(item);
-
-                        return;
-                    }
+            if (aclScope) {
+                if (!this.getAcl().check(aclScope)) {
+                    return false;
                 }
-            });
-
-            if (matchedList.length === 0) {
-                this.$el.find('ul .list-group-item').addClass('hidden');
-
-                $noData.removeClass('hidden');
-
-                return;
             }
 
-            this.dashletList.forEach(item => {
-                let $row = this.$el.find(`ul .list-group-item[data-name="${item}"]`);
+            if (accessDataList) {
+                if (!Espo.Utils.checkAccessDataList(accessDataList, this.getAcl(), this.getUser())) {
+                    return false;
+                }
+            }
 
-                if (!~matchedList.indexOf(item)) {
-                    $row.addClass('hidden');
+            this.translations[item] = this.translate(item, 'dashlets');
+
+            return true;
+        });
+    }
+
+    afterRender() {
+        this.$noData = this.$el.find('.no-data');
+
+        setTimeout(() => {
+            this.$el.find('input[data-name="quick-search"]').focus()
+        }, 100);
+    }
+
+    processQuickSearch(text) {
+        text = text.trim();
+
+        let $noData = this.$noData;
+
+        $noData.addClass('hidden');
+
+        if (!text) {
+            this.$el.find('ul .list-group-item').removeClass('hidden');
+
+            return;
+        }
+
+        let matchedList = [];
+
+        let lowerCaseText = text.toLowerCase();
+
+        this.dashletList.forEach(item => {
+            let label = this.translations[item].toLowerCase();
+
+            for (let word of label.split(' ')) {
+                let matched = word.indexOf(lowerCaseText) === 0;
+
+                if (matched) {
+                    matchedList.push(item);
 
                     return;
                 }
+            }
+        });
 
-                $row.removeClass('hidden');
-            });
-        },
-    });
-});
+        if (matchedList.length === 0) {
+            this.$el.find('ul .list-group-item').addClass('hidden');
+
+            $noData.removeClass('hidden');
+
+            return;
+        }
+
+        this.dashletList.forEach(item => {
+            let $row = this.$el.find(`ul .list-group-item[data-name="${item}"]`);
+
+            if (!~matchedList.indexOf(item)) {
+                $row.addClass('hidden');
+
+                return;
+            }
+
+            $row.removeClass('hidden');
+        });
+    }
+}
+
+export default AddDashletModalView;

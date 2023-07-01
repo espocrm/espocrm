@@ -26,142 +26,146 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import ModalView from 'views/modal';
+import Model from 'model';
+import Helper from 'helpers/mass-action';
 
-define('views/modals/mass-convert-currency', ['views/modal', 'model', 'helpers/mass-action'],
-    function (Dep, Model, Helper) {
+class MassConvertCurrencyModalView extends ModalView {
 
-    return Dep.extend({
+    template = 'modals/mass-convert-currency'
 
-        template: 'modals/mass-convert-currency',
+    className = 'dialog dialog-record'
 
-        className: 'dialog dialog-record',
+    buttonList = [
+        {
+            name: 'cancel',
+            label: 'Cancel',
+        }
+    ]
 
-        data: function () {
-            return {
+    data() {
+        return {};
+    }
 
-            };
-        },
+    setup() {
+        this.$header = $('<span>')
+            .append(
+                $('<span>').text(this.translate(this.options.entityType, 'scopeNamesPlural')),
+                ' <span class="chevron-right"></span> ',
+                $('<span>').text(this.translate('convertCurrency', 'massActions'))
+            )
 
-        buttonList: [
-            {
-                name: 'cancel',
-                label: 'Cancel'
-            }
-        ],
+        this.addButton({
+            name: 'convert',
+            text: this.translate('Update'),
+            style: 'danger'
+        }, true);
 
-        setup: function () {
-            this.$header = $('<span>')
-                .append(
-                    $('<span>').text(this.translate(this.options.entityType, 'scopeNamesPlural')),
-                    ' <span class="chevron-right"></span> ',
-                    $('<span>').text(this.translate('convertCurrency', 'massActions'))
-                )
+        let model = this.model = new Model();
 
-            this.addButton({
-                name: 'convert',
-                text: this.translate('Update'),
-                style: 'danger'
-            }, true);
+        model.set('currency', this.getConfig().get('defaultCurrency'));
+        model.set('baseCurrency', this.getConfig().get('baseCurrency'));
+        model.set('currencyRates', this.getConfig().get('currencyRates'));
+        model.set('currencyList', this.getConfig().get('currencyList'));
 
-            var model = this.model = new Model();
+        this.createView('currency', 'views/fields/enum', {
+            model: model,
+            params: {
+                options: this.getConfig().get('currencyList')
+            },
+            name: 'currency',
+            el: this.getSelector() + ' .field[data-name="currency"]',
+            mode: 'edit',
+            labelText: this.translate('Convert to')
+        });
 
-            model.set('currency', this.getConfig().get('defaultCurrency'));
-            model.set('baseCurrency', this.getConfig().get('baseCurrency'));
-            model.set('currencyRates', this.getConfig().get('currencyRates'));
-            model.set('currencyList', this.getConfig().get('currencyList'));
+        this.createView('baseCurrency', 'views/fields/enum', {
+            model: model,
+            params: {
+                options: this.getConfig().get('currencyList')
+            },
+            name: 'baseCurrency',
+            el: this.getSelector() + ' .field[data-name="baseCurrency"]',
+            mode: 'detail',
+            labelText: this.translate('baseCurrency', 'fields', 'Settings'),
+            readOnly: true
+        });
 
-            this.createView('currency', 'views/fields/enum', {
-                model: model,
+        this.createView('currencyRates', 'views/settings/fields/currency-rates', {
+            model: model,
+            name: 'currencyRates',
+            el: this.getSelector() + ' .field[data-name="currencyRates"]',
+            mode: 'edit',
+            labelText: this.translate('currencyRates', 'fields', 'Settings')
+        });
+    }
+
+    /**
+     * @param {string} field
+     * @return {module:views/fields/base}
+     */
+    getFieldView(field) {
+        return this.getView(field);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionConvert() {
+        this.disableButton('convert');
+
+        this.getFieldView('currency').fetchToModel();
+        this.getFieldView('currencyRates').fetchToModel();
+
+        let currency = this.model.get('currency');
+        let currencyRates = this.model.get('currencyRates');
+
+        let hasWhere = !this.options.ids || this.options.ids.length === 0;
+
+        let helper = new Helper(this);
+
+        let idle = hasWhere && helper.checkIsIdle(this.options.totalCount);
+
+        Espo.Ajax.postRequest('MassAction', {
+                entityType: this.options.entityType,
+                action: 'convertCurrency',
                 params: {
-                    options: this.getConfig().get('currencyList')
+                   ids: this.options.ids || null,
+                   where: hasWhere ? this.options.where : null,
+                   searchParams: hasWhere ? this.options.searchParams : null,
                 },
-                name: 'currency',
-                el: this.getSelector() + ' .field[data-name="currency"]',
-                mode: 'edit',
-                labelText: this.translate('Convert to')
-            });
-
-            this.createView('baseCurrency', 'views/fields/enum', {
-                model: model,
-                params: {
-                    options: this.getConfig().get('currencyList')
+                data: {
+                    fieldList: this.options.fieldList || null,
+                    currency: currency,
+                    targetCurrency: currency,
+                    rates: currencyRates,
                 },
-                name: 'baseCurrency',
-                el: this.getSelector() + ' .field[data-name="baseCurrency"]',
-                mode: 'detail',
-                labelText: this.translate('baseCurrency', 'fields', 'Settings'),
-                readOnly: true
-            });
+                idle: idle,
+            })
+            .then(result => {
+                if (result.id) {
+                    helper
+                        .process(result.id, 'convertCurrency')
+                        .then(view => {
+                            this.listenToOnce(view, 'close', () => this.close());
 
-            this.createView('currencyRates', 'views/settings/fields/currency-rates', {
-                model: model,
-                name: 'currencyRates',
-                el: this.getSelector() + ' .field[data-name="currencyRates"]',
-                mode: 'edit',
-                labelText: this.translate('currencyRates', 'fields', 'Settings')
-            });
-        },
-
-        actionConvert: function () {
-            this.disableButton('convert');
-
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
-
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
-
-            var hasWhere = !this.options.ids || this.options.ids.length === 0;
-
-
-            let helper = new Helper(this);
-
-            let idle = hasWhere && helper.checkIsIdle(this.options.totalCount);
-
-            Espo.Ajax.postRequest('MassAction', {
-                    entityType: this.options.entityType,
-                    action: 'convertCurrency',
-                    params: {
-                       ids: this.options.ids || null,
-                       where: hasWhere ? this.options.where : null,
-                       searchParams: hasWhere ? this.options.searchParams : null,
-                    },
-                    data: {
-                        fieldList: this.options.fieldList || null,
-                        currency: currency,
-                        targetCurrency: currency,
-                        rates: currencyRates,
-                    },
-                    idle: idle,
-                })
-                .then(result => {
-                    if (result.id) {
-                        helper
-                            .process(result.id, 'convertCurrency')
-                            .then(view => {
-                                this.listenToOnce(view, 'close', () => this.close());
-
-                                this.listenToOnce(view, 'success', result => {
-                                    this.trigger('after:update', {
-                                        count: result.count,
-                                        idle: true,
-                                    });
+                            this.listenToOnce(view, 'success', result => {
+                                this.trigger('after:update', {
+                                    count: result.count,
+                                    idle: true,
                                 });
                             });
+                        });
 
-                        return;
-                    }
+                    return;
+                }
 
-                    this.trigger('after:update', {
-                        count: result.count
-                    });
+                this.trigger('after:update', {count: result.count});
 
-                    this.close();
-                })
-                .catch(() => {
-                    this.enableButton('convert');
-                });
-        },
+                this.close();
+            })
+            .catch(() => {
+                this.enableButton('convert');
+            });
+    }
+}
 
-    });
-});
+export default MassConvertCurrencyModalView;

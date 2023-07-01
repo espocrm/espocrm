@@ -26,88 +26,89 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/action-history', ['views/modal', 'search-manager'], function (Dep, SearchManager) {
+import ModalView from 'views/modal';
+import SearchManager from 'search-manager';
 
-    return Dep.extend({
+class ActionHistoryModalView extends ModalView {
 
-        scope: 'ActionHistoryRecord',
+    template = 'modals/action-history'
 
-        className: 'dialog dialog-record',
+    scope = 'ActionHistoryRecord'
+    className = 'dialog dialog-record'
+    backdrop = true
 
-        template: 'modals/action-history',
+    setup() {
+        super.setup();
 
-        backdrop: true,
+        this.buttonList = [
+            {
+                name: 'cancel',
+                label: 'Close',
+            },
+        ];
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        this.scope = this.entityType = this.options.scope || this.scope;
 
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Close',
-                }
-            ];
+        this.$header = $('<a>')
+            .attr('href', '#ActionHistoryRecord')
+            .addClass('action')
+            .attr('data-action', 'listView')
+            .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
 
-            this.scope = this.entityType = this.options.scope || this.scope;
+        this.waitForView('list');
 
-            this.$header = $('<a>')
-                .attr('href', '#ActionHistoryRecord')
-                .addClass('action')
-                .attr('data-action', 'listView')
-                .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
+        this.getCollectionFactory().create(this.scope, collection => {
+            collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
+            this.collection = collection;
 
-            this.waitForView('list');
+            this.loadSearch();
+            this.loadList();
 
-            this.getCollectionFactory().create(this.scope, collection => {
-                collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
-                this.collection = collection;
+            collection.fetch();
+        });
+    }
 
-                this.loadSearch();
-                this.loadList();
-                collection.fetch();
-            });
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionListView() {
+        this.getRouter().navigate('#ActionHistoryRecord', {trigger: true});
+        this.close();
+    }
 
-        actionListView: function () {
-            this.getRouter().navigate('#ActionHistoryRecord', {trigger: true});
-            this.close();
-        },
+    loadSearch() {
+        let searchManager = this.searchManager =
+            new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
-        loadSearch: function () {
-            var searchManager = this.searchManager =
-                new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
+        this.collection.data.boolFilterList = ['onlyMy'];
+        this.collection.where = searchManager.getWhere();
 
-            this.collection.data.boolFilterList = ['onlyMy'];
+        this.createView('search', 'views/record/search', {
+            collection: this.collection,
+            el: this.containerSelector + ' .search-container',
+            searchManager: searchManager,
+            disableSavePreset: true,
+            textFilterDisabled: true,
+        });
+    }
 
-            this.collection.where = searchManager.getWhere();
+    loadList() {
+        let viewName = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.list`) ||
+           'views/record/list';
 
-            this.createView('search', 'views/record/search', {
+        this.listenToOnce(this.collection, 'sync', () => {
+            this.createView('list', viewName, {
                 collection: this.collection,
-                el: this.containerSelector + ' .search-container',
-                searchManager: searchManager,
-                disableSavePreset: true,
-                textFilterDisabled: true,
+                el: this.containerSelector + ' .list-container',
+                selectable: false,
+                checkboxes: false,
+                massActionsDisabled: true,
+                rowActionsView: 'views/record/row-actions/view-only',
+                type: 'listSmall',
+                searchManager: this.searchManager,
+                checkAllResultDisabled: true,
+                buttonsDisabled: true,
             });
-        },
+        });
+    }
+}
 
-        loadList: function () {
-            let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
-               'views/record/list';
-
-            this.listenToOnce(this.collection, 'sync', () => {
-                this.createView('list', viewName, {
-                    collection: this.collection,
-                    el: this.containerSelector + ' .list-container',
-                    selectable: false,
-                    checkboxes: false,
-                    massActionsDisabled: true,
-                    rowActionsView: 'views/record/row-actions/view-only',
-                    type: 'listSmall',
-                    searchManager: this.searchManager,
-                    checkAllResultDisabled: true,
-                    buttonsDisabled: true,
-                });
-            });
-        },
-    });
-});
+export default ActionHistoryModalView;

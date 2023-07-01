@@ -26,231 +26,236 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/image-preview', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+let Exif;
 
-        cssName: 'image-preview',
+class ImagePreviewModalView extends ModalView {
 
-        template: 'modals/image-preview',
+    template = 'modals/image-preview'
 
-        size: '',
+    cssName = 'image-preview'
+    size = ''
+    backdrop = true
 
-        backdrop: true,
+    transformClassList = [
+        'transform-flip',
+        'transform-rotate-180',
+        'transform-flip-and-rotate-180',
+        'transform-flip-and-rotate-270',
+        'transform-rotate-90',
+        'transform-flip-and-rotate-90',
+        'transform-rotate-270',
+    ]
 
-        transformClassList: [
-            'transform-flip',
-            'transform-rotate-180',
-            'transform-flip-and-rotate-180',
-            'transform-flip-and-rotate-270',
-            'transform-rotate-90',
-            'transform-flip-and-rotate-90',
-            'transform-rotate-270',
-        ],
+    events = {
+        /** @this ImagePreviewModalView */
+        'keydown': function (e) {
+            if (e.code === 'ArrowLeft') {
+                this.switchToPrevious(true);
 
-        events: {
-            'keydown': function (e) {
-                if (e.code === 'ArrowLeft') {
-                    this.switchToPrevious(true);
+                return;
+            }
 
+            if (e.code === 'ArrowRight') {
+                this.switchToNext(true);
+            }
+        },
+    }
+
+    data() {
+        return {
+            name: this.options.name,
+            url: this.getImageUrl(),
+            originalUrl: this.getOriginalImageUrl(),
+            showOriginalLink: this.size,
+        };
+    }
+
+    setup() {
+        this.buttonList = [];
+        this.headerHtml = '&nbsp;';
+
+        this.navigationEnabled = (this.options.imageList && this.options.imageList.length > 1);
+
+        this.imageList = this.options.imageList || [];
+
+        this.once('remove', () => {
+            $(window).off('resize.image-review');
+        });
+
+        this.wait(
+            Espo.loader.requirePromise('lib!exif-js')
+                .then(Lib => Exif = Lib)
+        );
+    }
+
+    getImageUrl() {
+        let url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
+
+        if (this.size) {
+            url += '&size=' + this.size;
+        }
+
+        if (this.getUser().get('portalId')) {
+            url += '&portalId=' + this.getUser().get('portalId');
+        }
+
+        return url;
+    }
+
+    getOriginalImageUrl() {
+        let url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
+
+        if (this.getUser().get('portalId')) {
+            url += '&portalId=' + this.getUser().get('portalId');
+        }
+
+        return url;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    onImageLoad() {}
+
+    afterRender() {
+        let $container = this.$el.find('.image-container');
+        let $img = this.$img = this.$el.find('.image-container img');
+
+        $img.on('load', () => {
+            let imgEl = $img.get(0);
+
+            Exif.getData(imgEl, () => {
+                if ($img.css('image-orientation') === 'from-image') {
                     return;
                 }
 
-                if (e.code === 'ArrowRight') {
-                    this.switchToNext(true);
-                }
-            },
-        },
+                let orientation = Exif.getTag(this, 'Orientation');
 
-        data: function () {
-            return {
-                name: this.options.name,
-                url: this.getImageUrl(),
-                originalUrl: this.getOriginalImageUrl(),
-                showOriginalLink: this.size,
-            };
-        },
-
-        setup: function () {
-            this.buttonList = [];
-            this.headerHtml = '&nbsp;';
-
-            this.navigationEnabled = (this.options.imageList && this.options.imageList.length > 1);
-
-            this.imageList = this.options.imageList || [];
-
-            this.once('remove', () => {
-                $(window).off('resize.image-review');
-            });
-
-            this.wait(Espo.loader.requirePromise('lib!exif-js'));
-        },
-
-        getImageUrl: function () {
-            var url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
-
-            if (this.size) {
-                url += '&size=' + this.size;
-            }
-
-            if (this.getUser().get('portalId')) {
-                url += '&portalId=' + this.getUser().get('portalId');
-            }
-
-            return url;
-        },
-
-        getOriginalImageUrl: function () {
-            var url = this.getBasePath() + '?entryPoint=image&id=' + this.options.id;
-
-            if (this.getUser().get('portalId')) {
-                url += '&portalId=' + this.getUser().get('portalId');
-            }
-
-            return url;
-        },
-
-        onImageLoad: function () {},
-
-        afterRender: function () {
-            var $container = this.$el.find('.image-container');
-            var $img = this.$img = this.$el.find('.image-container img');
-
-            $img.on('load', () => {
-                var imgEl = $img.get(0);
-
-                EXIF.getData(imgEl, () => {
-                    if ($img.css('image-orientation') === 'from-image') {
-                        return;
-                    }
-
-                    var orientation = EXIF.getTag(this, 'Orientation');
-
-                    switch (orientation) {
-                        case 2:
-                            $img.addClass('transform-flip');
-                            break;
-                        case 3:
-                            $img.addClass('transform-rotate-180');
-                            break;
-                        case 4:
-                            $img.addClass('transform-rotate-180');
-                            $img.addClass('transform-flip');
-                            break;
-                        case 5:
-                            $img.addClass('transform-rotate-270');
-                            $img.addClass('transform-flip');
-                            break;
-                        case 6:
-                            $img.addClass('transform-rotate-90');
-                            break;
-                        case 7:
-                            $img.addClass('transform-rotate-90');
-                            $img.addClass('transform-flip');
-                            break;
-                        case 8:
-                            $img.addClass('transform-rotate-270');
-                            break;
-                    }
-                });
-
-                if (imgEl.naturalWidth > imgEl.clientWidth) {
-                    this.$el.find('.original-link-container').removeClass('hidden');
+                switch (orientation) {
+                    case 2:
+                        $img.addClass('transform-flip');
+                        break;
+                    case 3:
+                        $img.addClass('transform-rotate-180');
+                        break;
+                    case 4:
+                        $img.addClass('transform-rotate-180');
+                        $img.addClass('transform-flip');
+                        break;
+                    case 5:
+                        $img.addClass('transform-rotate-270');
+                        $img.addClass('transform-flip');
+                        break;
+                    case 6:
+                        $img.addClass('transform-rotate-90');
+                        break;
+                    case 7:
+                        $img.addClass('transform-rotate-90');
+                        $img.addClass('transform-flip');
+                        break;
+                    case 8:
+                        $img.addClass('transform-rotate-270');
+                        break;
                 }
             });
 
-            if (this.navigationEnabled) {
-                $img.css('cursor', 'pointer');
-
-                $img.click(() => {
-                    this.switchToNext();
-                });
+            if (imgEl.naturalWidth > imgEl.clientWidth) {
+                this.$el.find('.original-link-container').removeClass('hidden');
             }
+        });
 
-            var manageSize = () => {
-                var width = $container.width();
+        if (this.navigationEnabled) {
+            $img.css('cursor', 'pointer');
 
-                $img.css('maxWidth', width);
-            };
-
-            $(window).off('resize.image-review');
-
-            $(window).on('resize.image-review', () => {
-                manageSize();
+            $img.click(() => {
+                this.switchToNext();
             });
+        }
 
-            setTimeout(() => manageSize(), 100);
-        },
+        const manageSize = () => {
+            let width = $container.width();
 
-        isMulitple: function () {
-            return this.imageList.length > 1;
-        },
+            $img.css('maxWidth', width);
+        };
 
-        switchToPrevious: function (noLoop) {
-            if (!this.isMulitple()) {
-                return;
+        $(window).off('resize.image-review');
+
+        $(window).on('resize.image-review', () => {
+            manageSize();
+        });
+
+        setTimeout(() => manageSize(), 100);
+    }
+
+    isMultiple() {
+        return this.imageList.length > 1;
+    }
+
+    switchToPrevious(noLoop) {
+        if (!this.isMultiple()) {
+            return;
+        }
+
+        let index = -1;
+
+        this.imageList.forEach((d, i) => {
+            if (d.id === this.options.id) {
+                index = i;
             }
+        });
 
-            let index = -1;
+        if (noLoop && index === 0) {
+            return;
+        }
 
-            this.imageList.forEach((d, i) => {
-                if (d.id === this.options.id) {
-                    index = i;
-                }
-            });
+        this.transformClassList.forEach(item => {
+            this.$img.removeClass(item);
+        });
 
-            if (noLoop && index === 0) {
-                return;
+        index--;
+
+        if (index < 0) {
+            index = this.imageList.length - 1;
+        }
+
+        this.options.id = this.imageList[index].id;
+        this.options.name = this.imageList[index].name;
+
+        this.reRender();
+    }
+
+    switchToNext(noLoop) {
+        if (!this.isMultiple()) {
+            return;
+        }
+
+        let index = -1;
+
+        this.imageList.forEach((d, i) => {
+            if (d.id === this.options.id) {
+                index = i;
             }
+        });
 
-            this.transformClassList.forEach(item => {
-                this.$img.removeClass(item);
-            });
+        if (noLoop && index === this.imageList.length - 1) {
+            return;
+        }
 
-            index--;
+        this.transformClassList.forEach(item => {
+            this.$img.removeClass(item);
+        });
 
-            if (index < 0) {
-                index = this.imageList.length - 1;
-            }
+        index++;
 
-            this.options.id = this.imageList[index].id;
-            this.options.name = this.imageList[index].name;
+        if (index > this.imageList.length - 1) {
+            index = 0;
+        }
 
-            this.reRender();
-        },
+        this.options.id = this.imageList[index].id;
+        this.options.name = this.imageList[index].name;
 
-        switchToNext: function (noLoop) {
-            if (!this.isMulitple()) {
-                return;
-            }
+        this.reRender();
+    }
+}
 
-            let index = -1;
-
-            this.imageList.forEach((d, i) => {
-                if (d.id === this.options.id) {
-                    index = i;
-                }
-            });
-
-            if (noLoop && index === this.imageList.length - 1) {
-                return;
-            }
-
-            this.transformClassList.forEach(item => {
-                this.$img.removeClass(item);
-            });
-
-            index++;
-
-            if (index > this.imageList.length - 1) {
-                index = 0;
-            }
-
-            this.options.id = this.imageList[index].id;
-            this.options.name = this.imageList[index].name;
-
-            this.reRender();
-        },
-
-    });
-});
+export default ImagePreviewModalView;

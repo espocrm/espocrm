@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module views/dashboard */
+
 import View from 'view';
 import GridStack from 'gridstack';
 

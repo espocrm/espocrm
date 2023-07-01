@@ -26,67 +26,75 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/image-crop', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class ImageCropModalView extends ModalView {
 
-        cssName: 'image-crop',
+    template = 'modals/image-crop'
 
-        template: 'modals/image-crop',
+    cssName = 'image-crop'
 
-        events: {
-            'click [data-action="zoomIn"]': function () {
-                this.$img.cropper('zoom', 0.1);
-            },
-            'click [data-action="zoomOut"]': function () {
-                this.$img.cropper('zoom', -0.1);
-            },
+    events = {
+        /** @this ImageCropModalView */
+        'click [data-action="zoomIn"]': function () {
+            this.$img.cropper('zoom', 0.1);
         },
+        /** @this ImageCropModalView */
+        'click [data-action="zoomOut"]': function () {
+            this.$img.cropper('zoom', -0.1);
+        },
+    }
 
-        setup: function () {
-            this.buttonList = [
-                {
-                    name: 'crop',
-                    label: 'Submit',
-                    style: 'primary',
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                },
-            ];
+    setup() {
+        this.buttonList = [
+            {
+                name: 'crop',
+                label: 'Submit',
+                style: 'primary',
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+            },
+        ];
 
-            this.wait(Espo.loader.requirePromise('lib!cropper'));
+        this.wait(
+            Espo.loader.requirePromise('lib!cropper')
+        );
 
-            this.on('remove', () => {
-                if (this.$img.length) {
-                    this.$img.cropper('destroy');
-                    this.$img.parent().empty();
-                }
+        this.on('remove', () => {
+            if (this.$img.length) {
+                this.$img.cropper('destroy');
+                this.$img.parent().empty();
+            }
+        });
+    }
+
+    afterRender() {
+        // noinspection RequiredAttributes,HtmlRequiredAltAttribute
+        let $img = this.$img = $(`<img>`)
+            .attr('src', this.options.contents)
+            .addClass('hidden');
+
+        this.$el.find('.image-container').append($img);
+
+        setTimeout(() => {
+            $img.cropper({
+                aspectRatio: 1,
+                movable: true,
+                resizable: true,
+                rotatable: false,
             });
-        },
+        }, 50);
+    }
 
-        afterRender: function () {
-            let $img = this.$img = $('<img>')
-                .attr('src', this.options.contents)
-                .addClass('hidden');
+    // noinspection JSUnusedGlobalSymbols
+    actionCrop() {
+        let dataUrl = this.$img.cropper('getDataURL', 'image/jpeg');
 
-            this.$el.find('.image-container').append($img);
+        this.trigger('crop', dataUrl);
+        this.close();
+    }
+}
 
-            setTimeout(() => {
-                $img.cropper({
-                    aspectRatio: 1,
-                    movable: true,
-                    resizable: true,
-                    rotatable: false,
-                });
-            }, 50);
-        },
-
-        actionCrop: function () {
-            var dataUrl = this.$img.cropper('getDataURL', 'image/jpeg');
-            this.trigger('crop', dataUrl);
-            this.close();
-        },
-    });
-});
+export default ImageCropModalView;

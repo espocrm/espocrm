@@ -26,43 +26,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/convert-currency', ['views/modals/mass-convert-currency'], function (Dep) {
+import MassConvertCurrencyModalView from 'views/modals/mass-convert-currency';
 
-    return Dep.extend({
+class ConvertCurrencyModalView extends MassConvertCurrencyModalView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.headerText = this.translate('convertCurrency', 'massActions');
-        },
+        this.headerText = this.translate('convertCurrency', 'massActions');
+    }
 
-        actionConvert: function () {
-            this.disableButton('convert');
+    actionConvert() {
+        this.disableButton('convert');
 
-            this.getView('currency').fetchToModel();
-            this.getView('currencyRates').fetchToModel();
+        this.getFieldView('currency').fetchToModel();
+        this.getFieldView('currencyRates').fetchToModel();
 
-            var currency = this.model.get('currency');
-            var currencyRates = this.model.get('currencyRates');
+        let currency = this.model.get('currency');
+        let currencyRates = this.model.get('currencyRates');
 
-            Espo.Ajax.postRequest('Action', {
-                    entityType: this.options.entityType,
-                    action: 'convertCurrency',
-                    id: this.options.model.id,
-                    data: {
-                        targetCurrency: currency,
-                        rates: currencyRates,
-                        fieldList: this.options.fieldList || null,
-                    },
-                })
-                .then(attributes => {
-                    this.trigger('after:update', attributes);
+        Espo.Ajax
+            .postRequest('Action', {
+                entityType: this.options.entityType,
+                action: 'convertCurrency',
+                id: this.options.model.id,
+                data: {
+                    targetCurrency: currency,
+                    rates: currencyRates,
+                    fieldList: this.options.fieldList || null,
+                },
+            })
+            .then(attributes => {
+                this.trigger('after:update', attributes);
 
-                    this.close();
-                })
-                .catch(() => {
-                    this.enableButton('convert');
-                });
-        },
-    });
-});
+                this.close();
+            })
+            .catch(() => {
+                this.enableButton('convert');
+            });
+    }
+}
+
+export default ConvertCurrencyModalView;

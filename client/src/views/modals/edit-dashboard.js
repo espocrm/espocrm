@@ -26,135 +26,154 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/edit-dashboard', ['views/modal', 'model'], function (Dep, Model) {
+import ModalView from 'views/modal';
+import Model from 'model';
 
-    return Dep.extend({
+class EditDashboardModalView extends ModalView {
 
-        className: 'dialog dialog-record',
-        cssName: 'edit-dashboard',
+    template = 'modals/edit-dashboard'
 
-        template: 'modals/edit-dashboard',
+    className = 'dialog dialog-record'
+    cssName = 'edit-dashboard'
 
-        data: function () {
-            return {
-                hasLocked: this.hasLocked,
-            };
+    data() {
+        return {
+            hasLocked: this.hasLocked,
+        };
+    }
+
+    events = {
+        /** @this EditDashboardModalView */
+        'click button.add': function (e) {
+            let name = $(e.currentTarget).data('name');
+
+            this.getParentDashboardView().addDashlet(name);
+            this.close();
         },
+    }
 
-        events: {
-            'click button.add': function (e) {
-                let name = $(e.currentTarget).data('name');
+    shortcutKeys = {
+        'Control+Enter': 'save',
+    }
 
-                this.getParentView().addDashlet(name);
-                this.close();
+    /**
+     * @return {module:views/dashboard}
+     */
+    getParentDashboardView() {
+        return /** @type module:views/dashboard */this.getParentView();
+    }
+
+    setup() {
+        this.buttonList = [
+            {
+                name: 'save',
+                label: this.options.fromDashboard ? 'Save': 'Apply',
+                style: 'primary',
+                title: 'Ctrl+Enter',
             },
-        },
-
-        shortcutKeys: {
-            'Control+Enter': 'save',
-        },
-
-        setup: function () {
-            this.buttonList = [
-                {
-                    name: 'save',
-                    label: this.options.fromDashboard ? 'Save': 'Apply',
-                    style: 'primary',
-                    title: 'Ctrl+Enter',
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                    title: 'Esc',
-                }
-            ];
-
-            let dashboardLayout = this.options.dashboardLayout || [];
-
-            let dashboardTabList = [];
-
-            dashboardLayout.forEach(item => {
-                if (item.name) {
-                    dashboardTabList.push(item.name);
-                }
-            });
-
-            let model = this.model = new Model();
-            model.name = 'Preferences';
-
-            model.set('dashboardTabList', dashboardTabList);
-
-            this.hasLocked = 'dashboardLocked' in this.options;
-
-            if (this.hasLocked) {
-                model.set('dashboardLocked', this.options.dashboardLocked || false);
+            {
+                name: 'cancel',
+                label: 'Cancel',
+                title: 'Esc',
             }
+        ];
 
-            this.createView('dashboardTabList', 'views/preferences/fields/dashboard-tab-list', {
-                el: this.options.el + ' .field[data-name="dashboardTabList"]',
-                defs: {
-                    name: 'dashboardTabList',
-                    params: {
-                        required: true,
-                        noEmptyString: true,
-                    }
-                },
+        let dashboardLayout = this.options.dashboardLayout || [];
+
+        let dashboardTabList = [];
+
+        dashboardLayout.forEach(item => {
+            if (item.name) {
+                dashboardTabList.push(item.name);
+            }
+        });
+
+        let model = this.model = new Model({}, {entityType: 'Preferences'});
+
+        model.set('dashboardTabList', dashboardTabList);
+
+        this.hasLocked = 'dashboardLocked' in this.options;
+
+        if (this.hasLocked) {
+            model.set('dashboardLocked', this.options.dashboardLocked || false);
+        }
+
+        this.createView('dashboardTabList', 'views/preferences/fields/dashboard-tab-list', {
+            el: this.options.el + ' .field[data-name="dashboardTabList"]',
+            defs: {
+                name: 'dashboardTabList',
+                params: {
+                    required: true,
+                    noEmptyString: true,
+                }
+            },
+            mode: 'edit',
+            model: model,
+        });
+
+        if (this.hasLocked) {
+            this.createView('dashboardLocked', 'views/fields/bool', {
+                el: this.options.el + ' .field[data-name="dashboardLocked"]',
                 mode: 'edit',
                 model: model,
-            });
+                defs: {
+                    name: 'dashboardLocked',
+                },
+            })
+        }
 
-            if (this.hasLocked) {
-                this.createView('dashboardLocked', 'views/fields/bool', {
-                    el: this.options.el + ' .field[data-name="dashboardLocked"]',
-                    mode: 'edit',
-                    model: model,
-                    defs: {
-                        name: 'dashboardLocked',
-                    },
-                })
+        this.headerText = this.translate('Edit Dashboard');
+
+        this.dashboardLayout = this.options.dashboardLayout;
+    }
+
+    /**
+     * @param {string} field
+     * @return {module:views/fields/base}
+     */
+    getFieldView(field) {
+        return this.getView(field);
+    }
+
+    actionSave() {
+        const dashboardTabListView = this.getFieldView('dashboardTabList');
+
+        dashboardTabListView.fetchToModel();
+
+        if (this.hasLocked) {
+            const dashboardLockedView = this.getFieldView('dashboardLocked');
+
+            dashboardLockedView.fetchToModel();
+        }
+
+        if (dashboardTabListView.validate()) {
+            return;
+        }
+
+        let attributes = {};
+
+        attributes.dashboardTabList = this.model.get('dashboardTabList');
+
+        if (this.hasLocked) {
+            attributes.dashboardLocked = this.model.get('dashboardLocked');
+        }
+
+        let names = this.model.get('translatedOptions');
+
+        let renameMap = {};
+
+        for (let name in names) {
+            if (name !== names[name]) {
+                renameMap[name] = names[name];
             }
+        }
 
-            this.headerText = this.translate('Edit Dashboard');
+        attributes.renameMap = renameMap;
 
-            this.dashboardLayout = this.options.dashboardLayout;
-        },
+        this.trigger('after:save', attributes);
 
-        actionSave: function () {
-            let dashboardTabListView = this.getView('dashboardTabList');
-            dashboardTabListView.fetchToModel();
+        this.dialog.close();
+    }
+}
 
-            if (this.hasLocked) {
-                let dashboardLockedView = this.getView('dashboardLocked');
-                dashboardLockedView.fetchToModel();
-            }
-
-            if (dashboardTabListView.validate()) {
-                return;
-            }
-
-            let attributes = {};
-
-            attributes.dashboardTabList = this.model.get('dashboardTabList');
-
-            if (this.hasLocked) {
-                attributes.dashboardLocked = this.model.get('dashboardLocked');
-            }
-
-            let names = this.model.get('translatedOptions');
-
-            let renameMap = {};
-
-            for (let name in names) {
-                if (name !== names[name]) {
-                    renameMap[name] = names[name];
-                }
-            }
-
-            attributes.renameMap = renameMap;
-
-            this.trigger('after:save', attributes);
-
-            this.dialog.close();
-        },
-    });
-});
+export default EditDashboardModalView;
