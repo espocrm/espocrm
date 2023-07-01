@@ -37,6 +37,7 @@ use InvalidArgumentException;
 use RuntimeException;
 
 use const E_USER_DEPRECATED;
+use const JSON_THROW_ON_ERROR;
 
 class BaseEntity implements Entity
 {
@@ -163,6 +164,7 @@ class BaseEntity implements Entity
             }
 
             if ($p2) {
+                // @todo Remove second parameter support in v9.0.
                 trigger_error(
                     'Second parameter is deprecated in Entity::set(array, onlyAccessible).',
                     E_USER_DEPRECATED
@@ -207,7 +209,7 @@ class BaseEntity implements Entity
     /**
      * Get an attribute value.
      *
-     * @param array<string, mixed> $params @deprecated
+     * @param array<string, mixed> $params @deprecated  @todo Remove in v9.0.
      * @retrun mixed
      */
     public function get(string $attribute, $params = [])
@@ -226,7 +228,7 @@ class BaseEntity implements Entity
             return $this->getFromContainer($attribute);
         }
 
-        // @todo Remove this.
+        // @todo Remove support in v9.0.
         if (!empty($params)) {
             trigger_error(
                 'Second parameter will be removed from the method Entity::get.',
@@ -234,7 +236,7 @@ class BaseEntity implements Entity
             );
         }
 
-        // @todo Remove this.
+        // @todo Remove support in v9.0.
         if ($this->hasRelation($attribute) && $this->id && $this->entityManager) {
             trigger_error(
                 "Accessing related records with Entity::get is deprecated. " .
@@ -283,7 +285,7 @@ class BaseEntity implements Entity
         $value = $this->valuesContainer[$attribute] ?? null;
 
         if ($value === null) {
-            return $value;
+            return null;
         }
 
         $type = $this->getAttributeType($attribute);
@@ -493,7 +495,7 @@ class BaseEntity implements Entity
         $preparedValue = $value;
 
         if (is_array($value)) {
-            $preparedValue = json_decode(json_encode($value, \JSON_THROW_ON_ERROR));
+            $preparedValue = json_decode(json_encode($value, JSON_THROW_ON_ERROR));
 
             if ($preparedValue instanceof stdClass) {
                 return $preparedValue;
@@ -587,15 +589,6 @@ class BaseEntity implements Entity
     public function setAsSaved(): void
     {
         $this->isSaved = true;
-    }
-
-    /**
-     * @deprecated As of v6.0. Use `getEntityType`.
-     * @return string
-     */
-    public function getEntityName()
-    {
-        return $this->getEntityType();
     }
 
     /**
@@ -1093,7 +1086,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated As of v7.0. Use `set` method instead.
-     * @todo Make protected.
+     * @todo Make protected in v9.0.
      * @param array<string, mixed> $data
      */
     public function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false): void
