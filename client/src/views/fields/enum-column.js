@@ -93,6 +93,8 @@ define('views/fields/enum-column', ['views/fields/enum'], function (Dep) {
                     }
                 };
             }
+
+            return null;
         },
     });
 });

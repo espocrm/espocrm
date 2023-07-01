@@ -390,8 +390,7 @@ class VarcharFieldView extends BaseFieldView {
         let value = this.$element.val().toString().trim();
 
         if (!value) {
-            // @todo Change to `null` in v8.0 (and for all other fields).
-            return false;
+            return null;
         }
 
         return {

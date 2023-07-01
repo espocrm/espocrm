@@ -395,7 +395,7 @@ function (Dep, From, EmailAddress) {
                 };
             }
 
-            return false;
+            return null;
         },
 
         getValueForDisplay: function () {

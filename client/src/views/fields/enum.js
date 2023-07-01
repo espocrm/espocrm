@@ -501,6 +501,8 @@ class EnumFieldView extends BaseFieldView {
                 },
             };
         }
+
+        return null;
     }
 
     getSearchType() {

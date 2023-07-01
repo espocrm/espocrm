@@ -742,6 +742,8 @@ class ArrayFieldView extends BaseFieldView {
                 },
             };
         }
+
+        return null;
     }
 
     validateRequired() {

@@ -339,13 +339,13 @@ class DateFieldView extends BaseFieldView {
 
         if (type === 'between') {
             if (!value) {
-                return false;
+                return null;
             }
 
             let valueTo = this.parseDate(this.$el.find('input.additional').val());
 
             if (!valueTo) {
-                return false;
+                return null;
             }
 
             data = {
@@ -366,7 +366,7 @@ class DateFieldView extends BaseFieldView {
         }
         else if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
             if (!value) {
-                return false;
+                return null;
             }
 
             data = {

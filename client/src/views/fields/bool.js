@@ -81,7 +81,7 @@ class BoolFieldView extends BaseFieldView {
         let type = this.$element.val();
 
         if (!type) {
-            return;
+            return null;
         }
 
         if (type === 'any') {
