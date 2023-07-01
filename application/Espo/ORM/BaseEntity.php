@@ -35,7 +35,6 @@ use Espo\ORM\Value\ValueAccessor;
 use stdClass;
 use InvalidArgumentException;
 use RuntimeException;
-use JsonException;
 
 use const E_USER_DEPRECATED;
 
@@ -56,34 +55,16 @@ class BaseEntity implements Entity
     private array $writtenMap = [];
     /** @var array<string, array<string, mixed>> */
     private array $attributes = [];
+    /** @var array<string, array<string, mixed>> */
+    private array $relations = [];
     /** @var array<string, mixed> */
     private array $fetchedValuesContainer = [];
-
-    /**
-     * @todo Make private, rename to `attributes` in v8.0.
-     * @deprecated As of v6.0. Use getAttributeList, getAttributeParam, ORM\Defs.
-     * @var array<string, array<string, mixed>>
-     */
-    public array $fields = [];
-
-    /**
-     * @todo Make private in v8.0.
-     * @deprecated As of v6.0. Use getRelationList, getRelationParam, ORM\Defs.
-     * @var array<string, array<string, mixed>>
-     */
-    protected array $relations = [];
-
-    /**
-     * @deprecated As of v7.0. `setInContainer`, `hasInContainer`, `getFromContainer`.
-     * @todo Make private in v8.0.
-     * @var array<string, mixed>
-     */
-    protected array $valuesContainer = [];
-
+    /** @var array<string, mixed> */
+    private array $valuesContainer = [];
 
     /**
      * @deprecated As of v7.0. Use `getId`. To be changed to protected.
-     * @todo Change to protected in v8.0.
+     * @todo Change to protected in v9.0.
      * @var ?string
      */
     public $id = null;
@@ -106,7 +87,6 @@ class BaseEntity implements Entity
 
         $this->attributes = $defs['attributes'] ?? $defs['fields'] ?? $this->attributes;
         $this->relations = $defs['relations'] ?? $this->relations;
-        $this->fields = $this->attributes;
 
         if ($valueAccessorFactory) {
             $this->valueAccessor = $valueAccessorFactory->create($this);
@@ -1145,6 +1125,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated As of v7.0. Use `setInContainer` method.
+     * @todo Remove in v9.0.
      *
      * @param string $attribute
      * @param mixed $value
@@ -1152,14 +1133,5 @@ class BaseEntity implements Entity
     protected function setValue($attribute, $value): void
     {
         $this->setInContainer($attribute, $value);
-    }
-
-    /**
-     * @deprecated As of v6.0. Access `entityManager` property.
-     */
-    protected function getEntityManager(): EntityManager
-    {
-        /** @var EntityManager */
-        return $this->entityManager;
     }
 }

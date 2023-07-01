@@ -450,7 +450,7 @@ class EntityManager
     }
 
     /**
-     * @todo Remove in v8.0.
+     * @todo Remove in v9.0.
      * @deprecated As of v6.0. Use `getQueryComposer`.
      */
     public function getQuery(): QueryComposer

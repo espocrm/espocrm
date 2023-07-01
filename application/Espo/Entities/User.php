@@ -33,6 +33,8 @@ use Espo\Core\Entities\Person;
 
 use Espo\Core\Field\Link;
 use Espo\Core\Field\LinkMultiple;
+use Espo\Modules\Crm\Entities\Contact;
+use RuntimeException;
 
 class User extends Person
 {
@@ -194,8 +196,12 @@ class User extends Person
 
     public function loadAccountField(): void
     {
+        if (!$this->entityManager) {
+            throw new RuntimeException("No entity manager");
+        }
+
         if ($this->get('contactId')) {
-            $contact = $this->getEntityManager()->getEntity('Contact', $this->get('contactId'));
+            $contact = $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $this->get('contactId'));
 
             if ($contact && $contact->get('accountId')) {
                 $this->set('accountId', $contact->get('accountId'));

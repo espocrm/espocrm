@@ -70,7 +70,7 @@ class Job extends TEntity
 {
     public function getFromContainerOriginal(string $attribute)
     {
-        return $this->valuesContainer[$attribute] ?? null;
+        return $this->getFromContainer($attribute);
     }
 }
 

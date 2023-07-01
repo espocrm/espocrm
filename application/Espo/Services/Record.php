@@ -40,8 +40,6 @@ use Espo\Tools\Export\Export as ExportTool;
 use Espo\Tools\Export\Params as ExportParams;
 use Espo\Core\Di;
 
-use stdClass;
-
 /**
  * @template TEntity of Entity
  * @extends RecordService<TEntity>
@@ -330,89 +328,4 @@ class Record extends RecordService implements
      */
     public function loadAdditionalFieldsForExport(Entity $entity)
     {}
-
-    /**
-     * @deprecated
-     * @todo Remove in v8.0.
-     * @return string[]
-     */
-    protected function getConvertCurrencyFieldList()
-    {
-        $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->entityType, 'edit');
-
-        $list = [];
-
-        foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
-            if (
-                $this->metadata
-                    ->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency'
-            ) {
-                continue;
-            }
-
-            if (in_array($field, $forbiddenFieldList)) {
-                continue;
-            }
-
-            $list[] = $field;
-        }
-
-        return $list;
-    }
-
-    /**
-     * @deprecated Use `Espo\Core\Currency\Converter`.
-     * @todo Remove in v8.0.
-     * @param ?string[] $fieldList
-     * @return stdClass
-     */
-    public function getConvertCurrencyValues(
-        Entity $entity,
-        string $targetCurrency,
-        string $baseCurrency,
-        stdClass $rates,
-        bool $allFields = false,
-        ?array $fieldList = null
-    ) {
-        $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
-
-        $data = (object) [];
-
-        foreach ($fieldList as $field) {
-            $currencyAttribute = $field . 'Currency';
-
-            $currentCurrency = $entity->get($currencyAttribute);
-            $value = $entity->get($field);
-
-            if ($value === null) {
-                continue;
-            }
-
-            if ($currentCurrency === $targetCurrency) {
-                continue;
-            }
-
-            if ($currentCurrency !== $baseCurrency && !property_exists($rates, $currentCurrency)) {
-                continue;
-            }
-
-            $rate1 = property_exists($rates, $currentCurrency) ? $rates->$currentCurrency : 1.0;
-            $value = $value * $rate1;
-
-            $rate2 = property_exists($rates, $targetCurrency) ? $rates->$targetCurrency : 1.0;
-            $value = $value / $rate2;
-
-            if (!$rate2) {
-                continue;
-            }
-
-            $value = round($value, 2);
-
-            $data->$currencyAttribute = $targetCurrency;
-
-            $data->$field = $value;
-        }
-
-        return $data;
-    }
 }

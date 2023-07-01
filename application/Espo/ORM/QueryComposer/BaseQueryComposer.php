@@ -306,7 +306,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * @deprecated As of v6.0. Use `composeSelect`.
-     * @todo Remove in v8.0.
+     * @todo Remove in v9.0.
      * @param array<string, mixed>|null $params
      */
     public function createSelectQuery(string $entityType, ?array $params = null): string

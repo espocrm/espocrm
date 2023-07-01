@@ -1739,17 +1739,6 @@ class Service implements Crud,
         }
     }
 
-    /**
-     * @deprecated
-     * @todo Remove in v7.6.
-     * @param string $type
-     * @return string[]
-     */
-    protected function getFieldByTypeList($type)
-    {
-        return $this->fieldUtil->getFieldByTypeList($this->entityType, $type);
-    }
-
     public function prepareSearchParams(SearchParams $searchParams): SearchParams
     {
         return $this
