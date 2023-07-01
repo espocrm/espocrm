@@ -26,37 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/external-account', ['controller'], function (Dep) {
+import Controller from 'controller';
 
-    return Dep.extend({
+class ExternalAccountController extends Controller {
 
-        defaultAction: 'list',
+    defaultAction = 'list'
 
-        actionList: function (options) {
-            this.collectionFactory.create('ExternalAccount', (collection) => {
-                collection.once('sync', () => {
-                    this.main('ExternalAccount.Index', {
-                        collection: collection,
-                    });
+    actionList() {
+        this.collectionFactory.create('ExternalAccount', collection => {
+            collection.once('sync', () => {
+                this.main('ExternalAccount.Index', {
+                    collection: collection,
                 });
-
-                collection.fetch();
             });
-        },
 
-        actionEdit: function (options) {
-            let id = options.id;
+            collection.fetch();
+        });
+    }
 
-            this.collectionFactory.create('ExternalAccount', (collection) => {
-                collection.once('sync', () => {
-                    this.main('ExternalAccount.Index', {
-                        collection: collection,
-                        id: id,
-                    });
+    /**
+     * @param {{id: string}} options
+     */
+    actionEdit(options) {
+        let id = options.id;
+
+        this.collectionFactory.create('ExternalAccount', collection => {
+            collection.once('sync', () => {
+                this.main('ExternalAccount.Index', {
+                    collection: collection,
+                    id: id,
                 });
-
-                collection.fetch();
             });
-        },
-    });
-});
+
+            collection.fetch();
+        });
+    }
+}
+
+export default ExternalAccountController;

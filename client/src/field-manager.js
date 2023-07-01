@@ -80,7 +80,7 @@ class FieldManager {
      * Get a list of parameters for a specific field type.
      *
      * @param {string} fieldType A field type.
-     * @returns {string[]}
+     * @returns {Object.<string, *>[]}
      */
     getParamList(fieldType) {
         if (fieldType in this.defs) {

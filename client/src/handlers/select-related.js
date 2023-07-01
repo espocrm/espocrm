@@ -42,12 +42,13 @@
  *
  * @abstract
  */
-class SelectRelated {
+class SelectRelatedHandler {
 
     /**
      * @param {module:view-helper} viewHelper
      */
     constructor(viewHelper) {
+        // noinspection JSUnusedGlobalSymbols
         /** @protected */
         this.viewHelper = viewHelper;
     }
@@ -64,4 +65,4 @@ class SelectRelated {
     }
 }
 
-export default SelectRelated;
+export default SelectRelatedHandler;

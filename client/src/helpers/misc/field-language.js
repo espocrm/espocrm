@@ -30,26 +30,26 @@
 
 /**
  * A field-language util.
- *
- * @class
- * @param {module:metadata} metadata A metadata.
- * @param {module:language} language A language.
  */
-const FieldLanguage = function (metadata, language) {
-    /**
-     * @private
-     * @type {module:metadata}
-     */
-    this.metadata = metadata;
+class FieldLanguage {
 
     /**
-     * @private
-     * @type {module:language}
+     * @param {module:metadata} metadata A metadata.
+     * @param {module:language} language A language.
      */
-    this.language = language;
-};
+    constructor(metadata, language) {
+        /**
+         * @private
+         * @type {module:metadata}
+         */
+        this.metadata = metadata;
 
-_.extend(FieldLanguage.prototype, /** @lends FieldLanguage# */{
+        /**
+         * @private
+         * @type {module:language}
+         */
+        this.language = language;
+    }
 
     /**
      * Translate an attribute.
@@ -58,61 +58,61 @@ _.extend(FieldLanguage.prototype, /** @lends FieldLanguage# */{
      * @param {string} name An attribute name.
      * @returns {string}
      */
-    translateAttribute: function (scope, name) {
+    translateAttribute(scope, name) {
         let label = this.language.translate(name, 'fields', scope);
 
         if (name.indexOf('Id') === name.length - 2) {
-            let baseField = name.substr(0, name.length - 2);
+            let baseField = name.slice(0, name.length - 2);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
-                ' (' + this.language.translate('id', 'fields') + ')';
+                    ' (' + this.language.translate('id', 'fields') + ')';
             }
         }
         else if (name.indexOf('Name') === name.length - 4) {
-            let baseField = name.substr(0, name.length - 4);
+            let baseField = name.slice(0, name.length - 4);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
-                ' (' + this.language.translate('name', 'fields') + ')';
+                    ' (' + this.language.translate('name', 'fields') + ')';
             }
         }
         else if (name.indexOf('Type') === name.length - 4) {
-            let baseField = name.substr(0, name.length - 4);
+            let baseField = name.slice(0, name.length - 4);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
-                ' (' + this.language.translate('type', 'fields') + ')';
+                    ' (' + this.language.translate('type', 'fields') + ')';
             }
         }
 
         if (name.indexOf('Ids') === name.length - 3) {
-            let baseField = name.substr(0, name.length - 3);
+            let baseField = name.slice(0, name.length - 3);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
-                ' (' + this.language.translate('ids', 'fields') + ')';
+                    ' (' + this.language.translate('ids', 'fields') + ')';
             }
         }
         else if (name.indexOf('Names') === name.length - 5) {
-            let baseField = name.substr(0, name.length - 5);
+            let baseField = name.slice(0, name.length - 5);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
-                ' (' + this.language.translate('names', 'fields') + ')';
+                    ' (' + this.language.translate('names', 'fields') + ')';
             }
         }
         else if (name.indexOf('Types') === name.length - 5) {
-            let baseField = name.substr(0, name.length - 5);
+            let baseField = name.slice(0, name.length - 5);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
-                ' (' + this.language.translate('types', 'fields') + ')';
+                    ' (' + this.language.translate('types', 'fields') + ')';
             }
         }
 
         return label;
-    },
-});
+    }
+}
 
 export default FieldLanguage;

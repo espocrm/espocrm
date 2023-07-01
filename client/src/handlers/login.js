@@ -33,7 +33,7 @@
  *
  * @abstract
  */
-class Handler {
+class LoginHandler {
 
     /**
      * @param {module:views/login} loginView A login view.
@@ -67,4 +67,4 @@ class Handler {
     }
 }
 
-export default Handler;
+export default LoginHandler;

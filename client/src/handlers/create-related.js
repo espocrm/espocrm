@@ -26,36 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('handlers/create-related', [], () => {
+/**
+ * Prepares attributes for a related record that is being created.
+ *
+ * @abstract
+ */
+class CreateRelatedHandler {
 
     /**
-     * Prepares attributes for a related record that is being created.
-     *
-     * @abstract
-     * @class
-     * @name Class
-     * @memberOf module:handlers/create-related
+     * @param {module:view-helper} viewHelper
      */
-    class Class {
-
-        /**
-         * @param {module:view-helper} viewHelper
-         */
-        constructor(viewHelper) {
-            this.viewHelper = viewHelper;
-        }
-
-        /**
-         * Get attributes for a new record.
-         *
-         * @abstract
-         * @param {module:model} model A model.
-         * @return {Promise<Object.<string, *>>} Attributes.
-         */
-        getAttributes(model) {
-            return Promise.resolve({});
-        }
+    constructor(viewHelper) {
+        // noinspection JSUnusedGlobalSymbols
+        this.viewHelper = viewHelper;
     }
 
-    return Class;
-});
+    /**
+     * Get attributes for a new record.
+     *
+     * @abstract
+     * @param {module:model} model A model.
+     * @return {Promise<Object.<string, *>>} Attributes.
+     */
+    getAttributes(model) {
+        return Promise.resolve({});
+    }
+}
+
+export default CreateRelatedHandler;

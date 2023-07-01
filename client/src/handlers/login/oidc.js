@@ -26,10 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'handlers/login';
+import LoginHandler from 'handlers/login';
 import Base64 from 'js-base64';
 
-class Handler extends Dep {
+class OidcLoginHandler extends LoginHandler {
 
     /** @inheritDoc */
     process() {
@@ -209,4 +209,4 @@ class Handler extends Dep {
     }
 }
 
-export default Handler;
+export default OidcLoginHandler;

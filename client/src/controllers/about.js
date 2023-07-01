@@ -26,16 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/about', ['controller'], function (Dep) {
+import Controller from 'controller';
 
-    return Dep.extend({
+class AboutController extends Controller {
 
-        defaultAction: 'about',
+    defaultAction = 'about'
 
-        actionAbout: function () {
-            this.main('About', {}, function (view) {
-                view.render();
-            });
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionAbout() {
+        this.main('About', {}, view => {
+            view.render();
+        });
+    }
+}
+
+export default AboutController;

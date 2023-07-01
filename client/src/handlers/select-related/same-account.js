@@ -26,44 +26,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('handlers/select-related/same-account', ['handlers/select-related'], Dep => {
+import SelectRelatedHandler from 'handlers/select-related';
 
-    return class extends Dep {
-        /**
-         * @param {module:model} model
-         * @return {Promise<module:handlers/select-related~filters>}
-         */
-        getFilters(model) {
-            let advanced = {};
+class SameAccountSelectRelatedHandler extends SelectRelatedHandler {
 
-            let accountId = null;
-            let accountName = null;
+    /**
+     * @param {module:model} model
+     * @return {Promise<module:handlers/select-related~filters>}
+     */
+    getFilters(model) {
+        let advanced = {};
 
-            if (model.get('accountId')) {
-                accountId = model.get('accountId');
-                accountName = model.get('accountName');
-            }
+        let accountId = null;
+        let accountName = null;
 
-            if (!accountId && model.get('parentType') === 'Account' && model.get('parentId')) {
-                accountId = model.get('parentId');
-                accountName = model.get('parentName');
-            }
-
-            if (accountId) {
-                advanced.account = {
-                    attribute: 'accountId',
-                    type: 'equals',
-                    value: accountId,
-                    data: {
-                        type: 'is',
-                        nameValue: accountName,
-                    },
-                };
-            }
-
-            return Promise.resolve({
-                advanced: advanced,
-            });
+        if (model.get('accountId')) {
+            accountId = model.get('accountId');
+            accountName = model.get('accountName');
         }
+
+        if (!accountId && model.get('parentType') === 'Account' && model.get('parentId')) {
+            accountId = model.get('parentId');
+            accountName = model.get('parentName');
+        }
+
+        if (accountId) {
+            advanced.account = {
+                attribute: 'accountId',
+                type: 'equals',
+                value: accountId,
+                data: {
+                    type: 'is',
+                    nameValue: accountName,
+                },
+            };
+        }
+
+        return Promise.resolve({
+            advanced: advanced,
+        });
     }
-});
+}
+
+export default SameAccountSelectRelatedHandler;

@@ -26,29 +26,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('handlers/import', ['action-handler'], function (Dep) {
+import ActionHandler from 'action-handler';
 
-    /**
-     * @extends module:action-handler
-     */
-    class Class extends Dep {
+class ImportHandler extends ActionHandler {
 
-        actionErrorExport() {
-            Espo.Ajax
-                .postRequest(`Import/${this.view.model.id}/exportErrors`)
-                .then(data => {
-                    if (!data.attachmentId) {
-                        let message = this.view.translate('noErrors', 'messages', 'Import');
+    // noinspection JSUnusedGlobalSymbols
+    actionErrorExport() {
+        Espo.Ajax
+            .postRequest(`Import/${this.view.model.id}/exportErrors`)
+            .then(data => {
+                if (!data.attachmentId) {
+                    let message = this.view.translate('noErrors', 'messages', 'Import');
 
-                        Espo.Ui.warning(message);
+                    Espo.Ui.warning(message);
 
-                        return;
-                    }
+                    return;
+                }
 
-                    window.location = this.view.getBasePath() + '?entryPoint=download&id=' + data.attachmentId;
-                });
-        }
+                window.location = this.view.getBasePath() + '?entryPoint=download&id=' + data.attachmentId;
+            });
     }
+}
 
-    return Class;
-});
+export default ImportHandler;
