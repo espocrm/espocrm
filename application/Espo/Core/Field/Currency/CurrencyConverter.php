@@ -30,6 +30,7 @@
 namespace Espo\Core\Field\Currency;
 
 /**
- * @deprecated Since v7.1.0. Use `Espo\Core\Currency\Converter`.
+ * @deprecated As of v7.1.0. Use `Espo\Core\Currency\Converter`.
+ * @todo Remove in v9.0.
  */
 class CurrencyConverter extends \Espo\Core\Currency\Converter {}

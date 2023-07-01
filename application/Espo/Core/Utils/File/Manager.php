@@ -231,7 +231,7 @@ class Manager
 
         if (is_array($path)) {
             // For backward compatibility.
-            // @todo Remove support of arrays in v7.3.
+            // @todo Remove support of arrays in v9.0.
             trigger_error(
                 'Array parameter is deprecated for FileManager::getContents.',
                 E_USER_DEPRECATED
