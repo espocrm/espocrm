@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Freature requests are frozen til July 2023. Please post on the forum instead. (Suggest an idea for EspoCRM).
+about: Suggest an idea for EspoCRM.
 title: ''
 labels: ''
 assignees: ''
