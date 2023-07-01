@@ -630,7 +630,7 @@ class BaseEntity implements Entity
      */
     public function getAttributeList(): array
     {
-        return array_keys($this->getAttributes());
+        return array_keys($this->attributes);
     }
 
     /**
@@ -638,21 +638,12 @@ class BaseEntity implements Entity
      */
     public function getRelationList(): array
     {
-        return array_keys($this->getRelations());
+        return array_keys($this->relations);
     }
 
     /**
      * @deprecated As of v6.0. Use `getValueMap`.
-     * @return array<string, mixed>
-     */
-    public function getValues()
-    {
-        return $this->toArray();
-    }
-
-    /**
-     * @deprecated As of v6.0. Use `getValueMap`.
-     * @todo Make protected.
+     * @todo Remove in v9.0.
      * @return array<string, mixed>
      */
     public function toArray()
@@ -684,33 +675,6 @@ class BaseEntity implements Entity
         $array = $this->toArray();
 
         return (object) $array;
-    }
-
-    /**
-     * @deprecated As of v6.0. Use ORM\Defs instead.
-     * @return array<string, mixed>
-     */
-    public function getFields()
-    {
-        return $this->getAttributes();
-    }
-
-    /**
-     * @deprecated As of v7.0. Use ORM\Defs instead.
-     * @return array<string, mixed>
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * @deprecated As of v7.0. Use ORM\Defs instead.
-     * @return array<string, mixed>
-     */
-    public function getRelations()
-    {
-        return $this->relations;
     }
 
     /**

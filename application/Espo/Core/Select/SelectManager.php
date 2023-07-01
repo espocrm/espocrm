@@ -373,9 +373,7 @@ class SelectManager
             return;
         }
 
-        $relDefs = $this->getSeed()->getRelations();
-
-        $relationType = $seed->getRelationType($link);
+        $relDefs = $this->entityManager->getMetadata()->get($this->entityType, ['relations']);
 
         $defs = $relDefs[$link];
 
@@ -455,7 +453,7 @@ class SelectManager
 
     public function applyInCategory(string $link, $value, array &$result)
     {
-        $relDefs = $this->getSeed()->getRelations();
+        $relDefs = $this->entityManager->getMetadata()->get($this->entityType, ['relations']);
 
         if (empty($relDefs[$link])) {
             throw new Error("Can't apply inCategory for link {$link}.");

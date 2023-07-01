@@ -360,11 +360,10 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         $arr = [];
 
         foreach ($this as $entity) {
-            if ($itemsAsObjects) {
-                $item = $entity->getValueMap();
-            }
-            else {
-                $item = $entity->toArray(); // @phpstan-ignore-line
+            $item = $entity->getValueMap();
+
+            if (!$itemsAsObjects) {
+                $item = get_object_vars($item);
             }
 
             $arr[] = $item;
