@@ -45,7 +45,7 @@ class MetadataDataProvider implements MetadataDataProviderInterface
         $data = $this->ormMetadataData->getData();
 
         foreach (array_keys($data) as $entityType) {
-            $data[$entityType]['vFields'] = $this->metadata->get(['entityDefs', $entityType, 'fields']) ?? [];
+            $data[$entityType]['fields'] = $this->metadata->get(['entityDefs', $entityType, 'fields']) ?? [];
         }
 
         return $data;

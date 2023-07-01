@@ -199,7 +199,7 @@ class DefsTest extends \PHPUnit\Framework\TestCase
     {
         $data = [
             'Test' => [
-                'fields' => [],
+                'attributes' => [],
             ],
         ];
 
@@ -252,7 +252,7 @@ class DefsTest extends \PHPUnit\Framework\TestCase
     {
         $data = [
             'Test' => [
-                'fields' => [],
+                'attributes' => [],
             ],
         ];
 
@@ -269,7 +269,7 @@ class DefsTest extends \PHPUnit\Framework\TestCase
     {
         $data = [
             'Test' => [
-                'vFields' => [
+                'fields' => [
                     'f1' => [
                         'type' => 'varchar',
                         'length' => 100,
@@ -302,7 +302,7 @@ class DefsTest extends \PHPUnit\Framework\TestCase
     {
         $data = [
             'Test' => [
-                'fields' => [],
+                'attributes' => [],
             ],
         ];
 

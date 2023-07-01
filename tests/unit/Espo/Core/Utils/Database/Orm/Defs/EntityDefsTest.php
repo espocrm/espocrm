@@ -55,7 +55,7 @@ class EntityDefsTest extends TestCase
             ->withIndex($i1);
 
         $this->assertEquals([
-            'fields' => [
+            'attributes' => [
                 'a1' => $a1->toAssoc(),
                 'a2' => $a2->toAssoc(),
             ],

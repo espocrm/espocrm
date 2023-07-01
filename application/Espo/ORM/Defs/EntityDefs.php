@@ -76,7 +76,7 @@ class EntityDefs
     public function getAttributeNameList(): array
     {
         /** @var string[] */
-        return array_keys($this->data['attributes'] ?? $this->data['fields'] ?? []);
+        return array_keys($this->data['attributes']);
     }
 
     /**
@@ -109,7 +109,7 @@ class EntityDefs
     public function getFieldNameList(): array
     {
         /** @var string[] */
-        return array_keys($this->data['vFields'] ?? []);
+        return array_keys($this->data['fields'] ?? []);
     }
 
     /**
@@ -419,7 +419,7 @@ class EntityDefs
 
     private function loadField(string $name): ?FieldDefs
     {
-        $raw = $this->data['vFields'][$name] ?? /*$this->data['fields'][$name] ??*/ null;
+        $raw = $this->data['fields'][$name] ?? null;
 
         if (!$raw) {
             return null;

@@ -125,8 +125,7 @@ class EntityDefs
                 $attributesData[$name] = $attributeDefs->toAssoc();
             }
 
-            // @todo Change to attributes.
-            $data['fields'] = $attributesData;
+            $data['attributes'] = $attributesData;
         }
 
         if (count($this->relations)) {

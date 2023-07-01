@@ -85,7 +85,7 @@
     },
     "additionalTables": {
         "{entityType}Path": {
-            "fields": {
+            "attributes": {
                 "id": {
                     "type": "id",
                     "dbType": "integer",

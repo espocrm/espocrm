@@ -1,138 +1,138 @@
 <?php
 
-return array(
-    'fields' => array(
-      'id' => 
-      array (
+return [
+    'attributes' => [
+      'id' =>
+      [
         'dbType' => 'varchar',
         'len' => 24,
         'type' => 'id',
-      ),
-      'name' => 
-      array (
+      ],
+      'name' =>
+      [
         'type' => 'varchar',
         'len' => 255,
-      ),
-      'deleted' => 
-      array (
+      ],
+      'deleted' =>
+      [
         'type' => 'bool',
         'default' => false,
-      ),
-      'type' => 
-      array (
+      ],
+      'type' =>
+      [
         'type' => 'varchar',
         'len' => 100,
-      ),
-      'size' => 
-      array (
+      ],
+      'size' =>
+      [
         'type' => 'int',
         'len' => 11,
-      ),
-      'sourceId' => 
-      array (
+      ],
+      'sourceId' =>
+      [
         'type' => 'varchar',
         'len' => 36,
-      ),
-      'createdAt' => 
-      array (
+      ],
+      'createdAt' =>
+      [
         'type' => 'datetime',
         'notNull' => false,
-      ),
-      'contents' => 
-      array (
+      ],
+      'contents' =>
+      [
         'type' => 'text',
         'notStorable' => true,
-      ),
-      'role' => 
-      array (
+      ],
+      'role' =>
+      [
         'type' => 'varchar',
         'len' => 36,
-      ),
-      'global' => 
-      array (
+      ],
+      'global' =>
+      [
         'type' => 'bool',
         'default' => false,
-      ),
-      'parentId' => 
-      array (
+      ],
+      'parentId' =>
+      [
         'dbType' => 'varchar',
         'len' => 24,
         'type' => 'foreignId',
         'index' => 'parent',
         'notNull' => false,
-      ),
-      'parentType' => 
-      array (
+      ],
+      'parentType' =>
+      [
         'type' => 'foreignType',
         'notNull' => false,
         'index' => 'parent',
         'len' => 100,
         'dbType' => 'varchar',
-      ),
-      'parentName' => 
-      array (
+      ],
+      'parentName' =>
+      [
         'type' => 'varchar',
         'notStorable' => true,
-      ),
-      'relatedId' => 
-      array (
+      ],
+      'relatedId' =>
+      [
         'dbType' => 'varchar',
         'len' => 24,
         'type' => 'foreignId',
         'index' => 'related',
         'notNull' => false,
-      ),
-      'relatedType' => 
-      array (
+      ],
+      'relatedType' =>
+      [
         'type' => 'foreignType',
         'notNull' => false,
         'index' => 'related',
         'len' => 100,
         'dbType' => 'varchar',
-      ),
-      'relatedName' => 
-      array (
+      ],
+      'relatedName' =>
+      [
         'type' => 'varchar',
         'notStorable' => true,
-      ),
-      'createdById' => 
-      array (
+      ],
+      'createdById' =>
+      [
         'dbType' => 'varchar',
         'len' => 24,
         'type' => 'foreignId',
         'index' => true,
         'notNull' => false,
-      ),
-      'createdByName' => 
-      array (
+      ],
+      'createdByName' =>
+      [
         'type' => 'foreign',
         'notStorable' => false,
         'relation' => 'createdBy',
-        'foreign' => 
-        array (
+        'foreign' =>
+        [
           0 => 'firstName',
           1 => ' ',
           2 => 'lastName',
-        ),
-      ),
-    ),
-    'relations' => array(
-     'related' => 
-      array (
+        ],
+      ],
+    ],
+    'relations' => [
+     'related' =>
+      [
         'type' => 'belongsToParent',
         'key' => 'relatedId',
-      ),
-      'parent' => 
-      array (
+      ],
+      'parent' =>
+      [
         'type' => 'belongsToParent',
         'key' => 'parentId',
-      ),
-      'createdBy' => 
-      array (
+      ],
+      'createdBy' =>
+      [
         'type' => 'belongsTo',
         'entity' => 'User',
         'key' => 'createdById',
         'foreignKey' => 'id',
-      ),
-    )
-);
+      ],
+    ]
+];

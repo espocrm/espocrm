@@ -4,7 +4,7 @@ use Espo\ORM\Entity;
 
 return [
     'Account' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],
@@ -41,7 +41,7 @@ return [
     ],
 
     'Team' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],
@@ -60,7 +60,7 @@ return [
     ],
 
     'EntityTeam' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
                 'autoincrement' => true,
@@ -89,7 +89,7 @@ return [
     ],
 
     'Contact' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],
@@ -120,7 +120,7 @@ return [
     ],
 
     'Post' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],
@@ -195,7 +195,7 @@ return [
     ],
 
     'Comment' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],
@@ -227,7 +227,7 @@ return [
     ],
 
     'PostData' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],
@@ -251,7 +251,7 @@ return [
     ],
 
     'Tag' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],
@@ -281,7 +281,7 @@ return [
     ],
 
     'PostTag' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
                 'autoincrement' => true,
@@ -316,7 +316,7 @@ return [
     ],
 
     'Note' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],
@@ -349,7 +349,7 @@ return [
     ],
 
     'Article' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID
             ],
@@ -371,7 +371,7 @@ return [
     ],
 
     'Job' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID
             ],
@@ -400,7 +400,7 @@ return [
     ],
 
     'Test' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                  'type' => Entity::ID,
              ],
@@ -437,7 +437,7 @@ return [
     ],
 
     'Dependee' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],
@@ -459,7 +459,7 @@ return [
     ],
 
     'TestWhere' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                  'type' => Entity::ID,
             ],
@@ -521,7 +521,7 @@ return [
     ],
 
     'TestSelect' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],
@@ -558,7 +558,7 @@ return [
     ],
 
     'TestSelectRight' => [
-        'fields' => [
+        'attributes' => [
             'id' => [
                 'type' => Entity::ID,
             ],

@@ -85,7 +85,7 @@ class BaseEntity implements Entity
         $this->entityType = $entityType;
         $this->entityManager = $entityManager;
 
-        $this->attributes = $defs['attributes'] ?? $defs['fields'] ?? $this->attributes;
+        $this->attributes = $defs['attributes'] /*?? $defs['fields']*/ ?? $this->attributes;
         $this->relations = $defs['relations'] ?? $this->relations;
 
         if ($valueAccessorFactory) {

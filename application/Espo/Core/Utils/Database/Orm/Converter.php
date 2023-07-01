@@ -92,15 +92,8 @@ class Converter
     /** @var array<string, mixed> */
     private array $idParams = [];
 
-    /**
-     * Permitted entityDefs parameters which will be copied to ormMetadata.
-     *
-     * @var string[]
-     */
-    private array $permittedEntityOptions = [
-        'indexes',
-        'additionalTables',
-    ];
+    /** @var string[] */
+    private array $copyEntityProperties = ['indexes'];
 
     private IndexHelper $indexHelper;
 
@@ -167,11 +160,13 @@ class Converter
                 $ormMetadata,
                 $this->createEntityTypesFromRelations($entityType, $entityOrmMetadata)
             );
+        }
 
+        foreach ($entityDefs as $entityMetadata) {
             /** @var array<string, array<string, mixed>> $ormMetadata */
             $ormMetadata = Util::merge(
                 $ormMetadata,
-                $this->createAdditionalEntityTypes($entityOrmMetadata)
+                $this->obtainAdditionalTablesOrmMetadata($entityMetadata)
             );
         }
 
@@ -194,17 +189,17 @@ class Converter
         $ormMetadata = [];
 
         $ormMetadata[$entityType] = [
-            'fields' => [],
+            'attributes' => [],
             'relations' => [],
         ];
 
-        foreach ($this->permittedEntityOptions as $optionName) {
+        foreach ($this->copyEntityProperties as $optionName) {
             if (isset($entityMetadata[$optionName])) {
                 $ormMetadata[$entityType][$optionName] = $entityMetadata[$optionName];
             }
         }
 
-        $ormMetadata[$entityType]['fields'] = $this->convertFields($entityType, $entityMetadata);
+        $ormMetadata[$entityType]['attributes'] = $this->convertFields($entityType, $entityMetadata);
 
         $ormMetadata = $this->correctFields($entityType, $ormMetadata);
 
@@ -224,7 +219,7 @@ class Converter
                 $ormMetadata[$entityType]['collection']['orderBy'] = $collectionDefs['orderByColumn'];
             }
             else if (array_key_exists('orderBy', $collectionDefs)) {
-                if (array_key_exists($collectionDefs['orderBy'], $ormMetadata[$entityType]['fields'])) {
+                if (array_key_exists($collectionDefs['orderBy'], $ormMetadata[$entityType]['attributes'])) {
                     $ormMetadata[$entityType]['collection']['orderBy'] = $collectionDefs['orderBy'];
                 }
             }
@@ -245,15 +240,18 @@ class Converter
      */
     private function afterFieldsProcess(array $ormMetadata): array
     {
-        foreach ($ormMetadata as $entityType => &$entityParams) {
-            foreach ($entityParams['fields'] as $attribute => &$attributeParams) {
+        foreach ($ormMetadata as /*$entityType =>*/ &$entityParams) {
+            if (empty($entityParams['attributes'])) {
+                print_r($entityParams);
+            }
+            foreach ($entityParams['attributes'] as $attribute => &$attributeParams) {
 
                 // Remove fields without type.
                 if (
                     !isset($attributeParams['type']) &&
                     (!isset($attributeParams['notStorable']) || $attributeParams['notStorable'] === false)
                 ) {
-                    unset($entityParams['fields'][$attribute]);
+                    unset($entityParams['attributes'][$attribute]);
 
                     continue;
                 }
@@ -316,7 +314,7 @@ class Converter
     private function afterProcess(array $ormMetadata): array
     {
         foreach ($ormMetadata as $entityType => &$entityParams) {
-            foreach ($entityParams['fields'] as $attribute => &$attributeParams) {
+            foreach ($entityParams['attributes'] as $attribute => &$attributeParams) {
                 $attributeType = $attributeParams['type'] ?? null;
 
                 switch ($attributeType) {
@@ -337,7 +335,7 @@ class Converter
      */
     private function obtainForeignType(array $data, string $entityType, string $attribute): ?string
     {
-        $params = $data[$entityType]['fields'][$attribute] ?? [];
+        $params = $data[$entityType]['attributes'][$attribute] ?? [];
 
         $foreign = $params['foreign'] ?? null;
         $relation = $params['relation'] ?? null;
@@ -354,7 +352,7 @@ class Converter
             return null;
         }
 
-        $foreignParams = $data[$foreignEntityType]['fields'][$foreign] ?? [];
+        $foreignParams = $data[$foreignEntityType]['attributes'][$foreign] ?? [];
 
         return $foreignParams['type'] ?? null;
     }
@@ -397,7 +395,7 @@ class Converter
 
             $fieldTypeMetadata = $this->metadataHelper->getFieldDefsByType($attributeParams);
 
-            $fieldDefs = $this->convertField($entityType, $attribute, $attributeParams, $fieldTypeMetadata);
+            $fieldDefs = $this->convertField($attributeParams, $fieldTypeMetadata);
 
             if ($fieldDefs !== false) {
                 if (isset($output[$attribute]) && !in_array($attribute, $unmergedFields)) {
@@ -442,23 +440,23 @@ class Converter
     {
         $entityMetadata = $ormMetadata[$entityType];
 
-        foreach ($entityMetadata['fields'] as $field => $fieldParams) {
-            $fieldType = $fieldParams['type'] ?? null;
+        foreach ($entityMetadata['attributes'] as $field => $itemParams) {
+            $type = $itemParams['type'] ?? null;
 
-            if (!$fieldType) {
+            if (!$type) {
                 continue;
             }
 
             /** @var ?class-string<FieldConverter> $className */
-            $className = $this->metadata->get(['fields', $fieldType, 'converterClassName']);
+            $className = $this->metadata->get(['fields', $type, 'converterClassName']);
 
             if ($className) {
                 $toUnset =
-                    !in_array('', $this->metadata->get(['fields', $fieldType, 'actualFields']) ?? []) &&
-                    !in_array('', $this->metadata->get(['fields', $fieldType, 'notActualFields']) ?? []);
+                    !in_array('', $this->metadata->get(['fields', $type, 'actualFields']) ?? []) &&
+                    !in_array('', $this->metadata->get(['fields', $type, 'notActualFields']) ?? []);
 
                 if ($toUnset) {
-                    $ormMetadata = Util::unsetInArray($ormMetadata, [$entityType => ['fields.' . $field]]);
+                    $ormMetadata = Util::unsetInArray($ormMetadata, [$entityType => ['attributes.' . $field]]);
                 }
 
                 $converter = $this->injectableFactory->create($className);
@@ -480,7 +478,7 @@ class Converter
             if ($defaultAttributes && array_key_exists($field, $defaultAttributes)) {
                 $defaultMetadataPart = [
                     $entityType => [
-                        'fields' => [
+                        'attributes' => [
                             $field => [
                                 'default' => $defaultAttributes[$field],
                             ]
@@ -499,19 +497,19 @@ class Converter
 
         if ($scopeDefs['stream'] ?? false) {
             if (!isset($entityMetadata['fields']['isFollowed'])) {
-                $ormMetadata[$entityType]['fields']['isFollowed'] = [
+                $ormMetadata[$entityType]['attributes']['isFollowed'] = [
                     'type' => Entity::VARCHAR,
                     'notStorable' => true,
                     'notExportable' => true,
                 ];
 
-                $ormMetadata[$entityType]['fields']['followersIds'] = [
+                $ormMetadata[$entityType]['attributes']['followersIds'] = [
                     'type' => Entity::JSON_ARRAY,
                     'notStorable' => true,
                     'notExportable' => true,
                 ];
 
-                $ormMetadata[$entityType]['fields']['followersNames'] = [
+                $ormMetadata[$entityType]['attributes']['followersNames'] = [
                     'type' => Entity::JSON_OBJECT,
                     'notStorable' => true,
                     'notExportable' => true,
@@ -521,7 +519,7 @@ class Converter
 
         // @todo Refactor.
         if ($this->metadata->get(['entityDefs', $entityType, 'optimisticConcurrencyControl'])) {
-            $ormMetadata[$entityType]['fields']['versionNumber'] = [
+            $ormMetadata[$entityType]['attributes']['versionNumber'] = [
                 'type' => Entity::INT,
                 'dbType' => Types::BIGINT,
                 'notExportable' => true,
@@ -537,8 +535,6 @@ class Converter
      * @return array<string, mixed>|false
      */
     private function convertField(
-        string $entityType,
-        string $field,
         array $fieldParams,
         ?array $fieldTypeMetadata = null
     ) {
@@ -742,8 +738,8 @@ class Converter
 
         $defs['indexes'] ??= [];
 
-        if (isset($defs['fields'])) {
-            $indexList = self::getEntityIndexListFromAttributes($defs['fields']);
+        if (isset($defs['attributes'])) {
+            $indexList = self::getEntityIndexListFromAttributes($defs['attributes']);
 
             foreach ($indexList as $indexName => $indexParams) {
                 if (!isset($defs['indexes'][$indexName])) {
@@ -824,7 +820,7 @@ class Converter
      * @param array<string, mixed> $defs
      * @return array<string, mixed>
      */
-    private function createAdditionalEntityTypes(array $defs): array
+    private function obtainAdditionalTablesOrmMetadata(array $defs): array
     {
         /** @var array<string, array<string, mixed>> $additionalDefs */
         $additionalDefs = $defs['additionalTables'] ?? [];
@@ -838,6 +834,17 @@ class Converter
 
         foreach ($entityTypeList as $itemEntityType) {
             $this->applyIndexes($additionalDefs, $itemEntityType);
+        }
+
+        // For backward compatibility. Actual as of v8.0.
+        // @todo Remove in v10.0.
+        // @todo Add deprecation warning in v9.0. If 'fields' is set.
+        foreach ($additionalDefs as &$entityDefs) {
+            if (!isset($entityDefs['attributes'])) {
+                $entityDefs['attributes'] = $entityDefs['fields'] ?? [];
+
+                unset($entityDefs['fields']);
+            }
         }
 
         return $additionalDefs;
@@ -862,7 +869,7 @@ class Converter
 
             $itemDefs = [
                 'skipRebuild' => true,
-                'fields' => [
+                'attributes' => [
                     'id' => [
                         'type' => Entity::ID,
                         'autoincrement' => true,
@@ -876,7 +883,7 @@ class Converter
 
             if (!$relationDefs->hasMidKey()) {
                 throw new LogicException(
-                    "Bad manyMany relation {$name} in {$entityType}. Might be not defined on the other side.");
+                    "Bad manyMany relation $name in $entityType. Might be not defined on the other side.");
             }
 
             $key1 = $relationDefs->getMidKey();
@@ -885,7 +892,7 @@ class Converter
             $midKeys = [$key1, $key2];
 
             foreach ($midKeys as $key) {
-                $itemDefs['fields'][$key] = [
+                $itemDefs['attributes'][$key] = [
                     'type' => Entity::FOREIGN_ID,
                 ];
             }
@@ -907,7 +914,7 @@ class Converter
                     $columnDefs['default'] = $attributeDefs->getParam('default');
                 }
 
-                $itemDefs['fields'][$columnName] = $columnDefs;
+                $itemDefs['attributes'][$columnName] = $columnDefs;
             }
 
             foreach ($relationDefs->getIndexList() as $indexDefs) {
