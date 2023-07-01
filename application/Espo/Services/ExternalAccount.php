@@ -49,7 +49,7 @@ use Espo\Entities\Integration as IntegrationEntity;
 use Exception;
 
 /**
- * @extends Record<\Espo\Entities\ExternalAccount>
+ * @extends Record<ExternalAccountEntity>
  */
 class ExternalAccount extends Record implements Di\HookManagerAware
 {
@@ -63,8 +63,6 @@ class ExternalAccount extends Record implements Di\HookManagerAware
         if (!$integrationEntity) {
             throw new NotFound();
         }
-
-        $integrationEntity->toArray(); // ?
 
         if (!$integrationEntity->get('enabled')) {
             throw new Error("{$integration} is disabled.");
@@ -99,7 +97,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
                 return $client->ping();
             }
         }
-        catch (Exception $e) {}
+        catch (Exception) {}
 
         return false;
     }
@@ -157,7 +155,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
 
     public function read(string $id, ReadParams $params): Entity
     {
-        list ($integration, $userId) = explode('__', $id);
+        [, $userId] = explode('__', $id);
 
         if ($this->user->getId() !== $userId && !$this->user->isAdmin()) {
             throw new Forbidden();
@@ -169,7 +167,7 @@ class ExternalAccount extends Record implements Di\HookManagerAware
             throw new NotFoundSilent("Record does not exist.");
         }
 
-        list($integration, $id) = explode('__', $entity->getId());
+        [$integration,] = explode('__', $entity->getId());
 
         $externalAccountSecretAttributeList = $this->metadata
             ->get(['integrations', $integration, 'externalAccountSecretAttributeList']) ?? [];
