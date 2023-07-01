@@ -31,6 +31,6 @@ namespace Espo\Core\Select\AccessControl;
 
 /**
  * @deprecated Use `\Espo\Core\Select\AccessControl\FilterResolvers\Bypass` instead.
- * @todo Remove in v8.0.
+ * @todo Remove in v9.0.
  */
 class BypassFilterResolver extends \Espo\Core\Select\AccessControl\FilterResolvers\Bypass {}

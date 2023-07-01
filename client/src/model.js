@@ -1000,7 +1000,7 @@ class Model {
 
     /**
      * @deprecated Use `getClonedAttributes`.
-     * @todo Remove in v8.0.
+     * @todo Remove in v9.0.
      * @return {Object.<string, *>}
      */
     toJSON() {

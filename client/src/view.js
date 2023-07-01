@@ -327,7 +327,7 @@ class View extends BullView {
      * Ajax request.
      *
      * @deprecated Use `Espo.Ajax`.
-     * @todo Remove in v8.0.
+     * @todo Remove in v9.0.
      * @param {string} url An URL.
      * @param {string} type A method.
      * @param {any} [data] Data.
@@ -343,7 +343,7 @@ class View extends BullView {
      * POST request.
      *
      * @deprecated Use `Espo.Ajax.postRequest`.
-     * @todo Remove in v8.0.
+     * @todo Remove in v9.0.
      * @param {string} url An URL.
      * @param {any} [data] Data.
      * @param {Object} [options] Options.
@@ -358,7 +358,7 @@ class View extends BullView {
      * GET request.
      *
      * @deprecated Use `Espo.Ajax.getRequest`.
-     * @todo Remove in v8.0.
+     * @todo Remove in v9.0.
      * @param {string} url An URL.
      * @param {any} [data] Data.
      * @param {Object} [options] Options.

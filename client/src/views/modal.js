@@ -281,7 +281,7 @@ class ModalView extends View {
         this.buttonList = Espo.Utils.cloneDeep(this.buttonList);
         this.dropdownItemList = Espo.Utils.cloneDeep(this.dropdownItemList);
 
-        // @todo Remove in v8.0.
+        // @todo Remove in v9.0.
         this.buttons = Espo.Utils.cloneDeep(this.buttons);
 
         if (this.shortcutKeys) {

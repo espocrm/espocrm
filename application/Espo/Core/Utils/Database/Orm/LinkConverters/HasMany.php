@@ -46,7 +46,7 @@ class HasMany implements LinkConverter
     {
         if (!$linkDefs->hasForeignRelationName() && $linkDefs->getParam('disabled')) {
             // For bc.
-            // @todo Remove in v8.0.
+            // @todo Remove in v9.0.
             return EntityDefs::create();
         }
 
