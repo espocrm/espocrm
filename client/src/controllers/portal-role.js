@@ -26,16 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/portal-role', ['controllers/record'], function (Dep) {
+import RecordController from 'controllers/record';
 
-    return Dep.extend({
+class PortalRoleController extends RecordController {
 
-        checkAccess: function () {
-            if (this.getUser().isAdmin()) {
-                return true;
-            }
+    checkAccess(action) {
+        if (this.getUser().isAdmin()) {
+            return true;
+        }
 
-            return false;
-        },
-    });
-});
+        return false;
+    }
+}
+
+export default PortalRoleController;

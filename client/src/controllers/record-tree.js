@@ -26,36 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/record-tree', ['controllers/record'], function (Dep) {
+import RecordController from 'controllers/record';
 
-    return Dep.extend({
+class RecordTreeController extends RecordController {
 
-        defaultAction: 'listTree',
+    defaultAction = 'listTree'
 
-        beforeView: function (options) {
-            Dep.prototype.beforeView.call(this, options);
+    beforeView(options) {
+        super.beforeView(options);
 
-            options = options || {};
+        options = options || {};
 
-            if (options.model) {
-                options.model.unset('childCollection');
-                options.model.unset('childList');
-            }
-        },
+        if (options.model) {
+            options.model.unset('childCollection');
+            options.model.unset('childList');
+        }
+    }
 
-        beforeListTree: function () {
-            this.handleCheckAccess('read');
-        },
+    // noinspection JSUnusedGlobalSymbols
+    beforeListTree() {
+        this.handleCheckAccess('read');
+    }
 
-        actionListTree: function () {
-            this.getCollection().then(collection => {
-                collection.url = collection.entityType + '/action/listTree';
+    // noinspection JSUnusedGlobalSymbols
+    actionListTree() {
+        this.getCollection().then(collection => {
+            collection.url = collection.entityType + '/action/listTree';
 
-                this.main(this.getViewName('listTree'), {
-                    scope: this.name,
-                    collection: collection
-                });
+            this.main(this.getViewName('listTree'), {
+                scope: this.name,
+                collection: collection
             });
-        },
-    });
-});
+        });
+    }
+}
+
+export default RecordTreeController;

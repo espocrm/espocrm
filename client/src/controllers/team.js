@@ -26,18 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/team', ['controllers/record'], function (Dep) {
+import RecordController from 'controllers/record';
 
-    return Dep.extend({
+class TeamController extends RecordController {
 
-        checkAccess: function (action) {
-            if (action == 'read') {
-                return true;
-            }
+    checkAccess(action) {
+        if (action === 'read') {
+            return true;
+        }
 
-            if (this.getUser().isAdmin()) {
-                return true;
-            }
-        },
-    });
-});
+        if (this.getUser().isAdmin()) {
+            return true;
+        }
+
+        return false;
+    }
+}
+
+export default TeamController;

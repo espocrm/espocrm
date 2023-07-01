@@ -26,29 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/login-as', ['controller'], function (Dep) {
+import Controller from 'controller';
 
-    return Dep.extend({
+class LoginAsController extends Controller {
 
-        actionLogin: function (options) {
-            let anotherUser = options.anotherUser;
-            let username = options.username;
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {Record} options
+     */
+    actionLogin(options) {
+        let anotherUser = options.anotherUser;
+        let username = options.username;
 
-            if (!anotherUser) {
-                throw new Error("No anotherUser.");
-            }
+        if (!anotherUser) {
+            throw new Error("No anotherUser.");
+        }
 
-            this.baseController.login({
-                anotherUser: anotherUser,
-                username: username,
-            });
+        this.baseController.login({
+            anotherUser: anotherUser,
+            username: username,
+        });
 
-            this.listenToOnce(this.baseController, 'login', () => {
-                this.baseController.once('router-set', () => {
-                    let url = window.location.href.split('?')[0];
-                    window.location.replace(url);
-                })
-            });
-        },
-    });
-});
+        this.listenToOnce(this.baseController, 'login', () => {
+            this.baseController.once('router-set', () => {
+                let url = window.location.href.split('?')[0];
+
+                window.location.replace(url);
+            })
+        });
+    }
+}
+
+export default LoginAsController;

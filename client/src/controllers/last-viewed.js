@@ -26,14 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/last-viewed', ['controllers/record'], function (Dep) {
+import RecordController from 'controllers/record';
 
-    return Dep.extend({
+class LastViewedController extends RecordController {
 
-        entityType: 'ActionHistoryRecord',
+    entityType = 'ActionHistoryRecord'
 
-        checkAccess: function (action) {
-            return this.getAcl().check(this.entityType, action);
-        },
-    });
-});
+    checkAccess(action) {
+        return this.getAcl().check(this.entityType, action);
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default LastViewedController;

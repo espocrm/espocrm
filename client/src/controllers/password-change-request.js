@@ -26,24 +26,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/password-change-request', ['controller'], function (Dep) {
+import Controller from 'controller';
 
-    return Dep.extend({
+class PasswordChangeRequestController extends Controller {
 
-        actionPasswordChange: function (options) {
-            options = options || {};
+    // noinspection JSUnusedGlobalSymbols
+    actionPasswordChange(options) {
+        options = options || {};
 
-            if (!options.id) {
-                throw new Error();
-            }
+        if (!options.id) {
+            throw new Error();
+        }
 
-            this.entire('views/user/password-change-request', {
-                requestId: options.id,
-                strengthParams: options.strengthParams,
-                notFound: options.notFound,
-            }, view => {
-                view.render();
-            });
-        },
-    });
-});
+        this.entire('views/user/password-change-request', {
+            requestId: options.id,
+            strengthParams: options.strengthParams,
+            notFound: options.notFound,
+        }, view => {
+            view.render();
+        });
+    }
+}
+
+export default PasswordChangeRequestController;

@@ -41,6 +41,12 @@ class ApiUserController extends RecordController {
             });
     }
 
+    /**
+     * @protected
+     * @param {Object} options
+     * @param {module:models/user} model
+     * @param {string} view
+     */
     createViewView(options, model, view) {
         if (!model.isApi()) {
             if (model.isPortal()) {

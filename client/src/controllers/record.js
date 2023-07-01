@@ -61,7 +61,7 @@ class RecordController extends Controller {
      * Get a view name/path.
      *
      * @protected
-     * @param {'list'|'detail'|'edit'|'create'|'listRelated'} type A type.
+     * @param {'list'|'detail'|'edit'|'create'|'listRelated'|string} type A type.
      * @returns {string}
      */
     getViewName(type) {

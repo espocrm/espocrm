@@ -26,42 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/note', ['controller'], function (Dep) {
+import Controller from 'controller';
 
+class NoteController extends Controller {
+
+    // noinspection JSUnusedGlobalSymbols
     /**
-     * @class
-     * @name Class
-     * @extends module:controller
-     * @memberOf module:controllers/note
+     * @param {Record} options
      */
-    return Dep.extend(/** @lends module:controllers/note.Class# */{
+    actionView(options) {
+        let id = options.id;
 
-        actionView: function (options) {
-            let id = options.id;
+        if (!id) {
+            throw new Espo.Exceptions.NotFound;
+        }
 
-            if (!id) {
-                throw new Espo.Espo.Exceptions.NotFound;
-            }
+        let viewName = this.getMetadata().get(['clientDefs', this.name, 'views', 'detail']) ||
+            'views/note/detail';
 
-            let viewName = 'views/note/detail' ||
-                this.getMetadata().get(['clientDefs', this.name, 'views', 'detail']);
+        let model;
 
-            let model;
+        this.showLoadingNotification();
 
-            this.showLoadingNotification();
+        this.modelFactory.create('Note')
+            .then(m => {
+                model = m;
+                model.id = id;
 
-            this.modelFactory.create('Note')
-                .then(m => {
-                    model = m;
-                    model.id = id;
+                return model.fetch({main: true});
+            })
+            .then(() => {
+                this.hideLoadingNotification();
 
-                    return model.fetch({main: true});
-                })
-                .then(() => {
-                    this.hideLoadingNotification();
+                this.main(viewName, {model: model});
+            });
+    }
+}
 
-                    this.main(viewName, {model: model});
-                });
-        },
-    });
-});
+export default NoteController;

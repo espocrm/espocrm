@@ -441,7 +441,7 @@ class Controller {
     /**
      * Create a main view in the master.
      *
-     * @param {string} view A view name.
+     * @param {string} [view] A view name.
      * @param {Object} [options] Options for view.
      * @param {module:controller~viewCallback} [callback] A callback with a created view.
      * @param {boolean} [useStored] Use a stored view if available.
