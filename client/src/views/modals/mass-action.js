@@ -26,129 +26,129 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/mass-action', ['views/modal', 'model'], function (Dep, Model) {
+import ModalView from 'views/modal';
+import Model from 'model';
 
-    return Dep.extend({
+class MassActionModalView extends ModalView {
 
-        className: 'dialog dialog-record',
+    template = 'modals/mass-action'
 
-        template: 'modals/mass-action',
+    className = 'dialog dialog-record'
+    checkInterval = 4000
 
-        checkInterval: 4000,
+    data() {
+        return {
+            infoText: this.translate('infoText', 'messages', 'MassAction'),
+        };
+    }
 
-        data: function () {
-            return {
-                infoText: this.translate('infoText', 'messages', 'MassAction'),
-            };
-        },
+    setup() {
+        this.action = this.options.action;
+        this.id = this.options.id;
+        this.status = 'Pending';
 
-        setup: function () {
-            this.action = this.options.action;
-            this.id = this.options.id;
-            this.status = 'Pending';
+        this.headerText =
+            this.translate('Mass Action', 'scopeNames') + ': ' +
+            this.translate(this.action, 'massActions', this.options.scope);
 
-            this.headerText =
-                this.translate('Mass Action', 'scopeNames') + ': ' +
-                this.translate(this.action, 'massActions', this.options.scope);
+        this.model = new Model();
+        this.model.name = 'MassAction';
 
-            this.model = new Model();
-            this.model.name = 'MassAction';
+        this.model.setDefs({
+            fields: {
+                'status': {
+                    type: 'enum',
+                    readOnly: true,
+                    options: [
+                        'Pending',
+                        'Running',
+                        'Success',
+                        'Failed',
+                    ],
+                    style: {
+                        'Success': 'success',
+                        'Failed': 'danger',
+                    },
+                },
+                'processedCount': {
+                    type: 'int',
+                    readOnly: true,
+                },
+            }
+        });
 
-            this.model.setDefs({
-                fields: {
-                    'status': {
-                        type: 'enum',
-                        readOnly: true,
-                        options: [
-                            'Pending',
-                            'Running',
-                            'Success',
-                            'Failed',
+        this.model.set({
+            status: this.status,
+            processedCount: null,
+        });
+
+        this.createView('record', 'views/record/edit-for-modal', {
+            scope: 'None',
+            model: this.model,
+            el: this.getSelector() + ' .record',
+            detailLayout: [
+                {
+                    rows: [
+                        [
+                            {
+                                name: 'status',
+                                labelText: this.translate('status', 'fields', 'MassAction'),
+                            },
+                            {
+                                name: 'processedCount',
+                                labelText: this.translate('processedCount', 'fields', 'MassAction'),
+                            },
                         ],
-                        style: {
-                            'Success': 'success',
-                            'Failed': 'danger',
-                        },
-                    },
-                    'processedCount': {
-                        type: 'int',
-                        readOnly: true,
-                    },
-                }
-            });
+                    ],
+                },
+            ],
+        });
 
-            this.model.set({
-                status: this.status,
-                processedCount: null,
-            });
+        this.on('close', () => {
+            let status = this.model.get('status');
 
-            this.createView('record', 'views/record/edit-for-modal', {
-                scope: 'None',
-                model: this.model,
-                el: this.getSelector() + ' .record',
-                detailLayout: [
-                    {
-                        rows: [
-                            [
-                                {
-                                    name: 'status',
-                                    labelText: this.translate('status', 'fields', 'MassAction'),
-                                },
-                                {
-                                    name: 'processedCount',
-                                    labelText: this.translate('processedCount', 'fields', 'MassAction'),
-                                }
-                            ]
-                        ]
-                    }
-                ],
-            });
+            if (
+                status !== 'Pending' &&
+                status !== 'Running'
+            ) {
+                return;
+            }
 
-            this.on('close', () => {
-                let status = this.model.get('status');
+            Espo.Ajax.postRequest(`MassAction/${this.id}/subscribe`);
+        });
 
-                if (
-                    status !== 'Pending' &&
-                    status !== 'Running'
-                ) {
+        this.checkStatus();
+    }
+
+    checkStatus() {
+        Espo.Ajax
+            .getRequest(`MassAction/${this.id}/status`)
+            .then(response => {
+                let status = response.status;
+
+                this.model.set('status', status);
+
+                if (status === 'Pending' || status === 'Running') {
+                    setTimeout(() => this.checkStatus(), this.checkInterval);
+
                     return;
                 }
 
-                Espo.Ajax.postRequest(`MassAction/${this.id}/subscribe`);
-            });
-
-            this.checkStatus();
-        },
-
-        checkStatus: function () {
-            Espo.Ajax
-                .getRequest(`MassAction/${this.id}/status`)
-                .then(response => {
-                    let status = response.status;
-
-                    this.model.set('status', status);
-
-                    if (status === 'Pending' || status === 'Running') {
-                        setTimeout(() => this.checkStatus(), this.checkInterval);
-
-                        return;
-                    }
-
-                    this.model.set({
-                        processedCount: response.processedCount,
-                    });
-
-                    if (status === 'Success') {
-                        this.trigger('success', {
-                            count: response.processedCount,
-                        });
-                    }
-
-                    if (this.$el) {
-                        this.$el.find('.info-text').addClass('hidden');
-                    }
+                this.model.set({
+                    processedCount: response.processedCount,
                 });
-        },
 
-    });
-});
+                if (status === 'Success') {
+                    this.trigger('success', {
+                        count: response.processedCount,
+                    });
+                }
+
+                if (this.$el) {
+                    this.$el.find('.info-text').addClass('hidden');
+                }
+            });
+    }
+}
+
+export default MassActionModalView;

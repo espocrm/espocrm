@@ -29,7 +29,7 @@
 import SelectRecordsModal from 'views/modals/select-records';
 import ListWithCategories from 'views/list-with-categories';
 
-class SelectRecordsWithCategoriesModal extends SelectRecordsModal {
+class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
 
     template = 'modals/select-records-with-categories'
 
@@ -117,9 +117,11 @@ class SelectRecordsWithCategoriesModal extends SelectRecordsModal {
         ListWithCategories.prototype.applyCategoryToCollection.call(this);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     isCategoryMultiple() {
         ListWithCategories.prototype.isCategoryMultiple.call(this);
     }
 }
 
-export default SelectRecordsWithCategoriesModal;
+// noinspection JSUnusedGlobalSymbols
+export default SelectRecordsWithCategoriesModalView;

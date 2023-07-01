@@ -26,83 +26,93 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/kanban-move-over', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class KanbanMoveOverModalView extends ModalView {
 
-        template: 'modals/kanban-move-over',
+    template = 'modals/kanban-move-over'
 
-        data: function () {
-            return {
-                optionDataList: this.optionDataList
-            };
+    /** @inheritDoc */
+    backdrop = true
+
+    data() {
+        return {
+            optionDataList: this.optionDataList,
+        };
+    }
+
+    events = {
+        /** @this KanbanMoveOverModalView */
+        'click [data-action="move"]': function (e) {
+            let value = $(e.currentTarget).data('value');
+
+            this.moveTo(value);
         },
+    }
 
-        events: {
-            'click [data-action="move"]': function (e) {
-                var value = $(e.currentTarget).data('value');
-                this.moveTo(value);
-            }
-        },
+    setup() {
+        this.scope = this.model.name;
 
-        setup: function () {
-            this.scope = this.model.name;
-            var iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+        let iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
-            this.statusField = this.options.statusField;
+        this.statusField = this.options.statusField;
 
-            this.$header = $('<span>');
+        this.$header = $('<span>');
 
+        this.$header.append(
+            $('<span>').text(this.getLanguage().translate(this.scope, 'scopeNames'))
+        );
+
+        if (this.model.get('name')) {
+            this.$header.append(' <span class="chevron-right"></span> ');
             this.$header.append(
-                $('<span>').text(this.getLanguage().translate(this.scope, 'scopeNames'))
-            );
+                $('<span>').text(this.model.get('name'))
+            )
+        }
 
-            if (this.model.get('name')) {
-                this.$header.append(' <span class="chevron-right"></span> ');
-                this.$header.append(
-                    $('<span>').text(this.model.get('name'))
-                )
+        this.$header.prepend(iconHtml);
+
+        this.buttonList = [
+            {
+                name: 'cancel',
+                label: 'Cancel'
             }
+        ];
 
-            this.$header.prepend(iconHtml);
+        this.optionDataList = [];
 
-            this.buttonList = [
+        (
+            this.getMetadata()
+                .get(['entityDefs', this.scope, 'fields', this.statusField, 'options']) || []
+        )
+            .forEach((item) => {
+                this.optionDataList.push({
+                    value: item,
+                    label: this.getLanguage().translateOption(item, this.statusField, this.scope),
+                });
+            });
+    }
+
+    moveTo(status) {
+        var attributes = {};
+
+        attributes[this.statusField] = status;
+
+        this.model
+            .save(
+                attributes,
                 {
-                    name: 'cancel',
-                    label: 'Cancel'
+                    patch: true,
+                    isMoveTo: true,
                 }
-            ];
+            )
+            .then(() => {
+                Espo.Ui.success(this.translate('Done'));
+            });
 
-            this.optionDataList = [];
+        this.close();
+    }
+}
 
-            (this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.statusField, 'options']) || [])
-                .forEach((item) => {
-                    this.optionDataList.push({
-                        value: item,
-                        label: this.getLanguage().translateOption(item, this.statusField, this.scope),
-                    });
-                });
-        },
-
-        moveTo: function (status) {
-            var attributes = {};
-
-            attributes[this.statusField] = status;
-
-            this.model
-                .save(
-                    attributes,
-                    {
-                        patch: true,
-                        isMoveTo: true,
-                    }
-                )
-                .then(() => {
-                    Espo.Ui.success(this.translate('Done'));
-                });
-
-            this.close();
-        },
-    });
-});
+// noinspection JSUnusedGlobalSymbols
+export default KanbanMoveOverModalView;

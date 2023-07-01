@@ -26,158 +26,158 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/resolve-save-conflict', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class ResolveSaveConflictModalView extends ModalView {
 
-        backdrop: true,
+    template = 'modals/resolve-save-conflict'
 
-        fitHeight: true,
+    backdrop = true
 
-        template: 'modals/resolve-save-conflict',
+    resolutionList = [
+        'current',
+        'actual',
+        'original',
+    ]
 
-        resolutionList: [
-            'current',
-            'actual',
-            'original',
-        ],
+    defaultResolution = 'current'
 
-        defaultResolution: 'current',
+    data() {
+        let dataList = [];
 
-        data: function () {
-            var dataList = [];
-
-            this.fieldList.forEach(item => {
-                var o = {
-                    field: item,
-                    viewKey: item + 'Field',
-                    resolution: this.defaultResolution,
-                };
-
-                dataList.push(o);
-            });
-
-            return {
-                dataList: dataList,
-                entityType: this.entityType,
-                resolutionList: this.resolutionList,
+        this.fieldList.forEach(item => {
+            let o = {
+                field: item,
+                viewKey: item + 'Field',
+                resolution: this.defaultResolution,
             };
-        },
 
-        setup: function () {
-            this.headerText = this.translate('Resolve Conflict');
+            dataList.push(o);
+        });
 
-            this.buttonList = [
-                {
-                    name: 'apply',
-                    label: 'Apply',
-                    style: 'danger',
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                },
-            ];
+        return {
+            dataList: dataList,
+            entityType: this.entityType,
+            resolutionList: this.resolutionList,
+        };
+    }
 
-            this.entityType = this.model.entityType;
+    setup() {
+        this.headerText = this.translate('Resolve Conflict');
 
-            this.originalModel = this.model;
+        this.buttonList = [
+            {
+                name: 'apply',
+                label: 'Apply',
+                style: 'danger',
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+            },
+        ];
 
-            this.originalAttributes = Espo.Utils.cloneDeep(this.options.originalAttributes);
-            this.currentAttributes = Espo.Utils.cloneDeep(this.options.currentAttributes);
-            this.actualAttributes = Espo.Utils.cloneDeep(this.options.actualAttributes);
+        this.entityType = this.model.entityType;
 
-            var attributeList = this.options.attributeList;
+        this.originalModel = this.model;
 
-            var fieldList = [];
+        this.originalAttributes = Espo.Utils.cloneDeep(this.options.originalAttributes);
+        this.currentAttributes = Espo.Utils.cloneDeep(this.options.currentAttributes);
+        this.actualAttributes = Espo.Utils.cloneDeep(this.options.actualAttributes);
 
-            this.getFieldManager()
-                .getEntityTypeFieldList(this.entityType)
-                .forEach(field => {
-                    var fieldAttributeList = this.getFieldManager()
-                        .getEntityTypeFieldAttributeList(this.entityType, field);
+        let attributeList = this.options.attributeList;
 
-                    var intersect = attributeList.filter(value => fieldAttributeList.includes(value));
+        let fieldList = [];
 
-                    if (intersect.length) {
-                        fieldList.push(field);
-                    }
-                });
+        this.getFieldManager()
+            .getEntityTypeFieldList(this.entityType)
+            .forEach(field => {
+                let fieldAttributeList = this.getFieldManager()
+                    .getEntityTypeFieldAttributeList(this.entityType, field);
 
-            this.fieldList = fieldList;
+                let intersect = attributeList.filter(value => fieldAttributeList.includes(value));
 
-            this.wait(
-                this.getModelFactory().create(this.entityType)
-                    .then(model => {
-                        this.model = model;
-
-                        this.fieldList.forEach(field => {
-                            this.setResolution(field, this.defaultResolution);
-                        });
-
-                        this.fieldList.forEach(field => {
-                            this.createField(field);
-                        });
-                    })
-            );
-        },
-
-        setResolution: function (field, resolution) {
-            let attributeList = this.getFieldManager()
-                .getEntityTypeFieldAttributeList(this.entityType, field);
-
-            let values = {};
-
-            let source = this.currentAttributes;
-
-            if (resolution === 'actual') {
-                source = this.actualAttributes;
-            }
-            else if (resolution === 'original') {
-                source = this.originalAttributes;
-            }
-
-            for (let attribute of attributeList) {
-                values[attribute] = source[attribute] || null;
-            }
-
-            this.model.set(values);
-        },
-
-        createField: function (field) {
-            let type = this.model.getFieldType(field);
-
-            let viewName =
-                this.model.getFieldParam(field, 'view') ||
-                this.getFieldManager().getViewName(type);
-
-            this.createView(field + 'Field', viewName, {
-                readOnly: true,
-                model: this.model,
-                name: field,
-                el: this.getSelector() + ' [data-name="field"][data-field="' + field + '"]',
-                mode: 'list',
+                if (intersect.length) {
+                    fieldList.push(field);
+                }
             });
-        },
 
-        afterRender: function () {
-            this.$el.find('[data-name="resolution"]').on('change', e => {
-                let $el = $(e.currentTarget);
+        this.fieldList = fieldList;
 
-                let field = $el.attr('data-field');
-                let resolution = $el.val();
+        this.wait(
+            this.getModelFactory().create(this.entityType)
+                .then(model => {
+                    this.model = model;
 
-                this.setResolution(field, resolution);
-            });
-        },
+                    this.fieldList.forEach(field => {
+                        this.setResolution(field, this.defaultResolution);
+                    });
 
-        actionApply: function () {
-            let attributes = this.model.attributes;
+                    this.fieldList.forEach(field => {
+                        this.createField(field);
+                    });
+                })
+        );
+    }
 
-            this.originalModel.set(attributes);
+    setResolution(field, resolution) {
+        let attributeList = this.getFieldManager()
+            .getEntityTypeFieldAttributeList(this.entityType, field);
 
-            this.trigger('resolve');
-            this.close();
-        },
-    });
-});
+        let values = {};
+
+        let source = this.currentAttributes;
+
+        if (resolution === 'actual') {
+            source = this.actualAttributes;
+        }
+        else if (resolution === 'original') {
+            source = this.originalAttributes;
+        }
+
+        for (let attribute of attributeList) {
+            values[attribute] = source[attribute] || null;
+        }
+
+        this.model.set(values);
+    }
+
+    createField(field) {
+        let type = this.model.getFieldType(field);
+
+        let viewName =
+            this.model.getFieldParam(field, 'view') ||
+            this.getFieldManager().getViewName(type);
+
+        this.createView(field + 'Field', viewName, {
+            readOnly: true,
+            model: this.model,
+            name: field,
+            el: this.getSelector() + ' [data-name="field"][data-field="' + field + '"]',
+            mode: 'list',
+        });
+    }
+
+    afterRender() {
+        this.$el.find('[data-name="resolution"]').on('change', e => {
+            let $el = $(e.currentTarget);
+
+            let field = $el.attr('data-field');
+            let resolution = $el.val();
+
+            this.setResolution(field, resolution);
+        });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionApply() {
+        let attributes = this.model.attributes;
+
+        this.originalModel.set(attributes);
+
+        this.trigger('resolve');
+        this.close();
+    }
+}
+
+export default ResolveSaveConflictModalView;

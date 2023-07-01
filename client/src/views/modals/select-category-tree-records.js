@@ -26,124 +26,126 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/select-category-tree-records', ['views/modals/select-records'], function (Dep) {
+import SelectRecordsModalView from 'views/modals/select-records';
 
-    return Dep.extend({
+class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
 
-        setup: function () {
-            this.filters = this.options.filters || {};
-            this.boolFilterList = this.options.boolFilterList || {};
-            this.primaryFilterName = this.options.primaryFilterName || null;
+    setup() {
+        this.filters = this.options.filters || {};
+        this.boolFilterList = this.options.boolFilterList || {};
+        this.primaryFilterName = this.options.primaryFilterName || null;
 
-            if ('multiple' in this.options) {
-                this.multiple = this.options.multiple;
+        if ('multiple' in this.options) {
+            this.multiple = this.options.multiple;
+        }
+
+        this.createButton = false;
+        this.massRelateEnabled = this.options.massRelateEnabled;
+
+        this.buttonList = [
+            {
+                name: 'cancel',
+                label: 'Cancel'
             }
+        ];
 
-            this.createButton = false;
-            this.massRelateEnabled = this.options.massRelateEnabled;
+        if (this.multiple) {
+            this.buttonList.unshift({
+                name: 'select',
+                style: 'danger',
+                label: 'Select',
+                onClick: dialog => {
+                    let listView = this.getRecordView();
 
-            this.buttonList = [
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
+                    if (listView.allResultIsChecked) {
+                        this.trigger('select', {
+                            massRelate: true,
+                            where: this.collection.getWhere(),
+                            searchParams: this.collection.data,
+                        });
+                    }
+                    else {
+                        var list = listView.getSelected();
+                        if (list.length) {
+                            this.trigger('select', list);
+                        }
+                    }
+
+                    dialog.close();
+                },
+            });
+        }
+
+        this.scope = this.options.scope;
+
+        this.$header = $('<span>');
+
+        this.$header.append(
+            $('<span>').text(
+                this.translate('Select') + ': ' +
+                this.getLanguage().translate(this.scope, 'scopeNamesPlural')
+            )
+        );
+
+        this.$header.prepend(
+            this.getHelper().getScopeColorIconHtml(this.scope)
+        );
+
+        this.waitForView('list');
+
+        Espo.loader.require('search-manager', SearchManager => {
+            this.getCollectionFactory().create(this.scope, collection => {
+                collection.maxSize = this.getConfig().get('recordsPerPageSelect') || 5;
+
+                this.collection = collection;
+
+                var searchManager = new SearchManager(collection, 'listSelect', null, this.getDateTime());
+
+                searchManager.emptyOnReset = true;
+
+                if (this.filters) {
+                    searchManager.setAdvanced(this.filters);
                 }
-            ];
 
-            if (this.multiple) {
-                this.buttonList.unshift({
-                    name: 'select',
-                    style: 'danger',
-                    label: 'Select',
-                    onClick: (dialog) => {
-                        var listView = this.getView('list');
+                if (this.boolFilterList) {
+                    searchManager.setBool(this.boolFilterList);
+                }
 
-                        if (listView.allResultIsChecked) {
-                            this.trigger('select', {
-                                massRelate: true,
-                                where: this.collection.getWhere(),
-                                searchParams: this.collection.data,
-                            });
-                        }
-                        else {
-                            var list = listView.getSelected();
-                            if (list.length) {
-                                this.trigger('select', list);
-                            }
-                        }
+                if (this.primaryFilterName) {
+                    searchManager.setPrimary(this.primaryFilterName);
+                }
 
-                        dialog.close();
-                    },
-                });
-            }
+                collection.where = searchManager.getWhere();
+                collection.url = collection.entityType + '/action/listTree';
 
-            this.scope = this.options.scope;
+                var viewName = this.getMetadata()
+                    .get('clientDefs.' + this.scope + '.recordViews.listSelectCategoryTree') ||
+                    'views/record/list-tree';
 
-            this.$header = $('<span>');
-
-            this.$header.append(
-                $('<span>').text(
-                    this.translate('Select') + ': ' +
-                    this.getLanguage().translate(this.scope, 'scopeNamesPlural')
-                )
-            );
-
-            this.$header.prepend(
-                this.getHelper().getScopeColorIconHtml(this.scope)
-            );
-
-            this.waitForView('list');
-
-            Espo.loader.require('search-manager', SearchManager => {
-                this.getCollectionFactory().create(this.scope, collection => {
-                    collection.maxSize = this.getConfig().get('recordsPerPageSelect') || 5;
-
-                    this.collection = collection;
-
-                    var searchManager = new SearchManager(collection, 'listSelect', null, this.getDateTime());
-
-                    searchManager.emptyOnReset = true;
-
-                    if (this.filters) {
-                        searchManager.setAdvanced(this.filters);
-                    }
-
-                    if (this.boolFilterList) {
-                        searchManager.setBool(this.boolFilterList);
-                    }
-
-                    if (this.primaryFilterName) {
-                        searchManager.setPrimary(this.primaryFilterName);
-                    }
-
-                    collection.where = searchManager.getWhere();
-                    collection.url = collection.entityType + '/action/listTree';
-
-                    var viewName = this.getMetadata()
-                        .get('clientDefs.' + this.scope + '.recordViews.listSelectCategoryTree') ||
-                        'views/record/list-tree';
-
-                    this.listenToOnce(collection, 'sync', () => {
-                        this.createView('list', viewName, {
-                            collection: collection,
-                            el: this.containerSelector + ' .list-container',
-                            readOnly: true,
-                            selectable: true,
-                            checkboxes: this.multiple,
-                            massActionsDisabled: true,
-                            searchManager: searchManager,
-                            checkAllResultDisabled: true,
-                            buttonsDisabled: true,
-                        }, listView => {
-                            listView.once('select', model => {
-                                this.trigger('select', model);
-                                this.close();
-                            });
+                this.listenToOnce(collection, 'sync', () => {
+                    this.createView('list', viewName, {
+                        collection: collection,
+                        el: this.containerSelector + ' .list-container',
+                        readOnly: true,
+                        selectable: true,
+                        checkboxes: this.multiple,
+                        massActionsDisabled: true,
+                        searchManager: searchManager,
+                        checkAllResultDisabled: true,
+                        buttonsDisabled: true,
+                    }, listView => {
+                        listView.once('select', model => {
+                            this.trigger('select', model);
+                            this.close();
                         });
                     });
-
-                    collection.fetch();
                 });
+
+                collection.fetch();
             });
-        },
-    });
-});
+        });
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default SelectCategoryTreeRecordsModalView;

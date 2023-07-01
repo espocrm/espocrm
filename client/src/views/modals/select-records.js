@@ -34,14 +34,13 @@ import SearchManager from 'search-manager';
 /**
  * A select-records modal.
  */
-class SelectRecordsModal extends ModalView {
+class SelectRecordsModalView extends ModalView {
 
     template = 'modals/select-records'
 
     cssName = 'select-modal'
     className = 'dialog dialog-record'
     multiple = false
-    header = false
     createButton = true
     searchPanel = true
     scope = ''
@@ -49,34 +48,34 @@ class SelectRecordsModal extends ModalView {
 
     /** @inheritDoc */
     shortcutKeys = {
-        /** @this SelectRecordsModal */
+        /** @this SelectRecordsModalView */
         'Control+Enter': function (e) {
             this.handleShortcutKeyCtrlEnter(e);
         },
-        /** @this SelectRecordsModal */
+        /** @this SelectRecordsModalView */
         'Control+Space': function (e) {
             this.handleShortcutKeyCtrlSpace(e);
         },
-        /** @this SelectRecordsModal */
+        /** @this SelectRecordsModalView */
         'Control+Slash': function (e) {
             this.handleShortcutKeyCtrlSlash(e);
         },
-        /** @this SelectRecordsModal */
+        /** @this SelectRecordsModalView */
         'Control+Comma': function (e) {
             this.handleShortcutKeyCtrlComma(e);
         },
-        /** @this SelectRecordsModal */
+        /** @this SelectRecordsModalView */
         'Control+Period': function (e) {
             this.handleShortcutKeyCtrlPeriod(e);
         },
     }
 
     events = {
-        /** @this SelectRecordsModal */
+        /** @this SelectRecordsModalView */
         'click button[data-action="create"]': function () {
             this.create();
         },
-        /** @this SelectRecordsModal */
+        /** @this SelectRecordsModalView */
         'click .list a': function (e) {
             e.preventDefault();
         },
@@ -459,9 +458,8 @@ class SelectRecordsModal extends ModalView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlComma(e) {
+    handleShortcutKeyCtrlComma() {
         if (!this.getSearchView()) {
             return;
         }
@@ -471,9 +469,8 @@ class SelectRecordsModal extends ModalView {
 
     /**
      * @protected
-     * @param {JQueryKeyEventObject} e
      */
-    handleShortcutKeyCtrlPeriod(e) {
+    handleShortcutKeyCtrlPeriod() {
         if (!this.getSearchView()) {
             return;
         }
@@ -482,4 +479,4 @@ class SelectRecordsModal extends ModalView {
     }
 }
 
-export default SelectRecordsModal;
+export default SelectRecordsModalView;

@@ -57,9 +57,9 @@
  * @typedef {Object} module:search-manager~advancedFilter
  *
  * @property {string} type A type. E.g. `equals`.
- * @property {string} attribute An attribute.
+ * @property {string} [attribute] An attribute.
  * @property {*} [value] A value.
- * @property {Object.<string,*>} [data] Additional data for UI.
+ * @property {Object.<string, *>} [data] Additional data for UI.
  */
 
 /**
@@ -306,7 +306,7 @@ class SearchManager {
     /**
      * Set advanced filters.
      *
-     * @param {{string: module:search-manager~advancedFilter}} advanced Advanced filters.
+     * @param {Object.<string, module:search-manager~advancedFilter>} advanced Advanced filters.
      *   Pairs of field => advancedFilter.
      */
     setAdvanced(advanced) {

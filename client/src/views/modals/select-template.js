@@ -26,43 +26,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/select-template', ['views/modals/select-records'], function (Dep) {
+import SelectRecordsModalView from 'views/modals/select-records';
 
-    return Dep.extend({
+class SelectTemplateModalView extends SelectRecordsModalView {
 
-        multiple: false,
+    multiple = false
+    createButton = false
+    searchPanel = false
+    scope = 'Template'
 
-        createButton: false,
+    loadSearch() {
+        super.loadSearch();
 
-        searchPanel: false,
+        this.searchManager.setAdvanced({
+            entityType: {
+                type: 'equals',
+                value: this.options.entityType,
+            },
+        });
 
-        scope: 'Template',
+        this.collection.where = this.searchManager.getWhere();
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+    afterRender() {
+        super.afterRender();
 
-        loadSearch: function () {
-            Dep.prototype.loadSearch.call(this);
+        let firstLinkElement = this.$el.find('a.link').first().get(0);
 
-            this.searchManager.setAdvanced({
-                entityType: {
-                    type: 'equals',
-                    value: this.options.entityType,
-                }
-            });
+        if (firstLinkElement) {
+            // noinspection JSUnresolvedReference
+            setTimeout(() => firstLinkElement.focus({preventScroll: true}), 10);
+        }
+    }
+}
 
-            this.collection.where = this.searchManager.getWhere();
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            let firstLinkElement = this.$el.find('a.link').first().get(0);
-
-            if (firstLinkElement) {
-                setTimeout(() => firstLinkElement.focus({preventScroll: true}), 10);
-            }
-        },
-    });
-});
+export default SelectTemplateModalView;

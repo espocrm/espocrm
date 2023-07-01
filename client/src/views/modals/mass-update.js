@@ -26,323 +26,331 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/mass-update', ['views/modal', 'helpers/mass-action'], function (Dep, MassActionHelper) {
+import ModalView from 'views/modal';
+import MassActionHelper from 'helpers/mass-action';
 
-    return Dep.extend({
+class MassUpdateModalView extends ModalView {
 
-        cssName: 'mass-update',
+    template = 'modals/mass-update'
 
-        className: 'dialog dialog-record',
+    cssName = 'mass-update'
+    className = 'dialog dialog-record'
+    layoutName = 'massUpdate'
 
-        template: 'modals/mass-update',
+    ACTION_UPDATE = 'update'
+    //ACTION_ADD = 'add'
+    //ACTION_REMOVE = 'remove'
 
-        layoutName: 'massUpdate',
+    data() {
+        return {
+            scope: this.scope,
+            fieldList: this.fieldList,
+            entityType: this.entityType,
+        };
+    }
 
-        ACTION_UPDATE: 'update',
+    events = {
+        /** @this MassUpdateModalView */
+        'click a[data-action="add-field"]': function (e) {
+            let field = $(e.currentTarget).data('name');
 
-        ACTION_ADD: 'add',
-
-        ACTION_REMOVE: 'remove',
-
-        data: function () {
-            return {
-                scope: this.scope,
-                fieldList: this.fieldList,
-                entityType: this.entityType,
-            };
+            this.addField(field);
         },
+        /** @this MassUpdateModalView */
+        'click button[data-action="reset"]': function () {
+            this.reset();
+        }
+    }
 
-        events: {
-            'click button[data-action="update"]': function () {
-                this.update();
+    setup() {
+        this.buttonList = [
+            {
+                name: 'update',
+                label: 'Update',
+                style: 'danger',
+                disabled: true,
             },
-            'click a[data-action="add-field"]': function (e) {
-                var field = $(e.currentTarget).data('name');
-                this.addField(field);
-            },
-            'click button[data-action="reset"]': function (e) {
-                this.reset();
+            {
+                name: 'cancel',
+                label: 'Cancel',
             }
-        },
+        ];
 
-        setup: function () {
-            this.buttonList = [
-                {
-                    name: 'update',
-                    label: 'Update',
-                    style: 'danger',
-                    disabled: true,
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                }
-            ];
+        this.entityType = this.options.entityType || this.options.scope;
+        this.scope = this.options.scope || this.entityType;
 
-            this.entityType = this.options.entityType || this.options.scope;
-            this.scope = this.options.scope || this.entityType;
+        this.ids = this.options.ids;
+        this.where = this.options.where;
+        this.searchParams = this.options.searchParams;
+        this.byWhere = this.options.byWhere;
 
-            this.ids = this.options.ids;
-            this.where = this.options.where;
-            this.searchParams = this.options.searchParams;
-            this.byWhere = this.options.byWhere;
+        this.hasActionMap = {};
 
-            this.hasActionMap = {};
+        let totalCount = this.options.totalCount;
 
-            let totalCount = this.options.totalCount;
+        this.helper = new MassActionHelper(this);
 
-            this.helper = new MassActionHelper(this);
+        this.idle = this.byWhere && this.helper.checkIsIdle(totalCount);
 
-            this.idle = this.byWhere && this.helper.checkIsIdle(totalCount);
+        this.$header = $('<span>')
+            .append(
+                $('<span>').text(this.translate(this.scope, 'scopeNamesPlural')),
+                ' <span class="chevron-right"></span> ',
+                $('<span>').text(this.translate('Mass Update'))
+            )
 
-            this.$header = $('<span>')
-                .append(
-                    $('<span>').text(this.translate(this.scope, 'scopeNamesPlural')),
-                    ' <span class="chevron-right"></span> ',
-                    $('<span>').text(this.translate('Mass Update'))
-                )
+        var forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
 
-            var forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
+        this.wait(true);
 
-            this.wait(true);
+        this.getModelFactory().create(this.entityType, (model) => {
+            this.model = model;
 
-            this.getModelFactory().create(this.entityType, (model) => {
-                this.model = model;
+            this.getHelper().layoutManager.get(this.entityType, this.layoutName, (layout) => {
+                layout = layout || [];
 
-                this.getHelper().layoutManager.get(this.entityType, this.layoutName, (layout) => {
-                    layout = layout || [];
+                this.fieldList = [];
 
-                    this.fieldList = [];
+                layout.forEach((field) => {
+                    if (~forbiddenList.indexOf(field)) {
+                        return;
+                    }
 
-                    layout.forEach((field) => {
-                        if (~forbiddenList.indexOf(field)) {
-                            return;
-                        }
-
-                        if (model.hasField(field)) {
-                            this.fieldList.push(field);
-                        }
-                    });
-
-                    this.wait(false);
+                    if (model.hasField(field)) {
+                        this.fieldList.push(field);
+                    }
                 });
+
+                this.wait(false);
+            });
+        });
+
+        this.addedFieldList = [];
+    }
+
+    addField(name) {
+        this.$el.find('[data-action="reset"]').removeClass('hidden');
+
+        this.$el.find('ul.filter-list li[data-name="'+name+'"]').addClass('hidden');
+
+        if (this.$el.find('ul.filter-list li:not(.hidden)').length === 0) {
+            this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
+        }
+
+        this.addedFieldList.push(name);
+
+        let label = this.getHelper().escapeString(
+            this.translate(name, 'fields', this.entityType)
+        );
+
+        let $cell =
+            $('<div>')
+                .addClass('cell form-group')
+                .attr('data-name', name)
+                .append(
+                    $('<label>')
+                        .addClass('control-label')
+                        .text(label)
+                )
+                .append(
+                    $('<div>')
+                        .addClass('field')
+                        .attr('data-name', name)
+                );
+
+        let $row =
+            $('<div>')
+                .addClass('item grid-auto-fill-md')
+                .attr('data-name', name)
+                .append($cell);
+
+        this.$el.find('.fields-container').append($row);
+
+        let type = this.model.getFieldType(name);
+        let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+
+        let actionList = this.getMetadata().get(['entityDefs', this.entityType, name, 'massUpdateActionList']) ||
+            this.getMetadata().get(['fields', type, 'massUpdateActionList']);
+
+        let hasActionDropdown = actionList !== null;
+
+        this.hasActionMap[name] = hasActionDropdown;
+
+        this.disableButton('update');
+
+        this.createView(name, viewName, {
+            model: this.model,
+            el: this.getSelector() + ' .field[data-name="' + name + '"]',
+            defs: {
+                name: name,
+            },
+            mode: 'edit',
+        }, view => {
+            this.enableButton('update');
+
+            view.render();
+        });
+
+        if (hasActionDropdown) {
+            let $select =
+                $('<select>')
+                    .addClass('item-action form-control')
+                    .attr('data-name', name);
+
+            actionList.forEach(action => {
+                let label = this.translate(Espo.Utils.upperCaseFirst(action));
+
+                $select.append(
+                    $('<option>')
+                        .text(label)
+                        .val(action)
+                );
             });
 
-            this.addedFieldList = [];
-        },
-
-        addField: function (name) {
-            this.$el.find('[data-action="reset"]').removeClass('hidden');
-
-            this.$el.find('ul.filter-list li[data-name="'+name+'"]').addClass('hidden');
-
-            if (this.$el.find('ul.filter-list li:not(.hidden)').length === 0) {
-                this.$el.find('button.select-field').addClass('disabled').attr('disabled', 'disabled');
-            }
-
-            this.addedFieldList.push(name);
-
-            let label = this.getHelper().escapeString(
-                this.translate(name, 'fields', this.entityType)
-            );
-
-            let $cell =
+            let $cellAction =
                 $('<div>')
-                    .addClass('cell form-group')
+                    .addClass('cell call-action form-group')
                     .attr('data-name', name)
                     .append(
                         $('<label>')
-                            .addClass('control-label')
-                            .text(label)
+                            .addClass('control-label hidden-xs')
+                            .html('&nbsp;')
                     )
                     .append(
                         $('<div>')
                             .addClass('field')
                             .attr('data-name', name)
+                            .append($select)
                     );
 
-            let $row =
-                $('<div>')
-                    .addClass('item grid-auto-fill-md')
-                    .attr('data-name', name)
-                    .append($cell);
+            $row.append($cellAction);
+        }
+    }
 
-            this.$el.find('.fields-container').append($row);
+    /**
+     * @param {string} field
+     * @return {module:views/fields/base}
+     */
+    getFieldView(field) {
+        return this.getView(field);
+    }
 
-            let type = this.model.getFieldType(name);
-            let viewName = this.model.getFieldParam(name, 'view') || this.getFieldManager().getViewName(type);
+    // noinspection JSUnusedGlobalSymbols
+    actionUpdate() {
+        this.disableButton('update');
 
-            let actionList = this.getMetadata().get(['entityDefs', this.entityType, name, 'massUpdateActionList']) ||
-                this.getMetadata().get(['fields', type, 'massUpdateActionList']);
+        let attributes = {};
+        let actions = {};
 
-            let hasActionDropdown = actionList !== null;
+        this.addedFieldList.forEach(field => {
+            let action = this.fetchAction(field);
+            let itemAttributes = this.getFieldView(field).fetch();
 
-            this.hasActionMap[name] = hasActionDropdown;
+            let itemActualAttributes = {};
 
-            this.disableButton('update');
+            this.getFieldManager()
+                .getEntityTypeFieldActualAttributeList(this.entityType, field)
+                .forEach(attribute => {
+                    actions[attribute] = action;
 
-            this.createView(name, viewName, {
-                model: this.model,
-                el: this.getSelector() + ' .field[data-name="' + name + '"]',
-                defs: {
-                    name: name,
-                },
-                mode: 'edit',
-            }, view => {
-                this.enableButton('update');
-
-                view.render();
-            });
-
-            if (hasActionDropdown) {
-                let $select =
-                    $('<select>')
-                        .addClass('item-action form-control')
-                        .attr('data-name', name);
-
-                actionList.forEach(action => {
-                    let label = this.translate(Espo.Utils.upperCaseFirst(action));
-
-                    $select.append(
-                        $('<option>')
-                            .text(label)
-                            .val(action)
-                    );
+                    itemActualAttributes[attribute] = itemAttributes[attribute];
                 });
 
-                let $cellAction =
-                    $('<div>')
-                        .addClass('cell call-action form-group')
-                        .attr('data-name', name)
-                        .append(
-                            $('<label>')
-                                .addClass('control-label hidden-xs')
-                                .html('&nbsp;')
-                        )
-                        .append(
-                            $('<div>')
-                                .addClass('field')
-                                .attr('data-name', name)
-                                .append($select)
-                        );
+            _.extend(attributes, itemActualAttributes);
+        });
 
-                $row.append($cellAction);
-            }
-        },
+        this.model.set(attributes);
 
-        actionUpdate: function () {
-            this.disableButton('update');
+        let notValid = false;
 
-            let attributes = {};
-            let actions = {};
+        this.addedFieldList.forEach(field => {
+            let view = this.getFieldView(field);
 
-            this.addedFieldList.forEach(field => {
-                let action = this.fetchAction(field);
-                let itemAttributes = this.getView(field).fetch();
+            notValid = view.validate() || notValid;
+        });
 
-                let itemActualAttributes = {};
+        if (notValid) {
+            Espo.Ui.error(this.translate('Not valid'))
 
-                this.getFieldManager()
-                    .getEntityTypeFieldActualAttributeList(this.entityType, field)
-                    .forEach(attribute => {
-                        actions[attribute] = action;
+            this.enableButton('update');
 
-                        itemActualAttributes[attribute] = itemAttributes[attribute];
-                    });
+            return;
+        }
 
-                _.extend(attributes, itemActualAttributes);
-            });
+        Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            this.model.set(attributes);
+        Espo.Ajax
+            .postRequest('MassAction', {
+                action: 'update',
+                entityType: this.entityType,
+                params: {
+                    ids: this.ids || null,
+                    where: (!this.ids || this.ids.length === 0) ? this.options.where : null,
+                    searchParams: (!this.ids || this.ids.length === 0) ? this.options.searchParams : null,
+                },
+                data: {
+                    values: attributes,
+                    actions: actions,
+                },
+                idle: this.idle,
+            })
+            .then(result => {
+                result = result || {};
 
-            let notValid = false;
+                if (result.id) {
+                    this.helper
+                        .process(result.id, 'update')
+                        .then(view => {
+                            this.listenToOnce(view, 'close', () => this.close());
 
-            this.addedFieldList.forEach(field => {
-                let view = this.getView(field);
-
-                notValid = view.validate() || notValid;
-            });
-
-            if (notValid) {
-                this.notify('Not valid', 'error');
-                this.enableButton('update');
-
-                return;
-            }
-
-            Espo.Ui.notify(this.translate('saving', 'messages'));
-
-            Espo.Ajax
-                .postRequest('MassAction', {
-                    action: 'update',
-                    entityType: this.entityType,
-                    params: {
-                        ids: this.ids || null,
-                        where: (!this.ids || this.ids.length === 0) ? this.options.where : null,
-                        searchParams: (!this.ids || this.ids.length === 0) ? this.options.searchParams : null,
-                    },
-                    data: {
-                        values: attributes,
-                        actions: actions,
-                    },
-                    idle: this.idle,
-                })
-                .then(result => {
-                    result = result || {};
-
-                    if (result.id) {
-                        this.helper
-                            .process(result.id, 'update')
-                            .then(view => {
-                                this.listenToOnce(view, 'close', () => this.close());
-
-                                this.listenToOnce(view, 'success', result => {
-                                    this.trigger('after:update', {
-                                        count: result.count,
-                                        idle: true,
-                                    });
+                            this.listenToOnce(view, 'success', result => {
+                                this.trigger('after:update', {
+                                    count: result.count,
+                                    idle: true,
                                 });
                             });
+                        });
 
-                        return;
-                    }
+                    return;
+                }
 
-                    this.trigger('after:update', {
-                        count: result.count,
-                    });
-                })
-                .catch(() => {
-                    this.enableButton('update');
+                this.trigger('after:update', {
+                    count: result.count,
                 });
-        },
-
-        fetchAction: function (name) {
-            if (!this.hasActionMap[name]) {
-                return this.ACTION_UPDATE;
-            }
-
-            let $dropdown = this.$el.find('select.item-action[data-name="'+name+'"]');
-
-            return $dropdown.val() || this.ACTION_UPDATE;
-        },
-
-        reset: function () {
-            this.addedFieldList.forEach(field => {
-                this.clearView(field);
-
-                this.$el.find('.item[data-name="'+field+'"]').remove();
+            })
+            .catch(() => {
+                this.enableButton('update');
             });
+    }
 
-            this.addedFieldList = [];
-            this.hasActionMap = {};
+    fetchAction(name) {
+        if (!this.hasActionMap[name]) {
+            return this.ACTION_UPDATE;
+        }
 
-            this.model.clear();
+        let $dropdown = this.$el.find('select.item-action[data-name="' + name + '"]');
 
-            this.$el.find('[data-action="reset"]').addClass('hidden');
-            this.$el.find('button.select-field').removeClass('disabled').removeAttr('disabled');
-            this.$el.find('ul.filter-list').find('li').removeClass('hidden');
+        return $dropdown.val() || this.ACTION_UPDATE;
+    }
 
-            this.disableButton('update');
-        },
-    });
-});
+    reset() {
+        this.addedFieldList.forEach(field => {
+            this.clearView(field);
+
+            this.$el.find('.item[data-name="'+field+'"]').remove();
+        });
+
+        this.addedFieldList = [];
+        this.hasActionMap = {};
+
+        this.model.clear();
+
+        this.$el.find('[data-action="reset"]').addClass('hidden');
+        this.$el.find('button.select-field').removeClass('disabled').removeAttr('disabled');
+        this.$el.find('ul.filter-list').find('li').removeClass('hidden');
+
+        this.disableButton('update');
+    }
+}
+
+export default MassUpdateModalView;

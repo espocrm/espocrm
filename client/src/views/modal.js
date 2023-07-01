@@ -64,7 +64,7 @@ class ModalView extends View {
      * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
      * @property {boolean} [hidden=false] Is hidden.
      * @property {boolean} [disabled=false] Disabled.
-     * @property {function():void} [onClick] Called on click. If not defined, then
+     * @property {function(module:ui.Dialog): void} [onClick] Called on click. If not defined, then
      * the `action<Name>` class method will be called.
      * @property {string} [className] An additional class name.
      */

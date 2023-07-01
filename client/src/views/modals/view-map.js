@@ -26,46 +26,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/view-map', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class ViewMapModalView extends ModalView {
 
-        backdrop: true,
+    templateContent = `<div class="map-container no-side-margin">{{{map}}}</div>`
 
-        fitHeight: true,
+    backdrop = true
 
-        templateContent: '<div class="map-container no-side-margin">{{{map}}}</div>',
+    setup() {
+        let field = this.options.field;
 
-        setup: function () {
-            this.buttonList = [
-                {
-                    name: 'close',
-                    label: 'Close',
-                }
-            ];
-        },
+        let url = '#AddressMap/view/' + this.model.entityType + '/' + this.model.id + '/' + field;
+        let fieldLabel = this.translate(field, 'fields', this.model.entityType);
 
-        setup: function () {
-            let field = this.options.field;
+        this.headerElement =
+            $('<a>')
+                .attr('href', '#' + url)
+                .text(fieldLabel)
+                .get(0);
 
-            let url = '#AddressMap/view/' + this.model.entityType + '/' + this.model.id + '/' + field;
-            let fieldLabel = this.translate(field, 'fields', this.model.entityType);
+        let viewName = this.model.getFieldParam(field + 'Map', 'view') ||
+            this.getFieldManager().getViewName('map');
 
-            this.headerElement =
-                $('<a>')
-                    .attr('href', '#' + url)
-                    .text(fieldLabel)
-                    .get(0);
+        this.createView('map', viewName, {
+            model: this.model,
+            name: field + 'Map',
+            el: this.getSelector() + ' .map-container',
+            height: 'auto',
+        });
+    }
+}
 
-            let viewName = this.model.getFieldParam(field + 'Map', 'view') ||
-                this.getFieldManager().getViewName('map');
-
-            this.createView('map', viewName, {
-                model: this.model,
-                name: field + 'Map',
-                el: this.getSelector() + ' .map-container',
-                height: 'auto',
-            });
-        },
-    });
-});
+export default ViewMapModalView;

@@ -26,170 +26,169 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/password-change-request', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class PasswordChangeRequestModalView extends ModalView {
 
-        cssName: 'password-change-request',
+    template = 'modals/password-change-request'
 
-        className: 'dialog dialog-centered',
+    cssName = 'password-change-request'
+    className = 'dialog dialog-centered'
+    noFullHeight = true
+    footerAtTheTop = false
 
-        template: 'modals/password-change-request',
+    setup() {
+        this.buttonList = [
+            {
+                name: 'submit',
+                label: 'Submit',
+                style: 'danger',
+                className: 'btn-s-wide',
+            },
+            {
+                name: 'cancel',
+                label: 'Close',
+                pullLeft: true,
+                className: 'btn-s-wide',
+            }
+        ];
 
-        noFullHeight: true,
+        this.headerText = this.translate('Password Change Request', 'labels', 'User');
 
-        footerAtTheTop: false,
+        this.once('close remove', () => {
+            if (this.$userName) {
+                this.$userName.popover('destroy');
+            }
 
-        setup: function () {
+            if (this.$emailAddress) {
+                this.$emailAddress.popover('destroy');
+            }
+        });
+    }
 
-            this.buttonList = [
-                {
-                    name: 'submit',
-                    label: 'Submit',
-                    style: 'danger',
-                    className: 'btn-s-wide',
-                },
-                {
-                    name: 'cancel',
-                    label: 'Close',
-                    pullLeft: true,
-                    className: 'btn-s-wide',
+    afterRender() {
+        this.$userName = this.$el.find('input[name="username"]');
+        this.$emailAddress = this.$el.find('input[name="emailAddress"]');
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionSubmit() {
+        let $userName = this.$userName;
+        let $emailAddress = this.$emailAddress;
+
+        let userName = $userName.val();
+        let emailAddress = $emailAddress.val();
+
+        let isValid = true;
+
+        if (userName === '') {
+            isValid = false;
+
+            var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
+
+            this.isPopoverUserNameDestroyed = false;
+
+            $userName.popover({
+                container: 'body',
+                placement: 'bottom',
+                content: message,
+                trigger: 'manual',
+            }).popover('show');
+
+            let $cellUserName = $userName.closest('.form-group');
+
+            $cellUserName.addClass('has-error');
+
+            $userName.one('mousedown click', () => {
+                $cellUserName.removeClass('has-error');
+
+                if (this.isPopoverUserNameDestroyed) {
+                    return;
                 }
-            ];
 
-            this.headerText = this.translate('Password Change Request', 'labels', 'User');
-
-            this.once('close remove', () => {
-                if (this.$userName) {
-                    this.$userName.popover('destroy');
-                }
-
-                if (this.$emailAddress) {
-                    this.$emailAddress.popover('destroy');
-                }
+                $userName.popover('destroy');
+                this.isPopoverUserNameDestroyed = true;
             });
-        },
+        }
 
-        afterRender: function () {
-            this.$userName = this.$el.find('input[name="username"]');
-            this.$emailAddress = this.$el.find('input[name="emailAddress"]');
-        },
+        if (emailAddress === '') {
+            isValid = false;
 
-        actionSubmit: function () {
-            let $userName = this.$userName;
-            let $emailAddress = this.$emailAddress;
+            let message = this.getLanguage().translate('emailAddressCantBeEmpty', 'messages', 'User');
 
-            let userName = $userName.val();
-            let emailAddress = $emailAddress.val();
+            this.isPopoverEmailAddressDestroyed = false;
 
-            let isValid = true;
+            $emailAddress.popover({
+                container: 'body',
+                placement: 'bottom',
+                content: message,
+                trigger: 'manual',
+            }).popover('show');
 
-            if (userName === '') {
-                isValid = false;
+            let $cellEmailAddress = $emailAddress.closest('.form-group');
 
-                var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
+            $cellEmailAddress.addClass('has-error');
 
-                this.isPopoverUserNameDestroyed = false;
+            $emailAddress.one('mousedown click', () => {
+                $cellEmailAddress.removeClass('has-error');
 
-                $userName.popover({
-                    container: 'body',
-                    placement: 'bottom',
-                    content: message,
-                    trigger: 'manual',
-                }).popover('show');
+                if (this.isPopoverEmailAddressDestroyed) {
+                    return;
+                }
 
-                let $cellUserName = $userName.closest('.form-group');
+                $emailAddress.popover('destroy');
 
-                $cellUserName.addClass('has-error');
+                this.isPopoverEmailAddressDestroyed = true;
+            });
+        }
 
-                $userName.one('mousedown click', () => {
-                    $cellUserName.removeClass('has-error');
+        if (!isValid) {
+            return;
+        }
 
-                    if (this.isPopoverUserNameDestroyed) {
-                        return;
-                    }
+        let $submit = this.$el.find('button[data-name="submit"]');
 
-                    $userName.popover('destroy');
-                    this.isPopoverUserNameDestroyed = true;
-                });
-            }
+        $submit.addClass('disabled');
 
-            if (emailAddress === '') {
-                isValid = false;
+        Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                let message = this.getLanguage().translate('emailAddressCantBeEmpty', 'messages', 'User');
+        Espo.Ajax
+            .postRequest('User/passwordChangeRequest', {
+                userName: userName,
+                emailAddress: emailAddress,
+                url: this.options.url,
+            })
+            .then(() => {
+                Espo.Ui.notify(false);
 
-                this.isPopoverEmailAddressDestroyed = false;
+                let msg = this.translate('uniqueLinkHasBeenSent', 'messages', 'User');
 
-                $emailAddress.popover({
-                    container: 'body',
-                    placement: 'bottom',
-                    content: message,
-                    trigger: 'manual',
-                }).popover('show');
+                msg += ' ' + this.translate('passwordRecoverySentIfMatched', 'messages', 'User');
 
-                let $cellEmailAddress = $emailAddress.closest('.form-group');
+                this.$el.find('.cell-userName').addClass('hidden');
+                this.$el.find('.cell-emailAddress').addClass('hidden');
 
-                $cellEmailAddress.addClass('has-error');
+                $submit.addClass('hidden');
 
-                $emailAddress.one('mousedown click', () => {
-                    $cellEmailAddress.removeClass('has-error');
+                this.$el.find('.msg-box').removeClass('hidden');
+                this.$el.find('.msg-box').html('<span class="text-success">' + msg + '</span>');
+            })
+            .catch(xhr => {
+                if (xhr.status === 404) {
+                    Espo.Ui.error(this.translate('userNameEmailAddressNotFound', 'messages', 'User'));
 
-                    if (this.isPopoverEmailAddressDestroyed) {
-                        return;
-                    }
+                    xhr.errorIsHandled = true;
+                }
 
-                    $emailAddress.popover('destroy');
-                    this.isPopoverEmailAddressDestroyed = true;
-                });
-            }
+                if (xhr.status === 403 && xhr.getResponseHeader('X-Status-Reason') === 'Already-Sent') {
+                    Espo.Ui.error(this.translate('forbidden', 'messages', 'User'), true);
 
-            if (!isValid) {
-                return;
-            }
+                    xhr.errorIsHandled = true;
+                }
 
-            let $submit = this.$el.find('button[data-name="submit"]');
+                $submit.removeClass('disabled');
+            });
+    }
+}
 
-            $submit.addClass('disabled');
-
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-
-            Espo.Ajax
-                .postRequest('User/passwordChangeRequest', {
-                    userName: userName,
-                    emailAddress: emailAddress,
-                    url: this.options.url,
-                })
-                .then(() => {
-                    Espo.Ui.notify(false);
-
-                    let msg = this.translate('uniqueLinkHasBeenSent', 'messages', 'User');
-
-                    msg += ' ' + this.translate('passwordRecoverySentIfMatched', 'messages', 'User');
-
-                    this.$el.find('.cell-userName').addClass('hidden');
-                    this.$el.find('.cell-emailAddress').addClass('hidden');
-
-                    $submit.addClass('hidden');
-
-                    this.$el.find('.msg-box').removeClass('hidden');
-                    this.$el.find('.msg-box').html('<span class="text-success">' + msg + '</span>');
-                })
-                .catch(xhr => {
-                    if (xhr.status === 404) {
-                        Espo.Ui.error(this.translate('userNameEmailAddressNotFound', 'messages', 'User'));
-
-                        xhr.errorIsHandled = true;
-                    }
-
-                    if (xhr.status === 403 && xhr.getResponseHeader('X-Status-Reason') === 'Already-Sent') {
-                        Espo.Ui.error(this.translate('forbidden', 'messages', 'User'), true);
-
-                        xhr.errorIsHandled = true;
-                    }
-
-                    $submit.removeClass('disabled');
-                });
-        },
-    });
-});
+export default PasswordChangeRequestModalView;

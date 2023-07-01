@@ -26,63 +26,72 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/save-filters', ['views/modal', 'model'], function (Dep, Model) {
+import ModalView from 'views/modal';
+import Model from 'model';
 
-    return Dep.extend({
+class SaveFiltersModalView extends ModalView {
 
-        cssName: 'save-filters',
+    template = 'modals/save-filters'
 
-        template: 'modals/save-filters',
+    cssName = 'save-filters'
 
-        data: function () {
-            return {
-                dashletList: this.dashletList,
-            };
-        },
+    data() {
+        return {
+            dashletList: this.dashletList,
+        };
+    }
 
-        setup: function () {
-            this.buttonList = [
-                {
-                    name: 'save',
-                    label: 'Save',
-                    style: 'primary'
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
+    setup() {
+        this.buttonList = [
+            {
+                name: 'save',
+                label: 'Save',
+                style: 'primary',
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+            },
+        ];
+
+        this.headerText = this.translate('Save Filter');
+
+        let model = new Model();
+
+        this.createView('name', 'views/fields/varchar', {
+            el: this.options.el + ' .field[data-name="name"]',
+            defs: {
+                name: 'name',
+                params: {
+                    required: true
                 }
-            ];
+            },
+            mode: 'edit',
+            model: model,
+        });
+    }
 
-            this.headerText = this.translate('Save Filter');
+    /**
+     * @param {string} field
+     * @return {module:views/fields/base}
+     */
+    getFieldView(field) {
+        return this.getView(field);
+    }
 
-            var model = new Model();
+    actionSave() {
+        let nameView = this.getFieldView('name');
 
-            this.createView('name', 'views/fields/varchar', {
-                el: this.options.el + ' .field[data-name="name"]',
-                defs: {
-                    name: 'name',
-                    params: {
-                        required: true
-                    }
-                },
-                mode: 'edit',
-                model: model,
-            });
-        },
+        nameView.fetchToModel();
 
-        actionSave: function () {
-            var nameView = this.getView('name');
-            nameView.fetchToModel();
+        if (nameView.validate()) {
+            return;
+        }
 
-            if (nameView.validate()) {
-                return;
-            }
+        this.trigger('save', nameView.model.get('name'));
 
-            this.trigger('save', nameView.model.get('name'));
+        return true;
+    }
+}
 
-            return true;
-        },
-    });
-});
-
-
+export default SaveFiltersModalView;
