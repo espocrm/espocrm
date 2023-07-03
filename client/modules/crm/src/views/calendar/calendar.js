@@ -143,11 +143,11 @@ class CalendarView extends View {
 
     setup() {
         this.wait(
-            Espo.loader.requirePromise('lib!fullcalendar-moment')
+            Espo.loader.requirePromise('lib!@fullcalendar/moment')
         );
 
         this.wait(
-            Espo.loader.requirePromise('lib!fullcalendar-moment-timezone')
+            Espo.loader.requirePromise('lib!@fullcalendar/moment-timezone')
         );
 
         this.date = this.options.date || null;

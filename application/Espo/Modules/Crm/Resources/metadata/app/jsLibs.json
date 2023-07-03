@@ -6,14 +6,14 @@
         "exportsAs": "FullCalendar",
         "sourceMap": true
     },
-    "fullcalendar-moment": {
+    "@fullcalendar/moment": {
         "path": "client/modules/crm/lib/fullcalendar-moment.js",
         "devPath": "client/modules/crm/lib/original/fullcalendar-moment.js",
         "exportsTo": "FullCalendar",
         "exportsAs": "Moment",
         "sourceMap": true
     },
-    "fullcalendar-moment-timezone": {
+    "@fullcalendar/moment-timezone": {
         "path": "client/modules/crm/lib/fullcalendar-moment-timezone.js",
         "devPath": "client/modules/crm/lib/original/fullcalendar-moment-timezone.js",
         "exportsTo": "FullCalendar",
