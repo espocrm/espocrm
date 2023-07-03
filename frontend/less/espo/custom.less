@@ -2440,12 +2440,12 @@ table.table td.cell .html-container {
     .calendar {
         border-radius: var(--panel-border-radius);
 
-        .fc-view-container {
+        /*.fc-view-container {
             .fc-view > table {
                 border-collapse: collapse;
                 border-style: hidden;
             }
-        }
+        }*/
     }
 
     .timeline {
@@ -2455,13 +2455,14 @@ table.table td.cell .html-container {
 }
 
 .dashlet-body {
-    .fc-agenda-view {
+    .fc-daygrid,
+    .fc-timegrid {
         border-top: 1px solid var(--calendar-border);
 
-        table {
+        /*table {
             border-collapse: collapse;
             border-style: hidden;
-        }
+        }*/
     }
 }
 

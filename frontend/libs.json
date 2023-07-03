@@ -180,10 +180,22 @@
         "amdId": "ace"
     },
     {
-        "src": "node_modules/fullcalendar/dist/fullcalendar.js",
+        "src": "node_modules/fullcalendar/index.global.js",
         "dest": "client/modules/crm/lib/fullcalendar.js",
         "minify": true,
         "amdId": "fullcalendar"
+    },
+    {
+        "src": "node_modules/@fullcalendar/moment/index.global.js",
+        "dest": "client/modules/crm/lib/fullcalendar-moment.js",
+        "minify": true,
+        "amdId": "fullcalendar-moment"
+    },
+    {
+        "src": "node_modules/@fullcalendar/moment-timezone/index.global.js",
+        "dest": "client/modules/crm/lib/fullcalendar-moment-timezone.js",
+        "minify": true,
+        "amdId": "fullcalendar-moment-timezone"
     },
     {
         "src": "node_modules/vis/dist/vis.js",
