@@ -75,12 +75,12 @@
                 "modules/crm/src/**/*.js"
             ],
             "dependentOn": [
-                "lib!flotr2",
-                "lib!espo-funnel-chart"
+                "flotr2",
+                "espo-funnel-chart"
             ],
             "requires": [
-                "lib!flotr2",
-                "lib!espo-funnel-chart"
+                "flotr2",
+                "espo-funnel-chart"
             ],
             "lookupPatterns": [
                 "modules/crm/src/**/*.js"
@@ -91,10 +91,10 @@
                 "modules/crm/src/**/*.js"
             ],
             "dependentOn": [
-                "lib!fullcalendar"
+                "fullcalendar"
             ],
             "requires": [
-                "lib!fullcalendar"
+                "fullcalendar"
             ],
             "lookupPatterns": [
                 "modules/crm/src/**/*.js"
@@ -105,10 +105,10 @@
                 "modules/crm/src/**/*.js"
             ],
             "dependentOn": [
-                "lib!vis"
+                "vis"
             ],
             "requires": [
-                "lib!vis"
+                "vis"
             ],
             "lookupPatterns": [
                 "modules/crm/src/**/*.js"
