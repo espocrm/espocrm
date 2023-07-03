@@ -295,6 +295,9 @@
                                         "delete",
                                         "stream"
                                     ]
+                                },
+                                "accessDataList": {
+                                    "$ref": "#/definitions/accessDataList"
                                 }
                             }
                         }

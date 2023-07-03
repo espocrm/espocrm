@@ -56,6 +56,8 @@ class PanelsContainerRecordView extends View {
      * @property {Object.<string,*>} [Options] A view options.
      * @property {boolean} [sticked] To stick to an upper panel.
      * @property {Number} [tabNumber]
+     * @property {string} [aclScope]
+     * @property {Espo.Utils~AccessDefs[]} [accessDataList] Access control defs.
      */
 
     /**
