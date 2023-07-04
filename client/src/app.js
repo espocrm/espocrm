@@ -246,12 +246,12 @@ class App {
      * A view factory.
      *
      * @private
-     * @type {Bull.Factory}
+     * @type {Factory}
      */
     viewFactory = null
 
     /**
-     * @type function(string, function(Bull.View))
+     * @type function(string, function(View))
      * @private
      */
     viewLoader = null
