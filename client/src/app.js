@@ -1301,6 +1301,9 @@ class App {
         this.broadcastChannel.subscribe(event => {
             if (!this.auth && this.started) {
                 if (event.data === 'logged-in') {
+                    // This works if the same instance opened in different tabs.
+                    // This does not work for different instances on the same domain
+                    // which may be the case in dev environment.
                     window.location.reload();
                 }
 
