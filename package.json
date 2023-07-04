@@ -73,7 +73,8 @@
     "summernote": "^0.8.18",
     "timepicker": "^1.11.15",
     "underscore": "^1.13.1",
-    "vis": "^4.19.1"
+    "vis-data": "^7.1.6",
+    "vis-timeline": "^7.7.2"
   },
   "engines": {
     "npm": ">=7",

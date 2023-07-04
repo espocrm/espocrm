@@ -27,7 +27,8 @@
  ************************************************************************/
 
 import View from 'view';
-import Vis from 'vis';
+import {DataSet} from 'vis-data';
+import {Timeline} from 'vis-timeline';
 import moment from 'moment';
 import $ from 'jquery';
 
@@ -48,6 +49,9 @@ class TimelineView extends View {
     calendarType = 'single'
     calendarTypeList = ['single', 'shared']
     zoomPercentage = 1
+
+    /** @type {Timeline} */
+    timeline
 
     events = {
         /** @this TimelineView */
@@ -220,79 +224,6 @@ class TimelineView extends View {
         this.trigger('change:mode', mode);
     }
 
-    /*getModeDataList() {
-        let list = [];
-
-        this.modeList.forEach(name => {
-            let o = {
-                mode: name,
-                label: this.translate(name, 'modes', 'Calendar'),
-                labelShort: this.translate(name, 'modes', 'Calendar').substring(0, 2),
-            };
-
-            list.push(o);
-        });
-
-        if (this.isCustomViewAvailable) {
-            (this.getPreferences().get('calendarViewDataList') || []).forEach((item) => {
-                item = Espo.Utils.clone(item);
-
-                item.mode = 'view-' + item.id;
-                item.label = item.name;
-                item.labelShort = (item.name || '').substring(0, 2);
-
-                list.push(item);
-            });
-        }
-
-        let currentIndex = -1;
-
-        list.forEach((item, i) => {
-            if (item.mode === this.mode) {
-                currentIndex = i;
-            }
-        });
-
-        if (currentIndex >= this.visibleModeListCount) {
-            let tmp = list[this.visibleModeListCount - 1];
-
-            list[this.visibleModeListCount - 1] = list[currentIndex];
-            list[currentIndex] = tmp;
-        }
-
-        return list;
-    }*/
-
-    /*getVisibleModeDataList() {
-        let fullList =  this.getModeDataList();
-        let list = [];
-
-        fullList.forEach((o, i) => {
-            if (i >= this.visibleModeListCount) {
-                return;
-            }
-
-            list.push(o);
-        });
-
-        return list;
-    }*/
-
-    /*getHiddenModeDataList() {
-        let fullList =  this.getModeDataList();
-        let list = [];
-
-        fullList.forEach((o, i) => {
-            if (i < this.visibleModeListCount) {
-                return;
-            }
-
-            list.push(o);
-        });
-
-        return list;
-    }*/
-
     getCalendarTypeDataList() {
         let list = [];
 
@@ -375,16 +306,6 @@ class TimelineView extends View {
         this.getStorage().set('state', key, enabledScopeList);
     }
 
-    /*updateDate() {
-        if (!this.header) {
-            return;
-        }
-
-        let title = this.getTitle();
-
-        this.$el.find('.date-title h4 span').text(title);
-    }*/
-
     getTitle() {
         let title = '';
 
@@ -397,6 +318,10 @@ class TimelineView extends View {
         return title;
     }
 
+    /**
+     * @param {Object.<string, *>} o
+     * @return {Object}
+     */
     convertEvent(o) {
         let userId = o.userId || this.userList[0].id || this.getUser().id;
 
@@ -591,20 +516,6 @@ class TimelineView extends View {
         return resultList;
     }
 
-    /*convertTime(d) {
-        let format = this.getDateTime().internalDateTimeFormat;
-        let timeZone = this.getDateTime().timeZone;
-        let string = d.format(format);
-
-        let m;
-
-        m = timeZone ?
-            moment.tz(string, format, timeZone).utc() :
-            moment.utc(string, format);
-
-        return m.format(format) + ':00';
-    }*/
-
     afterRender() {
         if (this.options.containerSelector) {
             this.$container = $(this.options.containerSelector);
@@ -616,13 +527,18 @@ class TimelineView extends View {
         this.initDates();
         this.initGroupsDataSet();
 
-        this.fetchEvents(this.start, this.end, (eventList) => {
-            let itemsDataSet = new Vis.DataSet(eventList);
+        this.fetchEvents(this.start, this.end, eventList => {
+            let itemsDataSet = new DataSet(eventList);
 
-            let timeline = this.timeline = new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
+            this.timeline = new Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
                 dataAttributes: 'all',
                 start: this.start.toDate(),
                 end: this.end.toDate(),
+                xss: {
+                    filterOptions: {
+                        onTag: (tag, html) => html,
+                    },
+                },
                 moment: date => {
                     let m = moment(date);
 
@@ -641,15 +557,15 @@ class TimelineView extends View {
                     add: false,
                     updateTime: false,
                     updateGroup: false,
-                    remove: false
+                    remove: false,
                 },
                 locales: {
-                    mylocale: {
+                    myLocale: {
                         current: this.translate('current', 'labels', 'Calendar'),
-                        time: this.translate('time', 'labels', 'Calendar')
+                        time: this.translate('time', 'labels', 'Calendar'),
                     }
                 },
-                locale: 'mylocale',
+                locale: 'myLocale',
                 margin: {
                     item: {
                         vertical: 12,
@@ -658,7 +574,7 @@ class TimelineView extends View {
                 },
             });
 
-            timeline.on('click', (e) => {
+            this.timeline.on('click', e => {
                 if (this.blockClick) {
                     return;
                 }
@@ -682,7 +598,8 @@ class TimelineView extends View {
                 }
             });
 
-            timeline.on('rangechanged', (e) =>{
+            // noinspection SpellCheckingInspection
+            this.timeline.on('rangechanged', e => {
                 e.skipClick = true;
 
                 this.blockClick = true;
@@ -705,15 +622,15 @@ class TimelineView extends View {
             });
 
             this.once('remove', () => {
-                timeline.destroy();
+                this.timeline.destroy();
             });
         });
     }
 
     createEvent(dateStart, userId) {
         if (!dateStart) {
-            let time = (this.timeline.range.end - this.timeline.range.start) / 2 +
-                this.timeline.range.start;
+            let time = (this.timeline.getWindow().end - this.timeline.getWindow().start) / 2 +
+                this.timeline.getWindow().start;
 
             dateStart = moment(time)
                 .utc()
@@ -789,7 +706,7 @@ class TimelineView extends View {
 
     runFetch() {
         this.fetchEvents(this.start, this.end, eventList => {
-            let itemsDataSet = new Vis.DataSet(eventList);
+            let itemsDataSet = new DataSet(eventList);
 
             this.timeline.setItems(itemsDataSet);
             this.triggerView();
@@ -876,22 +793,6 @@ class TimelineView extends View {
         }
     }
 
-    /*orderUserList(list) {
-        let userList = [];
-
-        list.forEach(id => {
-            this.userList.forEach(item => {
-                if (id === item.id) {
-                    userList.push(item);
-                }
-            });
-        });
-
-        this.userList = userList;
-
-        this.storeUserList();
-    }*/
-
     storeUserList() {
         this.getPreferences().save({
             'sharedCalendarUserList': Espo.Utils.clone(this.userList),
@@ -920,21 +821,6 @@ class TimelineView extends View {
             this.storeUserList();
         }
     }
-
-    /*removeSharedCalendarUser(id) {
-        let index = -1;
-
-        this.userList.forEach((item, i) => {
-            if (item.id === id) {
-                index = i;
-            }
-        });
-
-        if (~index) {
-            this.userList.splice(index, 1);
-            this.storeUserList();
-        }
-    }*/
 
     getSharedCalenderUserList() {
         let list = Espo.Utils.clone(this.getPreferences().get('sharedCalendarUserList'));
@@ -984,7 +870,7 @@ class TimelineView extends View {
             });
         });
 
-        this.groupsDataSet = new Vis.DataSet(list);
+        this.groupsDataSet = new DataSet(list);
     }
 
     getGroupContent(id, name) {
@@ -1029,10 +915,6 @@ class TimelineView extends View {
             .attr('src', this.getBasePath() + '?entryPoint=avatar&size=small&id=' + id + '&t=' + t)
             .get(0).outerHTML;
     }
-
-    /*initItemsDataSet() {
-        this.itemsDataSet = new Vis.DataSet(list);
-    }*/
 
     fetchEvents(from, to, callback) {
         if (!this.options.noFetchLoadingMessage) {
@@ -1082,12 +964,6 @@ class TimelineView extends View {
             Espo.Ui.notify(false);
         });
     }
-
-    /*removeUser(id) {
-        this.removeSharedCalendarUser(id);
-        this.initGroupsDataSet();
-        this.timeline.setGroups(this.groupsDataSet);
-    }*/
 
     actionShowSharedCalendarOptions() {
         this.createView('dialog', 'crm:views/calendar/modals/shared-options', {
@@ -1179,19 +1055,23 @@ class TimelineView extends View {
     }
 
     actionPrevious() {
-        this.timeline.moveTo(this.timeline.range.start);
+        let start = this.timeline.getWindow().start;
+
+        this.timeline.moveTo(start);
 
         this.triggerView();
     }
 
     actionNext() {
-        this.timeline.moveTo(this.timeline.range.end);
+        let end = this.timeline.getWindow().end;
+
+        this.timeline.moveTo(end);
 
         this.triggerView();
     }
 
     actionToday() {
-        this.timeline.moveTo(moment());
+        this.timeline.moveTo(moment().toDate());
 
         this.triggerView();
     }

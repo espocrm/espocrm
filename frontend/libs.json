@@ -198,9 +198,15 @@
         "amdId": "@fullcalendar/moment-timezone"
     },
     {
-        "src": "node_modules/vis/dist/vis.js",
-        "dest": "client/modules/crm/lib/vis.js",
+        "src": "node_modules/vis-timeline/peer/umd/vis-timeline-graph2d.js",
+        "dest": "client/modules/crm/lib/vis-timeline.js",
         "minify": true,
-        "amdId": "vis"
+        "amdId": "vis-timeline"
+    },
+    {
+        "src": "node_modules/vis-data/peer/umd/vis-data.js",
+        "dest": "client/modules/crm/lib/vis-data.js",
+        "minify": true,
+        "amdId": "vis-data"
     }
 ]

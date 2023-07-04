@@ -181,7 +181,7 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
                 url += '&userId=' + this.options.userId;
 
                 if (this.options.userName) {
-                    url += '&userName=' + this.getHelper().escapeString(this.options.userName).replace(/\\|\//g,'');
+                    url += '&userName=' + encodeURIComponent(this.options.userName);
                 }
             }
 
@@ -243,12 +243,18 @@ define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
                 userId: this.options.userId,
                 userName: this.options.userName,
                 el: '#main > .calendar-container',
-            }, (view) => {
+            }, view => {
+                let initial = true;
+
                 this.listenTo(view, 'view', (date, mode) => {
                     this.date = date;
                     this.mode = mode;
 
-                    this.updateUrl();
+                    if (!initial) {
+                        this.updateUrl();
+                    }
+
+                    initial = false;
                 });
 
                 this.listenTo(view, 'change:mode', (mode) => {

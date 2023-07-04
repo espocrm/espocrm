@@ -105,10 +105,12 @@
                 "modules/crm/src/**/*.js"
             ],
             "dependentOn": [
-                "vis"
+                "vis-data",
+                "vis-timeline"
             ],
             "requires": [
-                "vis"
+                "vis-data",
+                "vis-timeline"
             ],
             "lookupPatterns": [
                 "modules/crm/src/**/*.js"

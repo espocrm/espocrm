@@ -27,7 +27,8 @@
  ************************************************************************/
 
 import View from 'view';
-import Vis from 'vis';
+import {DataSet} from 'vis-data';
+import {Timeline} from 'vis-timeline';
 import moment from 'moment';
 import $ from 'jquery';
 
@@ -65,8 +66,6 @@ class SchedulerView extends View {
 
         this.usersField = this.options.usersField || usersFieldDefault;
         this.userIdList = [];
-
-        this.Vis = Vis;
 
         this.listenTo(this.model, 'change', (m) => {
             let isChanged =
@@ -176,9 +175,10 @@ class SchedulerView extends View {
         }
 
         this.fetch(this.start, this.end, eventList => {
-            let itemsDataSet = new Vis.DataSet(eventList);
+            let itemsDataSet = new DataSet(eventList);
 
-            let timeline = this.timeline =new Vis.Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
+            // noinspection SpellCheckingInspection
+            this.timeline = new Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
                 dataAttributes: 'all',
                 start: this.start.toDate(),
                 end: this.end.toDate(),
@@ -190,6 +190,11 @@ class SchedulerView extends View {
                     }
 
                     return m.tz(this.getDateTime().getTimeZone());
+                },
+                xss: {
+                    filterOptions: {
+                        onTag: (tag, html) => html,
+                    },
                 },
                 format: this.getFormatObject(),
                 zoomable: false,
@@ -204,12 +209,12 @@ class SchedulerView extends View {
                 },
                 showCurrentTime: true,
                 locales: {
-                    mylocale: {
+                    myLocale: {
                         current: this.translate('current', 'labels', 'Calendar'),
-                        time: this.translate('time', 'labels', 'Calendar')
+                        time: this.translate('time', 'labels', 'Calendar'),
                     }
                 },
-                locale: 'mylocale',
+                locale: 'myLocale',
                 margin: {
                     item: {
                         vertical: 12,
@@ -220,7 +225,8 @@ class SchedulerView extends View {
 
             $timeline.css('min-height', '');
 
-            timeline.on('rangechanged', (e) => {
+            // noinspection SpellCheckingInspection
+            this.timeline.on('rangechanged', (e) => {
                 e.skipClick = true;
 
                 this.blockClick = true;
@@ -245,7 +251,7 @@ class SchedulerView extends View {
         let convertedEventList = this.convertEventList(eventList);
         this.addEvent(convertedEventList);
 
-        let itemsDataSet = new this.Vis.DataSet(convertedEventList);
+        let itemsDataSet = new DataSet(convertedEventList);
 
         this.timeline.setItems(itemsDataSet);
     }
@@ -311,7 +317,7 @@ class SchedulerView extends View {
 
     runFetch() {
         this.fetch(this.start, this.end, eventList => {
-            let itemsDataSet = new this.Vis.DataSet(eventList);
+            let itemsDataSet = new DataSet(eventList);
 
             this.timeline.setItems(itemsDataSet);
         });
@@ -340,7 +346,7 @@ class SchedulerView extends View {
             let eventList = [];
 
             for (let userId in data) {
-                let itemList = data[userId]
+                let itemList = /** @type {Object.<string, *>} */data[userId]
                     .filter(item => !item.isBusyRange)
                     .concat(
                         data[userId].filter(item => item.isBusyRange)
@@ -417,6 +423,10 @@ class SchedulerView extends View {
         return resultList;
     }
 
+    /**
+     * @param {Object.<string, *>} o
+     * @return {Object}
+     */
     convertEvent(o) {
         let event;
 
@@ -500,7 +510,7 @@ class SchedulerView extends View {
             });
         });
 
-        this.groupsDataSet = new this.Vis.DataSet(list);
+        this.groupsDataSet = new DataSet(list);
     }
 
     getGroupContent(id, name) {
@@ -518,7 +528,7 @@ class SchedulerView extends View {
 
         return $('<span>')
             .append(
-                avatarHtml,
+                $(avatarHtml),
                 $('<span>')
                     .attr('data-id', id)
                     .addClass('group-title')

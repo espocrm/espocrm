@@ -20,9 +20,15 @@
         "exportsAs": "MomentTimezone",
         "sourceMap": true
     },
-    "vis": {
-        "path": "client/modules/crm/lib/vis.js",
-        "devPath": "client/modules/crm/lib/original/vis.js",
+    "vis-timeline": {
+        "path": "client/modules/crm/lib/vis-timeline.js",
+        "devPath": "client/modules/crm/lib/original/vis-timeline.js",
+        "sourceMap": true
+    },
+    "vis-data": {
+        "path": "client/modules/crm/lib/vis-data.js",
+        "devPath": "client/modules/crm/lib/original/vis-data.js",
+        "aliases": ["vis-data/peer/umd/vis-data.js"],
         "sourceMap": true
     }
 }
