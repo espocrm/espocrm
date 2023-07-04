@@ -597,6 +597,14 @@ function isIOS9UIWebView() {
     return /(iPhone|iPad|iPod).* OS 9_\d/.test(userAgent) && !/Version\/9\./.test(userAgent);
 }
 
+// Fixes issue that navigate with {trigger: false} fired
+// route change if there's a whitespace character.
+Backbone.history.getHash = function (window) {
+    let match = (window || this).location.href.match(/#(.*)$/);
+
+    return match ? this.decodeFragment(match[1]) : '';
+};
+
 // Override `backbone.history.loadUrl()` and `backbone.history.navigate()`
 // to fix the navigation issue (`location.hash` not changed immediately) on iOS9.
 if (isIOS9UIWebView()) {
