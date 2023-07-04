@@ -534,6 +534,9 @@ class TimelineView extends View {
                 dataAttributes: 'all',
                 start: this.start.toDate(),
                 end: this.end.toDate(),
+                rollingMode: {
+                    follow: false, // fixes slow render
+                },
                 xss: {
                     filterOptions: {
                         onTag: (tag, html) => html,

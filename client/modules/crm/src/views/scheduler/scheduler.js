@@ -182,6 +182,9 @@ class SchedulerView extends View {
                 dataAttributes: 'all',
                 start: this.start.toDate(),
                 end: this.end.toDate(),
+                rollingMode: {
+                    follow: false, // fixes slow render
+                },
                 moment: date => {
                     let m = moment(date);
 
