@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module modules/crm/views/calendar/calendar */
+
 import View from 'view';
 import moment from 'moment';
 import * as FullCalendar from 'fullcalendar';
@@ -294,12 +296,19 @@ class CalendarView extends View {
             this.updateDate();
 
             if (this.hasView('modeButtons')) {
-                this.getView('modeButtons').mode = mode;
-                this.getView('modeButtons').reRender();
+                this.getModeButtonsView().mode = mode;
+                this.getModeButtonsView().reRender();
             }
         }
 
         this.trigger('change:mode', mode);
+    }
+
+    /**
+     * @return {module:modules/crm/views/calendar/mode-buttons}
+     */
+    getModeButtonsView() {
+        return this.getView('modeButtons');
     }
 
     toggleScopeFilter(name) {
@@ -884,7 +893,7 @@ class CalendarView extends View {
                 let props = this.obtainPropsFromEvent(event);
 
                 if (!end && !this.allDayScopeList.includes(scope)) {
-                    props.end = moment.tz(start.toISOString(), null, this.getDateTime().timeZone)
+                    props.end = moment.tz(start, null, this.getDateTime().timeZone)
                         .clone()
                         .add(event.extendedProps.duration, 's')
                         .toDate();

@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module modules/crm/views/calendar/timeline */
+
 import View from 'view';
 import {DataSet} from 'vis-data';
 import {Timeline} from 'vis-timeline';
@@ -218,6 +220,13 @@ class TimelineView extends View {
                 mode: this.mode,
             });
         }
+    }
+
+    /**
+     * @return {module:modules/crm/views/calendar/mode-buttons}
+     */
+    getModeButtonsView() {
+        return this.getView('modeButtons');
     }
 
     selectMode(mode) {

@@ -26,406 +26,428 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/calendar/calendar-page', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class CalendarPage extends View {
 
-        template: 'crm:calendar/calendar-page',
+    template = 'crm:calendar/calendar-page'
 
-        el: '#main',
+    el = '#main'
 
-        fullCalendarModeList: [
-            'month',
-            'agendaWeek',
-            'agendaDay',
-            'basicWeek',
-            'basicDay',
-            'listWeek',
-        ],
+    fullCalendarModeList = [
+        'month',
+        'agendaWeek',
+        'agendaDay',
+        'basicWeek',
+        'basicDay',
+        'listWeek',
+    ]
 
-        events: {
-            'click [data-action="createCustomView"]': function () {
-                this.createCustomView();
-            },
-            'click [data-action="editCustomView"]': function () {
-                this.editCustomView();
-            }
+    events = {
+        /** @this CalendarPage */
+        'click [data-action="createCustomView"]': function () {
+            this.createCustomView();
         },
-
-        /**
-         * A shortcut-key => action map.
-         *
-         * @protected
-         * @type {?Object.<string,function (JQueryKeyEventObject): void>}
-         */
-        shortcutKeys: {
-            'Home': function (e) {
-                this.handleShortcutKeyHome(e);
-            },
-            'Numpad7': function (e) {
-                this.handleShortcutKeyHome(e);
-            },
-            'Numpad4': function (e) {
-                this.handleShortcutKeyArrowLeft(e);
-            },
-            'Numpad6': function (e) {
-                this.handleShortcutKeyArrowRight(e);
-            },
-            'ArrowLeft': function (e) {
-                this.handleShortcutKeyArrowLeft(e);
-            },
-            'ArrowRight': function (e) {
-                this.handleShortcutKeyArrowRight(e);
-            },
-            'Minus': function (e) {
-                this.handleShortcutKeyMinus(e);
-            },
-            'Equal': function (e) {
-                this.handleShortcutKeyPlus(e);
-            },
-            'NumpadSubtract': function (e) {
-                this.handleShortcutKeyMinus(e);
-            },
-            'NumpadAdd': function (e) {
-                this.handleShortcutKeyPlus(e);
-            },
-            'Digit1': function (e) {
-                this.handleShortcutKeyDigit(e, 1);
-            },
-            'Digit2': function (e) {
-                this.handleShortcutKeyDigit(e, 2);
-            },
-            'Digit3': function (e) {
-                this.handleShortcutKeyDigit(e, 3);
-            },
-            'Digit4': function (e) {
-                this.handleShortcutKeyDigit(e, 4);
-            },
-            'Digit5': function (e) {
-                this.handleShortcutKeyDigit(e, 5);
-            },
-            'Digit6': function (e) {
-                this.handleShortcutKeyDigit(e, 6);
-            },
-            'Control+Space': function (e) {
-                this.handleShortcutKeyControlSpace(e);
-            },
+        /** @this CalendarPage */
+        'click [data-action="editCustomView"]': function () {
+            this.editCustomView();
         },
+    }
 
-        setup: function () {
-            this.mode = this.mode || this.options.mode || null;
-            this.date = this.date || this.options.date || null;
+    /**
+     * A shortcut-key => action map.
+     *
+     * @protected
+     * @type {?Object.<string,function (JQueryKeyEventObject): void>}
+     */
+    shortcutKeys = {
+        /** @this CalendarPage */
+        'Home': function (e) {
+            this.handleShortcutKeyHome(e);
+        },
+        /** @this CalendarPage */
+        'Numpad7': function (e) {
+            this.handleShortcutKeyHome(e);
+        },
+        /** @this CalendarPage */
+        'Numpad4': function (e) {
+            this.handleShortcutKeyArrowLeft(e);
+        },
+        /** @this CalendarPage */
+        'Numpad6': function (e) {
+            this.handleShortcutKeyArrowRight(e);
+        },
+        /** @this CalendarPage */
+        'ArrowLeft': function (e) {
+            this.handleShortcutKeyArrowLeft(e);
+        },
+        /** @this CalendarPage */
+        'ArrowRight': function (e) {
+            this.handleShortcutKeyArrowRight(e);
+        },
+        /** @this CalendarPage */
+        'Minus': function (e) {
+            this.handleShortcutKeyMinus(e);
+        },
+        /** @this CalendarPage */
+        'Equal': function (e) {
+            this.handleShortcutKeyPlus(e);
+        },
+        /** @this CalendarPage */
+        'NumpadSubtract': function (e) {
+            this.handleShortcutKeyMinus(e);
+        },
+        /** @this CalendarPage */
+        'NumpadAdd': function (e) {
+            this.handleShortcutKeyPlus(e);
+        },
+        /** @this CalendarPage */
+        'Digit1': function (e) {
+            this.handleShortcutKeyDigit(e, 1);
+        },
+        /** @this CalendarPage */
+        'Digit2': function (e) {
+            this.handleShortcutKeyDigit(e, 2);
+        },
+        /** @this CalendarPage */
+        'Digit3': function (e) {
+            this.handleShortcutKeyDigit(e, 3);
+        },
+        /** @this CalendarPage */
+        'Digit4': function (e) {
+            this.handleShortcutKeyDigit(e, 4);
+        },
+        /** @this CalendarPage */
+        'Digit5': function (e) {
+            this.handleShortcutKeyDigit(e, 5);
+        },
+        /** @this CalendarPage */
+        'Digit6': function (e) {
+            this.handleShortcutKeyDigit(e, 6);
+        },
+        /** @this CalendarPage */
+        'Control+Space': function (e) {
+            this.handleShortcutKeyControlSpace(e);
+        },
+    }
 
-              if (!this.mode) {
-                this.mode = this.getStorage().get('state', 'calendarMode') || null;
+    setup() {
+        this.mode = this.mode || this.options.mode || null;
+        this.date = this.date || this.options.date || null;
 
-                if (this.mode && this.mode.indexOf('view-') === 0) {
-                    let viewId = this.mode.substr(5);
-                    let calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
-                    let isFound = false;
+          if (!this.mode) {
+            this.mode = this.getStorage().get('state', 'calendarMode') || null;
 
-                    calendarViewDataList.forEach(item => {
-                        if (item.id === viewId) {
-                            isFound = true;
-                        }
-                    });
+            if (this.mode && this.mode.indexOf('view-') === 0) {
+                let viewId = this.mode.slice(5);
+                let calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+                let isFound = false;
 
-                    if (!isFound) {
-                        this.mode = null;
+                calendarViewDataList.forEach(item => {
+                    if (item.id === viewId) {
+                        isFound = true;
                     }
-
-                    if (this.options.userId) {
-                        this.mode = null;
-                    }
-                }
-            }
-
-            this.events['keydown.main'] = e => {
-                let key = Espo.Utils.getKeyFromKeyEvent(e);
-
-                if (typeof this.shortcutKeys[key] === 'function') {
-                    this.shortcutKeys[key].call(this, e);
-                }
-            }
-
-            if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
-                this.setupCalendar();
-            }
-            else {
-                if (this.mode === 'timeline') {
-                    this.setupTimeline();
-                }
-            }
-        },
-
-        afterRender: function () {
-            this.$el.focus();
-        },
-
-        updateUrl: function (trigger) {
-            let url = '#Calendar/show';
-
-            if (this.mode || this.date) {
-                url += '/';
-            }
-
-            if (this.mode) {
-                url += 'mode=' + this.mode;
-            }
-
-            if (this.date) {
-                url += '&date=' + this.date;
-            }
-
-            if (this.options.userId) {
-                url += '&userId=' + this.options.userId;
-
-                if (this.options.userName) {
-                    url += '&userName=' + encodeURIComponent(this.options.userName);
-                }
-            }
-
-            this.getRouter().navigate(url, {trigger: trigger});
-        },
-
-        setupCalendar: function () {
-            let viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
-                'crm:views/calendar/calendar';
-
-            this.createView('calendar', viewName, {
-                date: this.date,
-                userId: this.options.userId,
-                userName: this.options.userName,
-                mode: this.mode,
-                el: '#main > .calendar-container',
-            }, view => {
-                let initial = true;
-
-                this.listenTo(view, 'view', (date, mode) => {
-                    this.date = date;
-                    this.mode = mode;
-
-                    if (!initial) {
-                        this.updateUrl();
-                    }
-
-                    initial = false;
                 });
 
-                this.listenTo(view, 'change:mode', (mode, refresh) => {
-                    this.mode = mode;
-
-                    if (!this.options.userId) {
-                        this.getStorage().set('state', 'calendarMode', mode);
-                    }
-
-                    if (refresh) {
-                        this.updateUrl(true);
-
-                        return;
-                    }
-
-                    if (!~this.fullCalendarModeList.indexOf(mode)) {
-                        this.updateUrl(true);
-                    }
-
-                    this.$el.focus();
-                });
-            });
-        },
-
-        setupTimeline: function () {
-            var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) ||
-                'crm:views/calendar/timeline';
-
-            this.createView('calendar', viewName, {
-                date: this.date,
-                userId: this.options.userId,
-                userName: this.options.userName,
-                el: '#main > .calendar-container',
-            }, view => {
-                let initial = true;
-
-                this.listenTo(view, 'view', (date, mode) => {
-                    this.date = date;
-                    this.mode = mode;
-
-                    if (!initial) {
-                        this.updateUrl();
-                    }
-
-                    initial = false;
-                });
-
-                this.listenTo(view, 'change:mode', (mode) => {
-                    this.mode = mode;
-
-                    if (!this.options.userId) {
-                        this.getStorage().set('state', 'calendarMode', mode);
-                    }
-
-                    this.updateUrl(true);
-                });
-            });
-        },
-
-        updatePageTitle: function () {
-            this.setPageTitle(this.translate('Calendar', 'scopeNames'));
-        },
-
-        createCustomView: function () {
-            this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {}, (view) => {
-                view.render();
-
-                this.listenToOnce(view, 'after:save', (data) => {
-                    view.close();
-                    this.mode = 'view-' + data.id;
-                    this.date = null;
-
-                    this.updateUrl(true);
-                });
-            });
-        },
-
-        editCustomView: function () {
-            let viewId = this.getView('calendar').viewId;
-
-            if (!viewId) {
-                return;
-            }
-
-            this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {
-                id: viewId
-            }, (view) => {
-                view.render();
-
-                this.listenToOnce(view, 'after:save', (data) => {
-                    view.close();
-
-                    let calendarView = this.getView('calendar');
-                    calendarView.setupMode();
-                    calendarView.reRender();
-                });
-
-                this.listenToOnce(view, 'after:remove', (data) => {
-                    view.close();
-
+                if (!isFound) {
                     this.mode = null;
-                    this.date = null;
+                }
 
-                    this.updateUrl(true);
-                });
+                if (this.options.userId) {
+                    this.mode = null;
+                }
+            }
+        }
+
+        this.events['keydown.main'] = e => {
+            let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+            if (typeof this.shortcutKeys[key] === 'function') {
+                this.shortcutKeys[key].call(this, e);
+            }
+        }
+
+        if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
+            this.setupCalendar();
+        }
+        else {
+            if (this.mode === 'timeline') {
+                this.setupTimeline();
+            }
+        }
+    }
+
+    afterRender() {
+        this.$el.focus();
+    }
+
+    updateUrl(trigger) {
+        let url = '#Calendar/show';
+
+        if (this.mode || this.date) {
+            url += '/';
+        }
+
+        if (this.mode) {
+            url += 'mode=' + this.mode;
+        }
+
+        if (this.date) {
+            url += '&date=' + this.date;
+        }
+
+        if (this.options.userId) {
+            url += '&userId=' + this.options.userId;
+
+            if (this.options.userName) {
+                url += '&userName=' + encodeURIComponent(this.options.userName);
+            }
+        }
+
+        this.getRouter().navigate(url, {trigger: trigger});
+    }
+
+    setupCalendar() {
+        let viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
+            'crm:views/calendar/calendar';
+
+        this.createView('calendar', viewName, {
+            date: this.date,
+            userId: this.options.userId,
+            userName: this.options.userName,
+            mode: this.mode,
+            el: '#main > .calendar-container',
+        }, view => {
+            let initial = true;
+
+            this.listenTo(view, 'view', (date, mode) => {
+                this.date = date;
+                this.mode = mode;
+
+                if (!initial) {
+                    this.updateUrl();
+                }
+
+                initial = false;
             });
-        },
 
-        /**
-         * @private
-         * @return {module:view}
-         */
-        getCalendarView: function () {
-            return this.getView('calendar');
-        },
+            this.listenTo(view, 'change:mode', (mode, refresh) => {
+                this.mode = mode;
 
-        /**
-         * @private
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyHome: function (e) {
-            e.preventDefault();
+                if (!this.options.userId) {
+                    this.getStorage().set('state', 'calendarMode', mode);
+                }
 
-            this.getCalendarView().actionToday();
-        },
+                if (refresh) {
+                    this.updateUrl(true);
 
-        /**
-         * @private
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyArrowLeft: function (e) {
-            e.preventDefault();
+                    return;
+                }
 
-            this.getCalendarView().actionPrevious();
-        },
+                if (!~this.fullCalendarModeList.indexOf(mode)) {
+                    this.updateUrl(true);
+                }
 
-        /**
-         * @private
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyArrowRight: function (e) {
-            e.preventDefault();
+                this.$el.focus();
+            });
+        });
+    }
 
-            this.getCalendarView().actionNext();
-        },
+    setupTimeline() {
+        var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) ||
+            'crm:views/calendar/timeline';
 
-        /**
-         * @private
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyMinus: function (e) {
-            if (!this.getCalendarView().actionZoomOut) {
-                return;
-            }
+        this.createView('calendar', viewName, {
+            date: this.date,
+            userId: this.options.userId,
+            userName: this.options.userName,
+            el: '#main > .calendar-container',
+        }, view => {
+            let initial = true;
 
-            e.preventDefault();
+            this.listenTo(view, 'view', (date, mode) => {
+                this.date = date;
+                this.mode = mode;
 
-            this.getCalendarView().actionZoomOut();
-        },
+                if (!initial) {
+                    this.updateUrl();
+                }
 
-        /**
-         * @private
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyPlus: function (e) {
-            if (!this.getCalendarView().actionZoomIn) {
-                return;
-            }
+                initial = false;
+            });
 
-            e.preventDefault();
+            this.listenTo(view, 'change:mode', (mode) => {
+                this.mode = mode;
 
-            this.getCalendarView().actionZoomIn();
-        },
+                if (!this.options.userId) {
+                    this.getStorage().set('state', 'calendarMode', mode);
+                }
 
-        /**
-         * @private
-         * @param {JQueryKeyEventObject} e
-         * @param {Number} digit
-         */
-        handleShortcutKeyDigit: function (e, digit) {
-            let modeList = this.getCalendarView().hasView('modeButtons') ?
-                this.getCalendarView()
-                    .getView('modeButtons')
-                    .getModeDataList(true)
-                    .map(item => item.mode) :
-                this.getCalendarView().modeList;
+                this.updateUrl(true);
+            });
+        });
+    }
 
-            let mode = modeList[digit - 1];
+    updatePageTitle() {
+        this.setPageTitle(this.translate('Calendar', 'scopeNames'));
+    }
 
-            if (!mode) {
-                return;
-            }
+    createCustomView() {
+        this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {}, (view) => {
+            view.render();
 
-            e.preventDefault();
+            this.listenToOnce(view, 'after:save', (data) => {
+                view.close();
+                this.mode = 'view-' + data.id;
+                this.date = null;
 
-            if (mode === this.mode) {
-                this.getCalendarView().actionRefresh();
+                this.updateUrl(true);
+            });
+        });
+    }
 
-                return;
-            }
+    editCustomView() {
+        let viewId = this.getCalendarView().viewId;
 
-            this.getCalendarView().selectMode(mode);
-        },
+        if (!viewId) {
+            return;
+        }
 
-        /**
-         * @private
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyControlSpace: function (e) {
-            if (!this.getCalendarView().createEvent) {
-                return;
-            }
+        this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {
+            id: viewId
+        }, (view) => {
+            view.render();
 
-            e.preventDefault();
+            this.listenToOnce(view, 'after:save', () => {
+                view.close();
 
-            this.getCalendarView().createEvent();
-        },
-    });
-});
+                let calendarView = this.getCalendarView();
+
+                calendarView.setupMode();
+                calendarView.reRender();
+            });
+
+            this.listenToOnce(view, 'after:remove', () => {
+                view.close();
+
+                this.mode = null;
+                this.date = null;
+
+                this.updateUrl(true);
+            });
+        });
+    }
+
+    /**
+     * @private
+     * @return {module:modules/crm/views/calendar/calendar | module:modules/crm/views/calendar/timeline}
+     */
+    getCalendarView() {
+        return this.getView('calendar');
+    }
+
+    /**
+     * @private
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyHome(e) {
+        e.preventDefault();
+
+        this.getCalendarView().actionToday();
+    }
+
+    /**
+     * @private
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyArrowLeft(e) {
+        e.preventDefault();
+
+        this.getCalendarView().actionPrevious();
+    }
+
+    /**
+     * @private
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyArrowRight(e) {
+        e.preventDefault();
+
+        this.getCalendarView().actionNext();
+    }
+
+    /**
+     * @private
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyMinus(e) {
+        if (!this.getCalendarView().actionZoomOut) {
+            return;
+        }
+
+        e.preventDefault();
+
+        this.getCalendarView().actionZoomOut();
+    }
+
+    /**
+     * @private
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyPlus(e) {
+        if (!this.getCalendarView().actionZoomIn) {
+            return;
+        }
+
+        e.preventDefault();
+
+        this.getCalendarView().actionZoomIn();
+    }
+
+    /**
+     * @private
+     * @param {JQueryKeyEventObject} e
+     * @param {Number} digit
+     */
+    handleShortcutKeyDigit(e, digit) {
+        let modeList = this.getCalendarView().hasView('modeButtons') ?
+            this.getCalendarView()
+                .getModeButtonsView()
+                .getModeDataList(true)
+                .map(item => item.mode) :
+            this.getCalendarView().modeList;
+
+        let mode = modeList[digit - 1];
+
+        if (!mode) {
+            return;
+        }
+
+        e.preventDefault();
+
+        if (mode === this.mode) {
+            this.getCalendarView().actionRefresh();
+
+            return;
+        }
+
+        this.getCalendarView().selectMode(mode);
+    }
+
+    /**
+     * @private
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyControlSpace(e) {
+        if (!this.getCalendarView().createEvent) {
+            return;
+        }
+
+        e.preventDefault();
+
+        this.getCalendarView().createEvent();
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default CalendarPage;
