@@ -46,7 +46,7 @@
                 "items": {
                     "type": "string"
                 },
-                "description": "Additional module IDs the lib will be available by. Can be useful for establishing backward compatibility."
+                "description": "Additional module IDs the lib will be available by. Can be useful for establishing backward compatibility or when another lib requires this lib by a different ID."
             }
         }
     }
