@@ -34,6 +34,14 @@ import * as FullCalendar from 'fullcalendar';
  * @typedef {import('@fullcalendar/core/internal-common.js').EventImpl} EventImpl
  */
 
+/**
+ * @typedef {import('@fullcalendar/core/internal-common.d.ts').CalendarOptions} CalendarOptions
+ */
+
+/**
+ * @typedef {import('@fullcalendar/interaction/index.d.ts').ExtraListenerRefiners} ExtraListenerRefiners
+ */
+
 class CalendarView extends View {
 
     template = 'crm:calendar/calendar'
@@ -701,6 +709,7 @@ class CalendarView extends View {
             slotLabelFormat = 'h:mmA';
         }
 
+        /** @type {CalendarOptions & Object.<string, *>} */
         let options = {
             headerToolbar: false,
             slotLabelFormat: slotLabelFormat,
@@ -762,7 +771,7 @@ class CalendarView extends View {
                 this.calendar.unselect();
             },
             eventClick: info => {
-                const event = /** @type EventImpl */info.event;
+                const event = info.event;
 
                 let scope = event.extendedProps.scope;
                 let recordId = event.extendedProps.recordId;
@@ -815,7 +824,7 @@ class CalendarView extends View {
                 this.fetchEvents(fromStr, toStr, callback);
             },
             eventDrop: info => {
-                let event = /** @type EventImpl */info.event;
+                let event = /** @type {EventImpl} */info.event;
                 let delta = info.delta;
 
                 const scope = event.extendedProps.scope;
@@ -875,7 +884,7 @@ class CalendarView extends View {
                 let props = this.obtainPropsFromEvent(event);
 
                 if (!end && !this.allDayScopeList.includes(scope)) {
-                    props.end = moment.tz(start, null, this.getDateTime().timeZone)
+                    props.end = moment.tz(start.toISOString(), null, this.getDateTime().timeZone)
                         .clone()
                         .add(event.extendedProps.duration, 's')
                         .toDate();
@@ -903,7 +912,7 @@ class CalendarView extends View {
                 });
             },
             eventResize: info => {
-                let event = /** @type EventImpl */info.event;
+                let event = info.event;
 
                 let attributes = {
                     dateEnd: this.convertDateTime(event.endStr),
