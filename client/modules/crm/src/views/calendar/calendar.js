@@ -887,13 +887,13 @@ class CalendarView extends View {
                 if (dateEndDate) {
                     let m = this.getDateTime().toMomentDate(dateEndDate).add(delta);
 
-                    attributes.dateStartDate = m.format(this.getDateTime().internalDateFormat);
+                    attributes.dateEndDate = m.format(this.getDateTime().internalDateFormat);
                 }
 
                 let props = this.obtainPropsFromEvent(event);
 
                 if (!end && !this.allDayScopeList.includes(scope)) {
-                    props.end = moment.tz(start, null, this.getDateTime().timeZone)
+                    props.end = moment.tz(start.toISOString(), null, this.getDateTime().timeZone)
                         .clone()
                         .add(event.extendedProps.duration, 's')
                         .toDate();
