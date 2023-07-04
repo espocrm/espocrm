@@ -547,7 +547,7 @@ class User extends Record implements
         $entity = $this->getRepository()->getById($id);
 
         if ($entity) {
-            $entity->set('deleteId', '0');
+            $entity->set('deleted', '0');
 
             $this->getRepository()->save($entity);
         }
