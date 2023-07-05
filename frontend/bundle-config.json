@@ -18,8 +18,7 @@
             ],
             "ignoreFiles": [
                 "src/namespace.js",
-                "src/loader.js",
-                "src/pre-loader.js"
+                "src/loader.js"
             ],
             "patterns": [
                 "src/*.js",
@@ -122,8 +121,7 @@
             ],
             "ignoreFiles": [
                 "src/namespace.js",
-                "src/loader.js",
-                "src/pre-loader.js"
+                "src/loader.js"
             ],
             "noDuplicates": true
         }
