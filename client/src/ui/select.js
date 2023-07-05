@@ -66,15 +66,17 @@ import Selectize from 'lib!selectize';
 /**
  * @module ui/select
  *
- * Important. Selectize library is heavily customized to fix multitude of UIX issues.
+ * Important. The Selectize library is heavily customized to fix multitude of UIX issues.
  * Upgrading is not advisable. Consider forking.
  */
 const Select = {
     /**
-     * @param {JQuery} $el An element.
+     * @param {Element|JQuery} element An element.
      * @param {module:ui/select~Options} [options] Options.
      */
-    init: function ($el, options) {
+    init: function (element, options) {
+        let $el = $(element);
+
         options = Select.applyDefaultOptions(options || {});
 
         let plugins = [];
@@ -203,10 +205,12 @@ const Select = {
     /**
      * Focus.
      *
-     * @param {JQuery} $el An element.
+     * @param {Element|JQuery} element An element.
      * @param {{noTrigger?: boolean}} [options] Options.
      */
-    focus: function ($el, options) {
+    focus: function (element, options) {
+        let $el = $(element);
+
         options = options || {};
 
         if (
@@ -232,10 +236,12 @@ const Select = {
     /**
      * Set options.
      *
-     * @param {JQuery} $el An element.
+     * @param {Element|JQuery} element An element.
      * @param {{value: string, text: string}[]} options Options.
      */
-    setOptions: function ($el, options) {
+    setOptions: function (element, options) {
+        let $el = $(element);
+
         let selectize = $el.get(0).selectize;
 
         selectize.clearOptions(true);

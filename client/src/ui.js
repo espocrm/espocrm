@@ -72,7 +72,7 @@ import $ from 'jquery';
  * @property {boolean} [disabled=false] Disabled.
  * @property {boolean} [hidden=false] Hidden.
  * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
- * @property {function(Espo.Ui.Dialog, JQueryEventObject):void} [onClick] An on-click callback.
+ * @property {function(Espo.Ui.Dialog, JQueryEventObject): void} [onClick] An on-click callback.
  * @property {string} [className] An additional class name.
  * @property {string} [title] A title.
  */
@@ -893,11 +893,13 @@ Espo.Ui = {
     /**
      * Init a popover.
      *
-     * @param {JQuery} $el An element.
+     * @param {Element|JQuery} element An element.
      * @param {Espo.Ui~PopoverOptions} o Options.
      * @param {module:view} [view] A view.
      */
-    popover: function ($el, o, view) {
+    popover: function (element, o, view) {
+        let $el = $(element);
+
         let $body = $('body')
         let content = o.content || Handlebars.Utils.escapeExpression(o.text || '');
         let isShown = false;

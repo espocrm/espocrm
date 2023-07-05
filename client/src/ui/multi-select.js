@@ -49,10 +49,12 @@ import Selectize from 'lib!selectize';
  */
 const MultiSelect = {
     /**
-     * @param {JQuery} $el An element.
+     * @param {Element|JQuery} element An element.
      * @param {module:ui/multi-select~Options} options Options.
      */
-    init: function ($el, options) {
+    init: function (element, options) {
+        let $el = $(element);
+
         options = MultiSelect.applyDefaultOptions(options);
 
         let plugins = [];
@@ -85,8 +87,10 @@ const MultiSelect = {
         };
 
         if (!options.matchAnyWord) {
+            // noinspection JSUnresolvedReference
             /** @this Selectize */
             selectizeOptions.score = function (search) {
+                // noinspection JSUnresolvedReference
                 let score = this.getScoreFunction(search);
 
                 search = search.toLowerCase();
@@ -104,6 +108,7 @@ const MultiSelect = {
         if (options.matchAnyWord) {
             /** @this Selectize */
             selectizeOptions.score = function (search) {
+                // noinspection JSUnresolvedReference
                 let score = this.getScoreFunction(search);
 
                 search = search.toLowerCase();
@@ -126,6 +131,7 @@ const MultiSelect = {
         if (options.allowCustomOptions) {
             selectizeOptions.persist = false;
             selectizeOptions.create = options.create;
+            // noinspection JSUnusedGlobalSymbols
             selectizeOptions.render = {
                 option_create: data => {
                     return $('<div>')
@@ -147,9 +153,11 @@ const MultiSelect = {
     /**
      * Focus.
      *
-     * @param {JQuery} $el An element.
+     * @param {Element|JQuery} element An element.
      */
-    focus: function ($el) {
+    focus: function (element) {
+        let $el = $(element);
+
         if (
             !$el[0] ||
             !$el[0].selectize
@@ -200,7 +208,7 @@ const MultiSelect = {
 
         const IS_MAC = /Mac/.test(navigator.userAgent);
 
-        Selectize.define('bypass_ctrl_enter', function (options) {
+        Selectize.define('bypass_ctrl_enter', function () {
             let self = this;
 
             this.onKeyDown = (function() {
@@ -254,7 +262,9 @@ const MultiSelect = {
                                 text: option.value,
                             };
 
+                            // noinspection JSUnresolvedReference
                             if (this.deleteSelection(e)) {
+                                // noinspection JSUnresolvedReference
                                 this.setTextboxValue(options.text.apply(this, [option]));
                                 this.refreshOptions(true);
                             }
