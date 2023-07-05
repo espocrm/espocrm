@@ -882,8 +882,8 @@ class App {
             if (arr.length > 1) {
                 logoutWait = this.appParams.logoutWait || false;
 
-                Ajax.postRequest('App/destroyAuthToken', {token: arr[1]}, {fullResponse: true})
-                    .then(xhr => {
+                Ajax.postRequest('App/destroyAuthToken', {token: arr[1]}, {resolveWithXhr: true})
+                    .then(/** XMLHttpRequest */xhr => {
                         let redirectUrl = xhr.getResponseHeader('X-Logout-Redirect-Url');
 
                         if (redirectUrl) {
@@ -1069,87 +1069,77 @@ class App {
      * @private
      */
     setupAjax() {
-        $.ajaxSetup({
-            beforeSend: (xhr, /** JQueryAjaxSettings & Object.<string, *> */ options) => {
-                if (!options.local && this.apiUrl) {
-                    options.url = Utils.trimSlash(this.apiUrl) + '/' + options.url;
-                }
+        /**
+         * @param {XMLHttpRequest} xhr
+         */
+        const beforeSend = (xhr) => {
+            if (this.auth !== null) {
+                xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
+                xhr.setRequestHeader('Espo-Authorization', this.auth);
+                xhr.setRequestHeader('Espo-Authorization-By-Token', 'true');
+            }
 
-                if (!options.local && this.basePath !== '') {
-                    options.url = this.basePath + options.url;
-                }
-
-                if (this.auth !== null) {
-                    xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
-                    xhr.setRequestHeader('Espo-Authorization', this.auth);
-                    xhr.setRequestHeader('Espo-Authorization-By-Token', 'true');
-                }
-
-                if (this.anotherUser !== null) {
-                    xhr.setRequestHeader('X-Another-User', this.anotherUser);
-                }
-            },
-            dataType: 'json',
-            timeout: this.ajaxTimeout,
-            contentType: 'application/json',
-        });
+            if (this.anotherUser !== null) {
+                xhr.setRequestHeader('X-Another-User', this.anotherUser);
+            }
+        };
 
         let appTimestampChangeProcessed = false;
 
-        $(document).ajaxSuccess((e, xhr, options) => {
+        /**
+         * @param {XMLHttpRequest} xhr
+         * @param {Object.<string, *>} options
+         */
+        const onSuccess = (xhr, options) => {
             let appTimestampHeader = xhr.getResponseHeader('X-App-Timestamp');
 
-            if (appTimestampHeader && !appTimestampChangeProcessed) {
-                let appTimestamp = parseInt(appTimestampHeader);
-
-                // noinspection JSUnresolvedReference
-                let bypassAppReload = options.bypassAppReload;
-
-                if (
-                    this.appTimestamp &&
-                    appTimestamp !== this.appTimestamp &&
-                    !bypassAppReload
-                ) {
-                    appTimestampChangeProcessed = true;
-
-                    Ui
-                        .confirm(
-                            this.language.translate('confirmAppRefresh', 'messages'),
-                            {
-                                confirmText: this.language.translate('Refresh'),
-                                cancelText: this.language.translate('Cancel'),
-                                backdrop: 'static',
-                                confirmStyle: 'success',
-                            }
-                        )
-                        .then(() => {
-                            window.location.reload();
-
-                            if (this.broadcastChannel) {
-                                this.broadcastChannel.postMessage('reload');
-                            }
-                        });
-                }
+            if (!appTimestampHeader || appTimestampChangeProcessed) {
+                return;
             }
-        });
 
-        $(document).ajaxError((e, xhr, options) => {
-            // To process after a promise-catch.
+            let appTimestamp = parseInt(appTimestampHeader);
 
+            // noinspection JSUnresolvedReference
+            let bypassAppReload = options.bypassAppReload;
+
+            if (
+                this.appTimestamp &&
+                appTimestamp !== this.appTimestamp &&
+                !bypassAppReload
+            ) {
+                appTimestampChangeProcessed = true;
+
+                Ui
+                    .confirm(
+                        this.language.translate('confirmAppRefresh', 'messages'),
+                        {
+                            confirmText: this.language.translate('Refresh'),
+                            cancelText: this.language.translate('Cancel'),
+                            backdrop: 'static',
+                            confirmStyle: 'success',
+                        }
+                    )
+                    .then(() => {
+                        window.location.reload();
+
+                        if (this.broadcastChannel) {
+                            this.broadcastChannel.postMessage('reload');
+                        }
+                    });
+            }
+        };
+
+        /**
+         * @param {module:ajax.Xhr} xhr
+         * @param {Object.<string, *>} options
+         */
+        const onError = (xhr, options) => {
             setTimeout(() => {
-                // noinspection JSUnresolvedReference
                 if (xhr.errorIsHandled) {
                     return;
                 }
 
                 switch (xhr.status) {
-                    case 0:
-                        if (xhr.statusText === 'timeout') {
-                            Ui.error(this.language.translate('Timeout'), true);
-                        }
-
-                        break;
-
                     case 200:
                         Ui.error(this.language.translate('Bad server response'));
 
@@ -1227,6 +1217,50 @@ class App {
                     console.error('Server side error ' + xhr.status + ': ' + statusReason);
                 }
             }, 0);
+        };
+
+        const onTimeout = () => {
+            Ui.error(this.language.translate('Timeout'), true);
+        };
+
+        Ajax.configure({
+            apiUrl: this.basePath + this.apiUrl,
+            timeout: this.ajaxTimeout,
+            beforeSend: beforeSend,
+            onSuccess: onSuccess,
+            onError: onError,
+            onTimeout: onTimeout,
+        });
+
+        // For backward compatibility.
+        // @todo Remove in v9.0.
+        $.ajaxSetup({
+            beforeSend: (xhr, options) => {
+                console.error(`$.ajax is deprecated, support will be removed in v9.0. Use Espo.Ajax instead.`);
+
+                // noinspection JSUnresolvedReference
+                if (!options.local && this.apiUrl) {
+                    options.url = Utils.trimSlash(this.apiUrl) + '/' + options.url;
+                }
+
+                // noinspection JSUnresolvedReference
+                if (!options.local && this.basePath !== '') {
+                    options.url = this.basePath + options.url;
+                }
+
+                if (this.auth !== null) {
+                    xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
+                    xhr.setRequestHeader('Espo-Authorization', this.auth);
+                    xhr.setRequestHeader('Espo-Authorization-By-Token', 'true');
+                }
+
+                if (this.anotherUser !== null) {
+                    xhr.setRequestHeader('X-Another-User', this.anotherUser);
+                }
+            },
+            dataType: 'json',
+            timeout: this.ajaxTimeout,
+            contentType: 'application/json',
         });
     }
 

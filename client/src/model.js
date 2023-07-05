@@ -492,7 +492,7 @@ class Model {
      *     patch?: boolean,
      *     wait?: boolean,
      * } & Object.<string, *>} [options] Options.
-     * @returns {Promise}
+     * @returns {Promise<Object.<string, *>>}
      * @fires Model#sync
      * @copyright Credits to Backbone.js.
      */

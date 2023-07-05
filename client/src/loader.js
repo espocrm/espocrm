@@ -1050,16 +1050,16 @@
         }
 
         /**
-         * Require a module or multiple modules.
+         * Require a module.
          *
-         * @param {...string} id A module or modules to require.
-         * @returns {Promise<unknown>}
+         * @param {string} id A module to require.
+         * @returns {Promise<*>}
          */
         requirePromise(id) {
             return new Promise((resolve, reject) => {
                 this.require(
                     id,
-                    (...args) => resolve(...args),
+                    arg => resolve(arg),
                     () => reject()
                 );
             });

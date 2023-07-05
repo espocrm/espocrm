@@ -1087,9 +1087,6 @@ class BaseRecordView extends View {
                     {
                         patch: !model.isNew(),
                         headers: headers,
-                        // Can't use a promise-catch, as it's called
-                        // after the default ajaxError callback.
-                        error: (m, xhr) => onError(xhr, reject),
                     },
                 )
                 .then(() => {
@@ -1105,6 +1102,9 @@ class BaseRecordView extends View {
                     model.trigger('after:save');
 
                     resolve();
+                })
+                .catch(xhr => {
+                    onError(xhr, reject);
                 });
         });
     }
@@ -1112,7 +1112,7 @@ class BaseRecordView extends View {
     /**
      * Handle a save error.
      *
-     * @param {JQueryXHR} xhr XHR.
+     * @param {module:ajax.Xhr} xhr XHR.
      * @param {module:views/record/base~saveOptions} [options] Options.
      */
     handleSaveError(xhr, options) {

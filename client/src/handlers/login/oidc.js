@@ -41,7 +41,10 @@ class OidcLoginHandler extends LoginHandler {
                     Espo.Ui.notify(false);
 
                     this.processWithData(data)
-                        .then((code, nonce) => {
+                        .then(info => {
+                            let code = info.code;
+                            let nonce = info.nonce;
+
                             let authString = Base64.encode('**oidc:' + code);
 
                             let headers = {
@@ -75,7 +78,7 @@ class OidcLoginHandler extends LoginHandler {
      *  prompt: 'login'|'consent'|'select_account',
      *  maxAge: ?Number,
      * }} data
-     * @return {Promise}
+     * @return {Promise<{code: string, nonce: string}>}
      */
     processWithData(data) {
         let state = (Math.random() + 1).toString(36).substring(7);
@@ -114,7 +117,7 @@ class OidcLoginHandler extends LoginHandler {
      * @param {string} url
      * @param {string} state
      * @param {string} nonce
-     * @return {Promise}
+     * @return {Promise<{code: string, nonce: string}>}
      */
     processWindow(url, state, nonce) {
         let proxy = window.open(url, 'ConnectWithOAuth', 'location=0,status=0,width=800,height=800');
@@ -177,7 +180,10 @@ class OidcLoginHandler extends LoginHandler {
                     window.clearInterval(interval);
                     proxy.close();
 
-                    resolve(parsedData.code, nonce);
+                    resolve({
+                        code: parsedData.code,
+                        nonce: nonce,
+                    });
                 }
             }, 300);
         });

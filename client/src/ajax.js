@@ -28,8 +28,29 @@
 
 /** @module ajax */
 
-// noinspection JSUnusedGlobalSymbols
+let isConfigured = false;
+/** @type {number} */
+let defaultTimeout;
+/** @type {string} */
+let apiUrl;
+/** @type {Espo.Ajax~Handler} */
+let beforeSend;
+/** @type {Espo.Ajax~Handler} */
+let onSuccess;
+/** @type {Espo.Ajax~Handler} */
+let onError;
+/** @type {Espo.Ajax~Handler} */
+let onTimeout;
 
+/**
+ * @callback Espo.Ajax~Handler
+ * @param {XMLHttpRequest} [xhr]
+ * @param {Object.<string, *>} [options]
+ */
+
+const baseUrl = window.location.origin + window.location.pathname;
+
+// noinspection JSUnusedGlobalSymbols
 /**
  * Functions for API HTTP requests.
  */
@@ -44,40 +65,130 @@ const Ajax = Espo.Ajax = {
      * @property {Object.<string, string>} [headers] A request headers.
      * @property {'json'|'text'} [dataType] A data type.
      * @property {string} [contentType] A content type.
-     * @property {boolean} [fullResponse] To resolve with `module:ajax.XhrWrapper`.
+     * @property {boolean} [resolveWithXhr] To resolve with `XMLHttpRequest`.
      */
 
     /**
      * Request.
      *
      * @param {string} url An URL.
-     * @param {string} method An HTTP method.
+     * @param {'GET'|'POST'|'PUT'|'DELETE'|'PATCH'|'OPTIONS'} method An HTTP method.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {AjaxPromise<any>}
+     * @returns {AjaxPromise<any, XMLHttpRequest>}
      */
     request: function (url, method, data, options) {
         options = options || {};
 
-        options.type = method;
-        options.url = url;
+        let timeout = 'timeout' in options ? options.timeout : defaultTimeout;
+        let contentType = options.contentType || 'application/json';
+        let body;
 
-        if (data) {
-            options.data = data;
+        if (options.data && !data) {
+            data = options.data;
+        }
+
+        if (!['GET', 'OPTIONS'].includes(method) && data) {
+            body = data;
+
+            if (contentType === 'application/json' && typeof data !== 'string') {
+                body = JSON.stringify(data);
+            }
+        }
+
+        if (apiUrl) {
+            url = Espo.Utils.trimSlash(apiUrl) + '/' + url;
+        }
+
+        let urlObj = new URL(baseUrl + url);
+
+        if (method === 'GET' && data) {
+            for (let key in data) {
+                let value = data[key];
+
+                if (value == null) {
+                    continue;
+                }
+
+                urlObj.searchParams.append(key, value);
+            }
+        }
+
+        let xhr = new Xhr();
+        xhr.timeout = timeout;
+        xhr.open(method, urlObj);
+        xhr.setRequestHeader('Content-Type', contentType);
+
+        if (options.headers) {
+            for (let key in options.headers) {
+                xhr.setRequestHeader(key, options.headers[key]);
+            }
+        }
+
+        if (beforeSend) {
+            beforeSend(xhr, options);
         }
 
         let promiseWrapper = {};
 
         let promise = new AjaxPromise((resolve, reject) => {
-            let xhr = $.ajax(options);
+            const onErrorGeneral = (isTimeout) => {
+                if (options.error) {
+                    options.error(xhr, options);
+                }
 
-            xhr
-                .then((response, status, xhr) => {
-                    let obj = options.fullResponse ? new XhrWrapper(xhr) : response;
+                reject(xhr, options);
 
-                    resolve(obj);
-                })
-                .fail(xhr => reject(xhr));
+                if (isTimeout) {
+                    if (onTimeout) {
+                        onTimeout(xhr, options);
+                    }
+
+                    return;
+                }
+
+                if (onError) {
+                    onError(xhr, options);
+                }
+            };
+
+            xhr.ontimeout = () => onErrorGeneral(true);
+            xhr.onerror = () => onErrorGeneral();
+
+            xhr.onload = () => {
+                if (xhr.status >= 400) {
+                    onErrorGeneral();
+
+                    return;
+                }
+
+                let response = xhr.responseText;
+
+                if ((options.dataType || 'json') === 'json') {
+                    try {
+                        response = JSON.parse(xhr.responseText);
+                    }
+                    catch (e) {
+                        console.error('Could not parse API response.');
+
+                        onErrorGeneral();
+                    }
+                }
+
+                if (options.success) {
+                    options.success(response);
+                }
+
+                onSuccess(xhr, options);
+
+                if (options.resolveWithXhr) {
+                    response = xhr;
+                }
+
+                resolve(response)
+            }
+
+            xhr.send(body);
 
             if (promiseWrapper.promise) {
                 promiseWrapper.promise.xhr = xhr;
@@ -100,7 +211,7 @@ const Ajax = Espo.Ajax = {
      * @param {string} url An URL.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any>}
+     * @returns {Promise<any, XMLHttpRequest>}
      */
     postRequest: function (url, data, options) {
         if (data) {
@@ -116,7 +227,7 @@ const Ajax = Espo.Ajax = {
      * @param {string} url An URL.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any>}
+     * @returns {Promise<any, XMLHttpRequest>}
      */
     patchRequest: function (url, data, options) {
         if (data) {
@@ -132,7 +243,7 @@ const Ajax = Espo.Ajax = {
      * @param {string} url An URL.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any>}
+     * @returns {Promise<any, XMLHttpRequest>}
      */
     putRequest: function (url, data, options) {
         if (data) {
@@ -148,7 +259,7 @@ const Ajax = Espo.Ajax = {
      * @param {string} url An URL.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any>}
+     * @returns {Promise<any, XMLHttpRequest>}
      */
     deleteRequest: function (url, data, options) {
         if (data) {
@@ -164,10 +275,36 @@ const Ajax = Espo.Ajax = {
      * @param {string} url An URL.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any>}
+     * @returns {Promise<any, XMLHttpRequest>}
      */
     getRequest: function (url, data, options) {
         return /** @type {Promise<any>} */ Ajax.request(url, 'GET', data, options);
+    },
+
+    /**
+     * @internal
+     * @param {{
+     *     apiUrl: string,
+     *     timeout: number,
+     *     beforeSend: Espo.Ajax~Handler,
+     *     onSuccess: Espo.Ajax~Handler,
+     *     onError: Espo.Ajax~Handler,
+     *     onTimeout: Espo.Ajax~Handler,
+     * }} options Options.
+     */
+    configure: function (options) {
+        if (isConfigured) {
+            throw new Error("Ajax is already configured.");
+        }
+
+        apiUrl = options.apiUrl;
+        defaultTimeout = options.timeout;
+        beforeSend = options.beforeSend;
+        onSuccess = options.onSuccess;
+        onError = options.onError;
+        onTimeout = options.onTimeout;
+
+        isConfigured = true;
     },
 };
 
@@ -177,18 +314,24 @@ const Ajax = Espo.Ajax = {
 class AjaxPromise extends Promise {
 
     /**
-     * @type {JQueryXHR|null}
+     * @type {XMLHttpRequest|null}
      * @internal
      */
     xhr = null
 
     isAborted = false
 
-    /** @deprecated Use `catch`. */
+    /**
+     * @deprecated Use `catch`.
+     * @todo Remove in v9.0.
+     */
     fail(...args) {
         return this.catch(args[0]);
     }
-    /** @deprecated Use `then`. */
+    /**
+     * @deprecated Use `then`
+     * @todo Remove in v9.0.
+     */
     done(...args) {
         return this.then(args[0]);
     }
@@ -232,47 +375,13 @@ class AjaxPromise extends Promise {
 }
 
 /**
- * @name module:ajax.XhrWrapper
+ * @name module:ajax.Xhr
  */
-class XhrWrapper {
-
+class Xhr extends XMLHttpRequest {
     /**
-     * @param {JQueryXHR} xhr
+     * To be set in an error handler to bypass default handling.
      */
-    constructor(xhr) {
-        this.xhr = xhr;
-    }
-
-    /**
-     * @param {string} name
-     * @return {string}
-     */
-    getResponseHeader(name) {
-        return this.xhr.getResponseHeader(name);
-    }
-
-    /**
-     * @return {Number}
-     */
-    getStatus() {
-        return this.xhr.status;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @return {*}
-     */
-    getResponseParsedBody() {
-        return this.xhr.responseJSON;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    /**
-     * @return {string}
-     */
-    getResponseBody() {
-        return this.xhr.responseText;
-    }
+    errorIsHandled = false
 }
 
 export default Ajax;
