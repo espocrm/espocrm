@@ -48,6 +48,18 @@ let onTimeout;
  * @param {Object.<string, *>} [options]
  */
 
+/**
+ * Options.
+ *
+ * @typedef {Object} Espo.Ajax~Options
+ *
+ * @property {Number} [timeout] A timeout.
+ * @property {Object.<string, string>} [headers] A request headers.
+ * @property {'json'|'text'} [dataType] A data type.
+ * @property {string} [contentType] A content type.
+ * @property {boolean} [resolveWithXhr] To resolve with `XMLHttpRequest`.
+ */
+
 const baseUrl = window.location.origin + window.location.pathname;
 
 // noinspection JSUnusedGlobalSymbols
@@ -55,18 +67,6 @@ const baseUrl = window.location.origin + window.location.pathname;
  * Functions for API HTTP requests.
  */
 const Ajax = Espo.Ajax = {
-
-    /**
-     * Options.
-     *
-     * @typedef {Object} Espo.Ajax~Options
-     *
-     * @property {Number} [timeout] A timeout.
-     * @property {Object.<string, string>} [headers] A request headers.
-     * @property {'json'|'text'} [dataType] A data type.
-     * @property {string} [contentType] A content type.
-     * @property {boolean} [resolveWithXhr] To resolve with `XMLHttpRequest`.
-     */
 
     /**
      * Request.
