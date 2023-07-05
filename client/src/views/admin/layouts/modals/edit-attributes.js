@@ -93,7 +93,7 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
             attributeList = filteredAttributeList;
 
             this.createView('edit', 'views/admin/layouts/record/edit-attributes', {
-                el: this.options.el + ' .edit-container',
+                selector: '.edit-container',
                 attributeList: attributeList,
                 attributeDefs: this.options.attributeDefs,
                 dynamicLogicDefs: this.options.dynamicLogicDefs,

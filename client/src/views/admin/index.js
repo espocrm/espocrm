@@ -128,7 +128,7 @@ define('views/admin/index', ['view'], function (Dep) {
 
             if (!this.getConfig().get('adminNotificationsDisabled')) {
                 this.createView('notificationsPanel', 'views/admin/panels/notifications', {
-                    el: this.getSelector() + ' .notifications-panel-container'
+                    selector: '.notifications-panel-container'
                 });
             }
         },

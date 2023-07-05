@@ -67,7 +67,7 @@ define('crm:views/calendar/modals/shared-options', ['views/modal', 'model'], fun
             });
 
             this.createView('record', 'crm:views/calendar/record/shared-options', {
-                el: this.options.el + ' .record-container',
+                selector: '.record-container',
                 model: model,
             });
         },

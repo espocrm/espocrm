@@ -40,7 +40,7 @@ define('views/address-map/view', ['views/main'], function (Dep) {
 
             this.createView('header', 'views/header', {
                 model: this.model,
-                el: '#main > .header',
+                fullSelector: '#main > .header',
                 scope: this.model.entityType,
                 fontSizeFlexible: true,
             });
@@ -55,7 +55,7 @@ define('views/address-map/view', ['views/main'], function (Dep) {
             this.createView('map', viewName, {
                 model: this.model,
                 name: field + 'Map',
-                el: this.getSelector() + ' .map-container',
+                selector: '.map-container',
                 height: this.getHelper().calculateContentContainerHeight(this.$el.find('.map-container')),
             }, (view) => {
             	view.render();

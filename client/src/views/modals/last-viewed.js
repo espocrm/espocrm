@@ -75,7 +75,7 @@ class LastViewedModalView extends ModalView {
         this.listenToOnce(this.collection, 'sync', () => {
             this.createView('list', viewName, {
                 collection: this.collection,
-                el: this.containerSelector + ' .list-container',
+                fullSelector: this.containerSelector + ' .list-container',
                 selectable: false,
                 checkboxes: false,
                 massActionsDisabled: true,

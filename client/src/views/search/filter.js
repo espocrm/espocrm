@@ -53,7 +53,7 @@ class FilterView extends View {
             this.createView('field', viewName, {
                 mode: 'search',
                 model: this.model,
-                el: this.options.el + ' .field',
+                selector: '.field',
                 defs: {
                     name: name,
                 },

@@ -153,7 +153,7 @@ class ResolveSaveConflictModalView extends ModalView {
             readOnly: true,
             model: this.model,
             name: field,
-            el: this.getSelector() + ' [data-name="field"][data-field="' + field + '"]',
+            selector: '[data-name="field"][data-field="' + field + '"]',
             mode: 'list',
         });
     }

@@ -144,7 +144,7 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
         createFieldView: function (type, name, readOnly, params) {
             this.createView(name, this.getFieldManager().getViewName(type), {
                 model: this.model,
-                el: this.options.el + ' .field[data-name="' + name + '"]',
+                selector: '.field[data-name="' + name + '"]',
                 defs: {
                     name: name,
                     params: params

@@ -47,13 +47,13 @@ class MergeView extends MainView {
     setupHeader() {
         this.createView('header', this.headerView, {
             model: this.model,
-            el: '#main > .page-header'
+            fullSelector: '#main > .page-header'
         });
     }
 
     setupRecord() {
         this.createView('body', this.recordView, {
-            el: '#main > .body',
+            fullSelector: '#main > .body',
             models: this.models,
             collection: this.collection
         });

@@ -1363,7 +1363,7 @@ class BaseRecordView extends View {
         let o = {
             model: this.model,
             mode: mode || 'edit',
-            el: this.options.el + ' .field[data-name="' + name + '"]',
+            selector: '.field[data-name="' + name + '"]',
             defs: {
                 name: name,
                 params: params || {},

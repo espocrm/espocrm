@@ -124,7 +124,7 @@ define('views/dashlets/abstract/record-list',
 
                 this.createView('list', viewName, {
                     collection: collection,
-                    el: this.getSelector() + ' .list-container',
+                    selector: '.list-container',
                     pagination: this.getOption('pagination') ? 'bottom' : false,
                     type: 'listDashlet',
                     rowActionsView: this.rowActionsView,

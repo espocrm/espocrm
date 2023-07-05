@@ -460,7 +460,7 @@ define('views/import/step2', ['view'], function (Dep) {
 
             this.createView(name, viewName, {
                 model: this.model,
-                el: this.getSelector() + ' .field[data-name="' + name + '"]',
+                fullSelector: this.getSelector() + ' .field[data-name="' + name + '"]',
                 defs: {
                     name: name,
                 },

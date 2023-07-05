@@ -82,7 +82,7 @@ define('views/admin/integrations/index', ['view'], function (Dep) {
             Espo.Ui.notify(' ... ');
 
             this.createView('content', viewName, {
-                el: '#integration-content',
+                fullSelector: '#integration-content',
                 integration: integration,
             }, view => {
                 this.renderHeader();

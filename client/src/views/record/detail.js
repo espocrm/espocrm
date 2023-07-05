@@ -2913,7 +2913,7 @@ class DetailRecordView extends BaseRecordView {
      */
     convertDetailLayout(simplifiedLayout) {
         let layout = [];
-        let el = this.options.el || '#' + (this.id);
+        let el = this.getSelector() || '#' + (this.id);
 
         this.panelFieldListMap = {};
 
@@ -3017,7 +3017,7 @@ class DetailRecordView extends BaseRecordView {
                         this.getFieldManager().getViewName(type);
 
                     let o = {
-                        el: el + ' .middle .field[data-name="' + name + '"]',
+                        fullSelector: el + ' .middle .field[data-name="' + name + '"]',
                         defs: {
                             name: name,
                             params: cellDefs.params || {},
@@ -3093,7 +3093,7 @@ class DetailRecordView extends BaseRecordView {
                         name: name + 'Field',
                         view: viewName,
                         field: name,
-                        el: el + ' .middle .field[data-name="' + name + '"]',
+                        fullSelector: el + ' .middle .field[data-name="' + name + '"]',
                         fullWidth: fullWidth,
                         options: o,
                     };
@@ -3181,12 +3181,12 @@ class DetailRecordView extends BaseRecordView {
      * @protected
      */
     createSideView() {
-        let el = this.options.el || '#' + (this.id);
+        let el = this.getSelector() || '#' + (this.id);
 
         this.createView('side', this.sideView, {
             model: this.model,
             scope: this.scope,
-            el: el + ' .side',
+            fullSelector: el + ' .side',
             type: this.type,
             readOnly: this.readOnly,
             inlineEditDisabled: this.inlineEditDisabled,
@@ -3202,7 +3202,7 @@ class DetailRecordView extends BaseRecordView {
      * @protected
      */
     createMiddleView(callback) {
-        let el = this.options.el || '#' + (this.id);
+        let el = this.getSelector() || '#' + (this.id);
 
         this.waitForView('middle');
 
@@ -3220,7 +3220,7 @@ class DetailRecordView extends BaseRecordView {
                 scope: this.scope,
                 type: this.type,
                 layoutDefs: layout,
-                el: el + ' .middle',
+                fullSelector: el + ' .middle',
                 layoutData: {
                     model: this.model,
                 },
@@ -3237,12 +3237,12 @@ class DetailRecordView extends BaseRecordView {
      * @protected
      */
     createBottomView() {
-        let el = this.options.el || '#' + (this.id);
+        let el = this.getSelector() || '#' + (this.id);
 
         this.createView('bottom', this.bottomView, {
             model: this.model,
             scope: this.scope,
-            el: el + ' .bottom',
+            fullSelector: el + ' .bottom',
             readOnly: this.readOnly,
             type: this.type,
             inlineEditDisabled: this.inlineEditDisabled,

@@ -126,7 +126,7 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
                 itemData: item,
                 scope: this.scope,
                 level: this.level + 1,
-                el: this.getSelector() + ' [data-view-key="'+key+'"]',
+                selector: '[data-view-key="'+key+'"]',
                 number: number,
                 type: type,
                 field: field,

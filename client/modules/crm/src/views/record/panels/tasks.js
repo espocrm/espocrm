@@ -127,7 +127,7 @@ define('crm:views/record/panels/tasks', ['views/record/panels/relationship'], fu
 
         afterRender: function () {
             this.createView('list', 'views/record/list-expanded', {
-                el: this.getSelector() + ' > .list-container',
+                selector: '> .list-container',
                 pagination: false,
                 type: 'listRelationship',
                 rowActionsView: this.defs.rowActionsView || this.rowActionsView,

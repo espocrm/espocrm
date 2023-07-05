@@ -146,7 +146,7 @@ define('views/admin/label-manager/index', ['view'], function (Dep) {
             Espo.Ui.notify(' ... ');
 
             this.createView('record', 'views/admin/label-manager/edit', {
-                el: this.getSelector() + ' .language-record',
+                selector: '.language-record',
                 scope: this.scope,
                 language: this.language,
             }, (view) => {

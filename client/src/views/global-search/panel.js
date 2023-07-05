@@ -58,7 +58,7 @@ define('views/global-search/panel', ['view'], function (Dep) {
         afterRender: function () {
             this.listenToOnce(this.collection, 'sync', () => {
                 this.createView('list', 'views/record/list-expanded', {
-                    el: this.options.el + ' .list-container',
+                    selector: '.list-container',
                     collection: this.collection,
                     listLayout: {
                         rows: [
@@ -67,8 +67,8 @@ define('views/global-search/panel', ['view'], function (Dep) {
                                     name: 'name',
                                     view: 'views/global-search/name-field',
                                     params: {
-                                        containerEl: this.options.el
-                                    }
+                                        containerEl: this.getSelector(),
+                                    },
                                 }
                             ]
                         ],

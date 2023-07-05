@@ -99,7 +99,7 @@ define('views/user-security/modals/two-factor-sms',
 
                         this.createView('record', 'views/record/edit-for-modal', {
                             scope: 'None',
-                            el: this.getSelector() + ' .record',
+                            selector: '.record',
                             model: model,
                             detailLayout: [
                                 {

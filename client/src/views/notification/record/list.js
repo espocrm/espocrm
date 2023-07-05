@@ -62,8 +62,8 @@ define('views/notification/record/list', ['views/record/list-expanded'], functio
 
                             view._afterRender();
 
-                            if (view.options.el) {
-                                view.setElement(view.options.el);
+                            if (view.getSelector()) {
+                                view.setElement(view.getSelector());
                             }
                         });
                     });

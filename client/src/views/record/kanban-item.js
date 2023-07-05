@@ -79,7 +79,7 @@ class KanbanRecordItem extends View {
                 name: name,
                 mode: mode,
                 readOnly: true,
-                el: this.getSelector() + ' .field[data-name="'+name+'"]',
+                selector: '.field[data-name="'+name+'"]',
             });
         });
 
@@ -90,7 +90,7 @@ class KanbanRecordItem extends View {
             };
 
             this.createView('itemMenu', this.rowActionsView, {
-                el: this.getSelector() + ' .item-menu-container',
+                selector: '.item-menu-container',
                 model: this.model,
                 acl: acl,
                 statusFieldIsEditable: this.options.statusFieldIsEditable,

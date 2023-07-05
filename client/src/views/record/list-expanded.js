@@ -156,7 +156,7 @@ class ListExpandedRecordView extends ListRecordView {
     getItemEl(model, item) {
         let name = item.field || item.columnName;
 
-        return this.options.el + ' li[data-id="' + model.id + '"] .cell[data-name="' + name+ '"]';
+        return this.getSelector() + ' li[data-id="' + model.id + '"] .cell[data-name="' + name+ '"]';
     }
 
     getRowContainerHtml(id) {

@@ -118,7 +118,7 @@ define('crm:views/lead/convert', ['view'], function (Dep) {
 
                                 this.createView(scope, convertEntityViewName, {
                                     model: model,
-                                    el: '#main .edit-container-' + Espo.Utils.toDom(scope),
+                                    fullSelector: '#main .edit-container-' + Espo.Utils.toDom(scope),
                                     buttonsPosition: false,
                                     buttonsDisabled: true,
                                     layoutName: 'detailConvert',

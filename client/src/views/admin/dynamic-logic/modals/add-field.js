@@ -45,7 +45,7 @@ define('views/admin/dynamic-logic/modals/add-field', ['views/modal', 'model'], f
             var model = new Model();
 
             this.createView('field', 'views/admin/dynamic-logic/fields/field', {
-                el: this.getSelector() + ' [data-name="field"]',
+                selector: '[data-name="field"]',
                 model: model,
                 mode: 'edit',
                 scope: this.scope,

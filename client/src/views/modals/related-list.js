@@ -372,7 +372,7 @@ class RelatedListModalView extends ModalView {
         if (this.searchPanel) {
             this.createView('search', 'views/record/search', {
                 collection: this.collection,
-                el: this.containerSelector + ' .search-container',
+                fullSelector: this.containerSelector + ' .search-container',
                 searchManager: searchManager,
                 disableSavePreset: true,
                 filterList: filterList,
@@ -391,7 +391,7 @@ class RelatedListModalView extends ModalView {
 
         this.createView('list', viewName, {
             collection: this.collection,
-            el: this.containerSelector + ' .list-container',
+            fullSelector: this.containerSelector + ' .list-container',
             rowActionsView: this.rowActionsView,
             layoutName: this.layoutName,
             searchManager: this.searchManager,

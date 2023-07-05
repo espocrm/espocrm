@@ -309,7 +309,7 @@ define('crm:views/record/panels/activities',
         afterRender: function () {
             let afterFetch = () => {
                 this.createView('list', 'views/record/list-expanded', {
-                    el: this.getSelector() + ' > .list-container',
+                    selector: '> .list-container',
                     pagination: false,
                     type: 'listRelationship',
                     rowActionsView: this.rowActionsView,

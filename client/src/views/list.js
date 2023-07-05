@@ -292,7 +292,7 @@ class ListView extends MainView {
     setupHeader() {
         this.createView('header', this.headerView, {
             collection: this.collection,
-            el: '#main > .page-header',
+            fullSelector: '#main > .page-header',
             scope: this.scope,
             isXsSingleRow: true,
         });
@@ -346,7 +346,7 @@ class ListView extends MainView {
     createSearchView() {
         return this.createView('search', this.searchView, {
             collection: this.collection,
-            el: '#main > .search-container',
+            fullSelector: '#main > .search-container',
             searchManager: this.searchManager,
             scope: this.scope,
             viewMode: this.viewMode,
@@ -596,7 +596,7 @@ class ListView extends MainView {
     createListRecordView(fetch) {
         let o = {
             collection: this.collection,
-            el: this.options.el + ' .list-container',
+            selector: '.list-container',
             scope: this.scope,
             skipBuildRows: true,
             shortcutKeysEnabled: true,

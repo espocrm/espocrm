@@ -59,7 +59,7 @@ define('views/notification/items/base', ['view'], function (Dep) {
                     name: name,
                     params: params || {}
                 },
-                el: this.options.el + ' .cell-' + name,
+                selector: '.cell-' + name,
                 mode: 'list',
             });
         },
@@ -82,7 +82,7 @@ define('views/notification/items/base', ['view'], function (Dep) {
 
             this.createView('message', 'views/stream/message', {
                 messageTemplate: this.messageTemplate,
-                el: this.options.el + ' .message',
+                selector: '.message',
                 model: this.model,
                 messageData: this.messageData,
             });

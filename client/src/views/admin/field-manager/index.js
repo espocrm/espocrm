@@ -106,7 +106,7 @@ define('views/admin/field-manager/index', ['view'], function (Dep) {
             });
 
             this.createView('header', 'views/admin/field-manager/header', {
-                el: this.getSelector() + '> .page-header',
+                selector: '> .page-header',
                 scope: this.scope,
                 field: this.field,
             });
@@ -123,7 +123,7 @@ define('views/admin/field-manager/index', ['view'], function (Dep) {
             Espo.Ui.notify(' ... ');
 
             this.createView('content', 'views/admin/field-manager/list', {
-                el: '#fields-content',
+                fullSelector: '#fields-content',
                 scope: scope,
             }, (view) => {
                 view.render();
@@ -146,7 +146,7 @@ define('views/admin/field-manager/index', ['view'], function (Dep) {
             Espo.Ui.notify(' ... ');
 
             this.createView('content', 'views/admin/field-manager/edit', {
-                el: '#fields-content',
+                fullSelector: '#fields-content',
                 scope: scope,
                 field: field,
             }, (view) => {
@@ -172,7 +172,7 @@ define('views/admin/field-manager/index', ['view'], function (Dep) {
             Espo.Ui.notify(' ... ');
 
             this.createView('content', 'Admin.FieldManager.Edit', {
-                el: '#fields-content',
+                fullSelector: '#fields-content',
                 scope: scope,
                 type: type,
             }, (view) => {

@@ -68,7 +68,7 @@ define('views/notification/fields/container', ['views/fields/base'], function (D
 
             this.createView('notification', viewName, {
                 model: this.model,
-                el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
+                fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
             });
         },
 
@@ -89,7 +89,7 @@ define('views/notification/fields/container', ['views/fields/base'], function (D
                 this.createView('notification', viewName, {
                     model: model,
                     isUserStream: true,
-                    el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
+                    fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
                     onlyContent: true,
                     isNotification: true,
                 });
@@ -114,7 +114,7 @@ define('views/notification/fields/container', ['views/fields/base'], function (D
                     model: model,
                     userId: this.model.get('userId'),
                     isUserStream: true,
-                    el: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
+                    fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
                     onlyContent: true,
                     isNotification: true,
                 });

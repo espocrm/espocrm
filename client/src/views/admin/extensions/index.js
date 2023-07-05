@@ -103,7 +103,7 @@ export default Dep.extend({
                 .then(() => {
                     this.createView('list', 'views/extension/record/list', {
                         collection: this.collection,
-                        el: this.options.el + ' > .list-container',
+                        selector: '> .list-container',
                     });
 
                     if (this.collection.length === 0) {

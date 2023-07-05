@@ -387,7 +387,7 @@ class NavbarSiteView extends View {
         });
 
         this.createView('notificationsBadge', 'views/notification/badge', {
-            el: this.options.el + ' .notifications-badge-container'
+            selector: '.notifications-badge-container'
         });
 
         let setup = () => {
@@ -485,7 +485,7 @@ class NavbarSiteView extends View {
 
         if (this.globalSearchAvailable) {
             this.createView('globalSearch', 'views/global-search/global-search', {
-                el: this.options.el + ' .global-search-container'
+                selector: '.global-search-container'
             });
         }
     }

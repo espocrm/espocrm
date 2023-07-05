@@ -35,7 +35,7 @@ define('views/settings/edit', ['views/edit'], function (Dep) {
         setupHeader: function () {
             this.createView('header', this.headerView, {
                 model: this.model,
-                el: '#main > .header',
+                fullSelector: '#main > .header',
                 template: this.options.headerTemplate,
                 label: this.options.label,
             });

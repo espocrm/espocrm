@@ -93,7 +93,7 @@ define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fields/
             model.set('options', this.optionsDefsList[num].optionList || []);
 
             this.createView(key, 'views/fields/multi-enum', {
-                el: this.getSelector() + ' .options-container[data-key="'+key+'"]',
+                selector: '.options-container[data-key="'+key+'"]',
                 model: model,
                 name: 'options',
                 mode: 'edit',
@@ -143,7 +143,7 @@ define('views/admin/field-manager/fields/dynamic-logic-options', ['views/fields/
             }
 
             this.createView(key, 'views/admin/dynamic-logic/conditions-string/group-base', {
-                el: this.getSelector() + ' .string-container[data-key="'+key+'"]',
+                selector: '.string-container[data-key="'+key+'"]',
                 itemData: {
                     value: this.optionsDefsList[num].conditionGroup
                 },

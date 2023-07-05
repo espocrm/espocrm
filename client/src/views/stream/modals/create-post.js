@@ -61,7 +61,7 @@ define('views/stream/modals/create-post', ['views/modal'], function (Dep) {
             this.getModelFactory().create('Note', (model) => {
                 this.createView('record', 'views/stream/record/edit', {
                     model: model,
-                    el: this.options.el + ' .record',
+                    selector: '.record',
                 }, view => {
                     this.listenTo(view, 'after:save', () => {
                         this.trigger('after:save');

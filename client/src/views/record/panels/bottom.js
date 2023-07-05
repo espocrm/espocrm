@@ -273,7 +273,7 @@ class BottomPanelView extends View {
 
         var o = {
             model: this.model,
-            el: this.options.el + ' .field[data-name="' + field + '"]',
+            selector: '.field[data-name="' + field + '"]',
             defs: {
                 name: field,
                 params: params || {},

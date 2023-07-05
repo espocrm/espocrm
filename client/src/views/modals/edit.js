@@ -199,7 +199,7 @@ class EditModalView extends ModalView {
 
         let options = {
             model: model,
-            el: this.containerSelector + ' .edit-container',
+            fullSelector: this.containerSelector + ' .edit-container',
             type: 'editSmall',
             layoutName: this.layoutName || 'detailSmall',
             buttonsDisabled: true,

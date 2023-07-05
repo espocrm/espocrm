@@ -458,7 +458,7 @@ class ListWithCategories extends ListView {
         this.getNestedCategoriesCollection(collection => {
             this.createView('nestedCategories', 'views/record/list-nested-categories', {
                 collection: collection,
-                el: this.options.el + ' .nested-categories-container',
+                selector: '.nested-categories-container',
                 showEditLink: this.getAcl().check(this.categoryScope, 'edit'),
                 isExpanded: this.isExpanded,
                 hasExpandedToggler: this.hasExpandedToggler,
@@ -474,7 +474,7 @@ class ListWithCategories extends ListView {
         this.getTreeCollection(collection => {
             this.createView('categories', 'views/record/list-tree', {
                 collection: collection,
-                el: this.options.el + ' .categories-container',
+                selector: '.categories-container',
                 selectable: true,
                 showRoot: true,
                 rootName: this.translate(this.scope, 'scopeNamesPlural'),

@@ -148,7 +148,7 @@ define('crm:views/dashlets/activities',
 
             this.listenToOnce(this.collection, 'sync', () => {
                 this.createView('list', 'crm:views/record/list-activities-dashlet', {
-                    el: this.options.el + ' > .list-container',
+                    selector: '> .list-container',
                     pagination: false,
                     type: 'list',
                     rowActionsView: this.rowActionsView,

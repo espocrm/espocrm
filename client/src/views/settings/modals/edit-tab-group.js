@@ -107,7 +107,7 @@ define('views/settings/modals/edit-tab-group', ['views/modal', 'model'], functio
             this.createView('record', 'views/record/edit-for-modal', {
                 detailLayout: detailLayout,
                 model: model,
-                el: this.getSelector() + ' .record',
+                selector: '.record',
             });
         },
 

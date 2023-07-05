@@ -38,7 +38,7 @@ class LoginSecondStepView extends View {
     /** @inheritDoc */
     views =  {
         footer: {
-            el: 'body > footer',
+            fullSelector: 'body > footer',
             view: 'views/site/footer',
         },
     }

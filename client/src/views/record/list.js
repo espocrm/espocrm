@@ -2674,8 +2674,9 @@ class ListRecordView extends View {
      * @return {string}
      */
     getItemEl(model, item) {
-        return this.options.el + ' tr[data-id="' + model.id + '"] ' +
-            'td.cell[data-name="' + item.columnName + '"]';
+        return this.getSelector() +
+            ' tr[data-id="' + model.id + '"]' +
+            ' td.cell[data-name="' + item.columnName + '"]';
     }
 
     prepareInternalLayout(internalLayout, model) {
@@ -2709,7 +2710,7 @@ class ListRecordView extends View {
             this.createView(key, 'views/base', {
                 model: model,
                 acl: acl,
-                el: this.options.el + ' .list-row[data-id="'+key+'"]',
+                selector: '.list-row[data-id="' + key + '"]',
                 optionsToPass: ['acl'],
                 noCache: true,
                 layoutDefs: {
@@ -2886,8 +2887,8 @@ class ListRecordView extends View {
 
                         view._afterRender();
 
-                        if (view.options.el) {
-                            view.setElement(view.options.el);
+                        if (view.getSelector()) {
+                            view.setElement(view.getSelector());
                         }
                     });
                 });

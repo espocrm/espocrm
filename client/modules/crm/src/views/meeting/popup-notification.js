@@ -55,7 +55,7 @@ class MeetingPopupNotificationView extends PopupNotificationView {
             this.createView('dateField', 'views/fields/datetime', {
                 model: model,
                 mode: 'detail',
-                el: this.options.el + ' .field[data-name="' + dateAttribute + '"]',
+                selector: '.field[data-name="' + dateAttribute + '"]',
                 defs: {
                     name: dateAttribute,
                 },

@@ -88,7 +88,7 @@ define('views/export/modals/idle', ['views/modal', 'model'], function (Dep, Mode
             this.createView('record', 'views/record/edit-for-modal', {
                 scope: 'None',
                 model: this.model,
-                el: this.getSelector() + ' .record',
+                selector: '.record',
                 detailLayout: [
                     {
                         rows: [

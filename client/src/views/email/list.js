@@ -454,7 +454,7 @@ define('views/email/list', ['views/list'], function (Dep) {
                 this.createView('folders', 'views/email-folder/list-side', {
                     collection: collection,
                     emailCollection: this.collection,
-                    el: this.options.el + ' .folders-container',
+                    selector: '.folders-container',
                     showEditLink: this.getAcl().check(this.folderScope, 'edit'),
                     selectedFolderId: this.selectedFolderId,
                 }, view => {

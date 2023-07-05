@@ -91,7 +91,7 @@ define('views/global-search/global-search', ['view'], function (Dep) {
             $container.appendTo(this.$el.find('.global-search-panel-container'));
 
             this.createView('panel', 'views/global-search/panel', {
-                el: '#global-search-panel',
+                fullSelector: '#global-search-panel',
                 collection: this.collection,
             }, function (view) {
                 view.render();

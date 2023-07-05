@@ -197,7 +197,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('entity', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="entity"]',
+                selector: '.field[data-name="entity"]',
                 defs: {
                     name: 'entity'
                 },
@@ -207,7 +207,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('entityForeign', 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="entityForeign"]',
+                selector: '.field[data-name="entityForeign"]',
                 defs: {
                     name: 'entityForeign',
                     params: {
@@ -222,7 +222,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('linkType', 'views/fields/enum', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="linkType"]',
+                selector: '.field[data-name="linkType"]',
                 defs: {
                     name: 'linkType',
                     params: {
@@ -237,7 +237,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('link', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="link"]',
+                selector: '.field[data-name="link"]',
                 defs: {
                     name: 'link',
                     params: {
@@ -251,7 +251,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('linkForeign', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="linkForeign"]',
+                selector: '.field[data-name="linkForeign"]',
                 defs: {
                     name: 'linkForeign',
                     params: {
@@ -265,7 +265,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('label', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="label"]',
+                selector: '.field[data-name="label"]',
                 defs: {
                     name: 'label',
                     params: {
@@ -278,7 +278,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('labelForeign', 'views/fields/varchar', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="labelForeign"]',
+                selector: '.field[data-name="labelForeign"]',
                 defs: {
                     name: 'labelForeign',
                     params: {
@@ -292,7 +292,7 @@ define('views/admin/link-manager/modals/edit',
                 this.createView('relationName', 'views/fields/varchar', {
                     model: model,
                     mode: 'edit',
-                    el: this.options.el + ' .field[data-name="relationName"]',
+                    selector: '.field[data-name="relationName"]',
                     defs: {
                         name: 'relationName',
                         params: {
@@ -307,7 +307,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('linkMultipleField', 'views/fields/bool', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="linkMultipleField"]',
+                selector: '.field[data-name="linkMultipleField"]',
                 defs: {
                     name: 'linkMultipleField'
                 },
@@ -319,7 +319,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('linkMultipleFieldForeign', 'views/fields/bool', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="linkMultipleFieldForeign"]',
+                selector: '.field[data-name="linkMultipleFieldForeign"]',
                 defs: {
                     name: 'linkMultipleFieldForeign'
                 },
@@ -331,7 +331,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('audited', 'views/fields/bool', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="audited"]',
+                selector: '.field[data-name="audited"]',
                 defs: {
                     name: 'audited'
                 },
@@ -342,7 +342,7 @@ define('views/admin/link-manager/modals/edit',
             this.createView('auditedForeign', 'views/fields/bool', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="auditedForeign"]',
+                selector: '.field[data-name="auditedForeign"]',
                 defs: {
                     name: 'auditedForeign'
                 },
@@ -353,24 +353,25 @@ define('views/admin/link-manager/modals/edit',
             this.createView('parentEntityTypeList', 'views/fields/entity-type-list', {
                 model: model,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="parentEntityTypeList"]',
+                selector: '.field[data-name="parentEntityTypeList"]',
                 defs: {
                     name: 'parentEntityTypeList',
                 },
             });
 
             this.createView('foreignLinkEntityTypeList',
-                    'views/admin/link-manager/fields/foreign-link-entity-type-list', {
-                model: model,
-                mode: 'edit',
-                el: this.options.el + ' .field[data-name="foreignLinkEntityTypeList"]',
-                defs: {
-                    name: 'foreignLinkEntityTypeList',
-                    params: {
-                        options: this.model.get('parentEntityTypeList') || [],
+                    'views/admin/link-manager/fields/foreign-link-entity-type-list',
+                {
+                    model: model,
+                    mode: 'edit',
+                    selector: '.field[data-name="foreignLinkEntityTypeList"]',
+                    defs: {
+                        name: 'foreignLinkEntityTypeList',
+                        params: {
+                            options: this.model.get('parentEntityTypeList') || [],
+                        },
                     },
-                },
-            });
+                });
 
             this.model.fetchedAttributes = this.model.getClonedAttributes();
 

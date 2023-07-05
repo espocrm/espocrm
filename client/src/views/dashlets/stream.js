@@ -57,11 +57,11 @@ define('views/dashlets/stream', ['views/dashlets/abstract/base'], function (Dep)
 
                 this.listenToOnce(collection, 'sync', () => {
                     this.createView('list', 'views/stream/record/list', {
-                        el: this.getSelector() + ' > .list-container',
+                        selector: '> .list-container',
                         collection: collection,
                         isUserStream: true,
                         noEdit: false,
-                    }, (view) => {
+                    }, view => {
                         view.render();
                     });
                 });

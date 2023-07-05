@@ -149,7 +149,7 @@ define('views/admin/formula-sandbox/index', ['view', 'model'], function (Dep, Mo
 
         createRecordView: function () {
             return this.createView('record', 'views/admin/formula-sandbox/record/edit', {
-                el: this.getSelector() + ' .record',
+                selector: '.record',
                 model: this.model,
                 targetEntityType: this.targetEntityType,
                 confirmLeaveDisabled: true,

@@ -463,7 +463,7 @@ class Controller {
             }
 
             options = options || {};
-            options.el = '#main';
+            options.fullSelector = '#main';
 
             let process = main => {
                 if (isCanceled) {
@@ -608,7 +608,7 @@ class Controller {
         this.set('masterRendered', false);
 
         options = options || {};
-        options.el = 'body';
+        options.fullSelector = 'body';
 
         this.viewFactory.create(view, options, view => {
             this.set('entire', view);

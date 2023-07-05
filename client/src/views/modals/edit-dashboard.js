@@ -99,7 +99,7 @@ class EditDashboardModalView extends ModalView {
         }
 
         this.createView('dashboardTabList', 'views/preferences/fields/dashboard-tab-list', {
-            el: this.options.el + ' .field[data-name="dashboardTabList"]',
+            selector: '.field[data-name="dashboardTabList"]',
             defs: {
                 name: 'dashboardTabList',
                 params: {
@@ -113,7 +113,7 @@ class EditDashboardModalView extends ModalView {
 
         if (this.hasLocked) {
             this.createView('dashboardLocked', 'views/fields/bool', {
-                el: this.options.el + ' .field[data-name="dashboardLocked"]',
+                selector: '.field[data-name="dashboardLocked"]',
                 mode: 'edit',
                 model: model,
                 defs: {

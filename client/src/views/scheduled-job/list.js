@@ -41,7 +41,7 @@ define('views/scheduled-job/list', ['views/list'], function (Dep) {
             });
 
             this.createView('search', 'views/base', {
-                el: '#main > .search-container',
+                fullSelector: '#main > .search-container',
                 template: 'scheduled-job/cronjob',
             });
         },

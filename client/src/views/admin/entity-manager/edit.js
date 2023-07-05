@@ -458,7 +458,7 @@ function (Dep, Model) {
 
         createRecordView: function () {
             return this.createView('record', 'views/admin/entity-manager/record/edit', {
-                el: this.getSelector() + ' .record',
+                selector: '.record',
                 model: this.model,
                 detailLayout: this.detailLayout,
                 isNew: this.isNew,

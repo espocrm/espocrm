@@ -68,7 +68,7 @@ class IndexImportView extends View {
         }
 
         this.createView('step', 'views/import/step' + num.toString(), {
-            el: this.options.el + ' > .import-container',
+            selector: '> .import-container',
             entityType: this.entityType,
             formData: this.formData,
             result: result,

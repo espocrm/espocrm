@@ -159,7 +159,7 @@ class DetailView extends MainView {
     setupHeader() {
         this.createView('header', this.headerView, {
             model: this.model,
-            el: '#main > .header',
+            fullSelector: '#main > .header',
             scope: this.scope,
             fontSizeFlexible: true,
         });
@@ -179,7 +179,7 @@ class DetailView extends MainView {
     setupRecord() {
         let o = {
             model: this.model,
-            el: '#main > .record',
+            fullSelector: '#main > .record',
             scope: this.scope,
             shortcutKeysEnabled: true,
             isReturn: this.isReturn,

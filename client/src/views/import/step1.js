@@ -187,7 +187,7 @@ class Step1ImportView extends View {
         });
 
         this.createView('actionField', 'views/fields/enum', {
-            el: this.getSelector() + ' .field[data-name="action"]',
+            selector: '.field[data-name="action"]',
             model: this.model,
             name: 'action',
             mode: 'edit',
@@ -206,7 +206,7 @@ class Step1ImportView extends View {
         });
 
         this.createView('entityTypeField', 'views/fields/enum', {
-            el: this.getSelector() + ' .field[data-name="entityType"]',
+            selector: '.field[data-name="entityType"]',
             model: this.model,
             name: 'entityType',
             mode: 'edit',
@@ -219,7 +219,7 @@ class Step1ImportView extends View {
         });
 
         this.createView('decimalMarkField', 'views/fields/varchar', {
-            el: this.getSelector() + ' .field[data-name="decimalMark"]',
+            selector: '.field[data-name="decimalMark"]',
             model: this.model,
             name: 'decimalMark',
             mode: 'edit',
@@ -235,7 +235,7 @@ class Step1ImportView extends View {
         });
 
         this.createView('personNameFormatField', 'views/fields/enum', {
-            el: this.getSelector() + ' .field[data-name="personNameFormat"]',
+            selector: '.field[data-name="personNameFormat"]',
             model: this.model,
             name: 'personNameFormat',
             mode: 'edit',
@@ -246,7 +246,7 @@ class Step1ImportView extends View {
         });
 
         this.createView('delimiterField', 'views/fields/enum', {
-            el: this.getSelector() + ' .field[data-name="delimiter"]',
+            selector: '.field[data-name="delimiter"]',
             model: this.model,
             name: 'delimiter',
             mode: 'edit',
@@ -261,7 +261,7 @@ class Step1ImportView extends View {
         });
 
         this.createView('textQualifierField', 'views/fields/enum', {
-            el: this.getSelector() + ' .field[data-name="textQualifier"]',
+            selector: '.field[data-name="textQualifier"]',
             model: this.model,
             name: 'textQualifier',
             mode: 'edit',
@@ -275,7 +275,7 @@ class Step1ImportView extends View {
         });
 
         this.createView('dateFormatField', 'views/fields/enum', {
-            el: this.getSelector() + ' .field[data-name="dateFormat"]',
+            selector: '.field[data-name="dateFormat"]',
             model: this.model,
             name: 'dateFormat',
             mode: 'edit',
@@ -286,7 +286,7 @@ class Step1ImportView extends View {
         });
 
         this.createView('timeFormatField', 'views/fields/enum', {
-            el: this.getSelector() + ' .field[data-name="timeFormat"]',
+            selector: '.field[data-name="timeFormat"]',
             model: this.model,
             name: 'timeFormat',
             mode: 'edit',
@@ -297,7 +297,7 @@ class Step1ImportView extends View {
         });
 
         this.createView('currencyField', 'views/fields/enum', {
-            el: this.getSelector() + ' .field[data-name="currency"]',
+            selector: '.field[data-name="currency"]',
             model: this.model,
             name: 'currency',
             mode: 'edit',
@@ -307,7 +307,7 @@ class Step1ImportView extends View {
         });
 
         this.createView('timezoneField', 'views/fields/enum', {
-            el: this.getSelector() + ' .field[data-name="timezone"]',
+            selector: '.field[data-name="timezone"]',
             model: this.model,
             name: 'timezone',
             mode: 'edit',
@@ -317,14 +317,14 @@ class Step1ImportView extends View {
         });
 
         this.createView('headerRowField', 'views/fields/bool', {
-            el: this.getSelector() + ' .field[data-name="headerRow"]',
+            selector: '.field[data-name="headerRow"]',
             model: this.model,
             name: 'headerRow',
             mode: 'edit',
         });
 
         this.createView('silentModeField', 'views/fields/bool', {
-            el: this.getSelector() + ' .field[data-name="silentMode"]',
+            selector: '.field[data-name="silentMode"]',
             model: this.model,
             name: 'silentMode',
             mode: 'edit',
@@ -333,21 +333,21 @@ class Step1ImportView extends View {
         });
 
         this.createView('idleModeField', 'views/fields/bool', {
-            el: this.getSelector() + ' .field[data-name="idleMode"]',
+            selector: '.field[data-name="idleMode"]',
             model: this.model,
             name: 'idleMode',
             mode: 'edit',
         });
 
         this.createView('skipDuplicateCheckingField', 'views/fields/bool', {
-            el: this.getSelector() + ' .field[data-name="skipDuplicateChecking"]',
+            selector: '.field[data-name="skipDuplicateChecking"]',
             model: this.model,
             name: 'skipDuplicateChecking',
             mode: 'edit',
         });
 
         this.createView('manualModeField', 'views/fields/bool', {
-            el: this.getSelector() + ' .field[data-name="manualMode"]',
+            selector: '.field[data-name="manualMode"]',
             model: this.model,
             name: 'manualMode',
             mode: 'edit',

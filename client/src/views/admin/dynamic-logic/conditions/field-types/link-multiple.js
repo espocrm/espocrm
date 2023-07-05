@@ -54,7 +54,7 @@ define('views/admin/dynamic-logic/conditions/field-types/link-multiple',
             this.createView('value', viewName, {
                 model: this.model,
                 name: fieldName,
-                el: this.getSelector() + ' .value-container',
+                selector: '.value-container',
                 mode: 'edit',
                 readOnlyDisabled: true,
                 foreignScope: this.getMetadata()

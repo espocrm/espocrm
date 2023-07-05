@@ -125,7 +125,7 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
                 this.listenToOnce(collection, 'sync', () => {
                     this.createView('list', viewName, {
                         collection: collection,
-                        el: this.containerSelector + ' .list-container',
+                        fullSelector: this.containerSelector + ' .list-container',
                         readOnly: true,
                         selectable: true,
                         checkboxes: this.multiple,

@@ -120,7 +120,7 @@ define('views/admin/template-manager/index', ['view'], function (Dep) {
             Espo.Ui.notify(' ... ');
 
             this.createView('record', 'views/admin/template-manager/edit', {
-                el: this.getSelector() + ' .template-record',
+                selector: '.template-record',
                 name: this.selectedTemplate,
             }, (view) => {
                 view.render();

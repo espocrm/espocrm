@@ -78,7 +78,7 @@ class ComplexCreatedFieldView extends BaseFieldView {
             mode: this.MODE_DETAIL,
             readOnly: true,
             readOnlyLocked: true,
-            el: this.getSelector() + ' [data-name="' + field + '"]',
+            selector: '[data-name="' + field + '"]',
         });
     }
 

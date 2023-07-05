@@ -71,7 +71,7 @@ class StreamView extends View {
         this.wait(
             this.getModelFactory().create('Note', model => {
                 this.createView('createPost', 'views/stream/record/edit', {
-                    el: this.options.el + ' .create-post-container',
+                    selector: '.create-post-container',
                     model: model,
                     interactiveMode: true,
                 }, view => {
@@ -92,7 +92,7 @@ class StreamView extends View {
 
             collection.fetch().then(() => {
                 this.createView('list', 'views/stream/record/list', {
-                    el: this.options.el + ' .list-container',
+                    selector: '.list-container',
                     collection: collection,
                     isUserStream: true,
                 }, view => {

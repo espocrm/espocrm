@@ -216,7 +216,7 @@ class CalendarView extends View {
 
         if (this.header) {
             this.createView('modeButtons', 'crm:views/calendar/mode-buttons', {
-                el: this.getSelector() + ' .mode-buttons',
+                selector: '.mode-buttons',
                 isCustomViewAvailable: this.isCustomViewAvailable,
                 modeList: this.modeList,
                 scopeList: this.scopeList,

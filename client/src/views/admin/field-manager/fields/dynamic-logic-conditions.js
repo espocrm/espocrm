@@ -52,7 +52,7 @@ define('views/admin/field-manager/fields/dynamic-logic-conditions', ['views/fiel
 
         createStringView: function () {
             this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions-string/group-base', {
-                el: this.getSelector() + ' .top-group-string-container',
+                selector: '.top-group-string-container',
                 itemData: {
                     value: this.conditionGroup
                 },

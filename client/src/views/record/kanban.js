@@ -825,7 +825,7 @@ class KanbanRecordView extends ListRecordView {
 
         this.createView(key, this.itemViewName, {
             model: model,
-            el: this.getSelector() + ' .item[data-id="'+model.id+'"]',
+            selector: '.item[data-id="'+model.id+'"]',
             itemLayout: this.listLayout,
             rowActionsDisabled: this.rowActionsDisabled,
             rowActionsView: this.rowActionsView,

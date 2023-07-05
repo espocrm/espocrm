@@ -170,7 +170,7 @@ class ListTreeRecordItemView extends View {
 
         this.createView('children', this.listViewName, {
             collection: childCollection,
-            el: this.options.el + ' > .children',
+            selector: '> .children',
             createDisabled: this.options.createDisabled,
             readOnly: this.options.readOnly,
             level: this.level + 1,

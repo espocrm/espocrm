@@ -41,7 +41,7 @@ define('views/admin/formula/modals/add-attribute', ['views/modal', 'model'], fun
             var model = new Model();
 
             this.createView('attribute', 'views/admin/formula/fields/attribute', {
-                el: this.getSelector() + ' [data-name="attribute"]',
+                selector: '[data-name="attribute"]',
                 model: model,
                 mode: 'edit',
                 scope: this.scope,

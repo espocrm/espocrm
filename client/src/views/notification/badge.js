@@ -472,7 +472,7 @@ define('views/notification/badge', ['view'], function (Dep) {
             $container.appendTo(this.$el.find('.notifications-panel-container'));
 
             this.createView('panel', 'views/notification/panel', {
-                el: '#notifications-panel',
+                fullSelector: '#notifications-panel',
             }, view => {
                 view.render();
 

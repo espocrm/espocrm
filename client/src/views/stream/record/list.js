@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module views/stream/record/list */
+
 import ListExpandedRecordView from 'views/record/list-expanded';
 
 class ListStreamRecordView extends ListExpandedRecordView {
@@ -95,8 +97,8 @@ class ListStreamRecordView extends ListExpandedRecordView {
 
                         view._afterRender();
 
-                        if (view.options.el) {
-                            view.setElement(view.options.el);
+                        if (view.getSelector()) {
+                            view.setElement(view.getSelector());
                         }
                     });
                 });
@@ -143,7 +145,7 @@ class ListStreamRecordView extends ListExpandedRecordView {
             noEdit: this.options.noEdit,
             optionsToPass: ['acl'],
             name: this.type + '-' + model.name,
-            el: this.options.el + ' li[data-id="' + model.id + '"]',
+            selector: 'li[data-id="' + model.id + '"]',
             setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
         }, callback);
     }

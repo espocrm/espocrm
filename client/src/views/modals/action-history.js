@@ -83,7 +83,7 @@ class ActionHistoryModalView extends ModalView {
 
         this.createView('search', 'views/record/search', {
             collection: this.collection,
-            el: this.containerSelector + ' .search-container',
+            fullSelector: this.containerSelector + ' .search-container',
             searchManager: searchManager,
             disableSavePreset: true,
             textFilterDisabled: true,
@@ -97,7 +97,7 @@ class ActionHistoryModalView extends ModalView {
         this.listenToOnce(this.collection, 'sync', () => {
             this.createView('list', viewName, {
                 collection: this.collection,
-                el: this.containerSelector + ' .list-container',
+                fullSelector: this.containerSelector + ' .list-container',
                 selectable: false,
                 checkboxes: false,
                 massActionsDisabled: true,

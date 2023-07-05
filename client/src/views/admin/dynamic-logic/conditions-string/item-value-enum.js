@@ -41,7 +41,7 @@ define('views/admin/dynamic-logic/conditions-string/item-value-enum',
             this.createView('value', viewName, {
                 model: this.model,
                 name: this.field,
-                el: this.getSelector() + '[data-view-key="'+key+'"]',
+                selector: '[data-view-key="'+key+'"]',
                 params: {
                     options: this.getMetadata()
                     .get(['entityDefs', this.scope, 'fields', this.field, 'options']) || []

@@ -266,7 +266,7 @@ class RelationshipPanelView extends BottomPanelView {
                     checkboxes: false,
                     rowActionsView: this.rowActionsView,
                     buttonsDisabled: true,
-                    el: this.options.el + ' .list-container',
+                    selector: '.list-container',
                     skipBuildRows: true,
                     rowActionsOptions: {
                         unlinkDisabled: this.defs.unlinkDisabled,

@@ -116,7 +116,7 @@ function (Dep, MultiCollection) {
 
             this.listenToOnce(this.collection, 'sync', () => {
                 this.createView('list', 'views/record/list-expanded', {
-                    el: this.getSelector() + ' > .list-container',
+                    selector: '> .list-container',
                     pagination: false,
                     type: 'listRelationship',
                     rowActionsView: 'crm:views/target-list/record/row-actions/opted-out',

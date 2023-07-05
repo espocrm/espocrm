@@ -368,7 +368,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
             });
 
             this.createView('panel-' + data.number, 'view', {
-                el: this.getSelector() + ' li.panel-layout[data-number="'+data.number+'"]',
+                selector: 'li.panel-layout[data-number="'+data.number+'"]',
                 template: 'admin/layouts/grid-panel',
                 data: () => {
                     var o = Espo.Utils.clone(data);

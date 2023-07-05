@@ -128,7 +128,7 @@ define('views/admin/dynamic-logic/conditions/field-types/base', ['view'], functi
                 this.createView('value', viewName, {
                     model: this.model,
                     name: fieldName,
-                    el: this.getSelector() + ' .value-container',
+                    selector: '.value-container',
                     mode: 'edit',
                     readOnlyDisabled: true,
                 }, function (view) {
@@ -149,7 +149,7 @@ define('views/admin/dynamic-logic/conditions/field-types/base', ['view'], functi
                 this.createView('value', 'views/fields/varchar', {
                     model: this.model,
                     name: this.getValueFieldName(),
-                    el: this.getSelector() + ' .value-container',
+                    selector: '.value-container',
                     mode: 'edit',
                     readOnlyDisabled: true,
                 }, function (view) {

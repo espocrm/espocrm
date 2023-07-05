@@ -85,7 +85,7 @@ define('views/external-account/index', ['view'], function (Dep) {
             Espo.Ui.notify(' ... ');
 
             this.createView('content', viewName, {
-                el: '#external-account-content',
+                fullSelector: '#external-account-content',
                 id: id,
                 integration: integration
             }, view => {

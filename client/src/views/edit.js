@@ -96,7 +96,7 @@ class EditView extends MainView {
     setupHeader() {
         this.createView('header', this.headerView, {
             model: this.model,
-            el: '#main > .header',
+            fullSelector: '#main > .header',
             scope: this.scope,
         });
     }
@@ -107,7 +107,7 @@ class EditView extends MainView {
     setupRecord() {
         let o = {
             model: this.model,
-            el: '#main > .record',
+            fullSelector: '#main > .record',
             scope: this.scope,
             shortcutKeysEnabled: true,
         };

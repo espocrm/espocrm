@@ -1010,7 +1010,7 @@ class ModalView extends View {
 
                 masterView
                     .createView('collapsedModalBar', 'views/collapsed-modal-bar', {
-                        el: 'body > .collapsed-modal-bar',
+                        fullSelector: 'body > .collapsed-modal-bar',
                     })
                     .then(view => resolve(view));
             }))

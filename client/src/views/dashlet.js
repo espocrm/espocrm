@@ -152,7 +152,7 @@ class DashletView extends View {
             'views/dashlets/' + Espo.Utils.camelCaseToHyphen(this.name);
 
         this.createView('body', viewName, {
-            el: this.options.el + ' .dashlet-body',
+            selector: '.dashlet-body',
             id: this.id,
             name: this.name,
             readOnly: this.options.readOnly,

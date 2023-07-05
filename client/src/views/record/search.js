@@ -1092,7 +1092,7 @@ class SearchView extends View {
             name: name,
             model: this.model,
             params: params,
-            el: this.options.el + ' .filter[data-name="' + name + '"]',
+            selector: '.filter[data-name="' + name + '"]',
         }, view => {
             if (typeof callback === 'function') {
                 view.once('after:render', () => {

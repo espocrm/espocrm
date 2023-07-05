@@ -216,7 +216,7 @@ class CalendarPage extends View {
             userId: this.options.userId,
             userName: this.options.userName,
             mode: this.mode,
-            el: '#main > .calendar-container',
+            fullSelector: '#main > .calendar-container',
         }, view => {
             let initial = true;
 
@@ -261,7 +261,7 @@ class CalendarPage extends View {
             date: this.date,
             userId: this.options.userId,
             userName: this.options.userName,
-            el: '#main > .calendar-container',
+            fullSelector: '#main > .calendar-container',
         }, view => {
             let initial = true;
 

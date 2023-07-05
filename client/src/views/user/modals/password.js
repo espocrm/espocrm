@@ -69,7 +69,7 @@ define('views/user/modals/password', ['views/modal', 'model'], function (Dep, Mo
 
             this.createView('record', 'views/record/edit-for-modal', {
                 scope: 'None',
-                el: this.getSelector() + ' .record',
+                selector: '.record',
                 model: this.model,
                 detailLayout: [
                     {

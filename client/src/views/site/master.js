@@ -43,7 +43,7 @@ class MasterSiteView extends View {
             view: false,
         },
         footer: {
-            el: 'body > footer',
+            fullSelector: 'body > footer',
             view: 'views/site/footer',
         },
     }

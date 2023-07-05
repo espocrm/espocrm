@@ -79,7 +79,7 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
             this.createView('record', 'views/export/record/record', {
                 scope: this.scope,
                 model: this.model,
-                el: this.getSelector() + ' .record',
+                selector: '.record',
                 formatList: formatList,
             });
         },

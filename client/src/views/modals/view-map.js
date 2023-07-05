@@ -52,7 +52,7 @@ class ViewMapModalView extends ModalView {
         this.createView('map', viewName, {
             model: this.model,
             name: field + 'Map',
-            el: this.getSelector() + ' .map-container',
+            selector: '.map-container',
             height: 'auto',
         });
     }

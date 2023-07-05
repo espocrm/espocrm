@@ -60,7 +60,7 @@ define('views/admin/dynamic-logic/modals/edit', ['views/modal'], function (Dep) 
             this.scope = this.options.scope;
 
             this.createView('conditionGroup', 'views/admin/dynamic-logic/conditions/and', {
-                el: this.getSelector() + ' .top-group-container',
+                selector: '.top-group-container',
                 itemData: {
                     value: this.conditionGroup
                 },

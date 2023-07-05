@@ -73,7 +73,7 @@ define('views/admin/dynamic-logic/conditions-string/item-multiple-values-base',
                 this.createView(key, viewName, {
                     model: model,
                     name: this.field,
-                    el: this.getSelector() + ' [data-view-key="'+key+'"]'
+                    selector: '[data-view-key="'+key+'"]'
                 });
             }, this);
         },

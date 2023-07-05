@@ -72,7 +72,7 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
             this.listenToOnce(collection, 'sync', () => {
                 this.createView('categories', 'views/record/list-tree', {
                     collection: collection,
-                    el: this.options.el + ' .categories-container',
+                    selector: '.categories-container',
                     selectable: true,
                     readOnly: true,
                     showRoot: true,

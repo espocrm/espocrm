@@ -122,13 +122,11 @@ define('views/admin/dynamic-logic/conditions-string/group-base', ['view'], funct
                 itemData: item,
                 scope: this.scope,
                 level: this.level + 1,
-                el: this.getSelector() + ' [data-view-key="'+key+'"]',
+                selector: '[data-view-key="'+key+'"]',
                 number: number,
                 operator: operator,
                 operatorString: operatorString,
             });
         },
-
     });
 });
-

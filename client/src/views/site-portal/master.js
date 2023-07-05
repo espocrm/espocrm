@@ -42,7 +42,7 @@ define('views/site-portal/master', ['views/site/master'], function (Dep) {
                 view: false,
             },
             footer: {
-                el: 'body > footer',
+                fullSelector: 'body > footer',
                 view: 'views/site/footer'
             }
         },

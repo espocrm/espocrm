@@ -180,7 +180,7 @@ class MassUpdateModalView extends ModalView {
 
         this.createView(name, viewName, {
             model: this.model,
-            el: this.getSelector() + ' .field[data-name="' + name + '"]',
+            selector: '.field[data-name="' + name + '"]',
             defs: {
                 name: name,
             },

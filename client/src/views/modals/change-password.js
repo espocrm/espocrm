@@ -56,7 +56,7 @@ class ChangePasswordModalView extends ModalView {
             this.createView('currentPassword', 'views/fields/password', {
                 model: user,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="currentPassword"]',
+                selector:  '.field[data-name="currentPassword"]',
                 defs: {
                     name: 'currentPassword',
                     params: {
@@ -68,7 +68,7 @@ class ChangePasswordModalView extends ModalView {
             this.createView('password', 'views/user/fields/password', {
                 model: user,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="password"]',
+                selector: '.field[data-name="password"]',
                 defs: {
                     name: 'password',
                     params: {
@@ -80,7 +80,7 @@ class ChangePasswordModalView extends ModalView {
             this.createView('passwordConfirm', 'views/fields/password', {
                 model: user,
                 mode: 'edit',
-                el: this.options.el + ' .field[data-name="passwordConfirm"]',
+                selector: '.field[data-name="passwordConfirm"]',
                 defs: {
                     name: 'passwordConfirm',
                     params: {

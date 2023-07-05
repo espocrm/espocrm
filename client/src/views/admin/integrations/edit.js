@@ -147,7 +147,7 @@ define('views/admin/integrations/edit', ['view', 'model'], function (Dep, Model)
 
             this.createView(name, viewName, {
                 model: this.model,
-                el: this.options.el + ' .field[data-name="'+name+'"]',
+                selector: '.field[data-name="' + name + '"]',
                 defs: {
                     name: name,
                     params: params

@@ -59,7 +59,7 @@ define('crm:views/dashlets/calendar', ['views/dashlets/abstract/base'], function
                     'crm:views/calendar/timeline';
 
                 this.createView('calendar', viewName, {
-                    el: this.options.el + ' > .calendar-container',
+                    selector: '> .calendar-container',
                     header: false,
                     calendarType: 'shared',
                     userList: userList,
@@ -83,12 +83,12 @@ define('crm:views/dashlets/calendar', ['views/dashlets/abstract/base'], function
 
             this.createView('calendar', viewName, {
                 mode: mode,
-                el: this.options.el + ' > .calendar-container',
+                selector: '> .calendar-container',
                 header: false,
                 enabledScopeList: this.getOption('enabledScopeList'),
-                containerSelector: this.options.el,
+                containerSelector: this.getSelector(),
                 teamIdList: teamIdList,
-            }, (view) => {
+            }, view => {
                 this.listenTo(view, 'view', () => {
                     if (this.getOption('mode') === 'month') {
                         let title = this.getOption('title');

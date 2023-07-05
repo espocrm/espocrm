@@ -197,7 +197,7 @@ class ListTreeRecordView extends ListRecordView {
                 this.createView(key, this.itemViewName, {
                     model: model,
                     collection: this.collection,
-                    el: this.options.el + ' ' + this.getRowSelector(model.id),
+                    selector: this.getRowSelector(model.id),
                     createDisabled: this.createDisabled,
                     readOnly: this.readOnly,
                     level: this.level,
@@ -232,7 +232,8 @@ class ListTreeRecordView extends ListRecordView {
     }
 
     getItemEl(model, item) {
-        return this.options.el + ' li[data-id="' + model.id + '"] span.cell[data-name="' + item.name + '"]';
+        return this.getSelector() +
+            ' li[data-id="' + model.id + '"] span.cell[data-name="' + item.name + '"]';
     }
 
     getCreateAttributes() {

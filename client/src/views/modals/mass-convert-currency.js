@@ -74,7 +74,7 @@ class MassConvertCurrencyModalView extends ModalView {
                 options: this.getConfig().get('currencyList')
             },
             name: 'currency',
-            el: this.getSelector() + ' .field[data-name="currency"]',
+            selector: '.field[data-name="currency"]',
             mode: 'edit',
             labelText: this.translate('Convert to')
         });
@@ -85,7 +85,7 @@ class MassConvertCurrencyModalView extends ModalView {
                 options: this.getConfig().get('currencyList')
             },
             name: 'baseCurrency',
-            el: this.getSelector() + ' .field[data-name="baseCurrency"]',
+            selector: '.field[data-name="baseCurrency"]',
             mode: 'detail',
             labelText: this.translate('baseCurrency', 'fields', 'Settings'),
             readOnly: true
@@ -94,7 +94,7 @@ class MassConvertCurrencyModalView extends ModalView {
         this.createView('currencyRates', 'views/settings/fields/currency-rates', {
             model: model,
             name: 'currencyRates',
-            el: this.getSelector() + ' .field[data-name="currencyRates"]',
+            selector: '.field[data-name="currencyRates"]',
             mode: 'edit',
             labelText: this.translate('currencyRates', 'fields', 'Settings')
         });

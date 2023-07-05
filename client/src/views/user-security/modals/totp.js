@@ -91,7 +91,7 @@ define('views/user-security/modals/totp', ['views/modal', 'model'], function (De
 
             this.createView('record', 'views/record/edit-for-modal', {
                 scope: 'None',
-                el: this.getSelector() + ' .record',
+                selector: '.record',
                 model: model,
                 detailLayout: [
                     {

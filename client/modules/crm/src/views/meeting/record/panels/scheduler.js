@@ -39,7 +39,7 @@ define('crm:views/meeting/record/panels/scheduler', ['views/record/panels/bottom
                 'crm:views/scheduler/scheduler';
 
             this.createView('scheduler', viewName, {
-                el: this.getSelector() + ' .scheduler-container',
+                selector: '.scheduler-container',
                 notToRender: true,
                 model: this.model,
             });

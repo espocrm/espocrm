@@ -235,7 +235,7 @@ class MergeRecordView extends View {
 
                 this.createView(model.id + '-' + field, viewName, {
                     model: model,
-                    el: '.merge [data-id="'+model.id+'"] .field[data-name="' + field + '"]',
+                    fullSelector: '.merge [data-id="' + model.id + '"] .field[data-name="' + field + '"]',
                     defs: {
                         name: field,
                     },
@@ -251,7 +251,7 @@ class MergeRecordView extends View {
             this.models.forEach(model => {
                 this.createView(model.id + '-' + 'createdAt', 'views/fields/datetime', {
                     model: model,
-                    el: '.merge [data-id="'+model.id+'"] .field[data-name="createdAt"]',
+                    fullSelector: '.merge [data-id="' + model.id + '"] .field[data-name="createdAt"]',
                     defs: {
                         name: 'createdAt',
                     },

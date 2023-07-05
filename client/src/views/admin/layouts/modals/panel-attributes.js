@@ -71,7 +71,7 @@ define('views/admin/layouts/modals/panel-attributes', ['views/modal', 'model'], 
             let attributeDefs = this.options.attributeDefs;
 
             this.createView('edit', 'views/admin/layouts/record/edit-attributes', {
-                el: this.options.el + ' .edit-container',
+                selector: '.edit-container',
                 attributeList: attributeList,
                 attributeDefs: attributeDefs,
                 model: model,

@@ -62,7 +62,7 @@ define('views/notification/list', ['view'], function (Dep) {
                 'views/notification/record/list';
 
             let options = {
-                el: this.options.el + ' .list-container',
+                selector: '.list-container',
                 collection: this.collection,
                 showCount: false,
                 listLayout: {
@@ -72,7 +72,7 @@ define('views/notification/list', ['view'], function (Dep) {
                                 name: 'data',
                                 view: 'views/notification/fields/container',
                                 params: {
-                                    containerEl: this.options.el
+                                    containerEl: this.getSelector(),
                                 },
                             },
                         ],

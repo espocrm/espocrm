@@ -54,7 +54,7 @@ define('views/user/password-change-request', ['view', 'model'], function (Dep, M
             this.createView('password', 'views/user/fields/password', {
                 model: model,
                 mode: 'edit',
-                el: this.getSelector() + ' .field[data-name="password"]',
+                selector: '.field[data-name="password"]',
                 defs: {
                     name: 'password',
                     params: {
@@ -68,7 +68,7 @@ define('views/user/password-change-request', ['view', 'model'], function (Dep, M
             this.createView('passwordConfirm', 'views/fields/password', {
                 model: model,
                 mode: 'edit',
-                el: this.getSelector() + ' .field[data-name="passwordConfirm"]',
+                selector: '.field[data-name="passwordConfirm"]',
                 defs: {
                     name: 'passwordConfirm',
                     params: {
@@ -82,7 +82,7 @@ define('views/user/password-change-request', ['view', 'model'], function (Dep, M
                 model: model,
                 mode: 'detail',
                 readOnly: true,
-                el: this.getSelector() + ' .field[data-name="generatePassword"]',
+                selector: '.field[data-name="generatePassword"]',
                 defs: {
                     name: 'generatePassword',
                 },
@@ -93,7 +93,7 @@ define('views/user/password-change-request', ['view', 'model'], function (Dep, M
                 model: model,
                 mode: 'detail',
                 readOnly: true,
-                el: this.getSelector() + ' .field[data-name="passwordPreview"]',
+                selector: '.field[data-name="passwordPreview"]',
                 defs: {
                     name: 'passwordPreview',
                 },

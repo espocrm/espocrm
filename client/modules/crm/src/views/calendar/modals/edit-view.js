@@ -113,7 +113,7 @@ define('crm:views/calendar/modals/edit-view', ['views/modal', 'model'], function
             model.set(modelData);
 
             this.createView('record', 'crm:views/calendar/record/edit-view', {
-                el: this.options.el + ' .record-container',
+                selector: '.record-container',
                 model: model
             });
         },

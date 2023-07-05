@@ -247,7 +247,7 @@ class PanelStreamView extends RelationshipPanelView {
             }
 
             this.createView('postField', 'views/note/fields/post', {
-                el: this.getSelector() + ' .textarea-container',
+                selector: '.textarea-container',
                 name: 'post',
                 mode: 'edit',
                 params: {
@@ -424,10 +424,10 @@ class PanelStreamView extends RelationshipPanelView {
 
         this.listenToOnce(collection, 'sync', () => {
             this.createView('list', 'views/stream/record/list', {
-                el: this.options.el + ' > .list-container',
+                selector: '> .list-container',
                 collection: collection,
                 model: this.model
-            }, (view) => {
+            }, view => {
                 view.render();
             });
 
@@ -542,7 +542,7 @@ class PanelStreamView extends RelationshipPanelView {
         this.createView('attachments', 'views/stream/fields/attachment-multiple', {
             model: this.seed,
             mode: 'edit',
-            el: this.options.el + ' div.attachments-container',
+            selector: 'div.attachments-container',
             defs: {
                 name: 'attachments',
             },

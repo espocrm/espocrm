@@ -135,7 +135,7 @@ define('views/working-time-calendar/fields/time-ranges', ['views/fields/base'], 
                 viewName,
                 {
                     value: item,
-                    el: this.getSelector() + ' .item[data-key="' + key + '"]',
+                    selector: '.item[data-key="' + key + '"]',
                     key: key,
                 }
             )

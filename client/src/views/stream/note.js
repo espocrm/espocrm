@@ -116,7 +116,7 @@ class NoteStreamView extends View {
 
         if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {
             this.createView('right', 'views/stream/row-actions/default', {
-                el: this.options.el + ' .right-container',
+                selector: '.right-container',
                 acl: this.options.acl,
                 model: this.model,
                 isEditable: this.isEditable,
@@ -150,7 +150,7 @@ class NoteStreamView extends View {
                 name: name,
                 params: params || {}
             },
-            el: this.options.el + ' .cell-' + name,
+            selector: '.cell-' + name,
             mode: 'list',
         };
 
@@ -206,7 +206,7 @@ class NoteStreamView extends View {
 
         this.createView('message', 'views/stream/message', {
             messageTemplate: this.messageTemplate,
-            el: this.options.el + ' .message',
+            selector: '.message',
             model: this.model,
             messageData: this.messageData,
         });

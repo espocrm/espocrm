@@ -234,7 +234,7 @@ define('views/admin/layouts/index', ['view'], function (Dep) {
                 .get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
 
             this.createView('content', 'views/admin/layouts/' + Espo.Utils.camelCaseToHyphen(typeReal), {
-                el: '#layout-content',
+                fullSelector: '#layout-content',
                 scope: scope,
                 type: type,
                 setId: this.setId,

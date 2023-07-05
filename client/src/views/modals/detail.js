@@ -385,7 +385,7 @@ class DetailModalView extends ModalView {
 
         let options = {
             model: model,
-            el: this.containerSelector + ' .record-container',
+            fullSelector: this.containerSelector + ' .record-container',
             type: 'detailSmall',
             layoutName: this.layoutName || 'detailSmall',
             buttonsDisabled: true,

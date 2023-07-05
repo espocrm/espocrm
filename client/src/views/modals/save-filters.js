@@ -59,7 +59,7 @@ class SaveFiltersModalView extends ModalView {
         let model = new Model();
 
         this.createView('name', 'views/fields/varchar', {
-            el: this.options.el + ' .field[data-name="name"]',
+            selector: '.field[data-name="name"]',
             defs: {
                 name: 'name',
                 params: {
