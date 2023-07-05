@@ -140,7 +140,6 @@ class Collection {
      */
     whereFunction
 
-
     /**
      * A last sync request promise.
      *

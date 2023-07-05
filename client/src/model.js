@@ -998,6 +998,7 @@ class Model {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @deprecated Use `getClonedAttributes`.
      * @todo Remove in v9.0.

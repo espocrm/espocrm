@@ -41,8 +41,8 @@ const Ajax = Espo.Ajax = {
      * @typedef {Object} Espo.Ajax~Options
      *
      * @property {Number} [timeout] A timeout.
-     * @property {Object.<string,string>} [headers] A request headers.
-     * @property {'xml'|'json'|'text'} [dataType] A data type.
+     * @property {Object.<string, string>} [headers] A request headers.
+     * @property {'json'|'text'} [dataType] A data type.
      * @property {string} [contentType] A content type.
      * @property {boolean} [fullResponse] To resolve with `module:ajax.XhrWrapper`.
      */
