@@ -382,7 +382,7 @@ class ModalView extends View {
                 let key = Espo.Utils.getKeyFromKeyEvent(e);
 
                 if (typeof this.shortcutKeys[key] === 'function') {
-                    this.shortcutKeys[key].call(this, e);
+                    this.shortcutKeys[key].call(this, e.originalEvent);
 
                     return;
                 }
