@@ -32,38 +32,43 @@ class GlobalSearchView extends View {
 
     template = 'global-search/global-search'
 
-    events = {
-        /** @this GlobalSearchView */
-        'keydown input.global-search-input': function (e) {
-            let key = Espo.Utils.getKeyFromKeyEvent(e);
-
-            if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
-                this.runSearch();
-
-                return;
-            }
-
-            if (key === 'Escape') {
-                this.closePanel();
-            }
-        },
-        /** @this GlobalSearchView */
-        'click [data-action="search"]': function () {
-            this.runSearch();
-        },
-        /** @this GlobalSearchView */
-        'focus input.global-search-input': function (e) {
-            e.currentTarget.select();
-        },
-    }
-
     setup() {
+        this.addHandler('keydown', 'input.global-search-input', 'onKeydown');
+        this.addHandler('focus', 'input.global-search-input', 'onFocus');
+        this.addHandler('click', '[data-action="search"]', () => this.runSearch());
+
         let promise = this.getCollectionFactory().create('GlobalSearch', collection => {
             this.collection = collection;
-            collection.url = 'GlobalSearch';
+            this.collection.url = 'GlobalSearch';
         });
 
         this.wait(promise);
+    }
+
+    /**
+     * @param {MouseEvent} e
+     */
+    onFocus(e) {
+        let inputElement = /** @type {HTMLInputElement} */e.target;
+
+        inputElement.select();
+    }
+
+    /**
+     * @param {KeyboardEvent} e
+     */
+    onKeydown(e) {
+        let key = Espo.Utils.getKeyFromKeyEvent(e);
+
+        if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
+            this.runSearch();
+
+            return;
+        }
+
+        if (key === 'Escape') {
+            this.closePanel();
+        }
     }
 
     afterRender() {
