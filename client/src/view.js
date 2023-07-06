@@ -71,16 +71,15 @@ class View extends BullView {
      */
 
     /**
-     * Add a DOM button-action event handler.
+     * Add a DOM click event handler for a target defined by `data-action="{name}"` attribute.
      *
-     * @todo Add an `<a>` tag support.
      * @param {string} action An action name.
      * @param {module:view~actionHandlerCallback} handler A handler.
      */
     addActionHandler(action, handler) {
-        let fullAction = 'click button[data-action=\"'+action+'\"]';
+        let fullAction = `click [data-action="${action}"]`;
 
-        this.events[fullAction] = handler;
+        this.events[fullAction] = e => handler(e.originalEvent);
     }
 
     /**
