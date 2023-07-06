@@ -26,117 +26,117 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/global-search/global-search', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class GlobalSearchView extends View {
 
-        template: 'global-search/global-search',
+    template = 'global-search/global-search'
 
-        events: {
-            'keydown input.global-search-input': function (e) {
-                let key = Espo.Utils.getKeyFromKeyEvent(e);
+    events = {
+        /** @this GlobalSearchView */
+        'keydown input.global-search-input': function (e) {
+            let key = Espo.Utils.getKeyFromKeyEvent(e);
 
-                if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
-                    this.runSearch();
-
-                    return;
-                }
-
-                if (key === 'Escape') {
-                    this.closePanel();
-                }
-            },
-            'click [data-action="search"]': function () {
+            if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
                 this.runSearch();
-            },
-            'focus input.global-search-input': function (e) {
-                e.currentTarget.select();
-            },
-        },
 
-        setup: function () {
-            this.wait(true);
-
-            this.getCollectionFactory().create('GlobalSearch', collection => {
-                this.collection = collection;
-                collection.url = 'GlobalSearch';
-
-                this.wait(false);
-            });
-        },
-
-        afterRender: function () {
-            this.$input = this.$el.find('input.global-search-input');
-        },
-
-        runSearch: function () {
-            let text = this.$input.val().trim();
-
-            if (text !== '' && text.length >= 2) {
-                this.search(text);
-            }
-        },
-
-        search: function (text) {
-            this.collection.url = this.collection.urlRoot =  'GlobalSearch?q=' + encodeURIComponent(text);
-
-            this.showPanel();
-        },
-
-        showPanel: function () {
-            this.closePanel();
-
-            var $container = $('<div>').attr('id', 'global-search-panel');
-
-            $container.appendTo(this.$el.find('.global-search-panel-container'));
-
-            this.createView('panel', 'views/global-search/panel', {
-                fullSelector: '#global-search-panel',
-                collection: this.collection,
-            }, function (view) {
-                view.render();
-
-                this.listenToOnce(view, 'close', this.closePanel);
-            });
-
-            let $document = $(document);
-
-            $document.on('mouseup.global-search', (e) => {
-                if (e.which !== 1) {
-                    return;
-                }
-
-                if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-                    this.closePanel();
-                }
-            });
-
-            $document.on('click.global-search', (e) => {
-                if (
-                    e.target.tagName === 'A' &&
-                    $(e.target).data('action') !== 'showMore' &&
-                    !$(e.target).hasClass('global-search-button')
-                ) {
-                    setTimeout(() => {
-                        this.closePanel();
-                    }, 100);
-                }
-            });
-        },
-
-        closePanel: function () {
-            let $container = $('#global-search-panel');
-
-            $container.remove();
-
-            let $document = $(document);
-
-            if (this.hasView('panel')) {
-                this.getView('panel').remove();
+                return;
             }
 
-            $document.off('mouseup.global-search');
-            $document.off('click.global-search');
+            if (key === 'Escape') {
+                this.closePanel();
+            }
         },
-    });
-});
+        /** @this GlobalSearchView */
+        'click [data-action="search"]': function () {
+            this.runSearch();
+        },
+        /** @this GlobalSearchView */
+        'focus input.global-search-input': function (e) {
+            e.currentTarget.select();
+        },
+    }
+
+    setup() {
+        let promise = this.getCollectionFactory().create('GlobalSearch', collection => {
+            this.collection = collection;
+            collection.url = 'GlobalSearch';
+        });
+
+        this.wait(promise);
+    }
+
+    afterRender() {
+        this.$input = this.$el.find('input.global-search-input');
+    }
+
+    runSearch() {
+        let text = this.$input.val().trim();
+
+        if (text !== '' && text.length >= 2) {
+            this.search(text);
+        }
+    }
+
+    search(text) {
+        this.collection.url = this.collection.urlRoot = 'GlobalSearch?q=' + encodeURIComponent(text);
+
+        this.showPanel();
+    }
+
+    showPanel() {
+        this.closePanel();
+
+        let $container = $('<div>').attr('id', 'global-search-panel');
+
+        $container.appendTo(this.$el.find('.global-search-panel-container'));
+
+        this.createView('panel', 'views/global-search/panel', {
+            fullSelector: '#global-search-panel',
+            collection: this.collection,
+        }, view => {
+            view.render();
+
+            this.listenToOnce(view, 'close', this.closePanel);
+        });
+
+        let $document = $(document);
+
+        $document.on('mouseup.global-search', (e) => {
+            if (e.which !== 1) {
+                return;
+            }
+
+            if (!$container.is(e.target) && $container.has(e.target).length === 0) {
+                this.closePanel();
+            }
+        });
+
+        $document.on('click.global-search', (e) => {
+            if (
+                e.target.tagName === 'A' &&
+                $(e.target).data('action') !== 'showMore' &&
+                !$(e.target).hasClass('global-search-button')
+            ) {
+                setTimeout(() => this.closePanel(), 100);
+            }
+        });
+    }
+
+    closePanel() {
+        let $container = $('#global-search-panel');
+
+        $container.remove();
+
+        let $document = $(document);
+
+        if (this.hasView('panel')) {
+            this.getView('panel').remove();
+        }
+
+        $document.off('mouseup.global-search');
+        $document.off('click.global-search');
+    }
+}
+
+export default GlobalSearchView;
