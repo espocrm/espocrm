@@ -421,20 +421,21 @@ class Controller {
 
         let masterView = this.masterView || 'views/site/master';
 
-        this.viewFactory.create(masterView, {el: 'body'}, (master) => {
+        this.viewFactory.create(masterView, {fullSelector: 'body'}, /** Bull.View */master => {
             this.set('master', master);
 
-            if (!this.get('masterRendered')) {
-                master.render(() => {
-                    this.set('masterRendered', true);
-
-                    callback.call(this, master);
-                });
+            if (this.get('masterRendered')) {
+                callback.call(this, master);
 
                 return;
             }
 
-            callback.call(this, master);
+            master.render()
+                .then(() => {
+                    this.set('masterRendered', true);
+
+                    callback.call(this, master);
+                })
         });
     }
 
