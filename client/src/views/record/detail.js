@@ -3300,7 +3300,7 @@ class DetailRecordView extends BaseRecordView {
     /**
      * Called after save or cancel. By default, redirects a page. Can be overridden in options.
      *
-     * @param {string|'save'|'cancel'|'delete'} after Name of an action after which #exit is invoked.
+     * @param {string|'save'|'cancel'|'delete'} [after] Name of an action after which #exit is invoked.
      */
     exit(after) {
         if (after) {

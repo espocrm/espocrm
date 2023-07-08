@@ -55,7 +55,7 @@ class MainView extends View {
      *
      * @typedef {Object} module:views/main~MenuItem
      *
-     * @property {string} name A name.
+     * @property {string} [name] A name.
      * @property {string} [action] An action.
      * @property {string} [link] A link.
      * @property {string} [label] A translatable label.
@@ -68,7 +68,7 @@ class MainView extends View {
      * @property {string} [html] An HTML.
      * @property {string} [text] A text.
      * @property {string} [className] An additional class name. Only for buttons.
-     * @property {'read'|'edit'|'stream'|'delete'} [acl] Access to a record (or a scope if `aclScope` specified)
+     * @property {'create'|'read'|'edit'|'stream'|'delete'} [acl] Access to a record (or a scope if `aclScope` specified)
      *   required for a menu item.
      * @property {string} [aclScope] A scope to check access to with the `acl` parameter.
      * @property {string} [configCheck] A config parameter defining a menu item availability.

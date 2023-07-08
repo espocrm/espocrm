@@ -26,148 +26,148 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/edit', ['views/record/edit', 'views/email/record/detail'], function (Dep, Detail) {
+/** @module views/email/record/edit */
 
-    return Dep.extend({
+import EditRecordView from 'views/record/edit';
+import EmailDetailRecordView from 'views/email/record/detail';
 
-        shortcutKeyCtrlEnterAction: 'send',
+class EmailEditRecordView extends EditRecordView {
 
-        init: function () {
-            Dep.prototype.init.call(this);
-            Detail.prototype.layoutNameConfigure.call(this);
-        },
+    shortcutKeyCtrlEnterAction = 'send'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    init() {
+        super.init();
 
-            if (['Archived', 'Sent'].includes(this.model.get('status'))) {
-                this.shortcutKeyCtrlEnterAction = 'save';
-            }
+        EmailDetailRecordView.prototype.layoutNameConfigure.call(this);
+    }
 
-            this.addButton({
-                name: 'send',
-                label: 'Send',
-                style: 'primary',
-                title: 'Ctrl+Enter',
-            }, true);
+    setup() {
+        super.setup();
 
-            this.addButton({
-                name: 'saveDraft',
-                label: 'Save Draft',
-                title: 'Ctrl+S',
-            }, true);
+        if (['Archived', 'Sent'].includes(this.model.get('status'))) {
+            this.shortcutKeyCtrlEnterAction = 'save';
+        }
 
-            this.controlSendButton();
+        this.addButton({
+            name: 'send',
+            label: 'Send',
+            style: 'primary',
+            title: 'Ctrl+Enter',
+        }, true);
 
-            if (this.model.get('status') === 'Draft') {
-                this.setFieldReadOnly('dateSent');
+        this.addButton({
+            name: 'saveDraft',
+            label: 'Save Draft',
+            title: 'Ctrl+S',
+        }, true);
 
-                // Not implemented for detail view yet.
-                this.hideField('selectTemplate');
-            }
+        this.controlSendButton();
 
-            this.handleAttachmentField();
-            this.handleCcField();
-            this.handleBccField();
+        if (this.model.get('status') === 'Draft') {
+            this.setFieldReadOnly('dateSent');
 
-            this.listenTo(this.model, 'change:attachmentsIds', () => {
-                this.handleAttachmentField();
-            });
+            // Not implemented for detail view yet.
+            this.hideField('selectTemplate');
+        }
 
-            this.listenTo(this.model, 'change:cc', () => {
-                this.handleCcField();
-            });
+        this.handleAttachmentField();
+        this.handleCcField();
+        this.handleBccField();
 
-            this.listenTo(this.model, 'change:bcc', () => {
-                this.handleBccField();
-            });
-        },
+        this.listenTo(this.model, 'change:attachmentsIds', () => this.handleAttachmentField());
+        this.listenTo(this.model, 'change:cc', () => this.handleCcField());
+        this.listenTo(this.model, 'change:bcc', () => this.handleBccField());
+    }
 
-        handleAttachmentField: function () {
-            if (
-                (this.model.get('attachmentsIds') || []).length === 0 &&
-                !this.isNew &&
-                this.model.get('status') !== 'Draft'
-            ) {
-                this.hideField('attachments');
+    handleAttachmentField() {
+        if (
+            (this.model.get('attachmentsIds') || []).length === 0 &&
+            !this.isNew &&
+            this.model.get('status') !== 'Draft'
+        ) {
+            this.hideField('attachments');
 
-                return;
-            }
+            return;
+        }
 
-            this.showField('attachments');
-        },
+        this.showField('attachments');
+    }
 
-        handleCcField: function () {
-            if (!this.model.get('cc') && this.model.get('status') !== 'Draft') {
-                this.hideField('cc');
-            } else {
-                this.showField('cc');
-            }
-        },
+    handleCcField() {
+        if (!this.model.get('cc') && this.model.get('status') !== 'Draft') {
+            this.hideField('cc');
+        } else {
+            this.showField('cc');
+        }
+    }
 
-        handleBccField: function () {
-            if (!this.model.get('bcc') && this.model.get('status') !== 'Draft') {
-                this.hideField('bcc');
-            } else {
-                this.showField('bcc');
-            }
-        },
+    handleBccField() {
+        if (!this.model.get('bcc') && this.model.get('status') !== 'Draft') {
+            this.hideField('bcc');
+        } else {
+            this.showField('bcc');
+        }
+    }
 
-        controlSendButton: function ()  {
-            let status = this.model.get('status');
+    controlSendButton()  {
+        let status = this.model.get('status');
 
-            if (status === 'Draft') {
-                this.showActionItem('send');
-                this.showActionItem('saveDraft');
-                this.hideActionItem('save');
-                this.hideActionItem('saveAndContinueEditing');
+        if (status === 'Draft') {
+            this.showActionItem('send');
+            this.showActionItem('saveDraft');
+            this.hideActionItem('save');
+            this.hideActionItem('saveAndContinueEditing');
 
-                return;
-            }
+            return;
+        }
 
-            this.hideActionItem('send');
-            this.hideActionItem('saveDraft');
-            this.showActionItem('save');
-            this.showActionItem('saveAndContinueEditing');
-        },
+        this.hideActionItem('send');
+        this.hideActionItem('saveDraft');
+        this.showActionItem('save');
+        this.showActionItem('saveAndContinueEditing');
+    }
 
-        actionSaveDraft: function () {
-            this.actionSaveAndContinueEditing();
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionSaveDraft() {
+        this.actionSaveAndContinueEditing();
+    }
 
-        actionSend: function () {
-            Detail.prototype.send.call(this)
-                .then(() => {
-                    this.exit();
-                })
-                .catch(() => {});
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionSend() {
+        EmailDetailRecordView.prototype.send.call(this)
+            .then(() => this.exit())
+            .catch(() => {});
+    }
 
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlS: function (e) {
-            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
-                return;
-            }
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlS(e) {
+        if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+            return;
+        }
 
-            e.preventDefault();
-            e.stopPropagation();
+        e.preventDefault();
+        e.stopPropagation();
 
-            if (this.mode !== this.MODE_EDIT) {
-                return;
-            }
+        if (this.mode !== this.MODE_EDIT) {
+            return;
+        }
 
-            if (!this.saveAndContinueEditingAction) {
-                return;
-            }
+        if (!this.saveAndContinueEditingAction) {
+            return;
+        }
 
-            if (!this.hasAvailableActionItem('saveDraft') && !this.hasAvailableActionItem('saveAndContinueEditing')) {
-                return;
-            }
+        if (
+            !this.hasAvailableActionItem('saveDraft') &&
+            !this.hasAvailableActionItem('saveAndContinueEditing')
+        ) {
+            return;
+        }
 
-            this.actionSaveAndContinueEditing();
-        },
-    });
-});
+        this.actionSaveAndContinueEditing();
+    }
+}
+
+export default EmailEditRecordView;

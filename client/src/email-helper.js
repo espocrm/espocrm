@@ -30,67 +30,49 @@
 
 /**
  * An email helper.
- *
- * @class
- * @param {module:language} language A language.
- * @param {module:models/user} user A user.
- * @param {module:date-time} dateTime A date-time util.
- * @param {module:acl-manager} acl An ACL manager.
  */
-const EmailHelper = function (language, user, dateTime, acl) {
-    /**
-     * @type {module:language}
-     * @private
-     */
-    this.language = language;
+class EmailHelper {
 
     /**
-     * @type {module:models/user}
-     * @private
+     * @param {module:language} language A language.
+     * @param {module:models/user} user A user.
+     * @param {module:date-time} dateTime A date-time util.
+     * @param {module:acl-manager} acl An ACL manager.
      */
-    this.user = user;
+    constructor(language, user, dateTime, acl) {
+        /** @private */
+        this.language = language;
+        /** @private */
+        this.user = user;
+        /** @private */
+        this.dateTime = dateTime;
+        /** @private */
+        this.acl = acl;
 
-    /**
-     * @type {module:date-time}
-     * @private
-     */
-    this.dateTime = dateTime;
-
-    /**
-     * @type {module:acl-manager}
-     * @private
-     */
-    this.acl = acl;
-
-    /**
-     * @type {string}
-     * @private
-     */
-    this.erasedPlaceholder = 'ERASED:';
-};
-
-_.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
+        /** @private */
+        this.erasedPlaceholder = 'ERASED:';
+    }
 
     /**
      * @returns {module:language}
      */
-    getLanguage: function () {
+    getLanguage() {
         return this.language;
-    },
+    }
 
     /**
      * @returns {module:models/user}
      */
-    getUser: function () {
+    getUser() {
         return this.user;
-    },
+    }
 
     /**
      * @returns {module:date-time}
      */
-    getDateTime: function () {
+    getDateTime() {
         return this.dateTime;
-    },
+    }
 
     /**
      * Get reply email attributes.
@@ -100,7 +82,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
      * @param {boolean} [cc=false] To include CC (reply-all).
      * @returns {Object.<string, *>}
      */
-    getReplyAttributes: function (model, data, cc) {
+    getReplyAttributes(model, data, cc) {
         let attributes = {
             status: 'Draft',
             isHtml: model.get('isHtml'),
@@ -267,7 +249,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
         this.addReplyBodyAttributes(model, attributes);
 
         return attributes;
-    },
+    }
 
     /**
      * Get forward email attributes.
@@ -275,7 +257,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
      * @param {module:model} model An email model.
      * @returns {Object}
      */
-    getForwardAttributes: function (model) {
+    getForwardAttributes(model) {
         let attributes = {
             status: 'Draft',
             isHtml: model.get('isHtml'),
@@ -299,7 +281,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
         this.addForwardBodyAttributes(model, attributes);
 
         return attributes;
-    },
+    }
 
     /**
      * Add body attributes for a forward email.
@@ -307,7 +289,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
      * @param {module:model} model An email model.
      * @param {Object} attributes
      */
-    addForwardBodyAttributes: function (model, attributes) {
+    addForwardBodyAttributes(model, attributes) {
         let prepending = '';
 
         if (model.get('isHtml')) {
@@ -403,7 +385,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
 
             attributes['bodyPlain'] = attributes['body'] = prepending + '\n\n' + bodyPlain;
         }
-    },
+    }
 
     /**
      * Parse a name from a string address.
@@ -411,7 +393,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
      * @param {string} value A string address. E.g. `Test Name <address@domain>`.
      * @returns {string|null}
      */
-    parseNameFromStringAddress: function (value) {
+    parseNameFromStringAddress(value) {
         if (~value.indexOf('<')) {
             let name = value.replace(/<(.*)>/, '').trim();
 
@@ -423,7 +405,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
         }
 
         return null;
-    },
+    }
 
     /**
      * Parse an address from a string address.
@@ -431,7 +413,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
      * @param {string} value A string address. E.g. `Test Name <address@domain>`.
      * @returns {string|null}
      */
-    parseAddressFromStringAddress: function (value) {
+    parseAddressFromStringAddress(value) {
         let r = value.match(/<(.*)>/);
         let address;
 
@@ -443,7 +425,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
         }
 
         return address;
-    },
+    }
 
     /**
      * Add body attributes for a reply email.
@@ -451,7 +433,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
      * @param {module:model} model An email model.
      * @param {Object.<string, *>} attributes
      */
-    addReplyBodyAttributes: function (model, attributes) {
+    addReplyBodyAttributes(model, attributes) {
         let format = this.getDateTime().getReadableShortDateTimeFormat();
 
         let dateSent = model.get('dateSent');
@@ -502,7 +484,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
             attributes['body'] = bodyPlain;
             attributes['bodyPlain'] = bodyPlain;
         }
-    },
+    }
 
     /**
      * Compose a mailto link.
@@ -511,7 +493,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
      * @param {string} [bcc] BCC.
      * @returns {string} A mailto link.
      */
-    composeMailToLink: function (attributes, bcc) {
+    composeMailToLink(attributes, bcc) {
         let link = 'mailto:';
 
         link += (attributes.to || '').split(';').join(',');
@@ -542,6 +524,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
 
         if (attributes.body) {
             o.body = attributes.body;
+
             if (attributes.isHtml) {
                 o.body = this.htmlToPlain(o.body);
             }
@@ -567,7 +550,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
         link += part;
 
         return link;
-    },
+    }
 
     /**
      * Convert an HTML to a plain text.
@@ -575,7 +558,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
      * @param {string} text A text.
      * @returns {string}
      */
-    htmlToPlain: function (text) {
+    htmlToPlain(text) {
         text = text || '';
 
         let value = text.replace(/<br\s*\/?>/mg, '\n');
@@ -590,7 +573,7 @@ _.extend(EmailHelper.prototype, /** @lends EmailHelper# */{
         value =  $div.text();
 
         return value;
-    },
-});
+    }
+}
 
 export default EmailHelper;
