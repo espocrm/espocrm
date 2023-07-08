@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\Stream;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Acl\Exceptions\NotAvailable;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 use Espo\Core\Utils\SystemUser;
@@ -1200,7 +1200,7 @@ class Service
         try {
             return $this->userAclManagerProvider->get($user);
         }
-        catch (Error $e) {
+        catch (NotAvailable) {
             return null;
         }
     }
