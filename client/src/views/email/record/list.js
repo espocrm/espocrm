@@ -174,6 +174,8 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
 
             ids.forEach(id => {
                 this.collection.trigger('moving-to-trash', id, this.collection.get(id));
+
+                this.uncheckRecord(id, null, true);
             });
         },
 
@@ -196,6 +198,8 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
 
             ids.forEach(id => {
                 this.collection.trigger('retrieving-from-trash', id, this.collection.get(id));
+
+                this.uncheckRecord(id, null, true);
             });
         },
 
