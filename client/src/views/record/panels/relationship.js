@@ -95,7 +95,7 @@ class RelationshipPanelView extends BottomPanelView {
         this.link = this.link || this.defs.link || this.panelName;
 
         if (!this.scope && !(this.link in this.model.defs.links)) {
-            throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.name + '\'');
+            throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.entityType + '\'');
         }
 
         this.scope = this.scope || this.model.defs.links[this.link].entity;
@@ -103,7 +103,7 @@ class RelationshipPanelView extends BottomPanelView {
         let linkReadOnly = this.getMetadata()
             .get(['entityDefs', this.model.entityType, 'links', this.link, 'readOnly']) || false;
 
-        let url = this.url = this.url || this.model.name + '/' + this.model.id + '/' + this.link;
+        let url = this.url = this.url || this.model.entityType + '/' + this.model.id + '/' + this.link;
 
         if (!('create' in this.defs)) {
             this.defs.create = true;
@@ -309,7 +309,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     setupTitle() {
-        this.title = this.title || this.translate(this.link, 'links', this.model.name);
+        this.title = this.title || this.translate(this.link, 'links', this.model.entityType);
 
         var iconHtml = '';
 
@@ -427,7 +427,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @private
      */
     getStoredFilter() {
-        var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
+        var key = 'panelFilter' + this.model.entityType + '-' + (this.panelName || this.name);
 
         return this.getStorage().get('state', key) || null;
     }
@@ -436,7 +436,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @private
      */
     storeFilter(filter) {
-        var key = 'panelFilter' + this.model.name + '-' + (this.panelName || this.name);
+        var key = 'panelFilter' + this.model.entityType + '-' + (this.panelName || this.name);
 
         if (filter) {
             this.getStorage().set('state', key, filter);
@@ -529,7 +529,7 @@ class RelationshipPanelView extends BottomPanelView {
     actionViewRelatedList(data) {
         var viewName =
             this.getMetadata().get(
-                ['clientDefs', this.model.name, 'relationshipPanels', this.name, 'viewModalView']
+                ['clientDefs', this.model.entityType, 'relationshipPanels', this.name, 'viewModalView']
             ) ||
             this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'relatedList']) ||
             this.viewModalView ||
@@ -741,7 +741,7 @@ class RelationshipPanelView extends BottomPanelView {
             Espo.Ui.notify(' ... ');
 
             Espo.Ajax
-                .postRequest(this.model.name + '/action/unlinkAll', {
+                .postRequest(this.model.entityType + '/action/unlinkAll', {
                     link: data.link,
                     id: this.model.id,
                 })

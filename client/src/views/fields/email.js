@@ -221,7 +221,7 @@ class EmailFieldView extends VarcharFieldView {
                     let optOut;
 
                     if (this.model.isNew()) {
-                        optOut = this.emailAddressOptedOutByDefault && this.model.name !== 'User';
+                        optOut = this.emailAddressOptedOutByDefault && this.model.entityType !== 'User';
                     } else {
                         optOut = this.model.get(this.isOptedOutFieldName)
                     }
@@ -436,7 +436,7 @@ class EmailFieldView extends VarcharFieldView {
             to: emailAddress
         };
 
-        let scope = this.model.name;
+        let scope = this.model.entityType;
 
         switch (scope) {
             case 'Account':
@@ -469,8 +469,8 @@ class EmailFieldView extends VarcharFieldView {
         }
 
         if (!attributes.parentId) {
-            if (this.checkParentTypeAvailability(this.model.name)) {
-                attributes.parentType = this.model.name;
+            if (this.checkParentTypeAvailability(this.model.entityType)) {
+                attributes.parentType = this.model.entityType;
                 attributes.parentId = this.model.id;
                 attributes.parentName = this.model.get('name');
             }
@@ -483,7 +483,7 @@ class EmailFieldView extends VarcharFieldView {
         }
 
 
-        if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name)) {
+        if (~['Contact', 'Lead', 'Account'].indexOf(this.model.entityType)) {
             attributes.nameHash = {};
             attributes.nameHash[emailAddress] = this.model.get('name');
         }

@@ -37,7 +37,7 @@ class DetailMiddleRecordView extends View {
 
     init() {
         this.recordHelper = this.options.recordHelper;
-        this.scope = this.model.name;
+        this.scope = this.model.entityType;
     }
 
     data() {

@@ -106,7 +106,7 @@ class DefaultsPopulator {
                     fillAssignedUser = true;
                 }
                 else if (
-                    this.acl.getScopeForbiddenFieldList(model.name, 'edit').includes(assignedUserField)
+                    this.acl.getScopeForbiddenFieldList(model.entityType, 'edit').includes(assignedUserField)
                 ) {
                     fillAssignedUser = true;
                 }

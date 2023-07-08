@@ -441,7 +441,7 @@ class DateFieldView extends BaseFieldView {
         if (moment(value).unix() <= moment(otherValue).unix()) {
             let msg = this.translate('fieldShouldAfter', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                .replace('{otherField}', this.translate(field, 'fields', this.model.entityType));
 
             this.showValidationMessage(msg);
 

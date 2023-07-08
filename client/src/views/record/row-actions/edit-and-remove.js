@@ -40,7 +40,7 @@ define('views/record/row-actions/edit-and-remove', ['views/record/row-actions/de
                     data: {
                         id: this.model.id
                     },
-                    link: '#' + this.model.name + '/edit/' + this.model.id
+                    link: '#' + this.model.entityType + '/edit/' + this.model.id
                 });
             }
 

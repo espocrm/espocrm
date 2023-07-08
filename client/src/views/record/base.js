@@ -596,8 +596,6 @@ class BaseRecordView extends View {
             this.setIsNotChanged();
         });
 
-        this.events = this.events || {};
-
         this.entityType = this.model.entityType || this.model.name;
         this.scope = this.options.scope || this.entityType;
 

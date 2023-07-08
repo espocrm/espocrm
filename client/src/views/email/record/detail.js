@@ -423,7 +423,7 @@ define('views/email/record/detail', ['views/record/detail'], function (Dep) {
         actionViewUsers: function (data) {
             var viewName =
                 this.getMetadata()
-                    .get(['clientDefs', this.model.name, 'relationshipPanels', 'users', 'viewModalView']) ||
+                    .get(['clientDefs', this.model.entityType, 'relationshipPanels', 'users', 'viewModalView']) ||
                 this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
                 'views/modals/related-list';
 

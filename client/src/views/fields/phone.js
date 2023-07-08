@@ -216,7 +216,7 @@ class PhoneFieldView extends VarcharFieldView {
                     let optOut;
 
                     if (this.model.isNew()) {
-                        optOut = this.phoneNumberOptedOutByDefault && this.model.name !== 'User';
+                        optOut = this.phoneNumberOptedOutByDefault && this.model.entityType !== 'User';
                     } else {
                         optOut = this.model.get(this.isOptedOutFieldName)
                     }
@@ -411,7 +411,7 @@ class PhoneFieldView extends VarcharFieldView {
         this.dataFieldName = this.name + 'Data';
         this.defaultType = this.defaultType ||
             this.getMetadata()
-                .get('entityDefs.' + this.model.name + '.fields.' + this.name + '.defaultType');
+                .get('entityDefs.' + this.model.entityType + '.fields.' + this.name + '.defaultType');
 
         this.isOptedOutFieldName = this.name + 'IsOptedOut';
         this.isInvalidFieldName = this.name + 'IsInvalid';

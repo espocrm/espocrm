@@ -77,7 +77,7 @@ class DetailSideRecordView extends PanelsContainerRecordView {
 
     init() {
         this.panelList = this.options.panelList || this.panelList;
-        this.scope = this.entityType = this.options.model.name;
+        this.scope = this.entityType = this.options.model.entityType;
 
         this.recordHelper = this.options.recordHelper;
 

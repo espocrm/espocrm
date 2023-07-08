@@ -77,7 +77,7 @@ function (Dep, RegExpPattern, /** module:ui/select*/Select) {
             });
 
             let columns = this.getMetadata()
-                .get(['entityDefs', this.model.name, 'fields', this.name, 'columns']) || {};
+                .get(['entityDefs', this.model.entityType, 'fields', this.name, 'columns']) || {};
 
             /** @type {string[]} */
             this.columnList = this.columnList || Object.keys(columns);
@@ -99,9 +99,9 @@ function (Dep, RegExpPattern, /** module:ui/select*/Select) {
 
                     if (
                         !this.getMetadata().get(['entityDefs', this.foreignScope, 'fields', field, 'type']) &&
-                        this.getMetadata().get(['entityDefs', this.model.name, 'fields', field, 'type'])
+                        this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', field, 'type'])
                     ) {
-                        o.scope = this.model.name;
+                        o.scope = this.model.entityType;
                     }
 
                     let fieldDefs = this.getMetadata().get(['entityDefs', o.scope, 'fields', field]) || {};

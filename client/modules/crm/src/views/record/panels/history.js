@@ -84,7 +84,7 @@ define('crm:views/record/panels/history', ['crm:views/record/panels/activities']
                 to: this.getUser().get('emailAddress'),
             };
 
-            if (this.model.name === 'Contact') {
+            if (this.model.entityType === 'Contact') {
                 if (this.getConfig().get('b2cMode')) {
                     attributes.parentType = 'Contact';
                     attributes.parentName = this.model.get('name');
@@ -96,7 +96,7 @@ define('crm:views/record/panels/history', ['crm:views/record/panels/activities']
                         attributes.parentName = this.model.get('accountName');
                     }
                 }
-            } else if (this.model.name === 'Lead') {
+            } else if (this.model.entityType === 'Lead') {
                 attributes.parentType = 'Lead';
                 attributes.parentId = this.model.id
                 attributes.parentName = this.model.get('name');
@@ -107,8 +107,8 @@ define('crm:views/record/panels/history', ['crm:views/record/panels/activities']
 
             if (scope) {
                 if (!attributes.parentId) {
-                    if (this.checkParentTypeAvailability(scope, this.model.name)) {
-                        attributes.parentType = this.model.name;
+                    if (this.checkParentTypeAvailability(scope, this.model.entityType)) {
+                        attributes.parentType = this.model.entityType;
                         attributes.parentId = this.model.id;
                         attributes.parentName = this.model.get('name');
                     }

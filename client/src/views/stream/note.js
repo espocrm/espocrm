@@ -86,7 +86,7 @@ class NoteStreamView extends View {
         if (!this.isUserStream) {
             if (this.parentModel) {
                 if (
-                    this.parentModel.name !== this.model.get('parentType') ||
+                    this.parentModel.entityType !== this.model.get('parentType') ||
                     this.parentModel.id !== this.model.get('parentId')
                 ) {
                     this.isThis = false;
@@ -223,7 +223,7 @@ class NoteStreamView extends View {
     }
 
     getIconHtml(scope, id) {
-        if (this.isThis && scope === this.parentModel.name) {
+        if (this.isThis && scope === this.parentModel.entityType) {
             return;
         }
 

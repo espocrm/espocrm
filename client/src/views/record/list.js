@@ -2717,7 +2717,7 @@ class ListRecordView extends View {
                     type: this._internalLayoutType,
                     layout: internalLayout
                 },
-                name: this.type + '-' + model.name,
+                name: this.type + '-' + model.entityType,
                 setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
             }, callback);
         }, model);
@@ -2948,7 +2948,7 @@ class ListRecordView extends View {
         let scope = data.scope;
 
         if (!scope && model) {
-            scope = model.name;
+            scope = model.entityType;
         }
 
         if (!scope) {
@@ -3009,7 +3009,7 @@ class ListRecordView extends View {
         let scope = data.scope;
 
         if (!scope && model) {
-            scope = model.name;
+            scope = model.entityType;
         }
 
         if (!scope) {

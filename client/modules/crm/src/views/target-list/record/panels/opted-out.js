@@ -45,7 +45,7 @@ function (Dep, MultiCollection) {
         },
 
         getStorageKey: function () {
-            return 'target-list-opted-out-' + this.model.name + '-' + this.name;
+            return 'target-list-opted-out-' + this.model.entityType + '-' + this.name;
         },
 
         setup: function () {

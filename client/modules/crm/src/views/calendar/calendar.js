@@ -1100,7 +1100,7 @@ class CalendarView extends View {
     addModel(model) {
         let d = model.getClonedAttributes();
 
-        d.scope = model.name;
+        d.scope = model.entityType;
 
         let event = this.convertToFcEvent(d);
 
@@ -1108,7 +1108,7 @@ class CalendarView extends View {
     }
 
     updateModel(model) {
-        let eventId = model.name + '-' + model.id;
+        let eventId = model.entityType + '-' + model.id;
 
         let event = this.calendar.getEventById(eventId);
 
@@ -1118,7 +1118,7 @@ class CalendarView extends View {
 
         let attributes = model.getClonedAttributes();
 
-        attributes.scope = model.name;
+        attributes.scope = model.entityType;
 
         let data = this.convertToFcEvent(attributes);
 
@@ -1181,7 +1181,7 @@ class CalendarView extends View {
     }
 
     removeModel(model) {
-        let event = this.calendar.getEventById(model.name + '-' + model.id);
+        let event = this.calendar.getEventById(model.entityType + '-' + model.id);
 
         if (!event) {
             return;

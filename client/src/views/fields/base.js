@@ -455,7 +455,7 @@ class BaseFieldView extends View {
     /** @inheritDoc */
     data() {
         let data = {
-            scope: this.model.name,
+            scope: this.model.entityType || this.model.name,
             name: this.name,
             defs: this.defs,
             params: this.params,

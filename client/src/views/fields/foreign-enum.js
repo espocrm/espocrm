@@ -42,7 +42,7 @@ define('views/fields/foreign-enum', ['views/fields/enum'], function (Dep) {
                 return;
             }
 
-            let scope = this.getMetadata().get(['entityDefs', this.model.name, 'links', link, 'entity']);
+            let scope = this.getMetadata().get(['entityDefs', this.model.entityType, 'links', link, 'entity']);
 
             if (!scope) {
                 return;

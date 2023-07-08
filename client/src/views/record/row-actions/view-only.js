@@ -38,7 +38,7 @@ define('views/record/row-actions/view-only', ['views/record/row-actions/default'
                     data: {
                         id: this.model.id
                     },
-                    link: '#' + this.model.name + '/view/' + this.model.id
+                    link: '#' + this.model.entityType + '/view/' + this.model.id
                 }
             ];
         },

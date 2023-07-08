@@ -40,7 +40,7 @@ define('crm:views/target-list/record/row-actions/default', ['views/record/row-ac
                         label: 'Cancel Opt-Out',
                         data: {
                             id: this.model.id,
-                            type: this.model.name,
+                            type: this.model.entityType,
                         },
                     });
                 } else {
@@ -49,7 +49,7 @@ define('crm:views/target-list/record/row-actions/default', ['views/record/row-ac
                         label: 'Opt-Out',
                         data: {
                             id: this.model.id,
-                            type: this.model.name,
+                            type: this.model.entityType,
                         },
                     });
                 }

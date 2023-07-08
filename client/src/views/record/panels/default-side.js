@@ -53,12 +53,12 @@ class DefaultSidePanelView extends SidePanelView {
         this.fieldList = Espo.Utils.cloneDeep(this.fieldList);
 
         this.hasComplexCreated =
-            !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'createdAt']) &&
-            !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'createdBy']);
+            !!this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'createdAt']) &&
+            !!this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'createdBy']);
 
         this.hasComplexModified =
-            !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'modifiedAt']) &&
-            !!this.getMetadata().get(['entityDefs', this.model.name, 'fields', 'modifiedBy']);
+            !!this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'modifiedAt']) &&
+            !!this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'modifiedBy']);
 
         super.setup();
     }
@@ -124,7 +124,7 @@ class DefaultSidePanelView extends SidePanelView {
             });
         }
 
-        if (this.getMetadata().get(['scopes', this.model.name ,'stream']) && !this.getUser().isPortal()) {
+        if (this.getMetadata().get(['scopes', this.model.entityType ,'stream']) && !this.getUser().isPortal()) {
             this.fieldList.push({
                 name: 'followers',
                 labelText: this.translate('Followers'),

@@ -35,8 +35,8 @@ define('views/import/detail', ['views/detail'], function (Dep) {
 
             return this.buildHeaderHtml([
                 $('<a>')
-                    .attr('href', '#' + this.model.name + '/list')
-                    .text(this.getLanguage().translate(this.model.name, 'scopeNamesPlural')),
+                    .attr('href', '#' + this.model.entityType + '/list')
+                    .text(this.getLanguage().translate(this.model.entityType, 'scopeNamesPlural')),
                 $('<span>')
                     .text(name)
             ]);

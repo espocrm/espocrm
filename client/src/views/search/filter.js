@@ -37,7 +37,7 @@ class FilterView extends View {
     data() {
         return {
             name: this.name,
-            scope: this.model.name,
+            scope: this.model.entityType,
             notRemovable: this.options.notRemovable,
         };
     }

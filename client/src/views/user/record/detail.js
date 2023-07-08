@@ -313,7 +313,7 @@ define('views/user/record/detail', ['views/record/detail'], function (Dep) {
         getGridLayout: function (callback) {
             this._helper
                 .layoutManager
-                .get(this.model.name, this.options.layoutName || this.layoutName, (simpleLayout) => {
+                .get(this.model.entityType, this.options.layoutName || this.layoutName, (simpleLayout) => {
 
                 var layout = Espo.Utils.cloneDeep(simpleLayout);
 

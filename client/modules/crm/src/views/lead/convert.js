@@ -35,7 +35,7 @@ define('crm:views/lead/convert', ['view'], function (Dep) {
         data: function () {
             return {
                 scopeList: this.scopeList,
-                scope: this.model.name,
+                scope: this.model.entityType,
             };
         },
 

@@ -95,12 +95,12 @@ function (Dep, /** module:ui/select*/Select) {
             });
 
             this.roleField = this.getMetadata()
-                .get(['entityDefs', this.model.name, 'fields', this.name, 'columns', this.columnName]);
+                .get(['entityDefs', this.model.entityType, 'fields', this.name, 'columns', this.columnName]);
 
             this.displayRoleAsLabel = this.getMetadata()
                 .get(['entityDefs', this.model.entityType, 'fields', this.roleField, 'displayAsLabel']);
 
-            this.roleFieldScope = this.roleFieldIsForeign ? this.foreignScope : this.model.name;
+            this.roleFieldScope = this.roleFieldIsForeign ? this.foreignScope : this.model.entityType;
 
             if (this.roleType === this.ROLE_TYPE_ENUM && !this.forceRoles) {
                 this.roleList = this.getMetadata()

@@ -92,7 +92,7 @@ define('views/personal-data/record/record', ['views/record/base'], function (Dep
                 ...this.events,
             };
 
-            this.scope = this.model.name;
+            this.scope = this.model.entityType;
 
             this.fieldList = [];
             this.checkedFieldList = [];

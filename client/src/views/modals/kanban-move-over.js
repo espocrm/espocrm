@@ -51,7 +51,7 @@ class KanbanMoveOverModalView extends ModalView {
     }
 
     setup() {
-        this.scope = this.model.name;
+        this.scope = this.model.entityType;
 
         let iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 

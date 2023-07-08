@@ -35,7 +35,7 @@ define('crm:views/meeting/record/row-actions/dashlet', ['views/record/row-action
 
             actionList.forEach(item => {
                 item.data = item.data || {};
-                item.data.scope = this.model.name;
+                item.data.scope = this.model.entityType;
             });
 
             if (this.options.acl.edit && !~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
@@ -44,7 +44,7 @@ define('crm:views/meeting/record/row-actions/dashlet', ['views/record/row-action
                     label: 'Set Held',
                     data: {
                         id: this.model.id,
-                        scope: this.model.name,
+                        scope: this.model.entityType,
                     }
                 });
 
@@ -53,7 +53,7 @@ define('crm:views/meeting/record/row-actions/dashlet', ['views/record/row-action
                     label: 'Set Not Held',
                     data: {
                         id: this.model.id,
-                        scope: this.model.name,
+                        scope: this.model.entityType,
                     }
                 });
             }
@@ -64,7 +64,7 @@ define('crm:views/meeting/record/row-actions/dashlet', ['views/record/row-action
                     label: 'Remove',
                     data: {
                         id: this.model.id,
-                        scope: this.model.name,
+                        scope: this.model.entityType,
                     }
                 });
             }

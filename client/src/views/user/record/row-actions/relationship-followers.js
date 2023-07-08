@@ -37,7 +37,7 @@ define('views/user/record/row-actions/relationship-followers', ['views/record/ro
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.name + '/view/' + this.model.id
+                link: '#' + this.model.entityType + '/view/' + this.model.id
             }];
 
             if (

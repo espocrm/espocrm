@@ -70,7 +70,7 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
 
             this.model = new Model();
             this.model.id = this.id;
-            this.model.name = 'ExternalAccount';
+            this.model.entityType = this.model.name = 'ExternalAccount';
             this.model.urlRoot = 'ExternalAccount';
 
             this.model.defs = {

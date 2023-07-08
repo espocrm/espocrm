@@ -71,7 +71,7 @@ function (Dep, /** module:ui/select*/Select, moment) {
         },
 
         setup: function () {
-            if (this.model.isNew() && !this.model.get(this.name) && this.model.name !== 'Preferences') {
+            if (this.model.isNew() && !this.model.get(this.name) && this.model.entityType !== 'Preferences') {
                 this.reminderList = this.getPreferences().get('defaultReminders') || [];
             } else {
                 this.reminderList = this.model.get(this.name) || [];

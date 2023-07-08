@@ -144,7 +144,7 @@ class ListStreamRecordView extends ListExpandedRecordView {
             isUserStream: this.options.isUserStream,
             noEdit: this.options.noEdit,
             optionsToPass: ['acl'],
-            name: this.type + '-' + model.name,
+            name: this.type + '-' + model.entityType,
             selector: 'li[data-id="' + model.id + '"]',
             setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
         }, callback);

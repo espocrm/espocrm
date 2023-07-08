@@ -37,7 +37,7 @@ define('views/record/row-actions/view-and-remove', ['views/record/row-actions/de
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.name + '/view/' + this.model.id
+                link: '#' + this.model.entityType + '/view/' + this.model.id
             }];
 
             if (this.options.acl.delete) {

@@ -53,7 +53,7 @@ define('views/stream/notes/email-sent', ['views/stream/note'], function (Dep) {
             if (
                 this.parentModel &&
                 (
-                    this.model.get('parentType') === this.parentModel.name &&
+                    this.model.get('parentType') === this.parentModel.entityType &&
                     this.model.get('parentId') === this.parentModel.id
                 )
             ) {

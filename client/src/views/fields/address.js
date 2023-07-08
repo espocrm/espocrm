@@ -578,7 +578,7 @@ class AddressFieldView extends BaseFieldView {
             this[item + 'Field'] = attribute;
 
             this[item + 'MaxLength'] =
-                this.getMetadata().get(['entityDefs', this.model.name, 'fields', attribute, 'maxLength']);
+                this.getMetadata().get(['entityDefs', this.entityType, 'fields', attribute, 'maxLength']);
         });
     }
 
@@ -587,7 +587,7 @@ class AddressFieldView extends BaseFieldView {
             if (this.model.isRequired(name)) {
                 if (this.model.get(name) === '') {
                     let msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.translate(name, 'fields', this.model.name));
+                        .replace('{field}', this.translate(name, 'fields', this.entityType));
 
                     this.showValidationMessage(msg, '[data-name="'+name+'"]');
 

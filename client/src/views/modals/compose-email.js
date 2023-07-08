@@ -141,7 +141,7 @@ class ComposeEmailModalView extends EditModalView {
     }
 
     createRecordView(model, callback) {
-        let viewName = this.getMetadata().get('clientDefs.' + model.name + '.recordViews.compose') ||
+        let viewName = this.getMetadata().get('clientDefs.' + model.entityType + '.recordViews.compose') ||
             'views/email/record/compose';
 
         let options = {

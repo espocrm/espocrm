@@ -162,32 +162,34 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
         },
 
         getGridLayout: function (callback) {
-            this._helper.layoutManager.get(this.model.name, this.options.layoutName || this.layoutName, function (simpleLayout) {
+            this._helper.layoutManager.get(this.model.entityType, this.options.layoutName || this.layoutName, simpleLayout => {
                 var layout = Espo.Utils.cloneDeep(simpleLayout);
 
                 layout.push({
                     "label": "Teams and Access Control",
                     "name": "accessControl",
                     "rows": [
-                        [{"name":"type"}, {"name":"isActive"}],
-                        [{"name":"teams"}, {"name":"defaultTeam"}],
-                        [{"name":"roles"}, false]
+                        [{"name": "type"}, {"name": "isActive"}],
+                        [{"name": "teams"}, {"name": "defaultTeam"}],
+                        [{"name": "roles"}, false]
                     ]
                 });
+
                 layout.push({
                     "label": "Portal",
                     "name": "portal",
                     "rows": [
-                        [{"name":"portals"}, {"name":"contact"}],
-                        [{"name":"portalRoles"}, {"name":"accounts"}]
+                        [{"name": "portals"}, {"name": "contact"}],
+                        [{"name": "portalRoles"}, {"name": "accounts"}]
                     ]
                 });
+
                 if (this.getUser().isAdmin() && this.model.isPortal()) {
                     layout.push({
                         "label": "Misc",
                         "name": "portalMisc",
                         "rows": [
-                            [{"name":"dashboardTemplate"}, false]
+                            [{"name": "dashboardTemplate"}, false]
                         ]
                     });
                 }
@@ -202,7 +204,7 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                     });
                 }
 
-                if (this.type == 'edit' && this.getUser().isAdmin() && !this.model.isApi()) {
+                if (this.type === 'edit' && this.getUser().isAdmin() && !this.model.isApi()) {
                     layout.push({
                         label: 'Password',
                         rows: [
@@ -259,7 +261,7 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                     layout.push({
                         "name": "auth",
                         "rows": [
-                            [{"name":"authMethod"}, false]
+                            [{"name": "authMethod"}, false]
                         ]
                     });
                 }
@@ -270,7 +272,7 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                 };
 
                 callback(gridLayout);
-            }.bind(this));
+            });
         },
 
         getPasswordSendingMessage: function () {
@@ -305,6 +307,5 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
         errorHandlerUserNameExists: function () {
             Espo.Ui.error(this.translate('userNameExists', 'messages', 'User'))
         },
-
     });
 });

@@ -40,7 +40,7 @@ define('views/fields/foreign-checklist', ['views/fields/checklist'], function (D
             }
 
             var scope = this.getMetadata()
-                .get(['entityDefs', this.model.name, 'links', this.params.link, 'entity']);
+                .get(['entityDefs', this.model.entityType, 'links', this.params.link, 'entity']);
 
             if (!scope) {
                 return;

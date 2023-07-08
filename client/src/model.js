@@ -781,7 +781,7 @@ class Model {
     setRelate(data) {
         let setRelate = options => {
             let link = options.link;
-            let model = options.model;
+            let model = /** @type {module:model} */options.model;
 
             if (!link || !model) {
                 throw new Error('Bad related options');
@@ -792,7 +792,7 @@ class Model {
             switch (type) {
                 case 'belongsToParent':
                     this.set(link + 'Id', model.id);
-                    this.set(link + 'Type', model.name);
+                    this.set(link + 'Type', model.entityType);
                     this.set(link + 'Name', model.get('name'));
 
                     break;

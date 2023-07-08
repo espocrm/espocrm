@@ -56,7 +56,7 @@ define('crm:views/lead/detail', ['views/detail'], function (Dep) {
         },
 
         actionConvert: function () {
-            this.getRouter().navigate(this.model.name + '/convert/' + this.model.id , {trigger: true});
+            this.getRouter().navigate(this.model.entityType + '/convert/' + this.model.id , {trigger: true});
         },
     });
 });

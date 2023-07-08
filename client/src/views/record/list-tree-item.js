@@ -118,7 +118,7 @@ class ListTreeRecordItemView extends View {
         }
 
         this.rootView = this.options.rootView;
-        this.scope = this.model.name;
+        this.scope = this.model.entityType;
 
         this.isUnfolded = false;
 

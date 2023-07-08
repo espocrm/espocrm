@@ -15,7 +15,7 @@
 
     <span data-name="white-space" data-id="{{model.id}}" class="empty-icon{{#unless isEnd}} hidden{{/unless}}">&nbsp;</span>
 
-    <a href="#{{model.name}}/view/{{model.id}}"
+    <a href="#{{model.entityType}}/view/{{model.id}}"
         class="link{{#if isSelected}} text-bold{{/if}}" data-id="{{model.id}}" title="{{name}}"
     >{{name}}</a>
 

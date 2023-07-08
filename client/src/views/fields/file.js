@@ -565,7 +565,7 @@ class FileFieldView extends LinkFieldView {
             });
 
             attachment.set('role', 'Attachment');
-            attachment.set('relatedType', this.model.name);
+            attachment.set('relatedType', this.model.entityType);
             attachment.set('field', this.name);
 
             this.handleUploadingFile(file).then(file => {
@@ -771,7 +771,7 @@ class FileFieldView extends LinkFieldView {
                     }
 
                     modelList.forEach(model => {
-                        if (model.name === 'Attachment') {
+                        if (model.entityType === 'Attachment') {
                             this.setAttachment(model);
 
                             return;

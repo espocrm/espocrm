@@ -42,7 +42,7 @@ define('views/fields/foreign-array', ['views/fields/array'], function (Dep) {
                 return;
             }
 
-            let scope = this.getMetadata().get(['entityDefs', this.model.name, 'links', link, 'entity']);
+            let scope = this.getMetadata().get(['entityDefs', this.model.entityType, 'links', link, 'entity']);
 
             if (!scope) {
                 return;

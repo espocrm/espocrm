@@ -193,8 +193,8 @@ class EditModalView extends ModalView {
     createRecordView(model, callback) {
         let viewName =
             this.editView ||
-            this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editSmall']) ||
-            this.getMetadata().get(['clientDefs', model.name, 'recordViews', 'editQuick']) ||
+            this.getMetadata().get(['clientDefs', model.entityType, 'recordViews', 'editSmall']) ||
+            this.getMetadata().get(['clientDefs', model.entityType, 'recordViews', 'editQuick']) ||
             'views/record/edit-small';
 
         let options = {

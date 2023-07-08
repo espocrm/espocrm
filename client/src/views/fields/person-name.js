@@ -175,7 +175,7 @@ class PersonNameFieldView extends VarcharFieldView {
             if (this.model.isRequired(name)) {
                 if (!this.model.get(name)) {
                     let msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.translate(name, 'fields', this.model.name));
+                        .replace('{field}', this.translate(name, 'fields', this.model.entityType));
                     this.showValidationMessage(msg, '[data-name="'+name+'"]');
 
                     return true;

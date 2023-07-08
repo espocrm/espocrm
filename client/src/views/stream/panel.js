@@ -184,7 +184,7 @@ class PanelStreamView extends RelationshipPanelView {
             ...this.events,
         };
 
-        this.scope = this.model.name;
+        this.scope = this.model.entityType;
         this.filter = this.getStoredFilter();
 
         this.setupTitle();
@@ -198,9 +198,9 @@ class PanelStreamView extends RelationshipPanelView {
 
         this.isInternalNoteMode = false;
 
-        this.storageTextKey = 'stream-post-' + this.model.name + '-' + this.model.id;
-        this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.name + '-' + this.model.id;
-        this.storageIsInernalKey = 'stream-post-is-internal-' + this.model.name + '-' + this.model.id;
+        this.storageTextKey = 'stream-post-' + this.model.entityType + '-' + this.model.id;
+        this.storageAttachmentsKey = 'stream-post-attachments-' + this.model.entityType + '-' + this.model.id;
+        this.storageIsInernalKey = 'stream-post-is-internal-' + this.model.entityType + '-' + this.model.id;
 
         this.on('remove', () => {
             this.storeControl();
@@ -382,7 +382,7 @@ class PanelStreamView extends RelationshipPanelView {
         this.getCollectionFactory().create('Note', (collection) => {
             this.collection = collection;
 
-            collection.url = this.model.name + '/' + this.model.id + '/stream';
+            collection.url = this.model.entityType + '/' + this.model.id + '/stream';
             collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
             this.setFilter(this.filter);
@@ -615,7 +615,7 @@ class PanelStreamView extends RelationshipPanelView {
 
     prepareNoteForPost(model) {
         model.set('parentId', this.model.id);
-        model.set('parentType', this.model.name);
+        model.set('parentType', this.model.entityType);
     }
 
     getButtonList() {
@@ -667,7 +667,7 @@ class PanelStreamView extends RelationshipPanelView {
 
     // noinspection JSUnusedGlobalSymbols
     actionViewPostList() {
-        var url = this.model.name + '/' + this.model.id + '/posts';
+        var url = this.model.entityType + '/' + this.model.id + '/posts';
 
         var data = {
             scope: 'Note',

@@ -642,7 +642,7 @@ class WysiwygFieldView extends TextFieldView {
                         attachment.set('relatedId', this.model.id);
                     }
 
-                    attachment.set('relatedType', this.model.name);
+                    attachment.set('relatedType', this.model.entityType);
                     attachment.set('file', e.target.result);
                     attachment.set('field', this.name);
 

@@ -80,7 +80,7 @@ define('views/fields/followers', ['views/fields/link-multiple'], function (Dep) 
 
         reloadFollowers: function () {
             this.getCollectionFactory().create('User', (collection) => {
-                collection.url = this.model.name + '/' + this.model.id + '/followers';
+                collection.url = this.model.entityType + '/' + this.model.id + '/followers';
                 collection.offset = 0;
                 collection.maxSize = this.limit;
 
@@ -105,7 +105,7 @@ define('views/fields/followers', ['views/fields/link-multiple'], function (Dep) 
 
         showMoreFollowers: function () {
             this.getCollectionFactory().create('User', (collection) => {
-                collection.url = this.model.name + '/' + this.model.id + '/followers';
+                collection.url = this.model.entityType + '/' + this.model.id + '/followers';
                 collection.offset = this.ids.length || 0;
                 collection.maxSize = this.portionSize;
                 collection.data.select = ['id', 'name'].join(',');

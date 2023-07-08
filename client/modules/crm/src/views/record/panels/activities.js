@@ -98,7 +98,7 @@ define('crm:views/record/panels/activities',
                 }
             });
 
-            this.url = this.serviceName + '/' + this.model.name + '/' + this.model.id + '/' + this.name;
+            this.url = this.serviceName + '/' + this.model.entityType + '/' + this.model.id + '/' + this.name;
 
             this.seeds = {};
 
@@ -226,8 +226,8 @@ define('crm:views/record/panels/activities',
                     o.data.scope = scope;
 
                     if (
-                        this.model.name !== 'User' &&
-                        !this.checkParentTypeAvailability(scope, this.model.name)
+                        this.model.entityType !== 'User' &&
+                        !this.checkParentTypeAvailability(scope, this.model.entityType)
                     ) {
                         return;
                     }
@@ -378,7 +378,7 @@ define('crm:views/record/panels/activities',
                 status: data.status,
             };
 
-            if (this.model.name === 'User') {
+            if (this.model.entityType === 'User') {
                 if (this.model.isPortal()) {
                     attributes.usersIds = [this.model.id];
 
@@ -392,7 +392,7 @@ define('crm:views/record/panels/activities',
                 }
             }
             else {
-                if (this.model.name === 'Contact') {
+                if (this.model.entityType === 'Contact') {
                     if (this.model.get('accountId') && !this.getConfig().get('b2cMode')) {
                         attributes.parentType = 'Account';
                         attributes.parentId = this.model.get('accountId');
@@ -408,21 +408,21 @@ define('crm:views/record/panels/activities',
                         }
                     }
                 }
-                else if (this.model.name === 'Lead') {
+                else if (this.model.entityType === 'Lead') {
                     attributes.parentType = 'Lead';
                     attributes.parentId = this.model.id;
                     attributes.parentName = this.model.get('name');
                 }
 
-                if (this.model.name !== 'Account' && this.model.has('contactsIds')) {
+                if (this.model.entityType !== 'Account' && this.model.has('contactsIds')) {
                     attributes.contactsIds = this.model.get('contactsIds');
                     attributes.contactsNames = this.model.get('contactsNames');
                 }
 
                 if (scope) {
                     if (!attributes.parentId) {
-                        if (this.checkParentTypeAvailability(scope, this.model.name)) {
-                            attributes.parentType = this.model.name;
+                        if (this.checkParentTypeAvailability(scope, this.model.entityType)) {
+                            attributes.parentType = this.model.entityType;
                             attributes.parentId = this.model.id;
                             attributes.parentName = this.model.get('name');
                         }
@@ -509,7 +509,7 @@ define('crm:views/record/panels/activities',
                 to: this.model.get('emailAddress')
             };
 
-            if (this.model.name === 'Contact') {
+            if (this.model.entityType === 'Contact') {
                 if (this.getConfig().get('b2cMode')) {
                     attributes.parentType = 'Contact';
                     attributes.parentName = this.model.get('name');
@@ -517,27 +517,27 @@ define('crm:views/record/panels/activities',
                 }
                 else {
                     if (this.model.get('accountId')) {
-                        attributes.parentType = 'Account',
+                        attributes.parentType = 'Account';
                         attributes.parentId = this.model.get('accountId');
                         attributes.parentName = this.model.get('accountName');
                     }
                 }
             }
-            else if (this.model.name === 'Lead') {
-                attributes.parentType = 'Lead',
-                attributes.parentId = this.model.id
+            else if (this.model.entityType === 'Lead') {
+                attributes.parentType = 'Lead';
+                attributes.parentId = this.model.id;
                 attributes.parentName = this.model.get('name');
             }
 
-            if (~['Contact', 'Lead', 'Account'].indexOf(this.model.name) && this.model.get('emailAddress')) {
+            if (~['Contact', 'Lead', 'Account'].indexOf(this.model.entityType) && this.model.get('emailAddress')) {
                 attributes.nameHash = {};
                 attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
             }
 
             if (scope) {
                 if (!attributes.parentId) {
-                    if (this.checkParentTypeAvailability(scope, this.model.name)) {
-                        attributes.parentType = this.model.name;
+                    if (this.checkParentTypeAvailability(scope, this.model.entityType)) {
+                        attributes.parentType = this.model.entityType;
                         attributes.parentId = this.model.id;
                         attributes.parentName = this.model.get('name');
                     }
@@ -555,7 +555,7 @@ define('crm:views/record/panels/activities',
 
             if (
                 attributes.parentType &&
-                attributes.parentType === this.model.name &&
+                attributes.parentType === this.model.entityType &&
                 ~emailKeepParentTeamsEntityList.indexOf(attributes.parentType) &&
                 this.model.get('teamsIds') &&
                 this.model.get('teamsIds').length
@@ -649,7 +649,7 @@ define('crm:views/record/panels/activities',
         },
 
         actionViewRelatedList: function (data) {
-            data.url = 'Activities/' + this.model.name + '/' +
+            data.url = 'Activities/' + this.model.entityType + '/' +
                 this.model.id + '/' + this.name + '/list/' + data.scope;
 
             data.title = this.translate(this.defs.label) +

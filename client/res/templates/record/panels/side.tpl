@@ -9,7 +9,7 @@
         >
             <span
                 class="label-text"
-            >{{#if labelText}}{{labelText}}{{else}}{{translate label scope=../model.name category='fields'}}{{/if}}</span>
+            >{{#if labelText}}{{labelText}}{{else}}{{translate label scope=../model.entityType category='fields'}}{{/if}}</span>
         </label>
         {{/unless}}
         <div class="field{{#if hidden}} hidden{{/if}}" data-name="{{name}}">

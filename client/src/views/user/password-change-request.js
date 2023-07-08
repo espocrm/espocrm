@@ -47,9 +47,8 @@ define('views/user/password-change-request', ['view', 'model'], function (Dep, M
         },
 
         setup: function () {
-            var model = this.model = new Model;
-
-            model.name = 'User';
+            let model = this.model = new Model();
+            model.entityType = model.name = 'User';
 
             this.createView('password', 'views/user/fields/password', {
                 model: model,

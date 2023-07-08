@@ -49,7 +49,7 @@ define('crm:views/task/record/row-actions/dashlet', ['views/record/row-actions/v
                     label: 'Remove',
                     data: {
                         id: this.model.id,
-                        scope: this.model.name
+                        scope: this.model.entityType
                     }
                 });
             }

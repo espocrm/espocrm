@@ -84,10 +84,10 @@ define('views/stream/notes/update', ['views/stream/note'], function (Dep) {
                 fields.forEach(field => {
                     let type = model.getFieldType(field) || 'base';
                     let viewName = this.getMetadata()
-                        .get(['entityDefs', model.name, 'fields', field, 'view']) ||
+                        .get(['entityDefs', model.entityType, 'fields', field, 'view']) ||
                         this.getFieldManager().getViewName(type);
 
-                    let attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.name, field);
+                    let attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.entityType, field);
 
                     let hasValue = false;
 

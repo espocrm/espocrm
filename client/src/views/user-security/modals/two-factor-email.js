@@ -65,8 +65,7 @@ define('views/user-security/modals/two-factor-email',
             let codeLength = this.getConfig().get('auth2FAEmailCodeLength') || 7;
 
             let model = new Model();
-
-            model.name = 'UserSecurity';
+            model.entityType = model.name = 'UserSecurity';
 
             model.set('emailAddress', null);
 

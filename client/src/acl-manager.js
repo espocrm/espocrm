@@ -223,7 +223,7 @@ class AclManager {
      * @returns {boolean|null} True if access allowed, null if not enough data to determine.
      */
     checkModel(model, action, precise) {
-        var scope = model.name;
+        let scope = model.entityType;
 
         // todo move this to custom acl
         if (action === 'edit') {
@@ -281,7 +281,7 @@ class AclManager {
      * @returns {boolean|null} True if owner, null if not clear.
      */
     checkIsOwner(model) {
-        return this.getImplementation(model.name).checkIsOwner(model);
+        return this.getImplementation(model.entityType).checkIsOwner(model);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -292,7 +292,7 @@ class AclManager {
      * @returns {boolean|null} True if in a team, null if not clear.
      */
     checkInTeam(model) {
-        return this.getImplementation(model.name).checkInTeam(model);
+        return this.getImplementation(model.entityType).checkInTeam(model);
     }
 
     /**

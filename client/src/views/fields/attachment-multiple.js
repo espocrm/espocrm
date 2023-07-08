@@ -535,7 +535,7 @@ class AttachmentMultipleFieldView extends BaseFieldView {
                 let attachment = model.clone();
 
                 attachment.set('role', 'Attachment');
-                attachment.set('parentType', this.model.name);
+                attachment.set('parentType', this.model.entityType);
                 attachment.set('field', this.name);
 
                 uploadHelper
@@ -839,7 +839,7 @@ class AttachmentMultipleFieldView extends BaseFieldView {
                     }
 
                     modelList.forEach(model => {
-                        if (model.name === 'Attachment') {
+                        if (model.entityType === 'Attachment') {
                             this.pushAttachment(model);
 
                             return;

@@ -1726,7 +1726,7 @@ class DetailRecordView extends BaseRecordView {
     }
 
     init() {
-        this.entityType = this.model.name;
+        this.entityType = this.model.entityType || this.model.name;
         this.scope = this.options.scope || this.entityType;
 
         this.layoutName = this.options.layoutName || this.layoutName;
@@ -1973,7 +1973,7 @@ class DetailRecordView extends BaseRecordView {
         });
 
         let dependencyDefs = Espo.Utils.clone(
-            this.getMetadata().get(['clientDefs', this.model.name, 'formDependency']) || {}
+            this.getMetadata().get(['clientDefs', this.entityType, 'formDependency']) || {}
         );
 
         this.dependencyDefs = _.extend(dependencyDefs, this.dependencyDefs);
@@ -1981,7 +1981,7 @@ class DetailRecordView extends BaseRecordView {
         this.initDependancy();
 
         let dynamicLogic = Espo.Utils.clone(
-            this.getMetadata().get(['clientDefs', this.model.name, 'dynamicLogic']) || {}
+            this.getMetadata().get(['clientDefs', this.entityType, 'dynamicLogic']) || {}
         );
 
         this.dynamicLogicDefs = _.extend(dynamicLogic, this.dynamicLogicDefs);
@@ -2239,7 +2239,7 @@ class DetailRecordView extends BaseRecordView {
         }
 
         let id = model.id;
-        let scope = model.name || this.scope;
+        let scope = this.entityType || this.scope;
 
         let url;
 
@@ -2353,7 +2353,7 @@ class DetailRecordView extends BaseRecordView {
 
     actionViewFollowers(data) {
         let viewName = this.getMetadata().get(
-                ['clientDefs', this.model.name, 'relationshipPanels', 'followers', 'viewModalView']
+                ['clientDefs', this.entityType, 'relationshipPanels', 'followers', 'viewModalView']
             ) ||
             this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
             'views/modals/followers-list';
@@ -2369,7 +2369,7 @@ class DetailRecordView extends BaseRecordView {
             scope: 'User',
             title: this.translate('Followers'),
             filtersDisabled: true,
-            url: this.model.entityType + '/' + this.model.id + '/followers',
+            url: this.entityType + '/' + this.model.id + '/followers',
             createDisabled: true,
             selectDisabled: selectDisabled,
             rowActionsView: 'views/user/record/row-actions/relationship-followers',
@@ -2414,7 +2414,7 @@ class DetailRecordView extends BaseRecordView {
 
     actionPrintPdf() {
         this.createView('pdfTemplate', 'views/modals/select-template', {
-            entityType: this.model.name,
+            entityType: this.entityType,
         }, (view) => {
             view.render();
 
@@ -2423,8 +2423,8 @@ class DetailRecordView extends BaseRecordView {
 
                 window.open(
                     '?entryPoint=pdf&entityType=' +
-                    this.model.name+'&entityId=' +
-                    this.model.id+'&templateId=' + model.id, '_blank'
+                    this.entityType + '&entityId=' +
+                    this.model.id + '&templateId=' + model.id, '_blank'
                 );
             });
         });
@@ -3157,7 +3157,7 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        this.getHelper().layoutManager.get(this.model.name, this.layoutName, detailLayout => {
+        this.getHelper().layoutManager.get(this.entityType, this.layoutName, detailLayout => {
             if (typeof this.modifyDetailLayout === 'function') {
                 detailLayout = Espo.Utils.cloneDeep(detailLayout);
 

@@ -38,7 +38,7 @@ define('views/import/record/row-actions/duplicates', ['views/record/row-actions/
                 label: 'Set as Not Duplicate',
                 data: {
                     id: this.model.id,
-                    type: this.model.name,
+                    type: this.model.entityType,
                 },
             });
 

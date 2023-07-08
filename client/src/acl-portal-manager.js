@@ -46,7 +46,7 @@ class AclPortalManager extends AclManager {
     checkInAccount(model) {
         const impl =
             /** @type {module:acl-portal} */
-            this.getImplementation(model.name);
+            this.getImplementation(model.entityType);
 
         return impl.checkInAccount(model);
     }
@@ -61,7 +61,7 @@ class AclPortalManager extends AclManager {
     checkIsOwnContact(model) {
         const impl =
             /** @type {module:acl-portal} */
-            this.getImplementation(model.name);
+            this.getImplementation(model.entityType);
 
         return impl.checkIsOwnContact(model);
     }

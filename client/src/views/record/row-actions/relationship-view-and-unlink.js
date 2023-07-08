@@ -37,7 +37,7 @@ define('views/record/row-actions/relationship-view-and-unlink', ['views/record/r
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.name + '/view/' + this.model.id
+                link: '#' + this.model.entityType + '/view/' + this.model.id
             }];
 
             if (this.options.acl.edit && !this.options.unlinkDisabled) {
