@@ -28,6 +28,8 @@
 
 /** @module ajax */
 
+import $ from 'jquery';
+
 let isConfigured = false;
 /** @type {number} */
 let defaultTimeout;
@@ -88,6 +90,10 @@ const Ajax = Espo.Ajax = {
             data = options.data;
         }
 
+        if (apiUrl) {
+            url = Espo.Utils.trimSlash(apiUrl) + '/' + url;
+        }
+
         if (!['GET', 'OPTIONS'].includes(method) && data) {
             body = data;
 
@@ -96,23 +102,17 @@ const Ajax = Espo.Ajax = {
             }
         }
 
-        if (apiUrl) {
-            url = Espo.Utils.trimSlash(apiUrl) + '/' + url;
+        if (method === 'GET' && data) {
+            let part = $.param(data);
+
+            url.includes('?') ?
+                url += '&' :
+                url += '?';
+
+            url += part;
         }
 
         let urlObj = new URL(baseUrl + url);
-
-        if (method === 'GET' && data) {
-            for (let key in data) {
-                let value = data[key];
-
-                if (value == null) {
-                    continue;
-                }
-
-                urlObj.searchParams.append(key, value);
-            }
-        }
 
         let xhr = new Xhr();
         xhr.timeout = timeout;
