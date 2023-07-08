@@ -70,6 +70,7 @@ class EmailListView extends ListView {
      * @private
      */
     initDroppable() {
+        // noinspection JSUnresolvedReference
         this.$el.find('.folders-container .folder-list > .droppable')
             .droppable({
                 accept: '.list-row',
@@ -137,11 +138,12 @@ class EmailListView extends ListView {
 
         let $container = this.$el.find('.list-container > .list');
 
-        const recordView = this.getRecordView();
+        const recordView = this.getEmailRecordView();
 
         this.collection.models.slice(fromIndex).forEach(m => {
             let $row = $container.find(`.list-row[data-id="${m.id}"]`).first();
 
+            // noinspection JSUnresolvedReference
             $row.draggable({
                 cancel: 'input,textarea,button,select,option,.dropdown-menu',
                 helper: () => {
@@ -261,7 +263,7 @@ class EmailListView extends ListView {
             this.getMetadata().get(['scopes', this.folderScope, 'disabled']) ||
             !this.getAcl().checkScope(this.folderScope);
 
-        var params = this.options.params || {};
+        let params = this.options.params || {};
 
         this.selectedFolderId = params.folder || this.defaultFolderId;
 
@@ -280,7 +282,7 @@ class EmailListView extends ListView {
     }
 
     data() {
-        var data = {};
+        let data = {};
         data.foldersDisabled = this.foldersDisabled;
 
         return data;
@@ -316,7 +318,7 @@ class EmailListView extends ListView {
             e.preventDefault();
             e.stopPropagation();
 
-            this.getRecordView().massActionMoveToTrash();
+            this.getEmailRecordView().massActionMoveToTrash();
         };
 
         this.shortcutKeys['Control+KeyI'] = e => {
@@ -327,7 +329,7 @@ class EmailListView extends ListView {
             e.preventDefault();
             e.stopPropagation();
 
-            this.getRecordView().toggleMassMarkAsImportant();
+            this.getEmailRecordView().toggleMassMarkAsImportant();
         };
 
         this.shortcutKeys['Control+KeyM'] = e => {
@@ -338,12 +340,12 @@ class EmailListView extends ListView {
             e.preventDefault();
             e.stopPropagation();
 
-            this.getRecordView().massActionMoveToFolder();
+            this.getEmailRecordView().massActionMoveToFolder();
         };
     }
 
     hasSelectedRecords() {
-        let recordView = this.getRecordView();
+        let recordView = this.getEmailRecordView();
 
         return recordView.checkedList &&
             recordView.checkedList.length &&
@@ -489,8 +491,16 @@ class EmailListView extends ListView {
         };
     }
 
+    /**
+     * @protected
+     * @return {module:views/email-folder/list-side}
+     */
+    getFoldersView() {
+        return this.getView('folders')
+    }
+
     applyRoutingParams(params) {
-        var id;
+        let id;
 
         if ('folder' in params) {
             id = params.folder || 'inbox';
@@ -499,7 +509,7 @@ class EmailListView extends ListView {
         }
 
         if (!params.isReturnThroughLink && id !== this.selectedFolderId) {
-            var foldersView = this.getView('folders');
+            var foldersView = this.getFoldersView();
 
             if (foldersView) {
                 foldersView.actionSelectFolder(id);
@@ -510,7 +520,7 @@ class EmailListView extends ListView {
     }
 
     onDrop(folderId, id) {
-        let recordView = /** @type {module:views/email/record/list} */this.getRecordView();
+        let recordView = this.getEmailRecordView();
 
         if (folderId === this.FOLDER_IMPORTANT) {
             setTimeout(() => {
@@ -555,8 +565,8 @@ class EmailListView extends ListView {
      * @protected
      * @return {module:views/email/record/list}
      */
-    getRecordView() {
-        return this.getView('list');
+    getEmailRecordView() {
+        return /** @type {module:views/email/record/list} */this.getRecordView();
     }
 
     /**
@@ -576,7 +586,7 @@ class EmailListView extends ListView {
         let bottomSpaceHeight = parseInt(window.getComputedStyle($('#content').get(0)).paddingBottom, 10);
 
         let getOffsetTop = (/** JQuery */$element) => {
-            let element = $element.get(0);
+            let element = /** @type {HTMLElement} */$element.get(0);
 
             let value = 0;
 
