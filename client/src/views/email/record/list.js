@@ -26,366 +26,391 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], function (Dep, MassActionHelper) {
+/** @module views/email/record/list */
 
-    /**
-     * @class
-     * @name Class
-     * @memberOf module:views/email/record/list
-     * @extends module:views/record/list
-     */
-    return Dep.extend(/** @lends module:views/email/record/list.Class# */{
+import ListRecordView from 'views/record/list';
+import MassActionHelper from 'helpers/mass-action';
 
-        rowActionsView: 'views/email/record/row-actions/default',
+class EmailListRecordView extends ListRecordView {
 
-        massActionList: ['remove', 'massUpdate'],
+    rowActionsView = 'views/email/record/row-actions/default'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    massActionList = ['remove', 'massUpdate']
 
-            if (this.collection.url === this.entityType) {
-                this.addMassAction('retrieveFromTrash', false, true);
-                this.addMassAction('moveToFolder', true, true);
-                this.addMassAction('markAsNotImportant', false, true);
-                this.addMassAction('markAsImportant', false, true);
-                this.addMassAction('markAsNotRead', false, true);
-                this.addMassAction('markAsRead', false, true);
-                this.addMassAction('moveToTrash', false, true);
+    setup() {
+        super.setup();
 
-                this.dropdownItemList.push({
-                    name: 'markAllAsRead',
-                    label: 'Mark all as read',
-                });
+        if (this.collection.url === this.entityType) {
+            this.addMassAction('retrieveFromTrash', false, true);
+            this.addMassAction('moveToFolder', true, true);
+            this.addMassAction('markAsNotImportant', false, true);
+            this.addMassAction('markAsImportant', false, true);
+            this.addMassAction('markAsNotRead', false, true);
+            this.addMassAction('markAsRead', false, true);
+            this.addMassAction('moveToTrash', false, true);
+
+            this.dropdownItemList.push({
+                name: 'markAllAsRead',
+                label: 'Mark all as read',
+            });
+        }
+
+        this.listenTo(this.collection, 'moving-to-trash', (id) => {
+            let model = this.collection.get(id);
+
+            if (model) {
+                model.set('inTrash', true);
             }
 
-            this.listenTo(this.collection, 'moving-to-trash', (id) => {
-                let model = this.collection.get(id);
-
-                if (model) {
-                    model.set('inTrash', true);
-                }
-
-                if (this.collection.selectedFolderId !== 'trash' && this.collection.selectedFolderId !== 'all') {
-                    this.removeRecordFromList(id);
-                }
-            });
-
-            this.listenTo(this.collection, 'retrieving-from-trash', (id) => {
-                let model = this.collection.get(id);
-
-                if (model) {
-                    model.set('inTrash', false);
-                }
-
-                if (this.collection.selectedFolderId === 'trash') {
-                    this.removeRecordFromList(id);
-                }
-            });
-        },
-
-        massActionMarkAsRead: function () {
-            let ids = [];
-
-            for (let i in this.checkedList) {
-                ids.push(this.checkedList[i]);
+            if (this.collection.selectedFolderId !== 'trash' && this.collection.selectedFolderId !== 'all') {
+                this.removeRecordFromList(id);
             }
+        });
 
-            Espo.Ajax.postRequest('Email/inbox/read', {ids: ids});
+        this.listenTo(this.collection, 'retrieving-from-trash', (id) => {
+            let model = this.collection.get(id);
 
-            ids.forEach(id => {
-                let model = this.collection.get(id);
-
-                if (model) {
-                    model.set('isRead', true);
-                }
-            });
-        },
-
-        massActionMarkAsNotRead: function () {
-            let ids = [];
-
-            for (let i in this.checkedList) {
-                ids.push(this.checkedList[i]);
+            if (model) {
+                model.set('inTrash', false);
             }
-
-            Espo.Ajax.deleteRequest('Email/inbox/read', {ids: ids});
-
-            ids.forEach(id => {
-                let model = this.collection.get(id);
-
-                if (model) {
-                    model.set('isRead', false);
-                }
-            });
-        },
-
-        massActionMarkAsImportant: function () {
-            let ids = [];
-
-            for (let i in this.checkedList) {
-                ids.push(this.checkedList[i]);
-            }
-
-            Espo.Ajax.postRequest('Email/inbox/important', {ids: ids});
-
-            ids.forEach(id => {
-                let model = this.collection.get(id);
-
-                if (model) {
-                    model.set('isImportant', true);
-                }
-            });
-        },
-
-        massActionMarkAsNotImportant: function () {
-            let ids = [];
-
-            for (let i in this.checkedList) {
-                ids.push(this.checkedList[i]);
-            }
-
-            Espo.Ajax.deleteRequest('Email/inbox/important', {ids: ids});
-
-            ids.forEach(id => {
-                let model = this.collection.get(id);
-
-                if (model) {
-                    model.set('isImportant', false);
-                }
-            });
-        },
-
-        massActionMoveToTrash: function () {
-            let ids = [];
-
-            for (let i in this.checkedList) {
-                ids.push(this.checkedList[i]);
-            }
-
-            Espo.Ajax
-                .postRequest('Email/inbox/inTrash', {ids: ids})
-                .then(() => {
-                    Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
-                });
 
             if (this.collection.selectedFolderId === 'trash') {
-                return;
+                this.removeRecordFromList(id);
             }
+        });
+    }
 
-            ids.forEach(id => {
-                this.collection.trigger('moving-to-trash', id, this.collection.get(id));
+    // noinspection JSUnusedGlobalSymbols
+    massActionMarkAsRead() {
+        let ids = [];
 
-                this.uncheckRecord(id, null, true);
-            });
-        },
+        for (let i in this.checkedList) {
+            ids.push(this.checkedList[i]);
+        }
 
-        massActionRetrieveFromTrash: function () {
-            let ids = [];
+        Espo.Ajax.postRequest('Email/inbox/read', {ids: ids});
 
-            for (let i in this.checkedList) {
-                ids.push(this.checkedList[i]);
+        ids.forEach(id => {
+            let model = this.collection.get(id);
+
+            if (model) {
+                model.set('isRead', true);
             }
+        });
+    }
 
-            Espo.Ajax
-                .deleteRequest('Email/inbox/inTrash', {ids: ids})
-                .then(() => {
-                    Espo.Ui.success(this.translate('Done'));
-                });
+    // noinspection JSUnusedGlobalSymbols
+    massActionMarkAsNotRead() {
+        let ids = [];
 
-            if (this.collection.selectedFolderId !== 'trash') {
-                return;
+        for (let i in this.checkedList) {
+            ids.push(this.checkedList[i]);
+        }
+
+        Espo.Ajax.deleteRequest('Email/inbox/read', {ids: ids});
+
+        ids.forEach(id => {
+            let model = this.collection.get(id);
+
+            if (model) {
+                model.set('isRead', false);
             }
+        });
+    }
 
-            ids.forEach(id => {
-                this.collection.trigger('retrieving-from-trash', id, this.collection.get(id));
+    massActionMarkAsImportant() {
+        let ids = [];
 
-                this.uncheckRecord(id, null, true);
-            });
-        },
+        for (let i in this.checkedList) {
+            ids.push(this.checkedList[i]);
+        }
 
-        massMoveToFolder: function (folderId) {
-            let params = this.getMassActionSelectionPostData();
-            let helper = new MassActionHelper(this);
-            let idle = !!params.searchParams && helper.checkIsIdle();
+        Espo.Ajax.postRequest('Email/inbox/important', {ids: ids});
 
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
-
-            Espo.Ajax
-                .postRequest('MassAction', {
-                    entityType: this.entityType,
-                    action: 'moveToFolder',
-                    params: params,
-                    idle: idle,
-                    data: {
-                        folderId: folderId,
-                    },
-                })
-                .then(result => {
-                    Espo.Ui.notify(false);
-
-                    if (result.id) {
-                        helper
-                            .process(result.id, 'moveToFolder')
-                            .then(view => {
-                                this.listenToOnce(view, 'close:success', () => {
-                                    this.collection.fetch().then(() => {
-                                        Espo.Ui.success(this.translate('Done'));
-                                    });
-                                });
-                            });
-
-                        return;
-                    }
-
-                    this.collection.fetch().then(() => {
-                        Espo.Ui.success(this.translate('Done'));
-                    });
-                });
-        },
-
-        massActionMoveToFolder: function () {
-            this.createView('dialog', 'views/email-folder/modals/select-folder', {
-                headerText: this.translate('Move to Folder', 'labels', 'Email'),
-            }, view => {
-                view.render();
-
-                this.listenToOnce(view, 'select', folderId => {
-                    this.clearView('dialog');
-
-                    this.massMoveToFolder(folderId);
-                });
-            });
-        },
-
-        actionMarkAsImportant: function (data) {
-            data = data || {};
-
-            let id = data.id;
-
-            Espo.Ajax.postRequest('Email/inbox/important', {id: id});
-
+        ids.forEach(id => {
             let model = this.collection.get(id);
 
             if (model) {
                 model.set('isImportant', true);
             }
-        },
+        });
+    }
 
-        actionMarkAsNotImportant: function (data) {
-            data = data || {};
+    massActionMarkAsNotImportant() {
+        let ids = [];
 
-            let id = data.id;
+        for (let i in this.checkedList) {
+            ids.push(this.checkedList[i]);
+        }
 
-            Espo.Ajax.deleteRequest('Email/inbox/important', {id: id});
+        Espo.Ajax.deleteRequest('Email/inbox/important', {ids: ids});
 
+        ids.forEach(id => {
             let model = this.collection.get(id);
 
             if (model) {
                 model.set('isImportant', false);
             }
-        },
+        });
+    }
 
-        actionMarkAllAsRead: function () {
-            Espo.Ajax.postRequest('Email/inbox/read', {all: true});
+    // noinspection JSUnusedGlobalSymbols
+    massActionMoveToTrash() {
+        let ids = [];
 
-            this.collection.forEach(model => {
-                model.set('isRead', true);
+        for (let i in this.checkedList) {
+            ids.push(this.checkedList[i]);
+        }
+
+        Espo.Ajax
+            .postRequest('Email/inbox/inTrash', {ids: ids})
+            .then(() => {
+                Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
             });
 
-            this.collection.trigger('all-marked-read');
-        },
+        if (this.collection.selectedFolderId === 'trash') {
+            return;
+        }
 
-        actionMoveToTrash: function (data) {
-            let id = data.id;
+        ids.forEach(id => {
+            this.collection.trigger('moving-to-trash', id, this.collection.get(id));
 
-            Espo.Ui.notify(' ... ');
+            this.uncheckRecord(id, null, true);
+        });
+    }
 
-            Espo.Ajax
-                .postRequest('Email/inbox/inTrash', {id: id})
-                .then(() => {
-                    Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
+    // noinspection JSUnusedGlobalSymbols
+    massActionRetrieveFromTrash() {
+        let ids = [];
 
-                    this.collection.trigger('moving-to-trash', id, this.collection.get(id));
+        for (let i in this.checkedList) {
+            ids.push(this.checkedList[i]);
+        }
+
+        Espo.Ajax
+            .deleteRequest('Email/inbox/inTrash', {ids: ids})
+            .then(() => {
+                Espo.Ui.success(this.translate('Done'));
+            });
+
+        if (this.collection.selectedFolderId !== 'trash') {
+            return;
+        }
+
+        ids.forEach(id => {
+            this.collection.trigger('retrieving-from-trash', id, this.collection.get(id));
+
+            this.uncheckRecord(id, null, true);
+        });
+    }
+
+    massMoveToFolder(folderId) {
+        let params = this.getMassActionSelectionPostData();
+        let helper = new MassActionHelper(this);
+        let idle = !!params.searchParams && helper.checkIsIdle();
+
+        Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+        Espo.Ajax
+            .postRequest('MassAction', {
+                entityType: this.entityType,
+                action: 'moveToFolder',
+                params: params,
+                idle: idle,
+                data: {
+                    folderId: folderId,
+                },
+            })
+            .then(result => {
+                Espo.Ui.notify(false);
+
+                if (result.id) {
+                    helper
+                        .process(result.id, 'moveToFolder')
+                        .then(view => {
+                            this.listenToOnce(view, 'close:success', () => {
+                                this.collection.fetch().then(() => {
+                                    Espo.Ui.success(this.translate('Done'));
+                                });
+                            });
+                        });
+
+                    return;
+                }
+
+                this.collection.fetch().then(() => {
+                    Espo.Ui.success(this.translate('Done'));
                 });
-        },
+            });
+    }
 
-        actionRetrieveFromTrash: function (data) {
-            let id = data.id;
+    // noinspection JSUnusedGlobalSymbols
+    massActionMoveToFolder() {
+        this.createView('dialog', 'views/email-folder/modals/select-folder', {
+            headerText: this.translate('Move to Folder', 'labels', 'Email'),
+        }, view => {
+            view.render();
 
-            Espo.Ui.notify(' ... ');
+            this.listenToOnce(view, 'select', folderId => {
+                this.clearView('dialog');
 
-            this.retrieveFromTrash(id)
-                .then(() => {
-                    Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
+                this.massMoveToFolder(folderId);
+            });
+        });
+    }
 
+    actionMarkAsImportant(data) {
+        data = data || {};
+
+        let id = data.id;
+
+        Espo.Ajax.postRequest('Email/inbox/important', {id: id});
+
+        let model = this.collection.get(id);
+
+        if (model) {
+            model.set('isImportant', true);
+        }
+    }
+
+    actionMarkAsNotImportant(data) {
+        data = data || {};
+
+        let id = data.id;
+
+        Espo.Ajax.deleteRequest('Email/inbox/important', {id: id});
+
+        let model = this.collection.get(id);
+
+        if (model) {
+            model.set('isImportant', false);
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionMarkAllAsRead() {
+        Espo.Ajax.postRequest('Email/inbox/read', {all: true});
+
+        this.collection.forEach(model => {
+            model.set('isRead', true);
+        });
+
+        this.collection.trigger('all-marked-read');
+    }
+
+    actionMoveToTrash(data) {
+        let id = data.id;
+
+        Espo.Ui.notify(' ... ');
+
+        Espo.Ajax
+            .postRequest('Email/inbox/inTrash', {id: id})
+            .then(() => {
+                Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
+
+                this.collection.trigger('moving-to-trash', id, this.collection.get(id));
+            });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionRetrieveFromTrash(data) {
+        let id = data.id;
+
+        Espo.Ui.notify(' ... ');
+
+        this.retrieveFromTrash(id)
+            .then(() => {
+                Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
+
+                this.collection.trigger('retrieving-from-trash', id, this.collection.get(id));
+            });
+    }
+
+    /**
+     * @param {string} id
+     * @return {Promise}
+     */
+    retrieveFromTrash(id) {
+        return Espo.Ajax.deleteRequest('Email/inbox/inTrash', {id: id});
+    }
+
+    massRetrieveFromTrashMoveToFolder(folderId) {
+        let ids = [];
+
+        for (let i in this.checkedList) {
+            ids.push(this.checkedList[i]);
+        }
+
+        Espo.Ajax
+            .deleteRequest('Email/inbox/inTrash', {ids: ids})
+            .then(() => {
+                ids.forEach(id => {
                     this.collection.trigger('retrieving-from-trash', id, this.collection.get(id));
                 });
-        },
 
-        /**
-         * @param {string} id
-         * @return {Promise}
-         */
-        retrieveFromTrash: function (id) {
-            return Espo.Ajax.deleteRequest('Email/inbox/inTrash', {id: id});
-        },
+                return Espo.Ajax
+                    .postRequest(`Email/inbox/folders/${folderId}`, {ids: ids})
+                    .then(() => {
+                        Espo.Ui.success(this.translate('Done'));
+                    })
+            });
+    }
 
-        massRetrieveFromTrashMoveToFolder: function (folderId) {
-            let ids = [];
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @todo Use one API request.
+     */
+    actionRetrieveFromTrashMoveToFolder(data) {
+        let id = data.id;
+        let folderId = data.folderId;
 
-            for (let i in this.checkedList) {
-                ids.push(this.checkedList[i]);
-            }
+        Espo.Ui.notify(' ... ');
 
-            Espo.Ajax
-                .deleteRequest('Email/inbox/inTrash', {ids: ids})
-                .then(() => {
-                    ids.forEach(id => {
-                        this.collection.trigger('retrieving-from-trash', id, this.collection.get(id));
-                    });
-
-                    return Espo.Ajax
-                        .postRequest(`Email/inbox/folders/${folderId}`, {ids: ids})
-                        .then(() => {
-                            Espo.Ui.success(this.translate('Done'));
-                        })
+        this.retrieveFromTrash(id)
+            .then(() => {
+                return this.moveToFolder(id, folderId)
+            })
+            .then(() => {
+                this.collection.fetch().then(() => {
+                    Espo.Ui.success(this.translate('Done'));
                 });
-        },
+            });
+    }
 
-        /**
-         * @todo Use one API request.
-         */
-        actionRetrieveFromTrashMoveToFolder: function (data) {
-            let id = data.id;
-            let folderId = data.folderId;
+    /**
+     * @param {string} id
+     * @param {string} folderId
+     * @return {Promise}
+     */
+    moveToFolder(id, folderId) {
+        return Espo.Ajax.postRequest(`Email/inbox/folders/${folderId}`, {id: id});
+    }
 
+    actionMoveToFolder(data) {
+        let id = data.id;
+        let folderId = data.folderId;
+
+        if (folderId) {
             Espo.Ui.notify(' ... ');
 
-            this.retrieveFromTrash(id)
-                .then(() => {
-                    return this.moveToFolder(id, folderId)
-                })
+            this.moveToFolder(id, folderId)
                 .then(() => {
                     this.collection.fetch().then(() => {
                         Espo.Ui.success(this.translate('Done'));
                     });
                 });
-        },
 
-        /**
-         * @param {string} id
-         * @param {string} folderId
-         * @return {Promise}
-         */
-        moveToFolder: function (id, folderId) {
-            return Espo.Ajax.postRequest(`Email/inbox/folders/${folderId}`, {id: id});
-        },
+            return;
+        }
 
-        actionMoveToFolder: function (data) {
-            let id = data.id;
-            let folderId = data.folderId;
+        this.createView('dialog', 'views/email-folder/modals/select-folder', {
+            headerText: this.translate('Move to Folder', 'labels', 'Email'),
+        }, view => {
+            view.render();
 
-            if (folderId) {
+            this.listenToOnce(view, 'select', folderId => {
+                this.clearView('dialog');
+
                 Espo.Ui.notify(' ... ');
 
                 this.moveToFolder(id, folderId)
@@ -394,74 +419,57 @@ define('views/email/record/list', ['views/record/list', 'helpers/mass-action'], 
                             Espo.Ui.success(this.translate('Done'));
                         });
                     });
+            });
+        });
+    }
 
+    // noinspection JSUnusedGlobalSymbols
+    actionSend(data) {
+        let id = data.id;
+
+        this.confirm({
+            message: this.translate('sendConfirm', 'messages', 'Email'),
+            confirmText: this.translate('Send', 'labels', 'Email'),
+        }).then(() => {
+            let model = this.collection.get(id);
+
+            if (!model) {
                 return;
             }
 
-            this.createView('dialog', 'views/email-folder/modals/select-folder', {
-                headerText: this.translate('Move to Folder', 'labels', 'Email'),
-            }, view => {
-                view.render();
+            Espo.Ui.notify(this.translate('Sending...', 'labels', 'Email'));
 
-                this.listenToOnce(view, 'select', folderId => {
-                    this.clearView('dialog');
+            model
+                .save({
+                    status: 'Sending',
+                })
+                .then(() => {
+                    Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
 
-                    Espo.Ui.notify(' ... ');
-
-                    this.moveToFolder(id, folderId)
-                        .then(() => {
-                            this.collection.fetch().then(() => {
-                                Espo.Ui.success(this.translate('Done'));
-                            });
-                        });
-                });
-            });
-        },
-
-        actionSend: function (data) {
-            let id = data.id;
-
-            this.confirm({
-                message: this.translate('sendConfirm', 'messages', 'Email'),
-                confirmText: this.translate('Send', 'labels', 'Email'),
-            }).then(() => {
-                let model = this.collection.get(id);
-
-                if (!model) {
-                    return;
-                }
-
-                Espo.Ui.notify(this.translate('Sending...', 'labels', 'Email'));
-
-                model
-                    .save({
-                        status: 'Sending',
-                    })
-                    .then(() => {
-                        Espo.Ui.success(this.translate('emailSent', 'messages', 'Email'));
-
-                        if (this.collection.selectedFolderId === 'drafts') {
-                            this.removeRecordFromList(id);
-                            this.uncheckRecord(id, null, true);
-                            this.collection.trigger('draft-sent');
-                        }
+                    if (this.collection.selectedFolderId === 'drafts') {
+                        this.removeRecordFromList(id);
+                        this.uncheckRecord(id, null, true);
+                        this.collection.trigger('draft-sent');
                     }
-                );
-            });
-        },
+                }
+            );
+        });
+    }
 
-        toggleMassMarkAsImportant: function () {
-            let allImportant = !this.checkedList
-                .map(id => this.collection.get(id))
-                .find(m => !m.get('isImportant'));
+    // noinspection JSUnusedGlobalSymbols
+    toggleMassMarkAsImportant() {
+        let allImportant = !this.checkedList
+            .map(id => this.collection.get(id))
+            .find(m => !m.get('isImportant'));
 
-            if (allImportant) {
-                this.massActionMarkAsNotImportant();
+        if (allImportant) {
+            this.massActionMarkAsNotImportant();
 
-                return;
-            }
+            return;
+        }
 
-            this.massActionMarkAsImportant();
-        },
-    });
-});
+        this.massActionMarkAsImportant();
+    }
+}
+
+export default EmailListRecordView;
