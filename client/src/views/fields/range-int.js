@@ -204,7 +204,7 @@ define('views/fields/range-int',
                 if (minValue !== null && maxValue !== null) {
                     if (value < minValue || value > maxValue ) {
                         let msg = this.translate('fieldShouldBeBetween', 'messages')
-                            .replace('{field}', this.translate(name, 'fields', this.model.name))
+                            .replace('{field}', this.translate(name, 'fields', this.entityType))
                             .replace('{min}', minValue)
                             .replace('{max}', maxValue);
 
@@ -216,7 +216,7 @@ define('views/fields/range-int',
                     if (minValue !== null) {
                         if (value < minValue) {
                             let msg = this.translate('fieldShouldBeLess', 'messages')
-                                .replace('{field}', this.translate(name, 'fields', this.model.name))
+                                .replace('{field}', this.translate(name, 'fields', this.entityType))
                                 .replace('{value}', minValue);
 
                             this.showValidationMessage(msg, '[data-name="'+name+'"]');
@@ -226,7 +226,7 @@ define('views/fields/range-int',
                     } else if (maxValue !== null) {
                         if (value > maxValue) {
                             let msg = this.translate('fieldShouldBeGreater', 'messages')
-                                .replace('{field}', this.translate(name, 'fields', this.model.name))
+                                .replace('{field}', this.translate(name, 'fields', this.entityType))
                                 .replace('{value}', maxValue);
 
                             this.showValidationMessage(msg, '[data-name="'+name+'"]');
@@ -252,8 +252,8 @@ define('views/fields/range-int',
             if (fromValue !== null && toValue !== null) {
                 if (fromValue > toValue) {
                     let msg = this.translate('fieldShouldBeGreater', 'messages')
-                        .replace('{field}', this.translate(this.toField, 'fields', this.model.name))
-                        .replace('{value}', this.translate(this.fromField, 'fields', this.model.name));
+                        .replace('{field}', this.translate(this.toField, 'fields', this.entityType))
+                        .replace('{value}', this.translate(this.fromField, 'fields', this.entityType));
 
                     this.showValidationMessage(msg, '[data-name="'+this.fromField+'"]');
 

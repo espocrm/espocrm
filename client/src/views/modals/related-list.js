@@ -242,7 +242,7 @@ class RelatedListModalView extends ModalView {
         this.$header.append(
             title ||
             $('<span>').text(
-                this.getLanguage().translate(this.link, 'links', this.model.name)
+                this.getLanguage().translate(this.link, 'links', this.entityType)
             )
         );
 

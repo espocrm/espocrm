@@ -57,6 +57,7 @@ class BaseFieldView extends View {
      */
     listTemplate = 'fields/base/list'
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * List-link mode template.
      *
@@ -89,23 +90,26 @@ class BaseFieldView extends View {
      */
     searchTemplate = 'fields/base/search'
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @protected
-     * @type {string|null}
+     * @type {string}
      */
-    listTemplateContent = null
+    listTemplateContent
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @protected
-     * @type {string|null}
+     * @type {string}
      */
-    detailTemplateContent = null
+    detailTemplateContent
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @protected
-     * @type {string|null}
+     * @type {string}
      */
-    editTemplateContent = null
+    editTemplateContent
 
     /**
      * A validation list. There should be a `validate{Name}` method for each item.
@@ -144,7 +148,7 @@ class BaseFieldView extends View {
      *
      * @type {string}
      */
-    name = null
+    name
 
     /**
      * Definitions.
@@ -218,26 +222,26 @@ class BaseFieldView extends View {
     VALIDATION_POPOVER_TIMEOUT = 3000
 
     /**
-     * @type {(function:boolean)|null}
+     * @type {(function():boolean)}
      * @private
      * @internal
      */
-    validateCallback = null
+    validateCallback
 
     /**
      * An element selector to point validation popovers to.
      *
-     * @type {?string}
+     * @type {string}
      * @protected
      */
-    validationElementSelector = null
+    validationElementSelector
 
     /**
      * A view-record helper.
      *
-     * @type {module:view-record-helper|null}
+     * @type {module:view-record-helper}
      */
-    recordHelper = null
+    recordHelper
 
     /**
      * @type {JQuery|null}
@@ -572,7 +576,7 @@ class BaseFieldView extends View {
         if (!this._template) {
             this._templateCompiled = null;
 
-            if (contentProperty in this && this[contentProperty] !== null) {
+            if (contentProperty in this && this[contentProperty] != null) {
                 this.compiledTemplatesCache = this.compiledTemplatesCache || {};
 
                 this._templateCompiled =
@@ -660,12 +664,10 @@ class BaseFieldView extends View {
         this.defs = this.options.defs || {};
         this.name = this.options.name || this.defs.name;
         this.params = this.options.params || this.defs.params || {};
-
         this.validateCallback = this.options.validateCallback;
 
         this.fieldType = this.model.getFieldParam(this.name, 'type') || this.type;
-
-        this.entityType = this.model.entityType;
+        this.entityType = this.model.entityType || this.model.name;
 
         this.recordHelper = this.options.recordHelper;
 
@@ -714,7 +716,7 @@ class BaseFieldView extends View {
             mode = this.MODE_DETAIL;
         }
 
-        this.mode = null;
+        this.mode = undefined;
 
         this.wait(
             this.setMode(mode)
@@ -725,7 +727,7 @@ class BaseFieldView extends View {
             this.searchData = {};
             this.setupSearch();
 
-            this.events['keydown.' + this.cid] = e => {
+            this.events['keydown.' + this.cid] = /** JQueryKeyEventObject */e => {
                 if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                     this.trigger('search');
                 }
@@ -890,12 +892,12 @@ class BaseFieldView extends View {
             if (!tooltipText && typeof this.tooltip === 'string') {
                 let [scope, field] = this.tooltip.includes('.') ?
                     this.tooltip.split('.') :
-                    [this.model.entityType, this.tooltip];
+                    [this.entityType, this.tooltip];
 
                 tooltipText = this.translate(field, 'tooltips', scope);
             }
 
-            tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.model.name) || '';
+            tooltipText = tooltipText || this.translate(this.name, 'tooltips', this.entityType) || '';
             tooltipText = this.getHelper()
                 .transformMarkdownText(tooltipText, {linksInNewTab: true}).toString();
 
@@ -1133,7 +1135,7 @@ class BaseFieldView extends View {
      * @return {string[]}
      */
     getAttributeList() {
-        return this.getFieldManager().getAttributes(this.fieldType, this.name);
+        return this.getFieldManager().getAttributeList(this.fieldType, this.name);
     }
 
     /**
@@ -1489,7 +1491,7 @@ class BaseFieldView extends View {
      * @returns {string}
      */
     getLabelText() {
-        return this.options.labelText || this.translate(this.name, 'fields', this.model.name);
+        return this.options.labelText || this.translate(this.name, 'fields', this.entityType);
     }
 
     /**

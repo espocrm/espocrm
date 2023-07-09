@@ -413,6 +413,7 @@ class DateFieldView extends BaseFieldView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateDate() {
         if (this.model.get(this.name) === -1) {
             let msg = this.translate('fieldShouldBeDate', 'messages')
@@ -424,6 +425,7 @@ class DateFieldView extends BaseFieldView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateAfter() {
         let field = this.model.getFieldParam(this.name, 'after');
 
@@ -441,7 +443,7 @@ class DateFieldView extends BaseFieldView {
         if (moment(value).unix() <= moment(otherValue).unix()) {
             let msg = this.translate('fieldShouldAfter', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{otherField}', this.translate(field, 'fields', this.model.entityType));
+                .replace('{otherField}', this.translate(field, 'fields', this.entityType));
 
             this.showValidationMessage(msg);
 
@@ -449,6 +451,7 @@ class DateFieldView extends BaseFieldView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateBefore() {
         let field = this.model.getFieldParam(this.name, 'before');
 
@@ -466,7 +469,7 @@ class DateFieldView extends BaseFieldView {
         if (moment(value).unix() >= moment(otherValue).unix()) {
             let msg = this.translate('fieldShouldBefore', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                .replace('{otherField}', this.translate(field, 'fields', this.entityType));
 
             this.showValidationMessage(msg);
 

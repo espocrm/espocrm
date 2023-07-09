@@ -168,7 +168,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
         if (isNotValid) {
             let msg = this.translate('fieldShouldAfter', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                .replace('{otherField}', this.translate(field, 'fields', this.entityType));
 
             this.showValidationMessage(msg);
 
@@ -194,7 +194,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
         if (moment(value).unix() >= moment(otherValue).unix()) {
             let msg = this.translate('fieldShouldBefore', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                .replace('{otherField}', this.translate(field, 'fields', this.entityType));
 
             this.showValidationMessage(msg);
 
