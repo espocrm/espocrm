@@ -499,6 +499,7 @@ class BaseRecordView extends View {
 
     /**
      * @deprecated Use `getFieldViews`.
+     * @private
      * @return {Object<string, module:views/fields/base>}
      */
     getFields() {
@@ -596,7 +597,7 @@ class BaseRecordView extends View {
             this.setIsNotChanged();
         });
 
-        this.entityType = this.model.entityType || this.model.name;
+        this.entityType = this.model.entityType || this.model.name || 'Common';
         this.scope = this.options.scope || this.entityType;
 
         this.fieldList = this.options.fieldList || this.fieldList || [];
@@ -754,6 +755,7 @@ class BaseRecordView extends View {
 
     /**
      * @deprecated
+     * @private
      * For bc.
      */
     initDependancy() {

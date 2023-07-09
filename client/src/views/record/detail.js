@@ -1737,7 +1737,7 @@ class DetailRecordView extends BaseRecordView {
     }
 
     init() {
-        this.entityType = this.model.entityType || this.model.name;
+        this.entityType = this.model.entityType || this.model.name || 'Common';
         this.scope = this.options.scope || this.entityType;
 
         this.layoutName = this.options.layoutName || this.layoutName;
