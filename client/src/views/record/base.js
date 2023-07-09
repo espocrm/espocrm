@@ -649,7 +649,7 @@ class BaseRecordView extends View {
              this.attributes = this.model.getClonedAttributes();
         });
 
-        this.initDependancy();
+        this.initDependency();
         this.initDynamicLogic();
     }
 
@@ -664,6 +664,7 @@ class BaseRecordView extends View {
         this.attributes[attribute] = value;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Check whether a current attribute value differs from initial.
      *
@@ -737,16 +738,11 @@ class BaseRecordView extends View {
     }
 
     /**
-     * @deprecated
+     * @protected
+     * @internal
      */
-    applyDependancy() {
-        this._handleDependencyAttributes();
-    }
-
-    /**
-     * @deprecated
-     */
-    initDependancy() {
+    initDependency() {
+        // noinspection JSDeprecatedSymbols
         Object.keys(this.dependencyDefs || {}).forEach((attr) => {
             this.listenTo(this.model, 'change:' + attr, () => {
                 this._handleDependencyAttribute(attr);
@@ -754,6 +750,14 @@ class BaseRecordView extends View {
         });
 
         this._handleDependencyAttributes();
+    }
+
+    /**
+     * @deprecated
+     * For bc.
+     */
+    initDependancy() {
+        this.initDependency();
     }
 
     /**
@@ -1249,7 +1253,8 @@ class BaseRecordView extends View {
      * @private
      */
     _handleDependencyAttributes() {
-        Object.keys(this.dependencyDefs || {}).forEach((attr) => {
+        // noinspection JSDeprecatedSymbols
+        Object.keys(this.dependencyDefs || {}).forEach(attr => {
             this._handleDependencyAttribute(attr);
         });
     }
@@ -1258,6 +1263,7 @@ class BaseRecordView extends View {
      * @private
      */
     _handleDependencyAttribute(attr) {
+        // noinspection JSDeprecatedSymbols
         let data = this.dependencyDefs[attr];
         let value = this.model.get(attr);
 

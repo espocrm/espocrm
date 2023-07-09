@@ -1212,7 +1212,7 @@ class BaseFieldView extends View {
     }
 
     /**
-     * @private
+     * @public
      */
     removeInlineEditLinks() {
         let $cell = this.get$cell();
@@ -1257,7 +1257,9 @@ class BaseFieldView extends View {
     }
 
     /**
-     * @private
+     * @public
+     * @param {boolean} value
+     * @internal
      */
     setIsInlineEditMode(value) {
         this._isInlineEditMode = value;

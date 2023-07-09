@@ -49,7 +49,7 @@ class ActionItemSetupHelper {
      * @param {function(Object): void} addFunc
      * @param {function(string): void} showFunc
      * @param {function(string): void} hideFunc
-     * @param {{listenToViewModelSync?: boolean}} options
+     * @param {{listenToViewModelSync?: boolean}} [options]
      */
     setup(view, type, waitFunc, addFunc, showFunc, hideFunc, options) {
         options = options || {};

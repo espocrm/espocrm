@@ -63,7 +63,6 @@ class DetailMiddleRecordView extends View {
     }
 
     /**
-     * @private
      * @param {string} name
      */
     showPanelInternal(name) {
@@ -102,8 +101,8 @@ class DetailMiddleRecordView extends View {
     }
 
     /**
-     * @private
-     * @param {string} name
+     * @public
+     * @param {string} name A name.
      */
     hidePanelInternal(name) {
         if (this.isRendered()) {
@@ -114,7 +113,7 @@ class DetailMiddleRecordView extends View {
     /**
      * Hide a field.
      *
-     * @param {string} name
+     * @param {string} name A name.
      */
     hideField(name) {
         this.recordHelper.setFieldStateParam(name, 'hidden', true);
@@ -157,7 +156,7 @@ class DetailMiddleRecordView extends View {
     /**
      * Show a field.
      *
-     * @param {string} name
+     * @param {string} name A name.
      */
     showField(name) {
         if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
@@ -216,10 +215,10 @@ class DetailMiddleRecordView extends View {
      * @return {Object.<string, module:views/fields/base>}
      */
     getFieldViews() {
-        var fieldViews = {};
+        let fieldViews = {};
 
-        for (var viewKey in this.nestedViews) {
-            var name = this.nestedViews[viewKey].name;
+        for (let viewKey in this.nestedViews) {
+            let name = this.nestedViews[viewKey].name;
 
             fieldViews[name] = this.nestedViews[viewKey];
         }
@@ -253,4 +252,5 @@ class DetailMiddleRecordView extends View {
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default DetailMiddleRecordView;

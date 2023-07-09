@@ -44,14 +44,6 @@ class DetailRecordView extends BaseRecordView {
     type = 'detail'
 
     /**
-     * Not used.
-     *
-     * @deprecated
-     * @protected
-     */
-    name = 'detail'
-
-    /**
      * A layout name. Can be overridden by an option parameter.
      *
      * @protected
@@ -194,7 +186,7 @@ class DetailRecordView extends BaseRecordView {
      * A dropdown item list.
      *
      * @protected
-     * @type {module:views/record/detail~dropdownItem[]}
+     * @type {Array<module:views/record/detail~dropdownItem|false>}
      */
     dropdownItemList = [
         {
@@ -457,6 +449,18 @@ class DetailRecordView extends BaseRecordView {
     blockUpdateWebSocketPeriod = 500
 
     /**
+     * @internal
+     * @protected
+     */
+    stickButtonsFormBottomSelector
+
+    /**
+     * @protected
+     * @type {string}
+     */
+    dynamicHandlerClassName
+
+    /**
      * A Ctrl+Enter shortcut action.
      *
      * @protected
@@ -551,10 +555,12 @@ class DetailRecordView extends BaseRecordView {
         this.getRouter().dispatch(this.scope, 'edit', options);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionDelete() {
         this.delete();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * A `save` action.
      *
@@ -588,7 +594,7 @@ class DetailRecordView extends BaseRecordView {
     }
 
     focusOnFirstDiv() {
-        let element = this.$el.find('> div').get(0);
+        let element = /** @type {HTMLElement} */this.$el.find('> div').get(0);
 
         if (element) {
             element.focus({preventScroll: true});
@@ -605,6 +611,7 @@ class DetailRecordView extends BaseRecordView {
             .catch(() => {});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * A `self-assign` action.
      */
@@ -631,6 +638,7 @@ class DetailRecordView extends BaseRecordView {
             });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * A `convert-currency` action.
      */
@@ -771,7 +779,7 @@ class DetailRecordView extends BaseRecordView {
             this.type === this.TYPE_DETAIL &&
             this.getMetadata().get(['scopes', this.scope, 'hasPersonalData'])
         ) {
-            if (this.getAcl().get('dataPrivacyPermission') === 'yes') {
+            if (this.getAcl().getPermissionLevel('dataPrivacyPermission') === 'yes') {
                 this.dropdownItemList.push({
                     'label': 'View Personal Data',
                     'name': 'viewPersonalData'
@@ -817,6 +825,7 @@ class DetailRecordView extends BaseRecordView {
      * Disable action items.
      */
     disableActionItems() {
+        // noinspection JSDeprecatedSymbols
         this.disableButtons();
     }
 
@@ -824,6 +833,7 @@ class DetailRecordView extends BaseRecordView {
      * Enable action items.
      */
     enableActionItems() {
+        // noinspection JSDeprecatedSymbols
         this.enableButtons();
     }
 
@@ -947,6 +957,7 @@ class DetailRecordView extends BaseRecordView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Disable a button or dropdown action item.
      *
@@ -999,6 +1010,7 @@ class DetailRecordView extends BaseRecordView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Enable a button or dropdown action item.
      *
@@ -1357,7 +1369,7 @@ class DetailRecordView extends BaseRecordView {
         let isSmallScreen = $(window.document).width() < screenWidthXs;
 
         let getOffsetTop = (/** JQuery */$element) => {
-            let element = $element.get(0);
+            let element = /** @type {HTMLElement} */$element.get(0);
 
             let value = 0;
 
@@ -1624,7 +1636,7 @@ class DetailRecordView extends BaseRecordView {
 
         if (this.hasView('middle')) {
             if ('getFieldViews' in this.getMiddleView()) {
-                _.extend(fields, Espo.Utils.clone(this.getMiddleView().getFieldViews(withHidden)));
+                _.extend(fields, Espo.Utils.clone(this.getMiddleView().getFieldViews()));
             }
         }
 
@@ -1653,7 +1665,7 @@ class DetailRecordView extends BaseRecordView {
         let view;
 
         if (this.hasView('middle')) {
-            view = (this.getMiddleView().getFieldViews(true) || {})[name];
+            view = (this.getMiddleView().getFieldViews() || {})[name];
         }
 
         if (!view && this.hasView('side')) {
@@ -1713,7 +1725,6 @@ class DetailRecordView extends BaseRecordView {
             dropdownItemListEmpty: this.isDropdownItemListEmpty(),
             dropdownEditItemListEmpty: this.isDropdownEditItemListEmpty(),
             buttonsDisabled: this.buttonsDisabled,
-            name: this.name,
             id: this.id,
             isWide: this.isWide,
             isSmall: this.type === 'editSmall' || this.type === 'detailSmall',
@@ -1976,9 +1987,10 @@ class DetailRecordView extends BaseRecordView {
             this.getMetadata().get(['clientDefs', this.entityType, 'formDependency']) || {}
         );
 
+        // noinspection JSDeprecatedSymbols
         this.dependencyDefs = _.extend(dependencyDefs, this.dependencyDefs);
 
-        this.initDependancy();
+        this.initDependency();
 
         let dynamicLogic = Espo.Utils.clone(
             this.getMetadata().get(['clientDefs', this.entityType, 'dynamicLogic']) || {}
@@ -2096,9 +2108,9 @@ class DetailRecordView extends BaseRecordView {
             }, 10);
         };
 
-        this.on('set-field-required', (field) => process('required', field));
-        this.on('set-field-option-list', (field) => process('options', field));
-        this.on('reset-field-option-list', (field) => process('options', field));
+        this.on('set-field-required', field => process('required', field));
+        this.on('set-field-option-list', field => process('options', field));
+        this.on('reset-field-option-list', field => process('options', field));
     }
 
     /**
@@ -2241,14 +2253,6 @@ class DetailRecordView extends BaseRecordView {
         let id = model.id;
         let scope = this.entityType || this.scope;
 
-        let url;
-
-        if (this.mode === this.MODE_EDIT) {
-            url = '#' + scope + '/edit/' + id;
-        } else {
-            url = '#' + scope + '/view/' + id;
-        }
-
         this.getRouter().navigate('#' + scope + '/view/' + id, {trigger: false});
 
         this.getRouter().dispatch(scope, 'view', {
@@ -2276,9 +2280,6 @@ class DetailRecordView extends BaseRecordView {
             if (this.indexOfRecord < 0) {
                 this.indexOfRecord = 0;
             }
-        }
-        else {
-            collection = this.model.collection;
         }
 
         if (!(this.indexOfRecord > 0)) {
@@ -2338,6 +2339,7 @@ class DetailRecordView extends BaseRecordView {
             });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionViewPersonalData() {
         this.createView('viewPersonalData', 'views/personal-data/modals/personal-data', {
             model: this.model
@@ -2351,6 +2353,7 @@ class DetailRecordView extends BaseRecordView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionViewFollowers(data) {
         let viewName = this.getMetadata().get(
                 ['clientDefs', this.entityType, 'relationshipPanels', 'followers', 'viewModalView']
@@ -2412,6 +2415,7 @@ class DetailRecordView extends BaseRecordView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionPrintPdf() {
         this.createView('pdfTemplate', 'views/modals/select-template', {
             entityType: this.entityType,
@@ -2498,6 +2502,7 @@ class DetailRecordView extends BaseRecordView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     errorHandlerModified(data, options) {
         Espo.Ui.notify(false);
 
@@ -2684,7 +2689,7 @@ class DetailRecordView extends BaseRecordView {
         }
     }
 
-    manageAccessDelete(second) {
+    manageAccessDelete() {
         if (this.isNew) {
             return;
         }
@@ -2704,7 +2709,7 @@ class DetailRecordView extends BaseRecordView {
         }
     }
 
-    manageAccessStream(second) {
+    manageAccessStream() {
         if (this.isNew) {
             return;
         }
@@ -2712,7 +2717,7 @@ class DetailRecordView extends BaseRecordView {
         if (
             ~['no', 'own'].indexOf(this.getAcl().getLevel('User', 'read'))
             &&
-            this.getAcl().get('portalPermission') === 'no'
+            this.getAcl().getPermissionLevel('portalPermission') === 'no'
         ) {
             this.hideActionItem('viewFollowers');
 
@@ -2740,9 +2745,13 @@ class DetailRecordView extends BaseRecordView {
         this.manageAccessStream();
     }
 
+    /**
+     * Add a button.
+     *
+     * @param {module:views/record/detail~button} o
+     * @param {boolean} [toBeginning]
+     */
     addButton(o, toBeginning) {
-        let method = toBeginning ? 'unshift' : 'push';
-
         let name = o.name;
 
         if (!name) {
@@ -2755,14 +2764,22 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        this.buttonList[method](o);
+        toBeginning ?
+            this.buttonList.unshift(o) :
+            this.buttonList.push(o);
     }
 
+    /**
+     * Add a dropdown item.
+     *
+     * @param {module:views/record/detail~dropdownItem|false} o
+     * @param {boolean} [toBeginning]
+     */
     addDropdownItem(o, toBeginning) {
-        let method = toBeginning ? 'unshift' : 'push';
-
         if (!o) {
-            this.dropdownItemList[method](false);
+            toBeginning ?
+                this.dropdownItemList.unshift(false) :
+                this.dropdownItemList.push(false);
 
             return;
         }
@@ -2779,12 +2796,18 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        this.dropdownItemList[method](o);
+        toBeginning ?
+            this.dropdownItemList.unshift(o) :
+            this.dropdownItemList.push(o);
     }
 
+    /**
+     * Add an 'edit' mode button.
+     *
+     * @param {module:views/record/detail~button} o
+     * @param {boolean} [toBeginning]
+     */
     addButtonEdit(o, toBeginning) {
-        let method = toBeginning ? 'unshift' : 'push';
-
         let name = o.name;
 
         if (!name) {
@@ -2797,7 +2820,9 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        this.buttonEditList[method](o);
+        toBeginning ?
+            this.buttonEditList.unshift(o) :
+            this.buttonEditList.push(o);
     }
 
     /**
@@ -2874,6 +2899,7 @@ class DetailRecordView extends BaseRecordView {
      * @param {string} name A name.
      */
     removeActionItem(name) {
+        // noinspection JSDeprecatedSymbols
         this.removeButton(name);
     }
 
@@ -3273,6 +3299,7 @@ class DetailRecordView extends BaseRecordView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Called after create.
      *
@@ -3432,6 +3459,7 @@ class DetailRecordView extends BaseRecordView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @protected
      * @return {Number}

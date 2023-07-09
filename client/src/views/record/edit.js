@@ -41,8 +41,6 @@ class EditRecordView extends DetailRecordView {
     /** @inheritDoc */
     type = 'edit'
     /** @inheritDoc */
-    name = 'edit'
-    /** @inheritDoc */
     fieldsMode = 'edit'
     /** @inheritDoc */
     mode = 'edit'
