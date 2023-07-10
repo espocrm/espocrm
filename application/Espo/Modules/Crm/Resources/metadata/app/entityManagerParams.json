@@ -1,4 +1,31 @@
 {
+    "Account": {
+        "updateDuplicateCheck": {
+            "location": "recordDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
+    },
+    "Contact": {
+        "updateDuplicateCheck": {
+            "location": "recordDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
+    },
+    "Lead": {
+        "updateDuplicateCheck": {
+            "location": "recordDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
+    },
     "Meeting": {
         "activityStatusList": {
             "location": "scopes",

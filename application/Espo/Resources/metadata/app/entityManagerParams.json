@@ -7,5 +7,23 @@
                 "tooltip": true
             }
         }
+    },
+    "@Company": {
+        "updateDuplicateCheck": {
+            "location": "recordDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
+    },
+    "@Person": {
+        "updateDuplicateCheck": {
+            "location": "recordDefs",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        }
     }
 }
