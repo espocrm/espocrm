@@ -103,7 +103,7 @@ class DetailSideRecordView extends PanelsContainerRecordView {
         this.setupPanels();
 
         if (!this.additionalPanelsDisabled) {
-            var additionalPanels = this.getMetadata()
+            let additionalPanels = this.getMetadata()
                 .get(['clientDefs', this.scope, 'sidePanels', this.type]) || [];
 
             additionalPanels.forEach((panel) => {
@@ -128,7 +128,7 @@ class DetailSideRecordView extends PanelsContainerRecordView {
         });
 
         this.panelList = this.panelList.map((p) => {
-            var item = Espo.Utils.clone(p);
+            let item = Espo.Utils.clone(p);
 
             if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                 item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
@@ -194,7 +194,7 @@ class DetailSideRecordView extends PanelsContainerRecordView {
      * @protected
      */
     setupDefaultPanel() {
-        var met = false;
+        let met = false;
 
         this.panelList.forEach((item) => {
             if (item.name === 'default') {
@@ -206,7 +206,7 @@ class DetailSideRecordView extends PanelsContainerRecordView {
             return;
         }
 
-        var defaultPanelDefs = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]);
+        let defaultPanelDefs = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.type]);
 
         if (defaultPanelDefs === false) {
             return;
@@ -227,7 +227,7 @@ class DetailSideRecordView extends PanelsContainerRecordView {
         defaultPanelDefs.view = this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelView']) ||
             defaultPanelDefs.view;
 
-        var fieldList = this.getMetadata()
+        let fieldList = this.getMetadata()
             .get(['clientDefs', this.scope, 'defaultSidePanelFieldLists', this.type]);
 
         if (!fieldList) {
@@ -243,14 +243,14 @@ class DetailSideRecordView extends PanelsContainerRecordView {
             defaultPanelDefs.options.fieldList = fieldList;
         }
 
-        if (defaultPanelDefs.options.fieldList && defaultPanelDefs.options.fieldList.length) {
-            defaultPanelDefs.options.fieldList.forEach((item, i) => {
-                if (typeof item !== 'object') {
-                    item = {
-                        name: item
-                    };
+        fieldList = defaultPanelDefs.options.fieldList;
 
-                    defaultPanelDefs.options.fieldList[i] = item;
+        if (fieldList && fieldList.length) {
+            fieldList.forEach((item, i) => {
+                if (typeof item !== 'object') {
+                    item = {name: item};
+
+                    fieldList[i] = item;
                 }
 
                 if (item.name === ':assignedUser') {
@@ -268,6 +268,14 @@ class DetailSideRecordView extends PanelsContainerRecordView {
                         defaultPanelDefs.options.fieldList[i] = {};
                     }
                 }
+            });
+
+            const fieldDefs = this.getMetadata().get(['entityDefs', this.entityType, 'fields']) || {};
+
+            defaultPanelDefs.options.fieldList = fieldList.filter(item => {
+                const defs = fieldDefs[item.name] || {}
+
+                return !defs.disabled;
             });
         }
 
