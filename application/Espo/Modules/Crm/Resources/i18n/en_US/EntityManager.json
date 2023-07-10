@@ -3,11 +3,9 @@
         "activityStatusList": "Activity Statuses",
         "historyStatusList": "History Statuses",
         "completedStatusList": "Completed Statuses",
-        "canceledStatusList": "Canceled Statuses",
-        "updateDuplicateCheck": "Duplicate check on update"
+        "canceledStatusList": "Canceled Statuses"
     },
     "tooltips": {
-        "updateDuplicateCheck": "Perform checking for duplicates when updating a record.",
         "activityStatusList": "Status values determining that an activity record should be displayed in the Activity panel and considered as actual.",
         "historyStatusList": "Status values determining that an activity record should be displayed in the History panel.",
         "completedStatusList": "Status values determining that an activity is completed.",

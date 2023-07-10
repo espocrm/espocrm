@@ -6,6 +6,14 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "duplicateCheckFieldList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true,
+                "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
+            }
         }
     },
     "Contact": {
@@ -15,6 +23,14 @@
                 "type": "bool",
                 "tooltip": true
             }
+        },
+        "duplicateCheckFieldList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true,
+                "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
+            }
         }
     },
     "Lead": {
@@ -23,6 +39,14 @@
             "fieldDefs": {
                 "type": "bool",
                 "tooltip": true
+            }
+        },
+        "duplicateCheckFieldList": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true,
+                "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
         }
     },

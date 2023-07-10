@@ -32,6 +32,11 @@ use Espo\Entities\Role;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\UpdateBuilder;
+use Espo\Core\Templates\Entities\Company;
+use Espo\Core\Templates\Entities\Person;
+use Espo\Core\Templates\Entities\Base;
+use Espo\Core\Templates\Entities\BasePlus;
+use Espo\Core\Utils\Metadata;
 
 class AfterUpgrade
 {
@@ -39,6 +44,10 @@ class AfterUpgrade
     {
         $this->updateRoles(
             $container->getByClass(EntityManager::class)
+        );
+
+        $this->updateMetadata(
+            $container->getByClass(Metadata::class)
         );
     }
 
@@ -50,5 +59,44 @@ class AfterUpgrade
             ->build();
 
         $entityManager->getQueryExecutor()->execute($query);
+    }
+
+    private function updateMetadata(Metadata $metadata): void
+    {
+        $defs = $metadata->get(['scopes']);
+
+        foreach ($defs as $entityType => $item) {
+            $isCustom = $item['isCustom'] ?? false;
+            $type = $item['type'] ?? false;
+
+            if (!$isCustom) {
+                continue;
+            }
+
+            if (
+                !in_array($type, [
+                    BasePlus::TEMPLATE_TYPE,
+                    Base::TEMPLATE_TYPE,
+                    Company::TEMPLATE_TYPE,
+                    Person::TEMPLATE_TYPE
+                ])
+            ) {
+                continue;
+            }
+
+            $recordDefs = $metadata->getCustom('recordDefs', $entityType) ?? (object) [];
+            $scopes = $metadata->getCustom('scopes', $entityType) ?? (object) [];
+
+            $recordDefs->duplicateWhereBuilderClassName = "Espo\\Classes\\DuplicateWhereBuilders\\General";
+
+            $scopes->duplicateCheckFieldList = [];
+
+            if ($type === Company::TEMPLATE_TYPE || $type === Person::TEMPLATE_TYPE) {
+                $scopes->duplicateCheckFieldList = ['name', 'emailAddress'];
+            }
+
+            $metadata->saveCustom('recordDefs', $entityType, $recordDefs);
+            $metadata->saveCustom('scopes', $entityType, $scopes);
+        }
     }
 }

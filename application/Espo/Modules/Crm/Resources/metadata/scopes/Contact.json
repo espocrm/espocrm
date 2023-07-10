@@ -10,5 +10,6 @@
     "importable": true,
     "notifications": true,
     "object": true,
-    "hasPersonalData": true
+    "hasPersonalData": true,
+    "duplicateCheckFieldList": ["name", "emailAddress"]
 }

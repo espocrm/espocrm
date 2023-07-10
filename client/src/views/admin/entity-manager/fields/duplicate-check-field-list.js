@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,7 +26,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Classes\DuplicateWhereBuilders;
+import MultiEnumFieldView from 'views/fields/multi-enum';
 
-class Company extends General
-{}
+class DuplicateFieldListCheckEntityManagerFieldView extends MultiEnumFieldView {
+
+    fieldTypeList = [
+        'varchar',
+        'personName',
+        'email',
+        'phone',
+        'url',
+        'barcode',
+    ]
+
+    setupOptions() {
+        let entityType = this.model.get('name');
+
+        let options =
+            this.getFieldManager()
+                .getEntityTypeFieldList(entityType, {
+                    typeList: this.fieldTypeList,
+                    onlyAvailable: true,
+                })
+                .sort((a, b) => {
+                    return this.getLanguage().translate(a, 'fields', this.entityType)
+                        .localeCompare(
+                            this.getLanguage().translate(b, 'fields', this.entityType)
+                        );
+                });
+
+        this.translatedOptions = {};
+
+        options.forEach(item => {
+            this.translatedOptions[item] = this.translate(item, 'fields', entityType);
+        })
+
+        this.params.options = options;
+    }
+}
+
+export default DuplicateFieldListCheckEntityManagerFieldView;

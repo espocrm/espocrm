@@ -40,7 +40,9 @@
         "fullTextSearch": "Full-Text Search",
         "parentEntityTypeList": "Parent Entity Types",
         "foreignLinkEntityTypeList": "Foreign Links",
-        "optimisticConcurrencyControl": "Optimistic concurrency control"
+        "optimisticConcurrencyControl": "Optimistic concurrency control",
+        "updateDuplicateCheck": "Duplicate check on update",
+        "duplicateCheckFieldList": "Duplicate check fields"
     },
     "options": {
         "type": {
@@ -75,6 +77,8 @@
         "beforeSaveApiScript": "A script called on create and update API requests before an entity is saved. Use for custom validation and duplicate checking."
     },
     "tooltips": {
+        "duplicateCheckFieldList": "Which fields to check when performing checking for duplicates.",
+        "updateDuplicateCheck": "Perform checking for duplicates when updating a record.",
         "optimisticConcurrencyControl": "Prevents writing conflicts.",
         "statusField": "Updates of this field are logged in stream.",
         "textFilterFields": "Fields used by text search.",
