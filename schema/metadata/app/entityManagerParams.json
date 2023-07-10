@@ -22,7 +22,8 @@
                     "enum": [
                         "scopes",
                         "entityDefs",
-                        "clientDefs"
+                        "clientDefs",
+                        "recordDefs"
                     ]
                 },
                 "fieldDefs": {

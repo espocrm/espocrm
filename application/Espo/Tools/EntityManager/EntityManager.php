@@ -1709,7 +1709,7 @@ class EntityManager
 
             $location = $defs['location'] ?? self::DEFAULT_PARAM_LOCATION;
 
-            if (!in_array($location, ['scopes', 'entityDefs', 'clientDefs'])) {
+            if (!in_array($location, ['scopes', 'entityDefs', 'clientDefs', 'recordDefs'])) {
                 throw new Error("Param location `$location` is not supported.");
             }
 
