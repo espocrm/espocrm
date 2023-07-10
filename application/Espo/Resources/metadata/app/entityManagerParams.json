@@ -19,7 +19,7 @@
         "duplicateCheckFieldList": {
             "location": "scopes",
             "fieldDefs": {
-                "type": "bool",
+                "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
@@ -36,7 +36,7 @@
         "duplicateCheckFieldList": {
             "location": "scopes",
             "fieldDefs": {
-                "type": "bool",
+                "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
@@ -53,7 +53,7 @@
         "duplicateCheckFieldList": {
             "location": "scopes",
             "fieldDefs": {
-                "type": "bool",
+                "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
@@ -70,7 +70,7 @@
         "duplicateCheckFieldList": {
             "location": "scopes",
             "fieldDefs": {
-                "type": "bool",
+                "type": "multiEnum",
                 "tooltip": true,
                 "view": "views/admin/entity-manager/fields/duplicate-check-field-list"
             }
