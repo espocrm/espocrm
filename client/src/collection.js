@@ -728,6 +728,14 @@ class Collection {
     }
 
     /**
+     * @deprecated As of v8.0. Use `prepareAttributes`.
+     * @todo Remove in v9.0.
+     */
+    parse(response, options) {
+        return this.prepareAttributes(response, options);
+    }
+
+    /**
      * Fetch from the backend.
      *
      * @param {{
