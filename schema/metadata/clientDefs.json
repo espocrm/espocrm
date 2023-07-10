@@ -388,6 +388,14 @@
                         "description": "An order direction.",
                         "type": "string",
                         "enum": ["asc", "desc"]
+                    },
+                    "selectHandler": {
+                        "type": "string",
+                        "description": "A select handler for providing filters when selecting related records. Should have a method *getFilters* returning a promise."
+                    },
+                    "createHandler": {
+                        "type": "string",
+                        "description": "A create handler. Provides attributes when creating a new related record. Should have a method *getAttributes* returning a promise."
                     }
                 }
             }
