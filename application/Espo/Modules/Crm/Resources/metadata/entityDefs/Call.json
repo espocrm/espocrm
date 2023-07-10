@@ -287,7 +287,8 @@
         "phoneNumbersMap": {
             "type": "jsonObject",
             "notStorable": true,
-            "disabled": true
+            "disabled": true,
+            "customizationDisabled": true
         },
         "assignedUser": {
             "type": "link",
