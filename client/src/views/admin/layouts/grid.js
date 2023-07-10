@@ -461,7 +461,9 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
         afterRender: function () {
             this.makeDraggable();
 
-            this.$el.find('.enabled-well').focus();
+            let wellElement = /** @type {HTMLElement} */this.$el.find('.enabled-well').get(0)
+
+            wellElement.focus({preventScroll: true});
         },
 
         fetch: function () {
