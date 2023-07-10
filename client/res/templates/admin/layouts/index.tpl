@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <a
-                        class="accordion-toggle"
+                        class="accordion-toggle{{#if ../em}} btn btn-link{{/if}}"
                         data-scope="{{scope}}" href="{{url}}"
                     >{{translate scope category='scopeNamesPlural'}}</a>
                 </div>

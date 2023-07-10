@@ -111,6 +111,31 @@ class LayoutIndexView extends View {
         });
     }
 
+    afterRender() {
+        this.controlActiveButton();
+    }
+
+    controlActiveButton() {
+        if (!this.scope) {
+            return;
+        }
+
+        let $header = this.$el.find(`.accordion-toggle[data-scope="${this.scope}"]`);
+
+        this.undisableLinks();
+
+        if (this.em && this.scope && !this.type) {
+            $header.addClass('disabled');
+
+            return;
+        }
+
+        $header.removeClass('disabled');
+
+        this.$el.find(`a.layout-link[data-scope="${this.scope}"][data-type="${this.type}"]`)
+            .addClass('disabled');
+    }
+
     /**
      * @param {MouseEvent} e
      */
@@ -127,11 +152,10 @@ class LayoutIndexView extends View {
         }
 
         this.getRouter().checkConfirmLeaveOut(() => {
-            this.undisableLinks();
-
-            $(e.target).addClass('disabled');
-
             this.openLayout(scope, type);
+
+
+            this.controlActiveButton();
         });
     }
 
@@ -150,8 +174,10 @@ class LayoutIndexView extends View {
                 this.clearView('content');
                 this.type = null;
 
-                this.undisableLinks();
                 this.renderDefaultPage();
+                this.controlActiveButton();
+
+                this.navigate(this.scope);
             });
 
             return;
@@ -221,7 +247,11 @@ class LayoutIndexView extends View {
     }
 
     navigate(scope, type) {
-        let url = '#Admin/layouts/scope=' + scope + '&type=' + type;
+        let url = '#Admin/layouts/scope=' + scope;
+
+        if (type) {
+            url += '&type=' + type;
+        }
 
         if (this.em) {
             url += '&em=true';
