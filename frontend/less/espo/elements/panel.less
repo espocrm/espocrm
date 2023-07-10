@@ -209,7 +209,7 @@
             right: -10px;
         }
 
-        .btn {
+        .btn:not(.btn-link) {
             background-color: transparent;
             border-color: transparent;
             color: @gray-soft;
@@ -463,9 +463,8 @@ body {
 
 .panel {
     > .panel-heading {
-        .btn:hover,
-        .btn:focus
-        {
+        .btn:hover:not(.btn-link),
+        .btn:focus:not(.btn-link) {
             color: var(--btn-text-color);
             > .fa,
             > .fas,
@@ -577,8 +576,8 @@ body {
             color: @panel-style-text;
             background-color: @panel-style-bg;
             border-color: transparent;
-            .btn,
-            .btn-danger {
+            .btn:not(.btn-link),
+            .btn-@{style}:not(.btn-link) {
                 &,
                 &:focus:not(:hover),
                 &:active:not(:hover) {
