@@ -120,6 +120,13 @@ function (Dep, /** module:ui/multi-select*/MultiSelect) {
                         return false;
                     }
 
+                    if (
+                        fields[item].layoutAvailabilityList &&
+                        !fields[item].layoutAvailabilityList.includes('list')
+                    ) {
+                        return false;
+                    }
+
                     if (forbiddenFieldList.indexOf(item) !== -1) {
                         return false;
                     }
