@@ -120,7 +120,7 @@ class LayoutIndexView extends View {
         let scope = $(e.target).data('scope');
         let type = $(e.target).data('type');
 
-        if (this.getView('content')) {
+        if (this.getContentView()) {
             if (this.scope === scope && this.type === type) {
                 return;
             }
@@ -139,6 +139,21 @@ class LayoutIndexView extends View {
      */
     onItemHeaderClick(e) {
         e.preventDefault();
+
+        if (this.em) {
+            if (!this.getContentView()) {
+                return;
+            }
+
+            this.getRouter().checkConfirmLeaveOut(() => {
+                this.clearView('content');
+                this.type = null;
+
+                this.renderDefaultPage();
+            });
+
+            return;
+        }
 
         let $target = $(e.target);
         let scope = $target.data('scope');
@@ -190,7 +205,7 @@ class LayoutIndexView extends View {
             scope: scope,
             type: type,
             setId: this.setId,
-        }, (view) => {
+        }, view => {
             this.renderLayoutHeader();
             view.render();
             Espo.Ui.notify(false);
