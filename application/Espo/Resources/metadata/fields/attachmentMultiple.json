@@ -69,7 +69,7 @@
         "foreign": "parent",
         "layoutRelationshipsDisabled": true,
         "relationName": "attachments",
-        "disabled": true
+        "utility": true
     },
     "notSortable": true,
     "converterClassName": "Espo\\Core\\Utils\\Database\\Orm\\FieldConverters\\AttachmentMultiple",

@@ -168,15 +168,18 @@ class MergeRecordView extends View {
                 continue;
             }
 
-            if (fieldsDefs[field].disabled) {
+            if (
+                fieldsDefs[field].disabled ||
+                fieldsDefs[field].utility ||
+                fieldsDefs[field].mergeDisabled
+            ) {
                 continue;
             }
 
-            if (fieldsDefs[field].mergeDisabled) {
-                continue;
-            }
-
-            if (field === 'createdAt' || field === 'modifiedAt') {
+            if (
+                field === 'createdAt' ||
+                field === 'modifiedAt'
+            ) {
                 continue;
             }
 

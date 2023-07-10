@@ -116,7 +116,11 @@ function (Dep, /** module:ui/multi-select*/MultiSelect) {
                          .localeCompare(this.translate(v2, 'fields', scope));
                 })
                 .filter(item => {
-                    if (fields[item].disabled || fields[item].listLayoutDisabled) {
+                    if (
+                        fields[item].disabled ||
+                        fields[item].listLayoutDisabled ||
+                        fields[item].utility
+                    ) {
                         return false;
                     }
 

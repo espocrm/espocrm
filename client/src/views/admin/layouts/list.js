@@ -251,6 +251,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             }
 
             return !model.getFieldParam(name, 'disabled') &&
+                !model.getFieldParam(name, 'utility') &&
                 !model.getFieldParam(name, 'layoutListDisabled');
         },
     });

@@ -82,19 +82,18 @@ function (Dep, /** module:ui/select */Select) {
 
             var ignoreFieldList = [];
 
-            fieldList.forEach((field) => {
+            fieldList.forEach(field => {
+                let aclDefs = this.getMetadata().get(['entityAcl', entityType, 'fields', field]) || {};
+                let fieldDefs = this.getMetadata().get(['entityDefs', entityType, 'fields', field]) || {};
+
                 if (
-                    this.getMetadata().get(['entityAcl', entityType, 'fields', field, 'onlyAdmin'])
-                    ||
-                    this.getMetadata().get(['entityAcl', entityType, 'fields', field, 'forbidden'])
-                    ||
-                    this.getMetadata().get(['entityAcl', entityType, 'fields', field, 'internal'])
-                    ||
-                    this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'disabled'])
-                    ||
-                    this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'directAccessDisabled'])
-                    ||
-                    this.getMetadata().get(['entityDefs', entityType, 'fields', field, 'templatePlaceholderDisabled'])
+                    aclDefs.onlyAdmin ||
+                    aclDefs.forbidden ||
+                    aclDefs.internal ||
+                    fieldDefs.disabled ||
+                    fieldDefs.utility ||
+                    fieldDefs.directAccessDisabled ||
+                    fieldDefs.templatePlaceholderDisabled
                 ) {
                     ignoreFieldList.push(field);
                 }
@@ -178,7 +177,7 @@ function (Dep, /** module:ui/select */Select) {
                 var scope = links[link].entity;
                 if (!scope) return;
 
-                if (links[link].disabled) {
+                if (links[link].disabled || links[link].utility) {
                     return;
                 }
 
@@ -196,19 +195,18 @@ function (Dep, /** module:ui/select */Select) {
 
                 var ignoreFieldList = [];
 
-                fieldList.forEach((field) => {
+                fieldList.forEach(field => {
+                    let aclDefs = this.getMetadata().get(['entityAcl', entityType, 'fields', field]) || {};
+                    let fieldDefs = this.getMetadata().get(['entityDefs', entityType, 'fields', field]) || {};
+
                     if (
-                        this.getMetadata().get(['entityAcl', scope, 'fields', field, 'onlyAdmin'])
-                        ||
-                        this.getMetadata().get(['entityAcl', scope, 'fields', field, 'forbidden'])
-                        ||
-                        this.getMetadata().get(['entityAcl', scope, 'fields', field, 'internal'])
-                        ||
-                        this.getMetadata().get(['entityDefs', scope, 'fields', field, 'disabled'])
-                        ||
-                        this.getMetadata().get(['entityDefs', scope, 'fields', field, 'directAccessDisabled'])
-                        ||
-                        this.getMetadata().get(['entityDefs', scope, 'fields', field, 'templatePlaceholderDisabled'])
+                        aclDefs.onlyAdmin ||
+                        aclDefs.forbidden ||
+                        aclDefs.internal ||
+                        fieldDefs.disabled ||
+                        fieldDefs.utility ||
+                        fieldDefs.directAccessDisabled ||
+                        fieldDefs.templatePlaceholderDisabled
                     ) {
                         ignoreFieldList.push(field);
                     }

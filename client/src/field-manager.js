@@ -435,21 +435,28 @@ class FieldManager {
     }
 
     /**
-     * Check whether a field is not disabled, not only-admin, not forbidden and not internal.
+     * Check whether a field is not disabled, not utility, not only-admin, not forbidden and not internal.
      *
      * @param {string} entityType An entity type.
      * @param {string} field A field name.
      * @returns {boolean}
      */
     isEntityTypeFieldAvailable(entityType, field) {
-        if (this.metadata.get(['entityDefs', entityType, 'fields', field, 'disabled'])) {
+        let defs = this.metadata.get(['entityDefs', entityType, 'fields', field]) || {};
+
+        if (
+            defs.disabled ||
+            defs.utility
+        ) {
             return false;
         }
 
+        let aclDefs = this.metadata.get(['entityAcl', entityType, 'fields', field]) || {};
+
         if (
-            this.metadata.get(['entityAcl', entityType, 'fields', field, 'onlyAdmin']) ||
-            this.metadata.get(['entityAcl', entityType, 'fields', field, 'forbidden']) ||
-            this.metadata.get(['entityAcl', entityType, 'fields', field, 'internal'])
+            aclDefs.onlyAdmin ||
+            aclDefs.forbidden ||
+            aclDefs.internal
         ) {
             return false;
         }

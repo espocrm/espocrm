@@ -284,7 +284,9 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                 return;
             }
 
-            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutDetailDisabled');
+            return !model.getFieldParam(name, 'disabled') &&
+                !model.getFieldParam(name, 'utility') &&
+                !model.getFieldParam(name, 'layoutDetailDisabled');
         },
 
         hasDefaultPanel: function () {

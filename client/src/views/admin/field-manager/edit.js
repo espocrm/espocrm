@@ -406,23 +406,20 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         setupDynamicLogicFields: function (hasRequired) {
+            let defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field]) || {};
+
             if (
-                this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'disabled']) ||
-                this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicDisabled']) ||
-                this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'layoutDetailDisabled'])
+                defs.disabled ||
+                defs.dynamicLogicDisabled ||
+                defs.layoutDetailDisabled ||
+                defs.utility
             ) {
                 return Promise.resolve();
             }
 
             let promiseList = [];
 
-            let dynamicLogicVisibleDisabled = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicVisibleDisabled']);
-
-            if (!dynamicLogicVisibleDisabled) {
+            if (!defs.dynamicLogicVisibleDisabled) {
                 let isVisible = this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'visible']);
 
@@ -443,10 +440,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
             let readOnly = this.getMetadata().get(['fields', this.type, 'readOnly']);
 
-            let dynamicLogicRequiredDisabled = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicRequiredDisabled']);
-
-            if (!dynamicLogicRequiredDisabled && !readOnly && hasRequired) {
+            if (!defs.dynamicLogicRequiredDisabled && !readOnly && hasRequired) {
                 let dynamicLogicRequired = this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'required']);
 
@@ -462,10 +456,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.hasDynamicLogicPanel = true;
             }
 
-            let dynamicLogicReadOnlyDisabled = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicReadOnlyDisabled']);
-
-            if (!dynamicLogicReadOnlyDisabled && !readOnly) {
+            if (!defs.dynamicLogicReadOnlyDisabled && !readOnly) {
                 let dynamicLogicReadOnly = this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'readOnly']);
 
@@ -481,13 +472,9 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.hasDynamicLogicPanel = true;
             }
 
-            let typeDynamicLogicOptions = this.getMetadata()
-                .get(['fields', this.type, 'dynamicLogicOptions']);
+            let typeDynamicLogicOptions = this.getMetadata().get(['fields', this.type, 'dynamicLogicOptions']);
 
-            let dynamicLogicOptionsDisabled = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicOptionsDisabled']);
-
-            if (typeDynamicLogicOptions && !dynamicLogicOptionsDisabled) {
+            if (typeDynamicLogicOptions && !defs.dynamicLogicOptionsDisabled) {
                 let dynamicLogicOptions =  this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'options', this.field]);
 
@@ -503,10 +490,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.hasDynamicLogicPanel = true;
             }
 
-            let dynamicLogicInvalidDisabled = this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicInvalidDisabled']);
-
-            if (!dynamicLogicInvalidDisabled && !readOnly) {
+            if (!defs.dynamicLogicInvalidDisabled && !readOnly) {
                 let dynamicLogicInvalid = this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'invalid']);
 

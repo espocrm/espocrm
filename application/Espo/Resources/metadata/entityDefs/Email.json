@@ -10,7 +10,7 @@
             "required": true,
             "notStorable": true,
             "view": "views/email/fields/subject",
-            "disabled": true
+            "utility": true
         },
         "fromName": {
             "type": "varchar",
@@ -60,7 +60,7 @@
         },
         "addressNameMap": {
             "type": "jsonObject",
-            "disabled": true,
+            "utility": true,
             "readOnly": true,
             "customizationDisabled": true
         },
@@ -122,7 +122,7 @@
         "personStringData": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "view": "views/email/fields/person-string-data",
             "customizationDisabled": true
         },
@@ -193,21 +193,21 @@
             "type": "text",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "typeHash": {
             "type": "text",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "idHash": {
             "type": "text",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "messageId": {
@@ -388,13 +388,13 @@
         "isJustSent": {
             "type": "bool",
             "default": false,
-            "disabled": true,
+            "utility": true,
             "notStorable": true,
             "customizationDisabled": true
         },
         "isBeingImported": {
             "type": "bool",
-            "disabled": true,
+            "utility": true,
             "notStorable": true,
             "customizationDisabled": true
         },
@@ -477,7 +477,7 @@
         },
         "createEvent": {
             "type": "base",
-            "disabled": true,
+            "utility": true,
             "notStorable": true,
             "view": "views/email/fields/create-event",
             "customizationDisabled": true,

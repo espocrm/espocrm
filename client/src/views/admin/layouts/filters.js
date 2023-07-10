@@ -123,6 +123,7 @@ define('views/admin/layouts/filters', ['views/admin/layouts/rows'], function (De
             }
 
             return !model.getFieldParam(name, 'disabled') &&
+                !model.getFieldParam(name, 'utility') &&
                 !model.getFieldParam(name, 'layoutFiltersDisabled');
         },
     });

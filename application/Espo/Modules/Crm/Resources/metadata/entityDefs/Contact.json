@@ -20,7 +20,7 @@
         "accountAnyId": {
             "notStorable": true,
             "customizationDisabled": true,
-            "disabled": true,
+            "utility": true,
             "type": "varchar",
             "where": {
                 "=": {
@@ -408,7 +408,7 @@
             "type": "varchar",
             "notStorable": true,
             "exportDisabled": true,
-            "disabled": true,
+            "utility": true,
             "fieldManagerParamList": []
         },
         "acceptanceStatusMeetings": {
@@ -540,7 +540,7 @@
             "type": "bool",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true
+            "utility": true
         }
     },
     "links": {

@@ -81,11 +81,12 @@ define('views/admin/field-manager/fields/foreign/field', ['views/fields/enum'], 
                     return;
                 }
 
-                if (fields[item].notStorable) {
-                    return;
-                }
-
-                if (fields[item].disabled) {
+                if (
+                    fields[item].disabled ||
+                    fields[item].utility ||
+                    fields[item].directAccessDisabled ||
+                    fields[item].notStorable
+                ) {
                     return;
                 }
 

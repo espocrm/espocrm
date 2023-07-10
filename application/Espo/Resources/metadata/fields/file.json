@@ -67,7 +67,7 @@
         "type": "belongsTo",
         "entity": "Attachment",
         "skipOrmDefs": true,
-        "disabled": true
+        "utility": true
     },
     "personalData": true,
     "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\File"

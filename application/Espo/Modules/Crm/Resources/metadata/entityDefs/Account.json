@@ -92,7 +92,7 @@
         "contactRole": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "maxLength": 100,
             "pattern": "$noBadCharacters",
             "layoutMassUpdateDisabled": true,
@@ -107,7 +107,7 @@
             "type": "bool",
             "notStorable": true,
             "default": false,
-            "disabled": true
+            "utility": true
         },
         "billingAddress": {
             "type": "address"
@@ -218,7 +218,7 @@
             "type": "bool",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true
+            "utility": true
         }
     },
     "links": {

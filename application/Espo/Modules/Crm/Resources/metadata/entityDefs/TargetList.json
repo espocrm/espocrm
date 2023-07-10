@@ -64,7 +64,7 @@
             "layoutFiltersDisabled": true,
             "layoutLinkDisabled": true,
             "notStorable": true,
-            "disabled": true
+            "utility": true
         },
         "excludingActionList": {
             "type": "multiEnum",
@@ -73,7 +73,7 @@
             "layoutFiltersDisabled": true,
             "layoutLinkDisabled": true,
             "notStorable": true,
-            "disabled": true
+            "utility": true
         },
         "targetStatus": {
             "type": "enum",

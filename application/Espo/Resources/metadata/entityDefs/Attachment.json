@@ -28,11 +28,11 @@
         "source": {
             "type": "link",
             "readOnly": true,
-            "disabled": true
+            "utility": true
         },
         "field": {
             "type": "varchar",
-            "disabled": true
+            "utility": true
         },
         "isBeingUploaded": {
             "type": "bool",

@@ -4,7 +4,7 @@
             "type": "bool",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true,
+            "utility": true,
             "fieldManagerParamList": []
         }
     },

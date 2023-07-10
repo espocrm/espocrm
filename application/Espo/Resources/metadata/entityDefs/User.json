@@ -40,7 +40,8 @@
             "type": "password",
             "maxLength": 150,
             "internal": true,
-            "disabled": true,
+            "utility": true,
+            "directAccessDisabled": true,
             "fieldManagerParamList": [
                 "tooltipText"
             ]
@@ -49,8 +50,9 @@
             "type": "password",
             "maxLength": 150,
             "internal": true,
-            "disabled": true,
+            "utility": true,
             "notStorable": true,
+            "directAccessDisabled": true,
             "fieldManagerParamList": []
         },
         "authMethod": {
@@ -193,25 +195,25 @@
         "token": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "authTokenId": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "authLogRecordId": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "ipAddress": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "defaultTeam": {
@@ -224,7 +226,7 @@
             "type": "varchar",
             "notStorable": true,
             "exportDisabled": true,
-            "disabled": true,
+            "utility": true,
             "fieldManagerParamList": []
         },
         "acceptanceStatusMeetings": {
@@ -254,7 +256,7 @@
         "teamRole": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "fieldManagerParamList": []
         },
         "teams": {
@@ -315,7 +317,7 @@
             "type": "link",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true
+            "utility": true
         },
         "avatar": {
             "type": "image",
@@ -327,7 +329,7 @@
         "sendAccessInfo": {
             "type": "bool",
             "notStorable": true,
-            "disabled": true
+            "utility": true
         },
         "gender": {
             "type": "enum",
@@ -374,7 +376,7 @@
         },
         "userData": {
             "type": "linkOne",
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "lastAccess": {
@@ -394,7 +396,7 @@
             "readOnly": true,
             "notNull": true,
             "default": "0",
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         }
     },

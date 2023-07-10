@@ -87,7 +87,7 @@
         },
         "dashletsOptions": {
             "type": "jsonObject",
-            "disabled": true
+            "utility": true
         },
         "customUrl": {
             "type": "url"

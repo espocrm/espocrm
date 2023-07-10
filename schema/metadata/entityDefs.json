@@ -297,6 +297,10 @@
                     "type": "boolean",
                     "description": "Disables the field."
                 },
+                "utility": {
+                    "type": "boolean",
+                    "description": "The field will be hidden from a user on the UI but not disabled."
+                },
                 "tooltip": {
                     "type": ["string", "boolean"],
                     "description": "Enable a tooltip for the field. A tooltip text is taken from the language by: {EntityType} > tooltips > {fieldName}. If defined as a string, then text will be taken from the language by: {EntityType} > tooltips > {value}."
@@ -566,6 +570,10 @@
                 "notMergeable": {
                     "type": "boolean",
                     "description": "Disable merging related records when duplicate records are being merged. For hasMany, hasChildren."
+                },
+                "utility": {
+                    "type": "boolean",
+                    "description": "The link will be hidden from a user on the UI but not disabled."
                 }
             }
         },

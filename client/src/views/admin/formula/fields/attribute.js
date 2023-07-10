@@ -51,8 +51,20 @@ function (Dep, /** module:ui/multi-select */MultiSelect) {
 
             Object.keys(links).forEach(link => {
                 var type = links[link].type;
+                let scope = links[link].entity;
 
                 if (!type) {
+                    return;
+                }
+
+                if (!scope) {
+                    return;
+                }
+
+                if (
+                    links[link].disabled ||
+                    links[link].utility
+                ) {
                     return;
                 }
 
@@ -64,21 +76,11 @@ function (Dep, /** module:ui/multi-select */MultiSelect) {
             linkList.sort();
 
             linkList.forEach(link => {
-                let scope = links[link].entity;
-
-                if (!scope) {
-                    return;
-                }
-
-                if (links[link].disabled) {
-                    return;
-                }
-
                 let linkAttributeList = this.getFieldManager()
                     .getEntityTypeAttributeList(scope)
                     .sort();
 
-                linkAttributeList.forEach((item) => {
+                linkAttributeList.forEach(item => {
                     attributeList.push(link + '.' + item);
                 });
             });
