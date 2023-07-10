@@ -127,7 +127,8 @@ class LayoutIndexView extends View {
         }
 
         this.getRouter().checkConfirmLeaveOut(() => {
-            $("#layouts-menu a.layout-link").removeClass('disabled');
+            this.undisableLinks();
+
             $(e.target).addClass('disabled');
 
             this.openLayout(scope, type);
@@ -149,6 +150,7 @@ class LayoutIndexView extends View {
                 this.clearView('content');
                 this.type = null;
 
+                this.undisableLinks();
                 this.renderDefaultPage();
             });
 
@@ -180,6 +182,10 @@ class LayoutIndexView extends View {
 
             this.getContentView().actionSave();
         }
+    }
+
+    undisableLinks() {
+        $("#layouts-menu a.layout-link").removeClass('disabled');
     }
 
     /**
