@@ -249,7 +249,6 @@ return [
     'requiredPhpLibs' => [
         'json',
         'openssl',
-        'pdo_mysql',
         'mbstring',
         'zip',
         'gd',

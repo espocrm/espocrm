@@ -123,6 +123,15 @@ class SystemRequirements
             ];
         }
 
+        uksort($list, function ($k1, $k2) use ($list) {
+            $order = ['version', 'lib', 'param'];
+
+            $a = $list[$k1];
+            $b = $list[$k2];
+
+            return array_search($a['type'], $order) - array_search($b['type'], $order);
+        });
+
         return $list;
     }
 
