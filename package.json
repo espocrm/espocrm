@@ -45,7 +45,7 @@
     "bootstrap": "^3.4.1",
     "bootstrap-colorpicker": "^2.5.2",
     "bootstrap-datepicker": "^1.9.0",
-    "bullbone": "github:yurikuzn/bull#1.2.7",
+    "bullbone": "github:yurikuzn/bull#1.2.8",
     "cronstrue": "^1.114.0",
     "cropper": "^0.7.9",
     "devbridge-autocomplete": "^1.4.11",

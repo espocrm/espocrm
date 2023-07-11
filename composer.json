@@ -6,7 +6,6 @@
     "license": "GPL-3.0-only",
     "require": {
         "php": ">=8.0.2 <8.3.0",
-        "ext-pdo_mysql": "*",
         "ext-openssl": "*",
         "ext-json": "*",
         "ext-zip": "*",
@@ -55,6 +54,8 @@
         "phpstan/phpstan": "^1.8"
     },
     "suggest": {
+        "ext-pdo_mysql": "*",
+        "ext-pdo_pgsql": "*",
         "ext-bcmath": "*",
         "ext-zmq": "*",
         "ext-ldap": "*",

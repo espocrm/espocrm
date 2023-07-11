@@ -35,6 +35,15 @@ use Espo\Core\Utils\File\Manager as FileManager;
 
 class SystemRequirements
 {
+    private const PLATFORM_MYSQL = 'Mysql';
+    private const PLATFORM_POSTGRESQL = 'Postgresql';
+
+    /** @var array<string, string> */
+    private $pdoExtensionMap = [
+        self::PLATFORM_MYSQL => 'pdo_mysql',
+        self::PLATFORM_POSTGRESQL => 'pdo_pgsql',
+    ];
+
     public function __construct(
         private Config $config,
         private FileManager $fileManager,
@@ -100,7 +109,28 @@ class SystemRequirements
             ]);
         }
 
-        return $this->getRequiredList('phpRequirements', $requiredList);
+        $list = $this->getRequiredList('phpRequirements', $requiredList);
+
+        $pdoExtension = $this->getPdoExtension();
+
+        if ($pdoExtension) {
+            $acceptable = $this->systemHelper->hasPhpExtension($pdoExtension);
+
+            $list[$pdoExtension] = [
+                'type' => 'lib',
+                'acceptable' => $acceptable,
+                'actual' => $acceptable ? 'On' : 'Off',
+            ];
+        }
+
+        return $list;
+    }
+
+    private function getPdoExtension(): ?string
+    {
+        $platform = $this->config->get('database.platform') ?? self::PLATFORM_MYSQL;
+
+        return $this->pdoExtensionMap[$platform] ?? null;
     }
 
     /**
