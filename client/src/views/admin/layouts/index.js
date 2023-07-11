@@ -261,12 +261,12 @@ class LayoutIndexView extends View {
     }
 
     renderDefaultPage() {
-        $("#layout-header").html('').hide();
-        $("#layout-content").html(this.translate('selectLayout', 'messages', 'Admin'));
+        $('#layout-header').html('').hide();
+        $('#layout-content').html(this.translate('selectLayout', 'messages', 'Admin'));
     }
 
     renderLayoutHeader() {
-        let $header = $("#layout-header");
+        let $header = $('#layout-header');
 
         if (!this.scope) {
             $header.html('');
@@ -274,14 +274,21 @@ class LayoutIndexView extends View {
             return;
         }
 
-        let html = '';
+        let list = [];
+
+        let separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
 
         if (!this.em) {
-            html += this.getLanguage().translate(this.scope, 'scopeNamesPlural') +
-            " <span class=\"breadcrumb-separator\"><span class=\"chevron-right\"></span></span> ";
+            list.push(
+                $('<span>').text(this.translate(this.scope, 'scopeNames'))
+            );
         }
 
-        html += this.getLanguage().translate(this.type, 'layouts', 'Admin');
+        list.push(
+            $('<span>').text(this.translateLayoutName(this.type, this.scope))
+        );
+
+        let html = list.map($item => $item.get(0).outerHTML).join(' ' + separatorHtml + ' ');
 
         $header.show().html(html);
     }
@@ -293,23 +300,47 @@ class LayoutIndexView extends View {
     getHeaderHtml() {
         let separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
 
-        let html = "<a href=\"#Admin\">" + this.translate('Administration') + "</a> " + separatorHtml + ' ';
+        let list = [];
+
+        let $root = $('<a>')
+            .attr('href', '#Admin')
+            .text(this.translate('Administration'));
+
+        list.push($root);
 
         if (this.em) {
-            html += "<a href=\"#Admin/entityManager\">" +
-                this.translate('Entity Manager', 'labels', 'Admin') + "</a>";
+            list.push(
+                $('<a>')
+                    .attr('href', '#Admin/entityManager')
+                    .text(this.translate('Entity Manager', 'labels', 'Admin'))
+            );
 
             if (this.scope) {
-                html += ' ' + separatorHtml + ' ' +
-                    "<a href=\"#Admin/entityManager/scope=" + this.scope + "\">" +
-                    this.translate(this.scope, 'scopeNames') + '</a>' +
-                    ' ' + separatorHtml + ' ' + this.translate('Layouts', 'labels', 'EntityManager');
+                list.push(
+                    $('<a>')
+                        .attr('href', `#Admin/entityManager/scope=` + this.scope)
+                        .text(this.translate(this.scope, 'scopeNames'))
+                );
+
+                list.push(
+                    $('<span>').text(this.translate('Layouts'), 'labels', 'EntityManager')
+                );
             }
         } else {
-            html += this.translate('Layout Manager', 'labels', 'Admin');
+            list.push(
+                $('<span>').text(this.translate('Layout Manager', 'labels', 'Admin'))
+            );
         }
 
-        return html;
+        return list.map($item => $item.get(0).outerHTML).join(' ' + separatorHtml + ' ');
+    }
+
+    translateLayoutName(type, scope) {
+        if (this.getLanguage().get(scope, 'layouts', type)) {
+            return this.getLanguage().translate(type, 'layouts', scope);
+        }
+
+        return this.getLanguage().translate(type, 'layouts', 'Admin');
     }
 
     getLayoutScopeDataList() {
@@ -367,6 +398,7 @@ class LayoutIndexView extends View {
                 typeDataList.push({
                     type: type,
                     url: url,
+                    label: this.translateLayoutName(type, scope),
                 });
             });
 

@@ -21,7 +21,7 @@
                                     data-type="{{type}}"
                                     data-scope="{{../scope}}"
                                     href="{{url}}"
-                                >{{translate type scope='Admin' category='layouts'}}</a>
+                                >{{label}}</a>
                             </li>
                         {{/each}}
                         </ul>
@@ -34,7 +34,7 @@
 
     <div id="layouts-panel" class="col-sm-9">
         <h4 id="layout-header" style="margin-top: 0px;"></h4>
-        <div id="layout-content">
+        <div id="layout-content" class="">
             {{{content}}}
         </div>
     </div>
