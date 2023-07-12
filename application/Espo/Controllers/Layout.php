@@ -32,7 +32,6 @@ namespace Espo\Controllers;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Tools\Layout\Service as Service;
@@ -41,14 +40,10 @@ use stdClass;
 
 class Layout
 {
-    private User $user;
-    private Service $service;
-
-    public function __construct(User $user, Service $service)
-    {
-        $this->user = $user;
-        $this->service = $service;
-    }
+    public function __construct(
+        private User $user,
+        private Service $service)
+    {}
 
     /**
      * @return mixed
