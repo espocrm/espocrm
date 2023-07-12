@@ -37,6 +37,7 @@ use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Tools\Layout\Service as Service;
 use Espo\Entities\User;
+use stdClass;
 
 class Layout
 {
@@ -103,7 +104,7 @@ class Layout
     }
 
     /**
-     * @return mixed
+     * @return array<int, mixed>|stdClass|null
      * @throws Forbidden
      * @throws BadRequest
      * @throws NotFound
@@ -125,7 +126,7 @@ class Layout
     }
 
     /**
-     * @return mixed
+     * @return array<int, mixed>|stdClass|null
      * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
