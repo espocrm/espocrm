@@ -26,199 +26,255 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/base', ['view'], function (Dep) {
+/** @module module:views/admin/layouts/base */
 
-    return Dep.extend({
+import View from 'view';
 
-        scope: null,
+class LayoutBaseView extends View {
 
-        type: null,
+    /**
+     * @type {string}
+     */
+    scope
+    /**
+     * @type {string}
+     */
+    type
 
-        events: {
-            'click button[data-action="save"]': function () {
-                this.actionSave();
-            },
-            'click button[data-action="cancel"]': function () {
-                this.cancel();
-            },
-            'click button[data-action="resetToDefault"]': function () {
-                this.confirm(this.translate('confirmation', 'messages'), () => {
-                    this.resetToDefault();
-                });
-            },
+    events = {
+        /** @this LayoutBaseView */
+        'click button[data-action="save"]': function () {
+            this.actionSave();
         },
+        /** @this LayoutBaseView */
+        'click button[data-action="cancel"]': function () {
+            this.cancel();
+        },
+        /** @this LayoutBaseView */
+        'click button[data-action="resetToDefault"]': function () {
+            this.confirm(this.translate('confirmation', 'messages'), () => {
+                this.resetToDefault();
+            });
+        },
+        /** @this LayoutBaseView */
+        'click button[data-action="remove"]': function () {
+            this.actionDelete();
+        },
+    }
 
-        buttonList: [
-            {
-                name: 'save',
-                label: 'Save',
-                style: 'primary',
-            },
-            {
-                name: 'cancel',
-                label: 'Cancel',
-            },
-            {
+    buttonList = [
+        {
+            name: 'save',
+            label: 'Save',
+            style: 'primary',
+        },
+        {
+            name: 'cancel',
+            label: 'Cancel',
+        },
+    ]
+
+    // noinspection JSUnusedGlobalSymbols
+    dataAttributes = null
+    dataAttributesDefs = null
+    dataAttributesDynamicLogicDefs = null
+
+    setup() {
+        this.buttonList = _.clone(this.buttonList);
+        this.events = _.clone(this.events);
+        this.scope = this.options.scope;
+        this.type = this.options.type;
+        this.setId = this.options.setId;
+        this.em = this.options.em;
+
+        let defs = this.getMetadata()
+            .get(['clientDefs', this.scope, 'additionalLayouts', this.type]) ?? {};
+
+        this.dataAttributeList = Espo.Utils.clone(defs.dataAttributeList || this.dataAttributeList);
+
+        this.isCustom = !!defs.isCustom;
+
+        if (this.isCustom && this.em) {
+            this.buttonList.push({
+                name: 'remove',
+                label: 'Remove',
+            })
+        }
+
+        if (!this.isCustom) {
+            this.buttonList.push({
                 name: 'resetToDefault',
                 label: 'Reset to Default',
-            }
-        ],
-
-        dataAttributes: null,
-
-        dataAttributesDefs: null,
-
-        dataAttributesDynamicLogicDefs: null,
-
-        actionSave: function () {
-            this.disableButtons();
-            Espo.Ui.notify(this.translate('saving', 'messages'));
-            this.save(this.enableButtons.bind(this));
-        },
-
-        disableButtons: function () {
-            this.$el.find('.button-container button').attr('disabled', true);
-        },
-
-        enableButtons: function () {
-            this.$el.find('.button-container button').removeAttr('disabled');
-        },
-
-        setConfirmLeaveOut: function (value) {
-            this.getRouter().confirmLeaveOut = value;
-        },
-
-        setIsChanged: function () {
-            this.isChanged = true;
-            this.setConfirmLeaveOut(true);
-        },
-
-        setIsNotChanged: function () {
-            this.isChanged = false;
-            this.setConfirmLeaveOut(false);
-        },
-
-        save: function (callback) {
-            var layout = this.fetch();
-
-            if (!this.validate(layout)) {
-                this.enableButtons();
-
-                return false;
-            }
-
-            this.getHelper()
-                .layoutManager
-                .set(this.scope, this.type, layout, () => {
-                    this.notify('Saved', 'success', 2000);
-
-                    this.setIsNotChanged();
-
-                    if (typeof callback === 'function') {
-                        callback();
-                    }
-
-                    this.getHelper().broadcastChannel.postMessage('update:layout');
-                }, this.setId)
-                .catch(() => this.enableButtons());
-        },
-
-        resetToDefault: function () {
-            this.getHelper().layoutManager.resetToDefault(this.scope, this.type, () => {
-                this.cancel();
-            }, this.options.setId);
-        },
-
-        reset: function () {
-            this.render();
-        },
-
-        fetch: function () {},
-
-        setup: function () {
-            this.buttonList = _.clone(this.buttonList);
-            this.events = _.clone(this.events);
-            this.scope = this.options.scope;
-            this.type = this.options.type;
-            this.setId = this.options.setId;
-
-            this.dataAttributeList =
-                this.getMetadata()
-                    .get(['clientDefs', this.scope, 'additionalLayouts', this.type, 'dataAttributeList']) ||
-                this.dataAttributeList;
-
-            this.dataAttributeList = Espo.Utils.clone(this.dataAttributeList);
-        },
-
-        unescape: function (string) {
-            if (string === null) {
-                return '';
-            }
-
-            var map = {
-                '&amp;': '&',
-                '&lt;': '<',
-                '&gt;': '>',
-                '&quot;': '"',
-                '&#x27;': "'",
-            };
-
-            var reg = new RegExp('(' + _.keys(map).join('|') + ')', 'g');
-
-            return ('' + string).replace(reg, match => {
-                return map[match];
             });
-        },
+        }
+    }
 
-        getEditAttributesModalViewOptions: function (attributes) {
-            return {
-                name: attributes.name,
-                scope: this.scope,
-                attributeList: this.dataAttributeList,
-                attributeDefs: this.dataAttributesDefs,
-                dynamicLogicDefs: this.dataAttributesDynamicLogicDefs,
-                attributes: attributes,
-                languageCategory: this.languageCategory,
-                headerText: ' ',
-            };
-        },
+    actionSave() {
+        this.disableButtons();
+        Espo.Ui.notify(this.translate('saving', 'messages'));
 
-        openEditDialog: function (attributes) {
-            let name = attributes.name;
+        this.save(this.enableButtons.bind(this));
+    }
 
-            let viewOptions = this.getEditAttributesModalViewOptions(attributes);
+    disableButtons() {
+        this.$el.find('.button-container button').attr('disabled', 'disabled');
+    }
 
-            this.createView('editModal', 'views/admin/layouts/modals/edit-attributes', viewOptions, view => {
-                view.render();
+    enableButtons() {
+        this.$el.find('.button-container button').removeAttr('disabled');
+    }
 
-                this.listenToOnce(view, 'after:save', attributes => {
-                    this.trigger('update-item', name, attributes);
+    setConfirmLeaveOut(value) {
+        this.getRouter().confirmLeaveOut = value;
+    }
 
-                    let $li = $("#layout ul > li[data-name='" + name + "']");
+    setIsChanged() {
+        this.isChanged = true;
+        this.setConfirmLeaveOut(true);
+    }
 
-                    for (let key in attributes) {
-                        $li.attr('data-' + key, attributes[key]);
-                        $li.data(key, attributes[key]);
-                        $li.find('.' + key + '-value').text(attributes[key]);
-                    }
+    setIsNotChanged() {
+        this.isChanged = false;
+        this.setConfirmLeaveOut(false);
+    }
 
-                    view.close();
+    save(callback) {
+        var layout = this.fetch();
 
-                    this.setIsChanged();
-                });
-            });
-        },
+        if (!this.validate(layout)) {
+            this.enableButtons();
 
-        cancel: function () {
-            this.loadLayout(() => {
+            return false;
+        }
+
+        this.getHelper()
+            .layoutManager
+            .set(this.scope, this.type, layout, () => {
+                Espo.Ui.success(this.translate('Saved'));
+
                 this.setIsNotChanged();
 
-                this.reRender();
-            });
-        },
+                if (typeof callback === 'function') {
+                    callback();
+                }
 
-        validate: function (layout) {
-            return true;
-        },
-    });
-});
+                this.getHelper().broadcastChannel.postMessage('update:layout');
+            }, this.setId)
+            .catch(() => this.enableButtons());
+    }
+
+    resetToDefault() {
+        this.getHelper().layoutManager.resetToDefault(this.scope, this.type, () => {
+            this.cancel();
+        }, this.options.setId);
+    }
+
+    reset() {
+        this.render();
+    }
+
+    fetch() {}
+
+    unescape(string) {
+        if (string === null) {
+            return '';
+        }
+
+        var map = {
+            '&amp;': '&',
+            '&lt;': '<',
+            '&gt;': '>',
+            '&quot;': '"',
+            '&#x27;': "'",
+        };
+
+        var reg = new RegExp('(' + _.keys(map).join('|') + ')', 'g');
+
+        return ('' + string).replace(reg, match => {
+            return map[match];
+        });
+    }
+
+    getEditAttributesModalViewOptions(attributes) {
+        return {
+            name: attributes.name,
+            scope: this.scope,
+            attributeList: this.dataAttributeList,
+            attributeDefs: this.dataAttributesDefs,
+            dynamicLogicDefs: this.dataAttributesDynamicLogicDefs,
+            attributes: attributes,
+            languageCategory: this.languageCategory,
+            headerText: ' ',
+        };
+    }
+
+    openEditDialog(attributes) {
+        let name = attributes.name;
+
+        let viewOptions = this.getEditAttributesModalViewOptions(attributes);
+
+        this.createView('editModal', 'views/admin/layouts/modals/edit-attributes', viewOptions, view => {
+            view.render();
+
+            this.listenToOnce(view, 'after:save', attributes => {
+                this.trigger('update-item', name, attributes);
+
+                let $li = $("#layout ul > li[data-name='" + name + "']");
+
+                for (let key in attributes) {
+                    $li.attr('data-' + key, attributes[key]);
+                    $li.data(key, attributes[key]);
+                    $li.find('.' + key + '-value').text(attributes[key]);
+                }
+
+                view.close();
+
+                this.setIsChanged();
+            });
+        });
+    }
+
+    cancel() {
+        this.loadLayout(() => {
+            this.setIsNotChanged();
+
+            if (this.em) {
+                this.trigger('cancel');
+
+                return;
+            }
+
+            this.reRender();
+        });
+    }
+
+    // noinspection JSUnusedLocalSymbols
+    validate(layout) {
+        return true;
+    }
+
+    actionDelete() {
+        this.confirm(this.translate('confirmation', 'messages'))
+            .then(() => {
+                this.disableButtons();
+
+                Espo.Ui.notify(' ... ');
+
+                Espo.Ajax
+                    .postRequest('Layout/action/delete', {
+                        scope: this.scope,
+                        name: this.type,
+                    })
+                    .then(() => {
+                        Espo.Ui.success(this.translate('Removed'), {suppress: true});
+
+                        this.trigger('after-delete');
+                    })
+                    .catch(() => {
+                        this.enableButtons();
+                    });
+            });
+    }
+}
+
+export default LayoutBaseView;

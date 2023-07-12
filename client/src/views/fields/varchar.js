@@ -326,7 +326,9 @@ class VarcharFieldView extends BaseFieldView {
             return false;
         }
 
-        this.showValidationMessage(result.message, '[data-name="' + name + '"]');
+        let message = result.message.replace('{field}', this.getLanguage().translate(this.getLabelText()));
+
+        this.showValidationMessage(message, '[data-name="' + name + '"]');
 
         return true;
     }

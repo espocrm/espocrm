@@ -37,6 +37,34 @@ import ActionItemSetup from 'helpers/action-item-setup';
  */
 class DetailRecordView extends BaseRecordView {
 
+    /**
+     * @param {{
+     *     model: module:model,
+     *     scope?: string,
+     *     layoutName?: string,
+     *     detailLayout?: module:views/record/detail~panelDefs[],
+     *     readOnly?: boolean,
+     *     rootUrl?: string,
+     *     returnUrl?: string,
+     *     returnAfterCreate?: string,
+     *     editModeDisabled?: boolean,
+     *     confirmLeaveDisabled?: boolean,
+     *     isWide?: boolean,
+     *     sideView?: string,
+     *     bottomView?: string,
+     *     inlineEditDisabled?: boolean,
+     *     navigateButtonsDisabled?: boolean,
+     *     accessControlDisabled?: boolean,
+     *     dynamicLogicDefs?: Object,
+     *     attributes?: Object.<string, *>,
+     *     buttonList?: module:views/record/detail~button[],
+     *     dropdownItemList?: module:views/record/detail~dropdownItem[],
+     * } | Object.<string, *>} options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
+
     /** @inheritDoc */
     template = 'record/detail'
 
@@ -163,7 +191,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {string} [html] An HTML.
      * @property {string} [text] A text.
      * @property {boolean} [hidden] Hidden.
-     * @property {Object.<string,string>} [data] Data attributes.
+     * @property {Object.<string, string>} [data] Data attributes.
      * @property {string} [title] A title (not translatable).
      * @property {boolean} [disabled] Disabled.
      */
@@ -395,6 +423,7 @@ class DetailRecordView extends BaseRecordView {
      *
      * @protected
      * @type {Object}
+     * @todo Add typedef.
      */
     dynamicLogicDefs = {}
 
@@ -459,6 +488,14 @@ class DetailRecordView extends BaseRecordView {
      * @type {string}
      */
     dynamicHandlerClassName
+
+    /**
+     * Disable access control.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    accessControlDisabled
 
     /**
      * A Ctrl+Enter shortcut action.

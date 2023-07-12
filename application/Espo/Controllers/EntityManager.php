@@ -259,6 +259,14 @@ class EntityManager
             $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
 
+        if (array_key_exists('layout', $data)) {
+            $params['layout'] = $data['layout'];
+        }
+
+        if (array_key_exists('layoutForeign', $data)) {
+            $params['layoutForeign'] = $data['layoutForeign'];
+        }
+
         /** @var array{
          *   linkType: string,
          *   entity: string,
@@ -272,6 +280,8 @@ class EntityManager
          *   linkMultipleFieldForeign?: bool,
          *   audited?: bool,
          *   auditedForeign?: bool,
+         *   layout?: string,
+         *   layoutForeign?: string,
          * } $params
          */
 
@@ -280,6 +290,10 @@ class EntityManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function postActionUpdateLink(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -326,6 +340,14 @@ class EntityManager
             $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
 
+        if (array_key_exists('layout', $data)) {
+            $params['layout'] = $data['layout'];
+        }
+
+        if (array_key_exists('auditedForeign', $data)) {
+            $params['layoutForeign'] = $data['layoutForeign'];
+        }
+
         /**
          * @var array{
          *   entity: string,
@@ -340,6 +362,8 @@ class EntityManager
          *   auditedForeign?: bool,
          *   parentEntityTypeList?: string[],
          *   foreignLinkEntityTypeList?: string[],
+         *   layout?: string,
+         *   layoutForeign?: string,
          * } $params
          */
 

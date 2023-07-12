@@ -42,7 +42,8 @@
         "foreignLinkEntityTypeList": "Foreign Links",
         "optimisticConcurrencyControl": "Optimistic concurrency control",
         "updateDuplicateCheck": "Duplicate check on update",
-        "duplicateCheckFieldList": "Duplicate check fields"
+        "duplicateCheckFieldList": "Duplicate check fields",
+        "layout": "Layout"
     },
     "options": {
         "type": {

@@ -29,11 +29,15 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\InjectableFactory;
+use Espo\Tools\Layout\CustomLayoutService;
+use Espo\Tools\Layout\LayoutDefs;
 use Espo\Tools\Layout\Service as Service;
 use Espo\Entities\User;
 use stdClass;
@@ -42,8 +46,9 @@ class Layout
 {
     public function __construct(
         private User $user,
-        private Service $service)
-    {}
+        private Service $service,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     /**
      * @return mixed
@@ -142,5 +147,76 @@ class Layout
         }
 
         return $this->service->getOriginal($scope, $name, $setId);
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws Conflict
+     */
+    public function postActionCreate(Request $request): bool
+    {
+        if (!$this->user->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        $body = $request->getParsedBody();
+
+        $scope = $body->scope ?? null;
+        $name = $body->name ?? null;
+        $type = $body->type ?? null;
+        $label = $body->label ?? null;
+
+        if (
+            !is_string($scope) ||
+            !is_string($name) ||
+            !is_string($type) ||
+            !is_string($label) ||
+            !$scope ||
+            !$name ||
+            !$type ||
+            !$label
+        ) {
+            throw new BadRequest();
+        }
+
+        $defs = new LayoutDefs($scope, $name, $type, $label);
+
+        $service = $this->injectableFactory->create(CustomLayoutService::class);
+
+        $service->create($defs);
+
+        return true;
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws BadRequest
+     */
+    public function postActionDelete(Request $request): bool
+    {
+        if (!$this->user->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        $body = $request->getParsedBody();
+
+        $scope = $body->scope ?? null;
+        $name = $body->name ?? null;
+
+        if (
+            !is_string($scope) ||
+            !is_string($name) ||
+            !$scope ||
+            !$name
+        ) {
+            throw new BadRequest();
+        }
+
+        $service = $this->injectableFactory->create(CustomLayoutService::class);
+
+        $service->delete($scope, $name);
+
+        return true;
     }
 }

@@ -35,6 +35,8 @@
         "Layout": "Layout"
     },
     "messages": {
+        "alreadyExists": "Layout `{name}` already exists.",
+        "createInfo": "Custom list layouts can be used by relationship panels.",
         "cantBeEmpty": "Layout can't be empty.",
         "fieldsIncompatible": "Fields can't be on the layout together: {fields}."
     },

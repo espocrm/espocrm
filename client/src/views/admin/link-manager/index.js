@@ -26,301 +26,307 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/link-manager/index', ['view'], function (Dep) {
+/** @module views/admin/link-manager/index */
 
-    return Dep.extend({
+import View from 'view';
 
-        template: 'admin/link-manager/index',
+class LinkManagerIndexView extends View {
 
-        scopeDataList: null,
+    template = 'admin/link-manager/index'
 
-        scope: null,
+    scope = null
 
-        data: function () {
-            return {
-                linkDataList: this.linkDataList,
-                scope: this.scope,
-            };
+    data() {
+        return {
+            linkDataList: this.linkDataList,
+            scope: this.scope,
+        };
+    }
+
+    events = {
+        /** @this LinkManagerIndexView */
+        'click a[data-action="editLink"]': function (e) {
+            var link = $(e.currentTarget).data('link');
+
+            this.editLink(link);
         },
-
-        events: {
-            'click a[data-action="editLink"]': function (e) {
-                var link = $(e.currentTarget).data('link');
-                this.editLink(link);
-            },
-            'click button[data-action="createLink"]': function (e) {
-                this.createLink();
-            },
-            'click [data-action="removeLink"]': function (e) {
-                var link = $(e.currentTarget).data('link');
-                this.confirm(this.translate('confirmation', 'messages'), function () {
-                    this.removeLink(link);
-                }, this);
-            },
-            'keyup input[data-name="quick-search"]': function (e) {
-                this.processQuickSearch(e.currentTarget.value);
-            },
+        /** @this LinkManagerIndexView */
+        'click button[data-action="createLink"]': function (e) {
+            this.createLink();
         },
+        /** @this LinkManagerIndexView */
+        'click [data-action="removeLink"]': function (e) {
+            var link = $(e.currentTarget).data('link');
+            this.confirm(this.translate('confirmation', 'messages'), function () {
+                this.removeLink(link);
+            }, this);
+        },
+        /** @this LinkManagerIndexView */
+        'keyup input[data-name="quick-search"]': function (e) {
+            this.processQuickSearch(e.currentTarget.value);
+        },
+    }
 
-        computeRelationshipType: function (type, foreignType) {
-            if (type == 'hasMany') {
-                if (foreignType == 'hasMany') {
-                    return 'manyToMany';
-                }
-                else if (foreignType == 'belongsTo') {
-                    return 'oneToMany';
-                }
-                else {
-                    return;
-                }
+    computeRelationshipType(type, foreignType) {
+        if (type == 'hasMany') {
+            if (foreignType == 'hasMany') {
+                return 'manyToMany';
             }
-            else if (type == 'belongsTo') {
-                if (foreignType == 'hasMany') {
-                    return 'manyToOne';
-                }
-                else if (foreignType == 'hasOne') {
-                    return 'oneToOneRight';
-                }
-                else {
-                    return;
-                }
+            else if (foreignType == 'belongsTo') {
+                return 'oneToMany';
             }
-            else if (type == 'belongsToParent') {
-                if (foreignType == 'hasChildren') {
-                    return 'childrenToParent'
-                }
-
+            else {
                 return;
             }
-            else if (type == 'hasChildren') {
-                if (foreignType == 'belongsToParent') {
-                    return 'parentToChildren'
-                }
-
+        }
+        else if (type == 'belongsTo') {
+            if (foreignType == 'hasMany') {
+                return 'manyToOne';
+            }
+            else if (foreignType == 'hasOne') {
+                return 'oneToOneRight';
+            }
+            else {
                 return;
             }
-            else if (type === 'hasOne') {
-                if (foreignType == 'belongsTo') {
-                    return 'oneToOneLeft';
-                }
-
-                return;
+        }
+        else if (type == 'belongsToParent') {
+            if (foreignType == 'hasChildren') {
+                return 'childrenToParent'
             }
-        },
 
-        setupLinkData: function () {
-            this.linkDataList = [];
+            return;
+        }
+        else if (type == 'hasChildren') {
+            if (foreignType == 'belongsToParent') {
+                return 'parentToChildren'
+            }
 
-            var links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
+            return;
+        }
+        else if (type === 'hasOne') {
+            if (foreignType == 'belongsTo') {
+                return 'oneToOneLeft';
+            }
 
-            var linkList = Object.keys(links).sort((v1, v2) => {
-                return v1.localeCompare(v2);
-            });
+            return;
+        }
+    }
 
-            linkList.forEach((link) => {
-                var d = links[link];
+    setupLinkData() {
+        this.linkDataList = [];
 
-                var linkForeign = d.foreign;
+        var links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
 
-                if (d.type === 'belongsToParent') {
-                    var type = 'childrenToParent';
-                }
-                else {
-                    if (!d.entity) {
-                        return;
-                    }
+        var linkList = Object.keys(links).sort((v1, v2) => {
+            return v1.localeCompare(v2);
+        });
 
-                    if (!linkForeign) {
-                        return;
-                    }
+        linkList.forEach((link) => {
+            var d = links[link];
 
-                    var foreignType = this.getMetadata()
-                        .get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
+            var linkForeign = d.foreign;
 
-                    var type = this.computeRelationshipType(d.type, foreignType);
-                }
-
-                if (!type) {
+            if (d.type === 'belongsToParent') {
+                var type = 'childrenToParent';
+            }
+            else {
+                if (!d.entity) {
                     return;
                 }
 
-                this.linkDataList.push({
-                    link: link,
-                    isCustom: d.isCustom,
-                    isRemovable: d.isCustom,
-                    customizable: d.customizable,
-                    type: type,
-                    entityForeign: d.entity,
-                    entity: this.scope,
-                    labelEntityForeign: this.getLanguage().translate(d.entity, 'scopeNames'),
-                    linkForeign: linkForeign,
-                    label: this.getLanguage().translate(link, 'links', this.scope),
-                    labelForeign: this.getLanguage().translate(d.foreign, 'links', d.entity),
-                });
-            });
-        },
+                if (!linkForeign) {
+                    return;
+                }
 
-        setup: function () {
-            this.scope = this.options.scope || null;
+                var foreignType = this.getMetadata()
+                    .get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
 
-            this.setupLinkData();
+                var type = this.computeRelationshipType(d.type, foreignType);
+            }
 
-            this.on('after:render', () => {
-                this.renderHeader();
-            });
-        },
+            if (!type) {
+                return;
+            }
 
-        afterRender: function () {
-            this.$noData = this.$el.find('.no-data');
-        },
-
-        createLink: function () {
-            this.createView('edit', 'views/admin/link-manager/modals/edit', {
-                scope: this.scope
-            }, (view) => {
-                view.render();
-
-                this.listenTo(view, 'after:save', () => {
-                    this.clearView('edit');
-
-                    this.setupLinkData();
-                    this.render();
-                });
-
-                this.listenTo(view, 'close', () => {
-                    this.clearView('edit');
-                });
-            });
-        },
-
-        editLink: function (link) {
-            this.createView('edit', 'views/admin/link-manager/modals/edit', {
-                scope: this.scope,
+            this.linkDataList.push({
                 link: link,
-            }, (view) => {
-                view.render();
+                isCustom: d.isCustom,
+                isRemovable: d.isCustom,
+                customizable: d.customizable,
+                type: type,
+                entityForeign: d.entity,
+                entity: this.scope,
+                labelEntityForeign: this.getLanguage().translate(d.entity, 'scopeNames'),
+                linkForeign: linkForeign,
+                label: this.getLanguage().translate(link, 'links', this.scope),
+                labelForeign: this.getLanguage().translate(d.foreign, 'links', d.entity),
+            });
+        });
+    }
 
-                this.listenTo(view, 'after:save', () => {
-                    this.clearView('edit');
+    setup() {
+        this.scope = this.options.scope || null;
 
+        this.setupLinkData();
+
+        this.on('after:render', () => {
+            this.renderHeader();
+        });
+    }
+
+    afterRender() {
+        this.$noData = this.$el.find('.no-data');
+    }
+
+    createLink() {
+        this.createView('edit', 'views/admin/link-manager/modals/edit', {
+            scope: this.scope,
+        }, view => {
+            view.render();
+
+            this.listenTo(view, 'after:save', () => {
+                this.clearView('edit');
+
+                this.setupLinkData();
+                this.render();
+            });
+
+            this.listenTo(view, 'close', () => {
+                this.clearView('edit');
+            });
+        });
+    }
+
+    editLink(link) {
+        this.createView('edit', 'views/admin/link-manager/modals/edit', {
+            scope: this.scope,
+            link: link,
+        }, view => {
+            view.render();
+
+            this.listenTo(view, 'after:save', () => {
+                this.clearView('edit');
+
+                this.setupLinkData();
+                this.render();
+            });
+
+            this.listenTo(view, 'close', () => {
+                this.clearView('edit');
+            });
+        });
+    }
+
+    removeLink(link) {
+        Espo.Ajax
+            .postRequest('EntityManager/action/removeLink', {
+                entity: this.scope,
+                link: link,
+            })
+            .then(() => {
+                this.$el.find('table tr[data-link="'+link+'"]').remove();
+
+                this.getMetadata().loadSkipCache().then(() => {
                     this.setupLinkData();
+
                     this.render();
                 });
-
-                this.listenTo(view, 'close', () => {
-                    this.clearView('edit');
-                });
             });
-        },
+    }
 
-        removeLink: function (link) {
-            Espo.Ajax
-                .postRequest('EntityManager/action/removeLink', {
-                    entity: this.scope,
-                    link: link,
-                })
-                .then(() => {
-                    this.$el.find('table tr[data-link="'+link+'"]').remove();
+    renderHeader() {
+        if (!this.scope) {
+            $('#scope-header').html('');
 
-                    this.getMetadata().loadSkipCache().then(() => {
-                        this.setupLinkData();
+            return;
+        }
 
-                        this.render();
-                    });
-                });
-        },
+        $('#scope-header').show().html(this.getLanguage().translate(this.scope, 'scopeNames'));
+    }
 
-        renderHeader: function () {
-            if (!this.scope) {
-                $('#scope-header').html('');
+    updatePageTitle() {
+        this.setPageTitle(this.getLanguage().translate('Entity Manager', 'labels', 'Admin'));
+    }
 
-                return;
+    processQuickSearch(text) {
+        text = text.trim();
+
+        let $noData = this.$noData;
+
+        $noData.addClass('hidden');
+
+        if (!text) {
+            this.$el.find('table tr.link-row').removeClass('hidden');
+
+            return;
+        }
+
+        let matchedList = [];
+
+        let lowerCaseText = text.toLowerCase();
+
+        this.linkDataList.forEach(item => {
+            let matched = false;
+
+            let label = item.label || '';
+            let link = item.link || '';
+            let entityForeign = item.entityForeign || '';
+            let labelEntityForeign = item.labelEntityForeign || '';
+
+            if (
+                label.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                link.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                entityForeign.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                labelEntityForeign.toLowerCase().indexOf(lowerCaseText) === 0
+            ) {
+                matched = true;
             }
 
-            $('#scope-header').show().html(this.getLanguage().translate(this.scope, 'scopeNames'));
-        },
+            if (!matched) {
+                let wordList = link.split(' ')
+                    .concat(
+                        label.split(' ')
+                    )
+                    .concat(
+                        entityForeign.split(' ')
+                    )
+                    .concat(
+                        labelEntityForeign.split(' ')
+                    );
 
-        updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Entity Manager', 'labels', 'Admin'));
-        },
-
-        processQuickSearch: function (text) {
-            text = text.trim();
-
-            let $noData = this.$noData;
-
-            $noData.addClass('hidden');
-
-            if (!text) {
-                this.$el.find('table tr.link-row').removeClass('hidden');
-
-                return;
-            }
-
-            let matchedList = [];
-
-            let lowerCaseText = text.toLowerCase();
-
-            this.linkDataList.forEach(item => {
-                let matched = false;
-
-                let label = item.label || '';
-                let link = item.link || '';
-                let entityForeign = item.entityForeign || '';
-                let labelEntityForeign = item.labelEntityForeign || '';
-
-                if (
-                    label.toLowerCase().indexOf(lowerCaseText) === 0 ||
-                    link.toLowerCase().indexOf(lowerCaseText) === 0 ||
-                    entityForeign.toLowerCase().indexOf(lowerCaseText) === 0 ||
-                    labelEntityForeign.toLowerCase().indexOf(lowerCaseText) === 0
-                ) {
-                    matched = true;
-                }
-
-                if (!matched) {
-                    let wordList = link.split(' ')
-                        .concat(
-                            label.split(' ')
-                        )
-                        .concat(
-                            entityForeign.split(' ')
-                        )
-                        .concat(
-                            labelEntityForeign.split(' ')
-                        );
-
-                    wordList.forEach((word) => {
-                        if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
-                            matched = true;
-                        }
-                    });
-                }
-
-                if (matched) {
-                    matchedList.push(link);
-                }
-            });
-
-            if (matchedList.length === 0) {
-                this.$el.find('table tr.link-row').addClass('hidden');
-
-                $noData.removeClass('hidden');
-
-                return;
-            }
-
-            this.linkDataList
-                .map(item => item.link)
-                .forEach(scope => {
-                    if (!~matchedList.indexOf(scope)) {
-                        this.$el.find('table tr.link-row[data-link="'+scope+'"]').addClass('hidden');
-
-                        return;
+                wordList.forEach((word) => {
+                    if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
+                        matched = true;
                     }
-
-                    this.$el.find('table tr.link-row[data-link="'+scope+'"]').removeClass('hidden');
                 });
-        },
-    });
-});
+            }
+
+            if (matched) {
+                matchedList.push(link);
+            }
+        });
+
+        if (matchedList.length === 0) {
+            this.$el.find('table tr.link-row').addClass('hidden');
+
+            $noData.removeClass('hidden');
+
+            return;
+        }
+
+        this.linkDataList
+            .map(item => item.link)
+            .forEach(scope => {
+                if (!~matchedList.indexOf(scope)) {
+                    this.$el.find('table tr.link-row[data-link="'+scope+'"]').addClass('hidden');
+
+                    return;
+                }
+
+                this.$el.find('table tr.link-row[data-link="'+scope+'"]').removeClass('hidden');
+            });
+    }
+}
+
+export default LinkManagerIndexView;

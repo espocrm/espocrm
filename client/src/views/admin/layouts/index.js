@@ -27,6 +27,8 @@
  ************************************************************************/
 
 import View from 'view';
+import LayoutDefaultPageView from 'views/admin/layouts/default-page';
+import LayoutCreateModalView from 'views/admin/layouts/modals/create';
 
 class LayoutIndexView extends View {
 
@@ -71,6 +73,8 @@ class LayoutIndexView extends View {
         this.addHandler('click', '#layouts-menu a.layout-link', 'onLayoutLinkClick');
         this.addHandler('click', 'a.accordion-toggle', 'onItemHeaderClick');
         this.addHandler('keydown.shortcuts', '', 'onKeyDown');
+
+        this.addActionHandler('createLayout', () => this.actionCreateLayout());
 
         this.em = this.options.em || false;
         this.scope = this.options.scope || null;
@@ -154,9 +158,18 @@ class LayoutIndexView extends View {
         this.getRouter().checkConfirmLeaveOut(() => {
             this.openLayout(scope, type);
 
-
             this.controlActiveButton();
         });
+    }
+
+    openDefaultPage() {
+        this.clearView('content');
+        this.type = null;
+
+        this.renderDefaultPage();
+        this.controlActiveButton();
+
+        this.navigate(this.scope);
     }
 
     /**
@@ -171,13 +184,7 @@ class LayoutIndexView extends View {
             }
 
             this.getRouter().checkConfirmLeaveOut(() => {
-                this.clearView('content');
-                this.type = null;
-
-                this.renderDefaultPage();
-                this.controlActiveButton();
-
-                this.navigate(this.scope);
+                this.openDefaultPage();
             });
 
             return;
@@ -237,12 +244,30 @@ class LayoutIndexView extends View {
             scope: scope,
             type: type,
             setId: this.setId,
+            em: this.em,
         }, view => {
             this.renderLayoutHeader();
             view.render();
             Espo.Ui.notify(false);
 
             $(window).scrollTop(0);
+
+            if (this.em) {
+                this.listenToOnce(view, 'cancel', () => {
+                    this.openDefaultPage();
+                });
+
+                this.listenToOnce(view, 'after-delete', () => {
+                    this.openDefaultPage();
+
+                    Promise.all([
+                        this.getMetadata().loadSkipCache(),
+                        this.getLanguage().loadSkipCache(),
+                    ]).then(() => {
+                        this.reRender();
+                    });
+                });
+            }
         });
     }
 
@@ -262,6 +287,18 @@ class LayoutIndexView extends View {
 
     renderDefaultPage() {
         $('#layout-header').html('').hide();
+
+        if (this.em) {
+            this.assignView('default', new LayoutDefaultPageView(), '#layout-content')
+                .then(/** LayoutDefaultPageView */view => {
+                    view.render();
+                });
+
+            return;
+        }
+
+        this.clearView('default');
+
         $('#layout-content').html(this.translate('selectLayout', 'messages', 'Admin'));
     }
 
@@ -323,7 +360,7 @@ class LayoutIndexView extends View {
                 );
 
                 list.push(
-                    $('<span>').text(this.translate('Layouts'), 'labels', 'EntityManager')
+                    $('<span>').text(this.translate('Layouts', 'labels', 'EntityManager'))
                 );
             }
         } else {
@@ -409,6 +446,23 @@ class LayoutIndexView extends View {
         });
 
         return dataList;
+    }
+
+    actionCreateLayout() {
+        const view = new LayoutCreateModalView({scope: this.scope});
+
+        this.assignView('dialog', view).then(/** LayoutCreateModalView */view => {
+            view.render();
+
+            this.listenToOnce(view, 'done', () => {
+                Promise.all([
+                    this.getMetadata().loadSkipCache(),
+                    this.getLanguage().loadSkipCache(),
+                ]).then(() => {
+                    this.reRender();
+                });
+            });
+        });
     }
 }
 

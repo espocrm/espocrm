@@ -627,6 +627,8 @@ class EntityManager
      *   linkMultipleFieldForeign?: bool,
      *   audited?: bool,
      *   auditedForeign?: bool,
+     *   layout?: string,
+     *   layoutForeign?: string,
      * } $params
      * @throws BadRequest
      * @throws Error
@@ -1078,6 +1080,8 @@ class EntityManager
             $this->metadata->set('entityDefs', $entityForeign, $dataRight);
         }
 
+        $this->setLayouts($params);
+
         $this->metadata->save();
 
         $this->language->set($entity, 'fields', $link, $label);
@@ -1129,6 +1133,8 @@ class EntityManager
      *   auditedForeign?: bool,
      *   parentEntityTypeList?: string[],
      *   foreignLinkEntityTypeList?: string[],
+     *   layout?: string,
+     *   layoutForeign?: string,
      * } $params
      * @throws BadRequest
      * @throws Error
@@ -1291,6 +1297,9 @@ class EntityManager
                 $this->updateParentForeignLinks($entity, $link, $linkForeign, $foreignLinkEntityTypeList);
             }
         }
+
+        $this->setLayouts($params);
+        $this->metadata->save();
 
         $label = null;
 
@@ -1717,5 +1726,35 @@ class EntityManager
         }
 
         return $result;
+    }
+
+    /**
+     * @param array{
+     *   entity: string,
+     *   link: string,
+     *   entityForeign?: ?string,
+     *   linkForeign?: ?string,
+     *   layout?: string,
+     *   layoutForeign?: string,
+     * } $params
+     */
+    private function setLayouts(array $params): void
+    {
+        $this->setLayout($params['entity'], $params['link'], $params['layout'] ?? null);
+
+        if (isset($params['entityForeign']) && isset($params['linkForeign'])) {
+            $this->setLayout($params['entityForeign'], $params['linkForeign'], $params['layoutForeign'] ?? null);
+        }
+    }
+
+    private function setLayout(string $entityType, string $link, ?string $layout): void
+    {
+        $this->metadata->set('clientDefs', $entityType, [
+            'relationshipPanels' => [
+                $link => [
+                    'layout' => $layout,
+                ]
+            ]
+        ]);
     }
 }

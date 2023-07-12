@@ -310,6 +310,12 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
 
                 this.setIsNotChanged();
 
+                if (this.em) {
+                    this.trigger('cancel');
+
+                    return;
+                }
+
                 this.setupPanels(() => {
                     countLoaded ++;
 
