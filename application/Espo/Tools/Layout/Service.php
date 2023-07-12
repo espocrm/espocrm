@@ -29,8 +29,6 @@
 
 namespace Espo\Tools\Layout;
 
-use Espo\Entities\LayoutRecord;
-
 use Espo\Core\Acl;
 use Espo\Core\Acl\Exceptions\NotImplemented;
 use Espo\Core\DataManager;
@@ -41,11 +39,11 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Layout as LayoutUtil;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\LayoutSet;
-use Espo\Entities\Portal as PortalEntity;
-use Espo\Entities\Team as TeamEntity;
+use Espo\Entities\Portal;
+use Espo\Entities\Team;
 use Espo\Entities\User;
+use Espo\Entities\LayoutRecord;
 use Espo\Tools\LayoutManager\LayoutManager;
 
 use stdClass;
@@ -89,10 +87,8 @@ class Service
         }
 
         if ($result === false) {
-            $methodName = 'getOriginal' . ucfirst($name);
-
-            if (method_exists($this, $methodName)) {
-                $result = $this->$methodName($scope, $setId);
+            if ($name === 'bottomPanelsDetail') {
+                return $this->getOriginalBottomPanelsDetail($scope);
             }
         }
 
@@ -112,7 +108,7 @@ class Service
                 throw new Forbidden();
             }
         }
-        catch (NotImplemented $e) {}
+        catch (NotImplemented) {}
 
         $layoutSetId = null;
         $data = null;
@@ -125,7 +121,7 @@ class Service
 
             if ($portalId) {
                 $portal = $em
-                    ->getRDBRepositoryByClass(PortalEntity::class)
+                    ->getRDBRepositoryByClass(Portal::class)
                     ->select(['layoutSetId'])
                     ->where(['id' => $portalId])
                     ->findOne();
@@ -139,7 +135,7 @@ class Service
 
             if ($teamId) {
                 $team = $em
-                    ->getRDBRepositoryByClass(TeamEntity::class)
+                    ->getRDBRepositoryByClass(Team::class)
                     ->select(['layoutSetId'])
                     ->where(['id' => $teamId])
                     ->findOne();
@@ -154,16 +150,14 @@ class Service
             $nameReal = $name;
 
             if ($user->isPortal()) {
-                if (substr($name, -6) === 'Portal') {
+                if (str_ends_with($name, 'Portal')) {
                     $nameReal = substr($name, 0, -6);
                 }
             }
 
             $layout = $this->getRecordFromSet($scope, $nameReal, $layoutSetId, true);
 
-            if ($layout) {
-                $data = $layout->get('data');
-            }
+            $data = $layout?->get('data');
         }
 
         if (!$data) {
@@ -171,12 +165,9 @@ class Service
 
             $data = Json::decode($dataString);
         }
-        else {
-            $dataString = Json::encode($data);
-        }
 
         if (is_null($data)) {
-            throw new NotFound("Layout {$scope}:{$name} is not found.");
+            throw new NotFound("Layout $scope:$name is not found.");
         }
 
         if (!$this->user->isAdmin()) {
@@ -186,7 +177,7 @@ class Service
                         $link = $item;
 
                         if (is_object($item)) {
-                            /** @var \stdClass $item */
+                            /** @var stdClass $item */
                             $link = $item->name ?? null;
                         }
 
@@ -206,10 +197,8 @@ class Service
         }
 
         if ($data === false) {
-            $methodName = 'getForFrontend' . ucfirst($name);
-
-            if (method_exists($this, $methodName)) {
-                $data = $this->$methodName($scope);
+            if ($name === 'bottomPanelsDetail') {
+                return $this->getForFrontendBottomPanelsDetail($scope);
             }
         }
 
@@ -231,7 +220,7 @@ class Service
         $layoutSet = $entityManager->getEntityById(LayoutSet::ENTITY_TYPE, $setId);
 
         if (!$layoutSet) {
-            throw new NotFound("LayoutSet {$setId} not found.");
+            throw new NotFound("LayoutSet $setId not found.");
         }
 
         $layoutList = $layoutSet->get('layoutList') ?? [];
@@ -243,7 +232,7 @@ class Service
                 return null;
             }
 
-            throw new NotFound("Layout {$fullName} is no allowed in set.");
+            throw new NotFound("Layout $fullName is no allowed in set.");
         }
 
         return $entityManager
@@ -316,10 +305,8 @@ class Service
 
         $this->layoutManager->resetToDefault($scope, $name);
 
-        $methodName = 'resetToDefault' . ucfirst($name);
-
-        if (method_exists($this, $methodName)) {
-            $this->$methodName($scope);
+        if ($name === 'bottomPanelsDetail') {
+            $this->resetToDefaultBottomPanelsDetail($scope);
         }
 
         return $this->getOriginal($scope, $name);
@@ -329,7 +316,7 @@ class Service
      * @throws Error
      * @throws NotFound
      */
-    protected function getOriginalBottomPanelsDetail(string $scope, ?string $setId = null): stdClass
+    private function getOriginalBottomPanelsDetail(string $scope): stdClass
     {
         $relationships = $this->getOriginal($scope, 'relationships') ?? [];
 
@@ -369,12 +356,12 @@ class Service
      * @throws NotFound
      * @throws Error
      */
-    protected function getForFrontendBottomPanelsDetail(string $scope): stdClass
+    private function getForFrontendBottomPanelsDetail(string $scope): stdClass
     {
         return $this->getOriginalBottomPanelsDetail($scope);
     }
 
-    protected function resetToDefaultBottomPanelsDetail(string $scope): void
+    private function resetToDefaultBottomPanelsDetail(string $scope): void
     {
         $this->layoutManager->resetToDefault($scope, 'relationships');
     }
