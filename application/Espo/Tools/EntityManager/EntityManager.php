@@ -1457,6 +1457,9 @@ class EntityManager
             'links.' . $linkForeign
         ]);
 
+        $this->metadata->delete('clientDefs', $entity, ['relationshipPanels.' . $link]);
+        $this->metadata->delete('clientDefs', $entityForeign, ['relationshipPanels.' . $linkForeign]);
+
         $this->metadata->save();
 
         if ($linkParams) {
