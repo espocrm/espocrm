@@ -38,7 +38,7 @@ import ActionItemSetup from 'helpers/action-item-setup';
 class DetailRecordView extends BaseRecordView {
 
     /**
-     * @param {{
+     * @typedef {{
      *     model: module:model,
      *     scope?: string,
      *     layoutName?: string,
@@ -59,7 +59,11 @@ class DetailRecordView extends BaseRecordView {
      *     attributes?: Object.<string, *>,
      *     buttonList?: module:views/record/detail~button[],
      *     dropdownItemList?: module:views/record/detail~dropdownItem[],
-     * } | Object.<string, *>} options Options.
+     * } | Object.<string, *>} module:views/record/detail~options
+     */
+
+    /**
+     * @param {module:views/record/detail~options} options Options.
      */
     constructor(options) {
         super(options);

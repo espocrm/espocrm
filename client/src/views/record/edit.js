@@ -73,6 +73,19 @@ class EditRecordView extends DetailRecordView {
     /** @inheritDoc */
     setupHandlerType = 'record/edit'
 
+    /**
+     * @param {
+     *     module:views/record/detail~options |
+     *     {
+     *         duplicateSourceId?: string,
+     *         focusForCreate?: boolean,
+     *     }
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
+
     /** @inheritDoc */
     actionSave(data) {
         data = data || {};
