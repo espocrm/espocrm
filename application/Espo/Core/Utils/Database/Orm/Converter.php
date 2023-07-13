@@ -448,7 +448,9 @@ class Converter
             }
 
             /** @var ?class-string<FieldConverter> $className */
-            $className = $this->metadata->get(['fields', $type, 'converterClassName']);
+            $className =
+                $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'converterClassName']) ??
+                $this->metadata->get(['fields', $type, 'converterClassName']);
 
             if ($className) {
                 $toUnset =

@@ -391,6 +391,10 @@
                     },
                     "description": "Fields that are incompatible with the subject field on detail view layouts."
                 },
+                "converterClassName": {
+                    "type": "string",
+                    "description": "Converts field defs to ORM metadata. Should implement Espo\\Core\\Utils\\Database\\Orm\\FieldConverter."
+                },
                 "select": {
                     "type": "object",
                     "description": "A custom complex expression to be used for the field when reading from DB. It's possible to define leftJoins and joins that are needed to be applied when the field is being selected.",
