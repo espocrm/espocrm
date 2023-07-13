@@ -966,7 +966,7 @@ class BaseRecordView extends View {
      * Save.
      *
      * @param {module:views/record/base~saveOptions} [options] Options.
-     * @return {Promise<never,string>}
+     * @return {Promise}
      */
     save(options) {
         options = options || {};

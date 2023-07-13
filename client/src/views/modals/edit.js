@@ -339,12 +339,12 @@ class EditModalView extends ModalView {
 
     // noinspection JSUnusedGlobalSymbols
     actionFullForm() {
-        var url;
-        var router = this.getRouter();
+        let url;
+        let router = this.getRouter();
 
-        var attributes;
-        var model;
-        var options;
+        let attributes;
+        let model;
+        let options;
 
         if (!this.id) {
             url = '#' + this.scope + '/create';
