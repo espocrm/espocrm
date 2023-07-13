@@ -359,6 +359,10 @@
                     "type": "boolean",
                     "description": "Disables the ability to add the field in formula-script, templates and some other tools."
                 },
+                "directUpdateDisabled": {
+                    "type": "boolean",
+                    "description": "Indicates that updating the field directly is not possible."
+                },
                 "importDisabled": {
                     "type": "boolean",
                     "description": "Disables the ability to import the field."
