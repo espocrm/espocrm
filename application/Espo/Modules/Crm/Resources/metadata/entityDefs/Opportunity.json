@@ -245,7 +245,7 @@
                             "from": "ContactOpportunity",
                             "select": ["opportunityId"],
                             "whereClause": {
-                                "deleted": 0,
+                                "deleted": false,
                                 "role": "{value}"
                             }
                         }
@@ -264,7 +264,7 @@
                             "from": "ContactOpportunity",
                             "select": ["opportunityId"],
                             "whereClause": {
-                                "deleted": 0,
+                                "deleted": false,
                                 "role": "{value}"
                             }
                         }
@@ -290,7 +290,7 @@
                             "from": "ContactOpportunity",
                             "select": ["opportunityId"],
                             "whereClause": {
-                                "deleted": 0,
+                                "deleted": false,
                                 "role": null
                             }
                         }

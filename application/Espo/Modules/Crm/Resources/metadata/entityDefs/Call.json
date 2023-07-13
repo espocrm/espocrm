@@ -107,7 +107,7 @@
                                 "from": "CallContact",
                                 "select": ["callId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -117,7 +117,7 @@
                                 "from": "CallLead",
                                 "select": ["callId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -127,7 +127,7 @@
                                 "from": "CallUser",
                                 "select": ["callId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -152,7 +152,7 @@
                                 "from": "CallContact",
                                 "select": ["callId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -162,7 +162,7 @@
                                 "from": "CallLead",
                                 "select": ["callId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -172,7 +172,7 @@
                                 "from": "CallUser",
                                 "select": ["callId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -195,7 +195,7 @@
                                 "from": "CallContact",
                                 "select": ["callId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": null
                                 }
                             }
@@ -205,7 +205,7 @@
                                 "from": "CallLead",
                                 "select": ["callId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": null
                                 }
                             }
@@ -215,7 +215,7 @@
                                 "from": "CallUser",
                                 "select": ["callId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": null
                                 }
                             }

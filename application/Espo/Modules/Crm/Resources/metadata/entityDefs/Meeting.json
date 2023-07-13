@@ -109,7 +109,7 @@
                                 "from": "ContactMeeting",
                                 "select": ["meetingId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -119,7 +119,7 @@
                                 "from": "LeadMeeting",
                                 "select": ["meetingId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -129,7 +129,7 @@
                                 "from": "MeetingUser",
                                 "select": ["meetingId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -154,7 +154,7 @@
                                 "from": "ContactMeeting",
                                 "select": ["meetingId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -164,7 +164,7 @@
                                 "from": "LeadMeeting",
                                 "select": ["meetingId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -174,7 +174,7 @@
                                 "from": "MeetingUser",
                                 "select": ["meetingId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": "{value}"
                                 }
                             }
@@ -197,7 +197,7 @@
                                 "from": "ContactMeeting",
                                 "select": ["meetingId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": null
                                 }
                             }
@@ -207,7 +207,7 @@
                                 "from": "LeadMeeting",
                                 "select": ["meetingId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": null
                                 }
                             }
@@ -217,7 +217,7 @@
                                 "from": "MeetingUser",
                                 "select": ["meetingId"],
                                 "whereClause": {
-                                    "deleted": 0,
+                                    "deleted": false,
                                     "status": null
                                 }
                             }

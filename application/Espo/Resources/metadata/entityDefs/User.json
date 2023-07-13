@@ -150,7 +150,7 @@
                             "from": "TeamUser",
                             "select": ["userId"],
                             "whereClause": {
-                                "deleted": 0,
+                                "deleted": false,
                                 "role": "{value}"
                             }
                         }
