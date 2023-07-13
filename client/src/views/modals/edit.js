@@ -43,7 +43,6 @@ class EditModalView extends ModalView {
     fullFormDisabled = false
     editView = null
     escapeDisabled = true
-    fitHeight = true
     className = 'dialog dialog-record'
     sideDisabled = false
     bottomDisabled = false
@@ -318,7 +317,7 @@ class EditModalView extends ModalView {
                         let msg = this.translate('Created')  + '\n' +
                             `[${name}](${url})`;
 
-                        Espo.Ui.notify(msg, 'success', 4000, true);
+                        Espo.Ui.notify(msg, 'success', 4000, {suppress: true});
                     }
 
                     return;
@@ -338,6 +337,7 @@ class EditModalView extends ModalView {
         this.actionSave({bypassClose: true});
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionFullForm() {
         var url;
         var router = this.getRouter();
