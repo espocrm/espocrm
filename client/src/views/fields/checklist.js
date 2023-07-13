@@ -28,40 +28,36 @@
 
 /** @module views/fields/checklist */
 
-import Dep from 'views/fields/array';
+import ArrayFieldView from 'views/fields/array';
 
-/**
- * @class Class
- * @extends module:views/fields/base
- */
-export default Dep.extend(/** @lends Class# */{
+class ChecklistFieldView extends ArrayFieldView {
 
-    type: 'checklist',
+    type = 'checklist'
 
-    listTemplate: 'fields/array/list',
-    detailTemplate: 'fields/checklist/detail',
-    editTemplate: 'fields/checklist/edit',
+    listTemplate = 'fields/array/list'
+    detailTemplate = 'fields/checklist/detail'
+    editTemplate = 'fields/checklist/edit'
 
-    isInversed: false,
+    isInversed = false
 
-    events: {},
+    events = {}
 
-    data: function () {
+    data() {
         return {
             optionDataList: this.getOptionDataList(),
-            ...Dep.prototype.data.call(this),
+            ...super.data(),
         };
-    },
+    }
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
         this.params.options = this.params.options || [];
 
         this.isInversed = this.params.isInversed || this.options.isInversed || this.isInversed;
-    },
+    }
 
-    afterRender: function () {
+    afterRender() {
         if (this.isSearchMode()) {
             this.renderSearch();
         }
@@ -71,9 +67,9 @@ export default Dep.extend(/** @lends Class# */{
                 this.trigger('change');
             });
         }
-    },
+    }
 
-    getOptionDataList: function () {
+    getOptionDataList() {
         let valueList = this.model.get(this.name) || [];
         let list = [];
 
@@ -96,13 +92,14 @@ export default Dep.extend(/** @lends Class# */{
         });
 
         return list;
-    },
+    }
 
-    fetch: function () {
+    fetch() {
         let list = [];
 
         this.params.options.forEach(item => {
             let $item = this.$el.find('input[data-name="' + item + '"]');
+
             let isChecked = $item.get(0) && $item.get(0).checked;
 
             if (this.isInversed) {
@@ -119,9 +116,9 @@ export default Dep.extend(/** @lends Class# */{
         data[this.name] = list;
 
         return data;
-    },
+    }
 
-    validateRequired: function () {
+    validateRequired() {
         if (!this.isRequired()) {
             return;
         }
@@ -129,16 +126,16 @@ export default Dep.extend(/** @lends Class# */{
         let value = this.model.get(this.name);
 
         if (!value || value.length === 0) {
-            var msg = this.translate('fieldIsRequired', 'messages')
+            let msg = this.translate('fieldIsRequired', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg, '.checklist-item-container:last-child input');
 
             return true;
         }
-    },
+    }
 
-    validateMaxCount: function () {
+    validateMaxCount() {
         if (!this.params.maxCount) {
             return;
         }
@@ -155,5 +152,7 @@ export default Dep.extend(/** @lends Class# */{
 
             return true;
         }
-    },
-});
+    }
+}
+
+export default ChecklistFieldView;
