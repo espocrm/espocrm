@@ -91,136 +91,147 @@
             "where": {
                 "=": {
                     "whereClause": {
-                        "OR": {
-                            "contactsMiddle.status": "{value}",
-                            "leadsMiddle.status": "{value}",
-                            "usersMiddle.status": "{value}"
-                        }
-                    },
-                    "leftJoins": ["users", "contacts", "leads"],
-                    "distinct": true
+                        "OR": [
+                            {
+                                "id=s": {
+                                    "from": "CallContact",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
+                                }
+                            },
+                            {
+                                "id=s": {
+                                    "from": "CallLead",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
+                                }
+                            },
+                            {
+                                "id=s": {
+                                    "from": "CallUser",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
                 },
                 "<>": {
-                    "whereClause": [
-                        {
-                            "id!=s": {
-                                "from": "CallContact",
-                                "select": ["callId"],
-                                "whereClause": {
-                                    "deleted": false,
-                                    "status": "{value}"
+                    "whereClause": {
+                        "AND": [
+                            {
+                                "id!=s": {
+                                    "from": "CallContact",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
+                                }
+                            },
+                            {
+                                "id!=s": {
+                                    "from": "CallLead",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
+                                }
+                            },
+                            {
+                                "id!=s": {
+                                    "from": "CallUser",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "id!=s": {
-                                "from": "CallLead",
-                                "select": ["callId"],
-                                "whereClause": {
-                                    "deleted": false,
-                                    "status": "{value}"
-                                }
-                            }
-                        },
-                        {
-                            "id!=s": {
-                                "from": "CallUser",
-                                "select": ["callId"],
-                                "whereClause": {
-                                    "deleted": false,
-                                    "status": "{value}"
-                                }
-                            }
-                        }
-                    ]
+                        ]
+                    }
                 },
                 "IN": {
-                    "leftJoins": ["users", "leads", "contacts"],
                     "whereClause": {
-                        "OR": {
-                            "contactsMiddle.status": "{value}",
-                            "leadsMiddle.status": "{value}",
-                            "usersMiddle.status": "{value}"
-                        }
-                    },
-                    "distinct": true
+                        "OR": [
+                            {
+                                "id=s": {
+                                    "from": "CallContact",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
+                                }
+                            },
+                            {
+                                "id=s": {
+                                    "from": "CallLead",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
+                                }
+                            },
+                            {
+                                "id=s": {
+                                    "from": "CallUser",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
                 },
                 "NOT IN": {
-                    "whereClause": [
-                        {
-                            "id!=s": {
-                                "from": "CallContact",
-                                "select": ["callId"],
-                                "whereClause": {
-                                    "deleted": false,
-                                    "status": "{value}"
-                                }
-                            }
-                        },
-                        {
-                            "id!=s": {
-                                "from": "CallLead",
-                                "select": ["callId"],
-                                "whereClause": {
-                                    "deleted": false,
-                                    "status": "{value}"
-                                }
-                            }
-                        },
-                        {
-                            "id!=s": {
-                                "from": "CallUser",
-                                "select": ["callId"],
-                                "whereClause": {
-                                    "deleted": false,
-                                    "status": "{value}"
-                                }
-                            }
-                        }
-                    ]
-                },
-                "IS NULL": {
-                    "leftJoins": ["users", "contacts", "leads"],
                     "whereClause": {
-                        "contactsMiddle.status": null,
-                        "leadsMiddle.status": null,
-                        "usersMiddle.status": null
-                    },
-                    "distinct": true
-                },
-                "IS NOT NULL": {
-                    "whereClause": [
-                        {
-                            "id!=s": {
-                                "from": "CallContact",
-                                "select": ["callId"],
-                                "whereClause": {
-                                    "deleted": false,
-                                    "status": null
+                        "AND": [
+                            {
+                                "id!=s": {
+                                    "from": "CallContact",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
+                                }
+                            },
+                            {
+                                "id!=s": {
+                                    "from": "CallLead",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
+                                }
+                            },
+                            {
+                                "id!=s": {
+                                    "from": "CallUser",
+                                    "select": ["callId"],
+                                    "whereClause": {
+                                        "deleted": false,
+                                        "status": "{value}"
+                                    }
                                 }
                             }
-                        },
-                        {
-                            "id!=s": {
-                                "from": "CallLead",
-                                "select": ["callId"],
-                                "whereClause": {
-                                    "deleted": false,
-                                    "status": null
-                                }
-                            }
-                        },
-                        {
-                            "id!=s": {
-                                "from": "CallUser",
-                                "select": ["callId"],
-                                "whereClause": {
-                                    "deleted": false,
-                                    "status": null
-                                }
-                            }
-                        }
-                    ]
+                        ]
+                    }
                 }
             },
             "view": "crm:views/meeting/fields/acceptance-status"
