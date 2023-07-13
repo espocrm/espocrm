@@ -148,6 +148,7 @@ class VarcharFieldView extends BaseFieldView {
         });
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * Compose an autocomplete URL.
      *

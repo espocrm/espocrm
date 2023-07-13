@@ -53,19 +53,19 @@ class LinkFieldView extends BaseFieldView {
      *
      * @type {string}
      */
-    nameName = null
+    nameName
 
     /**
      * An ID attribute name.
      *
      * @type {string}
      */
-    idName = null
+    idName
 
     /**
      * A foreign entity type.
      *
-     * @type {string}
+     * @type {string|null}
      */
     foreignScope = null
 
@@ -557,19 +557,21 @@ class LinkFieldView extends BaseFieldView {
                     let $elementOneOf = this.$el.find('input.element-one-of');
 
                     $elementOneOf.autocomplete({
-                        serviceUrl: q => {
-                            return this.getAutocompleteUrl(q);
+                        serviceUrl: () => {
+                            return this.getAutocompleteUrl();
                         },
                         minChars: 1,
                         paramName: 'q',
                         noCache: true,
                         formatResult: suggestion => {
+                            // noinspection JSUnresolvedReference
                             return this.getHelper().escapeString(suggestion.name);
                         },
                         transformResult: response => {
                             return this._transformAutocompleteResult(JSON.parse(response));
                         },
                         onSelect: s => {
+                            // noinspection JSUnresolvedReference
                             this.addLinkOneOf(s.id, s.name);
 
                             $elementOneOf.val('');

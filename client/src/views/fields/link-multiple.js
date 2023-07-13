@@ -319,6 +319,7 @@ class LinkMultipleFieldView extends BaseFieldView {
 
                 this.deleteLink(id);
 
+                // noinspection JSUnresolvedReference
                 this.$element.get(0).focus({preventScroll: true});
             };
         }
@@ -426,20 +427,21 @@ class LinkMultipleFieldView extends BaseFieldView {
                 });
 
                 this.$element.autocomplete({
-                    serviceUrl: (q) => {
-                        return this.getAutocompleteUrl(q);
+                    serviceUrl: () => {
+                        return this.getAutocompleteUrl();
                     },
                     minChars: 1,
                     paramName: 'q',
                     noCache: true,
                     autoSelectFirst: true,
                     triggerSelectOnValidInput: false,
-                    beforeRender: ($c) => {
+                    beforeRender: $c => {
                         if (this.$element.hasClass('input-sm')) {
                             $c.addClass('small');
                         }
                     },
-                    formatResult: (suggestion) => {
+                    formatResult: suggestion => {
+                        // noinspection JSUnresolvedReference
                         return this.getHelper().escapeString(suggestion.name);
                     },
                     transformResult: response => {
@@ -461,6 +463,7 @@ class LinkMultipleFieldView extends BaseFieldView {
                         };
                     },
                     onSelect: s => {
+                        // noinspection JSUnresolvedReference
                         this.addLink(s.id, s.name);
 
                         this.$element.val('');
@@ -487,6 +490,7 @@ class LinkMultipleFieldView extends BaseFieldView {
 
             if (this.isEditMode()) {
                 if (this.sortable) {
+                    // noinspection JSUnresolvedReference
                     this.$el.find('.link-container').sortable({
                         stop: () => {
                             this.fetchFromDom();
@@ -625,9 +629,10 @@ class LinkMultipleFieldView extends BaseFieldView {
         return $el;
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * @param {string} id An ID.
-     * @return {string|null}
+     * @return {string}
      */
     getIconHtml(id) {
         return this.iconHtml;
@@ -637,12 +642,13 @@ class LinkMultipleFieldView extends BaseFieldView {
      * Get an item HTML for detail mode.
      *
      * @param {string} id An ID.
+     * @param {string} [name] A name.
      * @return {string}
      */
-    getDetailLinkHtml(id) {
+    getDetailLinkHtml(id, name) {
         // Do not use the `html` method to avoid XSS.
 
-        let name = this.nameHash[id] || id;
+        name = name || this.nameHash[id] || id;
 
         if (!name && id) {
             name = this.translate(this.foreignScope, 'scopeNames');
