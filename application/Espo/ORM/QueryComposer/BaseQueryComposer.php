@@ -2476,12 +2476,15 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if ($field === self::EXISTS_OPERATOR) {
-            if (!$value instanceof Select) {
-                throw new RuntimeException("Bad EXISTS usage in where-clause.");
-
+            if ($value instanceof Select) {
+                $subQueryPart = $this->composeSelect($value);
             }
-
-            $subQueryPart = $this->composeSelect($value);
+            else if (is_array($value)) {
+                $subQueryPart = $this->createSelectQueryInternal($value);
+            }
+            else {
+                throw new RuntimeException("Bad EXISTS usage in where-clause.");
+            }
 
             return "EXISTS ($subQueryPart)";
         }
