@@ -369,20 +369,25 @@ class VarcharFieldView extends BaseFieldView {
                 };
             }
 
+            let value = [
+                {
+                    type: 'isNotNull',
+                    field: this.name,
+                    value: null,
+                },
+            ];
+
+            if (!this.model.getFieldParam(this.name, 'notStorable')) {
+                value.push({
+                    type: 'notEquals',
+                    field: this.name,
+                    value: '',
+                });
+            }
+
             return {
                 type: 'and',
-                value: [
-                    {
-                        type: 'notEquals',
-                        field: this.name,
-                        value: '',
-                    },
-                    {
-                        type: 'isNotNull',
-                        field: this.name,
-                        value: null,
-                    }
-                ],
+                value: value,
                 data: {
                     type: type,
                 },

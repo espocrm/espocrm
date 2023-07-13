@@ -483,19 +483,24 @@ class EnumFieldView extends BaseFieldView {
         }
 
         if (type === 'isNotEmpty') {
+            let value = [
+                {
+                    type: 'isNotNull',
+                    attribute: this.name,
+                },
+            ];
+
+            if (!this.model.getFieldParam(this.name, 'notStorable')) {
+                value.push({
+                    type: 'notEquals',
+                    value: '',
+                    attribute: this.name,
+                });
+            }
+
             return {
                 type: 'and',
-                value: [
-                    {
-                        type: 'isNotNull',
-                        attribute: this.name,
-                    },
-                    {
-                        type: 'notEquals',
-                        value: '',
-                        attribute: this.name,
-                    },
-                ],
+                value: value,
                 data: {
                     type: 'isNotEmpty',
                 },
