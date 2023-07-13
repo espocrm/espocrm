@@ -26,10 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/fields/acceptance-status', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        searchTypeList: ['anyOf', 'noneOf'],
-    });
-});
+    searchTypeList = ['anyOf', 'noneOf']
+
+    fetchSearch() {
+        let data = super.fetchSearch();
+
+        if (
+            data &&
+            data.data.type === 'noneOf' &&
+            data.value &&
+            data.value.length > 1
+        ) {
+            data.value = [data.value[0]];
+        }
+
+        return data;
+    }
+}

@@ -445,13 +445,14 @@ class EnumFieldView extends BaseFieldView {
             return {
                 type: 'or',
                 value: [
-                    {
-                        type: 'isNull',
-                        attribute: this.name,
-                    },
+                    // Don't change order.
                     {
                         type: 'notIn',
                         value: list,
+                        attribute: this.name,
+                    },
+                    {
+                        type: 'isNull',
                         attribute: this.name,
                     },
                 ],
