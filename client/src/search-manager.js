@@ -228,18 +228,25 @@ class SearchManager {
      * @private
      */
     getWherePart(name, defs) {
-        var attribute = name;
+        let attribute = name;
+
+        if (typeof defs !== 'object') {
+            console.error('Bad where clause');
+
+            return {};
+        }
 
         if ('where' in defs) {
             return defs.where;
         }
 
         let type = defs.type;
+        let value;
 
         if (type === 'or' || type === 'and') {
             let a = [];
 
-            var value = defs.value || {};
+            value = defs.value || {};
 
             for (let n in value) {
                 a.push(this.getWherePart(n, value[n]));
