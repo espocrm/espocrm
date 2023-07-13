@@ -92,7 +92,7 @@ class EditRecordView extends DetailRecordView {
 
         let isNew = this.isNew;
 
-        this.save(data.options)
+        return this.save(data.options)
             .then(() => {
                 if (this.options.duplicateSourceId) {
                     this.returnUrl = null;

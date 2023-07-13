@@ -1070,10 +1070,10 @@ class BaseRecordView extends View {
         this.trigger('before:save');
         model.trigger('before:save');
 
-        let onError = (xhr, reject) => {
-            this.handleSaveError(xhr, options);
-            this.afterSaveError();
+        let onError = (xhr, reject, resolve) => {
+            const promise = this.handleSaveError(xhr, options, resolve);
 
+            this.afterSaveError();
             this.setModelAttributes(beforeSaveAttributes);
 
             this.lastSaveCancelReason = 'error';
@@ -1081,7 +1081,13 @@ class BaseRecordView extends View {
             this.trigger('error:save');
             this.trigger('cancel:save', {reason: 'error'});
 
-            reject('error');
+            promise.then(skipReject => {
+                if (skipReject) {
+                    return;
+                }
+
+                reject('error');
+            })
         };
 
         return new Promise((resolve, reject) => {
@@ -1108,7 +1114,7 @@ class BaseRecordView extends View {
                     resolve();
                 })
                 .catch(xhr => {
-                    onError(xhr, reject);
+                    onError(xhr, reject, resolve);
                 });
         });
     }
@@ -1118,15 +1124,17 @@ class BaseRecordView extends View {
      *
      * @param {module:ajax.Xhr} xhr XHR.
      * @param {module:views/record/base~saveOptions} [options] Options.
+     * @param {function} saveResolve Resolve save promise.
+     * @return {Promise<boolean>}
      */
-    handleSaveError(xhr, options) {
+    handleSaveError(xhr, options, saveResolve) {
         let handlerData = null;
 
         if (~[409, 500].indexOf(xhr.status)) {
             let statusReason = xhr.getResponseHeader('X-Status-Reason');
 
             if (!statusReason) {
-                return;
+                return Promise.resolve(false);
             }
 
             try {
@@ -1148,7 +1156,7 @@ class BaseRecordView extends View {
                     catch (e) {
                         console.error('Could not parse error response body.');
 
-                        return;
+                        return Promise.resolve(false);
                     }
 
                     handlerData.data = data;
@@ -1157,7 +1165,7 @@ class BaseRecordView extends View {
         }
 
         if (!handlerData || !handlerData.reason) {
-            return;
+            return Promise.resolve(false);
         }
 
         let reason = handlerData.reason;
@@ -1168,25 +1176,31 @@ class BaseRecordView extends View {
             this.getMetadata()
                 .get(['clientDefs', 'Global', 'saveErrorHandlers', reason]);
 
-        if (handlerName) {
-            Espo.loader.require(handlerName, Handler => {
-                let handler = new Handler(this);
+        return new Promise(resolve => {
+            if (handlerName) {
+                Espo.loader.require(handlerName, Handler => {
+                    let handler = new Handler(this);
 
-                handler.process(handlerData.data, options);
-            });
+                    handler.process(handlerData.data, options);
 
-            xhr.errorIsHandled = true;
+                    resolve(false);
+                });
 
-            return;
-        }
+                xhr.errorIsHandled = true;
 
-        let methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(reason);
+                return;
+            }
 
-        if (methodName in this) {
-            xhr.errorIsHandled = true;
+            let methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(reason);
 
-            this[methodName](handlerData.data, options);
-        }
+            if (methodName in this) {
+                xhr.errorIsHandled = true;
+
+                let skipReject = this[methodName](handlerData.data, options, saveResolve);
+
+                resolve(skipReject || false);
+            }
+        });
     }
 
     /**

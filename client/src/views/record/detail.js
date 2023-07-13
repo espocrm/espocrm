@@ -606,13 +606,14 @@ class DetailRecordView extends BaseRecordView {
      * A `save` action.
      *
      * @param {{options?: module:views/record/base~saveOptions}} [data] Data.
+     * @return Promise
      */
     actionSave(data) {
         data = data || {};
 
         let modeBeforeSave = this.mode;
 
-        this.save(data.options)
+        const promise = this.save(data.options)
             .catch(reason => {
                 if (modeBeforeSave === this.MODE_EDIT && reason === 'error') {
                     this.setEditMode();
@@ -625,6 +626,8 @@ class DetailRecordView extends BaseRecordView {
             this.focusOnFirstDiv();
             $(window).scrollTop(0);
         }
+
+        return promise;
     }
 
     actionCancelEdit() {
@@ -2521,7 +2524,7 @@ class DetailRecordView extends BaseRecordView {
         this.enableActionItems();
     }
 
-    errorHandlerDuplicate(duplicates) {
+    errorHandlerDuplicate(duplicates, o, resolve) {
         Espo.Ui.notify(false);
 
         this.createView('duplicate', 'views/modals/duplicate', {
@@ -2538,9 +2541,11 @@ class DetailRecordView extends BaseRecordView {
                             'X-Skip-Duplicate-Check': 'true',
                         }
                     }
-                });
+                }).then(() => resolve());
             });
         });
+
+        return true;
     }
 
     // noinspection JSUnusedGlobalSymbols
