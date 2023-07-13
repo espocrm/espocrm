@@ -124,29 +124,44 @@
             "notStorable": true,
             "where": {
                 "LIKE": {
-                    "leftJoins": [["teams", "teamsPosition"]],
                     "whereClause": {
-                        "teamsPositionMiddle.role*": "{value}"
-                    },
-                    "distinct": true
+                        "id=s": {
+                            "from": "TeamUser",
+                            "select": ["userId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role*": "{value}"
+                            }
+                        }
+                    }
                 },
                 "NOT LIKE": {
-                    "leftJoins": [["teams", "teamsPosition"]],
                     "whereClause": {
-                        "teamsPositionMiddle.role!*": "{value}"
-                    },
-                    "distinct": true
+                        "id!=s": {
+                            "from": "TeamUser",
+                            "select": ["userId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role*": "{value}"
+                            }
+                        }
+                    }
                 },
                 "=": {
-                    "leftJoins": [["teams", "teamsPosition"]],
                     "whereClause": {
-                        "teamsPositionMiddle.role": "{value}"
-                    },
-                    "distinct": true
+                        "id=s": {
+                            "from": "TeamUser",
+                            "select": ["userId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role": "{value}"
+                            }
+                        }
+                    }
                 },
                 "<>": {
                     "whereClause": {
-                        "id!=s": {
+                        "id=!s": {
                             "from": "TeamUser",
                             "select": ["userId"],
                             "whereClause": {
@@ -157,18 +172,48 @@
                     }
                 },
                 "IS NULL": {
-                    "leftJoins": [["teams", "teamsPosition"]],
                     "whereClause": {
-                        "teamsPositionMiddle.role": null
-                    },
-                    "distinct": true
+                        "NOT": {
+                            "EXISTS": {
+                                "from": "User",
+                                "fromAlias": "sq",
+                                "select": ["id"],
+                                "leftJoins": [
+                                    [
+                                        "teams",
+                                        "m",
+                                        {},
+                                        {"onlyMiddle": true}
+                                    ]
+                                ],
+                                "whereClause": {
+                                    "m.role!=": null,
+                                    "sq.id:": "user.id"
+                                }
+                            }
+                        }
+                    }
                 },
                 "IS NOT NULL": {
-                    "leftJoins": [["teams", "teamsPosition"]],
                     "whereClause": {
-                        "teamsPositionMiddle.role!=": null
-                    },
-                    "distinct": true
+                        "EXISTS": {
+                            "from": "User",
+                            "fromAlias": "sq",
+                            "select": ["id"],
+                            "leftJoins": [
+                                [
+                                    "teams",
+                                    "m",
+                                    {},
+                                    {"onlyMiddle": true}
+                                ]
+                            ],
+                            "whereClause": {
+                                "m.role!=": null,
+                                "sq.id:": "user.id"
+                            }
+                        }
+                    }
                 }
             },
             "directUpdateDisabled": true,

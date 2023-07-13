@@ -121,46 +121,102 @@
             },
             "where": {
                 "LIKE": {
-                    "leftJoins": ["accounts"],
                     "whereClause": {
-                        "accountsMiddle.role*": "{value}"
-                    },
-                    "distinct": true
+                        "id=s": {
+                            "from": "AccountContact",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role*": "{value}"
+                            }
+                        }
+                    }
                 },
                 "NOT LIKE": {
-                    "leftJoins": ["accounts"],
                     "whereClause": {
-                        "accountsMiddle.role!*": "{value}"
-                    },
-                    "distinct": true
+                        "id!=s": {
+                            "from": "AccountContact",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role*": "{value}"
+                            }
+                        }
+                    }
                 },
                 "=": {
-                    "leftJoins": ["accounts"],
                     "whereClause": {
-                        "accountsMiddle.role": "{value}"
-                    },
-                    "distinct": true
+                        "id=s": {
+                            "from": "AccountContact",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role": "{value}"
+                            }
+                        }
+                    }
                 },
                 "<>": {
-                    "leftJoins": ["accounts"],
                     "whereClause": {
-                        "accountsMiddle.role!=": "{value}"
-                    },
-                    "distinct": true
+                        "id!=s": {
+                            "from": "AccountContact",
+                            "select": ["contactId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role": "{value}"
+                            }
+                        }
+                    }
                 },
                 "IS NULL": {
-                    "leftJoins": ["accounts"],
                     "whereClause": {
-                        "accountsMiddle.role=": null
-                    },
-                    "distinct": true
+                        "NOT": {
+                            "EXISTS": {
+                                "from": "Contact",
+                                "fromAlias": "sq",
+                                "select": ["id"],
+                                "leftJoins": [
+                                    [
+                                        "accounts",
+                                        "m",
+                                        {},
+                                        {"onlyMiddle": true}
+                                    ]
+                                ],
+                                "whereClause": {
+                                    "AND": [
+                                        {"m.role!=": null},
+                                        {"m.role!=": ""},
+                                        {"sq.id:": "contact.id"}
+                                    ]
+                                }
+                            }
+                        }
+                    }
                 },
                 "IS NOT NULL": {
-                    "leftJoins": ["accounts"],
                     "whereClause": {
-                        "accountsMiddle.role!=": null
-                    },
-                    "distinct": true
+                        "EXISTS": {
+                            "from": "Contact",
+                            "fromAlias": "sq",
+                            "select": ["id"],
+                            "leftJoins": [
+                                [
+                                    "accounts",
+                                    "m",
+                                    {},
+                                    {"onlyMiddle": true}
+                                ]
+                            ],
+                            "whereClause": {
+                                "AND": [
+                                    {"m.role!=": null},
+                                    {"m.role!=": ""},
+                                    {"sq.id:": "contact.id"}
+                                ]
+                            }
+                        }
+                    }
                 }
             },
             "customizationOptionsDisabled": true,
