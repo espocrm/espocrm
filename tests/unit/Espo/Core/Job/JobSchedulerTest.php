@@ -39,6 +39,7 @@ use Espo\ORM\EntityManager;
 use Espo\Entities\Job as JobEntity;
 
 use tests\unit\testClasses\Core\Job\TestJob;
+use tests\unit\testClasses\Core\Job\TestJobDataLess;
 
 use DateTimeImmutable;
 use DateInterval;
@@ -161,7 +162,7 @@ class JobSchedulerTest extends \PHPUnit\Framework\TestCase
 
 
         $jobEntityReturned = $scheduler
-            ->setClassName(TestJob::class)
+            ->setClassName(TestJobDataLess::class)
             ->schedule();
 
         $this->assertSame($jobEntityReturned, $jobEntity);

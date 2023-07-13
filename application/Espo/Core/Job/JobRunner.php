@@ -212,8 +212,11 @@ class JobRunner
 
     private function runJobWithClassName(JobEntity $jobEntity): void
     {
-        /** @var class-string<Job|JobDataLess> $className */
         $className = $jobEntity->getClassName();
+
+        if (!$className) {
+            throw new RuntimeException("No className in job {$jobEntity->getId()}.");
+        }
 
         $job = $this->jobFactory->createByClassName($className);
 
@@ -222,9 +225,16 @@ class JobRunner
 
     /**
      * @param Job|JobDataLess $job
+     * @internal Native type is not used for bc.
      */
     private function runJob($job, JobEntity $jobEntity): void
     {
+        if ($job instanceof JobDataLess) {
+            $job->run();
+
+            return;
+        }
+
         $data = Data::create($jobEntity->getData())
             ->withTargetId($jobEntity->getTargetId())
             ->withTargetType($jobEntity->getTargetType());
