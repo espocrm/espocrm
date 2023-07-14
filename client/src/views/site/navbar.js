@@ -1223,6 +1223,7 @@ class NavbarSiteView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionLogout() {
         this.getRouter().logout();
     }
