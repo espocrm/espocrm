@@ -70,6 +70,8 @@ define('views/admin/field-manager/list', ['view'], function (Dep) {
 
         afterRender: function () {
             this.$noData = this.$el.find('.no-data');
+
+            this.$el.find('input[data-name="quick-search"]').focus();
         },
 
         buildFieldDefs: function () {

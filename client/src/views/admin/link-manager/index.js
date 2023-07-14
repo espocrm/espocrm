@@ -177,6 +177,8 @@ class LinkManagerIndexView extends View {
 
     afterRender() {
         this.$noData = this.$el.find('.no-data');
+
+        this.$el.find('input[data-name="quick-search"]').focus();
     }
 
     createLink() {
