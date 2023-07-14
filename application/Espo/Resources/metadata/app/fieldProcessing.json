@@ -1,3 +1,23 @@
 {
-
+    "readLoaderClassNameList": [
+        "Espo\\Core\\FieldProcessing\\Link\\HasOneLoader",
+        "Espo\\Core\\FieldProcessing\\Link\\NotJoinedLoader",
+        "Espo\\Core\\FieldProcessing\\LinkMultiple\\Loader",
+        "Espo\\Core\\FieldProcessing\\LinkParent\\Loader",
+        "Espo\\Core\\FieldProcessing\\EmailAddress\\Loader",
+        "Espo\\Core\\FieldProcessing\\PhoneNumber\\Loader",
+        "Espo\\Core\\FieldProcessing\\Stream\\FollowersLoader"
+    ],
+    "listLoaderClassNameList": [
+        "Espo\\Core\\FieldProcessing\\LinkParent\\Loader",
+        "Espo\\Core\\FieldProcessing\\LinkMultiple\\ListLoader"
+    ],
+    "saverClassNameList": [
+        "Espo\\Core\\FieldProcessing\\EmailAddress\\Saver",
+        "Espo\\Core\\FieldProcessing\\PhoneNumber\\Saver",
+        "Espo\\Core\\FieldProcessing\\Relation\\Saver",
+        "Espo\\Core\\FieldProcessing\\MultiEnum\\Saver",
+        "Espo\\Core\\FieldProcessing\\File\\Saver",
+        "Espo\\Core\\FieldProcessing\\Wysiwyg\\Saver"
+    ]
 }
