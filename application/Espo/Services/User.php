@@ -73,13 +73,6 @@ class User extends Record implements
     ];
 
     /** @var string[] */
-    protected $validateSkipFieldList = [
-        'name',
-        'firstName',
-        'lastName',
-    ];
-
-    /** @var string[] */
     private $allowedUserTypeList = [
         UserEntity::TYPE_REGULAR,
         UserEntity::TYPE_ADMIN,

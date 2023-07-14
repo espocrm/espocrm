@@ -28,6 +28,7 @@
  ************************************************************************/
 
 use Espo\Core\Container;
+use Espo\Core\Templates\Entities\Event;
 use Espo\Entities\Role;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Expression;
@@ -70,6 +71,20 @@ class AfterUpgrade
             $type = $item['type'] ?? false;
 
             if (!$isCustom) {
+                continue;
+            }
+
+            if ($type === Event::TEMPLATE_TYPE) {
+                $metadata->set('entityDefs', $entityType, [
+                    'fields' => [
+                        'dateEnd' => [
+                            'suppressValidationList' => ['required'],
+                        ],
+                    ]
+                ]);
+
+                $metadata->save();
+
                 continue;
             }
 

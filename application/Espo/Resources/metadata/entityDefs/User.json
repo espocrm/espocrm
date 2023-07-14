@@ -98,12 +98,14 @@
         },
         "firstName": {
             "type": "varchar",
-            "maxLength": 100
+            "maxLength": 100,
+            "suppressValidationList": ["required"]
         },
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
-            "required": true
+            "required": true,
+            "suppressValidationList": ["required"]
         },
         "isActive": {
             "type": "bool",

@@ -46,13 +46,6 @@ class Meeting extends Record implements
     /**
      * @var string[]
      */
-    protected $validateRequiredSkipFieldList = [
-        'dateEnd',
-    ];
-
-    /**
-     * @var string[]
-     */
     protected $duplicateIgnoreAttributeList = [
         'usersColumns',
         'contactsColumns',

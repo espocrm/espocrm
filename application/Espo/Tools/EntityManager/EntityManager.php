@@ -139,19 +139,7 @@ class EntityManager
             "{\n".
             "}\n";
 
-        $filePath = "custom/Espo/Custom/Controllers/$normalizedName.php";
-
-        $this->fileManager->putContents($filePath, $contents);
-
-        $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Services;\n\n".
-            "class $normalizedName extends $templateNamespace\Services\\$type\n".
-            "{\n".
-            "}\n";
-
-        $filePath = "custom/Espo/Custom/Services/$normalizedName.php";
-
-        $this->fileManager->putContents($filePath, $contents);
+        $this->fileManager->putContents("custom/Espo/Custom/Controllers/$normalizedName.php", $contents);
 
         $stream = false;
 

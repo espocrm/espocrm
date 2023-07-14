@@ -333,6 +333,13 @@
                     },
                     "description": "A custom mandatory validation list for the field. Use this parameter to re-define mandatory validations applied for a specific field. By default, mandatory validations for a field type are applied."
                 },
+                "suppressValidationList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Validations to be bypassed for the field."
+                },
                 "customizationDisabled": {
                     "type": "boolean",
                     "description": "Disables the ability to customize the field in the Entity Manager tool."

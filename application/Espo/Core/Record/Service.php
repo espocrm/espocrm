@@ -71,6 +71,8 @@ use stdClass;
 use InvalidArgumentException;
 use LogicException;
 
+use const E_USER_DEPRECATED;
+
 /**
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
  * Access control is processed here.
@@ -166,14 +168,13 @@ class Service implements Crud,
     /** @var bool */
     protected $forceSelectAllAttributes = false;
     /** @var string[] */
-    protected $validateSkipFieldList = [];
-    /**
-     * @todo Move to metadata.
-     * @var string[]
-     */
-    protected $validateRequiredSkipFieldList = [];
-    /** @var string[] */
     protected $duplicateIgnoreAttributeList = [];
+    /**
+     * @var string[]
+     * @deprecated As of v8.0. Use `suppressValidationList` metadata parameter.
+     * @todo Remove in v9.0.
+     */
+    protected $validateSkipFieldList = [];
 
     /** @var Acl */
     protected $acl = null;
@@ -354,8 +355,14 @@ class Service implements Crud,
     {
         $params = FieldValidationParams
             ::create()
-            ->withSkipFieldList($this->validateSkipFieldList)
-            ->withTypeSkipFieldList('required', $this->validateRequiredSkipFieldList);
+            ->withSkipFieldList($this->validateSkipFieldList);
+
+        if (!empty($this->validateSkipFieldList)) {
+            trigger_error(
+                '$validateSkipFieldList is deprecated and will be removed in v9.0.',
+                E_USER_DEPRECATED
+            );
+        }
 
         $this->fieldValidationManager->process($entity, $data, $params);
     }
