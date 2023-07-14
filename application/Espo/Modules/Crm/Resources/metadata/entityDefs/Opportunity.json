@@ -239,7 +239,8 @@
                 "relationName": "contactOpportunity",
                 "nearKey": "opportunityId"
             },
-            "view": "crm:views/opportunity/fields/contact-role"
+            "view": "crm:views/opportunity/fields/contact-role",
+            "optionsReference": "Contact.opportunityRole"
         },
         "createdAt": {
             "type": "datetime",
