@@ -270,6 +270,12 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/entityTemplates.json"
+            ],
+            "url": "./schema/metadata/app/entityTemplates.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/export.json"
             ],
             "url": "./schema/metadata/app/export.json"

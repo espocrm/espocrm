@@ -23,13 +23,13 @@
                     <option name="mappingKind" value="Directory" />
                   </Item>
                   <Item>
+                    <option name="path" value="schema/autoload.json" />
+                  </Item>
+                  <Item>
                     <option name="path" value="schema/module.json" />
                   </Item>
                   <Item>
                     <option name="path" value="schema/routes.json" />
-                  </Item>
-                  <Item>
-                    <option name="path" value="schema/autoload.json" />
                   </Item>
                 </list>
               </option>
@@ -581,6 +581,25 @@
                   <Item>
                     <option name="pattern" value="true" />
                     <option name="path" value="*/Resources/metadata/app/entityTemplateList.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
+        <entry key="metadata/app/entityTemplates">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/entityTemplates" />
+              <option name="relativePathToSchema" value="schema/metadata/app/entityTemplates.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/entityTemplates.json" />
                     <option name="mappingKind" value="Pattern" />
                   </Item>
                 </list>

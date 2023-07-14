@@ -134,18 +134,6 @@ class EntityManager
         }
 
         $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Entities;\n\n".
-            "class $normalizedName extends $templateNamespace\Entities\\$type\n".
-            "{\n".
-            "    public const ENTITY_TYPE = '$name';\n\n".
-            "    protected \$entityType = '$name';\n".
-            "}\n";
-
-        $filePath = "custom/Espo/Custom/Entities/$normalizedName.php";
-
-        $this->fileManager->putContents($filePath, $contents);
-
-        $contents = "<" . "?" . "php\n\n".
             "namespace Espo\Custom\Controllers;\n\n".
             "class $normalizedName extends $templateNamespace\Controllers\\$type\n".
             "{\n".
@@ -162,16 +150,6 @@ class EntityManager
             "}\n";
 
         $filePath = "custom/Espo/Custom/Services/$normalizedName.php";
-
-        $this->fileManager->putContents($filePath, $contents);
-
-        $contents = "<" . "?" . "php\n\n".
-            "namespace Espo\Custom\Repositories;\n\n".
-            "class $normalizedName extends $templateNamespace\Repositories\\$type\n".
-            "{\n".
-            "}\n";
-
-        $filePath = "custom/Espo/Custom/Repositories/$normalizedName.php";
 
         $this->fileManager->putContents($filePath, $contents);
 
