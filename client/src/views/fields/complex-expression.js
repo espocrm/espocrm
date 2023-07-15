@@ -188,7 +188,7 @@ define('views/fields/complex-expression', ['views/fields/text'], function (Dep) 
                         return item.insertText;
                     });
 
-            var attributeList = this.getAttributeList();
+            var attributeList = this.getFormulaAttributeList();
 
             var languageTools = ace.require("ace/ext/language_tools");
 
@@ -247,7 +247,7 @@ define('views/fields/complex-expression', ['views/fields/text'], function (Dep) 
             this.editor.completers = [completer];
         },
 
-        getAttributeList: function () {
+        getFormulaAttributeList: function () {
             if (!this.targetEntityType) {
                 return [];
             }
@@ -304,7 +304,7 @@ define('views/fields/complex-expression', ['views/fields/text'], function (Dep) 
         addAttribute: function () {
             this.createView('dialog', 'views/admin/formula/modals/add-attribute', {
                 scope: this.targetEntityType,
-                attributeList: this.getAttributeList(),
+                attributeList: this.getFormulaAttributeList(),
             }, view => {
                 view.render();
 

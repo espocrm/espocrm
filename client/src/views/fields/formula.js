@@ -204,7 +204,7 @@ class FormulaFieldView extends TextFieldView {
 
     addAttribute() {
         this.createView('dialog', 'views/admin/formula/modals/add-attribute', {
-            scope: this.targetEntityType
+            scope: this.targetEntityType,
         }, view => {
             view.render();
 
@@ -256,7 +256,7 @@ class FormulaFieldView extends TextFieldView {
     initAutocomplete() {
         let functionItemList = this.getFunctionDataList().filter(item => item.insertText);
 
-        let attributeList = this.getAttributeList();
+        let attributeList = this.getFormulaAttributeList();
 
         ace.require('ace/ext/language_tools');
 
@@ -343,7 +343,7 @@ class FormulaFieldView extends TextFieldView {
         this.editor.completers = [completer];
     }
 
-    getAttributeList() {
+    getFormulaAttributeList() {
         if (!this.targetEntityType) {
             return [];
         }
