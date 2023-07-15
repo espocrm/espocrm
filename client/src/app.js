@@ -752,7 +752,7 @@ class App {
 
         let internalModuleMap = {};
 
-        let isModuleInternal = (module) => {
+        const isModuleInternal = (module) => {
             if (!(module in internalModuleMap)) {
                 internalModuleMap[module] = this.internalModuleList.indexOf(module) !== -1;
             }
@@ -760,7 +760,7 @@ class App {
             return internalModuleMap[module];
         };
 
-        let getResourceInnerPath = (type, name) => {
+        const getResourceInnerPath = (type, name) => {
             let path = null;
 
             switch (type) {
@@ -777,24 +777,17 @@ class App {
                     path = 'res/layout-types/' + name + '.tpl';
 
                     break;
-
-                case 'layout':
-                    path = 'res/layouts/' + name + '.json';
-
-                    break;
             }
 
             return path;
         };
 
-        let getResourcePath = (type, name) => {
-            if (name.indexOf(':') === -1) {
+        const getResourcePath = (type, name) => {
+            if (!name.includes(':')) {
                 return 'client/' + getResourceInnerPath(type, name);
             }
 
-            let arr = name.split(':');
-            let mod = arr[0];
-            let path = arr[1];
+            let [mod, path] = name.split(':');
 
             if (mod === 'custom') {
                 return 'client/custom/' + getResourceInnerPath(type, path);
