@@ -39,7 +39,8 @@ class LayoutCreateModalView extends ModalView {
     // language=Handlebars
     templateContent = `
         <div class="complex-text-container">{{complexText info}}</div>
-        <div class="record no-side-margin">{{{record}}}</div>    `
+        <div class="record no-side-margin">{{{record}}}</div>
+    `
 
     className = 'dialog dialog-record'
 
@@ -91,7 +92,7 @@ class LayoutCreateModalView extends ModalView {
             model: this.model,
             detailLayout: [
                 {
-                    rows: [
+                    columns: [
                         [
                             {
                                 labelText: this.translate('type', 'fields', 'Admin'),
@@ -104,9 +105,6 @@ class LayoutCreateModalView extends ModalView {
                                     },
                                 }),
                             },
-                            false
-                        ],
-                        [
                             {
                                 labelText: this.translate('name', 'fields'),
                                 view: new VarcharFieldView({
@@ -118,9 +116,6 @@ class LayoutCreateModalView extends ModalView {
                                     },
                                 }),
                             },
-                            false
-                        ],
-                        [
                             {
                                 labelText: this.translate('label', 'fields', 'Admin'),
                                 view: new VarcharFieldView({
@@ -131,8 +126,8 @@ class LayoutCreateModalView extends ModalView {
                                     },
                                 }),
                             },
-                            false
                         ],
+                        []
                     ]
                 }
             ]
