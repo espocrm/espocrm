@@ -33,7 +33,7 @@ function (Dep, /** module:ui/select*/Select) {
      * @class
      * @name Class
      * @memberOf module:views/fields/duration
-     * @extends module:views/fields/enum
+     * @extends module:views/fields/enumeration
      */
     return Dep.extend(/** @lends module:views/fields/duration.Class# */{
 

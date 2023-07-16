@@ -36,6 +36,36 @@ import RegExpPattern from 'helpers/reg-exp-pattern';
  */
 class VarcharFieldView extends BaseFieldView {
 
+    /**
+     * @typedef {Object} module:views/fields/varchar~options
+     * @property {
+     *     module:views/fields/varchar~params &
+     *     module:views/fields/base~params &
+     *     Object.<string, *>
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/varchar~params
+     * @property {number} [maxLength] A max length.
+     * @property {string[]} [options] Select options.
+     * @property {boolean} [required] Required.
+     * @property {string} [optionsPath] An options metadata path.
+     * @property {boolean} [noSpellCheck] Disable spell check.
+     * @property {string} [pattern] A validation pattern. If starts with `$`, then a predefined pattern is used.
+     * @property {boolean} [copyToClipboard] To display a Copy-to-clipboard button.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/varchar~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
+
     type = 'varchar'
 
     listTemplate = 'fields/varchar/list'
@@ -238,6 +268,7 @@ class VarcharFieldView extends BaseFieldView {
                 this.useAutocompleteUrl
             )
         ) {
+            // noinspection JSUnusedGlobalSymbols
             let autocompleteOptions = {
                 minChars: 0,
                 lookup: this.params.options,
@@ -298,6 +329,7 @@ class VarcharFieldView extends BaseFieldView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validatePattern() {
         let pattern = this.params.pattern;
 

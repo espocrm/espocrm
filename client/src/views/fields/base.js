@@ -44,6 +44,8 @@ class BaseFieldView extends View {
      * @property {string} name A field name.
      * @property {module:model} [model] A model.
      * @property {module:views/fields/base~params | Object.<string, *>} [params] Parameters.
+     * @property {boolean} [inlineEditDisabled] Disable inline edit.
+     * @property {boolean} [readOnly] Read-only.
      */
 
     /**
