@@ -35,12 +35,31 @@ import $ from 'jquery';
 /**
  * A base field view. Can be in different modes. Each mode uses a separate template.
  *
- * @todo Document all options. Introduce separate constructor arguments to pass general field options
- *   and specific field type options.
  * @todo Document events.
- *
  */
 class BaseFieldView extends View {
+
+    /**
+     * @typedef {Object} module:views/fields/base~options
+     * @property {string} name A field name.
+     * @property {module:model} [model] A model.
+     * @property {module:views/fields/base~params | Object.<string, *>} [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/base~params
+     * @property {boolean} [inlineEditDisabled] Disable inline edit.
+     * @property {boolean} [readOnly] Read-only.
+     */
+
+    /**
+     * @param {module:views/fields/base~options | Object.<string, *>} options Options.
+     */
+    constructor(options) {
+        super(options);
+
+        this.name = options.name;
+    }
 
     /**
      * A field type.

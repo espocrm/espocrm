@@ -31,6 +31,8 @@
 import ModalView from 'views/modal';
 import EditForModalRecordView from 'views/record/edit-for-modal';
 import Model from 'model';
+import EnumFieldView from 'views/fields/enum';
+import VarcharFieldView from 'views/fields/varchar';
 
 class LayoutCreateModalView extends ModalView {
 
@@ -92,39 +94,42 @@ class LayoutCreateModalView extends ModalView {
                     rows: [
                         [
                             {
-                                name: 'type',
-                                type: 'enum',
-                                params: {
-                                    readOnly: true,
-                                    translation: 'Admin.layouts',
-                                    options: ['list'],
-                                },
                                 labelText: this.translate('type', 'fields', 'Admin'),
+                                view: new EnumFieldView({
+                                    name: 'type',
+                                    params: {
+                                        readOnly: true,
+                                        translation: 'Admin.layouts',
+                                        options: ['list'],
+                                    },
+                                }),
                             },
                             false
                         ],
                         [
                             {
-                                name: 'name',
-                                type: 'varchar',
-                                params: {
-                                    required: true,
-                                    noSpellCheck: true,
-                                    pattern: '$latinLetters',
-                                },
                                 labelText: this.translate('name', 'fields'),
+                                view: new VarcharFieldView({
+                                    name: 'name',
+                                    params: {
+                                        required: true,
+                                        noSpellCheck: true,
+                                        pattern: '$latinLetters',
+                                    },
+                                }),
                             },
                             false
                         ],
                         [
                             {
-                                name: 'label',
-                                type: 'varchar',
-                                params: {
-                                    required: true,
-                                    pattern: '$noBadCharacters',
-                                },
                                 labelText: this.translate('label', 'fields', 'Admin'),
+                                view: new VarcharFieldView({
+                                    name: 'label',
+                                    params: {
+                                        required: true,
+                                        pattern: '$noBadCharacters',
+                                    },
+                                }),
                             },
                             false
                         ],

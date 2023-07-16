@@ -38,32 +38,32 @@ import ActionItemSetup from 'helpers/action-item-setup';
 class DetailRecordView extends BaseRecordView {
 
     /**
-     * @typedef {{
-     *     model: module:model,
-     *     scope?: string,
-     *     layoutName?: string,
-     *     detailLayout?: module:views/record/detail~panelDefs[],
-     *     readOnly?: boolean,
-     *     rootUrl?: string,
-     *     returnUrl?: string,
-     *     returnAfterCreate?: string,
-     *     editModeDisabled?: boolean,
-     *     confirmLeaveDisabled?: boolean,
-     *     isWide?: boolean,
-     *     sideView?: string,
-     *     bottomView?: string,
-     *     inlineEditDisabled?: boolean,
-     *     navigateButtonsDisabled?: boolean,
-     *     accessControlDisabled?: boolean,
-     *     dynamicLogicDefs?: Object,
-     *     attributes?: Object.<string, *>,
-     *     buttonList?: module:views/record/detail~button[],
-     *     dropdownItemList?: module:views/record/detail~dropdownItem[],
-     * } | Object.<string, *>} module:views/record/detail~options
+     * @typedef {Object} module:views/record/detail~options
+     *
+     * @property {module:model} model A model.
+     * @property {string} [scope] A scope.
+     * @property {string} [layoutName] A layout name.
+     * @property {module:views/record/detail~panelDefs[]} [detailLayout] A detail layout.
+     * @property {boolean} [readOnly] Read-only.
+     * @property {string} [rootUrl]
+     * @property {string} [returnUrl]
+     * @property {boolean} [returnAfterCreate]
+     * @property {boolean} [editModeDisabled]
+     * @property {boolean} [confirmLeaveDisabled]
+     * @property {boolean} [editModeDisabled]
+     * @property {boolean} [isWide]
+     * @property {string} [sideView]
+     * @property {string} [bottomView]
+     * @property {string} [inlineEditDisabled] Disable inline edit.
+     * @property {string} [navigateButtonsDisabled]
+     * @property {Object} [dynamicLogicDefs]
+     * @property {Object.<string, *>} [attributes]
+     * @property {module:views/record/detail~button[]} [buttonList] Buttons.
+     * @property {module:views/record/detail~dropdownItem[]} [dropdownItemList] Dropdown items.
      */
 
     /**
-     * @param {module:views/record/detail~options} options Options.
+     * @param {module:views/record/detail~options | Object.<string, *>} options Options.
      */
     constructor(options) {
         super(options);
@@ -86,8 +86,7 @@ class DetailRecordView extends BaseRecordView {
     /**
      * Panel definitions.
      *
-     * @typedef module:views/record/detail~panelDefs
-     * @type Object
+     * @typedef {Object} module:views/record/detail~panelDefs
      * @property {string} [label] A translatable label.
      * @property {string} [customLabel] A custom label.
      * @property {string} [name] A name. Useful to be able to show/hide by a name.
@@ -96,25 +95,24 @@ class DetailRecordView extends BaseRecordView {
      * @property {string} [tabLabel] A tab label. If starts with `$`, a translation
      *   of the `tabs` category is used.
      * @property {module:views/record/detail~rowDefs[]} [rows] Rows.
+     * @property {module:views/record/detail~rowDefs[]} [columns] Columns.
      */
 
     /**
      * A row.
      *
-     * @typedef module:views/record/detail~rowDefs
-     * @type Array<module:views/record/detail~cellDefs|false>
+     * @typedef {Array<module:views/record/detail~cellDefs|false>} module:views/record/detail~rowDefs
      */
 
     /**
      * Cell definitions.
      *
-     * @typedef module:views/record/detail~cellDefs
-     * @type Object
+     * @typedef {Object} module:views/record/detail~cellDefs
      * @property {string} [name] A name (usually a field name).
-     * @property {string} [view] An overridden field view name.
+     * @property {string|module:views/fields/base} [view] An overridden field view name or a view instance.
      * @property {string} [type] An overridden field type.
      * @property {boolean} [readOnly] Read-only.
-     * @property {boolean} [inlineEditDisabled ] Disable inline edit.
+     * @property {boolean} [inlineEditDisabled] Disable inline edit.
      * @property {Object.<string, *>} [params] Overridden field parameters.
      * @property {Object.<string, *>} [options] Field view options.
      * @property {string} [labelText] A label text (not-translatable).
@@ -2980,7 +2978,7 @@ class DetailRecordView extends BaseRecordView {
      * Convert a detail layout to an internal layout.
      *
      * @protected
-     * @param {Object[]} simplifiedLayout A detail layout.
+     * @param {module:views/record/detail~panelDefs[]} simplifiedLayout A detail layout.
      * @return {Object[]}
      */
     convertDetailLayout(simplifiedLayout) {
@@ -3033,14 +3031,17 @@ class DetailRecordView extends BaseRecordView {
 
             this.middlePanelDefsList.push(this.middlePanelDefs[panel.name]);
 
+            // noinspection JSUnresolvedReference
             if (item.dynamicLogicVisible && this.dynamicLogic) {
                 this.dynamicLogic.addPanelVisibleCondition(panel.name, item.dynamicLogicVisible);
             }
 
-            if (simplifiedLayout[p].dynamicLogicStyled && this.dynamicLogic) {
+            // noinspection JSUnresolvedReference
+            if (item.dynamicLogicStyled && this.dynamicLogic) {
                 this.dynamicLogic.addPanelStyledCondition(panel.name, item.dynamicLogicStyled);
             }
 
+            // noinspection JSUnresolvedReference
             if (item.hidden && tabNumber === 0) {
                 panel.hidden = true;
 
@@ -3072,11 +3073,27 @@ class DetailRecordView extends BaseRecordView {
                         continue;
                     }
 
-                    if (!cellDefs.name) {
+                    let view = cellDefs.view;
+                    let name = cellDefs.name;
+
+                    if (!name && view && typeof view === 'object') {
+                        name = view.name;
+                    }
+
+                    if (!name) {
+                        console.warn(`No 'name' specified in detail layout cell.`);
+
                         continue;
                     }
 
-                    let name = cellDefs.name;
+                    let selector;
+
+                    if (view && typeof view === 'object') {
+                        view.model = this.model;
+                        view.mode = this.fieldsMode;
+
+                        selector = `.field[data-name="${name}"]`;
+                    }
 
                     if (panel.name) {
                         this.panelFieldListMap[panel.name].push(name);
@@ -3084,7 +3101,7 @@ class DetailRecordView extends BaseRecordView {
 
                     let type = cellDefs.type || this.model.getFieldType(name) || 'base';
 
-                    let viewName = cellDefs.view ||
+                    view = view ||
                         this.model.getFieldParam(name, 'view') ||
                         this.getFieldManager().getViewName(type);
 
@@ -3114,6 +3131,7 @@ class DetailRecordView extends BaseRecordView {
                         o.inlineEditDisabled = true;
                     }
 
+                    // noinspection JSUnresolvedReference
                     let fullWidth = cellDefs.fullWidth || false;
 
                     if (!fullWidth) {
@@ -3163,12 +3181,16 @@ class DetailRecordView extends BaseRecordView {
 
                     let cell = {
                         name: name + 'Field',
-                        view: viewName,
+                        view: view,
                         field: name,
                         fullSelector: el + ' .middle .field[data-name="' + name + '"]',
                         fullWidth: fullWidth,
                         options: o,
                     };
+
+                    if (selector) {
+                        cell.selector = selector;
+                    }
 
                     if ('labelText' in cellDefs) {
                         o.labelText = cellDefs.labelText;
