@@ -453,7 +453,7 @@ class Controller {
      */
 
     /**
-     * Create a main view in the master.
+     * Create a main view in the master container and render it.
      *
      * @param {string|module:view} [view] A view name or view instance.
      * @param {Object.<string, *>} [options] Options for a view.
@@ -643,7 +643,8 @@ class Controller {
     }
 
     /**
-     * Create a view in the BODY element.
+     * Create a view in the BODY element. Use for rendering separate pages without the default navbar and footer.
+     * If a callback is not passed, the view will be automatically rendered.
      *
      * @param {string|module:view} view A view name or view instance.
      * @param {Object.<string, *>} [options] Options for a view.
@@ -659,11 +660,33 @@ class Controller {
         this.set('master', null);
         this.set('masterRendered', false);
 
+        if (typeof view === 'object') {
+            view.setElement('body');
+
+            this.viewFactory.prepare(view, () => {
+                if (!callback) {
+                    view.render();
+
+                    return;
+                }
+
+                callback(view);
+            });
+
+            return;
+        }
+
         options = options || {};
         options.fullSelector = 'body';
 
         this.viewFactory.create(view, options, view => {
             this.set('entire', view);
+
+            if (!callback) {
+                view.render();
+
+                return;
+            }
 
             callback(view);
         });
