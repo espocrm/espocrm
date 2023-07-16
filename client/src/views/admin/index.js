@@ -26,220 +26,227 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/index', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class AdminIndexView extends View {
 
-        template: 'admin/index',
+    template = 'admin/index'
 
-        events: {
-            'click [data-action]': function (e) {
-                Espo.Utils.handleAction(this, e);
-            },
-            'keyup input[data-name="quick-search"]': function (e) {
-                this.processQuickSearch(e.currentTarget.value);
-            },
+    events = {
+        /** @this AdminIndexView */
+        'click [data-action]': function (e) {
+            Espo.Utils.handleAction(this, e);
         },
-
-        data: function () {
-            return {
-                panelDataList: this.panelDataList,
-                iframeUrl: this.iframeUrl,
-                iframeHeight: this.getConfig().get('adminPanelIframeHeight') || 1330,
-                iframeDisabled: this.getConfig().get('adminPanelIframeDisabled') || false,
-            };
+        /** @this AdminIndexView */
+        'keyup input[data-name="quick-search"]': function (e) {
+            this.processQuickSearch(e.currentTarget.value);
         },
+    }
 
-        afterRender: function () {
-            let $quickSearch = this.$el.find('input[data-name="quick-search"]');
+    data() {
+        return {
+            panelDataList: this.panelDataList,
+            iframeUrl: this.iframeUrl,
+            iframeHeight: this.getConfig().get('adminPanelIframeHeight') || 1330,
+            iframeDisabled: this.getConfig().get('adminPanelIframeDisabled') || false,
+        };
+    }
 
-            if (this.quickSearchText) {
-                $quickSearch.val(this.quickSearchText);
+    afterRender() {
+        let $quickSearch = this.$el.find('input[data-name="quick-search"]');
 
-                this.processQuickSearch(this.quickSearchText);
-            }
+        if (this.quickSearchText) {
+            $quickSearch.val(this.quickSearchText);
 
-            $quickSearch.get(0).focus({preventScroll: true});
-        },
+            this.processQuickSearch(this.quickSearchText);
+        }
 
-        setup: function () {
-            this.panelDataList = [];
+        // noinspection JSUnresolvedReference
+        $quickSearch.get(0).focus({preventScroll: true});
+    }
 
-            var panels = this.getMetadata().get('app.adminPanel') || {};
+    setup() {
+        this.panelDataList = [];
 
-            for (var name in panels) {
-                var panelItem = Espo.Utils.cloneDeep(panels[name]);
+        let panels = this.getMetadata().get('app.adminPanel') || {};
 
-                panelItem.name = name;
-                panelItem.itemList = panelItem.itemList || [];
-                panelItem.label = this.translate(panelItem.label, 'labels', 'Admin');
+        for (let name in panels) {
+            let panelItem = Espo.Utils.cloneDeep(panels[name]);
 
-                if (panelItem.itemList) {
-                    panelItem.itemList.forEach(item => {
-                        item.label = this.translate(item.label, 'labels', 'Admin');
+            panelItem.name = name;
+            panelItem.itemList = panelItem.itemList || [];
+            panelItem.label = this.translate(panelItem.label, 'labels', 'Admin');
 
-                        if (item.description) {
-                            item.keywords = (this.getLanguage().get('Admin', 'keywords', item.description) || '')
-                                .split(',');
-                        } else {
-                            item.keywords = [];
-                        }
-                    });
-                }
+            if (panelItem.itemList) {
+                panelItem.itemList.forEach(item => {
+                    item.label = this.translate(item.label, 'labels', 'Admin');
 
-                // Legacy support.
-                if (panelItem.items) {
-                    panelItem.items.forEach(item => {
-                        item.label = this.translate(item.label, 'labels', 'Admin');
-                        panelItem.itemList.push(item);
-
+                    if (item.description) {
+                        item.keywords = (this.getLanguage().get('Admin', 'keywords', item.description) || '')
+                            .split(',');
+                    } else {
                         item.keywords = [];
-                    });
-                }
-
-                this.panelDataList.push(panelItem);
+                    }
+                });
             }
 
-            this.panelDataList.sort((v1, v2) => {
-                if (!('order' in v1) && ('order' in v2)) {
-                    return 0;
-                }
+            // Legacy support.
+            if (panelItem.items) {
+                panelItem.items.forEach(item => {
+                    item.label = this.translate(item.label, 'labels', 'Admin');
+                    panelItem.itemList.push(item);
 
-                if (!('order' in v2)) {
-                    return 0;
-                }
+                    item.keywords = [];
+                });
+            }
 
-                return v1.order - v2.order;
+            this.panelDataList.push(panelItem);
+        }
+
+        this.panelDataList.sort((v1, v2) => {
+            if (!('order' in v1) && ('order' in v2)) {
+                return 0;
+            }
+
+            if (!('order' in v2)) {
+                return 0;
+            }
+
+            return v1.order - v2.order;
+        });
+
+        let iframeParams = [
+            'version=' + encodeURIComponent(this.getConfig().get('version')),
+            'css=' + encodeURIComponent(this.getConfig().get('siteUrl') +
+                '/' + this.getThemeManager().getStylesheet())
+        ];
+
+        this.iframeUrl = this.getConfig().get('adminPanelIframeUrl') || 'https://s.espocrm.com/';
+
+        if (~this.iframeUrl.indexOf('?')) {
+            this.iframeUrl += '&' + iframeParams.join('&');
+        } else {
+            this.iframeUrl += '?' + iframeParams.join('&');
+        }
+
+        if (!this.getConfig().get('adminNotificationsDisabled')) {
+            this.createView('notificationsPanel', 'views/admin/panels/notifications', {
+                selector: '.notifications-panel-container'
             });
+        }
+    }
 
-            var iframeParams = [
-                'version=' + encodeURIComponent(this.getConfig().get('version')),
-                'css=' + encodeURIComponent(this.getConfig().get('siteUrl') +
-                    '/' + this.getThemeManager().getStylesheet())
-            ];
+    processQuickSearch(text) {
+        text = text.trim();
 
-            this.iframeUrl = this.getConfig().get('adminPanelIframeUrl') || 'https://s.espocrm.com/';
+        this.quickSearchText = text;
 
-            if (~this.iframeUrl.indexOf('?')) {
-                this.iframeUrl += '&' + iframeParams.join('&');
-            } else {
-                this.iframeUrl += '?' + iframeParams.join('&');
+        let $noData = this.$noData || this.$el.find('.no-data');
+
+        $noData.addClass('hidden');
+
+        if (!text) {
+            this.$el.find('.admin-content-section').removeClass('hidden');
+            this.$el.find('.admin-content-row').removeClass('hidden');
+
+            return;
+        }
+
+        text = text.toLowerCase();
+
+        this.$el.find('.admin-content-section').addClass('hidden');
+        this.$el.find('.admin-content-row').addClass('hidden');
+
+        let anythingMatched = false;
+
+        this.panelDataList.forEach((panel, panelIndex) => {
+            let panelMatched = false;
+            let panelLabelMatched = false;
+
+            if (panel.label && panel.label.toLowerCase().indexOf(text) === 0) {
+                panelMatched = true;
+                panelLabelMatched = true;
             }
 
-            if (!this.getConfig().get('adminNotificationsDisabled')) {
-                this.createView('notificationsPanel', 'views/admin/panels/notifications', {
-                    selector: '.notifications-panel-container'
-                });
-            }
-        },
-
-        processQuickSearch: function (text) {
-            text = text.trim();
-
-            this.quickSearchText = text;
-
-            var $noData = this.$noData || this.$el.find('.no-data');
-
-            $noData.addClass('hidden');
-
-            if (!text) {
-                this.$el.find('.admin-content-section').removeClass('hidden');
-                this.$el.find('.admin-content-row').removeClass('hidden');
-
-                return;
-            }
-
-            text = text.toLowerCase();
-
-            this.$el.find('.admin-content-section').addClass('hidden');
-            this.$el.find('.admin-content-row').addClass('hidden');
-
-            let anythingMatched = false;
-
-            this.panelDataList.forEach((panel, panelIndex) => {
-                var panelMatched = false;
-
-                var panelLabelMatched = false;
-
-                if (panel.label && panel.label.toLowerCase().indexOf(text) === 0) {
-                    panelMatched = true;
-                    panelLabelMatched = true;
+            panel.itemList.forEach((row, rowIndex) => {
+                if (!row.label) {
+                    return;
                 }
 
-                panel.itemList.forEach((row, rowIndex) => {
-                    if (!row.label) return;
+                let matched = false;
 
-                    var matched = false;
+                if (panelLabelMatched) {
+                    matched = true;
+                }
 
-                    if (panelLabelMatched) {
-                        matched = true;
+                if (!matched) {
+                    matched = row.label.toLowerCase().indexOf(text) === 0;
+                }
+
+                if (!matched) {
+                    let wordList = row.label.split(' ');
+
+                    wordList.forEach((word) => {
+                        if (word.toLowerCase().indexOf(text) === 0) {
+                            matched = true;
+                        }
+                    });
+
+                    if (!matched) {
+                        matched = ~row.keywords.indexOf(text);
                     }
 
                     if (!matched) {
-                        matched = row.label.toLowerCase().indexOf(text) === 0;
-                    }
-
-                    if (!matched) {
-                        var wordList = row.label.split(' ');
-
-                        wordList.forEach((word) => {
-                            if (word.toLowerCase().indexOf(text) === 0) {
-                                matched = true;
-                            }
-                        });
-
-                        if (!matched) {
-                            matched = ~row.keywords.indexOf(text);
-                        }
-                        if (!matched) {
-                            if (text.length > 3) {
-                                row.keywords.forEach((word) => {
-                                    if (word.indexOf(text) === 0) {
-                                        matched = true;
-                                    }
-                                });
-                            }
+                        if (text.length > 3) {
+                            row.keywords.forEach((word) => {
+                                if (word.indexOf(text) === 0) {
+                                    matched = true;
+                                }
+                            });
                         }
                     }
+                }
 
-                    if (matched) {
-                        panelMatched = true;
+                if (matched) {
+                    panelMatched = true;
 
-                        this.$el.find(
-                            '.admin-content-section[data-index="'+panelIndex.toString()+'"] '+
-                            '.admin-content-row[data-index="'+rowIndex.toString()+'"]'
-                        ).removeClass('hidden');
-
-                        anythingMatched = true;
-                    }
-                });
-
-                if (panelMatched) {
-
-                    this.$el
-                        .find('.admin-content-section[data-index="' + panelIndex.toString() + '"]')
-                        .removeClass('hidden');
+                    this.$el.find(
+                        '.admin-content-section[data-index="'+panelIndex.toString()+'"] '+
+                        '.admin-content-row[data-index="'+rowIndex.toString()+'"]'
+                    ).removeClass('hidden');
 
                     anythingMatched = true;
                 }
             });
 
-            if (!anythingMatched) {
-                $noData.removeClass('hidden');
+            if (panelMatched) {
+
+                this.$el
+                    .find('.admin-content-section[data-index="' + panelIndex.toString() + '"]')
+                    .removeClass('hidden');
+
+                anythingMatched = true;
             }
-        },
+        });
 
-        updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Administration'));
-        },
+        if (!anythingMatched) {
+            $noData.removeClass('hidden');
+        }
+    }
 
-        actionClearCache: function () {
-            this.trigger('clear-cache');
-        },
+    updatePageTitle() {
+        this.setPageTitle(this.getLanguage().translate('Administration'));
+    }
 
-        actionRebuild: function () {
-            this.trigger('rebuild');
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionClearCache() {
+        this.trigger('clear-cache');
+    }
 
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionRebuild() {
+        this.trigger('rebuild');
+    }
+}
+
+export default AdminIndexView;
