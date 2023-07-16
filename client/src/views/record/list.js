@@ -2712,12 +2712,10 @@ class ListRecordView extends View {
                 acl: acl,
                 selector: '.list-row[data-id="' + key + '"]',
                 optionsToPass: ['acl'],
-                noCache: true,
                 layoutDefs: {
                     type: this._internalLayoutType,
                     layout: internalLayout
                 },
-                name: this.type + '-' + model.entityType,
                 setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
             }, callback);
         }, model);
