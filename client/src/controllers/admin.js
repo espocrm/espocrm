@@ -29,6 +29,7 @@
 import Controller from 'controller';
 import SearchManager from 'search-manager';
 import SettingsEditView from 'views/settings/edit';
+import AdminIndexView from 'views/admin/index';
 
 class AdminController extends Controller {
 
@@ -86,7 +87,7 @@ class AdminController extends Controller {
         model.fetch().then(() => {
             model.id = '1';
 
-            this.main('views/settings/edit', {
+            const editView = new SettingsEditView({
                 model: model,
                 headerTemplate: 'admin/settings/headers/page',
                 recordView: defs.recordView,
@@ -97,6 +98,8 @@ class AdminController extends Controller {
                     'label',
                 ],
             });
+
+            this.main(editView);
         });
     }
 
@@ -113,12 +116,17 @@ class AdminController extends Controller {
             this.clearStoredMainView(key);
         }
 
-        this.main('views/admin/index', null, view => {
+        const view = new AdminIndexView();
+
+        this.main(view, null, view => {
             view.render();
 
             this.listenTo(view, 'clear-cache', this.clearCache);
             this.listenTo(view, 'rebuild', this.rebuild);
-        }, isReturn, key);
+        }, {
+            useStored: isReturn,
+            key: key,
+        });
     }
 
     // noinspection JSUnusedGlobalSymbols

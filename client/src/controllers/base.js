@@ -29,6 +29,7 @@
 /** @module controllers/base */
 
 import Controller from 'controller';
+import BaseView from 'views/base';
 
 /**
  * A base controller.
@@ -149,6 +150,8 @@ class BaseController extends Controller {
      * Error Not Found.
      */
     error404() {
+        //const view = new BaseView();
+
         this.entire('views/base', {template: 'errors/404'}, view => {
             view.render();
         });

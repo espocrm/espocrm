@@ -455,7 +455,7 @@ class Controller {
     /**
      * Create a main view in the master.
      *
-     * @param {string|module:view} [view] A view name.
+     * @param {string|module:view} [view] A view name or view instance.
      * @param {Object.<string, *>} [options] Options for a view.
      * @param {module:controller~viewCallback} [callback] A callback with a created view.
      * @param {module:controller~mainParams} [params] Parameters.
@@ -468,12 +468,18 @@ class Controller {
             callback: callback,
         };
 
+        const selector = '#main';
+
         const useStored = params.useStored || false;
         const key = params.key;
 
         this.listenToOnce(this.baseController, 'action', () => dto.isCanceled = true);
 
-        view = view || 'views/base';
+        const mainView = view && typeof view === 'object' ?
+            view : undefined;
+
+        const viewName = !mainView ?
+            (view || 'views/base') : undefined;
 
         this.master(masterView => {
             if (dto.isCanceled) {
@@ -481,10 +487,10 @@ class Controller {
             }
 
             options = options || {};
-            options.fullSelector = '#main';
+            options.fullSelector = selector;
 
             if (useStored && this.hasStoredMainView(key)) {
-                let mainView = this.getStoredMainView(key);
+                const mainView = this.getStoredMainView(key);
 
                 let isActual = true;
 
@@ -517,7 +523,20 @@ class Controller {
                 this.clearStoredMainView(key);
             }
 
-            this.viewFactory.create(view, options, view => this._processMain(view, masterView, dto));
+            if (mainView) {
+                masterView.assignView('main', mainView, selector)
+                    .then(() => {
+                        dto.isSet = true;
+
+                        this._processMain(view, masterView, dto);
+                    });
+
+                return;
+            }
+
+            this.viewFactory.create(viewName, options, view => {
+                this._processMain(view, masterView, dto);
+            });
         });
     }
 
@@ -529,6 +548,7 @@ class Controller {
      *     key?: string,
      *     useStored?: boolean,
      *     callback?: module:controller~viewCallback,
+     *     isSet?: boolean,
      * }} dto Data.
      * @private
      */
@@ -565,7 +585,10 @@ class Controller {
         }
 
         masterView.currentViewKey = key;
-        masterView.setView('main', mainView);
+
+        if (!dto.isSet) {
+            masterView.setView('main', mainView);
+        }
 
         const afterRender = () => {
             setTimeout(() => mainView.stopListening(this.baseController, 'action', onAction), 500);
@@ -622,8 +645,7 @@ class Controller {
     /**
      * Create a view in the BODY element.
      *
-     * @todo Add support of view instances.
-     * @param {string} view A view name.
+     * @param {string|module:view} view A view name or view instance.
      * @param {Object.<string, *>} [options] Options for a view.
      * @param {module:controller~viewCallback} [callback] A callback with a created view.
      */
