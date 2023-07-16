@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module views/site/master */
+
 import View from 'view';
 import $ from 'jquery';
 

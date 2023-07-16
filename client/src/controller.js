@@ -30,10 +30,16 @@
 
 import Exceptions from 'exceptions';
 import {Events, View as BullView} from 'bullbone';
+import $ from 'jquery';
 
 /**
  * @callback module:controller~viewCallback
  * @param {module:view} view A view.
+ */
+
+/**
+ * @callback module:controller~masterViewCallback
+ * @param {module:views/site/master} view A master view.
  */
 
 /**
@@ -398,12 +404,13 @@ class Controller {
     }
 
     /**
-     * Create a master view, render if not already rendered.
+     * Serve a master view. Render if not already rendered.
      *
-     * @param {module:controller~viewCallback} callback A callback with a created master view.
+     * @param {module:controller~masterViewCallback} callback A callback with a created master view.
+     * @private
      */
     master(callback) {
-        let entire = this.get('entire');
+        const entire = this.get('entire');
 
         if (entire) {
             entire.remove();
@@ -411,7 +418,7 @@ class Controller {
             this.set('entire', null);
         }
 
-        let master = this.get('master');
+        const master = this.get('master');
 
         if (master) {
             callback.call(this, master);
@@ -421,7 +428,7 @@ class Controller {
 
         let masterView = this.masterView || 'views/site/master';
 
-        this.viewFactory.create(masterView, {fullSelector: 'body'}, /** Bull.View */master => {
+        this.viewFactory.create(masterView, {fullSelector: 'body'}, /** module:view */master => {
             this.set('master', master);
 
             if (this.get('masterRendered')) {
@@ -440,129 +447,150 @@ class Controller {
     }
 
     /**
+     * @typedef {Object} module:controller~mainParams
+     * @property {boolean} [useStored] Use a stored view if available.
+     * @property {string} [key] A stored view key.
+     */
+
+    /**
      * Create a main view in the master.
      *
-     * @param {string} [view] A view name.
-     * @param {Object} [options] Options for view.
+     * @param {string|module:view} [view] A view name.
+     * @param {Object.<string, *>} [options] Options for a view.
      * @param {module:controller~viewCallback} [callback] A callback with a created view.
-     * @param {boolean} [useStored] Use a stored view if available.
-     * @param {string} [storedKey] A stored view key.
+     * @param {module:controller~mainParams} [params] Parameters.
      */
-    main(view, options, callback, useStored, storedKey) {
-        let isCanceled = false;
-        let isRendered = false;
+    main(view, options, callback, params = {}) {
+        const dto = {
+            isCanceled: false,
+            key: params.key,
+            useStored: params.useStored,
+            callback: callback,
+        };
 
-        this.listenToOnce(this.baseController, 'action', () => {
-            isCanceled = true;
-        });
+        const useStored = params.useStored || false;
+        const key = params.key;
+
+        this.listenToOnce(this.baseController, 'action', () => dto.isCanceled = true);
 
         view = view || 'views/base';
 
-        this.master(master => {
-            if (isCanceled) {
+        this.master(masterView => {
+            if (dto.isCanceled) {
                 return;
             }
 
             options = options || {};
             options.fullSelector = '#main';
 
-            let process = main => {
-                if (isCanceled) {
-                    return;
-                }
-
-                if (storedKey) {
-                    this.storeMainView(storedKey, main);
-                }
-
-                const onAction = () => {
-                    main.cancelRender();
-                    isCanceled = true;
-                };
-
-                main.listenToOnce(this.baseController, 'action', onAction);
-
-                if (master.currentViewKey) {
-                    this.set('storedScrollTop-' + master.currentViewKey, $(window).scrollTop());
-
-                    if (this.hasStoredMainView(master.currentViewKey)) {
-                        let mainView = master.getView('main');
-
-                        if (mainView) {
-                            mainView.propagateEvent('remove', {ignoreCleaning: true});
-                        }
-
-                        master.unchainView('main');
-                    }
-                }
-
-                master.currentViewKey = storedKey;
-                master.setView('main', main);
-
-                let afterRender = () => {
-                    setTimeout(() => main.stopListening(this.baseController, 'action', onAction), 500);
-
-                    isRendered = true;
-
-                    main.updatePageTitle();
-
-                    if (useStored && this.has('storedScrollTop-' + storedKey)) {
-                        $(window).scrollTop(this.get('storedScrollTop-' + storedKey));
-
-                        return;
-                    }
-
-                    $(window).scrollTop(0);
-                };
-
-                if (callback) {
-                    this.listenToOnce(main, 'after:render', afterRender);
-
-                    callback.call(this, main);
-
-                    return;
-                }
-
-                main.render()
-                    .then(afterRender);
-            };
-
-            if (useStored && this.hasStoredMainView(storedKey)) {
-                let main = this.getStoredMainView(storedKey);
+            if (useStored && this.hasStoredMainView(key)) {
+                let mainView = this.getStoredMainView(key);
 
                 let isActual = true;
 
                 if (
-                    main &&
-                    ('isActualForReuse' in main) &&
-                    typeof main.isActualForReuse === 'function'
+                    mainView &&
+                    ('isActualForReuse' in mainView) &&
+                    typeof mainView.isActualForReuse === 'function'
                 ) {
-                    isActual = main.isActualForReuse();
+                    isActual = mainView.isActualForReuse();
                 }
 
-                let lastUrl = (main && 'lastUrl' in main) ? main.lastUrl : null;
+                let lastUrl = (mainView && 'lastUrl' in mainView) ? mainView.lastUrl : null;
 
                 if (
                     isActual &&
                     (!lastUrl || lastUrl === this.getRouter().getCurrentUrl())
                 ) {
-                    process(main);
+                    this._processMain(mainView, masterView, dto);
 
                     if (
-                        'setupReuse' in main &&
-                        typeof main.setupReuse === 'function'
+                        'setupReuse' in mainView &&
+                        typeof mainView.setupReuse === 'function'
                     ) {
-                        main.setupReuse(options.params || {});
+                        mainView.setupReuse(options.params || {});
                     }
 
                     return;
                 }
 
-                this.clearStoredMainView(storedKey);
+                this.clearStoredMainView(key);
             }
 
-            this.viewFactory.create(view, options, process);
+            this.viewFactory.create(view, options, view => this._processMain(view, masterView, dto));
         });
+    }
+
+    /**
+     * @param {module:view} mainView
+     * @param {module:views/site/master} masterView
+     * @param {{
+     *     isCanceled: boolean,
+     *     key?: string,
+     *     useStored?: boolean,
+     *     callback?: module:controller~viewCallback,
+     * }} dto Data.
+     * @private
+     */
+    _processMain(mainView, masterView, dto) {
+        if (dto.isCanceled) {
+            return;
+        }
+
+        const key = dto.key;
+
+        if (key) {
+            this.storeMainView(key, mainView);
+        }
+
+        const onAction = () => {
+            mainView.cancelRender();
+            dto.isCanceled = true;
+        };
+
+        mainView.listenToOnce(this.baseController, 'action', onAction);
+
+        if (masterView.currentViewKey) {
+            this.set('storedScrollTop-' + masterView.currentViewKey, $(window).scrollTop());
+
+            if (this.hasStoredMainView(masterView.currentViewKey)) {
+                let mainView = masterView.getView('main');
+
+                if (mainView) {
+                    mainView.propagateEvent('remove', {ignoreCleaning: true});
+                }
+
+                masterView.unchainView('main');
+            }
+        }
+
+        masterView.currentViewKey = key;
+        masterView.setView('main', mainView);
+
+        const afterRender = () => {
+            setTimeout(() => mainView.stopListening(this.baseController, 'action', onAction), 500);
+
+            mainView.updatePageTitle();
+
+            if (dto.useStored && this.has('storedScrollTop-' + key)) {
+                $(window).scrollTop(this.get('storedScrollTop-' + key));
+
+                return;
+            }
+
+            $(window).scrollTop(0);
+        };
+
+        if (dto.callback) {
+            this.listenToOnce(mainView, 'after:render', afterRender);
+
+            dto.callback.call(this, mainView);
+
+            return;
+        }
+
+        mainView.render()
+            .then(afterRender);
     }
 
     /**
@@ -592,17 +620,18 @@ class Controller {
     }
 
     /**
-     * Create a view in the <body> element.
+     * Create a view in the BODY element.
      *
-     * @param {String} view A view name.
-     * @param {Bull.View~Options} options Options for a view.
+     * @todo Add support of view instances.
+     * @param {string} view A view name.
+     * @param {Object.<string, *>} [options] Options for a view.
      * @param {module:controller~viewCallback} [callback] A callback with a created view.
      */
     entire(view, options, callback) {
-        let master = this.get('master');
+        const masterView = this.get('master');
 
-        if (master) {
-            master.remove();
+        if (masterView) {
+            masterView.remove();
         }
 
         this.set('master', null);

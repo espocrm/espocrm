@@ -28,6 +28,7 @@
 
 import Controller from 'controller';
 import SearchManager from 'search-manager';
+import SettingsEditView from 'views/settings/edit';
 
 class AdminController extends Controller {
 
