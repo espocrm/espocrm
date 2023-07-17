@@ -32,6 +32,7 @@ use Espo\Core\Container;
 use Espo\Core\DataManager;
 use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\DatabaseParamsFactory;
+use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Database\Dbal\ConnectionFactoryFactory;
 use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Core\Utils\ScheduledJob as ScheduledJobUtil;
@@ -52,6 +53,7 @@ use Espo\Entities\Job;
 use Espo\Entities\ScheduledJob;
 use Espo\Entities\User;
 use Espo\ORM\Query\SelectBuilder;
+use Espo\Tools\Installer\DatabaseConfigDataProvider;
 
 class Installer
 {
@@ -299,13 +301,22 @@ class Installer
 
     public function getSystemRequirementList($type, $requiredOnly = false, array $additionalData = null)
     {
+        $platform = $additionalData['databaseParams']['platform'] ?? 'Mysql';
+
+        $dbConfigDataProvider = new DatabaseConfigDataProvider($platform);
+
         /** @var SystemRequirements $systemRequirementManager */
-         $systemRequirementManager = $this->app
+        $systemRequirementManager = $this->app
             ->getContainer()
             ->getByClass(InjectableFactory::class)
-            ->create(SystemRequirements::class);
+            ->createWithBinding(
+                SystemRequirements::class,
+                BindingContainerBuilder::create()
+                    ->bindInstance(ConfigDataProvider::class, $dbConfigDataProvider)
+                    ->build()
+            );
 
-         return $systemRequirementManager->getRequiredListByType($type, $requiredOnly, $additionalData);
+        return $systemRequirementManager->getRequiredListByType($type, $requiredOnly, $additionalData);
     }
 
     public function checkDatabaseConnection(array $rawParams, bool $createDatabase = false): void

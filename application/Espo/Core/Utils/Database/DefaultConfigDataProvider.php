@@ -27,55 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-$clearedCookieList = [
-    'auth-token-secret',
-    'auth-username',
-    'auth-token',
-];
+namespace Espo\Core\Utils\Database;
 
-foreach ($clearedCookieList as $cookieName) {
-    if (!isset($_COOKIE[$cookieName])) {
-        continue;
-    }
+use Espo\Core\Utils\Config;
 
-    setcookie($cookieName, null, -1, '/');
-}
+class DefaultConfigDataProvider implements ConfigDataProvider
+{
+    private const DEFAULT_PLATFORM = 'Mysql';
 
-$config = $installer->getConfig();
+    public function __construct(private Config $config) {}
 
-$fields = [
-    'db-platform' => [
-        'default' => $config->get('database.platform', 'Mysql'),
-    ],
-    'db-driver' => [
-        'default' => $config->get('database.driver', ''),
-    ],
-    'db-name' => [
-        'default' => $config->get('database.dbname', ''),
-    ],
-    'host-name' => [
-        'default' => $config->get('database.host', '') .
-            ($config->get('database.port') ? ':' . $config->get('database.port') : ''),
-    ],
-    'db-user-name' => [
-        'default' => $config->get('database.user', ''),
-    ],
-    'db-user-password' => [],
-];
-
-foreach ($fields as $fieldName => $field) {
-    if (isset($_SESSION['install'][$fieldName])) {
-        $fields[$fieldName]['value'] = $_SESSION['install'][$fieldName];
-    } else {
-        $fields[$fieldName]['value'] = $field['default'] ?? '';
+    public function getPlatform(): string
+    {
+        return $this->config->get('database.platform') ?? self::DEFAULT_PLATFORM;
     }
 }
-
-$platforms = [
-    'Mysql' => 'MySQL',
-    'Postgresql' => 'PostgreSQL',
-];
-
-$smarty->assign('platforms', $platforms);
-
-$smarty->assign('fields', $fields);

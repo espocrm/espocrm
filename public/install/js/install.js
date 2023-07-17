@@ -363,6 +363,7 @@ InstallScript.prototype.finish = function() {
 }
 
 InstallScript.prototype.setConnSett = function() {
+    this.connSett.dbPlatform = $('[name="db-platform"]').val();
 	this.connSett.dbName = $('[name="db-name"]').val();
 	this.connSett.hostName = $('[name="host-name"]').val();
 	this.connSett.dbUserName = $('[name="db-user-name"]').val();

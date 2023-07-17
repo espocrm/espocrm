@@ -6,6 +6,23 @@
         <div class="row">
             <div class=" col-md-6">
                 <div class="row">
+                    <div class="cell cell-db-platform col-sm-12 form-group">
+                        <label class="field-label-db-platform control-label">{$langs['fields']['Platform']}</label>
+                        <div class="field field-db-platform">
+                            <select
+                                name="db-platform"
+                                class="main-element form-control"
+                            >
+                            {foreach from=$platforms item=lbl key=val}
+                                {if $val == $fields['db-platform'].value}
+                                <option selected="selected" value="{$val}">{$lbl}</option>
+                                {else}
+                                <option value="{$val}">{$lbl}</option>
+                                {/if}
+                            {/foreach}
+                            </select>
+                        </div>
+                    </div>
                     <div class="cell cell-website col-sm-12 form-group">
                             <label class="field-label-website control-label">{$langs['fields']['Host Name']} *</label>
                             <div class="field field-website">

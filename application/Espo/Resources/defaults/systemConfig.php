@@ -75,6 +75,7 @@ return [
         'internalOutboundEmailFromAddress',
         'requiredPhpVersion',
         'requiredMysqlVersion',
+        'requiredPostgresqlVersion',
         'recommendedMysqlParams',
         'requiredPhpLibs',
         'recommendedPhpLibs',
@@ -270,6 +271,7 @@ return [
     'requiredMysqlVersion' => '5.7.0',
     'recommendedMysqlParams' => [],
     'requiredMariadbVersion' => '10.2.2',
+    'requiredPostgresqlVersion' => '15.0',
     'recommendedMariadbParams' => [],
     /** Max execution time (in seconds) allocated for a single job. If exceeded then set to Failed.*/
     'jobPeriod' => 7800,

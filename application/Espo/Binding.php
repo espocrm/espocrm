@@ -240,6 +240,11 @@ class Binding implements BindingProcessor
             'Espo\\ORM\\PDO\\PDOProvider',
             'Espo\\ORM\\PDO\\DefaultPDOProvider'
         );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Utils\\Database\\ConfigDataProvider',
+            'Espo\\Core\\Utils\\Database\\DefaultConfigDataProvider'
+        );
     }
 
     private function bindMisc(Binder $binder): void

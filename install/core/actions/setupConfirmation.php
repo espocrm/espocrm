@@ -39,6 +39,7 @@ $dbConfig = [
     'dbname' => $installData['db-name'],
     'user' => $installData['db-user-name'],
     'password' => $installData['db-user-password'],
+    'platform' => $installData['db-platform']
 ];
 
 $mysqlRequirementList = $installer->getSystemRequirementList('database', false, ['databaseParams' => $dbConfig]);

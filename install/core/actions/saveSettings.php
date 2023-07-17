@@ -40,15 +40,16 @@ $database = [
     'dbname' => $_SESSION['install']['db-name'],
     'user' => $_SESSION['install']['db-user-name'],
     'password' => $_SESSION['install']['db-user-password'],
+    'platform' => $_SESSION['install']['db-platform'],
 ];
 
 $host = $_SESSION['install']['host-name'];
 
-if (strpos($host,':') === false) {
+if (!str_contains($host, ':')) {
     $host .= ":";
 }
 
-list($database['host'], $database['port']) = explode(':', $host);
+[$database['host'], $database['port']] = explode(':', $host);
 
 $saveData = [
     'database' => $database,
