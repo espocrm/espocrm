@@ -316,9 +316,10 @@ class SystemRequirements
         switch ($type) {
             case 'requiredMysqlVersion':
             case 'requiredMariadbVersion':
+            case 'requiredPostgresqlVersion':
                 /** @var string $data */
 
-                $actualVersion = $databaseHelper->getServerVersion();
+                $actualVersion = $databaseHelper->getVersion();
 
                 $requiredVersion = $data;
 

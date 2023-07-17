@@ -57,7 +57,7 @@ class PostgresqlDetailsProvider implements DetailsProvider
 
     public function getServerVersion(): string
     {
-        return (string) $this->getParam('version');
+        return (string) $this->getFullDatabaseVersion();
     }
 
     public function getParam(string $name): ?string

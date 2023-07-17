@@ -330,6 +330,7 @@
         "requiredPhpVersion": "PHP Version",
         "requiredMysqlVersion": "MySQL Version",
         "requiredMariadbVersion": "MariaDB version",
+        "requiredPostgresqlVersion": "PostgreSQL version",
         "host": "Host Name",
         "dbname": "Database Name",
         "user": "User Name",
