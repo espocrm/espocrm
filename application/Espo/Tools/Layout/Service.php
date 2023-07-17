@@ -71,9 +71,9 @@ class Service
         if ($setId) {
             $layout = $this->getRecordFromSet($scope, $name, $setId, true);
 
-            if ($layout && $layout->get('data') !== null) {
+            if ($layout && $layout->getData() !== null) {
                 /** @var string $data */
-                $data = $layout->get('data');
+                $data = $layout->getData();
 
                 $result = Json::decode($data);
             }
@@ -177,8 +177,7 @@ class Service
                     $link = $item->name ?? null;
                 }
 
-                $foreignEntityType = $this->metadata
-                    ->get(['entityDefs', $scope, 'links', $link, 'entity']);
+                $foreignEntityType = $this->metadata->get(['entityDefs', $scope, 'links', $link, 'entity']);
 
                 if (
                     $foreignEntityType &&
@@ -258,7 +257,7 @@ class Service
             $this->entityManager->saveEntity($layout);
 
             return Json::decode(
-                $layout->get('data')
+                $layout->getData()
             );
         }
 
