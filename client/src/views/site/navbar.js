@@ -390,7 +390,7 @@ class NavbarSiteView extends View {
             selector: '.notifications-badge-container'
         });
 
-        let setup = () => {
+        const setup = () => {
             this.setupQuickCreateList();
             this.setupGlobalSearch();
             this.setupTabDefsList();
@@ -537,7 +537,7 @@ class NavbarSiteView extends View {
 
         updateMoreHeight();
 
-        let hideOneTab = () => {
+        const hideOneTab = () => {
             let count = $tabs.children().length;
 
             if (count <= 1) {
@@ -549,7 +549,7 @@ class NavbarSiteView extends View {
             $one.prependTo($more);
         };
 
-        let unhideOneTab = () => {
+        const unhideOneTab = () => {
             let $one = $more.children().eq(0);
 
             if ($one.length) {
@@ -579,7 +579,7 @@ class NavbarSiteView extends View {
         let $moreDd = $('#nav-more-tabs-dropdown');
         let $moreLi = $moreDd.closest('li');
 
-        let updateWidth = () => {
+        const updateWidth = () => {
             let windowWidth = window.innerWidth;
             let moreWidth = $moreLi.width();
 
@@ -623,7 +623,7 @@ class NavbarSiteView extends View {
             }
         };
 
-        let processUpdateWidth = isRecursive => {
+        const processUpdateWidth = isRecursive => {
             if ($navbar.height() > navbarNeededHeight) {
                 updateWidth();
                 setTimeout(() => processUpdateWidth(true), 200);
@@ -682,7 +682,7 @@ class NavbarSiteView extends View {
             $more.scrollTop($window.scrollTop());
         });
 
-        let updateSizeForSide = () => {
+        const updateSizeForSide = () => {
             let windowHeight = window.innerHeight;
             let windowWidth = window.innerWidth;
 
