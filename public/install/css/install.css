@@ -154,6 +154,8 @@ header.step-header h4 {
 
     border-bottom-left-radius: var(--panel-border-radius);
     border-bottom-right-radius: var(--panel-border-radius);
+
+    padding-bottom: 14px;
 }
 
 #license-agree {
