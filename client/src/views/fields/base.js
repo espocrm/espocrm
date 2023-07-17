@@ -46,6 +46,7 @@ class BaseFieldView extends View {
      * @property {module:views/fields/base~params | Object.<string, *>} [params] Parameters.
      * @property {boolean} [inlineEditDisabled] Disable inline edit.
      * @property {boolean} [readOnly] Read-only.
+     * @property {string} [labelText] A custom label text.
      */
 
     /**
@@ -61,6 +62,7 @@ class BaseFieldView extends View {
         super(options);
 
         this.name = options.name;
+        this.labelText = options.labelText;
     }
 
     /**
@@ -226,6 +228,14 @@ class BaseFieldView extends View {
     readOnly = false
 
     /**
+     * A label text.
+     *
+     * @type {string}
+     * @protected
+     */
+    labelText
+
+    /**
      * @type {string[]|null}
      */
     attributeList = null
@@ -233,7 +243,7 @@ class BaseFieldView extends View {
     /**
      * Attribute values before edit.
      *
-     * @type {Object.<string,*>|{}}
+     * @type {Object.<string, *>|{}}
      */
     initialAttributes = null
 
@@ -691,6 +701,10 @@ class BaseFieldView extends View {
         this.entityType = this.model.entityType || this.model.name;
 
         this.recordHelper = this.options.recordHelper;
+
+        if (!this.labelText) {
+            this.labelText = this.translate(this.name, 'fields', this.entityType);
+        }
 
         this.getFieldManager().getParamList(this.type).forEach(d => {
             let name = d.name;
@@ -1514,7 +1528,7 @@ class BaseFieldView extends View {
      * @returns {string}
      */
     getLabelText() {
-        return this.options.labelText || this.translate(this.name, 'fields', this.entityType);
+        return this.labelText;
     }
 
     /**

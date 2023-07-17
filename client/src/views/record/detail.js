@@ -3205,6 +3205,16 @@ class DetailRecordView extends BaseRecordView {
                         cell.label = cellDefs.label;
                     }
 
+                    if (
+                        view &&
+                        typeof view === 'object' &&
+                        !cell.customLabel &&
+                        !cell.label &&
+                        view.getLabelText()
+                    ) {
+                        cell.customLabel = view.getLabelText();
+                    }
+
                     if ('customCode' in cellDefs) {
                         cell.customCode = cellDefs.customCode;
                     }
