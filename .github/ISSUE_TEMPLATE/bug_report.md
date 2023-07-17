@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a bug report. Not to be used for help requests or server configuration issues. We appreciate if you prefer posting bug reports on weekdays rather than weekends.
+about: Create a bug report. Not to be used for help requests or server configuration issues.
 title: ''
 labels: ''
 assignees: ''
