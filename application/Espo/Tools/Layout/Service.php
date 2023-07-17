@@ -64,7 +64,7 @@ class Service
      * @throws NotFound
      * @throws Error
      */
-    public function getOriginal(string $scope, string $name, ?string $setId = null)
+    public function getOriginal(string $scope, string $name, ?string $setId = null): mixed
     {
         $result = null;
 
@@ -93,12 +93,11 @@ class Service
     }
 
     /**
-     * @return mixed
      * @throws Forbidden
      * @throws NotFound
      * @throws Error
      */
-    public function getForFrontend(string $scope, string $name)
+    public function getForFrontend(string $scope, string $name): mixed
     {
         try {
             if (!$this->acl->checkScope($scope)) {
@@ -237,12 +236,10 @@ class Service
     }
 
     /**
-     * @param mixed $data
-     * @return mixed
      * @throws NotFound
      * @throws Error
      */
-    public function update(string $scope, string $name, ?string $setId, $data)
+    public function update(string $scope, string $name, ?string $setId, mixed $data): mixed
     {
         if ($setId) {
             $layout = $this->getRecordFromSet($scope, $name, $setId);
@@ -280,7 +277,7 @@ class Service
      * @throws NotFound
      * @throws Error
      */
-    public function resetToDefault(string $scope, string $name, ?string $setId = null)
+    public function resetToDefault(string $scope, string $name, ?string $setId = null): mixed
     {
         $this->dataManager->updateCacheTimestamp();
 
