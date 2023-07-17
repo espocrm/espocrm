@@ -26,161 +26,173 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/entity-manager/index', ['view'], function (Dep) {
+import View from 'view';
+import EntityManagerExportModalView from 'views/admin/entity-manager/modals/export';
 
-    return Dep.extend({
+class EntityManagerIndexView extends View {
 
-        template: 'admin/entity-manager/index',
+    template = 'admin/entity-manager/index'
+    scopeDataList = null
+    scope = null
 
-        scopeDataList: null,
+    data() {
+        return {
+            scopeDataList: this.scopeDataList,
+        };
+    }
 
-        scope: null,
-
-        data: function () {
-            return {
-                scopeDataList: this.scopeDataList,
-            };
+    events = {
+        /** @this EntityManagerIndexView */
+        'click button[data-action="createEntity"]': function () {
+            this.getRouter().navigate('#Admin/entityManager/create&', {trigger: true});
         },
-
-        events: {
-            'click button[data-action="createEntity"]': function (e) {
-                this.getRouter().navigate('#Admin/entityManager/create&', {trigger: true});
-            },
-
-            'keyup input[data-name="quick-search"]': function (e) {
-                this.processQuickSearch(e.currentTarget.value);
-            },
+        /** @this EntityManagerIndexView */
+        'keyup input[data-name="quick-search"]': function (e) {
+            this.processQuickSearch(e.currentTarget.value);
         },
+    }
 
-        setupScopeData: function () {
-            this.scopeDataList = [];
+    setupScopeData() {
+        this.scopeDataList = [];
 
-            var scopeList = Object.keys(this.getMetadata().get('scopes'))
-                .sort((v1, v2) => {
-                    return v1.localeCompare(v2);
-                });
-
-            var scopeListSorted = [];
-
-            scopeList.forEach((scope) => {
-                var d = this.getMetadata().get('scopes.' + scope);
-
-                if (d.entity && d.customizable) {
-                    scopeListSorted.push(scope);
-                }
+        let scopeList = Object.keys(this.getMetadata().get('scopes'))
+            .sort((v1, v2) => {
+                return v1.localeCompare(v2);
             });
 
-            scopeList.forEach((scope) => {
-                var d = this.getMetadata().get('scopes.' + scope);
+        let scopeListSorted = [];
 
-                if (d.entity && !d.customizable) {
-                    scopeListSorted.push(scope);
-                }
-            });
+        scopeList.forEach(scope => {
+            var d = this.getMetadata().get('scopes.' + scope);
 
-            scopeList = scopeListSorted;
+            if (d.entity && d.customizable) {
+                scopeListSorted.push(scope);
+            }
+        });
 
-            scopeList.forEach((scope) => {
-                var d = this.getMetadata().get('scopes.' + scope);
+        scopeList.forEach(scope => {
+            var d = this.getMetadata().get('scopes.' + scope);
 
-                var isRemovable = !!d.isCustom;
+            if (d.entity && !d.customizable) {
+                scopeListSorted.push(scope);
+            }
+        });
 
-                if (d.isNotRemovable) {
-                    isRemovable = false;
-                }
+        scopeList = scopeListSorted;
 
-                let hasView = d.customizable;
+        scopeList.forEach(scope => {
+            let d = /** @type Object.<string, *>*/this.getMetadata().get('scopes.' + scope);
 
-                this.scopeDataList.push({
-                    name: scope,
-                    isCustom: d.isCustom,
-                    isRemovable: isRemovable,
-                    hasView: hasView,
-                    type: d.type,
-                    label: this.getLanguage().translate(scope, 'scopeNames'),
-                    layouts: d.layouts,
-                });
-            });
-        },
+            let isRemovable = !!d.isCustom;
 
-        setup: function () {
-            this.setupScopeData();
-        },
-
-        afterRender: function () {
-            this.$noData = this.$el.find('.no-data');
-
-            this.$el.find('input[data-name="quick-search"]').focus();
-        },
-
-        updatePageTitle: function () {
-            this.setPageTitle(this.getLanguage().translate('Entity Manager', 'labels', 'Admin'));
-        },
-
-        processQuickSearch: function (text) {
-            text = text.trim();
-
-            let $noData = this.$noData;
-
-            $noData.addClass('hidden');
-
-            if (!text) {
-                this.$el.find('table tr.scope-row').removeClass('hidden');
-
-                return;
+            if (d.isNotRemovable) {
+                isRemovable = false;
             }
 
-            let matchedList = [];
+            let hasView = d.customizable;
 
-            let lowerCaseText = text.toLowerCase();
-
-            this.scopeDataList.forEach(item => {
-                let matched = false;
-
-                if (
-                    item.label.toLowerCase().indexOf(lowerCaseText) === 0 ||
-                    item.name.toLowerCase().indexOf(lowerCaseText) === 0
-                ) {
-                    matched = true;
-                }
-
-                if (!matched) {
-                    let wordList = item.label.split(' ')
-                        .concat(
-                            item.label.split(' ')
-                        );
-
-                    wordList.forEach((word) => {
-                        if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
-                            matched = true;
-                        }
-                    });
-                }
-
-                if (matched) {
-                    matchedList.push(item.name);
-                }
+            this.scopeDataList.push({
+                name: scope,
+                isCustom: d.isCustom,
+                isRemovable: isRemovable,
+                hasView: hasView,
+                type: d.type,
+                label: this.getLanguage().translate(scope, 'scopeNames'),
+                layouts: d.layouts,
             });
+        });
+    }
 
-            if (matchedList.length === 0) {
-                this.$el.find('table tr.scope-row').addClass('hidden');
+    setup() {
+        this.setupScopeData();
 
-                $noData.removeClass('hidden');
+        this.addActionHandler('export', () => this.actionExport());
+    }
 
-                return;
+    afterRender() {
+        this.$noData = this.$el.find('.no-data');
+
+        this.$el.find('input[data-name="quick-search"]').focus();
+    }
+
+    updatePageTitle() {
+        this.setPageTitle(this.getLanguage().translate('Entity Manager', 'labels', 'Admin'));
+    }
+
+    processQuickSearch(text) {
+        text = text.trim();
+
+        let $noData = this.$noData;
+
+        $noData.addClass('hidden');
+
+        if (!text) {
+            this.$el.find('table tr.scope-row').removeClass('hidden');
+
+            return;
+        }
+
+        let matchedList = [];
+
+        let lowerCaseText = text.toLowerCase();
+
+        this.scopeDataList.forEach(item => {
+            let matched = false;
+
+            if (
+                item.label.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                item.name.toLowerCase().indexOf(lowerCaseText) === 0
+            ) {
+                matched = true;
             }
 
-            this.scopeDataList
-                .map(item => item.name)
-                .forEach(scope => {
-                    if (!~matchedList.indexOf(scope)) {
-                        this.$el.find('table tr.scope-row[data-scope="'+scope+'"]').addClass('hidden');
+            if (!matched) {
+                let wordList = item.label.split(' ')
+                    .concat(
+                        item.label.split(' ')
+                    );
 
-                        return;
+                wordList.forEach((word) => {
+                    if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
+                        matched = true;
                     }
-
-                    this.$el.find('table tr.scope-row[data-scope="'+scope+'"]').removeClass('hidden');
                 });
-        },
-    });
-});
+            }
+
+            if (matched) {
+                matchedList.push(item.name);
+            }
+        });
+
+        if (matchedList.length === 0) {
+            this.$el.find('table tr.scope-row').addClass('hidden');
+
+            $noData.removeClass('hidden');
+
+            return;
+        }
+
+        this.scopeDataList
+            .map(item => item.name)
+            .forEach(scope => {
+                if (!~matchedList.indexOf(scope)) {
+                    this.$el.find('table tr.scope-row[data-scope="'+scope+'"]').addClass('hidden');
+
+                    return;
+                }
+
+                this.$el.find('table tr.scope-row[data-scope="'+scope+'"]').removeClass('hidden');
+            });
+    }
+
+    actionExport() {
+        const view = new EntityManagerExportModalView();
+
+        this.assignView('dialog', view)
+            .then(() => {
+                view.render();
+            })
+    }
+}
+
+export default EntityManagerIndexView;

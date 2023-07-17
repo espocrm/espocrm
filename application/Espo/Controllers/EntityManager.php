@@ -31,12 +31,17 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\InjectableFactory;
 use Espo\Entities\User;
 use Espo\Tools\EntityManager\EntityManager as EntityManagerTool;
-
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Tools\ExportCustom\ExportCustom;
+use Espo\Tools\ExportCustom\Params as ExportCustomParams;
+
+use Espo\Tools\ExportCustom\Service as ExportCustomService;
+use stdClass;
 
 class EntityManager
 {
@@ -45,9 +50,9 @@ class EntityManager
      */
     public function __construct(
         private User $user,
-        private EntityManagerTool $entityManagerTool
+        private EntityManagerTool $entityManagerTool,
+        private InjectableFactory $injectableFactory
     ) {
-
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
@@ -424,6 +429,25 @@ class EntityManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
+    public function postActionResetFormulaToDefault(Request $request): bool
+    {
+        $data = $request->getParsedBody();
+
+        $scope = $data->scope ?? null;
+        $type = $data->type ?? null;
+
+        if (!$scope || !$type) {
+            throw new BadRequest();
+        }
+
+        $this->entityManagerTool->resetFormulaToDefault($scope, $type);
+
+        return true;
+    }
+
     public function postActionResetToDefault(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -435,5 +459,46 @@ class EntityManager
         $this->entityManagerTool->resetToDefaults($data->scope);
 
         return true;
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    public function postActionExportCustom(Request $request): stdClass
+    {
+        $data = $request->getParsedBody();
+
+        $name = $data->name ?? null;
+        $version = $data->version ?? null;
+        $author = $data->author ?? null;
+        $module = $data->module ?? null;
+        $description = $data->description ?? null;
+
+        if (
+            !is_string($name) ||
+            !is_string($version) ||
+            !is_string($author) ||
+            !is_string($module) ||
+            !is_string($description) && !is_null($description)
+        ) {
+            throw new BadRequest();
+        }
+
+        $params = new ExportCustomParams(
+            name: $name,
+            module: $module,
+            version: $version,
+            author: $author,
+            description: $description
+        );
+
+        $export = $this->injectableFactory->create(ExportCustom::class);
+        $service = $this->injectableFactory->create(ExportCustomService::class);
+
+        $service->storeToConfig($params);
+
+        $result = $export->process($params);
+
+        return (object) ['id' => $result->getAttachmentId()];
     }
 }

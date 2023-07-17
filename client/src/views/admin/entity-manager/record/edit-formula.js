@@ -26,67 +26,68 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/entity-manager/record/edit-formula', ['views/record/base'], function (Dep) {
+import BaseRecordView from 'views/record/base';
 
-    return Dep.extend({
+class EntityManagerEditFormulaRecordView extends BaseRecordView {
 
-        template: 'admin/entity-manager/record/edit-formula',
+    template = 'admin/entity-manager/record/edit-formula'
 
-        data: function () {
-            return {
-                field: this.field,
-                fieldKey: this.field + 'Field',
-            };
-        },
+    data() {
+        return {
+            field: this.field,
+            fieldKey: this.field + 'Field',
+        };
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.field = this.options.type;
+        this.field = this.options.type;
 
-            let additionalFunctionDataList = null;
+        let additionalFunctionDataList = null;
 
-            if (this.options.type === 'beforeSaveApiScript') {
-                additionalFunctionDataList = this.getRecordServiceFunctionDataList();
-            }
+        if (this.options.type === 'beforeSaveApiScript') {
+            additionalFunctionDataList = this.getRecordServiceFunctionDataList();
+        }
 
-            this.createField(
-                this.field,
-                'views/fields/formula',
-                {
-                    targetEntityType: this.options.targetEntityType,
-                    height: 500,
-                },
-                'edit',
-                false,
-                {additionalFunctionDataList: additionalFunctionDataList}
-            );
-        },
+        this.createField(
+            this.field,
+            'views/fields/formula',
+            {
+                targetEntityType: this.options.targetEntityType,
+                height: 500,
+            },
+            'edit',
+            false,
+            {additionalFunctionDataList: additionalFunctionDataList}
+        );
+    }
 
-        getRecordServiceFunctionDataList: function () {
-            return [
-                {
-                    name: 'recordService\\skipDuplicateCheck',
-                    insertText: 'recordService\\skipDuplicateCheck()',
-                    returnType: 'bool'
-                },
-                {
-                    name: 'recordService\\throwDuplicateConflict',
-                    insertText: 'recordService\\throwDuplicateConflict(RECORD_ID)',
-                },
-                {
-                    name: 'recordService\\throwBadRequest',
-                    insertText: 'recordService\\throwBadRequest(MESSAGE)',
-                },
-                {
-                    name: 'recordService\\throwForbidden',
-                    insertText: 'recordService\\throwForbidden(MESSAGE)',
-                },
-                {
-                    name: 'recordService\\throwConflict',
-                    insertText: 'recordService\\throwConflict(MESSAGE)',
-                },
-            ];
-        },
-    });
-});
+    getRecordServiceFunctionDataList() {
+        return [
+            {
+                name: 'recordService\\skipDuplicateCheck',
+                insertText: 'recordService\\skipDuplicateCheck()',
+                returnType: 'bool'
+            },
+            {
+                name: 'recordService\\throwDuplicateConflict',
+                insertText: 'recordService\\throwDuplicateConflict(RECORD_ID)',
+            },
+            {
+                name: 'recordService\\throwBadRequest',
+                insertText: 'recordService\\throwBadRequest(MESSAGE)',
+            },
+            {
+                name: 'recordService\\throwForbidden',
+                insertText: 'recordService\\throwForbidden(MESSAGE)',
+            },
+            {
+                name: 'recordService\\throwConflict',
+                insertText: 'recordService\\throwConflict(MESSAGE)',
+            },
+        ];
+    }
+}
+
+export default EntityManagerEditFormulaRecordView;

@@ -27,11 +27,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Templates\Controllers;
+namespace Espo\Tools\ExportCustom;
 
-/**
- * Do not remove. Used by exported custom modules.
- */
-class Base extends \Espo\Core\Controllers\Record
+class Result
 {
+    public function __construct(private string $attachmentId) {}
+
+    public function getAttachmentId(): string
+    {
+        return $this->attachmentId;
+    }
 }

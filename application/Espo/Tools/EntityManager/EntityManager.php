@@ -1726,4 +1726,10 @@ class EntityManager
             ]
         ]);
     }
+
+    public function resetFormulaToDefault(string $scope, string $type): void
+    {
+        $this->metadata->delete('formula', $scope, $type);
+        $this->metadata->save();
+    }
 }

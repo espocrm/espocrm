@@ -3,10 +3,25 @@
 {{translate 'Entity Manager' scope='Admin'}}</h3></div>
 
 <div class="button-container">
-    <button class="btn btn-default" data-action="createEntity">
-        <span class="fas fa-plus"></span>
-        {{translate 'Create Entity' scope='Admin'}}
-    </button>
+    <div class="btn-group">
+        <button class="btn btn-default" data-action="createEntity">
+            <span class="fas fa-plus"></span>
+            {{translate 'Create Entity' scope='Admin'}}
+        </button>
+        <button
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+        ><span class="fas fa-ellipsis-h"></span></button>
+        <ul class="dropdown-menu pull-right">
+            <li>
+                <a
+                    role="button"
+                    data-action="export"
+                    tabindex="0"
+                >{{translate 'Export'}}</a>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <div class="row">

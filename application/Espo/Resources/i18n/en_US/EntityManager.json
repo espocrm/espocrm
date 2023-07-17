@@ -43,7 +43,10 @@
         "optimisticConcurrencyControl": "Optimistic concurrency control",
         "updateDuplicateCheck": "Duplicate check on update",
         "duplicateCheckFieldList": "Duplicate check fields",
-        "layout": "Layout"
+        "layout": "Layout",
+        "author": "Author",
+        "module": "Module",
+        "version": "Version"
     },
     "options": {
         "type": {

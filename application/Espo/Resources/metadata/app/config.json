@@ -131,6 +131,9 @@
         },
         "apiCorsMaxAge": {
             "level": "admin"
+        },
+        "customExportManifest": {
+            "level": "admin"
         }
     }
 }
