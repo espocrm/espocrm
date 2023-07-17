@@ -36,7 +36,6 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
-use Espo\Core\Utils\Layout;
 use Espo\Core\Utils\Metadata;
 use RuntimeException;
 
@@ -46,7 +45,7 @@ class CustomLayoutService
         private Metadata $metadata,
         private FileManager $fileManager,
         private Language $baseLanguage,
-        private Layout $layout,
+        private LayoutProvider $layoutProvider,
         private DataManager $dataManager
     ) {}
 
@@ -75,7 +74,7 @@ class CustomLayoutService
         if (
             $this->metadata->get(['clientDefs', $scope, 'additionalLayouts', $name]) ||
             $this->fileManager->exists("application/Espo/Resources/defaults/layouts/$name") ||
-            $this->layout->get($scope, $name)
+            $this->layoutProvider->get($scope, $name)
         ) {
             throw Conflict::createWithBody(
                 "Layout $name already exists.",

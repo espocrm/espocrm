@@ -1,6 +1,6 @@
 {
-    "layout": {
-        "className": "Espo\\Core\\Portal\\Utils\\Layout"
+    "layoutProvider": {
+        "className": "Espo\\Tools\\Layout\\PortalLayoutProvider"
     },
     "themeManager": {
         "className": "Espo\\Core\\Portal\\Utils\\ThemeManager"

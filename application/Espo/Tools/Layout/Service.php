@@ -37,7 +37,6 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Layout as LayoutUtil;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\LayoutSet;
 use Espo\Entities\Portal;
@@ -52,7 +51,7 @@ class Service
 {
     public function __construct(
         private Acl $acl,
-        private LayoutUtil $layout,
+        private LayoutProvider $layoutProvider,
         private LayoutManager $layoutManager,
         private EntityManager $entityManager,
         private Metadata $metadata,
@@ -81,7 +80,7 @@ class Service
         }
 
         if (!$result) {
-            $data = $this->layout->get($scope, $name) ?? 'false';
+            $data = $this->layoutProvider->get($scope, $name) ?? 'false';
 
             $result = Json::decode($data);
         }
@@ -161,7 +160,7 @@ class Service
         }
 
         if (!$data) {
-            $dataString = $this->layout->get($scope, $name) ?? 'null';
+            $dataString = $this->layoutProvider->get($scope, $name) ?? 'null';
 
             $data = Json::decode($dataString);
         }

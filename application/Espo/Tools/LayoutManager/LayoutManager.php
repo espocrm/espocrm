@@ -32,7 +32,7 @@ namespace Espo\Tools\LayoutManager;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Json;
-use Espo\Core\Utils\Layout;
+use Espo\Tools\Layout\LayoutProvider;
 
 use const JSON_PRETTY_PRINT;
 use const JSON_UNESCAPED_UNICODE;
@@ -44,15 +44,17 @@ class LayoutManager
      */
     protected $changedData = [];
 
-    public function __construct(protected FileManager $fileManager, protected Layout $layout)
-    {}
+    public function __construct(
+        protected FileManager $fileManager,
+        protected LayoutProvider $layoutProvider
+    ) {}
 
     /**
      * Get layout in string format.
      */
     public function get(string $scope, string $name): ?string
     {
-        return $this->layout->get($scope, $name);
+        return $this->layoutProvider->get($scope, $name);
     }
 
     /**
@@ -138,6 +140,6 @@ class LayoutManager
     protected function sanitizeInput(string $name): string
     {
         /** @var string */
-        return preg_replace("([\.]{2,})", '', $name);
+        return preg_replace("([.]{2,})", '', $name);
     }
 }

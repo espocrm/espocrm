@@ -29,7 +29,7 @@
 
 namespace tests\unit\Espo\Core\Utils;
 
-use Espo\Core\Utils\Layout;
+use Espo\Tools\Layout\LayoutProvider;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\InjectableFactory;
 
@@ -41,7 +41,7 @@ use Espo\Core\{
 class LayoutTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var Layout
+     * @var LayoutProvider
      */
     private $layout;
 
@@ -65,7 +65,7 @@ class LayoutTest extends \PHPUnit\Framework\TestCase
 
         $this->fileReader = $this->createMock(FileReader::class);
 
-        $this->layout = new Layout($this->fileManager, $this->injectableFactory, $this->fileReader);
+        $this->layout = new \Espo\Tools\Layout\LayoutProvider($this->fileManager, $this->injectableFactory, $this->fileReader);
     }
 
     public function testGet1(): void
