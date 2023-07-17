@@ -72,7 +72,7 @@ foreach ($fields as $fieldName => $field) {
 }
 
 $platforms = [
-    'Mysql' => 'MySQL',
+    'Mysql' => 'MySQL / MariaDB',
     'Postgresql' => 'PostgreSQL',
 ];
 
