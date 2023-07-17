@@ -84,7 +84,7 @@ class Layout
             $defaultImpl = $this->injectableFactory->create($defaultImplClassName);
 
             if (!method_exists($defaultImpl, 'get')) {
-                throw new RuntimeException("No 'get' method in '{$defaultImplClassName}'.");
+                throw new RuntimeException("No 'get' method in '$defaultImplClassName'.");
             }
 
             $data = $defaultImpl->get($scope);
@@ -104,6 +104,6 @@ class Layout
     protected function sanitizeInput(string $name): string
     {
         /** @var string */
-        return preg_replace("([\.]{2,})", '', $name);
+        return preg_replace("([.]{2,})", '', $name);
     }
 }

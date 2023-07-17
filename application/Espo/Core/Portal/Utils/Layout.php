@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Portal\Utils;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Layout as LayoutBase;
 use Espo\Core\Utils\Resource\FileReader\Params as FileReaderParams;
+use RuntimeException;
 
 class Layout extends LayoutBase
 {
@@ -41,7 +41,7 @@ class Layout extends LayoutBase
             $this->sanitizeInput($scope) !== $scope ||
             $this->sanitizeInput($name) !== $name
         ) {
-            throw new Error("Bad parameters.");
+            throw new RuntimeException("Bad parameters.");
         }
 
         $path = 'layouts/' . $scope . '/portal/' . $name . '.json';
