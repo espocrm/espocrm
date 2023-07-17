@@ -387,14 +387,15 @@ class NavbarSiteView extends View {
         });
 
         this.createView('notificationsBadge', 'views/notification/badge', {
-            selector: '.notifications-badge-container'
+            selector: '.notifications-badge-container',
         });
 
         const setup = () => {
             this.setupQuickCreateList();
-            this.setupGlobalSearch();
             this.setupTabDefsList();
         };
+
+        this.setupGlobalSearch();
 
         setup();
 
@@ -485,7 +486,7 @@ class NavbarSiteView extends View {
 
         if (this.globalSearchAvailable) {
             this.createView('globalSearch', 'views/global-search/global-search', {
-                selector: '.global-search-container'
+                selector: '.global-search-container',
             });
         }
     }
