@@ -95,7 +95,6 @@ class LayoutCreateModalView extends ModalView {
                     columns: [
                         [
                             {
-                                labelText: this.translate('type', 'fields', 'Admin'),
                                 view: new EnumFieldView({
                                     name: 'type',
                                     params: {
@@ -103,10 +102,10 @@ class LayoutCreateModalView extends ModalView {
                                         translation: 'Admin.layouts',
                                         options: ['list'],
                                     },
+                                    labelText: this.translate('type', 'fields', 'Admin'),
                                 }),
                             },
                             {
-                                labelText: this.translate('name', 'fields'),
                                 view: new VarcharFieldView({
                                     name: 'name',
                                     params: {
@@ -114,16 +113,17 @@ class LayoutCreateModalView extends ModalView {
                                         noSpellCheck: true,
                                         pattern: '$latinLetters',
                                     },
+                                    labelText: this.translate('name', 'fields'),
                                 }),
                             },
                             {
-                                labelText: this.translate('label', 'fields', 'Admin'),
                                 view: new VarcharFieldView({
                                     name: 'label',
                                     params: {
                                         required: true,
                                         pattern: '$noBadCharacters',
                                     },
+                                    labelText: this.translate('label', 'fields', 'Admin'),
                                 }),
                             },
                         ],
