@@ -80,4 +80,10 @@ class Portal extends \Espo\Core\ORM\Entity
         /** @var ?Link */
         return $this->getValueObject('authenticationProvider');
     }
+
+    public function getLayoutSet(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('layoutSet');
+    }
 }

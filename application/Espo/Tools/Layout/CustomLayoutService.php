@@ -41,6 +41,8 @@ use RuntimeException;
 
 class CustomLayoutService
 {
+    private const TYPE_LIST = 'list';
+
     public function __construct(
         private Metadata $metadata,
         private FileManager $fileManager,
@@ -63,7 +65,7 @@ class CustomLayoutService
 
         $this->checkName($name);
 
-        if ($type !== 'list') {
+        if ($type !== self::TYPE_LIST) {
             throw new BadRequest("Not supported type.");
         }
 

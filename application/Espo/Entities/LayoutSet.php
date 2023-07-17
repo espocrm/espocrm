@@ -29,7 +29,17 @@
 
 namespace Espo\Entities;
 
-class LayoutSet extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class LayoutSet extends Entity
 {
     public const ENTITY_TYPE = 'LayoutSet';
+
+    /**
+     * @return string[]
+     */
+    public function getLayoutList(): array
+    {
+        return $this->get('layoutList') ?? [];
+    }
 }
