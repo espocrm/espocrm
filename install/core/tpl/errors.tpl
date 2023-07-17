@@ -9,11 +9,6 @@
         </div>
     </form>
 </div>
-<div class="loading-panel hide">
-    <div class="text-right">
-        <i class="fas fa-spinner fa-spin"></i>
-    </div>
-</div>
 <footer class="modal-footer">
     <button class="btn btn-warning btn-s-wide" type="button" id="re-check">{$langs['labels']['Re-check']}</button>
 </footer>

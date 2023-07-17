@@ -104,11 +104,6 @@ body > .content {
 	margin-right: 10px;
 }
 
-.loading-panel {
-    padding: 0 14px 10px 0;
-    margin-top: -29px;
-}
-
 .space {
     padding: 14px;
 }
@@ -156,6 +151,9 @@ header.step-header h4 {
 
 .panel .modal-footer {
     background-color: var(--panel-bg) !important;
+
+    border-bottom-left-radius: var(--panel-border-radius);
+    border-bottom-right-radius: var(--panel-border-radius);
 }
 
 #license-agree {

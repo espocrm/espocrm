@@ -584,11 +584,11 @@ InstallScript.prototype.hideMsg = function() {
 }
 
 InstallScript.prototype.showLoading = function() {
-	$('.loading-panel').removeClass('hide');
+    Espo.Ui.notify(' ... ');
 }
 
 InstallScript.prototype.hideLoading = function() {
-	$('.loading-panel').addClass('hide');
+    Espo.Ui.notify(false);
 }
 
 InstallScript.prototype.checkPass = function(opt) {
