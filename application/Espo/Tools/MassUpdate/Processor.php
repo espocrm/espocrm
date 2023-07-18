@@ -186,7 +186,7 @@ class Processor
         }
 
         try {
-            $this->linkCheck->process($entity);
+            $this->linkCheck->processFields($entity);
         }
         catch (Forbidden) {
             return false;

@@ -71,7 +71,7 @@ class LinkCheck
      *
      * @throws Forbidden
      */
-    public function process(Entity $entity): void
+    public function processFields(Entity $entity): void
     {
         $this->processLinkMultiple($entity);
     }
@@ -212,6 +212,16 @@ class LinkCheck
                     ->encode()
             );
         }
+    }
+
+    /**
+     * Check unlink access to a specific link.
+     *
+     * @throws Forbidden
+     */
+    public function processUnlink(Entity $entity, string $link): void
+    {
+        $this->processLink($entity, $link);
     }
 
     /**

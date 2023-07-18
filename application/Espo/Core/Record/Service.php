@@ -671,7 +671,7 @@ class Service implements Crud,
 
         $this->processValidation($entity, $data);
         $this->processAssignmentCheck($entity);
-        $this->getLinkCheck()->process($entity);
+        $this->getLinkCheck()->processFields($entity);
 
         if (!$params->skipDuplicateCheck()) {
             $this->processDuplicateCheck($entity);
@@ -738,7 +738,7 @@ class Service implements Crud,
 
         $this->processValidation($entity, $data);
         $this->processAssignmentCheck($entity);
-        $this->getLinkCheck()->process($entity);
+        $this->getLinkCheck()->processFields($entity);
 
         $checkForDuplicates =
             $this->metadata->get(['recordDefs', $this->entityType, 'updateDuplicateCheck']) ??
@@ -1140,7 +1140,7 @@ class Service implements Crud,
             throw new LogicException("Only core entities are supported.");
         }
 
-        $this->getLinkCheck()->processLink($entity, $link);
+        $this->getLinkCheck()->processUnlink($entity, $link);
 
         if ($this->processUnlinkMethod($id, $link, $foreignId)) {
             return;
