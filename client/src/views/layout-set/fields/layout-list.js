@@ -75,5 +75,9 @@ define('views/layout-set/fields/layout-list', [
                 });
             });
         },
+
+        translateLayoutName: function (type, scope) {
+            return LayoutsIndex.prototype.translateLayoutName.call(this, type, scope);
+        },
     });
 });
