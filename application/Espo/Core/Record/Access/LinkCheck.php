@@ -41,9 +41,11 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Defs;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Type\RelationType;
 
 /**
  * Check access for record linking.
@@ -57,6 +59,7 @@ class LinkCheck
      * @param string[] $noEditAccessRequiredLinkList
      */
     public function __construct(
+        private Defs $ormDefs,
         private EntityManager $entityManager,
         private Acl $acl,
         private Metadata $metadata,
@@ -235,6 +238,16 @@ class LinkCheck
     }
 
     /**
+     * Check unlink access for a specific foreign entity.
+     * @throws Forbidden
+     */
+    public function processUnlinkForeign(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        $this->processLinkForeign($entity, $link, $foreignEntity);
+        $this->processUnlinkForeignRequired($entity, $link, $foreignEntity);
+    }
+
+    /**
      * @throws Forbidden
      */
     private function linkForeignAccessCheck(
@@ -368,5 +381,65 @@ class LinkCheck
         $this->linkCheckerCache[$link] = $checker;
 
         return $checker;
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function processUnlinkForeignRequired(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        $relationDefs = $this->ormDefs
+            ->getEntity($entity->getEntityType())
+            ->tryGetRelation($link);
+
+        if (!$relationDefs) {
+            return;
+        }
+
+        if (
+            !$relationDefs->hasForeignEntityType() ||
+            !$relationDefs->hasForeignRelationName()
+        ) {
+            return;
+        }
+
+        $foreignLink = $relationDefs->getForeignRelationName();
+
+        $foreignRelationDefs = $this->ormDefs
+            ->getEntity($foreignEntity->getEntityType())
+            ->tryGetRelation($foreignLink);
+
+        if (!$foreignRelationDefs) {
+            return;
+        }
+
+        if (
+            !in_array($foreignRelationDefs->getType(), [
+                RelationType::BELONGS_TO,
+                RelationType::HAS_ONE,
+                RelationType::BELONGS_TO_PARENT,
+            ])
+        ) {
+            return;
+        }
+
+        $foreignFieldDefs = $this->ormDefs
+            ->getEntity($foreignEntity->getEntityType())
+            ->tryGetField($foreignLink);
+
+        if (!$foreignFieldDefs) {
+            return;
+        }
+
+        if (!$foreignFieldDefs->getParam('required')) {
+            return;
+        }
+
+        throw ForbiddenSilent::createWithBody(
+            "Can't unlink required field ({$foreignEntity->getEntityType()}:$foreignLink}).",
+            ErrorBody::create()
+                ->withMessageTranslation('cannotUnrelateRequiredLink')
+                ->encode()
+        );
     }
 }

@@ -1158,7 +1158,7 @@ class Service implements Crud,
             throw new NotFound();
         }
 
-        $this->getLinkCheck()->processLinkForeign($entity, $link, $foreignEntity);
+        $this->getLinkCheck()->processUnlinkForeign($entity, $link, $foreignEntity);
 
         $this->recordHookManager->processBeforeUnlink($entity, $link, $foreignEntity);
 

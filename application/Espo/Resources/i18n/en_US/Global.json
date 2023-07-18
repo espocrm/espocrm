@@ -372,6 +372,7 @@
         "noAccessToRecord": "Operation requires `{action}` access to record.",
         "noAccessToForeignRecord": "Operation requires `{action}` access to foreign record.",
         "noLinkAccess": "No access to link operation for a specific record.",
+        "cannotUnrelateRequiredLink": "Can't unrelate required link.",
         "cannotRelateNonExisting": "Can't relate with non-existing {foreignEntityType} record.",
         "cannotRelateForbidden": "Can't relate with forbidden {foreignEntityType} record. `{action}` access required.",
         "cannotRelateForbiddenLink": "No access to link '{link}'.",
