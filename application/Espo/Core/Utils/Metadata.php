@@ -328,7 +328,7 @@ class Metadata
                 }
 
                 if (isset($collectionItem->order)) {
-                     $collectionItem->asc = $collectionItem->order === 'asc' ? true : false;
+                     $collectionItem->asc = $collectionItem->order === 'asc';
                 }
                 else if (isset($collectionItem->asc)) {
                     $collectionItem->order = $collectionItem->asc === true ? 'asc' : 'desc';
@@ -377,7 +377,7 @@ class Metadata
      */
     public function getCustom(string $key1, string $key2, $default = null)
     {
-        $filePath = $this->customPath . "/{$key1}/{$key2}.json";
+        $filePath = $this->customPath . "/$key1/$key2.json";
 
         if (!$this->fileManager->isFile($filePath)) {
             return $default;
@@ -407,7 +407,7 @@ class Metadata
             }
         }
 
-        $filePath = $this->customPath . "/{$key1}/{$key2}.json";
+        $filePath = $this->customPath . "/$key1/$key2.json";
 
         $changedData = Json::encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
@@ -469,7 +469,7 @@ class Metadata
                 $unsetList = $unsets;
 
                 foreach ($unsetList as $unsetItem) {
-                    if (preg_match('/fields\.([^\.]+)/', $unsetItem, $matches) && isset($matches[1])) {
+                    if (preg_match('/fields\.([^.]+)/', $unsetItem, $matches) && isset($matches[1])) {
                         $fieldName = $matches[1];
                         $fieldPath = [$key1, $key2, 'fields', $fieldName];
 
@@ -562,7 +562,7 @@ class Metadata
                         continue;
                     }
 
-                    $filePath = $path . "/{$key1}/{$key2}.json";
+                    $filePath = $path . "/$key1/$key2.json";
 
                     $result &= $this->fileManager->mergeJsonContents($filePath, $data);
                 }
@@ -576,13 +576,13 @@ class Metadata
                         continue;
                     }
 
-                    $filePath = $path . "/{$key1}/{$key2}.json";
+                    $filePath = $path . "/$key1/$key2.json";
 
                     $rowResult = $this->fileManager->unsetJsonContents($filePath, $unsetData);
 
                     if (!$rowResult) {
                         throw new LogicException(
-                            "Metadata items {$key1}.{$key2} can be deleted for custom code only."
+                            "Metadata items $key1.$key2 can be deleted for custom code only."
                         );
                     }
                 }
