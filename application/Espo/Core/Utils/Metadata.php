@@ -236,6 +236,10 @@ class Metadata
         return Util::getValueByKey($objData, $key, $default);
     }
 
+    /**
+     * This method modified loaded metadata object.
+     * Only to be used in short living request processes.
+     */
     public function getAllForFrontend(): stdClass
     {
         $data = $this->getObjData();
