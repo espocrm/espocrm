@@ -26,95 +26,104 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/layout-set/layouts', ['views/admin/layouts/index'], function (Dep) {
+import LayoutIndexView from 'views/admin/layouts/index';
 
-    return Dep.extend({
+class LayoutsView extends LayoutIndexView {
 
-        setup: function () {
-            var setId = this.setId = this.options.layoutSetId;
-            this.baseUrl = '#LayoutSet/editLayouts/id=' + setId;
+    setup() {
+        let setId = this.setId = this.options.layoutSetId;
+        this.baseUrl = '#LayoutSet/editLayouts/id=' + setId;
 
-            Dep.prototype.setup.call(this);
+        super.setup();
 
+        this.wait(
+            this.getModelFactory()
+                .create('LayoutSet')
+                .then(m => {
+                    this.sModel = m;
+                    m.id = setId;
 
-            this.wait(
-                this.getModelFactory()
-                    .create('LayoutSet')
-                    .then(m => {
-                        this.sModel = m;
-                        m.id = setId;
+                    return m.fetch();
+                })
+        );
+    }
 
-                        return m.fetch();
-                    })
-            );
-        },
+    getLayoutScopeDataList() {
+        let dataList = [];
+        let list = this.sModel.get('layoutList') || [];
 
-        getLayoutScopeDataList: function () {
-            var dataList = [];
-            var list = this.sModel.get('layoutList') || [];
+        let scopeList = [];
 
-            var scopeList = [];
+        list.forEach(item => {
+            let arr = item.split('.');
+            let scope = arr[0];
+
+            if (~scopeList.indexOf(scope)) {
+                return;
+            }
+
+            scopeList.push(scope);
+        });
+
+        scopeList.forEach(scope => {
+            let o = {};
+
+            o.scope = scope;
+            o.url = this.baseUrl + '&scope=' + scope;
+            o.typeDataList = [];
+
+            let typeList = [];
 
             list.forEach(item => {
-                var arr = item.split('.');
-                var scope = arr[0];
+                let [scope, type] = item.split('.');
 
-                if (~scopeList.indexOf(scope)) {
+                if (scope !== o.scope) {
                     return;
                 }
 
-                scopeList.push(scope);
+                typeList.push(type);
             });
 
-            scopeList.forEach(scope => {
-                var o = {};
-
-                o.scope = scope;
-                o.url = this.baseUrl + '&scope=' + scope;
-                o.typeDataList = [];
-
-                var typeList = [];
-
-                list.forEach(function (item) {
-                    var arr = item.split('.');
-                    var scope = arr[0];
-                    var type = arr[1];
-
-                    if (scope !== o.scope) {
-                        return;
-                    }
-
-                    typeList.push(type);
+            typeList.forEach(type => {
+                o.typeDataList.push({
+                    type: type,
+                    url: this.baseUrl + '&scope=' + scope + '&type=' + type,
+                    label: this.translateLayoutName(type, scope),
                 });
-
-                typeList.forEach(type => {
-                    o.typeDataList.push({
-                        type: type,
-                        url: this.baseUrl + '&scope=' + scope + '&type=' + type,
-                    });
-                });
-
-                o.typeList = typeList;
-
-                dataList.push(o);
             });
 
-            return dataList;
-        },
+            o.typeList = typeList;
 
-        getHeaderHtml: function () {
-            var m = this.sModel;
-            var separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
+            dataList.push(o);
+        });
 
-            var html = "<a href=\"#LayoutSet\">"+this.translate('LayoutSet', 'scopeNamesPlural')+"</a> " + separatorHtml + ' ' +
-                "<a href=\"#LayoutSet/view/"+m.id+"\">"+Handlebars.Utils.escapeExpression(m.get('name'))+"</a> " +
-                separatorHtml + ' ' + this.translate('Edit Layouts', 'labels', 'LayoutSet');
+        return dataList;
+    }
 
-            return html;
-        },
+    getHeaderHtml() {
+        const separatorHtml = ' <span class="breadcrumb-separator"><span class="chevron-right"></span></span> ';
 
-        navigate: function (scope, type) {
-            this.getRouter().navigate('#LayoutSet/editLayouts/id='+this.setId+'&scope='+scope + '&type='+type, {trigger: false});
-        },
-    });
-});
+        return $('<span>')
+            .append(
+                $('<a>')
+                    .attr('href', '#LayoutSet')
+                    .text(this.translate('LayoutSet', 'scopeNamesPlural')),
+                separatorHtml,
+                $('<a>')
+                    .attr('href', '#LayoutSet/view/' + this.sModel.id)
+                    .text(this.sModel.get('name')),
+                separatorHtml,
+                $('<span>')
+                    .text(this.translate('Edit Layouts', 'labels', 'LayoutSet'))
+            )
+            .get(0).outerHTML;
+    }
+
+    navigate(scope, type) {
+        let url = '#LayoutSet/editLayouts/id=' + this.setId + '&scope=' + scope + '&type=' + type;
+
+        this.getRouter().navigate(url, {trigger: false});
+    }
+}
+
+export default LayoutsView;
