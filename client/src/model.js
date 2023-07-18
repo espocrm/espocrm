@@ -503,17 +503,17 @@ class Model {
             this.setMultiple(attributes, options);
         }
 
-        let success = options.success;
+        const success = options.success;
 
-        let setAttributes = this.attributes;
+        const setAttributes = this.attributes;
 
         options.success = response => {
-            this.attributes = attributes;
+            this.attributes = setAttributes;
 
             let responseAttributes = this.prepareAttributes(response, options);
 
             if (options.wait) {
-                responseAttributes = {...attributes, ...responseAttributes};
+                responseAttributes = {...setAttributes, ...responseAttributes};
             }
 
             if (responseAttributes) {
@@ -527,7 +527,7 @@ class Model {
             this.trigger('sync', this, response, options);
         };
 
-        let error = options.error;
+        const error = options.error;
 
         options.error = response => {
             if (error) {
@@ -538,7 +538,7 @@ class Model {
         };
 
         if (attributes && options.wait) {
-            // Set temporary attributes to properly find new ids.
+            // Set temporary attributes to properly find new IDs.
             this.attributes =  {...setAttributes, ...attributes};
         }
 
