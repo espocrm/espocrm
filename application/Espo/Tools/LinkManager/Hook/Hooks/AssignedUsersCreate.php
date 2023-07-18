@@ -27,56 +27,66 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\EntityManager\Link\Hooks;
+namespace Espo\Tools\LinkManager\Hook\Hooks;
 
-use Espo\Tools\EntityManager\Link\DeleteHook;
-use Espo\Tools\EntityManager\Link\Params;
-
+use Espo\Tools\LinkManager\Hook\CreateHook;
+use Espo\Tools\LinkManager\Params;
+use Espo\Tools\LinkManager\Type;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
 
-use Espo\ORM\Defs;
-
-class ForeignFieldDelete implements DeleteHook
+class AssignedUsersCreate implements CreateHook
 {
-    private Metadata $metadata;
+    private const LINK_NAME = 'assignedUsers';
 
-    private Defs $defs;
-
-    public function __construct(Metadata $metadata, Defs $defs)
-    {
-        $this->metadata = $metadata;
-        $this->defs = $defs;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     public function process(Params $params): void
     {
-        $this->processInternal($params->getEntityType(), $params->getLink());
-
-        if ($params->getForeignEntityType()) {
-            $this->processInternal($params->getForeignEntityType(), $params->getForeignLink());
-        }
-    }
-
-    private function processInternal(string $entityType, string $link): void
-    {
-        if (!$this->defs->hasEntity($entityType)) {
+        if ($params->getType() !== Type::MANY_TO_MANY) {
             return;
         }
 
-        foreach ($this->defs->getEntity($entityType)->getFieldList() as $fieldDefs) {
-            if ($fieldDefs->getType() !== 'foreign') {
-                continue;
-            }
+        $foreignEntityType = $params->getForeignEntityType();
+        $entityType = $params->getEntityType();
 
-            if ($fieldDefs->getParam('link') === $link) {
-                $this->deleteForeignField($entityType, $fieldDefs->getName());
-            }
+        if (!$foreignEntityType || !$entityType) {
+            return;
+        }
+
+        if (
+            $params->getEntityType() === User::ENTITY_TYPE &&
+            $params->getForeignLink() === self::LINK_NAME
+        ) {
+            $this->processInternal($foreignEntityType);
+
+            return;
+        }
+
+        if (
+            $params->getForeignEntityType() === User::ENTITY_TYPE &&
+            $params->getLink() === self::LINK_NAME
+        ) {
+            $this->processInternal($entityType);
         }
     }
 
-    private function deleteForeignField(string $entityType, string $field): void
+    private function processInternal(string $entityType): void
     {
-        $this->metadata->delete('entityDefs', $entityType, ['fields.' . $field]);
+        $fieldType = $this->metadata->get(['entityDefs', $entityType, 'fields', self::LINK_NAME, 'type']);
+
+        if ($fieldType !== 'linkMultiple') {
+            return;
+        }
+
+        $this->metadata->set('entityDefs', $entityType, [
+            'fields' => [
+                self::LINK_NAME => [
+                    'view' => 'views/fields/assigned-users',
+                ],
+            ]
+        ]);
 
         $this->metadata->save();
     }

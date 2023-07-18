@@ -27,25 +27,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\EntityManager\Link\Hooks;
+namespace Espo\Tools\LinkManager\Hook\Hooks;
 
 use Espo\Core\Templates\Entities\Company;
 use Espo\Core\Templates\Entities\Person;
-use Espo\Tools\EntityManager\Link\CreateHook;
-use Espo\Tools\EntityManager\Link\Params;
-use Espo\Tools\EntityManager\Link\Type;
+use Espo\Tools\LinkManager\Hook\DeleteHook;
+use Espo\Tools\LinkManager\Params;
+use Espo\Tools\LinkManager\Type;
 use Espo\Modules\Crm\Entities\TargetList;
 
 use Espo\Core\Utils\Metadata;
 
-class TargetListCreate implements CreateHook
+class TargetListDelete implements DeleteHook
 {
-    private Metadata $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     public function process(Params $params): void
     {
@@ -91,68 +87,19 @@ class TargetListCreate implements CreateHook
 
     private function processInternal(string $entityType, string $link, string $foreignLink): void
     {
-        $this->metadata->set('entityDefs', TargetList::ENTITY_TYPE, [
-            'links' => [
-                $foreignLink => [
-                    'additionalColumns' => [
-                        'optedOut' => [
-                            'type' => 'bool',
-                        ]
-                    ],
-                    'columnAttributeMap' => [
-                        'optedOut' => 'isOptedOut',
-                    ],
-                ],
-            ],
-        ]);
-
-        $this->metadata->set('entityDefs', $entityType, [
-            'links' => [
-                $link => [
-                    'columnAttributeMap' => [
-                        'optedOut' => 'targetListIsOptedOut',
-                    ],
-                ],
-            ],
-            'fields' => [
-                'targetListIsOptedOut' => [
-                    'type' => 'bool',
-                    'notStorable' => true,
-                    'readOnly' => true,
-                    'disabled' => true,
-                ],
-            ]
-        ]);
-
-        $this->metadata->set('clientDefs', TargetList::ENTITY_TYPE, [
-            'relationshipPanels' => [
-                $foreignLink => [
-                    'actionList' => [
-                        [
-                            'label' => 'Unlink All',
-                            'action' => 'unlinkAllRelated',
-                            'acl' => 'edit',
-                            'data' => [
-                                'link' => $foreignLink,
-                            ],
-                        ],
-                    ],
-                    'rowActionsView' => 'crm:views/target-list/record/row-actions/default',
-                    'view' => 'crm:views/target-list/record/panels/relationship',
-                    'massSelect' => true,
-                ],
-            ],
-        ]);
+        $this->metadata->delete('entityDefs', $entityType, ['fields.targetListIsOptedOut']);
 
         $targetLinkList = $this->metadata->get(['scopes', TargetList::ENTITY_TYPE, 'targetLinkList']) ?? [];
 
-        if (!in_array($foreignLink, $targetLinkList)) {
-            $targetLinkList[] = $foreignLink;
+        if (in_array($foreignLink, $targetLinkList)) {
+            $targetLinkList = array_diff($targetLinkList, [$foreignLink]);
 
             $this->metadata->set('scopes', TargetList::ENTITY_TYPE, [
                 'targetLinkList' => $targetLinkList,
             ]);
         }
+
+        $this->metadata->delete('clientDefs', TargetList::ENTITY_TYPE, ['relationshipPanels.' . $foreignLink]);
 
         $this->metadata->save();
     }

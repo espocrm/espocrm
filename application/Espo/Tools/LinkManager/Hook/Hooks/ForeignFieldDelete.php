@@ -27,68 +27,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\EntityManager\Link;
+namespace Espo\Tools\LinkManager\Hook\Hooks;
 
-/**
- * @immutable
- */
-class Params
+use Espo\Tools\LinkManager\Hook\DeleteHook;
+use Espo\Tools\LinkManager\Params;
+use Espo\Core\Utils\Metadata;
+
+use Espo\ORM\Defs;
+
+class ForeignFieldDelete implements DeleteHook
 {
-    private string $type;
-    private string $entityType;
-    private string $link;
-    private string $foreignLink;
-    private ?string $foreignEntityType = null;
-    private ?string $name = null;
-
     public function __construct(
-        string $type,
-        string $entityType,
-        string $link,
-        ?string $foreignEntityType,
-        string $foreignLink,
-        ?string $name
-    ) {
-        $this->type = $type;
-        $this->entityType = $entityType;
-        $this->link = $link;
-        $this->foreignEntityType = $foreignEntityType;
-        $this->foreignLink = $foreignLink;
-        $this->name = $name;
+        private Metadata $metadata,
+        private Defs $defs
+    ) {}
+
+    public function process(Params $params): void
+    {
+        $this->processInternal($params->getEntityType(), $params->getLink());
+
+        if ($params->getForeignEntityType()) {
+            $this->processInternal($params->getForeignEntityType(), $params->getForeignLink());
+        }
     }
 
-    public static function createBuilder(): ParamsBuilder
+    private function processInternal(string $entityType, string $link): void
     {
-        return new ParamsBuilder();
+        if (!$this->defs->hasEntity($entityType)) {
+            return;
+        }
+
+        foreach ($this->defs->getEntity($entityType)->getFieldList() as $fieldDefs) {
+            if ($fieldDefs->getType() !== 'foreign') {
+                continue;
+            }
+
+            if ($fieldDefs->getParam('link') === $link) {
+                $this->deleteForeignField($entityType, $fieldDefs->getName());
+            }
+        }
     }
 
-    public function getType(): string
+    private function deleteForeignField(string $entityType, string $field): void
     {
-        return $this->type;
-    }
+        $this->metadata->delete('entityDefs', $entityType, ['fields.' . $field]);
 
-    public function getEntityType(): string
-    {
-        return $this->entityType;
-    }
-
-    public function getLink(): string
-    {
-        return $this->link;
-    }
-
-    public function getForeignLink(): string
-    {
-        return $this->foreignLink;
-    }
-
-    public function getForeignEntityType(): ?string
-    {
-        return $this->foreignEntityType;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
+        $this->metadata->save();
     }
 }

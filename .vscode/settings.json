@@ -336,6 +336,12 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/entityManager.json"
+            ],
+            "url": "./schema/metadata/app/entityManager.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/massActions.json"
             ],
             "url": "./schema/metadata/app/massActions.json"

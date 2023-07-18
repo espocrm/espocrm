@@ -27,9 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\EntityManager\Hooks;
+namespace Espo\Tools\EntityManager\Hook;
 
-class CompanyType extends BasePlusType
+use Espo\Tools\EntityManager\Params;
+
+interface CreateHook
 {
-
+    public function process(Params $params): void;
 }

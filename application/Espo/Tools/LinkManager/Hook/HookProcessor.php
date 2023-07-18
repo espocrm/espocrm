@@ -27,22 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\EntityManager\Link;
+namespace Espo\Tools\LinkManager\Hook;
 
 use Espo\Core\Utils\Metadata;
 use Espo\Core\InjectableFactory;
+use Espo\Tools\LinkManager\Params;
 
 class HookProcessor
 {
-    private Metadata $metadata;
-
-    private InjectableFactory $injectableFactory;
-
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
-    {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private InjectableFactory $injectableFactory
+    ) {}
 
     public function processCreate(Params $params): void
     {

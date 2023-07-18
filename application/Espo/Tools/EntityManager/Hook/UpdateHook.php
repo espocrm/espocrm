@@ -27,9 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\EntityManager\Link;
+namespace Espo\Tools\EntityManager\Hook;
 
-interface DeleteHook
+use Espo\Tools\EntityManager\Params;
+
+interface UpdateHook
 {
-    public function process(Params $params): void;
+    public function process(Params $params, Params $previousParams): void;
 }

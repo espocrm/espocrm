@@ -27,9 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\EntityManager\Link;
+namespace Espo\Tools\EntityManager;
 
-interface CreateHook
+class Params
 {
-    public function process(Params $params): void;
+    /**
+     * @param array<string, mixed> $params
+     */
+    public function __construct(
+        private string $name,
+        private ?string $type,
+        private array $params
+    ) {}
+
+    public function get(string $name): mixed
+    {
+        return $this->params[$name] ?? null;
+    }
+
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    public function getName(): string
+    {
+        return $this->name;
+    }
 }

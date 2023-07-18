@@ -797,6 +797,25 @@
             </SchemaInfo>
           </value>
         </entry>
+        <entry key="metadata/app/entityManager">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/entityManager" />
+              <option name="relativePathToSchema" value="schema/metadata/app/entityManager.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/entityManager.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="metadata/app/massActions">
           <value>
             <SchemaInfo>

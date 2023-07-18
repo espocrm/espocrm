@@ -39,9 +39,11 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Tools\ExportCustom\ExportCustom;
 use Espo\Tools\ExportCustom\Params as ExportCustomParams;
-
 use Espo\Tools\ExportCustom\Service as ExportCustomService;
+use Espo\Tools\LinkManager\LinkManager;
 use stdClass;
+
+use const FILTER_SANITIZE_STRING;
 
 class EntityManager
 {
@@ -51,6 +53,7 @@ class EntityManager
     public function __construct(
         private User $user,
         private EntityManagerTool $entityManagerTool,
+        private LinkManager $linkManager,
         private InjectableFactory $injectableFactory
     ) {
         if (!$this->user->isAdmin()) {
@@ -76,8 +79,8 @@ class EntityManager
         $name = $data['name'];
         $type = $data['type'];
 
-        $name = filter_var($name, \FILTER_SANITIZE_STRING);
-        $type = filter_var($type, \FILTER_SANITIZE_STRING);
+        $name = filter_var($name, FILTER_SANITIZE_STRING);
+        $type = filter_var($type, FILTER_SANITIZE_STRING);
 
         if (!is_string($name) || !is_string($type)) {
             throw new BadRequest();
@@ -160,7 +163,7 @@ class EntityManager
 
         $name = $data['name'];
 
-        $name = filter_var($name, \FILTER_SANITIZE_STRING);
+        $name = filter_var($name, FILTER_SANITIZE_STRING);
 
         if (!is_string($name)) {
             throw new BadRequest();
@@ -188,7 +191,7 @@ class EntityManager
 
         $name = $data['name'];
 
-        $name = filter_var($name, \FILTER_SANITIZE_STRING);
+        $name = filter_var($name, FILTER_SANITIZE_STRING);
 
         if (!is_string($name)) {
             throw new BadRequest();
@@ -231,11 +234,11 @@ class EntityManager
                 throw new BadRequest();
             }
 
-            $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+            $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
         }
 
         foreach ($additionalParamList as $item) {
-            $params[$item] = filter_var($data[$item] ?? null, \FILTER_SANITIZE_STRING);
+            $params[$item] = filter_var($data[$item] ?? null, FILTER_SANITIZE_STRING);
         }
 
         $params['labelForeign'] = $params['labelForeign'] ?? $params['linkForeign'];
@@ -290,7 +293,7 @@ class EntityManager
          * } $params
          */
 
-        $this->entityManagerTool->createLink($params);
+        $this->linkManager->create($params);
 
         return true;
     }
@@ -318,7 +321,7 @@ class EntityManager
 
         foreach ($paramList as $item) {
             if (array_key_exists($item, $data)) {
-                $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+                $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
             }
         }
 
@@ -372,11 +375,15 @@ class EntityManager
          * } $params
          */
 
-        $this->entityManagerTool->updateLink($params);
+        $this->linkManager->update($params);
 
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function postActionRemoveLink(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -391,7 +398,7 @@ class EntityManager
         $params = [];
 
         foreach ($paramList as $item) {
-            $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+            $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
         }
 
         /**
@@ -401,7 +408,7 @@ class EntityManager
          * } $params
          */
 
-        $this->entityManagerTool->deleteLink($params);
+        $this->linkManager->delete($params);
 
         return true;
     }
@@ -448,6 +455,10 @@ class EntityManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function postActionResetToDefault(Request $request): bool
     {
         $data = $request->getParsedBody();
