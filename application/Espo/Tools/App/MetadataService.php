@@ -32,6 +32,7 @@ namespace Espo\Tools\App;
 use Espo\Core\Acl;
 use Espo\Core\Utils\Metadata as MetadataUtil;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Reminder;
 use Espo\Tools\App\Metadata\AclDependencyProvider;
 use stdClass;
 
@@ -62,7 +63,7 @@ class MetadataService
                 continue;
             }
 
-            if (in_array($scope, ['Reminder'])) {
+            if ($scope === Reminder::ENTITY_TYPE) {
                 continue;
             }
 
@@ -133,11 +134,7 @@ class MetadataService
 
                 unset($data->entityDefs->$entityType->links->$link);
 
-                if (
-                    isset($data->clientDefs) &&
-                    isset($data->clientDefs->$entityType) &&
-                    isset($data->clientDefs->$entityType->relationshipPanels)
-                ) {
+                if (isset($data->clientDefs->$entityType->relationshipPanels)) {
                     unset($data->clientDefs->$entityType->relationshipPanels->$link);
                 }
             }
