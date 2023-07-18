@@ -165,11 +165,11 @@ class Metadata
     /**
     * Get all metadata.
     *
-    * @param bool $isJSON
-    * @param bool $reload
-    * @return array<string, mixed>|string
+    * @/param bool $isJSON
+    * @/param bool $reload
+    * @/return array<string, mixed>|string
     */
-    public function getAll(bool $isJSON = false, bool $reload = false)
+    /*public function getAll(bool $isJSON = false, bool $reload = false)
     {
         if ($reload) {
             $this->init($reload);
@@ -182,7 +182,7 @@ class Metadata
         }
 
         return $this->data;
-    }
+    }*/
 
     private function objInit(bool $reload = false): void
     {
@@ -236,75 +236,9 @@ class Metadata
         return Util::getValueByKey($objData, $key, $default);
     }
 
-    /**
-     * This method modified loaded metadata object.
-     * Only to be used in short living request processes.
-     */
-    public function getAllForFrontend(): stdClass
+    public function getAll(): stdClass
     {
-        $data = $this->getObjData();
-
-        $frontendHiddenPathList = $this->get(['app', 'metadata', 'frontendHiddenPathList'], []);
-
-        foreach ($frontendHiddenPathList as $row) {
-            $this->removeDataByPath($row, $data);
-        }
-
-        return $data;
-    }
-
-    /**
-     *
-     * @param string[] $row
-     * @param stdClass $data
-     */
-    private function removeDataByPath($row, &$data): void
-    {
-        $p = &$data;
-        $path = [&$p];
-
-        foreach ($row as $i => $item) {
-            if (is_array($item)) {
-                break;
-            }
-
-            if ($item === self::ANY_KEY) {
-                foreach (get_object_vars($p) as &$v) {
-                    $this->removeDataByPath(
-                        array_slice($row, $i + 1),
-                        $v
-                    );
-                }
-
-                return;
-            }
-
-            if (!property_exists($p, $item)) {
-                break;
-            }
-
-            if ($i == count($row) - 1) {
-                unset($p->$item);
-
-                $o = &$p;
-
-                for ($j = $i - 1; $j > 0; $j--) {
-                    if (is_object($o) && !count(get_object_vars($o))) {
-                        $o = &$path[$j];
-                        $k = $row[$j];
-
-                        unset($o->$k);
-                    }
-                    else {
-                        break;
-                    }
-                }
-            }
-            else {
-                $p = &$p->$item;
-                $path[] = &$p;
-            }
-        }
+        return $this->getObjData();
     }
 
     /**

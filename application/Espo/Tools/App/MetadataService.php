@@ -38,6 +38,8 @@ use stdClass;
 
 class MetadataService
 {
+    private const ANY_KEY = '__ANY__';
+
     public function __construct(
         private Acl $acl,
         private MetadataUtil $metadata,
@@ -47,10 +49,22 @@ class MetadataService
 
     public function getDataForFrontend(): stdClass
     {
-        $data = $this->metadata->getAllForFrontend();
+        $data = $this->metadata->getAll();
+
+        $hiddenPathList = $this->metadata->get(['app', 'metadata', 'frontendHiddenPathList'], []);
+
+        foreach ($hiddenPathList as $row) {
+            $this->removeDataByPath($row, $data);
+        }
 
         if ($this->user->isAdmin()) {
             return $data;
+        }
+
+        $hiddenPathList = $this->metadata->get(['app', 'metadata', 'frontendNonAdminHiddenPathList'], []);
+
+        foreach ($hiddenPathList as $row) {
+            $this->removeDataByPath($row, $data);
         }
 
         /** @var string[] $scopeList */
@@ -195,5 +209,59 @@ class MetadataService
         }
 
         return $data;
+    }
+
+    /**
+     *
+     * @param string[] $row
+     * @param stdClass $data
+     */
+    private function removeDataByPath($row, &$data): void
+    {
+        $p = &$data;
+        $path = [&$p];
+
+        foreach ($row as $i => $item) {
+            if (is_array($item)) {
+                break;
+            }
+
+            if ($item === self::ANY_KEY) {
+                foreach (get_object_vars($p) as &$v) {
+                    $this->removeDataByPath(
+                        array_slice($row, $i + 1),
+                        $v
+                    );
+                }
+
+                return;
+            }
+
+            if (!property_exists($p, $item)) {
+                break;
+            }
+
+            if ($i == count($row) - 1) {
+                unset($p->$item);
+
+                $o = &$p;
+
+                for ($j = $i - 1; $j > 0; $j--) {
+                    if (is_object($o) && !count(get_object_vars($o))) {
+                        $o = &$path[$j];
+                        $k = $row[$j];
+
+                        unset($o->$k);
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+            else {
+                $p = &$p->$item;
+                $path[] = &$p;
+            }
+        }
     }
 }

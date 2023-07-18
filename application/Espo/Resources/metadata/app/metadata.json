@@ -35,10 +35,12 @@
         ["app", "recordId"],
         ["app", "currencyConversion"],
         ["selectDefs"],
-        ["recordDefs"],
         ["pdfDefs"],
         ["aclDefs"],
         ["notificationDefs"],
         ["authenticationMethods", "__ANY__", "implementationClassName"]
+    ],
+    "frontendNonAdminHiddenPathList": [
+        ["recordDefs"]
     ]
 }

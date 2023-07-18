@@ -20,6 +20,21 @@
                 ]
             }
         },
+        "frontendNonAdminHiddenPathList": {
+            "type": "array",
+            "description": "Sections of metadata (defined as paths) to be hidden from the front-end for non-admin users.",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                ]
+            }
+        },
         "aclDependencies": {
             "type": "object",
             "description": "Rules making a metadata sections available for a user when they don't have access to a scope.",
