@@ -133,7 +133,7 @@ class LinkCheck
                 in_array($name, $this->acl->getScopeForbiddenLinkList($entityType, AclTable::ACTION_EDIT))
             ) {
                 throw ForbiddenSilent::createWithBody(
-                    "No access to link {$name}.",
+                    "No access to link $name.",
                     ErrorBody::create()
                         ->withMessageTranslation('cannotRelateForbiddenLink', null, ['link' => $name])
                         ->encode()
@@ -206,7 +206,7 @@ class LinkCheck
 
         if (!$this->acl->check($entity, $action)) {
             throw ForbiddenSilent::createWithBody(
-                "No record access for link operation ({$entityType}:{$link}).",
+                "No record access for link operation ($entityType:$link).",
                 ErrorBody::create()
                     ->withMessageTranslation('noAccessToRecord', null, ['action' => $action])
                     ->encode()
@@ -306,7 +306,7 @@ class LinkCheck
             $body->withMessageTranslation('noAccessToForeignRecord', null, ['action' => $action]);
 
         throw ForbiddenSilent::createWithBody(
-            "No foreign record access for link operation ({$entityType}:{$link}).",
+            "No foreign record access for link operation ($entityType:$link).",
             $body->encode()
         );
     }
@@ -329,7 +329,7 @@ class LinkCheck
         }
 
         throw ForbiddenSilent::createWithBody(
-            "No access for link operation ({$entityType}:{$link}).",
+            "No access for link operation ($entityType:$link).",
             ErrorBody::create()
                 ->withMessageTranslation('noLinkAccess')
                 ->encode()
