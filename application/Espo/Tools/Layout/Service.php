@@ -106,38 +106,9 @@ class Service
         }
         catch (NotImplemented) {}
 
-        $layoutSetId = null;
         $data = null;
 
-        if ($this->user->isPortal()) {
-            $portalId = $this->user->getPortalId();
-
-            if ($portalId) {
-                $portal = $this->entityManager
-                    ->getRDBRepositoryByClass(Portal::class)
-                    ->select(['layoutSetId'])
-                    ->where(['id' => $portalId])
-                    ->findOne();
-
-                if ($portal) {
-                    $layoutSetId = $portal->getLayoutSet()?->getId();
-                }
-            }
-        } else {
-            $teamId = $this->user->getDefaultTeam()?->getId();
-
-            if ($teamId) {
-                $team = $this->entityManager
-                    ->getRDBRepositoryByClass(Team::class)
-                    ->select(['layoutSetId'])
-                    ->where(['id' => $teamId])
-                    ->findOne();
-
-                if ($team) {
-                    $layoutSetId = $team->getLayoutSet()?->getId();
-                }
-            }
-        }
+        $layoutSetId = $this->getUserLayoutSetId();
 
         if ($layoutSetId) {
             $nameReal = $name;
@@ -352,5 +323,50 @@ class Service
     private function resetToDefaultBottomPanelsDetail(string $scope): void
     {
         $this->layoutManager->resetToDefault($scope, 'relationships');
+    }
+
+    private function getUserLayoutSetId(): ?string
+    {
+        if ($this->user->isPortal()) {
+            $portalId = $this->user->getPortalId();
+
+            if (!$portalId) {
+                return null;
+            }
+
+            $portal = $this->entityManager
+                ->getRDBRepositoryByClass(Portal::class)
+                ->select(['layoutSetId'])
+                ->where(['id' => $portalId])
+                ->findOne();
+
+            if (!$portal) {
+                return null;
+            }
+
+            return $portal->getLayoutSet()?->getId();
+        }
+
+        if ($this->user->getLayoutSet()) {
+            return $this->user->getLayoutSet()->getId();
+        }
+
+        $teamId = $this->user->getDefaultTeam()?->getId();
+
+        if (!$teamId) {
+            return null;
+        }
+
+        $team = $this->entityManager
+            ->getRDBRepositoryByClass(Team::class)
+            ->select(['layoutSetId'])
+            ->where(['id' => $teamId])
+            ->findOne();
+
+        if (!$team) {
+            return null;
+        }
+
+        return $team->getLayoutSet()?->getId();
     }
 }

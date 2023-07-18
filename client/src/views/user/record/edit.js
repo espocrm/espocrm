@@ -209,7 +209,7 @@ class UserEditRecordView extends EditRecordView {
                         "label": "Misc",
                         "name": "misc",
                         "rows": [
-                            [{"name": "workingTimeCalendar"}, false]
+                            [{"name": "workingTimeCalendar"}, {"name": "layoutSet"}]
                         ]
                     });
                 }

@@ -40,7 +40,8 @@
         "authMethod": "Authentication Method",
         "auth2FAEnable": "Enable 2-Factor Authentication",
         "auth2FAMethod": "2FA Method",
-        "auth2FATotpSecret": "2FA TOTP Secret"
+        "auth2FATotpSecret": "2FA TOTP Secret",
+        "layoutSet": "Layout Set"
     },
     "links": {
         "defaultTeam": "Default Team",
@@ -56,7 +57,8 @@
         "userData": "User Data",
         "dashboardTemplate": "Dashboard Template",
         "workingTimeCalendar": "Working Time Calendar",
-        "workingTimeRanges": "Working Time Ranges"
+        "workingTimeRanges": "Working Time Ranges",
+        "layoutSet": "Layout Set"
     },
     "labels": {
         "Create User": "Create User",
@@ -93,7 +95,8 @@
         "teams": "Teams which this user belongs to. Access control level is inherited from team's roles.",
         "roles": "Additional access roles. Use it if user doesn't belong to any team or you need to extend access control level exclusively for this user.",
         "portalRoles": "Additional portal roles. Use it to extend access control level exclusively for this user.",
-        "portals": "Portals which this user has access to."
+        "portals": "Portals which this user has access to.",
+        "layoutSet": "Layouts from a specified set will be applied for the user instead of default ones."
     },
     "messages": {
         "loginAs": "Open the login link in an incognito window to preserve your current session. Use your admin credentials to log in.",

@@ -359,7 +359,7 @@ class UserDetailRecordView extends DetailRecordView {
                         "label": "Misc",
                         "name": "misc",
                         "rows": [
-                            [{"name": "workingTimeCalendar"}, false],
+                            [{"name": "workingTimeCalendar"}, {"name": "layoutSet"}],
                         ]
                     });
                 }

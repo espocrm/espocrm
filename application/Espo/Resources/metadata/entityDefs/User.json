@@ -414,6 +414,13 @@
             "layoutListDisabled": true,
             "customizationAuditedDisabled": true
         },
+        "layoutSet": {
+            "type": "link",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "customizationAuditedDisabled": true,
+            "tooltip": true
+        },
         "auth2FA": {
             "type": "foreign",
             "link": "userData",
@@ -502,6 +509,11 @@
             "type": "hasMany",
             "foreign": "users",
             "entity": "WorkingTimeRange"
+        },
+        "layoutSet": {
+            "type": "belongsTo",
+            "entity": "LayoutSet",
+            "noJoin": true
         },
         "preferences": {
             "type": "hasOne",

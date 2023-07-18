@@ -50,6 +50,9 @@
         "workingTimeCalendar": {
             "nonAdminReadOnly": true
         },
+        "layoutSet": {
+            "onlyAdmin": true
+        },
         "accounts": {
             "nonAdminReadOnly": true
         },

@@ -145,6 +145,12 @@ class User extends Person
         return $this->getValueObject('workingTimeCalendar');
     }
 
+    public function getLayoutSet(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('layoutSet');
+    }
+
     public function getTeams(): LinkMultiple
     {
         /** @var LinkMultiple */
