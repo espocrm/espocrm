@@ -26,144 +26,154 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail'], function (Dep, Detail) {
+import EditRecordView from 'views/record/edit';
+import UserDetailRecordView from 'views/user/record/detail';
 
-    return Dep.extend({
+class UserEditRecordView extends EditRecordView {
 
-        sideView: 'views/user/record/edit-side',
+    sideView = 'views/user/record/edit-side'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    /**
+     * @name model
+     * @type module:models/user
+     * @memberOf UserEditRecordView#
+     */
 
-            this.setupNonAdminFieldsAccess();
+    setup() {
+        super.setup();
 
-            if (this.model.id === this.getUser().id) {
-                this.listenTo(this.model, 'after:save', () => {
-                    this.getUser().set(this.model.getClonedAttributes());
-                });
-            }
+        this.setupNonAdminFieldsAccess();
 
-            this.hideField('sendAccessInfo');
-
-            this.passwordInfoMessage = this.getPasswordSendingMessage();
-
-            if (!this.passwordInfoMessage) {
-                this.hideField('passwordInfo');
-            }
-
-            let passwordChanged = false;
-
-            this.listenToOnce(this.model, 'change:password', (model) => {
-                passwordChanged = true;
-
-                if (this.model.isNew()) {
-                    this.controlSendAccessInfoFieldForNew();
-
-                    return;
-                }
-
-                this.controlSendAccessInfoField();
-            });
-
-            this.listenTo(this.model, 'change', (model) => {
-                if (!this.model.isNew() && !passwordChanged) {
-                    return;
-                }
-
-                if (
-                    !model.hasChanged('emailAddress') &&
-                    !model.hasChanged('portalsIds')&&
-                    !model.hasChanged('password')
-                ) {
-                    return;
-                }
-
-                if (this.model.isNew()) {
-                    this.controlSendAccessInfoFieldForNew();
-
-                    return;
-                }
-
-                this.controlSendAccessInfoField();
-            });
-
-            Detail.prototype.setupFieldAppearance.call(this);
-
-            this.hideField('passwordPreview');
-
-            this.listenTo(this.model, 'change:passwordPreview', (model, value) => {
-                value = value || '';
-
-                if (value.length) {
-                    this.showField('passwordPreview');
-                } else {
-                    this.hideField('passwordPreview');
-                }
-            });
-
-
+        if (this.model.id === this.getUser().id) {
             this.listenTo(this.model, 'after:save', () => {
-                this.model.unset('password', {silent: true});
-                this.model.unset('passwordConfirm', {silent: true});
+                this.getUser().set(this.model.getClonedAttributes());
             });
-        },
+        }
 
-        controlSendAccessInfoField: function () {
-            if (this.isPasswordSendable() && this.model.get('password')) {
-                this.showField('sendAccessInfo');
+        this.hideField('sendAccessInfo');
 
-                return;
-            }
+        this.passwordInfoMessage = this.getPasswordSendingMessage();
 
-            this.hideField('sendAccessInfo');
+        if (!this.passwordInfoMessage) {
+            this.hideField('passwordInfo');
+        }
 
-            this.model.set('sendAccessInfo', false);
-        },
+        let passwordChanged = false;
 
-        controlSendAccessInfoFieldForNew: function () {
-            let skipSettingTrue = this.recordHelper.getFieldStateParam('sendAccessInfo', 'hidden') === false;
+        this.listenToOnce(this.model, 'change:password', () => {
+            passwordChanged = true;
 
-            if (this.isPasswordSendable()) {
-                this.showField('sendAccessInfo');
-
-                if (!skipSettingTrue) {
-                    this.model.set('sendAccessInfo', true);
-                }
+            if (this.model.isNew()) {
+                this.controlSendAccessInfoFieldForNew();
 
                 return;
             }
 
-            this.hideField('sendAccessInfo');
+            this.controlSendAccessInfoField();
+        });
 
-            this.model.set('sendAccessInfo', false);
-        },
-
-        isPasswordSendable: function () {
-            if (this.model.isPortal()) {
-                if (!(this.model.get('portalsIds') || []).length) {
-                    return false;
-                }
+        this.listenTo(this.model, 'change', (model) => {
+            if (!this.model.isNew() && !passwordChanged) {
+                return;
             }
 
-            if (!this.model.get('emailAddress')) {
+            if (
+                !model.hasChanged('emailAddress') &&
+                !model.hasChanged('portalsIds')&&
+                !model.hasChanged('password')
+            ) {
+                return;
+            }
+
+            if (this.model.isNew()) {
+                this.controlSendAccessInfoFieldForNew();
+
+                return;
+            }
+
+            this.controlSendAccessInfoField();
+        });
+
+        UserDetailRecordView.prototype.setupFieldAppearance.call(this);
+
+        this.hideField('passwordPreview');
+
+        this.listenTo(this.model, 'change:passwordPreview', (model, value) => {
+            value = value || '';
+
+            if (value.length) {
+                this.showField('passwordPreview');
+            } else {
+                this.hideField('passwordPreview');
+            }
+        });
+
+
+        this.listenTo(this.model, 'after:save', () => {
+            this.model.unset('password', {silent: true});
+            this.model.unset('passwordConfirm', {silent: true});
+        });
+    }
+
+    controlSendAccessInfoField() {
+        if (this.isPasswordSendable() && this.model.get('password')) {
+            this.showField('sendAccessInfo');
+
+            return;
+        }
+
+        this.hideField('sendAccessInfo');
+
+        this.model.set('sendAccessInfo', false);
+    }
+
+    controlSendAccessInfoFieldForNew() {
+        let skipSettingTrue = this.recordHelper.getFieldStateParam('sendAccessInfo', 'hidden') === false;
+
+        if (this.isPasswordSendable()) {
+            this.showField('sendAccessInfo');
+
+            if (!skipSettingTrue) {
+                this.model.set('sendAccessInfo', true);
+            }
+
+            return;
+        }
+
+        this.hideField('sendAccessInfo');
+
+        this.model.set('sendAccessInfo', false);
+    }
+
+    // noinspection SpellCheckingInspection
+    isPasswordSendable() {
+        if (this.model.isPortal()) {
+            if (!(this.model.get('portalsIds') || []).length) {
                 return false;
             }
+        }
 
-            return true;
-        },
+        if (!this.model.get('emailAddress')) {
+            return false;
+        }
+
+        return true;
+    }
 
 
-        setupNonAdminFieldsAccess: function () {
-            Detail.prototype.setupNonAdminFieldsAccess.call(this);
-        },
+    setupNonAdminFieldsAccess() {
+        UserDetailRecordView.prototype.setupNonAdminFieldsAccess.call(this);
+    }
 
-        controlFieldAppearance: function () {
-            Detail.prototype.controlFieldAppearance.call(this);
-        },
+    // noinspection JSUnusedGlobalSymbols
+    controlFieldAppearance() {
+        UserDetailRecordView.prototype.controlFieldAppearance.call(this);
+    }
 
-        getGridLayout: function (callback) {
-            this._helper.layoutManager.get(this.model.entityType, this.options.layoutName || this.layoutName, simpleLayout => {
-                var layout = Espo.Utils.cloneDeep(simpleLayout);
+    getGridLayout(callback) {
+        this.getHelper().layoutManager
+            .get(this.model.entityType, this.options.layoutName || this.layoutName, simpleLayout => {
+                let layout = Espo.Utils.cloneDeep(simpleLayout);
 
                 layout.push({
                     "label": "Teams and Access Control",
@@ -204,7 +214,11 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                     });
                 }
 
-                if (this.type === 'edit' && this.getUser().isAdmin() && !this.model.isApi()) {
+                if (
+                    this.type === this.TYPE_EDIT &&
+                    this.getUser().isAdmin() &&
+                    !this.model.isApi()
+                ) {
                     layout.push({
                         label: 'Password',
                         rows: [
@@ -221,8 +235,8 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                                 {
                                     name: 'generatePassword',
                                     view: 'views/user/fields/generate-password',
-                                    customLabel: ''
-                                }
+                                    customLabel: '',
+                                },
                             ],
                             [
                                 {
@@ -238,8 +252,8 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                                     view: 'views/fields/base',
                                     params: {
                                         readOnly: true
-                                    }
-                                }
+                                    },
+                                },
                             ],
                             [
                                 {
@@ -249,9 +263,8 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                                     name: 'passwordInfo',
                                     type: 'text',
                                     customLabel: '',
-                                    customCode: this.passwordInfoMessage
-                                }
-
+                                    customCode: this.passwordInfoMessage,
+                                },
                             ]
                         ]
                     });
@@ -266,46 +279,51 @@ define('views/user/record/edit', ['views/record/edit', 'views/user/record/detail
                     });
                 }
 
-                var gridLayout = {
+                let gridLayout = {
                     type: 'record',
                     layout: this.convertDetailLayout(layout),
                 };
 
                 callback(gridLayout);
             });
-        },
+    }
 
-        getPasswordSendingMessage: function () {
-            if (this.getConfig().get('smtpServer') && this.getConfig().get('smtpServer') !== '') {
-                return '';
+    getPasswordSendingMessage() {
+        if (this.getConfig().get('smtpServer') && this.getConfig().get('smtpServer') !== '') {
+            return '';
+        }
+
+        let msg = this.translate('setupSmtpBefore', 'messages', 'User')
+            .replace('{url}', '#Admin/outboundEmails');
+
+        msg = this.getHelper().transformMarkdownInlineText(msg);
+
+        return msg;
+    }
+
+    fetch() {
+        let data = super.fetch();
+
+        if (!this.isNew) {
+            if (
+                'password' in data &&
+                (data['password'] === '' || data['password'] == null)
+            ) {
+                delete data['password'];
+                delete data['passwordConfirm'];
+
+                this.model.unset('password');
+                this.model.unset('passwordConfirm');
             }
+        }
 
-            var msg = this.translate('setupSmtpBefore', 'messages', 'User').replace('{url}', '#Admin/outboundEmails');
+        return data;
+    }
 
-            msg = this.getHelper().transformMarkdownInlineText(msg);
+    // noinspection JSUnusedGlobalSymbols
+    errorHandlerUserNameExists() {
+        Espo.Ui.error(this.translate('userNameExists', 'messages', 'User'))
+    }
+}
 
-            return msg;
-        },
-
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
-
-            if (!this.isNew) {
-                if ('password' in data) {
-                    if (data['password'] == '') {
-                        delete data['password'];
-                        delete data['passwordConfirm'];
-                        this.model.unset('password');
-                        this.model.unset('passwordConfirm');
-                    }
-                }
-            }
-
-            return data;
-        },
-
-        errorHandlerUserNameExists: function () {
-            Espo.Ui.error(this.translate('userNameExists', 'messages', 'User'))
-        },
-    });
-});
+export default UserEditRecordView;
