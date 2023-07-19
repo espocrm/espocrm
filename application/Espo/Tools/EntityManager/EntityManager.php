@@ -71,13 +71,14 @@ class EntityManager
 
     /**
      * @param array<string, mixed> $params
-     * @param array<string, mixed> $replaceData @todo Revise.
      * @throws BadRequest
      * @throws Error
      * @throws Conflict
      */
-    public function create(string $name, string $type, array $params = [], array $replaceData = []): void
+    public function create(string $name, string $type, array $params = [], ?CreateParams $createParams = null): void
     {
+        $createParams ??= new CreateParams();
+
         $name = ucfirst($name);
         $name = trim($name);
 
@@ -89,9 +90,10 @@ class EntityManager
             throw new Error("Type '$type' does not exist.");
         }
 
+        /** @var array<string, mixed> $templateDefs */
         $templateDefs = $this->metadata->get(['app', 'entityTemplates', $type], []);
 
-        if (!empty($templateDefs['isNotCreatable']) && empty($params['forceCreate'])) {
+        if (!empty($templateDefs['isNotCreatable']) && !$createParams->forceCreate()) {
             throw new Error("Type '$type' is not creatable.");
         }
 
@@ -128,7 +130,7 @@ class EntityManager
             $normalizedTemplateModuleName = Util::normalizeClassName($templateModuleName);
 
             $templateNamespace = "\Espo\Modules\\$normalizedTemplateModuleName\Core\Templates";
-            $templatePath = "application/Espo/Modules/$normalizedTemplateModuleName/Core/Templates";
+            $templatePath = "custom/Espo/Modules/$normalizedTemplateModuleName/Core/Templates";
         }
 
         $contents = "<" . "?" . "php\n\n".
@@ -173,13 +175,8 @@ class EntityManager
             }
 
             $languageContents = $this->fileManager->getContents($filePath);
-
-            $languageContents = str_replace('{entityType}', $name, $languageContents);
+            $languageContents = $this->replace($languageContents, $name, $createParams->getReplaceData());
             $languageContents = str_replace('{entityTypeTranslated}', $labelSingular, $languageContents);
-
-            foreach ($replaceData as $key => $value) {
-                $languageContents = str_replace('{'.$key.'}', $value, $languageContents);
-            }
 
             $destinationFilePath = 'custom/Espo/Custom/Resources/i18n/' . $language . '/' . $name . '.json';
 
@@ -189,12 +186,7 @@ class EntityManager
         $filePath = $templatePath . "/Metadata/$type/scopes.json";
 
         $scopesDataContents = $this->fileManager->getContents($filePath);
-
-        $scopesDataContents = str_replace('{entityType}', $name, $scopesDataContents);
-
-        foreach ($replaceData as $key => $value) {
-            $scopesDataContents = str_replace('{'.$key.'}', $value, $scopesDataContents);
-        }
+        $scopesDataContents = $this->replace($scopesDataContents, $name, $createParams->getReplaceData());
 
         $scopesData = Json::decode($scopesDataContents, true);
 
@@ -218,13 +210,7 @@ class EntityManager
         $filePath = $templatePath . "/Metadata/$type/entityDefs.json";
 
         $entityDefsDataContents = $this->fileManager->getContents($filePath);
-
-        $entityDefsDataContents = str_replace('{entityType}', $name, $entityDefsDataContents);
-        $entityDefsDataContents = str_replace('{entityTypeLowerFirst}', lcfirst($name), $entityDefsDataContents);
-
-        foreach ($replaceData as $key => $value) {
-            $entityDefsDataContents = str_replace('{' . $key . '}', $value, $entityDefsDataContents);
-        }
+        $entityDefsDataContents = $this->replace($entityDefsDataContents, $name, $createParams->getReplaceData());
 
         $entityDefsData = Json::decode($entityDefsDataContents, true);
 
@@ -233,12 +219,7 @@ class EntityManager
         $filePath = $templatePath . "/Metadata/$type/clientDefs.json";
 
         $clientDefsContents = $this->fileManager->getContents($filePath);
-
-        $clientDefsContents = str_replace('{entityType}', $name, $clientDefsContents);
-
-        foreach ($replaceData as $key => $value) {
-            $clientDefsContents = str_replace('{'.$key.'}', $value, $clientDefsContents);
-        }
+        $clientDefsContents = $this->replace($clientDefsContents, $name, $createParams->getReplaceData());
 
         $clientDefsData = Json::decode($clientDefsContents, true);
 
@@ -253,6 +234,7 @@ class EntityManager
         if (!empty($params['kanbanViewMode'])) {
             $clientDefsData['kanbanViewMode'] = true;
         }
+
         $this->metadata->set('clientDefs', $name, $clientDefsData);
 
         $this->processMetadataCreateSelectDefs($templatePath, $name, $type);
@@ -284,6 +266,25 @@ class EntityManager
         }
 
         $this->dataManager->rebuild();
+    }
+
+    /**
+     * @param array<string, string> $data
+     */
+    private function replace(
+        string $contents,
+        string $name,
+        array $data
+    ): string {
+
+        $contents = str_replace('{entityType}', $name, $contents);
+        $contents = str_replace('{entityTypeLowerFirst}', lcfirst($name), $contents);
+
+        foreach ($data as $key => $value) {
+            $contents = str_replace('{' . $key . '}', $value, $contents);
+        }
+
+        return $contents;
     }
 
     private function processMetadataCreateSelectDefs(string $templatePath, string $name, string $type): void
@@ -318,24 +319,25 @@ class EntityManager
 
     /**
      * @param array{
-     *   stream?: bool,
-     *   disabled?: bool,
-     *   statusField?: ?string,
-     *   labelSingular?: ?string,
-     *   labelPlural?: ?string,
-     *   sortBy?: ?string,
-     *   sortDirection?: ?string,
-     *   textFilterFields?: ?string[],
-     *   fullTextSearch?: bool,
-     *   countDisabled?: bool,
-     *   kanbanStatusIgnoreList?: ?string[],
-     *   kanbanViewMode?: bool,
-     *   color?: ?string,
-     *   iconClass?: ?string,
-     * } $data
+     *     stream?: bool,
+     *     disabled?: bool,
+     *     statusField?: ?string,
+     *     labelSingular?: ?string,
+     *     labelPlural?: ?string,
+     *     sortBy?: ?string,
+     *     sortDirection?: ?string,
+     *     textFilterFields?: ?string[],
+     *     fullTextSearch?: bool,
+     *     countDisabled?: bool,
+     *     kanbanStatusIgnoreList?: ?string[],
+     *     kanbanViewMode?: bool,
+     *     color?: ?string,
+     *     iconClass?: ?string,
+     *     optimisticConcurrencyControl?: bool,
+     * }|array<string, mixed> $params
      * @throws Error
      */
-    public function update(string $name, array $data): void
+    public function update(string $name, array $params): void
     {
         if (!$this->metadata->get('scopes.' . $name)) {
             throw new Error("Entity `$name` does not exist.");
@@ -345,7 +347,7 @@ class EntityManager
         $type = $this->metadata->get(['scopes', $name, 'type']);
 
         if ($this->metadata->get(['scopes', $name, 'statusFieldLocked'])) {
-            unset($data['statusField']);
+            unset($params['statusField']);
         }
 
         $initialData = [
@@ -355,73 +357,73 @@ class EntityManager
                 $this->metadata->get(['entityDefs', $name, 'collection', 'fullTextSearch']) ?? false,
         ];
 
-        $entityTypeParams = new Params($name, $type, array_merge($this->getCurrentParams($name), $data));
+        $entityTypeParams = new Params($name, $type, array_merge($this->getCurrentParams($name), $params));
         $previousEntityTypeParams = new Params($name, $type, $this->getCurrentParams($name));
 
-        if (array_key_exists('stream', $data)) {
-            $this->metadata->set('scopes', $name, ['stream' => (bool) $data['stream']]);
+        if (array_key_exists('stream', $params)) {
+            $this->metadata->set('scopes', $name, ['stream' => (bool) $params['stream']]);
         }
 
-        if (array_key_exists('disabled', $data)) {
-            $this->metadata->set('scopes', $name, ['disabled' => (bool) $data['disabled']]);
+        if (array_key_exists('disabled', $params)) {
+            $this->metadata->set('scopes', $name, ['disabled' => (bool) $params['disabled']]);
         }
 
-        if (array_key_exists('statusField', $data)) {
-            $this->metadata->set('scopes', $name, ['statusField' => $data['statusField']]);
+        if (array_key_exists('statusField', $params)) {
+            $this->metadata->set('scopes', $name, ['statusField' => $params['statusField']]);
         }
 
-        if (isset($data['sortBy'])) {
+        if (isset($params['sortBy'])) {
             $this->metadata->set('entityDefs', $name, [
-                'collection' => ['orderBy' => $data['sortBy']],
+                'collection' => ['orderBy' => $params['sortBy']],
             ]);
 
-            if (isset($data['sortDirection'])) {
+            if (isset($params['sortDirection'])) {
                 $this->metadata->set('entityDefs', $name, [
-                    'collection' => ['order' => $data['sortDirection']],
+                    'collection' => ['order' => $params['sortDirection']],
                 ]);
             }
         }
 
-        if (isset($data['textFilterFields'])) {
+        if (isset($params['textFilterFields'])) {
             $this->metadata->set('entityDefs', $name, [
-                'collection' => ['textFilterFields' => $data['textFilterFields']]
+                'collection' => ['textFilterFields' => $params['textFilterFields']]
             ]);
         }
 
-        if (isset($data['fullTextSearch'])) {
+        if (isset($params['fullTextSearch'])) {
             $this->metadata->set('entityDefs', $name, [
-                'collection' => ['fullTextSearch' => (bool) $data['fullTextSearch']],
+                'collection' => ['fullTextSearch' => (bool) $params['fullTextSearch']],
             ]);
         }
 
-        if (isset($data['countDisabled'])) {
+        if (isset($params['countDisabled'])) {
             $this->metadata->set('entityDefs', $name, [
-                'collection' => ['countDisabled' => (bool) $data['countDisabled']],
+                'collection' => ['countDisabled' => (bool) $params['countDisabled']],
             ]);
         }
 
-        if (array_key_exists('kanbanStatusIgnoreList', $data)) {
-            $itemValue = $data['kanbanStatusIgnoreList'] ?: null;
+        if (array_key_exists('kanbanStatusIgnoreList', $params)) {
+            $itemValue = $params['kanbanStatusIgnoreList'] ?: null;
 
             $this->metadata->set('scopes', $name, ['kanbanStatusIgnoreList' => $itemValue]);
         }
 
-        if (array_key_exists('kanbanViewMode', $data)) {
-            $this->metadata->set('clientDefs', $name, ['kanbanViewMode' => $data['kanbanViewMode']]);
+        if (array_key_exists('kanbanViewMode', $params)) {
+            $this->metadata->set('clientDefs', $name, ['kanbanViewMode' => $params['kanbanViewMode']]);
         }
 
-        if (array_key_exists('color', $data)) {
-            $this->metadata->set('clientDefs', $name, ['color' => $data['color']]);
+        if (array_key_exists('color', $params)) {
+            $this->metadata->set('clientDefs', $name, ['color' => $params['color']]);
         }
 
-        if (array_key_exists('iconClass', $data)) {
-            $this->metadata->set('clientDefs', $name, ['iconClass' => $data['iconClass']]);
+        if (array_key_exists('iconClass', $params)) {
+            $this->metadata->set('clientDefs', $name, ['iconClass' => $params['iconClass']]);
         }
 
-        $this->setAdditionalParamsInMetadata($name, $data);
+        $this->setAdditionalParamsInMetadata($name, $params);
 
-        if (!empty($data['labelSingular'])) {
-            $labelSingular = $data['labelSingular'];
+        if (!empty($params['labelSingular'])) {
+            $labelSingular = $params['labelSingular'];
             $labelCreate = $this->language->translateLabel('Create') . ' ' . $labelSingular;
 
             $this->language->set('Global', 'scopeNames', $name, $labelSingular);
@@ -433,8 +435,8 @@ class EntityManager
             }
         }
 
-        if (!empty($data['labelPlural'])) {
-            $labelPlural = $data['labelPlural'];
+        if (!empty($params['labelPlural'])) {
+            $labelPlural = $params['labelPlural'];
             $this->language->set('Global', 'scopeNamesPlural', $name, $labelPlural);
 
             if ($isCustom) {
@@ -457,9 +459,9 @@ class EntityManager
 
         if (
             !$initialData['optimisticConcurrencyControl'] &&
-            !empty($data['optimisticConcurrencyControl']) &&
+            !empty($params['optimisticConcurrencyControl']) &&
             (
-                empty($data['fullTextSearch']) || $initialData['fullTextSearch']
+                empty($params['fullTextSearch']) || $initialData['fullTextSearch']
             )
         ) {
             $this->dataManager->rebuild();
@@ -467,12 +469,13 @@ class EntityManager
     }
 
     /**
-     * @param array{forceRemove?: bool} $params
      * @throws Forbidden
      * @throws Error
      */
-    public function delete(string $name, array $params = []): void
+    public function delete(string $name, ?DeleteParams $deleteParams = null): void
     {
+        $deleteParams ??= new DeleteParams();
+
         if (!$this->isCustom($name)) {
             throw new Forbidden;
         }
@@ -481,10 +484,14 @@ class EntityManager
 
         $type = $this->metadata->get(['scopes', $name, 'type']);
         $isNotRemovable = $this->metadata->get(['scopes', $name, 'isNotRemovable']);
+        /** @var array<string, mixed> $templateDefs */
         $templateDefs = $this->metadata->get(['app', 'entityTemplates', $type], []);
 
-        if ((!empty($templateDefs['isNotRemovable']) || $isNotRemovable) && empty($params['forceRemove'])) {
-            throw new Error('Type \''.$type.'\' is not removable.');
+        if (
+            (!empty($templateDefs['isNotRemovable']) || $isNotRemovable) &&
+            !$deleteParams->forceRemove()
+        ) {
+            throw new Error("Type '$type' is not removable.");
         }
 
         $entityTypeParams = new Params($name, $type, $this->getCurrentParams($name));
@@ -637,26 +644,30 @@ class EntityManager
     /**
      * @throws Error
      */
-    public function resetToDefaults(string $scope): void
+    public function resetToDefaults(string $name): void
     {
-        if ($this->isCustom($scope)) {
-            throw new Error("Can't reset to defaults custom entity type '$scope.'");
+        if ($this->isCustom($name)) {
+            throw new Error("Can't reset to defaults custom entity type '$name.'");
         }
 
-        $this->metadata->delete('scopes', $scope, [
+        $type = $this->metadata->get(['scopes', $name, 'type']);
+
+        $previousEntityTypeParams = new Params($name, $type, $this->getCurrentParams($name));
+
+        $this->metadata->delete('scopes', $name, [
             'disabled',
             'stream',
             'statusField',
             'kanbanStatusIgnoreList',
         ]);
 
-        $this->metadata->delete('clientDefs', $scope, [
+        $this->metadata->delete('clientDefs', $name, [
             'iconClass',
             'statusField',
             'kanbanViewMode',
         ]);
 
-        $this->metadata->delete('entityDefs', $scope, [
+        $this->metadata->delete('entityDefs', $name, [
             'collection.sortBy',
             'collection.asc',
             'collection.orderBy',
@@ -665,15 +676,19 @@ class EntityManager
             'collection.fullTextSearch',
         ]);
 
-        foreach ($this->getAdditionalParamLocationMap($scope) as $param => $location) {
-            $this->metadata->delete($location, $scope, [$param]);
+        foreach ($this->getAdditionalParamLocationMap($name) as $param => $location) {
+            $this->metadata->delete($location, $name, [$param]);
         }
 
         $this->metadata->save();
 
-        $this->language->delete('Global', 'scopeNames', $scope);
-        $this->language->delete('Global', 'scopeNamesPlural', $scope);
+        $this->language->delete('Global', 'scopeNames', $name);
+        $this->language->delete('Global', 'scopeNamesPlural', $name);
         $this->language->save();
+
+        $entityTypeParams = new Params($name, $type, $this->getCurrentParams($name));
+
+        $this->processUpdateHook($entityTypeParams, $previousEntityTypeParams);
 
         $this->dataManager->clearCache();
     }
