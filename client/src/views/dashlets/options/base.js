@@ -122,6 +122,7 @@ class BaseDashletOptionsModalView extends ModalView {
         this.fields = Espo.Utils.cloneDeep(this.options.fields);
         this.fieldList = Object.keys(this.fields);
         this.optionsData = this.options.optionsData;
+        this.name = this.options.name;
     }
 
     setup() {
