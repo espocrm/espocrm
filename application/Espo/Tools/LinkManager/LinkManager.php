@@ -47,6 +47,13 @@ use Espo\Tools\EntityManager\NameUtil;
  */
 class LinkManager
 {
+    private const MANY_TO_MANY = 'manyToMany';
+    private const MANY_TO_ONE = 'manyToOne';
+    private const ONE_TO_MANY = 'oneToMany';
+    private const CHILDREN_TO_PARENT = 'childrenToParent';
+    private const ONE_TO_ONE_LEFT = 'oneToOneLeft';
+    private const ONE_TO_ONE_RIGHT = 'oneToOneRight';
+
     public function __construct(
         private Metadata $metadata,
         private Language $language,
@@ -59,20 +66,22 @@ class LinkManager
 
     /**
      * @param array{
-     *   linkType: string,
-     *   entity: string,
-     *   link: string,
-     *   entityForeign: string,
-     *   linkForeign: string,
-     *   label: string,
-     *   labelForeign: string,
-     *   relationName?: ?string,
-     *   linkMultipleField?: bool,
-     *   linkMultipleFieldForeign?: bool,
-     *   audited?: bool,
-     *   auditedForeign?: bool,
-     *   layout?: string,
-     *   layoutForeign?: string,
+     *     linkType: string,
+     *     entity: string,
+     *     link: string,
+     *     entityForeign: string,
+     *     linkForeign: string,
+     *     label: string,
+     *     labelForeign: string,
+     *     relationName?: ?string,
+     *     linkMultipleField?: bool,
+     *     linkMultipleFieldForeign?: bool,
+     *     audited?: bool,
+     *     auditedForeign?: bool,
+     *     layout?: string,
+     *     layoutForeign?: string,
+     *     parentEntityTypeList?: string[],
+     *     foreignLinkEntityTypeList?: string[],
      * } $params
      * @throws BadRequest
      * @throws Error
@@ -106,7 +115,7 @@ class LinkManager
             throw new BadRequest("No link or link-foreign.");
         }
 
-        if ($linkType === 'manyToMany') {
+        if ($linkType === self::MANY_TO_MANY) {
             $relationName = !empty($params['relationName']) ?
                 $params['relationName'] :
                 lcfirst($entity) . $entityForeign;
@@ -201,7 +210,7 @@ class LinkManager
             $auditedForeign = true;
         }
 
-        if ($linkType !== 'childrenToParent') {
+        if ($linkType !== self::CHILDREN_TO_PARENT) {
             if (empty($entityForeign)) {
                 throw new Error();
             }
@@ -236,8 +245,8 @@ class LinkManager
         }
 
         switch ($linkType) {
-            case 'oneToOneRight':
-            case 'oneToOneLeft':
+            case self::ONE_TO_ONE_RIGHT:
+            case self::ONE_TO_ONE_LEFT:
 
                 if (
                     $this->metadata->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign) ||
@@ -255,7 +264,7 @@ class LinkManager
                     throw new Conflict("Field $entity::$link already exists.");
                 }
 
-                if ($linkType === 'oneToOneLeft') {
+                if ($linkType === self::ONE_TO_ONE_LEFT) {
                     $dataLeft = [
                         'fields' => [
                             $link => [
@@ -326,7 +335,7 @@ class LinkManager
 
                 break;
 
-            case 'oneToMany':
+            case self::ONE_TO_MANY:
 
                 if (
                     $this->metadata->get('entityDefs.' . $entityForeign . '.fields.' . $linkForeign) ||
@@ -380,7 +389,7 @@ class LinkManager
 
                 break;
 
-            case 'manyToOne':
+            case self::MANY_TO_ONE:
 
                 if (
                     $this->metadata->get('entityDefs.' . $entity . '.fields.' . $link) ||
@@ -434,7 +443,7 @@ class LinkManager
 
                 break;
 
-            case 'manyToMany':
+            case self::MANY_TO_MANY:
                 $dataLeft = [
                     'fields' => [
                         $link => [
@@ -495,7 +504,7 @@ class LinkManager
 
                 break;
 
-            case 'childrenToParent':
+            case self::CHILDREN_TO_PARENT:
                 $dataLeft = [
                     'fields' => [
                         $link => [
@@ -550,7 +559,7 @@ class LinkManager
             $this->baseLanguage->save();
         }
 
-        if ($linkType === 'childrenToParent') {
+        if ($linkType === self::CHILDREN_TO_PARENT) {
             $foreignLinkEntityTypeList = $params['foreignLinkEntityTypeList'] ?? null;
 
             if (is_array($foreignLinkEntityTypeList)) {
