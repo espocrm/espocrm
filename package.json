@@ -11,7 +11,8 @@
     "test": "grunt run-tests",
     "test-unit": "grunt run-unit-tests",
     "test-integration": "grunt run-integration-tests",
-    "postinstall": "node js/scripts/postinstall-cleanup && node js/scripts/prepare-lib-original.js"
+    "postinstall": "node js/scripts/postinstall-cleanup && node js/scripts/prepare-lib-original.js",
+    "build-frontend": "grunt internal"
   },
   "author": "Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko",
   "license": "GPL-3.0",
