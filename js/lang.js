@@ -57,18 +57,20 @@ class Lang
             this.moduleList = [onlyModuleName];
         }
 
-        var dirNames = this.dirNames = {};
+        let dirNames = this.dirNames = {};
 
-        var coreDir = this.espoPath + 'application/Espo/Resources/i18n/' + this.baseLanguage + '/';
-        var dirs = [coreDir];
+        let coreDir = this.espoPath + 'application/Espo/Resources/i18n/' + this.baseLanguage + '/';
+
+        let dirs = [coreDir];
+
         dirNames[coreDir] = 'application/Espo/Resources/i18n/' + this.language + '/';
 
-        var installDir = this.espoPath + 'install/core/i18n/' + this.baseLanguage + '/';
+        let installDir = this.espoPath + 'install/core/i18n/' + this.baseLanguage + '/';
 
         dirs.push(installDir);
         dirNames[installDir] = 'install/core/i18n/' + this.language + '/';
 
-        var templatesDir = this.espoPath + 'application/Espo/Core/Templates/i18n/' + this.baseLanguage + '/';
+        let templatesDir = this.espoPath + 'application/Espo/Core/Templates/i18n/' + this.baseLanguage + '/';
 
         dirs.push(templatesDir);
         dirNames[templatesDir] = 'application/Espo/Core/Templates/i18n/' + this.language + '/';
@@ -78,8 +80,24 @@ class Lang
         }
 
         this.moduleList.forEach(moduleName => {
-            var dir = this.espoPath + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/' +
+            let path1 = this.espoPath + 'application/Espo/Modules/' + moduleName;
+            let path2 = this.espoPath + 'custom/Espo/Modules/' + moduleName;
+
+            let baseDir = fs.existsSync(path1) ? path1 : path2;
+
+            let dir = baseDir + '/Resources/i18n/' + this.baseLanguage + '/';
+
+            dirs.push(dir);
+
+            dirNames[dir] = fs.existsSync(path1) ?
+                'application/Espo/Modules/' + moduleName + '/Resources/i18n/' + this.language + '/' :
+                'custom/Espo/Modules/' + moduleName + '/Resources/i18n/' + this.language + '/';
+        });
+
+        this.moduleList.forEach(moduleName => {
+            let dir = this.espoPath + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/' +
                 this.baseLanguage + '/';
+
             dirs.push(dir);
 
             dirNames[dir] = 'application/Espo/Modules/' + moduleName +
@@ -96,8 +114,9 @@ class Lang
     }
 
     run () {
-        var translationData = {};
-        var dirs = this.dirs;
+        let translationData = {};
+        let dirs = this.dirs;
+
         const isWin = this.isWin;
         const language = this.language;
 
@@ -111,11 +130,11 @@ class Lang
                     return;
                 }
 
-                var key = item.msgctxt + '__' + item.msgid;
-                var file = item.msgctxt.split('.')[0];
-                var path = item.msgctxt.split('.').slice(1);
+                //let key = item.msgctxt + '__' + item.msgid;
+                let file = item.msgctxt.split('.')[0];
+                let path = item.msgctxt.split('.').slice(1);
 
-                var o = {
+                let o = {
                     stringOriginal: item.msgid,
                     stringTranslated: item.msgstr[0],
                     context: item.msgctxt,
@@ -128,11 +147,11 @@ class Lang
             });
 
             dirs.forEach(path =>{
-                var resDirPath = this.dirNames[path];
-                var resPath = this.espoPath + 'build/' + language + '/' + resDirPath;
+                let resDirPath = this.dirNames[path];
+                let resPath = this.espoPath + 'build/' + language + '/' + resDirPath;
 
                 if (!fs.existsSync(resPath)) {
-                    var d = '';
+                    let d = '';
 
                     resPath.split('/').forEach(f =>{
                         if (!f) {
@@ -151,29 +170,28 @@ class Lang
                     });
                 }
 
-                var list = fs.readdirSync(path);
+                let list = fs.readdirSync(path);
 
                 list.forEach(fileName => {
+                    let filePath = path + fileName;
+                    let resFilePath = resPath + '/' + fileName;
 
-                    var filePath = path + fileName;
-                    var resFilePath = resPath + '/' + fileName;
+                    let contents = fs.readFileSync(filePath, 'utf8');
 
-                    var contents = fs.readFileSync(filePath, 'utf8');
+                    let fileKey = fileName.split('.')[0];
 
-                    var fileKey = fileName.split('.')[0];
-
-                    var fileObject = JSON.parse(contents);
-                    var targetFileObject = {};
+                    let fileObject = JSON.parse(contents);
+                    let targetFileObject = {};
 
                     if (!(fileKey in translationData)) {
                         return;
                     }
 
                     translationData[fileKey].forEach(item => {
-                        var isArray = false;
-                        var isMet = true;
-                        var c = fileObject;
-                        var path = item.path.slice(0);
+                        let isArray = false;
+                        let isMet = true;
+                        let c = fileObject;
+                        let path = item.path.slice(0);
 
                         if (
                             this.baseLanguage !== this.language &&
@@ -182,8 +200,8 @@ class Lang
                             return;
                         }
 
-                        for (var i in item.path) {
-                            var key = item.path[i];
+                        for (let i in item.path) {
+                            let key = item.path[i];
 
                             if (key in c) {
                                 c = c[key];
@@ -198,15 +216,16 @@ class Lang
                             }
                         }
 
-                        var pathList = [];
+                        let pathList = [];
 
                         if (isMet) {
                             if (!isArray) {
                                 isMet = false;
 
-                                for (var k in c) {
+                                for (let k in c) {
                                     if (c[k] === item.stringOriginal) {
-                                        var p = path.slice(0);
+                                        let p = path.slice(0);
+
                                         p.push(k);
 
                                         pathList.push(p);
@@ -222,7 +241,7 @@ class Lang
                             return;
                         }
 
-                        var targetValue = item.stringTranslated;
+                        let targetValue = item.stringTranslated;
 
                         if (targetValue === '') {
                             return;
@@ -245,8 +264,7 @@ class Lang
                         }
 
                         pathList.forEach(path => {
-
-                            var c = targetFileObject;
+                            let c = targetFileObject;
 
                             path.forEach((pathKey, i) => {
                                 if (i < path.length - 1) {

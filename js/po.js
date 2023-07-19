@@ -38,24 +38,28 @@ class PO
         this.onlyModuleName = onlyModuleName;
 
         this.espoPath = espoPath;
-        if (this.espoPath.substr(-1) != '/') {
+        if (this.espoPath.substr(-1) !== '/') {
             this.espoPath += '/';
         }
 
         this.moduleList = ['Crm'];
+
         if (onlyModuleName) {
             this.moduleList = [onlyModuleName];
         }
+
         this.baseLanguage = 'en_US';
         this.language = language || this.baseLanguage;
 
-        this.outputFileName = 'espocrm-' + this.language ;
+        this.outputFileName = 'espocrm-' + this.language;
+
         if (onlyModuleName) {
             this.outputFileName += '-' + onlyModuleName;
         }
+
         this.outputFileName += '.po';
 
-        var dirs = [
+        let dirs = [
             this.espoPath + 'application/Espo/Resources/i18n/',
             this.espoPath + 'install/core/i18n/',
             this.espoPath + 'application/Espo/Core/Templates/i18n/'
@@ -65,9 +69,14 @@ class PO
             dirs = [];
         }
 
-        this.moduleList.forEach(function (moduleName) {
-            dirs.push(this.espoPath + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/');
-        }, this);
+        this.moduleList.forEach(moduleName => {
+            let path1 = this.espoPath + 'application/Espo/Modules/' + moduleName;
+            let path2 = this.espoPath + 'custom/Espo/Modules/' + moduleName;
+
+            let dir = fs.existsSync(path1) ? path1 : path2;
+
+            dirs.push(dir + '/Resources/i18n/');
+        });
 
         this.dirs = dirs;
 
@@ -85,58 +94,63 @@ class PO
     }
 
     runAll () {
-        var pathToLanguage = this.espoPath + '/application/Espo/Resources/i18n/';
+        let pathToLanguage = this.espoPath + '/application/Espo/Resources/i18n/';
 
-        var languageList = [];
+        let languageList = [];
 
-        fs.readdirSync(pathToLanguage).forEach(function (dir) {
-            if (dir.indexOf('_') == 2) {
+        fs.readdirSync(pathToLanguage).forEach(dir => {
+            if (dir.indexOf('_') === 2) {
                 languageList.push(dir);
             }
         });
 
-        languageList.forEach(function (language) {
-            var po = new PO(this.espoPath, language, this.onlyModuleName);
+        languageList.forEach(language => {
+            let po = new PO(this.espoPath, language, this.onlyModuleName);
+
             po.run();
-        }, this);
+        });
     }
 
     run () {
-        var dirs = this.dirs;
-        var messageData = {};
-        var targetMessageData = {}
+        let dirs = this.dirs;
+        let messageData = {};
+        let targetMessageData = {}
 
-        var poContents = this.poContentHeader;
+        let poContents = this.poContentHeader;
 
-        dirs.forEach(function (path) {
-            var dirPath = this.getDirPath(path, this.baseLanguage);
+        dirs.forEach(path => {
+            let dirPath = this.getDirPath(path, this.baseLanguage);
 
-            var list = fs.readdirSync(dirPath);
+            let list = fs.readdirSync(dirPath);
 
-            list.forEach(function (fileName) {
-                var filePath = this.getDirPath(path, this.baseLanguage) + fileName;
+            list.forEach(fileName => {
+                let filePath = this.getDirPath(path, this.baseLanguage) + fileName;
+
                 this.populateMessageDataFromFile(filePath, messageData);
 
-                if (this.language != this.baseLanguage) {
-                    var langFilePath = this.getDirPath(path, this.language) + fileName;
+                if (this.language !== this.baseLanguage) {
+                    let langFilePath = this.getDirPath(path, this.language) + fileName;
+
                     this.populateMessageDataFromFile(langFilePath, targetMessageData);
                 }
-            }, this);
-        }, this);
+            });
+        });
 
 
-        if (this.language == this.baseLanguage) {
+        if (this.language === this.baseLanguage) {
             targetMessageData = messageData;
         }
 
-        for (var key in messageData) {
+        for (let key in messageData) {
             poContents += 'msgctxt "' + messageData[key].context + '"\n';
             poContents += 'msgid "' + messageData[key].value + '"\n';
-            var translatedValue = (targetMessageData[key] || {}).value || "";
+
+            let translatedValue = (targetMessageData[key] || {}).value || "";
+
             poContents += 'msgstr "' + translatedValue + '"\n\n';
         }
 
-        var resFilePath = this.espoPath + 'build/' + this.outputFileName;
+        let resFilePath = this.espoPath + 'build/' + this.outputFileName;
 
         if (fs.existsSync(resFilePath)) {
             fs.unlinkSync(resFilePath);
@@ -150,36 +164,38 @@ class PO
             return messageData;
         }
 
-        var data = fs.readFileSync(filePath, 'utf8');
+        let data = fs.readFileSync(filePath, 'utf8');
+
         data = JSON.parse(data);
 
-        var fileName = filePath.split('\/').slice(-1).pop().split('.')[0];
+        let fileName = filePath.split('\/').slice(-1).pop().split('.')[0];
 
         this.populateMessageData(fileName, data, '', messageData);
     }
 
     getDirPath (path, language) {
-        var dirPath = path + language + '/';
-        return dirPath;
+        return path + language + '/';
     }
 
     populateMessageData (fileName, dataObject, prefix, messageData) {
         prefix = prefix || '';
 
-        for (var index in dataObject) {
+        for (let index in dataObject) {
             if (dataObject[index] === null || dataObject[index] === "") {
                 continue;
             }
 
             if (typeof dataObject[index] === 'object' && !Array.isArray(dataObject[index])) {
-                var nextPrefix = prefix + (prefix ? '.' : '') + index;
+                let nextPrefix = prefix + (prefix ? '.' : '') + index;
+
                 this.populateMessageData(fileName, dataObject[index], nextPrefix, messageData);
+
                 continue;
             }
 
-            var path = fileName + '.' + prefix;
-            var key = path + '.' + index;
-            var value = dataObject[index];
+            let path = fileName + '.' + prefix;
+            let key = path + '.' + index;
+            let value = dataObject[index];
 
             if (Array.isArray(value)) {
                 value = '"' + value.join('", "') + '"';
@@ -194,7 +210,8 @@ class PO
     }
 
     replaceAll (string, find, replace) {
-        var escapedRegExp = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+        let escapedRegExp = find.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+
         return string.replace(new RegExp(escapedRegExp, 'g'), replace);
     }
 
@@ -203,6 +220,7 @@ class PO
         savedString = this.replaceAll(savedString, '"', '\\"');
         savedString = this.replaceAll(savedString, "\n", '\\n');
         savedString = this.replaceAll(savedString, "\t", '\\t');
+
         return savedString;
     }
 }
