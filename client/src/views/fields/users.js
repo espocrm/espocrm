@@ -26,28 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/users', ['views/fields/link-multiple'], function (Dep) {
+import LinkMultipleFieldView from 'views/fields/link-multiple';
 
-    return Dep.extend({
+class UsersFieldView extends LinkMultipleFieldView {
 
-        init: function () {
-            this.assignmentPermission = this.getAcl().get('assignmentPermission');
+    init() {
+        this.assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
 
-            if (this.assignmentPermission === 'no') {
-                this.readOnly = true;
-            }
+        if (this.assignmentPermission === 'no') {
+            this.readOnly = true;
+        }
 
-            Dep.prototype.init.call(this);
-        },
+        super.init();
+    }
 
-        getSelectBoolFilterList: function () {
-            if (this.assignmentPermission === 'team' || this.assignmentPermission === 'no') {
-                return ['onlyMyTeam'];
-            }
-        },
+    getSelectBoolFilterList() {
+        if (this.assignmentPermission === 'team' || this.assignmentPermission === 'no') {
+            return ['onlyMyTeam'];
+        }
+    }
 
-        getSelectPrimaryFilterName: function () {
-            return 'active';
-        },
-    });
-});
+    getSelectPrimaryFilterName() {
+        return 'active';
+    }
+}
+
+export default UsersFieldView;
+
+

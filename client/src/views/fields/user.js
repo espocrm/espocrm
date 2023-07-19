@@ -100,6 +100,7 @@ class UserFieldView extends LinkFieldView {
         if (this.mode === this.MODE_SEARCH) {
             let $elementTeams = this.$el.find('input.element-teams');
 
+
             $elementTeams.autocomplete({
                 serviceUrl: () => {
                     return 'Team?&maxSize=' + this.getAutocompleteMaxCount() + '&select=id,name';
@@ -109,6 +110,7 @@ class UserFieldView extends LinkFieldView {
                 paramName: 'q',
                 noCache: true,
                 formatResult: suggestion => {
+                    // noinspection JSUnresolvedReference
                     return this.getHelper().escapeString(suggestion.name);
                 },
                 transformResult: response => {
@@ -126,7 +128,7 @@ class UserFieldView extends LinkFieldView {
 
                     return {suggestions: list};
                 },
-                onSelect: s => {
+                onSelect: /** {id: string, name: string } */s => {
                     this.addLinkTeams(s.id, s.name);
 
                     $elementTeams.val('');
@@ -185,11 +187,11 @@ class UserFieldView extends LinkFieldView {
     }
 
     addLinkTeamsHtml(id, name) {
-        id = Handlebars.Utils.escapeExpression(id);
-        name = Handlebars.Utils.escapeExpression(name);
+        id = this.getHelper().escapeString(id);
+        name = this.getHelper().escapeString(name);
 
         let $container = this.$el.find('.link-teams-container');
-        
+
         let $el = $('<div />')
             .addClass('link-' + id)
             .addClass('list-group-item');
