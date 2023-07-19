@@ -232,7 +232,9 @@ class LinkManagerIndexView extends View {
                 this.getMetadata().loadSkipCache().then(() => {
                     this.setupLinkData();
 
-                    this.render();
+                    Espo.Ui.success(this.translate('Removed'), {suppress: true});
+
+                    this.reRender();
                 });
             });
     }
