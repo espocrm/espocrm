@@ -60,7 +60,7 @@ Branches:
 
 ### Language
 
-If you want to improve existing translation or add a language that is not available yet, you can contribute on our [POEditor](https://poeditor.com/join/project/gLDKZtUF4i) project. See instructions [here](https://www.espocrm.com/blog/how-to-use-poeditor-to-translate-espocrm/).
+If you want to improve existing translation or add a language that is not available yet, you can contribute on our [POEditor](https://poeditor.com/join/project/gLDKZtUF4i) project. See instructions [here](https://www.espocrm.com/blog/how-to-use-poeditor-to-translate-espocrm/). It may be reasonable about your intention to join the POEditor project by posting on our forum or via the contact form on our website.
 
 Changes on POEditor are usually merged to the GitHub repository before minor releases.
 
