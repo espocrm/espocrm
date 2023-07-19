@@ -91,6 +91,7 @@ class Record extends RecordService implements
     /**
      * @deprecated For backward compatibility, to be removed.
      * @return void
+     * @todo Remove in v9.0.
      */
     protected function init() {}
 
@@ -101,6 +102,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->entityType`.
+     * @todo Remove in v9.0.
      */
     public function getEntityType(): string
     {
@@ -109,8 +111,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->config`.
-     *
      * @return \Espo\Core\Utils\Config
+     * @todo Remove in v9.0.
      */
     protected function getConfig()
     {
@@ -119,8 +121,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->serviceFactory`.
-     *
      * @return \Espo\Core\ServiceFactory
+     * @todo Remove in v9.0.
      */
     protected function getServiceFactory()
     {
@@ -130,6 +132,7 @@ class Record extends RecordService implements
     /**
      * @deprecated Since v7.0.
      * @return \Espo\Core\Select\SelectManagerFactory
+     * @todo Remove in v9.0.
      */
     protected function getSelectManagerFactory()
     {
@@ -138,8 +141,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->acl`.
-     *
      * @return \Espo\Core\Acl
+     * @todo Remove in v9.0.
      */
     protected function getAcl()
     {
@@ -148,8 +151,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->user`.
-     *
      * @return \Espo\Entities\User
+     * @todo Remove in v9.0.
      */
     protected function getUser()
     {
@@ -159,6 +162,7 @@ class Record extends RecordService implements
     /**
      * @deprecated Use `$this->aclManager`.
      * @return \Espo\Core\AclManager
+     * @todo Remove in v9.0.
      */
     protected function getAclManager()
     {
@@ -167,8 +171,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->fileManager`.
-     *
      * @return \Espo\Core\Utils\File\Manager
+     * @todo Remove in v9.0.
      */
     protected function getFileManager()
     {
@@ -177,8 +181,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->metadata`.
-     *
      * @return \Espo\Core\Utils\Metadata
+     * @todo Remove in v9.0.
      */
     protected function getMetadata()
     {
@@ -188,6 +192,7 @@ class Record extends RecordService implements
     /**
      * @deprecated Use `$this->fieldUtil`.
      * @return \Espo\Core\Utils\FieldUtil
+     * @todo Remove in v9.0.
      */
     protected function getFieldManagerUtil()
     {
@@ -196,8 +201,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->entityManager`.
-     *
      * @return \Espo\ORM\EntityManager
+     * @todo Remove in v9.0.
      */
     protected function getEntityManager()
     {
@@ -206,6 +211,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated
+     * @todo Remove in v9.0.
      * @param ?string $entityType
      * @return \Espo\Core\Select\SelectManager
      */
@@ -220,6 +226,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated
+     * @todo Remove in v9.0.
      * @param array<string, mixed> $params
      * @return array<string, mixed>
      */
@@ -238,7 +245,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->recordServiceContainer->get($name)`.
-     *
+     * @todo Remove in v9.0.
      * @param string $name
      * @return \Espo\Core\Record\Service<Entity>
      */
@@ -252,6 +259,7 @@ class Record extends RecordService implements
      * @param Collection<TEntity> $collection
      * @throws ForbiddenSilent
      * @deprecated
+     * @todo Remove in v9.0.
      */
     public function exportCollection(array $params, Collection $collection): string
     {
@@ -285,6 +293,7 @@ class Record extends RecordService implements
     /**
      * @deprecated
      * @param string[] $selectAttributeList
+     * @todo Remove in v9.0.
      */
     public function loadLinkMultipleFieldsForList(Entity $entity, array $selectAttributeList): void
     {
@@ -313,6 +322,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `Espo\Core\FieldProcessing\ListLoadProcessor`.
+     * @todo Remove in v9.0.
      * @param TEntity $entity
      * @return void
      */
@@ -323,6 +333,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `Espo\Core\FieldProcessing\ListLoadProcessor`.
+     * @todo Remove in v9.0.
      * @param TEntity $entity
      * @return void
      */

@@ -2210,7 +2210,7 @@ abstract class BaseQueryComposer implements QueryComposer
      * Quote a value (if needed).
      * @deprecated As of v6.0. Not meant to be used outside as Query Builder should be used to
      * build queries.
-     * @todo Make protected in 8.0.
+     * @todo Make protected in v9.0.
      * @param mixed $value
      */
     public function quote($value): string
@@ -2885,7 +2885,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Sanitize a string.
-     * @todo Make protected in 8.0.
+     * @todo Make protected in 9.0.
      * @deprecated As of v6.0. Not to be used outside.
      */
     public function sanitize(string $string): string
@@ -2895,7 +2895,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * Sanitize an alias for a SELECT statement.
-     * @todo Make protected in 8.0.
+     * @todo Make protected in 9.0.
      * @deprecated As of v6.0. Not to be used outside.
      */
     public function sanitizeSelectAlias(string $string): string

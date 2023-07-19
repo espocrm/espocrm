@@ -66,7 +66,7 @@ class ContainerConfiguration implements Configuration
 
             if (!$className) {
                 /** @deprecated */
-                /** @todo Remove in 8.0. */
+                /** @todo Remove in v9.0. */
                 $className = $this->metadata->get(['app', 'loaders', ucfirst($name)]);
             }
         } catch (Exception) {}

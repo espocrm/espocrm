@@ -171,7 +171,7 @@ class InjectableFactory
 
         $obj = $class->newInstanceArgs($injectionList);
 
-        // @todo Remove in 8.0.
+        // @todo Remove in v9.0.
         if ($class->implementsInterface(Injectable::class)) {
             $this->applyInjectable($class, $obj);
 
@@ -476,7 +476,7 @@ class InjectableFactory
     /**
      * @deprecated
      * @param ReflectionClass<object> $class
-     * @todo Remove in 8.0.
+     * @todo Remove in v9.0.
      */
     private function applyInjectable(ReflectionClass $class, object $obj): void
     {

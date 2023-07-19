@@ -31,7 +31,7 @@ namespace Espo\Core\Utils;
 
 /**
  * @deprecated As of v6.0. Use FieldUtil.
- * @todo Remove in 8.0.
+ * @todo Remove in v8.0.
  */
 class FieldManagerUtil extends FieldUtil
 {
