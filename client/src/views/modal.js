@@ -171,7 +171,7 @@ class ModalView extends View {
      * Dropdown action items.
      *
      * @protected
-     * @type {module:views/modal~Button[]|false}
+     * @type {Array<module:views/modal~Button|false>}
      */
     dropdownItemList = []
 

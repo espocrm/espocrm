@@ -47,7 +47,7 @@ class BottomPanelView extends View {
 
     /**
      * @protected
-     * @type {module:views/record/panels-container~action[]}
+     * @type {Array<module:views/record/panels-container~action|false>}
      */
     actionList = null
 
@@ -342,6 +342,7 @@ class BottomPanelView extends View {
         this.createView(viewKey, viewName, o);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Is tab-hidden.
      *
