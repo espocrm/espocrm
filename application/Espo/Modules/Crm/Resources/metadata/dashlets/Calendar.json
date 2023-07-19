@@ -24,7 +24,7 @@
             "users": {
                 "type": "linkMultiple",
                 "entity": "User",
-                "view": "views/fields/assigned-users",
+                "view": "crm:views/calendar/fields/users",
                 "sortable": true
             },
             "teams": {
