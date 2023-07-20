@@ -860,7 +860,7 @@ class Service implements Crud,
         return RecordCollection::create($collection, $total);
     }
 
-    protected function createSelectApplierClassNameListProvider(): ApplierClassNameListProvider
+    private function createSelectApplierClassNameListProvider(): ApplierClassNameListProvider
     {
         return $this->injectableFactory->create(ApplierClassNameListProvider::class);
     }
@@ -868,7 +868,7 @@ class Service implements Crud,
     /**
      * @return TEntity|null
      */
-    protected function getEntityEvenDeleted(string $id): ?Entity
+    private function getEntityEvenDeleted(string $id): ?Entity
     {
         $query = $this->entityManager
             ->getQueryBuilder()
