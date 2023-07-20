@@ -165,8 +165,17 @@ class LayoutBaseView extends View {
 
     resetToDefault() {
         this.getHelper().layoutManager.resetToDefault(this.scope, this.type, () => {
-            this.cancel();
+            this.loadLayout(() => {
+                this.setIsNotChanged();
+
+                this.prepareLayout().then(() => this.reRender());
+            });
+
         }, this.options.setId);
+    }
+
+    prepareLayout() {
+        return Promise.resolve();
     }
 
     reset() {
@@ -244,7 +253,7 @@ class LayoutBaseView extends View {
                 return;
             }
 
-            this.reRender();
+            this.prepareLayout().then(() => this.reRender());
         });
     }
 

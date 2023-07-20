@@ -304,23 +304,15 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
             return panelDataList;
         },
 
-        cancel: function () {
-            this.loadLayout(() => {
+        prepareLayout: function () {
+            return new Promise(resolve => {
                 let countLoaded = 0;
-
-                this.setIsNotChanged();
-
-                if (this.em) {
-                    this.trigger('cancel');
-
-                    return;
-                }
 
                 this.setupPanels(() => {
                     countLoaded ++;
 
                     if (countLoaded === this.panels.length) {
-                        this.reRender();
+                        resolve();
                     }
                 });
             });
