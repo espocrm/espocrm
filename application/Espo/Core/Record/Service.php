@@ -141,8 +141,6 @@ class Service implements Crud,
     protected $nonAdminReadOnlyLinkList = [];
     /** @var string[] */
     protected $onlyAdminLinkList = [];
-    /** @var array<string, array<string, mixed>> */
-    protected $linkParams = [];
     /** @var array<string, string[]> */
     protected $linkMandatorySelectAttributeList = [];
     /** @var string[] */
@@ -966,14 +964,11 @@ class Service implements Crud,
             ->getRelation($link)
             ->getForeignEntityType();
 
-        $linkParams = $this->linkParams[$link] ?? [];
+        $skipAcl = $this->metadata
+            ->get("recordDefs.$this->entityType.relationships.$link.selectAccessControlDisabled") ?? false;
 
-        $skipAcl = $linkParams['skipAcl'] ?? false;
-
-        if (!$skipAcl) {
-            if (!$this->acl->check($foreignEntityType, AclTable::ACTION_READ)) {
-                throw new Forbidden();
-            }
+        if (!$skipAcl && !$this->acl->check($foreignEntityType, AclTable::ACTION_READ)) {
+            throw new Forbidden();
         }
 
         $recordService = $this->recordServiceContainer->get($foreignEntityType);

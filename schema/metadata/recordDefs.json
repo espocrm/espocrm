@@ -101,6 +101,10 @@
             "additionalProperties": {
                 "type": "object",
                 "properties": {
+                    "selectAccessControlDisabled": {
+                        "description": "Disable access control when listing related records; only access to a parent record will be checked.",
+                        "type": "boolean"
+                    },
                     "linkRequiredAccess": {
                         "description": "Access to a current record that is needed to be able to link and unlink records.",
                         "type": "string",
@@ -116,7 +120,7 @@
                         "type": "boolean"
                     },
                     "linkCheckDisabled": {
-                        "description": "Disable a link-check functionallity linking through link-multiple field.",
+                        "description": "Disable a link-check functionality when linking through link-multiple field.",
                         "type": "boolean"
                     }
                 }
