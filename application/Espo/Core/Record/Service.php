@@ -67,6 +67,7 @@ use Espo\ORM\Query\Part\WhereClause;
 use Espo\Tools\Stream\Service as StreamService;
 use Espo\Entities\User;
 use Espo\Entities\ActionHistoryRecord;
+use Hoa\Ustring\Search;
 use stdClass;
 use InvalidArgumentException;
 use LogicException;
@@ -271,7 +272,26 @@ class Service implements Crud,
      */
     public function getEntity(string $id): ?Entity
     {
-        $entity = $this->getRepository()->getById($id);
+        try {
+            $query = $this->selectBuilderFactory
+                ->create()
+                ->from($this->entityType)
+                ->withSearchParams(
+                    SearchParams::create()->withSelect(['*'])
+                )
+                ->withAdditionalApplierClassNameList(
+                    $this->createSelectApplierClassNameListProvider()->get($this->entityType)
+                )
+                ->build();
+        }
+        catch (BadRequest|Error $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+
+        $entity = $this->getRepository()
+            ->clone($query)
+            ->where(['id' => $id])
+            ->findOne();
 
         if (!$entity && $this->user->isAdmin()) {
             $entity = $this->getEntityEvenDeleted($id);
@@ -1749,8 +1769,13 @@ class Service implements Crud,
 
     public function prepareSearchParams(SearchParams $searchParams): SearchParams
     {
-        return $this
-            ->prepareSearchParamsSelect($searchParams)
+        $searchParams = $this->prepareSearchParamsSelect($searchParams);
+
+        if ($searchParams->getSelect() === null) {
+            $searchParams = $searchParams->withSelect(['*']);
+        }
+
+        return $searchParams
             ->withMaxTextAttributeLength(
                 $this->getMaxSelectTextAttributeLength()
             );

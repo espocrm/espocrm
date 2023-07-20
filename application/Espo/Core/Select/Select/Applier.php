@@ -115,6 +115,10 @@ class Applier
             return null;
         }
 
+        if ($passedAttributeList === ['*']) {
+            return ['*'];
+        }
+
         $attributeList = [];
 
         if (!in_array('id', $passedAttributeList)) {
