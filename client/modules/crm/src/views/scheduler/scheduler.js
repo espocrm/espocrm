@@ -51,6 +51,9 @@ class SchedulerView extends View {
         this.endField = this.options.endField || 'dateEnd';
         this.assignedUserField = this.options.assignedUserField || 'assignedUser';
 
+        this.startDateField = this.startField + 'Date';
+        this.endDateField = this.endField + 'Date';
+
         this.colors = Espo.Utils.clone(this.getMetadata().get('clientDefs.Calendar.colors') || {});
 
         this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
@@ -72,6 +75,7 @@ class SchedulerView extends View {
                 m.hasChanged('isAllDay') ||
                 m.hasChanged(this.startField) ||
                 m.hasChanged(this.endField) ||
+                m.hasChanged(this.endDateField) ||
                 m.hasChanged(this.usersField + 'Ids') ||
                 !this.eventAssignedUserIsAttendeeDisabled && m.hasChanged(this.assignedUserField + 'Id');
 
@@ -276,8 +280,8 @@ class SchedulerView extends View {
         let endS = this.model.get(this.endField);
 
         if (this.model.get('isAllDay')) {
-            startS = this.model.get(this.startField + 'Date');
-            endS = this.model.get(this.endField + 'Date');
+            startS = this.model.get(this.startDateField);
+            endS = this.model.get(this.endDateField);
         }
 
         if (!startS || !endS) {
