@@ -70,6 +70,7 @@ use Espo\Entities\ActionHistoryRecord;
 use stdClass;
 use InvalidArgumentException;
 use LogicException;
+use RuntimeException;
 
 use const E_USER_DEPRECATED;
 
@@ -265,7 +266,7 @@ class Service implements Crud,
     /**
      * Get an entity by ID. Access control check is performed.
      *
-     * @throws ForbiddenSilent If no read access.
+     * @throws Forbidden If no read access.
      * @return ?TEntity
      */
     public function getEntity(string $id): ?Entity
@@ -994,7 +995,10 @@ class Service implements Crud,
 
         $selectBuilder
             ->from($foreignEntityType)
-            ->withSearchParams($preparedSearchParams);
+            ->withSearchParams($preparedSearchParams)
+            ->withAdditionalApplierClassNameList(
+                $this->createSelectApplierClassNameListProvider()->get($foreignEntityType)
+            );
 
         if (!$skipAcl) {
             $selectBuilder->withStrictAccessControl();
