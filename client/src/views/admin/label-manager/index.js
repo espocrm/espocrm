@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import View from 'view';
+import Select from 'ui/select';
 
 class LabelManagerView extends  View {
 
@@ -108,6 +109,12 @@ class LabelManagerView extends  View {
         this.once('after:render', () => {
             this.selectScope(this.scope, true);
         });
+    }
+
+    afterRender() {
+        Select.init(
+            this.element.querySelector(`select[data-name="language"]`)
+        );
     }
 
     selectLanguage(language) {
