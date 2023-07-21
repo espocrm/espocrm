@@ -29,14 +29,31 @@ body[data-navbar="top"] {
     }
 }
 
-
-#navbar {
-    .navbar-inverse .navbar-nav {
-        > li > a {
-            > .fas,
-            > .far {
-                color: var(--text-gray-color);
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    #navbar {
+        .navbar-inverse .navbar-nav {
+            > li > a {
+                > .fas,
+                > .far {
+                    color: var(--text-gray-color);
+                }
             }
         }
     }
 }
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    body[data-navbar="top"] {
+        #navbar {
+            .navbar-inverse .navbar-nav {
+                > li > a {
+                    > .fas,
+                    > .far {
+                        color: var(--text-gray-color);
+                    }
+                }
+            }
+        }
+    }
+}
+
