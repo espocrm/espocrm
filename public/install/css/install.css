@@ -150,7 +150,7 @@ header.step-header h4 {
 }
 
 .panel .modal-footer {
-    background-color: var(--panel-bg) !important;
+    background-color: transparent;
 
     border-bottom-left-radius: var(--panel-border-radius);
     border-bottom-right-radius: var(--panel-border-radius);

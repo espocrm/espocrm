@@ -204,6 +204,10 @@ if (Utils::checkActionExists($action)) {
     include $actionFile;
 }
 
+$theme = $_SESSION['install']['theme'] ?? $config->get('theme');
+
+$smarty->assign('logoSrc', $installer->getLogoSrc($theme));
+
 $loaderParamsProvider = $installer->getInjectableFactory()->create(LoaderParamsProvider::class);
 
 if (!empty($actionFile) && file_exists('install/core/tpl/' . $tplName)) {

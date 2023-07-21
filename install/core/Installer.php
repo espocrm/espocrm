@@ -753,4 +753,9 @@ class Installer
             'scheduledJobId' => $scheduledJob->getId(),
         ]);
     }
+
+    public function getLogoSrc(string $theme): string
+    {
+        return $this->getMetadata()->get(['themes', $theme, 'logo']) ?? 'client/img/logo.svg';
+    }
 }
