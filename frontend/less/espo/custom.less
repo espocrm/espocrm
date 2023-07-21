@@ -3032,6 +3032,17 @@ table.table-admin-panel {
         }
     }
 
+    .list-main-column {
+        > .nested-categories-container + .list-container {
+            > .list {
+                margin-left: -@container-padding;
+                margin-right: -@container-padding;
+                border-left: 0;
+                border-right: 0;
+            }
+        }
+    }
+
     .modal-body {
         .categories-container + .list-container {
             .list {
