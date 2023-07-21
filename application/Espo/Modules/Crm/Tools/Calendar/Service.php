@@ -61,7 +61,7 @@ use RuntimeException;
 
 class Service
 {
-    private const BUSY_RANGES_MAX_RANGE_DAYS = 10;
+    private const BUSY_RANGES_MAX_RANGE_DAYS = 20;
     /** @var array<string, string[]> */
     private array $entityTypeCanceledStatusListCacheMap = [];
 
@@ -923,11 +923,13 @@ class Service
             }
         }
 
+        $toReturn = true;
+
         try {
             $diff = $to->getDateTime()->diff($from->getDateTime(), true);
 
             if ($diff->days > $this->config->get('busyRangesMaxRange', self::BUSY_RANGES_MAX_RANGE_DAYS)) {
-                return [];
+                $toReturn = false;
             }
         }
         catch (Exception) {
@@ -952,7 +954,9 @@ class Service
             ->withScopeList($scopeList);
 
         foreach ($userIdList as $userId) {
-            $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+            $user = $this->entityManager
+                ->getRDBRepositoryByClass(User::class)
+                ->getById($userId);
 
             if (!$user) {
                 continue;
@@ -971,7 +975,9 @@ class Service
                 [];
 
             try {
-                $busyRangeList = $this->fetchBusyRanges($userId, $fetchParams, $ignoreList);
+                $busyRangeList = $toReturn ?
+                    $this->fetchBusyRanges($userId, $fetchParams, $ignoreList) :
+                    [];
             }
             catch (Exception $e) {
                 if ($e instanceof Forbidden) {
