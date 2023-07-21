@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\App;
 
+use Espo\Core\Utils\ThemeManager;
 use Espo\Entities\Settings;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -66,7 +67,8 @@ class SettingsService
         private FieldValidationManager $fieldValidationManager,
         private InjectableFactory $injectableFactory,
         private Access $access,
-        private AuthenticationMethodProvider $authenticationMethodProvider
+        private AuthenticationMethodProvider $authenticationMethodProvider,
+        private ThemeManager $themeManager
     ) {}
 
     /**
@@ -253,6 +255,8 @@ class SettingsService
         ) {
             $data->passwordRecoveryEnabled = true;
         }
+
+        $data->logoSrc = $this->themeManager->getLogoSrc();
     }
 
     private function filterDataByAccess(stdClass $data): void

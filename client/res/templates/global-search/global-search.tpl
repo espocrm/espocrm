@@ -11,7 +11,7 @@
             class="btn btn-link global-search-button"
             data-action="search"
             title="{{translate 'Search'}}"
-        ><span class="fas fa-search"></span></a>
+        ><span class="fas fa-search icon"></span></a>
     </div>
 </div>
 <div class="global-search-panel-container"></div>

@@ -1,6 +1,7 @@
 {
     "stylesheet": "client/css/espo/espo.css",
     "stylesheetIframe": "client/css/espo/espo-iframe.css",
+    "logo": "client/img/logo.svg",
     "params": {
         "navbar": {
             "type": "enum",
@@ -17,13 +18,6 @@
             "valueMap": {
                 "side": 30,
                 "top": 43
-            }
-        },
-        "logo": {
-            "param": "navbar",
-            "valueMap": {
-                "side": "client/img/logo.svg",
-                "top": "client/img/logo.svg"
             }
         }
     },

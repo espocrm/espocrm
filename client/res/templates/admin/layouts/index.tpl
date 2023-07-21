@@ -2,7 +2,7 @@
 
 <div class="row">
     <div id="layouts-menu" class="col-sm-3">
-        <div class="panel-group" id="layout-accordion">
+        <div class="panel-group panel-group-accordion" id="layout-accordion">
         {{#each layoutScopeDataList}}
             <div class="panel panel-default">
                 <div class="panel-heading">

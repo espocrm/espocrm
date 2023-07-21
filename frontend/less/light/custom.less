@@ -1,0 +1,30 @@
+#navbar > .navbar {
+    .short-label,
+    .more-icon {
+        color: var(--text-gray-color);
+    }
+}
+
+body[data-navbar="top"] {
+    #navbar {
+        .navbar-right {
+            > li {
+                .icon {
+                    color: var(--text-gray-color);
+                }
+            }
+        }
+    }
+}
+
+body[data-navbar="side"] {
+    #navbar > .navbar {
+        border-right: var(--panel-border-width) solid var(--default-border-color);
+    }
+}
+
+body[data-navbar="top"] {
+    #navbar > .navbar {
+        border-bottom: 1px solid var(--default-border-color);
+    }
+}

@@ -183,7 +183,7 @@
                     role="button"
                     tabindex="0"
                     title="{{translate 'Create'}}"
-                ><i class="fas fa-plus"></i></a>
+                ><i class="fas fa-plus icon"></i></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
                     <li class="dropdown-header">{{translate 'Create'}}</li>
                     {{#each quickCreateList}}
@@ -207,7 +207,7 @@
                     role="button"
                     tabindex="0"
                     title="{{translate 'Menu'}}"
-                ><span class="fas fa-ellipsis-v"></span></a>
+                ><span class="fas fa-ellipsis-v icon"></span></a>
                 <ul class="dropdown-menu" role="menu" aria-labelledby="nav-menu-dropdown">
                     {{#each menuDataList}}
                         {{#unless divider}}

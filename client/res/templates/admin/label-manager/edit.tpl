@@ -14,7 +14,7 @@
 {{/unless}}
 
 {{#each categoryList}}
-<div class="panel panel-default" data-name="{{./this}}">
+<div class="panel panel-default" data-name="{{./this}}" style="overflow: hidden;">
     <div class="panel-heading clearfix">
         <div
             class="pull-left"

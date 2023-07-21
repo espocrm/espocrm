@@ -140,7 +140,7 @@
 
         margin-bottom: 0;
 
-        &:last-child {
+        &:last-child:not(.first):not(.in-middle) {
             border-bottom-width: var(--panel-border-width);
         }
     }
@@ -151,7 +151,7 @@
         border-top-width: var(--panel-border-width);
     }
 
-    > .panel:last-child {
+    > .panel:last-child:not(.first):not(.in-middle) {
         border-bottom-width: var(--panel-border-width);
     }
 

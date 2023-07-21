@@ -30,6 +30,10 @@ html {
     box-shadow: none;
 }
 
+#main > .calendar-container .calendar {
+    border: var(--panel-border-width) solid var(--default-border-color);
+}
+
 a:focus-visible,
 a.btn:focus-visible,
 button:focus-visible,
@@ -991,6 +995,26 @@ section {
     margin-right: -@container-padding;
 }
 
+#main > .list-container,
+.modal-body > .list-container,
+.modal-body .categories-container + .list-container,
+.left-container + .list-container,
+.nested-categories-container + .list-container {
+    > .list {
+        border: var(--panel-border-width) solid var(--default-border-color);
+    }
+}
+
+.modal-body > .list-container > .list {
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
+#main > .list-container > .list {
+    border-left-width: 0;
+    border-right-width: 0;
+}
+
 #main > .list-container > .list-tree > ul,
 .modal-body > .list-container > .list-tree > ul {
     padding-top: @table-cell-padding;
@@ -1058,6 +1082,9 @@ section {
         .list {
             margin-right: -@container-padding;
             margin-left: -@container-padding;
+
+            border-left-width: 0;
+            border-right-width: 0;
 
             > table td:first-child,
             > table th:first-child {
@@ -2449,7 +2476,7 @@ table.table td.cell .html-container {
     }
 
     .timeline {
-        border: var(--panel-border-width);
+        border: var(--panel-border-width) solid var(--default-border-color);
         border-radius: var(--panel-border-radius);
     }
 }
@@ -2787,6 +2814,8 @@ table.table-admin-panel {
 }
 
 .admin-panel-iframe-container {
+    border: var(--panel-border-width) solid var(--default-border-color);
+
     > h4 {
         padding: @padding-base-vertical @padding-base-horizontal;
         padding-bottom: 7px;

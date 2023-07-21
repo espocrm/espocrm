@@ -165,7 +165,8 @@ class LoginView extends View {
         let companyLogoId = this.getConfig().get('companyLogoId');
 
         if (!companyLogoId) {
-            return this.getBasePath() + ('client/img/logo.svg');
+            return this.getBasePath() +
+                (this.getConfig().get('logoSrc') || 'client/img/logo.svg');
         }
 
         return this.getBasePath() + '?entryPoint=LogoImage&id=' + companyLogoId;

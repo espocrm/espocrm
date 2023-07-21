@@ -269,12 +269,13 @@ class Installer
     public function getThemeList(): array
     {
         return [
+            'Violet',
             'Espo',
             'Dark',
             'Glass',
-            'Hazyblue',
+            'Light',
             'Sakura',
-            'Violet',
+            'Hazyblue',
         ];
     }
 

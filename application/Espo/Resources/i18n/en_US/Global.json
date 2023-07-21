@@ -843,6 +843,7 @@
     },
     "themes": {
         "Dark": "Dark",
+        "Light": "Light",
         "Espo": "Espo",
         "EspoRtl": "RTL",
         "Sakura": "Sakura",
