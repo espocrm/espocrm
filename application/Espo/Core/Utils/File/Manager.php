@@ -554,6 +554,10 @@ class Manager
 
         $umask = umask(0);
 
+        if (is_dir($path)) {
+            return true;
+        }
+
         $result = mkdir($path, $permission);
 
         if ($umask) {
