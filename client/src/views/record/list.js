@@ -63,6 +63,7 @@ class ListRecordView extends View {
     /** @inheritDoc */
     name = 'list'
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * A presentation type.
      */
@@ -632,6 +633,7 @@ class ListRecordView extends View {
          * @this module:views/record/list
          */
         'click .select-all': function (e) {
+            // noinspection JSUnresolvedReference
             this.selectAllHandler(e.currentTarget.checked);
         },
         /**
@@ -660,6 +662,7 @@ class ListRecordView extends View {
 
             let $parent = $el.closest('.dropdown-menu').parent();
 
+            // noinspection JSUnresolvedReference
             $parent.find('.actions-button[data-toggle="dropdown"]')
                 .dropdown('toggle')
                 .focus();
@@ -1165,7 +1168,7 @@ class ListRecordView extends View {
 
                 Espo.Ajax
                     .postRequest(url, data, {timeout: 0})
-                    .then(response => {
+                    .then(/** Object.<string, *> */response => {
                         Espo.Ui.notify(false);
 
                         if (response.exportId) {
@@ -1261,7 +1264,7 @@ class ListRecordView extends View {
             let url = defs.url;
 
             Espo.Ajax.postRequest(url, data)
-                .then(result=> {
+                .then(/** Object.<string, *> */result=> {
                     let successMessage = result.successMessage || defs.successMessage || 'done';
 
                     this.collection
@@ -1306,6 +1309,7 @@ class ListRecordView extends View {
         return data;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     massActionRecalculateFormula() {
         let ids = false;
 
@@ -1367,6 +1371,7 @@ class ListRecordView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     massActionRemove() {
         if (!this.getAcl().check(this.entityType, 'delete')) {
             Espo.Ui.error(this.translate('Access denied'));
@@ -1462,6 +1467,7 @@ class ListRecordView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     massActionPrintPdf() {
         let maxCount = this.getConfig().get('massPrintPdfMaxCount');
 
@@ -1509,6 +1515,7 @@ class ListRecordView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     massActionFollow() {
         let count = this.checkedList.length;
 
@@ -1551,6 +1558,7 @@ class ListRecordView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     massActionUnfollow() {
         let count = this.checkedList.length;
 
@@ -1608,6 +1616,7 @@ class ListRecordView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     massActionMerge() {
         if (!this.getAcl().check(this.entityType, 'edit')) {
             Espo.Ui.error(this.translate('Access denied'));
@@ -1638,6 +1647,7 @@ class ListRecordView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     massActionMassUpdate() {
         if (!this.getAcl().check(this.entityType, 'edit')) {
             Espo.Ui.error(this.translate('Access denied'));
@@ -1727,6 +1737,7 @@ class ListRecordView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     massActionExport() {
         if (this.getConfig().get('exportDisabled') && !this.getUser().isAdmin()) {
             return;
@@ -1735,6 +1746,7 @@ class ListRecordView extends View {
         this.export();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     massActionUnlink() {
         this.confirm({
             message: this.translate('unlinkSelectedRecordsConfirmation', 'messages'),
@@ -1753,6 +1765,7 @@ class ListRecordView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     massActionConvertCurrency() {
         let ids = false;
 
@@ -2072,7 +2085,8 @@ class ListRecordView extends View {
         ];
 
         metadataMassActionList.forEach(item => {
-            let defs = this.massActionDefs[item] || {};
+            let defs = /** @type {Espo.Utils~ActionAccessDefs & Espo.Utils~ActionAvailabilityDefs} */
+                this.massActionDefs[item] || {};
 
             if (
                 !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
@@ -2093,7 +2107,8 @@ class ListRecordView extends View {
             }
 
             if (~this.massActionList.indexOf(item)) {
-                let defs = this.massActionDefs[item] || {};
+                let defs = /** @type {Espo.Utils~ActionAccessDefs & Espo.Utils~ActionAvailabilityDefs} */
+                    this.massActionDefs[item] || {};
 
                 if (
                     !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
@@ -2804,7 +2819,7 @@ class ListRecordView extends View {
 
         let lengthBefore = collection.length;
 
-        let final = () => {
+        const final = () => {
             $showMore.parent().append($showMore);
 
             if (
@@ -2844,7 +2859,7 @@ class ListRecordView extends View {
 
         let initialCount = collection.length;
 
-        let success = () => {
+        const success = () => {
             if (!options.skipNotify) {
                 Espo.Ui.notify(false);
             }
@@ -2987,6 +3002,10 @@ class ListRecordView extends View {
             });
     }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {Object.<string, *>} data
+     */
     actionQuickEdit(data) {
         data = data || {};
 
@@ -3101,6 +3120,7 @@ class ListRecordView extends View {
         return 'tr[data-id="' + id + '"]';
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionQuickRemove(data) {
         data = data || {};
 
@@ -3196,6 +3216,7 @@ class ListRecordView extends View {
         return this.checkedList.indexOf(id) !== -1;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     getTableMinWidth() {
         if (!this.listLayout) {
             return;
