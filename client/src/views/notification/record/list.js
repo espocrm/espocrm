@@ -53,19 +53,12 @@ define('views/notification/record/list', ['views/record/list-expanded'], functio
                 for (let i = rowCount - 1; i >= 0; i--) {
                     let model = this.collection.at(i);
 
+                    $list.prepend(
+                        $(this.getRowContainerHtml(model.id))
+                    );
+
                     this.buildRow(i, model, view => {
-                        view.getHtml(html => {
-                            let $row = $(this.getRowContainerHtml(model.id));
-
-                            $row.append(html);
-                            $list.prepend($row);
-
-                            view._afterRender();
-
-                            if (view.getSelector()) {
-                                view.setElement(view.getSelector());
-                            }
-                        });
+                        view.render();
                     });
                 }
             });

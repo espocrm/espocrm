@@ -2874,36 +2874,29 @@ class ListRecordView extends View {
             }
 
             for (let i = initialCount; i < collection.length; i++) {
-                let model = collection.at(i);
+                const model = collection.at(i);
 
-                this.buildRow(i, model, (view) => {
-                    let model = view.model;
+                this.buildRow(i, model, view => {
+                    const model = view.model;
 
-                    view.getHtml(html => {
-                        let $row = $(this.getRowContainerHtml(model.id));
+                    let $existingRow = this.getDomRowItem(model.id);
 
-                        $row.append(html);
+                    if ($existingRow && $existingRow.length) {
+                        $existingRow.remove();
+                    }
 
-                        let $existingRowItem = this.getDomRowItem(model.id);
+                    $list.append(
+                        $(this.getRowContainerHtml(model.id))
+                    );
 
-                        if ($existingRowItem && $existingRowItem.length) {
-                            $existingRowItem.remove();
-                        }
+                    view.render()
+                        .then(() => {
+                            rowsReady++;
 
-                        $list.append($row);
-
-                        rowsReady++;
-
-                        if (rowsReady === rowCount) {
-                            final();
-                        }
-
-                        view._afterRender();
-
-                        if (view.getSelector()) {
-                            view.setElement(view.getSelector());
-                        }
-                    });
+                            if (rowsReady === rowCount) {
+                                final();
+                            }
+                        });
                 });
             }
 

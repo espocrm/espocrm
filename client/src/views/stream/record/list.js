@@ -75,32 +75,24 @@ class ListStreamRecordView extends ListExpandedRecordView {
                 let model = this.collection.at(i);
 
                 this.buildRow(i, model, view => {
-                    view.getHtml(html => {
-                        if (i === 0) {
-                            this.isRenderingNew = false;
-                        }
+                    if (i === 0) {
+                        this.isRenderingNew = false;
+                    }
 
-                        let $row = $(this.getRowContainerHtml(model.id));
+                    let $row = $(this.getRowContainerHtml(model.id));
 
-                        // Prevent a race condition issue.
-                        let $existingRow = this.$el.find(`[data-id="${model.id}"]`);
+                    // Prevent a race condition issue.
+                    let $existingRow = this.$el.find(`[data-id="${model.id}"]`);
 
-                        if ($existingRow.length) {
-                            $row = $existingRow;
-                        }
+                    if ($existingRow.length) {
+                        $row = $existingRow;
+                    }
 
-                        $row.append(html);
+                    if (!$existingRow.length) {
+                        $list.prepend($row);
+                    }
 
-                        if (!$existingRow.length) {
-                            $list.prepend($row);
-                        }
-
-                        view._afterRender();
-
-                        if (view.getSelector()) {
-                            view.setElement(view.getSelector());
-                        }
-                    });
+                    view.render();
                 });
             }
         });
