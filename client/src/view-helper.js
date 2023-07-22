@@ -942,6 +942,22 @@ class ViewHelper {
 
         return Promise.all(promiseList);
     }
+
+    /** @private */
+    _isXsScreen
+
+    /**
+     * Is xs screen width.
+     *
+     * @return {boolean}
+     */
+    isXsScreen() {
+        if (this._isXsScreen == null) {
+            this._isXsScreen = window.innerWidth < this.themeManager.getParam('screenWidthXs');
+        }
+
+        return this._isXsScreen;
+    }
 }
 
 export default ViewHelper;

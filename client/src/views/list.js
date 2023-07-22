@@ -603,6 +603,10 @@ class ListView extends MainView {
             forceDisplayTopBar: true,
         };
 
+        if (this.getHelper().isXsScreen()) {
+            o.type = 'listSmall';
+        }
+
         this.optionsToPass.forEach(option => {
             o[option] = this.options[option];
         });

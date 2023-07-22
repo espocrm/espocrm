@@ -576,6 +576,10 @@ class ListRelatedView extends MainView {
             ...o
         };
 
+        if (this.getHelper().isXsScreen()) {
+            o.type = 'listSmall';
+        }
+
         this.prepareRecordViewOptions(o);
 
         let listViewName = this.getRecordViewName();
