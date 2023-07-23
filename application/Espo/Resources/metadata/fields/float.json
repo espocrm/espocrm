@@ -35,6 +35,9 @@
         "min",
         "max"
     ],
+    "mandatoryValidationList": [
+        "valid"
+    ],
     "filter": true,
     "fieldDefs": {
         "notNull": false

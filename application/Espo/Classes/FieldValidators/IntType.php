@@ -30,6 +30,7 @@
 namespace Espo\Classes\FieldValidators;
 
 use Espo\ORM\Entity;
+use stdClass;
 
 class IntType
 {
@@ -40,6 +41,7 @@ class IntType
 
     /**
      * @param mixed $validationValue
+     * @noinspection PhpUnused
      */
     public function checkMax(Entity $entity, string $field, $validationValue): bool
     {
@@ -56,6 +58,7 @@ class IntType
 
     /**
      * @param mixed $validationValue
+     * @noinspection PhpUnused
      */
     public function checkMin(Entity $entity, string $field, $validationValue): bool
     {
@@ -68,6 +71,26 @@ class IntType
         }
 
         return true;
+    }
+
+    /** @noinspection PhpUnused */
+    public function rawCheckValid(stdClass $data, string $field): bool
+    {
+        if (!isset($data->$field)) {
+            return true;
+        }
+
+        $value = $data->$field;
+
+        if ($value === '') {
+            return true;
+        }
+
+        if (is_numeric($value)) {
+            return true;
+        }
+
+        return false;
     }
 
     protected function isNotEmpty(Entity $entity, string $field): bool

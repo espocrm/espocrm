@@ -35,6 +35,9 @@
         "min",
         "max"
     ],
+    "mandatoryValidationList": [
+        "valid"
+    ],
     "filter": true,
     "textFilter": true,
     "textFilterForeign": true,

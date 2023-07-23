@@ -29,13 +29,12 @@
 
 namespace tests\integration\Espo\Record;
 
-use Espo\Core\{
-    Exceptions\BadRequest,
-    Application,
-    Record\CreateParams,
-    Record\UpdateParams,
-};
-
+use Espo\Core\Application;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Record\CreateParams;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Record\UpdateParams;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Tools\App\SettingsService as SettingsService;
 
 class FieldValidationTest extends \tests\integration\Core\BaseTestCase
@@ -407,5 +406,44 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
         $service->setConfigData((object) [
             'activitiesEntityList' => 'should-be-array',
         ]);
+    }
+
+    public function testCurrencyValid(): void
+    {
+        $service = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Lead::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object) [
+            'lastName' => 'Test 1',
+            'opportunityAmount' => '100.10',
+        ], CreateParams::create());
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object) [
+            'lastName' => 'Test 2',
+            'opportunityAmount' => '100',
+        ], CreateParams::create());
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object) [
+            'lastName' => 'Test 3',
+            'opportunityAmount' => '',
+        ], CreateParams::create());
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object) [
+            'lastName' => 'Test 4',
+            'opportunityAmount' => null,
+        ], CreateParams::create());
+
+        $this->expectException(BadRequest::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object) [
+            'lastName' => 'Test Bad 1',
+            'opportunityAmount' => 'bad-value',
+        ], CreateParams::create());
     }
 }
