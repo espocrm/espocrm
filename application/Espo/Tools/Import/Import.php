@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Core\FieldValidation\Exceptions\ValidationError;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Entities\Attachment;
 use Espo\Entities\ImportError;
@@ -512,6 +513,8 @@ class Import
             $valueMap->$attribute = $value;
         }
 
+        $failureList = [];
+
         foreach ($attributeList as $i => $attribute) {
             if (empty($attribute)) {
                 continue;
@@ -523,7 +526,12 @@ class Import
 
             $value = $row[$i];
 
-            $this->processRowItem($entity, $attribute, $value, $valueMap);
+            try {
+                $this->processRowItem($entity, $attribute, $value, $valueMap);
+            }
+            catch (ValidationError $e) {
+                $failureList[] = $e->getFailure();
+            }
         }
 
         $defaultCurrency = $params->getCurrency() ?? $this->config->get('defaultCurrency');
@@ -554,7 +562,10 @@ class Import
         }
 
         try {
-            $failureList = $this->fieldValidationManager->processAll($entity);
+            $failureList = array_merge(
+                $failureList,
+                $this->fieldValidationManager->processAll($entity)
+            );
 
             if ($failureList !== []) {
                 $this->createError(
@@ -584,7 +595,6 @@ class Import
                     ->getRDBRepository($entity->getEntityType())
                     ->deleteFromDb($entity->getId(), true);
             }
-
 
             $this->entityManager->saveEntity($entity, [
                 'noStream' => true,
@@ -705,10 +715,15 @@ class Import
     }
 
     /**
-     * @param mixed $value
+     * @throws ValidationError
      */
-    private function processRowItem(CoreEntity $entity, string $attribute, $value, stdClass $valueMap): void
-    {
+    private function processRowItem(
+        CoreEntity $entity,
+        string $attribute,
+        string $value,
+        stdClass $valueMap
+    ): void {
+
         assert(is_string($this->entityType));
 
         $params = $this->params;
@@ -895,13 +910,13 @@ class Import
     }
 
     /**
-     * @param mixed $value
-     * @return mixed
+     * @throws ValidationError
      */
-    private function parseValue(CoreEntity $entity, string $attribute, $value)
+    private function parseValue(CoreEntity $entity, string $attribute, string $value): mixed
     {
         $params = $this->params;
 
+        /** @noinspection PhpRedundantVariableDocTypeInspection */
         /** @var non-empty-string $decimalMark */
         $decimalMark = $params->getDecimalMark() ?? self::DEFAULT_DECIMAL_MARK;
 
@@ -917,32 +932,48 @@ class Import
 
         $type = $entity->getAttributeType($attribute);
 
+        if ($type !== Entity::BOOL && strtolower($value) === 'null') {
+            return null;
+        }
+
         switch ($type) {
             case Entity::DATE:
                 $dt = DateTime::createFromFormat($dateFormat, $value);
 
-                if ($dt) {
-                    return $dt->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
+                if (!$dt) {
+                    throw ValidationError::create(
+                        new Failure($entity->getEntityType(), $attribute, 'valid')
+                    );
                 }
 
-                return null;
+                return $dt->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
 
             case Entity::DATETIME:
+                /** @noinspection PhpUnhandledExceptionInspection */
                 $timezone = new DateTimeZone($timezone);
 
                 $dt = DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
 
-                if ($dt) {
-                    $dt->setTimezone(new DateTimeZone('UTC'));
-
-                    return $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+                if (!$dt) {
+                    throw ValidationError::create(
+                        new Failure($entity->getEntityType(), $attribute, 'valid')
+                    );
                 }
 
-                return null;
+                $dt->setTimezone(new DateTimeZone('UTC'));
+
+                return $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
             case Entity::FLOAT:
                 $a = explode($decimalMark, $value);
-                $a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
+
+                if (!is_numeric($a[0])) {
+                    throw ValidationError::create(
+                        new Failure($entity->getEntityType(), $attribute, 'valid')
+                    );
+                }
+
+                //$a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
 
                 if (count($a) > 1) {
                     return floatval($a[0] . '.' . $a[1]);
@@ -951,6 +982,12 @@ class Import
                 return floatval($a[0]);
 
             case Entity::INT:
+                if (!is_numeric($value)) {
+                    throw ValidationError::create(
+                        new Failure($entity->getEntityType(), $attribute, 'valid')
+                    );
+                }
+
                 return intval($value);
 
             case Entity::BOOL:
@@ -964,12 +1001,8 @@ class Import
                 return Json::decode($value);
 
             case Entity::JSON_ARRAY:
-                if (!is_string($value)) {
-                    return null;
-                }
-
                 if (!strlen($value)) {
-                    return null;
+                    return [];
                 }
 
                 if ($value[0] === '[') {

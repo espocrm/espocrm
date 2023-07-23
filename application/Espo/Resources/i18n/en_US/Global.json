@@ -876,10 +876,12 @@
         "varchar_pattern": "Likely, the value contains not allowed characters.",
         "email_emailAddress": "Invalid email address value.",
         "phone_phoneNumber": "Invalid phone number value.",
-        "dateTimeOptional_valid": "Invalid date-time value.",
-        "dateTime_valid": "Invalid date-time value.",
+        "datetimeOptional_valid": "Invalid date-time value.",
+        "datetime_valid": "Invalid date-time value.",
         "date_valid": "Invalid date value.",
         "enum_valid": "Invalid enum value. The value must be one of defined enum options. An empty value is allowed only if the field has an empty option.",
+        "int_valid": "Invalid integer number value.",
+        "float_valid": "Invalid number value.",
         "multiEnum_valid": "Invalid multi-enum value. Values must be one of defined field options."
     },
     "navbarTabs": {
