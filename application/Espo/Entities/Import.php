@@ -29,22 +29,16 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\ORM\Entity;
 use Espo\Tools\Import\Params;
 
-use stdClass;
-
-class Import extends \Espo\Core\ORM\Entity
+class Import extends Entity
 {
     public const ENTITY_TYPE = 'Import';
-
     public const STATUS_STANDBY = 'Standby';
-
     public const STATUS_IN_PROCESS = 'In Process';
-
     public const STATUS_FAILED = 'Failed';
-
     public const STATUS_PENDING = 'Pending';
-
     public const STATUS_COMPLETE = 'Complete';
 
     public function getStatus(): ?string
