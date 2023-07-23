@@ -206,7 +206,7 @@ class Import
             }
 
             if (!$this->aclManager->checkScope($this->user, $this->entityType, Table::ACTION_CREATE)) {
-                throw new Forbidden("Import: Create is forbidden for {$this->entityType}.");
+                throw new Forbidden("Import: Create is forbidden for $this->entityType.");
             }
         }
 
@@ -591,6 +591,7 @@ class Import
             }
 
             if ($entity->hasId()) {
+                /** @noinspection PhpDeprecationInspection */
                 $this->entityManager
                     ->getRDBRepository($entity->getEntityType())
                     ->deleteFromDb($entity->getId(), true);
@@ -706,7 +707,7 @@ class Import
             $entity->set($relation . 'Id', $found->getId());
             $entity->set($relation . 'Name', $found->get('name'));
 
-            return;
+            //return;
         }
 
         //if (!in_array($foreignEntityType, ['User', 'Team'])) {
@@ -1143,7 +1144,7 @@ class Import
 
         $cnt = strlen($string);
         $esc = false;
-        $escesc = false;
+        $escEsc = false;
 
         $num = 0;
         $i = 0;
@@ -1165,32 +1166,32 @@ class Import
                 } else {
                     $num++;
 
-                    $esc = false;
-                    $escesc = false;
+                    //$esc = false;
+                    $escEsc = false;
                 }
             } else if ($s == $enclosure) {
-                if ($escesc) {
-                    $o[$num].= $enclosure;
+                if ($escEsc) {
+                    $o[$num] .= $enclosure;
                 }
 
                 if ($esc) {
                     $esc = false;
 
-                    $escesc = true;
+                    $escEsc = true;
                 } else {
                     $esc = true;
 
-                    $escesc = false;
+                    $escEsc = false;
                 }
             } else {
                 if (!array_key_exists($num, $o)) {
                     $o[$num] = '';
                 }
 
-                if ($escesc) {
+                if ($escEsc) {
                     $o[$num] .= $enclosure;
 
-                    $escesc = false;
+                    $escEsc = false;
                 }
 
                 $o[$num] .= $s;
@@ -1217,6 +1218,7 @@ class Import
      * @param ImportError::TYPE_*|null $type
      * @param string[] $row
      * @param Failure[] $failureList
+     * @noinspection PhpDocSignatureInspection
      */
     private function createError(
         ?string $type,
