@@ -506,6 +506,7 @@ class DetailView extends MainView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Action 'selectRelated'.
      *
