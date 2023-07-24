@@ -37,7 +37,8 @@ use Espo\Tools\EntityManager\Params;
 class EventDeleteHook implements DeleteHook
 {
     public function __construct(
-        private Language $baseLanguage
+        private Language $baseLanguage,
+        private Language $language
     ) {}
 
     public function process(Params $params): void
@@ -56,6 +57,10 @@ class EventDeleteHook implements DeleteHook
         $this->baseLanguage->delete('Global', 'labels', $label1);
         $this->baseLanguage->delete('Global', 'labels', $label2);
 
+        $this->language->delete('Global', 'labels', $label1);
+        $this->language->delete('Global', 'labels', $label2);
+
         $this->baseLanguage->save();
+        $this->language->save();
     }
 }
