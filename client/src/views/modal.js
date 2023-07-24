@@ -997,8 +997,6 @@ class ModalView extends View {
                 title = $title.text();
             }
 
-            let key = this._path.split('/').pop();
-
             this.dialog.close();
 
             let masterView = this;
@@ -1007,7 +1005,7 @@ class ModalView extends View {
                 masterView = masterView.getParentView();
             }
 
-            this.getParentView().unchainView(key);
+            this.unchainFromParent();
 
             (new Promise(resolve => {
                 if (masterView.hasView('collapsedModalBar')) {
@@ -1026,6 +1024,12 @@ class ModalView extends View {
                 barView.addModalView(this, {title: title});
             });
         });
+    }
+
+    unchainFromParent() {
+        const key = this.getParentView().getViewKey(this);
+
+        this.getParentView().unchainView(key);
     }
 
     /**

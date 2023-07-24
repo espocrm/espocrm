@@ -600,20 +600,15 @@ class BaseFieldView extends View {
             this[property] = 'fields/' + Espo.Utils.camelCaseToHyphen(this.type) + '/' + this.mode;
         }
 
-        this.template = this[property];
+        if (!this._hasTemplateContent) {
+            this.setTemplate(this[property]);
+        }
 
         let contentProperty = mode + 'TemplateContent';
 
-        if (!this._template) {
-            this._templateCompiled = null;
-
+        if (!this._hasTemplateContent) {
             if (contentProperty in this && this[contentProperty] != null) {
-                this.compiledTemplatesCache = this.compiledTemplatesCache || {};
-
-                this._templateCompiled =
-                    this.compiledTemplatesCache[contentProperty] =
-                        this.compiledTemplatesCache[contentProperty] ||
-                        this._templator.compileTemplate(this[contentProperty]);
+                this.setTemplateContent(this[contentProperty]);
             }
         }
 
@@ -691,6 +686,8 @@ class BaseFieldView extends View {
     /** @inheritDoc */
     init() {
         this.validations = Espo.Utils.clone(this.validations);
+
+        this._hasTemplateContent = !!this.templateContent;
 
         this.defs = this.options.defs || {};
         this.name = this.options.name || this.defs.name;
