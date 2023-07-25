@@ -40,7 +40,7 @@ $database = [
     'dbname' => $_SESSION['install']['db-name'],
     'user' => $_SESSION['install']['db-user-name'],
     'password' => $_SESSION['install']['db-user-password'],
-    'platform' => $_SESSION['install']['db-platform'],
+    'platform' => $_SESSION['install']['db-platform'] ?? 'Mysql',
 ];
 
 $host = $_SESSION['install']['host-name'];
