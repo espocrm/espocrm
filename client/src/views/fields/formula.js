@@ -119,7 +119,7 @@ class FormulaFieldView extends TextFieldView {
 
         data.containerId = this.containerId;
         data.targetEntityType = this.targetEntityType;
-        data.hasSide = !this.insertDisabled && !this.checkSyntaxDisabled;
+        data.hasSide = !this.insertDisabled || !this.checkSyntaxDisabled;
         data.hasInsert = !this.insertDisabled;
         data.hasCheckSyntax = !this.checkSyntaxDisabled;
 
@@ -238,6 +238,24 @@ class FormulaFieldView extends TextFieldView {
 
         if (this.options.additionalFunctionDataList) {
             list = list.concat(this.options.additionalFunctionDataList);
+        }
+
+        let allowedFunctionList = /** @type string[] */this.options.allowedFunctionList;
+
+        if (allowedFunctionList) {
+            list = list.filter(/** {name: string} */item => {
+                for (let func of allowedFunctionList) {
+                    if (func.endsWith('\\') && item.name.startsWith(func)) {
+                        return true;
+                    }
+
+                    if (item.name === func) {
+                        return true;
+                    }
+                }
+
+                return false;
+            });
         }
 
         if (!this.targetEntityType) {
