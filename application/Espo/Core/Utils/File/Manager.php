@@ -552,16 +552,21 @@ class Manager
             $permission = (int) base_convert((string) $defaultPermissions['dir'], 8, 10);
         }
 
-        $umask = umask(0);
-
         if (is_dir($path)) {
             return true;
         }
+
+        $umask = umask(0);
 
         $result = mkdir($path, $permission);
 
         if ($umask) {
             umask($umask);
+        }
+
+        if (!$result && is_dir($path)) {
+            // Dir can be created by a concurrent process.
+            return true;
         }
 
         if (!empty($defaultPermissions['user'])) {
@@ -572,7 +577,7 @@ class Manager
             $this->getPermissionUtils()->chgrp($path);
         }
 
-        return (bool) $result;
+        return $result;
     }
 
     /**
