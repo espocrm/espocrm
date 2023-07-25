@@ -239,7 +239,7 @@ class Service implements Crud,
      * @param non-empty-string $id
      * @return TEntity
      * @throws NotFoundSilent If not found.
-     * @throws ForbiddenSilent If no read access.
+     * @throws Forbidden If no read access.
      */
     public function read(string $id, ReadParams $params): Entity
     {
