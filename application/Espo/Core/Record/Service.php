@@ -40,9 +40,10 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
-use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Record\Access\LinkCheck;
+use Espo\Core\Record\ActionHistory\Action;
+use Espo\Core\Record\ActionHistory\ActionLogger;
 use Espo\Core\Record\Formula\Processor as FormulaProcessor;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
@@ -66,8 +67,7 @@ use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\Tools\Stream\Service as StreamService;
 use Espo\Entities\User;
-use Espo\Entities\ActionHistoryRecord;
-use Hoa\Ustring\Search;
+
 use stdClass;
 use InvalidArgumentException;
 use LogicException;
@@ -189,6 +189,7 @@ class Service implements Crud,
     private ?ListLoadProcessor $listLoadProcessor = null;
     private ?DuplicateFinder $duplicateFinder = null;
     private ?LinkCheck $linkCheck = null;
+    private ?ActionLogger $actionLogger = null;
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
@@ -208,7 +209,7 @@ class Service implements Crud,
     /**
      * Add an action-history record.
      *
-     * @param ActionHistoryRecord::ACTION_* $action
+     * @param Action::* $action
      */
     public function processActionHistoryRecord(string $action, Entity $entity): void
     {
@@ -220,18 +221,16 @@ class Service implements Crud,
             return;
         }
 
-        /** @var ActionHistoryRecord $historyRecord */
-        $historyRecord = $this->entityManager->getNewEntity(ActionHistoryRecord::ENTITY_TYPE);
+        $this->getActionLogger()->log($action, $entity);
+    }
 
-        $historyRecord
-            ->setAction($action)
-            ->setUserId($this->user->getId())
-            ->setAuthTokenId($this->user->get('authTokenId'))
-            ->setAuthLogRecordId($this->user->get('authLogRecordId'))
-            ->setIpAddress($this->user->get('ipAddress'))
-            ->setTarget(LinkParent::createFromEntity($entity));
+    private function getActionLogger(): ActionLogger
+    {
+        if (!$this->actionLogger) {
+            $this->actionLogger = $this->injectableFactory->createResolved(ActionLogger::class);
+        }
 
-        $this->entityManager->saveEntity($historyRecord);
+        return $this->actionLogger;
     }
 
     /**
@@ -259,7 +258,7 @@ class Service implements Crud,
         }
 
         $this->recordHookManager->processBeforeRead($entity, $params);
-        $this->processActionHistoryRecord(ActionHistoryRecord::ACTION_READ, $entity);
+        $this->processActionHistoryRecord(Action::READ, $entity);
 
         return $entity;
     }
@@ -709,7 +708,7 @@ class Service implements Crud,
         $this->afterCreateProcessDuplicating($entity, $params);
         $this->loadAdditionalFields($entity);
         $this->prepareEntityForOutput($entity);
-        $this->processActionHistoryRecord(ActionHistoryRecord::ACTION_CREATE, $entity);
+        $this->processActionHistoryRecord(Action::CREATE, $entity);
 
         return $entity;
     }
@@ -777,7 +776,7 @@ class Service implements Crud,
 
         $this->afterUpdateEntity($entity, $data);
         $this->prepareEntityForOutput($entity);
-        $this->processActionHistoryRecord(ActionHistoryRecord::ACTION_UPDATE, $entity);
+        $this->processActionHistoryRecord(Action::UPDATE, $entity);
 
         return $entity;
     }
@@ -813,7 +812,7 @@ class Service implements Crud,
         $this->beforeDeleteEntity($entity);
         $this->getRepository()->remove($entity);
         $this->afterDeleteEntity($entity);
-        $this->processActionHistoryRecord(ActionHistoryRecord::ACTION_DELETE, $entity);
+        $this->processActionHistoryRecord(Action::DELETE, $entity);
     }
 
     /**

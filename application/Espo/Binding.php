@@ -292,6 +292,11 @@ class Binding implements BindingProcessor
             'Espo\\Tools\\Api\\Cors\\Helper',
             'Espo\\Tools\\Api\\Cors\\DefaultHelper'
         );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Record\\ActionHistory\\ActionLogger',
+            'Espo\\Core\\Record\\ActionHistory\\DefaultActionLogger'
+        );
     }
 
     private function bindAcl(Binder $binder): void

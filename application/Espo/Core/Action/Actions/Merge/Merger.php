@@ -35,10 +35,10 @@ use Espo\Core\Action\Params;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\ObjectUtil;
-use Espo\Entities\ActionHistoryRecord;
 use Espo\ORM\Entity;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\PhoneNumber;
@@ -137,7 +137,7 @@ class Merger
         foreach ($sourceEntityList as $sourceEntity) {
             $this->entityManager->removeEntity($sourceEntity);
 
-            $service->processActionHistoryRecord(ActionHistoryRecord::ACTION_DELETE, $sourceEntity);
+            $service->processActionHistoryRecord(Action::DELETE, $sourceEntity);
         }
 
         if ($hasPhoneNumber) {
@@ -152,7 +152,7 @@ class Merger
 
         $this->entityManager->saveEntity($entity);
 
-        $service->processActionHistoryRecord(ActionHistoryRecord::ACTION_UPDATE, $entity);
+        $service->processActionHistoryRecord(Action::UPDATE, $entity);
     }
 
     /**

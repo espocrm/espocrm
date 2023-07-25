@@ -29,33 +29,23 @@
 
 namespace Espo\Tools\ActionHistory;
 
+use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Entities\ActionHistoryRecord;
 use Espo\Core\FieldProcessing\ListLoadProcessor;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
-
 use Espo\Entities\User;
 
 class Service
 {
-    private Metadata $metadata;
-    private EntityManager $entityManager;
-    private User $user;
-    private ListLoadProcessor $listLoadProcessor;
-
     public function __construct(
-        Metadata $metadata,
-        EntityManager $entityManager,
-        User $user,
-        ListLoadProcessor $listLoadProcessor
-    ) {
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-        $this->listLoadProcessor = $listLoadProcessor;
-    }
+        private Metadata $metadata,
+        private EntityManager $entityManager,
+        private User $user,
+        private ListLoadProcessor $listLoadProcessor
+    ) {}
 
     /**
      * @return RecordCollection<ActionHistoryRecord>
@@ -78,7 +68,7 @@ class Service
             ->getRDBRepositoryByClass(ActionHistoryRecord::class)
             ->where([
                 'userId' => $this->user->getId(),
-                'action' => ActionHistoryRecord::ACTION_READ,
+                'action' => Action::READ,
                 'targetType' => $targetTypeList,
             ])
             ->order('MAX:createdAt', 'DESC')

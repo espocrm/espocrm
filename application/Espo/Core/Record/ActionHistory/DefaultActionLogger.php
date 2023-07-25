@@ -27,64 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Entities;
+namespace Espo\Core\Record\ActionHistory;
 
 use Espo\Core\Field\LinkParent;
-use Espo\Core\ORM\Entity;
-use Espo\Core\Record\ActionHistory\Action;
+use Espo\Entities\ActionHistoryRecord;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
-class ActionHistoryRecord extends Entity
+class DefaultActionLogger implements ActionLogger
 {
-    public const ENTITY_TYPE = 'ActionHistoryRecord';
-
-    public const ACTION_CREATE = Action::CREATE;
-    public const ACTION_READ = Action::READ;
-    public const ACTION_UPDATE = Action::UPDATE;
-    public const ACTION_DELETE = Action::DELETE;
+    public function __construct(
+        private EntityManager $entityManager,
+        private User $user
+    ) {}
 
     /**
-     * @param Action::* $action
+     * @inheritDoc
      */
-    public function setAction(string $action): self
+    public function log(string $action, Entity $entity): void
     {
-        $this->set('action', $action);
+        $historyRecord = $this->entityManager
+            ->getRepositoryByClass(ActionHistoryRecord::class)
+            ->getNew();
 
-        return $this;
-    }
+        $historyRecord
+            ->setAction($action)
+            ->setUserId($this->user->getId())
+            ->setAuthTokenId($this->user->get('authTokenId'))
+            ->setAuthLogRecordId($this->user->get('authLogRecordId'))
+            ->setIpAddress($this->user->get('ipAddress'))
+            ->setTarget(LinkParent::createFromEntity($entity));
 
-    public function setUserId(string $userId): self
-    {
-        $this->set('userId', $userId);
-
-        return $this;
-    }
-
-    public function setIpAddress(?string $ipAddress): self
-    {
-        $this->set('ipAddress', $ipAddress);
-
-        return $this;
-    }
-
-    public function setAuthTokenId(?string $authTokenId): self
-    {
-        $this->set('authTokenId', $authTokenId);
-
-        return $this;
-    }
-
-    public function setAuthLogRecordId(?string $authLogRecordId): self
-    {
-        $this->set('authLogRecordId', $authLogRecordId);
-
-        return $this;
-    }
-
-    public function setTarget(LinkParent $target): self
-    {
-        $this->set('targetId', $target->getId());
-        $this->set('targetType', $target->getEntityType());
-
-        return $this;
+        $this->entityManager->saveEntity($historyRecord);
     }
 }

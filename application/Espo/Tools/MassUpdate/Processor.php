@@ -40,6 +40,7 @@ use Espo\Core\MassAction\Result;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 use Espo\Core\Record\Access\LinkCheck;
+use Espo\Core\Record\ActionHistory\Action as RecordAction;
 use Espo\Core\Record\ServiceFactory;
 use Espo\Core\Record\Service;
 
@@ -198,7 +199,7 @@ class Processor
             'modifiedById' => $this->user->getId(),
         ]);
 
-        $service->processActionHistoryRecord(ActionHistoryRecord::ACTION_UPDATE, $entity);
+        $service->processActionHistoryRecord(RecordAction::UPDATE, $entity);
 
         return true;
     }
