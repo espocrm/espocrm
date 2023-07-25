@@ -1071,7 +1071,14 @@ class BaseRecordView extends View {
         model.trigger('before:save');
 
         let onError = (xhr, reject, resolve) => {
-            const promise = this.handleSaveError(xhr, options, resolve);
+            this.handleSaveError(xhr, options, resolve)
+                .then(skipReject => {
+                    if (skipReject) {
+                        return;
+                    }
+
+                    reject('error');
+                });
 
             this.afterSaveError();
             this.setModelAttributes(beforeSaveAttributes);
@@ -1080,14 +1087,6 @@ class BaseRecordView extends View {
 
             this.trigger('error:save');
             this.trigger('cancel:save', {reason: 'error'});
-
-            promise.then(skipReject => {
-                if (skipReject) {
-                    return;
-                }
-
-                reject('error');
-            })
         };
 
         return new Promise((resolve, reject) => {
@@ -1199,7 +1198,11 @@ class BaseRecordView extends View {
                 let skipReject = this[methodName](handlerData.data, options, saveResolve);
 
                 resolve(skipReject || false);
+
+                return;
             }
+
+            resolve(false);
         });
     }
 
