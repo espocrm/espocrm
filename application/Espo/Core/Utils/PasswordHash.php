@@ -60,7 +60,7 @@ class PasswordHash
     /**
      * Get a salt from the config and normalize it.
      */
-    protected function getSalt(): string
+    private function getSalt(): string
     {
         $salt = $this->config->get('passwordSalt');
 
@@ -74,7 +74,7 @@ class PasswordHash
     /**
      * Convert salt in format in accordance to $saltFormat.
      */
-    protected function normalizeSalt(string $salt): string
+    private function normalizeSalt(string $salt): string
     {
         return str_replace("{0}", $salt, $this->saltFormat);
     }
