@@ -61,8 +61,8 @@ class NotificationListView extends View {
                         {
                             name: 'data',
                             view: 'views/notification/fields/container',
-                            params: {
-                                containerEl: this.getSelector(),
+                            options: {
+                                containerSelector: this.getSelector(),
                             },
                         },
                     ],

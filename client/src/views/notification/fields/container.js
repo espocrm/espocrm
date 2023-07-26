@@ -67,7 +67,7 @@ class NotificationContainerFieldView extends BaseFieldView {
 
         this.createView('notification', viewName, {
             model: this.model,
-            fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
+            fullSelector: this.options.containerSelector  + ' li[data-id="' + this.model.id + '"]',
         });
     }
 
@@ -87,7 +87,7 @@ class NotificationContainerFieldView extends BaseFieldView {
             this.createView('notification', viewName, {
                 model: model,
                 isUserStream: true,
-                fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
+                fullSelector: this.options.containerSelector  + ' li[data-id="' + this.model.id + '"]',
                 onlyContent: true,
                 isNotification: true,
             });
@@ -112,7 +112,7 @@ class NotificationContainerFieldView extends BaseFieldView {
                 model: model,
                 userId: this.model.get('userId'),
                 isUserStream: true,
-                fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
+                fullSelector: this.options.containerSelector + ' li[data-id="' + this.model.id + '"]',
                 onlyContent: true,
                 isNotification: true,
             });

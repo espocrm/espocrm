@@ -80,16 +80,13 @@ class GlobalSearchPanel extends View {
                         {
                             name: 'name',
                             view: 'views/global-search/name-field',
-                            params: {
-                                containerEl: this.getSelector(),
-                            },
                         }
                     ]
                 ],
                 right: {
                     name: 'read',
                     view: 'views/global-search/scope-badge',
-                    width: '80px'
+                    width: '80px',
                 },
             }
         });

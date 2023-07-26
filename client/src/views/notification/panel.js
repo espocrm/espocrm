@@ -96,17 +96,17 @@ define('views/notification/panel', ['view'], function (Dep) {
                                 {
                                     name: 'data',
                                     view: 'views/notification/fields/container',
-                                    params: {
-                                        containerEl: this.getSelector(),
-                                    }
+                                    options: {
+                                        containerSelector: this.getSelector(),
+                                    },
                                 }
                             ]
                         ],
                         right: {
                             name: 'read',
                             view: 'views/notification/fields/read',
-                            width: '10px'
-                        }
+                            width: '10px',
+                        },
                     }
                 }, (view) => {
                     view.render();

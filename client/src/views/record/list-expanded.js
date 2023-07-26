@@ -96,25 +96,35 @@ class ListExpandedRecordView extends ListRecordView {
             let layoutRow = [];
 
             for (let j in row) {
-                let e = row[j];
-                let type = e.type || model.getFieldType(e.name) || 'base';
+                let rowItem = row[j];
+                let type = rowItem.type || model.getFieldType(rowItem.name) || 'base';
 
                 let item = {
-                    name: e.name + 'Field',
-                    field: e.name,
-                    view: e.view ||
-                        model.getFieldParam(e.name, 'view') ||
+                    name: rowItem.name + 'Field',
+                    field: rowItem.name,
+                    view: rowItem.view ||
+                        model.getFieldParam(rowItem.name, 'view') ||
                         this.getFieldManager().getViewName(type),
                     options: {
                         defs: {
-                            name: e.name,
-                            params: e.params || {}
+                            name: rowItem.name,
+                            params: rowItem.params || {}
                         },
                         mode: 'list',
                     },
                 };
 
-                if (e.link) {
+                if (rowItem.options) {
+                    for (let optionName in rowItem.options) {
+                        if (typeof item.options[optionName] !== 'undefined') {
+                            continue;
+                        }
+
+                        item.options[optionName] = rowItem.options[optionName];
+                    }
+                }
+
+                if (rowItem.link) {
                     item.options.mode = 'listLink';
                 }
 
