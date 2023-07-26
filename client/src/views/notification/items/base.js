@@ -30,7 +30,7 @@
 
 import View from 'view';
 
-class NotificationItemBaseView extends View {
+class BaseNotificationItemView extends View {
 
     /** @type {string} */
     messageName
@@ -121,4 +121,4 @@ class NotificationItemBaseView extends View {
     }
 }
 
-export default NotificationItemBaseView;
+export default BaseNotificationItemView;

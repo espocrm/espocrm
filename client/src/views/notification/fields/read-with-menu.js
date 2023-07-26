@@ -26,21 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/fields/read-with-menu', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+class NotificationReadWithMenuFieldView extends BaseFieldView {
 
-        type: 'read',
+    type = 'read'
+    listTemplate = 'notification/fields/read-with-menu'
+    detailTemplate = 'notification/fields/read-with-menu'
 
-        listTemplate: 'notification/fields/read-with-menu',
+    data() {
+        return {
+            isRead: this.model.get('read'),
+        };
+    }
+}
 
-        detailTemplate: 'notification/fields/read-with-menu',
-
-        data: function () {
-            return {
-                isRead: this.model.get('read')
-            };
-        },
-
-    });
-});
+export default NotificationReadWithMenuFieldView;

@@ -26,20 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/fields/read', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+class NotificationReadFieldView extends BaseFieldView {
 
-        type: 'read',
+    type = 'read'
+    listTemplate = 'notification/fields/read'
+    detailTemplate = 'notification/fields/read'
 
-        listTemplate: 'notification/fields/read',
+    data() {
+        return {
+            isRead: this.model.get('read'),
+        };
+    }
+}
 
-        detailTemplate: 'notification/fields/read',
-
-        data: function () {
-            return {
-                isRead: this.model.get('read')
-            };
-        },
-    });
-});
+export default NotificationReadFieldView;

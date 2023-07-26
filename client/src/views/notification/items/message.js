@@ -26,50 +26,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/items/message',
-['views/notification/items/base', 'lib!marked', 'lib!dompurify'],
-function (Dep, marked, DOMPurify) {
+import BaseNotificationItemView from 'views/notification/items/base';
+import {marked} from 'marked';
+import DOMPurify from 'dompurify';
 
-    return Dep.extend({
+class MessageNotificationItemView extends BaseNotificationItemView {
 
-        template: 'notification/items/message',
+    template = 'notification/items/message'
 
-        data: function () {
-            return _.extend({
-                style: this.style,
-            }, Dep.prototype.data.call(this));
-        },
+    data() {
+        return {
+            ...super.data(),
+            style: this.style,
+        };
+    }
 
-        setup: function () {
-            var data = this.model.get('data') || {};
+    setup() {
+        let data = /** @type Object.<string, *> */this.model.get('data') || {};
 
-            this.style = data.style || 'text-muted';
+        let messageRaw = this.model.get('message') || data.message || '';
+        let message = marked.parse(messageRaw);
 
-            let message = marked.parse(
-                (this.model.get('message') || data.message || '')
-            );
+        this.messageTemplate = DOMPurify.sanitize(message, {}).toString();
 
-            this.messageTemplate = DOMPurify.sanitize(message).toString();
+        this.userId = data.userId;
+        this.style = data.style || 'text-muted';
 
-            this.userId = data.userId;
+        this.messageData['entityType'] = this.translateEntityType(data.entityType);
 
-            this.messageData['entityType'] = this.translateEntityType(data.entityType);
+        this.messageData['user'] =
+            $('<a>')
+                .attr('href', '#User/view/' + data.userId)
+                .attr('data-id', data.userId)
+                .attr('data-scope', 'User')
+                .text(data.userName);
 
-            this.messageData['user'] =
-                $('<a>')
-                    .attr('href', '#User/view/' + data.userId)
-                    .attr('data-id', data.userId)
-                    .attr('data-scope', 'User')
-                    .text(data.userName);
+        this.messageData['entity'] =
+            $('<a>')
+                .attr('href', '#' + data.entityType + '/view/' + data.entityId)
+                .attr('data-id', data.entityId)
+                .attr('data-scope', data.entityType)
+                .text(data.entityName);
 
-            this.messageData['entity'] =
-                $('<a>')
-                    .attr('href', '#' + data.entityType + '/view/' + data.entityId)
-                    .attr('data-id', data.entityId)
-                    .attr('data-scope', data.entityType)
-                    .text(data.entityName);
+        this.createMessage();
+    }
+}
 
-            this.createMessage();
-        },
-    });
-});
+export default MessageNotificationItemView;
