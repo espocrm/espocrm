@@ -26,97 +26,99 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/items/base', ['view'], function (Dep) {
+/** @module views/notification/items/base */
 
-    return Dep.extend({
+import View from 'view';
 
-        messageName: null,
+class NotificationItemBaseView extends View {
 
-        messageTemplate: null,
+    /** @type {string} */
+    messageName
+    /** @type {string} */
+    messageTemplate
+    messageData = null
+    isSystemAvatar = false
 
-        messageData: null,
+    data() {
+        return {
+            avatar: this.getAvatarHtml(),
+        };
+    }
 
-        isSystemAvatar: false,
+    init() {
+        this.createField('createdAt', null, null, 'views/fields/datetime-short');
 
-        data: function () {
-            return {
-                avatar: this.getAvatarHtml(),
-            };
-        },
+        this.messageData = {};
+    }
 
-        init: function () {
-            this.createField('createdAt', null, null, 'views/fields/datetime-short');
+    createField(name, type, params, view) {
+        type = type || this.model.getFieldType(name) || 'base';
 
-            this.messageData = {};
-        },
+        this.createView(name, view || this.getFieldManager().getViewName(type), {
+            model: this.model,
+            defs: {
+                name: name,
+                params: params || {}
+            },
+            selector: '.cell-' + name,
+            mode: 'list',
+        });
+    }
 
-        createField: function (name, type, params, view) {
-            type = type || this.model.getFieldType(name) || 'base';
+    createMessage() {
+        let parentType = this.model.get('relatedParentType') || null;
 
-            this.createView(name, view || this.getFieldManager().getViewName(type), {
-                model: this.model,
-                defs: {
-                    name: name,
-                    params: params || {}
-                },
-                selector: '.cell-' + name,
-                mode: 'list',
-            });
-        },
+        if (!this.messageTemplate && this.messageName) {
+            this.messageTemplate = this.translate(this.messageName, 'notificationMessages', parentType) || '';
+        }
 
-        createMessage: function () {
-            var parentType = this.model.get('relatedParentType') || null;
+        if (
+            this.messageTemplate.indexOf('{entityType}') === 0 &&
+            typeof this.messageData.entityType === 'string'
+        ) {
+            this.messageData.entityTypeUcFirst = Espo.Utils.upperCaseFirst(this.messageData.entityType);
 
-            if (!this.messageTemplate && this.messageName) {
-                this.messageTemplate = this.translate(this.messageName, 'notificationMessages', parentType) || '';
-            }
+            this.messageTemplate = this.messageTemplate.replace('{entityType}', '{entityTypeUcFirst}');
+        }
 
-            if (
-                this.messageTemplate.indexOf('{entityType}') === 0 &&
-                typeof this.messageData.entityType === 'string'
-            ) {
-                this.messageData.entityTypeUcFirst = Espo.Utils.upperCaseFirst(this.messageData.entityType);
+        this.createView('message', 'views/stream/message', {
+            messageTemplate: this.messageTemplate,
+            selector: '.message',
+            model: this.model,
+            messageData: this.messageData,
+        });
+    }
 
-                this.messageTemplate = this.messageTemplate.replace('{entityType}', '{entityTypeUcFirst}');
-            }
+    getAvatarHtml() {
+        let id = this.userId;
 
-            this.createView('message', 'views/stream/message', {
-                messageTemplate: this.messageTemplate,
-                selector: '.message',
-                model: this.model,
-                messageData: this.messageData,
-            });
-        },
+        if (this.isSystemAvatar || !id) {
+            id = this.getHelper().getAppParam('systemUserId');
+        }
 
-        getAvatarHtml: function () {
-            let id = this.userId;
+        return this.getHelper().getAvatarHtml(id, 'small', 20);
+    }
 
-            if (this.isSystemAvatar || !id) {
-                id = this.getHelper().getAppParam('systemUserId');
-            }
+    /**
+     * @param {string} entityType
+     * @param {boolean} [isPlural]
+     * @return {string}
+     */
+    translateEntityType(entityType, isPlural) {
+        let string = isPlural ?
+            (this.translate(entityType, 'scopeNamesPlural') || '') :
+            (this.translate(entityType, 'scopeNames') || '');
 
-            return this.getHelper().getAvatarHtml(id, 'small', 20);
-        },
+        string = string.toLowerCase();
 
-        /**
-         * @param {string} entityType
-         * @param {boolean} [isPlural]
-         * @return {string}
-         */
-        translateEntityType: function (entityType, isPlural) {
-            let string = isPlural ?
-                (this.translate(entityType, 'scopeNamesPlural') || '') :
-                (this.translate(entityType, 'scopeNames') || '');
+        let language = this.getPreferences().get('language') || this.getConfig().get('language');
 
-            string = string.toLowerCase();
+        if (~['de_DE', 'nl_NL'].indexOf(language)) {
+            string = Espo.Utils.upperCaseFirst(string);
+        }
 
-            let language = this.getPreferences().get('language') || this.getConfig().get('language');
+        return string;
+    }
+}
 
-            if (~['de_DE', 'nl_NL'].indexOf(language)) {
-                string = Espo.Utils.upperCaseFirst(string);
-            }
-
-            return string;
-        },
-    });
-});
+export default NotificationItemBaseView;
