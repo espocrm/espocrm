@@ -1097,6 +1097,7 @@ class App {
 
             if (
                 this.appTimestamp &&
+                // this.appTimestamp is set to current time if cache disabled.
                 appTimestamp > this.appTimestamp &&
                 !bypassAppReload
             ) {
