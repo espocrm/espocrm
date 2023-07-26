@@ -67,15 +67,7 @@ Espo.Utils = {
 
         handler = handler || data.handler;
 
-        if (typeof viewObject[method] === 'function') {
-            viewObject[method].call(viewObject, data, e);
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            fired = true;
-        }
-        else if (handler) {
+        if (handler) {
             e.preventDefault();
             e.stopPropagation();
 
@@ -86,6 +78,14 @@ Espo.Utils = {
 
                 handler[method].call(handler, data, e);
             });
+        }
+        else if (typeof viewObject[method] === 'function') {
+            viewObject[method].call(viewObject, data, e);
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            fired = true;
         }
 
         if (!fired) {

@@ -45,14 +45,15 @@ class CreatePostModalView extends ModalView {
                 label: 'Post',
                 style: 'primary',
                 title: 'Ctrl+Enter',
+                onClick: () => this.post(),
             },
             {
                 name: 'cancel',
                 label: 'Cancel',
-                onClick: function (dialog) {
+                title: 'Esc',
+                onClick: dialog => {
                     dialog.close();
                 },
-                title: 'Esc',
             }
         ];
 
@@ -82,10 +83,9 @@ class CreatePostModalView extends ModalView {
         return this.getView('record');
     }
 
-    actionPost() {
+    post() {
         this.getRecordView().save();
     }
 }
 
 export default CreatePostModalView;
-

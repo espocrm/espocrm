@@ -410,7 +410,13 @@ class ModalView extends View {
 
                 let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
-                this[methodName]();
+                if (typeof this[methodName] === 'function') {
+                    this[methodName]();
+
+                    return;
+                }
+
+                this[actionName]();
             };
         }
     }
