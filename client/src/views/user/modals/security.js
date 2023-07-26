@@ -26,231 +26,238 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/modals/security', ['views/modal', 'model'], function (Dep, Model) {
+import ModalView from 'views/modal';
+import Model from 'model';
 
-    return Dep.extend({
+class UserSecurityModalView extends ModalView {
 
-        templateContent: '<div class="record no-side-margin">{{{record}}}</div>',
+    templateContent = '<div class="record no-side-margin">{{{record}}}</div>'
 
-        className: 'dialog dialog-record',
+    className = 'dialog dialog-record'
 
-        shortcutKeys: {
-            'Control+Enter': 'apply',
-        },
+    shortcutKeys = {
+        'Control+Enter': 'apply',
+    }
 
-        setup: function () {
-            this.buttonList = [
-                {
-                    name: 'apply',
-                    label: 'Apply',
-                    hidden: true,
-                    style: 'danger',
+    setup() {
+        this.buttonList = [
+            {
+                name: 'apply',
+                label: 'Apply',
+                hidden: true,
+                style: 'danger',
+                onClick: () => this.apply(),
+            },
+            {
+                name: 'cancel',
+                label: 'Close',
+            }
+        ];
+
+        this.dropdownItemList = [
+            {
+                name: 'reset',
+                text: this.translate('Reset 2FA'),
+                hidden: true,
+                onClick: () => this.reset(),
+            },
+        ];
+
+        this.userModel = this.options.userModel;
+
+        this.$header = $('<span>').append(
+            $('<span>').text(this.translate('Security')),
+            ' <span class="chevron-right"></span> ',
+            $('<span>').text(this.userModel.get('userName'))
+        );
+
+        const model = this.model = new Model();
+
+        model.name = 'UserSecurity';
+        model.id = this.userModel.id;
+        model.url = 'UserSecurity/' + this.userModel.id;
+
+        let auth2FAMethodList = this.getConfig().get('auth2FAMethodList') || [];
+
+        model.setDefs({
+            fields: {
+                'auth2FA': {
+                    type: 'bool',
+                    labelText: this.translate('auth2FAEnable', 'fields', 'User'),
                 },
-                {
-                    name: 'cancel',
-                    label: 'Close',
-                }
-            ];
-
-            this.dropdownItemList = [
-                {
-                    name: 'reset',
-                    text: this.translate('Reset 2FA'),
-                    hidden: true,
+                'auth2FAMethod': {
+                    type: 'enum',
+                    options: auth2FAMethodList,
+                    translation: 'Settings.options.auth2FAMethodList',
                 },
-            ];
+            }
+        });
 
-            this.userModel = this.options.userModel;
+        this.wait(
+            model.fetch().then(() => {
+                this.initialAttributes = Espo.Utils.cloneDeep(model.attributes);
 
-            this.$header = $('<span>').append(
-                $('<span>').text(this.translate('Security')),
-                ' <span class="chevron-right"></span> ',
-                $('<span>').text(this.userModel.get('userName'))
-            );
-
-            var model = this.model = new Model();
-
-            model.name = 'UserSecurity';
-            model.id = this.userModel.id;
-            model.url = 'UserSecurity/' + this.userModel.id;
-
-            var auth2FAMethodList = this.getConfig().get('auth2FAMethodList') || [];
-
-            model.setDefs({
-                fields: {
-                    'auth2FA': {
-                        type: 'bool',
-                        labelText: this.translate('auth2FAEnable', 'fields', 'User'),
-                    },
-                    'auth2FAMethod': {
-                        type: 'enum',
-                        options: auth2FAMethodList,
-                        translation: 'Settings.options.auth2FAMethodList',
-                    },
+                if (model.get('auth2FA')) {
+                    this.showActionItem('reset');
                 }
-            });
 
-            this.wait(
-                model.fetch().then(() => {
-                    this.initialAttributes = Espo.Utils.cloneDeep(model.attributes);
+                this.createView('record', 'views/record/edit-for-modal', {
+                    scope: 'None',
+                    selector: '.record',
+                    model: this.model,
+                    detailLayout: [
+                        {
+                            rows: [
+                                [
+                                    {
+                                        name: 'auth2FA',
+                                        labelText: this.translate('auth2FAEnable', 'fields', 'User'),
+                                    },
+                                    {
+                                        name: 'auth2FAMethod',
+                                        labelText: this.translate('auth2FAMethod', 'fields', 'User'),
+                                    }
+                                ],
+                            ]
+                        }
+                    ],
+                }, (view) => {
+                    this.controlFieldsVisibility(view);
 
-                    if (model.get('auth2FA')) {
-                        this.showActionItem('reset');
-                    }
-
-                    this.createView('record', 'views/record/edit-for-modal', {
-                        scope: 'None',
-                        selector: '.record',
-                        model: this.model,
-                        detailLayout: [
-                            {
-                                rows: [
-                                    [
-                                        {
-                                            name: 'auth2FA',
-                                            labelText: this.translate('auth2FAEnable', 'fields', 'User'),
-                                        },
-                                        {
-                                            name: 'auth2FAMethod',
-                                            labelText: this.translate('auth2FAMethod', 'fields', 'User'),
-                                        }
-                                    ],
-                                ]
-                            }
-                        ],
-                    }, (view) => {
+                    this.listenTo(this.model, 'change:auth2FA', () => {
                         this.controlFieldsVisibility(view);
-
-                        this.listenTo(this.model, 'change:auth2FA', () => {
-                            this.controlFieldsVisibility(view);
-                        });
-                    });
-                })
-            );
-
-            this.listenTo(this.model, 'change', () => {
-                if (this.initialAttributes ) {
-                    if (this.isChanged()) {
-                        this.showButton('apply');
-                    }
-                    else {
-                        this.hideButton('apply');
-                    }
-                }
-            });
-        },
-
-        controlFieldsVisibility: function (view) {
-            if (this.model.get('auth2FA')) {
-                view.showField('auth2FAMethod');
-                view.setFieldRequired('auth2FAMethod');
-            }
-            else {
-                view.hideField('auth2FAMethod');
-                view.setFieldNotRequired('auth2FAMethod');
-            }
-        },
-
-        isChanged: function () {
-            return this.initialAttributes.auth2FA !== this.model.get('auth2FA') ||
-                this.initialAttributes.auth2FAMethod !== this.model.get('auth2FAMethod')
-        },
-
-        actionReset: function (dialog) {
-            this.confirm(this.translate('security2FaResetConfirmation', 'messages', 'User'), () => {
-                this.actionApply(dialog, true);
-            });
-        },
-
-        actionApply: function (dialog, reset) {
-            var data = this.getView('record').processFetch();
-
-            if (!data) {
-                return;
-            }
-
-            this.hideButton('apply');
-
-            new Promise((resolve) => {
-                this.createView('dialog', 'views/user/modals/password', {}, (passwordView) => {
-                    passwordView.render();
-
-                    this.listenToOnce(passwordView, 'cancel', () => this.showButton('apply'));
-
-                    this.listenToOnce(passwordView, 'proceed', (data) => {
-                        this.model.set('password', data.password);
-
-                        passwordView.close();
-
-                        resolve();
                     });
                 });
-            }).then(() => this.processApply(reset));
-        },
+            })
+        );
 
-        processApply: function (reset) {
-            if (this.model.get('auth2FA')) {
-                var auth2FAMethod = this.model.get('auth2FAMethod');
+        this.listenTo(this.model, 'change', () => {
+            if (this.initialAttributes) {
+                this.isChanged() ?
+                    this.showActionItem('apply') :
+                    this.hideActionItem('apply');
+            }
+        });
+    }
 
-                var view = this.getMetadata().get(['app', 'authentication2FAMethods', auth2FAMethod, 'userApplyView']);
+    controlFieldsVisibility(view) {
+        if (this.model.get('auth2FA')) {
+            view.showField('auth2FAMethod');
+            view.setFieldRequired('auth2FAMethod');
+        }
+        else {
+            view.hideField('auth2FAMethod');
+            view.setFieldNotRequired('auth2FAMethod');
+        }
+    }
 
-                if (view) {
-                    Espo.Ui.notify(' ... ');
+    isChanged() {
+        return this.initialAttributes.auth2FA !== this.model.get('auth2FA') ||
+            this.initialAttributes.auth2FAMethod !== this.model.get('auth2FAMethod')
+    }
 
-                    this.createView('dialog', view, {
-                        model: this.model,
-                        reset: reset,
-                    }, (view) => {
-                        Espo.Ui.notify(false);
+    reset() {
+        this.confirm(this.translate('security2FaResetConfirmation', 'messages', 'User'), () => {
+            this.apply(true);
+        });
+    }
 
-                        view.render();
+    /**
+     * @return {module:views/record/edit}
+     */
+    getRecordView() {
+        return this.getView('record');
+    }
 
-                        this.listenToOnce(view, 'cancel', () => {
-                            this.close();
-                        });
+    apply(reset) {
+        let data = this.getRecordView().processFetch();
 
-                        this.listenToOnce(view, 'apply', () => {
-                            view.close();
+        if (!data) {
+            return;
+        }
 
-                            this.processSave();
-                        });
+        this.hideActionItem('apply');
 
-                        this.listenToOnce(view, 'done', () => {
-                            Espo.Ui.success(this.translate('Done'));
-                            this.trigger('done');
+        new Promise(resolve => {
+            this.createView('dialog', 'views/user/modals/password', {}, passwordView => {
+                passwordView.render();
 
-                            view.close();
-                            this.close();
-                        });
+                this.listenToOnce(passwordView, 'cancel', () => this.showActionItem('apply'));
+
+                this.listenToOnce(passwordView, 'proceed', (data) => {
+                    this.model.set('password', data.password);
+
+                    passwordView.close();
+
+                    resolve();
+                });
+            });
+        }).then(() => this.processApply(reset));
+    }
+
+    processApply(reset) {
+        if (this.model.get('auth2FA')) {
+            let auth2FAMethod = this.model.get('auth2FAMethod');
+
+            const view = this.getMetadata().get(['app', 'authentication2FAMethods', auth2FAMethod, 'userApplyView']);
+
+            if (view) {
+                Espo.Ui.notify(' ... ');
+
+                this.createView('dialog', view, {
+                    model: this.model,
+                    reset: reset,
+                }, view => {
+                    Espo.Ui.notify(false);
+
+                    view.render();
+
+                    this.listenToOnce(view, 'cancel', () => {
+                        this.close();
                     });
 
-                    return ;
-                }
+                    this.listenToOnce(view, 'apply', () => {
+                        view.close();
 
-                if (reset) {
-                    this.model.set('auth2FA', false);
-                }
+                        this.processSave();
+                    });
 
-                this.processSave();
+                    this.listenToOnce(view, 'done', () => {
+                        Espo.Ui.success(this.translate('Done'));
+                        this.trigger('done');
 
-                return;
+                        view.close();
+                        this.close();
+                    });
+                });
+
+                return ;
+            }
+
+            if (reset) {
+                this.model.set('auth2FA', false);
             }
 
             this.processSave();
-        },
 
-        processSave: function () {
-            this.hideButton('apply');
+            return;
+        }
 
-            this.model
-                .save()
-                .then(() => {
-                    this.close();
+        this.processSave();
+    }
 
-                    Espo.Ui.success(this.translate('Done'));
-                })
-                .catch(() => this.showButton('apply'));
-        },
+    processSave() {
+        this.hideActionItem('apply');
 
-    });
-});
+        this.model
+            .save()
+            .then(() => {
+                this.close();
+
+                Espo.Ui.success(this.translate('Done'));
+            })
+            .catch(() => this.showActionItem('apply'));
+    }
+}
+
+export default UserSecurityModalView;
