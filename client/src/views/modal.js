@@ -876,6 +876,8 @@ class ModalView extends View {
             $dropdownGroup.addClass('hidden');
             $dropdownGroup.find('> button').addClass('hidden');
         }
+
+        this.adjustButtons();
     }
 
     /**
