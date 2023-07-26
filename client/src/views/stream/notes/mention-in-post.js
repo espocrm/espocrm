@@ -26,134 +26,134 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/notes/mention-in-post', ['views/stream/note'], function (Dep) {
+import NoteStreamView from 'views/stream/note';
 
-    return Dep.extend({
+class MentionInPostNoteStreamView extends NoteStreamView {
 
-        template: 'stream/notes/post',
+    template = 'stream/notes/post'
+    messageName = 'mentionInPost'
 
-        messageName: 'mentionInPost',
+    data() {
+        return {
+            ...super.data(),
+            showAttachments: !!(this.model.get('attachmentsIds') || []).length,
+            showPost: !!this.model.get('post'),
+        };
+    }
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+    setup() {
+        if (this.model.get('post')) {
+            this.createField('post', null, null, 'views/stream/fields/post');
+        }
 
-            data.showAttachments = !!(this.model.get('attachmentsIds') || []).length;
-            data.showPost = !!this.model.get('post');
+        if ((this.model.get('attachmentsIds') || []).length) {
+            this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
+                previewSize: this.options.isNotification ? 'small' : null
+            });
+        }
 
-            return data;
-        },
+        this.messageData['mentioned'] = this.options.userId;
 
-        setup: function () {
-            if (this.model.get('post')) {
-                this.createField('post', null, null, 'views/stream/fields/post');
-            }
+        if (!this.model.get('parentId')) {
+            this.messageName = 'mentionInPostTarget';
+        }
 
-            if ((this.model.get('attachmentsIds') || []).length) {
-                this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
-                    previewSize: this.options.isNotification ? 'small' : null
-                });
-            }
+        if (!this.isUserStream || this.options.userId !== this.getUser().id) {
+            this.createMessage();
 
-            this.messageData['mentioned'] = this.options.userId;
+            return;
+        }
 
-            if (!this.model.get('parentId')) {
-                this.messageName = 'mentionInPostTarget';
-            }
+        if (this.model.get('parentId')) {
+            this.messageName = 'mentionYouInPost';
 
-            if (!this.isUserStream || this.options.userId !== this.getUser().id) {
-                this.createMessage();
+            this.createMessage();
 
-                return;
-            }
+            return;
+        }
 
-            if (this.model.get('parentId')) {
-                this.messageName = 'mentionYouInPost';
+        this.messageName = 'mentionYouInPostTarget';
 
-                this.createMessage();
+        if (this.model.get('isGlobal')) {
+            this.messageName = 'mentionYouInPostTargetAll';
 
-                return;
-            }
+            this.createMessage();
 
-            this.messageName = 'mentionYouInPostTarget';
+            return;
+        }
 
-            if (this.model.get('isGlobal')) {
-                this.messageName = 'mentionYouInPostTargetAll';
+        this.messageName = 'mentionYouInPostTarget';
 
-                this.createMessage();
+        if (this.model.has('teamsIds') && this.model.get('teamsIds').length) {
+            let teamIdList = this.model.get('teamsIds');
+            let teamNameHash = this.model.get('teamsNames') || {};
 
-                return;
-            }
+            let teamHtmlList = [];
 
-            this.messageName = 'mentionYouInPostTarget';
+            teamIdList.forEach(teamId => {
+                let teamName = teamNameHash[teamId];
 
-            if (this.model.has('teamsIds') && this.model.get('teamsIds').length) {
-                let teamIdList = this.model.get('teamsIds');
-                let teamNameHash = this.model.get('teamsNames') || {};
-
-                let teamHtmlList = [];
-
-                teamIdList.forEach(teamId => {
-                    let teamName = teamNameHash[teamId];
-
-                    if (!teamName) {
-                        return;
-                    }
-
-                    teamHtmlList.push(
-                        $('<a>')
-                            .attr('href', '#Team/view/' + teamId)
-                            .text(teamName)
-                            .get(0).outerHTML
-                    );
-                });
-
-                this.messageData['html:target'] = teamHtmlList.join(', ');
-
-                this.createMessage();
-
-                return;
-            }
-
-            if (this.model.has('usersIds') && this.model.get('usersIds').length) {
-                var userIdList = this.model.get('usersIds');
-                var userNameHash = this.model.get('usersNames') || {};
-
-                if (userIdList.length === 1 && userIdList[0] === this.model.get('createdById')) {
-                    this.messageName = 'mentionYouInPostTargetNoTarget';
-                    this.createMessage();
-
+                if (!teamName) {
                     return;
                 }
 
-                let userHtmlList = [];
+                teamHtmlList.push(
+                    $('<a>')
+                        .attr('href', '#Team/view/' + teamId)
+                        .text(teamName)
+                        .get(0).outerHTML
+                );
+            });
 
-                userIdList.forEach(userId => {
-                    let userName = userNameHash[userId];
+            this.messageData['html:target'] = teamHtmlList.join(', ');
 
-                    if (!userName) {
-                        return;
-                    }
+            this.createMessage();
 
-                    userHtmlList.push(
-                        $('<a>')
-                            .attr('href', '#User/view/' + userId)
-                            .text(userName)
-                            .get(0).outerHTML
-                    );
-                });
+            return;
+        }
 
-                this.messageData['html:target'] = userHtmlList.join(', ');
+        if (this.model.has('usersIds') && this.model.get('usersIds').length) {
+            var userIdList = this.model.get('usersIds');
+            var userNameHash = this.model.get('usersNames') || {};
 
+            if (userIdList.length === 1 && userIdList[0] === this.model.get('createdById')) {
+                this.messageName = 'mentionYouInPostTargetNoTarget';
                 this.createMessage();
 
                 return;
             }
 
-            if (this.model.get('targetType') === 'self') {
-                this.messageName = 'mentionYouInPostTargetNoTarget';
-            }
+            let userHtmlList = [];
+
+            userIdList.forEach(userId => {
+                let userName = userNameHash[userId];
+
+                if (!userName) {
+                    return;
+                }
+
+                userHtmlList.push(
+                    $('<a>')
+                        .attr('href', '#User/view/' + userId)
+                        .text(userName)
+                        .get(0).outerHTML
+                );
+            });
+
+            this.messageData['html:target'] = userHtmlList.join(', ');
 
             this.createMessage();
-        },
-    });
-});
+
+            return;
+        }
+
+        if (this.model.get('targetType') === 'self') {
+            this.messageName = 'mentionYouInPostTargetNoTarget';
+        }
+
+        this.createMessage();
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default MentionInPostNoteStreamView;

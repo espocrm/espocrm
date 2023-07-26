@@ -26,57 +26,66 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/modals/create-post', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class CreatePostModalView extends ModalView {
 
-        templateContent: '<div class="record">{{{record}}}</div>',
+    templateContent = '<div class="record">{{{record}}}</div>'
 
-        shortcutKeys: {
-            'Control+Enter': 'post',
-        },
+    shortcutKeys = {
+        'Control+Enter': 'post',
+    }
 
-        setup: function () {
-            this.headerText = this.translate('Create Post');
+    setup() {
+        this.headerText = this.translate('Create Post');
 
-            this.buttonList = [
-                {
-                    name: 'post',
-                    label: 'Post',
-                    style: 'primary',
-                    title: 'Ctrl+Enter',
+        this.buttonList = [
+            {
+                name: 'post',
+                label: 'Post',
+                style: 'primary',
+                title: 'Ctrl+Enter',
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+                onClick: function (dialog) {
+                    dialog.close();
                 },
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                    onClick: function (dialog) {
-                        dialog.close();
-                    },
-                    title: 'Esc',
-                }
-            ];
+                title: 'Esc',
+            }
+        ];
 
-            this.wait(true);
+        this.wait(true);
 
-            this.getModelFactory().create('Note', (model) => {
-                this.createView('record', 'views/stream/record/edit', {
-                    model: model,
-                    selector: '.record',
-                }, view => {
-                    this.listenTo(view, 'after:save', () => {
-                        this.trigger('after:save');
-                    });
-
-                    this.listenTo(view, 'disable-post-button', () => this.disableButton('post'));
-                    this.listenTo(view, 'enable-post-button', () => this.enableButton('post'));
+        this.getModelFactory().create('Note', model => {
+            this.createView('record', 'views/stream/record/edit', {
+                model: model,
+                selector: '.record',
+            }, view => {
+                this.listenTo(view, 'after:save', () => {
+                    this.trigger('after:save');
                 });
 
-                this.wait(false);
+                this.listenTo(view, 'disable-post-button', () => this.disableButton('post'));
+                this.listenTo(view, 'enable-post-button', () => this.enableButton('post'));
             });
-        },
 
-        actionPost: function () {
-            this.getView('record').save();
-        },
-    });
-});
+            this.wait(false);
+        });
+    }
+
+    /**
+     * @return {module:views/record/edit}
+     */
+    getRecordView() {
+        return this.getView('record');
+    }
+
+    actionPost() {
+        this.getRecordView().save();
+    }
+}
+
+export default CreatePostModalView;
+

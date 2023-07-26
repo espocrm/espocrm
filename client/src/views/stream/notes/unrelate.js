@@ -26,12 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/notes/unrelate', ['views/stream/notes/relate'], function (Dep) {
+import RelateNoteStreamView from 'views/stream/notes/relate';
 
-    return Dep.extend({
+class UnrelateNoteStreamView extends RelateNoteStreamView {
 
-        template: 'stream/notes/create-related',
+    template = 'stream/notes/create-related'
+    messageName = 'unrelate'
+}
 
-        messageName: 'unrelate',
-    });
-});
+export default UnrelateNoteStreamView;

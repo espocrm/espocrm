@@ -26,118 +26,128 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/notes/update', ['views/stream/note'], function (Dep) {
+import NoteStreamView from 'views/stream/note';
 
-    return Dep.extend({
+class UpdateNoteStreamView extends NoteStreamView {
 
-        template: 'stream/notes/update',
+    template = 'stream/notes/update'
+    messageName = 'update'
 
-        messageName: 'update',
+    data() {
+        return {
+            ...super.data(),
+            fieldsArr: this.fieldsArr,
+            parentType: this.model.get('parentType'),
+        };
+    }
 
-        data: function () {
-            return _.extend({
-                fieldsArr: this.fieldsArr,
-                parentType: this.model.get('parentType')
-            }, Dep.prototype.data.call(this));
-        },
+    init() {
+        if (this.getUser().isAdmin()) {
+            this.isRemovable = true;
+        }
 
-        events: {
-            'click a[data-action="expandDetails"]': function (e) {
-                if (this.$el.find('.details').hasClass('hidden')) {
-                    this.$el.find('.details').removeClass('hidden');
-                    $(e.currentTarget).find('span').removeClass('fa-chevron-down').addClass('fa-chevron-up');
-                } else {
-                    this.$el.find('.details').addClass('hidden');
-                    $(e.currentTarget).find('span').addClass('fa-chevron-down').removeClass('fa-chevron-up');
+        super.init();
+    }
+
+    setup() {
+        this.addActionHandler('expandDetails', /** MouseEvent */e => this.toggleDetails(e));
+
+        this.createMessage();
+
+        this.wait(true);
+
+        this.getModelFactory().create(this.model.get('parentType'), model => {
+            let modelWas = model;
+            let modelBecame = model.clone();
+
+            let data = this.model.get('data');
+
+            data.attributes = data.attributes || {};
+
+            modelWas.set(data.attributes.was);
+            modelBecame.set(data.attributes.became);
+
+            this.fieldsArr = [];
+
+            let fields = data.fields;
+
+            fields.forEach(field => {
+                let type = model.getFieldType(field) || 'base';
+                let viewName = this.getMetadata().get(['entityDefs', model.entityType, 'fields', field, 'view']) ||
+                    this.getFieldManager().getViewName(type);
+
+                let attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.entityType, field);
+
+                let hasValue = false;
+
+                for (let attribute of attributeList) {
+                    if (attribute in data.attributes.was) {
+                        hasValue = true;
+
+                        break;
+                    }
                 }
-            }
-        },
 
-        init: function () {
-            if (this.getUser().isAdmin()) {
-                this.isRemovable = true;
-            }
-
-            Dep.prototype.init.call(this);
-        },
-
-        setup: function () {
-            var data = this.model.get('data');
-
-            var fields = data.fields;
-
-            this.createMessage();
-
-            this.wait(true);
-
-            this.getModelFactory().create(this.model.get('parentType'), (model) => {
-                let modelWas = model;
-                let modelBecame = model.clone();
-
-                data.attributes = data.attributes || {};
-
-                modelWas.set(data.attributes.was);
-                modelBecame.set(data.attributes.became);
-
-                this.fieldsArr = [];
-
-                fields.forEach(field => {
-                    let type = model.getFieldType(field) || 'base';
-                    let viewName = this.getMetadata()
-                        .get(['entityDefs', model.entityType, 'fields', field, 'view']) ||
-                        this.getFieldManager().getViewName(type);
-
-                    let attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.entityType, field);
-
-                    let hasValue = false;
-
-                    for (let attribute of attributeList) {
-                        if (attribute in data.attributes.was) {
-                            hasValue = true;
-
-                            break;
-                        }
-                    }
-
-                    if (!hasValue) {
-                        this.fieldsArr.push({
-                            field: field,
-                            noValues: true,
-                        });
-
-                        return;
-                    }
-
-                    this.createView(field + 'Was', viewName, {
-                        model: modelWas,
-                        readOnly: true,
-                        defs: {
-                            name: field
-                        },
-                        mode: 'detail',
-                        inlineEditDisabled: true,
-                    });
-
-                    this.createView(field + 'Became', viewName, {
-                        model: modelBecame,
-                        readOnly: true,
-                        defs: {
-                            name: field,
-                        },
-                        mode: 'detail',
-                        inlineEditDisabled: true,
-                    });
-
+                if (!hasValue) {
                     this.fieldsArr.push({
                         field: field,
-                        was: field + 'Was',
-                        became: field + 'Became',
+                        noValues: true,
                     });
+
+                    return;
+                }
+
+                this.createView(field + 'Was', viewName, {
+                    model: modelWas,
+                    readOnly: true,
+                    defs: {
+                        name: field
+                    },
+                    mode: 'detail',
+                    inlineEditDisabled: true,
                 });
 
-                this.wait(false);
-            });
-        },
-    });
-});
+                this.createView(field + 'Became', viewName, {
+                    model: modelBecame,
+                    readOnly: true,
+                    defs: {
+                        name: field,
+                    },
+                    mode: 'detail',
+                    inlineEditDisabled: true,
+                });
 
+                this.fieldsArr.push({
+                    field: field,
+                    was: field + 'Was',
+                    became: field + 'Became',
+                });
+            });
+
+            this.wait(false);
+        });
+    }
+
+    /**
+     * @param {MouseEvent} event
+     */
+    toggleDetails(event) {
+        if (this.$el.find('.details').hasClass('hidden')) {
+            this.$el.find('.details').removeClass('hidden');
+
+            $(event.target).find('span')
+                .removeClass('fa-chevron-down')
+                .addClass('fa-chevron-up');
+
+            return;
+        }
+
+        this.$el.find('.details').addClass('hidden');
+
+        $(event.target).find('span')
+            .addClass('fa-chevron-down')
+            .removeClass('fa-chevron-up');
+    }
+}
+
+export default UpdateNoteStreamView;

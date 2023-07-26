@@ -26,89 +26,88 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/notes/email-received', ['views/stream/note'], function (Dep) {
+import NoteStreamView from 'views/stream/note';
 
-    return Dep.extend({
+class EmailReceivedNoteStreamView extends NoteStreamView {
 
-        template: 'stream/notes/email-received',
+    template = 'stream/notes/email-received'
+    isRemovable = false
+    isSystemAvatar = true
 
-        isRemovable: false,
+    data() {
+        return {
+            ...super.data(),
+            emailId: this.emailId,
+            emailName: this.emailName,
+            hasPost: this.hasPost,
+            hasAttachments: this.hasAttachments,
+            emailIconClassName: this.getMetadata().get(['clientDefs', 'Email', 'iconClass']) || '',
+        };
+    }
 
-        isSystemAvatar: true,
+    setup() {
+        let data = /** @type Object.<string, *> */this.model.get('data') || {};
 
-        data: function () {
-            return _.extend({
-                emailId: this.emailId,
-                emailName: this.emailName,
-                hasPost: this.hasPost,
-                hasAttachments: this.hasAttachments,
-                emailIconClassName: this.getMetadata().get(['clientDefs', 'Email', 'iconClass']) || ''
-            }, Dep.prototype.data.call(this));
-        },
+        this.emailId = data.emailId;
+        this.emailName = data.emailName;
 
-        setup: function () {
-            var data = this.model.get('data') || {};
-
-            this.emailId = data.emailId;
-            this.emailName = data.emailName;
-
-            if (
-                this.parentModel &&
-                (
-                    this.model.get('parentType') === this.parentModel.entityType &&
-                    this.model.get('parentId') === this.parentModel.id
-                )
-            ) {
-                if (this.model.get('post')) {
-                    this.createField('post', null, null, 'views/stream/fields/post');
-                    this.hasPost = true;
-                }
-
-                if ((this.model.get('attachmentsIds') || []).length) {
-                    this.createField(
-                        'attachments',
-                        'attachmentMultiple',
-                        {},
-                        'views/stream/fields/attachment-multiple'
-                    );
-
-                    this.hasAttachments = true;
-                }
+        if (
+            this.parentModel &&
+            (
+                this.model.get('parentType') === this.parentModel.entityType &&
+                this.model.get('parentId') === this.parentModel.id
+            )
+        ) {
+            if (this.model.get('post')) {
+                this.createField('post', null, null, 'views/stream/fields/post');
+                this.hasPost = true;
             }
 
-            this.messageData['email'] =
+            if ((this.model.get('attachmentsIds') || []).length) {
+                this.createField(
+                    'attachments',
+                    'attachmentMultiple',
+                    {},
+                    'views/stream/fields/attachment-multiple'
+                );
+
+                this.hasAttachments = true;
+            }
+        }
+
+        this.messageData['email'] =
+            $('<a>')
+                .attr('href', '#Email/view/' + data.emailId)
+                .text(data.emailName);
+
+        this.messageName = 'emailReceived';
+
+        if (data.isInitial) {
+            this.messageName += 'Initial';
+        }
+
+        if (data.personEntityId) {
+            this.messageName += 'From';
+
+            this.messageData['from'] =
                 $('<a>')
-                    .attr('href', '#Email/view/' + data.emailId)
-                    .text(data.emailName);
+                    .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
+                    .text(data.personEntityName);
+        }
 
-            this.messageName = 'emailReceived';
+        if (
+            this.model.get('parentType') === data.personEntityType &&
+            this.model.get('parentId') === data.personEntityId
+        ) {
+            this.isThis = true;
+        }
 
-            if (data.isInitial) {
-                this.messageName += 'Initial';
-            }
+        if (this.isThis) {
+            this.messageName += 'This';
+        }
 
-            if (data.personEntityId) {
-                this.messageName += 'From';
+        this.createMessage();
+    }
+}
 
-                this.messageData['from'] =
-                    $('<a>')
-                        .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
-                        .text(data.personEntityName);
-            }
-
-            if (
-                this.model.get('parentType') === data.personEntityType &&
-                this.model.get('parentId') === data.personEntityId
-            ) {
-                this.isThis = true;
-            }
-
-            if (this.isThis) {
-                this.messageName += 'This';
-            }
-
-            this.createMessage();
-        },
-    });
-});
-
+export default EmailReceivedNoteStreamView;
