@@ -568,8 +568,8 @@ class EmailDetailView extends DetailView {
         ]);
     }
 
-    actionNavigateToRoot(data, e) {
-        e.stopPropagation();
+    actionNavigateToRoot(data, event) {
+        event.stopPropagation();
 
         this.getRouter().checkConfirmLeaveOut(() => {
             let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;

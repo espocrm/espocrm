@@ -554,7 +554,7 @@ class DetailRecordView extends BaseRecordView {
     events = {
         /** @this DetailRecordView */
         'click .button-container .action': function (e) {
-            Espo.Utils.handleAction(this, e);
+            Espo.Utils.handleAction(this, e.originalEvent);
         },
         /** @this DetailRecordView */
         'click [data-action="showMoreDetailPanels"]': function () {

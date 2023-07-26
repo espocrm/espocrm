@@ -108,7 +108,7 @@ class MainView extends View {
     events = {
         /** @this MainView */
         'click .action': function (e) {
-            Espo.Utils.handleAction(this, e);
+            Espo.Utils.handleAction(this, e.originalEvent);
         },
     }
 
@@ -500,10 +500,10 @@ class MainView extends View {
      * Action 'navigateToRoot'.
      *
      * @param {Object} data
-     * @param {jQuery.Event} e
+     * @param {MouseEvent} event
      */
-    actionNavigateToRoot(data, e) {
-        e.stopPropagation();
+    actionNavigateToRoot(data, event) {
+        event.stopPropagation();
 
         this.getRouter().checkConfirmLeaveOut(() => {
             let options = {

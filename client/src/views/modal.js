@@ -243,7 +243,7 @@ class ModalView extends View {
     events = {
         /** @this module:views/modal */
         'click .action': function (e) {
-            Espo.Utils.handleAction(this, e);
+            Espo.Utils.handleAction(this, e.originalEvent);
         },
         /** @this module:views/modal */
         'click [data-action="collapseModal"]': function () {
@@ -467,7 +467,10 @@ class ModalView extends View {
             o.onClick = o.onClick || ((d, e) => {
                 let handler = o.handler || (o.data || {}).handler;
 
-                Espo.Utils.handleAction(this, e, o.name, handler);
+                Espo.Utils.handleAction(this, e.originalEvent, {
+                    action: o.name,
+                    handler: handler,
+                });
             });
 
             buttonListExt.push(o);
@@ -511,7 +514,10 @@ class ModalView extends View {
             o.onClick = o.onClick || ((d, e) => {
                 let handler = o.handler || (o.data || {}).handler;
 
-                Espo.Utils.handleAction(this, e, o.name, handler);
+                Espo.Utils.handleAction(this, e.originalEvent, {
+                    action: o.name,
+                    handler: handler,
+                });
             });
 
             dropdownItemListExt.push(o);

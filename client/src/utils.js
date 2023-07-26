@@ -36,54 +36,56 @@ const IS_MAC = /Mac/.test(navigator.userAgent);
 Espo.Utils = {
 
     /**
-     * Process a view event action.
+     * Handle a click event action.
      *
-     * @param {module:view} viewObject A view.
-     * @param {JQueryKeyEventObject} e An event.
-     * @param {string} [action] An action. If not specified, will be fetched from a target element.
-     * @param {string} [handler] A handler name.
+     * @param {module:view} view A view.
+     * @param {MouseEvent} event An event.
+     * @param {{
+     *     action?: string,
+     *     handler?: string,
+     * }} [actionData] Data. If an action is not specified, it will be fetched from a target element.
      */
-    handleAction: function (viewObject, e, action, handler) {
-        let $target = $(e.currentTarget);
+    handleAction: function (view, event, actionData) {
+        actionData = actionData || {};
 
-        action = action || $target.data('action');
-
-        let fired = false;
+        const $target = $(event.target);
+        const action = actionData.action || $target.data('action');
 
         if (!action) {
             return;
         }
 
-        if (e.ctrlKey || e.metaKey || e.shiftKey) {
-            let href = $target.attr('href');
+        if (event.ctrlKey || event.metaKey || event.shiftKey) {
+            const href = $target.attr('href');
 
             if (href && href !== 'javascript:') {
                 return;
             }
         }
 
-        let data = $target.data();
-        let method = 'action' + Espo.Utils.upperCaseFirst(action);
+        const data = $target.data();
+        const method = 'action' + Espo.Utils.upperCaseFirst(action);
+        const handler = actionData.handler || data.handler;
 
-        handler = handler || data.handler;
+        let fired = false;
 
         if (handler) {
-            e.preventDefault();
-            e.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
 
             fired = true;
 
             Espo.loader.require(handler, Handler => {
-                let handler = new Handler(viewObject);
+                let handler = new Handler(view);
 
-                handler[method].call(handler, data, e);
+                handler[method].call(handler, data, event);
             });
         }
-        else if (typeof viewObject[method] === 'function') {
-            viewObject[method].call(viewObject, data, e);
+        else if (typeof view[method] === 'function') {
+            view[method].call(view, data, event);
 
-            e.preventDefault();
-            e.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
 
             fired = true;
         }
@@ -92,6 +94,14 @@ Espo.Utils = {
             return;
         }
 
+        this._processAfterActionDropdown($target)
+    },
+
+    /**
+     * @private
+     * @param {JQuery} $target
+     */
+    _processAfterActionDropdown: function ($target) {
         let $dropdown = $target.closest('.dropdown-menu');
 
         if (!$dropdown.length) {

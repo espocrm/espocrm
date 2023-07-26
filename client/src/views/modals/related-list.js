@@ -80,14 +80,14 @@ class RelatedListModalView extends ModalView {
             let data = $el.data();
 
             if (typeof this[method] === 'function') {
-                this[method](data, e);
+                this[method](data, e.originalEvent);
 
                 e.preventDefault();
 
                 return;
             }
 
-            this.trigger('action', action, data, e);
+            this.trigger('action', action, data, e.originalEvent);
         }
     }
 
