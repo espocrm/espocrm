@@ -930,24 +930,11 @@ class LinkManagerEditModalView extends ModalView {
 
                 this.model.fetchedAttributes = this.model.getClonedAttributes();
 
-                let data;
-
-                data = ((this.getLanguage().data || {}) || {})[entity] || {};
-                (data.fields || {})[link] = label;
-                (data.links || {})[link] = label;
-
-                if (entityForeign) {
-                    data = ((this.getLanguage().data || {}) || {})[entityForeign];
-
-                    if (linkForeign) {
-                        (data.fields || {})[linkForeign] = labelForeign;
-                        (data.links || {})[linkForeign] = labelForeign;
-                    }
-                }
-
-                this.getMetadata().loadSkipCache().then(() => {
+                Promise.all([
+                    this.getMetadata().loadSkipCache(),
+                    this.getLanguage().loadSkipCache(),
+                ]).then(() => {
                     this.broadcastUpdate();
-
                     this.trigger('after:save');
 
                     if (!options.noClose) {
@@ -955,7 +942,9 @@ class LinkManagerEditModalView extends ModalView {
                     }
 
                     if (options.noClose) {
-                        this.$el.find('button[data-name="save"]').removeClass('disabled').removeAttr('disabled');
+                        this.$el.find('button[data-name="save"]')
+                            .removeClass('disabled')
+                            .removeAttr('disabled');
                     }
                 });
             })

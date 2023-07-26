@@ -465,11 +465,11 @@ class EntityManagerEditView extends View {
     }
 
     hideField(name) {
-        this.getView('record').hideField(name);
+        this.getRecordView().hideField(name);
     }
 
     showField(name) {
-        this.getView('record').showField(name);
+        this.getRecordView().showField(name);
     }
 
     toPlural(string) {
@@ -638,14 +638,9 @@ class EntityManagerEditView extends View {
                 Espo.Ui.success(this.translate('Saved')) :
                 Espo.Ui.success(this.translate('entityCreated', 'messages', 'EntityManager'))
 
-            let global = ((this.getLanguage().data || {}) || {}).Global;
-
-            (global.scopeNames || {})[name] = this.model.get('labelSingular');
-            (global.scopeNamesPlural || {})[name] = this.model.get('labelPlural');
-
             this.getMetadata().loadSkipCache()
             .then(
-                Promise.all([
+                () => Promise.all([
                     this.getConfig().load(),
                     this.getLanguage().loadSkipCache(),
                 ])

@@ -510,7 +510,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         afterRender: function () {
-            this.getView('name').on('change', (m) => {
+            this.getView('name').on('change', () => {
                 let name = this.model.get('name');
 
                 let label = name;
