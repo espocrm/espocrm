@@ -250,9 +250,7 @@ class SelectRecordsModalView extends ModalView {
             checkAllResultDisabled: !this.massRelateEnabled,
             buttonsDisabled: true,
             skipBuildRows: true,
-            pagination: this.getConfig().get('listPagination') ||
-                this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
-                null,
+            pagination: this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) || null,
         }, view => {
             this.listenToOnce(view, 'select', model => {
                 this.trigger('select', model);
