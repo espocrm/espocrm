@@ -1097,7 +1097,7 @@ class App {
 
             if (
                 this.appTimestamp &&
-                appTimestamp !== this.appTimestamp &&
+                appTimestamp > this.appTimestamp &&
                 !bypassAppReload
             ) {
                 appTimestampChangeProcessed = true;
