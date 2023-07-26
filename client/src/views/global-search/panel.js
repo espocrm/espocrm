@@ -26,112 +26,116 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/global-search/panel', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class GlobalSearchPanel extends View {
 
-        template: 'global-search/panel',
+    template = 'global-search/panel'
 
-        events: {
-            'click [data-action="closePanel"]': function () {
-                this.close();
-            },
-        },
+    setup() {
+        this.addHandler('click', '[data-action="closePanel"]', () => this.close());
 
-        setup: function () {
-            this.maxSize = this.getConfig().get('globalSearchMaxSize') || 10;
+        this.maxSize = this.getConfig().get('globalSearchMaxSize') || 10;
 
-            this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
-            this.navbarPanelBodyMaxHeight = this.getThemeManager().getParam('navbarPanelBodyMaxHeight') || 600;
+        this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
+        this.navbarPanelBodyMaxHeight = this.getThemeManager().getParam('navbarPanelBodyMaxHeight') || 600;
+    }
 
-            this.once('remove', () => {
-                $(window).off('resize.global-search-height');
+    onRemove() {
+        $(window).off('resize.global-search-height');
 
-                if (this.overflowWasHidden) {
-                    $('body').css('overflow', 'unset');
+        if (this.overflowWasHidden) {
+            $('body').css('overflow', 'unset');
 
-                    this.overflowWasHidden = false;
-                }
-            });
-        },
+            this.overflowWasHidden = false;
+        }
+    }
 
-        afterRender: function () {
-            this.listenToOnce(this.collection, 'sync', () => {
-                this.createView('list', 'views/record/list-expanded', {
-                    selector: '.list-container',
-                    collection: this.collection,
-                    listLayout: {
-                        rows: [
-                            [
-                                {
-                                    name: 'name',
-                                    view: 'views/global-search/name-field',
-                                    params: {
-                                        containerEl: this.getSelector(),
-                                    },
-                                }
-                            ]
-                        ],
-                        right: {
-                            name: 'read',
-                            view: 'views/global-search/scope-badge',
-                            width: '80px'
+    afterRender() {
+        this.collection.reset();
+        this.collection.maxSize = this.maxSize;
+
+        this.collection.fetch()
+            .then(() => this.createRecordView())
+            .then(view => view.render());
+
+        const $window = $(window);
+
+        $window.off('resize.global-search-height');
+        $window.on('resize.global-search-height', this.processSizing.bind(this));
+
+        this.processSizing();
+    }
+
+    /**
+     * @return {Promise<module:views/record/list-expanded>}
+     */
+    createRecordView() {
+        return this.createView('list', 'views/record/list-expanded', {
+            selector: '.list-container',
+            collection: this.collection,
+            listLayout: {
+                rows: [
+                    [
+                        {
+                            name: 'name',
+                            view: 'views/global-search/name-field',
+                            params: {
+                                containerEl: this.getSelector(),
+                            },
                         }
-                    }
-                }, (view) => {
-                    view.render();
-                });
-            });
+                    ]
+                ],
+                right: {
+                    name: 'read',
+                    view: 'views/global-search/scope-badge',
+                    width: '80px'
+                },
+            }
+        });
+    }
 
-            this.collection.reset();
-            this.collection.maxSize = this.maxSize;
-            this.collection.fetch();
+    processSizing() {
+        const $window = $(window);
 
-            var $window = $(window);
+        let windowHeight = $window.height();
+        let windowWidth = $window.width();
 
-            $window.off('resize.global-search-height');
-            $window.on('resize.global-search-height', this.processSizing.bind(this));
+        let diffHeight = this.$el.find('.panel-heading').outerHeight();
 
-            this.processSizing();
-        },
+        let cssParams = {};
 
-        processSizing: function () {
-            var $window = $(window);
-            var windowHeight = $window.height();
-            var windowWidth = $window.width();
+        if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
+            cssParams.height = (windowHeight - diffHeight) + 'px';
+            cssParams.overflow = 'auto';
 
-            var diffHeight = this.$el.find('.panel-heading').outerHeight();
+            $('body').css('overflow', 'hidden');
 
-            var cssParams = {};
+            this.overflowWasHidden = true;
+        }
+        else {
+            cssParams.height = 'unset';
+            cssParams.overflow = 'none';
 
-            if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
-                cssParams.height = (windowHeight - diffHeight) + 'px';
-                cssParams.overflow = 'auto';
+            if (this.overflowWasHidden) {
+                $('body').css('overflow', 'unset');
 
-                $('body').css('overflow', 'hidden');
-                this.overflowWasHidden = true;
-            } else {
-                cssParams.height = 'unset';
-                cssParams.overflow = 'none';
-
-                if (this.overflowWasHidden) {
-                    $('body').css('overflow', 'unset');
-
-                    this.overflowWasHidden = false;
-                }
-
-                if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
-                    var maxHeight = windowHeight - this.navbarPanelHeightSpace;
-
-                    cssParams.maxHeight = maxHeight + 'px';
-                }
+                this.overflowWasHidden = false;
             }
 
-            this.$el.find('.panel-body').css(cssParams);
-        },
+            if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
+                let maxHeight = windowHeight - this.navbarPanelHeightSpace;
 
-        close: function () {
-            this.trigger('close');
-        },
-    });
-});
+                cssParams.maxHeight = maxHeight + 'px';
+            }
+        }
+
+        this.$el.find('.panel-body').css(cssParams);
+    }
+
+    close() {
+        this.trigger('close');
+    }
+}
+
+export default GlobalSearchPanel;

@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module module:views/record/list-expanded */
+
 import ListRecordView from 'views/record/list';
 
 class ListExpandedRecordView extends ListRecordView {
