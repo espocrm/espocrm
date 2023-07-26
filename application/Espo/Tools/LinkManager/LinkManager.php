@@ -36,6 +36,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
+use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\Tools\LinkManager\Hook\HookProcessor as LinkHookProcessor;
 use Espo\Tools\LinkManager\Params as LinkParams;
@@ -53,6 +54,9 @@ class LinkManager
     private const CHILDREN_TO_PARENT = 'childrenToParent';
     private const ONE_TO_ONE_LEFT = 'oneToOneLeft';
     private const ONE_TO_ONE_RIGHT = 'oneToOneRight';
+
+    // 64 - 3
+    private const MAX_LINK_NAME_LENGTH = 61;
 
     public function __construct(
         private Metadata $metadata,
@@ -120,10 +124,8 @@ class LinkManager
                 $params['relationName'] :
                 lcfirst($entity) . $entityForeign;
 
-            if (
-                strlen($relationName) > NameUtil::MAX_LINK_NAME_LENGTH
-            ) {
-                throw new Error("Relation name should not be longer than " . NameUtil::MAX_LINK_NAME_LENGTH . ".");
+            if ($this->isNameTooLong($relationName)) {
+                throw new Error("Relation name is too long.");
             }
 
             if (preg_match('/[^a-z]/', $relationName[0])) {
@@ -148,8 +150,11 @@ class LinkManager
             ->setName($relationName)
             ->build();
 
-        if (strlen($link) > NameUtil::MAX_LINK_NAME_LENGTH || strlen($linkForeign) > NameUtil::MAX_LINK_NAME_LENGTH) {
-            throw new Error("Link name should not be longer than " . NameUtil::MAX_LINK_NAME_LENGTH . ".");
+        if (
+            $this->isNameTooLong($link) ||
+            $this->isNameTooLong($linkForeign)
+        ) {
+            throw new Error("Link name is too long.");
         }
 
         if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {
@@ -1055,5 +1060,10 @@ class LinkManager
     private function isLanguageNotBase(): bool
     {
         return $this->language->getLanguage() !== $this->baseLanguage->getLanguage();
+    }
+
+    private function isNameTooLong(string $name): bool
+    {
+        return strlen(Util::camelCaseToUnderscore($name)) > self::MAX_LINK_NAME_LENGTH;
     }
 }

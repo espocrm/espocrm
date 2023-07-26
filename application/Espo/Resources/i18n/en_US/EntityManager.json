@@ -73,6 +73,9 @@
         }
     },
     "messages": {
+        "nameIsAlreadyUsed": "Name '{name}' is already used.",
+        "nameIsNotAllowed": "Name '{name}' is not allowed.",
+        "nameIsTooLong": "Name is too long.",
         "confirmRemove": "Are you sure you want to remove the entity type from the system?",
         "entityCreated": "Entity has been created",
         "linkAlreadyExists": "Link name conflict.",

@@ -107,15 +107,34 @@ class EntityManager
         }
 
         if ($this->nameUtil->nameIsTooLong($name)) {
-            throw new Error("Entity name should not be longer than " . NameUtil::MAX_ENTITY_NAME_LENGTH . ".");
+            throw Error::createWithBody(
+                "Entity type name should not be longer than " . NameUtil::MAX_ENTITY_NAME_LENGTH . ".",
+                Error\Body::create()
+                    ->withMessageTranslation('nameIsTooLong', 'EntityManager')
+                    ->encode()
+            );
         }
 
         if ($this->nameUtil->nameIsUsed($name)) {
-            throw new Conflict("Name '$name' is already used.");
+            throw Conflict::createWithBody(
+                "Name '$name' is already used.",
+                Error\Body::create()
+                    ->withMessageTranslation('nameIsAlreadyUsed', 'EntityManager', [
+                        'name' => $name,
+                    ])
+                    ->encode()
+            );
         }
 
         if ($this->nameUtil->nameIsNotAllowed($name)) {
-            throw new Conflict("Entity name '$name' is not allowed.");
+            throw Conflict::createWithBody(
+                "Entity type name '$name' is not allowed.",
+                Error\Body::create()
+                    ->withMessageTranslation('nameIsNotAllowed', 'EntityManager', [
+                        'name' => $name,
+                    ])
+                    ->encode()
+            );
         }
 
         $normalizedName = Util::normalizeClassName($name);

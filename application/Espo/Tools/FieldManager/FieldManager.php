@@ -46,12 +46,10 @@ use stdClass;
  */
 class FieldManager
 {
-    protected bool $isChanged = false;
+    private bool $isChanged = false;
 
-    /**
-     * @var string[]
-     */
-    protected $forbiddenFieldNameList = [
+    /** @var string[] */
+    private $forbiddenFieldNameList = [
         'id',
         'deleted',
         'skipDuplicateCheck',
@@ -62,10 +60,8 @@ class FieldManager
         'true',
     ];
 
-    /**
-     * @var string[]
-     */
-    protected $forbiddenAnyCaseFieldNameList = [
+    /** @var string[] */
+    private $forbiddenAnyCaseFieldNameList = [
         'id',
         'deleted',
         'null',
@@ -74,7 +70,8 @@ class FieldManager
         'system',
     ];
 
-    const MAX_NAME_LENGTH = 100;
+    // 64 - margin (for attribute name suffixes and prefixes)
+    private const MAX_NAME_LENGTH = 50;
 
     public function __construct(
         private InjectableFactory $injectableFactory,
@@ -118,26 +115,53 @@ class FieldManager
             throw new BadRequest("Empty field name.");
         }
 
-        if (strlen($name) > self::MAX_NAME_LENGTH) {
-            throw new Error("Field name should not be longer than " . self::MAX_NAME_LENGTH . ".");
-        }
+        if (strlen(Util::camelCaseToUnderscore($name)) > self::MAX_NAME_LENGTH) {
+            throw Error::createWithBody(
+                "Field name should not be longer than " . self::MAX_NAME_LENGTH . ".",
+                Error\Body::create()
+                    ->withMessageTranslation('nameIsTooLong', 'EntityManager')
+                    ->encode()
+            );
+        };
 
         $existingField = $this->getFieldDefs($scope, $name);
 
         if (isset($existingField)) {
-            throw new Conflict("Field '{$name}' already exists in '{$scope}'.");
+            throw Conflict::createWithBody(
+                "Field '{$name}' already exists in '{$scope}'.",
+                Error\Body::create()
+                    ->withMessageTranslation('fieldAlreadyExists', 'FieldManager', [
+                        'field' => $name,
+                        'entityType' => $scope,
+                    ])
+                    ->encode()
+            );
         }
 
         if ($this->metadata->get(['entityDefs', $scope, 'links', $name])) {
-            throw new Conflict("Link with name '{$name}' already exists in '{$scope}'.");
+            throw Conflict::createWithBody(
+                "Link with name '{$name}' already exists in '{$scope}'.",
+                Error\Body::create()
+                    ->withMessageTranslation('linkWithSameNameAlreadyExists', 'FieldManager', [
+                        'field' => $name,
+                        'entityType' => $scope,
+                    ])
+                    ->encode()
+            );
         }
 
-        if (in_array($name, $this->forbiddenFieldNameList)) {
-            throw new Conflict("Field '{$name}' is not allowed.");
-        }
-
-        if (in_array(strtolower($name), $this->forbiddenAnyCaseFieldNameList)) {
-            throw new Conflict("Field '{$name}' is not allowed.");
+        if (
+            in_array($name, $this->forbiddenFieldNameList) ||
+            in_array(strtolower($name), $this->forbiddenAnyCaseFieldNameList)
+        ) {
+            throw Conflict::createWithBody(
+                "Field '{$name}' is not allowed.",
+                Error\Body::create()
+                    ->withMessageTranslation('fieldNameIsNotAllowed', 'FieldManager', [
+                        'field' => $name,
+                    ])
+                    ->encode()
+            );
         }
 
         $firstLatter = $name[0];

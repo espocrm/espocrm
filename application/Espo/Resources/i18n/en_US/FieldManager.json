@@ -158,5 +158,10 @@
         "link": "A record related through Belongs-To (many-to-one or one-to-one) relationship.",
         "linkParent": "A record related through Belongs-To-Parent relationship. Can be of different entity types.",
         "linkMultiple": "A set of records related through Has-Many (many-to-many or one-to-many) relationship. Not all relationships have their link-multiple fields. Only those do, where Link-Multiple parameter(s) is enabled."
+    },
+    "messages": {
+        "fieldNameIsNotAllowed": "Field name '{field}' is not allowed.",
+        "fieldAlreadyExists": "Field '{field}' already exists in '{entityType}'.",
+        "linkWithSameNameAlreadyExists": "Link with the name '{field}' already exists in '{entityType}'."
     }
 }
