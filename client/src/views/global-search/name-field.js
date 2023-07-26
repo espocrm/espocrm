@@ -26,19 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/global-search/name-field', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+class GlobalSearchNameFieldView extends BaseFieldView {
 
-        listTemplate: 'global-search/name-field',
+    listTemplate = 'global-search/name-field'
 
-        data: function () {
-            return {
-                scope: this.model.get('_scope'),
-                name: this.model.get('name') || this.translate('None'),
-                id: this.model.id,
-                iconHtml: this.getHelper().getScopeColorIconHtml(this.model.get('_scope'))
-            };
-        },
-    });
-});
+    data() {
+        return {
+            scope: this.model.get('_scope'),
+            name: this.model.get('name') || this.translate('None'),
+            id: this.model.id,
+            iconHtml: this.getHelper().getScopeColorIconHtml(this.model.get('_scope')),
+        };
+    }
+}
+
+export default GlobalSearchNameFieldView;

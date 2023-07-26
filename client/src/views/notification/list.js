@@ -26,72 +26,79 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/list', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class NotificationListView extends View {
 
-        template: 'notification/list',
+    template = 'notification/list'
 
-        events: {
-            'click [data-action="markAllNotificationsRead"]': function () {
-                Espo.Ajax
-                    .postRequest('Notification/action/markAllRead')
-                    .then(() => {
-                        this.trigger('all-read');
-                        this.$el.find('.badge-circle-warning').remove();
-                    });
-            },
-            'click [data-action="refresh"]': function () {
-                this.getView('list').showNewRecords();
-            },
-        },
+    setup() {
+        this.addActionHandler('refresh', () => this.getRecordView().showNewRecords());
+        this.addActionHandler('markAllNotificationsRead', () => this.actionMarkAllRead());
 
-        setup: function () {
-            this.wait(
-                this.getCollectionFactory().create('Notification')
-                    .then(collection => {
-                        collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
-                        this.collection = collection;
-                    })
-            );
-        },
+        const promise =
+            this.getCollectionFactory().create('Notification')
+                .then(collection => {
+                    this.collection = collection;
+                    this.collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
+                })
 
-        afterRender: function () {
-            let viewName = this.getMetadata()
-                .get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
-                'views/notification/record/list';
+        this.wait(promise);
+    }
 
-            let options = {
-                selector: '.list-container',
-                collection: this.collection,
-                showCount: false,
-                listLayout: {
-                    rows: [
-                        [
-                            {
-                                name: 'data',
-                                view: 'views/notification/fields/container',
-                                params: {
-                                    containerEl: this.getSelector(),
-                                },
+    afterRender() {
+        let viewName = this.getMetadata()
+            .get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
+            'views/notification/record/list';
+
+        let options = {
+            selector: '.list-container',
+            collection: this.collection,
+            showCount: false,
+            listLayout: {
+                rows: [
+                    [
+                        {
+                            name: 'data',
+                            view: 'views/notification/fields/container',
+                            params: {
+                                containerEl: this.getSelector(),
                             },
-                        ],
+                        },
                     ],
-                    right: {
-                        name: 'read',
-                        view: 'views/notification/fields/read-with-menu',
-                        width: '10px',
-                    },
+                ],
+                right: {
+                    name: 'read',
+                    view: 'views/notification/fields/read-with-menu',
+                    width: '10px',
                 },
-            };
+            },
+        };
 
-            this.collection
-                .fetch()
-                .then(() => this.createView('list', viewName, options))
-                .then(view => view.render())
-                .then(view => {
-                    view.$el.find('> .list > .list-group');
-                });
-        },
-    });
-});
+        this.collection
+            .fetch()
+            .then(() => this.createView('list', viewName, options))
+            .then(view => view.render())
+            .then(view => {
+                view.$el.find('> .list > .list-group');
+            });
+    }
+
+    actionMarkAllRead() {
+        Espo.Ajax.postRequest('Notification/action/markAllRead')
+            .then(() => {
+                this.trigger('all-read');
+
+                this.$el.find('.badge-circle-warning').remove();
+            });
+    }
+
+    /**
+     * @return {module:views/notification/record/list}
+     */
+    getRecordView() {
+        return this.getView('list');
+    }
+}
+
+export default NotificationListView;

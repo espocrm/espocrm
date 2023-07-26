@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module collections/note */
+
 import Collection from 'collection';
 
 class NoteCollection extends Collection {
@@ -50,7 +52,7 @@ class NoteCollection extends Collection {
     /**
      * Fetch new records.
      *
-     * @param {Object} options Options.
+     * @param {Object} [options] Options.
      * @returns {Promise}
      */
     fetchNew(options) {

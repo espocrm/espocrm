@@ -26,102 +26,100 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/fields/container', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+class NotificationContainerFieldView extends BaseFieldView {
 
-        type: 'notification',
+    type = 'notification'
 
-        listTemplate: 'notification/fields/container',
+    listTemplate = 'notification/fields/container'
+    detailTemplate = 'notification/fields/container'
 
-        detailTemplate: 'notification/fields/container',
+    setup() {
+        switch (this.model.get('type')) {
+            case 'Note':
+                this.processNote(this.model.get('noteData'));
 
-        setup: function () {
-            switch (this.model.get('type')) {
-                case 'Note':
-                    this.processNote(this.model.get('noteData'));
+                break;
 
-                    break;
+            case 'MentionInPost':
+                this.processMentionInPost(this.model.get('noteData'));
 
-                case 'MentionInPost':
-                    this.processMentionInPost(this.model.get('noteData'));
+                break;
 
-                    break;
+            default:
+                this.process();
+        }
+    }
 
-                default:
-                    this.process();
-            }
-        },
+    process() {
+        let type = this.model.get('type');
 
-        process: function () {
-            let type = this.model.get('type');
+        if (!type) {
+            return;
+        }
 
-            if (!type) {
-                return;
-            }
+        type = type.replace(/ /g, '');
 
-            type = type.replace(/ /g, '');
+        let viewName = this.getMetadata()
+            .get('clientDefs.Notification.itemViews.' + type) ||
+            'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
 
-            let viewName = this.getMetadata()
-                .get('clientDefs.Notification.itemViews.' + type) ||
-                'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
+        this.createView('notification', viewName, {
+            model: this.model,
+            fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
+        });
+    }
+
+    processNote(data) {
+        if (!data) {
+            return;
+        }
+
+        this.wait(true);
+
+        this.getModelFactory().create('Note', model => {
+            model.set(data);
+
+            let viewName = this.getMetadata().get('clientDefs.Note.itemViews.' + data.type) ||
+                'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
 
             this.createView('notification', viewName, {
-                model: this.model,
+                model: model,
+                isUserStream: true,
                 fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
+                onlyContent: true,
+                isNotification: true,
             });
-        },
 
-        processNote: function (data) {
-            if (!data) {
-                return;
-            }
+            this.wait(false);
+        });
+    }
 
-            this.wait(true);
+    processMentionInPost(data) {
+        if (!data) {
+            return;
+        }
 
-            this.getModelFactory().create('Note', model => {
-                model.set(data);
+        this.wait(true);
 
-                let viewName = this.getMetadata()
-                    .get('clientDefs.Note.itemViews.' + data.type) ||
-                    'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
+        this.getModelFactory().create('Note', model => {
+            model.set(data);
 
-                this.createView('notification', viewName, {
-                    model: model,
-                    isUserStream: true,
-                    fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
-                    onlyContent: true,
-                    isNotification: true,
-                });
+            let viewName = 'views/stream/notes/mention-in-post';
 
-                this.wait(false);
+            this.createView('notification', viewName, {
+                model: model,
+                userId: this.model.get('userId'),
+                isUserStream: true,
+                fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
+                onlyContent: true,
+                isNotification: true,
             });
-        },
 
-        processMentionInPost: function (data) {
-            if (!data) {
-                return;
-            }
+            this.wait(false);
+        });
+    }
+}
 
-            this.wait(true);
-
-            this.getModelFactory().create('Note', model => {
-                model.set(data);
-
-                let viewName = 'views/stream/notes/mention-in-post';
-
-                this.createView('notification', viewName, {
-                    model: model,
-                    userId: this.model.get('userId'),
-                    isUserStream: true,
-                    fullSelector: this.params.containerEl + ' li[data-id="' + this.model.id + '"]',
-                    onlyContent: true,
-                    isNotification: true,
-                });
-
-                this.wait(false);
-            });
-        },
-    });
-});
-
+export default NotificationContainerFieldView;
