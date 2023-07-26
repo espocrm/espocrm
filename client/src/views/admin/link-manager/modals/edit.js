@@ -251,8 +251,9 @@ class LinkManagerEditModalView extends ModalView {
                 name: 'link',
                 params: {
                     required: true,
-                    trim: true
-                }
+                    trim: true,
+                    maxLength: 61,
+                },
             },
             readOnly: !isNew,
         });
@@ -265,8 +266,9 @@ class LinkManagerEditModalView extends ModalView {
                 name: 'linkForeign',
                 params: {
                     required: true,
-                    trim: true
-                }
+                    trim: true,
+                    maxLength: 61,
+                },
             },
             readOnly: !isNew,
         });
@@ -306,7 +308,8 @@ class LinkManagerEditModalView extends ModalView {
                     name: 'relationName',
                     params: {
                         required: true,
-                        trim: true
+                        trim: true,
+                        maxLength: 61,
                     },
                 },
                 readOnly: !isNew,

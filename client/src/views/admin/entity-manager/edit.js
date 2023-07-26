@@ -378,7 +378,7 @@ class EntityManagerEditView extends View {
                     type: 'varchar',
                     required: true,
                     trim: true,
-                    maxLength: 100,
+                    maxLength: 64,
                     readOnly: scope !== false,
                 },
                 labelSingular: {

@@ -123,7 +123,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
             this.model.defs = {
                 fields: {
-                    name: {required: true, maxLength: 100},
+                    name: {required: true, maxLength: 50},
                     label: {required: true},
                     tooltipText: {},
                 }
