@@ -26,151 +26,156 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/panel', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class NotificationPanelView extends View {
 
-        template: 'notification/panel',
+    template = 'notification/panel'
 
-        events: {
-            'click [data-action="markAllNotificationsRead"]': function () {
-                Espo.Ajax
-                    .postRequest('Notification/action/markAllRead')
-                    .then(() => this.trigger('all-read'));
-            },
-            'click [data-action="openNotifications"]': function (e) {
-                this.getRouter().navigate('#Notification', {trigger: true});
+    setup() {
+        this.addActionHandler('markAllNotificationsRead', () => this.actionMarkAllRead());
+        this.addActionHandler('openNotifications', () => this.actionOpenNotifications());
+        this.addActionHandler('closePanel', () => this.close());
+
+        this.addHandler('keydown', '', /** KeyboardEvent */event => {
+            if (event.code === 'Escape') {
                 this.close();
-            },
-            'click [data-action="closePanel"]': function () {
-                this.close();
-            },
-            'keydown': function (e) {
-                if (e.code === 'Escape') {
-                    this.close();
-                }
             }
-        },
+        })
 
-        setup: function () {
-            this.wait(true);
-
-            this.getCollectionFactory().create('Notification', (collection) => {
+        const promise =
+            this.getCollectionFactory().create('Notification', collection => {
                 this.collection = collection;
-                collection.maxSize = this.getConfig().get('notificationsMaxSize') || 5;
-
-                this.wait(false);
+                this.collection.maxSize = this.getConfig().get('notificationsMaxSize') || 5;
 
                 this.listenTo(this.collection, 'sync', () => {
                     this.trigger('collection-fetched');
                 });
             });
 
-            this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
-            this.navbarPanelBodyMaxHeight = this.getThemeManager().getParam('navbarPanelBodyMaxHeight') || 600;
+        this.wait(promise);
 
-            this.once('remove', () => {
-                $(window).off('resize.notifications-height');
+        this.navbarPanelHeightSpace = this.getThemeManager().getParam('navbarPanelHeightSpace') || 100;
+        this.navbarPanelBodyMaxHeight = this.getThemeManager().getParam('navbarPanelBodyMaxHeight') || 600;
 
-                if (this.overflowWasHidden) {
-                    $('body').css('overflow', 'unset');
-
-                    this.overflowWasHidden = false;
-                }
-            });
-        },
-
-        afterRender: function () {
-            this.listenToOnce(this.collection, 'sync', () => {
-                var viewName = this.getMetadata()
-                    .get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
-                    'views/notification/record/list';
-
-                this.createView('list', viewName, {
-                    selector: '.list-container',
-                    collection: this.collection,
-                    showCount: false,
-                    listLayout: {
-                        rows: [
-                            [
-                                {
-                                    name: 'data',
-                                    view: 'views/notification/fields/container',
-                                    options: {
-                                        containerSelector: this.getSelector(),
-                                    },
-                                }
-                            ]
-                        ],
-                        right: {
-                            name: 'read',
-                            view: 'views/notification/fields/read',
-                            width: '10px',
-                        },
-                    }
-                }, (view) => {
-                    view.render();
-                });
-            });
-
-            this.collection.fetch();
-
-            let $window = $(window);
-            $window.off('resize.notifications-height');
-            $window.on('resize.notifications-height', this.processSizing.bind(this));
-            this.processSizing();
-
-            $('#navbar li.notifications-badge-container').addClass('open');
-
-            this.$el.find('> .panel').focus();
-        },
-
-        onRemove: function () {
-            $('#navbar li.notifications-badge-container').removeClass('open');
-        },
-
-        processSizing: function () {
-            let $window = $(window);
-            let windowHeight = $window.height();
-            let windowWidth = $window.width();
-
-            let diffHeight = this.$el.find('.panel-heading').outerHeight();
-
-            let cssParams = {};
-
-            if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
-                cssParams.height = (windowHeight - diffHeight) + 'px';
-                cssParams.overflow = 'auto';
-
-                $('body').css('overflow', 'hidden');
-                this.overflowWasHidden = true;
-
-                this.$el.find('.panel-body').css(cssParams);
-
-                return;
-
-            }
-
-            cssParams.height = 'unset';
-            cssParams.overflow = 'none';
+        this.once('remove', () => {
+            $(window).off('resize.notifications-height');
 
             if (this.overflowWasHidden) {
                 $('body').css('overflow', 'unset');
 
                 this.overflowWasHidden = false;
             }
+        });
+    }
 
-            if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
-                let maxHeight = windowHeight - this.navbarPanelHeightSpace;
+    afterRender() {
+        this.collection.fetch()
+            .then(() => this.createRecordView())
+            .then(view => view.render());
 
-                cssParams.maxHeight = maxHeight + 'px';
+        let $window = $(window);
+
+        $window.off('resize.notifications-height');
+        $window.on('resize.notifications-height', this.processSizing.bind(this));
+
+        this.processSizing();
+
+        $('#navbar li.notifications-badge-container').addClass('open');
+
+        this.$el.find('> .panel').focus();
+    }
+
+    onRemove() {
+        $('#navbar li.notifications-badge-container').removeClass('open');
+    }
+
+    /**
+     * @return {Promise<module:views/record/list-expanded>}
+     */
+    createRecordView() {
+        let viewName = this.getMetadata()
+                .get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
+            'views/notification/record/list';
+
+        return this.createView('list', viewName, {
+            selector: '.list-container',
+            collection: this.collection,
+            showCount: false,
+            listLayout: {
+                rows: [
+                    [
+                        {
+                            name: 'data',
+                            view: 'views/notification/fields/container',
+                            options: {
+                                containerSelector: this.getSelector(),
+                            },
+                        }
+                    ]
+                ],
+                right: {
+                    name: 'read',
+                    view: 'views/notification/fields/read',
+                    width: '10px',
+                },
             }
+        });
+    }
+
+    actionMarkAllRead() {
+        Espo.Ajax.postRequest('Notification/action/markAllRead')
+            .then(() => this.trigger('all-read'));
+    }
+
+    processSizing() {
+        let $window = $(window);
+        let windowHeight = $window.height();
+        let windowWidth = $window.width();
+
+        let diffHeight = this.$el.find('.panel-heading').outerHeight();
+
+        let cssParams = {};
+
+        if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
+            cssParams.height = (windowHeight - diffHeight) + 'px';
+            cssParams.overflow = 'auto';
+
+            $('body').css('overflow', 'hidden');
+            this.overflowWasHidden = true;
 
             this.$el.find('.panel-body').css(cssParams);
-        },
 
-        close: function () {
-            this.trigger('close');
-        },
-    });
-});
+            return;
+        }
+
+        cssParams.height = 'unset';
+        cssParams.overflow = 'none';
+
+        if (this.overflowWasHidden) {
+            $('body').css('overflow', 'unset');
+
+            this.overflowWasHidden = false;
+        }
+
+        if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
+            let maxHeight = windowHeight - this.navbarPanelHeightSpace;
+
+            cssParams.maxHeight = maxHeight + 'px';
+        }
+
+        this.$el.find('.panel-body').css(cssParams);
+    }
+
+    close() {
+        this.trigger('close');
+    }
+
+    actionOpenNotifications() {
+        this.getRouter().navigate('#Notification', {trigger: true});
+
+        this.close();
+    }
+}
+
+export default NotificationPanelView;
