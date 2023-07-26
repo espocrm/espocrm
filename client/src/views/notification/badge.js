@@ -26,501 +26,499 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/badge', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class NotificationBadgeView extends View {
 
-        template: 'notification/badge',
+    template = 'notification/badge'
 
-        notificationsCheckInterval: 10,
-        groupedCheckInterval: 15,
+    notificationsCheckInterval = 10
+    groupedCheckInterval = 15
 
-        /** @private */
-        useWebSocket: false,
+    /** @private */
+    useWebSocket = false
 
-        timeout: null,
-        groupedTimeout: null,
+    timeout = null
+    groupedTimeout = null
 
-        /**
-         * @type {{
-         *     portalDisabled?: boolean,
-         *     grouped?: boolean,
-         *     disabled?: boolean,
-         *     interval?: Number,
-         *     url?: string,
-         *     useWebSocket?: boolean,
-         * }|null}
-         */
-        popupNotificationsData: null,
+    /**
+     * @type {Object.<string, {
+     *     portalDisabled?: boolean,
+     *     grouped?: boolean,
+     *     disabled?: boolean,
+     *     interval?: Number,
+     *     url?: string,
+     *     useWebSocket?: boolean,
+     *     view?: string,
+     *     webSocketCategory?: string,
+     * }>}
+     */
+    popupNotificationsData
 
-        soundPath: 'client/sounds/pop_cork',
+    soundPath = 'client/sounds/pop_cork'
 
-        events: {
-            'click a[data-action="showNotifications"]': function () {
-                this.showNotifications();
-            },
-        },
+    setup() {
+        this.addActionHandler('showNotifications', () => this.showNotifications());
 
-        setup: function () {
-            this.soundPath = this.getBasePath() + (this.getConfig().get('notificationSound') || this.soundPath);
+        this.soundPath = this.getBasePath() + (this.getConfig().get('notificationSound') || this.soundPath);
+        this.notificationSoundsDisabled = true;
+        this.useWebSocket = !!this.getHelper().webSocketManager;
 
-            this.notificationSoundsDisabled = true;
-
-            this.useWebSocket = !!this.getHelper().webSocketManager;
-
-            let clearTimeouts = () => {
-                if (this.timeout) {
-                    clearTimeout(this.timeout);
-                }
-
-                if (this.groupedTimeout) {
-                    clearTimeout(this.groupedTimeout);
-                }
-
-                for (let name in this.popupTimeouts) {
-                    clearTimeout(this.popupTimeouts[name]);
-                }
+        let clearTimeouts = () => {
+            if (this.timeout) {
+                clearTimeout(this.timeout);
             }
 
-            this.once('remove', () => clearTimeouts());
-            this.listenToOnce(this.getHelper().router, 'logout', () => clearTimeouts());
+            if (this.groupedTimeout) {
+                clearTimeout(this.groupedTimeout);
+            }
 
-            this.notificationsCheckInterval = this.getConfig().get('notificationsCheckInterval') ||
-                this.notificationsCheckInterval;
+            for (let name in this.popupTimeouts) {
+                clearTimeout(this.popupTimeouts[name]);
+            }
+        }
 
-            this.groupedCheckInterval = this.getConfig().get('popupNotificationsCheckInterval') ||
-                this.groupedCheckInterval;
+        this.once('remove', () => clearTimeouts());
+        this.listenToOnce(this.getHelper().router, 'logout', () => clearTimeouts());
 
-            this.lastId = 0;
-            this.shownNotificationIds = [];
-            this.closedNotificationIds = [];
-            this.popupTimeouts = {};
+        this.notificationsCheckInterval = this.getConfig().get('notificationsCheckInterval') ||
+            this.notificationsCheckInterval;
 
-            delete localStorage['messageBlockPlayNotificationSound'];
-            delete localStorage['messageClosePopupNotificationId'];
-            delete localStorage['messageNotificationRead'];
+        this.groupedCheckInterval = this.getConfig().get('popupNotificationsCheckInterval') ||
+            this.groupedCheckInterval;
 
-            window.addEventListener('storage', e => {
-                if (e.key === 'messageClosePopupNotificationId') {
-                    let id = localStorage.getItem('messageClosePopupNotificationId');
+        this.lastId = 0;
+        this.shownNotificationIds = [];
+        this.closedNotificationIds = [];
+        this.popupTimeouts = {};
 
-                    if (id) {
-                        let key = 'popup-' + id;
+        delete localStorage['messageBlockPlayNotificationSound'];
+        delete localStorage['messageClosePopupNotificationId'];
+        delete localStorage['messageNotificationRead'];
 
-                        if (this.hasView(key)) {
-                            this.markPopupRemoved(id);
-                            this.clearView(key);
-                        }
+        window.addEventListener('storage', e => {
+            if (e.key === 'messageClosePopupNotificationId') {
+                let id = localStorage.getItem('messageClosePopupNotificationId');
+
+                if (id) {
+                    let key = 'popup-' + id;
+
+                    if (this.hasView(key)) {
+                        this.markPopupRemoved(id);
+                        this.clearView(key);
                     }
                 }
-
-                if (e.key === 'messageNotificationRead') {
-                    if (
-                        !this.isBroadcastingNotificationRead &&
-                        localStorage.getItem('messageNotificationRead')
-                    ) {
-                        this.checkUpdates();
-                    }
-                }
-            }, false);
-        },
-
-        afterRender: function () {
-            this.$badge = this.$el.find('.notifications-button');
-            this.$number = this.$el.find('.number-badge');
-
-            this.runCheckUpdates(true);
-
-            this.$popupContainer = $('#popup-notifications-container');
-
-            if (!$(this.$popupContainer).length) {
-                this.$popupContainer = $('<div>')
-                    .attr('id', 'popup-notifications-container')
-                    .addClass('hidden')
-                    .appendTo('body');
             }
 
-            let popupNotificationsData = this.popupNotificationsData =
-                this.getMetadata().get('app.popupNotifications') || {};
-
-            for (let name in popupNotificationsData) {
-                this.checkPopupNotifications(name);
-            }
-
-            if (this.hasGroupedPopupNotifications()) {
-                this.checkGroupedPopupNotifications();
-            }
-        },
-
-        playSound: function () {
-            if (this.notificationSoundsDisabled) {
-                return;
-            }
-
-            let $audio =
-                $('<audio>')
-                    .attr('autoplay', 'autoplay')
-                    .append(
-                        $('<source>')
-                            .attr('src', this.soundPath + '.mp3')
-                            .attr('type', 'audio/mpeg')
-                    )
-                    .append(
-                        $('<source>')
-                            .attr('src', this.soundPath + '.ogg')
-                            .attr('type', 'audio/ogg')
-                    )
-                    .append(
-                        $('<embed>')
-                            .attr('src', this.soundPath + '.mp3')
-                            .attr('hidden', 'true')
-                            .attr('autostart', 'true')
-                            .attr('false', 'false')
-                    );
-
-            $audio.get(0).volume = 0.3;
-            $audio.get(0).play();
-        },
-
-        showNotRead: function (count) {
-            this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
-
-            this.$number.removeClass('hidden').html(count.toString());
-
-            this.getHelper().pageTitle.setNotificationNumber(count);
-        },
-
-        hideNotRead: function () {
-            this.$badge.attr('title', this.translate('Notifications'));
-            this.$number.addClass('hidden').html('');
-
-            this.getHelper().pageTitle.setNotificationNumber(0);
-        },
-
-        checkBypass: function () {
-            let last = this.getRouter().getLast() || {};
-
-            let pageAction = (last.options || {}).page || null;
-
-            if (
-                last.controller === 'Admin' &&
-                last.action === 'page' &&
-                ~['upgrade', 'extensions'].indexOf(pageAction)
-            ) {
-                return true;
-            }
-
-            return false;
-        },
-
-        checkUpdates: function (isFirstCheck) {
-            if (this.checkBypass()) {
-                return;
-            }
-
-            Espo.Ajax
-                .getRequest('Notification/action/notReadCount')
-                .then(count => {
-                    if (!isFirstCheck && count > this.unreadCount) {
-                        let messageBlockPlayNotificationSound =
-                            localStorage.getItem('messageBlockPlayNotificationSound');
-
-                        if (!messageBlockPlayNotificationSound) {
-                            this.playSound();
-
-                            localStorage.setItem('messageBlockPlayNotificationSound', true);
-
-                            setTimeout(() => {
-                                delete localStorage['messageBlockPlayNotificationSound'];
-                            }, this.notificationsCheckInterval * 1000);
-                        }
-                    }
-
-                    this.unreadCount = count;
-
-                    if (count) {
-                        this.showNotRead(count);
-
-                        return;
-                    }
-
-                    this.hideNotRead();
-                });
-        },
-
-        runCheckUpdates: function (isFirstCheck) {
-            this.checkUpdates(isFirstCheck);
-
-            if (this.useWebSocket) {
-                this.getHelper().webSocketManager.subscribe('newNotification', () => {
+            if (e.key === 'messageNotificationRead') {
+                if (
+                    !this.isBroadcastingNotificationRead &&
+                    localStorage.getItem('messageNotificationRead')
+                ) {
                     this.checkUpdates();
-                });
-
-                return;
+                }
             }
+        }, false);
+    }
 
-            this.timeout = setTimeout(
-                () => this.runCheckUpdates(),
-                this.notificationsCheckInterval * 1000
-            );
-        },
+    afterRender() {
+        this.$badge = this.$el.find('.notifications-button');
+        this.$number = this.$el.find('.number-badge');
 
-        /**
-         * @private
-         * @return {boolean}
-         */
-        hasGroupedPopupNotifications: function () {
-            for (let name in this.popupNotificationsData) {
-                let data = this.popupNotificationsData[name] || {};
+        this.runCheckUpdates(true);
 
-                if (!data.grouped) {
-                    continue;
+        this.$popupContainer = $('#popup-notifications-container');
+
+        if (!$(this.$popupContainer).length) {
+            this.$popupContainer = $('<div>')
+                .attr('id', 'popup-notifications-container')
+                .addClass('hidden')
+                .appendTo('body');
+        }
+
+        let popupNotificationsData = this.popupNotificationsData =
+            this.getMetadata().get('app.popupNotifications') || {};
+
+        for (let name in popupNotificationsData) {
+            this.checkPopupNotifications(name);
+        }
+
+        if (this.hasGroupedPopupNotifications()) {
+            this.checkGroupedPopupNotifications();
+        }
+    }
+
+    playSound() {
+        if (this.notificationSoundsDisabled) {
+            return;
+        }
+
+        const audioElement =
+            /** @type {HTMLAudioElement} */$('<audio>')
+                .attr('autoplay', 'autoplay')
+                .append(
+                    $('<source>')
+                        .attr('src', this.soundPath + '.mp3')
+                        .attr('type', 'audio/mpeg')
+                )
+                .append(
+                    $('<source>')
+                        .attr('src', this.soundPath + '.ogg')
+                        .attr('type', 'audio/ogg')
+                )
+                .append(
+                    $('<embed>')
+                        .attr('src', this.soundPath + '.mp3')
+                        .attr('hidden', 'true')
+                        .attr('autostart', 'true')
+                        .attr('false', 'false')
+                )
+                .get(0);
+
+        audioElement.volume = 0.3;
+        audioElement.play();
+    }
+
+    showNotRead(count) {
+        this.$badge.attr('title', this.translate('New notifications') + ': ' + count);
+
+        this.$number.removeClass('hidden').html(count.toString());
+
+        this.getHelper().pageTitle.setNotificationNumber(count);
+    }
+
+    hideNotRead() {
+        this.$badge.attr('title', this.translate('Notifications'));
+        this.$number.addClass('hidden').html('');
+
+        this.getHelper().pageTitle.setNotificationNumber(0);
+    }
+
+    checkBypass() {
+        let last = this.getRouter().getLast() || {};
+
+        let pageAction = (last.options || {}).page || null;
+
+        if (
+            last.controller === 'Admin' &&
+            last.action === 'page' &&
+            ~['upgrade', 'extensions'].indexOf(pageAction)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    checkUpdates(isFirstCheck) {
+        if (this.checkBypass()) {
+            return;
+        }
+
+        Espo.Ajax
+            .getRequest('Notification/action/notReadCount')
+            .then(count => {
+                if (!isFirstCheck && count > this.unreadCount) {
+                    let messageBlockPlayNotificationSound =
+                        localStorage.getItem('messageBlockPlayNotificationSound');
+
+                    if (!messageBlockPlayNotificationSound) {
+                        this.playSound();
+
+                        localStorage.setItem('messageBlockPlayNotificationSound', 'true');
+
+                        setTimeout(() => {
+                            delete localStorage['messageBlockPlayNotificationSound'];
+                        }, this.notificationsCheckInterval * 1000);
+                    }
                 }
 
-                if (data.portalDisabled && this.getUser().isPortal()) {
-                    continue;
+                this.unreadCount = count;
+
+                if (count) {
+                    this.showNotRead(count);
+
+                    return;
                 }
 
-                return true;
-            }
+                this.hideNotRead();
+            });
+    }
 
-            return false;
-        },
+    runCheckUpdates(isFirstCheck) {
+        this.checkUpdates(isFirstCheck);
 
-        /**
-         * @private
-         */
-        checkGroupedPopupNotifications: function () {
-            if (!this.checkBypass()) {
-                Espo.Ajax.getRequest('PopupNotification/action/grouped')
-                    .then(result => {
-                        for (let type in result) {
-                            let list = result[type];
+        if (this.useWebSocket) {
+            this.getHelper().webSocketManager.subscribe('newNotification', () => {
+                this.checkUpdates();
+            });
 
-                            list.forEach(item => this.showPopupNotification(type, item));
-                        }
-                    });
-            }
+            return;
+        }
 
-            if (this.useWebSocket) {
-                return;
-            }
+        this.timeout = setTimeout(
+            () => this.runCheckUpdates(),
+            this.notificationsCheckInterval * 1000
+        );
+    }
 
-            this.groupedTimeout = setTimeout(
-                () => this.checkGroupedPopupNotifications(),
-                this.groupedCheckInterval * 1000
-            );
-        },
-
-        checkPopupNotifications: function (name, isNotFirstCheck) {
+    /**
+     * @private
+     * @return {boolean}
+     */
+    hasGroupedPopupNotifications() {
+        for (let name in this.popupNotificationsData) {
             let data = this.popupNotificationsData[name] || {};
 
-            let url = data.url;
-            let interval = data.interval;
-            let disabled = data.disabled || false;
-
-            if (disabled) {
-                return;
+            if (!data.grouped) {
+                continue;
             }
 
             if (data.portalDisabled && this.getUser().isPortal()) {
-                return;
+                continue;
             }
 
-            let useWebSocket = this.useWebSocket && data.useWebSocket;
+            return true;
+        }
 
-            if (useWebSocket) {
-                let category = 'popupNotifications.' + (data.webSocketCategory || name);
+        return false;
+    }
 
-                this.getHelper().webSocketManager.subscribe(category, (c, response) => {
-                    if (!response.list) {
-                        return;
+    /**
+     * @private
+     */
+    checkGroupedPopupNotifications() {
+        if (!this.checkBypass()) {
+            Espo.Ajax.getRequest('PopupNotification/action/grouped')
+                .then(result => {
+                    for (let type in result) {
+                        let list = result[type];
+
+                        list.forEach(item => this.showPopupNotification(type, item));
                     }
-
-                    response.list.forEach(item => {
-                        this.showPopupNotification(name, item);
-                    });
                 });
-            }
+        }
 
-            if (data.grouped) {
-                return;
-            }
+        if (this.useWebSocket) {
+            return;
+        }
 
-            if (!url) {
-                return;
-            }
+        this.groupedTimeout = setTimeout(
+            () => this.checkGroupedPopupNotifications(),
+            this.groupedCheckInterval * 1000
+        );
+    }
 
-            if (!interval) {
-                return;
-            }
+    checkPopupNotifications(name, isNotFirstCheck) {
+        let data = this.popupNotificationsData[name] || {};
 
-            (
-                new Promise(resolve => {
-                    if (this.checkBypass()) {
-                        resolve();
+        let url = data.url;
+        let interval = data.interval;
+        let disabled = data.disabled || false;
 
-                        return;
-                    }
+        if (disabled) {
+            return;
+        }
 
-                    Espo.Ajax
-                        .getRequest(url)
-                        .then(list =>
-                            list.forEach(item =>
-                                this.showPopupNotification(name, item, isNotFirstCheck)
-                            )
+        if (data.portalDisabled && this.getUser().isPortal()) {
+            return;
+        }
+
+        let useWebSocket = this.useWebSocket && data.useWebSocket;
+
+        if (useWebSocket) {
+            let category = 'popupNotifications.' + (data.webSocketCategory || name);
+
+            this.getHelper().webSocketManager.subscribe(category, (c, response) => {
+                if (!response.list) {
+                    return;
+                }
+
+                response.list.forEach(item => {
+                    this.showPopupNotification(name, item);
+                });
+            });
+        }
+
+        if (data.grouped) {
+            return;
+        }
+
+        if (!url) {
+            return;
+        }
+
+        if (!interval) {
+            return;
+        }
+
+        (
+            new Promise(resolve => {
+                if (this.checkBypass()) {
+                    resolve();
+
+                    return;
+                }
+
+                Espo.Ajax
+                    .getRequest(url)
+                    .then(list =>
+                        list.forEach(item =>
+                            this.showPopupNotification(name, item, isNotFirstCheck)
                         )
-                        .finally(() => resolve());
-                })
-            )
-            .then(() => {
-                if (useWebSocket) {
-                    return;
-                }
-
-                this.popupTimeouts[name] = setTimeout(
-                    () => this.checkPopupNotifications(name, true),
-                    interval * 1000
-                );
-            });
-        },
-
-        showPopupNotification: function (name, data, isNotFirstCheck) {
-            let view = this.popupNotificationsData[name].view;
-
-            if (!view) {
+                    )
+                    .finally(() => resolve());
+            })
+        )
+        .then(() => {
+            if (useWebSocket) {
                 return;
             }
 
-            let id = data.id || null;
+            this.popupTimeouts[name] = setTimeout(
+                () => this.checkPopupNotifications(name, true),
+                interval * 1000
+            );
+        });
+    }
 
-            if (id) {
-                id = name + '_' + id;
+    showPopupNotification(name, data, isNotFirstCheck) {
+        let view = this.popupNotificationsData[name].view;
 
-                if (~this.shownNotificationIds.indexOf(id)) {
-                    let notificationView = this.getView('popup-' + id);
+        if (!view) {
+            return;
+        }
 
-                    if (notificationView) {
-                        notificationView.trigger('update-data', data.data);
-                    }
+        let id = data.id || null;
 
-                    return;
+        if (id) {
+            id = name + '_' + id;
+
+            if (~this.shownNotificationIds.indexOf(id)) {
+                let notificationView = this.getView('popup-' + id);
+
+                if (notificationView) {
+                    notificationView.trigger('update-data', data.data);
                 }
 
-                if (~this.closedNotificationIds.indexOf(id)) {
-                    return;
-                }
-            }
-            else {
-                id = this.lastId++;
-            }
-
-            this.shownNotificationIds.push(id);
-
-            this.createView('popup-' + id, view, {
-                notificationData: data.data || {},
-                notificationId: data.id,
-                id: id,
-                isFirstCheck: !isNotFirstCheck,
-            }, view => {
-                view.render();
-
-                this.$popupContainer.removeClass('hidden');
-
-                this.listenTo(view, 'remove', () => {
-                    this.markPopupRemoved(id);
-
-                    localStorage.setItem('messageClosePopupNotificationId', id);
-                });
-            });
-        },
-
-        markPopupRemoved: function (id) {
-            let index = this.shownNotificationIds.indexOf(id);
-
-            if (index > -1) {
-                this.shownNotificationIds.splice(index, 1);
-            }
-
-            if (this.shownNotificationIds.length === 0) {
-                this.$popupContainer.addClass('hidden');
-            }
-
-            this.closedNotificationIds.push(id);
-        },
-
-        broadcastNotificationsRead: function () {
-            if (!this.useWebSocket) {
                 return;
             }
 
-            this.isBroadcastingNotificationRead = true;
+            if (~this.closedNotificationIds.indexOf(id)) {
+                return;
+            }
+        }
+        else {
+            id = this.lastId++;
+        }
 
-            localStorage.setItem('messageNotificationRead', true);
+        this.shownNotificationIds.push(id);
 
-            setTimeout(() => {
-                this.isBroadcastingNotificationRead = false;
-                delete localStorage['messageNotificationRead'];
-            }, 500);
-        },
+        this.createView('popup-' + id, view, {
+            notificationData: data.data || {},
+            notificationId: data.id,
+            id: id,
+            isFirstCheck: !isNotFirstCheck,
+        }, view => {
+            view.render();
 
-        showNotifications: function () {
-            this.closeNotifications();
+            this.$popupContainer.removeClass('hidden');
 
-            let $container = $('<div>').attr('id', 'notifications-panel');
+            this.listenTo(view, 'remove', () => {
+                this.markPopupRemoved(id);
 
-            $container.appendTo(this.$el.find('.notifications-panel-container'));
+                localStorage.setItem('messageClosePopupNotificationId', id);
+            });
+        });
+    }
 
-            this.createView('panel', 'views/notification/panel', {
-                fullSelector: '#notifications-panel',
-            }, view => {
-                view.render();
+    markPopupRemoved(id) {
+        let index = this.shownNotificationIds.indexOf(id);
 
-                this.listenTo(view, 'all-read', () => {
-                    this.hideNotRead();
-                    this.$el.find('.badge-circle-warning').remove();
-                    this.broadcastNotificationsRead();
-                });
+        if (index > -1) {
+            this.shownNotificationIds.splice(index, 1);
+        }
 
-                this.listenTo(view, 'collection-fetched', () => {
-                    this.checkUpdates();
-                    this.broadcastNotificationsRead();
-                });
+        if (this.shownNotificationIds.length === 0) {
+            this.$popupContainer.addClass('hidden');
+        }
 
-                this.listenToOnce(view, 'close', () => {
-                    this.closeNotifications();
-                });
+        this.closedNotificationIds.push(id);
+    }
+
+    broadcastNotificationsRead() {
+        if (!this.useWebSocket) {
+            return;
+        }
+
+        this.isBroadcastingNotificationRead = true;
+
+        localStorage.setItem('messageNotificationRead', 'true');
+
+        setTimeout(() => {
+            this.isBroadcastingNotificationRead = false;
+            delete localStorage['messageNotificationRead'];
+        }, 500);
+    }
+
+    showNotifications() {
+        this.closeNotifications();
+
+        let $container = $('<div>').attr('id', 'notifications-panel');
+
+        $container.appendTo(this.$el.find('.notifications-panel-container'));
+
+        this.createView('panel', 'views/notification/panel', {
+            fullSelector: '#notifications-panel',
+        }, view => {
+            view.render();
+
+            this.listenTo(view, 'all-read', () => {
+                this.hideNotRead();
+                this.$el.find('.badge-circle-warning').remove();
+                this.broadcastNotificationsRead();
             });
 
-            let $document = $(document);
+            this.listenTo(view, 'collection-fetched', () => {
+                this.checkUpdates();
+                this.broadcastNotificationsRead();
+            });
 
-            $document.on('mouseup.notification', e => {
-                if (!$container.is(e.target) && $container.has(e.target).length === 0) {
-                    if (!$(e.target).closest('div.modal-dialog').length) {
-                        this.closeNotifications();
-                    }
+            this.listenToOnce(view, 'close', () => {
+                this.closeNotifications();
+            });
+        });
+
+        let $document = $(document);
+
+        $document.on('mouseup.notification', e => {
+            if (!$container.is(e.target) && $container.has(e.target).length === 0) {
+                if (!$(e.target).closest('div.modal-dialog').length) {
+                    this.closeNotifications();
                 }
+            }
+        });
+
+        if (window.innerWidth < this.getThemeManager().getParam('screenWidthXs')) {
+            this.listenToOnce(this.getRouter(), 'route', () => {
+                this.closeNotifications();
             });
+        }
+    }
 
-            if (window.innerWidth < this.getThemeManager().getParam('screenWidthXs')) {
-                this.listenToOnce(this.getRouter(), 'route', () => {
-                    this.closeNotifications();
-                });
-            }
-        },
+    closeNotifications() {
+        let $container = $('#notifications-panel');
 
-        closeNotifications: function () {
-            let $container = $('#notifications-panel');
+        $container.remove();
 
-            $container.remove();
+        let $document = $(document);
 
-            let $document = $(document);
+        if (this.hasView('panel')) {
+            this.getView('panel').remove();
+        }
 
-            if (this.hasView('panel')) {
-                this.getView('panel').remove();
-            }
+        $document.off('mouseup.notification');
+    }
+}
 
-            $document.off('mouseup.notification');
-        },
-    });
-});
+export default NotificationBadgeView;
