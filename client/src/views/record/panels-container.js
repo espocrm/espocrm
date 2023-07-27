@@ -53,10 +53,10 @@ class PanelsContainerRecordView extends View {
      * @property {module:views/record/panels-container~button[]} [buttonList] Buttons.
      * @property {module:views/record/panels-container~action[]} [actionList] Dropdown actions.
      * @property {string} [view] A view name.
-     * @property {Object.<string,*>} [Options] A view options.
+     * @property {Object.<string, *>} [Options] A view options.
      * @property {boolean} [sticked] To stick to an upper panel.
-     * @property {Number} [tabNumber]
-     * @property {string} [aclScope]
+     * @property {Number} [tabNumber] A tab number.
+     * @property {string} [aclScope] A scope to check access to.
      * @property {Espo.Utils~AccessDefs[]} [accessDataList] Access control defs.
      */
 
@@ -71,7 +71,7 @@ class PanelsContainerRecordView extends View {
      * @property {string} [html] A HTML.
      * @property {string} [text] A text.
      * @property {string} [title] A title (on hover). Translatable.
-     * @property {Object.<string,(string|number|boolean)>} [data] Data attributes.
+     * @property {Object.<string, (string|number|boolean)>} [data] Data attributes.
      */
 
     /**
@@ -85,7 +85,7 @@ class PanelsContainerRecordView extends View {
      * @property {string} [label] A label. Translatable.
      * @property {string} [html] A HTML.
      * @property {string} [text] A text.
-     * @property {Object.<string,(string|number|boolean)>} [data] Data attributes.
+     * @property {Object.<string, (string|number|boolean)>} [data] Data attributes.
      */
 
     /**
