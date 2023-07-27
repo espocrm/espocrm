@@ -80,7 +80,7 @@ class ControllerActionProcessor
 
         if (!method_exists($controller, $primaryActionMethodName)) {
             throw new NotFoundSilent(
-                "Action {$requestMethod} '{$actionName}' does not exist in controller '{$controllerName}'.");
+                "Action $requestMethod '$actionName' does not exist in controller '$controllerName'.");
         }
 
         if ($this->useShortParamList($controller, $primaryActionMethodName)) {
@@ -187,11 +187,11 @@ class ControllerActionProcessor
         $className = $this->classFinder->find('Controllers', $name);
 
         if (!$className) {
-            throw new NotFound("Controller '{$name}' does not exist.");
+            throw new NotFound("Controller '$name' does not exist.");
         }
 
         if (!class_exists($className)) {
-            throw new NotFound("Class not found for controller '{$name}'.");
+            throw new NotFound("Class not found for controller '$name'.");
         }
 
         return $className;
