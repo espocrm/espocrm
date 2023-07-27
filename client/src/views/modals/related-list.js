@@ -335,17 +335,17 @@ class RelatedListModalView extends ModalView {
         let filterList = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || []);
 
         if (this.filterList) {
-            this.filterList.forEach((item1) => {
-                var isFound = false;
+            this.filterList.forEach(item1 => {
+                let isFound = false;
 
-                var name1 = item1.name || item1;
+                let name1 = item1.name || item1;
 
                 if (!name1 || name1 === 'all') {
                     return;
                 }
 
-                filterList.forEach((item2) => {
-                    var name2 = item2.name || item2;
+                filterList.forEach(item2 => {
+                    let name2 = item2.name || item2;
 
                     if (name1 === name2) {
                         isFound = true;
@@ -369,14 +369,14 @@ class RelatedListModalView extends ModalView {
                 searchManager: searchManager,
                 disableSavePreset: true,
                 filterList: filterList,
-            }, (view) => {
+            }, view => {
                 this.listenTo(view, 'reset', () => {});
             });
         }
     }
 
     loadList() {
-        var viewName =
+        let viewName =
             this.listViewName ||
             this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
             this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
@@ -437,7 +437,7 @@ class RelatedListModalView extends ModalView {
                     selectAttributeList.push('name');
                 }
 
-                var mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
+                let mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
                     this.mandatorySelectAttributeList || [];
 
                 mandatorySelectAttributeList.forEach((attribute) => {
