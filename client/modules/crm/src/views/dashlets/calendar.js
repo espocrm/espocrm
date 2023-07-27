@@ -120,6 +120,7 @@ define('crm:views/dashlets/calendar', ['views/dashlets/abstract/base'], function
                 text: this.translate('View Calendar', 'labels', 'Calendar'),
                 url: '#Calendar',
                 iconHtml: '<span class="far fa-calendar-alt"></span>',
+                onClick: () => this.actionViewCalendar(),
             });
         },
 
@@ -128,11 +129,13 @@ define('crm:views/dashlets/calendar', ['views/dashlets/abstract/base'], function
                 this.buttonList.push({
                     name: 'previous',
                     html: '<span class="fas fa-chevron-left"></span>',
+                    onClick: () => this.actionPrevious(),
                 });
 
                 this.buttonList.push({
                     name: 'next',
                     html: '<span class="fas fa-chevron-right"></span>',
+                    onClick: () => this.actionNext(),
                 });
             }
         },

@@ -61,7 +61,7 @@ class PanelsContainerRecordView extends View {
      */
 
     /**
-     * A button.
+     * A button. Handled by an `action{Action}` method or a click handler.
      *
      * @typedef {Object} module:views/record/panels-container~button
      *
@@ -72,10 +72,11 @@ class PanelsContainerRecordView extends View {
      * @property {string} [text] A text.
      * @property {string} [title] A title (on hover). Translatable.
      * @property {Object.<string, (string|number|boolean)>} [data] Data attributes.
+     * @property {function()} [onClick] A click event.
      */
 
     /**
-     * An action.
+     * An action. Handled by an `action{Action}` method or a click handler.
      *
      * @typedef {Object} module:views/record/panels-container~action
      *
@@ -86,6 +87,7 @@ class PanelsContainerRecordView extends View {
      * @property {string} [html] A HTML.
      * @property {string} [text] A text.
      * @property {Object.<string, (string|number|boolean)>} [data] Data attributes.
+     * @property {function()} [onClick] A click event.
      */
 
     /**
@@ -151,24 +153,37 @@ class PanelsContainerRecordView extends View {
             let $target = $(e.currentTarget);
             let panel = $target.data('panel');
 
-            //let action = $target.data('action');
-            //let data = $target.data();
-
             if (!panel) {
                 return;
             }
 
-            let view = this.getView(panel);
+            let panelView = this.getView(panel);
 
-            if (!view) {
+            if (!panelView) {
                 return;
             }
 
+            let actionItems;
+
+            if (
+                typeof panelView.getButtonList === 'function' &&
+                typeof panelView.getActionList === 'function'
+            ) {
+                actionItems = [...panelView.getButtonList(), ...panelView.getActionList()];
+            }
+
+            Espo.Utils.handleAction(panelView, e.originalEvent, e.currentTarget, {
+                actionItems: actionItems,
+                className: 'panel-action',
+            });
+
             // @todo Check data. Maybe pass cloned data with unset params.
 
-            Espo.Utils.handleAction(view, e.originalEvent, e.currentTarget);
+            /*
+            let action = $target.data('action');
+            let data = $target.data();
 
-            /*if (action && panel) {
+            if (action && panel) {
                 let method = 'action' + Espo.Utils.upperCaseFirst(action);
                 let d = _.clone(data);
 
@@ -416,8 +431,10 @@ class PanelsContainerRecordView extends View {
         return fields;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @deprecated Use `getFieldViews`.
+     * @todo Remove in v9.0.
      */
     getFields() {
         return this.getFieldViews();

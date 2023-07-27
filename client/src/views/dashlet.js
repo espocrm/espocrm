@@ -43,14 +43,14 @@ class DashletView extends View {
      *
      * @type {string}
      */
-    name = ''
+    name
 
     /**
      * A dashlet ID.
      *
      * @type {string}
      */
-    id = ''
+    id
 
     /**
      * An options view name.
@@ -76,13 +76,13 @@ class DashletView extends View {
     events = {
         /** @this DashletView */
         'click .action': function (e) {
-            let isHandled = Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
+            const isHandled = Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
 
             if (isHandled) {
                 return;
             }
 
-            Espo.Utils.handleAction(this.getBodyView(), e.originalEvent, e.currentTarget);
+            this.getBodyView().handleAction(e.originalEvent, e.currentTarget);
         },
         /** @this DashletView */
         'mousedown .panel-heading .dropdown-menu': function (e) {
@@ -149,7 +149,7 @@ class DashletView extends View {
      * Refresh.
      */
     refresh() {
-        this.getView('body').actionRefresh();
+        this.getBodyView().actionRefresh();
     }
 
     actionRefresh() {
@@ -231,6 +231,7 @@ class DashletView extends View {
         return this.getView('body');
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionRemove() {
         this.confirm(this.translate('confirmation', 'messages'), () => {
             this.trigger('remove-dashlet');

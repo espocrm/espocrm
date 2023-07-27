@@ -12,7 +12,7 @@
                     html=html
                     title=title
                     text=text
-                    className='btn-xs-wide'
+                    className='btn-xs-wide detail-action-item'
                     disabled=disabled
                 }}
             {{/each}}
@@ -36,6 +36,7 @@
                             hidden=hidden
                             disabled=disabled
                             data=data
+                            className='detail-action-item'
                         }}
                     {{else}}
                         {{#unless @first}}
@@ -83,7 +84,7 @@
                 html=html
                 title=title
                 text=text
-                className='btn-xs-wide'
+                className='btn-xs-wide edit-action-item'
                 disabled=disabled
             }}
         {{/each}}
@@ -107,6 +108,7 @@
                         hidden=hidden
                         disabled=disabled
                         data=data
+                        className='edit-action-item'
                     }}
                 {{else}}
                     {{#unless @first}}

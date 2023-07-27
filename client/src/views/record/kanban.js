@@ -44,7 +44,6 @@ class KanbanRecordView extends ListRecordView {
     name = 'kanban'
 
     showCount = true
-    buttonList = []
     headerDisabled = false
     layoutName = 'kanban'
     portalLayoutDisabled = false
@@ -56,6 +55,14 @@ class KanbanRecordView extends ListRecordView {
     _internalLayout = null
     buttonsDisabled = false
     backDragStarted = true
+
+    /**
+     * A button list.
+     *
+     * @protected
+     * @type {module:views/record/list~button[]}
+     */
+    buttonList = []
 
     events = {
          /** @this KanbanRecordView */
@@ -99,7 +106,10 @@ class KanbanRecordView extends ListRecordView {
         },
         /** @this KanbanRecordView */
         'click .action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
+                actionItems: [...this.buttonList],
+                className: 'list-action-item',
+            });
         },
         /** @this KanbanRecordView */
         'mouseenter th.group-header': function (e) {

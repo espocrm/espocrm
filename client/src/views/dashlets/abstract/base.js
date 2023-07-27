@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module views/dashlets/abstract/base */
+
 import View from 'view';
 
 /**
@@ -52,6 +54,48 @@ class BaseDashletView extends View {
 
     noPadding = false
 
+    /**
+     * A button. Handled by an `action{Name}` method or a click handler.
+     *
+     * @typedef module:views/dashlets/abstract/base~button
+     *
+     * @property {string} name A name.
+     * @property {string} [label] A label.
+     * @property {string} [html] An HTML.
+     * @property {string} [text] A text.
+     * @property {string} [title] A title (not translatable).
+     * @property {function()} [onClick] A click handler.
+     */
+
+    /**
+     * A dropdown action. Handled by an `action{Name}` method or a click handler.
+     *
+     * @typedef module:views/dashlets/abstract/base~action
+     *
+     * @property {string} name A name.
+     * @property {string} [label] A label.
+     * @property {string} [html] An HTML.
+     * @property {string} [text] A text.
+     * @property {string} [title] A title (not translatable).
+     * @property {string} [iconHtml] An icon HTML.
+     * @property {string} [url] A link URL.
+     * @property {function()} [onClick] A click handler.
+     */
+
+    /**
+     * Buttons.
+     *
+     * @protected
+     * @type {Array<module:views/dashlets/abstract/base~button>}
+     */
+    buttonList = []
+
+    /**
+     * Dropdown actions.
+     *
+     * @protected
+     * @type {Array<module:views/dashlets/abstract/base~action>}
+     */
     actionList = [
         {
             name: 'refresh',
@@ -67,10 +111,8 @@ class BaseDashletView extends View {
             name: 'remove',
             label: 'Remove',
             iconHtml: '<span class="fas fa-times"></span>',
-        }
+        },
     ]
-
-    buttonList = []
 
     /**
      * Refresh.
@@ -222,7 +264,19 @@ class BaseDashletView extends View {
      * @return {module:views/dashlet}
      */
     getContainerView() {
-        return this.getParentView();
+        return /** @type module:views/dashlet */this.getParentView();
+    }
+
+    /**
+     * @internal
+     * @param {MouseEvent} event
+     * @param {HTMLElement} element
+     */
+    handleAction(event, element) {
+        Espo.Utils.handleAction(this, event, element, {
+            actionItems: [...this.buttonList, ...this.actionList],
+            className: 'dashlet-action',
+        });
     }
 }
 

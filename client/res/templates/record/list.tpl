@@ -19,7 +19,14 @@
         {{/if}}
         {{#if buttonList.length}}
         {{#each buttonList}}
-            {{button name scope=../scope label=label style=style hidden=hidden}}
+            {{button
+                name
+                scope=../scope
+                label=label
+                style=style
+                hidden=hidden
+                class='list-action-item'
+            }}
         {{/each}}
         {{/if}}
 
@@ -37,8 +44,9 @@
                 <a
                     role="button"
                     tabindex="0"
-                    class="action"
+                    class="action list-action-item"
                     data-action="{{name}}"
+                    data-name="{{name}}"
                 >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a></li>
                 {{else}}
                     {{#unless @first}}

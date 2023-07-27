@@ -386,6 +386,8 @@ class ViewHelper {
             let $a = $('<a>')
                 .attr('role', 'button')
                 .attr('tabindex', '0')
+                .attr('data-name', name)
+                .addClass(options.hash.className || '')
                 .addClass('action')
                 .html(html);
 
@@ -449,6 +451,7 @@ class ViewHelper {
                 .addClass(options.hash.hidden ? 'hidden' : '')
                 .addClass(options.hash.disabled ? 'disabled' : '')
                 .attr('data-action', name)
+                .attr('data-name', name)
                 .addClass('btn-' + style)
                 .html(html);
 

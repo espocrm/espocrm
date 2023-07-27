@@ -100,8 +100,12 @@ class SidePanelView extends View {
     disabled = false
 
     events = {
+        /** @this SidePanelView */
         'click .action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
+                actionItems: [...this.buttonList, ...this.actionList],
+                className: 'panel-action',
+            });
         },
     }
 
@@ -313,8 +317,10 @@ class SidePanelView extends View {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @deprecated Use `getFieldViews`.
+     * @todo Remove in v9.0.
      */
     getFields() {
         return this.getFieldViews();
@@ -375,6 +381,7 @@ class SidePanelView extends View {
         this.model.fetch();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Is tab-hidden.
      *

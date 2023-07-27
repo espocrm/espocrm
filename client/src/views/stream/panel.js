@@ -635,6 +635,7 @@ class PanelStreamView extends RelationshipPanelView {
                         $('<span>').text(this.translate('posts', 'filters', 'Note')),
                     )
                     .get(0).innerHTML,
+            onClick: () => this.actionViewPostList(),
         });
 
         this.actionList.push(false);

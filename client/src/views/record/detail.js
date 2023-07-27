@@ -167,7 +167,7 @@ class DetailRecordView extends BaseRecordView {
     isNew = false
 
     /**
-     * A button. Handled by an `action{Name}` method.
+     * A button. Handled by an `action{Name}` method, a click handler or a handler class.
      *
      * @typedef module:views/record/detail~button
      *
@@ -180,10 +180,11 @@ class DetailRecordView extends BaseRecordView {
      * @property {boolean} [hidden] Hidden.
      * @property {string} [title] A title (not translatable).
      * @property {boolean} [disabled] Disabled.
+     * @property {function()} [onClick] A click handler.
      */
 
     /**
-     * A dropdown item. Handled by an `action{Name}` method.
+     * A dropdown item. Handled by an `action{Name}` method, a click handler or a handler class.
      *
      * @typedef module:views/record/detail~dropdownItem
      *
@@ -196,6 +197,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {Object.<string, string>} [data] Data attributes.
      * @property {string} [title] A title (not translatable).
      * @property {boolean} [disabled] Disabled.
+     * @property {function()} [onClick] A click handler.
      */
 
     /**
@@ -554,7 +556,18 @@ class DetailRecordView extends BaseRecordView {
     events = {
         /** @this DetailRecordView */
         'click .button-container .action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
+            const target = /** @type {HTMLElement} */e.currentTarget;
+
+            let actionItems = undefined;
+
+            if (target.classList.contains('detail-action-item')) {
+                actionItems = [...this.buttonList, ...this.dropdownItemList]
+            }
+            else if (target.classList.contains('edit-action-item')) {
+                actionItems = [...this.buttonEditList, ...this.dropdownEditItemList];
+            }
+
+            Espo.Utils.handleAction(this, e.originalEvent, target, {actionItems: actionItems});
         },
         /** @this DetailRecordView */
         'click [data-action="showMoreDetailPanels"]': function () {

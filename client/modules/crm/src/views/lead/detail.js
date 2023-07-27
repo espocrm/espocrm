@@ -39,6 +39,7 @@ define('crm:views/lead/detail', ['views/detail'], function (Dep) {
                 label: 'Convert',
                 acl: 'edit',
                 hidden: !this.isConvertable(),
+                onClick: () => this.actionConvert(),
             });
 
             if (!this.model.has('status')) {

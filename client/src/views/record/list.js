@@ -144,7 +144,7 @@ class ListRecordView extends View {
     minColumnWidth = 100
 
     /**
-     * A button. Handled by a class method `action{Name}`.
+     * A button. Handled by a class method `action{Name}` or a handler.
      *
      * @typedef {Object} module:views/record/list~button
      *
@@ -152,6 +152,7 @@ class ListRecordView extends View {
      * @property {string} label A label. To be translated in a current scope.
      * @property {'default'|'danger'|'warning'|'success'} [style] A style.
      * @property {boolean} [hidden] Hidden.
+     * @property {function()} [onClick] A click handler.
      */
 
     /**
@@ -163,7 +164,7 @@ class ListRecordView extends View {
     buttonList = []
 
     /**
-     * A dropdown item. Handled by a class method `action{Name}`.
+     * A dropdown item. Handled by a class method `action{Name}` or a handler.
      *
      * @typedef {Object} module:views/record/list~dropdownItem
      *
@@ -171,6 +172,7 @@ class ListRecordView extends View {
      * @property {string} [label] A label. To be translated in a current scope.
      * @property {string} [html] An HTML.
      * @property {boolean} [hidden] Hidden.
+     * @property {function()} [onClick] A click handler.
      */
 
     /**
@@ -636,13 +638,12 @@ class ListRecordView extends View {
             // noinspection JSUnresolvedReference
             this.selectAllHandler(e.currentTarget.checked);
         },
-        /**
-         * @param {JQueryKeyEventObject} e
-         * @this module:views/record/list
-         */
+        /** @this ListRecordView */
         'click .action': function (e) {
-            // noinspection JSCheckFunctionSignatures
-            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
+                actionItems: [...this.buttonList, ...this.dropdownItemList],
+                className: 'list-action-item',
+            });
         },
         /** @this ListRecordView */
         'click .checkbox-dropdown [data-action="selectAllResult"]': function () {
@@ -806,7 +807,6 @@ class ListRecordView extends View {
             middleTop -= 5;
             buttonsTop -= 5;
         }
-
 
         $scrollable.off('scroll.list-' + this.cid);
         $scrollable.on('scroll.list-' + this.cid, () => controlSticking());

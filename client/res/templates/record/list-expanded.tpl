@@ -35,7 +35,13 @@
     {{/if}}
 
     {{#each buttonList}}
-        {{button name scope=../scope label=label style=style}}
+        {{button
+            name
+            scope=../scope
+            label=label
+            style=style
+            class='list-action-item'
+        }}
     {{/each}}
 </div>
 {{/if}}

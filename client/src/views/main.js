@@ -51,7 +51,7 @@ class MainView extends View {
 
     /**
      * A top-right menu item (button or dropdown action).
-     * Handled by a class method `action{Action}`.
+     * Handled by a class method `action{Action}`, a click handler or a handler class.
      *
      * @typedef {Object} module:views/main~MenuItem
      *
@@ -75,6 +75,7 @@ class MainView extends View {
      *   If starts with `!`, then the result is negated.
      * @property {module:utils~AccessDefs[]} [accessDataList] Access definitions.
      * @property {string} [initFunction] An init function.
+     * @property {function()} [onClick] A click handler.
      */
 
     /**
@@ -108,7 +109,10 @@ class MainView extends View {
     events = {
         /** @this MainView */
         'click .action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
+                actionItems: [...this.menu.buttons, ...this.menu.dropdown],
+                className: 'main-header-manu-action',
+            });
         },
     }
 
@@ -384,24 +388,22 @@ class MainView extends View {
      */
     addMenuItem(type, item, toBeginning, doNotReRender) {
         if (item) {
-            item.name = item.name || item.action;
+            item.name = item.name || item.action || Espo.Utils.generateId();
 
             let name = item.name;
 
-            if (name) {
-                let index = -1;
+            let index = -1;
 
-                this.menu[type].forEach((data, i) => {
-                    data = data || {};
+            this.menu[type].forEach((data, i) => {
+                data = data || {};
 
-                    if (data.name === name) {
-                        index = i;
-                    }
-                });
-
-                if (~index) {
-                    this.menu[type].splice(index, 1);
+                if (data.name === name) {
+                    index = i;
                 }
+            });
+
+            if (~index) {
+                this.menu[type].splice(index, 1);
             }
         }
 

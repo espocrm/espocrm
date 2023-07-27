@@ -75,8 +75,12 @@ class BottomPanelView extends View {
     disabled = false
 
     events = {
+        /** @this BottomPanelView */
         'click .action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
+                actionItems: [...this.buttonList, ...this.actionList],
+                className: 'panel-action',
+            });
         },
     }
 

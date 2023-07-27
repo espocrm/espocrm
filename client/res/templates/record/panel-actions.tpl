@@ -1,7 +1,7 @@
 {{#each buttonList}}
 <button
     type="button"
-    class="btn btn-{{#if ../defs.style}}{{../defs.style}}{{else}}default{{/if}} btn-sm action{{#if hidden}} hidden{{/if}}"
+    class="btn btn-{{#if ../defs.style}}{{../defs.style}}{{else}}default{{/if}} btn-sm panel-action action{{#if hidden}} hidden{{/if}}"
     data-action="{{action}}"
     data-panel="{{../defs.name}}" {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
     title="{{#if title}}{{translate title scope=../scope}}{{/if}}"
@@ -29,6 +29,7 @@
             disabled=disabled
             data=data
             link=link
+            className='panel-action'
         }}
     {{else}}
     {{#unless @first}}

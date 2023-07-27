@@ -44,6 +44,8 @@ Espo.Utils = {
      * @param {{
      *     action?: string,
      *     handler?: string,
+     *     actionItems?: Array<{onClick?: function(), name?: string}>,
+     *     className?: string,
      * }} [actionData] Data. If an action is not specified, it will be fetched from a target element.
      * @return {boolean} True if handled.
      */
@@ -52,6 +54,27 @@ Espo.Utils = {
 
         const $target = $(element);
         const action = actionData.action || $target.data('action');
+
+        const name = $target.data('name') || action;
+
+        if (
+            name &&
+            actionData.actionItems &&
+            (
+                !actionData.className ||
+                element.classList.contains(actionData.className)
+            )
+        ) {
+            const data = actionData.actionItems.find(item => {
+                return item.name === name || item.action === name;
+            });
+
+            if (data && data.onClick) {
+                data.onClick();
+
+                return true;
+            }
+        }
 
         if (!action) {
             return false;
@@ -628,6 +651,16 @@ Espo.Utils = {
         }
 
         return key;
+    },
+
+    /**
+     * Generate an ID. Not to be used by 3rd party code.
+     *
+     * @internal
+     * @return {string}
+     */
+    generateId: function () {
+        return (Math.floor(Math.random() * 10000001)).toString()
     },
 };
 

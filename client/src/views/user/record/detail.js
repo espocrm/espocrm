@@ -51,6 +51,7 @@ class UserDetailRecordView extends DetailRecordView {
                 name: 'access',
                 label: 'Access',
                 style: 'default',
+                onClick: () => this.actionAccess(),
             });
         }
 
