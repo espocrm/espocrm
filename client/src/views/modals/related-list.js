@@ -299,9 +299,6 @@ class RelatedListModalView extends ModalView {
             }
 
             this.setupSearch();
-
-            this.wait(true);
-
             this.setupList();
         });
     }
@@ -376,13 +373,13 @@ class RelatedListModalView extends ModalView {
     }
 
     setupList() {
-        let viewName =
+        const viewName =
             this.listViewName ||
             this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
             this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
             'views/record/list';
 
-        this.createView('list', viewName, {
+        const promise = this.createView('list', viewName, {
             collection: this.collection,
             fullSelector: this.containerSelector + ' .list-container',
             rowActionsView: this.rowActionsView,
@@ -402,6 +399,7 @@ class RelatedListModalView extends ModalView {
                 this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
                 null,
         }, view => {
+
             this.listenToOnce(view, 'select', model => {
                 this.trigger('select', model);
 
@@ -410,24 +408,26 @@ class RelatedListModalView extends ModalView {
 
             if (this.multiple) {
                 this.listenTo(view, 'check', () => {
-                    if (view.checkedList.length) {
-                        this.enableButton('select');
-                    } else {
+                    view.checkedList.length ?
+                        this.enableButton('select') :
                         this.disableButton('select');
-                    }
                 });
 
-                this.listenTo(view, 'select-all-results', () => {
-                    this.enableButton('select');
-                });
+                this.listenTo(view, 'select-all-results', () => this.enableButton('select'));
             }
 
-            if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
-                this.listenToOnce(view, 'after:build-rows', () => {
-                    this.wait(false);
-                });
+            const fetch = () => {
+                // Timeout to make notify work.
+                setTimeout(() => {
+                    Espo.Ui.notify(' ... ');
 
-                this.collection.fetch();
+                    this.collection.fetch()
+                        .then(() => Espo.Ui.notify(false));
+                }, 1);
+            };
+
+            if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
+                fetch();
 
                 return;
             }
@@ -437,7 +437,7 @@ class RelatedListModalView extends ModalView {
                     selectAttributeList.push('name');
                 }
 
-                let mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
+                const mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
                     this.mandatorySelectAttributeList || [];
 
                 mandatorySelectAttributeList.forEach(attribute => {
@@ -450,13 +450,11 @@ class RelatedListModalView extends ModalView {
                     this.collection.data.select = selectAttributeList.join(',');
                 }
 
-                this.listenToOnce(view, 'after:build-rows', () => {
-                    this.wait(false);
-                });
-
-                this.collection.fetch();
+                fetch();
             });
         });
+
+        this.wait(promise);
     }
 
     // noinspection JSUnusedGlobalSymbols

@@ -646,27 +646,26 @@ class ListView extends MainView {
                 });
             }
 
-            if (fetch) {
-                view.getSelectAttributeList(selectAttributeList => {
-                    if (this.options.mediator && this.options.mediator.abort) {
-                        return;
-                    }
-
-                    if (selectAttributeList) {
-                        this.collection.data.select = selectAttributeList.join(',');
-                    }
-
-                    Espo.Ui.notify(' ... ');
-
-                    this.collection.fetch({main: true})
-                        .then(() => Espo.Ui.notify(false));
-
-                });
+            if (!fetch) {
+                view.render();
 
                 return;
             }
 
-            view.render();
+            view.getSelectAttributeList(selectAttributeList => {
+                if (this.options.mediator && this.options.mediator.abort) {
+                    return;
+                }
+
+                if (selectAttributeList) {
+                    this.collection.data.select = selectAttributeList.join(',');
+                }
+
+                Espo.Ui.notify(' ... ');
+
+                this.collection.fetch({main: true})
+                    .then(() => Espo.Ui.notify(false));
+            });
         });
     }
 

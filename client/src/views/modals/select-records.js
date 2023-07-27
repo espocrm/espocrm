@@ -183,7 +183,6 @@ class SelectRecordsModalView extends ModalView {
             }
 
             this.setupSearch();
-            this.wait(true);
             this.setupList();
         });
     }
@@ -234,11 +233,11 @@ class SelectRecordsModalView extends ModalView {
     }
 
     setupList() {
-        let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
+        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
             this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
             'views/record/list';
 
-        this.createView('list', viewName, {
+        const promise = this.createView('list', viewName, {
             collection: this.collection,
             fullSelector: this.containerSelector + ' .list-container',
             selectable: true,
@@ -252,6 +251,7 @@ class SelectRecordsModalView extends ModalView {
             skipBuildRows: true,
             pagination: this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) || null,
         }, view => {
+
             this.listenToOnce(view, 'select', model => {
                 this.trigger('select', model);
 
@@ -273,10 +273,18 @@ class SelectRecordsModalView extends ModalView {
                 });
             }
 
-            if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
-                this.listenToOnce(view, 'after:build-rows', () => this.wait(false));
+            const fetch = () => {
+                // Timeout to make notify work.
+                setTimeout(() => {
+                    Espo.Ui.notify(' ... ');
 
-                this.collection.fetch();
+                    this.collection.fetch()
+                        .then(() => Espo.Ui.notify(false));
+                }, 1);
+            };
+
+            if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
+                fetch();
 
                 return;
             }
@@ -299,11 +307,11 @@ class SelectRecordsModalView extends ModalView {
                     this.collection.data.select = selectAttributeList.join(',');
                 }
 
-                this.listenToOnce(view, 'after:build-rows', () => this.wait(false));
-
-                this.collection.fetch();
+                fetch();
             });
         });
+
+        this.wait(promise);
     }
 
     create() {

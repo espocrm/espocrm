@@ -580,7 +580,6 @@ class RelationshipPanelView extends BottomPanelView {
             view.render();
 
             this.listenTo(view, 'action', (event, element) => {
-                console.log(event, element);
                 Espo.Utils.handleAction(this, event, element);
             });
 

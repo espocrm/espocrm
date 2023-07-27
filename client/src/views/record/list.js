@@ -946,6 +946,8 @@ class ListRecordView extends View {
             this.forceDisplayTopBar ||
             displayTotalCount;
 
+        let noDataDisabled = this.noDataDisabled || this._renderEmpty;
+
         return {
             scope: this.scope,
             entityType: this.entityType,
@@ -972,7 +974,7 @@ class ListRecordView extends View {
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
             moreCountFormatted: this.getNumberUtil().formatInt(moreCount),
             checkboxColumnWidth: this.checkboxColumnWidth,
-            noDataDisabled: this.noDataDisabled,
+            noDataDisabled: noDataDisabled,
         };
     }
 
@@ -1978,6 +1980,8 @@ class ListRecordView extends View {
         );
 
         this.listenTo(this.collection, 'sync', (c, r, options) => {
+            this._renderEmpty = false;
+
             if (this.hasView('modal') && this.getView('modal').isRendered()) {
                 return;
             }
@@ -2007,7 +2011,6 @@ class ListRecordView extends View {
             }
 
             this.checkedList = [];
-
             this.allResultIsChecked = false;
 
             this.buildRows(() => {
@@ -2020,6 +2023,8 @@ class ListRecordView extends View {
         if (!this.options.skipBuildRows) {
             this.buildRows();
         }
+
+        this._renderEmpty = this.options.skipBuildRows;
     }
 
     afterRender() {
