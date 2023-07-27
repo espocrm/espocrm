@@ -502,14 +502,6 @@ class ListRelatedView extends MainView {
      * Load a record list view.
      */
     loadList() {
-        let methodName = 'loadList' + Espo.Utils.upperCaseFirst(this.viewMode);
-
-        if (this[methodName]) {
-            this[methodName]();
-
-            return;
-        }
-
         if ('isFetched' in this.collection && this.collection.isFetched) {
             this.createListRecordView(false);
 
