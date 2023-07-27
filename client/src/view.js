@@ -40,7 +40,7 @@ class View extends BullView {
 
     /**
      * @callback module:view~actionHandlerCallback
-     * @param {Event} e A DOM event.
+     * @param {MouseEvent} event A DOM event.
      * @param {HTMLElement} element A target element.
      */
 
