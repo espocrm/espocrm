@@ -301,6 +301,13 @@ class RelatedListModalView extends ModalView {
             this.setupSearch();
             this.setupList();
         });
+
+        // If the list not yet loaded.
+        this.once('close', () => {
+            Espo.Ui.notify(false);
+
+            this.collection.abortLastFetch();
+        });
     }
 
     setFilter(filter) {
