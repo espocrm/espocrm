@@ -298,11 +298,11 @@ class RelatedListModalView extends ModalView {
                 });
             }
 
-            this.loadSearch();
+            this.setupSearch();
 
             this.wait(true);
 
-            this.loadList();
+            this.setupList();
         });
     }
 
@@ -318,7 +318,7 @@ class RelatedListModalView extends ModalView {
         return this.getView('search');
     }
 
-    loadSearch() {
+    setupSearch() {
         let searchManager = this.searchManager =
             new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
@@ -375,7 +375,7 @@ class RelatedListModalView extends ModalView {
         }
     }
 
-    loadList() {
+    setupList() {
         let viewName =
             this.listViewName ||
             this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
@@ -402,7 +402,7 @@ class RelatedListModalView extends ModalView {
                 this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
                 null,
         }, view => {
-            this.listenToOnce(view, 'select', (model) => {
+            this.listenToOnce(view, 'select', model => {
                 this.trigger('select', model);
 
                 this.close();
@@ -432,7 +432,7 @@ class RelatedListModalView extends ModalView {
                 return;
             }
 
-            view.getSelectAttributeList((selectAttributeList) => {
+            view.getSelectAttributeList(selectAttributeList => {
                 if (!~selectAttributeList.indexOf('name')) {
                     selectAttributeList.push('name');
                 }
@@ -440,7 +440,7 @@ class RelatedListModalView extends ModalView {
                 let mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
                     this.mandatorySelectAttributeList || [];
 
-                mandatorySelectAttributeList.forEach((attribute) => {
+                mandatorySelectAttributeList.forEach(attribute => {
                     if (!~selectAttributeList.indexOf(attribute)) {
                         selectAttributeList.push(attribute);
                     }

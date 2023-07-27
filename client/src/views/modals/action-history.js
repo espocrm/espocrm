@@ -61,8 +61,8 @@ class ActionHistoryModalView extends ModalView {
             collection.maxSize = this.getConfig().get('recordsPerPage') || 20;
             this.collection = collection;
 
-            this.loadSearch();
-            this.loadList();
+            this.setupSearch();
+            this.setupList();
 
             collection.fetch();
         });
@@ -74,7 +74,7 @@ class ActionHistoryModalView extends ModalView {
         this.close();
     }
 
-    loadSearch() {
+    setupSearch() {
         let searchManager = this.searchManager =
             new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
@@ -90,7 +90,7 @@ class ActionHistoryModalView extends ModalView {
         });
     }
 
-    loadList() {
+    setupList() {
         let viewName = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.list`) ||
            'views/record/list';
 

@@ -182,13 +182,13 @@ class SelectRecordsModalView extends ModalView {
                 this.collection.setOrder(this.defaultOrderBy, this.defaultOrder || 'asc', true);
             }
 
-            this.loadSearch();
+            this.setupSearch();
             this.wait(true);
-            this.loadList();
+            this.setupList();
         });
     }
 
-    loadSearch() {
+    setupSearch() {
         let searchManager = this.searchManager =
             new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
@@ -233,7 +233,7 @@ class SelectRecordsModalView extends ModalView {
         }
     }
 
-    loadList() {
+    setupList() {
         let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelect') ||
             this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.list') ||
             'views/record/list';

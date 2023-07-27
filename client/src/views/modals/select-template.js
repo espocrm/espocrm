@@ -35,8 +35,8 @@ class SelectTemplateModalView extends SelectRecordsModalView {
     searchPanel = false
     scope = 'Template'
 
-    loadSearch() {
-        super.loadSearch();
+    setupSearch() {
+        super.setupSearch();
 
         this.searchManager.setAdvanced({
             entityType: {
