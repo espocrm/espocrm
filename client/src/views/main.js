@@ -377,7 +377,7 @@ class MainView extends View {
     /**
      * Add a menu item.
      *
-     * @param {'buttons'|'dropdown'|'actions'} type A type.
+     * @param {'buttons'|'dropdown'} type A type.
      * @param {module:views/main~MenuItem|false} item Item definitions.
      * @param {boolean} [toBeginning=false] To beginning.
      * @param {boolean} [doNotReRender=false] Skip re-render.
