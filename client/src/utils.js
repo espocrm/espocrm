@@ -40,26 +40,28 @@ Espo.Utils = {
      *
      * @param {module:view} view A view.
      * @param {MouseEvent} event An event.
+     * @param {HTMLElement} element An  element.
      * @param {{
      *     action?: string,
      *     handler?: string,
      * }} [actionData] Data. If an action is not specified, it will be fetched from a target element.
+     * @return {boolean} True if handled.
      */
-    handleAction: function (view, event, actionData) {
+    handleAction: function (view, event, element, actionData) {
         actionData = actionData || {};
 
-        const $target = $(event.target);
+        const $target = $(element);
         const action = actionData.action || $target.data('action');
 
         if (!action) {
-            return;
+            return false;
         }
 
         if (event.ctrlKey || event.metaKey || event.shiftKey) {
             const href = $target.attr('href');
 
             if (href && href !== 'javascript:') {
-                return;
+                return false;
             }
         }
 
@@ -91,10 +93,12 @@ Espo.Utils = {
         }
 
         if (!fired) {
-            return;
+            return false;
         }
 
-        this._processAfterActionDropdown($target)
+        this._processAfterActionDropdown($target);
+
+        return true;
     },
 
     /**

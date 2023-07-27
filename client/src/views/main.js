@@ -108,7 +108,7 @@ class MainView extends View {
     events = {
         /** @this MainView */
         'click .action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent);
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
         },
     }
 

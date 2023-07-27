@@ -76,28 +76,13 @@ class DashletView extends View {
     events = {
         /** @this DashletView */
         'click .action': function (e) {
-            let $target = $(e.currentTarget);
-            let action = $target.data('action');
-            let data = $target.data();
+            let isHandled = Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
 
-            if (action) {
-                let method = 'action' + Espo.Utils.upperCaseFirst(action);
-
-                delete data['action'];
-
-                if (typeof this[method] == 'function') {
-                    e.preventDefault();
-
-                    this[method].call(this, data);
-                } else {
-                    let bodyView = this.getView('body');
-
-                    if (typeof bodyView[method] == 'function') {
-                        e.preventDefault();
-                        bodyView[method].call(bodyView, data);
-                    }
-                }
+            if (isHandled) {
+                return;
             }
+
+            Espo.Utils.handleAction(this.getBodyView(), e.originalEvent, e.currentTarget);
         },
         /** @this DashletView */
         'mousedown .panel-heading .dropdown-menu': function (e) {

@@ -451,14 +451,8 @@ class EmailDetailRecordView extends DetailRecordView {
 
             view.render();
 
-            this.listenTo(view, 'action', (action, data, e) => {
-                var method = 'action' + Espo.Utils.upperCaseFirst(action);
-
-                if (typeof this[method] == 'function') {
-                    this[method](data, e);
-
-                    e.preventDefault();
-                }
+            this.listenTo(view, 'action', (event, element) => {
+                Espo.Utils.handleAction(this, event, element);
             });
 
             this.listenToOnce(view, 'close', () => {

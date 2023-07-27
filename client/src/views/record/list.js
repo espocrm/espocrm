@@ -642,7 +642,7 @@ class ListRecordView extends View {
          */
         'click .action': function (e) {
             // noinspection JSCheckFunctionSignatures
-            Espo.Utils.handleAction(this, e.originalEvent);
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
         },
         /** @this ListRecordView */
         'click .checkbox-dropdown [data-action="selectAllResult"]': function () {

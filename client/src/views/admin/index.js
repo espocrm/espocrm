@@ -35,7 +35,7 @@ class AdminIndexView extends View {
     events = {
         /** @this AdminIndexView */
         'click [data-action]': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent);
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
         },
         /** @this AdminIndexView */
         'keyup input[data-name="quick-search"]': function (e) {

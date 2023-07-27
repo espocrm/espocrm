@@ -76,17 +76,8 @@ class BottomPanelView extends View {
 
     events = {
         'click .action': function (e) {
-            var $el = $(e.currentTarget);
-            var action = $el.data('action');
-            var method = 'action' + Espo.Utils.upperCaseFirst(action);
-
-            if (typeof this[method] === 'function') {
-                var data = $el.data();
-                this[method](data, e);
-
-                e.preventDefault();
-            }
-        }
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
+        },
     }
 
     data() {

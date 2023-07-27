@@ -74,21 +74,14 @@ class RelatedListModalView extends ModalView {
         },
         /** @this RelatedListModalView */
         'click .action': function (e) {
-            let $el = $(e.currentTarget);
-            let action = $el.data('action');
-            let method = 'action' + Espo.Utils.upperCaseFirst(action);
-            let data = $el.data();
+            let isHandled = Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
 
-            if (typeof this[method] === 'function') {
-                this[method](data, e.originalEvent);
-
-                e.preventDefault();
-
+            if (isHandled) {
                 return;
             }
 
-            this.trigger('action', action, data, e.originalEvent);
-        }
+            this.trigger('action', e.originalEvent, e.currentTarget);
+        },
     }
 
     setup() {
@@ -512,6 +505,7 @@ class RelatedListModalView extends ModalView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionSelectRelated() {
         // noinspection JSUnresolvedReference
         let actionName = this.defs.selectAction || 'selectRelated';

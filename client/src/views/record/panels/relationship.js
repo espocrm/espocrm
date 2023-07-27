@@ -574,19 +574,14 @@ class RelationshipPanelView extends BottomPanelView {
 
         Espo.Ui.notify(' ... ');
 
-        this.createView('modalRelatedList', viewName, options, (view) => {
+        this.createView('modalRelatedList', viewName, options, view => {
             Espo.Ui.notify(false);
 
             view.render();
 
-            this.listenTo(view, 'action', (action, data, e) => {
-                let method = 'action' + Espo.Utils.upperCaseFirst(action);
-
-                if (typeof this[method] === 'function') {
-                    this[method](data, e);
-
-                    e.preventDefault();
-                }
+            this.listenTo(view, 'action', (event, element) => {
+                console.log(event, element);
+                Espo.Utils.handleAction(this, event, element);
             });
 
             this.listenToOnce(view, 'close', () => {

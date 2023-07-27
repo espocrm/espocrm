@@ -101,18 +101,8 @@ class SidePanelView extends View {
 
     events = {
         'click .action': function (e) {
-            let $el = $(e.currentTarget);
-            let action = $el.data('action');
-            let method = 'action' + Espo.Utils.upperCaseFirst(action);
-
-            if (typeof this[method] === 'function') {
-                let data = $el.data();
-
-                this[method](data, e);
-
-                e.preventDefault();
-            }
-        }
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
+        },
     }
 
     data() {

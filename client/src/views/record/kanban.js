@@ -99,7 +99,7 @@ class KanbanRecordView extends ListRecordView {
         },
         /** @this KanbanRecordView */
         'click .action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent);
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
         },
         /** @this KanbanRecordView */
         'mouseenter th.group-header': function (e) {

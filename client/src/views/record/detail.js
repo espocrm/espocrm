@@ -554,7 +554,7 @@ class DetailRecordView extends BaseRecordView {
     events = {
         /** @this DetailRecordView */
         'click .button-container .action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent);
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
         },
         /** @this DetailRecordView */
         'click [data-action="showMoreDetailPanels"]': function () {
@@ -2434,19 +2434,13 @@ class DetailRecordView extends BaseRecordView {
 
         Espo.Ui.notify(' ... ');
 
-        this.createView('modalRelatedList', viewName, options, (view) => {
+        this.createView('modalRelatedList', viewName, options, view => {
             Espo.Ui.notify(false);
 
             view.render();
 
-            this.listenTo(view, 'action', (action, data, e) => {
-                let method = 'action' + Espo.Utils.upperCaseFirst(action);
-
-                if (typeof this[method] === 'function') {
-                    this[method](data, e);
-
-                    e.preventDefault();
-                }
+            this.listenTo(view, 'action', (event, element) => {
+                Espo.Utils.handleAction(this, event, element);
             });
 
             this.listenToOnce(view, 'close', () => {

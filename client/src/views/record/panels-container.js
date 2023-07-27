@@ -149,11 +149,26 @@ class PanelsContainerRecordView extends View {
     events = {
         'click .action': function (e) {
             let $target = $(e.currentTarget);
-            let action = $target.data('action');
             let panel = $target.data('panel');
-            let data = $target.data();
 
-            if (action && panel) {
+            //let action = $target.data('action');
+            //let data = $target.data();
+
+            if (!panel) {
+                return;
+            }
+
+            let view = this.getView(panel);
+
+            if (!view) {
+                return;
+            }
+
+            // @todo Check data. Maybe pass cloned data with unset params.
+
+            Espo.Utils.handleAction(view, e.originalEvent, e.currentTarget);
+
+            /*if (action && panel) {
                 let method = 'action' + Espo.Utils.upperCaseFirst(action);
                 let d = _.clone(data);
 
@@ -165,7 +180,7 @@ class PanelsContainerRecordView extends View {
                 if (view && typeof view[method] == 'function') {
                     view[method].call(view, d, e);
                 }
-            }
+            }*/
         },
         'click .panels-show-more-delimiter [data-action="showMorePanels"]': 'actionShowMorePanels',
         /** @this module:views/record/panels-container */
