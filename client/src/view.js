@@ -41,6 +41,7 @@ class View extends BullView {
     /**
      * @callback module:view~actionHandlerCallback
      * @param {Event} e A DOM event.
+     * @param {HTMLElement} element A target element.
      */
 
     /**
@@ -77,9 +78,9 @@ class View extends BullView {
      * @param {module:view~actionHandlerCallback} handler A handler.
      */
     addActionHandler(action, handler) {
-        let fullAction = `click [data-action="${action}"]`;
+        const fullAction = `click [data-action="${action}"]`;
 
-        this.events[fullAction] = e => handler(e.originalEvent);
+        this.events[fullAction] = e => handler(e.originalEvent, e.currentTarget);
     }
 
     /**
