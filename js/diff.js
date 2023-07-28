@@ -437,7 +437,8 @@ class Diff
             if (
                 item.indexOf('tests/') === 0 ||
                 item.indexOf('upgrades/') === 0 ||
-                item.indexOf('frontend/') === 0
+                item.indexOf('frontend/') === 0||
+                item.indexOf('js/') === 0
             ) {
                 return false;
             }
@@ -573,14 +574,20 @@ class Diff
                 return item.name;
             }
 
-            if (!item.src) {
+            const src = /** @type string */item.src;
+
+            if (!src) {
                 throw new Error("Bad lib data in `frontend/libs.json`.");
             }
 
-            let name = item.src.split('/')[1] || null;
+            let name = src.split('/')[1];
 
             if (!name) {
                 throw new Error("Bad lib data in `frontend/libs.json`.");
+            }
+
+            if (name.startsWith('@')) {
+                return src.split('/').slice(1, 3).join('/');
             }
 
             return name;
