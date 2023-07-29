@@ -28,6 +28,12 @@
 
 import TextFieldView from 'views/fields/text';
 
+/**
+ * @type {{
+ *     edit: import('ace-builds').edit,
+ *     require: import('ace-builds').require,
+ * }}
+ */
 let ace;
 
 class FormulaFieldView extends TextFieldView {
@@ -376,7 +382,7 @@ class FormulaFieldView extends TextFieldView {
         let linkList = [];
 
         Object.keys(links).forEach((link) => {
-            var type = links[link].type;
+            let type = links[link].type;
 
             if (!type) {
                 return;
@@ -390,7 +396,7 @@ class FormulaFieldView extends TextFieldView {
         linkList.sort();
 
         linkList.forEach((link) => {
-            var scope = links[link].entity;
+            let scope = links[link].entity;
 
             if (!scope) {
                 return;
