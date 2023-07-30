@@ -26,34 +26,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/enum-int', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+class EnumIntFieldView extends EnumFieldView {
 
-        type: 'enumInt',
+    type = 'enumInt'
 
-        listTemplate: 'fields/enum/detail',
+    listTemplate = 'fields/enum/detail'
+    detailTemplate = 'fields/enum/detail'
+    editTemplate = 'fields/enum/edit'
+    searchTemplate = 'fields/enum/search'
 
-        detailTemplate: 'fields/enum/detail',
+    validations = []
 
-        editTemplate: 'fields/enum/edit',
+    fetch() {
+        let value = parseInt(this.$element.val());
+        let data = {};
 
-        searchTemplate: 'fields/enum/search',
+        data[this.name] = value;
 
-        validations: [],
+        return data;
+    }
 
-        fetch: function () {
-            var value = parseInt(this.$element.val());
-            var data = {};
+    parseItemForSearch(item) {
+        return parseInt(item);
+    }
+}
 
-            data[this.name] = value;
-
-            return data;
-        },
-
-        parseItemForSearch: function (item) {
-            return parseInt(item);
-        },
-    });
-});
-
+export default EnumIntFieldView;

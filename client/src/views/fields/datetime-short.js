@@ -28,37 +28,33 @@
 
 /** @module views/fields/datetime-short */
 
-import Dep from 'views/fields/datetime';
+import DatetimeFieldView from 'views/fields/datetime';
 import moment from 'moment';
 
-/**
- * @class Class
- * @extends module:views/fields/datetime
- */
-export default Dep.extend(/** @lends Class# */{
+class DatetimeShortFieldView extends DatetimeFieldView {
 
-    listTemplate: 'fields/datetime-short/list',
-    detailTemplate: 'fields/datetime-short/detail',
+    listTemplate = 'fields/datetime-short/list'
+    detailTemplate = 'fields/datetime-short/detail'
 
-    data: function () {
-        let data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
         if (this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL) {
-            data.fullDateValue = Dep.prototype.getDateStringValue.call(this);
+            data.fullDateValue = super.getDateStringValue();
         }
 
         return data;
-    },
+    }
 
-    getDateStringValue: function () {
+    getDateStringValue() {
         if (!(this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL)) {
-            return Dep.prototype.getDateStringValue.call(this);
+            return super.getDateStringValue();
         }
 
         let value = this.model.get(this.name)
 
         if (!value) {
-            return Dep.prototype.getDateStringValue.call(this);
+            return super.getDateStringValue();
         }
 
         let timeFormat = this.getDateTime().timeFormat;
@@ -67,20 +63,23 @@ export default Dep.extend(/** @lends Class# */{
             timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
         }
 
-        let d = this.getDateTime().toMoment(value);
+        let m = this.getDateTime().toMoment(value);
         let now = moment().tz(this.getDateTime().timeZone || 'UTC');
 
         if (
-            d.unix() > now.clone().startOf('day').unix() &&
-            d.unix() < now.clone().add(1, 'days').startOf('day').unix()
+            m.unix() > now.clone().startOf('day').unix() &&
+            m.unix() < now.clone().add(1, 'days').startOf('day').unix()
         ) {
-            return  d.format(timeFormat);
+            return m.format(timeFormat);
         }
 
         let readableFormat = this.getDateTime().getReadableShortDateFormat();
 
-        return d.format('YYYY') === now.format('YYYY') ?
-            d.format(readableFormat) :
-            d.format(readableFormat + ', YY');
-    },
-});
+        return m.format('YYYY') === now.format('YYYY') ?
+            m.format(readableFormat) :
+            m.format(readableFormat + ', YY');
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default DatetimeShortFieldView;

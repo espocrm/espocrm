@@ -26,75 +26,76 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/enum-column', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+class EnumColumnFieldView extends EnumFieldView {
 
-        searchTypeList: ['anyOf', 'noneOf'],
+    searchTypeList = ['anyOf', 'noneOf']
 
-        fetchSearch: function () {
-            var type = this.fetchSearchType();
+    fetchSearch() {
+        let type = this.fetchSearchType();
 
-            var list = this.$element.val().split(':,:');
+        let list = this.$element.val().split(':,:');
 
-            if (list.length === 1 && list[0] === '') {
-                list = [];
-            }
+        if (list.length === 1 && list[0] === '') {
+            list = [];
+        }
 
-            list.forEach((item, i) => {
-                list[i] = this.parseItemForSearch(item);
-            });
+        list.forEach((item, i) => {
+            list[i] = this.parseItemForSearch(item);
+        });
 
-            if (type === 'anyOf') {
-                if (list.length === 0) {
-                    return {
-                        data: {
-                            type: 'anyOf',
-                            valueList: list
-                        }
-                    };
-                }
-
+        if (type === 'anyOf') {
+            if (list.length === 0) {
                 return {
-                    type: 'columnIn',
-                    value: list,
                     data: {
                         type: 'anyOf',
-                        valueList: list
-                    }
+                        valueList: list,
+                    },
                 };
             }
-            else if (type === 'noneOf') {
-                if (list.length === 0) {
-                    return {
-                        data: {
-                            type: 'noneOf',
-                            valueList: list
-                        }
-                    };
-                }
 
+            return {
+                type: 'columnIn',
+                value: list,
+                data: {
+                    type: 'anyOf',
+                    valueList: list,
+                },
+            };
+        }
+        else if (type === 'noneOf') {
+            if (list.length === 0) {
                 return {
-                    type: 'or',
-                    value: [
-                        {
-                            type: 'columnIsNull',
-                            attribute: this.name
-                        },
-                        {
-                            type: 'columnNotIn',
-                            value: list,
-                            attribute: this.name
-                        }
-                    ],
                     data: {
                         type: 'noneOf',
-                        valueList: list
-                    }
+                        valueList: list,
+                    },
                 };
             }
 
-            return null;
-        },
-    });
-});
+            return {
+                type: 'or',
+                value: [
+                    {
+                        type: 'columnIsNull',
+                        attribute: this.name,
+                    },
+                    {
+                        type: 'columnNotIn',
+                        value: list,
+                        attribute: this.name,
+                    }
+                ],
+                data: {
+                    type: 'noneOf',
+                    valueList: list,
+                },
+            };
+        }
+
+        return null;
+    }
+}
+
+export default EnumColumnFieldView;

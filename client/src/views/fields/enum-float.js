@@ -26,23 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/enum-float', ['views/fields/enum-int'], function (Dep) {
+import EnumIntFieldView from 'views/fields/enum-int';
 
-    return Dep.extend({
+class EnumFloatFieldView extends EnumIntFieldView {
 
-        type: 'enumFloat',
+    type = 'enumFloat'
 
-        fetch: function () {
-            var value = parseFloat(this.$element.val());
-            var data = {};
+    fetch() {
+        let value = parseFloat(this.$element.val());
+        let data = {};
 
-            data[this.name] = value;
+        data[this.name] = value;
 
-            return data;
-        },
+        return data;
+    }
 
-        parseItemForSearch: function (item) {
-            return parseFloat(item);
-        },
-    });
-});
+    parseItemForSearch(item) {
+        return parseFloat(item);
+    }
+}
+
+export default EnumFloatFieldView;
