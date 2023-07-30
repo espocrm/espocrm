@@ -26,39 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/json-object', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+class JsonObjectFieldView extends BaseFieldView {
 
-        type: 'jsonObject',
+    type = 'jsonObject'
 
-        listTemplate: 'fields/json-object/detail',
+    listTemplate = 'fields/json-object/detail'
+    detailTemplate = 'fields/json-object/detail'
 
-        detailTemplate: 'fields/json-object/detail',
+    data() {
+        const data = super.setup();
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+        data.valueIsSet = this.model.has(this.name);
+        data.isNotEmpty = !!this.model.get(this.name);
 
-            data.valueIsSet = this.model.has(this.name);
-            data.isNotEmpty = !!this.model.get(this.name);
+        return data;
+    }
 
-            return data;
-        },
+    getValueForDisplay() {
+        const value = this.model.get(this.name);
 
-        getValueForDisplay: function () {
-            if (!this.model.get(this.name)) {
-                return null;
-            }
+        if (!value) {
+            return null;
+        }
 
-            var text = JSON.stringify(this.model.get(this.name), false, 2)
-                .replace(/(\r\n|\n|\r)/gm, '<br>').replace(/\s/g, '&nbsp;');
+        return JSON.stringify(value, null, 2)
+            .replace(/(\r\n|\n|\r)/gm, '<br>').replace(/\s/g, '&nbsp;');
+    }
+}
 
-            return text;
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-        },
-    });
-});
+export default JsonObjectFieldView;
 

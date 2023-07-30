@@ -26,23 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'views/fields/currency';
+import CurrencyFieldView from 'views/fields/currency';
 
-/**
- * @class Class
- * @extends module:views/fields/currency
- */
-export default Dep.extend(/** @lends Class# */{
+class CurrencyConvertedFieldView extends CurrencyFieldView {
 
-    data: function () {
-        let currencyValue = this.getConfig().get('defaultCurrency');
+    data() {
+        let data = super.data();
 
-        let data = Dep.prototype.data.call(this);
+        const currencyValue = this.getConfig().get('defaultCurrency');
 
         data.currencyValue = currencyValue;
-        data.currencySymbol = this.getMetadata()
-            .get(['app', 'currency', 'symbolMap', currencyValue]) || '';
+        data.currencySymbol = this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || '';
 
         return data;
-    },
-});
+    }
+}
+
+export default CurrencyConvertedFieldView;

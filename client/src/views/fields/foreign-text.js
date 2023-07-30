@@ -26,23 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-text', ['views/fields/text', 'helpers/misc/foreign-field'], function (Dep, Helper) {
+import TextFieldView from 'views/fields/text';
+import Helper from 'helpers/misc/foreign-field';
 
-    return Dep.extend({
+class ForeignTextFieldView extends TextFieldView {
 
-        type: 'foreign',
+    type = 'foreign'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            /** @var {module:helpers/misc/foreign-field} */
-            let helper = new Helper(this);
+        const helper = new Helper(this);
 
-            let foreignParams = helper.getForeignParams();
+        const foreignParams = helper.getForeignParams();
 
-            for (let param in foreignParams) {
-                this.params[param] = foreignParams[param];
-            }
-        },
-    });
-});
+        for (let param in foreignParams) {
+            this.params[param] = foreignParams[param];
+        }
+    }
+}
+
+export default ForeignTextFieldView;

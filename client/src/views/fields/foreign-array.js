@@ -26,50 +26,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-array', ['views/fields/array'], function (Dep) {
+import ArrayFieldView from 'views/fields/array';
 
-    return Dep.extend({
+class ForeignArrayFieldView extends ArrayFieldView {
 
-        type: 'foreign',
+    type = 'foreign'
 
-        setupOptions: function () {
-            this.params.options = [];
+    setupOptions() {
+        this.params.options = [];
 
-            let field = this.params.field;
-            let link = this.params.link;
+        let field = this.params.field;
+        let link = this.params.link;
 
-            if (!field || !link) {
-                return;
-            }
+        if (!field || !link) {
+            return;
+        }
 
-            let scope = this.getMetadata().get(['entityDefs', this.model.entityType, 'links', link, 'entity']);
+        let scope = this.getMetadata().get(['entityDefs', this.model.entityType, 'links', link, 'entity']);
 
-            if (!scope) {
-                return;
-            }
+        if (!scope) {
+            return;
+        }
 
-            let {
-                optionsPath,
-                translation,
-                options,
-                isSorted,
-                displayAsLabel,
-                style,
-            } = this.getMetadata()
-                .get(['entityDefs', scope, 'fields', field]);
+        let {
+            optionsPath,
+            translation,
+            options,
+            isSorted,
+            displayAsLabel,
+            style,
+        } = this.getMetadata()
+            .get(['entityDefs', scope, 'fields', field]);
 
-            options = optionsPath ? this.getMetadata().get(optionsPath) : options;
+        options = optionsPath ? this.getMetadata().get(optionsPath) : options;
 
-            this.params.options = Espo.Utils.clone(options) || [];
-            this.params.translation = translation;
-            this.params.isSorted = isSorted || false;
-            this.params.displayAsLabel = displayAsLabel || false;
-            this.styleMap = style || {};
+        this.params.options = Espo.Utils.clone(options) || [];
+        this.params.translation = translation;
+        this.params.isSorted = isSorted || false;
+        this.params.displayAsLabel = displayAsLabel || false;
+        this.styleMap = style || {};
 
-            this.translatedOptions = Object.fromEntries(
-                this.params.options
-                    .map(item => [item, this.getLanguage().translateOption(item, field, scope)])
-            );
-        },
-    });
-});
+        this.translatedOptions = Object.fromEntries(
+            this.params.options
+                .map(item => [item, this.getLanguage().translateOption(item, field, scope)])
+        );
+    }
+}
+
+export default ForeignArrayFieldView;

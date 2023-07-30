@@ -26,15 +26,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-multi-enum', ['views/fields/multi-enum', 'views/fields/foreign-array'],
-function (Dep, ForeignArray) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
+import ForeignArrayFieldView from 'views/fields/foreign-array';
 
-    return Dep.extend({
+class ForeignMultiEnumFieldView extends MultiEnumFieldView {
 
-        type: 'foreign',
+    type = 'foreign'
 
-        setupOptions: function () {
-            ForeignArray.prototype.setupOptions.call(this);
-        },
-    });
-});
+    setupOptions() {
+        ForeignArrayFieldView.prototype.setupOptions.call(this);
+    }
+}
+
+export default ForeignMultiEnumFieldView;

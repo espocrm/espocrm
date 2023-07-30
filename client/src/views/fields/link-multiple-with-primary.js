@@ -26,256 +26,243 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-multiple-with-primary', ['views/fields/link-multiple'], function (Dep) {
+import LinkMultipleFieldView from 'views/fields/link-multiple';
+
+/**
+ * A link-multiple field with a primary.
+ */
+class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
 
     /**
-     * A link-multiple field with a primary.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/link-multiple.Class
-     * @memberOf module:views/fields/link-multiple-with-primary
+     * @protected
+     * @type {string}
      */
-    return Dep.extend(/** @lends module:views/fields/link-multiple-with-primary.Class# */{
+    primaryLink
 
-        /**
-         * @protected
-         * @type {?string}
-         */
-        primaryLink: null,
+    switchPrimary(id) {
+        let $switch = this.$el.find(`[data-id="${id}"][data-action="switchPrimary"]`);
 
-        switchPrimary: function (id) {
-            let $switch = this.$el.find(`[data-id="${id}"][data-action="switchPrimary"]`);
+        if (!$switch.hasClass('active')) {
+            this.$el.find('button[data-action="switchPrimary"]')
+                .removeClass('active')
+                .children()
+                .addClass('text-muted');
 
-            if (!$switch.hasClass('active')) {
-                this.$el.find('button[data-action="switchPrimary"]')
-                    .removeClass('active')
-                    .children()
-                    .addClass('text-muted');
+            $switch.addClass('active').children().removeClass('text-muted');
 
-                $switch.addClass('active').children().removeClass('text-muted');
+            this.setPrimaryId(id);
+        }
+    }
 
-                this.setPrimaryId(id);
-            }
-        },
+    /**
+     * @inheritDoc
+     */
+    getAttributeList() {
+        const list = super.getAttributeList();
 
-        /**
-         * @inheritDoc
-         */
-        getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
+        list.push(this.primaryIdAttribute);
+        list.push(this.primaryNameAttribute);
 
-            list.push(this.primaryIdAttribute);
-            list.push(this.primaryNameAttribute);
+        return list;
+    }
 
-            return list;
-        },
+    setup() {
+        this.primaryLink = this.options.primaryLink || this.primaryLink ||
+            this.model.getFieldParam(this.name, 'primaryLink');
 
-        setup: function () {
-            this.primaryLink = this.options.primaryLink || this.primaryLink ||
-                this.model.getFieldParam(this.name, 'primaryLink');
+        this.primaryIdAttribute = this.primaryLink + 'Id';
+        this.primaryNameAttribute = this.primaryLink + 'Name';
 
-            this.primaryIdAttribute = this.primaryLink + 'Id';
-            this.primaryNameAttribute = this.primaryLink + 'Name';
+        super.setup();
 
-            Dep.prototype.setup.call(this);
+        this.primaryId = this.model.get(this.primaryIdAttribute);
+        this.primaryName = this.model.get(this.primaryNameAttribute);
 
+        this.listenTo(this.model, 'change:' + this.primaryIdAttribute, () => {
             this.primaryId = this.model.get(this.primaryIdAttribute);
             this.primaryName = this.model.get(this.primaryNameAttribute);
+        });
 
-            this.listenTo(this.model, 'change:' + this.primaryIdAttribute, () => {
-                this.primaryId = this.model.get(this.primaryIdAttribute);
-                this.primaryName = this.model.get(this.primaryNameAttribute);
-            });
+        this.events['click [data-action="switchPrimary"]'] = e => {
+            let $target = $(e.currentTarget);
+            let id = $target.data('id');
 
-            this.events['click [data-action="switchPrimary"]'] = e => {
-                let $target = $(e.currentTarget);
-                let id = $target.data('id');
+            this.switchPrimary(id);
+        };
+    }
 
-                this.switchPrimary(id);
-            };
-        },
+    /**
+     * @protected
+     * @param {string|null} id An ID.
+     */
+    setPrimaryId(id) {
+        this.primaryId = id;
 
-        /**
-         * @protected
-         * @param {string} id An ID.
-         */
-        setPrimaryId: function (id) {
-            this.primaryId = id;
+        this.primaryName = id ?
+            this.nameHash[id] : null;
 
-            if (id) {
-                this.primaryName = this.nameHash[id];
+        this.trigger('change');
+    }
+
+    /**
+     * @protected
+     */
+    renderLinks() {
+        if (this.primaryId) {
+            this.addLinkHtml(this.primaryId, this.primaryName);
+        }
+
+        this.ids.forEach(id => {
+            if (id !== this.primaryId) {
+                this.addLinkHtml(id, this.nameHash[id]);
             }
-            else {
-                this.primaryName = null;
-            }
+        });
+    }
 
-            this.trigger('change');
-        },
+    /**
+     * @inheritDoc
+     */
+    getValueForDisplay() {
+        if (this.isDetailMode() || this.isListMode()) {
+            let itemList = [];
 
-        /**
-         * @protected
-         */
-        renderLinks: function () {
             if (this.primaryId) {
-                this.addLinkHtml(this.primaryId, this.primaryName);
+                itemList.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
             }
 
-            this.ids.forEach((id) => {
+            if (!this.ids.length) {
+                return;
+            }
+
+            this.ids.forEach(id => {
                 if (id !== this.primaryId) {
-                    this.addLinkHtml(id, this.nameHash[id]);
+                    itemList.push(this.getDetailLinkHtml(id));
                 }
             });
-        },
 
-        /**
-         * @inheritDoc
-         */
-        getValueForDisplay: function () {
-            if (this.isDetailMode() || this.isListMode()) {
-                let itemList = [];
+            return itemList
+                .map(item => $('<div>').append(item).get(0).outerHTML)
+                .join('');
+        }
+    }
 
-                if (this.primaryId) {
-                    itemList.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
-                }
+    /**
+     * @inheritDoc
+     */
+    deleteLink(id) {
+        if (id === this.primaryId) {
+            this.setPrimaryId(null);
+        }
 
-                if (!this.ids.length) {
-                    return;
-                }
+        super.deleteLink(id);
+    }
 
-                this.ids.forEach(id => {
-                    if (id !== this.primaryId) {
-                        itemList.push(this.getDetailLinkHtml(id));
-                    }
-                });
+    /**
+     * @inheritDoc
+     */
+    deleteLinkHtml(id) {
+        super.deleteLinkHtml(id);
 
-                return itemList
-                    .map(item => $('<div>').append(item).get(0).outerHTML)
-                    .join('');
+        this.managePrimaryButton();
+    }
+
+    /**
+     * @inheritDoc
+     */
+    addLinkHtml(id, name) {
+        // Do not use the `html` method to avoid XSS.
+
+        name = name || id;
+
+        if (this.isSearchMode()) {
+            return super.addLinkHtml(id, name);
+        }
+
+        let $container = this.$el.find('.link-container');
+
+        let $el = $('<div>')
+            .addClass('form-inline clearfix ')
+            .addClass('list-group-item link-with-role link-group-item-with-primary')
+            .addClass('link-' + id)
+            .attr('data-id', id);
+
+        let $name = $('<div>').text(name).append('&nbsp;');
+
+        let $remove = $('<a>')
+            .attr('role', 'button')
+            .attr('tabindex', '0')
+            .attr('data-id', id)
+            .attr('data-action', 'clearLink')
+            .addClass('pull-right')
+            .append(
+                $('<span>').addClass('fas fa-times')
+            );
+
+        let $left = $('<div>');
+        let $right = $('<div>');
+
+        $left.append($name);
+        $right.append($remove);
+
+        $el.append($left);
+        $el.append($right);
+
+        let isPrimary = (id === this.primaryId);
+
+        let $star = $('<span>')
+            .addClass('fas fa-star fa-sm')
+            .addClass(!isPrimary ? 'text-muted' : '')
+
+        let $button = $('<button>')
+            .attr('type', 'button')
+            .addClass('btn btn-link btn-sm pull-right hidden')
+            .attr('title', this.translate('Primary'))
+            .attr('data-action', 'switchPrimary')
+            .attr('data-id', id)
+            .append($star);
+
+        $button.insertBefore($el.children().first().children().first());
+
+        $container.append($el);
+
+        this.managePrimaryButton();
+
+        return $el;
+    }
+
+    /**
+     * @protected
+     */
+    managePrimaryButton() {
+        let $primary = this.$el.find('button[data-action="switchPrimary"]');
+
+        if ($primary.length > 1) {
+            $primary.removeClass('hidden');
+        }
+        else {
+            $primary.addClass('hidden');
+        }
+
+        if ($primary.filter('.active').length === 0) {
+            let $first = $primary.first();
+
+            if ($first.length) {
+                $first.addClass('active').children().removeClass('text-muted');
+
+                this.setPrimaryId($first.data('id'));
             }
-        },
+        }
+    }
 
-        /**
-         * @inheritDoc
-         */
-        deleteLink: function (id) {
-            if (id === this.primaryId) {
-                this.setPrimaryId(null);
-            }
+    fetch() {
+        const data = super.fetch();
 
-            Dep.prototype.deleteLink.call(this, id);
-        },
+        data[this.primaryIdAttribute] = this.primaryId;
+        data[this.primaryNameAttribute] = this.primaryName;
 
-        /**
-         * @inheritDoc
-         */
-        deleteLinkHtml: function (id) {
-            Dep.prototype.deleteLinkHtml.call(this, id);
+        // noinspection JSValidateTypes
+        return data;
+    }
+}
 
-            this.managePrimaryButton();
-        },
-
-        /**
-         * @inheritDoc
-         */
-        addLinkHtml: function (id, name) {
-            // Do not use the `html` method to avoid XSS.
-
-            name = name || id;
-
-            if (this.isSearchMode()) {
-                return Dep.prototype.addLinkHtml.call(this, id, name);
-            }
-
-            let $container = this.$el.find('.link-container');
-
-            let $el = $('<div>')
-                .addClass('form-inline clearfix ')
-                .addClass('list-group-item link-with-role link-group-item-with-primary')
-                .addClass('link-' + id)
-                .attr('data-id', id);
-
-            let $name = $('<div>').text(name).append('&nbsp;');
-
-            let $remove = $('<a>')
-                .attr('role', 'button')
-                .attr('tabindex', '0')
-                .attr('data-id', id)
-                .attr('data-action', 'clearLink')
-                .addClass('pull-right')
-                .append(
-                    $('<span>').addClass('fas fa-times')
-                );
-
-            let $left = $('<div>');
-            let $right = $('<div>');
-
-            $left.append($name);
-            $right.append($remove);
-
-            $el.append($left);
-            $el.append($right);
-
-            let isPrimary = (id === this.primaryId);
-
-            let $star = $('<span>')
-                .addClass('fas fa-star fa-sm')
-                .addClass(!isPrimary ? 'text-muted' : '')
-
-            let $button = $('<button>')
-                .attr('type', 'button')
-                .addClass('btn btn-link btn-sm pull-right hidden')
-                .attr('title', this.translate('Primary'))
-                .attr('data-action', 'switchPrimary')
-                .attr('data-id', id)
-                .append($star);
-
-            $button.insertBefore($el.children().first().children().first());
-
-            $container.append($el);
-
-            this.managePrimaryButton();
-
-            return $el;
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-        },
-
-        /**
-         * @protected
-         */
-        managePrimaryButton: function () {
-            let $primary = this.$el.find('button[data-action="switchPrimary"]');
-
-            if ($primary.length > 1) {
-                $primary.removeClass('hidden');
-            }
-            else {
-                $primary.addClass('hidden');
-            }
-
-            if ($primary.filter('.active').length === 0) {
-                let $first = $primary.first();
-
-                if ($first.length) {
-                    $first.addClass('active').children().removeClass('text-muted');
-
-                    this.setPrimaryId($first.data('id'));
-                }
-            }
-        },
-
-        fetch: function () {
-            let data = Dep.prototype.fetch.call(this);
-
-            data[this.primaryIdAttribute] = this.primaryId;
-            data[this.primaryNameAttribute] = this.primaryName;
-
-            return data;
-        },
-    });
-});
-
-
+export default LinkMultipleWithPrimaryFieldView;
