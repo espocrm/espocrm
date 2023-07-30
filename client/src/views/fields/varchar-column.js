@@ -26,81 +26,82 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/varchar-column', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+class VarcharColumnFieldView extends VarcharFieldView {
 
-        searchTypeList: ['startsWith', 'contains', 'equals', 'endsWith', 'like', 'isEmpty', 'isNotEmpty'],
+    searchTypeList = [
+        'startsWith',
+        'contains',
+        'equals',
+        'endsWith',
+        'like',
+        'isEmpty',
+        'isNotEmpty',
+    ]
 
-        fetchSearch: function () {
-            var type = this.fetchSearchType() || 'startsWith';
+    fetchSearch() {
+        const type = this.fetchSearchType() || 'startsWith';
 
-            var data;
-
-            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                if (type === 'isEmpty') {
-                    data = {
-                        typeFront: type,
-                        where: {
-                            type: 'or',
-                            value: [
-                                {
-                                    type: 'columnIsNull',
-                                    field: this.name,
-                                },
-                                {
-                                    type: 'columnEquals',
-                                    field: this.name,
-                                    value: ''
-                                }
-                            ]
-                        }
-                    }
-                } else {
-                    data = {
-                        typeFront: type,
-                        where: {
-                            type: 'and',
-                            value: [
-                                {
-                                    type: 'columnNotEquals',
-                                    field: this.name,
-                                    value: ''
-                                },
-                                {
-                                    type: 'columnIsNotNull',
-                                    field: this.name,
-                                    value: null
-                                }
-                            ]
-                        }
-                    }
-                }
-
-                return data;
-            }
-            else {
-
-                var value = this.$element.val().toString().trim();
-
-                value = value.trim();
-
-                if (value) {
-                    data = {
-                        value: value,
-                        type: 'column' . Espo.Utils.upperCaseFirst(type),
-                        data: {
-                            type: type,
-                            value: value
-                        }
-                    }
-
-                    return data;
-                }
+        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+            if (type === 'isEmpty') {
+                return {
+                    typeFront: type,
+                    where: {
+                        type: 'or',
+                        value: [
+                            {
+                                type: 'columnIsNull',
+                                field: this.name,
+                            },
+                            {
+                                type: 'columnEquals',
+                                field: this.name,
+                                value: '',
+                            },
+                        ],
+                    },
+                };
             }
 
-            return null;
+            return  {
+                typeFront: type,
+                where: {
+                    type: 'and',
+                    value: [
+                        {
+                            type: 'columnNotEquals',
+                            field: this.name,
+                            value: '',
+                        },
+                        {
+                            type: 'columnIsNotNull',
+                            field: this.name,
+                            value: null,
+                        },
+                    ],
+                },
+            };
         }
-    });
-});
+
+        let value = this.$element.val().toString().trim();
+
+        value = value.trim();
+
+        if (value) {
+            return {
+                value: value,
+                type: 'column' . Espo.Utils.upperCaseFirst(type),
+                data: {
+                    type: type,
+                    value: value,
+                },
+            };
+        }
+
+        return null;
+    }
+}
+
+export default VarcharColumnFieldView;
 

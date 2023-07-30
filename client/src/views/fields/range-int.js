@@ -26,262 +26,270 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/range-int',
-['views/fields/base', 'views/fields/int', 'lib!autonumeric'], function (Dep, Int, AutoNumeric) {
+import BaseFieldView from 'views/fields/base';
+import IntFieldView from 'views/fields/int';
+import AutoNumeric from 'autonumeric';
 
-    return Dep.extend({
+class RangeIntFieldView extends BaseFieldView {
 
-        type: 'rangeInt',
+    type = 'rangeInt'
 
-        listTemplate: 'fields/range-int/detail',
-        detailTemplate: 'fields/range-int/detail',
-        editTemplate: 'fields/range-int/edit',
+    listTemplate = 'fields/range-int/detail'
+    detailTemplate = 'fields/range-int/detail'
+    editTemplate = 'fields/range-int/edit'
 
-        validations: ['required', 'int', 'range', 'order'],
+    validations = ['required', 'int', 'range', 'order']
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+    // noinspection JSCheckFunctionSignatures
+    data() {
+        const data = super.data();
 
-            data.ucName = Espo.Utils.upperCaseFirst(this.name);
-            data.fromValue = this.model.get(this.fromField);
-            data.toValue = this.model.get(this.toField);
+        data.ucName = Espo.Utils.upperCaseFirst(this.name);
+        data.fromValue = this.model.get(this.fromField);
+        data.toValue = this.model.get(this.toField);
 
-            return data;
-        },
+        // noinspection JSValidateTypes
+        return data;
+    }
 
-        init: function () {
-            var ucName = Espo.Utils.upperCaseFirst(this.options.defs.name);
+    init() {
+        const ucName = Espo.Utils.upperCaseFirst(this.options.defs.name);
 
-            this.fromField = 'from' + ucName;
-            this.toField = 'to' + ucName;
+        this.fromField = 'from' + ucName;
+        this.toField = 'to' + ucName;
 
-            Dep.prototype.init.call(this);
-        },
+        super.init();
+    }
 
-        getValueForDisplay: function () {
-            let fromValue = this.model.get(this.fromField);
-            let toValue = this.model.get(this.toField);
+    getValueForDisplay() {
+        let fromValue = this.model.get(this.fromField);
+        let toValue = this.model.get(this.toField);
 
-            fromValue = isNaN(fromValue) ? null : fromValue;
-            toValue = isNaN(toValue) ? null : toValue;
+        fromValue = isNaN(fromValue) ? null : fromValue;
+        toValue = isNaN(toValue) ? null : toValue;
 
-            if (fromValue !== null && toValue !== null) {
-                return this.formatNumber(fromValue) + ' &#8211 ' + this.formatNumber(toValue);
+        if (fromValue !== null && toValue !== null) {
+            return this.formatNumber(fromValue) + ' &#8211 ' + this.formatNumber(toValue);
+        }
+        else if (fromValue) {
+            return '&#62;&#61; ' + this.formatNumber(fromValue);
+        }
+        else if (toValue) {
+            return '&#60;&#61; ' + this.formatNumber(toValue);
+        }
+
+        return this.translate('None');
+    }
+
+    setup() {
+        if (this.getPreferences().has('decimalMark')) {
+            this.decimalMark = this.getPreferences().get('decimalMark');
+        }
+        else {
+            if (this.getConfig().has('decimalMark')) {
+                this.decimalMark = this.getConfig().get('decimalMark');
             }
-            else if (fromValue) {
-                return '&#62;&#61; ' + this.formatNumber(fromValue);
+        }
+
+        if (this.getPreferences().has('thousandSeparator')) {
+            this.thousandSeparator = this.getPreferences().get('thousandSeparator');
+        }
+        else {
+            if (this.getConfig().has('thousandSeparator')) {
+                this.thousandSeparator = this.getConfig().get('thousandSeparator');
             }
-            else if (toValue) {
-                return '&#60;&#61; ' + this.formatNumber(toValue);
+        }
+    }
+
+    setupFinal() {
+        super.setupFinal();
+
+        this.setupAutoNumericOptions();
+    }
+
+    /**
+     * @protected
+     */
+    setupAutoNumericOptions() {
+        let separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
+        let decimalCharacter = '.';
+
+        if (separator === '.') {
+            decimalCharacter = ',';
+        }
+
+        this.autoNumericOptions = {
+            digitGroupSeparator: separator,
+            decimalCharacter: decimalCharacter,
+            modifyValueOnWheel: false,
+            decimalPlaces: 0,
+            selectOnFocus: false,
+            formulaMode: true,
+        };
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.mode === this.MODE_EDIT) {
+            this.$from = this.$el.find('[data-name="' + this.fromField + '"]');
+            this.$to = this.$el.find('[data-name="' + this.toField + '"]');
+
+            this.$from.on('change', () => {
+                this.trigger('change');
+            });
+
+            this.$to.on('change', () => {
+                this.trigger('change');
+            });
+
+            if (this.autoNumericOptions) {
+                // noinspection JSUnusedGlobalSymbols
+                this.autoNumericInstance1 = new AutoNumeric(this.$from.get(0), this.autoNumericOptions);
+                // noinspection JSUnusedGlobalSymbols
+                this.autoNumericInstance2 = new AutoNumeric(this.$to.get(0), this.autoNumericOptions);
             }
-            else {
-                return this.translate('None');
-            }
-        },
+        }
+    }
 
-        setup: function () {
-            if (this.getPreferences().has('decimalMark')) {
-                this.decimalMark = this.getPreferences().get('decimalMark');
-            }
-            else {
-                if (this.getConfig().has('decimalMark')) {
-                    this.decimalMark = this.getConfig().get('decimalMark');
-                }
-            }
-
-            if (this.getPreferences().has('thousandSeparator')) {
-                this.thousandSeparator = this.getPreferences().get('thousandSeparator');
-            }
-            else {
-                if (this.getConfig().has('thousandSeparator')) {
-                    this.thousandSeparator = this.getConfig().get('thousandSeparator');
-                }
-            }
-        },
-
-        setupFinal: function () {
-            Dep.prototype.setupFinal.call(this);
-
-            this.setupAutoNumericOptions();
-        },
-
-        /**
-         * @protected
-         */
-        setupAutoNumericOptions: function () {
-            let separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
-            let decimalCharacter = '.';
-
-            if (separator === '.') {
-                decimalCharacter = ',';
-            }
-
-            this.autoNumericOptions = {
-                digitGroupSeparator: separator,
-                decimalCharacter: decimalCharacter,
-                modifyValueOnWheel: false,
-                decimalPlaces: 0,
-                selectOnFocus: false,
-                formulaMode: true,
-            };
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode === this.MODE_EDIT) {
-                this.$from = this.$el.find('[data-name="' + this.fromField + '"]');
-                this.$to = this.$el.find('[data-name="' + this.toField + '"]');
-
-                this.$from.on('change', () => {
-                    this.trigger('change');
-                });
-
-                this.$to.on('change', () => {
-                    this.trigger('change');
-                });
-
-                if (this.autoNumericOptions) {
-                    this.autoNumericInstance1 = new AutoNumeric(this.$from.get(0), this.autoNumericOptions);
-                    this.autoNumericInstance2 = new AutoNumeric(this.$to.get(0), this.autoNumericOptions);
-                }
-            }
-        },
-
-        validateRequired: function () {
-            var validate = (name) => {
-                if (this.model.isRequired(name)) {
-                    if (this.model.get(name) === null) {
-                        var msg = this.translate('fieldIsRequired', 'messages')
-                            .replace('{field}', this.getLabelText());
-
-                        this.showValidationMessage(msg, '[data-name="'+name+'"]');
-
-                        return true;
-                    }
-                }
-            };
-
-            let result = false;
-
-            result = validate(this.fromField) || result;
-            result = validate(this.toField) || result;
-
-            return result;
-        },
-
-        validateInt: function () {
-            let validate = (name) => {
-                if (isNaN(this.model.get(name))) {
-                    var msg = this.translate('fieldShouldBeInt', 'messages')
+    validateRequired() {
+        const validate = (name) => {
+            if (this.model.isRequired(name)) {
+                if (this.model.get(name) === null) {
+                    var msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.getLabelText());
 
-                    this.showValidationMessage(msg, '[data-name="'+name+'"]');
-
-                    return true;
-                }
-            };
-
-            let result = false;
-
-            result = validate(this.fromField) || result;
-            result = validate(this.toField) || result;
-
-            return result;
-        },
-
-        validateRange: function () {
-            let validate = (name) => {
-                var value = this.model.get(name);
-
-                if (value === null) {
-                    return false;
-                }
-
-                var minValue = this.model.getFieldParam(name, 'min');
-                var maxValue = this.model.getFieldParam(name, 'max');
-
-                if (minValue !== null && maxValue !== null) {
-                    if (value < minValue || value > maxValue ) {
-                        let msg = this.translate('fieldShouldBeBetween', 'messages')
-                            .replace('{field}', this.translate(name, 'fields', this.entityType))
-                            .replace('{min}', minValue)
-                            .replace('{max}', maxValue);
-
-                        this.showValidationMessage(msg, '[data-name="'+name+'"]');
-
-                        return true;
-                    }
-                } else {
-                    if (minValue !== null) {
-                        if (value < minValue) {
-                            let msg = this.translate('fieldShouldBeLess', 'messages')
-                                .replace('{field}', this.translate(name, 'fields', this.entityType))
-                                .replace('{value}', minValue);
-
-                            this.showValidationMessage(msg, '[data-name="'+name+'"]');
-
-                            return true;
-                        }
-                    } else if (maxValue !== null) {
-                        if (value > maxValue) {
-                            let msg = this.translate('fieldShouldBeGreater', 'messages')
-                                .replace('{field}', this.translate(name, 'fields', this.entityType))
-                                .replace('{value}', maxValue);
-
-                            this.showValidationMessage(msg, '[data-name="'+name+'"]');
-
-                            return true;
-                        }
-                    }
-                }
-            };
-
-            let result = false;
-
-            result = validate(this.fromField) || result;
-            result = validate(this.toField) || result;
-
-            return result;
-        },
-
-        validateOrder: function () {
-            let fromValue = this.model.get(this.fromField);
-            let toValue = this.model.get(this.toField);
-
-            if (fromValue !== null && toValue !== null) {
-                if (fromValue > toValue) {
-                    let msg = this.translate('fieldShouldBeGreater', 'messages')
-                        .replace('{field}', this.translate(this.toField, 'fields', this.entityType))
-                        .replace('{value}', this.translate(this.fromField, 'fields', this.entityType));
-
-                    this.showValidationMessage(msg, '[data-name="'+this.fromField+'"]');
+                    this.showValidationMessage(msg, '[data-name="' + name + '"]');
 
                     return true;
                 }
             }
-        },
+        };
 
-        isRequired: function () {
-            return this.model.getFieldParam(this.fromField, 'required') ||
-                this.model.getFieldParam(this.toField, 'required');
-        },
+        let result = false;
 
-        parse: function (value) {
-            return Int.prototype.parse.call(this, value);
-        },
+        result = validate(this.fromField) || result;
+        result = validate(this.toField) || result;
 
-        formatNumber: function (value) {
-            return Int.prototype.formatNumberDetail.call(this, value);
-        },
+        return result;
+    }
 
-        fetch: function () {
-            let data = {};
+    // noinspection JSUnusedGlobalSymbols
+    validateInt() {
+        const validate = (name) => {
+            if (isNaN(this.model.get(name))) {
+                var msg = this.translate('fieldShouldBeInt', 'messages')
+                    .replace('{field}', this.getLabelText());
 
-            data[this.fromField] = this.parse(this.$from.val().trim());
-            data[this.toField] = this.parse(this.$to.val().trim());
+                this.showValidationMessage(msg, '[data-name="' + name + '"]');
 
-            return data;
-        },
-    });
-});
+                return true;
+            }
+        };
+
+        let result = false;
+
+        result = validate(this.fromField) || result;
+        result = validate(this.toField) || result;
+
+        return result;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateRange() {
+        const validate = (name) => {
+            var value = this.model.get(name);
+
+            if (value === null) {
+                return false;
+            }
+
+            var minValue = this.model.getFieldParam(name, 'min');
+            var maxValue = this.model.getFieldParam(name, 'max');
+
+            if (minValue !== null && maxValue !== null) {
+                if (value < minValue || value > maxValue) {
+                    let msg = this.translate('fieldShouldBeBetween', 'messages')
+                        .replace('{field}', this.translate(name, 'fields', this.entityType))
+                        .replace('{min}', minValue)
+                        .replace('{max}', maxValue);
+
+                    this.showValidationMessage(msg, '[data-name="' + name + '"]');
+
+                    return true;
+                }
+            } else {
+                if (minValue !== null) {
+                    if (value < minValue) {
+                        let msg = this.translate('fieldShouldBeLess', 'messages')
+                            .replace('{field}', this.translate(name, 'fields', this.entityType))
+                            .replace('{value}', minValue);
+
+                        this.showValidationMessage(msg, '[data-name="' + name + '"]');
+
+                        return true;
+                    }
+                } else if (maxValue !== null) {
+                    if (value > maxValue) {
+                        let msg = this.translate('fieldShouldBeGreater', 'messages')
+                            .replace('{field}', this.translate(name, 'fields', this.entityType))
+                            .replace('{value}', maxValue);
+
+                        this.showValidationMessage(msg, '[data-name="' + name + '"]');
+
+                        return true;
+                    }
+                }
+            }
+        };
+
+        let result = false;
+
+        result = validate(this.fromField) || result;
+        result = validate(this.toField) || result;
+
+        return result;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateOrder() {
+        let fromValue = this.model.get(this.fromField);
+        let toValue = this.model.get(this.toField);
+
+        if (fromValue !== null && toValue !== null) {
+            if (fromValue > toValue) {
+                let msg = this.translate('fieldShouldBeGreater', 'messages')
+                    .replace('{field}', this.translate(this.toField, 'fields', this.entityType))
+                    .replace('{value}', this.translate(this.fromField, 'fields', this.entityType));
+
+                this.showValidationMessage(msg, '[data-name="'+this.fromField+'"]');
+
+                return true;
+            }
+        }
+    }
+
+    isRequired() {
+        return this.model.getFieldParam(this.fromField, 'required') ||
+            this.model.getFieldParam(this.toField, 'required');
+    }
+
+    parse(value) {
+        return IntFieldView.prototype.parse.call(this, value);
+    }
+
+    formatNumber(value) {
+        return IntFieldView.prototype.formatNumberDetail.call(this, value);
+    }
+
+    fetch() {
+        let data = {};
+
+        data[this.fromField] = this.parse(this.$from.val().trim());
+        data[this.toField] = this.parse(this.$to.val().trim());
+
+        return data;
+    }
+}
+
+export default RangeIntFieldView;
