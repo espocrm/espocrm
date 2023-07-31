@@ -41,6 +41,10 @@
         "awsS3Storage": {
             "level": "system"
         },
+        "defaultFileStorage": {
+            "level": "admin",
+            "readOnly": true
+        },
         "smsProvider": {
             "level": "admin"
         },
