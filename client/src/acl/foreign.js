@@ -26,19 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('acl/foreign', ['acl'], function (Dep) {
+import Acl from 'acl';
 
-    /**
-     * To be used for entities for which access is determined by access to a foreign record.
-     */
-    return Dep.extend({
+/**
+ * To be used for entities for which access is determined by access to a foreign record.
+ */
+class ForeignAcl extends Acl {
 
-        checkIsOwner: function (model) {
-            return true;
-        },
+    checkIsOwner(model) {
+        return true;
+    }
 
-        checkInTeam: function (model) {
-            return true;
-        },
-    });
-});
+    checkInTeam(model) {
+        return true;
+    }
+}
+
+export default ForeignAcl;

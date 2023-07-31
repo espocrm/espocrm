@@ -26,16 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('acl/preferences', ['acl'], function (Dep) {
+import Acl from 'acl';
 
-    return Dep.extend({
+class PreferencesAcl extends Acl {
 
-        checkIsOwner: function (model) {
-            if (this.getUser().id === model.id) {
-                return true;
-            }
+    checkIsOwner(model) {
+        if (this.getUser().id === model.id) {
+            return true;
+        }
 
-            return false;
-        },
-    });
-});
+        return false;
+    }
+}
+
+export default PreferencesAcl;
