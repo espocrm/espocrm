@@ -26,33 +26,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/row-actions/relationship-view-and-edit', ['views/record/row-actions/relationship'], function (Dep) {
+import RelationshipActionsView from 'views/record/row-actions/relationship';
 
-    return Dep.extend({
+class RelationshipViewAndEditActionsView extends RelationshipActionsView {
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
+    getActionList() {
+        const list = [{
+            action: 'quickView',
+            label: 'View',
+            data: {
+                id: this.model.id,
+            },
+            link: '#' + this.model.entityType + '/view/' + this.model.id,
+        }];
+
+        if (this.options.acl.edit) {
+            list.push({
+                action: 'quickEdit',
+                label: 'Edit',
                 data: {
-                    id: this.model.id
+                    id: this.model.id,
                 },
-                link: '#' + this.model.entityType + '/view/' + this.model.id
-            }];
+                link: '#' + this.model.entityType + '/edit/' + this.model.id,
+            });
+        }
 
-            if (this.options.acl.edit) {
-                list.push({
-                    action: 'quickEdit',
-                    label: 'Edit',
-                    data: {
-                        id: this.model.id
-                    },
-                    link: '#' + this.model.entityType + '/edit/' + this.model.id
-                });
-            }
+        return list;
+    }
+}
 
-            return list;
-        },
-    });
-});
+export default RelationshipViewAndEditActionsView;
 

@@ -26,22 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/row-actions/relationship-remove-only', ['views/record/row-actions/relationship'], function (Dep) {
+import RelationshipActionsView from 'views/record/row-actions/relationship';
 
-    return Dep.extend({
+class RelationshipRemoveOnlyActionsView extends RelationshipActionsView {
 
-        getActionList: function () {
-            if (this.options.acl.delete) {
-                return [
-                    {
-                        action: 'removeRelated',
-                        label: 'Remove',
-                        data: {
-                            id: this.model.id
-                        }
-                    }
-                ];
-            }
-        },
-    });
-});
+    getActionList() {
+        if (this.options.acl.delete) {
+            return [
+                {
+                    action: 'removeRelated',
+                    label: 'Remove',
+                    data: {
+                        id: this.model.id,
+                    },
+                },
+            ];
+        }
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default RelationshipRemoveOnlyActionsView;

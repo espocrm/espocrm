@@ -30,6 +30,8 @@ import View from 'view';
 
 /**
  * Row actions.
+ *
+ * @todo The ability to define row actions in metadata. For main list view, relationship panels.
  */
 class DefaultRowActionsView extends View {
 

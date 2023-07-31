@@ -26,21 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/row-actions/view-only', ['views/record/row-actions/default'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+class ViewOnlyRowActionsView extends DefaultRowActionsView {
 
-        getActionList: function () {
-            return [
-                {
-                    action: 'quickView',
-                    label: 'View',
-                    data: {
-                        id: this.model.id
-                    },
-                    link: '#' + this.model.entityType + '/view/' + this.model.id
-                }
-            ];
-        },
-    });
-});
+    getActionList() {
+        return [
+            {
+                action: 'quickView',
+                label: 'View',
+                data: {
+                    id: this.model.id,
+                },
+                link: '#' + this.model.entityType + '/view/' + this.model.id,
+            },
+        ];
+    }
+}
+
+export default ViewOnlyRowActionsView;

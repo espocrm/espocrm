@@ -26,53 +26,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/row-actions/relationship', ['views/record/row-actions/default'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+class RelationshipActionsView extends DefaultRowActionsView {
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
+    getActionList() {
+        const list = [{
+            action: 'quickView',
+            label: 'View',
+            data: {
+                id: this.model.id
+            },
+            link: '#' + this.model.entityType + '/view/' + this.model.id,
+        }];
+
+        if (this.options.acl.edit) {
+            list.push({
+                action: 'quickEdit',
+                label: 'Edit',
                 data: {
-                    id: this.model.id
+                    id: this.model.id,
                 },
-                link: '#' + this.model.entityType + '/view/' + this.model.id
-            }];
+                link: '#' + this.model.entityType + '/edit/' + this.model.id,
+            });
 
-            if (this.options.acl.edit) {
+            if (!this.options.unlinkDisabled) {
                 list.push({
-                    action: 'quickEdit',
-                    label: 'Edit',
+                    action: 'unlinkRelated',
+                    label: 'Unlink',
                     data: {
-                        id: this.model.id
+                        id: this.model.id,
                     },
-                    link: '#' + this.model.entityType + '/edit/' + this.model.id
-                });
-
-                if (!this.options.unlinkDisabled) {
-                    list.push({
-                        action: 'unlinkRelated',
-                        label: 'Unlink',
-                        data: {
-                            id: this.model.id
-                        }
-                    });
-                }
-            }
-
-            if (this.options.acl.delete) {
-                list.push({
-                    action: 'removeRelated',
-                    label: 'Remove',
-                    data: {
-                        id: this.model.id
-                    }
                 });
             }
+        }
 
-            return list;
-        },
+        if (this.options.acl.delete) {
+            list.push({
+                action: 'removeRelated',
+                label: 'Remove',
+                data: {
+                    id: this.model.id,
+                },
+            });
+        }
 
-    });
-});
+        return list;
+    }
+}
+
+export default RelationshipActionsView;

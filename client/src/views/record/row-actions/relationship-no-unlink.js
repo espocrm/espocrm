@@ -26,44 +26,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/row-actions/relationship-no-unlink', ['views/record/row-actions/relationship'], function (Dep) {
+import RelationshipActionsView from 'views/record/row-actions/relationship';
 
-    return Dep.extend({
+class RelationshipNoUnlinkActionsView extends RelationshipActionsView {
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
-                data: {
-                    id: this.model.id
-                },
-                link: '#' + this.model.entityType + '/view/' + this.model.id
-            }];
+    getActionList() {
+        let list = [{
+            action: 'quickView',
+            label: 'View',
+            data: {
+                id: this.model.id,
+            },
+            link: '#' + this.model.entityType + '/view/' + this.model.id,
+        }];
 
-            if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'quickEdit',
-                        label: 'Edit',
-                        data: {
-                            id: this.model.id
-                        },
-                        link: '#' + this.model.entityType + '/edit/' + this.model.id
-                    }
-                ]);
-            }
-
-            if (this.options.acl.delete) {
-                list.push({
-                    action: 'removeRelated',
-                    label: 'Remove',
+        if (this.options.acl.edit) {
+            list = list.concat([
+                {
+                    action: 'quickEdit',
+                    label: 'Edit',
                     data: {
                         id: this.model.id
-                    }
-                });
-            }
+                    },
+                    link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                }
+            ]);
+        }
 
-            return list;
-        },
-    });
-});
+        if (this.options.acl.delete) {
+            list.push({
+                action: 'removeRelated',
+                label: 'Remove',
+                data: {
+                    id: this.model.id,
+                },
+            });
+        }
+
+        return list;
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default RelationshipNoUnlinkActionsView;
