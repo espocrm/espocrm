@@ -314,6 +314,13 @@ class BaseFieldView extends View {
     lastValidationMessage = null
 
     /**
+     * Additional data.
+     *
+     * @type {Object.<string, *>}
+     */
+    dataObject
+
+    /**
      * Is the field required.
      *
      * @returns {boolean}
@@ -698,6 +705,7 @@ class BaseFieldView extends View {
         this.entityType = this.model.entityType || this.model.name;
 
         this.recordHelper = this.options.recordHelper;
+        this.dataObject = Espo.Utils.clone(this.options.dataObject || {});
 
         if (!this.labelText) {
             this.labelText = this.translate(this.name, 'fields', this.entityType);

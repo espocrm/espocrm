@@ -36,7 +36,7 @@ class EmailFolderDashletFieldView extends EnumFieldView {
     setup() {
         super.setup();
 
-        let userId = this.model.userId ?? this.getUser().id;
+        let userId = this.dataObject.userId ?? this.getUser().id;
 
         this.wait(
             Espo.Ajax.getRequest('EmailFolder/action/listAll', {userId: userId})

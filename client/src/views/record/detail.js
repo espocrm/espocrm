@@ -60,6 +60,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {Object.<string, *>} [attributes]
      * @property {module:views/record/detail~button[]} [buttonList] Buttons.
      * @property {module:views/record/detail~dropdownItem[]} [dropdownItemList] Dropdown items.
+     * @property {Object.<string, *>} [dataObject] Additional data.
      */
 
     /**
@@ -3181,6 +3182,7 @@ class DetailRecordView extends BaseRecordView {
                     o.validateCallback = () => this.validateField(name);
 
                     o.recordHelper = this.recordHelper;
+                    o.dataObject = this.options.dataObject || {};
 
                     if (cellDefs.options) {
                         for (let optionName in cellDefs.options) {

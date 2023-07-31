@@ -28,6 +28,7 @@
 
 import ModalView from 'views/modal';
 import Model from 'model';
+import EditForModalRecordView from 'views/record/edit-for-modal';
 
 class BaseDashletOptionsModalView extends ModalView {
 
@@ -98,16 +99,16 @@ class BaseDashletOptionsModalView extends ModalView {
         layout = [{rows: []}];
 
         let i = 0;
-        let a = [];
+        let row = [];
 
         for (let field in this.fields) {
             if (!(i % 2)) {
-                a = [];
+                row = [];
 
-                layout[0].rows.push(a);
+                layout[0].rows.push(row);
             }
 
-            a.push({name: field});
+            row.push({name: field});
 
             i++;
         }
@@ -134,6 +135,11 @@ class BaseDashletOptionsModalView extends ModalView {
         model.setDefs({fields: this.fields});
         model.set(this.optionsData);
 
+        this.dataObject = {
+            name: this.name,
+            userId: this.options.userId,
+        };
+
         model.dashletName = this.name;
         model.userId = this.options.userId;
 
@@ -142,11 +148,13 @@ class BaseDashletOptionsModalView extends ModalView {
 
         this.setupBeforeFinal();
 
-        this.createView('record', 'views/record/edit-for-modal', {
+        this.recordView = new EditForModalRecordView({
             model: model,
             detailLayout: this.getDetailLayout(),
-            selector: '.record',
+            dataObject: this.dataObject,
         });
+
+        this.assignView('record', this.recordView, '.record');
 
         this.$header =
             $('<span>')
@@ -171,7 +179,7 @@ class BaseDashletOptionsModalView extends ModalView {
      * @return {module:views/record/edit}
      */
     getRecordView() {
-        return this.getView('record');
+        return this.recordView;
     }
 
     /**
