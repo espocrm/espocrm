@@ -136,7 +136,7 @@ class BaseDashletOptionsModalView extends ModalView {
         model.set(this.optionsData);
 
         this.dataObject = {
-            name: this.name,
+            dashletName: this.name,
             userId: this.options.userId,
         };
 

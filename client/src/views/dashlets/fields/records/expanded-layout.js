@@ -26,165 +26,160 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/fields/records/expanded-layout', ['views/fields/base', 'ui/multi-select'],
-function (Dep, /** module:ui/multi-select*/MultiSelect) {
+import BaseFieldView from 'views/fields/base';
+import MultiSelect from 'ui/multi-select';
 
-    return Dep.extend({
+class ExpandedLayoutDashletFieldView extends BaseFieldView {
 
-        listTemplate: 'dashlets/fields/records/expanded-layout/edit',
+    listTemplate = 'dashlets/fields/records/expanded-layout/edit'
+    detailTemplate = 'dashlets/fields/records/expanded-layout/edit'
+    editTemplate ='dashlets/fields/records/expanded-layout/edit'
 
-        detailTemplate: 'dashlets/fields/records/expanded-layout/edit',
+    delimiter = ':,:'
 
-        editTemplate: 'dashlets/fields/records/expanded-layout/edit',
+    getRowHtml(row, i) {
+        row = row || [];
 
-        delimiter: ':,:',
+        let list = [];
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+        row.forEach(item => {
+            list.push(item.name);
+        });
 
-        getRowHtml: function (row, i) {
-            row = row || [];
+        return $('<div>')
+            .append(
+                $('<input>')
+                    .attr('type', 'text')
+                    .addClass('row-' + i.toString())
+                    .attr('value', list.join(this.delimiter))
+            )
+            .get(0).outerHTML;
+    }
 
-            let list = [];
+    afterRender() {
+        this.$container = this.$el.find('>.layout-container');
 
-            row.forEach(item => {
-                list.push(item.name);
-            });
+        let rowList = (this.model.get(this.name) || {}).rows || [];
 
-            return $('<div>')
-                .append(
-                    $('<input>')
-                        .attr('type', 'text')
-                        .addClass('row-' + i.toString())
-                        .attr('value', list.join(this.delimiter))
-                )
-                .get(0).outerHTML;
-        },
+        rowList = Espo.Utils.cloneDeep(rowList);
 
-        afterRender: function () {
-            this.$container = this.$el.find('>.layout-container');
+        rowList.push([]);
 
-            let rowList = (this.model.get(this.name) || {}).rows || [];
+        let fieldDataList = this.getFieldDataList();
 
-            rowList = Espo.Utils.cloneDeep(rowList);
+        rowList.forEach((row, i) => {
+            let rowHtml = this.getRowHtml(row, i);
+            let $row = $(rowHtml);
 
-            rowList.push([]);
+            this.$container.append($row);
 
-            let fieldDataList = this.getFieldDataList();
+            let $input = $row.find('input');
 
-            rowList.forEach((row, i) => {
-                let rowHtml = this.getRowHtml(row, i);
-                let $row = $(rowHtml);
-
-                this.$container.append($row);
-
-                let $input = $row.find('input');
-
-                /** @type {module:ui/multi-select~Options} */
-                let multiSelectOptions = {
-                    items: fieldDataList,
-                    delimiter: this.delimiter,
-                    matchAnyWord: this.matchAnyWord,
-                    draggable: true,
-                };
-
-                MultiSelect.init($input, multiSelectOptions);
-
-                $input.on('change', () => {
-                    this.trigger('change');
-                    this.reRender();
-                });
-            });
-        },
-
-        getFieldDataList: function () {
-            var scope = this.model.get('entityType') ||
-                this.getMetadata().get(['dashlets', this.model.dashletName, 'entityType']);
-
-            if (!scope) {
-                return [];
-            }
-
-            let fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
-
-            let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(scope);
-
-            let fieldList = Object.keys(fields)
-                .sort((v1, v2) => {
-                     return this.translate(v1, 'fields', scope)
-                         .localeCompare(this.translate(v2, 'fields', scope));
-                })
-                .filter(item => {
-                    if (
-                        fields[item].disabled ||
-                        fields[item].listLayoutDisabled ||
-                        fields[item].utility
-                    ) {
-                        return false;
-                    }
-
-                    if (
-                        fields[item].layoutAvailabilityList &&
-                        !fields[item].layoutAvailabilityList.includes('list')
-                    ) {
-                        return false;
-                    }
-
-                    if (forbiddenFieldList.indexOf(item) !== -1) {
-                        return false;
-                    }
-
-                    return true;
-                });
-
-            let dataList = [];
-
-            fieldList.forEach(item => {
-                dataList.push({
-                    value: item,
-                    text: this.translate(item, 'fields', scope),
-                });
-            });
-
-            return dataList;
-        },
-
-        fetch: function () {
-            var value = {
-                rows: [],
+            /** @type {module:ui/multi-select~Options} */
+            let multiSelectOptions = {
+                items: fieldDataList,
+                delimiter: this.delimiter,
+                matchAnyWord: this.matchAnyWord,
+                draggable: true,
             };
 
-            this.$el.find('input').each((i, el) => {
-                let row = [];
-                let list = ($(el).val() || '').split(this.delimiter);
+            MultiSelect.init($input, multiSelectOptions);
 
-                if (list.length === 1 && list[0] === '') {
-                    list = [];
+            $input.on('change', () => {
+                this.trigger('change');
+                this.reRender();
+            });
+        });
+    }
+
+    getFieldDataList() {
+        const scope = this.model.get('entityType') ||
+            this.getMetadata().get(['dashlets', this.dataObject.dashletName, 'entityType']);
+
+        if (!scope) {
+            return [];
+        }
+
+        let fields = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
+
+        let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(scope);
+
+        let fieldList = Object.keys(fields)
+            .sort((v1, v2) => {
+                 return this.translate(v1, 'fields', scope)
+                     .localeCompare(this.translate(v2, 'fields', scope));
+            })
+            .filter(item => {
+                if (
+                    fields[item].disabled ||
+                    fields[item].listLayoutDisabled ||
+                    fields[item].utility
+                ) {
+                    return false;
                 }
 
-                if (list.length === 0) {
-                    return;
+                if (
+                    fields[item].layoutAvailabilityList &&
+                    !fields[item].layoutAvailabilityList.includes('list')
+                ) {
+                    return false;
                 }
 
-                list.forEach(item => {
-                    let o = {name: item};
+                if (forbiddenFieldList.indexOf(item) !== -1) {
+                    return false;
+                }
 
-                    if (item === 'name') {
-                        o.link = true;
-                    }
-
-                    row.push(o);
-                });
-
-                value.rows.push(row);
+                return true;
             });
 
-            let data = {};
+        let dataList = [];
 
-            data[this.name] = value;
+        fieldList.forEach(item => {
+            dataList.push({
+                value: item,
+                text: this.translate(item, 'fields', scope),
+            });
+        });
 
-            return data;
-        },
-    });
-});
+        return dataList;
+    }
+
+    fetch() {
+        var value = {
+            rows: [],
+        };
+
+        this.$el.find('input').each((i, el) => {
+            let row = [];
+            let list = ($(el).val() || '').split(this.delimiter);
+
+            if (list.length === 1 && list[0] === '') {
+                list = [];
+            }
+
+            if (list.length === 0) {
+                return;
+            }
+
+            list.forEach(item => {
+                let o = {name: item};
+
+                if (item === 'name') {
+                    o.link = true;
+                }
+
+                row.push(o);
+            });
+
+            value.rows.push(row);
+        });
+
+        let data = {};
+
+        data[this.name] = value;
+
+        return data;
+    }
+}
+
+export default ExpandedLayoutDashletFieldView;
