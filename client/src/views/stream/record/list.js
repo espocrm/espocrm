@@ -30,6 +30,12 @@
 
 import ListExpandedRecordView from 'views/record/list-expanded';
 
+/**
+ * @property collection
+ * @memberOf ListStreamRecordView#
+ * @type module:collections/note
+ */
+
 class ListStreamRecordView extends ListExpandedRecordView {
 
     type = 'listStream'

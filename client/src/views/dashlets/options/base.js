@@ -36,7 +36,6 @@ class BaseDashletOptionsModalView extends ModalView {
     cssName = 'options-modal'
     className = 'dialog dialog-record'
     name = ''
-    fieldsMode = 'edit'
     escapeDisabled = true
     saveDisabled = false;
 

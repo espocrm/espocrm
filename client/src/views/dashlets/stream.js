@@ -26,36 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/stream', ['views/dashlets/abstract/base'], function (Dep) {
+import BaseDashletView from 'views/dashlets/abstract/base';
 
-    return Dep.extend({
+class StreamDashletView extends BaseDashletView {
 
-        name: 'Stream',
+    name = 'Stream'
 
-        templateContent: '<div class="list-container">{{{list}}}</div>',
+    templateContent = '<div class="list-container">{{{list}}}</div>'
 
-        actionRefresh: function () {
-            let listView = this.getView('list');
+    actionRefresh() {
+        if (!this.getRecordView()) {
+            return;
+        }
 
-            if (!listView) {
-                return;
+        this.getRecordView().showNewRecords();
+    }
+
+    afterRender() {
+        this.getCollectionFactory().create('Note', collection => {
+            this.collection = collection;
+
+            collection.url = 'Stream';
+            collection.maxSize = this.getOption('displayRecords');
+
+            if (this.getOption('skipOwn')) {
+                collection.data.skipOwn = true;
             }
 
-            listView.showNewRecords();
-        },
-
-        afterRender: function () {
-            this.getCollectionFactory().create('Note', (collection) => {
-                this.collection = collection;
-
-                collection.url = 'Stream';
-                collection.maxSize = this.getOption('displayRecords');
-
-                if (this.getOption('skipOwn')) {
-                    collection.data.skipOwn = true;
-                }
-
-                this.listenToOnce(collection, 'sync', () => {
+            collection.fetch()
+                .then(() => {
                     this.createView('list', 'views/stream/record/list', {
                         selector: '> .list-container',
                         collection: collection,
@@ -64,43 +63,51 @@ define('views/dashlets/stream', ['views/dashlets/abstract/base'], function (Dep)
                     }, view => {
                         view.render();
                     });
-                });
+                })
+        });
+    }
 
-                collection.fetch();
-            });
-        },
+    /**
+     * @return {module:views/stream/record/list}
+     */
+    getRecordView() {
+        return this.getView('list');
+    }
 
-        setupActionList: function () {
+    setupActionList() {
+        this.actionList.unshift({
+            name: 'viewList',
+            text: this.translate('View'),
+            iconHtml: '<span class="fas fa-align-justify"></span>',
+            url: '#Stream',
+        });
+
+        if (!this.getUser().isPortal()) {
             this.actionList.unshift({
-                name: 'viewList',
-                text: this.translate('View'),
-                iconHtml: '<span class="fas fa-align-justify"></span>',
-                url: '#Stream',
+                name: 'create',
+                text: this.translate('Create Post', 'labels'),
+                iconHtml: '<span class="fas fa-plus"></span>',
             });
+        }
+    }
 
-            if (!this.getUser().isPortal()) {
-                this.actionList.unshift({
-                    name: 'create',
-                    text: this.translate('Create Post', 'labels'),
-                    iconHtml: '<span class="fas fa-plus"></span>',
-                });
-            }
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionCreate() {
+        this.createView('dialog', 'views/stream/modals/create-post', {}, view => {
+            view.render();
 
-        actionCreate: function () {
-            this.createView('dialog', 'views/stream/modals/create-post', {}, (view) => {
-                view.render();
+            this.listenToOnce(view, 'after:save', () => {
+                view.close();
 
-                this.listenToOnce(view, 'after:save', () => {
-                    view.close();
-
-                    this.actionRefresh();
-                });
+                this.actionRefresh();
             });
-        },
+        });
+    }
 
-        actionViewList: function () {
-            this.getRouter().navigate('#Stream', {trigger: true});
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionViewList() {
+        this.getRouter().navigate('#Stream', {trigger: true});
+    }
+}
+
+export default StreamDashletView;

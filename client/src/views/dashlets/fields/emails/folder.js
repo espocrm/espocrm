@@ -26,43 +26,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/fields/emails/folder', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+class EmailFolderDashletFieldView extends EnumFieldView {
 
-        /** @type {{id: string, name: string}[]|null} */
-        folderDataList: null,
+    /** @type {{id: string, name: string}[]} */
+    folderDataList
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            let userId = this.model.userId ?? this.getUser().id;
+        let userId = this.model.userId ?? this.getUser().id;
 
-            this.wait(
-                Espo.Ajax.getRequest('EmailFolder/action/listAll', {userId: userId})
-                    .then(data => this.folderDataList = data.list)
-                    .then(() => this.setupOptions())
-            );
+        this.wait(
+            Espo.Ajax.getRequest('EmailFolder/action/listAll', {userId: userId})
+                .then(data => this.folderDataList = data.list)
+                .then(() => this.setupOptions())
+        );
 
-            this.setupOptions();
-        },
+        this.setupOptions();
+    }
 
-        setupOptions: function () {
-            if (!this.folderDataList) {
-                return;
-            }
+    setupOptions() {
+        if (!this.folderDataList) {
+            return;
+        }
 
-            this.params.options = this.folderDataList
-                .map(item => item.id)
-                .filter(item => item !== 'inbox' && item !== 'trash');
+        this.params.options = this.folderDataList
+            .map(item => item.id)
+            .filter(item => item !== 'inbox' && item !== 'trash');
 
-            this.params.options.unshift('');
+        this.params.options.unshift('');
 
-            this.translatedOptions = {'': this.translate('inbox', 'presetFilters', 'Email')};
+        this.translatedOptions = {'': this.translate('inbox', 'presetFilters', 'Email')};
 
-            this.folderDataList.forEach(item => {
-                this.translatedOptions[item.id] = item.name;
-            });
-        },
-    });
-});
+        this.folderDataList.forEach(item => {
+            this.translatedOptions[item.id] = item.name;
+        });
+    }
+}
+
+export default EmailFolderDashletFieldView;

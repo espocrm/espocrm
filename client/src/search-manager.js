@@ -33,9 +33,9 @@
  *
  * @typedef {Object} module:search-manager~data
  *
- * @property {string} primary A primary filter.
- * @property {Object.<string,boolean>} bool Bool filters.
- * @property {{string: module:search-manager~advancedFilter}} advanced Advanced filters (field filters).
+ * @property {string} [primary] A primary filter.
+ * @property {Object.<string, boolean>} [bool] Bool filters.
+ * @property {{string: module:search-manager~advancedFilter}} [advanced] Advanced filters (field filters).
  * Contains data needed for both the backend and frontend. Keys are field names.
  */
 
