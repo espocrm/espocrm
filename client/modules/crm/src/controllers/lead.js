@@ -26,14 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:controllers/lead', ['controllers/record'], function (Dep) {
+import RecordController from 'controllers/record';
 
-    return Dep.extend({
+class LeadController extends RecordController {
 
-        actionConvert: function (id) {
-            this.main('crm:views/lead/convert', {
-                id: id
-            });
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionConvert(id) {
+        this.main('crm:views/lead/convert', {id: id});
+    }
+}
+
+export default LeadController;

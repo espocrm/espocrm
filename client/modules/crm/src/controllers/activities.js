@@ -26,65 +26,61 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:controllers/activities', ['controller'], function (Dep) {
+import Controller from 'controller';
+
+class ActivitiesController extends Controller {
+
+    checkAccess(action) {
+        if (this.getAcl().check('Activities')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionActivities(options) {
+        this.processList('activities', options.entityType, options.id, options.targetEntityType);
+    }
+
+    actionHistory(options) {
+        this.processList('history', options.entityType, options.id, options.targetEntityType);
+    }
 
     /**
-     * @class
-     * @name Class
-     * @extends module:controller
-     * @memberOf module:crm:controllers/activities
+     * @param {'activities'|'history'} type
+     * @param {string} entityType
+     * @param {string} id
+     * @param {string} targetEntityType
      */
-    return Dep.extend(/** @lends module:crm:controllers/activities~Class# */{
+    processList(type, entityType, id, targetEntityType) {
+        let viewName = 'crm:views/activities/list'
 
-        checkAccess: function () {
-            if (this.getAcl().check('Activities')) {
-                return true;
-            }
+        let model;
 
-            return false;
-        },
+        this.modelFactory.create(entityType)
+            .then(m => {
+                model = m;
+                model.id = id;
 
-        actionActivities: function (options) {
-            this.processList('activities', options.entityType, options.id, options.targetEntityType);
-        },
+                return model.fetch({main: true});
+            })
+            .then(() => {
+                return this.collectionFactory.create(targetEntityType);
+            })
+            .then(collection => {
+                collection.url = 'Activities/' + model.entityType + '/' + id + '/' +
+                    type + '/list/' + targetEntityType;
 
-        actionHistory: function (options) {
-            this.processList('history', options.entityType, options.id, options.targetEntityType);
-        },
-
-        /**
-         * @param {'activities'|'history'} type
-         * @param {string} entityType
-         * @param {string} id
-         * @param {string} targetEntityType
-         */
-        processList: function (type, entityType, id, targetEntityType) {
-            let viewName = 'crm:views/activities/list'
-
-            let model;
-
-            this.modelFactory.create(entityType)
-                .then(m => {
-                    model = m;
-                    model.id = id;
-
-                    return model.fetch({main: true});
-                })
-                .then(() => {
-                    return this.collectionFactory.create(targetEntityType);
-                })
-                .then(collection => {
-                    collection.url = 'Activities/' + model.entityType + '/' + id + '/' +
-                        type + '/list/' + targetEntityType;
-
-                    this.main(viewName, {
-                        scope: entityType,
-                        model: model,
-                        collection: collection,
-                        link:  type + '_' + targetEntityType,
-                        type: type,
-                    });
+                this.main(viewName, {
+                    scope: entityType,
+                    model: model,
+                    collection: collection,
+                    link:  type + '_' + targetEntityType,
+                    type: type,
                 });
-        },
-    });
-});
+            });
+    }
+}
+
+export default ActivitiesController;

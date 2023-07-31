@@ -365,7 +365,7 @@ class Controller {
             return;
         }
 
-        let msg = action ?
+        const msg = action ?
             "Denied access to action '" + this.name + "#" + action + "'" :
             "Denied access to scope '" + this.name + "'";
 

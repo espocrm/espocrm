@@ -26,8 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import KnowledgeBaseHelper from "modules/crm/knowledge-base-helper";
-import Dep from "views/record/detail";
+import KnowledgeBaseHelper from 'modules/crm/knowledge-base-helper';
+import Dep from 'views/record/detail';
 
 /**
  * @class

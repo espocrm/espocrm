@@ -26,47 +26,49 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:acl/meeting', ['acl'], function (Dep) {
+import Acl from 'acl';
 
-    return Dep.extend({
+class MeetingAcl extends Acl {
 
-        checkModelRead: function (model, data, precise) {
-            return this._checkModelCustom('read', model, data, precise);
-        },
+    // noinspection JSUnusedGlobalSymbols
+    checkModelRead(model, data, precise) {
+        return this._checkModelCustom('read', model, data, precise);
+    }
 
-        checkModelStream: function (model, data, precise) {
-            return this._checkModelCustom('stream', model, data, precise);
-        },
+    // noinspection JSUnusedGlobalSymbols
+    checkModelStream(model, data, precise) {
+        return this._checkModelCustom('stream', model, data, precise);
+    }
 
-        _checkModelCustom: function (action, model, data, precise) {
-            let result = this.checkModel(model, data, action, precise);
+    _checkModelCustom(action, model, data, precise) {
+        let result = this.checkModel(model, data, action, precise);
 
-            if (result) {
+        if (result) {
+            return true;
+        }
+
+        if (data === false) {
+            return false;
+        }
+
+        let d = data || {};
+
+        if (d[action] === 'no') {
+            return false;
+        }
+
+        if (model.has('usersIds')) {
+            if (~(model.get('usersIds') || []).indexOf(this.getUser().id)) {
                 return true;
             }
+        }
+        else if (precise) {
+            return null;
+        }
 
-            if (data === false) {
-                return false;
-            }
+        return result;
+    }
+}
 
-            let d = data || {};
-
-            if (d[action] === 'no') {
-                return false;
-            }
-
-            if (model.has('usersIds')) {
-                if (~(model.get('usersIds') || []).indexOf(this.getUser().id)) {
-                    return true;
-                }
-            } else {
-                if (precise) {
-                    return null;
-                }
-            }
-
-            return result;
-        },
-    });
-});
+export default MeetingAcl;
 

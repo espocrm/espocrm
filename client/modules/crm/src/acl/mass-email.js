@@ -26,24 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:acl/mass-email', ['acl'], function (Dep) {
+import Acl from 'acl';
 
-    return Dep.extend({
+class MassEmailAcl extends Acl {
 
-        checkIsOwner: function (model) {
-            if (model.has('campaignId')) {
-                return true;
-            }
-
-            return Dep.prototype.checkIsOwner.call(this, model);
-        },
-
-        checkInTeam: function (model) {
-            if (model.has('campaignId')) {
-                return true;
-            }
-
-            return Dep.prototype.checkInTeam.call(this, model);
+    checkIsOwner(model) {
+        if (model.has('campaignId')) {
+            return true;
         }
-    });
-});
+
+        return super.checkIsOwner(model);
+    }
+
+    checkInTeam(model) {
+        if (model.has('campaignId')) {
+            return true;
+        }
+
+        return super.checkInTeam(model);
+    }
+}
+
+export default MassEmailAcl;

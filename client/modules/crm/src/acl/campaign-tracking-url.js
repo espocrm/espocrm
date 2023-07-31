@@ -26,24 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:acl/campaign-tracking-url', ['acl'], function (Dep) {
+import Acl from 'acl';
 
-    return Dep.extend({
+class CampaignTrackingUrlAcl extends Acl {
 
-        checkIsOwner: function (model) {
-            if (model.has('campaignId')) {
-                return true;
-            }
-
-            return false;
-        },
-
-        checkInTeam: function (model) {
-            if (model.has('campaignId')) {
-                return true;
-            }
-
-            return false;
+    checkIsOwner(model) {
+        if (model.has('campaignId')) {
+            return true;
         }
-    });
-});
+
+        return false;
+    }
+
+    checkInTeam(model) {
+        if (model.has('campaignId')) {
+            return true;
+        }
+
+        return false;
+    }
+}
+
+export default CampaignTrackingUrlAcl;

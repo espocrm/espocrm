@@ -26,34 +26,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:controllers/unsubscribe', ['controller'], function (Dep) {
+import Controller from 'controller';
 
-    return Dep.extend({
+class UnsubscribeController extends Controller {
 
-        actionUnsubscribe: function (data) {
-            var viewName = data.view || 'crm:views/campaign/unsubscribe';
+    // noinspection JSUnusedGlobalSymbols
+    actionUnsubscribe(data) {
+        const viewName = data.view || 'crm:views/campaign/unsubscribe';
 
-            var template = this.getMetadata().get(['clientDefs', 'Campaign', 'unsubscribeTemplate']);
+        this.entire(viewName, {
+            actionData: data.actionData,
+            template: data.template,
+        }, view => {
+            view.render();
+        });
+    }
 
-            this.entire(viewName, {
-                actionData: data.actionData,
-                template: data.template,
-            }, function (view) {
-                view.render();
-            });
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionSubscribeAgain(data) {
+        const viewName = data.view || 'crm:views/campaign/subscribe-again';
 
-        actionSubscribeAgain: function (data) {
-            var viewName = data.view || 'crm:views/campaign/subscribe-again';
+        this.entire(viewName, {
+            actionData: data.actionData,
+            template: data.template,
+        }, view => {
+            view.render();
+        });
+    }
+}
 
-            var template = this.getMetadata().get(['clientDefs', 'Campaign', 'subscribeTemplate']);
-
-            this.entire(viewName, {
-                actionData: data.actionData,
-                template: data.template,
-            }, function (view) {
-                view.render();
-            });
-        },
-    });
-});
+export default UnsubscribeController;

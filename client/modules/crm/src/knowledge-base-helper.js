@@ -28,7 +28,10 @@
 
 import Ajax from 'ajax';
 
-export default class {
+/**
+ * @todo Move to modules/crm/helpers.
+ */
+class KnowledgeBaseHelper {
 
     /**
      * @param {module:language} language
@@ -63,3 +66,5 @@ export default class {
         });
     }
 }
+
+export default KnowledgeBaseHelper;
