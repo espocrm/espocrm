@@ -208,4 +208,5 @@ _.extend(Handler.prototype, {
 
 Object.assign(Handler.prototype, Events);
 
+// noinspection JSUnusedGlobalSymbols
 export default Handler;

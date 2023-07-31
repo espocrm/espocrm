@@ -26,20 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:handlers/opportunity/contacts-create', ['handlers/create-related'], Dep => {
+import CreateRelated from 'handlers/create-related';
 
-    return class extends Dep {
-        /**
-         * @param {module:model} model
-         */
-        getAttributes(model) {
-            let attributes = {};
+class ContactsCreateHandler extends CreateRelated {
 
-            if (model.get('accountId')) {
-                attributes['accountsIds'] = [model.get('accountId')]
-            }
+    getAttributes(model) {
+        const attributes = {};
 
-            return Promise.resolve(attributes);
+        if (model.get('accountId')) {
+            attributes['accountsIds'] = [model.get('accountId')]
         }
+
+        return Promise.resolve(attributes);
     }
-});
+}
+
+export default ContactsCreateHandler;

@@ -26,16 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:handlers/campaign/mass-emails-create', ['handlers/create-related'], Dep => {
+import CreateRelated from 'handlers/create-related';
 
-    return class extends Dep {
-        /**
-         * @param {module:model} model
-         */
-        getAttributes(model) {
-            return Promise.resolve({
-                name: model.get('name') + ' ' + this.viewHelper.dateTime.getToday(),
-            });
-        }
+class MassEmailsCreateHandler extends CreateRelated {
+
+    getAttributes(model) {
+        return Promise.resolve({
+            name: model.get('name') + ' ' + this.viewHelper.dateTime.getToday(),
+        });
     }
-});
+}
+
+export default MassEmailsCreateHandler;
