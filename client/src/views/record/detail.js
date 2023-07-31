@@ -3312,6 +3312,7 @@ class DetailRecordView extends BaseRecordView {
             recordHelper: this.recordHelper,
             recordViewObject: this,
             isReturn: this.options.isReturn,
+            dataObject: this.options.dataObject,
         });
     }
 
@@ -3369,6 +3370,7 @@ class DetailRecordView extends BaseRecordView {
             recordViewObject: this,
             portalLayoutDisabled: this.portalLayoutDisabled,
             isReturn: this.options.isReturn,
+            dataObject: this.options.dataObject,
         });
     }
 

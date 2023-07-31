@@ -365,6 +365,7 @@ class PanelsContainerRecordView extends View {
                 readOnly: this.readOnly,
                 disabled: p.hidden || false,
                 recordViewObject: this.recordViewObject,
+                dataObject: this.options.dataObject,
             };
 
             options = _.extend(options, p.options);

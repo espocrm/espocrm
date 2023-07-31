@@ -220,6 +220,7 @@ class SidePanelView extends View {
                 params: params || {},
             },
             mode: mode || this.mode,
+            dataObject: this.options.dataObject,
         };
 
         if (options) {

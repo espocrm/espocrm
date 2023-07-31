@@ -120,7 +120,7 @@ class BottomPanelView extends View {
         this.setupFields();
 
         this.fieldList = this.fieldList.map((d) => {
-            var item = d;
+            let item = d;
 
             if (typeof item !== 'object') {
                 item = {
@@ -224,14 +224,15 @@ class BottomPanelView extends View {
      * @private
      */
     createFields() {
-        this.getFieldList().forEach((item) => {
-            var view = null;
-            var field;
-            var readOnly = null;
+        this.getFieldList().forEach(item => {
+            let view = null;
+            let field;
+            let readOnly = null;
 
             if (typeof item === 'object') {
                 field = item.name;
                 view = item.view;
+
                 if ('readOnly' in item) {
                     readOnly = item.readOnly;
                 }
@@ -260,13 +261,13 @@ class BottomPanelView extends View {
      * @param {Object<string,*>} [options] View options.
      */
     createField(field, viewName, params, mode, readOnly, options) {
-        var type = this.model.getFieldType(field) || 'base';
+        const type = this.model.getFieldType(field) || 'base';
 
         viewName = viewName ||
             this.model.getFieldParam(field, 'view') ||
             this.getFieldManager().getViewName(type);
 
-        var o = {
+        const o = {
             model: this.model,
             selector: '.field[data-name="' + field + '"]',
             defs: {
@@ -274,15 +275,16 @@ class BottomPanelView extends View {
                 params: params || {},
             },
             mode: mode || this.mode,
+            dataObject: this.options.dataObject,
         };
 
         if (options) {
-            for (var param in options) {
+            for (let param in options) {
                 o[param] = options[param];
             }
         }
 
-        var readOnlyLocked = this.readOnlyLocked;
+        let readOnlyLocked = this.readOnlyLocked;
 
         if (this.readOnly) {
             o.readOnly = true;
@@ -332,7 +334,7 @@ class BottomPanelView extends View {
             o.validateCallback = () => this.recordViewObject.validateField(field);
         }
 
-        var viewKey = field + 'Field';
+        const viewKey = field + 'Field';
 
         this.createView(viewKey, viewName, o);
     }
