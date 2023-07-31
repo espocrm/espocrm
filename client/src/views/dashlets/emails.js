@@ -26,61 +26,63 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/emails', ['views/dashlets/abstract/record-list'], function (Dep) {
+import RecordListDashletView from 'views/dashlets/abstract/record-list';
 
-    return Dep.extend({
+class EmailsDashletView extends RecordListDashletView {
 
-        name: 'Emails',
-        scope: 'Emails',
+    name = 'Emails'
+    scope ='Emails'
 
-        rowActionsView: 'views/email/record/row-actions/dashlet',
-        listView: 'views/email/record/list-expanded',
+    rowActionsView = 'views/email/record/row-actions/dashlet'
+    listView = 'views/email/record/list-expanded'
 
-        setupActionList: function () {
-            if (this.getAcl().checkScope(this.scope, 'create')) {
-                this.actionList.unshift({
-                    name: 'compose',
-                    text: this.translate('Compose Email', 'labels', this.scope),
-                    iconHtml: '<span class="fas fa-plus"></span>',
-                });
-            }
-        },
-
-        actionCompose: function () {
-            var attributes = this.getCreateAttributes() || {};
-
-            Espo.Ui.notify(' ... ');
-
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
-                'views/modals/compose-email';
-
-            this.createView('modal', viewName, {
-                scope: this.scope,
-                attributes: attributes,
-            }, view => {
-                view.render();
-
-                Espo.Ui.notify(false);
-
-                this.listenToOnce(view, 'after:save', () => {
-                    this.actionRefresh();
-                });
+    setupActionList() {
+        if (this.getAcl().checkScope(this.scope, 'create')) {
+            this.actionList.unshift({
+                name: 'compose',
+                text: this.translate('Compose Email', 'labels', this.scope),
+                iconHtml: '<span class="fas fa-plus"></span>',
             });
-        },
+        }
+    }
 
-        /**
-         * @return {module:search-manager~data}
-         */
-        getSearchData: function () {
-            return {
-                'advanced': [
-                    {
-                        'attribute': 'folderId',
-                        'type': 'inFolder',
-                        'value': this.getOption('folder') || 'inbox',
-                    }
-                ]
-            };
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionCompose() {
+        const attributes = this.getCreateAttributes() || {};
+
+        Espo.Ui.notify(' ... ');
+
+        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
+            'views/modals/compose-email';
+
+        this.createView('modal', viewName, {
+            scope: this.scope,
+            attributes: attributes,
+        }, view => {
+            view.render();
+
+            Espo.Ui.notify(false);
+
+            this.listenToOnce(view, 'after:save', () => {
+                this.actionRefresh();
+            });
+        });
+    }
+
+    /**
+     * @return {module:search-manager~data}
+     */
+    getSearchData() {
+        return {
+            'advanced': [
+                {
+                    'attribute': 'folderId',
+                    'type': 'inFolder',
+                    'value': this.getOption('folder') || 'inbox',
+                }
+            ]
+        };
+    }
+}
+
+export default EmailsDashletView;
