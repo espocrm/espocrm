@@ -26,21 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/import/list', ['views/list'], function (Dep) {
+import ListView from 'views/list';
 
-    return Dep.extend({
+class ImportListView extends ListView {
 
-        createButton: false,
+    createButton = false
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.menu.buttons.unshift({
-                iconHtml: '<span class="fas fa-plus fa-sm"></span>',
-                text: this.translate('New Import', 'labels', 'Import'),
-                link: '#Import',
-                acl: 'edit',
-            });
-        },
-    });
-});
+        this.menu.buttons.unshift({
+            iconHtml: '<span class="fas fa-plus fa-sm"></span>',
+            text: this.translate('New Import', 'labels', 'Import'),
+            link: '#Import',
+            acl: 'edit',
+        });
+    }
+}
+
+export default ImportListView;

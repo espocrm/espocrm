@@ -26,23 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/import/record/row-actions/duplicates', ['views/record/row-actions/default'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+class ImportDuplicatesRowActionsView extends DefaultRowActionsView {
 
-        getActionList: function () {
-            var list = Dep.prototype.getActionList.call(this);
+    getActionList() {
+        const list = super.getActionList();
 
-            list.push({
-                action: 'unmarkAsDuplicate',
-                label: 'Set as Not Duplicate',
-                data: {
-                    id: this.model.id,
-                    type: this.model.entityType,
-                },
-            });
+        list.push({
+            action: 'unmarkAsDuplicate',
+            label: 'Set as Not Duplicate',
+            data: {
+                id: this.model.id,
+                type: this.model.entityType,
+            },
+        });
 
-            return list;
-        },
-    });
-});
+        return list;
+    }
+}
+
+export default ImportDuplicatesRowActionsView;

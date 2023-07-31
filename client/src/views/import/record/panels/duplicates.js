@@ -26,30 +26,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/import/record/panels/duplicates', ['views/import/record/panels/imported'], function (Dep) {
+import ImportImportedPanelView from 'views/import/record/panels/imported';
 
-    return Dep.extend({
+class ImportDuplicatesPanelView extends ImportImportedPanelView {
 
-        link: 'duplicates',
+    link = 'duplicates'
 
-        setup: function () {
-            this.title = this.title || this.translate('Duplicates', 'labels', 'Import');
+    setup() {
+        this.title = this.title || this.translate('Duplicates', 'labels', 'Import');
 
-            Dep.prototype.setup.call(this);
-        },
+        super.setup();
+    }
 
-        actionUnmarkAsDuplicate: function (data) {
-            let id = data.id;
-            let type = data.type;
+    // noinspection JSUnusedGlobalSymbols
+    actionUnmarkAsDuplicate(data) {
+        const id = data.id;
+        const type = data.type;
 
-            this.confirm(this.translate('confirmation', 'messages'), () => {
-                Espo.Ajax.postRequest(`Import/${this.model.id}/unmarkDuplicates`, {
-                    entityId: id,
-                    entityType: type,
-                }).then(() => {
-                    this.collection.fetch();
-                });
+        this.confirm(this.translate('confirmation', 'messages'), () => {
+            Espo.Ajax.postRequest(`Import/${this.model.id}/unmarkDuplicates`, {
+                entityId: id,
+                entityType: type,
+            }).then(() => {
+                this.collection.fetch();
             });
-        },
-    });
-});
+        });
+    }
+}
+
+export default ImportDuplicatesPanelView;

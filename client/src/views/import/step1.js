@@ -410,7 +410,11 @@ class Step1ImportView extends View {
         this.controlFieldVisibility();
     }
 
+    /**
+     * @return {import('./index').default}
+     */
     getParentIndexView() {
+        // noinspection JSValidateTypes
         return this.getParentView();
     }
 

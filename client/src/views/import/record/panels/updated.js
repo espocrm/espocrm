@@ -26,17 +26,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/import/record/panels/updated', ['views/import/record/panels/imported'], function (Dep) {
+import ImportImportedPanelView from 'views/import/record/panels/imported';
 
-    return Dep.extend({
+class ImportUpdatedPanelView extends ImportImportedPanelView {
 
-        link: 'updated',
-        rowActionsView: 'views/record/row-actions/relationship-view-and-edit',
+    link = 'updated'
+    rowActionsView = 'views/record/row-actions/relationship-view-and-edit'
 
-        setup: function () {
-            this.title = this.title || this.translate('Updated', 'labels', 'Import');
+    setup() {
+        this.title = this.title || this.translate('Updated', 'labels', 'Import');
 
-            Dep.prototype.setup.call(this);
-        },
-    });
-});
+        super.setup();
+    }
+}
+
+export default ImportUpdatedPanelView;
