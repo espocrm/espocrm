@@ -44,12 +44,20 @@ class RecordListDashletView extends BaseDashletView {
     listViewExpanded = 'views/record/list-expanded'
     layoutType = 'expanded'
 
-    optionsFields = _.extend(_.clone(BaseDashletView.prototype.optionsFields), {
-        'displayRecords': {
-            type: 'enumInt',
-            options: [3,4,5,10,15],
+    optionsFields = {
+        title: {
+            type: 'varchar',
+            required: true,
         },
-    })
+        autorefreshInterval: {
+            type: 'enumFloat',
+            options: [0, 0.5, 1, 2, 5, 10],
+        },
+        displayRecords: {
+            type: 'enumInt',
+            options: [3, 4, 5, 10, 15],
+        },
+    }
 
     rowActionsView = 'views/record/row-actions/view-and-edit'
 
