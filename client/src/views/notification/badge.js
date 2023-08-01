@@ -473,6 +473,8 @@ class NotificationBadgeView extends View {
         }, view => {
             view.render();
 
+            this.$el.closest('.navbar-body').removeClass('in');
+
             this.listenTo(view, 'all-read', () => {
                 this.hideNotRead();
                 this.$el.find('.badge-circle-warning').remove();

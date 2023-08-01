@@ -43,6 +43,8 @@ class GlobalSearchView extends View {
         });
 
         this.wait(promise);
+
+        this.closeNavbarOnShow = /iPad|iPhone|iPod/.test(navigator.userAgent);
     }
 
     /**
@@ -91,6 +93,10 @@ class GlobalSearchView extends View {
 
     showPanel() {
         this.closePanel();
+
+        if (this.closeNavbarOnShow) {
+            this.$el.closest('.navbar-body').removeClass('in');
+        }
 
         let $container = $('<div>').attr('id', 'global-search-panel');
 
