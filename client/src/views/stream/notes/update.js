@@ -50,7 +50,7 @@ class UpdateNoteStreamView extends NoteStreamView {
     }
 
     setup() {
-        this.addActionHandler('expandDetails', /** MouseEvent */e => this.toggleDetails(e));
+        this.addActionHandler('expandDetails', /** MouseEvent */(e, target) => this.toggleDetails(e, target));
 
         this.createMessage();
 
@@ -130,12 +130,13 @@ class UpdateNoteStreamView extends NoteStreamView {
 
     /**
      * @param {MouseEvent} event
+     * @param {HTMLElement} target
      */
-    toggleDetails(event) {
+    toggleDetails(event, target) {
         if (this.$el.find('.details').hasClass('hidden')) {
             this.$el.find('.details').removeClass('hidden');
 
-            $(event.target).find('span')
+            $(target).find('span')
                 .removeClass('fa-chevron-down')
                 .addClass('fa-chevron-up');
 
