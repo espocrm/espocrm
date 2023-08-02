@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a bug report. Not to be used for help requests or server configuration issues.
+about: Create a bug report. Not to be used for help requests or server configuration issues. Only for issues related to open source EspoCRM. Issues related to extensions should not to be posted here.
 title: ''
 labels: ''
 assignees: ''
