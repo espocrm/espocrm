@@ -204,7 +204,7 @@ if (Utils::checkActionExists($action)) {
     include $actionFile;
 }
 
-$theme = $_SESSION['install']['theme'] ?? $config->get('theme');
+$theme = $_SESSION['install']['theme'] ?? $installer->getConfig()->get('theme');
 
 $smarty->assign('logoSrc', $installer->getLogoSrc($theme));
 
