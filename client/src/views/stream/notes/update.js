@@ -145,7 +145,7 @@ class UpdateNoteStreamView extends NoteStreamView {
 
         this.$el.find('.details').addClass('hidden');
 
-        $(event.target).find('span')
+        $(target).find('span')
             .addClass('fa-chevron-down')
             .removeClass('fa-chevron-up');
     }
