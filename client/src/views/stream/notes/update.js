@@ -50,7 +50,7 @@ class UpdateNoteStreamView extends NoteStreamView {
     }
 
     setup() {
-        this.addActionHandler('expandDetails', /** MouseEvent */(e, target) => this.toggleDetails(e, target));
+        this.addActionHandler('expandDetails', (e, target) => this.toggleDetails(e, target));
 
         this.createMessage();
 
