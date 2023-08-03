@@ -1,0 +1,1 @@
+Nachricht: [{{entityType}}] {{name}}
