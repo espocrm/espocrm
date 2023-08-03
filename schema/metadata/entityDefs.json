@@ -402,6 +402,10 @@
                     "type": "string",
                     "description": "Converts field defs to ORM metadata. Should implement Espo\\Core\\Utils\\Database\\Orm\\FieldConverter."
                 },
+                "duplicatorClassName": {
+                    "type": "string",
+                    "description": "Duplicates attributes of a field. Some fields can require some processing when an entity is being duplicated. Should implement Espo\\Core\\Record\\Duplicator\\FieldDuplicator."
+                },
                 "select": {
                     "type": "object",
                     "description": "A custom complex expression to be used for the field when reading from DB. It's possible to define leftJoins and joins that are needed to be applied when the field is being selected.",
