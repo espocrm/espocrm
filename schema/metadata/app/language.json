@@ -21,15 +21,15 @@
                 "properties": {
                     "scope": {
                         "type": "string",
-                        "description": "If a user have access to the scope, they will have access to translations defined by a key."
+                        "description": "If a user has access to the scope, they will have access to translations defined by a key."
                     },
                     "field": {
                         "type": "string",
-                        "description": "If a user have access to the field (of a scope), they will have access to translations defined by a key."
+                        "description": "If a user has access to the field (of a scope), they will have access to translations defined by a key."
                     },
                     "anyScopeList": {
                         "type": "array",
-                        "description": "If a user have access to any of listed scopes, they will have access to translations defined by a key.",
+                        "description": "If a user has access to any of listed scopes, they will have access to translations defined by a key.",
                         "items": {
                             "type": "string"
                         }
