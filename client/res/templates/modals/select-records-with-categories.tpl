@@ -10,7 +10,7 @@
 {{/unless}}
 
 {{#if createButton}}
-<div class="button-container">
+<div class="button-container hidden bottom-button-container">
     <button class="btn btn-default" data-action="create">{{createText}}</button>
 </div>
 {{/if}}
