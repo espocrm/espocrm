@@ -65,7 +65,7 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
     }
 
     setupCategories() {
-        const promise = this.getCollectionFactory().create(this.categoryScope, collection => {
+        this.getCollectionFactory().create(this.categoryScope, collection => {
             this.treeCollection = collection;
 
             collection.url = collection.entityType + '/action/listTree';
@@ -74,8 +74,6 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
             collection.fetch()
                 .then(() => this.createCategoriesView());
         });
-
-        this.wait(promise);
     }
 
     createCategoriesView() {
