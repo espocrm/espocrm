@@ -711,6 +711,11 @@ body[data-navbar="side"] {
     }
 
     @media screen and (max-width: (@screen-sm-min - 1px)) {
+        .stick-sub,
+        &.minimized .stick-sub {
+            left: 0;
+        }
+
         .list-buttons-container .sticked-bar,
         &.minimized .list-buttons-container .sticked-bar {
             width: 100%;
