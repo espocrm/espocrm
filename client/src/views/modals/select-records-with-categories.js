@@ -33,9 +33,9 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
 
     template = 'modals/select-records-with-categories'
 
+    //categoryField = 'category'
+    //categoryFilterType = 'inCategory'
     categoryScope = ''
-    categoryField = 'category'
-    categoryFilterType = 'inCategory'
     isExpanded = true
 
     data() {
@@ -56,60 +56,62 @@ class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
         super.setup();
     }
 
-    loadList() {
+    setupList() {
         if (!this.categoriesDisabled) {
-            this.loadCategories();
+            this.setupCategories();
         }
 
-        super.loadList();
+        super.setupList();
     }
 
-    loadCategories() {
-        this.getCollectionFactory().create(this.categoryScope, collection => {
+    setupCategories() {
+        const promise = this.getCollectionFactory().create(this.categoryScope, collection => {
+            this.treeCollection = collection;
+
             collection.url = collection.entityType + '/action/listTree';
             collection.data.onlyNotEmpty = true;
 
-            this.listenToOnce(collection, 'sync', () => {
-                this.createView('categories', 'views/record/list-tree', {
-                    collection: collection,
-                    selector: '.categories-container',
-                    selectable: true,
-                    readOnly: true,
-                    showRoot: true,
-                    rootName: this.translate(this.scope, 'scopeNamesPlural'),
-                    buttonsDisabled: true,
-                    checkboxes: false,
-                    isExpanded: this.isExpanded,
-                }, view => {
-                    if (this.isRendered()) {
-                        view.render();
-                    } else {
-                        this.listenToOnce(this, 'after:render', () => view.render());
-                    }
+            collection.fetch()
+                .then(() => this.createCategoriesView());
+        });
 
-                    this.listenTo(view, 'select', model => {
-                        this.currentCategoryId = null;
-                        this.currentCategoryName = '';
+        this.wait(promise);
+    }
 
-                        if (model && model.id) {
-                            this.currentCategoryId = model.id;
-                            this.currentCategoryName = model.get('name');
-                        }
+    createCategoriesView() {
+        this.createView('categories', 'views/record/list-tree', {
+            collection: this.treeCollection,
+            selector: '.categories-container',
+            selectable: true,
+            readOnly: true,
+            showRoot: true,
+            rootName: this.translate(this.scope, 'scopeNamesPlural'),
+            buttonsDisabled: true,
+            checkboxes: false,
+            isExpanded: this.isExpanded,
+        }, view => {
+            if (this.isRendered()) {
+                view.render();
+            } else {
+                this.listenToOnce(this, 'after:render', () => view.render());
+            }
 
-                        this.applyCategoryToCollection();
+            this.listenTo(view, 'select', model => {
+                this.currentCategoryId = null;
+                this.currentCategoryName = '';
 
-                        Espo.Ui.notify(' ... ');
+                if (model && model.id) {
+                    this.currentCategoryId = model.id;
+                    this.currentCategoryName = model.get('name');
+                }
 
-                        this.listenToOnce(this.collection, 'sync', () => {
-                            Espo.Ui.notify(false);
-                        });
+                this.applyCategoryToCollection();
 
-                        this.collection.fetch();
-                    });
-                });
+                Espo.Ui.notify(' ... ');
+
+                this.collection.fetch()
+                    .then(() => Espo.Ui.notify(false));
             });
-
-            collection.fetch();
         });
     }
 
