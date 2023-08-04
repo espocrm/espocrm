@@ -295,11 +295,7 @@ class SelectRecordsModalView extends ModalView {
                     Espo.Ui.notify(' ... ');
 
                     this.collection.fetch()
-                        .then(() => {
-                            Espo.Ui.notify(false);
-
-                            this.$el.find('.bottom-button-container').removeClass('hidden');
-                        });
+                        .then(() => Espo.Ui.notify(false));
                 }, 1);
             };
 
