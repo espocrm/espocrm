@@ -144,6 +144,15 @@ class SelectRecordsModalView extends ModalView {
             }
         }
 
+        if (this.createButton) {
+            this.addButton({
+                name: 'create',
+                position: 'right',
+                onClick: () => this.create(),
+                label: 'Create',
+            });
+        }
+
         if (this.getMetadata().get(['clientDefs', this.scope, 'searchPanelDisabled'])) {
             this.searchPanel = false;
         }

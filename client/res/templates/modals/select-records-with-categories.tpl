@@ -8,9 +8,3 @@
 {{else}}
 <div class="list-container">{{{list}}}</div>
 {{/unless}}
-
-{{#if createButton}}
-<div class="button-container hidden bottom-button-container">
-    <button class="btn btn-default" data-action="create">{{createText}}</button>
-</div>
-{{/if}}
