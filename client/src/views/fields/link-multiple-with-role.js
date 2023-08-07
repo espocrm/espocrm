@@ -352,7 +352,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
     }
 
     fetch() {
-        let data = super.data();
+        let data = super.fetch();
 
         if (!this.skipRoles) {
             data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
