@@ -2817,6 +2817,8 @@ class ListRecordView extends View {
         $list = $list || this.$el.find(this.listContainerEl);
         options = options || {};
 
+        const $container = this.$el.find('.list');
+
         $showMore.children('a').addClass('disabled');
 
         if (!options.skipNotify) {
@@ -2838,9 +2840,11 @@ class ListRecordView extends View {
                 this.$el.find('.more-count').text(moreCountString);
 
                 $showMore.removeClass('hidden');
+                $container.addClass('has-show-more');
             }
             else {
                 $showMore.remove();
+                $container.removeClass('has-show-more');
             }
 
             $showMore.children('a').removeClass('disabled');
@@ -2871,6 +2875,7 @@ class ListRecordView extends View {
             }
 
             $showMore.addClass('hidden');
+            $container.removeClass('has-show-more');
 
             let rowCount = collection.length - initialCount;
             let rowsReady = 0;

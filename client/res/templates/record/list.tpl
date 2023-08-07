@@ -126,7 +126,7 @@
 </div>
 {{/if}}
 
-<div class="list{{#if tableMinWidth}} scrollable{{/if}}" data-scope="{{scope}}">
+<div class="list{{#if tableMinWidth}} scrollable{{/if}}{{#if showMoreActive}} has-show-more{{/if}}" data-scope="{{scope}}">
     <table class="table"{{#if tableMinWidth}} style="min-width: {{tableMinWidth}}px;"{{/if}}>
         {{#if header}}
         <thead>
