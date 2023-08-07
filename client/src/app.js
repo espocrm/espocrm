@@ -1230,7 +1230,9 @@ class App {
         // @todo Remove in v9.0.
         $.ajaxSetup({
             beforeSend: (xhr, options) => {
-                console.error(`$.ajax is deprecated, support will be removed in v9.0. Use Espo.Ajax instead.`);
+                if (!options.url || !options.url.includes('q=')) {
+                    console.warn(`$.ajax is deprecated, support will be removed in v9.0. Use Espo.Ajax instead.`);
+                }
 
                 // noinspection JSUnresolvedReference
                 if (!options.local && this.apiUrl) {
