@@ -246,6 +246,8 @@ class User extends Record implements
 
         parent::prepareEntityForOutput($entity);
 
+        $entity->clear('sendAccessInfo');
+
         if ($entity->isApi()) {
             if ($this->user->isAdmin()) {
                 if ($entity->getAuthMethod() === Hmac::NAME) {

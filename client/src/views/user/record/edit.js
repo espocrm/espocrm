@@ -320,6 +320,14 @@ class UserEditRecordView extends EditRecordView {
         return data;
     }
 
+    exit(after) {
+        if (after === 'create') {
+            this.model.unset('sendAccessInfo', {silent: true});
+        }
+
+        super.exit(after);
+    }
+
     // noinspection JSUnusedGlobalSymbols
     errorHandlerUserNameExists() {
         Espo.Ui.error(this.translate('userNameExists', 'messages', 'User'))
