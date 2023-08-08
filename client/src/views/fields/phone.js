@@ -99,7 +99,7 @@ class PhoneFieldView extends VarcharFieldView {
             this.manageAddButton();
         },
         /** @this PhoneFieldView */
-        'keypress input.phone-number': function (e) {
+        'keypress input.phone-number': function () {
             this.manageAddButton();
         },
         /** @this PhoneFieldView */
@@ -156,6 +156,7 @@ class PhoneFieldView extends VarcharFieldView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validatePhoneData() {
         let data = this.model.get(this.dataFieldName);
 
@@ -183,7 +184,7 @@ class PhoneFieldView extends VarcharFieldView {
                     .toString() + ') input.phone-number');
             }
 
-            let numberClean = String(number).replace(/[\s\+]/g, '');
+            let numberClean = String(number).replace(/[\s+]/g, '');
 
             if (~numberList.indexOf(numberClean)) {
                 let msg = this.translate('fieldValueDuplicate', 'messages')
