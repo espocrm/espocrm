@@ -308,15 +308,11 @@ class KanbanRecordView extends ListRecordView {
             $(window).off('resize.kanban-' + this.cid);
         });
 
-        if (
+        this.statusFieldIsEditable =
             this.getAcl().checkScope(this.entityType, 'edit') &&
-            !~this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').indexOf(this.statusField) &&
-            !this.getMetadata().get(['clientDefs', this.scope, 'editDisabled'])
-        ) {
-            this.statusFieldIsEditable = true;
-        } else {
-            this.statusFieldIsEditable = false;
-        }
+            !this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').includes(this.statusField) &&
+            !this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) &&
+            !this.getMetadata().get(['entityDefs', this.entityType, 'fields', this.statusField, 'readOnly']);
 
         this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
 
