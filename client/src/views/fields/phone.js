@@ -33,7 +33,7 @@ class PhoneFieldView extends VarcharFieldView {
 
     type = 'phone'
 
-    editTemplate ='fields/phone/edit'
+    editTemplate = 'fields/phone/edit'
     detailTemplate = 'fields/phone/detail'
     listTemplate = 'fields/phone/list'
 
