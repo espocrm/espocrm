@@ -396,6 +396,10 @@
                     "createHandler": {
                         "type": "string",
                         "description": "A create handler. Provides attributes when creating a new related record. Should have a method *getAttributes* returning a promise."
+                    },
+                    "layout": {
+                        "type": "string",
+                        "description": "A list layout name."
                     }
                 }
             }
