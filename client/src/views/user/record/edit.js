@@ -289,7 +289,7 @@ class UserEditRecordView extends EditRecordView {
     }
 
     getPasswordSendingMessage() {
-        if (this.getConfig().get('smtpServer') && this.getConfig().get('smtpServer') !== '') {
+        if (this.getConfig().get('outboundEmailFromAddress')) {
             return '';
         }
 
