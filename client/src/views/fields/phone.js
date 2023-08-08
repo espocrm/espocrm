@@ -510,4 +510,4 @@ class PhoneFieldView extends VarcharFieldView {
     }
 }
 
-export default VarcharFieldView;
+export default PhoneFieldView;
