@@ -321,7 +321,7 @@ class UserEditRecordView extends EditRecordView {
     }
 
     exit(after) {
-        if (after === 'create') {
+        if (after === 'create' || after === 'save') {
             this.model.unset('sendAccessInfo', {silent: true});
         }
 
