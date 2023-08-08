@@ -49,5 +49,15 @@ define('views/settings/fields/outbound-email-from-address', ['views/fields/email
                 ],
             });
         },
+
+        transformAutocompleteResult: function (response) {
+            const result = Dep.prototype.transformAutocompleteResult.call(this, response);
+
+            result.suggestions.forEach(item => {
+                item.value = item.attributes.emailAddress;
+            });
+
+            return result;
+        },
     });
 });
