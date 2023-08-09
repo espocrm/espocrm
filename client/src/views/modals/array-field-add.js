@@ -76,8 +76,16 @@ class ArrayFieldAddModalView extends ModalView {
     setup() {
         this.headerText = this.translate('Add Item');
         this.checkedList = [];
-        this.translations = this.options.translatedOptions || {};
+        this.translations = Espo.Utils.clone(this.options.translatedOptions || {});
         this.optionList = this.options.options || [];
+
+        this.optionList.forEach(item => {
+            if (item in this.translations) {
+                return;
+            }
+
+            this.translations[item] = item;
+        });
 
         this.buttonList = [
             {
