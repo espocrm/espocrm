@@ -26,28 +26,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'views/fields/varchar';
+import VarcharFieldView from 'views/fields/varchar';
 
-export default Dep.extend({
+class EmailAddressFieldView extends VarcharFieldView {
 
-    editTemplate: 'fields/email-address/edit',
+    editTemplate = 'fields/email-address/edit'
 
-    validations: ['required', 'emailAddress'],
+    validations = ['required', 'emailAddress']
 
-    emailAddressRe: new RegExp(
+    emailAddressRe = new RegExp(
         /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*/.source +
         /@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/.source
-    ),
+    )
 
-    validateEmailAddress: function () {
-        let value = this.model.get(this.name);
+    // noinspection JSUnusedGlobalSymbols
+    validateEmailAddress() {
+        const value = this.model.get(this.name);
 
         if (!value) {
             return false;
         }
 
         if (value !== '' && !this.emailAddressRe.test(value)) {
-            let msg = this.translate('fieldShouldBeEmail', 'messages')
+            const msg = this.translate('fieldShouldBeEmail', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);
@@ -56,5 +57,7 @@ export default Dep.extend({
         }
 
         return false;
-    },
-});
+    }
+}
+
+export default EmailAddressFieldView;

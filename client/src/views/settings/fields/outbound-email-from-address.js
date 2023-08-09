@@ -26,38 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/outbound-email-from-address', ['views/fields/email-address'], function (Dep) {
+import EmailAddressFieldView from 'views/fields/email-address';
 
-    return Dep.extend({
+class SettingsOutboundEmailFromAddressFieldView extends EmailAddressFieldView {
 
-        useAutocompleteUrl: true,
+    useAutocompleteUrl = true
 
-        getAutocompleteUrl: function (q) {
-            return 'InboundEmail?searchParams=' + JSON.stringify({
-                select: ['emailAddress'],
-                maxSize: 7,
-                where: [
-                    {
-                        type: 'startsWith',
-                        attribute: 'emailAddress',
-                        value: q,
-                    },
-                    {
-                        type: 'isTrue',
-                        attribute: 'useSmtp',
-                    },
-                ],
-            });
-        },
+    getAutocompleteUrl(q) {
+        return 'InboundEmail?searchParams=' + JSON.stringify({
+            select: ['emailAddress'],
+            maxSize: 7,
+            where: [
+                {
+                    type: 'startsWith',
+                    attribute: 'emailAddress',
+                    value: q,
+                },
+                {
+                    type: 'isTrue',
+                    attribute: 'useSmtp',
+                },
+            ],
+        });
+    }
 
-        transformAutocompleteResult: function (response) {
-            const result = Dep.prototype.transformAutocompleteResult.call(this, response);
+    transformAutocompleteResult(response) {
+        const result = super.transformAutocompleteResult(response);
 
-            result.suggestions.forEach(item => {
-                item.value = item.attributes.emailAddress;
-            });
+        result.suggestions.forEach(item => {
+            item.value = item.attributes.emailAddress;
+        });
 
-            return result;
-        },
-    });
-});
+        return result;
+    }
+}
+
+export default SettingsOutboundEmailFromAddressFieldView;
