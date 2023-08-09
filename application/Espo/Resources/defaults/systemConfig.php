@@ -101,8 +101,13 @@ return [
         'authTokenSecretDisabled',
         'authLogDisabled',
         'authApiUserLogDisabled',
+        'authFailedAttemptsPeriod',
+        'authMaxFailedAttemptNumber',
         'ipAddressServerParam',
         'jobNoTableLocking',
+        'passwordRecoveryRequestLifetime',
+        'passwordChangeRequestNewUserLifetime',
+        'passwordChangeRequestExistingUserLifetime',
     ],
     'adminItems' => [
         'devMode',
@@ -195,9 +200,6 @@ return [
         'authAnotherUserDisabled',
         'emailAddressEntityLookupDefaultOrder',
         'phoneNumberEntityLookupDefaultOrder',
-        'authFailedAttemptsPeriod',
-        'authMaxFailedAttemptNumber',
-        'authLogDisabled',
         'latestVersion',
     ],
     'superAdminItems' => [
