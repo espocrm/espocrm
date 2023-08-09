@@ -310,7 +310,12 @@ class RecoveryService
 
         $this->createCleanupRequestJob($entity->getId(), $lifetime);
 
-        $this->send($entity->getRequestId(), $emailAddress, $user);
+        try {
+            $this->send($entity->getRequestId(), $emailAddress, $user);
+        }
+        catch (SendingError $e) {
+            throw new Error("Email sending error. " . $e->getMessage());
+        }
 
         return $entity;
     }
