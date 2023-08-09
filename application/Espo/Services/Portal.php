@@ -31,14 +31,12 @@ namespace Espo\Services;
 
 use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
 use Espo\ORM\Entity;
-
 use Espo\Repositories\Portal as Repository;
 use Espo\Entities\Portal as PortalEntity;
-
 use Espo\Core\Di;
 
 /**
- * @extends Record<\Espo\Entities\Portal>
+ * @extends Record<PortalEntity>
  */
 class Portal extends Record implements
 
