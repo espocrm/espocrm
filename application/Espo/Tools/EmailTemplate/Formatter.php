@@ -120,7 +120,9 @@ class Formatter
             if (!is_string($value)) {
                 return '';
             }
-
+            if ($fieldType === 'wysiwyg') {
+                return $value;
+            }
             return nl2br($value);
         }
 
