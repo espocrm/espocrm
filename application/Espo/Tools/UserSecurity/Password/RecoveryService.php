@@ -29,6 +29,9 @@
 
 namespace Espo\Tools\UserSecurity\Password;
 
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\ApplicationState;
 use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
 use Espo\Core\Exceptions\ForbiddenSilent;
@@ -37,21 +40,12 @@ use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Utils\Util;
-use Espo\Core\Utils\Json;
-
 use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\Entities\PasswordChangeRequest;
 use Espo\Entities\Portal;
-
 use Espo\Repositories\Portal as PortalRepository;
-
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Field\DateTime;
-
 use Espo\Core\Authentication\Logins\Espo as EspoLogin;
 use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
 use Espo\Core\Job\QueueName;
