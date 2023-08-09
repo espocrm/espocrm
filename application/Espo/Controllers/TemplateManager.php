@@ -38,9 +38,12 @@ use Espo\Core\Api\Request;
 
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ * @todo Move to a service class.
+ */
 class TemplateManager
 {
-
     /**
      * @throws Forbidden
      */
@@ -55,6 +58,9 @@ class TemplateManager
         }
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function getActionGetTemplate(Request $request): stdClass
     {
         $name = $request->getQueryParam('name');
@@ -66,7 +72,6 @@ class TemplateManager
         $scope = $request->getQueryParam('scope');
 
         $module = $this->metadata->get(['app', 'templates', $name, 'module']);
-
         $hasSubject = !$this->metadata->get(['app', 'templates', $name, 'noSubject']);
 
         $templateFileManager = $this->templateFileManager;
@@ -89,6 +94,7 @@ class TemplateManager
         $scope = null;
 
         if (empty($data->name)) {
+            /** @noinspection PhpUnhandledExceptionInspection */
             throw new BadRequest();
         }
 
@@ -109,6 +115,9 @@ class TemplateManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionResetTemplate(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -124,7 +133,6 @@ class TemplateManager
         }
 
         $module = $this->metadata->get(['app', 'templates', $data->name, 'module']);
-
         $hasSubject = !$this->metadata->get(['app', 'templates', $data->name, 'noSubject']);
 
         $templateFileManager = $this->templateFileManager;
