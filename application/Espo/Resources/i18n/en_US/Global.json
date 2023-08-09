@@ -378,7 +378,8 @@
         "cannotRelateForbiddenLink": "No access to link '{link}'.",
         "error404": "The url you requested can't be handled.",
         "error403": "You don't have an access to this area.",
-        "emptyMassUpdate": "No fields available for Mass Update."
+        "emptyMassUpdate": "No fields available for Mass Update.",
+        "attemptIntervalFailure": "The operation is not allowed during a specific time interval. Wait for some time before the next attempt."
     },
     "boolFilters": {
         "onlyMy": "Only My",

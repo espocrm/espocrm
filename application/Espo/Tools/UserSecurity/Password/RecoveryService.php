@@ -41,6 +41,7 @@ use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Utils\Util;
 use Espo\Entities\Email;
+use Espo\Entities\SystemData;
 use Espo\Entities\User;
 use Espo\Entities\PasswordChangeRequest;
 use Espo\Entities\Portal;
@@ -63,6 +64,7 @@ class RecoveryService
     private const REQUEST_LIFETIME = '3 hours';
     private const NEW_USER_REQUEST_LIFETIME = '2 days';
     private const EXISTING_USER_REQUEST_LIFETIME = '2 days';
+    private const INTERNAL_SMTP_INTERVAL_PERIOD = '1 hour';
 
     public function __construct(
         private EntityManager $entityManager,
@@ -233,7 +235,9 @@ class RecoveryService
             $this->send($request->getRequestId(), $emailAddress, $user);
         }
         catch (SendingError $e) {
-            $this->log->error("Email sending error: " . $e->getMessage());
+            $message = "Email sending error. " . $e->getMessage();
+
+            $this->log->error($message);
 
             throw new Error("Email sending error.");
         }
@@ -289,6 +293,7 @@ class RecoveryService
 
     /**
      * @throws Error
+     * @throws Forbidden
      */
     public function createAndSendRequestForExistingUser(User $user, ?string $url = null): PasswordChangeRequest
     {
@@ -314,7 +319,9 @@ class RecoveryService
             $this->send($entity->getRequestId(), $emailAddress, $user);
         }
         catch (SendingError $e) {
-            throw new Error("Email sending error. " . $e->getMessage());
+            $this->log->error("Email sending error. " . $e->getMessage());
+
+            throw new Error("Email sending error.");
         }
 
         return $entity;
@@ -369,6 +376,7 @@ class RecoveryService
     /**
      * @throws Error
      * @throws SendingError
+     * @throws Forbidden
      */
     private function send(string $requestId, string $emailAddress, User $user): void
     {
@@ -381,6 +389,10 @@ class RecoveryService
 
         if (!$this->emailSender->hasSystemSmtp() && !$this->config->get('internalSmtpServer')) {
             throw new Error("Password recovery: SMTP credentials are not defined.");
+        }
+
+        if (!$this->emailSender->hasSystemSmtp()) {
+            $this->checkIntervalForInternalSmtp();
         }
 
         $sender = $this->emailSender->create();
@@ -440,7 +452,7 @@ class RecoveryService
             $port = $this->config->get('internalSmtpPort');
 
             if (!$server || $port === null) {
-                throw new NoSmtp();
+                throw new NoSmtp("No internal SMTP");
             }
 
             $smtpParams = SmtpParams
@@ -458,6 +470,8 @@ class RecoveryService
         }
 
         $sender->send($email);
+
+        $this->lastPasswordRecoveryDate();
     }
 
     /**
@@ -494,5 +508,56 @@ class RecoveryService
     {
         /** @var PortalRepository */
         return $this->entityManager->getRDBRepository(Portal::ENTITY_TYPE);
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkIntervalForInternalSmtp(): void
+    {
+        /** @var string $period */
+        $period = $this->config->get('passwordRecoveryInternalIntervalPeriod') ??
+            self::INTERNAL_SMTP_INTERVAL_PERIOD;
+
+        $data = $this->entityManager->getEntityById(SystemData::ENTITY_TYPE, SystemData::ONLY_ID);
+
+        if (!$data) {
+            return;
+        }
+
+        /** @var ?string $lastPasswordRecoveryDate */
+        $lastPasswordRecoveryDate = $data->get('lastPasswordRecoveryDate');
+
+        if (!$lastPasswordRecoveryDate) {
+            return;
+        }
+
+        $notPassed = DateTime::fromString($lastPasswordRecoveryDate)
+            ->modify('+' . $period)
+            ->isGreaterThan(DateTime::createNow());
+
+        if (!$notPassed) {
+            return;
+        }
+
+        throw Forbidden::createWithBody(
+            'Internal password recovery attempt interval failure.',
+            Error\Body::create()
+                ->withMessageTranslation('attemptIntervalFailure')
+                ->encode()
+        );
+    }
+
+    private function lastPasswordRecoveryDate(): void
+    {
+        $data = $this->entityManager->getEntityById(SystemData::ENTITY_TYPE, SystemData::ONLY_ID);
+
+        if (!$data) {
+            return;
+        }
+
+        $data->set('lastPasswordRecoveryDate', DateTime::createNow()->getString());
+
+        $this->entityManager->saveEntity($data);
     }
 }

@@ -108,6 +108,7 @@ return [
         'passwordRecoveryRequestLifetime',
         'passwordChangeRequestNewUserLifetime',
         'passwordChangeRequestExistingUserLifetime',
+        'passwordRecoveryInternalIntervalPeriod',
     ],
     'adminItems' => [
         'devMode',
