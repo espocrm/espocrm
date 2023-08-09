@@ -462,8 +462,7 @@ class RecoveryService
                 ->withPassword($this->config->get('internalSmtpPassword'))
                 ->withSecurity($this->config->get('internalSmtpSecurity'))
                 ->withFromName(
-                    $this->config->get('internalOutboundEmailFromAddress') ??
-                    $this->config->get('outboundEmailFromAddress')
+                    $this->config->get('outboundEmailFromName')
                 );
 
             $sender->withSmtpParams($smtpParams);
