@@ -31,6 +31,7 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\TemplateFileManager;
 use Espo\Core\ApplicationState;
@@ -50,7 +51,8 @@ class TemplateManager
     public function __construct(
         private Metadata $metadata,
         private TemplateFileManager $templateFileManager,
-        private ApplicationState $applicationState
+        private ApplicationState $applicationState,
+        private Config $config
     ) {
 
         if (!$this->applicationState->isAdmin()) {
@@ -87,6 +89,10 @@ class TemplateManager
         return $returnData;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function postActionSaveTemplate(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -96,6 +102,14 @@ class TemplateManager
         if (empty($data->name)) {
             /** @noinspection PhpUnhandledExceptionInspection */
             throw new BadRequest();
+        }
+
+        if (
+            $data->name === 'passwordChangeLink' &&
+            $this->config->get('restrictedMode') &&
+            !$this->applicationState->getUser()->isSuperAdmin()
+        ) {
+            throw new Forbidden();
         }
 
         if (!empty($data->scope)) {
