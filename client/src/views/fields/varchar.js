@@ -190,7 +190,9 @@ class VarcharFieldView extends BaseFieldView {
     }
 
     transformAutocompleteResult(response) {
-        let responseParsed = JSON.parse(response);
+        let responseParsed = typeof response === 'string' ?
+            JSON.parse(response) :
+            response;
 
         let list = [];
 
@@ -269,10 +271,12 @@ class VarcharFieldView extends BaseFieldView {
             )
         ) {
             // noinspection JSUnusedGlobalSymbols
-            let autocompleteOptions = {
+            const autocompleteOptions = {
                 minChars: 0,
                 lookup: this.params.options,
                 maxHeight: 200,
+                triggerSelectOnValidInput: false,
+                autoSelectFirst: true,
                 beforeRender: $c => {
                     if (this.$element.hasClass('input-sm')) {
                         $c.addClass('small');
@@ -296,15 +300,23 @@ class VarcharFieldView extends BaseFieldView {
             };
 
             if (this.useAutocompleteUrl) {
-                autocompleteOptions.serviceUrl = q => this.getAutocompleteUrl(q);
-                autocompleteOptions.transformResult = response =>
-                    this.transformAutocompleteResult(response);
                 autocompleteOptions.noCache = true;
-                autocompleteOptions.lookup = null;
+                autocompleteOptions.lookup = (query, done) => {
+                    Espo.Ajax.getRequest(this.getAutocompleteUrl(query))
+                        .then(response => {
+                            return this.transformAutocompleteResult(response);
+                        })
+                        .then(result => {
+                            done(result);
+                        });
+                };
             }
 
             this.$element.autocomplete(autocompleteOptions);
             this.$element.attr('autocomplete', 'espo-' + this.name);
+
+            // Prevent showing suggestions after select.
+            this.$element.off('focus.autocomplete');
 
             this.$element.on('focus', () => {
                 if (this.$element.val()) {
