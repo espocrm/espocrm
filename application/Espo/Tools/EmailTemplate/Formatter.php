@@ -121,6 +121,10 @@ class Formatter
                 return '';
             }
 
+            if ($fieldType === 'wysiwyg') {
+                return $value;
+            }
+
             return nl2br($value);
         }
 
