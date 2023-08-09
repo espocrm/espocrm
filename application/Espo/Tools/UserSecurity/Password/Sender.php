@@ -46,25 +46,13 @@ use Espo\Repositories\Portal as PortalRepository;
 
 class Sender
 {
-    private Config $config;
-    private EmailSender $emailSender;
-    private EntityManager $entityManager;
-    private HtmlizerFactory $htmlizerFactory;
-    private TemplateFileManager $templateFileManager;
-
     public function __construct(
-        Config $config,
-        EmailSender $emailSender,
-        EntityManager $entityManager,
-        HtmlizerFactory $htmlizerFactory,
-        TemplateFileManager $templateFileManager
-    ) {
-        $this->config = $config;
-        $this->emailSender = $emailSender;
-        $this->entityManager = $entityManager;
-        $this->htmlizerFactory = $htmlizerFactory;
-        $this->templateFileManager = $templateFileManager;
-    }
+        private Config $config,
+        private EmailSender $emailSender,
+        private EntityManager $entityManager,
+        private HtmlizerFactory $htmlizerFactory,
+        private TemplateFileManager $templateFileManager
+    ) {}
 
     /**
      * Send access info for a new user.
