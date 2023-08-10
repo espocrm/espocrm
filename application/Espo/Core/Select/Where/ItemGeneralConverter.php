@@ -29,10 +29,13 @@
 
 namespace Espo\Core\Select\Where;
 
+use DateTimeZone;
+use Espo\Core\Field\DateTime;
 use Espo\Core\Select\Where\Item\Type;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\ArrayValue;
 use Espo\Entities\User;
@@ -45,8 +48,7 @@ use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
-use DateTime;
-use DateInterval;
+use Exception;
 use RuntimeException;
 
 /**
@@ -811,54 +813,58 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processToday(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processToday(QueryBuilder $queryBuilder, string $attribute): array
     {
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
+
         return [
-            $attribute . '=' => date('Y-m-d'),
+            $attribute . '=' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processPast(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processPast(QueryBuilder $queryBuilder, string $attribute): array
     {
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
+
         return [
-            $attribute . '<' => date('Y-m-d'),
+            $attribute . '<' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processFuture(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processFuture(QueryBuilder $queryBuilder, string $attribute): array
     {
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
+
         return [
-            $attribute . '>' => date('Y-m-d'),
+            $attribute . '>' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLastSevenDays(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastSevenDays(QueryBuilder $queryBuilder, string $attribute): array
     {
-        $dt1 = new DateTime();
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $dt2 = clone $dt1;
-
-        $dt2->modify('-7 days');
+        $from = $today->addDays(-7);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt2->format('Y-m-d'),
-                $attribute . '<=' => $dt1->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<=' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -869,18 +875,17 @@ class ItemGeneralConverter implements ItemConverter
      */
     private function processLastXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
-        $dt1 = new DateTime();
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $dt2 = clone $dt1;
+        $number = intval($value);
 
-        $number = strval(intval($value));
-
-        $dt2->modify('-'.$number.' days');
+        $from = $today->addDays(- $number);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt2->format('Y-m-d'),
-                $attribute . '<=' => $dt1->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<=' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -891,18 +896,17 @@ class ItemGeneralConverter implements ItemConverter
      */
     private function processNextXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
-        $dt1 = new DateTime();
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $dt2 = clone $dt1;
+        $number = intval($value);
 
-        $number = strval(intval($value));
-
-        $dt2->modify('+' . $number . ' days');
+        $to = $today->addDays($number);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt1->format('Y-m-d'),
-                $attribute . '<=' => $dt2->format('Y-m-d'),
+                $attribute . '>=' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<=' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -913,14 +917,14 @@ class ItemGeneralConverter implements ItemConverter
      */
     private function processOlderThanXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
-        $dt = new DateTime();
+        $number = intval($value);
 
-        $number = strval(intval($value));
-
-        $dt->modify('-' . $number . ' days');
+        $date = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->addDays(- $number);
 
         return [
-            $attribute . '<' => $dt->format('Y-m-d'),
+            $attribute . '<' =>  $date->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
@@ -930,14 +934,14 @@ class ItemGeneralConverter implements ItemConverter
      */
     private function processAfterXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
-        $dt = new DateTime();
+        $number = intval($value);
 
-        $number = strval(intval($value));
-
-        $dt->modify('+' . $number . ' days');
+        $date = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->addDays($number);
 
         return [
-            $attribute . '>' => $dt->format('Y-m-d'),
+            $attribute . '>' => $date->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
@@ -947,12 +951,16 @@ class ItemGeneralConverter implements ItemConverter
      */
     private function processCurrentMonth(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
-        $dt = new DateTime();
+        $from = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->modify('first day of this month');
+
+        $to = $from->addMonths(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -963,12 +971,16 @@ class ItemGeneralConverter implements ItemConverter
      */
     private function processLastMonth(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
-        $dt = new DateTime();
+        $from = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->modify('first day of last month');
+
+        $to = $from->addMonths(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -979,61 +991,73 @@ class ItemGeneralConverter implements ItemConverter
      */
     private function processNextMonth(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
-        $dt = new DateTime();
+        $from = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->modify('first day of next month');
+
+        $to = $from->addMonths(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->modify('first day of next month')->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws \Exception
+     * @throws Exception
      */
-    private function processCurrentQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processCurrentQuarter(QueryBuilder $queryBuilder, string $attribute): array
     {
-        $dt = new DateTime();
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $quarter = ceil($dt->format('m') / 3);
+        $quarter = intval(ceil($now->getMonth() / 3));
 
-        $dt->modify('first day of January this year');
+        $from = $now
+            ->modify('first day of January this year')
+            ->addMonths(($quarter - 1) * 3);
+
+        $to = $from->addMonths(3);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->add(new DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws \Exception
+     * @throws Exception
      */
-    private function processLastQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastQuarter(QueryBuilder $queryBuilder, string $attribute): array
     {
-        $dt = new DateTime();
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $quarter = ceil($dt->format('m') / 3);
+        $quarter = intval(ceil($now->getMonth() / 3));
 
-        $dt->modify('first day of January this year');
+        $from = $now->modify('first day of January this year');
 
         $quarter--;
 
         if ($quarter == 0) {
             $quarter = 4;
-            $dt->modify('-1 year');
+
+            $from = $from->addYears(-1);
         }
+
+        $from = $from->addMonths(($quarter - 1) * 3);
+        $to = $from->addMonths(3);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->add(new DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1044,12 +1068,16 @@ class ItemGeneralConverter implements ItemConverter
      */
     private function processCurrentYear(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
-        $dt = new DateTime();
+        $from = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->modify('first day of January this year');
+
+        $to = $from->addYears(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1Y'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1060,135 +1088,129 @@ class ItemGeneralConverter implements ItemConverter
      */
     private function processLastYear(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
-        $dt = new DateTime();
+        $from = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->modify('first day of January last year');
+
+        $to = $from->addYears(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1Y'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processCurrentFiscalYear(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processCurrentFiscalYear(QueryBuilder $queryBuilder, string $attribute): array
     {
-        $dtToday = new DateTime();
-        $dt = new DateTime();
-
         $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
-        $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        if (intval($dtToday->format('m')) < $fiscalYearShift + 1) {
-            $dt->modify('-1 year');
+        $from = $now
+            ->modify('first day of January this year')
+            ->addMonths($fiscalYearShift);
+
+        if ($now->getMonth() < $fiscalYearShift + 1) {
+            $from = $from->addYears(-1);
         }
+
+        $to = $from->addYears(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1Y'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLastFiscalYear(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastFiscalYear(QueryBuilder $queryBuilder, string $attribute): array
     {
-        $dtToday = new DateTime();
-        $dt = new DateTime();
-
         $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
-        $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        if (intval($dtToday->format('m')) < $fiscalYearShift + 1) {
-            $dt->modify('-1 year');
+        $from = $now
+            ->modify('first day of January this year')
+            ->addMonths($fiscalYearShift)
+            ->addYears(-1);
+
+        if ($now->getMonth() < $fiscalYearShift + 1) {
+            $from = $from->addYears(-1);
         }
 
-        $dt->modify('-1 year');
+        $to = $from->addYears(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1Y'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws \Exception
+     * @throws Exception
      */
-    private function processCurrentFiscalQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processCurrentFiscalQuarter(QueryBuilder $queryBuilder, string $attribute): array
     {
-        $dtToday = new DateTime();
-        $dt = new DateTime();
-
         $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
-        $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $month = intval($dtToday->format('m'));
+        $quarterShift = (int) floor(($now->getMonth() - $fiscalYearShift - 1) / 3);
 
-        $quarterShift = floor(($month - $fiscalYearShift - 1) / 3);
+        $from = $now
+            ->modify('first day of January this year')
+            ->addMonths($fiscalYearShift)
+            ->addMonths($quarterShift * 3);
 
-        if ($quarterShift) {
-            if ($quarterShift >= 0) {
-                $dt->add(new DateInterval('P' . ($quarterShift * 3) . 'M'));
-            } else {
-                $quarterShift *= -1;
-                $dt->sub(new DateInterval('P' . ($quarterShift * 3) . 'M'));
-            }
-        }
+        $to = $from->addMonths(3);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLastFiscalQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastFiscalQuarter(QueryBuilder $queryBuilder, string $attribute): array
     {
-        $dtToday = new DateTime();
-        $dt = new DateTime();
-
         $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
-        $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $month = intval($dtToday->format('m'));
+        $quarterShift = (int) floor(($now->getMonth() - $fiscalYearShift - 1) / 3);
 
-        $quarterShift = floor(($month - $fiscalYearShift - 1) / 3);
+        $from = $now
+            ->modify('first day of January this year')
+            ->addMonths($fiscalYearShift)
+            ->addMonths($quarterShift * 3);
 
-        if ($quarterShift) {
-            if ($quarterShift >= 0) {
-                $dt->add(new DateInterval('P' . ($quarterShift * 3) . 'M'));
-            } else {
-                $quarterShift *= -1;
-                $dt->sub(new DateInterval('P' . ($quarterShift * 3) . 'M'));
-            }
-        }
-
-        $dt->modify('-3 months');
+        $from = $from->addMonths(-3);
+        $to = $from->addMonths(3);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1511,5 +1533,17 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         throw new Error("Bad where item. Not supported relation type.");
+    }
+
+    private function getSystemTimeZone(): DateTimeZone
+    {
+        $timeZone = $this->config->get('timeZone') ?? 'UTC';
+
+        try {
+            return new DateTimeZone($timeZone);
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
     }
 }
