@@ -261,6 +261,10 @@ class DateFieldView extends BaseFieldView {
                     this.trigger('change');
                 });
 
+                this.$el.find('input.number').on('change', () => {
+                    this.trigger('change');
+                });
+
                 $elAdd.on('change', e => {
                     this.trigger('change');
 
