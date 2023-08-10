@@ -136,7 +136,7 @@ class DatetimeFieldView extends DateFieldView {
                 'yesterday': [dt.add(-3, 'days').unix(), dt.add(1, 'days').unix()]
             };
 
-            if (d.unix() > ranges['today'][0] && d.unix() < ranges['today'][1]) {
+            if (d.unix() >= ranges['today'][0] && d.unix() < ranges['today'][1]) {
                 return this.translate('Today') + ' ' + d.format(timeFormat);
             }
             else if (d.unix() > ranges['tomorrow'][0] && d.unix() < ranges['tomorrow'][1]) {
