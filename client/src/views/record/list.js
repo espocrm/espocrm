@@ -2363,7 +2363,7 @@ class ListRecordView extends View {
     _getHeaderDefs() {
         let defs = [];
 
-        for (let i in this.listLayout) {
+        for (const i in this.listLayout) {
             let width = false;
 
             if ('width' in this.listLayout[i] && this.listLayout[i].width !== null) {
@@ -2373,9 +2373,10 @@ class ListRecordView extends View {
                 width = this.listLayout[i].widthPx;
             }
 
-            let itemName = this.listLayout[i].name;
+            const itemName = this.listLayout[i].name;
+            const label = this.listLayout[i].label || itemName;
 
-            let item = {
+            const item = {
                 name: itemName,
                 isSortable: !(this.listLayout[i].notSortable || false),
                 width: width,
@@ -2388,7 +2389,7 @@ class ListRecordView extends View {
                 item.label = item.customLabel;
             }
             else {
-                item.label = this.translate(itemName, 'fields', this.collection.entityType);
+                item.label = this.translate(label, 'fields', this.collection.entityType);
             }
 
             if (this.listLayout[i].noLabel) {

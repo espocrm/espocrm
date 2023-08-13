@@ -40,49 +40,54 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             'align',
             'view',
             'customLabel',
+            'label',
         ],
 
         dataAttributesDefs: {
             link: {
                 type: 'bool',
-                tooltip: true
+                tooltip: true,
             },
             width: {
                 type: 'float',
                 min: 0,
                 max: 100,
-                tooltip: true
+                tooltip: true,
             },
             widthPx: {
                 type: 'int',
                 min: 0,
                 max: 720,
-                tooltip: true
+                tooltip: true,
             },
             notSortable: {
                 type: 'bool',
-                tooltip: true
+                tooltip: true,
             },
             align: {
                 type: 'enum',
-                options: ['left', 'right']
+                options: ['left', 'right'],
             },
             view: {
                 type: 'varchar',
-                readOnly: true
+                readOnly: true,
             },
             noLabel: {
                 type: 'bool',
-                tooltip: true
+                tooltip: true,
             },
             customLabel: {
                 type: 'varchar',
-                readOnly: true
+                readOnly: true,
             },
             name: {
                 type: 'varchar',
-                readOnly: true
-            }
+                readOnly: true,
+            },
+            label: {
+                type: 'varchar',
+                readOnly: true,
+            },
         },
 
         dataAttributesDynamicLogicDefs: {
