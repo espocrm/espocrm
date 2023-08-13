@@ -38,7 +38,7 @@ use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Select;
 
 /**
- * An util-class for creating items that can be used as a where-clause.
+ * A util-class for creating items that can be used as a where-clause.
  */
 class Condition
 {
