@@ -623,7 +623,7 @@ class WysiwygFieldView extends TextFieldView {
             return;
         }
 
-        super.focusOnInlineEdit.call(this);
+        super.focusOnInlineEdit();
     }
 
     uploadInlineAttachment(file) {
