@@ -80,7 +80,9 @@ class View extends BullView {
     addActionHandler(action, handler) {
         const fullAction = `click [data-action="${action}"]`;
 
-        this.events[fullAction] = e => handler(e.originalEvent, e.currentTarget);
+        this.events[fullAction] = e => {
+            handler.call(this, e.originalEvent, e.currentTarget);
+        };
     }
 
     /**
