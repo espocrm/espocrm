@@ -247,6 +247,8 @@ class DateTime
 
     /**
      * Get the default time zone.
+     *
+     * @since v8.0.0.
      */
     public function getTimezone(): DateTimeZone
     {
@@ -255,6 +257,8 @@ class DateTime
 
     /**
      * Get a today's date according the default time zone.
+     *
+     * @since v8.0.0.
      */
     public function getToday(): Date
     {
@@ -267,6 +271,8 @@ class DateTime
 
     /**
      * Get a now date-time with the default time zone applied.
+     *
+     * @since v8.0.0.
      */
     public function getNow(): DateTimeField
     {
