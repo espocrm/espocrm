@@ -45,6 +45,7 @@ class SelectRecordsModalView extends ModalView {
     searchPanel = true
     scope = ''
     noCreateScopeList = ['User', 'Team', 'Role', 'Portal']
+    layoutName = 'listSmall'
 
     /** @inheritDoc */
     shortcutKeys = {
@@ -93,6 +94,7 @@ class SelectRecordsModalView extends ModalView {
         this.boolFilterList = this.options.boolFilterList || [];
         this.primaryFilterName = this.options.primaryFilterName || null;
         this.filterList = this.options.filterList || this.filterList || null;
+        this.layoutName = this.options.layoutName || this.layoutName;
 
         if ('multiple' in this.options) {
             this.multiple = this.options.multiple;
@@ -260,7 +262,7 @@ class SelectRecordsModalView extends ModalView {
             checkboxes: this.multiple,
             massActionsDisabled: true,
             rowActionsView: false,
-            layoutName: 'listSmall',
+            layoutName: this.layoutName,
             searchManager: this.searchManager,
             checkAllResultDisabled: !this.massRelateEnabled,
             buttonsDisabled: true,

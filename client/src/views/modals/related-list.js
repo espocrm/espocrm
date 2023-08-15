@@ -46,6 +46,7 @@ class RelatedListModalView extends ModalView {
     backdrop = true
     fixedHeaderHeight = true
     mandatorySelectAttributeList = null
+    layoutName = 'listSmall'
 
     /** @inheritDoc */
     shortcutKeys = {
@@ -106,7 +107,7 @@ class RelatedListModalView extends ModalView {
 
         this.filterList = this.options.filterList;
         this.filter = this.options.filter;
-        this.layoutName = this.options.layoutName || 'listSmall';
+        this.layoutName = this.options.layoutName || this.layoutName;
         this.url = this.options.url;
         this.listViewName = this.options.listViewName;
         this.rowActionsView = this.options.rowActionsView;
