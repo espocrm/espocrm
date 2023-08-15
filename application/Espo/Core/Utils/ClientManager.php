@@ -46,6 +46,7 @@ class ClientManager
     protected string $runScript = "app.start();";
     private string $basePath = '';
     private string $libsConfigPath = 'client/cfg/libs.json';
+    private string $apiUrl = 'api/v1';
 
     private string $nonce;
 
@@ -233,7 +234,7 @@ class ClientManager
 
         $data = [
             'applicationId' => 'espocrm-application-id',
-            'apiUrl' => 'api/v1',
+            'apiUrl' => $this->apiUrl,
             'applicationName' => $this->config->get('applicationName', 'EspoCRM'),
             'cacheTimestamp' => $cacheTimestamp,
             'loaderCacheTimestamp' => $loaderCacheTimestamp,
@@ -292,5 +293,10 @@ class ClientManager
     private function getDeveloperModeBundleLibFileList(): array
     {
         return $this->devModeJsFileListProvider->get();
+    }
+
+    public function setApiUrl(string $apiUrl): void
+    {
+        $this->apiUrl = $apiUrl;
     }
 }

@@ -40,6 +40,7 @@ use Espo\Core\Api\ErrorOutput;
 use Espo\Core\Api\RequestWrapper;
 use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Api\AuthBuilderFactory;
+use Espo\Core\Portal\Utils\Url;
 use Espo\Core\Utils\Route;
 use Espo\Core\Utils\ClientManager;
 use Espo\Core\ApplicationRunners\EntryPoint as EntryPointRunner;
@@ -85,6 +86,14 @@ class Starter
 
         if (!$entryPoint) {
             throw new BadRequest("No 'entryPoint' param.");
+        }
+
+        $portalId = Url::getPortalIdFromEnv();
+
+        if ($portalId && !$final) {
+            $this->runThroughPortal($portalId, $entryPoint);
+
+            return;
         }
 
         $responseWrapped = new ResponseWrapper(new Response());
@@ -206,7 +215,11 @@ class Starter
     {
         $app = new PortalApplication($portalId);
 
-        $app->setClientBasePath($this->clientManager->getBasePath());
+        $clientManager = $app->getContainer()
+            ->getByClass(ClientManager::class);
+
+        $clientManager->setBasePath($this->clientManager->getBasePath());
+        $clientManager->setApiUrl('api/v1/portal-access/' . $portalId);
 
         $params = RunnerParams::fromArray([
             'entryPoint' => $entryPoint,
