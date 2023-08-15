@@ -44,7 +44,7 @@ use Slim\ResponseEmitter;
 class ClientManager
 {
     private string $mainHtmlFilePath = 'html/main.html';
-    private string $runScript = "app.start();";
+    private string $runScript = 'app.start();';
     private string $favicon = 'client/img/favicon.ico';
     private string $favicon196 = 'client/img/favicon196x196.png';
     private string $basePath = '';
