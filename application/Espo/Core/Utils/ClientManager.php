@@ -48,6 +48,8 @@ class ClientManager
     private string $favicon = 'client/img/favicon.ico';
     private string $favicon196 = 'client/img/favicon196x196.png';
     private string $basePath = '';
+    private string $apiUrl = 'api/v1';
+
     private string $nonce;
 
     private const APP_DESCRIPTION = "EspoCRM – Open Source CRM application.";
@@ -189,7 +191,7 @@ class ClientManager
 
         $data = [
             'applicationId' => 'espocrm-application-id',
-            'apiUrl' => 'api/v1',
+            'apiUrl' => $this->apiUrl,
             'applicationName' => $this->config->get('applicationName', 'EspoCRM'),
             'cacheTimestamp' => $cacheTimestamp,
             'appTimestamp' => $appTimestamp,
@@ -373,5 +375,10 @@ class ClientManager
             fn ($item) => Util::fromCamelCase($item, '-'),
             $modules
         );
+    }
+
+    public function setApiUrl(string $apiUrl): void
+    {
+        $this->apiUrl = $apiUrl;
     }
 }
