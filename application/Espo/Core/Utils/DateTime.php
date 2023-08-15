@@ -31,10 +31,15 @@ namespace Espo\Core\Utils;
 
 use Carbon\Carbon;
 
-use DateTimeZone;
+use Espo\Core\Field\Date;
+use Espo\Core\Field\DateTime as DateTimeField;
+
 use DateTime as DateTimeStd;
+use DateTimeImmutable;
+use DateTimeZone;
 use Exception;
 use RuntimeException;
+
 
 /**
  * Util for a date-time formatting and conversion.
@@ -238,6 +243,35 @@ class DateTime
             array_values($map),
             $format
         );
+    }
+
+    /**
+     * Get the default time zone.
+     */
+    public function getTimezone(): DateTimeZone
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * Get a today's date according the default time zone.
+     */
+    public function getToday(): Date
+    {
+        $string = (new DateTimeImmutable)
+            ->setTimezone($this->getTimezone())
+            ->format(self::SYSTEM_DATE_FORMAT);
+
+        return Date::fromString($string);
+    }
+
+    /**
+     * Get a now date-time with the default time zone applied.
+     */
+    public function getNow(): DateTimeField
+    {
+        return DateTimeField::createNow()
+            ->withTimezone($this->getTimezone());
     }
 
     /**
