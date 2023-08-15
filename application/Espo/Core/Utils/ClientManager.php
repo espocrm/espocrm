@@ -378,7 +378,7 @@ class ClientManager
     }
 
     /**
-     * @since v8.0.0
+     * @since 8.0.0
      */
     public function setApiUrl(string $apiUrl): void
     {
