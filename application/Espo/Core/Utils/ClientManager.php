@@ -107,7 +107,7 @@ class ClientManager
             return;
         }
 
-        $scriptSrc = "script-src 'self' 'nonce-{$this->nonce}' 'unsafe-eval'";
+        $scriptSrc = "script-src 'self' 'nonce-$this->nonce' 'unsafe-eval'";
 
         $scriptSourceList = $this->config->get('clientCspScriptSourceList') ?? [];
 
@@ -377,6 +377,9 @@ class ClientManager
         );
     }
 
+    /**
+     * @since v8.0.0
+     */
     public function setApiUrl(string $apiUrl): void
     {
         $this->apiUrl = $apiUrl;
