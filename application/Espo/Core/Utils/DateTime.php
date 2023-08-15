@@ -259,7 +259,7 @@ class DateTime
     public function getToday(): Date
     {
         $string = (new DateTimeImmutable)
-            ->setTimezone($this->getTimezone())
+            ->setTimezone($this->timezone)
             ->format(self::SYSTEM_DATE_FORMAT);
 
         return Date::fromString($string);
@@ -271,7 +271,7 @@ class DateTime
     public function getNow(): DateTimeField
     {
         return DateTimeField::createNow()
-            ->withTimezone($this->getTimezone());
+            ->withTimezone($this->timezone);
     }
 
     /**
