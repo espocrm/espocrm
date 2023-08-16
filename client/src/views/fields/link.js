@@ -320,6 +320,10 @@ class LinkFieldView extends BaseFieldView {
                 this.deleteLinkOneOf(id);
             };
         }
+
+        /** @type {Object.<string, *>} */
+        this.panelDefs = this.getMetadata()
+            .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
     }
 
     /**
@@ -338,6 +342,13 @@ class LinkFieldView extends BaseFieldView {
         }
 
         this.trigger('change');
+
+        this.getSelectFieldHandler().then(handler => {
+            handler.getAttributes(model)
+                .then(attributes => {
+                    this.model.set(attributes)
+                });
+        });
     }
 
     /**
@@ -348,6 +359,38 @@ class LinkFieldView extends BaseFieldView {
         this.$elementId.val('');
 
         this.trigger('change');
+
+        this.getSelectFieldHandler().then(handler => {
+            handler.getClearAttributes()
+                .then(attributes => {
+                    this.model.set(attributes)
+                });
+        });
+    }
+
+    /**
+     * @private
+     * @return {Promise<{
+     *     getAttributes: function (module:model): Promise<Object.<string, *>>,
+     *     getClearAttributes: function(): Promise<Object.<string, *>>,
+     * }>}
+     */
+    getSelectFieldHandler() {
+        if (!this.panelDefs.selectFieldHandler) {
+            return Promise.resolve({
+                getClearAttributes: () => {},
+                getAttributes: () => {},
+            });
+        }
+
+        return new Promise(resolve => {
+            Espo.loader.requirePromise(this.panelDefs.selectFieldHandler)
+                .then(Handler => {
+                    const handler = new Handler(this.getHelper());
+
+                    resolve(handler);
+                });
+        });
     }
 
     /** @inheritDoc */
@@ -419,12 +462,8 @@ class LinkFieldView extends BaseFieldView {
         let url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.forceSelectAllAttributes) {
-            /** @var {Object.<string, *>} */
-            const panelDefs = this.getMetadata()
-                .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
-
             const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
-                panelDefs.selectMandatoryAttributeList;
+                this.panelDefs.selectMandatoryAttributeList;
 
             let select = ['id', 'name'];
 
@@ -458,10 +497,7 @@ class LinkFieldView extends BaseFieldView {
 
             this.$elementName.on('change', () => {
                 if (this.$elementName.val() === '') {
-                    this.$elementName.val('');
-                    this.$elementId.val('');
-
-                    this.trigger('change');
+                    this.clearLink();
                 }
             });
 
@@ -925,9 +961,7 @@ class LinkFieldView extends BaseFieldView {
     actionSelect() {
         Espo.Ui.notify(' ... ');
 
-        /** @var {Object.<string, *>} */
-        const panelDefs = this.getMetadata()
-            .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
+        const panelDefs = this.panelDefs;
 
         const viewName = panelDefs.selectModalView ||
             this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||

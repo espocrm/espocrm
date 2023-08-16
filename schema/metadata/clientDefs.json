@@ -397,6 +397,10 @@
                         "type": "string",
                         "description": "A create handler. Provides attributes when creating a new related record. Should have a method *getAttributes* returning a promise."
                     },
+                    "selectFieldHandler": {
+                        "type": "string",
+                        "description": "A handler called when change a link field. Only for belongs-to and has-one relations. Should have *getAttributes* and *getClearAttributes* methods."
+                    },
                     "layout": {
                         "type": "string",
                         "description": "A list layout name."
