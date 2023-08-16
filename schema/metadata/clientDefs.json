@@ -411,7 +411,15 @@
                 "type": "object",
                 "properties": {
                     "type": {
-                        "type": "string"
+                        "type": "string",
+                        "description": "A type. E.g. list, listSmall."
+                    },
+                    "dataAttributeList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Data attributes."
                     }
                 }
             }
