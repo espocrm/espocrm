@@ -305,7 +305,12 @@ class RelatedListModalView extends ModalView {
 
         // If the list not yet loaded.
         this.once('close', () => {
-            Espo.Ui.notify(false);
+            if (
+                this.collection.lastSyncPromise &&
+                this.collection.lastSyncPromise.getStatus() < 4
+            ) {
+                Espo.Ui.notify(false);
+            }
 
             this.collection.abortLastFetch();
         });
