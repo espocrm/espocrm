@@ -400,6 +400,13 @@
                     "layout": {
                         "type": "string",
                         "description": "A list layout name."
+                    },
+                    "selectMandatoryAttributeList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Attributes to be selected when selecting records."
                     }
                 }
             }

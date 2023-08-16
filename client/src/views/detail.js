@@ -633,6 +633,7 @@ class DetailView extends MainView {
                 massRelateEnabled: massRelateEnabled,
                 primaryFilterName: primaryFilterName,
                 boolFilterList: boolFilterList,
+                mandatorySelectAttributeList: panelDefs.selectMandatoryAttributeList,
             }, dialog => {
                 dialog.render();
 

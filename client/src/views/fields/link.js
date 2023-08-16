@@ -416,25 +416,32 @@ class LinkFieldView extends BaseFieldView {
      * @return {string}
      */
     getAutocompleteUrl() {
-        var url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
+        let url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.forceSelectAllAttributes) {
-            var select = ['id', 'name'];
+            /** @var {Object.<string, *>} */
+            const panelDefs = this.getMetadata()
+                .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
 
-            if (this.mandatorySelectAttributeList) {
+            const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
+                panelDefs.selectMandatoryAttributeList;
+
+            let select = ['id', 'name'];
+
+            if (mandatorySelectAttributeList) {
                 select = select.concat(this.mandatorySelectAttributeList);
             }
 
             url += '&select=' + select.join(',');
         }
 
-        var boolList = this.getSelectBoolFilterList();
+        const boolList = this.getSelectBoolFilterList();
 
         if (boolList) {
             url += '&' + $.param({'boolFilterList': boolList});
         }
 
-        var primary = this.getSelectPrimaryFilterName();
+        const primary = this.getSelectPrimaryFilterName();
 
         if (primary) {
             url += '&' + $.param({'primaryFilter': primary});
@@ -919,16 +926,19 @@ class LinkFieldView extends BaseFieldView {
         Espo.Ui.notify(' ... ');
 
         /** @var {Object.<string, *>} */
-        let panelDefs = this.getMetadata()
+        const panelDefs = this.getMetadata()
             .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
 
-        let viewName = panelDefs.selectModalView ||
+        const viewName = panelDefs.selectModalView ||
             this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
             this.selectRecordsView;
 
-        let handler = panelDefs.selectHandler || null;
+        const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
+            panelDefs.selectMandatoryAttributeList;
 
-        let createButton = this.isEditMode() &&
+        const handler = panelDefs.selectHandler || null;
+
+        const createButton = this.isEditMode() &&
             (!this.createDisabled && !panelDefs.createDisabled || this.forceCreateButton);
 
         let createAttributesProvider = null;
@@ -971,13 +981,13 @@ class LinkFieldView extends BaseFieldView {
                         .then(filters => resolve(filters));
                 });
         }).then(filters => {
-            let advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
-            let boolFilterList = [
+            const advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
+            const boolFilterList = [
                 ...(this.getSelectBoolFilterList() || []),
                 ...(filters.bool || []),
                 ...(panelDefs.selectBoolFilterList || []),
             ];
-            let primaryFilter = this.getSelectPrimaryFilterName() ||
+            const primaryFilter = this.getSelectPrimaryFilterName() ||
                 filters.primary || panelDefs.selectPrimaryFilter;
 
             this.createView('dialog', viewName, {
@@ -986,7 +996,7 @@ class LinkFieldView extends BaseFieldView {
                 filters: advanced,
                 boolFilterList: boolFilterList,
                 primaryFilterName: primaryFilter,
-                mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+                mandatorySelectAttributeList: mandatorySelectAttributeList,
                 forceSelectAllAttributes: this.forceSelectAllAttributes,
                 filterList: this.getSelectFilterList(),
                 createAttributesProvider: createAttributesProvider,
