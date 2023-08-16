@@ -393,7 +393,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             let select = ['id', 'name'];
 
             if (mandatorySelectAttributeList) {
-                select = select.concat(this.mandatorySelectAttributeList);
+                select = select.concat(mandatorySelectAttributeList);
             }
 
             url += '&select=' + select.join(',')
