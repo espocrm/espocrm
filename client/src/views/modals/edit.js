@@ -299,7 +299,7 @@ class EditModalView extends ModalView {
         editView
             .save()
             .then(() => {
-                let wasNew = !this.id;
+                const wasNew = !this.id;
 
                 if (wasNew) {
                     this.id = model.id;
@@ -311,10 +311,10 @@ class EditModalView extends ModalView {
                     this.dialog.close();
 
                     if (wasNew) {
-                        let url = '#' + this.scope + '/view/' + model.id;
-                        let name = model.get('name');
+                        const url = '#' + this.scope + '/view/' + model.id;
+                        const name = model.get('name') || this.model.id;
 
-                        let msg = this.translate('Created')  + '\n' +
+                        const msg = this.translate('Created') + '\n' +
                             `[${name}](${url})`;
 
                         Espo.Ui.notify(msg, 'success', 4000, {suppress: true});
