@@ -33,6 +33,14 @@
             "description": "Hides the search panel on the list view.",
             "type": "boolean"
         },
+        "searchPanelInPortalDisabled": {
+            "description": "Hides the search panel on the list view in portals.",
+            "type": "boolean"
+        },
+        "textFilterDisabled": {
+            "type": "boolean",
+            "description": "Disables text search."
+        },
         "views": {
             "description": "View classes. Available views: list, detail, edit, listRelated.",
             "type": "object",
