@@ -186,11 +186,11 @@ class ArrayType
     {
         $maxLength = $validationValue ?? self::DEFAULT_MAX_ITEM_LENGTH;
 
-        /** @var string[] $value */
+        /** @var mixed[] $value */
         $value = $entity->get($field) ?? [];
 
         foreach ($value as $item) {
-            if (mb_strlen($item) > $maxLength) {
+            if (is_string($item) && mb_strlen($item) > $maxLength) {
                 return false;
             }
         }
