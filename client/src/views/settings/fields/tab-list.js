@@ -264,6 +264,27 @@ class TabListFieldView extends ArrayFieldView {
             noGroups: this.noGroups,
         };
     }
+
+    getValueForDisplay() {
+        const labels = this.translatedOptions || {};
+
+        /** @var {string[]} */
+        const list = this.selected.map(item => {
+            if (typeof item !== 'string') {
+                return ' - ' + (item.text || '?');
+            }
+
+            return labels[item] || item;
+        });
+
+        return list.map(text => {
+            return $('<div>')
+                .addClass('multi-enum-item-container')
+                .text(text)
+                .get(0)
+                .outerHTML
+        }).join('');
+    }
 }
 
 export default TabListFieldView;

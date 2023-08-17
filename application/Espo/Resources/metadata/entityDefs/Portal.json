@@ -37,7 +37,11 @@
             "validationList": [
                 "array",
                 "required"
-            ]
+            ],
+            "suppressValidationList": [
+                "arrayOfString"
+            ],
+            "doNotStoreArrayValues": true
         },
         "quickCreateList": {
             "type": "array",
