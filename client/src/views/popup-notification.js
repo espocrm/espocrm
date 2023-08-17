@@ -155,7 +155,7 @@ class PopupNotificationView extends View {
      * @deprecated Use `resolveConfirm`.
      */
     confirm() {
-        console.warning(`Method 'confirm' in views/popup-notification is deprecated. Use 'resolveConfirm' instead.`);
+        console.warn(`Method 'confirm' in views/popup-notification is deprecated. Use 'resolveConfirm' instead.`);
 
         this.resolveConfirm();
     }
@@ -164,7 +164,7 @@ class PopupNotificationView extends View {
      * @deprecated Use `resolveCancel`.
      */
     cancel() {
-        console.warning(`Method 'cancel' in views/popup-notification is deprecated. Use 'resolveCancel' instead.`);
+        console.warn(`Method 'cancel' in views/popup-notification is deprecated. Use 'resolveCancel' instead.`);
 
         this.resolveCancel();
     }
