@@ -61,6 +61,36 @@
                 "type": "string"
             }
         },
+        "viewSetupHandlers": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "items": {
+                    "anyOf": [
+                        {"type": "string"},
+                        {"enum": ["__APPEND__"]}
+                    ]
+                }
+            },
+            "propertyNames": {
+                "anyOf": [
+                    {"type": "string"},
+                    {
+                        "enum": [
+                            "list",
+                            "detail",
+                            "edit",
+                            "record/list",
+                            "record/search",
+                            "record/detail",
+                            "record/edit",
+                            "record/kanban"
+                        ]
+                    }
+                ]
+            },
+            "description": "View setup handlers. https://docs.espocrm.com/development/frontend/view-setup-handlers/"
+        },
         "inlineEditDisabled": {
             "description": "Disable inline edit.",
             "type": "boolean"
@@ -230,6 +260,10 @@
                                     },
                                     "accessDataList": {
                                         "$ref": "#/definitions/accessDataList"
+                                    },
+                                    "configCheck": {
+                                        "type": "string",
+                                        "description": "A config path to check. Path items are separated by a dot. If a config value is not empty, then the action is allowed. The `!` prefix reverses the check."
                                     }
                                 }
                             }

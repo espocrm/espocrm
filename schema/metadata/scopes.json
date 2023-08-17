@@ -259,6 +259,10 @@
                 "type": "string"
             }
         },
+        "kanbanOrderDisabled": {
+            "description": "Disable the ability to order items for users.",
+            "type": "boolean"
+        },
         "languageIsGlobal": {
             "description": "Language labels will be available for all users (not restricted by ACL).",
             "type": "boolean"
