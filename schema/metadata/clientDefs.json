@@ -41,6 +41,14 @@
             "type": "boolean",
             "description": "Disables text search."
         },
+        "editDisabled": {
+            "type": "boolean",
+            "description": "Disables edit."
+        },
+        "removeDisabled": {
+            "type": "boolean",
+            "description": "Disables remove."
+        },
         "views": {
             "description": "View classes. Available views: list, detail, edit, listRelated.",
             "type": "object",
