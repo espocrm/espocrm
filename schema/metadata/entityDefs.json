@@ -96,6 +96,80 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "varchar"},
+                                    {"const": "text"},
+                                    {"const": "wysiwyg"},
+                                    {"const": "int"},
+                                    {"const": "float"},
+                                    {"const": "currency"},
+                                    {"const": "url"},
+                                    {"const": "personName"},
+                                    {"const": "address"},
+                                    {"const": "link"},
+                                    {"const": "linkMultiple"},
+                                    {"const": "linkParent"},
+                                    {"const": "linkOne"},
+                                    {"const": "email"},
+                                    {"const": "phone"},
+                                    {"const": "enum"},
+                                    {"const": "multiEnum"},
+                                    {"const": "array"},
+                                    {"const": "checklist"},
+                                    {"const": "urlMultiple"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "required": {
+                                "type": "boolean",
+                                "description": "The field is required."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "varchar"},
+                                    {"const": "text"},
+                                    {"const": "wysiwyg"},
+                                    {"const": "int"},
+                                    {"const": "float"},
+                                    {"const": "currency"},
+                                    {"const": "enum"},
+                                    {"const": "multiEnum"},
+                                    {"const": "array"},
+                                    {"const": "checklist"},
+                                    {"const": "urlMultiple"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "default": {
+                                "anyOf": [
+                                    {"type": "boolean"},
+                                    {"type": "string"},
+                                    {"type": "array"},
+                                    {"type": "integer"},
+                                    {"type": "number"},
+                                    {"type": "null"}
+                                ],
+                                "description": "A default value."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "enum"},
                                     {"const": "multiEnum"},
                                     {"const": "array"},
@@ -370,6 +444,10 @@
                     "type": "boolean",
                     "description": "Indicates that updating the field directly is not possible."
                 },
+                "foreignAccessDisabled": {
+                    "type": "boolean",
+                    "description": "Indicates that access to the field through a link is not feasible."
+                },
                 "importDisabled": {
                     "type": "boolean",
                     "description": "Disables the ability to import the field."
@@ -601,7 +679,31 @@
                     "type": "boolean",
                     "description": "The link will be hidden from a user on the UI but not disabled."
                 }
-            }
+            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "belongsToParent"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "entityList": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "description": "Entity types."
+                            }
+                        }
+                    }
+                }
+            ]
         },
         "joins": {
             "type": "array",
