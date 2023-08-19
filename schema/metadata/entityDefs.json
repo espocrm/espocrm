@@ -276,6 +276,89 @@
                             }
                         }
                     }
+                },
+                {
+                    "if": {
+                        "anyOf": [
+                            {
+                                "properties": {
+                                    "dbType": {
+                                        "anyOf": [
+                                            {"const": "decimal"}
+                                        ]
+                                    }
+                                }
+                            },
+                            {
+                                "properties": {
+                                    "type": {
+                                        "anyOf": [
+                                            {"const": "currency"}
+                                        ]
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    "then": {
+                        "properties": {
+                            "precision": {
+                                "type": "integer",
+                                "description": "A precision."
+                            },
+                            "scale": {
+                                "type": "integer",
+                                "description": "A scale."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "int"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "min": {
+                                "type": "integer",
+                                "description": "A minimum value."
+                            },
+                            "max": {
+                                "type": "integer",
+                                "description": "A maximum value."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "float"}
+                                    {"const": "currency"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "min": {
+                                "type": "number",
+                                "description": "A minimum value."
+                            },
+                            "max": {
+                                "type": "number",
+                                "description": "A maximum value."
+                            }
+                        }
+                    }
                 }
             ],
             "properties": {
