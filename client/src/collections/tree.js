@@ -39,6 +39,7 @@ class TreeCollection extends Collection {
         seed.model = this.model;
         seed.name = this.name;
         seed.entityType = this.entityType;
+        seed.defs = this.defs;
 
         return seed;
     }
