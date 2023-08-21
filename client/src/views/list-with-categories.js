@@ -74,6 +74,10 @@ class ListWithCategories extends ListView {
             this.categoryScope = this.scope + 'Category';
         }
 
+        this.showEditLink =
+            this.getAcl().check(this.categoryScope, 'edit') ||
+            this.getAcl().check(this.categoryScope, 'create');
+
         let isExpandedByDefault = this.getMetadata()
             .get(['clientDefs', this.categoryScope, 'isExpandedByDefault']) || false;
 
@@ -459,7 +463,7 @@ class ListWithCategories extends ListView {
             this.createView('nestedCategories', 'views/record/list-nested-categories', {
                 collection: collection,
                 selector: '.nested-categories-container',
-                showEditLink: this.getAcl().check(this.categoryScope, 'edit'),
+                showEditLink: this.showEditLink,
                 isExpanded: this.isExpanded,
                 hasExpandedToggler: this.hasExpandedToggler,
                 hasNavigationPanel: this.hasNavigationPanel,
@@ -480,7 +484,7 @@ class ListWithCategories extends ListView {
                 rootName: this.translate(this.scope, 'scopeNamesPlural'),
                 buttonsDisabled: true,
                 checkboxes: false,
-                showEditLink: this.getAcl().check(this.categoryScope, 'edit'),
+                showEditLink: this.showEditLink,
                 isExpanded: this.isExpanded,
                 hasExpandedToggler: this.hasExpandedToggler,
                 menuDisabled: !this.isExpanded && this.hasNavigationPanel,
