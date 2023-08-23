@@ -62,9 +62,9 @@ class RecordListDashletView extends BaseDashletView {
     rowActionsView = 'views/record/row-actions/view-and-edit'
 
     init() {
-        this.scope = this.getMetadata().get(['dashlets', this.name, 'entityType']) || this.scope;
-
         super.init();
+
+        this.scope = this.getMetadata().get(['dashlets', this.name, 'entityType']) || this.scope;
     }
 
     checkAccess() {
