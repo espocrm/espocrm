@@ -775,6 +775,11 @@ class Service implements Crud,
         $this->entityManager->saveEntity($entity);
 
         $this->afterUpdateEntity($entity, $data);
+
+        if ($this->metadata->get(['recordDefs', $this->entityType, 'loadAdditionalFieldsAfterUpdate'])) {
+            $this->loadAdditionalFields($entity);
+        }
+
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::UPDATE, $entity);
 

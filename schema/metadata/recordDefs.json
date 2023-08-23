@@ -126,6 +126,10 @@
                 }
             }
         },
+        "loadAdditionalFieldsAfterUpdate": {
+            "type": "boolean",
+            "description": "Load additional fields after update. Needed for cases when additional fields need to be re-loaded since they are not actual after update."
+        },
         "beforeReadHookClassNameList": {
             "description": "Before-read hooks. Should implement the Espo\\Core\\Record\\Hook\\ReadHook interface.",
             "type": "array",
