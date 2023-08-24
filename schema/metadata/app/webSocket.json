@@ -7,7 +7,7 @@
     "properties": {
         "categories": {
             "type": "object",
-            "description": "Categories. Define custom WebSocket events here. You can use dots in category names.",
+            "description": "Categories. Define custom WebSocket events here. You can use dots in category names. Must start with a lower case letter.",
             "additionalProperties": {
                 "type": "object",
                 "description": "A category.",

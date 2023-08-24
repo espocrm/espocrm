@@ -6,7 +6,7 @@
     "type": "object",
     "additionalProperties": {
         "type": "object",
-        "description": "A command name.",
+        "description": "A command name. In camelCase format.",
         "properties": {
             "className": {
                 "type": "string",
