@@ -378,8 +378,8 @@ class LinkFieldView extends BaseFieldView {
     getSelectFieldHandler() {
         if (!this.panelDefs.selectFieldHandler) {
             return Promise.resolve({
-                getClearAttributes: () => {},
-                getAttributes: () => {},
+                getClearAttributes: () => Promise.resolve({}),
+                getAttributes: () => Promise.resolve({}),
             });
         }
 
