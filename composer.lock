@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ac4f4892afc66870aa918650fd3c62a6",
+    "content-hash": "2b80267e733b9b4153f66fc0cfce5315",
     "packages": [
         {
             "name": "async-aws/core",
@@ -4540,16 +4540,16 @@
         },
         {
             "name": "spatie/async",
-            "version": "1.5.5",
+            "version": "1.5.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/spatie/async.git",
-                "reference": "742708736b1e6d606dd1cd0f60acb7e354211e41"
+                "reference": "24a8ffa98f4fe0f9dc5daef3bab02a65729fe23b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/spatie/async/zipball/742708736b1e6d606dd1cd0f60acb7e354211e41",
-                "reference": "742708736b1e6d606dd1cd0f60acb7e354211e41",
+                "url": "https://api.github.com/repos/spatie/async/zipball/24a8ffa98f4fe0f9dc5daef3bab02a65729fe23b",
+                "reference": "24a8ffa98f4fe0f9dc5daef3bab02a65729fe23b",
                 "shasum": ""
             },
             "require": {
@@ -4595,7 +4595,7 @@
             ],
             "support": {
                 "issues": "https://github.com/spatie/async/issues",
-                "source": "https://github.com/spatie/async/tree/1.5.5"
+                "source": "https://github.com/spatie/async/tree/1.5.6"
             },
             "funding": [
                 {
@@ -4603,7 +4603,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2022-06-21T06:40:45+00:00"
+            "time": "2023-08-25T15:47:03+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -8107,7 +8107,6 @@
     "prefer-lowest": false,
     "platform": {
         "php": ">=8.0.2 <8.3.0",
-        "ext-pdo_mysql": "*",
         "ext-openssl": "*",
         "ext-json": "*",
         "ext-zip": "*",
