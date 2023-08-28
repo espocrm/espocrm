@@ -503,6 +503,12 @@ class DetailRecordView extends BaseRecordView {
     accessControlDisabled
 
     /**
+     * @protected
+     * @type {boolean}
+     */
+    inlineEditModeIsOn = false
+
+    /**
      * A Ctrl+Enter shortcut action.
      *
      * @protected
@@ -4157,6 +4163,16 @@ class DetailRecordView extends BaseRecordView {
         e.stopPropagation();
 
         this.actionNext();
+    }
+
+    /**
+     * Is in inline-edit mode.
+     *
+     * @since 8.0.0
+     * @return {boolean}
+     */
+    isInlineEditMode() {
+        return this.inlineEditModeIsOn;
     }
 }
 
