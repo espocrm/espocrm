@@ -604,6 +604,10 @@
                     "type": "string",
                     "description": "A scope to check access to. If no access, the item is not displayed."
                 },
+                "name": {
+                    "type": "string",
+                    "description": "A name."
+                },
                 "action": {
                     "type": "string",
                     "description": "An action. To be used in javascript code for handling."
