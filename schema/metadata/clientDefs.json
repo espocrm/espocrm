@@ -207,6 +207,15 @@
         "menu": {
             "description": "Top-right menu for views (list, detail, edit). Action types: buttons, dropdowns. https://docs.espocrm.com/development/custom-buttons/",
             "type": "object",
+            "propertyNames": {
+                "enum": [
+                    "list",
+                    "detail",
+                    "edit",
+                    "listRelated",
+                    "listTree"
+                ]
+            },
             "additionalProperties": {
                 "type": "object",
                 "propertyNames": {
@@ -218,71 +227,7 @@
                         "anyOf": [
                             {"enum": ["__APPEND__"]},
                             {"const": false},
-                            {
-                                "type": "object",
-                                "properties": {
-                                    "label": {
-                                        "type": "string",
-                                        "description": "A translatable label."
-                                    },
-                                    "labelTranslation": {
-                                        "type": "string",
-                                        "description": "A label translation path. Example: 'Campaign.links.trackingUrls'."
-                                    },
-                                    "link": {
-                                        "type": "string",
-                                        "description": "A link (href)."
-                                    },
-                                    "acl": {
-                                        "enum": [
-                                            "create",
-                                            "read",
-                                            "edit",
-                                            "delete",
-                                            "stream"
-                                        ],
-                                        "description": "An action to check access to. If no access, the item is not displayed."
-                                    },
-                                    "aclScope": {
-                                        "type": "string",
-                                        "description": "A scope to check access to. If no access, the item is not displayed."
-                                    },
-                                    "action": {
-                                        "type": "string",
-                                        "description": "An action. To be used in javascript code for handling."
-                                    },
-                                    "style": {
-                                        "enum": [
-                                            "default",
-                                            "success",
-                                            "warning",
-                                            "danger",
-                                            "info"
-                                        ],
-                                        "description": "A style."
-                                    },
-                                    "data": {
-                                        "type": "object",
-                                        "properties": {
-                                            "handler": {
-                                                "type": "string",
-                                                "description": "A handler class."
-                                            }
-                                        }
-                                    },
-                                    "initFunction": {
-                                        "type": "string",
-                                        "description": "An init function of the handler."
-                                    },
-                                    "accessDataList": {
-                                        "$ref": "#/definitions/accessDataList"
-                                    },
-                                    "configCheck": {
-                                        "type": "string",
-                                        "description": "A config path to check. Path items are separated by a dot. If a config value is not empty, then the action is allowed. The `!` prefix reverses the check."
-                                    }
-                                }
-                            }
+                            {"$ref": "#/definitions/menuItem"}
                         ]
                     }
                 }
@@ -630,6 +575,71 @@
         }
     },
     "definitions": {
+        "menuItem": {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "description": "A translatable label."
+                },
+                "labelTranslation": {
+                    "type": "string",
+                    "description": "A label translation path. Example: 'Campaign.links.trackingUrls'."
+                },
+                "link": {
+                    "type": "string",
+                    "description": "A link (href)."
+                },
+                "acl": {
+                    "enum": [
+                        "create",
+                        "read",
+                        "edit",
+                        "delete",
+                        "stream"
+                    ],
+                    "description": "An action to check access to. If no access, the item is not displayed."
+                },
+                "aclScope": {
+                    "type": "string",
+                    "description": "A scope to check access to. If no access, the item is not displayed."
+                },
+                "action": {
+                    "type": "string",
+                    "description": "An action. To be used in javascript code for handling."
+                },
+                "style": {
+                    "enum": [
+                        "default",
+                        "success",
+                        "warning",
+                        "danger",
+                        "info"
+                    ],
+                    "description": "A style."
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "handler": {
+                            "type": "string",
+                            "description": "A handler class."
+                        }
+                    }
+                },
+                "initFunction": {
+                    "type": "string",
+                    "description": "An init function of the handler."
+                },
+                "accessDataList": {
+                    "$ref": "#/definitions/accessDataList"
+                },
+                "configCheck": {
+                    "type": "string",
+                    "description": "A config path to check. Path items are separated by a dot. If a config value is not empty, then the action is allowed. The `!` prefix reverses the check."
+                }
+            }
+        },
         "dynamicLogicVisible": {
             "type": "object",
             "description": "Conditions making the element visible.",
