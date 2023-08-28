@@ -4166,13 +4166,13 @@ class DetailRecordView extends BaseRecordView {
     }
 
     /**
-     * Is in inline-edit mode.
+     * Get a current mode.
      *
      * @since 8.0.0
-     * @return {boolean}
+     * @return {string}
      */
-    isInlineEditMode() {
-        return this.inlineEditModeIsOn;
+    getMode() {
+        return this.mode;
     }
 }
 
