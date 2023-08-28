@@ -361,6 +361,7 @@ class ViewHelper {
             let link = options.hash.link;
             let action = options.hash.action || name;
             let iconHtml = options.hash.iconHtml;
+            const iconClass = options.hash.iconClass;
 
             let html =
                 options.hash.html ||
@@ -376,6 +377,11 @@ class ViewHelper {
             }
 
             if (iconHtml) {
+                html = iconHtml + ' ' + html;
+            }
+            else if (iconClass) {
+                const iconHtml = $('<span>').addClass(iconClass).get(0).outerHTML;
+
                 html = iconHtml + ' ' + html;
             }
 
@@ -425,6 +431,7 @@ class ViewHelper {
             let labelTranslation = options.hash.labelTranslation;
             let link = options.hash.link;
             let iconHtml = options.hash.iconHtml;
+            const iconClass = options.hash.iconClass;
 
             let html =
                 options.hash.html ||
@@ -440,6 +447,11 @@ class ViewHelper {
             }
 
             if (iconHtml) {
+                html = iconHtml + ' ' + html;
+            }
+            else if (iconClass) {
+                const iconHtml = $('<span>').addClass(iconClass).get(0).outerHTML;
+
                 html = iconHtml + ' ' + html;
             }
 
