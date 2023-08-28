@@ -118,18 +118,20 @@
         }
     }
 
-    .record-grid-wide {
-        .left > .middle > .panel,
-        .left > .bottom > .panel {
-            border-right: 0;
-            border-top-right-radius: 0;
-            border-bottom-right-radius: 0;
-
-            &.first::before {
+    .no-side-margin {
+        .record-grid-wide {
+            .left > .middle > .panel,
+            .left > .bottom > .panel {
+                border-right: 0;
                 border-top-right-radius: 0;
-            }
-            &.last::before {
                 border-bottom-right-radius: 0;
+
+                &.first::before {
+                    border-top-right-radius: 0;
+                }
+                &.last::before {
+                    border-bottom-right-radius: 0;
+                }
             }
         }
     }
