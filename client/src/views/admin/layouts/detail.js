@@ -199,6 +199,12 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                         return;
                     }
 
+                    if (this.typeDefs.allFields) {
+                        resolve();
+
+                        return;
+                    }
+
                     this.getHelper().layoutManager.getOriginal(
                         this.scope,
                         'defaultSidePanel',

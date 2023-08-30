@@ -90,6 +90,8 @@ class LayoutBaseView extends View {
         let defs = this.getMetadata()
             .get(['clientDefs', this.scope, 'additionalLayouts', this.type]) ?? {};
 
+        this.typeDefs = defs;
+
         this.dataAttributeList = Espo.Utils.clone(defs.dataAttributeList || this.dataAttributeList);
 
         this.isCustom = !!defs.isCustom;

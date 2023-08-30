@@ -426,6 +426,10 @@
                             "type": "string"
                         },
                         "description": "Data attributes."
+                    },
+                    "allFields": {
+                        "type": "boolean",
+                        "description": "All fields. Actual for the detail type. If false, fields added in the side panel layout won't be available."
                     }
                 }
             }
