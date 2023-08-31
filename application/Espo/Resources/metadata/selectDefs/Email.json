@@ -27,6 +27,7 @@
     "textFilterUseContainsAttributeList": ["name"],
     "selectAttributesDependencyMap": {
         "subject": ["name"],
-        "personStringData": ["fromString", "fromEmailAddressId"]
+        "personStringData": ["fromString", "fromEmailAddressId"],
+        "replyToName": ["replyToString"]
     }
 }
