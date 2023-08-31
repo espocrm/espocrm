@@ -17,7 +17,7 @@
             "type": "object",
             "description": "Rules making language translations available for a user when they don't have access to a scope.",
             "additionalProperties": {
-                "description": "A metadata path, items are separated by dots.",
+                "description": "A language path, items are separated by dots.",
                 "properties": {
                     "scope": {
                         "type": "string",
