@@ -368,12 +368,19 @@ class MailMimeParser implements Parser
                 continue;
             }
 
+            // No ID found, fallback to attachment.
+            $attachment
+                ->setRole(Attachment::ROLE_ATTACHMENT)
+                ->setTargetField('attachments');
+
+            $this->entityManager->saveEntity($attachment);
+
             $email->addLinkMultipleId('attachments', $attachment->getId());
         }
 
         $body = $email->getBody();
 
-        if (!empty($body)) {
+        if ($body) {
             foreach ($inlineIds as $cid => $attachmentId) {
                 if (str_contains($body, 'cid:' . $cid)) {
                     $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
@@ -381,7 +388,20 @@ class MailMimeParser implements Parser
                     continue;
                 }
 
-                $email->addLinkMultipleId('attachments', $attachmentId);
+                // Fallback to attachment.
+                $attachment = $this->entityManager
+                    ->getRDBRepositoryByClass(Attachment::class)
+                    ->getById($attachmentId);
+
+                if ($attachment) {
+                    $attachment
+                        ->setRole(Attachment::ROLE_ATTACHMENT)
+                        ->setTargetField('attachments');
+
+                    $this->entityManager->saveEntity($attachment);
+
+                    $email->addLinkMultipleId('attachments', $attachmentId);
+                }
             }
 
             $email->setBody($body);
