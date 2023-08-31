@@ -29,17 +29,15 @@
 
 namespace Espo\Core\Mail\Parsers;
 
-use Psr\Http\Message\StreamInterface;
-
 use Espo\Entities\Email;
 use Espo\Entities\Attachment;
-
+use Espo\ORM\EntityManager;
 use Espo\Core\Mail\Message;
 use Espo\Core\Mail\Parser;
 use Espo\Core\Mail\Message\Part;
 use Espo\Core\Mail\Message\MailMimeParser\Part as WrapperPart;
 
-use Espo\ORM\EntityManager;
+use Psr\Http\Message\StreamInterface;
 
 use ZBateson\MailMimeParser\Header\AddressHeader;
 use ZBateson\MailMimeParser\MailMimeParser as WrappeeParser;
@@ -63,20 +61,20 @@ class MailMimeParser implements Parser
         'webp' => 'image/webp',
     ];
 
-    private EntityManager $entityManager;
     private ?WrappeeParser $parser = null;
 
-    /**
-     * @var array<string, ParserMessage>
-     */
+    private const FIELD_BODY = 'body';
+    private const FIELD_ATTACHMENTS = 'attachments';
+
+    private const DISPOSITION_INLINE = 'inline';
+
+    /** @var array<string, ParserMessage> */
     private array $messageHash = [];
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
-    protected function getParser(): WrappeeParser
+    private function getParser(): WrappeeParser
     {
         if (!$this->parser) {
             $this->parser = new WrappeeParser();
@@ -85,7 +83,7 @@ class MailMimeParser implements Parser
         return $this->parser;
     }
 
-    protected function loadContent(Message $message): void
+    private function loadContent(Message $message): void
     {
         $raw = $message->getFullRawContent();
 
@@ -98,7 +96,7 @@ class MailMimeParser implements Parser
     /**
      * @return ParserMessage
      */
-    protected function getMessage(Message $message)
+    private function getMessage(Message $message)
     {
         $key = spl_object_hash($message);
 
@@ -291,7 +289,7 @@ class MailMimeParser implements Parser
 
         $attachmentPartList = $this->getMessage($message)->getAllAttachmentParts();
 
-        $inlineIds = [];
+        $inlineAttachmentMap = [];
 
         foreach ($attachmentPartList as $attachmentPart) {
             if (!$attachmentPart instanceof MimePart) {
@@ -334,34 +332,33 @@ class MailMimeParser implements Parser
                 $contentId = trim($contentId, '<>');
             }
 
-            if ($disposition === 'inline') {
+            if ($disposition === self::DISPOSITION_INLINE) {
                 $attachment->setRole(Attachment::ROLE_INLINE_ATTACHMENT);
-                $attachment->setTargetField('body');
+                $attachment->setTargetField(self::FIELD_BODY);
             }
             else {
-                $disposition = 'attachment';
-
                 $attachment->setRole(Attachment::ROLE_ATTACHMENT);
-                $attachment->setTargetField('attachments');
+                $attachment->setTargetField(self::FIELD_ATTACHMENTS);
             }
 
             $attachment->setContents($content);
 
             $this->entityManager->saveEntity($attachment);
 
-            if ($disposition === 'attachment') {
-                $email->addLinkMultipleId('attachments', $attachment->getId());
+            if ($attachment->getRole() === Attachment::ROLE_ATTACHMENT) {
+                $email->addLinkMultipleId(self::FIELD_ATTACHMENTS, $attachment->getId());
 
                 if ($contentId) {
-                    $inlineIds[$contentId] = $attachment->getId();
+                    $inlineAttachmentMap[$contentId] = $attachment;
                 }
 
                 continue;
             }
 
-            // inline disposition
+            // Inline disposition.
+
             if ($contentId) {
-                $inlineIds[$contentId] = $attachment->getId();
+                $inlineAttachmentMap[$contentId] = $attachment;
 
                 $inlineAttachmentList[] = $attachment;
 
@@ -371,36 +368,36 @@ class MailMimeParser implements Parser
             // No ID found, fallback to attachment.
             $attachment
                 ->setRole(Attachment::ROLE_ATTACHMENT)
-                ->setTargetField('attachments');
+                ->setTargetField(self::FIELD_ATTACHMENTS);
 
             $this->entityManager->saveEntity($attachment);
 
-            $email->addLinkMultipleId('attachments', $attachment->getId());
+            $email->addLinkMultipleId(self::FIELD_ATTACHMENTS, $attachment->getId());
         }
 
         $body = $email->getBody();
 
         if ($body) {
-            foreach ($inlineIds as $cid => $attachmentId) {
+            foreach ($inlineAttachmentMap as $cid => $attachment) {
                 if (str_contains($body, 'cid:' . $cid)) {
-                    $body = str_replace('cid:' . $cid, '?entryPoint=attachment&amp;id=' . $attachmentId, $body);
+                    $body = str_replace(
+                        'cid:' . $cid,
+                        '?entryPoint=attachment&amp;id=' . $attachment->getId(),
+                        $body
+                    );
 
                     continue;
                 }
 
                 // Fallback to attachment.
-                $attachment = $this->entityManager
-                    ->getRDBRepositoryByClass(Attachment::class)
-                    ->getById($attachmentId);
-
-                if ($attachment) {
+                if ($attachment->getRole() === Attachment::ROLE_INLINE_ATTACHMENT) {
                     $attachment
                         ->setRole(Attachment::ROLE_ATTACHMENT)
-                        ->setTargetField('attachments');
+                        ->setTargetField(self::FIELD_ATTACHMENTS);
 
                     $this->entityManager->saveEntity($attachment);
 
-                    $email->addLinkMultipleId('attachments', $attachmentId);
+                    $email->addLinkMultipleId(self::FIELD_ATTACHMENTS, $attachment->getId());
                 }
             }
 
