@@ -22,6 +22,7 @@ You can try the CRM on the online [demo](https://www.espocrm.com/demo/).
 
 * PHP 8.0 and later;
 * MySQL 5.7 (and later), or MariaDB 10.2 (and later).
+* PostgreSQL 15 (and later) (yet experimental, officially supported soon)
 
 For more information about server configuration see [this article](https://docs.espocrm.com/administration/server-configuration/).
 
