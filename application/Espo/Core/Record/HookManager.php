@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Record;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\Hook\CreateHook;
 use Espo\Core\Record\Hook\DeleteHook;
 use Espo\Core\Record\Hook\LinkHook;
@@ -44,6 +47,11 @@ class HookManager
     public function __construct(private Provider $provider)
     {}
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
     public function processBeforeCreate(Entity $entity, CreateParams $params): void
     {
         foreach ($this->getBeforeCreateHookList($entity->getEntityType()) as $hook) {
@@ -58,6 +66,11 @@ class HookManager
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
     public function processBeforeUpdate(Entity $entity, UpdateParams $params): void
     {
         foreach ($this->getBeforeUpdateHookList($entity->getEntityType()) as $hook) {
@@ -65,6 +78,11 @@ class HookManager
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
     public function processBeforeDelete(Entity $entity, DeleteParams $params): void
     {
         foreach ($this->getBeforeDeleteHookList($entity->getEntityType()) as $hook) {
