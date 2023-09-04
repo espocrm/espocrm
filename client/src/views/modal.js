@@ -33,7 +33,7 @@ import View from 'view';
 /**
  * A base modal view. Can be extended or used directly.
  *
- * @see {@link https://docs.espocrm.com/development/modal/}
+ * @see https://docs.espocrm.com/development/modal/
  */
 class ModalView extends View {
 
