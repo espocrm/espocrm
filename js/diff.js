@@ -283,6 +283,7 @@ class Diff
 
             fileList.push('client/lib/espo.js');
             fileList.push('client/lib/espo.js.map');
+            fileList.push('client/lib/templates.tpl');
 
             Object.keys(bundleConfig.chunks)
                 .map(name => {
