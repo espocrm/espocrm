@@ -50,6 +50,10 @@ define('views/settings/modals/edit-tab-group', ['views/modal', 'model'], functio
                 label: 'Cancel',
             });
 
+            this.shortcutKeys = {
+                'Control+Enter': () => this.actionApply(),
+            };
+
             var detailLayout = [
                 {
                     rows: [

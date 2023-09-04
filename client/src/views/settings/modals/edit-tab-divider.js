@@ -51,6 +51,10 @@ class EditTabDividerSettingsModalView extends ModalView {
             label: 'Cancel',
         });
 
+        this.shortcutKeys = {
+            'Control+Enter': () => this.actionApply(),
+        };
+
         let detailLayout = [
             {
                 rows: [
