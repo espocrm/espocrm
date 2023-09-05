@@ -464,6 +464,10 @@ class BaseFieldView extends View {
      * @return {JQuery}
      */
     getLabelElement() {
+        if (this.$label && this.$label.get(0) && !document.contains(this.$label.get(0))) {
+            this.$label = undefined;
+        }
+
         if (!this.$label || !this.$label.length) {
             this.$label = this.$el.parent().children('label');
         }
