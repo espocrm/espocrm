@@ -36,7 +36,7 @@ class JsonObjectFieldView extends BaseFieldView {
     detailTemplate = 'fields/json-object/detail'
 
     data() {
-        const data = super.setup();
+        const data = super.data();
 
         data.valueIsSet = this.model.has(this.name);
         data.isNotEmpty = !!this.model.get(this.name);
