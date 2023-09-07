@@ -735,7 +735,7 @@ class CalendarView extends View {
             slotEventOverlap: true,
             slotDuration: slotDuration,
             snapDuration: this.slotDuration * 60 * 1000,
-            timeZone: this.getDateTime().timeZone,
+            timeZone: this.getDateTime().timeZone || undefined,
             longPressDelay: 300,
             eventColor: this.colors[''],
             nowIndicator: true,
