@@ -428,19 +428,19 @@ abstract class Base
                 $this->getLog()->error('SemVer: Version identification error: '.$e->getMessage().'.');
             }
 
-            if ($isInRange) {
-                return true;
+            if (!$isInRange) {
+                /** @var string $errorMessage */
+                $errorMessage = preg_replace('/\{version\}/', $currentVersion, $errorMessage);
+                /** @var string $errorMessage */
+                $errorMessage = preg_replace('/\{requiredVersion\}/', $version, $errorMessage);
+        
+                $this->throwErrorAndRemovePackage($errorMessage);
+        
+                return false;
             }
         }
 
-        /** @var string $errorMessage */
-        $errorMessage = preg_replace('/\{version\}/', $currentVersion, $errorMessage);
-        /** @var string $errorMessage */
-        $errorMessage = preg_replace('/\{requiredVersion\}/', $version, $errorMessage);
-
-        $this->throwErrorAndRemovePackage($errorMessage);
-
-        return false;
+        return true;
     }
 
     /**
