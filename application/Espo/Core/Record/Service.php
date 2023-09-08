@@ -41,6 +41,7 @@ use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ActionHistory\ActionLogger;
@@ -703,7 +704,7 @@ class Service implements Crud,
 
         $this->beforeCreateEntity($entity, $data);
 
-        $this->entityManager->saveEntity($entity);
+        $this->entityManager->saveEntity($entity, [SaveOption::API => true]);
 
         $this->afterCreateEntity($entity, $data);
         $this->afterCreateProcessDuplicating($entity, $params);
@@ -773,7 +774,7 @@ class Service implements Crud,
         $this->recordHookManager->processBeforeUpdate($entity, $params);
         $this->beforeUpdateEntity($entity, $data);
 
-        $this->entityManager->saveEntity($entity);
+        $this->entityManager->saveEntity($entity, [SaveOption::API => true]);
 
         $this->afterUpdateEntity($entity, $data);
 
