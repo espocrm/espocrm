@@ -411,7 +411,7 @@ class Saver implements SaverInterface
             return;
         }
 
-        $phoneNumberValue = trim($entity->get('phoneNumber'));
+        $phoneNumberValue = trim($entity->get('phoneNumber') ?? "");
 
         $entityRepository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
