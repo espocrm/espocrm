@@ -76,7 +76,7 @@ class EntityDefs
     public function getAttributeNameList(): array
     {
         /** @var string[] */
-        return array_keys($this->data['attributes']);
+        return array_keys($this->data['attributes'] ?? []);
     }
 
     /**
