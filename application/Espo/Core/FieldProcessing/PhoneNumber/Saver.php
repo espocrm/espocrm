@@ -411,7 +411,7 @@ class Saver implements SaverInterface
             return;
         }
 
-        $phoneNumberValue = trim($entity->get('phoneNumber'));
+        $phoneNumberValue = trim($entity->get('phoneNumber') ?? '');
 
         $entityRepository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
@@ -424,8 +424,6 @@ class Saver implements SaverInterface
                         'name' => $phoneNumberValue,
                     ])
                     ->findOne();
-
-                $isNewPhoneNumber = false;
 
                 if (!$phoneNumberNew) {
                     $phoneNumberNew = $this->entityManager->getNewEntity(PhoneNumber::ENTITY_TYPE);
@@ -446,8 +444,6 @@ class Saver implements SaverInterface
                     $phoneNumberNew->set('type', $defaultType);
 
                     $this->entityManager->saveEntity($phoneNumberNew);
-
-                    $isNewPhoneNumber = true;
                 }
 
                 $phoneNumberValueOld = $entity->getFetched('phoneNumber');
@@ -456,15 +452,15 @@ class Saver implements SaverInterface
                     $phoneNumberOld = $this->getByNumber($phoneNumberValueOld);
 
                     if ($phoneNumberOld) {
-                        $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld, [
-                            SaveOption::SKIP_HOOKS => true,
-                        ]);
+                        $entityRepository
+                            ->getRelation($entity, 'phoneNumbers')
+                            ->unrelate($phoneNumberOld, [SaveOption::SKIP_HOOKS => true]);
                     }
                 }
 
-                $entityRepository->relate($entity, 'phoneNumbers', $phoneNumberNew, null, [
-                    SaveOption::SKIP_HOOKS => true,
-                ]);
+                $entityRepository
+                    ->getRelation($entity, 'phoneNumbers')
+                    ->relate($phoneNumberNew, null, [SaveOption::SKIP_HOOKS => true]);
 
                 if ($entity->has('phoneNumberIsOptedOut')) {
                     $this->markNumberOptedOut($phoneNumberValue, (bool) $entity->get('phoneNumberIsOptedOut'));
@@ -527,9 +523,9 @@ class Saver implements SaverInterface
             $phoneNumberOld = $this->getByNumber($phoneNumberValueOld);
 
             if ($phoneNumberOld) {
-                $entityRepository->unrelate($entity, 'phoneNumbers', $phoneNumberOld, [
-                    SaveOption::SKIP_HOOKS => true,
-                ]);
+                $entityRepository
+                    ->getRelation($entity, 'phoneNumbers')
+                    ->unrelate($phoneNumberOld, [SaveOption::SKIP_HOOKS => true]);
             }
         }
     }
