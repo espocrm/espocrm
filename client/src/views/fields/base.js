@@ -865,18 +865,20 @@ class BaseFieldView extends View {
                     return;
                 }
 
+                if (options.skipReRenderInEditMode && this.isEditMode()) {
+                    return;
+                }
+
+                if (options.skipReRender) {
+                    return;
+                }
+
                 let reRender = () => {
                     if (!this.isRendered() && !this.isBeingRendered()) {
                         return;
                     }
 
-                    if (options.skipReRenderInEditMode && this.isEditMode()) {
-                        return;
-                    }
-
-                    if (!options.skipReRender) {
-                        this.reRender();
-                    }
+                    this.reRender();
 
                     if (options.highlight) {
                         this.trigger('highlight');
