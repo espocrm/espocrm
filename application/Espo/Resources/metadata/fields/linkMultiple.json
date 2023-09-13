@@ -13,7 +13,8 @@
         },
         {
             "name": "readOnly",
-            "type": "bool"
+            "type": "bool",
+            "tooltip": "linkReadOnly"
         },
         {
             "name": "default",

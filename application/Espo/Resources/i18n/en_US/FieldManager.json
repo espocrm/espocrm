@@ -104,7 +104,8 @@
         "optionsArray": "A list of possible values and their labels. If empty, the field will allow entering custom values.",
         "maxCount": "Maximum number of items allowed to be selected.",
         "displayAsList": "Each item in a new line.",
-        "optionsVarchar": "A list of autocomplete values."
+        "optionsVarchar": "A list of autocomplete values.",
+        "linkReadOnly": "Field value can't be specified by user. But can be calculated by formula.\n\nIt will also disable the ability to create a related record from relationship panels."
     },
     "fieldParts": {
         "address": {
