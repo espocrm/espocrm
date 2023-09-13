@@ -448,8 +448,6 @@ class CalendarView extends View {
         let start;
         let end;
 
-
-
         if (o.dateStart) {
             start = !o.dateStartDate ?
                 this.getDateTime().toMoment(o.dateStart) :
