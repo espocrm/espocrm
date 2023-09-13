@@ -412,7 +412,7 @@ class CalendarView extends View {
      * }}
      */
     convertToFcEvent(o) {
-        let event = {
+        const event = {
             title: o.name || '',
             scope: o.scope,
             id: o.scope + '-' + o.id,
@@ -719,7 +719,7 @@ class CalendarView extends View {
         }
 
         /** @type {CalendarOptions & Object.<string, *>} */
-        let options = {
+        const options = {
             headerToolbar: false,
             slotLabelFormat: slotLabelFormat,
             eventTimeFormat: timeFormat,
@@ -952,8 +952,6 @@ class CalendarView extends View {
             options.eventContent = arg => {
                 const event = /** @type {EventImpl} */arg.event;
 
-                console.log(arg);
-
                 let $content = $('<div>');
 
                 $content.append(
@@ -1126,7 +1124,7 @@ class CalendarView extends View {
     }
     /**
      * @param {EventImpl} event
-     * @return Object.<string, *>
+     * @return {Object.<string, *>}
      */
     obtainPropsFromEvent(event) {
         let props = {};
