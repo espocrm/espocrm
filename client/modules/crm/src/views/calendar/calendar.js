@@ -890,7 +890,7 @@ class CalendarView extends View {
                     attributes.dateEndDate = m.format(this.getDateTime().internalDateFormat);
                 }
 
-                let props = this.obtainPropsFromEvent(event);
+                const props = this.obtainPropsFromEvent(event);
 
                 if (!end && !this.allDayScopeList.includes(scope)) {
                     props.end = moment.tz(start.toISOString(), null, this.getDateTime().timeZone)
@@ -900,6 +900,11 @@ class CalendarView extends View {
                 }
 
                 props.allDay = false;
+
+                props.dateStart = attributes.dateStart;
+                props.dateEnd = attributes.dateEnd;
+                props.dateStartDate = attributes.dateStartDate;
+                props.dateEndDate = attributes.dateEndDate;
 
                 this.handleAllDay(props, true);
                 this.fillColor(props);
