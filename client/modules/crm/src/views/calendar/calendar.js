@@ -926,13 +926,13 @@ class CalendarView extends View {
                 });
             },
             eventResize: info => {
-                let event = info.event;
+                const event = info.event;
 
-                let attributes = {
+                const attributes = {
                     dateEnd: this.convertDateTime(event.endStr),
                 };
 
-                let duration = moment().tz(event.endStr).unix() - moment().tz(event.startStr).unix();
+                const duration = moment(event.end).unix() - moment(event.start).unix();
 
                 Espo.Ui.notify(this.translate('saving', 'messages'));
 
