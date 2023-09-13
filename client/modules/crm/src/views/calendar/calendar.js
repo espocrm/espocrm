@@ -448,16 +448,18 @@ class CalendarView extends View {
         let start;
         let end;
 
+
+
         if (o.dateStart) {
             start = !o.dateStartDate ?
                 this.getDateTime().toMoment(o.dateStart) :
-                this.getDateTime().toMomentDate(o.dateStartDate);
+                this.dateToMoment(o.dateStartDate);
         }
 
         if (o.dateEnd) {
             end = !o.dateEndDate ?
                 this.getDateTime().toMoment(o.dateEnd) :
-                this.getDateTime().toMomentDate(o.dateEndDate);
+                this.dateToMoment(o.dateEndDate);
         }
 
         if (end && start) {
@@ -489,6 +491,18 @@ class CalendarView extends View {
         }
 
         return event;
+    }
+
+    /**
+     * @private
+     * @param {string} date
+     * @return {moment.Moment}
+     */
+    dateToMoment(date)  {
+        return moment.tz(
+            date,
+            this.getDateTime().getTimeZone()
+        );
     }
 
     /**
@@ -572,17 +586,15 @@ class CalendarView extends View {
         if (this.allDayScopeList.includes(event.scope)) {
             event.allDay = event.allDayCopy = true;
 
-            if (!notInitial) {
-                if (end) {
-                    start = end;
+            if (!notInitial && end) {
+                start = end;
 
-                    if (
-                        !event.dateEndDate &&
-                        end.hours() === 0 &&
-                        end.minutes() === 0
-                    ) {
-                        start.add(-1, 'days');
-                    }
+                if (
+                    !event.dateEndDate &&
+                    end.hours() === 0 &&
+                    end.minutes() === 0
+                ) {
+                    start.add(-1, 'days');
                 }
             }
 
@@ -879,13 +891,13 @@ class CalendarView extends View {
                 }
 
                 if (dateStartDate) {
-                    let m = this.getDateTime().toMomentDate(dateStartDate).add(delta);
+                    const m = this.dateToMoment(dateStartDate).add(delta);
 
                     attributes.dateStartDate = m.format(this.getDateTime().internalDateFormat);
                 }
 
                 if (dateEndDate) {
-                    let m = this.getDateTime().toMomentDate(dateEndDate).add(delta);
+                    const m = this.dateToMoment(dateEndDate).add(delta);
 
                     attributes.dateEndDate = m.format(this.getDateTime().internalDateFormat);
                 }
