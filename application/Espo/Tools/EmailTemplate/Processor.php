@@ -188,8 +188,8 @@ class Processor
         $parent = $entityHash[self::KEY_PARENT] ?? null;
 
         if ($parent && !$this->config->get('emailTemplateHtmlizerDisabled')) {
-            $handlebarsInSubject = strpos($subject, '{{') !== false && strpos($subject, '}}') !== false;
-            $handlebarsInBody = strpos($body, '{{') !== false && strpos($body, '}}') !== false;
+            $handlebarsInSubject = str_contains($subject, '{{') && str_contains($subject, '}}');
+            $handlebarsInBody = str_contains($body, '{{') && str_contains($body, '}}');
 
             if ($handlebarsInSubject || $handlebarsInBody) {
                 $htmlizer = $this->createHtmlizer($params, $user);
