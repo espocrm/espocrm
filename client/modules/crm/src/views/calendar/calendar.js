@@ -758,6 +758,9 @@ class CalendarView extends View {
                 day: {
                     dayHeaderFormat: 'ddd DD',
                 },
+                month: {
+                    dayHeaderFormat: 'ddd',
+                },
             },
             windowResize: () => {
                 this.adjustSize();
