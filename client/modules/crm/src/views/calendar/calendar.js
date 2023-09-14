@@ -973,7 +973,9 @@ class CalendarView extends View {
                 let $content = $('<div>');
 
                 $content.append(
-                    $('<div>').text(event.title)
+                    $('<div>')
+                        .addClass('fc-event-title')
+                        .text(event.title)
                 );
 
                 const userIdList = event.extendedProps.userIdList || [];
@@ -988,6 +990,7 @@ class CalendarView extends View {
 
                     let $div = $('<div>')
                         .addClass('user')
+                        .css({overflow: 'hidden'})
                         .append(avatarHtml)
                         .append(
                             $('<span>').text(userName)
