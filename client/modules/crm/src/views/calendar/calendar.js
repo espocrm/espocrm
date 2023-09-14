@@ -432,8 +432,8 @@ class CalendarView extends View {
             event.color = this.colors['bg'];
         }
 
-        if (this.teamIdList && o.userIdList) {
-            event.userIdList = o.userIdList;
+        if (this.teamIdList) {
+            event.userIdList = o.userIdList || [];
             event.userNameMap = o.userNameMap || {};
 
             event.userIdList = event.userIdList.sort((v1, v2) => {
@@ -973,7 +973,9 @@ class CalendarView extends View {
                     $('<div>').text(event.title)
                 );
 
-                event.extendedProps.userIdList.forEach(userId => {
+                const userIdList = event.extendedProps.userIdList || [];
+
+                userIdList.forEach(userId => {
                     let userName = event.extendedProps.userNameMap[userId] || '';
                     let avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 13);
 
