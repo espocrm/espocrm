@@ -56,42 +56,23 @@ use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Exception;
 use DateTime;
 use DateTimezone;
+use RuntimeException;
 
 class Processor
 {
     private const KEY_PARENT = 'Parent';
 
-    private $formatter;
-    private $entityManager;
-    private $aclManager;
-    private $recordServiceContainer;
-    private $config;
-    private $fileStorageManager;
-    private $user;
-    private $htmlizerFactory;
-    private $dateTime;
-
     public function __construct(
-        Formatter $formatter,
-        EntityManager $entityManager,
-        AclManager $aclManager,
-        ServiceContainer $recordServiceContainer,
-        Config $config,
-        FileStorageManager $fileStorageManager,
-        User $user,
-        HtmlizerFactory $htmlizerFactory,
-        DateTimeUtil $dateTime
-    ) {
-        $this->formatter = $formatter;
-        $this->entityManager = $entityManager;
-        $this->aclManager = $aclManager;
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->config = $config;
-        $this->fileStorageManager = $fileStorageManager;
-        $this->user = $user;
-        $this->htmlizerFactory = $htmlizerFactory;
-        $this->dateTime = $dateTime;
-    }
+        private Formatter $formatter,
+        private EntityManager $entityManager,
+        private AclManager $aclManager,
+        private ServiceContainer $recordServiceContainer,
+        private Config $config,
+        private FileStorageManager $fileStorageManager,
+        private User $user,
+        private HtmlizerFactory $htmlizerFactory,
+        private DateTimeUtil $dateTime
+    ) {}
 
     public function process(EmailTemplate $template, Params $params, Data $data): Result
     {
@@ -306,7 +287,12 @@ class Processor
             );
         }
 
-        $now = new DateTime('now', new DateTimezone($this->config->get('timeZone')));
+        try {
+            $now = new DateTime('now', new DateTimezone($this->config->get('timeZone')));
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $replaceData = [
             'today' => $this->dateTime->getTodayString(),
@@ -367,7 +353,7 @@ class Processor
             try {
                 $hasAccess = $this->aclManager->checkEntityRead($user, $relatedEntity);
             }
-            catch (Exception $e) {
+            catch (Exception) {
                 continue;
             }
 
