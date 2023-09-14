@@ -51,6 +51,7 @@ use Espo\Entities\User;
 use Espo\Entities\Attachment;
 use Espo\Entities\EmailAddress;
 
+use Espo\ORM\Type\AttributeType;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Exception;
@@ -193,7 +194,8 @@ class Processor
                 $user,
                 false,
                 null,
-                !$params->applyAcl()
+                !$params->applyAcl(),
+                $template->isHtml()
             );
         }
 
@@ -205,7 +207,8 @@ class Processor
                 $user,
                 false,
                 null,
-                !$params->applyAcl()
+                !$params->applyAcl(),
+                $template->isHtml()
             );
         }
 
@@ -228,7 +231,8 @@ class Processor
         User $user,
         bool $skipLinks = false,
         ?string $prefixLink = null,
-        bool $skipAcl = false
+        bool $skipAcl = false,
+        bool $isHtml = true
     ): string {
 
         $attributeList = $entity->getAttributeList();
@@ -262,7 +266,7 @@ class Processor
                 continue;
             }
 
-            $value = $this->formatter->formatAttributeValue($entity, $attribute);
+            $value = $this->formatter->formatAttributeValue($entity, $attribute, !$isHtml);
 
             if (is_null($value)) {
                 continue;
@@ -283,7 +287,8 @@ class Processor
                 $entity,
                 $text,
                 $user,
-                $skipAcl
+                $skipAcl,
+                $isHtml
             );
         }
 
@@ -312,7 +317,8 @@ class Processor
         Entity $entity,
         string $text,
         User $user,
-        bool $skipAcl
+        bool $skipAcl,
+        bool $isHtml
     ): string {
 
         $forbiddenLinkList = $skipAcl ?
@@ -368,7 +374,8 @@ class Processor
                 $user,
                 true,
                 $relation,
-                $skipAcl
+                $skipAcl,
+                $isHtml
             );
         }
 
