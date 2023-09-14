@@ -1111,11 +1111,11 @@ class CalendarView extends View {
     }
 
     addModel(model) {
-        let d = model.getClonedAttributes();
+        const attributes = model.getClonedAttributes();
 
-        d.scope = model.entityType;
+        attributes.scope = model.entityType;
 
-        let event = this.convertToFcEvent(d);
+        const event = this.convertToFcEvent(attributes);
 
         this.calendar.addEvent(event);
     }
