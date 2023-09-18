@@ -88,7 +88,9 @@
     "Archive Email": "Suarchyvuoti laiškai",
     "Create Task": "Sukurti užduotį",
     "Tasks": "Užduotys",
-    "Scheduler": "Planuotojas"
+    "Scheduler": "Planuotojas",
+    "Schedule": "Tvarkaraštis",
+    "Log": "Žurnalas"
   },
   "fields": {
     "billingAddressCity": "Miestas",

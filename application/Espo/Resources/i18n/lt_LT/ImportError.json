@@ -7,7 +7,8 @@
     "exportRowIndex": "Eksporto eilučių indeksas",
     "lineNumber": "Linijos numeris",
     "exportLineNumber": "Eksporto eilutės numeris",
-    "row": "Eilutė"
+    "row": "Eilutė",
+    "entityType": "Subjekto tipas"
   },
   "options": {
     "type": {

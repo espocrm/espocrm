@@ -39,7 +39,8 @@
     "auth2FAEnable": "Įjungti 2 veiksnių autentiškumo nustatymą",
     "auth2FAMethod": "2FA metodas",
     "auth2FATotpSecret": "2FA TOTP paslaptis",
-    "workingTimeCalendar": "Darbo laiko kalendorius"
+    "workingTimeCalendar": "Darbo laiko kalendorius",
+    "layoutSet": "Maketų rinkinys"
   },
   "links": {
     "teams": "Komandos",
@@ -55,7 +56,8 @@
     "dashboardTemplate": "Prietaisų skydelio šablonas",
     "userData": "Naudotojo duomenys",
     "workingTimeCalendar": "Darbo laiko kalendorius",
-    "workingTimeRanges": "Darbo laiko intervalai"
+    "workingTimeRanges": "Darbo laiko intervalai",
+    "layoutSet": "Maketų rinkinys"
   },
   "labels": {
     "Create User": "Sukurti vartotoją",
@@ -92,7 +94,8 @@
     "teams": "Komandos kurioms priklauso šis naudotojas. Prieigos kontrolės lygis yra perimtas iš komandos rolės.",
     "roles": "Papildomos prieigos vaidmenys. Naudokite jį, jei naudotojas nepriklauso jokiai komandai arba jums reikia išplėsti prieigos kontrolės lygį tik šiam vartotojui.",
     "portalRoles": "Papildomos portalo rolės. Naudokite ją, kad galėtumėte išplėsti prieigos kontrolės lygį tik šiam vartotojui.",
-    "portals": "Portalai, prie kurių šis vartotojas turi prieigą."
+    "portals": "Portalai, prie kurių šis vartotojas turi prieigą.",
+    "layoutSet": "Naudotojui bus taikomi ne numatytieji, o nurodyto rinkinio maketai."
   },
   "messages": {
     "passwordWillBeSent": "Slaptažodis bus išsiųstas vartotojo el. pašto adresu.",

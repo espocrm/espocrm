@@ -38,7 +38,8 @@
     "auth2FAEnable": "Iespējot 2 faktoru autentifikāciju",
     "auth2FAMethod": "2FA metode",
     "auth2FATotpSecret": "2FA TOTP noslēpums",
-    "workingTimeCalendar": "Darba laika kalendārs"
+    "workingTimeCalendar": "Darba laika kalendārs",
+    "layoutSet": "Izkārtojuma komplekts"
   },
   "links": {
     "teams": "Grupas",
@@ -54,7 +55,8 @@
     "dashboardTemplate": "Informācijas paneļa veidne",
     "userData": "Lietotāja dati",
     "workingTimeCalendar": "Darba laika kalendārs",
-    "workingTimeRanges": "Darba laika diapazoni"
+    "workingTimeRanges": "Darba laika diapazoni",
+    "layoutSet": "Izkārtojuma komplekts"
   },
   "labels": {
     "Create User": "Izveidot lietotāju",
@@ -90,7 +92,8 @@
     "teams": "Grupas, kurām lietotājs pieder. Piekļuves kontrole līmenis ir pārmantots no grupas lomas.",
     "roles": "Papildu piekļuves lomas. Izmantojiet šo izvēli, ja lietotājs nepieder nevienai grupai vai nepieciešams paaugstināt piekļuves kontroles līmeni vienīgi šim lietotājam.",
     "portalRoles": "Papildu lomas portālos. Izmantojiet šo izvēli, lai paplašinātu piekļuves kontroles līmeni vienīgi šim lietotājam.",
-    "portals": "Portāli, kuriem šis lietotājs var piekļūt."
+    "portals": "Portāli, kuriem šis lietotājs var piekļūt.",
+    "layoutSet": "Lietotājam tiks piemēroti izkārtojumi no norādītā komplekta, nevis noklusējuma izkārtojumi."
   },
   "messages": {
     "passwordWillBeSent": "Parole tiks nosūtīta uz lietotāja e-pasta adresi.",

@@ -11,7 +11,10 @@
     "bottomMargin": "Alt Kenar Boşluğu",
     "printFooter": "Baskı Altlığı",
     "footerPosition": "Altbilgi Konumu",
-    "variables": "Uygun Yertutucuları"
+    "variables": "Uygun Yertutucuları",
+    "pageOrientation": "Sayfa yönlendirmesi",
+    "pageFormat": "Kağıt Biçimi",
+    "fontFace": "Yazı Tipi"
   },
   "labels": {
     "Create Template": "Şablon Oluştur"
@@ -19,5 +22,13 @@
   "tooltips": {
     "footer": "Sayfa numarasını basmak için {pageNumber} kullanın.",
     "variables": "Başlık, Gövde veya Alt Satır yertutucusu için kopyala-yapıştır gerekli."
+  },
+  "options": {
+    "placeholders": {
+      "today": "Bugün (Tarih)"
+    },
+    "pageFormat": {
+      "Custom": "Özel"
+    }
   }
 }

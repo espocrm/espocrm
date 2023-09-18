@@ -3,24 +3,26 @@
     "from": "Von",
     "to": "An",
     "subject": "Betreff",
-    "bodyContains": "Mailinhalt",
+    "bodyContains": "E-Mail Inhalt",
     "action": "Aktion",
     "isGlobal": "Ist global",
     "emailFolder": "Ordner",
     "groupEmailFolder": "E-Mail Gruppenordner",
-    "markAsRead": "Als gelesen markieren"
+    "markAsRead": "Als gelesen markieren",
+    "bodyContainsAll": "E-Mail-Text enthält alle"
   },
   "labels": {
-    "Create EmailFilter": "E.Mail Filter erstellen",
+    "Create EmailFilter": "E-Mail Filter erstellen",
     "Emails": "E-Mails"
   },
   "tooltips": {
-    "from": "Die E-Mails werden von der angegebenen Adresse gesendet. Bitte leer lassen wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
-    "to": "Die E-Mails werden an die angegebenen Adressen gesendet. Bitte leer lassen wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
+    "from": "Die E-Mails werden von der angegebenen Adresse gesendet. Bitte leer lassen, wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
+    "to": "Die E-Mails werden an die angegebenen Adressen gesendet. Bitte leer lassen, wenn nicht benötigt. Sie können den Platzhalter * verwenden.",
     "name": "Ein Name für den Filter",
     "bodyContains": "Der Text der E-Mail enthält eines der angegebenen Worte oder Phrasen.",
     "isGlobal": "Wendet diesen Filter auf alle eingehenden E-Mails im System an.",
-    "subject": "Verwenden Sie einen Platzhalter *: \n\n * `text*` - beginnt mit Text,\n * `*text*` - enthält Text,\n * `*text` - endet mit Text."
+    "subject": "Verwenden Sie einen Platzhalter *: \n\n * `text*` - beginnt mit Text,\n * `*text*` - enthält Text,\n * `*text` - endet mit Text.",
+    "bodyContainsAll": "Ein E-Mail-Text enthält alle angegebenen Wörter oder Ausdrücke."
   },
   "options": {
     "action": {

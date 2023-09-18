@@ -9,13 +9,9 @@
     "Field Level": "Livello del campo"
   },
   "fields": {
-    "exportPermission": "Permessi di Esportazione",
-    "massUpdatePermission": "Autorizzazione per l'aggiornamento di massa",
+    "exportPermission": "Permessi Esportazione",
+    "massUpdatePermission": "Permessi Aggiornamento di Massa",
     "data": "Dati",
     "fieldData": "Dati Campo"
-  },
-  "tooltips": {
-    "exportPermission": "Definisce se gli utenti del portale hanno la possibilità di esportare record.",
-    "massUpdatePermission": "Definisce se gli utenti del portale hanno la possibilità di eseguire aggiornamenti di massa dei record.\n"
   }
 }

@@ -1,14 +1,15 @@
 {
   "fields": {
-    "name": "İsim ",
+    "name": "İsim",
     "status": "Durum",
+    "host": "Sunucu",
     "username": "Kullanıcı Adı",
     "password": "Şifre",
     "monitoredFolders": "İzlenen Klasörler",
     "fetchSince": "İtibaren Getir",
     "emailAddress": "E-mail Adresi",
     "sentFolder": "Gönderilenler Klasörü",
-    "storeSentEmails": "Gönderilen E-mailleri Sakla ",
+    "storeSentEmails": "Gönderilen E-mailleri Sakla",
     "keepFetchedEmailsUnread": "Getirilen E-mailleri Okunmadı Olarak Tut",
     "emailFolder": "Klasöre Koy",
     "useSmtp": "SMTP kullan",
@@ -16,7 +17,9 @@
     "smtpPort": "SMTP Bağlantı Noktası",
     "smtpSecurity": "SMTP Güvenliği",
     "smtpUsername": "SMTP kullanıcı adı ",
-    "smtpPassword": "SMTP şifresi "
+    "smtpPassword": "SMTP şifresi ",
+    "useImap": "E-postaları Al",
+    "smtpAuthMechanism": "SMTP Kimlik Doğrulama Mekanizması"
   },
   "links": {
     "filters": "Filtreler",
@@ -25,12 +28,16 @@
   "options": {
     "status": {
       "Active": "Arşiv",
-      "Inactive": "Inaktif"
+      "Inactive": "Etkin Değil"
+    },
+    "smtpAuthMechanism": {
+      "plain": "SADE",
+      "login": "GİRİŞ"
     }
   },
   "labels": {
-    "Create EmailAccount": "E-mail Hesabı Yarat",
-    "Main": "Ana",
+    "Create EmailAccount": "E-mail Hesabı Oluştur",
+    "Main": "Anasayfa",
     "Test Connection": "Bağlantıyı Test Et",
     "Send Test Email": "Test E-postası gönder"
   },

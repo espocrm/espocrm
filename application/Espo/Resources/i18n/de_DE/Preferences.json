@@ -23,14 +23,16 @@
     "autoFollowEntityTypeList": "Automatisches Abonnieren",
     "emailReplyToAllByDefault": "Standardmäßig Allen antworten",
     "doNotFillAssignedUserIfNotRequired": "Zugwiesenen Benutzer nicht ausfüllen wenn optional",
-    "followEntityOnStreamPost": "Der Benutzer abonniert die Einträge nach dem Posten in dessen Aktivitäten",
+    "followEntityOnStreamPost": "Der Benutzer abonniert die Einträge nach dem Posten in dessen Ereignisverlauf",
     "followCreatedEntities": "Eigene Einträge abonnieren",
     "followCreatedEntityTypeList": "Der Benutzer abonniert erstellten Einträge bestimmter Entitätstypen",
     "emailUseExternalClient": "Verwenden einen externen E-Mail-Client",
     "scopeColorsDisabled": "Bereichsfarben deaktivieren",
     "tabColorsDisabled": "Tabfarben deaktivieren",
     "assignmentNotificationsIgnoreEntityTypeList": "In-App-Benachrichtigungen über Zuweisungen",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "E-Mail-Benachrichtigungen über Zuweisungen\n"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "E-Mail-Benachrichtigungen über Zuweisungen",
+    "dashboardLocked": "Dashboard sperren",
+    "textSearchStoringDisabled": "Textfilterspeicherung deaktivieren"
   },
   "options": {
     "weekStart": {
@@ -46,8 +48,8 @@
     "Reset Dashboard to Default": "Dashboard auf Standard zurücksetzen"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Der Benutzer abonniert automatisch alle neuen Einträge der gewählten Entitätstypen, sieht Neuigkeiten in den Aktivitäten und erhält Benachrichtigungen.",
-    "doNotFillAssignedUserIfNotRequired": "Wenn der Benutzer einen neuen Eintrag erstellt, wird zugwiesener Benutzer mit deisem Benutzer nicht ausfüllen, sofern nicht das Feld erforderlich ist.",
+    "autoFollowEntityTypeList": "Der Benutzer abonniert automatisch alle neuen Einträge der gewählten Entitätstypen, sieht Neuigkeiten im Ereignisverlauf und erhält Benachrichtigungen.",
+    "doNotFillAssignedUserIfNotRequired": "Beim Erstellen eines Datensatzes wird der zugewiesene Benutzer nicht mit dem eigenen Benutzer ausgefüllt, es sei denn, das Feld ist erforderlich.",
     "followCreatedEntities": "Wenn neue Datensätze erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind.",
     "followCreatedEntityTypeList": "Wenn neue Datensätze von ausgewählten Entitätstypen erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind."
   }

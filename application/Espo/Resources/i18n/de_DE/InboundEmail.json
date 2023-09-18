@@ -37,15 +37,15 @@
     "groupEmailFolder": "E-Mail Gruppenordner"
   },
   "tooltips": {
-    "reply": "Benachrichtigt E-Mail Empfänger beim Empfang der Nachrichten.\n\n Nur eine E-Mail pro Empfänger wird zu einer Zeit versendet um eine Endlosschleife zu verhindern.",
+    "reply": "Benachrichtigt E-Mail Empfänger beim Empfang der Nachrichten.\n\n Nur eine E-Mail pro Empfänger wird zu einer Zeit versendet, um eine Endlosschleife zu verhindern.",
     "createCase": "Fall aus eingehender E-Mail automatisch erstellen.",
-    "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an um Antworten hier zu empfangen.",
+    "replyToAddress": "Geben Sie die E-Mail Adresse dieser Mailbox an, um Antworten hier zu empfangen.",
     "caseDistribution": "Wie Fälle zugewiesen werden. Entweder direkt dem Benutzer oder im Team.",
     "assignToUser": "Benutzerfälle werden zugewiesen.",
     "team": "Teamfälle werden zugewiesen.",
     "teams": "E-Mails des Teams werden zugewiesen.",
     "addAllTeamUsers": "E-Mails werden im Posteingang aller Benutzer bestimmter Teams angezeigt.",
-    "targetUserPosition": "Bestimmen Sie die Position der Benutzer die Fälle zugewiesen bekommen.",
+    "targetUserPosition": "Bestimmen Sie die Position der Benutzer, die Fälle zugewiesen bekommen.",
     "monitoredFolders": "Mehrere Ordner sollten durch ein Komma getrennt sein.",
     "smtpIsShared": "Wenn diese Option aktiviert ist, können Benutzer E-Mails über dieses SMTP senden. Die Verfügbarkeit wird von Rollen über die Gruppen-E-Mail-Konto-Berechtigung gesteuert.",
     "smtpIsForMassEmail": "Wenn diese Option aktiviert ist, steht SMTP für Massen-E-Mail zur Verfügung.",

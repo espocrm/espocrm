@@ -77,7 +77,8 @@
     "smtpAuth": "Удостоверяване",
     "smtpSecurity": "Сигурност",
     "smtpUsername": "Потребител",
-    "emailAddress": "Електронна поща"
+    "emailAddress": "Електронна поща",
+    "Platform": "Платформа"
   },
   "messages": {
     "1045": "Отказан достъп за потребителя",

@@ -3,7 +3,7 @@
     "title": "Başlık",
     "dateFrom": "Başlangıç Tarih",
     "dateTo": "Bitiş Tarih",
-    "autorefreshInterval": "Oto-Tazeleme Aralığı",
+    "autorefreshInterval": "Sürekli-Tazeleme Aralığı",
     "displayRecords": "Kayıtları Göster",
     "isDoubleHeight": "Yükseklik 2x",
     "mode": "Mod",
@@ -14,7 +14,11 @@
     "boolFilterList": "Ek Filtreler",
     "sortBy": "Sırala (alan)",
     "sortDirection": "Sırala (yön)",
-    "expandedLayout": "Yerleşim"
+    "expandedLayout": "Yerleşim",
+    "dateFilter": "Tarih Filtresi",
+    "url": "UTL",
+    "text": "Metin",
+    "folder": "Klasör"
   },
   "options": {
     "mode": {
@@ -23,7 +27,7 @@
       "month": "Ay",
       "basicDay": "Gün",
       "agendaDay": "Gün (ajanda)",
-      "timeline": "Zaman Tüneli"
+      "timeline": "Zaman çizelgesi"
     }
   },
   "messages": {

@@ -31,7 +31,9 @@
     "scopeColorsDisabled": "Izslēgt tvēruma krāsas",
     "tabColorsDisabled": "Izslēgt ciļņa krāsas",
     "assignmentNotificationsIgnoreEntityTypeList": "Aplikācijā pieejamie uzdevuma paziņojumi",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Paziņojumi par uzdevumiem pa e-pastu"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Paziņojumi par uzdevumiem pa e-pastu",
+    "dashboardLocked": "Bloķēt paneli",
+    "textSearchStoringDisabled": "Teksta filtra saglabāšanas atspējošana"
   },
   "options": {
     "weekStart": {

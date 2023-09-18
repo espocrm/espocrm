@@ -262,7 +262,10 @@
     "Passwords": "Пароли",
     "2-Factor Authentication": "Двухфакторная аутентификация",
     "Group Tab": "Вкладка группа",
-    "Attachments": "Вложения"
+    "Attachments": "Вложения",
+    "Divider": "Разделитель",
+    "General": "Общие сведения",
+    "Dashboard": "Приборная панель"
   },
   "messages": {
     "ldapTestConnection": "Соединение успешно установлено."

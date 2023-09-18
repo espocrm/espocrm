@@ -3,13 +3,13 @@
     "User": "Utente",
     "Role": "Ruolo",
     "EmailTemplate": "Modello email",
-    "EmailAccount": "Account email personale",
-    "EmailAccountScope": "Account email personale",
+    "EmailAccount": "Account Email Personale",
+    "EmailAccountScope": "Account Email Personale",
     "OutboundEmail": "Email in Uscita",
     "ScheduledJob": "Lavoro programmato",
     "ExternalAccount": "Account Esterno",
     "Extension": "Estensione",
-    "InboundEmail": "Gruppo account email",
+    "InboundEmail": "Gruppo Account Email",
     "Stream": "Flusso Attività",
     "Import": "Importa",
     "Template": "Modello",
@@ -19,7 +19,7 @@
     "PortalRole": "Ruolo Portale",
     "Attachment": "Allegato",
     "EmailFolder": "Casella Email",
-    "PortalUser": "Utente portale",
+    "PortalUser": "Utente Portale",
     "ScheduledJobLogRecord": "Registro Lavoro Pianificato",
     "PasswordChangeRequest": "Richiesta di Cambio Password",
     "ActionHistoryRecord": "Record di cronologia delle azioni",
@@ -42,7 +42,7 @@
     "AuthFailLogRecord": "Autorizzazione log record fallita",
     "EmailTemplateCategory": "Categorie Modelli email",
     "LeadCapture": "Punto di ingresso cattura lead",
-    "LeadCaptureLogRecord": "Record del registro di acquisizione lead",
+    "LeadCaptureLogRecord": "Registro Acquisizioni Lead",
     "ArrayValue": "Valore di matrice",
     "ApiUser": "Utente API",
     "DashboardTemplate": "Modello di dashboard",
@@ -61,8 +61,8 @@
     "User": "Utenti",
     "Role": "Ruoli",
     "EmailTemplate": "Modelli Email",
-    "EmailAccount": "Account email Personale",
-    "EmailAccountScope": "Account email Personale",
+    "EmailAccount": "Account Email Personale",
+    "EmailAccountScope": "Account Email Personale",
     "OutboundEmail": "Email in Uscita",
     "ScheduledJob": "Lavori Pianificati",
     "ExternalAccount": "Account Esterni",
@@ -77,7 +77,7 @@
     "Attachment": "Allegati",
     "EmailFolder": "Caselle Email",
     "PortalUser": "Utenti Portale",
-    "ScheduledJobLogRecord": "Record Registro Lavoro Pianificato",
+    "ScheduledJobLogRecord": "Registro Lavori Pianificati",
     "PasswordChangeRequest": "Richiesta di Cambio Password",
     "ActionHistoryRecord": "Storico Azioni",
     "AuthToken": "Tokens di Autenticazione",
@@ -88,7 +88,7 @@
     "EmailTemplateCategory": "Categorie Modeli Email",
     "Import": "Importa",
     "LeadCapture": "Cattura Lead",
-    "LeadCaptureLogRecord": "Registro acquisizione lead",
+    "LeadCaptureLogRecord": "Registro Acquisizioni Lead",
     "ArrayValue": "Valori di matrice",
     "ApiUser": "Utenti API",
     "DashboardTemplate": "Template Dashboard",
@@ -187,10 +187,10 @@
     "Stream": "Flusso Attività",
     "Show more": "Mostra altro",
     "Dashlet Options": "Opzioni dashlet",
-    "Full Form": "Modulo completo",
+    "Full Form": "Modulo Completo",
     "Insert": "Inserisci",
     "Person": "Persona",
-    "First Name": "Nome",
+    "First Name": "Nominativo",
     "Last Name": "Cognome",
     "Original": "Originale",
     "You": "Tu",
@@ -264,11 +264,13 @@
     "Sign in": "Accedi",
     "Global Search": "Ricerca Globale",
     "Show Navigation Panel": "Mostra Pannello di Navigazione",
-    "Hide Navigation Panel": "Nascondi Pannello di Navigazione"
+    "Hide Navigation Panel": "Nascondi Pannello di Navigazione",
+    "Print": "Stampa",
+    "Copy to Clipboard": "Copia negli Appunti",
+    "Copied to clipboard": "Copiato negli appunti"
   },
   "messages": {
     "pleaseWait": "Attendere...",
-    "posting": "Spedizione...",
     "confirmLeaveOutMessage": "Sei sicuro di volere lasciare il form?",
     "notModified": "Non hai modificato il record",
     "fieldIsRequired": "{field} è richiesto",
@@ -356,7 +358,11 @@
     "cannotRelateNonExisting": "Impossibile collegarsi a un record {foreignEntityType} inesistente.",
     "cannotRelateForbidden": "Impossibile collegarsi a un record {foreignEntityType} proibito. È richiesto l'accesso a `{action}`.",
     "cannotRelateForbiddenLink": "Nessun accesso al collegamento '{link}'.",
-    "emptyMassUpdate": "Nessun campo disponibile per l'Aggiornamento Massivo."
+    "emptyMassUpdate": "Nessun campo disponibile per l'Aggiornamento Massivo.",
+    "fieldNotMatchingPattern$uriOptionalProtocol": "{field} deve essere un URL valido",
+    "fieldShouldBeLess": "{field} non dovrebbe essere maggiore di {value}",
+    "fieldShouldBeGreater": "{field} non dovrebbe essere inferiore a {value}",
+    "cannotUnrelateRequiredLink": "Impossibile scollegare il collegamento in quanto richiesto."
   },
   "boolFilters": {
     "onlyMy": "Solo i miei",
@@ -382,8 +388,8 @@
     "delete": "Elimina"
   },
   "fields": {
-    "name": "Nome Completo",
-    "firstName": "Nome",
+    "name": "Nome",
+    "firstName": "Nominativo",
     "lastName": "Cognome",
     "salutationName": "Saluto",
     "assignedUser": "Utente Assegnato",
@@ -590,7 +596,7 @@
       "isNot": "Non è",
       "isNotOneOf": "Nessuno di",
       "noneOf": "Nessuno di",
-      "allOf": "Tutto di",
+      "allOf": "Tutto Di",
       "any": "Qualunque"
     },
     "varcharSearchRanges": {
@@ -750,7 +756,8 @@
     "Dark": "Scuro",
     "Violet": "Violetto",
     "Hazyblue": "Blu Nebuloso",
-    "Glass": "Vetro"
+    "Glass": "Vetro",
+    "Light": "Chiaro"
   },
   "themeNavbars": {
     "side": "Navbar Verticale",
@@ -775,10 +782,16 @@
     "varchar_pattern": "Probabilmente il valore contiene caratteri non consentiti.",
     "email_emailAddress": "Valore indirizzo email non valido.",
     "phone_phoneNumber": "Valore telefono non valido.",
-    "dateTimeOptional_valid": "Valore data-ora non valido.",
-    "dateTime_valid": "Valore data-ora non valido.",
+    "datetimeOptional_valid": "Valore data-ora non valido.",
+    "datetime_valid": "Valore data-ora non valido.",
     "date_valid": "Valore data non valido.",
     "enum_valid": "Valore enum non valido. Il valore deve essere una delle opzioni enum definite. Un valore vuoto è consentito solo se il campo ha un'opzione vuota.",
-    "multiEnum_valid": "Valore multi-enum non valido. I valori devono rientrare tra le opzioni di campo stabilite."
+    "multiEnum_valid": "Valore multi-enum non valido. I valori devono rientrare tra le opzioni di campo stabilite.",
+    "int_valid": "Valore numerico intero non valido.",
+    "float_valid": "Valore numerico non valido."
+  },
+  "navbarTabs": {
+    "Support": "Supporto",
+    "Activities": "Attività"
   }
 }

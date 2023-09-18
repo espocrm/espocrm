@@ -78,14 +78,30 @@
     "currencyFormat": "Döviz Formatı",
     "currencyDecimalPlaces": "Döviz Ondalık Hanesi",
     "followCreatedEntities": "Oluşturulan Varlıkları Takip Et",
+    "aclAllowDeleteCreated": "Oluşturulan kayıtları kaldırmaya izin ver",
+    "adminNotifications": "Yönetim panelindeki sistem bildirimleri",
+    "adminNotificationsNewVersion": "Yeni EspoCRM sürümü yayınlandığında bildirim göster",
     "massEmailMaxPerHourCount": "Saat başı gönderilen maksimum e-mail sayısı ",
-    "maxEmailAccountCount": "Kullanıcı başına maksimum kişisel e-posta hesabı sayısı"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Pazar",
-      "1": "Pazartesi"
-    }
+    "maxEmailAccountCount": "Kullanıcı başına maksimum kişisel e-posta hesabı sayısı",
+    "streamEmailNotificationsTypeList": "Ne hakkında bildirimde bulunulmalı",
+    "authTokenPreventConcurrent": "Kullanıcı başına yalnızca bir kimlik doğrulama belirteci",
+    "scopeColorsDisabled": "Kapsam renklerini devre dışı bırak",
+    "tabColorsDisabled": "Sekme renklerini devre dışı bırak",
+    "tabIconsDisabled": "Sekme simgelerini devre dışı bırak",
+    "textFilterUseContainsForVarchar": "Varchar alanlarını filtrelerken 'içerir' değişken karakterini kullanın",
+    "emailAddressIsOptedOutByDefault": "Yeni e-posta adreslerini devre dışı bırakıldı olarak işaretleyin",
+    "adminNotificationsNewExtensionVersion": "Eklentilerin yeni sürümleri kullanıma sunulduğunda bildirim göster",
+    "cleanupDeletedRecords": "Silinen kayıtları temizle",
+    "ldapPortalUserLdapAuth": "Portal Kullanıcıları için LDAP Kimlik Doğrulaması Kullanın",
+    "ldapPortalUserPortals": "Portal Kullanıcısı için Varsayılan Görünümler",
+    "ldapPortalUserRoles": "Portal Kullanıcısı için Varsayılan Roller",
+    "addressCountryList": "Ülke Adreslerini Otomatik Tamamlama Listesi",
+    "fiscalYearShift": "Mali Yıl Başlangıcı",
+    "addressCityList": "Şehir Adreslerini Otomatik Tamamlama Listesi",
+    "cronDisabled": "Cron'u devre dışı bırak",
+    "maintenanceMode": "Bakım Modu",
+    "auth2FAMethodList": "Mevcut 2FA yöntemleri",
+    "pdfEngine": "PDF Dönüştürücü"
   },
   "tooltips": {
     "recordsPerPage": "Liste görünümlerinde başlangıçta görüntülenen kayıtların sayısı.",
@@ -116,7 +132,22 @@
     "ldapUserTeams": "Yaratılan takımlar. Daha fazlası için bkz. Kullanıcı profili.",
     "ldapUserDefaultTeam": "Oluşturulan kullanıcı için varsayılan ekip. Daha fazlası için bkz. Kullanıcı profili.",
     "b2cMode": "EspoCRM varsayılan olarak B2B için uyarlanmıştır. B2C'ye geçebilirsiniz.",
-    "outboundEmailIsShared": "Kullanıcıların bu SMTP yoluyla e-posta göndermesine izin verin."
+    "currencyDecimalPlaces": "Ondalık basamak sayısı. Boşsa, boş olmayan tüm ondalık basamaklar görüntülenecektir.",
+    "aclStrictMode": "Etkin: Rollerde belirtilmemişse kapsamlara erişim yasaklanır.\n\nDevre Dışı: Rollerde belirtilmemişse kapsamlara erişime izin verilir.",
+    "outboundEmailIsShared": "Kullanıcıların bu SMTP yoluyla e-posta göndermesine izin verin.",
+    "aclAllowDeleteCreated": "Kullanıcılar, silme erişimi olmasa bile oluşturdukları kayıtları kaldırabilecektir.",
+    "streamEmailNotificationsEntityList": "Takip edilen kayıtların akış güncellemeleri hakkında e-posta bildirimleri. Kullanıcılar, yalnızca belirtilen varlık türleri için e-posta bildirimleri alacaktır.",
+    "authTokenPreventConcurrent": "Kullanıcılar aynı anda birden fazla cihazda oturum açamaz.",
+    "emailAddressIsOptedOutByDefault": "Yeni kayıt oluştururken, e-posta adresi devre dışı bırakılmış olarak işaretlenecektir.",
+    "ldapPortalUserLdapAuth": "Portal kullanıcılarının Espo kimlik doğrulaması yerine LDAP kimlik doğrulamasını kullanmasına izin verin.",
+    "ldapPortalUserPortals": "Oluşturulan Portal Kullanıcısı için Varsayılan Portallar",
+    "ldapPortalUserRoles": "Oluşturulan Portal Kullanıcısı için Varsayılan Roller",
+    "jobRunInParallel": "İşlemler paralel süreçlerde yürütülecektir.",
+    "jobPoolConcurrencyNumber": "Aynı anda çalışan maksimum işlem sayısı.",
+    "jobMaxPortion": "Bir yürütme başına işlenen maksimum iş sayısı.",
+    "daemonMaxProcessNumber": "Aynı anda çalışan maksimum zamanlanmış işlemi sayısı.",
+    "cronDisabled": "Cron çalışmayacak",
+    "maintenanceMode": "Sisteme sadece yöneticilerin erişimi olacaktır."
   },
   "labels": {
     "System": "Sistem",
@@ -129,9 +160,20 @@
     "Mass Email": "Toplu E-posta",
     "Test Connection": "Bağlantıyı Test Et",
     "Connecting": "Bağlanıyor...",
-    "Activities": "Faaliyetler "
+    "Activities": "Faaliyetler ",
+    "Admin Notifications": "Yönetici Bildirimleri",
+    "Search": "Ara",
+    "Passwords": "Şifre",
+    "Dashboard": "Gösterge Paneli"
   },
   "messages": {
     "ldapTestConnection": "Bağlantı başarıyla kuruldu."
+  },
+  "options": {
+    "streamEmailNotificationsTypeList": {
+      "Post": "Gönderiler",
+      "Status": "Durum güncellemeleri",
+      "EmailReceived": "Gelen mailler"
+    }
   }
 }

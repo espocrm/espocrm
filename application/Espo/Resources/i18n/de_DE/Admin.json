@@ -78,23 +78,25 @@
   },
   "layouts": {
     "list": "Liste",
+    "detail": "Detailansicht",
     "listSmall": "Liste (Klein)",
-    "detailSmall": "Detail (Klein)",
+    "detailSmall": "Detailansicht (Klein)",
     "filters": "Suchfilter",
     "massUpdate": "Massenänderung",
     "relationships": "Beziehungen",
-    "sidePanelsDetail": "Seitenleisten (Detail)",
+    "sidePanelsDetail": "Seitenleisten (Detailansicht)",
     "sidePanelsEdit": "Seitenleisten (Bearbeiten)",
-    "sidePanelsDetailSmall": "Seitenleisten (Detail klein)",
+    "sidePanelsDetailSmall": "Seitenleisten (Detailansicht klein)",
     "sidePanelsEditSmall": "Seitenleisten (Bearbeiten klein)",
-    "detailSmallPortal": "Detail (Klein, Portal)",
+    "detailPortal": "Detailansicht (Portal)",
+    "detailSmallPortal": "Detailansicht (Klein, Portal)",
     "listSmallPortal": "Liste (Klein, Portal)",
     "listPortal": "Liste (Portal)",
     "relationshipsPortal": "Beziehungen (Portal)",
     "defaultSidePanel": "Felder des seitlichen Panel",
     "bottomPanelsDetail": "Untere Felder",
     "bottomPanelsEdit": "Untere Felder (Bearbeiten)",
-    "bottomPanelsDetailSmall": "Untere Felder (Detail klein)",
+    "bottomPanelsDetailSmall": "Untere Felder (Detailansicht klein)",
     "bottomPanelsEditSmall": "Untere Felder (Bearbeiten klein)"
   },
   "fieldTypes": {
@@ -135,7 +137,8 @@
     "datetime": "Datum-Uhrzeit",
     "datetimeOptional": "Datum/Datum-Uhrzeit",
     "checklist": "Checkliste",
-    "linkOne": "Link Eins"
+    "linkOne": "Link Eins",
+    "urlMultiple": "Url - Mehrere"
   },
   "fields": {
     "type": "Typ",
@@ -164,9 +167,9 @@
     "nextNumber": "Nächste Nummer",
     "padLength": "Länge auffüllen",
     "disableFormatting": "Formatierung deaktivieren",
-    "dynamicLogicVisible": "Bedingungen die ein Feld sichtbar machen",
-    "dynamicLogicReadOnly": "Bedingungen die ein Feld schreibgeschützt machen",
-    "dynamicLogicRequired": "Bedingungen die ein Feld erforderlich machen",
+    "dynamicLogicVisible": "Bedingungen, die ein Feld sichtbar machen",
+    "dynamicLogicReadOnly": "Bedingungen, die ein Feld schreibgeschützt machen",
+    "dynamicLogicRequired": "Bedingungen, die ein Feld erforderlich machen",
     "dynamicLogicOptions": "Bedingungsoptionen",
     "probabilityMap": "Stufenwahrscheinlichkeiten (%)",
     "readOnly": "nur lesen",
@@ -181,7 +184,7 @@
     "displayAsLabel": "Anzeige als Label",
     "allowCustomOptions": "Benutzerdefinierte Optionen zulassen",
     "maxCount": "Max. Anzahl Elemente",
-    "displayRawText": "Rohtext anzeigen (keine Abschrift)",
+    "displayRawText": "Rohtext anzeigen (kein Markdown)",
     "accept": "Annehmen",
     "displayAsList": "Als Liste anzeigen",
     "viewMap": "Schaltfläche \"Karte\" anzeigen",
@@ -194,7 +197,9 @@
     "decimalPlaces": "Dezimalstellen",
     "pattern": "Muster",
     "globalRestrictions": "Globale Beschränkungen",
-    "decimal": "Dezimal"
+    "decimal": "Dezimal",
+    "optionsReference": "Optionen Referenz",
+    "copyToClipboard": "\"In Zwischenablage kopieren\"-Schaltfläche"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
@@ -204,7 +209,7 @@
     "extensionInstalled": "Erweiterung {name} {version} wurde installiert.",
     "installExtension": "Erweiterung {name} {version} ist bereit für die Installation",
     "upgradeBackup": "Wie empfehlen VOR einer Aktualisierung die EspoCRM Dateien sowie die Datenbank zu sichern.",
-    "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen und das Dezimaltrennzeichen können nicht gleich sein",
+    "thousandSeparatorEqualsDecimalMark": "Das Tausendertrennzeichen und das Dezimaltrennzeichen können nicht gleich sein.",
     "userHasNoEmailAddress": "Der Benutzer hat keine E-Mail Adresse.",
     "uninstallConfirmation": "Möchten Sie die Erweiterung wirklich deinstallieren?",
     "cronIsNotConfigured": "Geplante Jobs werden nicht ausgeführt. Daher funktionieren eingehende E-Mails, Benachrichtigungen und Erinnerungen nicht. Bitte folgen Sie den [instructions](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab), um den Cron-Job einzurichten.",
@@ -253,7 +258,7 @@
     "attachments": "Alle Dateianhänge, die im System gespeichert sind.",
     "templateManager": "Nachrichten Templates anpassen",
     "systemRequirements": "Systemanforderungen für EspoCRM",
-    "apiUsers": "Benutzer trennen um diese zu integrieren",
+    "apiUsers": "Benutzer trennen, um diese zu integrieren.",
     "jobs": "Jobs führen Aufgaben im Hintergrund aus.",
     "pdfTemplates": "Vorlagen für den Druck im PDF-Format.",
     "webhooks": "Webhooks verwalten.",
@@ -283,7 +288,8 @@
     "user": "Benutzername",
     "writable": "Überschreibbar",
     "readable": "Lesbar",
-    "requiredMariadbVersion": "MariaDB Version"
+    "requiredMariadbVersion": "MariaDB Version",
+    "requiredPostgresqlVersion": "PostgreSQL Version"
   },
   "templates": {
     "accessInfo": "Zugriffsinfo",

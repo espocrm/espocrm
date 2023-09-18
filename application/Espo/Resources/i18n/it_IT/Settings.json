@@ -4,7 +4,7 @@
     "dateFormat": "Formato Data",
     "timeFormat": "Formato Ora",
     "timeZone": "Fuso Orario",
-    "weekStart": "Primo giorno della settimana",
+    "weekStart": "Primo Giorno della Settimana",
     "thousandSeparator": "Separatore delle migliaia",
     "decimalMark": "Segno decimale",
     "defaultCurrency": "Valuta Predefinita",
@@ -53,7 +53,7 @@
     "addressFormat": "Formato indirizzo",
     "notificationSoundsDisabled": "Disabilita notifiche sonore",
     "applicationName": "Nome dell'Applicazione",
-    "ldapUsername": "DN utente completo",
+    "ldapUsername": "DN Utente Completo",
     "ldapBindRequiresDn": "Il binding richiede DN\n",
     "ldapUserNameAttribute": "Attributo di nome utente",
     "ldapUserObjectClass": "Classe oggetto utente",
@@ -242,7 +242,9 @@
     "2-Factor Authentication": "Autenticazione a 2 fattori",
     "Group Tab": "Gruppo Schede",
     "Attachments": "Allegati",
-    "IdP Group": "Gruppo IDP"
+    "IdP Group": "Gruppo IDP",
+    "Divider": "Divisore",
+    "General": "Generale"
   },
   "messages": {
     "ldapTestConnection": "La connessione è stata stabilita con successo"

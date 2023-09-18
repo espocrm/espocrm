@@ -31,7 +31,9 @@
     "scopeColorsDisabled": "Забранете цветовете",
     "tabColorsDisabled": "Забранете цветове за табовете",
     "assignmentNotificationsIgnoreEntityTypeList": "Известия за назначения на записи (в приложението)",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Известия за назначения на записи (по имейл)"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Известия за назначения на записи (по имейл)",
+    "dashboardLocked": "Заключи дашборда",
+    "textSearchStoringDisabled": "Деактивиране на съхраняването на текстови филтри"
   },
   "options": {
     "weekStart": {

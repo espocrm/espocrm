@@ -154,7 +154,10 @@
     "oidcFallback": "OIDC atsarginis prisijungimas",
     "oidcAllowRegularUserFallback": "OIDC Leidimas įprastiems naudotojams prisijungti atsargine tvarka",
     "oidcAllowAdminUser": "OIDC Leisti administratoriaus naudotojams prisijungti prie OIDC",
-    "oidcLogoutUrl": "OIDC atsijungimo URL"
+    "oidcLogoutUrl": "OIDC atsijungimo URL",
+    "pdfEngine": "PDF variklis",
+    "recordsPerPageKanban": "Įrašai viename puslapyje (Kanban)",
+    "auth2FAInPortal": "Leidimas 2FA portaluose"
   },
   "tooltips": {
     "recordsPerPage": "Iš pradžių rodomas įrašų skaičius sąrašo rodinyje.",
@@ -236,7 +239,8 @@
     "oidcSyncTeams": "Sinchronizuokite naudotojų komandas (kiekvieno prisijungimo metu).",
     "oidcUsernameClaim": "Reikalavimas, naudojamas kaip vartotojo vardas (naudotojų parinkimui ir kūrimui).",
     "oidcTeams": "\"Espo\" komandos atvaizduotos pagal tapatybės teikėjo grupes / komandas / vaidmenis. Komandos su tuščia atvaizdavimo reikšme visada bus priskirtos naudotojui (kuriant arba sinchronizuojant).",
-    "oidcLogoutUrl": "URL adresas, į kurį naršyklė bus nukreipiama po atsijungimo iš \"Espo\". Skirtas išvalyti sesijos informaciją naršyklėje ir atlikti atsijungimą paslaugų teikėjo pusėje. Paprastai URL turi parametrą redirect-URL, kad būtų galima grįžti atgal į \"Espo\".\n\nGalimi simboliai:\n* `{siteUrl}`\n* `{klientoId}`"
+    "oidcLogoutUrl": "URL adresas, į kurį naršyklė bus nukreipiama po atsijungimo iš \"Espo\". Skirtas išvalyti sesijos informaciją naršyklėje ir atlikti atsijungimą paslaugų teikėjo pusėje. Paprastai URL turi parametrą redirect-URL, kad būtų galima grįžti atgal į \"Espo\".\n\nGalimi simboliai:\n* `{siteUrl}`\n* `{klientoId}`",
+    "recordsPerPageKanban": "Iš pradžių kanban stulpeliuose rodomų įrašų skaičius."
   },
   "labels": {
     "System": "Sistema",
@@ -256,7 +260,11 @@
     "2-Factor Authentication": "2 veiksnių autentiškumo nustatymas",
     "Group Tab": "Skirtukas Grupė",
     "Attachments": "Priedai",
-    "IdP Group": "IdP grupė"
+    "IdP Group": "IdP grupė",
+    "Divider": "Skirtukas",
+    "General": "Bendra",
+    "Navbar": "Navigacijos juosta",
+    "Dashboard": "Prietaisų skydelis"
   },
   "messages": {
     "ldapTestConnection": "Prisijungėte sėkmingai. Ryšys veikia."

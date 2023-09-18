@@ -64,7 +64,8 @@
     "confirmRemoveDuplicates": "Dadurch werden alle importierten Datensätze, die als Duplikate erkannt wurden, dauerhaft entfernt. Sind Sie sicher?",
     "removeImportLog": "Dies wird das Importprotokoll entfernen. Alle importierten Datensätze werden beibehalten. Verwenden Sie es, wenn Sie sicher sind, dass der Import in Ordnung ist.",
     "confirmRemoveImportLog": "Dadurch wird das Importprotokoll entfernt. Alle importierten Aufzeichnungen werden aufbewahrt. Sie können die Importergebnisse nicht rückgängig machen. Sind Sie sicher?",
-    "noErrors": "Keine Fehler."
+    "noErrors": "Keine Fehler.",
+    "importRunning": "Import läuft..."
   },
   "fields": {
     "file": "Datei",
@@ -94,7 +95,7 @@
   },
   "tooltips": {
     "manualMode": "Wenn dieses Kontrollkästchen markiert ist, müssen Sie den Import manuell aus der CLI ausführen. Der Befehl wird nach dem Einrichten des Imports angezeigt.",
-    "silentMode": "Ein Großteil der After-Save-Skripte wird übersprungen, Stream-Notizen werden nicht erstellt. Der Import wird schneller ablaufen."
+    "silentMode": "Ein Großteil der After-Save-Skripte wird übersprungen, Ereignisnotizen werden nicht erstellt. Der Import wird schneller ablaufen."
   },
   "links": {
     "errors": "Fehler"

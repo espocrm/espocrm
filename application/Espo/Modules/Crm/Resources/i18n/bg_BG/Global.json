@@ -88,7 +88,9 @@
     "Archive Email": "Архивиране на имейл",
     "Create Task": "Създаване на задача",
     "Tasks": "Задачи",
-    "Scheduler": "График"
+    "Scheduler": "График",
+    "Schedule": "График",
+    "Log": "Журнал"
   },
   "fields": {
     "billingAddressCity": "Град",

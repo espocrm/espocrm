@@ -127,7 +127,8 @@
     "datetime": "Дата-час",
     "datetimeOptional": "Дата / Дата-час",
     "checklist": "Чеклист",
-    "barcode": "Баркод"
+    "barcode": "Баркод",
+    "urlMultiple": "Множество URL адреси"
   },
   "fields": {
     "type": "Тип",
@@ -194,7 +195,9 @@
     "decimalPlaces": "Десетични знаци",
     "pattern": "Структура",
     "globalRestrictions": "Глобални рестрикции",
-    "decimal": "Десетична"
+    "decimal": "Десетична",
+    "optionsReference": "Избор на опции от други полета",
+    "copyToClipboard": "Бутон за копиране"
   },
   "messages": {
     "selectEntityType": "Изберете вида обект от лявото меню.",
@@ -288,7 +291,8 @@
     "host": "Сървър",
     "dbname": "Име на базата данни",
     "user": "Потребителско име",
-    "requiredMariadbVersion": "MariaDB версия"
+    "requiredMariadbVersion": "MariaDB версия",
+    "requiredPostgresqlVersion": "Версия на PostgreSQL"
   },
   "templates": {
     "accessInfo": "Информация за достъп",

@@ -213,7 +213,11 @@
     "2-Factor Authentication": "Двуфакторна автентификация",
     "Group Tab": "Групово меню",
     "Attachments": "Прикачени файлове",
-    "IdP Group": "IdP група"
+    "IdP Group": "IdP група",
+    "Divider": "Разделител",
+    "General": "Основни",
+    "Navbar": "Меню",
+    "Dashboard": "Дашборд"
   },
   "messages": {
     "ldapTestConnection": "Връзката беше успешна."

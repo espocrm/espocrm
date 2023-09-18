@@ -8,7 +8,8 @@
     "isGlobal": "yra globalus",
     "emailFolder": "Aplankas",
     "groupEmailFolder": "Grupės el. pašto aplankas",
-    "markAsRead": "Pažymėti kaip perskaitytą"
+    "markAsRead": "Pažymėti kaip perskaitytą",
+    "bodyContainsAll": "Kūnas apima viską"
   },
   "labels": {
     "Create EmailFilter": "Sukurti el.pašto filtrą",
@@ -20,7 +21,8 @@
     "name": "Pavadinkite filtrą apibūdinančiu pavadinimu",
     "bodyContains": "El. laiške yra bet kuris iš nurodytų žodžių ar frazių.",
     "isGlobal": "Šis filtras taikomas visiems sistemoje gaunamiems el. laiškams.",
-    "subject": "Naudokite pakaitinį simbolį *:\n\n * `tekstas*` - prasideda nuo teksto,\n * `*text*` - jame yra tekstas,\n * `*text` - baigiasi tekstu."
+    "subject": "Naudokite pakaitinį simbolį *:\n\n * `tekstas*` - prasideda nuo teksto,\n * `*text*` - jame yra tekstas,\n * `*text` - baigiasi tekstu.",
+    "bodyContainsAll": "Į el. laiško turinį įtraukiami visi nurodyti žodžiai arba frazės."
   },
   "options": {
     "action": {

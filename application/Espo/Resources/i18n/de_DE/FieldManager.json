@@ -72,17 +72,17 @@
     }
   },
   "tooltips": {
-    "audited": "Updates werden im Verlauf geloggt.",
+    "audited": "Updates werden im Ereignisverlauf geloggt.",
     "required": "Das Feld ist ein Pflichtfeld und darf nicht leer sein.",
     "default": "Der Wert wird beim Erstellen standardmäßig gesetzt.",
-    "min": "Min. zulässiger Wert",
-    "max": "Max. zulässiger Wert",
-    "seeMoreDisabled": "Wenn nicht angehakt, werden lange Texte gekürzt",
-    "lengthOfCut": "Wenn nicht angehakt, werden Langtexte verkürzt",
+    "min": "Min. zulässiger Wert.",
+    "max": "Max. zulässiger Wert.",
+    "seeMoreDisabled": "Wenn nicht angehakt, werden lange Texte gekürzt.",
+    "lengthOfCut": "Wie lang ein Text sein darf, bevor er gekürzt wird.",
     "maxLength": "Maximal zulässige Textlänge.",
     "before": "Der Datumswert sollte vor dem Datumswert des angegebenen Feldes liegen.",
     "after": "Der Datumswert sollte nach dem Datumswert des angegebenen Feldes liegen.",
-    "readOnly": "Feldwert kann nicht vom Benutzer angegebe, aber durch Formel berechnet werden.",
+    "readOnly": "Feldwert kann nicht vom Benutzer angegeben, aber durch Formel berechnet werden.",
     "maxFileSize": "Wenn leer oder 0, dann keine Begrenzung.",
     "fileAccept": "Welche Dateitypen akzeptiert werden sollen. Es ist möglich, benutzerdefinierte Elemente hinzuzufügen.",
     "barcodeLastChar": "Für den Typ EAN-13.",
@@ -95,7 +95,8 @@
     "maxCount": "Maximale Anzahl an auswählbaren Werten.",
     "displayAsList": "Jeder Wert in eine neue Zeile.",
     "optionsVarchar": "Eine Liste mit Werten zur Autovervollständigung.",
-    "currencyDecimal": "Verwenden Sie den DB-Typ Dezimal. In der Anwendung werden die Werte als Strings dargestellt. Überprüfen Sie diesen Parameter, wenn Präzision erforderlich ist."
+    "currencyDecimal": "Verwenden Sie den DB-Typ Dezimal. In der Anwendung werden die Werte als Strings dargestellt. Überprüfen Sie diesen Parameter, wenn Präzision erforderlich ist.",
+    "optionsReference": "Wiederverwendung von Optionen aus einem anderen Feld."
   },
   "fieldParts": {
     "address": {
@@ -123,7 +124,7 @@
   "fieldInfo": {
     "varchar": "Ein einzeiliger Text.",
     "enum": "Selectbox, es kann nur ein Wert ausgewählt werden.",
-    "text": "Ein mehrzeiliger Text mit Unterstützung für Abschriften.",
+    "text": "Ein mehrzeiliger Text mit Markdown-Unterstützung.",
     "date": "Datum ohne Uhrzeit.",
     "datetime": "Datum und Uhrzeit",
     "currency": "Ein Währungswert. Eine Gleitkommazahl mit einem Währungscode.",
@@ -147,6 +148,12 @@
     "foreign": "Ein Feld eines Bezugsdatensatzes. Schreibgeschützt",
     "link": "Ein Datensatz, der durch eine Belongs-To-Beziehung (Viele-zu-Eins- oder Eins-zu-Eins-Beziehung) verbunden ist.",
     "linkParent": "Ein Datensatz, der über die Beziehung zwischen Eltern und Angehörigen in Beziehung steht. Kann von verschiedenen Entitätstypen sein.",
-    "linkMultiple": "Eine Gruppe von Datensätzen, die durch Mehrfachbeziehungen (n:n oder n:1) verbunden sind. Nicht alle Beziehungen haben ihre Mehrfachlinks-Felder. Nur diejenigen, bei denen die Option \"Mehrere Felder verlinken\" aktiviert ist."
+    "linkMultiple": "Eine Gruppe von Datensätzen, die durch Mehrfachbeziehungen (n:n oder 1:n) verbunden sind. Nicht alle Beziehungen haben ihre Mehrfachlinks-Felder. Nur diejenigen, bei denen die Option \"Mehrere Felder verlinken\" aktiviert ist.",
+    "urlMultiple": "Mehrere Verknüpfungen."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Der Feldname '{field}' ist nicht erlaubt.",
+    "fieldAlreadyExists": "Das Feld '{field}' existiert bereits in '{entityType}'.",
+    "linkWithSameNameAlreadyExists": "Verknüpfung mit dem Namen '{field}' existiert bereits in '{entityType}'."
   }
 }

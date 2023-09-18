@@ -16,7 +16,9 @@
     "sortDirection": "Kārtot (virziens)",
     "expandedLayout": "Izkārtojums",
     "dateFilter": "Datumu filtrs",
-    "skipOwn": "Neparādiet savus ierakstus"
+    "skipOwn": "Neparādiet savus ierakstus",
+    "text": "Teksts",
+    "folder": "Mapes"
   },
   "options": {
     "mode": {

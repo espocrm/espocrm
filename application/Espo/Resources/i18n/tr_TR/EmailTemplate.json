@@ -2,21 +2,27 @@
   "fields": {
     "name": "İsim",
     "status": "Durum",
-    "isHtml": "Html olarak gönder",
     "body": "Mesaj",
     "subject": "Konu",
     "attachments": "Dosya Ekle",
-    "insertField": "Alan Ekle",
-    "oneOff": "Bir defalık"
+    "oneOff": "Bir defalık",
+    "category": "Sınıf"
   },
   "labels": {
     "Create EmailTemplate": "Eposta Şablonu Oluştur",
-    "Info": "Bilgi"
+    "Info": "Bilgi",
+    "Available placeholders": "Kullanılabilir yer tutucular"
   },
   "tooltips": {
     "oneOff": "Taslağı sadece bir defa kullanacak iseniz işaretleyiniz. Ör. Toplu Mail için"
   },
   "presetFilters": {
-    "actual": "Güncel "
+    "actual": "Güncel"
+  },
+  "placeholderTexts": {
+    "optOutLink": "abonelikten çıkma bağlantısı",
+    "today": "Günün tarihi",
+    "now": "şu anki tarih & saat",
+    "currentYear": "Geçerli Yıl"
   }
 }

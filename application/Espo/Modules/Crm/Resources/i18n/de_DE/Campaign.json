@@ -70,11 +70,11 @@
     "active": "Aktiv"
   },
   "messages": {
-    "unsubscribed": "Sie wurden erfolgreich aus unserem Verteiler entfernt",
+    "unsubscribed": "Sie wurden erfolgreich aus unserem Verteiler entfernt.",
     "subscribedAgain": "Sie sind wieder angemeldet."
   },
   "tooltips": {
-    "targetLists": "Zielkontakte die Nachrichten empfangen sollen",
-    "excludingTargetLists": "Zielkontakte die keine Nachrichten empfangen sollen"
+    "targetLists": "Zielkontakte, die Nachrichten empfangen sollen.",
+    "excludingTargetLists": "Zielkontakte, die keine Nachrichten empfangen sollen."
   }
 }

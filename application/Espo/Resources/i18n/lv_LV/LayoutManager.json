@@ -49,6 +49,8 @@
   },
   "messages": {
     "cantBeEmpty": "Izkārtojums nevar būt tukšs.",
-    "fieldsIncompatible": "Lauki nevar būt kopā izkārtojumā: {lauki}."
+    "fieldsIncompatible": "Lauki nevar būt kopā izkārtojumā: {lauki}.",
+    "alreadyExists": "Izkārtojums `{nosaukums}` jau pastāv.",
+    "createInfo": "Attiecību paneļos var izmantot pielāgotus sarakstu izkārtojumus."
   }
 }

@@ -62,7 +62,8 @@
     "confirmRemoveDuplicates": "Questo rimuoverà permanentemente tutti i record importati che sono stati riconosciuti come duplicati. Sei sicuro?",
     "removeImportLog": "Questo rimuoverà il registro di importazione. Tutti i record importati verranno mantenuti. Usalo se sei sicuro che l'importazione va bene.",
     "confirmRemoveImportLog": "Così facendo rimuoverai il log di importazione. Tutti i record importati rimarranno a sistema. Non sarai in grado di ripristinare i risultati di importazione. Sei sicuro?",
-    "noErrors": "Nessun errore."
+    "noErrors": "Nessun errore.",
+    "importRunning": "Importazione in corso..."
   },
   "fields": {
     "entityType": "Tipo di entità",

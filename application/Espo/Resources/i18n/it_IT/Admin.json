@@ -97,7 +97,7 @@
     "detailSmallPortal": "Dettaglio (Piccolo, Portale)",
     "listSmallPortal": "Lista (Ridotto, Portale)",
     "listPortal": "Lista (Portale)",
-    "relationshipsPortal": "Pannello relazioni (Portale)",
+    "relationshipsPortal": "Pannelli Relazione (Portale)",
     "defaultSidePanel": "Campi del pannello laterale",
     "bottomPanelsDetail": "Pannelli inferiori",
     "bottomPanelsEdit": "Pannelli inferiori (Modifica)",
@@ -129,7 +129,8 @@
     "jsonArray": "Array Json",
     "jsonObject": "Oggetto Json",
     "datetime": "Data-ora",
-    "datetimeOptional": "Data/data-ora"
+    "datetimeOptional": "Data/data-ora",
+    "urlMultiple": "Url Multipli"
   },
   "fields": {
     "type": "Tipo",
@@ -144,7 +145,7 @@
     "link": "Collegamento",
     "field": "Campo",
     "translation": "Traduzione",
-    "previewSize": "Anteprima Dimensione",
+    "previewSize": "Dimensione Anteprima",
     "defaultType": "Tipo Predefinito",
     "seeMoreDisabled": "Disabilita Taglio Testo",
     "entityList": "Elenco Entità",
@@ -171,7 +172,7 @@
     "noEmptyString": "Una stringa vuota non è consentita",
     "maxFileSize": "Dimensione massima del file (Mb)",
     "isPersonalData": "Sono dati personali",
-    "useIframe": "Usa iframe",
+    "useIframe": "Usa Iframe",
     "useNumericFormat": "Usa formato numerico",
     "strip": "Striscia",
     "cutHeight": "Altezza di taglio (px)",
@@ -193,7 +194,9 @@
     "conversionDisabled": "Disattiva la Conversione",
     "decimalPlaces": "Posizioni Decimali",
     "globalRestrictions": "Restrizioni Globali",
-    "decimal": "Decimale"
+    "decimal": "Decimale",
+    "optionsReference": "Opzioni di Riferimento",
+    "copyToClipboard": "Pulsante Copia negli appunti"
   },
   "messages": {
     "selectEntityType": "Scegli il tipo di entità dal menu di sinistra.",
@@ -278,7 +281,8 @@
     "user": "Nome utente",
     "writable": "Scrivibile",
     "readable": "Leggibile",
-    "requiredMariadbVersion": "Versione MariaDB"
+    "requiredMariadbVersion": "Versione MariaDB",
+    "requiredPostgresqlVersion": "Versione PostgreSQL"
   },
   "templates": {
     "accessInfo": "Informazioni di accesso",

@@ -8,10 +8,11 @@
     "isGlobal": "Globale",
     "emailFolder": "Cartella",
     "groupEmailFolder": "Cartella Email di Gruppo",
-    "markAsRead": "Segna come Letto"
+    "markAsRead": "Segna come Letto",
+    "bodyContainsAll": "Corpo Contiene Tutto"
   },
   "labels": {
-    "Create EmailFilter": "Crea un filtro per le email",
+    "Create EmailFilter": "Crea Filtro Email",
     "Emails": "Email"
   },
   "tooltips": {
@@ -20,7 +21,8 @@
     "name": "Dai al filtro un nome descrittivo.",
     "bodyContains": "Il corpo del messaggio contiene una delle parole, o frasi, specificate",
     "isGlobal": "Applica questo filtro a tutte le email in arrivo al sistema.",
-    "subject": "Usa un wildcard *: \n\n * `testo*` – inizia con testo,\n * `*testo*` – contiene testo,\n * `*testo` – finisce con testo."
+    "subject": "Usa un wildcard *: \n\n * `testo*` – inizia con testo,\n * `*testo*` – contiene testo,\n * `*testo` – finisce con testo.",
+    "bodyContainsAll": "Il corpo di un'email contiene tutte le parole o le frasi specificate."
   },
   "options": {
     "action": {

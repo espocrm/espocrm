@@ -24,7 +24,7 @@
     "Create Template": "Vorlage erstellen"
   },
   "tooltips": {
-    "footer": "Verwenden Sie den Platzhalter  {pageNumber} um eine Seitennummer zu drucken.",
+    "footer": "Verwenden Sie den Platzhalter {pageNumber}, um eine Seitennummer zu drucken.",
     "variables": "Kopieren und einfügen Sie benötigter Platzhalter in die Kopfzeile, in den Inhalt oder in die Fußzeile."
   },
   "options": {

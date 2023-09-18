@@ -82,7 +82,8 @@
     "Log Call": "Anruf erfassen",
     "Archive Email": "E-Mail archivieren",
     "Create Task": "Neue Aufgabe",
-    "Tasks": "Aufgaben"
+    "Tasks": "Aufgaben",
+    "Schedule": "Zeitplan"
   },
   "fields": {
     "billingAddressCity": "Ort",

@@ -17,7 +17,9 @@
     "portalUser": "Portal Kullanıcı",
     "originalLead": "Orijinal Müşteri Potansiyeli",
     "acceptanceStatus": "Kabul Durumu",
-    "accountIsInactive": "Hesap Inaktif"
+    "accountIsInactive": "Hesap Inaktif",
+    "acceptanceStatusMeetings": "Kabul Durumu (Toplantılar)",
+    "acceptanceStatusCalls": "Kabul Durumu (Aramalar)"
   },
   "links": {
     "opportunities": "Fırsatlar",
@@ -30,7 +32,8 @@
     "casesPrimary": "Dosyalar (Birincil)",
     "portalUser": "Portal Kullanıcı",
     "originalLead": "Orijinal Müşteri Potansiyeli",
-    "documents": "Belgeler"
+    "documents": "Belgeler",
+    "tasksPrimary": "Görevler (genişletilmiş)"
   },
   "labels": {
     "Create Contact": "Bağlantı Oluştur"

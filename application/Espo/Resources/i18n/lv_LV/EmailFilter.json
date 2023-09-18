@@ -8,7 +8,8 @@
     "isGlobal": "Ir globāls",
     "emailFolder": "Mape",
     "groupEmailFolder": "Grupas e-pasta mape",
-    "markAsRead": "Atzīmēt kā izlasītu"
+    "markAsRead": "Atzīmēt kā izlasītu",
+    "bodyContainsAll": "Ķermenis satur visu"
   },
   "labels": {
     "Create EmailFilter": "Izveidot e-pasta filtru",
@@ -20,7 +21,8 @@
     "name": "Dot filtriem aprakstošo nosaukumu.",
     "bodyContains": "E-pasta pamatteksts satur jebkuru no norādītajiem vārdiem vai frāzēm",
     "isGlobal": "Attiecina šo filtru uz visiem sistēmā ienākošajiem e-pastiem.",
-    "subject": "Izmantojiet aizstājējzīmi *:\n\n * `teksts*` - sākas ar tekstu,\n * `*text*` - satur tekstu,\n * `*text` - beidzas ar tekstu."
+    "subject": "Izmantojiet aizstājējzīmi *:\n\n * `teksts*` - sākas ar tekstu,\n * `*text*` - satur tekstu,\n * `*text` - beidzas ar tekstu.",
+    "bodyContainsAll": "E-pasta ķermenī ir iekļauti visi norādītie vārdi vai frāzes."
   },
   "options": {
     "action": {

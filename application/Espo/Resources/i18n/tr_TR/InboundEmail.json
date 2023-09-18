@@ -23,8 +23,15 @@
     "sentFolder": "Gönderilenler Klasörü",
     "storeSentEmails": "Gönderilen Emailleri Sakla",
     "useSmtp": "SMTP Kullan",
+    "smtpHost": "SMTP Sunucu",
     "smtpSecurity": "SMTP Güvenlik",
-    "smtpUsername": "SMTP Kullanıcı Adı"
+    "smtpUsername": "SMTP Kullanıcı Adı",
+    "smtpPassword": "SMTP Şifre",
+    "fromName": "Kimden",
+    "smtpIsShared": "SMTP Paylaşıldı",
+    "smtpIsForMassEmail": "SMTP Toplu E-posta içindir",
+    "useImap": "E-postaları Al",
+    "smtpAuthMechanism": "SMTP Kimlik Doğrulama Tipi"
   },
   "tooltips": {
     "reply": "E-posta gönderenlerine e-postalarının alındığını bildirin. \\ N \\ n Döngüleri önlemek için belirli bir süre boyunca belirli bir alıcıya yalnızca bir e-posta gönderilir.",
@@ -35,11 +42,16 @@
     "team": "Takım dosyaları atanacak.",
     "teams": "Ekiplerin e-postaları atanacak.",
     "addAllTeamUsers": "E-postalar, belirtilen ekiplerin tüm kullanıcılarının Gelen Kutusunda görünecek.",
-    "targetUserPosition": "Dosyalar belli pozisyonlarda ki kullanıcılar arasında dağıtılır."
+    "targetUserPosition": "Dosyalar belli pozisyonlarda ki kullanıcılar arasında dağıtılır.",
+    "monitoredFolders": "Birden çok klasör virgülle ayrılmalıdır.",
+    "smtpIsShared": "İşaretlenirse, kullanıcılar bu SMTP'yi kullanarak e-posta gönderebilir. Kullanılabilirlik, Grup E-posta Hesabı izniyle Roller tarafından kontrol edilir.",
+    "smtpIsForMassEmail": "İşaretlenirse SMTP, Toplu E-posta için kullanılabilir olacaktır.",
+    "storeSentEmails": "Gönderilen e-postalar IMAP sunucusunda saklanacaktır."
   },
   "links": {
     "filters": "Filtreler",
-    "emails": "E-postalar "
+    "emails": "E-postalar ",
+    "assignToUser": "Kullanıcıya ata"
   },
   "options": {
     "status": {
@@ -50,6 +62,10 @@
       "": "Hiç",
       "Direct-Assignment": "Direk-Görevlendirme",
       "Least-Busy": "En az meşgul"
+    },
+    "smtpAuthMechanism": {
+      "plain": "DÜZ",
+      "login": "GİRİŞ"
     }
   },
   "labels": {

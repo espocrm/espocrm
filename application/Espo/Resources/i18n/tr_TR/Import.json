@@ -4,7 +4,7 @@
     "Return to Import": "Aktarıma Dön",
     "Run Import": "Aktarımı başlat",
     "Back": "Geri",
-    "Field Mapping": "Alan haritalama ",
+    "Field Mapping": "Alan Eşleme",
     "Default Values": "Ön Tanımlı Değerler",
     "Add Field": "Alan Ekle",
     "Created": "Oluşturuldu",
@@ -46,12 +46,20 @@
     "Imported": "Aktarıldı",
     "Duplicates": "Çifte Kayıtlar",
     "Skip searching for duplicates": "Çiftleri aramaktan vazgeç",
-    "Timezone": "Saat dilimi"
+    "Timezone": "Saat dilimi",
+    "Remove Import Log": "İçe Aktarma Günlüğünü Kaldır",
+    "Import Results": "İçeri Alma Sonuçları",
+    "Silent Mode": "Sessiz mod"
   },
   "messages": {
     "utf8": "UTF-8 olmalı",
     "duplicatesRemoved": "Çifte Kayıtlar silindi",
-    "inIdle": "Boşta çalıştır (büyük veriler için cron aracılığıyla)"
+    "inIdle": "Boşta çalıştır (büyük veriler için cron aracılığıyla)",
+    "revert": "İçe aktarılan tüm kayıtları kalıcı olarak kaldıracaktır.",
+    "removeDuplicates": "Kopya olarak tanınan tüm içe aktarılan kayıtları kalıcı olarak kaldıracaktır.",
+    "confirmRevert": "İçe aktarılan tüm kayıtları kalıcı olarak kaldıracaktır. Emin misin?",
+    "confirmRemoveDuplicates": "Kopya olarak tanınan tüm içe aktarılan kayıtları kalıcı olarak kaldıracaktır. Emin misin?",
+    "removeImportLog": "İçe aktarma günlüğünü kaldıracaktır. İçe aktarılan tüm kayıtlar tutulacaktır. İçe aktarmanın başarılı olduğundan eminseniz kullanın."
   },
   "fields": {
     "file": "Dosya",

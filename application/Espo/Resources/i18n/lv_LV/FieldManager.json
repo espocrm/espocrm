@@ -96,7 +96,9 @@
     "optionsArray": "Iespējamo vērtību un to apzīmējumu saraksts. Ja lauks ir tukšs, tajā var ievadīt pielāgotas vērtības.",
     "maxCount": "Maksimālais atļautais atlasāmo elementu skaits.",
     "displayAsList": "Katrs vienums jaunā rindā.",
-    "optionsVarchar": "Automātiski papildināmo vērtību saraksts."
+    "optionsVarchar": "Automātiski papildināmo vērtību saraksts.",
+    "currencyDecimal": "Izmantojiet decimāldaļskaitļa DB tipu. Lietotnē vērtības tiks attēlotas kā virknes. Ja ir nepieciešama precizitāte, atzīmējiet šo parametru.",
+    "optionsReference": "Atkārtoti izmantojiet citas jomas opcijas."
   },
   "fieldParts": {
     "address": {
@@ -147,6 +149,12 @@
     "foreign": "Saistītā ieraksta lauks. Tikai nolasāms.",
     "link": "Ieraksts, kas saistīts ar pieder vienam vai vienam ar otru (daudzi ar vienu vai viens ar vienu).",
     "linkParent": "Ieraksts, kas saistīts ar pieder vecākiem. Var būt dažādu tipu vienības.",
-    "linkMultiple": "Ierakstu kopa, kas saistīta ar Has-Many (daudz-daudz vai viens-daudz) attiecībām. Ne visām attiecībām ir saite-daudzveidība lauki. Tie ir tikai tie, kuros ir iespējots(-i) parametrs(-i) Link-Multiple."
+    "linkMultiple": "Ierakstu kopa, kas saistīta ar Has-Many (daudz-daudz vai viens-daudz) attiecībām. Ne visām attiecībām ir saite-daudzveidība lauki. Tie ir tikai tie, kuros ir iespējots(-i) parametrs(-i) Link-Multiple.",
+    "urlMultiple": "Vairākas saites."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Lauka nosaukums '{field}' nav atļauts.",
+    "fieldAlreadyExists": "Lauks '{field}' jau pastāv laukā '{entityType}'.",
+    "linkWithSameNameAlreadyExists": "Saite ar nosaukumu '{field}' jau pastāv sadaļā '{entityType}'."
   }
 }

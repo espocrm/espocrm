@@ -1,6 +1,9 @@
 {
   "labels": {
-    "Dynamic Logic": "Dinamik Mantık"
+    "Dynamic Logic": "Dinamik Mantık",
+    "Name": "Ad",
+    "Label": "Etiket",
+    "Type": "Tip"
   },
   "options": {
     "dateTimeDefault": {
@@ -70,7 +73,8 @@
     "maxLength": "Maksimum kabul edilebilir metin uzunluğu.",
     "before": "Tarih değeri belirtilen alanın tarih değerinden önce olmalıdır.",
     "after": "Tarih değeri, belirtilen alanın tarih değerinden sonra olmalıdır.",
-    "readOnly": "Alan değeri kullanıcı tarafından belirlenemez. Ancak formülle hesaplanabilir."
+    "readOnly": "Alan değeri kullanıcı tarafından belirlenemez. Ancak formülle hesaplanabilir.",
+    "maxFileSize": "Boş veya 0 ise limit yoktur."
   },
   "fieldParts": {
     "address": {
@@ -82,11 +86,13 @@
       "map": "Harita"
     },
     "personName": {
+      "salutation": "Selamlama",
       "first": "İlk",
       "last": "Son"
     },
     "currency": {
-      "converted": "(Çevrilmiş)"
+      "converted": "(Çevrilmiş)",
+      "currency": "(Para birimi)"
     },
     "datetimeOptional": {
       "date": "Tarih"

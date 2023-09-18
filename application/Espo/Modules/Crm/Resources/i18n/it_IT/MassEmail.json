@@ -25,7 +25,7 @@
   "options": {
     "status": {
       "Draft": "Bozza",
-      "Pending": "In attesa",
+      "Pending": "In Attesa",
       "In Process": "In corso",
       "Complete": "Completo",
       "Canceled": "Cancellato",

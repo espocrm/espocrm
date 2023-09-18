@@ -11,7 +11,7 @@
     "ExternalAccount": "Externes Konto",
     "Extension": "Erweiterung",
     "InboundEmail": "Gruppen E-Mail Konto",
-    "Stream": "Aktivitäten",
+    "Stream": "Ereignisse",
     "Template": "Vorlage",
     "EmailFilter": "E-Mail Filter",
     "PortalRole": "Portal Rolle",
@@ -62,7 +62,7 @@
     "ExternalAccount": "Externe Konten",
     "Extension": "Erweiterungen",
     "InboundEmail": "Gruppen E-Mail Konten",
-    "Stream": "Aktivitäten",
+    "Stream": "Ereignisse",
     "Template": "Vorlagen",
     "EmailFilter": "E-Mail Filter",
     "Portal": "Portale",
@@ -110,7 +110,7 @@
     "Sending...": "Wird gesendet...",
     "Merged": "Zusammengeführt",
     "Removed": "Gelöscht",
-    "Posted": "Geposted",
+    "Posted": "Gesendet",
     "Linked": "Verknüpft",
     "Unlinked": "Verknüpfung gelöscht",
     "Done": "Fertig",
@@ -176,8 +176,8 @@
     "Active": "Aktiv",
     "Inactive": "Inaktiv",
     "Write your comment here": "Notiz hier einfügen",
-    "Post": "Senden",
-    "Stream": "Aktivitäten",
+    "Post": "Absenden",
+    "Stream": "Ereignisse",
     "Show more": "Mehr anzeigen",
     "Dashlet Options": "Dashlet Optionen",
     "Full Form": "Komplettes Formular",
@@ -255,11 +255,13 @@
     "Sign in": "Anmelden",
     "Global Search": "Globale Suche",
     "Show Navigation Panel": "Navigationsleiste anzeigen",
-    "Hide Navigation Panel": "Navigationsleiste verstecken"
+    "Hide Navigation Panel": "Navigationsleiste verstecken",
+    "Print": "Drucken",
+    "Copy to Clipboard": "In Zwischenablage kopieren",
+    "Copied to clipboard": "In Zwischenablage kopiert"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
-    "posting": "Poste...",
     "confirmLeaveOutMessage": "Sind Sie sicher, dass Sie das Formular verlassen wollen?",
     "notModified": "Sie haben keine Änderungen am Datensatz vorgenommen",
     "fieldIsRequired": "{field} wird benötigt",
@@ -273,22 +275,22 @@
     "resetPreferencesConfirmation": "Sind Sie sicher, dass Sie die Einstellungen auf Standardwerte zurücksetzen wollen?",
     "removeRecordConfirmation": "Sind Sie sicher, dass Sie den Eintrag löschen wollen?",
     "unlinkRecordConfirmation": "Sind Sie sicher, dass Sie die Beziehung zu dem verbundenen Datensatz entfernen möchten?",
-    "removeSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Sätze löschen möchten?",
+    "removeSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie die ausgewählten Datensätze löschen möchten?",
     "massUpdateResult": "{count} Einträge wurden aktualisiert",
     "massUpdateResultSingle": "{count} Eintrag wurde aktualisiert",
     "noRecordsUpdated": "Es wurden keine Einträge aktualisiert",
     "massRemoveResult": "{count} Einträge wurden gelöscht",
     "massRemoveResultSingle": "{count} Eintrag wurde gelöscht",
     "noRecordsRemoved": "Es wurden keine Einträge gelöscht",
-    "clickToRefresh": "Klicken um zu aktualisieren",
+    "clickToRefresh": "Klicken, um zu aktualisieren",
     "writeYourCommentHere": "Notiz hier einfügen",
     "writeMessageToUser": "Nachricht an {user} schreiben",
     "typeAndPressEnter": "Tippen & Enter drücken",
     "checkForNewNotifications": "Nach neuen Benachrichtigungen überprüfen",
-    "duplicate": "Der Datensatz den Sie erstellen wollen, könnte eine Dublette sein",
+    "duplicate": "Der Datensatz, den Sie erstellen wollen, könnte eine Dublette sein",
     "dropToAttach": "Anhang hier ablegen",
-    "writeMessageToSelf": "Nachricht auf eigene Pinnwand schreiben",
-    "checkForNewNotes": "Nach neuen Aktivitäten überprüfen",
+    "writeMessageToSelf": "Nachricht im eigenen Ereignisverlauf schreiben",
+    "checkForNewNotes": "Nach neuen Ereignissen überprüfen",
     "internalPost": "Beitrag kann nur von internen Benutzern gesehen werden",
     "done": "Fertig",
     "confirmMassFollow": "Sind Sie sicher, dass Sie den ausgewählten Datensätzen folgen wollen?",
@@ -308,8 +310,6 @@
     "loading": "Lade...",
     "saving": "Speichere...",
     "fieldMaxFileSizeError": "Die Datei soll nicht größer als {max} Mb sein",
-    "fieldShouldBeLess": "{field} muss kleiner als {value} sein",
-    "fieldShouldBeGreater": "{field} muss größer als {value} sein",
     "fieldIsUploading": "Hochladen läuft",
     "erasePersonalDataConfirmation": "Überprüfte Felder werden dauerhaft gelöscht. Sind Sie sicher?",
     "massPrintPdfMaxCountError": "Es kann nicht mehr als {maxCount} Datensätze gedruckt werden.",
@@ -336,7 +336,7 @@
     "validationFailure": "Fehler bei der Backend-Validierung.\n\nFeld: `{field}`\nValidierung: `{type}`",
     "confirmAppRefresh": "Die Anwendung wurde aktualisiert. Es wird empfohlen die Seite neu zu laden, um eine problemlose Funktionsweise sicherzustellen.",
     "error404": "Die von Ihnen angeforderte URL kann nicht verarbeitet werden.",
-    "error403": "Du hast keinen Zugang zu diesem Bereich.",
+    "error403": "Sie haben keinen Zugang zu diesem Bereich.",
     "extensionLicenseInvalid": "Ungültige '{name}'-Erweiterungslizenz.",
     "extensionLicenseExpired": "Das Abonnement der Lizenz für die Erweiterung '{name}' ist abgelaufen.",
     "extensionLicenseSoftExpired": "Das Abonnement der Lizenz für die Erweiterung '{name}' ist abgelaufen.",
@@ -349,7 +349,11 @@
     "cannotRelateNonExisting": "Kann nicht mit einem nicht existierenden {foreignEntityType} Datensatz verknüpft werden.",
     "cannotRelateForbidden": "Kann nicht mit verbotenem {foreignEntityType} Datensatz verknüpft werden. Zugriff auf `{action}` erforderlich.",
     "cannotRelateForbiddenLink": "Kein Zugriff auf den Link '{link}'.",
-    "emptyMassUpdate": "Keine Felder für Massenänderungen verfügbar."
+    "emptyMassUpdate": "Keine Felder für Massenänderungen verfügbar.",
+    "fieldNotMatchingPattern$uriOptionalProtocol": "{field} muss eine gültige URL sein",
+    "fieldShouldBeLess": "{field} sollte nicht größer als {value} sein",
+    "fieldShouldBeGreater": "{field} sollte nicht kleiner sein als {value}",
+    "cannotUnrelateRequiredLink": "Kann die Verknüpfung nicht lösen."
   },
   "boolFilters": {
     "onlyMy": "Nur Meine",
@@ -419,7 +423,7 @@
     "children": "Kinder"
   },
   "dashlets": {
-    "Stream": "Aktivitäten",
+    "Stream": "Ereignisse",
     "Emails": "Mein Posteingang",
     "Records": "Datensatzliste"
   },
@@ -464,7 +468,7 @@
     "emailReceivedFromThis": "E-Mail empfangen von {from}",
     "emailReceivedInitialFromThis": "E-Mail empfangen von {from}, ein(e) {entityType} wurde erstellt",
     "emailReceivedThis": "E-Mail empfangen",
-    "emailReceivedInitialThis": "E-Mail empfangen ein(e) {entityType} wurde erstellt",
+    "emailReceivedInitialThis": "E-Mail empfangen, ein(e) {entityType} wurde erstellt",
     "emailReceivedFrom": "E-Mail empfangen von {from}, verbunden mit {entityType} {entity}",
     "emailReceivedFromInitial": "E-Mail empfangen von {from}, {entityType} {entity} wurde erstellt",
     "emailReceivedInitialFrom": "E-Mail empfangen von {from}, {entityType} {entity} wurde erstellt",
@@ -473,7 +477,7 @@
     "emailSent": "{by} hat eine E-Mail verbunden mit {entityType} {entity} gesendet",
     "emailSentThis": "{by} hat eine E-Mail gesendet",
     "postTargetSelf": "{user} hat an sich selbst geschrieben",
-    "postTargetSelfAndOthers": "{user} hat an {target} und an siuch selbst geschrieben",
+    "postTargetSelfAndOthers": "{user} hat an {target} und an sich selbst geschrieben",
     "createAssignedYou": "{user} hat ihnen die {entityType} {entity} zugewiesen",
     "createAssignedThisSelf": "{user} erstellt {entityType} mit eigener Zuordnung",
     "createAssignedSelf": "{user} erstellt {entityType} {entity} mit eigener Zuordnung",
@@ -730,10 +734,10 @@
     }
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
+    "postTargetSelfAndOthers": "{user} hat an {target} und sich selbst geschrieben"
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{user} hat nach {target} und sich selbst gepostet"
+    "postTargetSelfAndOthers": "{user} hat an {target} und sich selbst geschrieben"
   },
   "durationUnits": {
     "d": "T",
@@ -749,7 +753,8 @@
     "Sakura": "Kirschblüten",
     "Violet": "Violett",
     "Hazyblue": "Blassblau",
-    "Glass": "Glas"
+    "Glass": "Glas",
+    "Light": "Hell"
   },
   "themeNavbars": {
     "side": "Seitliche Navigationsleiste",
@@ -775,10 +780,15 @@
     "varchar_pattern": "Wahrscheinlich enthält der Wert nicht zulässige Zeichen.",
     "email_emailAddress": "Ungültige E-Mail Adresse.",
     "phone_phoneNumber": "Ungültiger Wert für die Telefonnummer.",
-    "dateTimeOptional_valid": "Ungültiger Datum-Uhrzeit Wert.",
-    "dateTime_valid": "Ungültiger Datum-Uhrzeit Wert.",
+    "datetimeOptional_valid": "Ungültiger Datum-Uhrzeit Wert.",
+    "datetime_valid": "Ungültiger Datum-Uhrzeit Wert.",
     "date_valid": "Ungültiger Datumswert.",
     "enum_valid": "Ungültiger Enum-Wert. Der Wert muss eine der definierten Enum-Optionen sein. Ein leerer Wert ist nur zulässig, wenn das Feld eine leere Option hat.",
-    "multiEnum_valid": "Ungültiger Multi-Enum-Wert. Werte müssen eine der definierten Feldoptionen sein."
+    "multiEnum_valid": "Ungültiger Multi-Enum-Wert. Werte müssen eine der definierten Feldoptionen sein.",
+    "int_valid": "Ungültiger ganzzahliger Zahlenwert.",
+    "float_valid": "Ungültiger Zahlenwert."
+  },
+  "navbarTabs": {
+    "Activities": "Aktivitäten"
   }
 }

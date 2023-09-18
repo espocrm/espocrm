@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "activityStatusList": "Veiklos būsenos",
+    "historyStatusList": "Istorijos būsenos",
+    "completedStatusList": "Užbaigti statusai",
+    "canceledStatusList": "Atšauktos būsenos"
+  },
+  "tooltips": {
+    "activityStatusList": "Būklės reikšmės, nustatančios, kad veiklos įrašas turėtų būti rodomas Veiklos skydelyje ir laikomas faktiniu.",
+    "historyStatusList": "Būsenos reikšmės, lemiančios, kad veiklos įrašas būtų rodomas istorijos skydelyje.",
+    "completedStatusList": "Būsenos reikšmės, nustatančios, kad veikla baigta.",
+    "canceledStatusList": "Būsenos reikšmės, nustatančios, kad veikla yra atšaukta ir į ją nebus atsižvelgta laisvų/užimtų vietų intervaluose."
+  }
+}

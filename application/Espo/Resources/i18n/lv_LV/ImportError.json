@@ -7,7 +7,8 @@
     "exportRowIndex": "Eksporta rindu indekss",
     "lineNumber": "Līnijas numurs",
     "exportLineNumber": "Eksporta līnijas numurs",
-    "row": "Rinda"
+    "row": "Rinda",
+    "entityType": "Vienības veids"
   },
   "options": {
     "type": {

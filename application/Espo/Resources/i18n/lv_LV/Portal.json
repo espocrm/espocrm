@@ -19,13 +19,15 @@
     "defaultCurrency": "Noklusējuma valūta",
     "customUrl": "Pielāgotais vietrādis URL",
     "customId": "Pielāgots ID",
-    "layoutSet": "Izkārtojuma komplekts"
+    "layoutSet": "Izkārtojuma komplekts",
+    "authenticationProvider": "Autentifikācijas nodrošinātājs"
   },
   "links": {
     "users": "Lietotāji",
     "portalRoles": "Lomas",
     "notes": "Piezīmes",
-    "layoutSet": "Izkārtojuma komplekts"
+    "layoutSet": "Izkārtojuma komplekts",
+    "authenticationProvider": "Autentifikācijas nodrošinātājs"
   },
   "tooltips": {
     "portalRoles": "Norādītais portāls tiks attiecināts uz visiem šī portāla lietotājiem.",

@@ -34,7 +34,8 @@
     "auth2FAEnable": "Abilita autenticazione a 2 fattori",
     "auth2FAMethod": "Metodo 2FA",
     "auth2FATotpSecret": "2FA TOTP Secret\n",
-    "workingTimeCalendar": "Calendario Lavorativo"
+    "workingTimeCalendar": "Calendario Lavorativo",
+    "layoutSet": "Layout"
   },
   "links": {
     "teams": "Team",
@@ -49,12 +50,13 @@
     "dashboardTemplate": "Modello Dashboard",
     "userData": "Dati Utente",
     "workingTimeCalendar": "Calendario Lavorativo",
-    "workingTimeRanges": "Intervalli di Lavoro"
+    "workingTimeRanges": "Intervalli di Lavoro",
+    "layoutSet": "Layout"
   },
   "labels": {
     "Create User": "Crea Utente",
     "Generate": "Genera",
-    "Access": "Accesso",
+    "Access": "Permessi",
     "Preferences": "Preferenze",
     "Change Password": "Cambia password",
     "Teams and Access Control": "Controllo Teams e Accessi",
@@ -86,7 +88,8 @@
     "teams": "Team a cui appartiene l'utente. Il livello di controllo di accesso viene ereditato dai ruoli del team.",
     "roles": "Ruoli di accesso aggiuntivi. Usalo se l'utente non appartiene ad alcun gruppo o è necessario estendere il livello di controllo di accesso in esclusiva per questo utente.",
     "portalRoles": "Ulteriori ruoli portale. Usalo per estendere il livello di controllo di accesso esclusivamente per questo utente.",
-    "portals": "Portali a cui l'utente ha accesso."
+    "portals": "Portali a cui l'utente ha accesso.",
+    "layoutSet": "Saranno applicati all'utente i layout di un gruppo specifico, anziché quelli predefiniti."
   },
   "messages": {
     "passwordWillBeSent": "La password verrà inviata all'indirizzo email dell'utente.",

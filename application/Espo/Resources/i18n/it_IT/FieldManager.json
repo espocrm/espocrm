@@ -93,7 +93,8 @@
     "maxCount": "Numero massimo di elementi selezionabili.",
     "displayAsList": "Ogni elemento è inserito in una nuova riga.",
     "optionsVarchar": "Un elenco di valori per il completamento automatico.",
-    "currencyDecimal": "Usa il DB di tipo Decimale. Nell'applicazione, i valori saranno rappresentati come stringhe. Selezionare questo parametro se è richiesta maggiore precisione."
+    "currencyDecimal": "Usa il DB di tipo Decimale. Nell'applicazione, i valori saranno rappresentati come stringhe. Selezionare questo parametro se è richiesta maggiore precisione.",
+    "optionsReference": "Riutilizza le opzioni di un altro campo."
   },
   "fieldParts": {
     "address": {
@@ -145,6 +146,12 @@
     "foreign": "Campo di un record correlato. Di Sola Lettura.",
     "link": "Un record correlato attraverso la relazione Belongs-To (many-to-one o one-to-one).",
     "linkParent": "Un record collegato tramite una relazione Belongs-To-Parent. Può essere di tipi di entità differenti.",
-    "linkMultiple": "Un insieme di record correlati attraverso una relazione Has-Many (molti-a-molti o uno-a-molti). Non tutte le relazioni hanno i loro campi multipli. Lo sono solo quelle in cui il parametro Collegamento multiplo è abilitato."
+    "linkMultiple": "Un insieme di record correlati attraverso una relazione Has-Many (molti-a-molti o uno-a-molti). Non tutte le relazioni hanno i loro campi multipli. Lo sono solo quelle in cui il parametro Collegamento multiplo è abilitato.",
+    "urlMultiple": "Link multipli."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Nome campo '{field}' non è permesso.",
+    "fieldAlreadyExists": "Campo '{field}' già esistente in '{entityType}'.",
+    "linkWithSameNameAlreadyExists": "Collegamento con il nome '{field}' già esistente in '{entityType}'."
   }
 }

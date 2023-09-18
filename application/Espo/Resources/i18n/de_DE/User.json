@@ -35,7 +35,8 @@
     "auth2FAEnable": "2-Faktor-Authentifizierung aktivieren",
     "auth2FAMethod": "2FA Methode",
     "auth2FATotpSecret": "2FA TOTP Geheimnis",
-    "workingTimeCalendar": "Arbeitszeitkalender"
+    "workingTimeCalendar": "Arbeitszeitkalender",
+    "layoutSet": "Layout-Satz"
   },
   "links": {
     "roles": "Rollen",
@@ -50,7 +51,8 @@
     "dashboardTemplate": "Dashboard-Vorlage",
     "userData": "Benutzerdaten",
     "workingTimeCalendar": "Arbeitszeitkalender",
-    "workingTimeRanges": "Arbeitszeitzeiträume"
+    "workingTimeRanges": "Arbeitszeitzeiträume",
+    "layoutSet": "Layout-Satz"
   },
   "labels": {
     "Create User": "Benutzer erstellen",
@@ -81,11 +83,12 @@
     "defaultTeam": "Alle Datensätze dieses Benutzers werden standardmäßig seinem Team zugeordnet.",
     "userName": "Erlaubte Zeichen sind die Buchstaben a-z, Ziffern, Punkt, @-Symbol, Strich und Unterstrich.",
     "isAdmin": "Der Admin Benutzer hat vollen Zugriff auf alle Funktionen.",
-    "isActive": "Wenn nicht markiert kann der Benutzer sich nicht einloggen",
+    "isActive": "Wenn nicht markiert, kann der Benutzer sich nicht einloggen.",
     "teams": "Das Team zu dem dieser Benutzer gehört. Die Zugriffsberechtigung wird von der Team Rolle vererbt.",
     "roles": "Zusätzliche Zugriffsrollen. Wenn ein Benutzer zu keinem Team gehört oder wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
-    "portalRoles": "Zusätzliche Portal Rollen. Benutzen Sie diese wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
-    "portals": "Portale auf die der Benutzer Zugriff hat."
+    "portalRoles": "Zusätzliche Portal Rollen. Benutzen Sie diese, wenn Sie die Zugriffsberechtigung nur für diesen Benutzer erweitern wollen.",
+    "portals": "Portale auf die der Benutzer Zugriff hat.",
+    "layoutSet": "Layouts aus einem bestimmten Satz werden anstelle der Standardlayouts für den Benutzer verwendet."
   },
   "messages": {
     "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",

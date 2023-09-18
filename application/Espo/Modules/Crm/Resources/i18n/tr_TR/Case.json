@@ -10,7 +10,8 @@
     "type": "Tür",
     "description": "Açıklama",
     "lead": "Müşteri Potansiyeli",
-    "attachments": "Ekler"
+    "attachments": "Ekler",
+    "inboundEmail": "Grup Email Hesabı"
   },
   "links": {
     "account": "Hesap",
@@ -22,7 +23,8 @@
     "emails": "E-postalar ",
     "articles": "Bilgi Bankası Makaleleri",
     "lead": "Müşteri Potansiyeli",
-    "attachments": "Ekler"
+    "attachments": "Ekler",
+    "inboundEmail": "Grup Email Hesabı"
   },
   "options": {
     "status": {

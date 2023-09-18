@@ -276,11 +276,13 @@
     "Sign in": "Вход",
     "Global Search": "Глобална търсачка",
     "Show Navigation Panel": "Показване на страничния панел",
-    "Hide Navigation Panel": "Скриване на страничния панел"
+    "Hide Navigation Panel": "Скриване на страничния панел",
+    "Print": "Принтиране",
+    "Copy to Clipboard": "Бутон за копиране",
+    "Copied to clipboard": "Копирано в клипборда"
   },
   "messages": {
     "pleaseWait": "Моля изчакайте...",
-    "posting": "Публикува се ...",
     "confirmLeaveOutMessage": "Сигурни ли сте, искате да напуснете формата?",
     "notModified": "Нямате нови промени по текущия запис",
     "fieldIsRequired": "{field} е задължително",
@@ -329,8 +331,6 @@
     "loading": "Зареждане...",
     "saving": "Се запазва ...",
     "fieldMaxFileSizeError": "Файла не трябва да надвишава {макс} Mb",
-    "fieldShouldBeLess": "{field} не трябва да бъде със стойност по-голяма от {value}",
-    "fieldShouldBeGreater": "{field} не трябва да бъде със стойност по-малка от {value}",
     "fieldIsUploading": "Качването в процес на изпълнение",
     "erasePersonalDataConfirmation": "Избраните полета ще бъдат изтрити завинаги. Сигурен ли си?",
     "massPrintPdfMaxCountError": "Не може да се покажат повече от {maxCount} записи.",
@@ -370,7 +370,11 @@
     "cannotRelateNonExisting": "Не може да се свърже с несъществуващ {foreignEntityType} запис.",
     "cannotRelateForbidden": "Не може да се свърже със забранен запис {foreignEntityType}. Изисква се достъп „{action}“.",
     "cannotRelateForbiddenLink": "Няма достъп до връзката „{link}“.",
-    "emptyMassUpdate": "Няма налични полета за масова актуализация."
+    "emptyMassUpdate": "Няма налични полета за масова актуализация.",
+    "fieldNotMatchingPattern$uriOptionalProtocol": "{field} трябва да бъде валиден URL",
+    "fieldShouldBeLess": "Стойността на {field} не трябва да бъде по-голяма от {value}",
+    "fieldShouldBeGreater": "Стойността на {field} не трябва да бъде по-малко от {value}",
+    "cannotUnrelateRequiredLink": "Не може да се отсвърже тази релация."
   },
   "boolFilters": {
     "onlyMy": "Само мои",
@@ -447,7 +451,8 @@
   "dashlets": {
     "Stream": "Дейности",
     "Emails": "Входящи имейли",
-    "Records": "Списък със записи"
+    "Records": "Списък със записи",
+    "Memo": "Записки"
   },
   "notificationMessages": {
     "assign": "{entityType} {entity} беше назначено към теб",
@@ -774,10 +779,21 @@
     "varchar_pattern": "Вероятно стойността съдържа непозволени знаци.",
     "email_emailAddress": "Невалидна стойност на имейл адреса.",
     "phone_phoneNumber": "Невалидна стойност на телефонния номер.",
-    "dateTimeOptional_valid": "Невалидна стойност за дата-час.",
-    "dateTime_valid": "Невалидна стойност за дата-час.",
+    "datetimeOptional_valid": "Невалидна стойност за дата-час.",
+    "datetime_valid": "Невалидна стойност за дата-час.",
     "date_valid": "Невалидна стойност на датата.",
     "enum_valid": "Невалидна стойност на падащо меню. Стойността трябва да бъде една от дефинираните опции за изброяване. Празна стойност е разрешена само ако полето има празна опция.",
-    "multiEnum_valid": "Невалидна стойност за множество изброявания. Стойностите трябва да са една от дефинираните опции на полето."
+    "multiEnum_valid": "Невалидна стойност за множество изброявания. Стойностите трябва да са една от дефинираните опции на полето.",
+    "int_valid": "Невалидна стойност на цяло число.",
+    "float_valid": "Невалидна стойност на число."
+  },
+  "navbarTabs": {
+    "Business": "Бизнес",
+    "Marketing": "Маркетинг",
+    "Support": "Поддръжка",
+    "Activities": "Активности"
+  },
+  "themes": {
+    "Light": "Светла"
   }
 }

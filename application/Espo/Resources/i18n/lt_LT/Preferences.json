@@ -31,7 +31,9 @@
     "scopeColorsDisabled": "Išjunkite spalvų apimtį",
     "tabColorsDisabled": "Išjungti kortelių spalvas",
     "assignmentNotificationsIgnoreEntityTypeList": "Pranešimai apie paskyrimą programėlėje",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Pranešimai apie paskyrimą el. paštu"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Pranešimai apie paskyrimą el. paštu",
+    "dashboardLocked": "Užrakinti prietaisų skydelį",
+    "textSearchStoringDisabled": "Išjungti teksto filtro saugojimą"
   },
   "options": {
     "weekStart": {

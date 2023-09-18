@@ -13,10 +13,13 @@
     "account": "Hesap",
     "dateCompleted": "Tamamlanma Tarihi",
     "attachments": "Ekler",
-    "reminders": "Hatırlatıcılar"
+    "reminders": "Hatırlatıcılar",
+    "contact": "Kişiler"
   },
   "links": {
-    "attachments": "Eklentiler"
+    "attachments": "Eklentiler",
+    "account": "Hesaplar",
+    "contact": "Kişiler"
   },
   "options": {
     "status": {

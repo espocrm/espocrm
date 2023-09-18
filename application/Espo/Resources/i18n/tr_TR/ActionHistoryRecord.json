@@ -5,11 +5,14 @@
     "createdAt": "Tarih",
     "target": "Hedef",
     "targetType": "Hedef Tipi",
-    "ipAddress": "IP Adresi"
+    "ipAddress": "IP Adresi",
+    "authLogRecord": "Kimlik Doğrulama Kaydı",
+    "userType": "Kullanıcı Tipi"
   },
   "links": {
     "user": "Kullanıcı",
-    "target": "Hedef"
+    "target": "Hedef",
+    "authLogRecord": "Kimlik Doğrulama Kaydı"
   },
   "presetFilters": {
     "onlyMy": "Sadece Benim"

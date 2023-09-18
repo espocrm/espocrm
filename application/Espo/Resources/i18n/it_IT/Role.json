@@ -2,29 +2,20 @@
   "fields": {
     "name": "Nome",
     "roles": "Ruoli",
-    "assignmentPermission": "Permessi di Assegnazione",
-    "userPermission": "Autorizzazioni utente",
-    "portalPermission": "Autorizzazione portale",
-    "groupEmailAccountPermission": "Permesso account email di gruppo",
-    "exportPermission": "Permessi di Esportazione",
-    "dataPrivacyPermission": "Autorizzazione privacy dati",
-    "massUpdatePermission": "Autorizzazione per l'aggiornamento di massa",
-    "followerManagementPermission": "Permessi di Gestione dei Follower",
+    "assignmentPermission": "Permessi Assegnazione",
+    "userPermission": "Permessi Utente",
+    "portalPermission": "Permessi Portale",
+    "groupEmailAccountPermission": "Permesso Account Email di Gruppo",
+    "exportPermission": "Permessi Esportazione",
+    "dataPrivacyPermission": "Permessi Privacy Dati",
+    "massUpdatePermission": "Permessi Aggiornamento di Massa",
+    "followerManagementPermission": "Permessi Gestione Follower",
     "data": "Dati",
-    "fieldData": "Dati Campo"
+    "fieldData": "Dati Campo",
+    "messagePermission": "Permessi Messaggistica"
   },
   "links": {
     "users": "Utenti"
-  },
-  "tooltips": {
-    "assignmentPermission": "Permette di limitare la possibilità di assegnare record ed inviare messaggi ad altri utenti \n\ntutto - nessuna restrizione\n\nteam - può assegnare e postare solo al proprio team\n\nno - può assegnare e postare solo a sé stesso",
-    "userPermission": "Permette di limitare agli utenti la possibilità di visualizzare le attività, il calendario ed il flusso attività, di altri utenti\n\ntutto - tutto visualizzabile\n\nteam - visualizzabili le sole attività del proprio team\n\nno - nulla di visualizzabile",
-    "portalPermission": "Definisce un accesso alle informazioni del portale, capacità di pubblicare messaggi agli utenti del portale.",
-    "groupEmailAccountPermission": "Definisce un accesso agli account di posta elettronica di gruppo, una possibilità di inviare e-mail dal gruppo SMTP.",
-    "dataPrivacyPermission": "Consente di visualizzare e cancellare i dati personali.",
-    "exportPermission": "Definisce se gli utenti hanno la possibilità di esportare record.",
-    "massUpdatePermission": "Definisce se gli utenti hanno la possibilità di eseguire aggiornamenti di massa dei record.",
-    "followerManagementPermission": "Permette di gestire i follower dei record."
   },
   "labels": {
     "Access": "Accesso",
@@ -56,5 +47,16 @@
   },
   "messages": {
     "changesAfterClearCache": "Verranno applicate tutte le modifiche del controllo di accesso dopo la cancellazione della cache."
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "Consente di visualizzare e cancellare i dati personali.",
+    "followerManagementPermission": "Permette di gestire i follower dei record.",
+    "messagePermission": "Permette di inviare messaggi ad altri utenti.\n\n* tutti - può inviare a tutti\n* team - può inviare solo ai membri del team\n* no - non può inviare",
+    "assignmentPermission": "Permette di assegnare i record ad altri utenti.\n\n* tutti - nessuna restrizione\n* team - può assegnare solo ai membri del team\n* no - può essere assegnato solo a se stessi",
+    "userPermission": "Permette di visualizzare le attività, il calendario e il flusso di altri utenti.\n\n* tutti - può visualizzare tutto\n* team - può visualizzare solo le attività dei membri del team\n* no - non può visualizzare",
+    "portalPermission": "Accesso alle informazioni del portale, possibilità di inviare messaggi agli utenti del portale.",
+    "groupEmailAccountPermission": "Accesso agli account di posta elettronica di gruppo, possibilità di inviare e-mail da SMTP di gruppo.",
+    "exportPermission": "Permette di esportare i record.",
+    "massUpdatePermission": "La possibilità di eseguire l'aggiornamento di massa dei record."
   }
 }

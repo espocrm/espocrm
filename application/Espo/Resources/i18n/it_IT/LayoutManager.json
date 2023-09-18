@@ -47,6 +47,8 @@
   },
   "messages": {
     "cantBeEmpty": "Il layout non può essere vuoto.",
-    "fieldsIncompatible": "I campi non possono essere presenti contemporaneamente nel layout: {fields}."
+    "fieldsIncompatible": "I campi non possono essere presenti contemporaneamente nel layout: {fields}.",
+    "alreadyExists": "Layout `{name}` già esistente.",
+    "createInfo": "I layout lista personalizzati possono essere usati per i pannelli relazione."
   }
 }

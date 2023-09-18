@@ -15,7 +15,9 @@
     "sortBy": "Ordina (campo)",
     "sortDirection": "Ordina (direzione)",
     "dateFilter": "Filtro data",
-    "skipOwn": "Non mostrare i propri record"
+    "skipOwn": "Non mostrare i propri record",
+    "text": "Testo",
+    "folder": "Cartella"
   },
   "options": {
     "mode": {

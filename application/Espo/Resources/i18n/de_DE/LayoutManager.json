@@ -44,6 +44,8 @@
   },
   "messages": {
     "cantBeEmpty": "Layout kann nicht leer sein.",
-    "fieldsIncompatible": "Folgende Felder können nicht gemeinsam im Layout sein: {fields}."
+    "fieldsIncompatible": "Folgende Felder können nicht gemeinsam im Layout sein: {fields}.",
+    "alreadyExists": "Layout `{name}` existiert bereits.",
+    "createInfo": "Benutzerdefinierte Listenlayouts können von Beziehungspanels verwendet werden."
   }
 }

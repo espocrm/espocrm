@@ -9,7 +9,7 @@
     "dateEndDate": "Data Fine (tutto il giorno)",
     "priority": "Priorità",
     "description": "Descrizione",
-    "isOverdue": "In ritardo",
+    "isOverdue": "In Ritardo",
     "dateCompleted": "Completato in data",
     "attachments": "Allegati",
     "reminders": "Promemoria",
@@ -37,13 +37,13 @@
   "labels": {
     "Create Task": "Crea Compito",
     "Complete": "Completato",
-    "overdue": "in ritardo"
+    "overdue": "In Ritardo"
   },
   "presetFilters": {
     "actual": "In Corso",
     "completed": "Completato",
-    "todays": "Di oggi",
-    "overdue": "In ritardo",
+    "todays": "Di Oggi",
+    "overdue": "In Ritardo",
     "deferred": "Prorogato"
   },
   "nameOptions": {

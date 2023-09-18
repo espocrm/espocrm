@@ -17,7 +17,7 @@
     "contactIsInactive": "Inaktif"
   },
   "links": {
-    "contacts": "Bağlantılar",
+    "contacts": "Kişiler",
     "opportunities": "Fırsatlar",
     "cases": "Dosyalar",
     "documents": "Belgeler",
@@ -88,7 +88,8 @@
       "Support": "Destek ",
       "Testing, Inspection & Certification": "Test, Muayene ve Belgelendirme",
       "Wholesale": "Toptan",
-      "Water": "Su"
+      "Water": "Su",
+      "Travel": "Seyahat"
     }
   },
   "labels": {

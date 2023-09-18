@@ -49,6 +49,8 @@
   },
   "messages": {
     "cantBeEmpty": "Maketas negali būti tuščias.",
-    "fieldsIncompatible": "Laukai negali būti išdėstyti kartu: {fields}."
+    "fieldsIncompatible": "Laukai negali būti išdėstyti kartu: {fields}.",
+    "alreadyExists": "Layout `{name}` jau egzistuoja.",
+    "createInfo": "Pasirinktinius sąrašų išdėstymus galima naudoti santykių skydeliuose."
   }
 }

@@ -31,7 +31,7 @@
     "Activities": "Attività",
     "KnowledgeBaseArticle": "Articoli Base di Conoscenza",
     "KnowledgeBaseCategory": "Categoria Base di Conoscenza",
-    "CampaignLogRecord": "Registro della campagna"
+    "CampaignLogRecord": "Registro Campagna"
   },
   "scopeNamesPlural": {
     "Account": "Account",
@@ -52,7 +52,7 @@
     "Activities": "Attività",
     "KnowledgeBaseArticle": "Base di Conoscenza",
     "KnowledgeBaseCategory": "Categorie Base di Conoscenza",
-    "CampaignLogRecord": "Registro delle campagne"
+    "CampaignLogRecord": "Registro Campagne"
   },
   "dashlets": {
     "Leads": "I miei Lead",
@@ -81,7 +81,9 @@
     "Archive Email": "Archivia Email",
     "Create Task": "Crea Compito",
     "Tasks": "Compiti",
-    "Scheduler": "Pianificatore"
+    "Scheduler": "Pianificatore",
+    "Schedule": "Pianifica",
+    "Log": "Registra"
   },
   "fields": {
     "billingAddressCity": "Città",
@@ -94,6 +96,8 @@
     "addressState": "Provincia",
     "billingAddressStreet": "Via",
     "addressStreet": "Via",
+    "billingAddressMap": "Mappa",
+    "addressMap": "Mappa",
     "shippingAddressCity": "Città (Spedizione)",
     "shippingAddressStreet": "Via (Spedizione)",
     "shippingAddressCountry": "Nazione (Spedizione)",

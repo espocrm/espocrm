@@ -88,7 +88,8 @@
     "Archive Email": "Arhivēt e-pastu",
     "Create Task": "Izveidot uzdevumu",
     "Tasks": "Uzdevumi",
-    "Scheduler": "Plānotājs"
+    "Scheduler": "Plānotājs",
+    "Schedule": "Grafiks"
   },
   "fields": {
     "billingAddressCity": "Pilsēta",

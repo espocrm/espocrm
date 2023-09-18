@@ -44,8 +44,8 @@
     "Create Opportunity": "Crea Opportunità"
   },
   "presetFilters": {
-    "open": "Aperto",
-    "won": "Vinto",
+    "open": "Aperta",
+    "won": "Vinta",
     "lost": "Perso"
   }
 }

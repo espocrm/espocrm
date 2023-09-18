@@ -8,7 +8,7 @@
     "duration": "Süre",
     "description": "Açıklama",
     "users": "Kullanıcılar",
-    "contacts": "Bağlantılar",
+    "contacts": "Kişiler",
     "leads": "Müşteri Potansiyelleri",
     "reminders": "Hatırlatıcılar",
     "account": "Hesap",
@@ -37,7 +37,8 @@
     "Set Not Held": "SET NOT HELD XXXX",
     "Send Invitations": "Davetleri Gönder",
     "on time": "Zamanında",
-    "before": "Önce"
+    "before": "Önce",
+    "All-Day": "Tüm Gün"
   },
   "presetFilters": {
     "planned": "Planlandı",
@@ -45,6 +46,7 @@
     "todays": "Bugünün"
   },
   "messages": {
-    "nothingHasBeenSent": "Hiçbir şey gönderilmedi"
+    "nothingHasBeenSent": "Hiçbir şey gönderilmedi",
+    "selectAcceptanceStatus": "Kabul durumunuzu ayarlayın."
   }
 }

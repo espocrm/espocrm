@@ -21,5 +21,8 @@
       "notContains": "İçermez",
       "notHas": "İçermez"
     }
+  },
+  "labels": {
+    "Field": "Alan"
   }
 }

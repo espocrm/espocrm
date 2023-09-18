@@ -40,7 +40,12 @@
     "SetupConfirmation page title": "Sistem gereksinimleri",
     "PHP Configuration": "PHP ayarları",
     "MySQL Configuration": "Veri tabanı ayarları",
-    "Permission Requirements": "Izin"
+    "Permission Requirements": "Izin",
+    "Success": "Başarılı",
+    "Fail": "Başarısız",
+    "is recommended": "taviye edilirmi",
+    "extension is missing": "eksik Eklenti",
+    "headerTitle": "EspoCRM Kurulumu"
   },
   "fields": {
     "Choose your language": "Dili seçin",
@@ -97,29 +102,18 @@
     "Thousand Separator and Decimal Mark equal": "Binlik ayraç ve ondalık ayraç aynı olamaz",
     "extension": "{0} uzantı eksik",
     "option": "Önerilen değer {0}",
-    "mysqlSettingError": "EspoCRM, \"{NAME} \" ayarının {VALUE} olarak ayarlanmasını gerektiriyor"
-  },
-  "options": {
-    "modRewriteTitle": {
-      "apache": "<h3>API Hatası: EspoCRM API'sı kullanılamıyor.</h3><br> Gerekli adımları uygulayın. Her adımın ardından sorunun çözülüp çözülmediğini kontrol edin.",
-      "nginx": "<h3>API Hatası: EspoCRM API'sı kullanılamıyor.</h3>",
-      "microsoft-iis": "<h3>API Hatası: EspoCRM API'sı kullanılamıyor.</h3> <br> Olası problem: \"URL Yeniden Yaz \" devre dışı. Lütfen IIS sunucusunda \"URL Rewrite \" Modülü'nü kontrol edin ve etkinleştirin",
-      "default": "<h3>API Hatası: EspoCRM API'sı kullanılamıyor.</h3> <br> Olası sorun: devre dışı bırakılmış Rewrite Modülü. Lütfen sunucunuzdaki Rewrite Modülü'nü kontrol edin ve etkinleştirin (örn. Apache'deki mod_rewrite) ve .htaccess desteğini etkinleştirin."
-    },
-    "modRewriteInstruction": {
-      "apache": {
-        "linux": "<br> <br> 1. \"Mod_rewrite \" yı etkinleştirin. Bunu yapmak için şu komutları bir Terminalde çalıştırın: <pre>{APACHE1}</pre> <br> 2. .htaccess desteğini etkinleştirin. Sunucu yapılandırma ayarlarını ekleyin / düzenleyin (<code>{APACHE2_PATH1}</code>, <code>{APACHE2_PATH2}</code>, <code>{APACHE2_PATH3}</code>):<pre>{APACHE2}</pre>\n Sonra bu komutu bir Terminalde çalıştırın: <pre>{APACHE3}</pre> <br> 3. RewriteBase yolunu eklemeyi deneyin, {API_PATH} .htaccess dosyasını açın ve aşağıdaki satırı değiştirin: <pre>{APACHE4}</pre> <pre>{APACHE5}</pre> <br> Daha fazla bilgi için lütfen ziyaret edin. <a href=\"{APACHE_LINK}\" target=\"_blank\"> EspoCRM için Apache sunucusu yapılandırması </a> kılavuzunu okuyun. <br> <br>"
-      },
-      "nginx": {
-        "linux": "<br>Sunucu bölümünde bu kodu Nginx sunucu blok yapılandırma dosyanıza <code>{NGINX_PATH}</code> ekleyin:\n<pre> \n{NGINX} \n</pre> <br> Daha fazla bilgi için lütfen <a href=\"{NGINX_LINK}\" target=\"_blank\">EspoCRM için Nginx sunucu yapılandırması</a>. <br> <br>"
-      }
-    }
+    "mysqlSettingError": "EspoCRM, \"{NAME} \" ayarının {VALUE} olarak ayarlanmasını gerektiriyor",
+    "requiredMariadbVersion": "MariaDB sürümünüz EspoCRM tarafından desteklenmiyor, lütfen en az MariaDB {minVersion} sürümüne güncelleyin",
+    "Ajax failed": "Beklenmeyen bir hata oluştu"
   },
   "systemRequirements": {
     "requiredPhpVersion": "PHP sürümü",
     "requiredMysqlVersion": "MySQL sürümü",
     "host": "Sunucu Adı",
     "dbname": "Veritabanı adı",
-    "user": "Kullanıcı Adı"
+    "user": "Kullanıcı Adı",
+    "writable": "Yazılabilir",
+    "readable": "Okunabilir",
+    "requiredMariadbVersion": "MariaDB sürümü"
   }
 }

@@ -81,7 +81,8 @@
     "Configuration Instructions": "Konfigūravimo instrukcijos",
     "Formula Sandbox": "Formulės smėlio dėžė",
     "Working Time Calendars": "Darbo laiko kalendoriai",
-    "Group Email Folders": "Grupės el. pašto aplankai"
+    "Group Email Folders": "Grupės el. pašto aplankai",
+    "Authentication Providers": "Autentifikavimo paslaugų teikėjai"
   },
   "layouts": {
     "list": "Sąrašas",
@@ -142,7 +143,8 @@
     "datetimeOptional": "Data / data-laikas",
     "checklist": "Kontrolinis sąrašas",
     "linkOne": "Pirmoji sąsaja",
-    "barcode": "Brūkšninis kodas"
+    "barcode": "Brūkšninis kodas",
+    "urlMultiple": "Keli URL adresai"
   },
   "fields": {
     "type": "Tipas",
@@ -207,7 +209,10 @@
     "conversionDisabled": "Išjungti konversiją",
     "decimalPlaces": "Dešimtainės vietos",
     "pattern": "Šablonas",
-    "globalRestrictions": "Visuotiniai apribojimai"
+    "globalRestrictions": "Visuotiniai apribojimai",
+    "decimal": "Dešimtainis",
+    "optionsReference": "Parinktys Nuoroda",
+    "copyToClipboard": "Kopijavimo į iškarpinę mygtukas"
   },
   "messages": {
     "selectEntityType": "Pasirinkite objekto tipą kairiajame meniu.",
@@ -278,7 +283,8 @@
     "sms": "SMS nustatymai.",
     "formulaSandbox": "Rašykite ir išbandykite formulių scenarijus.",
     "workingTimeCalendars": "Darbo grafikas.",
-    "groupEmailFolders": "Komandoms bendrinami el. pašto aplankai."
+    "groupEmailFolders": "Komandoms bendrinami el. pašto aplankai.",
+    "authenticationProviders": "Papildomi portalų autentifikavimo paslaugų teikėjai."
   },
   "options": {
     "previewSize": {
@@ -302,7 +308,8 @@
     "user": "Naudotojo vardas",
     "writable": "Įrašoma",
     "readable": "Skaitoma",
-    "requiredMariadbVersion": "MariaDB versija"
+    "requiredMariadbVersion": "MariaDB versija",
+    "requiredPostgresqlVersion": "\"PostgreSQL\" versija"
   },
   "templates": {
     "accessInfo": "Priegos informacija",

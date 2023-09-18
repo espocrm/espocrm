@@ -80,7 +80,8 @@
     "Job Settings": "Darba iestatījumi",
     "Configuration Instructions": "Konfigurēšanas norādījumi",
     "Working Time Calendars": "Darba laika kalendāri",
-    "Group Email Folders": "Grupas e-pasta mapes"
+    "Group Email Folders": "Grupas e-pasta mapes",
+    "Authentication Providers": "Autentifikācijas nodrošinātāji"
   },
   "layouts": {
     "list": "Saraksts",
@@ -148,7 +149,8 @@
     "datetimeOptional": "Datums/Datums-laiks",
     "checklist": "Kontrolsaraksts",
     "linkOne": "Pirmā saite",
-    "barcode": "Svītrkods"
+    "barcode": "Svītrkods",
+    "urlMultiple": "Url numurs Vairāki"
   },
   "fields": {
     "type": "Tips",
@@ -215,7 +217,10 @@
     "conversionDisabled": "Atslēgt konvertēšanu",
     "decimalPlaces": "Decimālskaitļi aiz komata",
     "pattern": "Modelis",
-    "globalRestrictions": "Globālie ierobežojumi"
+    "globalRestrictions": "Globālie ierobežojumi",
+    "decimal": "Decimālskaitļi",
+    "optionsReference": "Atsauce uz opcijām",
+    "copyToClipboard": "Poga Kopēt uz starpliktuvi"
   },
   "messages": {
     "selectEntityType": "Atlasīt vienību tipu kreisajā izvēlnē.",
@@ -286,7 +291,8 @@
     "sms": "SMS iestatījumi.",
     "formulaSandbox": "Rakstīt un testēt formulas skriptus.",
     "workingTimeCalendars": "Darba grafiks.",
-    "groupEmailFolders": "E-pasta mapes, kas kopīgotas komandām."
+    "groupEmailFolders": "E-pasta mapes, kas kopīgotas komandām.",
+    "authenticationProviders": "Papildu autentificēšanas pakalpojumu sniedzēji portāliem."
   },
   "options": {
     "previewSize": {
@@ -310,7 +316,8 @@
     "user": "Lietotāja vārds",
     "writable": "Rakstiski",
     "readable": "Lasāmi",
-    "requiredMariadbVersion": "MariaDB versija"
+    "requiredMariadbVersion": "MariaDB versija",
+    "requiredPostgresqlVersion": "PostgreSQL versija"
   },
   "templates": {
     "accessInfo": "Piekļuves informācija",

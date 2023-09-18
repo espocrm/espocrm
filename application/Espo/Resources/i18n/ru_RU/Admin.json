@@ -219,7 +219,9 @@
     "decimalPlaces": "Десятичные знаки",
     "pattern": "Шаблон",
     "globalRestrictions": "Глобальные ограничения",
-    "decimal": "Десятичная дробь"
+    "decimal": "Десятичная дробь",
+    "optionsReference": "Справочник по опциям",
+    "copyToClipboard": "Кнопка копирования в буфер обмена"
   },
   "messages": {
     "selectEntityType": "Выберите тип объекта в левом меню.",
@@ -315,7 +317,8 @@
     "user": "Имя пользователя",
     "writable": "С доступом записи",
     "readable": "С доступом чтения",
-    "requiredMariadbVersion": "Версия MariaDB"
+    "requiredMariadbVersion": "Версия MariaDB",
+    "requiredPostgresqlVersion": "Версия PostgreSQL"
   },
   "templates": {
     "accessInfo": "Реквизиты доступа",

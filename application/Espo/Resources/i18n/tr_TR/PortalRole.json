@@ -7,5 +7,11 @@
     "Create PortalRole": "Portal Rolü Oluştur",
     "Scope Level": "Kapsam Düzeyi",
     "Field Level": "Alan Düzeyi"
+  },
+  "fields": {
+    "exportPermission": "Yetkileri Dışa Aktar",
+    "massUpdatePermission": "Toplu Güncelleme İzni",
+    "data": "Veri",
+    "fieldData": "Alan Verileri"
   }
 }

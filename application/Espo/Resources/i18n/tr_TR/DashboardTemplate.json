@@ -1,1 +1,10 @@
-{}
+{
+  "fields": {
+    "layout": "Düzen"
+  },
+  "labels": {
+    "Create DashboardTemplate": "Şablon Oluştur",
+    "Deploy to Users": "Kullanıcılara Dağıt",
+    "Deploy to Team": "Takımlara Dağıt"
+  }
+}

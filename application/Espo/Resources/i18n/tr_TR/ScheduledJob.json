@@ -15,7 +15,8 @@
       "CheckEmailAccounts": "Kişisel e-mail hesaplarını kontrol et",
       "SendEmailReminders": "E-mail hatırlatıcıları gönder",
       "AuthTokenControl": "Kimlik Doğrulama Simgesi Kontrolü",
-      "SendEmailNotifications": "E-posta Bildirimleri gönder"
+      "SendEmailNotifications": "E-posta Bildirimleri gönder",
+      "CheckNewVersion": "Yeni versiyon denetleme"
     },
     "cronSetup": {
       "linux": "Not: Espo Planlanmış İşleri çalıştırabilmek için şu kodları crontab dosyasına ekleyin:",
@@ -26,8 +27,5 @@
       "Active": "Aktif",
       "Inactive": "Pasif"
     }
-  },
-  "tooltips": {
-    "scheduling": "Crontab gösterimi. İşlerin sıklığını tanımlar. \\ N \\ n * / 5 * * * * - her 5 dakikada bir \\ n \\ n0 * / 2 * * * - her 2 saatte bir \\ n \\ n30 1 * * * - saat 01: 30'da bir kez Gün \\ n \\ n0 0 1 * * - ayın ilk gününde"
   }
 }
