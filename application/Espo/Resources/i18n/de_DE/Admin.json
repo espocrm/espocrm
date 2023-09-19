@@ -258,7 +258,7 @@
     "attachments": "Alle Dateianhänge, die im System gespeichert sind.",
     "templateManager": "Nachrichten Templates anpassen",
     "systemRequirements": "Systemanforderungen für EspoCRM",
-    "apiUsers": "Benutzer trennen, um diese zu integrieren.",
+    "apiUsers": "Separate Benutzer für Integrationszwecke.",
     "jobs": "Jobs führen Aufgaben im Hintergrund aus.",
     "pdfTemplates": "Vorlagen für den Druck im PDF-Format.",
     "webhooks": "Webhooks verwalten.",
