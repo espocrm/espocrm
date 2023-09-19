@@ -1,0 +1,1 @@
+Stornierung von: {{entityTypeLowerFirst}} '{{name}}'
