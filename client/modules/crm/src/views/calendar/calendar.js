@@ -970,25 +970,35 @@ class CalendarView extends View {
             options.eventContent = arg => {
                 const event = /** @type {EventImpl} */arg.event;
 
-                let $content = $('<div>');
+                const $content = $('<div>');
 
                 $content.append(
                     $('<div>')
-                        .addClass('fc-event-title')
-                        .text(event.title)
+                        .append(
+                            $('<div>')
+                                .addClass('fc-event-main-frame')
+                                .append(
+                                    arg.timeText ?
+                                        $('<div>').addClass('fc-event-time').text(arg.timeText) :
+                                        undefined
+                                )
+                                .append(
+                                    $('<div>').addClass('fc-event-title').text(event.title)
+                                )
+                        )
                 );
 
                 const userIdList = event.extendedProps.userIdList || [];
 
                 userIdList.forEach(userId => {
-                    let userName = event.extendedProps.userNameMap[userId] || '';
+                    const userName = event.extendedProps.userNameMap[userId] || '';
                     let avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 13);
 
                     if (avatarHtml) {
                         avatarHtml += ' ';
                     }
 
-                    let $div = $('<div>')
+                    const $div = $('<div>')
                         .addClass('user')
                         .css({overflow: 'hidden'})
                         .append(avatarHtml)
