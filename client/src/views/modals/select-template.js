@@ -34,6 +34,7 @@ class SelectTemplateModalView extends SelectRecordsModalView {
     createButton = false
     searchPanel = false
     scope = 'Template'
+    backdrop = true
 
     setupSearch() {
         super.setupSearch();
