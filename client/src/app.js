@@ -1064,15 +1064,16 @@ class App {
     setupAjax() {
         /**
          * @param {XMLHttpRequest} xhr
+         * @param {Object.<string, *>} options
          */
-        const beforeSend = (xhr) => {
-            if (this.auth !== null) {
+        const beforeSend = (xhr, options) => {
+            if (this.auth !== null && !options.login) {
                 xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
                 xhr.setRequestHeader('Espo-Authorization', this.auth);
                 xhr.setRequestHeader('Espo-Authorization-By-Token', 'true');
             }
 
-            if (this.anotherUser !== null) {
+            if (this.anotherUser !== null && !options.login) {
                 xhr.setRequestHeader('X-Another-User', this.anotherUser);
             }
         };
