@@ -52,7 +52,7 @@
   "tooltips": {
     "dataPrivacyPermission": "Ermöglicht das Anzeigen und Löschen persönlicher Daten.",
     "followerManagementPermission": "Ermöglicht die Verwaltung von Abonnenten bestimmter Datensätze.",
-    "messagePermission": "Erlaubt das Senden von Nachrichten an andere Benutzer.\n\n* Alle - kann an alle senden\n* Team - kann nur an Teammitglieder sendenlaubt\n* Nein - kann nicht senden",
+    "messagePermission": "Erlaubt das Senden von Nachrichten an andere Benutzer.\n\n* Alle - kann an alle senden\n* Team - kann nur an Teammitglieder senden\n* Nein - kann nicht senden",
     "assignmentPermission": "Erlaubt die Zuweisung von Datensätzen an andere Benutzer.\n\n* Alle - keine Einschränkung\n* Team - kann nur Teammitgliedern zuweisen\n* Nein - kann nur sich selbst zuweisen",
     "userPermission": "Erlaubt die Ansicht von Aktivitäten, Kalender und Ereignissen anderer Benutzer.\n\n* Alle - kann alles ansehen\n* Team - kann nur die Aktivitäten von Teammitgliedern sehen\n* Nein - kann nichts ansehen",
     "portalPermission": "Zugang zu Portalinformationen, die Möglichkeit, Nachrichten an Portalnutzer zu senden.",

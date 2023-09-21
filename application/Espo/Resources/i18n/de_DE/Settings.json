@@ -101,7 +101,7 @@
     "addressCountryList": "Adresse Land Autovervollständigungsliste",
     "fiscalYearShift": "Beginn des Geschäftsjahres",
     "jobRunInParallel": "Jobs werden parallel ausgeführt",
-    "jobMaxPortion": "Arbeitsplätze max. Anteil",
+    "jobMaxPortion": "Maximale Anzahl von Jobs",
     "jobPoolConcurrencyNumber": "Anzahl der Gleichzeitigkeit im Stellenpool",
     "daemonInterval": "Daemon Intervall",
     "daemonMaxProcessNumber": "Daemon max. Prozessnummer",
