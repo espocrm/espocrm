@@ -582,8 +582,7 @@ class DetailView extends MainView {
 
         let boolFilterList = dataBoolFilterList ||
             panelDefs.selectBoolFilterList ||
-            this.selectBoolFilterLists[link] ||
-            [];
+            this.selectBoolFilterLists[link];
 
         if (typeof boolFilterList === 'function') {
             boolFilterList = boolFilterList.call(this);
@@ -618,7 +617,13 @@ class DetailView extends MainView {
                 });
         }).then(filters => {
             advanced = {...advanced, ...(filters.advanced || {})};
-            boolFilterList = [...boolFilterList, ...(filters.bool || [])];
+
+            if (boolFilterList || filters.bool) {
+                boolFilterList = [
+                    ...(boolFilterList || []),
+                    ...(filters.bool || []),
+                ];
+            }
 
             if (filters.primary && !primaryFilterName) {
                 primaryFilterName = filters.primary;

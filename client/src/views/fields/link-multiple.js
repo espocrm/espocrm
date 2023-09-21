@@ -923,13 +923,18 @@ class LinkMultipleFieldView extends BaseFieldView {
                 });
         }).then(filters => {
             const advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
-            const boolFilterList = [
-                ...(this.getSelectBoolFilterList() || []),
-                ...(filters.bool || []),
-                ...(panelDefs.selectBoolFilterList || []),
-            ];
             const primaryFilter = this.getSelectPrimaryFilterName() ||
                 filters.primary || panelDefs.selectPrimaryFilter;
+
+            const localBoolFilterList = this.getSelectBoolFilterList();
+
+            const boolFilterList = (localBoolFilterList || filters.bool || panelDefs.selectBoolFilterList) ?
+                [
+                    ...(localBoolFilterList || []),
+                    ...(filters.bool || []),
+                    ...(panelDefs.selectBoolFilterList || []),
+                ] :
+                undefined;
 
             this.createView('dialog', viewName, {
                 scope: this.foreignScope,

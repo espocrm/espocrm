@@ -91,7 +91,7 @@ class SelectRecordsModalView extends ModalView {
 
     setup() {
         this.filters = this.options.filters || {};
-        this.boolFilterList = this.options.boolFilterList || [];
+        this.boolFilterList = this.options.boolFilterList;
         this.primaryFilterName = this.options.primaryFilterName || null;
         this.filterList = this.options.filterList || this.filterList || null;
         this.layoutName = this.options.layoutName || this.layoutName;
