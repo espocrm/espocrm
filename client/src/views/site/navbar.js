@@ -38,8 +38,8 @@ class NavbarSiteView extends View {
     events = {
         /** @this NavbarSiteView */
         'click .navbar-collapse.in a.nav-link': function (e) {
-            let $a = $(e.currentTarget);
-            let href = $a.attr('href');
+            const $a = $(e.currentTarget);
+            const href = $a.attr('href');
 
             if (href) {
                 this.xsCollapse();
@@ -59,7 +59,7 @@ class NavbarSiteView extends View {
         'click a[data-action="quick-create"]': function (e) {
             e.preventDefault();
 
-            let scope = $(e.currentTarget).data('name');
+            const scope = $(e.currentTarget).data('name');
 
             this.quickCreate(scope);
         },
@@ -108,7 +108,7 @@ class NavbarSiteView extends View {
     }
 
     handleGroupDropdownClick(e) {
-        let $target = $(e.currentTarget).parent();
+        const $target = $(e.currentTarget).parent();
 
         if ($target.parent().hasClass('more-dropdown-menu')) {
             e.stopPropagation();
@@ -138,11 +138,11 @@ class NavbarSiteView extends View {
             return;
         }
 
-        let rectItem = $target.get(0).getBoundingClientRect();
+        const rectItem = $target.get(0).getBoundingClientRect();
 
-        let windowHeight = window.innerHeight;
+        const windowHeight = window.innerHeight;
 
-        let isSide = this.isSide();
+        const isSide = this.isSide();
 
         if (
             !isSide &&
@@ -155,13 +155,13 @@ class NavbarSiteView extends View {
             return;
         }
 
-        let itemCount = $menu.children().length;
+        const itemCount = $menu.children().length;
 
-        let tabHeight = isSide ?
+        const tabHeight = isSide ?
             this.$tabs.find('> .tab').height() :
             this.$tabs.find('.tab-group > ul > li:visible').height();
 
-        let menuHeight = tabHeight * itemCount;
+        const menuHeight = tabHeight * itemCount;
 
         let top = rectItem.top - 1;
 
@@ -175,7 +175,7 @@ class NavbarSiteView extends View {
 
         $menu.css({top: top + 'px'});
 
-        let maxHeight = windowHeight - top;
+        const maxHeight = windowHeight - top;
 
         this.handleGroupMenuScrolling($menu, $target, maxHeight);
     }
@@ -185,7 +185,7 @@ class NavbarSiteView extends View {
             maxHeight: maxHeight + 'px',
         });
 
-        let $window = $(window);
+        const $window = $(window);
 
         $window.off('scroll.navbar-tab-group');
 
@@ -203,7 +203,7 @@ class NavbarSiteView extends View {
     }
 
     handleGroupDropdownOpen($target) {
-        let $menu = $target.find('.dropdown-menu');
+        const $menu = $target.find('.dropdown-menu');
 
         this.handleGroupMenuPosition($menu, $target);
 
@@ -221,15 +221,15 @@ class NavbarSiteView extends View {
     handleGroupDropdownInMoreOpen($target) {
         this.$el.find('.tab-group.tab.dropdown').removeClass('open');
 
-        let $parentDropdown = this.$el.find('.more-dropdown-menu');
+        const $parentDropdown = this.$el.find('.more-dropdown-menu');
 
         $target.addClass('open');
 
-        let $menu = $target.find('.dropdown-menu');
+        const $menu = $target.find('.dropdown-menu');
 
-        let rectDropdown = $parentDropdown.get(0).getBoundingClientRect();
+        const rectDropdown = $parentDropdown.get(0).getBoundingClientRect();
 
-        let left = rectDropdown.right;
+        const left = rectDropdown.right;
 
         $menu.css({
             left: left + 'px',
@@ -312,7 +312,7 @@ class NavbarSiteView extends View {
     }
 
     switchMinimizer() {
-        let $body = this.$body;
+        const $body = this.$body;
 
         if (this.isMinimized()) {
             if (this.isSideMenuOpened) {
@@ -337,7 +337,7 @@ class NavbarSiteView extends View {
     }
 
     getLogoSrc() {
-        let companyLogoId = this.getConfig().get('companyLogoId');
+        const companyLogoId = this.getConfig().get('companyLogoId');
 
         if (!companyLogoId) {
             return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.svg');
@@ -410,7 +410,7 @@ class NavbarSiteView extends View {
     }
 
     setupQuickCreateList() {
-        let scopes = this.getMetadata().get('scopes') || {};
+        const scopes = this.getMetadata().get('scopes') || {};
 
         this.quickCreateList = this.getQuickCreateList().filter(scope =>{
             if (!scopes[scope]) {
@@ -434,13 +434,13 @@ class NavbarSiteView extends View {
             return true;
         }
 
-        let scopes = this.getMetadata().get('scopes') || {};
+        const scopes = this.getMetadata().get('scopes') || {};
 
         if (!scopes[scope]) {
             return false;
         }
 
-        let defs = /** @type {{disabled?: boolean, acl?: boolean, tabAclPermission?: string}} */
+        const defs = /** @type {{disabled?: boolean, acl?: boolean, tabAclPermission?: string}} */
             scopes[scope] || {};
 
         if (defs.disabled) {
@@ -452,7 +452,7 @@ class NavbarSiteView extends View {
         }
 
         if (defs.tabAclPermission) {
-            let level = this.getAcl().getPermissionLevel(defs.tabAclPermission);
+            const level = this.getAcl().getPermissionLevel(defs.tabAclPermission);
 
             return level && level !== 'no';
         }
@@ -481,14 +481,14 @@ class NavbarSiteView extends View {
     }
 
     adjustTop() {
-        let smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
-        let navbarHeight = this.getNavbarHeight();
+        const smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
+        const navbarHeight = this.getNavbarHeight();
 
-        let $window = $(window);
+        const $window = $(window);
 
-        let $tabs = this.$tabs;
-        let $more = this.$more;
-        let $moreDropdown = this.$moreDropdown;
+        const $tabs = this.$tabs;
+        const $more = this.$more;
+        const $moreDropdown = this.$moreDropdown;
 
         $window.on('resize.navbar', () => updateWidth());
 
@@ -508,9 +508,9 @@ class NavbarSiteView extends View {
             $more.scrollTop($window.scrollTop());
         });
 
-        let updateMoreHeight = () => {
-            let windowHeight = window.innerHeight;
-            let windowWidth = window.innerWidth;
+        const updateMoreHeight = () => {
+            const windowHeight = window.innerHeight;
+            const windowWidth = window.innerWidth;
 
             if (windowWidth < smallScreenWidth) {
                 $more.css('max-height', '');
@@ -528,26 +528,26 @@ class NavbarSiteView extends View {
         updateMoreHeight();
 
         const hideOneTab = () => {
-            let count = $tabs.children().length;
+            const count = $tabs.children().length;
 
             if (count <= 1) {
                 return;
             }
 
-            let $one = $tabs.children().eq(count - 2);
+            const $one = $tabs.children().eq(count - 2);
 
             $one.prependTo($more);
         };
 
         const unhideOneTab = () => {
-            let $one = $more.children().eq(0);
+            const $one = $more.children().eq(0);
 
             if ($one.length) {
                 $one.insertBefore($moreDropdown);
             }
         };
 
-        let $navbar = $('#navbar .navbar');
+        const $navbar = $('#navbar .navbar');
 
         if (window.innerWidth >= smallScreenWidth) {
             $tabs.children('li').each(() => {
@@ -558,20 +558,20 @@ class NavbarSiteView extends View {
             $navbar.css('overflow', 'visible');
         }
 
-        let navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 555;
+        const navbarBaseWidth = this.getThemeManager().getParam('navbarBaseWidth') || 555;
 
-        let tabCount = this.tabList.length;
+        const tabCount = this.tabList.length;
 
-        let navbarNeededHeight = navbarHeight + 1;
+        const navbarNeededHeight = navbarHeight + 1;
 
         this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightTop';
 
-        let $moreDd = $('#nav-more-tabs-dropdown');
-        let $moreLi = $moreDd.closest('li');
+        const $moreDd = $('#nav-more-tabs-dropdown');
+        const $moreLi = $moreDd.closest('li');
 
         const updateWidth = () => {
-            let windowWidth = window.innerWidth;
-            let moreWidth = $moreLi.width();
+            const windowWidth = window.innerWidth;
+            const moreWidth = $moreLi.width();
 
             $more.children('li.not-in-more').each(() => {
                 unhideOneTab();
@@ -586,9 +586,9 @@ class NavbarSiteView extends View {
 
             $more.parent().addClass('hidden');
 
-            let headerWidth = this.$el.width();
+            const headerWidth = this.$el.width();
 
-            let maxWidth = headerWidth - navbarBaseWidth - moreWidth;
+            const maxWidth = headerWidth - navbarBaseWidth - moreWidth;
             let width = $tabs.width();
 
             let i = 0;
@@ -637,12 +637,12 @@ class NavbarSiteView extends View {
     }
 
     adjustSide() {
-        let smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
-        let navbarStaticItemsHeight = this.getStaticItemsHeight();
+        const smallScreenWidth = this.getThemeManager().getParam('screenWidthXs');
+        const navbarStaticItemsHeight = this.getStaticItemsHeight();
 
-        let $window = $(window);
-        let $tabs = this.$tabs;
-        let $more = this.$more;
+        const $window = $(window);
+        const $tabs = this.$tabs;
+        const $more = this.$more;
 
         this.adjustBodyMinHeightMethodName = 'adjustBodyMinHeightSide';
 
@@ -673,8 +673,8 @@ class NavbarSiteView extends View {
         });
 
         const updateSizeForSide = () => {
-            let windowHeight = window.innerHeight;
-            let windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const windowWidth = window.innerWidth;
 
             this.$minimizer.removeClass('hidden');
 
@@ -724,29 +724,29 @@ class NavbarSiteView extends View {
         let moreHeight = 0;
 
         this.$more.find('> li:visible').each((i, el) => {
-            let $el = $(el);
+            const $el = $(el);
 
             moreHeight += $el.height();
         });
 
         minHeight = Math.max(minHeight, moreHeight);
 
-        let tabHeight = this.$tabs.find('> .tab').height();
+        const tabHeight = this.$tabs.find('> .tab').height();
 
         this.tabList.forEach((item, i) => {
             if (typeof item !== 'object') {
                 return;
             }
 
-            let $li = this.$el.find('li.tab[data-name="group-'+i+'"]');
+            const $li = this.$el.find('li.tab[data-name="group-' + i + '"]');
 
             if (!$li.hasClass('open')) {
                 return;
             }
 
-            let tabCount = (item.itemList || []).length;
+            const tabCount = (item.itemList || []).length;
 
-            let menuHeight = tabHeight * tabCount;
+            const menuHeight = tabHeight * tabCount;
 
             if (menuHeight > minHeight) {
                 minHeight = menuHeight;
@@ -760,7 +760,7 @@ class NavbarSiteView extends View {
         let minHeight = this.getNavbarHeight();
 
         this.$more.find('> li').each((i, el) => {
-            let $el = $(el);
+            const $el = $(el);
 
             if (!this.isMoreTabsShown) {
                 if ($el.hasClass('after-show-more')) {
@@ -776,22 +776,22 @@ class NavbarSiteView extends View {
             minHeight += $el.height();
         });
 
-        let tabHeight = this.$tabs.find('.tab-group > ul > li:visible').height();
+        const tabHeight = this.$tabs.find('.tab-group > ul > li:visible').height();
 
         this.tabList.forEach((item, i) => {
             if (typeof item !== 'object') {
                 return;
             }
 
-            let $li = this.$el.find('li.tab[data-name="group-'+i+'"]');
+            const $li = this.$el.find('li.tab[data-name="group-' + i + '"]');
 
             if (!$li.hasClass('open')) {
                 return;
             }
 
-            let tabCount = (item.itemList || []).length;
+            const tabCount = (item.itemList || []).length;
 
-            let menuHeight = tabHeight * tabCount;
+            const menuHeight = tabHeight * tabCount;
 
             if (menuHeight > minHeight) {
                 minHeight = menuHeight;
@@ -809,7 +809,7 @@ class NavbarSiteView extends View {
 
         this.$body.addClass('has-navbar');
 
-        let $moreDd = this.$moreDropdown = this.$tabs.find('li.more');
+        const $moreDd = this.$moreDropdown = this.$tabs.find('li.more');
 
         $moreDd.on('shown.bs.dropdown', () => {
             this.isMoreDropdownShown = true;
@@ -844,11 +844,11 @@ class NavbarSiteView extends View {
         this.$navbarRightContainer = this.$navbar.find('> .navbar-body > .navbar-right-container');
         this.$navbarRight = this.$navbarRightContainer.children();
 
-        let handlerClassName = this.getThemeManager().getParam('navbarAdjustmentHandler');
+        const handlerClassName = this.getThemeManager().getParam('navbarAdjustmentHandler');
 
         if (handlerClassName) {
             Espo.loader.require(handlerClassName, Handler => {
-                let handler = new Handler(this);
+                const handler = new Handler(this);
 
                 this.navbarAdjustmentHandler = handler;
 
@@ -867,9 +867,9 @@ class NavbarSiteView extends View {
 
     adjustAfterRender() {
         if (this.isSide()) {
-            let process = () => {
+            const processSide = () => {
                 if (this.$navbar.height() < $(window).height() / 2) {
-                    setTimeout(() => process(), 50);
+                    setTimeout(() => processSide(), 50);
 
                     return;
                 }
@@ -883,12 +883,12 @@ class NavbarSiteView extends View {
                 this.adjustSide();
             };
 
-            process();
+            processSide();
 
             return;
         }
 
-        let process = () => {
+        const process = () => {
             if (this.$el.width() < $(window).width() / 2) {
                 setTimeout(() => process(), 50);
 
@@ -920,7 +920,7 @@ class NavbarSiteView extends View {
     }
 
     setupTabDefsList() {
-        let tabList = this.getTabList();
+        const tabList = this.getTabList();
 
         this.tabList = tabList.filter(item => {
             if (!item) {
@@ -959,8 +959,8 @@ class NavbarSiteView extends View {
         let moreIsMet = false;
 
         this.tabList = this.tabList.filter((item, i) => {
-            let nextItem = this.tabList[i + 1];
-            let prevItem = this.tabList[i - 1];
+            const nextItem = this.tabList[i + 1];
+            const prevItem = this.tabList[i - 1];
 
             if (isMoreDelimiter(item)) {
                 moreIsMet = true;
@@ -985,22 +985,22 @@ class NavbarSiteView extends View {
             return true;
         });
 
-        let tabDefsList = [];
+        const tabDefsList = [];
 
-        let colorsDisabled =
+        const colorsDisabled =
             this.getPreferences().get('scopeColorsDisabled') ||
             this.getPreferences().get('tabColorsDisabled') ||
             this.getConfig().get('scopeColorsDisabled') ||
             this.getConfig().get('tabColorsDisabled');
 
-        let tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
+        const tabIconsDisabled = this.getConfig().get('tabIconsDisabled');
 
-        let params = {
+        const params = {
             colorsDisabled: colorsDisabled,
             tabIconsDisabled: tabIconsDisabled,
         };
 
-        let vars = {
+        const vars = {
             moreIsMet: false,
             isHidden: false,
         };
@@ -1094,7 +1094,7 @@ class NavbarSiteView extends View {
 
         label = label || '';
 
-        let shortLabel = label.substring(0, 2);
+        const shortLabel = label.substring(0, 2);
 
         if (!params.colorsDisabled && !isGroup && !isDivider) {
             color = this.getMetadata().get(['clientDefs', tab, 'color']);
@@ -1104,7 +1104,7 @@ class NavbarSiteView extends View {
             iconClass = this.getMetadata().get(['clientDefs', tab, 'iconClass'])
         }
 
-        let o = {
+        const o = {
             link: link,
             label: label,
             shortLabel: shortLabel,
@@ -1203,8 +1203,8 @@ class NavbarSiteView extends View {
     quickCreate(scope) {
         Espo.Ui.notify(' ... ');
 
-        let type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
-        let viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
+        const type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
+        const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
 
         this.createView('quickCreate', viewName , {scope: scope}, (view) => {
             view.once('after:render', () => Espo.Ui.notify(false));
