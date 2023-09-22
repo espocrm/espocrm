@@ -412,7 +412,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             url += '&' + $.param({'boolFilterList': boolList});
         }
 
-        const primary = this.getSelectPrimaryFilterName() || panelDefs.selectPrimaryFilter;
+        const primary = this.getSelectPrimaryFilterName() || panelDefs.selectPrimaryFilterName;
 
         if (primary) {
             url += '&' + $.param({'primaryFilter': primary});
@@ -924,7 +924,7 @@ class LinkMultipleFieldView extends BaseFieldView {
         }).then(filters => {
             const advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
             const primaryFilter = this.getSelectPrimaryFilterName() ||
-                filters.primary || panelDefs.selectPrimaryFilter;
+                filters.primary || panelDefs.selectPrimaryFilterName;
 
             const localBoolFilterList = this.getSelectBoolFilterList();
 

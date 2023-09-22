@@ -1017,7 +1017,7 @@ class LinkFieldView extends BaseFieldView {
         }).then(filters => {
             const advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
             const primaryFilter = this.getSelectPrimaryFilterName() ||
-                filters.primary || panelDefs.selectPrimaryFilter;
+                filters.primary || panelDefs.selectPrimaryFilterName;
 
             const localBoolFilterList = this.getSelectBoolFilterList();
 

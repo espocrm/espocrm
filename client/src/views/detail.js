@@ -590,7 +590,7 @@ class DetailView extends MainView {
 
         boolFilterList = Espo.Utils.clone(boolFilterList);
 
-        primaryFilterName = primaryFilterName || panelDefs.selectPrimaryFilter || null;
+        primaryFilterName = primaryFilterName || panelDefs.selectPrimaryFilterName || null;
 
         let viewKey = data.viewKey || 'select';
 
