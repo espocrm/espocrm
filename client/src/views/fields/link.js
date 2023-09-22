@@ -164,6 +164,14 @@ class LinkFieldView extends BaseFieldView {
 
     getEmptyAutocompleteResult = null
 
+    /**
+     * Trigger autocomplete on empty input.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    autocompleteOnEmpty = false
+
     /** @inheritDoc */
     events = {
         /** @this LinkFieldView */
@@ -536,7 +544,7 @@ class LinkFieldView extends BaseFieldView {
                         return this.getAutocompleteUrl(q);
                     },
                     lookup: (q, callback) => {
-                        if (q.length === 0) {
+                        if (!this.autocompleteOnEmpty && q.length === 0) {
                             isEmptyQueryResult = true;
 
                             if (this.getEmptyAutocompleteResult) {

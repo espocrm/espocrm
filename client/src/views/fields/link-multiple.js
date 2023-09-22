@@ -164,6 +164,14 @@ class LinkMultipleFieldView extends BaseFieldView {
     autocompleteMaxCount = null
 
     /**
+     * Trigger autocomplete on empty input.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    autocompleteOnEmpty = false
+
+    /**
      * Select all attributes.
      *
      * @protected
@@ -433,11 +441,13 @@ class LinkMultipleFieldView extends BaseFieldView {
                     setTimeout(() => this.$element.autocomplete('clear'), 300);
                 });
 
+                const minChar = this.autocompleteOnEmpty ? 0 : 1;
+
                 this.$element.autocomplete({
                     serviceUrl: () => {
                         return this.getAutocompleteUrl();
                     },
-                    minChars: 1,
+                    minChars: minChar,
                     paramName: 'q',
                     noCache: true,
                     autoSelectFirst: true,
