@@ -162,8 +162,6 @@ class LinkFieldView extends BaseFieldView {
      */
     mandatorySelectAttributeList = null
 
-    getEmptyAutocompleteResult = null
-
     /**
      * Trigger autocomplete on empty input.
      *
@@ -464,7 +462,7 @@ class LinkFieldView extends BaseFieldView {
      * Compose an autocomplete URL. Can be extended.
      *
      * @protected
-     * @return {string}
+     * @return {string|Promise<string>}
      */
     getAutocompleteUrl() {
         let url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
@@ -482,13 +480,36 @@ class LinkFieldView extends BaseFieldView {
             url += '&select=' + select.join(',');
         }
 
-        const boolList = this.getSelectBoolFilterList();
+        if (this.panelDefs.selectHandler) {
+            return new Promise(resolve => {
+                this._getSelectFilters().then(filters => {
+                    if (filters.bool) {
+                        url += '&' + $.param({'boolFilterList': filters.bool});
+                    }
 
-        if (boolList) {
-            url += '&' + $.param({'boolFilterList': boolList});
+                    if (filters.primary) {
+                        url += '&' + $.param({'primaryFilter': filters.primary});
+                    }
+
+                    if (filters.advanced) {
+                        url += '&' + $.param({'advanced': filters.advanced});
+                    }
+
+                    resolve(url);
+                });
+            });
         }
 
-        const primary = this.getSelectPrimaryFilterName();
+        const boolList = [
+            ...(this.getSelectBoolFilterList() || []),
+            ...(this.panelDefs.selectBoolFilterList || []),
+        ];
+
+        const primary = this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName;
+
+        if (boolList.length) {
+            url += '&' + $.param({'boolFilterList': boolList});
+        }
 
         if (primary) {
             url += '&' + $.param({'primaryFilter': primary});
@@ -526,7 +547,7 @@ class LinkFieldView extends BaseFieldView {
             if (!this.autocompleteDisabled) {
                 let isEmptyQueryResult = false;
 
-                if (this.getEmptyAutocompleteResult) {
+                if (this.getEmptyAutocompleteResult()) {
                     this.$elementName.on('keydown', e => {
                         if (e.code === 'Tab' && isEmptyQueryResult) {
                             e.stopImmediatePropagation();
@@ -540,17 +561,14 @@ class LinkFieldView extends BaseFieldView {
                             $c.addClass('small');
                         }
                     },
-                    serviceUrl: q => {
-                        return this.getAutocompleteUrl(q);
-                    },
                     lookup: (q, callback) => {
                         if (!this.autocompleteOnEmpty && q.length === 0) {
                             isEmptyQueryResult = true;
 
-                            if (this.getEmptyAutocompleteResult) {
-                                callback(
-                                    this._transformAutocompleteResult(this.getEmptyAutocompleteResult())
-                                );
+                            const emptyResult = this.getEmptyAutocompleteResult();
+
+                            if (emptyResult) {
+                                callback(this._transformAutocompleteResult(emptyResult));
                             }
 
                             return;
@@ -558,10 +576,13 @@ class LinkFieldView extends BaseFieldView {
 
                         isEmptyQueryResult = false;
 
-                        Espo.Ajax
-                            .getRequest(this.getAutocompleteUrl(q), {q: q})
-                            .then(response => {
-                                callback(this._transformAutocompleteResult(response));
+                        Promise.resolve(this.getAutocompleteUrl(q))
+                            .then(url => {
+                                Espo.Ajax
+                                    .getRequest(url, {q: q})
+                                    .then(response => {
+                                        callback(this._transformAutocompleteResult(response));
+                                    });
                             });
                     },
                     minChars: 0,
@@ -670,7 +691,7 @@ class LinkFieldView extends BaseFieldView {
      * @private
      */
     _transformAutocompleteResult(response) {
-        let list = [];
+        const list = [];
 
         response.list.forEach(item => {
             list.push({
@@ -978,8 +999,6 @@ class LinkFieldView extends BaseFieldView {
         const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
             panelDefs.selectMandatoryAttributeList;
 
-        const handler = panelDefs.selectHandler || null;
-
         const createButton = this.isEditMode() &&
             (!this.createDisabled && !panelDefs.createDisabled || this.forceCreateButton);
 
@@ -1009,40 +1028,13 @@ class LinkFieldView extends BaseFieldView {
             };
         }
 
-        new Promise(resolve => {
-            if (!handler || this.isSearchMode()) {
-                resolve({});
-
-                return;
-            }
-
-            Espo.loader.requirePromise(handler)
-                .then(Handler => new Handler(this.getHelper()))
-                .then(/** module:handlers/select-related */handler => {
-                    handler.getFilters(this.model)
-                        .then(filters => resolve(filters));
-                });
-        }).then(filters => {
-            const advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
-            const primaryFilter = this.getSelectPrimaryFilterName() ||
-                filters.primary || panelDefs.selectPrimaryFilterName;
-
-            const localBoolFilterList = this.getSelectBoolFilterList();
-
-            const boolFilterList = (localBoolFilterList || filters.bool || panelDefs.selectBoolFilterList) ?
-                [
-                    ...(localBoolFilterList || []),
-                    ...(filters.bool || []),
-                    ...(panelDefs.selectBoolFilterList || []),
-                ] :
-                undefined;
-
+        this._getSelectFilters().then(filters => {
             this.createView('dialog', viewName, {
                 scope: this.foreignScope,
                 createButton: createButton,
-                filters: advanced,
-                boolFilterList: boolFilterList,
-                primaryFilterName: primaryFilter,
+                filters: filters.advanced,
+                boolFilterList: filters.bool,
+                primaryFilterName: filters.primary,
                 mandatorySelectAttributeList: mandatorySelectAttributeList,
                 forceSelectAllAttributes: this.forceSelectAllAttributes,
                 filterList: this.getSelectFilterList(),
@@ -1058,6 +1050,47 @@ class LinkFieldView extends BaseFieldView {
                     this.select(model);
                 });
             });
+        });
+    }
+
+    /**
+     * @private
+     * @return {Promise<{bool?: string[], advanced?: Object, primary?: string}>}
+     */
+    _getSelectFilters() {
+        const handler = this.panelDefs.selectHandler;
+
+        if (!handler || this.isSearchMode()) {
+            return Promise.resolve({});
+        }
+
+        return new Promise(resolve => {
+            Espo.loader.requirePromise(handler)
+                .then(Handler => new Handler(this.getHelper()))
+                .then(/** module:handlers/select-related */handler => {
+                    return handler.getFilters(this.model);
+                })
+                .then(filters => {
+                    const advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
+                    const primaryFilter = this.getSelectPrimaryFilterName() ||
+                        filters.primary || this.panelDefs.selectPrimaryFilterName;
+
+                    const localBoolFilterList = this.getSelectBoolFilterList();
+
+                    const boolFilterList = (localBoolFilterList || filters.bool || this.panelDefs.selectBoolFilterList) ?
+                        [
+                            ...(localBoolFilterList || []),
+                            ...(filters.bool || []),
+                            ...(this.panelDefs.selectBoolFilterList || []),
+                        ] :
+                        undefined;
+
+                    resolve({
+                        bool: boolFilterList,
+                        primary: primaryFilter,
+                        advanced: advanced,
+                    });
+                });
         });
     }
 
@@ -1092,6 +1125,10 @@ class LinkFieldView extends BaseFieldView {
                 });
             });
         });
+    }
+
+    getEmptyAutocompleteResult() {
+        return undefined;
     }
 }
 
