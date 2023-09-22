@@ -158,7 +158,7 @@ class NavbarSiteView extends View {
         const itemCount = $menu.children().length;
 
         const tabHeight = isSide ?
-            this.$tabs.find('> .tab').height() :
+            this.$tabs.find('> .tab:not(.tab-divider)').height() :
             this.$tabs.find('.tab-group > ul > li:visible').height();
 
         const menuHeight = tabHeight * itemCount;
@@ -726,12 +726,12 @@ class NavbarSiteView extends View {
         this.$more.find('> li:visible').each((i, el) => {
             const $el = $(el);
 
-            moreHeight += $el.height();
+            moreHeight += $el.outerHeight(true);
         });
 
         minHeight = Math.max(minHeight, moreHeight);
 
-        const tabHeight = this.$tabs.find('> .tab').height();
+        const tabHeight = this.$tabs.find('> .tab:not(.tab-divider)').height();
 
         this.tabList.forEach((item, i) => {
             if (typeof item !== 'object') {
