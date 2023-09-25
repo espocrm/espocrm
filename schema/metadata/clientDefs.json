@@ -406,6 +406,10 @@
                             "type": "string"
                         },
                         "description": "Attributes to be selected when selecting records."
+                    },
+                    "selectLayout": {
+                        "type": "string",
+                        "description": "A list layout name for the select dialog."
                     }
                 }
             }

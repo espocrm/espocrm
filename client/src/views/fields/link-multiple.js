@@ -953,6 +953,7 @@ class LinkMultipleFieldView extends BaseFieldView {
                 mandatorySelectAttributeList: mandatorySelectAttributeList,
                 forceSelectAllAttributes: this.forceSelectAllAttributes,
                 createAttributesProvider: createAttributesProvider,
+                layoutName: this.panelDefs.selectLayout,
             }, dialog => {
                 dialog.render();
 

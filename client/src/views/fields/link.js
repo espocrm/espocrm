@@ -1039,6 +1039,7 @@ class LinkFieldView extends BaseFieldView {
                 forceSelectAllAttributes: this.forceSelectAllAttributes,
                 filterList: this.getSelectFilterList(),
                 createAttributesProvider: createAttributesProvider,
+                layoutName: this.panelDefs.selectLayout,
             }, view => {
                 view.render();
 
@@ -1108,6 +1109,7 @@ class LinkFieldView extends BaseFieldView {
             boolFilterList: this.getSelectBoolFilterList(),
             primaryFilterName: this.getSelectPrimaryFilterName(),
             multiple: true,
+            layoutName: this.panelDefs.selectLayout,
         }, view => {
             view.render();
 

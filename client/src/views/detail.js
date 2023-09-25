@@ -639,6 +639,7 @@ class DetailView extends MainView {
                 primaryFilterName: primaryFilterName,
                 boolFilterList: boolFilterList,
                 mandatorySelectAttributeList: panelDefs.selectMandatoryAttributeList,
+                layoutName: panelDefs.selectLayout,
             }, dialog => {
                 dialog.render();
 
