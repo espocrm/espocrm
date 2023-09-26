@@ -28,15 +28,10 @@
  ************************************************************************/
 
 use Espo\Core\Container;
-use Espo\Core\Templates\Entities\Event;
 use Espo\Entities\Role;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\UpdateBuilder;
-use Espo\Core\Templates\Entities\Company;
-use Espo\Core\Templates\Entities\Person;
-use Espo\Core\Templates\Entities\Base;
-use Espo\Core\Templates\Entities\BasePlus;
 use Espo\Core\Utils\Metadata;
 
 class AfterUpgrade
@@ -74,7 +69,7 @@ class AfterUpgrade
                 continue;
             }
 
-            if ($type === Event::TEMPLATE_TYPE) {
+            if ($type === 'Event') {
                 $metadata->set('entityDefs', $entityType, [
                     'fields' => [
                         'dateEnd' => [
@@ -90,10 +85,10 @@ class AfterUpgrade
 
             if (
                 !in_array($type, [
-                    BasePlus::TEMPLATE_TYPE,
-                    Base::TEMPLATE_TYPE,
-                    Company::TEMPLATE_TYPE,
-                    Person::TEMPLATE_TYPE
+                    'BasePlus',
+                    'Base',
+                    'Company',
+                    'Person',
                 ])
             ) {
                 continue;
@@ -106,7 +101,7 @@ class AfterUpgrade
 
             $scopes->duplicateCheckFieldList = [];
 
-            if ($type === Company::TEMPLATE_TYPE || $type === Person::TEMPLATE_TYPE) {
+            if ($type === 'Company' || $type === 'Person') {
                 $scopes->duplicateCheckFieldList = ['name', 'emailAddress'];
             }
 
