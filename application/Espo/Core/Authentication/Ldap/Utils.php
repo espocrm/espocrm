@@ -144,14 +144,17 @@ class Utils
      * Normalize options to LDAP client format
      *
      * @param array<string, mixed> $options
-     *
      * @return array<string, mixed>
      */
     public function normalizeOptions(array $options): array
     {
-        $options['useSsl'] = (bool) ($options['useSsl'] == 'SSL');
-        $options['useStartTls'] = (bool) ($options['useStartTls'] == 'TLS');
-        $options['accountCanonicalForm'] = $this->accountCanonicalFormMap[$options['accountCanonicalForm']];
+        $useSsl = ($options['useSsl'] ?? null) == 'SSL';
+        $useStartTls = ($options['useStartTls'] ?? null) == 'TLS';
+        $accountCanonicalFormKey = $options['accountCanonicalForm'] ?? 'Dn';
+
+        $options['useSsl'] = $useSsl;
+        $options['useStartTls'] = $useStartTls;
+        $options['accountCanonicalForm'] = $this->accountCanonicalFormMap[$accountCanonicalFormKey] ?? 1;
 
         return $options;
     }
