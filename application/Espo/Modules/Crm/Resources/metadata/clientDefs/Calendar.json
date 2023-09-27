@@ -7,7 +7,7 @@
     "scopeList": ["Meeting", "Call", "Task"],
     "allDayScopeList": ["Task"],
     "modeList": ["month", "agendaWeek", "timeline", "agendaDay"],
-    "sharedViewModeList": ["basicWeek", "month", "basicDay"],
+    "sharedViewModeList": ["basicWeek", "agendaWeek", "month", "basicDay", "agendaDay"],
     "additionalColorList": ["#AB78AD", "#CC9B45"],
     "iconClass": "far fa-calendar-alt"
 }
