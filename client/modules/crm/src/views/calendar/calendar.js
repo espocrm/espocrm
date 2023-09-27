@@ -1010,7 +1010,7 @@ class CalendarView extends View {
         }
 
         if (this.date) {
-            options.initialDate = moment.utc(this.date).toDate();
+            options.initialDate = this.date;
         } else {
             this.$el.find('button[data-action="today"]').addClass('active');
         }
