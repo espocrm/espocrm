@@ -646,11 +646,11 @@ class CalendarView extends View {
             ) {
                 event.allDay = true;
 
-                if (!notInitial) {
+                //if (!notInitial) {
                     if (end.hours() !== 0 || end.minutes() !== 0) {
                         end.add(1, 'days');
                     }
-                }
+                //}
             } else {
                 event.allDay = false;
             }
