@@ -1181,24 +1181,18 @@ class CalendarView extends View {
      * @param {Object.<string, *>} props
      */
     applyPropsToEvent(event, props) {
+        if ('start' in props) {
+            event.setDates(props.start, props.end, {allDay: props.allDay});
+        }
+
         for (const key in props) {
             const value = props[key];
 
-            if (key === 'start') {
-                event.setStart(value);
-
-                continue;
-            }
-
-            if (key === 'end') {
-                event.setEnd(value);
-
-                continue;
-            }
-
-            if (key === 'allDay') {
-                event.setAllDay(value);
-
+            if (
+                key === 'start' ||
+                key === 'end' ||
+                key === 'allDay'
+            ) {
                 continue;
             }
 
