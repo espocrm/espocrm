@@ -641,7 +641,7 @@ class CalendarView extends View {
                 (
                     start.format('d') !== end.format('d') &&
                     (end.hours() !== 0 || end.minutes() !== 0)
-                ) ||
+                ) &&
                 (end.unix() - start.unix() >= 86400)
             ) {
                 event.allDay = true;
