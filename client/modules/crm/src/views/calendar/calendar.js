@@ -493,7 +493,7 @@ class CalendarView extends View {
 
     /**
      * @private
-     * @param {string} date
+     * @param {string|Date} date
      * @return {moment.Moment}
      */
     dateToMoment(date)  {
@@ -577,9 +577,13 @@ class CalendarView extends View {
         ).toString(16).slice(1) + alpha;
     }
 
+    /**
+     * @param {EventImpl} event
+     * @param {boolean} notInitial
+     */
     handleAllDay(event, notInitial) {
-        let start = event.start ? moment(event.start) : null;
-        let end = event.end ? moment(event.end) : null;
+        let start = event.start ? this.dateToMoment(event.start) : null;
+        const end = event.end ? this.dateToMoment(event.end) : null;
 
         if (this.allDayScopeList.includes(event.scope)) {
             event.allDay = event.allDayCopy = true;
@@ -827,8 +831,8 @@ class CalendarView extends View {
                 });
             },
             datesSet: () => {
-                let date = this.getDateTime().fromIso(this.calendar.getDate().toISOString());
-                let m = moment(this.calendar.getDate());
+                const date = this.getDateTime().fromIso(this.calendar.getDate().toISOString());
+                const m = this.dateToMoment(this.calendar.getDate());
 
                 this.date = date;
 
