@@ -294,8 +294,6 @@ class VarcharFieldView extends BaseFieldView {
                 },
                 onSelect: () => {
                     this.trigger('change');
-
-                    this.$element.focus();
                 },
             };
 
