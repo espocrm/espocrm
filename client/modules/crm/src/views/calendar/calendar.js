@@ -666,10 +666,10 @@ class CalendarView extends View {
     convertToFcEvents(list) {
         this.now = moment.tz(this.getDateTime().getTimeZone());
 
-        let events = [];
+        const events = [];
 
         list.forEach(o => {
-            let event = this.convertToFcEvent(o);
+            const event = this.convertToFcEvent(o);
 
             events.push(event);
         });
@@ -1139,19 +1139,19 @@ class CalendarView extends View {
     }
 
     updateModel(model) {
-        let eventId = model.entityType + '-' + model.id;
+        const eventId = model.entityType + '-' + model.id;
 
-        let event = this.calendar.getEventById(eventId);
+        const event = this.calendar.getEventById(eventId);
 
         if (!event) {
             return;
         }
 
-        let attributes = model.getClonedAttributes();
+        const attributes = model.getClonedAttributes();
 
         attributes.scope = model.entityType;
 
-        let data = this.convertToFcEvent(attributes);
+        const data = this.convertToFcEvent(attributes);
 
         this.applyPropsToEvent(event, data);
     }
@@ -1181,8 +1181,8 @@ class CalendarView extends View {
      * @param {Object.<string, *>} props
      */
     applyPropsToEvent(event, props) {
-        for (let key in props) {
-            let value = props[key];
+        for (const key in props) {
+            const value = props[key];
 
             if (key === 'start') {
                 event.setStart(value);
@@ -1195,6 +1195,7 @@ class CalendarView extends View {
 
                 continue;
             }
+
             if (key === 'allDay') {
                 event.setAllDay(value);
 
