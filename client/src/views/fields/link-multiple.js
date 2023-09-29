@@ -423,7 +423,7 @@ class LinkMultipleFieldView extends BaseFieldView {
                     }
 
                     if (filters.advanced) {
-                        url += '&' + $.param({'advanced': filters.advanced});
+                        url += '&' + $.param({'where': filters.advanced});
                     }
 
                     resolve(url);
