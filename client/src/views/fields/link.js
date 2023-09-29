@@ -99,7 +99,7 @@ class LinkFieldView extends BaseFieldView {
      * @protected
      * @type {boolean}
      */
-    createButton = false
+    createButton = true
 
     /**
      * Force create button even is disabled in clientDefs > relationshipPanels.
@@ -220,7 +220,7 @@ class LinkFieldView extends BaseFieldView {
         }
 
         const createButton = this.createButton &&
-            !(this.createDisabled && !this.panelDefs.createDisabled || this.forceCreateButton);
+            (!this.createDisabled && !this.panelDefs.createDisabled || this.forceCreateButton);
 
         return {
             ...super.data(),
@@ -1044,7 +1044,6 @@ class LinkFieldView extends BaseFieldView {
 
         const createButton = this.isEditMode() &&
             (!this.createDisabled && !panelDefs.createDisabled || this.forceCreateButton);
-
 
         const createAttributesProvider = createButton ?
             this.getCreateAttributesProvider() :
