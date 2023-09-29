@@ -713,7 +713,7 @@
                         "type": "object",
                         "properties": {
                             "type": {
-                                "enum": ["varchar", "int", "float", "bool"]
+                                "enum": ["varchar", "int", "float", "bool", "foreignId"]
                             },
                             "maxLength": {
                                 "type": "integer"
