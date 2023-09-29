@@ -94,6 +94,14 @@ class LinkFieldView extends BaseFieldView {
     createDisabled = false
 
     /**
+     * To display the create button.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    createButton = false
+
+    /**
      * Force create button even is disabled in clientDefs > relationshipPanels.
      *
      * @protected
@@ -211,6 +219,9 @@ class LinkFieldView extends BaseFieldView {
             iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
         }
 
+        const createButton = this.createButton &&
+            !(this.createDisabled && !this.panelDefs.createDisabled || this.forceCreateButton);
+
         return {
             ...super.data(),
             idName: this.idName,
@@ -221,6 +232,7 @@ class LinkFieldView extends BaseFieldView {
             valueIsSet: this.model.has(this.idName),
             iconHtml: iconHtml,
             url: this.getUrl(),
+            createButton: createButton,
         };
     }
 
@@ -325,6 +337,10 @@ class LinkFieldView extends BaseFieldView {
 
                 this.deleteLinkOneOf(id);
             };
+        }
+
+        if (this.createButton) {
+            this.addActionHandler('createLink', () => this.actionCreateLink());
         }
 
         /** @type {Object.<string, *>} */
@@ -985,6 +1001,33 @@ class LinkFieldView extends BaseFieldView {
     }
 
     /**
+     * @return {function(): Promise<Object.<string, *>>}
+     */
+    getCreateAttributesProvider() {
+        return () => {
+            const attributes = this.getCreateAttributes() || {};
+
+            if (!this.panelDefs.createHandler) {
+                return Promise.resolve(attributes);
+            }
+
+            return new Promise(resolve => {
+                Espo.loader.requirePromise(this.panelDefs.createHandler)
+                    .then(Handler => new Handler(this.getHelper()))
+                    .then(handler => {
+                        handler.getAttributes(this.model)
+                            .then(additionalAttributes => {
+                                resolve({
+                                    ...attributes,
+                                    ...additionalAttributes,
+                                });
+                            });
+                    });
+            });
+        };
+    }
+
+    /**
      * @protected
      */
     actionSelect() {
@@ -1002,31 +1045,10 @@ class LinkFieldView extends BaseFieldView {
         const createButton = this.isEditMode() &&
             (!this.createDisabled && !panelDefs.createDisabled || this.forceCreateButton);
 
-        let createAttributesProvider = null;
 
-        if (createButton) {
-            createAttributesProvider = () => {
-                let attributes = this.getCreateAttributes() || {};
-
-                if (!panelDefs.createHandler) {
-                    return Promise.resolve(attributes);
-                }
-
-                return new Promise(resolve => {
-                    Espo.loader.requirePromise(panelDefs.createHandler)
-                        .then(Handler => new Handler(this.getHelper()))
-                        .then(handler => {
-                            handler.getAttributes(this.model)
-                                .then(additionalAttributes => {
-                                    resolve({
-                                        ...attributes,
-                                        ...additionalAttributes,
-                                    });
-                                });
-                        });
-                });
-            };
-        }
+        const createAttributesProvider = createButton ?
+            this.getCreateAttributesProvider() :
+            null;
 
         this._getSelectFilters().then(filters => {
             this.createView('dialog', viewName, {
@@ -1131,6 +1153,31 @@ class LinkFieldView extends BaseFieldView {
 
     getEmptyAutocompleteResult() {
         return undefined;
+    }
+
+    actionCreateLink() {
+        const viewName = this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'edit']) ||
+            'views/modals/edit';
+
+        Espo.Ui.notify(' ... ');
+
+        this.getCreateAttributesProvider()().then(attributes => {
+            this.createView('dialog', viewName, {
+                scope: this.foreignScope,
+                fullFormDisabled: true,
+                attributes: attributes,
+            }, view => {
+                view.render()
+                    .then(() => Espo.Ui.notify(false));
+
+                this.listenToOnce(view, 'after:save', model => {
+                    view.close();
+                    this.clearView('dialog');
+
+                    this.select(model);
+                });
+            });
+        });
     }
 }
 
