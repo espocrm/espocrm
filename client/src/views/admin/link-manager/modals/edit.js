@@ -739,7 +739,7 @@ class LinkManagerEditModalView extends ModalView {
                     this.showField('auditedForeign');
 
                     this.hideField('layout');
-                    this.showField('layoutForeign');
+                    this.hideField('layoutForeign');
 
                     this.hideField('entityForeign');
                     this.hideField('labelForeign');
