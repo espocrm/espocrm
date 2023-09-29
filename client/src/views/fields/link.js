@@ -219,8 +219,7 @@ class LinkFieldView extends BaseFieldView {
             iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
         }
 
-        const createButton = this.createButton &&
-            (!this.createDisabled && !this.panelDefs.createDisabled || this.forceCreateButton);
+        const createButton = this.createButton && (!this.createDisabled || this.forceCreateButton);
 
         return {
             ...super.data(),
@@ -346,6 +345,10 @@ class LinkFieldView extends BaseFieldView {
         /** @type {Object.<string, *>} */
         this.panelDefs = this.getMetadata()
             .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
+
+        if (this.panelDefs.createDisabled) {
+            this.createDisabled = true;
+        }
     }
 
     /**
@@ -1042,8 +1045,7 @@ class LinkFieldView extends BaseFieldView {
         const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
             panelDefs.selectMandatoryAttributeList;
 
-        const createButton = this.isEditMode() &&
-            (!this.createDisabled && !panelDefs.createDisabled || this.forceCreateButton);
+        const createButton = this.isEditMode() && (!this.createDisabled || this.forceCreateButton);
 
         const createAttributesProvider = createButton ?
             this.getCreateAttributesProvider() :
