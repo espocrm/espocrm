@@ -166,8 +166,5 @@
     "layoutDetailDisabled": true,
     "layoutDetailSmallDisabled": true,
     "layoutSidePanelsDetailSmallDisabled": true,
-    "layoutSidePanelsEditSmallDisabled": true,
-    "layoutMassUpdateDisabled": true
-
-
+    "layoutSidePanelsEditSmallDisabled": true
 }
