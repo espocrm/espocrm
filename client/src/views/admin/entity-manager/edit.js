@@ -335,14 +335,18 @@ class EntityManagerEditView extends View {
     }
 
     setup() {
-        let scope = this.scope = this.options.scope || false;
+        const scope = this.scope = this.options.scope || false;
         this.isNew = !scope;
 
-        let model = this.model = new Model();
-        model.name = 'EntityManager';
+        this.model = new Model();
+        this.model.name = 'EntityManager';
 
         if (!this.isNew) {
             this.isCustom = this.getMetadata().get(['scopes', scope, 'isCustom'])
+        }
+
+        if (this.scope && !this.getMetadata().get(`scopes.${scope}.customizable`)) {
+            throw new Espo.Exceptions.NotFound("The entity type is not customizable.");
         }
 
         this.setupData();

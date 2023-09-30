@@ -40,6 +40,7 @@ class LinkManagerIndexView extends View {
         return {
             linkDataList: this.linkDataList,
             scope: this.scope,
+            isCreatable: this.isCustomizable,
         };
     }
 
@@ -51,7 +52,7 @@ class LinkManagerIndexView extends View {
             this.editLink(link);
         },
         /** @this LinkManagerIndexView */
-        'click button[data-action="createLink"]': function (e) {
+        'click button[data-action="createLink"]': function () {
             this.createLink();
         },
         /** @this LinkManagerIndexView */
@@ -68,67 +69,70 @@ class LinkManagerIndexView extends View {
     }
 
     computeRelationshipType(type, foreignType) {
-        if (type == 'hasMany') {
-            if (foreignType == 'hasMany') {
+        if (type === 'hasMany') {
+            if (foreignType === 'hasMany') {
                 return 'manyToMany';
             }
-            else if (foreignType == 'belongsTo') {
+            else if (foreignType === 'belongsTo') {
                 return 'oneToMany';
             }
             else {
-                return;
+                return undefined;
             }
         }
-        else if (type == 'belongsTo') {
-            if (foreignType == 'hasMany') {
+        else if (type === 'belongsTo') {
+            if (foreignType === 'hasMany') {
                 return 'manyToOne';
             }
-            else if (foreignType == 'hasOne') {
+            else if (foreignType === 'hasOne') {
                 return 'oneToOneRight';
             }
             else {
-                return;
+                return undefined;
             }
         }
-        else if (type == 'belongsToParent') {
-            if (foreignType == 'hasChildren') {
+        else if (type === 'belongsToParent') {
+            if (foreignType === 'hasChildren') {
                 return 'childrenToParent'
             }
 
-            return;
+            return undefined;
         }
-        else if (type == 'hasChildren') {
-            if (foreignType == 'belongsToParent') {
+        else if (type === 'hasChildren') {
+            if (foreignType === 'belongsToParent') {
                 return 'parentToChildren'
             }
 
-            return;
+            return undefined;
         }
         else if (type === 'hasOne') {
-            if (foreignType == 'belongsTo') {
+            if (foreignType === 'belongsTo') {
                 return 'oneToOneLeft';
             }
 
-            return;
+            return undefined;
         }
     }
 
     setupLinkData() {
         this.linkDataList = [];
 
-        var links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
+        this.isCustomizable = !!this.getMetadata().get(`scopes.${this.scope}.customizable`);
 
-        var linkList = Object.keys(links).sort((v1, v2) => {
+        const links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
+
+        const linkList = Object.keys(links).sort((v1, v2) => {
             return v1.localeCompare(v2);
         });
 
-        linkList.forEach((link) => {
+        linkList.forEach(link => {
             var d = links[link];
+            let type;
 
             var linkForeign = d.foreign;
 
             if (d.type === 'belongsToParent') {
-                var type = 'childrenToParent';
+                type = 'childrenToParent';
             }
             else {
                 if (!d.entity) {
@@ -142,7 +146,7 @@ class LinkManagerIndexView extends View {
                 var foreignType = this.getMetadata()
                     .get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
 
-                var type = this.computeRelationshipType(d.type, foreignType);
+                type = this.computeRelationshipType(d.type, foreignType);
             }
 
             if (!type) {
@@ -154,6 +158,7 @@ class LinkManagerIndexView extends View {
                 isCustom: d.isCustom,
                 isRemovable: d.isCustom,
                 customizable: d.customizable,
+                isEditable: this.isCustomizable,
                 type: type,
                 entityForeign: d.entity,
                 entity: this.scope,
