@@ -99,7 +99,7 @@ class LinkFieldView extends BaseFieldView {
      * @protected
      * @type {boolean}
      */
-    createButton = true
+    createButton = false
 
     /**
      * Force create button even is disabled in clientDefs > relationshipPanels.
@@ -1084,8 +1084,21 @@ class LinkFieldView extends BaseFieldView {
     _getSelectFilters() {
         const handler = this.panelDefs.selectHandler;
 
+        const localBoolFilterList = this.getSelectBoolFilterList();
+
         if (!handler || this.isSearchMode()) {
-            return Promise.resolve({});
+            const boolFilterList = (localBoolFilterList || this.panelDefs.selectBoolFilterList) ?
+                [
+                    ...(localBoolFilterList || []),
+                    ...(this.panelDefs.selectBoolFilterList || []),
+                ] :
+                undefined;
+
+            return Promise.resolve({
+                primary: this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName,
+                bool: boolFilterList,
+                advanced: this.getSelectFilters() || undefined,
+            });
         }
 
         return new Promise(resolve => {
@@ -1098,8 +1111,6 @@ class LinkFieldView extends BaseFieldView {
                     const advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
                     const primaryFilter = this.getSelectPrimaryFilterName() ||
                         filters.primary || this.panelDefs.selectPrimaryFilterName;
-
-                    const localBoolFilterList = this.getSelectBoolFilterList();
 
                     const boolFilterList = (localBoolFilterList || filters.bool || this.panelDefs.selectBoolFilterList) ?
                         [
