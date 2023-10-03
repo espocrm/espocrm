@@ -36,9 +36,10 @@ define('views/admin/entity-manager/modals/select-formula', ['views/modal'], func
      */
     return Dep.extend(/** @lends module:views/admin/entity-manager/modals/select-formula.Class# */{
 
+        // language=Handlebars
         templateContent: `
-            <div class="no-side-margin">
-                <table class="table table-bordered table-panel">
+            <div class="panel no-side-margin">
+                <table class="table table-bordered">
                     {{#each typeList}}
                     <tr>
                         <td style="width: 40%">
