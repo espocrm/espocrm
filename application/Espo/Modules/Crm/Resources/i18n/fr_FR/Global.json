@@ -96,5 +96,10 @@
     "cases": "Tickets",
     "account": "Compte",
     "opportunity": "Opportunité"
+  },
+  "streamMessages": {
+    "eventConfirmationAcceptedThis": "{invitee} a accepté de participer",
+    "eventConfirmationDeclinedThis": "{invitee} a refusé de participer",
+    "eventConfirmationTentativeThis": "{invitee} est hésitant à participer"
   }
 }

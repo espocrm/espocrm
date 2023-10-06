@@ -2,7 +2,6 @@
   "fields": {
     "name": "Nom",
     "status": "Statut",
-    "isHtml": "Html",
     "body": "Corps",
     "subject": "Objet",
     "attachments": "Pièces-jointes",
