@@ -18,8 +18,8 @@
     "isActive": "Je aktívny",
     "isPortalUser": "Je portálový používateľ",
     "contact": "Konktakt",
-    "accounts": "Účty",
-    "account": "Účet (primárny)",
+    "accounts": "Organizácie",
+    "account": "Organizácia (primárna)",
     "sendAccessInfo": "Poslať používateľovi email s informáciou o prístupe",
     "portal": "Portál",
     "gender": "Pohlavie",
@@ -36,8 +36,8 @@
     "portals": "Portály",
     "portalRoles": "Portálové role",
     "contact": "Kontakt",
-    "accounts": "Účty",
-    "account": "Účet (Primárny)",
+    "accounts": "Organizácie",
+    "account": "Organizácia (Primárna)",
     "tasks": "Úlohy"
   },
   "labels": {
@@ -76,7 +76,8 @@
     "forbidden": "Odmietnutý prístup, skúste neskôr",
     "uniqueLinkHasBeenSent": "Jedinečná URL bola odoslaná na uvedenú emailovú adresu.",
     "passwordChangedByRequest": "Heslo bolo zmenené.",
-    "userNameExists": "Používateľské meno už existuje"
+    "userNameExists": "Používateľské meno už existuje",
+    "passwordRecoverySentIfMatched": "Za predpokladu, že zadané údaje sa zhodujú s ľubovoľným používateľským účtom."
   },
   "boolFilters": {
     "onlyMyTeam": "Len môj tím"

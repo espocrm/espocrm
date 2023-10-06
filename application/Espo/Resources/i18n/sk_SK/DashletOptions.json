@@ -29,5 +29,8 @@
   },
   "messages": {
     "selectEntityType": "Vyberte typ entity v možnostiach dashletu."
+  },
+  "tooltips": {
+    "skipOwn": "Akcie vykonané vaším používateľským účtom sa nezobrazia."
   }
 }

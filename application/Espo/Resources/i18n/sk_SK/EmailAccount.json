@@ -17,7 +17,9 @@
     "smtpSecurity": "SMTP bezpečnosť",
     "smtpUsername": "SMTP používateľské meno",
     "smtpPassword": "SMTP heslo",
-    "useImap": "Načítať emaily"
+    "useImap": "Načítať emaily",
+    "smtpAuthMechanism": "Mechanizmus SMTP autorizácie",
+    "security": "Bezpečnosť"
   },
   "links": {
     "filters": "Filtre",
@@ -41,6 +43,8 @@
   },
   "tooltips": {
     "monitoredFolders": "Viaceré priečinky majú byť oddelené čiarkou.\n\nMôžete pridať priečinok s odoslanou poštou na synchronizovanie emailov odoslaných exteným emailovým klientom.",
-    "storeSentEmails": "Odoslané emaily budú uložené na serveri IMAP. Pole s emailovou adresou by sa malo zhodovať s adresou, z ktorej budú emaily odoslané."
+    "storeSentEmails": "Odoslané emaily budú uložené na serveri IMAP. Pole s emailovou adresou by sa malo zhodovať s adresou, z ktorej budú emaily odoslané.",
+    "useSmtp": "Schopnosť posielať e-maily.",
+    "emailAddress": "Záznam používateľa (priradený používateľ) by mal mať rovnakú e-mailovú adresu, aby bolo možné použiť tento e-mailový účet na odosielanie."
   }
 }

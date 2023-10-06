@@ -8,7 +8,6 @@
     "bcc": "Slepá kópia",
     "replyTo": "Odpovedať",
     "replyToString": "Odpovedať (String)",
-    "isHtml": "Je Html",
     "body": "Telo",
     "subject": "Predmet",
     "attachments": "Prílohy",
@@ -99,7 +98,6 @@
     "Folders": "Priečinky"
   },
   "messages": {
-    "noSmtpSetup": "Chýba SMTP nastavenie. {link}.",
     "testEmailSent": "Testovací email bol odoslaný",
     "emailSent": "Email bol odoslaný",
     "savedAsDraft": "Uložené ako koncept",

@@ -13,7 +13,8 @@
     "footerPosition": "Pozícia päty",
     "variables": "Dostupné náhrady",
     "pageOrientation": "Orientácia stránky",
-    "pageFormat": "Formát papiera"
+    "pageFormat": "Formát papiera",
+    "fontFace": "Písmo"
   },
   "labels": {
     "Create Template": "Vytvoriť šablónu"
