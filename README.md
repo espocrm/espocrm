@@ -66,3 +66,9 @@ If you have a question regarding some features, need help or customizations, wan
 ### License
 
 EspoCRM is published under the GNU GPLv3 [license](https://raw.githubusercontent.com/espocrm/espocrm/master/LICENSE.txt).
+
+### Language
+
+If you want to improve existing translation or add a language that is not available yet, you can contribute on our [POEditor](https://poeditor.com/join/project/gLDKZtUF4i) project. See instructions [here](https://www.espocrm.com/blog/how-to-use-poeditor-to-translate-espocrm/). It may be reasonable to let us know about your intention to join the POEditor project by posting on our forum or via the contact form on our website.
+
+Changes on POEditor are usually merged to the GitHub repository before minor releases.
