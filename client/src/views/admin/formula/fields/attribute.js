@@ -40,18 +40,18 @@ function (Dep, /** module:ui/multi-select */MultiSelect) {
                 return;
             }
 
-            let attributeList = this.getFieldManager()
+            const attributeList = this.getFieldManager()
                 .getEntityTypeAttributeList(this.options.scope)
                 .concat(['id'])
                 .sort();
 
-            let links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']) || {};
+            const links = this.getMetadata().get(['entityDefs', this.options.scope, 'links']) || {};
 
-            let linkList = [];
+            const linkList = [];
 
             Object.keys(links).forEach(link => {
-                var type = links[link].type;
-                let scope = links[link].entity;
+                const type = links[link].type;
+                const scope = links[link].entity;
 
                 if (!type) {
                     return;
@@ -76,6 +76,8 @@ function (Dep, /** module:ui/multi-select */MultiSelect) {
             linkList.sort();
 
             linkList.forEach(link => {
+                const scope = links[link].entity;
+
                 let linkAttributeList = this.getFieldManager()
                     .getEntityTypeAttributeList(scope)
                     .sort();
