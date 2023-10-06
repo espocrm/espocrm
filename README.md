@@ -59,12 +59,6 @@ Branches:
 * *master* – develop branch; new features should be pushed to this branch;
 * *stable* – last stable release.
 
-### Language
-
-If you want to improve existing translation or add a language that is not available yet, you can contribute on our [POEditor](https://poeditor.com/join/project/gLDKZtUF4i) project. See instructions [here](https://www.espocrm.com/blog/how-to-use-poeditor-to-translate-espocrm/). It may be reasonable to let us know about your intention to join the POEditor project by posting on our forum or via the contact form on our website.
-
-Changes on POEditor are usually merged to the GitHub repository before minor releases.
-
 ### Community & Support
 
 If you have a question regarding some features, need help or customizations, want to get in touch with other EspoCRM users, or add a feature request, please use our [community forum](https://forum.espocrm.com/). We believe that using the forum to ask for help and share experience allows everyone in the community to contribute and use this knowledge later.
