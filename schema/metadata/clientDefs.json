@@ -630,6 +630,14 @@
                     ],
                     "description": "A style."
                 },
+                "title": {
+                    "type": "string",
+                    "description": "A title."
+                },
+                "iconClass": {
+                    "type": "string",
+                    "description": "An icon class."
+                },
                 "data": {
                     "type": "object",
                     "properties": {

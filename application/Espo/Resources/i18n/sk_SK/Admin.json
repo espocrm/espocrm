@@ -56,7 +56,14 @@
     "Action History": "História akcií",
     "Label Manager": "Správca popiskov",
     "Auth Log": "Auth protokol",
-    "Permissions": "Povolenie"
+    "Lead Capture": "Zachytenie prvého kontaktu",
+    "Attachments": "Prílohy",
+    "Template Manager": "Správca šablón",
+    "System Requirements": "Systémové požiadavky",
+    "PHP Settings": "PHP nastavenia",
+    "Database Settings": "Nastavenie databázy",
+    "Permissions": "Povolenie",
+    "Success": "Úspech"
   },
   "layouts": {
     "list": "Zoznam",
@@ -144,7 +151,8 @@
     "noEmptyString": "Prázdny reťazec nie je povolený",
     "maxFileSize": "Max. veľkosť súboru (MB)",
     "isPersonalData": "Sú osobné dáta",
-    "useIframe": "Použite Iframe"
+    "useIframe": "Použite Iframe",
+    "useNumericFormat": "Použiť číselný formát"
   },
   "messages": {
     "selectEntityType": "Vyber typ entity v ľavom menu",
@@ -156,7 +164,6 @@
     "upgradeBackup": "Pred aktualizáciou odporúčame urobiť zálohu súborov a dát EspoCRM.",
     "thousandSeparatorEqualsDecimalMark": "Oddeľovač tisícov nemôže byť rovnaký ako oddeľovač desatinných miest.",
     "userHasNoEmailAddress": "Používateľ nemá emailovú adresu.",
-    "newVersionIsAvailable": "Je k dispozícii nová verzia EspoCRM {latestVersion}.",
     "uninstallConfirmation": "Ste si istý, že chcete rozšírenie odinštalovať?"
   },
   "descriptions": {
@@ -189,7 +196,8 @@
     "emailFilters": "Emailové správy, ktoré vyhovujú danému filtru, nebudú importované.",
     "actionHistory": "Protokol používateľských akcií.",
     "labelManager": "Prispôsobenie popiskov v aplikácii.",
-    "authLog": "História prihlásení."
+    "authLog": "História prihlásení.",
+    "leadCapture": "Vstupné body API pre Web-to-Lead"
   },
   "options": {
     "previewSize": {

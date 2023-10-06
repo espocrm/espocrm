@@ -1,11 +1,11 @@
 {
   "fields": {
     "name": "Názov",
-    "account": "Účet",
+    "account": "Organizácia",
     "stage": "Fáza",
     "amount": "Množstvo",
     "probability": "Uskutočniteľnosť, %",
-    "leadSource": "Zdroj stopy",
+    "leadSource": "Zdroj prvého kontaktu",
     "doNotCall": "Nevolať",
     "closeDate": "Dátum uzatvorenia",
     "contacts": "Kontakty",
@@ -13,7 +13,7 @@
     "amountConverted": "Množstvo (konvertované)",
     "amountWeightedConverted": "Množstvo vážené",
     "campaign": "Kampaň",
-    "originalLead": "Pôvodná stopa",
+    "originalLead": "Pôvodný prvý kontakt",
     "amountCurrency": "Mena obnosu",
     "contactRole": "Rola kontaktu",
     "lastStage": "Posledné štádium"
@@ -22,7 +22,7 @@
     "contacts": "Kontakty",
     "documents": "Dokumenty",
     "campaign": "Kampaň",
-    "originalLead": "Pôvodná stopa"
+    "originalLead": "Pôvodný prvý kontakt"
   },
   "options": {
     "stage": {

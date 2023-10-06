@@ -90,23 +90,6 @@
     "option": "Odporúčaná hodnota je {0}",
     "mysqlSettingError": "EspoCRM vyžaduje aby nastavenie MySQL \"{NAME}\" bolo nastavené na {VALUE}"
   },
-  "options": {
-    "modRewriteInstruction": {
-      "apache": {
-        "windows": "<br> <pre>1. Nájdite súbor httpd.conf (obyčajne sa nachádza v priečinku s názvom conf, config alebo niečo okolo tých riadkov)<br>\n2. Vo vnútri httpd.conf odkomentujte riadok <code>{WINDOWS_APACHE1}</code> (odstránte '#' na začiatku riadku)<br>\n3. Tiež skontrolujte či riadok ClearModuleList je odkomentovany a nájdite a uistite sa že riadok AddModule mod_rewrite.c nie je zakomentovaný.\n</pre>",
-        "linux": "<br><br>1. Povoliť \"mod_rewrite\". Spustite v termináli príkaz:<pre>{APACHE1}</pre><br>2. Povoliť podporu .htaccess. Pridajte/zmeňte nastavenia v konfigurácii servera (<code>{APACHE2_PATH1}</code>, <code>{APACHE2_PATH2}</code>, <code>{APACHE2_PATH3}</code>):<pre>{APACHE2}</pre>\n Potom spustite tento príkaz v termináli:<pre>{APACHE3}</pre><br>3. Skúste pridať RewriteBase cestu, otvorte súbor {API_PATH}.htaccess a vymeňte riadok:<pre>{APACHE4}</pre>za<pre>{APACHE5}</pre><br> Pre viac informácií navštívte <a href=\"{APACHE_LINK}\" target=\"_blank\">Konfigurácia Apache server pre EspoCRM</a>.<br><br>"
-      },
-      "nginx": {
-        "linux": "<br> Pridajte tento kód do konfiguračného súboru Vášho serveru Nginx <code>{NGINX_PATH}</code> do vnútra sekcie \"server\":<pre>{NGINX}</pre> <br> Pre podrobnejšie informácie prosím navštívte stránku s návodmi <a href=\"{NGINX_LINK}\" target=\"_blank\">Konfigurácia Nginx servera pre EspoCRM</a>.<br><br>"
-      }
-    },
-    "modRewriteTitle": {
-      "apache": "<h3>Chyba API: EspoCRM API je nedostupné.</h3><br>Urobte iba nevyhnutné kroky. Po každom kroku skontrolujte, či je problém vyriešený.",
-      "nginx": "<h3>Chyba API: EspoCRM API je nedostupné.</h3>",
-      "microsoft-iis": "<h3>Chyba API: EspoCRM API je nedostupné.</h3><br> Možný problém: zakázaný \"URL Rewrite\". Prosím skontrolujte a povoľte modul \"URL Rewrite\" v IIS serveri",
-      "default": "<h3>Chyba API: EspoCRM API je nedostupné.</h3><br> Možný problém: zakázaný Rewrite Module. Prosím skontrolujte a povoľte Rewrite Module vo Vašom serveri (napr. mod_rewrite v Apache) a podporu .htaccess."
-    }
-  },
   "systemRequirements": {
     "requiredPhpVersion": "Verzia PHP",
     "requiredMysqlVersion": "Verzia MySQL",

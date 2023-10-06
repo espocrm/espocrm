@@ -65,6 +65,7 @@ class MainView extends View {
      * @property {Object.<string,string|number|boolean>} [data] Data attribute values.
      * @property {string} [title] A title.
      * @property {string} [iconHtml] An icon HTML.
+     * @property {string} [iconClass] An icon class.
      * @property {string} [html] An HTML.
      * @property {string} [text] A text.
      * @property {string} [className] An additional class name. Only for buttons.

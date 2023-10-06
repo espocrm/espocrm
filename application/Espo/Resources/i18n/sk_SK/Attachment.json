@@ -1,5 +1,20 @@
 {
   "insertFromSourceLabels": {
     "Document": "Vložiť dokument"
+  },
+  "fields": {
+    "file": "Súbor",
+    "type": "Typ",
+    "field": "Pole",
+    "sourceId": "Zdroj ID",
+    "size": "Veľkosť (bajty)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Príloha",
+      "Import File": "Importovať súbor",
+      "Export File": "Exportovať súbor",
+      "Mail Merge": "Zlúčiť maily"
+    }
   }
 }

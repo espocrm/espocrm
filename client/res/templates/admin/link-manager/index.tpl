@@ -11,10 +11,12 @@
 </div>
 
 <div class="button-container">
-    <button class="btn btn-default btn-wide" data-action="createLink">
-        <span class="fas fa-plus"></span>
-        {{translate 'Create Link' scope='Admin'}}
-    </button>
+    {{#if isCreatable}}
+        <button class="btn btn-default btn-wide" data-action="createLink">
+            <span class="fas fa-plus"></span>
+            {{translate 'Create Link' scope='Admin'}}
+        </button>
+    {{/if}}
 </div>
 
 {{#if linkDataList.length}}
@@ -80,9 +82,11 @@
             {{translate entityForeign category='scopeNames'}}
         </td>
         <td align="right" width="10%">
-            <a role="button" tabindex="0" data-action="editLink" data-link="{{link}}">
-                {{translate 'Edit'}}
-            </a>
+            {{#if isEditable}}
+                <a role="button" tabindex="0" data-action="editLink" data-link="{{link}}">
+                    {{translate 'Edit'}}
+                </a>
+            {{/if}}
         </td>
         <td align="right" width="10%">
             {{#if isRemovable}}

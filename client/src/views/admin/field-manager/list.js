@@ -55,6 +55,8 @@ define('views/admin/field-manager/list', ['view'], function (Dep) {
         setup: function () {
             this.scope = this.options.scope;
 
+            this.isCustomizable = !!this.getMetadata().get(`scopes.${this.scope}.customizable`);
+
             this.hasAddField = true;
 
             let entityManagerData = this.getMetadata().get(['scopes', this.scope, 'entityManager']) || {};
@@ -89,7 +91,7 @@ define('views/admin/field-manager/list', ['view'], function (Dep) {
                         isCustom: defs.isCustom || false,
                         type: defs.type,
                         label: this.translate(field, 'fields', this.scope),
-                        isEditable: !defs.customizationDisabled,
+                        isEditable: !defs.customizationDisabled && this.isCustomizable,
                     });
                 });
             });

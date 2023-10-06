@@ -13,9 +13,9 @@
     "isOptedOut": "Je vylúčený z odberu"
   },
   "links": {
-    "accounts": "Účty",
+    "accounts": "Organizácie",
     "contacts": "Kontakty",
-    "leads": "Stopy",
+    "leads": "Prvé kontakty",
     "campaigns": "Kampane",
     "massEmails": "Hromadné emaily"
   },

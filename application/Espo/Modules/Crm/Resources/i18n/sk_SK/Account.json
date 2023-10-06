@@ -13,7 +13,7 @@
     "campaign": "Kampaň",
     "targetLists": "Cieľové zoznamy",
     "targetList": "Cieľový zoznam",
-    "originalLead": "Pôvodná stopa",
+    "originalLead": "Pôvodný prvý kontakt",
     "contactIsInactive": "Neaktívny"
   },
   "links": {
@@ -29,7 +29,8 @@
     "campaignLogRecords": "Protokol kampane",
     "campaign": "Kampaň",
     "portalUsers": "Používatelia portálu",
-    "originalLead": "Pôvodná stopa"
+    "originalLead": "Pôvodný prvý kontakt",
+    "contactsPrimary": "Kontakty (primárne)"
   },
   "options": {
     "type": {
@@ -89,7 +90,7 @@
     }
   },
   "labels": {
-    "Create Account": "Vytvoriť účet",
+    "Create Account": "Vytvoriť organizáciu",
     "Copy Billing": "Kopírovať fakturačnú",
     "Set Primary": "Nastaviť primárny"
   },

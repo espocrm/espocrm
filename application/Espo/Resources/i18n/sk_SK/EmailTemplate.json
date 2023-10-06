@@ -2,11 +2,9 @@
   "fields": {
     "name": "Názov",
     "status": "Stav",
-    "isHtml": "Je Html",
     "body": "Telo",
     "subject": "Predmet",
     "attachments": "Prílohy",
-    "insertField": "Vlož pole",
     "category": "Kategória"
   },
   "labels": {
@@ -19,11 +17,7 @@
   "presetFilters": {
     "actual": "Aktuálne"
   },
-  "messages": {
-    "infoText": "Dostupné náhrady:\n\n{optOutUrl} &#8211; URL pre odkaz na odregistrovanie;\n\n{optOutLink} &#8211; odkaz na odregistrovanie."
-  },
   "placeholderTexts": {
-    "optOutUrl": "URL pre odkaz na odhlásenie odberu",
     "optOutLink": "odkaz na odhlásenie odberu"
   }
 }

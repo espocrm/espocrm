@@ -89,6 +89,10 @@ define('views/admin/entity-manager/scope', ['view'], function (Dep) {
             this.hasFields = this.isCustomizable;
             this.hasRelationships = this.isCustomizable;
 
+            if (!scopeData.customizable) {
+                this.isEditable = false;
+            }
+
             if ('edit' in entityManagerData) {
                 this.isEditable = entityManagerData.edit;
             }

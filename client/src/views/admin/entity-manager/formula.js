@@ -61,6 +61,11 @@ class EntityManagerFormulaView extends View {
             throw Error("No scope or type.");
         }
 
+
+        if (!this.getMetadata().get(['scopes', this.scope, 'customizable'])) {
+            throw new Espo.Exceptions.NotFound("Entity type is not customizable.");
+        }
+
         if (!['beforeSaveCustomScript', 'beforeSaveApiScript'].includes(this.type)) {
             Espo.Ui.error('No allowed formula type.', true);
 

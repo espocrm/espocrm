@@ -14,7 +14,13 @@
                     {{#each data}} data-{{@key}}="{{./this}}"{{/each}}
                     {{#if title}}title="{{title}}"{{/if}}
                 >
-                {{#if iconHtml}}{{{iconHtml}}}{{/if}}
+                {{#if iconHtml}}
+                    {{{iconHtml}}}
+                {{else}}
+                    {{#if iconClass}}
+                        <span class="{{iconClass}}"></span>
+                    {{/if}}
+                {{/if}}
                 {{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}
                 </a>
             {{/each}}
@@ -63,7 +69,13 @@
                                 data-action="{{action}}"
                                 {{#each data}} data-{{@key}}="{{./this}}"{{/each}}
                             >
-                            {{#if iconHtml}}{{{iconHtml}}} {{/if}}
+                            {{#if iconHtml}}
+                                {{{iconHtml}}}
+                            {{else}}
+                                {{#if iconClass}}
+                                    <span class="{{iconClass}}"></span>
+                                {{/if}}
+                            {{/if}}
                             {{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}</a></li>
                         {{else}}
                             {{#unless @first}}

@@ -1,1 +1,14 @@
-{}
+{
+  "fields": {
+    "number": "Číslo",
+    "data": "Údaje",
+    "target": "Cieľ",
+    "leadCapture": "Zachytenie prvého kontaktu",
+    "createdAt": "Zadané o",
+    "isCreated": "Je prvý kontakt vytvorený"
+  },
+  "links": {
+    "leadCapture": "Zachytenie prvého kontaktu",
+    "target": "Cieľ"
+  }
+}

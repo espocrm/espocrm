@@ -3,22 +3,22 @@
     "parent": "Rodič",
     "contacts": "Kontakty",
     "opportunities": "Príležitosti",
-    "leads": "Stopy",
+    "leads": "Prvé kontakty",
     "meetings": "Stretnutia",
     "calls": "Hovory",
     "tasks": "Úlohy",
     "emails": "Emaily",
-    "accounts": "Účty",
+    "accounts": "Organizácie",
     "cases": "Prípady",
     "documents": "Dokumemty",
-    "account": "Účty",
+    "account": "Organizácia",
     "opportunity": "Príležitosti",
     "contact": "Kontakt"
   },
   "scopeNames": {
-    "Account": "Účet",
+    "Account": "Organizácia",
     "Contact": "Kontakt",
-    "Lead": "Stopa",
+    "Lead": "Prvý kontakt",
     "Target": "Cieľ",
     "Opportunity": "Príležitosť",
     "Meeting": "Stretnutie",
@@ -39,9 +39,9 @@
     "CampaignLogRecord": "Záznam protokolu kampane"
   },
   "scopeNamesPlural": {
-    "Account": "Účty",
+    "Account": "Organizácie",
     "Contact": "Kontakty",
-    "Lead": "Stopy",
+    "Lead": "Prvé kontakty",
     "Target": "Ciele",
     "Opportunity": "Príležitosti",
     "Meeting": "Stretnutia",
@@ -62,7 +62,7 @@
     "CampaignLogRecord": "Záznamy protokolu kampane"
   },
   "dashlets": {
-    "Leads": "Moje stopy",
+    "Leads": "Moje prvé kontakty",
     "Opportunities": "Moje príležitosti",
     "Tasks": "Moje úlohy",
     "Cases": "Moje prípady",

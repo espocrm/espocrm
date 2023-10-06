@@ -69,6 +69,7 @@ class CalendarView extends View {
         week: 'MMMM YYYY',
         day: 'dddd, MMMM D, YYYY',
     }
+    rangeSeparator = ' – '
 
     /** @private */
     fetching = false
@@ -381,7 +382,12 @@ class CalendarView extends View {
         const format = this.titleFormat[viewName];
 
         if (viewName === 'week') {
-            title = this.calendar.formatRange(view.currentStart, view.currentEnd, format);
+            const start = this.dateToMoment(view.currentStart).format(format);
+            const end = this.dateToMoment(view.currentEnd).subtract(1, 'minute').format(format);
+
+            title = start !== end ?
+                start + this.rangeSeparator + end :
+                start;
         } else {
             title = moment(view.currentStart).format(format);
         }
@@ -738,7 +744,7 @@ class CalendarView extends View {
             slotLabelFormat: slotLabelFormat,
             eventTimeFormat: timeFormat,
             initialView: this.modeViewMap[this.viewMode],
-            defaultRangeSeparator: ' – ',
+            defaultRangeSeparator: this.rangeSeparator,
             weekNumbers: true,
             weekNumberCalculation: 'ISO',
             editable: true,

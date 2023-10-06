@@ -9,9 +9,5 @@
   "fields": {
     "exportPermission": "Permission d'exportation",
     "massUpdatePermission": "Autorisation de mise à jour en masse"
-  },
-  "tooltips": {
-    "exportPermission": "Définit si les utilisateurs du portail ont la possibilité d'exporter des enregistrements.",
-    "massUpdatePermission": "Définit si les utilisateurs du portail ont la possibilité d'effectuer une mise à jour en masse des enregistrements."
   }
 }

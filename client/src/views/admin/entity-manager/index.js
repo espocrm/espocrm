@@ -81,7 +81,7 @@ class EntityManagerIndexView extends View {
         scopeList = scopeListSorted;
 
         scopeList.forEach(scope => {
-            let d = /** @type Object.<string, *>*/this.getMetadata().get('scopes.' + scope);
+            let d = /** @type {Object.<string, *>} */this.getMetadata().get('scopes.' + scope);
 
             let isRemovable = !!d.isCustom;
 

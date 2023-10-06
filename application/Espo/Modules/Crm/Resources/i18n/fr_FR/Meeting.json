@@ -11,8 +11,7 @@
     "account": "Compte",
     "dateStartDate": "Date de début (toute la journée)",
     "dateEndDate": "Date de fin (toute la journée)",
-    "isAllDay": "Est toute la journée",
-    "Acceptance": "Acceptation"
+    "isAllDay": "Est toute la journée"
   },
   "options": {
     "status": {

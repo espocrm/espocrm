@@ -1,6 +1,8 @@
 {
   "labels": {
     "Connect": "Spojenie",
-    "Connected": "Spojené"
+    "Connected": "Spojené",
+    "Disconnect": "Odpojiť",
+    "Disconnected": "Odpojené"
   }
 }

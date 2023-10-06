@@ -39,7 +39,9 @@
     "PhoneNumber": "Telefónne číslo",
     "AuthLogRecord": "Záznam Auth protokolu",
     "AuthFailLogRecord": "Záznam Auth chybového protokolu",
-    "EmailTemplateCategory": "Kategórie emailových šablón"
+    "EmailTemplateCategory": "Kategórie emailových šablón",
+    "LeadCapture": "Vstupné body pre zachytenie prvých kontaktov",
+    "LeadCaptureLogRecord": "Vedenie záznamu denníka zachytenia"
   },
   "scopeNamesPlural": {
     "Email": "Emaily",
@@ -71,7 +73,9 @@
     "LastViewed": "Naposledy videné",
     "AuthLogRecord": "Auth protokol",
     "AuthFailLogRecord": "Auth chybový protokol",
-    "EmailTemplateCategory": "Kategórie emailových šablón"
+    "EmailTemplateCategory": "Kategórie emailových šablón",
+    "LeadCapture": "Zachytenie prvého kontaktu",
+    "LeadCaptureLogRecord": "Záznam zachytenia prvého kontaktu"
   },
   "labels": {
     "Misc": "Rôzne",
@@ -88,7 +92,6 @@
     "Loading...": "Sťahovanie ...",
     "Uploading...": "Nahrávanie ...",
     "Sending...": "Posielanie ...",
-    "Merging...": "Zlučovanie ...",
     "Merged": "Zlúčené",
     "Removed": "Odstránené",
     "Posted": "Odoslané",
@@ -102,14 +105,10 @@
     "Record has been removed": "Záznam bol odstránený",
     "Wrong username/password": "Nesprávne používateľské meno/heslo",
     "Post cannot be empty": "Príspevok nemôže byť prázdny",
-    "Removing...": "Odstraňujem ...",
-    "Unlinking...": "Ruším linku ...",
-    "Posting...": "Posielam ...",
     "Username can not be empty!": "Používateľské meno nemôže byť prázdne!",
     "Cache is not enabled": "Vyrovnávacia pamäť nie je povolená",
     "Cache has been cleared": "Vyrovnávacia pamäť bola vymazaná",
     "Rebuild has been done": "Rekompilácia bola dokončená",
-    "Saving...": "Ukladám ...",
     "Modified": "Zmenené",
     "Created": "Vytvorené",
     "Create": "Vytvoriť",
@@ -223,7 +222,6 @@
   },
   "messages": {
     "pleaseWait": "Čakajte prosím ...",
-    "posting": "Odosielam ...",
     "confirmLeaveOutMessage": "Si si istý, že chceš opustiť formulár?",
     "notModified": "Nezmenil si záznam",
     "fieldIsRequired": "{field} je povinné",
@@ -272,8 +270,6 @@
     "loading": "Nahrávanie...",
     "saving": "Ukladanie...",
     "fieldMaxFileSizeError": "Súbor by nemal prekročiť {max} MB",
-    "fieldShouldBeLess": "{field} by nemalo byť väčšie ako {value}",
-    "fieldShouldBeGreater": "{field} by nemalo byť menšie ako {value}",
     "fieldIsUploading": "Prebieha nahrávanie",
     "erasePersonalDataConfirmation": "Označené polia budú zmazané natrvalo. Ste si istý?",
     "massPrintPdfMaxCountError": "Nedá sa tlačiť viac ako {maxCount}  zázanmov"
@@ -454,9 +450,6 @@
       "Mr.": "Pán",
       "Mrs.": "Pani",
       "Ms.": "Slečna"
-    },
-    "language": {
-      "sk_SK": "Slovensky"
     },
     "dateSearchRanges": {
       "on": "V deň",

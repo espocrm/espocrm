@@ -97,7 +97,12 @@ class LayoutIndexView extends View {
         });
 
         if (this.em && this.scope) {
-            this.scopeList = [this.scope];
+            if (this.scopeList.includes(this.scope)) {
+                this.scopeList = [this.scope];
+            }
+            else {
+                this.scopeList = [];
+            }
         }
 
         this.on('after:render', () => {
@@ -107,12 +112,36 @@ class LayoutIndexView extends View {
             this.renderLayoutHeader();
 
             if (!this.options.scope || !this.options.type) {
+                this.checkLayout();
+
                 this.renderDefaultPage();
             }
+
             if (this.scope && this.options.type) {
+                this.checkLayout();
+
                 this.openLayout(this.options.scope, this.options.type);
             }
         });
+    }
+
+    checkLayout() {
+        const scope = this.options.scope;
+        const type = this.options.type;
+
+        if (!scope) {
+            return;
+        }
+
+        const item = this.getLayoutScopeDataList().find(item => item.scope === scope);
+
+        if (!item) {
+            throw new Espo.Exceptions.NotFound("Layouts not available for entity type.");
+        }
+
+        if (type && !item.typeList.includes(type)) {
+            throw new Espo.Exceptions.NotFound("The layout type is not available for the entity type.");
+        }
     }
 
     afterRender() {
@@ -381,10 +410,10 @@ class LayoutIndexView extends View {
     }
 
     getLayoutScopeDataList() {
-        let dataList = [];
+        const dataList = [];
 
-        this.scopeList.forEach(scope =>{
-            let item = {};
+        this.scopeList.forEach(scope => {
+            const item = {};
 
             let typeList = Espo.Utils.clone(this.typeList);
 
@@ -412,9 +441,9 @@ class LayoutIndexView extends View {
                 typeList.push('kanban');
             }
 
-            let additionalLayouts = this.getMetadata().get(['clientDefs', scope, 'additionalLayouts']) || {};
+            const additionalLayouts = this.getMetadata().get(['clientDefs', scope, 'additionalLayouts']) || {};
 
-            for (let aItem in additionalLayouts) {
+            for (const aItem in additionalLayouts) {
                 typeList.push(aItem);
             }
 
@@ -423,7 +452,7 @@ class LayoutIndexView extends View {
                     .get(['clientDefs', scope, 'layout' + Espo.Utils.upperCaseFirst(name) + 'Disabled'])
             });
 
-            let typeDataList = [];
+            const typeDataList = [];
 
             typeList.forEach(type => {
                 let url = this.baseUrl + '/scope=' + scope + '&type=' + type;
