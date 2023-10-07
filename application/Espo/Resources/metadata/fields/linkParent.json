@@ -18,6 +18,10 @@
             "name": "readOnly",
             "type": "bool",
             "tooltip": "linkReadOnly"
+        },
+        {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
         }
     ],
     "actualFields": [

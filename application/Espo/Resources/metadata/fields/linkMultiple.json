@@ -17,6 +17,10 @@
             "tooltip": "linkReadOnly"
         },
         {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "default",
             "type": "linkMultiple",
             "view": "views/admin/field-manager/fields/link-multiple/default"

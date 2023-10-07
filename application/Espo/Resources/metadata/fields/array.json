@@ -58,6 +58,10 @@
             "type": "bool"
         },
         {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "optionsPath",
             "type": "varchar",
             "hidden": true

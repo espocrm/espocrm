@@ -17,6 +17,10 @@
             "type": "bool"
         },
         {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "translation",
             "type": "varchar",
             "hidden": true

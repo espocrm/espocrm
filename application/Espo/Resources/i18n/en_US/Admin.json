@@ -200,6 +200,7 @@
         "probabilityMap": "Stage Probabilities (%)",
         "notActualOptions": "Not Actual Options",
         "readOnly": "Read-only",
+        "readOnlyAfterCreate": "Read-only After Create",
         "maxFileSize": "Max File Size (Mb)",
         "isPersonalData": "Is Personal Data",
         "useIframe": "Use Iframe",

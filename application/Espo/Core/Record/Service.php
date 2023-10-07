@@ -517,7 +517,28 @@ class Service implements Crud,
         unset($data->versionNumber);
 
         $this->filterInput($data);
+        $this->filterReadOnlyAfterCreate($data);
         $this->handleInput($data);
+    }
+
+    private function filterReadOnlyAfterCreate(stdClass $data): void
+    {
+        $fieldDefsList = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entityType)
+            ->getFieldList();
+
+        foreach ($fieldDefsList as $fieldDefs) {
+            if (!$fieldDefs->getParam('readOnlyAfterCreate')) {
+                continue;
+            }
+
+            $attributeList = $this->fieldUtil->getAttributeList($this->entityType, $fieldDefs->getName());
+
+            foreach ($attributeList as $attribute) {
+                unset($data->$attribute);
+            }
+        }
     }
 
     /**

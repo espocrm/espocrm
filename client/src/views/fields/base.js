@@ -737,6 +737,13 @@ class BaseFieldView extends View {
             this.model.getFieldParam(this.name, 'readOnly') ||
             this.model.getFieldParam(this.name, 'clientReadOnly');
 
+        if (
+            !this.model.isNew() &&
+            this.model.getFieldParam(this.name, 'readOnlyAfterCreate')
+        ) {
+            this.readOnly = true;
+        }
+
         this.readOnlyLocked = this.options.readOnlyLocked || this.readOnly;
 
         this.inlineEditDisabled = this.options.inlineEditDisabled ||

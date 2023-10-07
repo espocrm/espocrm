@@ -44,6 +44,14 @@
             "tooltip": "fileAccept"
         },
         {
+            "name": "readOnly",
+            "type": "bool"
+        },
+        {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "audited",
             "type": "bool"
         }

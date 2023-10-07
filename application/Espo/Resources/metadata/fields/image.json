@@ -33,6 +33,14 @@
             "min": 0
         },
         {
+            "name": "readOnly",
+            "type": "bool"
+        },
+        {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "audited",
             "type": "bool"
         }

@@ -22,6 +22,10 @@
             "type": "bool"
         },
         {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "attachmentField",
             "type": "varchar",
             "hidden": true

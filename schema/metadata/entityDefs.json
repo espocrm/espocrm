@@ -420,6 +420,10 @@
                     "type": "boolean",
                     "description": "Read-only fields are stripped from a payload received from the front-end. Fields are not editable."
                 },
+                "readOnlyAfterCreate": {
+                    "type": "boolean",
+                    "description": "The field will become read-only after the record is created. Read-only fields are stripped from a payload received from the front-end. Fields are not editable."
+                },
                 "view": {
                     "type": "string",
                     "description": "A custom field view. If not specified, then a value from metadata > fields > {fieldType} > view is used."

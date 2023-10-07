@@ -46,6 +46,10 @@
             "type": "bool"
         },
         {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "audited",
             "type": "bool",
             "tooltip": true

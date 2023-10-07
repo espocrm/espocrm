@@ -50,6 +50,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
             'after',
             'before',
             'readOnly',
+            'readOnlyAfterCreate',
         ],
 
         /**
