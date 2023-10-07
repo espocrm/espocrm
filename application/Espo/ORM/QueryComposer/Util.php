@@ -41,11 +41,11 @@ class Util
             return true;
         }
 
-        if (strpos($string, '.') !== false) {
+        if (str_contains($string, '.')) {
             return true;
         }
 
-        if (strpos($string, ':') !== false) {
+        if (str_contains($string, ':')) {
             return true;
         }
 
@@ -55,9 +55,9 @@ class Util
     public static function isArgumentString(string $argument): bool
     {
         return
-            substr($argument, 0, 1) === '\'' && substr($argument, -1) === '\''
+            str_starts_with($argument, '\'') && str_ends_with($argument, '\'')
             ||
-            substr($argument, 0, 1) === '"' && substr($argument, -1) === '"';
+            str_starts_with($argument, '"') && str_ends_with($argument, '"');
     }
 
     public static function isArgumentNumeric(string $argument): bool
@@ -92,16 +92,7 @@ class Util
             $list = [];
         }
 
-        $arguments = $expression;
-
-        if (strpos($expression, ':')) {
-            $delimiterPosition = strpos($expression, ':');
-            $arguments = substr($expression, $delimiterPosition + 1);
-
-            if (substr($arguments, 0, 1) === '(' && substr($arguments, -1) === ')') {
-                $arguments = substr($arguments, 1, -1);
-            }
-        } else {
+        if (!strpos($expression, ':')) {
             if (
                 !self::isArgumentString($expression) &&
                 !self::isArgumentNumeric($expression) &&
@@ -109,8 +100,17 @@ class Util
             ) {
                 $list[] = $expression;
             }
+
             return $list;
         }
+
+        $delimiterPosition = strpos($expression, ':');
+        $arguments = substr($expression, $delimiterPosition + 1);
+
+        if (str_starts_with($arguments, '(') && str_ends_with($arguments, ')')) {
+            $arguments = substr($arguments, 1, -1);
+        }
+
 
         $argumentList = self::parseArgumentListFromFunctionContent($arguments);
 
