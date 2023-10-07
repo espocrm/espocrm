@@ -29,9 +29,7 @@
 
 namespace tests\unit\Espo\ORM\Query\Part;
 
-use Espo\ORM\{
-    Query\Part\Expression as Expr,
-};
+use Espo\ORM\Query\Part\Expression as Expr;
 
 use RuntimeException;
 
@@ -39,6 +37,24 @@ class ExpressionTest extends \PHPUnit\Framework\TestCase
 {
     protected function setUp(): void
     {
+    }
+
+    public function testAlias1(): void
+    {
+        $actual = Expr::alias('test')->getValue();
+
+        $expected = '#test';
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    public function testAlias2(): void
+    {
+        $actual = Expr::alias('test.someAlias')->getValue();
+
+        $expected = 'test.#someAlias';
+
+        $this->assertEquals($expected, $actual);
     }
 
     public function testColumn1(): void

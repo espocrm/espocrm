@@ -49,6 +49,10 @@ class Util
             return true;
         }
 
+        if (str_starts_with($string, '#')) {
+            return true;
+        }
+
         return false;
     }
 
@@ -96,7 +100,8 @@ class Util
             if (
                 !self::isArgumentString($expression) &&
                 !self::isArgumentNumeric($expression) &&
-                !self::isArgumentBoolOrNull($expression)
+                !self::isArgumentBoolOrNull($expression) &&
+                !str_contains($expression, '#')
             ) {
                 $list[] = $expression;
             }
@@ -110,7 +115,6 @@ class Util
         if (str_starts_with($arguments, '(') && str_ends_with($arguments, ')')) {
             $arguments = substr($arguments, 1, -1);
         }
-
 
         $argumentList = self::parseArgumentListFromFunctionContent($arguments);
 

@@ -1293,14 +1293,24 @@ abstract class BaseQueryComposer implements QueryComposer
             /** @noinspection PhpDeprecationInspection */
             $relName = $this->sanitize($relName);
         }
+
+        $isAlias = false;
+
         if (!empty($attribute)) {
+            $isAlias = str_starts_with($attribute, '#');
+
             /** @noinspection PhpDeprecationInspection */
-            $attribute = $this->sanitize($attribute);
+            $attribute = $isAlias ?
+                $this->sanitizeSelectAlias($attribute) :
+                $this->sanitize($attribute);
         }
 
         if ($attribute !== '') {
-            $part = $this->toDb($attribute);
-        } else {
+            $part = !$isAlias ?
+                $this->toDb($attribute):
+                $attribute;
+        }
+        else {
             $part = '';
         }
 
@@ -1322,17 +1332,21 @@ abstract class BaseQueryComposer implements QueryComposer
             return $part;
         }
 
-        if ($this->getAttributeParam($entity, $attribute, 'select')) {
+        if (!$isAlias && $this->getAttributeParam($entity, $attribute, 'select')) {
             return $this->getAttributeSql($entity, $attribute, 'select', $params);
         }
 
-        if ($part !== '') {
-            $part = $this->getFromAlias($params, $entityType) . '.' . $part;
-
-            $part = $this->quoteColumn($part);
+        if ($part === '') {
+            return $part;
         }
 
-        return $part;
+        if ($isAlias) {
+            return $this->quoteColumn($part);
+        }
+
+        $part = $this->getFromAlias($params, $entityType) . '.' . $part;
+
+        return $this->quoteColumn($part);
     }
 
     /**

@@ -113,11 +113,35 @@ class Expression implements WhereItem
             throw new RuntimeException("Empty column.");
         }
 
-        if (!preg_match('/^[a-zA-Z\d\.]+$/', $string)) {
+        if (!preg_match('/^[a-zA-Z\d.]+$/', $string)) {
             throw new RuntimeException("Bad column. Must be of letters, digits. Can have a dot.");
         }
 
         return self::create($expression);
+    }
+
+    /**
+     * Create an alias reference expression.
+     *
+     * @param string $expression Examples: `someAlias`, `subQueryAlias.someAlias`.
+     */
+    public static function alias(string $expression): self
+    {
+        if ($expression === '') {
+            throw new RuntimeException("Empty alias.");
+        }
+
+        if (!preg_match('/^[a-zA-Z\d.]+$/', $expression)) {
+            throw new RuntimeException("Bad alias expression. Must be of letters, digits. Can have a dot.");
+        }
+
+        if (str_contains($expression, '.')) {
+            [$left, $right] = explode('.', $expression, 2);
+
+            return self::create($left . '.#' . $right);
+        }
+
+        return self::create('#' . $expression);
     }
 
     /**
