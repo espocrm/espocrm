@@ -243,16 +243,19 @@ abstract class BaseQueryComposer implements QueryComposer
 
     public function composeCreateSavepoint(string $savepointName): string
     {
+        /** @noinspection PhpDeprecationInspection */
         return 'SAVEPOINT ' . $this->sanitize($savepointName);
     }
 
     public function composeReleaseSavepoint(string $savepointName): string
     {
+        /** @noinspection PhpDeprecationInspection */
         return 'RELEASE SAVEPOINT ' . $this->sanitize($savepointName);
     }
 
     public function composeRollbackToSavepoint(string $savepointName): string
     {
+        /** @noinspection PhpDeprecationInspection */
         return 'ROLLBACK TO SAVEPOINT ' . $this->sanitize($savepointName);
     }
 
@@ -338,6 +341,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $aliasPart = null;
 
         if ($alias) {
+            /** @noinspection PhpDeprecationInspection */
             $aliasPart = $this->sanitize($alias);
         }
 
@@ -407,6 +411,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
     /**
      * @param array<string, mixed> $params
+     * @noinspection PhpUnusedParameterInspection
      */
     protected function getInsertValuesPart(string $entityType, array $params): string
     {
@@ -497,6 +502,7 @@ abstract class BaseQueryComposer implements QueryComposer
             if (is_int($item[0])) {
                 $by = (string) $item[0];
             } else {
+                /** @noinspection PhpDeprecationInspection */
                 $by = $this->quoteIdentifier(
                     $this->sanitizeSelectAlias($item[0])
                 );
@@ -663,6 +669,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $indexKeyList = $entityType ?
             $this->getIndexKeyList($entityType, $params) : null;
 
+        /** @noinspection PhpDeprecationInspection */
         $fromAlias = $fromAlias ?
             $this->sanitize($fromAlias) : null;
 
@@ -1190,6 +1197,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!empty($function)) {
+            /** @noinspection PhpDeprecationInspection */
             $function = strtoupper($this->sanitize($function));
         }
 
@@ -1282,9 +1290,11 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (!empty($relName)) {
+            /** @noinspection PhpDeprecationInspection */
             $relName = $this->sanitize($relName);
         }
         if (!empty($attribute)) {
+            /** @noinspection PhpDeprecationInspection */
             $attribute = $this->sanitize($attribute);
         }
 
@@ -1335,6 +1345,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $alias = $params['fromAlias'] ?? null;
 
         if ($alias) {
+            /** @noinspection PhpDeprecationInspection */
             return $this->sanitize($alias);
         }
 
@@ -1415,6 +1426,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return $part;
         }
 
+        /** @noinspection PhpDeprecationInspection */
         $part = $this->getFromAlias($params, $entity->getEntityType()) . '.' .
             $this->toDb($this->sanitize($attribute));
 
@@ -1479,6 +1491,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
 
+        /** @noinspection PhpDeprecationInspection */
         $path = $fromAlias . '.' . $this->toDb($this->sanitize($attribute));
 
         return $this->quoteColumn($path);
@@ -1635,6 +1648,7 @@ abstract class BaseQueryComposer implements QueryComposer
                 $expression = explode(':', $expression)[1];
             }
 
+            /** @noinspection PhpDeprecationInspection */
             $attributeList = self::getAllAttributesFromComplexExpression($expression);
 
             $list = array_merge(
@@ -1664,7 +1678,6 @@ abstract class BaseQueryComposer implements QueryComposer
 
                 if ($itemToCompare === $newItem) {
                     $isMet = true;
-                    continue;
                 }
             }
 
@@ -1741,6 +1754,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         foreach ($itemPairList as $item) {
             $expression = $item[0];
+            /** @noinspection PhpDeprecationInspection */
             $alias = $this->sanitizeSelectAlias($item[1]);
 
             if ($expression === '' || $alias === '') {
@@ -1885,7 +1899,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $fieldPath = $this->getAttributePath($entity, $attribute, $params);
 
         if ($attributeType === Entity::TEXT && $maxTextColumnsLength !== null) {
-            $fieldPath = 'LEFT(' . $fieldPath . ', '. strval($maxTextColumnsLength) . ')';
+            $fieldPath = 'LEFT(' . $fieldPath . ', ' . $maxTextColumnsLength . ')';
         }
 
         return [$fieldPath, $attribute];
@@ -1936,6 +1950,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $key = $keySet['key'];
         $foreignKey = $keySet['foreignKey'];
 
+        /** @noinspection PhpDeprecationInspection */
         $alias = !$alias ?
             $this->getAlias($entity, $relationName) :
             $this->sanitizeSelectAlias($alias);
@@ -2376,6 +2391,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $alias = $this->getFromAlias($params, $entityType);
 
+        /** @noinspection PhpDeprecationInspection */
         $path = $alias . '.' . $this->toDb($this->sanitize($attribute));
 
         return $this->quoteColumn($path);
@@ -2679,6 +2695,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         $fromAlias = $this->getFromAlias($params, $entity->getEntityType());
+        /** @noinspection PhpDeprecationInspection */
         $column = $fromAlias . '.' . $this->toDb($this->sanitize($attribute));
 
         return $this->quoteColumn($column);
@@ -2900,7 +2917,7 @@ abstract class BaseQueryComposer implements QueryComposer
      */
     public function sanitizeSelectAlias(string $string): string
     {
-        $string = preg_replace('/[^A-Za-z\r\n0-9_:\'" .,\-\(\)]+/', '', $string) ?? '';
+        $string = preg_replace('/[^A-Za-z\r\n0-9_:\'" .,\-()]+/', '', $string) ?? '';
 
         if (strlen($string) > $this->aliasMaxLength) {
             $string = substr($string, 0, $this->aliasMaxLength);
@@ -3048,12 +3065,16 @@ abstract class BaseQueryComposer implements QueryComposer
             if (strpos($left, '.') > 0) {
                 list($leftAlias, $attribute) = explode('.', $left);
 
+                /** @noinspection PhpDeprecationInspection */
                 $leftAlias = $this->sanitize($leftAlias);
+                /** @noinspection PhpDeprecationInspection */
                 $column = $this->toDb($this->sanitize($attribute));
             }
             else {
+                /** @noinspection PhpDeprecationInspection */
                 $column = $this->toDb($this->sanitize($left));
 
+                /** @noinspection PhpDeprecationInspection */
                 $leftAlias = $noLeftAlias ?
                     $this->getFromAlias($params, $entity->getEntityType()) :
                     $this->sanitize($alias);
@@ -3146,14 +3167,17 @@ abstract class BaseQueryComposer implements QueryComposer
                     throw new LogicException();
                 }
 
+                /** @noinspection PhpDeprecationInspection */
                 $alias = $this->sanitizeSelectAlias($alias);
             }
             else {
+                /** @noinspection PhpDeprecationInspection */
                 $alias = $alias === null ?
                     $this->sanitize($target) :
                     $this->sanitizeSelectAlias($alias);
             }
 
+            /** @noinspection PhpDeprecationInspection */
             $targetPart = is_string($target) ?
                 $this->quoteIdentifier($this->toDb($this->sanitize($target))) :
                 '(' . $this->composeSelecting($target) . ')';
@@ -3194,6 +3218,7 @@ abstract class BaseQueryComposer implements QueryComposer
             $alias = $relationName;
         }
 
+        /** @noinspection PhpDeprecationInspection */
         $alias = $this->sanitize($alias);
 
         $relationConditions = $this->getRelationParam($entity, $relationName, 'conditions');
@@ -3562,13 +3587,16 @@ abstract class BaseQueryComposer implements QueryComposer
             if (strpos($attribute, '.') > 0) {
                 [$alias, $attribute] = explode('.', $attribute);
 
+                /** @noinspection PhpDeprecationInspection */
                 $alias = $this->sanitize($alias);
+                /** @noinspection PhpDeprecationInspection */
                 $column = $this->toDb($this->sanitize($attribute));
 
                 $left = $this->quoteColumn("$alias.$column");
             }
             else {
                 $table = $this->toDb($entity->getEntityType());
+                /** @noinspection PhpDeprecationInspection */
                 $column = $this->toDb($this->sanitize($attribute));
 
                 $left = $this->quoteColumn("$table.$column");
@@ -3592,6 +3620,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $list = [];
 
         foreach ($columnList as $column) {
+            /** @noinspection PhpDeprecationInspection */
             $list[] = $this->quoteIdentifier(
                 $this->toDb(
                     $this->sanitize($column)
@@ -3625,6 +3654,7 @@ abstract class BaseQueryComposer implements QueryComposer
         $list = [];
 
         foreach ($values as $column => $value) {
+            /** @noinspection PhpDeprecationInspection */
             $list[] = $this->quoteIdentifier(
                 $this->toDb(
                     $this->sanitize($column)
