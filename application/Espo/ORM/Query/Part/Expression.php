@@ -124,6 +124,7 @@ class Expression implements WhereItem
      * Create an alias reference expression.
      *
      * @param string $expression Examples: `someAlias`, `subQueryAlias.someAlias`.
+     * @since 8.1.0
      */
     public static function alias(string $expression): self
     {
