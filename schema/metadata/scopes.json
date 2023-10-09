@@ -288,6 +288,13 @@
             "items": {
                 "type": "string"
             }
+        },
+        "duplicateCheckFieldList": {
+            "description": "Fields to be check for duplicates.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         }
     }
 }
