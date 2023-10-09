@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Suggest an idea for EspoCRM.
+about: Suggest an idea for EspoCRM. For high-level features, consider creating feature requests on the forum. For low-level (framework) – here on GitHub.
 title: ''
 labels: ''
 assignees: ''
