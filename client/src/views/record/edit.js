@@ -100,7 +100,7 @@ class EditRecordView extends DetailRecordView {
 
                 this.exit(isNew ? 'create' : 'save');
             })
-            .catch(() => {});
+            .catch(reason => Promise.reject(reason));
     }
 
     /**
