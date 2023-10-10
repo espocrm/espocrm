@@ -724,6 +724,7 @@ class CalendarView extends View {
         const height = this.getCalculatedHeight();
 
         this.calendar.setOption('contentHeight', height);
+        this.calendar.updateSize();
     }
 
     afterRender() {
