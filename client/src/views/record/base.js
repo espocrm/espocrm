@@ -224,7 +224,7 @@ class BaseRecordView extends View {
      * @param {boolean } [locked] To lock. Won't be able to un-set.
      */
     setFieldReadOnly(name, locked) {
-        let previousValue = this.recordHelper.getFieldStateParam(name, 'readOnly');
+        const previousValue = this.recordHelper.getFieldStateParam(name, 'readOnly');
 
         this.recordHelper.setFieldStateParam(name, 'readOnly', true);
 
@@ -232,7 +232,7 @@ class BaseRecordView extends View {
             this.recordHelper.setFieldStateParam(name, 'readOnlyLocked', true);
         }
 
-        let view = this.getFieldView(name);
+        const view = this.getFieldView(name);
 
         if (view) {
             view.setReadOnly(locked);
@@ -240,6 +240,27 @@ class BaseRecordView extends View {
 
         if (!previousValue) {
             this.trigger('set-field-read-only', name);
+        }
+
+        /**
+         * @todo
+         *   Move to fields/base. Listen to recordHelper 'field-change' (if recordHelper is available).
+         *   Same for set state methods.
+         *   Issue is that sometimes state is changed in between view initialization (for bottom views with fields).
+         */
+
+        if (!view && !this.isReady) {
+            this.once('ready', () => {
+                const view = this.getFieldView(name);
+
+                if (
+                    view &&
+                    !view.readOnly &&
+                    this.recordHelper.getFieldStateParam(name, 'readOnly')
+                ) {
+                    view.setReadOnly(locked);
+                }
+            })
         }
     }
 
@@ -249,27 +270,39 @@ class BaseRecordView extends View {
      * @param {string} name A field name.
      */
     setFieldNotReadOnly(name) {
-        let previousValue = this.recordHelper.getFieldStateParam(name, 'readOnly');
+        const previousValue = this.recordHelper.getFieldStateParam(name, 'readOnly');
 
         this.recordHelper.setFieldStateParam(name, 'readOnly', false);
 
-        let view = this.getFieldView(name);
+        const view = this.getFieldView(name);
 
-        if (view) {
-            if (view.readOnly) {
-                view.setNotReadOnly();
+        if (view && view.readOnly) {
+            view.setNotReadOnly();
 
-                if (this.mode === this.MODE_EDIT) {
-                    if (!view.readOnlyLocked && view.isDetailMode()) {
-                        view.setEditMode()
-                            .then(() => view.reRender());
-                    }
+            if (this.mode === this.MODE_EDIT) {
+                if (!view.readOnlyLocked && view.isDetailMode()) {
+                    view.setEditMode()
+                        .then(() => view.reRender());
                 }
             }
         }
 
         if (previousValue) {
             this.trigger('set-field-not-read-only', name);
+        }
+
+        if (!view && !this.isReady) {
+            this.once('ready', () => {
+                const view = this.getFieldView(name);
+
+                if (
+                    view &&
+                    view.readOnly &&
+                    !this.recordHelper.getFieldStateParam(name, 'readOnly')
+                ) {
+                    view.setNotReadOnly();
+                }
+            })
         }
     }
 
@@ -279,11 +312,11 @@ class BaseRecordView extends View {
      * @param {string} name A field name.
      */
     setFieldRequired(name) {
-        let previousValue = this.recordHelper.getFieldStateParam(name, 'required');
+        const previousValue = this.recordHelper.getFieldStateParam(name, 'required');
 
         this.recordHelper.setFieldStateParam(name, 'required', true);
 
-        let view = this.getFieldView(name);
+        const view = this.getFieldView(name);
 
         if (view) {
             view.setRequired();
@@ -300,11 +333,11 @@ class BaseRecordView extends View {
      * @param {string} name A field name.
      */
     setFieldNotRequired(name) {
-        let previousValue = this.recordHelper.getFieldStateParam(name, 'required');
+        const previousValue = this.recordHelper.getFieldStateParam(name, 'required');
 
         this.recordHelper.setFieldStateParam(name, 'required', false);
 
-        let view = this.getFieldView(name);
+        const view = this.getFieldView(name);
 
         if (view) {
             view.setNotRequired();
