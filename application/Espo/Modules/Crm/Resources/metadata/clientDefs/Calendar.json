@@ -9,5 +9,6 @@
     "modeList": ["month", "agendaWeek", "timeline", "agendaDay"],
     "sharedViewModeList": ["basicWeek", "month", "basicDay"],
     "additionalColorList": ["#AB78AD", "#CC9B45"],
-    "iconClass": "far fa-calendar-alt"
+    "iconClass": "far fa-calendar-alt",
+    "slotDuration": 30
 }

@@ -164,7 +164,6 @@ class CalendarView extends View {
         this.date = this.options.date || null;
         this.mode = this.options.mode || this.defaultMode;
         this.header = ('header' in this.options) ? this.options.header : this.header;
-        this.slotDuration = this.options.slotDuration || this.slotDuration;
 
         this.setupMode();
 
@@ -172,12 +171,19 @@ class CalendarView extends View {
 
         this.colors = Espo.Utils
             .clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors);
+
         this.modeList = this.getMetadata()
             .get('clientDefs.Calendar.modeList') || this.modeList;
+
         this.scopeList = this.getConfig()
             .get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
+
         this.allDayScopeList = this.getMetadata()
             .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
+
+        this.slotDuration = this.options.slotDuration ||
+            this.getMetadata().get('clientDefs.Calendar.slotDuration') ||
+            this.slotDuration;
 
         this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
 
