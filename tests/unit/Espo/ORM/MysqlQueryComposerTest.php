@@ -1930,7 +1930,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'withDeleted' => true
         ]));
         $expectedSql =
-            "SELECT IF('1' OR '0', '1', ' ') AS `IF:(OR:('1','0'),'1',' ')` FROM `comment`";
+            "SELECT IF(('1' OR '0'), '1', ' ') AS `IF:(OR:('1','0'),'1',' ')` FROM `comment`";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -2498,6 +2498,31 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "FROM `test_where` ".
             "WHERE test_where.test = 4";
 
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testWhereExpression5(): void
+    {
+        $expectedSql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "WHERE ((1 OR 0) AND 1)";
+
+        $query = SelectBuilder::create()
+            ->from('Post')
+            ->select('id')
+            ->where(
+                Expression::and(
+                    Expression::or(
+                        Expression::value(1),
+                        Expression::value(0)
+                    ),
+                    Expression::value(1)
+                )
+            )
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
         $this->assertEquals($expectedSql, $sql);
     }
 
