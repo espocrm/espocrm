@@ -72,6 +72,23 @@ class View extends BullView {
      */
 
     /**
+     * When the view is ready. Can be useful to prevent race condition when re-initialization is needed
+     * in-between initialization and render.
+     *
+     * @return Promise
+     * @todo Move to Bull.View.
+     */
+    whenReady() {
+        if (this.isReady) {
+            return Promise.resolve();
+        }
+
+        return new Promise(resolve => {
+            this.once('ready', () => resolve());
+        });
+    }
+
+    /**
      * Add a DOM click event handler for a target defined by `data-action="{name}"` attribute.
      *
      * @param {string} action An action name.

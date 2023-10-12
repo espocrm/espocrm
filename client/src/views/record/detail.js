@@ -636,6 +636,8 @@ class DetailRecordView extends BaseRecordView {
                 if (modeBeforeSave === this.MODE_EDIT && reason === 'error') {
                     this.setEditMode();
                 }
+
+                return Promise.reject(reason);
             });
 
         if (!this.lastSaveCancelReason || this.lastSaveCancelReason === 'notModified') {

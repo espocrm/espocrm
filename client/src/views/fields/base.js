@@ -892,6 +892,18 @@ class BaseFieldView extends View {
                     }
                 };
 
+                if (!this.isReady) {
+                    this.once('ready', () => {
+                        const promise = this.prepare();
+
+                        if (promise) {
+                            promise.then(() => reRender());
+                        }
+                    });
+
+                    return;
+                }
+
                 let promise = this.prepare();
 
                 if (promise) {

@@ -37,6 +37,9 @@ use Espo\Core\AclManager;
 use Espo\Core\Portal\AclManagerContainer as PortalAclManagerContainer;
 use Espo\Core\ApplicationState;
 
+/**
+ * @todo Use WeakMap (User as a key).
+ */
 class UserAclManagerProvider
 {
     /** @var array<string, AclManager> */

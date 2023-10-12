@@ -981,7 +981,7 @@ abstract class BaseQueryComposer implements QueryComposer
         }
 
         if (in_array($function, ['OR', 'AND'])) {
-            return implode(' ' . $function . ' ', $argumentPartList);
+            return '(' . implode(' ' . $function . ' ', $argumentPartList) . ')';
         }
 
         if (!$isBuiltIn && $this->functionConverterFactory) {

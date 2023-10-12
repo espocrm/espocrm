@@ -288,6 +288,13 @@
             "items": {
                 "type": "string"
             }
+        },
+        "duplicateCheckFieldList": {
+            "description": "Fields to be check for duplicates. Requires recordDefs > duplicateWhereBuilderClassName set to Espo\\Classes\\DuplicateWhereBuilders\\General.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         }
     }
 }

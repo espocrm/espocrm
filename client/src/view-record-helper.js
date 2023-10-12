@@ -103,6 +103,8 @@ class ViewRecordHelper {
 
         this.fieldStateMap[field] = this.fieldStateMap[field] || {};
         this.fieldStateMap[field][name] = value;
+
+        this.trigger('field-change');
     }
 
     /**
