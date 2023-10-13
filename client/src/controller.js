@@ -42,6 +42,7 @@ import $ from 'jquery';
  * @param {module:views/site/master} view A master view.
  */
 
+
 /**
  * A controller. To be extended.
  *
@@ -447,6 +448,28 @@ class Controller {
     }
 
     /**
+     * @param {module:views/site/master} masterView
+     * @private
+     */
+    _unchainMainView(masterView) {
+        if (
+            !masterView.currentViewKey ||
+            !this.hasStoredMainView(masterView.currentViewKey)
+        ) {
+            return;
+        }
+
+        const currentMainView = masterView.getView('main');
+
+        if (!currentMainView) {
+            return;
+        }
+
+        currentMainView.propagateEvent('remove', {ignoreCleaning: true});
+        masterView.unchainView('main');
+    }
+
+    /**
      * @typedef {Object} module:controller~mainParams
      * @property {boolean} [useStored] Use a stored view if available.
      * @property {string} [key] A stored view key.
@@ -524,6 +547,8 @@ class Controller {
             }
 
             if (mainView) {
+                this._unchainMainView(masterView);
+
                 masterView.assignView('main', mainView, selector)
                     .then(() => {
                         dto.isSet = true;
@@ -573,15 +598,7 @@ class Controller {
         if (masterView.currentViewKey) {
             this.set('storedScrollTop-' + masterView.currentViewKey, $(window).scrollTop());
 
-            if (this.hasStoredMainView(masterView.currentViewKey)) {
-                let mainView = masterView.getView('main');
-
-                if (mainView) {
-                    mainView.propagateEvent('remove', {ignoreCleaning: true});
-                }
-
-                masterView.unchainView('main');
-            }
+            this._unchainMainView(masterView);
         }
 
         masterView.currentViewKey = key;
