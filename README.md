@@ -6,7 +6,7 @@
 software that allows you to see, enter and evaluate all your company relationships regardless
 of the type. People, companies or opportunities – all in an easy and intuitive interface.
 
-It's a web application with a frontend designed as a single page application and REST API
+It's a web application with a frontend designed as a single page application and a REST API
 backend written in PHP.
 
 [Download](https://www.espocrm.com/download/) the latest release from our website. Release notes
