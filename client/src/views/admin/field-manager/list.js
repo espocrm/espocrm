@@ -55,7 +55,9 @@ define('views/admin/field-manager/list', ['view'], function (Dep) {
         setup: function () {
             this.scope = this.options.scope;
 
-            this.isCustomizable = !!this.getMetadata().get(`scopes.${this.scope}.customizable`);
+            this.isCustomizable =
+                !!this.getMetadata().get(`scopes.${this.scope}.customizable`) &&
+                this.getMetadata().get(`scopes.${this.scope}.entityManager.fields`) !== false;
 
             this.hasAddField = true;
 
