@@ -53,7 +53,7 @@ class Help implements Command
         $commandList = array_filter(
             $fullCommandList,
             function ($item): bool {
-                return (bool) $this->metadata->get(['app', 'consoleCommands', $item]);
+                return (bool) $this->metadata->get(['app', 'consoleCommands', $item, 'listed']);
             }
         );
 
