@@ -496,7 +496,7 @@
 
             let up = 0;
 
-            for (let part of parts) {
+            for (const part of parts) {
                 if (part === '..') {
                     up++;
 
