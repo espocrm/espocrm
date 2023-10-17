@@ -1211,6 +1211,8 @@ class Import
             }
         }
 
+        ksort($o);
+
         return $o;
     }
 
