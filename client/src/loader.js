@@ -28,7 +28,7 @@
 
 (function () {
 
-    let root = this;
+    const root = this;
 
     if (!root.Espo) {
         root.Espo = {};
@@ -207,7 +207,7 @@
             this._definedMap[id] = value;
 
             if (id.slice(0, 4) === 'lib!') {
-                let libName = id.slice(4);
+                const libName = id.slice(4);
 
                 const libsData = this._libsConfig[libName];
 
@@ -263,7 +263,7 @@
             /** @var {?string} */
             let module = null;
 
-            let colonIndex = id.indexOf(':');
+            const colonIndex = id.indexOf(':');
 
             if (colonIndex > 0) {
                 module = id.substring(0, colonIndex);
@@ -274,13 +274,13 @@
             if (!module && id.indexOf('lib!') === 0) {
                 noStrictMode = true;
 
-                let realName = id.substring(4);
+                const realName = id.substring(4);
 
-                let libsData = this._libsConfig[realName] || {};
+                const libsData = this._libsConfig[realName] || {};
 
                 if (!this._isDeveloperMode) {
                     if (libsData.sourceMap) {
-                        let realPath = path.split('?')[0];
+                        const realPath = path.split('?')[0];
 
                         script += `\n//# sourceMappingURL=${this._baseUrl + realPath}.map`;
                     }
@@ -433,7 +433,7 @@
 
             if (totalCount) {
                 let readyCount = 0;
-                let loaded = {};
+                const loaded = {};
 
                 list.forEach(depId => {
                     this._load(depId, c => {
@@ -476,7 +476,7 @@
          * @private
          */
         _normalizeIdPath(id, subjectId) {
-            if (id.at(0) !== '.') {
+            if (id.charAt(0) !== '.') {
                 return id;
             }
 
@@ -486,13 +486,13 @@
 
             let outputPath = id;
 
-            let dirParts = subjectId.split('/').slice(0, -1);
+            const dirParts = subjectId.split('/').slice(0, -1);
 
             if (id.slice(0, 2) === './') {
                 outputPath = dirParts.join('/') + '/' + id.slice(2);
             }
 
-            let parts = outputPath.split('/');
+            const parts = outputPath.split('/');
 
             let up = 0;
 
@@ -527,7 +527,7 @@
                 return id;
             }
 
-            let [mod, part] = id.split(':');
+            const [mod, part] = id.split(':');
 
             return `modules/${mod}/${part}`;
         }
@@ -548,9 +548,9 @@
 
             if (!!/[A-Z]/.exec(id[0])) {
                 if (id.indexOf(':') !== -1) {
-                    let arr = id.split(':');
-                    let modulePart = arr[0];
-                    let namePart = arr[1];
+                    const arr = id.split(':');
+                    const modulePart = arr[0];
+                    const namePart = arr[1];
 
                     return this._convertCamelCaseToHyphen(modulePart) + ':' +
                         this._convertCamelCaseToHyphen(namePart)
@@ -564,10 +564,10 @@
             if (id.startsWith('modules/')) {
                 id = id.slice(8);
 
-                let index = id.indexOf('/');
+                const index = id.indexOf('/');
 
                 if (index > 0) {
-                    let mod = id.slice(0, index);
+                    const mod = id.slice(0, index);
                     id = id.slice(index + 1);
 
                     return mod + ':' + id;
@@ -688,7 +688,7 @@
                     throw new Error("Can't load with empty module ID.");
                 }
 
-                let value = this._get(id);
+                const value = this._get(id);
 
                 if (typeof value !== 'undefined') {
                     callback(value);
@@ -696,7 +696,7 @@
                     return;
                 }
 
-                let restoredId = this._restoreId(id);
+                const restoredId = this._restoreId(id);
 
                 if (restoredId in this._bundleMapping) {
                     let bundleName = this._bundleMapping[restoredId];
@@ -727,7 +727,7 @@
             }
 
             /** @type {Loader~dto} */
-            let dto = {
+            const dto = {
                 id: id,
                 type: type,
                 dataType: dataType,
@@ -752,12 +752,12 @@
             if (this._cacheTimestamp) {
                 useCache = true;
 
-                let sep = (path.indexOf('?') > -1) ? '&' : '?';
+                const sep = (path.indexOf('?') > -1) ? '&' : '?';
 
                 path += sep + 'r=' + this._cacheTimestamp;
             }
 
-            let url = this._basePath + path;
+            const url = this._basePath + path;
 
             dto.path = path;
             dto.url = url;
@@ -793,7 +793,7 @@
                 return this._bundlePromiseMap[name];
             }
 
-            let dependencies = this._bundleDependenciesMap[name] || [];
+            const dependencies = this._bundleDependenciesMap[name] || [];
 
             if (!dependencies.length) {
                 this._bundlePromiseMap[name] = this._addBundle(name);
@@ -838,7 +838,7 @@
 
             src = this._basePath + src;
 
-            let scriptEl = document.createElement('script');
+            const scriptEl = document.createElement('script');
 
             scriptEl.setAttribute('type', 'text/javascript')
             scriptEl.setAttribute('src', src);
@@ -865,7 +865,7 @@
                 from = root;
             }
             else {
-                for (let item of exportsTo.split('.')) {
+                for (const item of exportsTo.split('.')) {
                     from = from[item];
 
                     if (typeof from === 'undefined') {
@@ -886,12 +886,12 @@
          * @param {Loader~dto} dto
          */
         _processRequest(dto) {
-            let url = dto.url;
-            let errorCallback = dto.errorCallback;
-            let path = dto.path;
-            let useCache = dto.useCache;
+            const url = dto.url;
+            const errorCallback = dto.errorCallback;
+            const path = dto.path;
+            const useCache = dto.useCache;
 
-            let urlObj = new URL(this._baseUrl + url);
+            const urlObj = new URL(this._baseUrl + url);
 
             if (!useCache) {
                 urlObj.searchParams.append('_', Date.now().toString())
@@ -934,13 +934,13 @@
          * @param {string} text
          */
         _handleResponseText(dto, text) {
-            let id = dto.id;
-            let callback = dto.callback;
-            let type = dto.type;
-            let dataType = dto.dataType;
-            let exportsAs = dto.exportsAs;
-            let exportsTo = dto.exportsTo;
-            let suppressAmd = dto.suppressAmd;
+            const id = dto.id;
+            const callback = dto.callback;
+            const type = dto.type;
+            const dataType = dto.dataType;
+            const exportsAs = dto.exportsAs;
+            const exportsTo = dto.exportsTo;
+            const suppressAmd = dto.suppressAmd;
 
             this._addLoadCallback(id, callback);
 
