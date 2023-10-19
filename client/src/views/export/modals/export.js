@@ -64,7 +64,13 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
             this.scope = this.options.scope;
 
             if (this.options.fieldList) {
-                this.model.set('fieldList', this.options.fieldList);
+                const fieldList = this.options.fieldList
+                    .filter(field => {
+                        return !this.getMetadata()
+                            .get(`entityDefs.${this.scope}.fields.${field}.exportDisabled`);
+                    });
+
+                this.model.set('fieldList', fieldList);
                 this.model.set('exportAllFields', false);
             } else {
                 this.model.set('exportAllFields', true);
