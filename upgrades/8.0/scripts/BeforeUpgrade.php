@@ -64,7 +64,6 @@ class BeforeUpgrade
         throw new Error($message);
     }
 
-    /** @noinspection PhpSameParameterValueInspection */
     private function processCheckExtension(string $name, string $minVersion, array &$errorMessageList): void
     {
         $em = $this->container->get('entityManager');
