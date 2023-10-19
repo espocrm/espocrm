@@ -1442,7 +1442,7 @@ class App {
             files.push(file);
         });
 
-        let baseUrl = window.location.origin + window.location.pathname;
+        let baseUrl = Espo.Utils.obtainBaseUrl();
         let timestamp = this.loader.getCacheTimestamp();
 
         let promiseList = files.map(file => {

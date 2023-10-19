@@ -99,7 +99,15 @@
             this._internalModuleMap = {};
             this._isDeveloperMode = false;
 
-            this._baseUrl = window.location.origin + window.location.pathname;
+            let baseUrl = window.location.origin + window.location.pathname;
+
+            if (baseUrl.slice(-1) !== '/') {
+                baseUrl = window.location.pathname.includes('.') ?
+                    baseUrl.slice(0, baseUrl.lastIndexOf('/')) + '/' :
+                    baseUrl + '/';
+            }
+
+            this._baseUrl = baseUrl;
 
             this._isDeveloperModeIsSet = false;
             this._basePathIsSet = false;

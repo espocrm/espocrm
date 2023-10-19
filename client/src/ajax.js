@@ -62,7 +62,7 @@ let onTimeout;
  * @property {boolean} [resolveWithXhr] To resolve with `XMLHttpRequest`.
  */
 
-const baseUrl = window.location.origin + window.location.pathname;
+const baseUrl = Espo.Utils.obtainBaseUrl();
 
 // noinspection JSUnusedGlobalSymbols
 /**
