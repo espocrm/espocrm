@@ -157,11 +157,12 @@ class WysiwygFieldView extends TextFieldView {
     }
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.useIframe = this.useIframe;
         data.isPlain = this.isPlain();
 
+        // noinspection JSValidateTypes
         return data;
     }
 
@@ -299,7 +300,8 @@ class WysiwygFieldView extends TextFieldView {
 
         let $iframe = this.$el.find('iframe');
 
-        let iframeElement = this.iframe = $iframe.get(0);
+        /** @type {HTMLIFrameElement} */
+        const iframeElement = this.iframe = $iframe.get(0);
 
         if (!iframeElement) {
             return;
@@ -370,10 +372,9 @@ class WysiwygFieldView extends TextFieldView {
 
         // Make shortcuts working.
         $document.on('keydown', e => {
-            /** @var {KeyboardEvent} originalEvent */
-            let originalEvent = e.originalEvent;
+            const originalEvent = /** @type {KeyboardEvent} */ e.originalEvent;
 
-            let event = new KeyboardEvent('keydown', {
+            const event = new KeyboardEvent('keydown', {
                 bubbles: true,
                 code: originalEvent.code,
                 ctrlKey: originalEvent.ctrlKey,
@@ -464,7 +465,7 @@ class WysiwygFieldView extends TextFieldView {
             let height = $body.height();
 
             if (height === 0) {
-                height = $body.children(0).height() + 100;
+                height = $body.children().height() + 100;
             }
 
             iframeElement.style.height = height + 'px';
@@ -541,17 +542,18 @@ class WysiwygFieldView extends TextFieldView {
         delete keyMap.pc['CTRL+BACKSLASH'];
         delete keyMap.mac['CMD+BACKSLASH'];
 
-        let toolbar = this.toolbar;
+        const toolbar = this.toolbar;
 
         let lastChangeKeydown = new Date();
         const changeKeydownInterval = this.changeInterval * 1000;
 
-        let options = {
+        // noinspection JSUnusedGlobalSymbols
+        const options = {
             espoView: this,
             lang: this.getConfig().get('language'),
             keyMap: keyMap,
             callbacks: {
-                onImageUpload: (files) =>  {
+                onImageUpload: (files) => {
                     let file = files[0];
 
                     Espo.Ui.notify(this.translate('Uploading...'));
@@ -745,14 +747,15 @@ class WysiwygFieldView extends TextFieldView {
     }
 
     onScrollEdit(e) {
-        let $target = $(e.target);
-        let toolbarHeight = this.$toolbar.height();
-        let toolbarWidth = this.$toolbar.parent().width();
+        const $target = $(e.target);
+        const toolbarHeight = this.$toolbar.height();
+        const toolbarWidth = this.$toolbar.parent().width();
         let edgeTop, edgeTopAbsolute;
 
+        // noinspection JSIncompatibleTypesComparison
         if ($target.get(0) === window.document) {
-            let $buttonContainer = $target.find('.detail-button-container:not(.hidden)');
-            let offset = $buttonContainer.offset();
+            const $buttonContainer = $target.find('.detail-button-container:not(.hidden)');
+            const offset = $buttonContainer.offset();
 
             if (offset) {
                 edgeTop = offset.top + $buttonContainer.height();
@@ -996,8 +999,8 @@ class WysiwygFieldView extends TextFieldView {
             },
 
             'fullscreen': function (context) {
-                let options = context.options;
-                let self = options.espoView;
+                const options = context.options;
+                const self = options.espoView;
                 //let lang = options.langInfo;
                 //let ui = $.summernote.ui;
 
@@ -1018,11 +1021,14 @@ class WysiwygFieldView extends TextFieldView {
                     this.isInModal = this.$modal.length > 0;
                 };
 
+
                 this.resizeTo = function (size) {
                     this.$editable.css('height', size.h);
                     this.$codable.css('height', size.h);
 
+                    // noinspection SpellCheckingInspection
                     if (this.$codable.data('cmeditor')) {
+                        // noinspection SpellCheckingInspection,JSUnresolvedReference
                         this.$codable.data('cmeditor').setsize(null, size.h);
                     }
                 };
@@ -1067,6 +1073,7 @@ class WysiwygFieldView extends TextFieldView {
                             this.$scrollbar.css('overflow', 'hidden');
                         }
 
+                        // noinspection JSUnusedGlobalSymbols
                         this._isFullscreen = true;
                     }
                     else {
@@ -1080,6 +1087,7 @@ class WysiwygFieldView extends TextFieldView {
                             this.$scrollbar.css('overflow', '');
                         }
 
+                        // noinspection JSUnusedGlobalSymbols
                         this._isFullscreen = false;
                     }
 
