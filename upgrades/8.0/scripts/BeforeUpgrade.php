@@ -52,6 +52,7 @@ class BeforeUpgrade
     {
         $errorMessageList = [];
 
+        $this->processCheckExtension('Advanced Pack', '3.0.0', $errorMessageList);
         $this->processCheckExtension('Google Integration', '1.6.0', $errorMessageList);
 
         if (!count($errorMessageList)) {
