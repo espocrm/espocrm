@@ -49,6 +49,7 @@ class WysiwygFieldView extends TextFieldView {
     fetchEmptyValueAsNull = false
     validationElementSelector = '.note-editor'
     htmlPurificationDisabled = false
+    tableClassName = 'table table-bordered'
 
     events = {
         /** @this WysiwygFieldView */
@@ -583,6 +584,7 @@ class WysiwygFieldView extends TextFieldView {
             buttons: this.buttons,
             dialogsInBody: this.$el,
             codeviewFilter: true,
+            tableClassName: this.tableClassName,
         };
 
         if (this.height) {
