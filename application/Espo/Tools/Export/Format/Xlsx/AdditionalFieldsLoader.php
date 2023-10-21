@@ -34,6 +34,9 @@ use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\Tools\Export\AdditionalFieldsLoader as AdditionalFieldsLoaderInterface;
 
+/**
+ * @noinspection PhpUnused
+ */
 class AdditionalFieldsLoader implements AdditionalFieldsLoaderInterface
 {
     public function __construct(private Metadata $metadata)
@@ -76,7 +79,7 @@ class AdditionalFieldsLoader implements AdditionalFieldsLoaderInterface
                 ->get(['entityDefs', $entity->getEntityType(), 'fields', $field, 'type']);
 
             if ($fieldType === 'linkMultiple' || $fieldType === 'attachmentMultiple') {
-                if (!$entity->has($field . 'Ids')) {
+                if (!$entity->has($field . 'Ids') && $entity->hasLinkMultipleField($field)) {
                     $entity->loadLinkMultipleField($field);
                 }
             }

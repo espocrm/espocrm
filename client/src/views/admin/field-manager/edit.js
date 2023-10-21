@@ -399,7 +399,14 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
             this.isNew = !this.field;
 
-            if (!this.getMetadata().get(['scopes', this.scope, 'customizable'])) {
+            if (
+                !this.getMetadata().get(['scopes', this.scope, 'customizable']) ||
+                this.getMetadata().get(`scopes.${this.scope}.entityManager.fields`) === false ||
+                (
+                    this.field &&
+                    this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.field}.customizationDisabled`)
+                )
+            ) {
                 Espo.Ui.notify(false);
 
                 throw new Espo.Exceptions.NotFound("Entity type is not customizable.");

@@ -62,7 +62,10 @@ class EntityManagerFormulaView extends View {
         }
 
 
-        if (!this.getMetadata().get(['scopes', this.scope, 'customizable'])) {
+        if (
+            !this.getMetadata().get(['scopes', this.scope, 'customizable']) ||
+            this.getMetadata().get(`scopes.${this.scope}.entityManager.formula`) === false
+        ) {
             throw new Espo.Exceptions.NotFound("Entity type is not customizable.");
         }
 

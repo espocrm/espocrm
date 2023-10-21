@@ -345,7 +345,13 @@ class EntityManagerEditView extends View {
             this.isCustom = this.getMetadata().get(['scopes', scope, 'isCustom'])
         }
 
-        if (this.scope && !this.getMetadata().get(`scopes.${scope}.customizable`)) {
+        if (
+            this.scope &&
+            (
+                !this.getMetadata().get(`scopes.${scope}.customizable`) ||
+                this.getMetadata().get(`scopes.${scope}.entityManager.edit`) === false
+            )
+        ) {
             throw new Espo.Exceptions.NotFound("The entity type is not customizable.");
         }
 

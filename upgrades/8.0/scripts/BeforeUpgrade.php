@@ -52,6 +52,7 @@ class BeforeUpgrade
     {
         $errorMessageList = [];
 
+        $this->processCheckExtension('Advanced Pack', '3.0.0', $errorMessageList);
         $this->processCheckExtension('Google Integration', '1.6.0', $errorMessageList);
 
         if (!count($errorMessageList)) {
@@ -63,7 +64,6 @@ class BeforeUpgrade
         throw new Error($message);
     }
 
-    /** @noinspection PhpSameParameterValueInspection */
     private function processCheckExtension(string $name, string $minVersion, array &$errorMessageList): void
     {
         $em = $this->container->get('entityManager');

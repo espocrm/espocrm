@@ -283,6 +283,10 @@ class OpenSpoutProcessor implements ProcessorInterface
             return $value;
         }
 
+        if (is_numeric($value)) {
+            return $value;
+        }
+
         if (in_array($value[0], ['+', '-', '@', '='])) {
             return "'" . $value;
         }

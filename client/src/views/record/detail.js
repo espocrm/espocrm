@@ -57,6 +57,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {string} [inlineEditDisabled] Disable inline edit.
      * @property {string} [navigateButtonsDisabled]
      * @property {Object} [dynamicLogicDefs]
+     * @property {module:view-record-helper} [recordHelper] A record helper. For a form state management.
      * @property {Object.<string, *>} [attributes]
      * @property {module:views/record/detail~button[]} [buttonList] Buttons.
      * @property {module:views/record/detail~dropdownItem[]} [dropdownItemList] Dropdown items.
@@ -1866,7 +1867,8 @@ class DetailRecordView extends BaseRecordView {
             throw new Error('Model has not been injected into record view.');
         }
 
-        this.recordHelper = new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
+        this.recordHelper = this.options.recordHelper ||
+            new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
 
         this._initInlineEditSave();
 

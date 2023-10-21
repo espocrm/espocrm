@@ -30,6 +30,7 @@
 namespace Espo\Tools\Export;
 
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\Tools\Export\Collection as ExportCollection;
 use Espo\Tools\Export\Processor\Params as ProcessorParams;
 use Espo\ORM\Entity;
@@ -72,7 +73,8 @@ class Export
         private FileStorageManager $fileStorageManager,
         private ListLoadProcessor $listLoadProcessor,
         private FieldUtil $fieldUtil,
-        private User $user
+        private User $user,
+        private ApplierClassNameListProvider $applierClassNameListProvider
     ) {}
 
     public function setParams(Params $params): self
@@ -174,7 +176,7 @@ class Export
 
         $fileName = $fileName ?
             $fileName . '.' . $fileExtension :
-            "Export_{$entityType}.{$fileExtension}";
+            "Export_$entityType.$fileExtension";
 
         $processorParams = (new ProcessorParams($fileName, $attributeList, $fieldList))
             ->withName($params->getName())
@@ -291,6 +293,9 @@ class Export
             ->create()
             ->forUser($this->user)
             ->from($entityType)
+            ->withAdditionalApplierClassNameList(
+                $this->applierClassNameListProvider->get($entityType)
+            )
             ->withSearchParams($searchParams);
 
         if ($params->applyAccessControl()) {

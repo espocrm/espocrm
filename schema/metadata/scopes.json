@@ -295,6 +295,36 @@
             "items": {
                 "type": "string"
             }
+        },
+        "entityManager": {
+            "description": "Entity manager items availability.",
+            "type": "object",
+            "properties": {
+                "layouts": {
+                    "type": "boolean",
+                    "description": "Layouts."
+                },
+                "edit": {
+                    "type": "boolean",
+                    "description": "Edit the entity."
+                },
+                "formula": {
+                    "type": "boolean",
+                    "description": "Formula scripts."
+                },
+                "fields": {
+                    "type": "boolean",
+                    "description": "Fields."
+                },
+                "relationships": {
+                    "type": "boolean",
+                    "description": "Relationships."
+                },
+                "addField": {
+                    "type": "boolean",
+                    "description": "The ability to add new fields."
+                }
+            }
         }
     }
 }

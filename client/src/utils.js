@@ -662,6 +662,23 @@ Espo.Utils = {
     generateId: function () {
         return (Math.floor(Math.random() * 10000001)).toString()
     },
+
+    /**
+     * Not to be used in custom code. Can be removed in future versions.
+     * @internal
+     * @return {string}
+     */
+    obtainBaseUrl: function () {
+        let baseUrl = window.location.origin + window.location.pathname;
+
+        if (baseUrl.slice(-1) !== '/') {
+            baseUrl = window.location.pathname.includes('.') ?
+                baseUrl.slice(0, baseUrl.lastIndexOf('/')) + '/' :
+                baseUrl + '/';
+        }
+
+        return baseUrl;
+    }
 };
 
 const keyMap = {

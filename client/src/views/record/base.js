@@ -618,7 +618,7 @@ class BaseRecordView extends View {
         }
 
         /** @type {module:view-record-helper} */
-        this.recordHelper = new ViewRecordHelper();
+        this.recordHelper = this.options.recordHelper || new ViewRecordHelper();
 
         this.dynamicLogicDefs = this.options.dynamicLogicDefs || this.dynamicLogicDefs;
 

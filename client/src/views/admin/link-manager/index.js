@@ -117,7 +117,9 @@ class LinkManagerIndexView extends View {
     setupLinkData() {
         this.linkDataList = [];
 
-        this.isCustomizable = !!this.getMetadata().get(`scopes.${this.scope}.customizable`);
+        this.isCustomizable =
+            !!this.getMetadata().get(`scopes.${this.scope}.customizable`) &&
+            this.getMetadata().get(`scopes.${this.scope}.entityManager.relationships`) !== false;
 
         const links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
 
