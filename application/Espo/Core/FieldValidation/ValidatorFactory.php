@@ -31,6 +31,7 @@ namespace Espo\Core\FieldValidation;
 
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\FieldUtil;
 
 use Espo\ORM\Entity;
 use RuntimeException;
@@ -40,7 +41,8 @@ class ValidatorFactory
 
     public function __construct(
         private InjectableFactory $injectableFactory,
-        private Metadata $metadata
+        private Metadata $metadata,
+        private FieldUtil $fieldUtil
     ) {}
 
     public function isCreatable(string $entityType, string $field, string $type): bool
@@ -67,9 +69,11 @@ class ValidatorFactory
      */
     private function getClassName(string $entityType, string $field, string $type): ?string
     {
+        $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
+
         return
             $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'validatorClassNameMap', $type]) ??
-            $this->metadata->get(['fields', $field, 'validatorClassNameMap', $type]);
+            $this->metadata->get(['fields', $fieldType, 'validatorClassNameMap', $type]);
     }
 
     /**
