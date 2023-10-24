@@ -69,11 +69,12 @@ class ValidatorFactory
      */
     private function getClassName(string $entityType, string $field, string $type): ?string
     {
+        /** @var ?string $fieldType */
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
 
         return
             $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'validatorClassNameMap', $type]) ??
-            $this->metadata->get(['fields', $fieldType, 'validatorClassNameMap', $type]);
+            $this->metadata->get(['fields', $fieldType ?? '', 'validatorClassNameMap', $type]);
     }
 
     /**

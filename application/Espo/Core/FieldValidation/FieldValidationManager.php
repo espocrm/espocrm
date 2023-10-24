@@ -138,11 +138,12 @@ class FieldValidationManager
      */
     private function getMandatoryValidationList(string $entityType, string $field): array
     {
+        /** @var ?string $fieldType */
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
 
         return
             $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'mandatoryValidationList']) ??
-            $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList']) ?? [];
+            $this->metadata->get(['fields', $fieldType ?? '', 'mandatoryValidationList']) ?? [];
     }
 
     /**
@@ -150,11 +151,12 @@ class FieldValidationManager
      */
     private function getValidationList(string $entityType, string $field): array
     {
+        /** @var ?string $fieldType */
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
 
         return
             $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'validationList']) ??
-            $this->metadata->get(['fields', $fieldType, 'validationList']) ?? [];
+            $this->metadata->get(['fields', $fieldType ?? '', 'validationList']) ?? [];
     }
 
     /**
