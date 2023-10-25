@@ -125,7 +125,11 @@ class RelationshipPanelView extends BottomPanelView {
         this.filterList = this.defs.filterList || this.filterList || null;
 
         if (this.filterList && this.filterList.length) {
-            this.filter = this.getStoredFilter();
+            this.filter = this.getStoredFilter() || this.filterList[0];
+
+            if (this.filter === 'all') {
+                this.filter = null;
+            }
         }
 
         this.setupTitle();
