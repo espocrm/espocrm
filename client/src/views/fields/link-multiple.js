@@ -1008,7 +1008,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             return Promise.resolve({
                 primary: this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName,
                 bool: boolFilterList,
-                advanced: this.getSelectFilters() || this.panelDefs.selectPrimaryFilterName || undefined,
+                advanced: this.getSelectFilters() || undefined,
             });
         }
 
