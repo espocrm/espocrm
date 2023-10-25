@@ -102,6 +102,11 @@ class UserFieldView extends LinkFieldView {
 
 
             $elementTeams.autocomplete({
+                beforeRender: $c => {
+                    if (this.$elementName.hasClass('input-sm')) {
+                        $c.addClass('small');
+                    }
+                },
                 serviceUrl: () => {
                     return 'Team?&maxSize=' + this.getAutocompleteMaxCount() + '&select=id,name';
                 },
