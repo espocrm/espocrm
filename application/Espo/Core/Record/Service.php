@@ -277,7 +277,9 @@ class Service implements Crud,
                 ->create()
                 ->from($this->entityType)
                 ->withSearchParams(
-                    SearchParams::create()->withSelect(['*'])
+                    SearchParams::create()
+                        ->withSelect(['*'])
+                        ->withPrimaryFilter('one')
                 )
                 ->withAdditionalApplierClassNameList(
                     $this->createSelectApplierClassNameListProvider()->get($this->entityType)
