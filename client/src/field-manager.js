@@ -129,9 +129,9 @@ class FieldManager {
      * @returns {string[]}
      */
     getEntityTypeAttributeList(entityType) {
-        let list = [];
+        const list = [];
 
-        let defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
+        const defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
 
         Object.keys(defs).forEach(field => {
             this.getAttributeList(defs[field]['type'], field).forEach(attr => {
@@ -154,11 +154,11 @@ class FieldManager {
      * @returns {string[]}
      */
     getActualAttributeList(fieldType, fieldName) {
-        let fieldNames = [];
+        const fieldNames = [];
 
         if (fieldType in this.defs) {
             if ('actualFields' in this.defs[fieldType]) {
-                let actualFields = this.defs[fieldType].actualFields;
+                const actualFields = this.defs[fieldType].actualFields;
 
                 let naming = 'suffix';
 
@@ -195,11 +195,11 @@ class FieldManager {
      * @returns {string[]}
      */
     getNotActualAttributeList(fieldType, fieldName) {
-        let fieldNames = [];
+        const fieldNames = [];
 
         if (fieldType in this.defs) {
             if ('notActualFields' in this.defs[fieldType]) {
-                let notActualFields = this.defs[fieldType].notActualFields;
+                const notActualFields = this.defs[fieldType].notActualFields;
 
                 let naming = 'suffix';
 
@@ -236,7 +236,7 @@ class FieldManager {
      * @returns {string[]}
      */
     getEntityTypeFieldAttributeList(entityType, field) {
-        let type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
+        const type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
 
         if (!type) {
             return [];
@@ -256,7 +256,7 @@ class FieldManager {
      * @returns {string[]}
      */
     getEntityTypeFieldActualAttributeList(entityType, field) {
-        let type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
+        const type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
 
         if (!type) {
             return [];
@@ -272,22 +272,22 @@ class FieldManager {
      * @private
      */
     _getEntityTypeFieldAdditionalAttributeList(entityType, field) {
-        let type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
+        const type = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
 
         if (!type) {
             return [];
         }
 
-        let partList = this.metadata
+        const partList = this.metadata
             .get(['entityDefs', entityType, 'fields', field, 'additionalAttributeList']) || [];
 
         if (partList.length === 0) {
             return [];
         }
 
-        let isPrefix = (this.defs[type] || {}).naming === 'prefix';
+        const isPrefix = (this.defs[type] || {}).naming === 'prefix';
 
-        let list = [];
+        const list = [];
 
         partList.forEach(item => {
             if (isPrefix) {
@@ -346,7 +346,7 @@ class FieldManager {
 
         if (typeList) {
             list = list.filter(item => {
-                let type = this.metadata.get(['entityDefs', entityType, 'fields', item, 'type']);
+                const type = this.metadata.get(['entityDefs', entityType, 'fields', item, 'type']);
 
                 return ~typeList.indexOf(type);
             });
@@ -359,9 +359,9 @@ class FieldManager {
         }
 
         if (o.acl) {
-            let level = o.acl || 'read';
+            const level = o.acl || 'read';
 
-            let forbiddenEditFieldList = this.acl.getScopeForbiddenFieldList(entityType, level);
+            const forbiddenEditFieldList = this.acl.getScopeForbiddenFieldList(entityType, level);
 
             list = list.filter(item => {
                 return !~forbiddenEditFieldList.indexOf(item);
@@ -442,7 +442,7 @@ class FieldManager {
      * @returns {boolean}
      */
     isEntityTypeFieldAvailable(entityType, field) {
-        let defs = this.metadata.get(['entityDefs', entityType, 'fields', field]) || {};
+        const defs = this.metadata.get(['entityDefs', entityType, 'fields', field]) || {};
 
         if (
             defs.disabled ||
@@ -451,7 +451,7 @@ class FieldManager {
             return false;
         }
 
-        let aclDefs = this.metadata.get(['entityAcl', entityType, 'fields', field]) || {};
+        const aclDefs = this.metadata.get(['entityAcl', entityType, 'fields', field]) || {};
 
         if (
             aclDefs.onlyAdmin ||
