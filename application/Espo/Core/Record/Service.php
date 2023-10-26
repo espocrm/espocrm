@@ -1387,7 +1387,7 @@ class Service implements Crud,
         }
 
         if (!$id || !$link) {
-            throw new BadRequest;
+            throw new BadRequest();
         }
 
         $this->processForbiddenLinkEditCheck($link);
@@ -1398,6 +1398,7 @@ class Service implements Crud,
             throw new NotFound();
         }
 
+        // Not used link-check deliberately. Only edit access.
         if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
         }
