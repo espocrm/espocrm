@@ -1520,6 +1520,23 @@ class Service implements Crud,
      */
     protected function processForbiddenLinkEditCheck(string $link): void
     {
+        $type = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entityType)
+            ->tryGetRelation($link)
+            ?->getType();
+
+        if (
+            $type &&
+            !in_array($type, [
+                Entity::MANY_MANY,
+                Entity::HAS_MANY,
+                Entity::HAS_CHILDREN,
+            ])
+        ) {
+            throw new Forbidden("Only manyMany, hasMany & hasChildren relations are allowed.");
+        }
+
         $forbiddenLinkList = $this->acl
             ->getScopeForbiddenLinkList($this->entityType, AclTable::ACTION_EDIT);
 
