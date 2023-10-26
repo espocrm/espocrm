@@ -578,6 +578,31 @@
                             }
                         }
                     }
+                },
+                "options": {
+                    "type": "object",
+                    "description": "Enum options.",
+                    "additionalProperties": {
+                        "type": "array",
+                        "description": "A field name.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "optionList": {
+                                    "type": "array",
+                                    "items": {"type": "string"},
+                                    "description": "Options."
+                                },
+                                "conditionGroup": {
+                                    "type": "array",
+                                    "description": "An AND where clause.",
+                                    "items": {
+                                        "$ref": "#/definitions/dynamicLogicItem"
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

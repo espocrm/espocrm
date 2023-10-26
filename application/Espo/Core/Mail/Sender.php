@@ -85,6 +85,7 @@ class Sender
         private FileStorageManager $fileStorageManager
     ) {
 
+        /** @noinspection PhpDeprecationInspection */
         $this->useGlobal();
     }
 
@@ -149,6 +150,7 @@ class Sender
             throw new InvalidArgumentException();
         }
 
+        /** @noinspection PhpDeprecationInspection */
         return $this->useSmtp($params);
     }
 
@@ -171,6 +173,7 @@ class Sender
      */
     public function withEnvelopeOptions(array $options): self
     {
+        /** @noinspection PhpDeprecationInspection */
         return $this->setEnvelopeOptions($options);
     }
 
@@ -252,8 +255,9 @@ class Sender
             $authMechanism = $params['authMechanism'] ?? $params['smtpAuthMechanism'] ?? null;
 
             if ($authMechanism) {
-                $authMechanism = preg_replace("([\.]{2,})", '', $authMechanism);
+                $authMechanism = preg_replace("([.]{2,})", '', $authMechanism);
 
+                /** @noinspection SpellCheckingInspection */
                 if (in_array($authMechanism, ['login', 'crammd5', 'plain'])) {
                     $options['connectionClass'] = $authMechanism;
                 }
@@ -571,7 +575,7 @@ class Sender
                 empty($messageId) ||
                 !is_string($messageId) ||
                 strlen($messageId) < 4 ||
-                strpos($messageId, 'dummy:') === 0
+                str_starts_with($messageId, 'dummy:')
             ) {
                 $messageId = $this->generateMessageId($email);
 
@@ -597,13 +601,17 @@ class Sender
             $email->set('dateSent', DateTime::createNow()->getString());
         }
         catch (Exception $e) {
+            /** @noinspection PhpDeprecationInspection */
             $this->resetParams();
+            /** @noinspection PhpDeprecationInspection */
             $this->useGlobal();
 
             $this->handleException($e);
         }
 
+        /** @noinspection PhpDeprecationInspection */
         $this->resetParams();
+        /** @noinspection PhpDeprecationInspection */
         $this->useGlobal();
     }
 
@@ -642,14 +650,14 @@ class Sender
     private function handleException(Exception $e): void
     {
         if ($e instanceof ProtocolRuntimeException) {
-            $message = "Unknown error.";
+            $message = "unknownError";
 
             if (
                 stripos($e->getMessage(), 'password') !== false ||
                 stripos($e->getMessage(), 'credentials') !== false ||
                 stripos($e->getMessage(), '5.7.8') !== false
             ) {
-                $message = 'Invalid credentials.';
+                $message = 'invalidCredentials';
             }
 
             $this->log->error("Email sending error: " . $e->getMessage());
@@ -671,7 +679,7 @@ class Sender
         }
         else {
             $messageId =
-                '' . md5($email->get('name')) . '/' .time() . '/' .
+                md5($email->get('name')) . '/' .time() . '/' .
                 $rand .  '@espo';
         }
 

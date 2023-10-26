@@ -611,7 +611,7 @@ class LinkFieldView extends BaseFieldView {
                     formatResult: suggestion => {
                         return this.getHelper().escapeString(suggestion.name);
                     },
-                    onSelect: (s) => {
+                    onSelect: s => {
                         this.getModelFactory().create(this.foreignScope, (model) => {
                             model.set(s.attributes);
 
@@ -648,6 +648,11 @@ class LinkFieldView extends BaseFieldView {
                     let $elementOneOf = this.$el.find('input.element-one-of');
 
                     $elementOneOf.autocomplete({
+                        beforeRender: $c => {
+                            if (this.$elementName.hasClass('input-sm')) {
+                                $c.addClass('small');
+                            }
+                        },
                         serviceUrl: () => {
                             return this.getAutocompleteUrl();
                         },
@@ -662,11 +667,15 @@ class LinkFieldView extends BaseFieldView {
                             return this._transformAutocompleteResult(JSON.parse(response));
                         },
                         onSelect: s => {
-                            // noinspection JSUnresolvedReference
-                            this.addLinkOneOf(s.id, s.name);
+                            this.getModelFactory().create(this.foreignScope, model => {
+                                // noinspection JSUnresolvedReference
+                                model.set(s.attributes);
 
-                            $elementOneOf.val('');
-                            setTimeout(() => $elementOneOf.focus(), 50);
+                                this.selectOneOf([model]);
+
+                                $elementOneOf.val('');
+                                setTimeout(() => $elementOneOf.focus(), 50);
+                            });
                         },
                     });
 
@@ -1097,7 +1106,7 @@ class LinkFieldView extends BaseFieldView {
             return Promise.resolve({
                 primary: this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName,
                 bool: boolFilterList,
-                advanced: this.getSelectFilters() || this.panelDefs.selectPrimaryFilterName || undefined,
+                advanced: this.getSelectFilters() || undefined,
             });
         }
 
@@ -1156,9 +1165,7 @@ class LinkFieldView extends BaseFieldView {
                     models = [models];
                 }
 
-                models.forEach(model => {
-                    this.addLinkOneOf(model.id, model.get('name'));
-                });
+                this.selectOneOf(models);
             });
         });
     }
@@ -1189,6 +1196,17 @@ class LinkFieldView extends BaseFieldView {
                     this.select(model);
                 });
             });
+        });
+    }
+
+    /**
+     * @protected
+     * @param {module:model[]} models
+     * @since 8.0.4
+     */
+    selectOneOf(models) {
+        models.forEach(model => {
+            this.addLinkOneOf(model.id, model.get('name'));
         });
     }
 }

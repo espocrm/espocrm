@@ -52,8 +52,8 @@ class EntityManagerEditView extends View {
     }
 
     setupData() {
-        let scope = this.scope;
-        let templateType = this.getMetadata().get(['scopes', scope, 'type']) || null;
+        const scope = this.scope;
+        const templateType = this.getMetadata().get(['scopes', scope, 'type']) || null;
 
         this.hasStreamField = true;
 
@@ -117,20 +117,20 @@ class EntityManagerEditView extends View {
                 this.getMetadata().get(['scopes', scope, 'kanbanStatusIgnoreList']) || []
             );
 
-            for (let param in this.additionalParams) {
+            for (const param in this.additionalParams) {
                 /** @type {{fieldDefs: Object, location?: string}} */
-                let defs = this.additionalParams[param];
-                let location = defs.location || this.defaultParamLocation;
-                let defaultValue = defs.fieldDefs.type === 'bool' ? false : null;
+                const defs = this.additionalParams[param];
+                const location = defs.location || this.defaultParamLocation;
+                const defaultValue = defs.fieldDefs.type === 'bool' ? false : null;
 
-                let value = this.getMetadata().get([location, scope, param]) || defaultValue;
+                const value = this.getMetadata().get([location, scope, param]) || defaultValue;
 
                 this.model.set(param, value);
             }
         }
 
         if (scope) {
-            let fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
+            const fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
 
             this.orderableFieldList = Object.keys(fieldDefs)
                 .filter(item => {
@@ -161,10 +161,10 @@ class EntityManagerEditView extends View {
 
             this.filtersOptionList.forEach(item => {
                 if (~item.indexOf('.')) {
-                    let link = item.split('.')[0];
-                    let foreignField = item.split('.')[1];
+                    const link = item.split('.')[0];
+                    const foreignField = item.split('.')[1];
 
-                    let foreignEntityType = this.getMetadata()
+                    const foreignEntityType = this.getMetadata()
                         .get(['entityDefs', scope, 'links', link, 'entity']);
 
                     this.textFilterFieldsTranslation[item] =
@@ -293,22 +293,22 @@ class EntityManagerEditView extends View {
         ];
 
         if (this.scope) {
-            let rows1 = [];
-            let rows2 = [];
+            const rows1 = [];
+            const rows2 = [];
 
-            let paramList1 = Object.keys(this.additionalParams)
+            const paramList1 = Object.keys(this.additionalParams)
                 .filter(item => !!this.getMetadata().get(['app', 'entityManagerParams', 'Global', item]));
 
-            let paramList2 = Object.keys(this.additionalParams)
+            const paramList2 = Object.keys(this.additionalParams)
                 .filter(item => !paramList1.includes(item));
 
-            let add = function (rows, list) {
+            const add = function (rows, list) {
                 list.forEach((param, i) => {
                     if (i % 2 === 0) {
                         rows.push([]);
                     }
 
-                    let row = rows[rows.length - 1];
+                    const row = rows[rows.length - 1];
 
                     row.push({name: param});
 
@@ -364,9 +364,9 @@ class EntityManagerEditView extends View {
     }
 
     setupDefs() {
-        let scope = this.scope;
+        const scope = this.scope;
 
-        let defs = {
+        const defs = {
             fields: {
                 type: {
                     type: 'enum',
@@ -449,7 +449,7 @@ class EntityManagerEditView extends View {
             defs.fields.statusField.readOnly = true;
         }
 
-        for (let param in this.additionalParams) {
+        for (const param in this.additionalParams) {
             defs.fields[param] = this.additionalParams[param].fieldDefs;
         }
 
@@ -550,7 +550,7 @@ class EntityManagerEditView extends View {
             fieldList.push('color');
         }
 
-        let fetchedAttributes = Espo.Utils.cloneDeep(this.model.fetchedAttributes) || {};
+        const fetchedAttributes = Espo.Utils.cloneDeep(this.model.fetchedAttributes) || {};
 
         let notValid = false;
 
@@ -590,9 +590,9 @@ class EntityManagerEditView extends View {
             url = 'EntityManager/action/updateEntity';
         }
 
-        let name = this.model.get('name');
+        const name = this.model.get('name');
 
-        let data = {
+        const data = {
             name: name,
             labelSingular: this.model.get('labelSingular'),
             labelPlural: this.model.get('labelPlural'),
@@ -620,8 +620,8 @@ class EntityManagerEditView extends View {
             data.kanbanViewMode = this.model.get('kanbanViewMode');
             data.kanbanStatusIgnoreList = this.model.get('kanbanStatusIgnoreList');
 
-            for (let param in this.additionalParams) {
-                let type = this.additionalParams[param].fieldDefs.type;
+            for (const param in this.additionalParams) {
+                const type = this.additionalParams[param].fieldDefs.type;
 
                 this.getFieldManager().getAttributeList(type, param).forEach(attribute => {
                     data[attribute] = this.model.get(attribute);
@@ -656,7 +656,7 @@ class EntityManagerEditView extends View {
                 ])
             )
             .then(() => {
-                let rebuildRequired =
+                const rebuildRequired =
                     data.fullTextSearch && !fetchedAttributes.fullTextSearch;
 
                 this.broadcastUpdate();
@@ -741,10 +741,10 @@ class EntityManagerEditView extends View {
     }
 
     getTextFiltersOptionList(scope) {
-        let fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
+        const fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields']) || {};
 
-        let filtersOptionList = Object.keys(fieldDefs).filter(item => {
-            let fieldType = fieldDefs[item].type;
+        const filtersOptionList = Object.keys(fieldDefs).filter(item => {
+            const fieldType = fieldDefs[item].type;
 
             if (!this.getMetadata().get(['fields', fieldType, 'textFilter'])) {
                 return false;
@@ -763,20 +763,20 @@ class EntityManagerEditView extends View {
 
         filtersOptionList.unshift('id');
 
-        let linkList = Object.keys(this.getMetadata().get(['entityDefs', scope, 'links']) || {});
+        const linkList = Object.keys(this.getMetadata().get(['entityDefs', scope, 'links']) || {});
 
         linkList.sort((v1, v2) => {
             return this.translate(v1, 'links', scope).localeCompare(this.translate(v2, 'links', scope));
         });
 
         linkList.forEach((link) => {
-            let linkType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'type']);
+            const linkType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'type']);
 
             if (linkType !== 'belongsTo') {
                 return;
             }
 
-            let foreignEntityType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'entity']);
+            const foreignEntityType = this.getMetadata().get(['entityDefs', scope, 'links', link, 'entity']);
 
             if (!foreignEntityType) {
                 return;
@@ -786,9 +786,9 @@ class EntityManagerEditView extends View {
                 return;
             }
 
-            let fields = this.getMetadata().get(['entityDefs', foreignEntityType, 'fields']) || {};
+            const fields = this.getMetadata().get(['entityDefs', foreignEntityType, 'fields']) || {};
 
-            let fieldList = Object.keys(fields);
+            const fieldList = Object.keys(fields);
 
             fieldList.sort((v1, v2) => {
                 return this.translate(v1, 'fields', foreignEntityType)
@@ -797,7 +797,7 @@ class EntityManagerEditView extends View {
 
             fieldList
                 .filter(item => {
-                    let fieldType = this.getMetadata()
+                    const fieldType = this.getMetadata()
                         .get(['entityDefs', foreignEntityType, 'fields', item, 'type']);
 
                     if (!this.getMetadata().get(['fields', fieldType, 'textFilter'])) {

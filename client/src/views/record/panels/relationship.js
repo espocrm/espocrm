@@ -95,15 +95,15 @@ class RelationshipPanelView extends BottomPanelView {
         this.link = this.link || this.defs.link || this.panelName;
 
         if (!this.scope && !(this.link in this.model.defs.links)) {
-            throw new Error('Link \'' + this.link + '\' is not defined in model \'' + this.model.entityType + '\'');
+            throw new Error(`Link '${this.link}' is not defined in model '${this.model.entityType}'`);
         }
 
         this.scope = this.scope || this.model.defs.links[this.link].entity;
 
-        let linkReadOnly = this.getMetadata()
+        const linkReadOnly = this.getMetadata()
             .get(['entityDefs', this.model.entityType, 'links', this.link, 'readOnly']) || false;
 
-        let url = this.url = this.url || this.model.entityType + '/' + this.model.id + '/' + this.link;
+        const url = this.url = this.url || this.model.entityType + '/' + this.model.id + '/' + this.link;
 
         if (!('create' in this.defs)) {
             this.defs.create = true;
@@ -125,7 +125,11 @@ class RelationshipPanelView extends BottomPanelView {
         this.filterList = this.defs.filterList || this.filterList || null;
 
         if (this.filterList && this.filterList.length) {
-            this.filter = this.getStoredFilter();
+            this.filter = this.getStoredFilter() || this.filterList[0];
+
+            if (this.filter === 'all') {
+                this.filter = null;
+            }
         }
 
         this.setupTitle();
@@ -165,7 +169,7 @@ class RelationshipPanelView extends BottomPanelView {
         }
 
         if (this.defs.select) {
-            let data = {link: this.link};
+            const data = {link: this.link};
 
             if (this.defs.selectPrimaryFilterName) {
                 data.primaryFilterName = this.defs.selectPrimaryFilterName;
@@ -205,7 +209,7 @@ class RelationshipPanelView extends BottomPanelView {
 
         let listLayout = null;
 
-        let layout = this.defs.layout || null;
+        const layout = this.defs.layout || null;
 
         if (layout) {
             if (typeof layout === 'string') {
@@ -227,7 +231,8 @@ class RelationshipPanelView extends BottomPanelView {
             collection.maxSize = this.recordsPerPage || this.getConfig().get('recordsPerPageSmall') || 5;
 
             if (this.defs.filters) {
-                let searchManager = new SearchManager(collection, 'listRelationship', false, this.getDateTime());
+                const searchManager = new SearchManager(collection, 'listRelationship', null, this.getDateTime());
+
                 searchManager.setAdvanced(this.defs.filters);
                 collection.where = searchManager.getWhere();
             }
@@ -250,7 +255,7 @@ class RelationshipPanelView extends BottomPanelView {
 
             this.listenTo(this.model, 'update-all', () => collection.fetch());
 
-            let viewName =
+            const viewName =
                 this.defs.recordListView ||
                 this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
                 this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
@@ -377,41 +382,40 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     setupFilterActions() {
-        if (this.filterList && this.filterList.length) {
-            this.actionList.push(false);
-
-            this.filterList.slice(0).forEach((item) => {
-                let selected;
-
-                if (item === 'all') {
-                    selected = !this.filter;
-                }
-                else {
-                    selected = item === this.filter;
-                }
-
-                let label = this.translateFilter(item);
-
-                let $item =
-                    $('<div>')
-                        .append(
-                            $('<span>')
-                                .addClass('check-icon fas fa-check pull-right')
-                                .addClass(!selected ? 'hidden' : '')
-                        )
-                        .append(
-                            $('<div>').text(label)
-                        );
-
-                this.actionList.push({
-                    action: 'selectFilter',
-                    html: $item.get(0).innerHTML,
-                    data: {
-                        name: item,
-                    },
-                });
-            });
+        if (!(this.filterList && this.filterList.length)) {
+            return;
         }
+
+        this.actionList.push(false);
+
+        this.filterList.slice(0).forEach((item) => {
+            let selected;
+
+            selected = item === 'all' ?
+                !this.filter :
+                item === this.filter;
+
+            const label = this.translateFilter(item);
+
+            const $item =
+                $('<div>')
+                    .append(
+                        $('<span>')
+                            .addClass('check-icon fas fa-check pull-right')
+                            .addClass(!selected ? 'hidden' : '')
+                    )
+                    .append(
+                        $('<div>').text(label)
+                    );
+
+            this.actionList.push({
+                action: 'selectFilter',
+                html: $item.get(0).innerHTML,
+                data: {
+                    name: item,
+                },
+            });
+        });
     }
 
     /**
@@ -428,7 +432,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     getStoredFilter() {
-        let key = 'panelFilter' + this.model.entityType + '-' + (this.panelName || this.name);
+        const key = 'panelFilter' + this.model.entityType + '-' + (this.panelName || this.name);
 
         return this.getStorage().get('state', key) || null;
     }
@@ -437,7 +441,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @private
      */
     storeFilter(filter) {
-        let key = 'panelFilter' + this.model.entityType + '-' + (this.panelName || this.name);
+        const key = 'panelFilter' + this.model.entityType + '-' + (this.panelName || this.name);
 
         if (filter) {
             this.getStorage().set('state', key, filter);
@@ -467,7 +471,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     actionSelectFilter(data) {
-        let filter = data.name;
+        const filter = data.name;
         let filterInternal = filter;
 
         if (filter === 'all') {
@@ -478,7 +482,7 @@ class RelationshipPanelView extends BottomPanelView {
         this.setFilter(filterInternal);
 
         this.filterList.forEach(item => {
-            let $el = this.$el.closest('.panel').find('[data-name="'+item+'"] span');
+            const $el = this.$el.closest('.panel').find('[data-name="' + item + '"] span');
 
             if (item === filter) {
                 $el.removeClass('hidden');
@@ -489,10 +493,10 @@ class RelationshipPanelView extends BottomPanelView {
 
         this.collection.reset();
 
-        let listView = this.getView('list');
+        const listView = this.getView('list');
 
         if (listView && listView.$el) {
-            let height = listView.$el.parent().get(0).clientHeight;
+            const height = listView.$el.parent().get(0).clientHeight;
 
             listView.$el.empty();
 
@@ -529,7 +533,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     actionViewRelatedList(data) {
-        let viewName =
+        const viewName =
             this.getMetadata().get(
                 ['clientDefs', this.model.entityType, 'relationshipPanels', this.name, 'viewModalView']
             ) ||
@@ -537,7 +541,7 @@ class RelationshipPanelView extends BottomPanelView {
             this.viewModalView ||
             'views/modals/related-list';
 
-        let scope = data.scope || this.scope;
+        const scope = data.scope || this.scope;
 
         let filter = this.filter;
 
@@ -545,7 +549,7 @@ class RelationshipPanelView extends BottomPanelView {
             filter = null;
         }
 
-        let options = {
+        const options = {
             model: this.model,
             panelName: this.panelName,
             link: this.link,
@@ -567,7 +571,7 @@ class RelationshipPanelView extends BottomPanelView {
         };
 
         if (data.viewOptions) {
-            for (let item in data.viewOptions) {
+            for (const item in data.viewOptions) {
                 options[item] = data.viewOptions[item];
             }
         }
@@ -619,16 +623,16 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     actionViewRelated(data) {
-        let id = data.id;
-        let model = this.collection.get(id);
+        const id = data.id;
+        const model = this.collection.get(id);
 
         if (!model) {
             return;
         }
 
-        let scope = model.entityType;
+        const scope = model.entityType;
 
-        let helper = new RecordModal(this.getMetadata(), this.getAcl());
+        const helper = new RecordModal(this.getMetadata(), this.getAcl());
 
         helper
             .showDetail(this, {
@@ -650,10 +654,10 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     actionEditRelated(data) {
-        let id = data.id;
-        let scope = this.collection.get(id).name;
+        const id = data.id;
+        const scope = this.collection.get(id).name;
 
-        let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+        const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
             'views/modals/edit';
 
         Espo.Ui.notify(' ... ');
@@ -681,7 +685,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     actionUnlinkRelated(data) {
-        let id = data.id;
+        const id = data.id;
 
         this.confirm({
             message: this.translate('unlinkRecordConfirmation', 'messages'),
@@ -709,13 +713,13 @@ class RelationshipPanelView extends BottomPanelView {
      * @protected
      */
     actionRemoveRelated(data) {
-        let id = data.id;
+        const id = data.id;
 
         this.confirm({
             message: this.translate('removeRecordConfirmation', 'messages'),
             confirmText: this.translate('Remove'),
         }, () => {
-            let model = this.collection.get(id);
+            const model = this.collection.get(id);
 
             Espo.Ui.notify(' ... ');
 

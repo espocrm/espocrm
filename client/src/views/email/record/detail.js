@@ -527,7 +527,13 @@ class EmailDetailRecordView extends DetailRecordView {
         let msg = this.translate('sendingFailed', 'strings', 'Email');
 
         if (data.message) {
-            msg += ': ' + data.message;
+            let part = data.message;
+
+            if (this.getLanguage().has(part, 'messages', 'Email')) {
+                part = this.translate(part, 'messages', 'Email');
+            }
+
+            msg += ': ' + part;
         }
 
         Espo.Ui.error(msg, true);

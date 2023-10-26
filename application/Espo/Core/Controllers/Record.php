@@ -48,6 +48,8 @@ class Record extends RecordBase
      * @throws BadRequest
      * @throws NotFound
      * @throws Forbidden
+     * @throws Error
+     * @noinspection PhpUnused
      */
     public function getActionListLinked(Request $request): stdClass
     {
@@ -167,6 +169,7 @@ class Record extends RecordBase
      * @throws BadRequest
      * @throws NotFoundSilent
      * @throws Forbidden
+     * @noinspection PhpUnused
      */
     public function putActionFollow(Request $request): bool
     {
@@ -186,6 +189,7 @@ class Record extends RecordBase
      *
      * @throws NotFoundSilent
      * @throws BadRequest
+     * @noinspection PhpUnused
      */
     public function deleteActionUnfollow(Request $request): bool
     {

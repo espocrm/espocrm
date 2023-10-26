@@ -29,6 +29,7 @@
 /** @module ajax */
 
 import $ from 'jquery';
+import Utils from 'utils';
 
 let isConfigured = false;
 /** @type {number} */
@@ -62,7 +63,7 @@ let onTimeout;
  * @property {boolean} [resolveWithXhr] To resolve with `XMLHttpRequest`.
  */
 
-const baseUrl = Espo.Utils.obtainBaseUrl();
+const baseUrl = Utils.obtainBaseUrl();
 
 // noinspection JSUnusedGlobalSymbols
 /**

@@ -75,12 +75,15 @@ class ViewHelper {
 
         DOMPurify.addHook('afterSanitizeAttributes', function (node) {
             if (node instanceof HTMLAnchorElement) {
+                const href = node.getAttribute('href');
+
+                if (href && !href.startsWith('#')) {
+                    node.setAttribute('rel', 'noopener noreferrer');
+                }
+
                 if (node.targetBlank) {
                     node.setAttribute('target', '_blank');
                     node.setAttribute('rel', 'noopener noreferrer');
-                }
-                else {
-                    node.removeAttribute('rel');
                 }
             }
         });
@@ -316,7 +319,7 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('ifAttrNotEmpty', function (model, attr, options) {
-            let value = model.get(attr);
+            const value = model.get(attr);
 
             if (value !== null && typeof value !== 'undefined') {
                 return options.fn(this);
@@ -340,8 +343,8 @@ class ViewHelper {
         Handlebars.registerHelper('length', arr => arr.length);
 
         Handlebars.registerHelper('translate', (name, options) => {
-            let scope = options.hash.scope || null;
-            let category = options.hash.category || null;
+            const scope = options.hash.scope || null;
+            const category = options.hash.category || null;
 
             if (name === 'null') {
                 return '';
@@ -351,16 +354,16 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('dropdownItem', (name, options) => {
-            let scope = options.hash.scope || null;
-            let label = options.hash.label;
-            let labelTranslation = options.hash.labelTranslation;
-            let data = options.hash.data;
-            let hidden = options.hash.hidden;
-            let disabled = options.hash.disabled;
-            let title = options.hash.title;
-            let link = options.hash.link;
-            let action = options.hash.action || name;
-            let iconHtml = options.hash.iconHtml;
+            const scope = options.hash.scope || null;
+            const label = options.hash.label;
+            const labelTranslation = options.hash.labelTranslation;
+            const data = options.hash.data;
+            const hidden = options.hash.hidden;
+            const disabled = options.hash.disabled;
+            const title = options.hash.title;
+            const link = options.hash.link;
+            const action = options.hash.action || name;
+            const iconHtml = options.hash.iconHtml;
             const iconClass = options.hash.iconClass;
 
             let html =
@@ -385,11 +388,11 @@ class ViewHelper {
                 html = iconHtml + ' ' + html;
             }
 
-            let $li = $('<li>')
+            const $li = $('<li>')
                 .addClass(hidden ? 'hidden' : '')
                 .addClass(disabled ? 'disabled' : '');
 
-            let $a = $('<a>')
+            const $a = $('<a>')
                 .attr('role', 'button')
                 .attr('tabindex', '0')
                 .attr('data-name', name)
@@ -408,7 +411,7 @@ class ViewHelper {
                 $a.attr('role', 'button');
 
             if (data) {
-                for (let key in data) {
+                for (const key in data) {
                     $a.attr('data-' + Espo.Utils.camelCaseToHyphen(key), data[key]);
                 }
             }
@@ -425,12 +428,12 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('button', (name, options) => {
-            let style = options.hash.style || 'default';
-            let scope = options.hash.scope || null;
-            let label = options.hash.label || name;
-            let labelTranslation = options.hash.labelTranslation;
-            let link = options.hash.link;
-            let iconHtml = options.hash.iconHtml;
+            const style = options.hash.style || 'default';
+            const scope = options.hash.scope || null;
+            const label = options.hash.label || name;
+            const labelTranslation = options.hash.labelTranslation;
+            const link = options.hash.link;
+            const iconHtml = options.hash.iconHtml;
             const iconClass = options.hash.iconClass;
 
             let html =
@@ -455,9 +458,9 @@ class ViewHelper {
                 html = iconHtml + ' ' + html;
             }
 
-            let tag = link ? '<a>' : '<button>';
+            const tag = link ? '<a>' : '<button>';
 
-            let $button = $(tag)
+            const $button = $(tag)
                 .addClass('btn action')
                 .addClass(options.hash.className || '')
                 .addClass(options.hash.hidden ? 'hidden' : '')
@@ -503,8 +506,8 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('translateOption', (name, options) => {
-            let scope = options.hash.scope || null;
-            let field = options.hash.field || null;
+            const scope = options.hash.scope || null;
+            const field = options.hash.field || null;
 
             if (!field) {
                 return '';
@@ -536,9 +539,9 @@ class ViewHelper {
 
             let html = '';
 
-            let multiple = (Object.prototype.toString.call(value) === '[object Array]');
+            const multiple = (Object.prototype.toString.call(value) === '[object Array]');
 
-            let checkOption = name => {
+            const checkOption = name => {
                 if (multiple) {
                     return value.indexOf(name) !== -1;
                 }
@@ -548,10 +551,10 @@ class ViewHelper {
 
             options.hash = /** @type {Object.<string, *>} */ options.hash || {};
 
-            let scope = options.hash.scope || false;
-            let category = options.hash.category || false;
-            let field = options.hash.field || false;
-            let styleMap = options.hash.styleMap || {};
+            const scope = options.hash.scope || false;
+            const category = options.hash.category || false;
+            const field = options.hash.field || false;
+            const styleMap = options.hash.styleMap || {};
 
             if (!multiple && options.hash.includeMissingOption && (value || value === '')) {
                 if (!~list.indexOf(value)) {
@@ -579,7 +582,7 @@ class ViewHelper {
                 }
             }
 
-            let translate = name => {
+            const translate = name => {
                 if (!category) {
                     return translationHash[name] || name;
                 }
@@ -587,14 +590,14 @@ class ViewHelper {
                 return this.language.translate(name, category, /** @type {string} */scope);
             };
 
-            for (let key in list) {
-                let value = list[key];
-                let label = translate(value);
+            for (const key in list) {
+                const value = list[key];
+                const label = translate(value);
 
-                let $option =
+                const $option =
                     $('<option>')
                         .attr('value', value)
-                        .addClass(styleMap[value] ? 'text-' + styleMap[value]: '')
+                        .addClass(styleMap[value] ? 'text-' + styleMap[value] : '')
                         .text(label);
 
                 if (checkOption(list[key])) {
@@ -646,9 +649,9 @@ class ViewHelper {
             return '';
         }
 
-        let t = this.cache ? this.cache.get('app', 'timestamp') : Date.now();
+        const t = this.cache ? this.cache.get('app', 'timestamp') : Date.now();
 
-        let basePath = this.basePath || '';
+        const basePath = this.basePath || '';
         size = size || 'small';
         width = width || 16;
 
@@ -729,12 +732,12 @@ class ViewHelper {
             return '';
         }
 
-        let color = this.metadata.get(['clientDefs', scope, 'color']);
+        const color = this.metadata.get(['clientDefs', scope, 'color']);
 
         let html = '';
 
         if (color) {
-            let $span = $('<span class="color-icon fas fa-square">');
+            const $span = $('<span class="color-icon fas fa-square">');
 
             $span.css('color', color);
 
@@ -874,19 +877,19 @@ class ViewHelper {
      * @returns {number}
      */
     calculateContentContainerHeight($el) {
-        let smallScreenWidth = this.themeManager.getParam('screenWidthXs');
+        const smallScreenWidth = this.themeManager.getParam('screenWidthXs');
 
-        let $window = $(window);
+        const $window = $(window);
 
-        let footerHeight = $('#footer').height() || 26;
+        const footerHeight = $('#footer').height() || 26;
         let top = 0;
-        let element = $el.get(0);
+        const element = $el.get(0);
 
         if (element) {
             top = element.getBoundingClientRect().top;
 
             if ($window.width() < smallScreenWidth) {
-                let $navbarCollapse = $('#navbar .navbar-body');
+                const $navbarCollapse = $('#navbar .navbar-body');
 
                 if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
                     top -= $navbarCollapse.height();
@@ -894,7 +897,7 @@ class ViewHelper {
             }
         }
 
-        let spaceHeight = top + footerHeight;
+        const spaceHeight = top + footerHeight;
 
         return $window.height() - spaceHeight - 20;
     }
@@ -934,13 +937,12 @@ class ViewHelper {
          * @name ViewHelper~Handler#process
          * @param {module:view} [view] Deprecated.
          */
+        const promiseList = [];
 
-        let promiseList = [];
-
-        for (let id of handlerIdList) {
-            let promise = new Promise(resolve => {
+        for (const id of handlerIdList) {
+            const promise = new Promise(resolve => {
                 Espo.loader.require(id, /** typeof ViewHelper~Handler */Handler => {
-                    let result = (new Handler(view)).process(view);
+                    const result = (new Handler(view)).process(view);
 
                     if (result && Object.prototype.toString.call(result) === '[object Promise]') {
                         result.then(() => resolve());

@@ -251,7 +251,7 @@ class App {
     viewFactory = null
 
     /**
-     * @type function(string, function(View))
+     * @type {function(string, function(View))}
      * @private
      */
     viewLoader = null
@@ -1442,7 +1442,7 @@ class App {
             files.push(file);
         });
 
-        let baseUrl = Espo.Utils.obtainBaseUrl();
+        let baseUrl = Utils.obtainBaseUrl();
         let timestamp = this.loader.getCacheTimestamp();
 
         let promiseList = files.map(file => {

@@ -507,11 +507,14 @@ class LinkMultipleFieldView extends BaseFieldView {
                         };
                     },
                     onSelect: s => {
-                        // noinspection JSUnresolvedReference
-                        this.addLink(s.id, s.name);
+                        this.getModelFactory().create(this.foreignScope, model => {
+                            model.set(s.attributes);
 
-                        this.$element.val('');
-                        this.$element.focus();
+                            this.select([model])
+
+                            this.$element.val('');
+                            this.$element.focus();
+                        });
                     },
                 });
 
@@ -966,11 +969,22 @@ class LinkMultipleFieldView extends BaseFieldView {
                         models = [models];
                     }
 
-                    models.forEach(model => {
-                        this.addLink(model.id, model.get('name'));
-                    });
+                    this.select(models);
                 });
             });
+        });
+    }
+
+    /**
+     * On records select.
+     *
+     * @protected
+     * @param {module:model[]} models
+     * @since 8.0.4
+     */
+    select(models) {
+        models.forEach(model => {
+            this.addLink(model.id, model.get('name'));
         });
     }
 
@@ -994,7 +1008,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             return Promise.resolve({
                 primary: this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName,
                 bool: boolFilterList,
-                advanced: this.getSelectFilters() || this.panelDefs.selectPrimaryFilterName || undefined,
+                advanced: this.getSelectFilters() || undefined,
             });
         }
 

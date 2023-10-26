@@ -75,7 +75,7 @@ class RelatedListModalView extends ModalView {
         },
         /** @this RelatedListModalView */
         'click .action': function (e) {
-            let isHandled = Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
+            const isHandled = Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
 
             if (isHandled) {
                 return;
@@ -141,15 +141,15 @@ class RelatedListModalView extends ModalView {
                     return;
                 }
 
-                let model = this.collection.get(m.id);
+                const model = this.collection.get(m.id);
 
                 if (!model) {
                     return;
                 }
 
-                let attributes = {};
+                const attributes = {};
 
-                for (let name in m.attributes) {
+                for (const name in m.attributes) {
                     if (m.hasChanged(name)) {
                         attributes[name] = m.attributes[name];
                     }
@@ -187,7 +187,7 @@ class RelatedListModalView extends ModalView {
             }
         }
 
-        this.unlinkDisabled = this.unlinkDisabled || this.options.unlinkDisabled;
+        this.unlinkDisabled = this.unlinkDisabled || this.options.unlinkDisabled || this.defs.unlinkDisabled;
 
         if (!this.massUnlinkDisabled) {
             if (this.unlinkDisabled || this.defs.massUnlinkDisabled || this.defs.unlinkDisabled) {
@@ -253,7 +253,7 @@ class RelatedListModalView extends ModalView {
                 this.options.fullFormUrl
             )
         ) {
-            let url = this.options.fullFormUrl ||
+            const url = this.options.fullFormUrl ||
                 '#' + this.model.entityType + '/related/' + this.model.id + '/' + this.link;
 
             this.buttonList.unshift({
@@ -267,7 +267,7 @@ class RelatedListModalView extends ModalView {
                 .append(this.$header);
         }
 
-        let iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+        const iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
         if (iconHtml) {
             this.$header = $('<span>')
@@ -281,7 +281,7 @@ class RelatedListModalView extends ModalView {
             this.waitForView('search');
         }
 
-        this.getCollectionFactory().create(this.scope, (collection) => {
+        this.getCollectionFactory().create(this.scope, collection => {
             collection.maxSize = this.getConfig().get('recordsPerPage');
             collection.url = this.url;
 
@@ -291,11 +291,17 @@ class RelatedListModalView extends ModalView {
 
             if (this.panelCollection) {
                 this.listenTo(collection, 'change', (model) => {
-                    let panelModel = this.panelCollection.get(model.id);
+                    const panelModel = this.panelCollection.get(model.id);
 
                     if (panelModel) {
                         panelModel.set(model.attributes);
                     }
+                });
+
+                this.listenTo(collection, 'after:mass-remove', () => {
+                    this.panelCollection.fetch({
+                        skipCollectionSync: true,
+                    });
                 });
             }
 
@@ -329,12 +335,12 @@ class RelatedListModalView extends ModalView {
     }
 
     setupSearch() {
-        let searchManager = this.searchManager =
+        const searchManager = this.searchManager =
             new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
         searchManager.emptyOnReset = true;
 
-        let primaryFilterName = this.primaryFilterName;
+        const primaryFilterName = this.primaryFilterName;
 
         if (primaryFilterName) {
             searchManager.setPrimary(primaryFilterName);
@@ -348,14 +354,14 @@ class RelatedListModalView extends ModalView {
             this.filterList.forEach(item1 => {
                 let isFound = false;
 
-                let name1 = item1.name || item1;
+                const name1 = item1.name || item1;
 
                 if (!name1 || name1 === 'all') {
                     return;
                 }
 
                 filterList.forEach(item2 => {
-                    let name2 = item2.name || item2;
+                    const name2 = item2.name || item2;
 
                     if (name1 === name2) {
                         isFound = true;
@@ -430,13 +436,19 @@ class RelatedListModalView extends ModalView {
             }
 
             const fetch = () => {
-                // Timeout to make notify work.
-                setTimeout(() => {
+                this.whenRendered().then(() => {
                     Espo.Ui.notify(' ... ');
 
                     this.collection.fetch()
                         .then(() => Espo.Ui.notify(false));
-                }, 1);
+                });
+                // Timeout to make notify work.
+                /*setTimeout(() => {
+                    Espo.Ui.notify(' ... ');
+
+                    this.collection.fetch()
+                        .then(() => Espo.Ui.notify(false));
+                }, 1);*/
             };
 
             if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
@@ -472,7 +484,7 @@ class RelatedListModalView extends ModalView {
 
     // noinspection JSUnusedGlobalSymbols
     actionUnlinkRelated(data) {
-        let id = data.id;
+        const id = data.id;
 
         this.confirm({
             message: this.translate('unlinkRecordConfirmation', 'messages'),
@@ -493,8 +505,8 @@ class RelatedListModalView extends ModalView {
 
     actionCreateRelated() {
         // noinspection JSUnresolvedReference
-        let actionName = this.defs.createAction || 'createRelated';
-        let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+        const actionName = this.defs.createAction || 'createRelated';
+        const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
         let p = this.getParentView();
 
@@ -519,8 +531,8 @@ class RelatedListModalView extends ModalView {
     // noinspection JSUnusedGlobalSymbols
     actionSelectRelated() {
         // noinspection JSUnresolvedReference
-        let actionName = this.defs.selectAction || 'selectRelated';
-        let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+        const actionName = this.defs.selectAction || 'selectRelated';
+        const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
         let p = this.getParentView();
 
@@ -546,13 +558,13 @@ class RelatedListModalView extends ModalView {
 
     // noinspection JSUnusedGlobalSymbols
     actionRemoveRelated(data) {
-        let id = data.id;
+        const id = data.id;
 
         this.confirm({
             message: this.translate('removeRecordConfirmation', 'messages'),
             confirmText: this.translate('Remove'),
         }, () => {
-            let model = this.collection.get(id);
+            const model = this.collection.get(id);
 
             Espo.Ui.notify(' ... ');
 
@@ -578,7 +590,7 @@ class RelatedListModalView extends ModalView {
             return;
         }
 
-        let $search = this.$el.find('input.text-filter').first();
+        const $search = this.$el.find('input.text-filter').first();
 
         if (!$search.length) {
             return;

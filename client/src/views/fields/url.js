@@ -49,7 +49,7 @@ class UrlFieldView extends VarcharFieldView {
     DEFAULT_MAX_LENGTH =255
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.url = this.getUrl();
 
@@ -61,15 +61,15 @@ class UrlFieldView extends VarcharFieldView {
 
         if (this.isEditMode()) {
             this.$element.on('change', () => {
-                let value = this.$element.val() || '';
+                const value = this.$element.val() || '';
 
-                let parsedValue = this.parse(value);
+                const parsedValue = this.parse(value);
 
                 if (parsedValue === value) {
                     return;
                 }
 
-                let decoded = parsedValue ? decodeURI(parsedValue) : '';
+                const decoded = parsedValue ? decodeURI(parsedValue) : '';
 
                 this.$element.val(decoded);
             });
@@ -77,7 +77,7 @@ class UrlFieldView extends VarcharFieldView {
     }
 
     getValueForDisplay() {
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         return value ? decodeURI(value) : null;
     }
@@ -106,7 +106,7 @@ class UrlFieldView extends VarcharFieldView {
      */
     strip(value) {
         if (value.indexOf('//') !== -1) {
-            value = value.substr(value.indexOf('//') + 2);
+            value = value.substring(value.indexOf('//') + 2);
         }
 
         value = value.replace(/\/+$/, '');
@@ -128,23 +128,24 @@ class UrlFieldView extends VarcharFieldView {
         return url;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateValid() {
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (!value) {
             return false;
         }
 
         /** @var {string} */
-        let pattern = this.getMetadata().get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
+        const pattern = this.getMetadata().get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
 
-        let regExp = new RegExp('^' + pattern + '$');
+        const regExp = new RegExp('^' + pattern + '$');
 
         if (regExp.test(value)) {
             return false;
         }
 
-        let msg = this.translate('fieldInvalid', 'messages')
+        const msg = this.translate('fieldInvalid', 'messages')
             .replace('{field}', this.translate(this.name, 'fields', this.entityType));
 
         this.showValidationMessage(msg);
@@ -152,10 +153,11 @@ class UrlFieldView extends VarcharFieldView {
         return true;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateMaxLength() {
-        let maxLength = this.params.maxLength || this.DEFAULT_MAX_LENGTH;
+        const maxLength = this.params.maxLength || this.DEFAULT_MAX_LENGTH;
 
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (!value || !value.length) {
             return false;
@@ -165,7 +167,7 @@ class UrlFieldView extends VarcharFieldView {
             return false;
         }
 
-        let msg = this.translate('fieldUrlExceedsMaxLength', 'messages')
+        const msg = this.translate('fieldUrlExceedsMaxLength', 'messages')
             .replace('{maxLength}', maxLength)
             .replace('{field}', this.translate(this.name, 'fields', this.entityType));
 
@@ -175,9 +177,9 @@ class UrlFieldView extends VarcharFieldView {
     }
 
     fetch() {
-        let data = super.fetch();
+        const data = super.fetch();
 
-        let value = data[this.name];
+        const value = data[this.name];
 
         if (!value) {
             return data;
