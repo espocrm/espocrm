@@ -75,12 +75,15 @@ class ViewHelper {
 
         DOMPurify.addHook('afterSanitizeAttributes', function (node) {
             if (node instanceof HTMLAnchorElement) {
+                const href = node.getAttribute('href');
+
+                if (href && !href.startsWith('#')) {
+                    node.setAttribute('rel', 'noopener noreferrer');
+                }
+
                 if (node.targetBlank) {
                     node.setAttribute('target', '_blank');
                     node.setAttribute('rel', 'noopener noreferrer');
-                }
-                else {
-                    node.removeAttribute('rel');
                 }
             }
         });
