@@ -125,8 +125,8 @@ class SelectRecordsModalView extends ModalView {
 
         this.scope = this.entityType = this.options.scope || this.scope;
 
-        let customDefaultOrderBy = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'orderBy']);
-        let customDefaultOrder = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'order']);
+        const customDefaultOrderBy = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'orderBy']);
+        const customDefaultOrder = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'order']);
 
         if (customDefaultOrderBy) {
             this.defaultOrderBy = customDefaultOrderBy;
@@ -211,7 +211,7 @@ class SelectRecordsModalView extends ModalView {
     }
 
     setupSearch() {
-        let searchManager = this.searchManager =
+        const searchManager = this.searchManager =
             new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
         searchManager.emptyOnReset = true;
@@ -220,11 +220,11 @@ class SelectRecordsModalView extends ModalView {
             searchManager.setAdvanced(this.filters);
         }
 
-        let boolFilterList = this.boolFilterList ||
+        const boolFilterList = this.boolFilterList ||
             this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.boolFilterList');
 
         if (boolFilterList) {
-            let d = {};
+            const d = {};
 
             boolFilterList.forEach(item => {
                 d[item] = true;
@@ -233,7 +233,7 @@ class SelectRecordsModalView extends ModalView {
             searchManager.setBool(d);
         }
 
-        let primaryFilterName = this.primaryFilterName ||
+        const primaryFilterName = this.primaryFilterName ||
             this.getMetadata().get('clientDefs.' + this.scope + '.selectDefaultFilters.filter');
 
         if (primaryFilterName) {
@@ -323,7 +323,7 @@ class SelectRecordsModalView extends ModalView {
                     selectAttributeList.push('name');
                 }
 
-                let mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
+                const mandatorySelectAttributeList = this.options.mandatorySelectAttributeList ||
                     this.mandatorySelectAttributeList || [];
 
                 mandatorySelectAttributeList.forEach(attribute => {
@@ -352,8 +352,8 @@ class SelectRecordsModalView extends ModalView {
 
         Espo.Ui.notify(' ... ');
 
-        let viewName = this.getMetadata()
-            .get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
+        const viewName = this.getMetadata()
+                .get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
             'views/modals/edit';
 
         new Promise(resolve => {
@@ -397,7 +397,7 @@ class SelectRecordsModalView extends ModalView {
             return;
         }
 
-        let listView = this.getRecordView();
+        const listView = this.getRecordView();
 
         if (listView.allResultIsChecked) {
             this.trigger('select', {
@@ -411,7 +411,7 @@ class SelectRecordsModalView extends ModalView {
             return;
         }
 
-        let list = listView.getSelected();
+        const list = listView.getSelected();
 
         if (list.length) {
             this.trigger('select', list);
@@ -445,7 +445,7 @@ class SelectRecordsModalView extends ModalView {
             return;
         }
 
-        let $search = this.$el.find('input.text-filter').first();
+        const $search = this.$el.find('input.text-filter').first();
 
         if (!$search.length) {
             return;
