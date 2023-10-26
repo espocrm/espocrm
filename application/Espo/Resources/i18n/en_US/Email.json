@@ -121,6 +121,9 @@
         "sendingFailed": "Email sending failed"
     },
     "messages": {
+        "invalidCredentials": "Invalid credentials.",
+        "unknownError": "Unknown error.",
+        "recipientAddressRejected": "Recipient address rejected.",
         "noSmtpSetup": "SMTP is not configured: {link}",
         "testEmailSent": "Test email has been sent",
         "emailSent": "Email has been sent",
