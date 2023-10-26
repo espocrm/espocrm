@@ -493,7 +493,7 @@ class RelationshipPanelView extends BottomPanelView {
 
         this.collection.reset();
 
-        let listView = this.getView('list');
+        const listView = this.getView('list');
 
         if (listView && listView.$el) {
             const height = listView.$el.parent().get(0).clientHeight;
@@ -657,7 +657,7 @@ class RelationshipPanelView extends BottomPanelView {
         const id = data.id;
         const scope = this.collection.get(id).name;
 
-        let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+        const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
             'views/modals/edit';
 
         Espo.Ui.notify(' ... ');
