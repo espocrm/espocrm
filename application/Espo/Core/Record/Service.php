@@ -1409,7 +1409,7 @@ class Service implements Crud,
         }
 
         if (!$entity instanceof CoreEntity) {
-            throw new LogicException("Only core entities are supported");
+            throw new LogicException("Only core entities are supported.");
         }
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
