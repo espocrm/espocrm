@@ -281,7 +281,7 @@ class RelatedListModalView extends ModalView {
             this.waitForView('search');
         }
 
-        this.getCollectionFactory().create(this.scope, (collection) => {
+        this.getCollectionFactory().create(this.scope, collection => {
             collection.maxSize = this.getConfig().get('recordsPerPage');
             collection.url = this.url;
 
@@ -296,6 +296,12 @@ class RelatedListModalView extends ModalView {
                     if (panelModel) {
                         panelModel.set(model.attributes);
                     }
+                });
+
+                this.listenTo(collection, 'after:mass-remove', () => {
+                    this.panelCollection.fetch({
+                        skipCollectionSync: true,
+                    });
                 });
             }
 

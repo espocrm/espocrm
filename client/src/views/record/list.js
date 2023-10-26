@@ -1418,6 +1418,8 @@ class ListRecordView extends View {
                             Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
                         });
 
+                    this.collection.trigger('after:mass-remove');
+
                     Espo.Ui.notify(false);
                 };
 
@@ -1462,6 +1464,8 @@ class ListRecordView extends View {
                         this.showMoreRecords({skipNotify: true});
                     }
                 }
+
+                this.collection.trigger('after:mass-remove');
 
                 const msg = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
 
