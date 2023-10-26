@@ -297,13 +297,19 @@ class SelectRecordsModalView extends ModalView {
             }
 
             const fetch = () => {
-                // Timeout to make notify work.
-                setTimeout(() => {
+                this.whenRendered().then(() => {
                     Espo.Ui.notify(' ... ');
 
                     this.collection.fetch()
                         .then(() => Espo.Ui.notify(false));
-                }, 1);
+                });
+                // Timeout to make notify work.
+                /*setTimeout(() => {
+                    Espo.Ui.notify(' ... ');
+
+                    this.collection.fetch()
+                        .then(() => Espo.Ui.notify(false));
+                }, 1);*/
             };
 
             if (this.options.forceSelectAllAttributes || this.forceSelectAllAttributes) {
