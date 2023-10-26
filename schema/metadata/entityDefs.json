@@ -359,6 +359,41 @@
                             }
                         }
                     }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "linkMultiple"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "sortable": {
+                                "type": "boolean",
+                                "description": "Sortable."
+                            },
+                            "orderBy": {
+                                "type": "string",
+                                "description": "An order-by field."
+                            },
+                            "orderDirection": {
+                                "enum": ["asc", "desc"],
+                                "description": "An Order direction."
+                            },
+                            "columns": {
+                                "type": "object",
+                                "description": "A column => attribute map.",
+                                "additionalProperties": {
+                                    "type": "string",
+                                    "description": "A column."
+                                }
+                            }
+                        }
+                    }
                 }
             ],
             "properties": {
@@ -570,6 +605,13 @@
                 "duplicatorClassName": {
                     "type": "string",
                     "description": "Duplicates attributes of a field. Some fields can require some processing when an entity is being duplicated. Should implement Espo\\Core\\Record\\Duplicator\\FieldDuplicator."
+                },
+                "additionalAttributeList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "Additional attributes for a field. Attribute name will be derived by concatenation with the field name."
                 },
                 "select": {
                     "type": "object",
