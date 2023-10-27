@@ -188,6 +188,10 @@ abstract class BaseTestCase extends TestCase
         $this->espoApplication = null;
     }
 
+    /**
+     * @param array<string, mixed>|string $userData Data or a user name.
+     * @param ?array<string, mixed> $role
+     */
     protected function createUser($userData, ?array $role = null, bool $isPortal = false): User
     {
         return $this->espoTester->createUser($userData, $role, $isPortal);
