@@ -155,6 +155,7 @@ class LinkCheck
     }
 
     /**
+     * @param string[] $fieldTypes
      * @throws Forbidden
      */
     private function processCheckLinkWithoutField(EntityDefs $entityDefs, string $name, array $fieldTypes): void
