@@ -30,10 +30,15 @@
 namespace tests\integration\Espo\Record;
 
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Field\Date;
+use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Record\UpdateParams;
 use Espo\Core\Utils\Metadata;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\CaseObj;
+use Espo\Modules\Crm\Entities\Opportunity;
+use Espo\Modules\Crm\Entities\Task;
 use Espo\ORM\EntityManager;
 use tests\integration\Core\BaseTestCase;
 
@@ -71,5 +76,160 @@ class LinkTest extends BaseTestCase
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $accountService->unlink($account->getId(), 'cases', $case->getId());
+    }
+
+    public function testLinkCheck1(): void
+    {
+        $user = $this->createUser('test', [
+            'data' => [
+                'Account' => [
+                    'create' => 'no',
+                    'read' => 'own',
+                    'edit' => 'no',
+                    'delete' => 'no',
+                ],
+                'Opportunity' => [
+                    'create' => 'yes',
+                    'read' => 'own',
+                    'edit' => 'own',
+                    'delete' => 'no',
+                ],
+                'Task' => [
+                    'create' => 'yes',
+                    'read' => 'own',
+                    'edit' => 'own',
+                    'delete' => 'no',
+                ],
+            ]
+        ]);
+
+        $em = $this->getContainer()->getByClass(EntityManager::class);
+
+        $account1 = $em->createEntity(Account::ENTITY_TYPE, [
+            'name' => '1',
+            'assignedUserId' => $user->getId(),
+        ]);
+
+        $account2 = $em->createEntity(Account::ENTITY_TYPE, [
+            'name' => '2',
+        ]);
+
+        $this->auth('test');
+        $this->reCreateApplication();
+
+        $oppService = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Opportunity::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $oppService->create((object) [
+            'name' => '1',
+            'accountId' => $account1->getId(),
+            'assignedUserId' => $user->getId(),
+            'amount' => 1.0,
+            'amountCurrency' => 'USD',
+            'probability' => 10,
+            'closeDate' => Date::createToday()->getString(),
+        ], CreateParams::create());
+
+        $isThrown = false;
+
+        try {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $oppService->create((object) [
+                'name' => '2',
+                'accountId' => $account2->getId(),
+                'assignedUserId' => $user->getId(),
+                'amount' => 1.0,
+                'amountCurrency' => 'USD',
+                'probability' => 10,
+                'closeDate' => Date::createToday()->getString(),
+            ], CreateParams::create());
+        }
+        catch (Forbidden) {
+            $isThrown = true;
+        }
+
+        $this->assertTrue($isThrown);
+
+        //
+
+        $taskService = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Task::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $task1 = $taskService->create((object) [
+            'name' => '1',
+            'accountId' => $account1->getId(),
+            'parentType' => $account1->getEntityType(),
+            'assignedUserId' => $user->getId(),
+        ], CreateParams::create());
+
+        $isThrown = false;
+
+        try {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $taskService->create((object) [
+                'name' => '2',
+                'parentId' => $account2->getId(),
+                'parentType' => $account2->getEntityType(),
+                'assignedUserId' => $user->getId(),
+            ], CreateParams::create());
+        }
+        catch (Forbidden) {
+            $isThrown = true;
+        }
+
+        $this->assertTrue($isThrown);
+
+        //
+
+        $isThrown = false;
+
+        try {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $taskService->update($task1->getId(), (object) [
+                'parentId' => $account2->getId(),
+                'parentType' => $account2->getEntityType(),
+            ], UpdateParams::create());
+        }
+        catch (Forbidden) {
+            $isThrown = true;
+        }
+
+        $this->assertTrue($isThrown);
+
+        //
+
+        $metadata = $this->getContainer()->getByClass(Metadata::class);
+
+        $metadata->set('entityDefs', Opportunity::ENTITY_TYPE, [
+            'fields' => [
+                'account' => [
+                    'defaultAttributes' => [
+                        'accountId' => $account2->getId(),
+                    ]
+                ]
+            ]
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication();
+
+        $oppService = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Opportunity::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $oppService->create((object) [
+            'name' => '2',
+            'accountId' => $account2->getId(),
+            'assignedUserId' => $user->getId(),
+            'amount' => 1.0,
+            'amountCurrency' => 'USD',
+            'probability' => 10,
+            'closeDate' => Date::createToday()->getString(),
+        ], CreateParams::create());
     }
 }

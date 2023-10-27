@@ -34,10 +34,13 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Lead;
+use Espo\ORM\EntityManager;
 use Espo\Tools\App\SettingsService as SettingsService;
+use tests\integration\Core\BaseTestCase;
 
-class FieldValidationTest extends \tests\integration\Core\BaseTestCase
+class FieldValidationTest extends BaseTestCase
 {
     private function setFieldsDefs(Application $app, string $entityType, array $data)
     {
@@ -210,6 +213,27 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ], CreateParams::create());
     }
 
+    private function getAdminUser(): User
+    {
+        $repository = $this->getContainer()
+            ->getByClass(EntityManager::class)
+            ->getRDBRepositoryByClass(User::class);
+
+        $user = $repository
+            ->where(['type' => User::TYPE_ADMIN])
+            ->findOne();
+
+        if (!$user) {
+            $user = $repository->getNew();
+            $user->set('userName', 'test-admin');
+            $user->set('type', User::TYPE_ADMIN);
+
+            $repository->save($user);
+        }
+
+        return $user;
+    }
+
     public function testRequiredLink2()
     {
         $app = $this->createApplication();
@@ -225,7 +249,7 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ->create('Account')
             ->create((object) [
                 'name' => 'test',
-                'assignedUserId' => '1',
+                'assignedUserId' => $this->getAdminUser()->getId(),
             ], CreateParams::create());
 
         $this->assertTrue(true);
@@ -391,7 +415,7 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
                 'name' => 'test',
                 'dateStart' => '2021-01-01 00:00:00',
                 'duration' => 1000,
-                'assignedUserId' => '1',
+                'assignedUserId' => $this->getAdminUser()->getId(),
             ], CreateParams::create());
 
         $this->assertTrue(true);

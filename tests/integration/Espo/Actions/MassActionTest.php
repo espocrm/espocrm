@@ -30,6 +30,7 @@
 namespace tests\integration\Espo\Actions;
 
 use Espo\Core\MassAction\Api\PostProcess;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 
 use Espo\Core\MassAction\ServiceParams;
@@ -45,7 +46,7 @@ use Espo\Core\Api\ResponseWrapper;
 use Espo\Core\Application;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\ORM\EntityManager;
+use Espo\ORM\EntityManager;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Tools\MassUpdate\Data as MassUpdateData;
@@ -71,8 +72,31 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
         $this->action = $this->getInjectableFactory()->create(PostProcess::class);
     }
 
+    private function getAdminUser(): User
+    {
+        $repository = $this->getContainer()
+            ->getByClass(EntityManager::class)
+            ->getRDBRepositoryByClass(User::class);
+
+        $user = $repository
+            ->where(['type' => User::TYPE_ADMIN])
+            ->findOne();
+
+        if (!$user) {
+            $user = $repository->getNew();
+            $user->set('userName', 'test-admin');
+            $user->set('type', User::TYPE_ADMIN);
+
+            $repository->save($user);
+        }
+
+        return $user;
+    }
+
     public function testUpdate1(): void
     {
+        $adminUser = $this->getAdminUser();
+
         $this->createUser([
             'userName' => 'admin-test',
             'type' => 'admin',
@@ -93,7 +117,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
                 'ids' => [$account->getId()],
             ],
             'data' => [
-                'assignedUserId' => '1'
+                'assignedUserId' => $adminUser->getId(),
             ],
         ];
 
@@ -108,7 +132,7 @@ class MassActionTest extends \tests\integration\Core\BaseTestCase
 
         $accountReloaded = $this->entityManager->getEntity('Account', $account->getId());
 
-        $this->assertEquals('1', $accountReloaded->get('assignedUserId'));
+        $this->assertEquals($adminUser->getId(), $accountReloaded->get('assignedUserId'));
     }
 
     public function testUpdateNotAllowed(): void
