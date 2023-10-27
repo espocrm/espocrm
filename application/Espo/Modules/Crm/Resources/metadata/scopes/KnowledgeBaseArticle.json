@@ -3,6 +3,7 @@
     "layouts": true,
     "tab": true,
     "acl": true,
+    "aclPortal": true,
     "aclPortalLevelList": ["all", "no"],
     "aclPortalActionList": ["read"],
     "module": "Crm",
