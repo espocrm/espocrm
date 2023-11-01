@@ -74,21 +74,22 @@ const Select = {
      * @param {Element|JQuery} element An element.
      * @param {module:ui/select~Options} [options] Options.
      */
-    init: function (element, options) {
-        let $el = $(element);
+    init: function (element, options = {}) {
+        const score = options.score;
+        const $el = $(element);
 
         options = Select.applyDefaultOptions(options || {});
 
-        let plugins = [];
+        const plugins = [];
 
         Select.loadEspoSelectPlugin();
 
         plugins.push('espo_select');
 
-        let itemClasses = {};
+        const itemClasses = {};
 
-        let allowedValues = $el.children().toArray().map(item => {
-            let value = item.getAttributeNode('value').value;
+        const allowedValues = $el.children().toArray().map(item => {
+            const value = item.getAttributeNode('value').value;
 
             if (item.classList) {
                 itemClasses[value] = item.classList.toString();
@@ -99,13 +100,13 @@ const Select = {
 
         let $relativeParent = null;
 
-        let $modalBody = $el.closest('.modal-body');
+        const $modalBody = $el.closest('.modal-body');
 
         if ($modalBody.length) {
             $relativeParent = $modalBody;
         }
 
-        let selectizeOptions = {
+        const selectizeOptions = {
             sortField: [{field: options.sortBy, direction: options.sortDirection}],
             load: options.load,
             loadThrottle: 1,
@@ -125,7 +126,7 @@ const Select = {
                         .get(0).outerHTML;
                 },
                 option: function (data) {
-                    let $div = $('<div>')
+                    const $div = $('<div>')
                         .addClass('option')
                         .addClass(data.value === '' ? 'selectize-dropdown-emptyoptionlabel' : '')
                         .addClass(itemClasses[data.value] || '')
@@ -153,7 +154,7 @@ const Select = {
         if (!options.matchAnyWord) {
             /** @this Selectize */
             selectizeOptions.score = function (search) {
-                let score = this.getScoreFunction(search);
+                const score = this.getScoreFunction(search);
 
                 search = search.toLowerCase();
 
@@ -170,12 +171,12 @@ const Select = {
         if (options.matchAnyWord) {
             /** @this Selectize */
             selectizeOptions.score = function (search) {
-                let score = this.getScoreFunction(search);
+                const score = this.getScoreFunction(search);
 
                 search = search.toLowerCase();
 
                 return function (item) {
-                    let text = item.text.toLowerCase();
+                    const text = item.text.toLowerCase();
 
                     if (
                         !text.split(' ').find(item => item.startsWith(search)) &&
@@ -190,7 +191,6 @@ const Select = {
         }
 
         if (options.score) {
-            let score = options.score;
 
             selectizeOptions.score = function (search) {
                 return function (item) {
@@ -209,7 +209,7 @@ const Select = {
      * @param {{noTrigger?: boolean}} [options] Options.
      */
     focus: function (element, options) {
-        let $el = $(element);
+        const $el = $(element);
 
         options = options || {};
 
@@ -220,7 +220,7 @@ const Select = {
             return;
         }
 
-        let selectize = $el[0].selectize;
+        const selectize = $el[0].selectize;
 
         if (options.noTrigger) {
             selectize.focusNoTrigger = true;
@@ -240,9 +240,9 @@ const Select = {
      * @param {{value: string, text: string}[]} options Options.
      */
     setOptions: function (element, options) {
-        let $el = $(element);
+        const $el = $(element);
 
-        let selectize = $el.get(0).selectize;
+        const selectize = $el.get(0).selectize;
 
         selectize.clearOptions(true);
         selectize.load(callback => {
@@ -264,7 +264,7 @@ const Select = {
      * @param {string} value A value.
      */
     setValue: function ($el, value) {
-        let selectize = $el.get(0).selectize;
+        const selectize = $el.get(0).selectize;
 
         selectize.setValue(value, true);
     },
@@ -290,14 +290,14 @@ const Select = {
     applyDefaultOptions: function (options) {
         options = Espo.Utils.clone(options);
 
-        let defaults = {
+        const defaults = {
             selectOnTab: false,
             matchAnyWord: false,
             sortBy: '$order',
             sortDirection: 'asc',
         };
 
-        for (let key in defaults) {
+        for (const key in defaults) {
             if (key in options) {
                 continue;
             }
@@ -320,10 +320,10 @@ const Select = {
         const KEY_BACKSPACE = 8;
 
         Selectize.define('espo_select', function () {
-            let self = this;
+            const self = this;
 
             this.setup = (function () {
-                let original = self.setup;
+                const original = self.setup;
 
                 return function () {
                     original.apply(this, arguments);
@@ -367,7 +367,7 @@ const Select = {
             })();*/
 
             this.refreshOptions = (function () {
-                let original = self.refreshOptions;
+                const original = self.refreshOptions;
 
                 return function () {
                     if (self.focusNoTrigger) {
@@ -380,7 +380,7 @@ const Select = {
             })();
 
             this.blur = (function () {
-                let original = self.blur;
+                const original = self.blur;
 
                 return function () {
                     // Prevent closing on mouse down.
@@ -393,7 +393,7 @@ const Select = {
             })();
 
             this.close = (function () {
-                let original = self.close;
+                const original = self.close;
 
                 return function () {
                     if (self.preventClose) {
@@ -405,7 +405,7 @@ const Select = {
             })();
 
             this.onOptionSelect = (function () {
-                let original = self.onOptionSelect;
+                const original = self.onOptionSelect;
 
                 return function (e) {
                     if (e.type === 'mousedown' || e.type === 'click') {
@@ -428,10 +428,10 @@ const Select = {
             })();
 
             this.open = (function() {
-                let original = self.open;
+                const original = self.open;
 
                 return function () {
-                    let toProcess = !(self.isLocked || self.isOpen);
+                    const toProcess = !(self.isLocked || self.isOpen);
 
                     original.apply(this, arguments);
 
@@ -439,8 +439,8 @@ const Select = {
                         return;
                     }
 
-                    let $dropdownContent = self.$dropdown.children().first();
-                    let $selected = $dropdownContent.find('.selected');
+                    const $dropdownContent = self.$dropdown.children().first();
+                    const $selected = $dropdownContent.find('.selected');
 
                     if (!$selected.length) {
                         return;
@@ -456,7 +456,7 @@ const Select = {
             })();
 
             this.onMouseDown = (function() {
-                let original = self.onMouseDown;
+                const original = self.onMouseDown;
 
                 return function (e) {
                     // Prevent flicking when clicking on input.
@@ -473,7 +473,7 @@ const Select = {
             })();
 
             this.onFocus = (function() {
-                let original = self.onFocus;
+                const original = self.onFocus;
 
                 return function (e) {
                     if (self.preventReOpenOnFocus) {
@@ -504,7 +504,7 @@ const Select = {
             };
 
             this.onBlur = (function() {
-                let original = self.onBlur;
+                const original = self.onBlur;
 
                 return function () {
                     // Prevent closing on mouse down.
@@ -521,7 +521,7 @@ const Select = {
             })();
 
             this.onKeyDown = (function() {
-                let original = self.onKeyDown;
+                const original = self.onKeyDown;
 
                 return function (e) {
                     if (IS_MAC ? e.metaKey : e.ctrlKey) {
@@ -558,7 +558,7 @@ const Select = {
                                 RegExp(/^\p{L}/, 'u').test(e.key) // is letter
                             )
                         ) {
-                            let keyCode = e.keyCode;
+                            const keyCode = e.keyCode;
                             e.keyCode = KEY_BACKSPACE;
                             self.deleteSelection(e);
                             e.keyCode = keyCode;
@@ -578,30 +578,30 @@ const Select = {
                 };
 
                 return function() {
-                    let $control = self.$control;
+                    const $control = self.$control;
 
-                    let offset = this.settings.dropdownParent === 'body' ?
+                    const offset = this.settings.dropdownParent === 'body' ?
                         $control.offset() :
                         $control.position();
 
                     offset.top += $control.outerHeight(true);
 
-                    let dropdownHeight = self.$dropdown.prop('scrollHeight') + 5;
-                    let controlPosTop = self.$control.get(0).getBoundingClientRect().top;
-                    let wrapperHeight = self.$wrapper.height();
+                    const dropdownHeight = self.$dropdown.prop('scrollHeight') + 5;
+                    const controlPosTop = self.$control.get(0).getBoundingClientRect().top;
+                    const wrapperHeight = self.$wrapper.height();
 
-                    let controlPosBottom = self.$control.get(0).getBoundingClientRect().bottom;
+                    const controlPosBottom = self.$control.get(0).getBoundingClientRect().bottom;
 
-                    let boundaryTop = !this.settings.$relativeParent ? 0 :
+                    const boundaryTop = !this.settings.$relativeParent ? 0 :
                         this.settings.$relativeParent.get(0).getBoundingClientRect().top;
 
-                    let position =
+                    const position =
                         controlPosTop + dropdownHeight + wrapperHeight > window.innerHeight &&
                         controlPosBottom - dropdownHeight - wrapperHeight >= boundaryTop ?
                             POSITION.top :
                             POSITION.bottom;
 
-                    let styles = {
+                    const styles = {
                         width: $control.outerWidth(),
                         left: offset.left,
                     };
