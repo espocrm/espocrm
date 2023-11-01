@@ -28,6 +28,7 @@
 
 import ModalView from 'views/modal';
 import MassActionHelper from 'helpers/mass-action';
+import Select from 'ui/select';
 
 class MassUpdateModalView extends ModalView {
 
@@ -224,6 +225,8 @@ class MassUpdateModalView extends ModalView {
                     );
 
             $row.append($cellAction);
+
+            Select.init($select.get(0));
         }
     }
 
