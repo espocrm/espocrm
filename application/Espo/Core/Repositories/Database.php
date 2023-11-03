@@ -350,11 +350,7 @@ class Database extends RDBRepository
             }
         }
 
-        if (
-            !$entity->isNew() &&
-            !$isChanged &&
-            empty($options[SaveOption::MODIFIED_BY_ID])
-        ) {
+        if (!$isChanged && empty($options[SaveOption::MODIFIED_BY_ID])) {
             return;
         }
 
