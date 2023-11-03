@@ -50,6 +50,7 @@ class WysiwygFieldView extends TextFieldView {
     validationElementSelector = '.note-editor'
     htmlPurificationDisabled = false
     tableClassName = 'table table-bordered'
+    noStylesheet = false
 
     events = {
         /** @this WysiwygFieldView */
@@ -317,24 +318,28 @@ class WysiwygFieldView extends TextFieldView {
         let body = this.sanitizeHtml(this.model.get(this.name) || '');
 
         const useFallbackStylesheet = this.getThemeManager().getParam('isDark') && this.htmlHasColors(body);
+        const addFallbackClass = this.getThemeManager().getParam('isDark') &&
+            (this.htmlHasColors(body) || this.noStylesheet);
 
         const $iframeContainer = $iframe.parent();
 
-        useFallbackStylesheet ?
+        addFallbackClass ?
             $iframeContainer.addClass('fallback') :
             $iframeContainer.removeClass('fallback');
 
-        const linkElement = iframeElement.contentWindow.document.createElement('link');
+        if (!this.noStylesheet) {
+            const linkElement = iframeElement.contentWindow.document.createElement('link');
 
-        linkElement.type = 'text/css';
-        linkElement.rel = 'stylesheet';
-        linkElement.href = this.getBasePath() + (
-            useFallbackStylesheet ?
-            this.getThemeManager().getIframeFallbackStylesheet() :
-            this.getThemeManager().getIframeStylesheet()
-        );
+            linkElement.type = 'text/css';
+            linkElement.rel = 'stylesheet';
+            linkElement.href = this.getBasePath() + (
+                useFallbackStylesheet ?
+                    this.getThemeManager().getIframeFallbackStylesheet() :
+                    this.getThemeManager().getIframeStylesheet()
+            );
 
-        body = linkElement.outerHTML + body;
+            body = linkElement.outerHTML + body;
+        }
 
         documentElement.write(body);
         documentElement.close();
@@ -495,7 +500,7 @@ class WysiwygFieldView extends TextFieldView {
             $iframe.on('load', () => {
                 processHeight(true);
 
-                if (useFallbackStylesheet) {
+                if (useFallbackStylesheet && !this.noStylesheet) {
                     processBg();
                 }
             });
