@@ -886,6 +886,7 @@ Espo.Ui = {
      * @property {'manual'|'click'|'hover'|'focus'} [trigger='manual'] A trigger type.
      * @property {boolean} [noToggleInit=false] Skip init toggle on click.
      * @property {boolean} [preventDestroyOnRender=false] Don't destroy on re-render.
+     * @property {boolean} [noHideOnOutsideClick=false] Don't hide on clicking outside.
      * @property {function(): void} [onShow] On-show callback.
      * @property {function(): void} [onHide] On-hide callback.
      */
@@ -896,18 +897,18 @@ Espo.Ui = {
      * @param {Element|JQuery} element An element.
      * @param {Espo.Ui~PopoverOptions} o Options.
      * @param {module:view} [view] A view.
+     * @return {{hide: function(), destroy: function(), show: function(), detach: function()}}
      */
     popover: function (element, o, view) {
-        let $el = $(element);
-
-        let $body = $('body')
-        let content = o.content || Handlebars.Utils.escapeExpression(o.text || '');
+        const $el = $(element);
+        const $body = $('body');
+        const content = o.content || Handlebars.Utils.escapeExpression(o.text || '');
         let isShown = false;
 
         let container = o.container;
 
         if (!container) {
-            let $modalBody = $el.closest('.modal-body');
+            const $modalBody = $el.closest('.modal-body');
 
             container = $modalBody.length ? $modalBody : 'body';
         }
@@ -929,25 +930,27 @@ Espo.Ui = {
                     return;
                 }
 
-                $body.off('click.popover-' + view.cid);
-
-                $body.on('click.popover-' + view.cid, e => {
-                    if ($(e.target).closest('.popover-content').get(0)) {
-                        return;
-                    }
-
-                    if ($.contains($el.get(0), e.target)) {
-                        return;
-                    }
-
-                    if ($el.get(0) === e.target) {
-                        return;
-                    }
-
+                if (view && !o.noHideOnOutsideClick) {
                     $body.off('click.popover-' + view.cid);
-                    // noinspection JSUnresolvedReference
-                    $el.popover('hide');
-                });
+
+                    $body.on('click.popover-' + view.cid, e => {
+                        if ($(e.target).closest('.popover-content').get(0)) {
+                            return;
+                        }
+
+                        if ($.contains($el.get(0), e.target)) {
+                            return;
+                        }
+
+                        if ($el.get(0) === e.target) {
+                            return;
+                        }
+
+                        $body.off('click.popover-' + view.cid);
+                        // noinspection JSUnresolvedReference
+                        $el.popover('hide');
+                    });
+                }
 
                 if (o.onShow) {
                     o.onShow();
@@ -968,26 +971,46 @@ Espo.Ui = {
             });
         }
 
-        if (view) {
-            let hide = () => {
-                if (!isShown) {
-                    return;
-                }
+        let isDetached = false;
 
-                // noinspection JSUnresolvedReference
-                $el.popover('hide');
-            };
-
-            let destroy = () => {
-                // noinspection JSUnresolvedReference
-                $el.popover('destroy');
+        const detach = () => {
+            if (view) {
                 $body.off('click.popover-' + view.cid);
 
                 view.off('remove', destroy);
                 view.off('render', destroy);
                 view.off('render', hide);
-            };
+            }
 
+            isDetached = true;
+        };
+
+        const destroy = () => {
+            if (isDetached) {
+                return;
+            }
+
+            // noinspection JSUnresolvedReference
+            $el.popover('destroy');
+
+            detach();
+        };
+
+        const hide = () => {
+            if (!isShown) {
+                return;
+            }
+
+            // noinspection JSUnresolvedReference
+            $el.popover('hide');
+        };
+
+        const show = () => {
+            // noinspection JSUnresolvedReference
+            $el.popover('show');
+        };
+
+        if (view) {
             view.once('remove', destroy);
 
             if (!o.preventDestroyOnRender) {
@@ -998,6 +1021,13 @@ Espo.Ui = {
                 view.on('render', hide);
             }
         }
+
+        return {
+            hide: () => hide(),
+            destroy: () => destroy(),
+            show: () => show(),
+            detach: () => detach(),
+        };
     },
 
     /**

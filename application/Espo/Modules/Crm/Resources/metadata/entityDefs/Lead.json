@@ -216,7 +216,6 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true,
             "importDisabled": true,
             "noLoad": true
         },

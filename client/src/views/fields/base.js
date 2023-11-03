@@ -1450,8 +1450,10 @@ class BaseFieldView extends View {
      *
      * @param {string} message A message.
      * @param {string|JQuery|Element} [target] A target element or selector.
+     * @param {module:view} [view] A child view that contains the target. The closest view should to passed.
+     *   Should be omitted if there is no child views or the target is not rendered by a child view.
      */
-    showValidationMessage(message, target) {
+    showValidationMessage(message, target, view) {
         if (this.validationMessageSuspended) {
             return;
         }
@@ -1475,7 +1477,7 @@ class BaseFieldView extends View {
         }
 
         if ($el.length) {
-            let rect = $el.get(0).getBoundingClientRect();
+            const rect = $el.get(0).getBoundingClientRect();
 
             this.lastValidationMessage = message;
 
@@ -1484,51 +1486,42 @@ class BaseFieldView extends View {
             }
         }
 
-        $el
-            .popover({
-                placement: 'bottom',
-                container: 'body',
-                content: this.getHelper().transformMarkdownText(message).toString(),
-                html: true,
-                trigger: 'manual'
-            })
-            .popover('show');
+        this._popoverMap = this._popoverMap || new WeakMap();
+        const element = $el.get(0);
 
-        let isDestroyed = false;
+        if (!element) {
+            return;
+        }
 
-        $el.closest('.field').one('mousedown click', () => {
-            if (isDestroyed) {
-                return;
+        if (this._popoverMap[element]) {
+            try {
+                this._popoverMap[element].detach();
             }
+            catch (e) {}
+        }
 
-            $el.popover('destroy');
-            isDestroyed = true;
-        });
+        const popover = Espo.Ui.popover($el, {
+            placement: 'bottom',
+            container: 'body',
+            content: this.getHelper().transformMarkdownText(message).toString(),
+            trigger: 'manual',
+            noToggleInit: true,
+            noHideOnOutsideClick: true,
+        }, view || this);
 
-        this.once('render remove', () => {
-            if (isDestroyed) {
-                return;
-            }
+        popover.show();
 
-            if ($el) {
-                $el.popover('destroy');
-                isDestroyed = true;
-            }
-        });
+        this._popoverMap[element] = popover;
+
+        $el.closest('.field').one('mousedown click', () => popover.destroy());
+
+        this.once('render remove', () => popover.destroy());
 
         if (this._timeout) {
             clearTimeout(this._timeout);
         }
 
-        this._timeout = setTimeout(() => {
-            if (isDestroyed) {
-                return;
-            }
-
-            $el.popover('destroy');
-            isDestroyed = true;
-
-        }, this.VALIDATION_POPOVER_TIMEOUT);
+        this._timeout = setTimeout(() => popover.destroy(), this.VALIDATION_POPOVER_TIMEOUT);
     }
 
     /**
