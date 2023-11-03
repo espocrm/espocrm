@@ -297,6 +297,11 @@ class Binding implements BindingProcessor
             'Espo\\Core\\Record\\ActionHistory\\ActionLogger',
             'Espo\\Core\\Record\\ActionHistory\\DefaultActionLogger'
         );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Mail\\Importer',
+            'Espo\\Core\\Mail\\Importer\\DefaultImporter'
+        );
     }
 
     private function bindAcl(Binder $binder): void
