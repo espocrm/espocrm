@@ -51,6 +51,8 @@ class WysiwygFieldView extends TextFieldView {
     validationElementSelector = '.note-editor'
     htmlPurificationDisabled = false
     tableClassName = 'table table-bordered'
+    tableBorderWidth
+    tableCellPadding
     noStylesheet = false
 
     events = {
@@ -179,7 +181,7 @@ class WysiwygFieldView extends TextFieldView {
             ['color', ['color']],
             ['para', ['ul', 'ol', 'paragraph']],
             ['height', ['height']],
-            ['table', ['table', 'espoLink', 'espoImage', 'hr']],
+            ['table', ['espoTable', 'espoLink', 'espoImage', 'hr']],
             ['misc', ['codeview', 'fullscreen']],
         ];
 
@@ -591,6 +593,8 @@ class WysiwygFieldView extends TextFieldView {
             dialogsInBody: this.$el,
             codeviewFilter: true,
             tableClassName: this.tableClassName,
+            tableBorderWidth: this.tableBorderWidth,
+            tableCellPadding: this.tableCellPadding,
         };
 
         if (this.height) {

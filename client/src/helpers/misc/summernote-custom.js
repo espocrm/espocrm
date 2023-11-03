@@ -38,9 +38,159 @@ function init(langSets) {
             icon: '<i class="note-icon-link"/>',
             tooltip: langSets.link.link,
         },
+        espoTable: {
+            icon: '<i class="note-icon-table"/>',
+            tooltip: langSets.table.table,
+        },
     });
 
     $.extend($.summernote.plugins, {
+        'espoTable': function (context) {
+            const ui = $.summernote.ui;
+            const options = context.options;
+            const self = options.espoView;
+            const lang = options.langInfo;
+
+            if (!self) {
+                return;
+            }
+
+            context.memo('button.espoTable', () => {
+                return ui.buttonGroup([
+                    ui.button({
+                        className: 'dropdown-toggle',
+                        contents: ui.dropdownButtonContents(ui.icon(options.icons.table), options),
+                        tooltip: options.espoTable.tooltip,
+                        data: {
+                            toggle: 'dropdown',
+                        },
+                    }),
+                    ui.dropdown({
+                        title: lang.table.table,
+                        className: 'note-table',
+                        items: [
+                            '<div class="note-dimension-picker">',
+                            '<div class="note-dimension-picker-mousecatcher" data-event="insertTable" data-value="1x1"></div>',
+                            '<div class="note-dimension-picker-highlighted"></div>',
+                            '<div class="note-dimension-picker-unhighlighted"></div>',
+                            '</div>',
+                            '<div class="note-dimension-display">1 x 1</div>',
+                        ].join(''),
+                    }),
+                ], {
+                    callback: ($node) => {
+                        const $catcher = $node.find('.note-dimension-picker-mousecatcher');
+
+                        const createTable = (colCount, rowCount, options) => {
+                            const tds = [];
+                            let tdHTML;
+
+                            for (let idxCol = 0; idxCol < colCount; idxCol++) {
+                                tds.push('<td>&nbsp;</td>');
+                            }
+
+                            tdHTML = tds.join('');
+                            const trs = [];
+                            let trHTML;
+
+                            for (let idxRow = 0; idxRow < rowCount; idxRow++) {
+                                trs.push('<tr>' + tdHTML + '</tr>');
+                            }
+
+                            trHTML = trs.join('');
+                            const $table = $('<table>' + trHTML + '</table>');
+
+                            if (options.tableBorderWidth !== undefined) {
+                                $table.attr('border', options.tableBorderWidth);
+                                //$table.css({border: options.tableBorderWidth + 'pt'});
+                            }
+
+                            if (options.tableCellPadding !== undefined) {
+                                $table.attr('cellpadding', options.tableCellPadding);
+                            }
+
+                            $table.css({
+                                width: '100%',
+                                borderCollapse: 'collapse',
+                                borderSpacing: 0,
+                            });
+
+                            if (options && options.tableClassName) {
+                                $table.addClass(options.tableClassName);
+                            }
+
+                            return $table[0];
+                        };
+
+                        $catcher
+                            .css({
+                                width: options.insertTableMaxSize.col + 'em',
+                                height: options.insertTableMaxSize.row + 'em',
+                            })
+                            .mousedown(() => {
+                                const $note = context.$note;
+                                const dims = $catcher.data('value').split('x');
+
+                                const range = $note.summernote('editor.getLastRange').deleteContents();
+
+                                createTable(dims[0], dims[1], options)
+
+                                range.insertNode(
+                                    createTable(dims[0], dims[1], options)
+                                );
+                            })
+                            .on('mousemove', event => {
+                                const PX_PER_EM = 18;
+                                const $picker = $(event.target.parentNode);
+
+                                const $dimensionDisplay = $picker.next();
+                                const $catcher = $picker.find('.note-dimension-picker-mousecatcher');
+                                const $highlighted = $picker.find('.note-dimension-picker-highlighted');
+                                const $unhighlighted = $picker.find('.note-dimension-picker-unhighlighted');
+                                let posOffset;
+
+                                if (event.offsetX === undefined) {
+                                    const posCatcher = $(event.target).offset();
+                                    posOffset = {
+                                        x: event.pageX - posCatcher.left,
+                                        y: event.pageY - posCatcher.top
+                                    };
+                                } else {
+                                    posOffset = {
+                                        x: event.offsetX,
+                                        y: event.offsetY
+                                    };
+                                }
+
+                                const dim = {
+                                    c: Math.ceil(posOffset.x / PX_PER_EM) || 1,
+                                    r: Math.ceil(posOffset.y / PX_PER_EM) || 1
+                                };
+                                $highlighted.css({
+                                    width: dim.c + 'em',
+                                    height: dim.r + 'em'
+                                });
+
+                                $catcher.data('value', dim.c + 'x' + dim.r);
+
+                                if (dim.c > 3 && dim.c < options.insertTableMaxSize.col) {
+                                    $unhighlighted.css({
+                                        width: dim.c + 1 + 'em'
+                                    });
+                                }
+
+                                if (dim.r > 3 && dim.r < options.insertTableMaxSize.row) {
+                                    $unhighlighted.css({
+                                        height: dim.r + 1 + 'em'
+                                    });
+                                }
+
+                                $dimensionDisplay.html(dim.c + ' x ' + dim.r);
+                            });
+                    },
+                }).render();
+            });
+        },
         'espoImage': function (context) {
             const ui = $.summernote.ui;
             const options = context.options;
