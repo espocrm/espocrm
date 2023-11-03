@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Record\Duplicator;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\Defs;
@@ -97,8 +98,7 @@ class EntityDuplicator
     {
         $type = $fieldDefs->getType();
 
-        // @todo Use FieldType constants.
-        if (in_array($type, ['autoincrement', 'number'])) {
+        if (in_array($type, [FieldType::AUTOINCREMENT, FieldType::NUMBER])) {
             return true;
         }
 
