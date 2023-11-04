@@ -248,7 +248,7 @@ class ListView extends MainView {
 
         this.viewMode = this.viewMode || this.defaultViewMode;
 
-        let viewModeList = this.options.viewModeList ||
+        const viewModeList = this.options.viewModeList ||
             this.viewModeList ||
             this.getMetadata().get(['clientDefs', this.scope, 'listViewModeList']);
 
@@ -268,10 +268,10 @@ class ListView extends MainView {
         if (this.viewModeList.length > 1) {
             let viewMode = null;
 
-            let modeKey = 'listViewMode' + this.scope;
+            const modeKey = 'listViewMode' + this.scope;
 
             if (this.getStorage().has('state', modeKey)) {
-                let storedViewMode = this.getStorage().get('state', modeKey);
+                const storedViewMode = this.getStorage().get('state', modeKey);
 
                 if (storedViewMode && this.viewModeList.includes(storedViewMode)) {
                     viewMode = storedViewMode;
@@ -388,7 +388,7 @@ class ListView extends MainView {
         this.collection.maxSize = this.collectionMaxSize;
 
         if (toStore) {
-            let modeKey = 'listViewMode' + this.scope;
+            const modeKey = 'listViewMode' + this.scope;
 
             this.getStorage().set('state', modeKey, mode);
         }
@@ -403,7 +403,7 @@ class ListView extends MainView {
             return;
         }
 
-        let methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
+        const methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
 
         if (this[methodName]) {
             this[methodName]();
@@ -439,7 +439,7 @@ class ListView extends MainView {
      * Set up a search manager.
      */
     setupSearchManager() {
-        let collection = this.collection;
+        const collection = this.collection;
 
         const searchManager = new SearchManager(
             collection,
@@ -472,7 +472,7 @@ class ListView extends MainView {
      * Apply stored sorting.
      */
     applyStoredSorting() {
-        let sortingParams = this.getStorage().get('listSorting', this.collection.entityType) || {};
+        const sortingParams = this.getStorage().get('listSorting', this.collection.entityType) || {};
 
         if ('orderBy' in sortingParams) {
             this.collection.orderBy = sortingParams.orderBy;
@@ -519,7 +519,7 @@ class ListView extends MainView {
             return this.recordKanbanView;
         }
 
-        let propertyName = 'record' + Espo.Utils.upperCaseFirst(this.viewMode) + 'View';
+        const propertyName = 'record' + Espo.Utils.upperCaseFirst(this.viewMode) + 'View';
 
         viewName = this[propertyName];
 
@@ -586,7 +586,7 @@ class ListView extends MainView {
      * @return {Promise<module:views/record/list>}
      */
     createListRecordView(fetch) {
-        let o = {
+        const o = {
             collection: this.collection,
             selector: '.list-container',
             scope: this.scope,
@@ -620,7 +620,7 @@ class ListView extends MainView {
 
         this.prepareRecordViewOptions(o);
 
-        let listViewName = this.getRecordViewName();
+        const listViewName = this.getRecordViewName();
 
         return this.createView('list', listViewName, o, view => {
             if (!this.hasParentView()) {
@@ -674,21 +674,21 @@ class ListView extends MainView {
      * @inheritDoc
      */
     getHeader() {
+        const $root = $('<span>')
+            .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
         if (this.options.params && this.options.params.fromAdmin) {
             let $root = $('<a>')
                 .attr('href', '#Admin')
                 .text(this.translate('Administration', 'labels', 'Admin'));
 
-            let $scope = $('<span>')
+            const $scope = $('<span>')
                 .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
 
             return this.buildHeaderHtml([$root, $scope]);
         }
 
-        let $root = $('<span>')
-            .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
 
-        let headerIconHtml = this.getHeaderIconHtml();
+        const headerIconHtml = this.getHeaderIconHtml();
 
         if (headerIconHtml) {
             $root.prepend(headerIconHtml);
@@ -734,11 +734,11 @@ class ListView extends MainView {
     actionQuickCreate(data) {
         data = data || {};
 
-        let attributes = this.getCreateAttributes() || {};
+        const attributes = this.getCreateAttributes() || {};
 
         Espo.Ui.notify(' ... ');
 
-        let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
             'views/modals/edit';
 
         let options = {
@@ -754,7 +754,7 @@ class ListView extends MainView {
             options.focusForCreate = true;
         }
 
-        let returnDispatchParams = {
+        const returnDispatchParams = {
             controller: this.scope,
             action: null,
             options: {isReturn: true},
@@ -786,10 +786,10 @@ class ListView extends MainView {
     actionCreate(data) {
         data = data || {};
 
-        let router = this.getRouter();
+        const router = this.getRouter();
 
-        let url = '#' + this.scope + '/create';
-        let attributes = this.getCreateAttributes() || {};
+        const url = '#' + this.scope + '/create';
+        const attributes = this.getCreateAttributes() || {};
 
         let options = {attributes: attributes};
 
@@ -801,7 +801,7 @@ class ListView extends MainView {
             options.focusForCreate = true;
         }
 
-        let returnDispatchParams = {
+        const returnDispatchParams = {
             controller: this.scope,
             action: null,
             options: {isReturn: true},
@@ -866,7 +866,7 @@ class ListView extends MainView {
             return;
         }
 
-        let $search = this.$el.find('input.text-filter').first();
+        const $search = this.$el.find('input.text-filter').first();
 
         if (!$search.length) {
             return;
