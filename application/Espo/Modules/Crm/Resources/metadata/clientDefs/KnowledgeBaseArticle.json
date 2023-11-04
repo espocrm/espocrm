@@ -1,9 +1,9 @@
-{
+    {
     "controller": "controllers/record",
     "views": {
         "list": "crm:views/knowledge-base-article/list"
     },
-   "recordViews":{
+    "recordViews":{
         "editQuick":"crm:views/knowledge-base-article/record/edit-quick",
         "detailQuick":"crm:views/knowledge-base-article/record/detail-quick",
         "detail":"crm:views/knowledge-base-article/record/detail",
