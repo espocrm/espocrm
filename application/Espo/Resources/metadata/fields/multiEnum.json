@@ -105,5 +105,6 @@
         "update",
         "add",
         "remove"
-    ]
+    ],
+    "default": []
 }

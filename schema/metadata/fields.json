@@ -121,6 +121,9 @@
             },
             "description": "Columns used in full-text search."
         },
+        "default": {
+            "description": "A default value. Used when populating defaults for a new record in frontend. Usually to be set to null."
+        },
         "valueFactoryClassName": {
             "type": "string",
             "description": "A factory that creates value-objects for this field. A value-object can be obtained by calling getValueObject method on an Entity. Should implement Espo\\ORM\\Value\\ValueFactory."

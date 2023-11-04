@@ -832,6 +832,19 @@ class Model {
     }
 
     /**
+     * Get a field list.
+     *
+     * @return {string[]}
+     */
+    getFieldList() {
+        if (!this.defs || !this.defs.fields) {
+            return [];
+        }
+
+        return Object.keys(this.defs.fields);
+    }
+
+    /**
      * Get a field type.
      *
      * @param {string} field

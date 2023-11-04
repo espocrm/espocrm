@@ -36,12 +36,14 @@ class DefaultsPopulator {
      * @param {module:models/preferences} preferences
      * @param {module:acl-manager} acl
      * @param {module:models/settings} config
+     * @param {module:metadata} metadata
      */
-    constructor(user, preferences, acl, config) {
+    constructor(user, preferences, acl, config, metadata) {
         this.user = user;
         this.preferences = preferences;
         this.acl = acl;
         this.config = config;
+        this.metadata = metadata;
     }
 
     /**
@@ -61,6 +63,8 @@ class DefaultsPopulator {
         if (this.user.isPortal()) {
             this.prepareForPortal(model, defaultHash);
         }
+
+        this.prepareFields(model, defaultHash);
 
         for (const attr in defaultHash) {
             if (model.has(attr)) {
@@ -214,6 +218,87 @@ class DefaultsPopulator {
                 defaultHash['contactsNames'] = names;
             }
         }
+    }
+
+    /**
+     * @param {module:model} model
+     * @param {Object.<string, *>} defaultHash
+     * @private
+     */
+    prepareFields(model, defaultHash) {
+        const set = (attribute, value) => {
+            if (
+                attribute in defaultHash ||
+                model.has(attribute)
+            ) {
+                return;
+            }
+
+            defaultHash[attribute] = value;
+        };
+
+        model.getFieldList().forEach(field => {
+            const type = model.getFieldType(field);
+
+            if (!type) {
+                return;
+            }
+
+            /** @type {{default?: *}} */
+            const defs = this.metadata.get(`fields.${type}`) || {};
+
+            if ('default' in defs) {
+                set(field, defs.default);
+
+                return;
+            }
+
+            if (
+                type === 'link' ||
+                type === 'linkOne' ||
+                type === 'file' ||
+                type === 'image'
+            ) {
+                set(field + 'Id', null);
+                set(field + 'Name', null);
+
+                return;
+            }
+
+            if (type === 'linkParent') {
+                set(field + 'Id', null);
+                set(field + 'Name', null);
+                set(field + 'Type', null);
+
+                return;
+            }
+
+            if (
+                type === 'linkMultiple' ||
+                type === 'attachmentMultiple'
+            ) {
+                set(field + 'Ids', []);
+                set(field + 'Names', {});
+
+                return;
+            }
+
+            if (type === 'enum') {
+                /** @type {string[]} */
+                const options = model.getFieldParam(field, 'options') || [];
+                let value = options[0] || '';
+                value = value !== '' ? value : null;
+
+                set(field, value);
+
+                return;
+            }
+
+            if (type === 'currency') {
+                set(field, null);
+                set(field + 'Currency', null);
+            }
+        });
     }
 }
 

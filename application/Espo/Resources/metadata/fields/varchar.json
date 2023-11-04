@@ -71,5 +71,6 @@
     "textFilter": true,
     "textFilterForeign": true,
     "dynamicLogicOptions": true,
-    "fullTextSearch": true
+    "fullTextSearch": true,
+    "default": null
 }

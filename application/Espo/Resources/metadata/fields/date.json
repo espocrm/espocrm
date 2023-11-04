@@ -79,5 +79,6 @@
     },
     "personalData": true,
     "valueFactoryClassName": "Espo\\Core\\Field\\Date\\DateFactory",
-    "attributeExtractorClassName": "Espo\\Core\\Field\\Date\\DateAttributeExtractor"
+    "attributeExtractorClassName": "Espo\\Core\\Field\\Date\\DateAttributeExtractor",
+    "default": null
 }

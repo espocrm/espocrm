@@ -49,5 +49,6 @@
     "fieldDefs": {
         "type": "varchar"
     },
-    "personalData": true
+    "personalData": true,
+    "default": null
 }

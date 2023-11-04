@@ -63,5 +63,6 @@
     "personalData": true,
     "textFilter": true,
     "textFilterForeign": true,
-    "fullTextSearch": true
+    "fullTextSearch": true,
+    "default": null
 }

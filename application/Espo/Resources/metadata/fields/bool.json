@@ -20,5 +20,6 @@
     "filter": true,
     "fieldDefs": {
         "notNull": true
-    }
+    },
+    "default": false
 }

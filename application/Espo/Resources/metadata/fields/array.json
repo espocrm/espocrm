@@ -97,5 +97,6 @@
         "update",
         "add",
         "remove"
-    ]
+    ],
+    "default": []
 }

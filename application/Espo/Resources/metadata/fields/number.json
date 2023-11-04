@@ -36,5 +36,6 @@
     },
     "hookClassName": "Espo\\Tools\\FieldManager\\Hooks\\NumberType",
     "textFilter": true,
-    "readOnly": true
+    "readOnly": true,
+    "default": null
 }

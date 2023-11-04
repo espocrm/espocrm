@@ -1287,7 +1287,8 @@ class BaseRecordView extends View {
             this.getUser(),
             this.getPreferences(),
             this.getAcl(),
-            this.getConfig()
+            this.getConfig(),
+            this.getMetadata()
         );
 
         populator.populate(this.model);

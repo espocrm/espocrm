@@ -54,5 +54,6 @@
         "update",
         "add",
         "remove"
-    ]
+    ],
+    "default": []
 }

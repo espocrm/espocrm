@@ -73,5 +73,6 @@
     },
     "translatedOptions": true,
     "dynamicLogicOptions": true,
-    "personalData": true
+    "personalData": true,
+    "default": []
 }
