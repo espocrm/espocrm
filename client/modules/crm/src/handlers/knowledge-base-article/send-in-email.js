@@ -26,27 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/knowledge-base-article/record/list-for-case', ['views/record/list'], function (Dep) {
+import RowActionHandler from 'handlers/row-action';
 
-    return Dep.extend({
+class SendInEmailHandler extends RowActionHandler {
 
-        actionSendInEmail: function (data) {
-            let model = this.collection.get(data.id);
-            let parentModel = this.getParentView().model;
+    isAvailable(model, action) {
+        return this.view.getAcl().checkScope('Email', 'create');
+    }
 
-            Espo.Ui.notify(' ... ');
+    process(model, action) {
+        const parentModel = this.view.getParentView().model;
+        const modelFactory = this.view.getModelFactory();
+        const collectionFactory = this.view.getCollectionFactory();
 
-            new Promise(resolve => {
-                model.fetch().then(() => resolve());
-            })
+        Espo.Ui.notify(' ... ');
+
+        model.fetch()
             .then(() => {
                 return new Promise(resolve => {
                     if (
                         parentModel.get('contactsIds') &&
                         parentModel.get('contactsIds').length
                     ) {
-                        this.getCollectionFactory().create('Contact', contactList => {
-                            let contactListFinal = [];
+                        collectionFactory.create('Contact', contactList => {
+                            const contactListFinal = [];
                             contactList.url = 'Case/' + parentModel.id + '/contacts';
 
                             contactList.fetch().then(() => {
@@ -59,40 +62,39 @@ define('crm:views/knowledge-base-article/record/list-for-case', ['views/record/l
                                 });
 
                                 resolve(contactListFinal);
-                            }, () => {
-                                resolve([]);
                             });
                         });
+
+                        return;
                     }
-                    else if (parentModel.get('accountId')) {
-                        this.getModelFactory().create('Account', account => {
+
+                    if (parentModel.get('accountId')) {
+                        modelFactory.create('Account', account => {
                             account.id = parentModel.get('accountId');
 
-                            account.fetch().then(() => {
-                                resolve([account]);
-                            }, () => {
-                                resolve([]);
-                            });
+                            account.fetch()
+                                .then(() => resolve([account]));
                         });
+
+                        return;
                     }
-                    else if (parentModel.get('leadId')) {
-                        this.getModelFactory().create('Lead', lead => {
+
+                    if (parentModel.get('leadId')) {
+                        modelFactory.create('Lead', lead => {
                             lead.id = parentModel.get('leadId');
 
-                            lead.fetch().then(() => {
-                                resolve([lead]);
-                            }, () => {
-                                resolve([]);
-                            });
+                            lead.fetch()
+                                .then(() => resolve([lead]));
                         });
+
+                        return;
                     }
-                    else {
-                        resolve([]);
-                    }
-                })
+
+                    resolve([]);
+                });
             })
             .then(list => {
-                let attributes = {
+                const attributes = {
                     parentType: 'Case',
                     parentId: parentModel.id,
                     parentName: parentModel.get('name'),
@@ -116,13 +118,13 @@ define('crm:views/knowledge-base-article/record/list-for-case', ['views/record/l
                 });
 
                 Espo.loader.require('crm:knowledge-base-helper', Helper => {
-                    const helper = new Helper(this.getLanguage());
+                    const helper = new Helper(this.view.getLanguage());
 
                     helper.getAttributesForEmail(model, attributes, attributes => {
-                        var viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+                        const viewName = this.view.getMetadata().get('clientDefs.Email.modalViews.compose') ||
                             'views/modals/compose-email';
 
-                        this.createView('composeEmail', viewName, {
+                        this.view.createView('composeEmail', viewName, {
                             attributes: attributes,
                             selectTemplateDisabled: true,
                             signatureDisabled: true,
@@ -131,7 +133,7 @@ define('crm:views/knowledge-base-article/record/list-for-case', ['views/record/l
 
                             view.render();
 
-                            this.listenToOnce(view, 'after:send', () => {
+                            this.view.listenToOnce(view, 'after:send', () => {
                                 parentModel.trigger('after:relate');
                             });
                         });
@@ -141,6 +143,7 @@ define('crm:views/knowledge-base-article/record/list-for-case', ['views/record/l
             .catch(() => {
                 Espo.Ui.notify(false);
             });
-        },
-    });
-});
+    }
+}
+
+export default SendInEmailHandler;

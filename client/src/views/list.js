@@ -593,7 +593,7 @@ class ListView extends MainView {
             skipBuildRows: true,
             shortcutKeysEnabled: true,
             forceDisplayTopBar: true,
-            viewType: 'list',
+            additionalRowActionList: this.getMetadata().get(`clientDefs.${this.scope}.rowActionList`),
         };
 
         if (this.getHelper().isXsScreen()) {

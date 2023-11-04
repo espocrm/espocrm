@@ -564,7 +564,10 @@ class ListRelatedView extends MainView {
             forceDisplayTopBar: true,
             rowActionsOptions:  {
                 unlinkDisabled: this.panelDefs.unlinkDisabled || this.unlinkDisabled,
+                editDisabled: this.panelDefs.editDisabled,
+                removeDisabled: this.panelDefs.removeDisabled,
             },
+            additionalRowActionList: this.panelDefs.rowActionList,
             ...o
         };
 

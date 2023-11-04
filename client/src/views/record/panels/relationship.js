@@ -276,8 +276,11 @@ class RelationshipPanelView extends BottomPanelView {
                     skipBuildRows: true,
                     rowActionsOptions: {
                         unlinkDisabled: this.defs.unlinkDisabled,
+                        editDisabled: this.defs.editDisabled,
+                        removeDisabled: this.defs.removeDisabled,
                     },
                     displayTotalCount: false,
+                    additionalRowActionList: this.defs.rowActionList,
                 }, view => {
                     view.getSelectAttributeList((selectAttributeList) => {
                         if (selectAttributeList) {

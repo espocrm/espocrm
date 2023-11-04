@@ -3289,14 +3289,7 @@ class ListRecordView extends View {
     }
 
     setupRowActionDefs() {
-        const viewType = this.options.viewType;
-
-        if (!viewType && !this.options.additionalRowActionList) {
-            return;
-        }
-
-        const list = this.options.additionalRowActionList ||
-            this.getMetadata().get(`clientDefs.${this.scope}.rowActions.${viewType}`);
+        const list = this.options.additionalRowActionList;
 
         if (!list) {
             return;
@@ -3306,22 +3299,20 @@ class ListRecordView extends View {
 
         const defs = this.getMetadata().get(`clientDefs.${this.scope}.rowActionDefs`) || {};
 
-        const promiseList = [];
-
-        list.forEach(action => {
+        const promiseList = list.map(action => {
             /** @type {{handler: string, label?: string, labelTranslation?: string}} */
             const itemDefs = defs[action] || {};
 
-            if (itemDefs.handler) {
-                promiseList.push(
-                    Espo.loader.requirePromise(itemDefs.handler)
-                        .then(Handler => {
-                            this._rowActionHandlers[action] = new Handler(this);
-
-                            return true;
-                        })
-                );
+            if (!itemDefs.handler) {
+                return Promise.resolve();
             }
+
+            return Espo.loader.requirePromise(itemDefs.handler)
+                .then(Handler => {
+                    this._rowActionHandlers[action] = new Handler(this);
+
+                    return true;
+                });
         });
 
         this.wait(Promise.all(promiseList));

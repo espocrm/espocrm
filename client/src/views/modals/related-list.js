@@ -398,6 +398,9 @@ class RelatedListModalView extends ModalView {
             this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
             'views/record/list';
 
+        // noinspection JSUnresolvedReference
+        const rowActionList = this.defs.rowActionList;
+
         const promise = this.createView('list', viewName, {
             collection: this.collection,
             fullSelector: this.containerSelector + ' .list-container',
@@ -411,8 +414,11 @@ class RelatedListModalView extends ModalView {
             massActionRemoveDisabled: this.massActionRemoveDisabled,
             massActionMassUpdateDisabled: this.massActionMassUpdateDisabled,
             mandatorySelectAttributeList: this.mandatorySelectAttributeList,
+            additionalRowActionList: rowActionList,
             rowActionsOptions: {
                 unlinkDisabled: this.unlinkDisabled,
+                editDisabled: this.defs.editDisabled,
+                removeDisabled: this.defs.removeDisabled,
             },
             pagination: this.getConfig().get('listPagination') ||
                 this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||

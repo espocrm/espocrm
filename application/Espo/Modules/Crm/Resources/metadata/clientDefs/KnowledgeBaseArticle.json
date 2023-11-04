@@ -33,16 +33,18 @@
             "labelTranslation": "KnowledgeBaseArticle.labels.Move to Bottom",
             "handler": "crm:handlers/knowledge-base-article/move",
             "acl": "edit"
+        },
+        "sendInEmail": {
+            "label": "Send in Email",
+            "handler": "crm:handlers/knowledge-base-article/send-in-email"
         }
     },
-    "rowActions": {
-        "list": [
-            "moveToTop",
-            "moveUp",
-            "moveDown",
-            "moveToBottom"
-        ]
-    },
+    "rowActionList": [
+        "moveToTop",
+        "moveUp",
+        "moveDown",
+        "moveToBottom"
+    ],
     "filterList": [
         {
             "name": "published",

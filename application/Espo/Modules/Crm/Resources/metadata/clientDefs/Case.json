@@ -56,9 +56,12 @@
     ],
     "relationshipPanels": {
         "articles": {
-            "create": false,
-            "recordListView": "crm:views/knowledge-base-article/record/list-for-case",
-            "rowActionsView": "crm:views/knowledge-base-article/record/row-actions/for-case"
+            "createDisabled": true,
+            "editDisabled": true,
+            "removeDisabled": true,
+            "rowActionList": [
+                "sendInEmail"
+            ]
         },
         "contacts": {
             "createAttributeMap": {

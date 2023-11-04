@@ -61,6 +61,8 @@ class DefaultKanbanRowActionsView extends DefaultRowActionsView {
             });
         }
 
+        this.getAdditionalActionList().forEach(item => list.push(item));
+
         if (this.options.acl.delete) {
             list.push({
                 action: 'quickRemove',

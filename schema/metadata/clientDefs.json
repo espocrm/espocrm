@@ -107,6 +107,42 @@
             },
             "description": "View setup handlers. https://docs.espocrm.com/development/frontend/view-setup-handlers/"
         },
+        "rowActionList": {
+            "description": "Row actions for the main list view.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "rowActionDefs": {
+            "description": "Row actions definitions.",
+            "type": "object",
+            "additionalProperties": {
+                "description": "An action",
+                "type": "object",
+                "properties": {
+                    "label": {
+                        "type": "string",
+                        "description": "A translatable label."
+                    },
+                    "labelTranslation": {
+                        "type": "string",
+                        "description": "A label translation path."
+                    },
+                    "acl": {
+                        "enum": [
+                            "edit",
+                            "delete"
+                        ],
+                        "description": "Required access."
+                    },
+                    "handler": {
+                        "type": "string",
+                        "description": "A handler. Should extend handlers/row-action."
+                    }
+                }
+            }
+        },
         "inlineEditDisabled": {
             "description": "Disable inline edit.",
             "type": "boolean"
@@ -346,6 +382,19 @@
                     "unlinkDisabled": {
                         "description": "Disable the ability to unlink related records.",
                         "type": "boolean"
+                    },
+                    "editDisabled": {
+                        "description": "Disable edit.",
+                        "type": "boolean"
+                    },
+                    "removeDisabled": {
+                        "description": "Disable remove.",
+                        "type": "boolean"
+                    },
+                    "rowActionList": {
+                        "description": "Row actions.",
+                        "type": "array",
+                        "items": {"type": "string"}
                     },
                     "createRequiredAccess": {
                         "description": "Access (to a current entity type) required for creating related records.",
