@@ -192,7 +192,7 @@ class Model {
             'read': 'GET',
         };
 
-        let httpMethod = methodMap[method];
+        const httpMethod = methodMap[method];
 
         if (!httpMethod) {
             throw new Error(`Bad request method '${method}'.`);
@@ -200,7 +200,7 @@ class Model {
 
         options = options || {};
 
-        let url = this.composeSyncUrl();
+        const url = this.composeSyncUrl();
 
         if (!url) {
             throw new Error(`No 'url'.`);
@@ -209,7 +209,7 @@ class Model {
         const data = model && ['create', 'update', 'patch'].includes(method) ?
             (options.attributes || model.getClonedAttributes()) : null;
 
-        let error = options.error;
+        const error = options.error;
 
         options.error = (xhr, textStatus, errorThrown) => {
             options.textStatus = textStatus;
@@ -220,7 +220,7 @@ class Model {
             }
         };
 
-        let stringData = data ? JSON.stringify(data) : null;
+        const stringData = data ? JSON.stringify(data) : null;
 
         const ajaxPromise = !options.bypassRequest ?
             Espo.Ajax.request(url, httpMethod, stringData, options) :
@@ -278,8 +278,8 @@ class Model {
 
         options = options || {};
 
-        let changes = [];
-        let changing = this._changing;
+        const changes = [];
+        const changing = this._changing;
 
         this._changing = true;
 
@@ -288,12 +288,12 @@ class Model {
             this.changed = {};
         }
 
-        let current = this.attributes;
-        let changed = this.changed;
-        let previous = this._previousAttributes;
+        const current = this.attributes;
+        const changed = this.changed;
+        const previous = this._previousAttributes;
 
-        for (let attribute in attributes) {
-            let value = attributes[attribute];
+        for (const attribute in attributes) {
+            const value = attributes[attribute];
 
             if (!_.isEqual(current[attribute], value)) {
                 changes.push(attribute);
@@ -350,7 +350,7 @@ class Model {
     unset(attribute, options) {
         options = {...options, unset: true};
 
-        let attributes = {};
+        const attributes = {};
         attributes[attribute] = null;
 
         return this.setMultiple(attributes, options);
@@ -377,7 +377,7 @@ class Model {
      * @returns {boolean}
      */
     has(attribute) {
-        let value = this.get(attribute);
+        const value = this.get(attribute);
 
         return typeof value !== 'undefined';
     }
@@ -389,9 +389,9 @@ class Model {
      * @param {{silent?: boolean} & Object.<string, *>} [options] Options.
      */
     clear(options) {
-        let attributes = {};
+        const attributes = {};
 
-        for (let key in this.attributes) {
+        for (const key in this.attributes) {
             attributes[key] = void 0;
         }
 
@@ -465,10 +465,10 @@ class Model {
     fetch(options) {
         options = {...options};
 
-        let success = options.success;
+        const success = options.success;
 
         options.success = response => {
-            let serverAttributes = this.prepareAttributes(response, options);
+            const serverAttributes = this.prepareAttributes(response, options);
 
             this.set(serverAttributes, options);
 
@@ -542,7 +542,7 @@ class Model {
             this.attributes =  {...setAttributes, ...attributes};
         }
 
-        let method = this.isNew() ?
+        const method = this.isNew() ?
             'create' :
             (options.patch ? 'patch' : 'update');
 
@@ -568,7 +568,7 @@ class Model {
     destroy(options) {
         options = _.clone(options || {});
 
-        let success = options.success;
+        const success = options.success;
 
         const destroy = () => {
             this.stopListening();
@@ -599,7 +599,7 @@ class Model {
             return Promise.resolve();
         }
 
-        let error = options.error;
+        const error = options.error;
 
         options.error = response => {
             if (error) {
@@ -609,7 +609,7 @@ class Model {
             this.trigger('error', this, response, options);
         };
 
-        let result = this.sync('delete', this, options);
+        const result = this.sync('delete', this, options);
 
         if (!options.wait) {
             destroy();
@@ -643,7 +643,7 @@ class Model {
             return urlRoot;
         }
 
-        let id = this.get(this.idAttribute);
+        const id = this.get(this.idAttribute);
 
         return urlRoot.replace(/[^\/]$/, '$&/') + encodeURIComponent(id);
     }
@@ -709,7 +709,7 @@ class Model {
 
         const fieldDefs = this.defs.fields;
 
-        for (let field in fieldDefs) {
+        for (const field in fieldDefs) {
             let defaultValue = this.getFieldParam(field, 'default');
 
             if (defaultValue !== null) {
@@ -723,10 +723,10 @@ class Model {
                 }
             }
 
-            let defaultAttributes = this.getFieldParam(field, 'defaultAttributes');
+            const defaultAttributes = this.getFieldParam(field, 'defaultAttributes');
 
             if (defaultAttributes) {
-                for (let attribute in defaultAttributes) {
+                for (const attribute in defaultAttributes) {
                     defaultHash[attribute] = defaultAttributes[attribute];
                 }
             }
@@ -734,7 +734,7 @@ class Model {
 
         defaultHash = Espo.Utils.cloneDeep(defaultHash);
 
-        for (let attr in defaultHash) {
+        for (const attr in defaultHash) {
             if (this.has(attr)) {
                 delete defaultHash[attr];
             }
@@ -753,7 +753,7 @@ class Model {
             typeof defaultValue === 'string' &&
             defaultValue.indexOf('javascript:') === 0
         ) {
-            let code = defaultValue.substring(11);
+            const code = defaultValue.substring(11);
 
             defaultValue = (new Function( "with(this) { " + code + "}")).call(this);
         }
@@ -779,15 +779,15 @@ class Model {
      * @param {Object} data
      */
     setRelate(data) {
-        let setRelate = options => {
-            let link = options.link;
-            let model = /** @type {module:model} */options.model;
+        const setRelate = options => {
+            const link = options.link;
+            const model = /** @type {module:model} */options.model;
 
             if (!link || !model) {
                 throw new Error('Bad related options');
             }
 
-            let type = this.defs.links[link].type;
+            const type = this.defs.links[link].type;
 
             switch (type) {
                 case 'belongsToParent':
@@ -804,10 +804,10 @@ class Model {
                     break;
 
                 case 'hasMany':
-                    let ids = [];
+                    const ids = [];
                     ids.push(model.id);
 
-                    let names = {};
+                    const names = {};
 
                     names[model.id] = model.get('name');
 

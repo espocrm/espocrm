@@ -132,19 +132,18 @@ class BaseRecordView extends View {
             this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
         }
 
-        let processHtml = () => {
-            let fieldView = this.getFieldView(name);
+        const processHtml = () => {
+            const fieldView = this.getFieldView(name);
 
             if (fieldView) {
-                let $field = fieldView.$el;
-                let $cell = $field.closest('.cell[data-name="' + name + '"]');
-                let $label = $cell.find('label.control-label[data-name="' + name + '"]');
+                const $field = fieldView.$el;
+                const $cell = $field.closest('.cell[data-name="' + name + '"]');
+                const $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
                 $field.addClass('hidden');
                 $label.addClass('hidden');
                 $cell.addClass('hidden-cell');
-            }
-            else {
+            } else {
                 this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
                 this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
                 this.$el.find('label.control-label[data-name="' + name + '"]').addClass('hidden');
@@ -160,7 +159,7 @@ class BaseRecordView extends View {
             });
         }
 
-        let view = this.getFieldView(name);
+        const view = this.getFieldView(name);
 
         if (view) {
             view.setDisabled(locked);
@@ -179,13 +178,13 @@ class BaseRecordView extends View {
 
         this.recordHelper.setFieldStateParam(name, 'hidden', false);
 
-        let processHtml = () => {
-            let fieldView = this.getFieldView(name);
+        const processHtml = () => {
+            const fieldView = this.getFieldView(name);
 
             if (fieldView) {
-                let $field = fieldView.$el;
-                let $cell = $field.closest('.cell[data-name="' + name + '"]');
-                let $label = $cell.find('label.control-label[data-name="' + name + '"]');
+                const $field = fieldView.$el;
+                const $cell = $field.closest('.cell[data-name="' + name + '"]');
+                const $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
                 $field.removeClass('hidden');
                 $label.removeClass('hidden');
@@ -208,7 +207,7 @@ class BaseRecordView extends View {
             });
         }
 
-        let view = this.getFieldView(name);
+        const view = this.getFieldView(name);
 
         if (view) {
             if (!view.disabledLocked) {
@@ -355,12 +354,12 @@ class BaseRecordView extends View {
      * @param {string[]} list Options.
      */
     setFieldOptionList(name, list) {
-        let had = this.recordHelper.hasFieldOptionList(name);
-        let previousList = this.recordHelper.getFieldOptionList(name);
+        const had = this.recordHelper.hasFieldOptionList(name);
+        const previousList = this.recordHelper.getFieldOptionList(name);
 
         this.recordHelper.setFieldOptionList(name, list);
 
-        let view = this.getFieldView(name);
+        const view = this.getFieldView(name);
 
         if (view) {
             if ('setOptionList' in view) {
@@ -379,11 +378,11 @@ class BaseRecordView extends View {
      * @param {string} name A field name.
      */
     resetFieldOptionList(name) {
-        let had = this.recordHelper.hasFieldOptionList(name);
+        const had = this.recordHelper.hasFieldOptionList(name);
 
         this.recordHelper.clearFieldOptionList(name);
 
-        let view = this.getFieldView(name);
+        const view = this.getFieldView(name);
 
         if (view) {
             if ('resetOptionList' in view) {
@@ -433,11 +432,11 @@ class BaseRecordView extends View {
     stylePanel(name) {
         this.recordHelper.setPanelStateParam(name, 'styled', true);
 
-        let process = () => {
-            let $panel = this.$el.find('.panel[data-name="'+name+'"]');
-            let $btn = $panel.find('> .panel-heading .btn');
+        const process = () => {
+            const $panel = this.$el.find('.panel[data-name="' + name + '"]');
+            const $btn = $panel.find('> .panel-heading .btn');
 
-            let style = $panel.attr('data-style');
+            const style = $panel.attr('data-style');
 
             if (!style) {
                 return;
@@ -469,11 +468,11 @@ class BaseRecordView extends View {
     unstylePanel(name) {
         this.recordHelper.setPanelStateParam(name, 'styled', false);
 
-        let process = () => {
-            let $panel = this.$el.find('.panel[data-name="'+name+'"]');
-            let $btn = $panel.find('> .panel-heading .btn');
+        const process = () => {
+            const $panel = this.$el.find('.panel[data-name="' + name + '"]');
+            const $btn = $panel.find('> .panel-heading .btn');
 
-            let style = $panel.attr('data-style');
+            const style = $panel.attr('data-style');
 
             if (!style) {
                 return;
@@ -517,10 +516,10 @@ class BaseRecordView extends View {
      * @return {Object.<string, module:views/fields/base>}
      */
     getFieldViews(withHidden) {
-        let fields = {};
+        const fields = {};
 
         this.fieldList.forEach(item => {
-            let view = this.getFieldView(item);
+            const view = this.getFieldView(item);
 
             if (view) {
                 fields[item] = view;
@@ -603,7 +602,7 @@ class BaseRecordView extends View {
      */
     handleDataBeforeRender(data) {
         this.getFieldList().forEach((field) => {
-            let viewKey = field + 'Field';
+            const viewKey = field + 'Field';
 
             data[field] = data[viewKey];
         });
@@ -657,7 +656,7 @@ class BaseRecordView extends View {
 
         this.listenTo(this.model, 'change', (m, o) => {
             if (o.sync) {
-                for (let attribute in m.attributes) {
+                for (const attribute in m.attributes) {
                     if (!m.hasChanged(attribute)) {
                         continue;
                     }
@@ -719,9 +718,9 @@ class BaseRecordView extends View {
             this.updatedAttributes = null;
         }
 
-        let attributes = this.model.attributes;
+        const attributes = this.model.attributes;
 
-        for (let attr in attributes) {
+        for (const attr in attributes) {
             if (!(attr in this.attributes)) {
                 this.model.unset(attr);
             }
@@ -737,7 +736,7 @@ class BaseRecordView extends View {
      * @param {Object.<string,*>} [options] Options.
      */
     setModelAttributes(setAttributes, options) {
-        for (let item in this.model.attributes) {
+        for (const item in this.model.attributes) {
             if (!(item in setAttributes)) {
                 this.model.unset(item);
             }
@@ -801,13 +800,13 @@ class BaseRecordView extends View {
      * @protected
      */
     setupFieldLevelSecurity() {
-        let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
+        const forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'read');
 
         forbiddenFieldList.forEach((field) => {
             this.hideField(field, true);
         });
 
-        let readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
+        const readOnlyFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit');
 
         readOnlyFieldList.forEach((field) => {
             this.setFieldReadOnly(field, true);
@@ -838,10 +837,10 @@ class BaseRecordView extends View {
      * @return {boolean} True if not valid.
      */
     validate() {
-        let invalidFieldList = [];
+        const invalidFieldList = [];
 
         this.getFieldList().forEach(field => {
-            let fieldIsInvalid = this.validateField(field);
+            const fieldIsInvalid = this.validateField(field);
 
             if (fieldIsInvalid) {
                 invalidFieldList.push(field)
@@ -868,7 +867,10 @@ class BaseRecordView extends View {
      * @return {boolean} True if not valid.
      */
     validateField(field) {
-        let fieldView = this.getFieldView(field);
+        const msg =
+            this.translate('fieldInvalid', 'messages')
+                .replace('{field}', this.translate(field, 'fields', this.entityType));
+        const fieldView = this.getFieldView(field);
 
         if (!fieldView) {
             return false;
@@ -886,7 +888,7 @@ class BaseRecordView extends View {
 
         if (notValid) {
             if (fieldView.$el) {
-                let rect = fieldView.$el.get(0).getBoundingClientRect();
+                const rect = fieldView.$el.get(0).getBoundingClientRect();
 
                 if (
                     rect.top === 0 &&
@@ -895,7 +897,7 @@ class BaseRecordView extends View {
                     fieldView.$el.closest('.panel.hidden').length
                 ) {
                     setTimeout(() => {
-                        let msg = this.translate('Not valid') + ': ' +
+                        const msg = this.translate('Not valid') + ': ' +
                             (
                                 fieldView.lastValidationMessage ||
                                 this.translate(field, 'fields', this.entityType)
@@ -917,16 +919,13 @@ class BaseRecordView extends View {
             this.dynamicLogicDefs.fields[field].invalid &&
             this.dynamicLogicDefs.fields[field].invalid.conditionGroup
         ) {
-            let invalidConditionGroup = this.dynamicLogicDefs.fields[field].invalid.conditionGroup;
+            const invalidConditionGroup = this.dynamicLogicDefs.fields[field].invalid.conditionGroup;
 
-            let fieldInvalid = this.dynamicLogic.checkConditionGroup(invalidConditionGroup);
+            const fieldInvalid = this.dynamicLogic.checkConditionGroup(invalidConditionGroup);
 
             notValid = fieldInvalid || notValid;
 
             if (fieldInvalid) {
-                let msg =
-                    this.translate('fieldInvalid', 'messages')
-                        .replace('{field}', this.translate(field, 'fields', this.entityType));
 
                 fieldView.showValidationMessage(msg);
 
@@ -1004,19 +1003,19 @@ class BaseRecordView extends View {
     save(options) {
         options = options || {};
 
-        let headers = options.headers || {};
+        const headers = options.headers || {};
 
-        let model = this.model;
+        const model = this.model;
 
         this.lastSaveCancelReason = null;
 
         this.beforeBeforeSave();
 
-        let fetchedAttributes = this.fetch();
-        let initialAttributes = this.attributes;
-        let beforeSaveAttributes = this.model.getClonedAttributes();
+        const fetchedAttributes = this.fetch();
+        const initialAttributes = this.attributes;
+        const beforeSaveAttributes = this.model.getClonedAttributes();
 
-        let attributes = _.extend(
+        const attributes = _.extend(
             Espo.Utils.cloneDeep(beforeSaveAttributes),
             fetchedAttributes
         );
@@ -1028,7 +1027,7 @@ class BaseRecordView extends View {
         }
 
         if (!model.isNew()) {
-            for (let attr in attributes) {
+            for (const attr in attributes) {
                 if (_.isEqual(initialAttributes[attr], attributes[attr])) {
                     continue;
                 }
@@ -1036,9 +1035,9 @@ class BaseRecordView extends View {
                 setAttributes[attr] = attributes[attr];
             }
 
-            let forcePatchAttributeDependencyMap = this.forcePatchAttributeDependencyMap || {};
+            const forcePatchAttributeDependencyMap = this.forcePatchAttributeDependencyMap || {};
 
-            for (let attr in forcePatchAttributeDependencyMap) {
+            for (const attr in forcePatchAttributeDependencyMap) {
                 if (attr in setAttributes) {
                     continue;
                 }
@@ -1047,9 +1046,9 @@ class BaseRecordView extends View {
                     continue;
                 }
 
-                let depAttributeList = forcePatchAttributeDependencyMap[attr];
+                const depAttributeList = forcePatchAttributeDependencyMap[attr];
 
-                let treatAsChanged = !! depAttributeList.find(attr => attr in setAttributes);
+                const treatAsChanged = !!depAttributeList.find(attr => attr in setAttributes);
 
                 if (treatAsChanged) {
                     setAttributes[attr] = attributes[attr];
@@ -1087,7 +1086,7 @@ class BaseRecordView extends View {
             options.afterValidate();
         }
 
-        let optimisticConcurrencyControl = this.getMetadata()
+        const optimisticConcurrencyControl = this.getMetadata()
             .get(['entityDefs', this.entityType, 'optimisticConcurrencyControl']);
 
         if (optimisticConcurrencyControl && this.model.get('versionNumber') !== null) {
@@ -1103,7 +1102,7 @@ class BaseRecordView extends View {
         this.trigger('before:save');
         model.trigger('before:save');
 
-        let onError = (xhr, reject, resolve) => {
+        const onError = (xhr, reject, resolve) => {
             this.handleSaveError(xhr, options, resolve)
                 .then(skipReject => {
                     if (skipReject) {
@@ -1163,7 +1162,7 @@ class BaseRecordView extends View {
         let handlerData = null;
 
         if (~[409, 500].indexOf(xhr.status)) {
-            let statusReason = xhr.getResponseHeader('X-Status-Reason');
+            const statusReason = xhr.getResponseHeader('X-Status-Reason');
 
             if (!statusReason) {
                 return Promise.resolve(false);
@@ -1200,9 +1199,9 @@ class BaseRecordView extends View {
             return Promise.resolve(false);
         }
 
-        let reason = handlerData.reason;
+        const reason = handlerData.reason;
 
-        let handlerName =
+        const handlerName =
             this.getMetadata()
                 .get(['clientDefs', this.scope, 'saveErrorHandlers', reason]) ||
             this.getMetadata()
@@ -1211,7 +1210,7 @@ class BaseRecordView extends View {
         return new Promise(resolve => {
             if (handlerName) {
                 Espo.loader.require(handlerName, Handler => {
-                    let handler = new Handler(this);
+                    const handler = new Handler(this);
 
                     handler.process(handlerData.data, options);
 
@@ -1223,12 +1222,12 @@ class BaseRecordView extends View {
                 return;
             }
 
-            let methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(reason);
+            const methodName = 'errorHandler' + Espo.Utils.upperCaseFirst(reason);
 
             if (methodName in this) {
                 xhr.errorIsHandled = true;
 
-                let skipReject = this[methodName](handlerData.data, options, saveResolve);
+                const skipReject = this[methodName](handlerData.data, options, saveResolve);
 
                 resolve(skipReject || false);
 
@@ -1246,10 +1245,10 @@ class BaseRecordView extends View {
      */
     fetch() {
         let data = {};
-        let fieldViews = this.getFieldViews();
+        const fieldViews = this.getFieldViews();
 
-        for (let i in fieldViews) {
-            let view = fieldViews[i];
+        for (const i in fieldViews) {
+            const view = fieldViews[i];
 
             if (!view.isEditMode()) {
                 continue;
@@ -1269,7 +1268,7 @@ class BaseRecordView extends View {
      * @return {Object<string,*>|null}
      */
     processFetch() {
-        let data = this.fetch();
+        const data = this.fetch();
 
         this.model.set(data);
 
@@ -1316,8 +1315,8 @@ class BaseRecordView extends View {
      */
     _handleDependencyAttribute(attr) {
         // noinspection JSDeprecatedSymbols
-        let data = this.dependencyDefs[attr];
-        let value = this.model.get(attr);
+        const data = this.dependencyDefs[attr];
+        const value = this.model.get(attr);
 
         if (value in (data.map || {})) {
             (data.map[value] || []).forEach((item) => {
@@ -1338,9 +1337,9 @@ class BaseRecordView extends View {
      * @private
      */
     _doDependencyAction(data) {
-        let action = data.action;
+        const action = data.action;
 
-        let methodName = 'dependencyAction' + Espo.Utils.upperCaseFirst(action);
+        const methodName = 'dependencyAction' + Espo.Utils.upperCaseFirst(action);
 
         if (methodName in this && typeof this.methodName === 'function') {
             this.methodName(data);
@@ -1348,8 +1347,8 @@ class BaseRecordView extends View {
             return;
         }
 
-        let fieldList = data.fieldList || data.fields || [];
-        let panelList = data.panelList || data.panels || [];
+        const fieldList = data.fieldList || data.fields || [];
+        const panelList = data.panelList || data.panels || [];
 
         switch (action) {
             case 'hide':
@@ -1416,7 +1415,7 @@ class BaseRecordView extends View {
      * @param {Object<string,*>} [options] View options.
      */
     createField(name, view, params, mode, readOnly, options) {
-        let o = {
+        const o = {
             model: this.model,
             mode: mode || 'edit',
             selector: '.field[data-name="' + name + '"]',
@@ -1433,12 +1432,12 @@ class BaseRecordView extends View {
         view = view || this.model.getFieldParam(name, 'view');
 
         if (!view) {
-            let type = this.model.getFieldType(name) || 'base';
+            const type = this.model.getFieldType(name) || 'base';
             view = this.getFieldManager().getViewName(type);
         }
 
         if (options) {
-            for (let param in options) {
+            for (const param in options) {
                 o[param] = options[param];
             }
         }
@@ -1459,7 +1458,7 @@ class BaseRecordView extends View {
             o.customOptionList = this.recordHelper.getFieldOptionList(name);
         }
 
-        let viewKey = name + 'Field';
+        const viewKey = name + 'Field';
 
         this.createView(viewKey, view, o);
 
@@ -1474,19 +1473,19 @@ class BaseRecordView extends View {
      * @return {module:views/fields/base|null}
      */
     getFocusedFieldView() {
-        let $active = $(window.document.activeElement);
+        const $active = $(window.document.activeElement);
 
         if (!$active.length) {
             return null;
         }
 
-        let $field = $active.closest('.field');
+        const $field = $active.closest('.field');
 
         if (!$field.length) {
             return null;
         }
 
-        let name = $field.attr('data-name');
+        const name = $field.attr('data-name');
 
         if (!name) {
             return null;

@@ -52,7 +52,7 @@ class DefaultsPopulator {
     populate(model) {
         model.populateDefaults();
 
-        let defaultHash = {};
+        const defaultHash = {};
 
         if (!this.user.isPortal()) {
             this.prepare(model, defaultHash);
@@ -62,7 +62,7 @@ class DefaultsPopulator {
             this.prepareForPortal(model, defaultHash);
         }
 
-        for (let attr in defaultHash) {
+        for (const attr in defaultHash) {
             if (model.has(attr)) {
                 delete defaultHash[attr];
             }
@@ -77,7 +77,7 @@ class DefaultsPopulator {
      * @private
      */
     prepare(model, defaultHash) {
-        let hasAssignedUsers =
+        const hasAssignedUsers =
             model.hasField('assignedUsers') &&
             model.getLinkParam('assignedUsers', 'entity') === 'User';
 
@@ -125,7 +125,7 @@ class DefaultsPopulator {
             }
         }
 
-        let defaultTeamId = this.user.get('defaultTeamId');
+        const defaultTeamId = this.user.get('defaultTeamId');
 
         if (defaultTeamId) {
             if (
@@ -208,7 +208,7 @@ class DefaultsPopulator {
             if (this.user.get('contactId')) {
                 defaultHash['contactsIds'] = [this.user.get('contactId')];
 
-                let names = {};
+                const names = {};
 
                 names[this.user.get('contactId')] = this.user.get('contactName');
                 defaultHash['contactsNames'] = names;
