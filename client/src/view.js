@@ -33,7 +33,7 @@ import {View as BullView} from 'bullbone';
 /**
  * A base view. All views should extend this class.
  *
- * @see {@link https://docs.espocrm.com/development/view/}
+ * @see https://docs.espocrm.com/development/view/
  * @mixes Bull.Events
  */
 class View extends BullView {
@@ -71,6 +71,7 @@ class View extends BullView {
      * @private
      */
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * When the view is ready. Can be useful to prevent race condition when re-initialization is needed
      * in-between initialization and render.

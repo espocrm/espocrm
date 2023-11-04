@@ -57,6 +57,8 @@ import _ from 'underscore';
  * @property {Object.<string, Object.<string, *>>} [links] Links.
  */
 
+/** @typedef {import('bullbone')} Bull */
+
 /**
  * A model.
  *
