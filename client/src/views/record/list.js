@@ -49,6 +49,7 @@ class ListRecordView extends View {
      * @property {string} action An action.
      * @property {string} [label] A label.
      * @property {string} [link] A link.
+     * @property {string} [text] A text.
      * @property {Object.<string, string|number|boolean>} [data] Data attributes.
      */
 
@@ -473,6 +474,11 @@ class ListRecordView extends View {
      * @type {?Object.<string, Object.<string, *>>}
      */
     massActionDefs = null
+
+    /**
+     * @private
+     */
+    _additionalRowActionList
 
     /** @inheritDoc */
     events = {
@@ -1978,6 +1984,10 @@ class ListRecordView extends View {
             this.layoutName += 'Portal';
         }
 
+        this._rowActionHandlers = {};
+
+        this.setupRowActionDefs();
+
         this.wait(
             this.getHelper().processSetupHandlers(this, this.setupHandlerType)
         );
@@ -2598,8 +2608,10 @@ class ListRecordView extends View {
     getRowActionsDefs() {
         const options = {
             defs: {
-                params: {}
+                params: {},
             },
+            additionalActionList: this._additionalRowActionList || [],
+            scope: this.scope,
         };
 
         if (this.options.rowActionsOptions) {
@@ -2612,7 +2624,7 @@ class ListRecordView extends View {
             columnName: 'buttons',
             name: 'buttonsField',
             view: this.rowActionsView,
-            options: options
+            options: options,
         };
     }
 
@@ -2736,11 +2748,12 @@ class ListRecordView extends View {
             this.createView(key, 'views/base', {
                 model: model,
                 acl: acl,
+                rowActionHandlers: this._rowActionHandlers || {},
                 selector: '.list-row[data-id="' + key + '"]',
-                optionsToPass: ['acl'],
+                optionsToPass: ['acl', 'rowActionHandlers'],
                 layoutDefs: {
                     type: this._internalLayoutType,
-                    layout: internalLayout
+                    layout: internalLayout,
                 },
                 setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
             }, callback);
@@ -3273,6 +3286,72 @@ class ListRecordView extends View {
         }
 
         return minWidth;
+    }
+
+    setupRowActionDefs() {
+        const viewType = this.options.viewType;
+
+        if (!viewType && !this.options.additionalRowActionList) {
+            return;
+        }
+
+        const list = this.options.additionalRowActionList ||
+            this.getMetadata().get(`clientDefs.${this.scope}.rowActions.${viewType}`);
+
+        if (!list) {
+            return;
+        }
+
+        this._additionalRowActionList = list;
+
+        const defs = this.getMetadata().get(`clientDefs.${this.scope}.rowActionDefs`) || {};
+
+        const promiseList = [];
+
+        list.forEach(action => {
+            /** @type {{handler: string, label?: string, labelTranslation?: string}} */
+            const itemDefs = defs[action] || {};
+
+            if (itemDefs.handler) {
+                promiseList.push(
+                    Espo.loader.requirePromise(itemDefs.handler)
+                        .then(Handler => {
+                            this._rowActionHandlers[action] = new Handler(this);
+
+                            return true;
+                        })
+                );
+            }
+        });
+
+        this.wait(Promise.all(promiseList));
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionRowAction(data) {
+        const action = data.actualAction;
+        const id = data.id;
+
+        if (!action) {
+            return;
+        }
+
+        /** @type {{process: function(module:model, string)}} */
+        const handler = (this._rowActionHandlers || {})[action];
+
+        if (!handler) {
+            console.warn(`No handler for action ${action}.`);
+
+            return;
+        }
+
+        const model = this.collection.get(id);
+
+        if (!model) {
+            return;
+        }
+
+        handler.process(model, action);
     }
 }
 

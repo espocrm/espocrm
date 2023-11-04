@@ -30,24 +30,31 @@ import View from 'view';
 
 /**
  * Row actions.
- *
- * @todo The ability to define row actions in metadata. For main list view, relationship panels.
  */
 class DefaultRowActionsView extends View {
 
-    template ='record/row-actions/default'
+    template = 'record/row-actions/default'
 
     setup() {
         this.options.acl = this.options.acl || {};
+        this.scope = this.options.scope;
+
+        /** @type {Object.<string, {isAvailable: function(module:model, string)}>} */
+        this.handlers = this.options.rowActionHandlers || {};
+
+        /** @type {{name: string, acl: string, text: string}[]} */
+        this.additionalActionDataList = [];
+
+        this.setupAdditionalActions();
     }
 
     afterRender() {
-        let $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
+        const $dd = this.$el.find('button[data-toggle="dropdown"]').parent();
 
         let isChecked = false;
 
         $dd.on('show.bs.dropdown', () => {
-            let $el = this.$el.closest('.list-row');
+            const $el = this.$el.closest('.list-row');
 
             isChecked = false;
 
@@ -71,7 +78,7 @@ class DefaultRowActionsView extends View {
      * @return {module:views/record/list~rowAction[]}
      */
     getActionList() {
-        let list = [{
+        const list = [{
             action: 'quickView',
             label: 'View',
             data: {
@@ -91,6 +98,8 @@ class DefaultRowActionsView extends View {
             });
         }
 
+        this.getAdditionalActionList().forEach(item => list.push(item));
+
         if (this.options.acl.delete) {
             list.push({
                 action: 'quickRemove',
@@ -104,12 +113,65 @@ class DefaultRowActionsView extends View {
         return list;
     }
 
+    getAdditionalActionList() {
+        const list = [];
+
+        this.additionalActionDataList.forEach(item => {
+            const handler = this.handlers[item.name];
+
+            if (handler && !handler.isAvailable(this.model, item.name)) {
+                return;
+            }
+
+            if (item.acl && item.acl !== 'read' && !this.options.acl[item.acl]) {
+                return;
+            }
+
+            list.push({
+                action: 'rowAction',
+                text: item.text,
+                data: {
+                    id: this.model.id,
+                    actualAction: item.name,
+                },
+            });
+        });
+
+        return list;
+    }
+
     data() {
         return {
             acl: this.options.acl,
             actionList: this.getActionList(),
             scope: this.model.entityType,
         };
+    }
+
+    setupAdditionalActions() {
+        /** @type {string[]} */
+        const list = this.options.additionalActionList;
+
+        if (!list) {
+            return;
+        }
+
+        const defs = this.getMetadata().get(`clientDefs.${this.scope}.rowActionDefs`) || {};
+
+        list.forEach(action => {
+            /** @type {{label?: string, labelTranslation?: string, acl?: string}} */
+            const itemDefs = defs[action] || {};
+
+            const text = itemDefs.labelTranslation ?
+                this.getLanguage().translatePath(itemDefs.labelTranslation) :
+                this.getLanguage().translate(itemDefs.label, 'labels', this.model.entityType);
+
+            this.additionalActionDataList.push({
+                name: action,
+                acl:  itemDefs.acl,
+                text: text,
+            });
+        });
     }
 }
 

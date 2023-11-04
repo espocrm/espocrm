@@ -26,7 +26,37 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/knowledge-base-article/record/list', ['views/record/list'], function (Dep) {
+/** @module handlers/row-action */
 
-    return Dep.extend({});
-});
+/**
+ * @abstract
+ */
+class RowActionHandler {
+
+    /**
+     * @param {module:views/record/list} view
+     */
+    constructor(view) {
+        // noinspection JSUnusedGlobalSymbols
+        /** @protected */
+        this.view = view;
+
+        /**
+         * @protected
+         * @type {module:collection}
+         */
+        this.collection = this.view.collection;
+    }
+
+    isAvailable(model, action) {
+        return true;
+    }
+
+    /**
+     * @param {module:model} model A model.
+     * @param {string} action An action.
+     */
+    process(model, action) {}
+}
+
+export default RowActionHandler;

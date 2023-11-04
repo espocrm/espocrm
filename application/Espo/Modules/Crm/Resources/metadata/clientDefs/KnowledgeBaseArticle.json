@@ -1,4 +1,4 @@
-    {
+{
     "controller": "controllers/record",
     "views": {
         "list": "crm:views/knowledge-base-article/list"
@@ -12,6 +12,36 @@
     },
     "modalViews": {
         "select": "crm:views/knowledge-base-article/modals/select-records"
+    },
+    "rowActionDefs": {
+        "moveToTop": {
+            "label": "Move to Top",
+            "handler": "crm:handlers/knowledge-base-article/move",
+            "acl": "edit"
+        },
+        "moveUp": {
+            "label": "Move Up",
+            "handler": "crm:handlers/knowledge-base-article/move",
+            "acl": "edit"
+        },
+        "moveDown": {
+            "label": "Move Down",
+            "handler": "crm:handlers/knowledge-base-article/move",
+            "acl": "edit"
+        },
+        "moveToBottom": {
+            "labelTranslation": "KnowledgeBaseArticle.labels.Move to Bottom",
+            "handler": "crm:handlers/knowledge-base-article/move",
+            "acl": "edit"
+        }
+    },
+    "rowActions": {
+        "list": [
+            "moveToTop",
+            "moveUp",
+            "moveDown",
+            "moveToBottom"
+        ]
     },
     "filterList": [
         {
