@@ -81,7 +81,6 @@ class Builder
         $data = $this->resourceReader->read('metadata', $readerParams);
 
         $this->addAdditionalField($data);
-        $this->setMissingFieldDefaults($data);
 
         return $data;
     }
@@ -148,7 +147,7 @@ class Builder
         }
     }
 
-    private function setMissingFieldDefaults(stdClass $data): void
+    /*private function setMissingFieldDefaults(stdClass $data): void
     {
         if (!isset($data->entityDefs) || !isset($data->fields)) {
             return;
@@ -185,5 +184,5 @@ class Builder
                 $fieldDefs->default = $typeDefs->default;
             }
         }
-    }
+    }*/
 }

@@ -249,50 +249,15 @@ class DefaultsPopulator {
                 return;
             }
 
-            if (
-                type === 'link' ||
-                type === 'linkOne' ||
-                type === 'file' ||
-                type === 'image'
-            ) {
-                set(field + 'Id', null);
-                set(field + 'Name', null);
-
-                return;
-            }
-
-            if (type === 'linkParent') {
-                set(field + 'Id', null);
-                set(field + 'Name', null);
-                set(field + 'Type', null);
-
-                return;
-            }
-
-            if (
-                type === 'linkMultiple' ||
-                type === 'attachmentMultiple'
-            ) {
-                set(field + 'Ids', []);
-                set(field + 'Names', {});
-
-                return;
-            }
-
             if (type === 'enum') {
                 /** @type {string[]} */
                 const options = model.getFieldParam(field, 'options') || [];
                 let value = options[0] || '';
                 value = value !== '' ? value : null;
 
-                set(field, value);
-
-                return;
-            }
-
-            if (type === 'currency') {
-                set(field, null);
-                set(field + 'Currency', null);
+                if (value) {
+                    set(field, value);
+                }
             }
         });
     }
