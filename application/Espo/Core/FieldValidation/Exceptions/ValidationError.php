@@ -40,8 +40,16 @@ class ValidationError extends BadRequest implements HasLogMessage
 {
     private ?Failure $failure = null;
 
-    public static function createWithBody(string $reason, string $body): self
+    /**
+     * Create with a body (supposed to be sent to the frontend).
+     * Body object is supported since v8.1.
+     */
+    public static function createWithBody(string $reason, string|Body $body): self
     {
+        if ($body instanceof Body) {
+            $body = $body->encode();
+        }
+
         $exception = parent::createWithBody($reason, $body);
 
         if (!$exception instanceof self) {

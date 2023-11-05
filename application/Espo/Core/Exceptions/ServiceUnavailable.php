@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Exceptions;
 
+use Espo\Core\Exceptions\Error\Body;
 use Throwable;
 
 class ServiceUnavailable extends \Exception implements HasBody
@@ -44,9 +45,14 @@ class ServiceUnavailable extends \Exception implements HasBody
 
     /**
      * Create with a body (supposed to be sent to the frontend).
+     * Body object is supported since v8.1.
      */
-    public static function createWithBody(string $message, string $body): self
+    public static function createWithBody(string $message, string|Body $body): self
     {
+        if ($body instanceof Body) {
+            $body = $body->encode();
+        }
+
         $exception = new static($message);
         $exception->body = $body;
 

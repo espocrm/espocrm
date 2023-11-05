@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Exceptions;
 
+use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Utils\Log;
 use Throwable;
 use Exception;
@@ -50,9 +51,14 @@ class BadRequest extends Exception implements HasBody, HasLogLevel
 
     /**
      * Create with a body (supposed to be sent to the frontend).
+     * Body object is supported since v8.1.
      */
-    public static function createWithBody(string $reason, string $body): self
+    public static function createWithBody(string $reason, string|Body $body): self
     {
+        if ($body instanceof Body) {
+            $body = $body->encode();
+        }
+
         $exception = new static($reason);
         $exception->body = $body;
 
