@@ -134,8 +134,14 @@ class MysqlColumnPreparator implements ColumnPreparator
                 break;
 
             case Entity::TEXT:
-            case Entity::JSON_ARRAY:
                 $column = $column->withDefault(null);
+
+                break;
+
+            case Entity::JSON_ARRAY:
+                $default = is_array($default) ? json_encode($default) : null;
+
+                $column = $column->withDefault($default);
 
                 break;
 
