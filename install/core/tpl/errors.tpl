@@ -3,7 +3,7 @@
     <form id="nav">
         <div class="row">
             <div class=" col-md-13">
-                <div class="panel-body" align="center">
+                <div class="panel-body" style="text-align: center">
                 </div>
             </div>
         </div>

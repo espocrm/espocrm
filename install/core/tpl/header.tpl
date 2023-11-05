@@ -8,7 +8,7 @@
                 {$langs['labels']["{$action} page title"]}
             </h4>
         </div>
-        <div class="col-md-2 version" align="right">
+        <div class="col-md-2 version" style="text-align: right">
             {$langs['labels']['Version']} {$version}
         </div>
     </div>

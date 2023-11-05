@@ -4,7 +4,7 @@
 
         <div class="row">
             <div class="col-md-12">
-                <div align="center">
+                <div style="text-align: center">
                     <div class="content-img">
                         <img class="devices" src="img/devices.png" alt="EspoCRM">
                     </div>
@@ -44,7 +44,7 @@
                 </div>
             </div>
 
-            <div class="cell cell-website col-md-4" align="right" style="padding-top: 24px;">
+            <div class="cell cell-website col-md-4" style="padding-top: 24px; text-align: right;">
                 <a
                     target="_blank"
                     href="https://www.espocrm.com/documentation/administration/installation/"

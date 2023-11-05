@@ -45,7 +45,7 @@
         </td>
         <td>{{translate name scope=../scope category='fields'}}</td>
         <td>{{translate type category='fieldTypes' scope='Admin'}}</td>
-        <td align="right">
+        <td style="text-align: right">
             {{#if isCustom}}
             <a role="button" tabindex="0" data-action="removeField" data-name="{{name}}">{{translate 'Remove'}}</a>
             {{/if}}

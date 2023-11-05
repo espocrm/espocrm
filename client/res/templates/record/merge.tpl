@@ -23,7 +23,7 @@
         <tbody>
             {{#if hasCreatedAt}}
             <tr>
-                <td align="right">
+                <td style="text-align: right">
                     {{translate 'createdAt' scope=scope category='fields'}}
                 </td>
                 {{#each dataList}}
@@ -38,7 +38,7 @@
             {{/if}}
             {{#each rows}}
             <tr>
-                <td align="right">
+                <td style="text-align: right">
                     {{translate name scope=../scope category='fields'}}
                 </td>
                 {{#each columns}}
