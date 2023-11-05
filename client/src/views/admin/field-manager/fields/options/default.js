@@ -28,6 +28,7 @@
 
 define('views/admin/field-manager/fields/options/default', ['views/fields/enum'], function (Dep) {
 
+    // noinspection JSUnusedGlobalSymbols
     return Dep.extend({
 
         setup: function () {
@@ -35,24 +36,50 @@ define('views/admin/field-manager/fields/options/default', ['views/fields/enum']
 
             this.validations.push('listed');
 
-            this.setOptionList(this.model.get('options') || ['']);
+            this.updateAvailableOptions();
 
-            this.listenTo(this.model, 'change:options', () => {
-                this.setOptionList(this.model.get('options') || ['']);
+            this.listenTo(this.model, 'change', () => {
+                if (
+                    !this.model.hasChanged('options') &&
+                    !this.model.hasChanged('optionsReference')
+                ) {
+                    return;
+                }
+
+                this.updateAvailableOptions();
             });
         },
 
+        updateAvailableOptions: function () {
+            this.setOptionList(this.getAvailableOptions());
+        },
+
+        getAvailableOptions: function () {
+            const optionsReference = this.model.get('optionsReference');
+
+            if (optionsReference) {
+                const [entityType, field] = optionsReference.split('.');
+
+                const options = this.getMetadata()
+                    .get(`entityDefs.${entityType}.fields.${field}.options`) || [''];
+
+                return Espo.Utils.clone(options);
+            }
+
+            return this.model.get('options') || [''];
+        },
+
         validateListed: function () {
-            let value = this.model.get(this.name) ?? '';
+            const value = this.model.get(this.name) ?? '';
 
             if (!this.params.options) {
                 return false;
             }
 
-            let options = this.model.get('options') || [''];
+            const options = this.getAvailableOptions();
 
             if (options.indexOf(value) === -1) {
-                let msg = this.translate('fieldInvalid', 'messages')
+                const msg = this.translate('fieldInvalid', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
