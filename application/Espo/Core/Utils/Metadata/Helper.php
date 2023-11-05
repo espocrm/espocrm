@@ -29,36 +29,10 @@
 
 namespace Espo\Core\Utils\Metadata;
 
-use Espo\Core\Utils\Util;
 use Espo\Core\Utils\Metadata;
 
-/**
- * Warning: Instantiated explicitly.
- */
 class Helper
 {
-    protected string $defaultNaming = 'postfix';
-
-    /**
-     * List of copied params for metadata -> 'fields' from parent items.
-     *
-     * @var string[]
-     */
-    private array $copiedDefParams = [
-        'readOnly',
-        'disabled',
-        'notStorable',
-        'layoutListDisabled',
-        'layoutDetailDisabled',
-        'layoutMassUpdateDisabled',
-        'layoutFiltersDisabled',
-        'directAccessDisabled',
-        'directUpdateDisabled',
-        'customizationDisabled',
-        'importDisabled',
-        'exportDisabled',
-    ];
-
     public function __construct(private Metadata $metadata)
     {}
 
@@ -94,7 +68,7 @@ class Helper
 
     /**
      * Get link definition defined in 'fields' metadata.
-     * In linkDefs can be used as value (e.g. "type": "hasChildren") and/or variables (e.g. "entityName":"{entity}").
+     * In linkDefs can be used as value (e.g. "type": "hasChildren") and/or variables (e.g. "entityName": "{entity}").
      * Variables should be defined into fieldDefs (in 'entityDefs' metadata).
      *
      * @param string $entityType
@@ -127,46 +101,5 @@ class Helper
         }
 
         return $linkFieldDefsByType;
-    }
-
-    /**
-     * Get additional field list based on field definition in metadata 'fields'.
-     *
-     * @param string $fieldName
-     * @param array<string, mixed> $fieldParams
-     * @param array<string, mixed> $definitionList
-     * @return ?array<string, mixed>
-     */
-    public function getAdditionalFieldList($fieldName, array $fieldParams, array $definitionList)
-    {
-        if (empty($fieldParams['type']) || empty($definitionList)) {
-            return null;
-        }
-
-        $fieldType = $fieldParams['type'];
-        $fieldDefinition = $definitionList[$fieldType] ?? null;
-
-        if (
-            isset($fieldDefinition) &&
-            !empty($fieldDefinition['fields']) &&
-            is_array($fieldDefinition['fields'])
-        ) {
-            $copiedParams = array_intersect_key($fieldParams, array_flip($this->copiedDefParams));
-
-            $additionalFields = [];
-
-            // add additional fields
-            foreach ($fieldDefinition['fields'] as $subFieldName => $subFieldParams) {
-                $namingType = $fieldDefinition['naming'] ?? $this->defaultNaming;
-
-                $subFieldNaming = Util::getNaming($fieldName, $subFieldName, $namingType);
-
-                $additionalFields[$subFieldNaming] = array_merge($copiedParams, $subFieldParams);
-            }
-
-            return $additionalFields;
-        }
-
-        return null;
     }
 }

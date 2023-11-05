@@ -30,9 +30,8 @@
 namespace Espo\Core\Utils;
 
 use Espo\Core\Utils\File\Manager as FileManager;
-use Espo\Core\Utils\Metadata\Helper;
-use Espo\Core\Utils\Resource\Reader as ResourceReader;
-use Espo\Core\Utils\Resource\Reader\Params as ResourceReaderParams;
+use Espo\Core\Utils\Metadata\Builder;
+use Espo\Core\Utils\Metadata\BuilderHelper;
 
 use stdClass;
 use LogicException;
@@ -56,54 +55,14 @@ class Metadata
     /** @var array<string, array<string, mixed>> */
     private $changedData = [];
 
-    /** @var array<int, string[]> */
-    private $forceAppendPathList = [
-        ['app', 'rebuild', 'actionClassNameList'],
-        ['app', 'fieldProcessing', 'readLoaderClassNameList'],
-        ['app', 'fieldProcessing', 'listLoaderClassNameList'],
-        ['app', 'fieldProcessing', 'saverClassNameList'],
-        ['app', 'hook', 'suppressClassNameList'],
-        ['app', 'api', 'globalMiddlewareClassNameList'],
-        ['app', 'api', 'routeMiddlewareClassNameListMap', self::ANY_KEY],
-        ['app', 'api', 'controllerMiddlewareClassNameListMap', self::ANY_KEY],
-        ['app', 'api', 'controllerActionMiddlewareClassNameListMap', self::ANY_KEY],
-        ['app', 'entityManager', 'createHookClassNameList'],
-        ['app', 'entityManager', 'deleteHookClassNameList'],
-        ['app', 'entityManager', 'updateHookClassNameList'],
-        ['app', 'linkManager', 'createHookClassNameList'],
-        ['app', 'linkManager', 'deleteHookClassNameList'],
-        ['recordDefs', self::ANY_KEY, 'readLoaderClassNameList'],
-        ['recordDefs', self::ANY_KEY, 'listLoaderClassNameList'],
-        ['recordDefs', self::ANY_KEY, 'saverClassNameList'],
-        ['recordDefs', self::ANY_KEY, 'selectApplierClassNameList'],
-        ['recordDefs', self::ANY_KEY, 'beforeReadHookClassNameList'],
-        ['recordDefs', self::ANY_KEY, 'beforeCreateHookClassNameList'],
-        ['recordDefs', self::ANY_KEY, 'beforeUpdateHookClassNameList'],
-        ['recordDefs', self::ANY_KEY, 'beforeDeleteHookClassNameList'],
-        ['recordDefs', self::ANY_KEY, 'beforeLinkHookClassNameList'],
-        ['recordDefs', self::ANY_KEY, 'beforeUnlinkHookClassNameList'],
-    ];
-
-    private const ANY_KEY = '__ANY__';
-
-    private Helper $metadataHelper;
-
     public function __construct(
         private FileManager $fileManager,
         private DataCache $dataCache,
-        private ResourceReader $resourceReader,
         private Module $module,
+        private Builder $builder,
+        private BuilderHelper $builderHelper,
         private bool $useCache = false
-    ){}
-
-    private function getMetadataHelper(): Helper
-    {
-        if (!isset($this->metadataHelper)) {
-            $this->metadataHelper = new Helper($this);
-        }
-
-        return $this->metadataHelper;
-    }
+    ) {}
 
     /**
      * Init metadata.
@@ -162,28 +121,6 @@ class Metadata
         return Util::getValueByKey($this->getData(), $key, $default);
     }
 
-    /**
-    * Get all metadata.
-    *
-    * @/param bool $isJSON
-    * @/param bool $reload
-    * @/return array<string, mixed>|string
-    */
-    /*public function getAll(bool $isJSON = false, bool $reload = false)
-    {
-        if ($reload) {
-            $this->init($reload);
-        }
-
-        assert($this->data !== null);
-
-        if ($isJSON) {
-            return Json::encode($this->data);
-        }
-
-        return $this->data;
-    }*/
-
     private function objInit(bool $reload = false): void
     {
         if (!$this->useCache) {
@@ -199,12 +136,7 @@ class Metadata
             return;
         }
 
-        $readerParams = ResourceReaderParams::create()
-            ->withForceAppendPathList($this->forceAppendPathList);
-
-        $this->objData = $this->resourceReader->read('metadata', $readerParams);
-
-        $this->objData = $this->addAdditionalFieldsObj($this->objData);
+        $this->objData = $this->builder->build();
 
         if ($this->useCache) {
             $this->dataCache->store($this->objCacheKey, $this->objData);
@@ -241,71 +173,7 @@ class Metadata
         return $this->getObjData();
     }
 
-    /**
-     * @param stdClass $data
-     * @return stdClass
-     */
-    private function addAdditionalFieldsObj($data)
-    {
-        if (!isset($data->entityDefs)) {
-            return $data;
-        }
 
-        $fieldDefinitionList = Util::objectToArray($data->fields);
-
-        foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
-            if (isset($data->entityDefs->$entityType->collection)) {
-                /** @var stdClass $collectionItem */
-                $collectionItem = $data->entityDefs->$entityType->collection;
-
-                if (isset($collectionItem->orderBy)) {
-                    $collectionItem->sortBy = $collectionItem->orderBy;
-                }
-                else if (isset($collectionItem->sortBy)) {
-                    $collectionItem->orderBy = $collectionItem->sortBy;
-                }
-
-                if (isset($collectionItem->order)) {
-                     $collectionItem->asc = $collectionItem->order === 'asc';
-                }
-                else if (isset($collectionItem->asc)) {
-                    $collectionItem->order = $collectionItem->asc === true ? 'asc' : 'desc';
-                }
-            }
-
-            if (!isset($entityDefsItem->fields)) {
-                continue;
-            }
-
-            foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
-                $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList(
-                    $field,
-                    Util::objectToArray($fieldDefsItem), $fieldDefinitionList
-                );
-
-                if (!$additionalFields) {
-                    continue;
-                }
-
-                foreach ($additionalFields as $subFieldName => $subFieldParams) {
-                    $item = Util::arrayToObject($subFieldParams);
-
-                    if (isset($entityDefsItem->fields->$subFieldName)) {
-                        $data->entityDefs->$entityType->fields->$subFieldName = DataUtil::merge(
-                            $item,
-                            $entityDefsItem->fields->$subFieldName
-                        );
-
-                        continue;
-                    }
-
-                    $data->entityDefs->$entityType->fields->$subFieldName = $item;
-                }
-            }
-        }
-
-        return $data;
-    }
 
     /**
      * Get metadata definition in custom directory.
@@ -401,7 +269,7 @@ class Metadata
 
         switch ($key1) {
             case 'entityDefs':
-                // unset related additional fields, e.g. a field with "address" type
+                // Unset related additional fields, e.g. a field with an 'address' type.
                 $fieldDefinitionList = $this->get('fields');
 
                 $unsetList = $unsets;
@@ -411,7 +279,8 @@ class Metadata
                         $fieldName = $matches[1];
                         $fieldPath = [$key1, $key2, 'fields', $fieldName];
 
-                        $additionalFields = $this->getMetadataHelper()->getAdditionalFieldList(
+                        // @todo Revise the need. Additional fields are supposed to exist only in the build?
+                        $additionalFields = $this->builderHelper->getAdditionalFieldList(
                             $fieldName,
                             $this->get($fieldPath, []),
                             $fieldDefinitionList
@@ -449,6 +318,7 @@ class Metadata
         $this->deletedData = $mergedDeletedData;
 
         /** @var array<string, array<string, mixed>> $unsetDeletedData */
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
         $unsetDeletedData = Util::unsetInArrayByValue('__APPEND__', $this->deletedData, true);
         $this->deletedData = $unsetDeletedData;
 
