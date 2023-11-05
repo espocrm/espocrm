@@ -91,6 +91,14 @@ interface Entity
     public function set($attribute, $value = null): void;
 
     /**
+     * Set multiple attributes.
+     *
+     * @param array<string, mixed>|stdClass $valueMap Values.
+     * @since v8.1.0.
+     */
+    public function setMultiple(array|stdClass $valueMap): void;
+
+    /**
      * Get an attribute value.
      *
      * @return mixed

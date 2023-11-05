@@ -207,6 +207,17 @@ class BaseEntity implements Entity
     }
 
     /**
+     * Set multiple attributes.
+     *
+     * @param array<string, mixed>|stdClass $valueMap Values.
+     * @since v8.1.0.
+     */
+    public function setMultiple(array|stdClass $valueMap): void
+    {
+        $this->set($valueMap);
+    }
+
+    /**
      * Get an attribute value.
      *
      * @param array<string, mixed> $params @deprecated  @todo Remove in v9.0.
@@ -958,8 +969,6 @@ class BaseEntity implements Entity
             $this->setInContainer($attribute, $defs['default']);
         }
     }
-
-
 
     /**
      * Clone an array value.

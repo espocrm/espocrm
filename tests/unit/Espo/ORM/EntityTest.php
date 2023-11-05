@@ -399,4 +399,16 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(true, $entity->isAttributeWritten('int'));
         $this->assertEquals(false, $entity->isAttributeWritten('object'));
     }
+
+    public function testSetMultiple(): void
+    {
+        $entity = $this->createEntity('Test');
+        $entity->setMultiple(['int' => 2]);
+
+        $this->assertEquals(2, $entity->get('int'));
+
+        $entity->setMultiple((object) ['int' => 3]);
+
+        $this->assertEquals(3, $entity->get('int'));
+    }
 }
