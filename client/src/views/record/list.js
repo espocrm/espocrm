@@ -1984,8 +1984,6 @@ class ListRecordView extends View {
             this.layoutName += 'Portal';
         }
 
-        this._rowActionHandlers = {};
-
         this.setupRowActionDefs();
 
         this.wait(
@@ -3289,6 +3287,8 @@ class ListRecordView extends View {
     }
 
     setupRowActionDefs() {
+        this._rowActionHandlers = {};
+
         const list = this.options.additionalRowActionList;
 
         if (!list) {

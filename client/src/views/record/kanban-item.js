@@ -94,6 +94,9 @@ class KanbanRecordItem extends View {
                 model: this.model,
                 acl: acl,
                 statusFieldIsEditable: this.options.statusFieldIsEditable,
+                rowActionHandlers: this.options.rowActionHandlers || {},
+                additionalActionList: this.options.additionalRowActionList,
+                scope: this.options.scope,
             });
         }
     }

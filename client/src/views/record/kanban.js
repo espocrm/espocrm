@@ -283,6 +283,8 @@ class KanbanRecordView extends ListRecordView {
         this.seedCollection.orderBy = this.collection.defaultOrderBy;
         this.seedCollection.order = this.collection.defaultOrder;
 
+        this.setupRowActionDefs();
+
         this.listenTo(this.collection, 'sync', () => {
             if (this.hasView('modal') && this.getView('modal').isRendered()) {
                 return;
@@ -835,8 +837,11 @@ class KanbanRecordView extends ListRecordView {
             itemLayout: this.listLayout,
             rowActionsDisabled: this.rowActionsDisabled,
             rowActionsView: this.rowActionsView,
+            rowActionHandlers: this._rowActionHandlers || {},
             setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
             statusFieldIsEditable: this.statusFieldIsEditable,
+            additionalRowActionList: this._additionalRowActionList,
+            scope: this.scope,
         }, callback);
     }
 

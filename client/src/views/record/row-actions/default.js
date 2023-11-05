@@ -37,7 +37,7 @@ class DefaultRowActionsView extends View {
 
     setup() {
         this.options.acl = this.options.acl || {};
-        this.scope = this.options.scope;
+        this.scope = this.options.scope || this.model.entityType;
 
         /** @type {Object.<string, {isAvailable: function(module:model, string)}>} */
         this.handlers = this.options.rowActionHandlers || {};
