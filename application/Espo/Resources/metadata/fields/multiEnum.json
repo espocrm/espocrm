@@ -18,6 +18,11 @@
             "tooltip": true
         },
         {
+            "name": "default",
+            "type": "multiEnum",
+            "view": "views/admin/field-manager/fields/options/default-multi"
+        },
+        {
             "name": "isSorted",
             "type": "bool"
         },
