@@ -40,14 +40,14 @@ class Provider
     /** @var array<string, object[]> */
     private $map = [];
 
-    /** @var array<string, class-string> */
-    private $typeInterfaceMap = [
-        Type::BEFORE_CREATE => CreateHook::class,
-        Type::BEFORE_READ => ReadHook::class,
-        Type::BEFORE_UPDATE => UpdateHook::class,
-        Type::BEFORE_DELETE => DeleteHook::class,
-        Type::BEFORE_LINK => LinkHook::class,
-        Type::BEFORE_UNLINK => UnlinkHook::class,
+    /** @var array<string, class-string[]> */
+    private $typeInterfaceListMap = [
+        Type::BEFORE_CREATE => [CreateHook::class, SaveHook::class],
+        Type::BEFORE_READ => [ReadHook::class],
+        Type::BEFORE_UPDATE => [UpdateHook::class, SaveHook::class],
+        Type::BEFORE_DELETE => [DeleteHook::class],
+        Type::BEFORE_LINK => [LinkHook::class],
+        Type::BEFORE_UNLINK => [UnlinkHook::class],
     ];
 
     public function __construct(
@@ -79,10 +79,10 @@ class Provider
         /** @var class-string[] $classNameList */
         $classNameList = $this->metadata->get(['recordDefs', $entityType, $key]) ?? [];
 
-        $interfaceName = $this->typeInterfaceMap[$type] ?? null;
+        $interfaces = $this->typeInterfaceListMap[$type] ?? null;
 
-        if (!$interfaceName) {
-            throw new RuntimeException("Unsupported record hook type '{$type}'.");
+        if (!$interfaces) {
+            throw new RuntimeException("Unsupported record hook type '$type'.");
         }
 
         $list = [];
@@ -90,8 +90,18 @@ class Provider
         foreach ($classNameList as $className) {
             $class = new ReflectionClass($className);
 
-            if (!$class->implementsInterface($interfaceName)) {
-                throw new RuntimeException("Hook '$className' does not implement '{$interfaceName}'.");
+            $found = false;
+
+            foreach ($interfaces as $interface) {
+                if ($class->implementsInterface($interface)) {
+                    $found = true;
+
+                    break;
+                }
+            }
+
+            if (!$found) {
+                throw new RuntimeException("Hook '$className' does not implement any required interface.");
             }
 
             $list[] = $this->injectableFactory->create($className);

@@ -138,14 +138,14 @@
             }
         },
         "beforeCreateHookClassNameList": {
-            "description": "Before-create hooks. Should implement the Espo\\Core\\Record\\Hook\\CreateHook interface.",
+            "description": "Before-create hooks. Should implement the Espo\\Core\\Record\\Hook\\CreateHook or Espo\\Core\\Record\\Hook\\SaveHook interface.",
             "type": "array",
             "items": {
                 "type": "string"
             }
         },
         "beforeUpdateHookClassNameList": {
-            "description": "Before-update hooks. Should implement the Espo\\Core\\Record\\Hook\\UpdateHook interface.",
+            "description": "Before-update hooks. Should implement the Espo\\Core\\Record\\Hook\\UpdateHook or Espo\\Core\\Record\\Hook\\SaveHook interface.",
             "type": "array",
             "items": {
                 "type": "string"
