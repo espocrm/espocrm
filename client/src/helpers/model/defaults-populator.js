@@ -36,14 +36,12 @@ class DefaultsPopulator {
      * @param {module:models/preferences} preferences
      * @param {module:acl-manager} acl
      * @param {module:models/settings} config
-     * @param {module:metadata} metadata
      */
-    constructor(user, preferences, acl, config, metadata) {
+    constructor(user, preferences, acl, config) {
         this.user = user;
         this.preferences = preferences;
         this.acl = acl;
         this.config = config;
-        this.metadata = metadata;
     }
 
     /**
@@ -244,12 +242,10 @@ class DefaultsPopulator {
                 return;
             }
 
-            /** @type {{default?: *}} */
-            const defs = this.metadata.get(`fields.${type}`) || {};
-
-            if ('default' in defs) {
-                set(field, defs.default);
-
+            if (
+                model.getFieldParam(field, 'disabled') ||
+                model.getFieldParam(field, 'utility')
+            ) {
                 return;
             }
 

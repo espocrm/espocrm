@@ -122,7 +122,7 @@
             "description": "Columns used in full-text search."
         },
         "default": {
-            "description": "A default value. Used when populating defaults for a new record in frontend. Usually to be set to null."
+            "description": "A default value. Used when populating defaults for a new record. Usually to be set to null."
         },
         "valueFactoryClassName": {
             "type": "string",

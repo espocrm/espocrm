@@ -712,13 +712,9 @@ class Model {
         const fieldDefs = this.defs.fields;
 
         for (const field in fieldDefs) {
-            let defaultValue = this.getFieldParam(field, 'default');
-
-            if (defaultValue !== null) {
+            if (this.hasFieldParam(field, 'default')) {
                 try {
-                    defaultValue = this.parseDefaultValue(defaultValue);
-
-                    defaultHash[field] = defaultValue;
+                    defaultHash[field] = this.parseDefaultValue(this.getFieldParam(field, 'default'));
                 }
                 catch (e) {
                     console.error(e);
@@ -881,6 +877,20 @@ class Model {
         }
 
         return null;
+    }
+
+    hasFieldParam(field, param) {
+        if (!this.defs || !this.defs.fields) {
+            return false;
+        }
+
+        if (field in this.defs.fields) {
+            if (param in this.defs.fields[field]) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

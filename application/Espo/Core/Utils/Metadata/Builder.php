@@ -33,6 +33,7 @@ use Espo\Core\Utils\DataUtil;
 use Espo\Core\Utils\Resource\Reader as ResourceReader;
 use Espo\Core\Utils\Resource\Reader\Params as ResourceReaderParams;
 use Espo\Core\Utils\Util;
+use Espo\ORM\Defs\FieldDefs;
 use stdClass;
 
 class Builder
@@ -80,6 +81,7 @@ class Builder
         $data = $this->resourceReader->read('metadata', $readerParams);
 
         $this->addAdditionalField($data);
+        $this->setMissingFieldDefaults($data);
 
         return $data;
     }
@@ -142,6 +144,45 @@ class Builder
 
                     $data->entityDefs->$entityType->fields->$subFieldName = $item;
                 }
+            }
+        }
+    }
+
+    private function setMissingFieldDefaults(stdClass $data): void
+    {
+        if (!isset($data->entityDefs) || !isset($data->fields)) {
+            return;
+        }
+
+        foreach (get_object_vars($data->entityDefs) as $entityDefsItem) {
+            if (!isset($entityDefsItem->fields)) {
+                continue;
+            }
+
+            foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefs) {
+                $oFieldDefs = FieldDefs::fromRaw(Util::objectToArray($fieldDefs), $field);
+
+                $type = $oFieldDefs->getType();
+
+                $typeDefs = $data->fields->$type ?? null;
+
+                if (!$typeDefs) {
+                    continue;
+                }
+
+                if (!property_exists($typeDefs, 'default')) {
+                    continue;
+                }
+
+                if (
+                    $oFieldDefs->getParam('utility') ||
+                    $oFieldDefs->getParam('disabled') ||
+                    $oFieldDefs->hasParam('default')
+                ) {
+                    continue;
+                }
+
+                $fieldDefs->default = $typeDefs->default;
             }
         }
     }
