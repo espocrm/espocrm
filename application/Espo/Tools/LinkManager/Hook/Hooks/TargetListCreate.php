@@ -135,6 +135,7 @@ class TargetListCreate implements CreateHook
                     'rowActionsView' => 'crm:views/target-list/record/row-actions/default',
                     'view' => 'crm:views/target-list/record/panels/relationship',
                     'massSelect' => true,
+                    'removeDisabled' => true,
                 ],
             ],
         ]);

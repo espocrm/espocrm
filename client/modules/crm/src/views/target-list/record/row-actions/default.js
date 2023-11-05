@@ -26,12 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/target-list/record/row-actions/default', ['views/record/row-actions/relationship-no-remove'], function (Dep) {
+define('crm:views/target-list/record/row-actions/default', ['views/record/row-actions/relationship'], function (Dep) {
 
     return Dep.extend({
 
         getActionList: function () {
-            var list = Dep.prototype.getActionList.call(this);
+            const list = Dep.prototype.getActionList.call(this);
 
             if (this.options.acl.edit) {
                 if (this.model.get('targetListIsOptedOut')) {
