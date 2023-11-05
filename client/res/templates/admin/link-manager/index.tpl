@@ -42,53 +42,53 @@
     {{else}}
     <thead>
         <tr>
-            <th width="15%" align="left">{{translate 'entity' category='fields' scope='EntityManager'}}</th>
-            <th width="15%" align="left">{{translate 'linkForeign' category='fields' scope='EntityManager'}}</th>
-            <th width="10%" align="center" style="text-align: center">
+            <th style="width: 15%; text-align: left">{{translate 'entity' category='fields' scope='EntityManager'}}</th>
+            <th style="width: 15%; text-align: left">{{translate 'linkForeign' category='fields' scope='EntityManager'}}</th>
+            <th style="width: 10%; text-align: center">
                 {{translate 'linkType' category='fields' scope='EntityManager'}}
             </th>
-            <th width="15%" align="right" style="text-align: right">
+            <th style="width: 15%; text-align: right">
                 {{translate 'link' category='fields' scope='EntityManager'}}
             </th>
-            <th width="15%" align="right" style="text-align: right">
+            <th style="width: 15%; text-align: right">
                 {{translate 'entityForeign' category='fields' scope='EntityManager'}}
             </th>
-            <th width="10%"></th>
-            <th width="10%"></th>
+            <th style="width: 10%"></th>
+            <th style="width: 10%"></th>
         </tr>
     </thead>
     {{/unless}}
     {{#each linkDataList}}
     <tr data-link="{{link}}" class="link-row">
-        <td width="15%" align="left">
+        <td style="width: 15%; text-align: left">
             {{translate entity category='scopeNames'}}
         </td>
-        <td width="15%" align="left">
+        <td style="width: 15%; text-align: left">
             <span title="{{translate linkForeign category='links' scope=entityForeign}}">
                 {{linkForeign}}
             </span>
         </td>
-        <td width="10%" align="center">
+        <td style="width: 10%; text-align: center">
             <strong>
             {{translateOption type field='linkType' scope='EntityManager'}}
             </strong>
         </td>
-        <td width="15%" align="right">
+        <td style="width: 15%; text-align: right">
             <span title="{{translate link category='links' scope=entity}}">
                 {{link}}
             </span>
         </td>
-        <td width="15%" align="right">
+        <td style="width: 15%; text-align: right">
             {{translate entityForeign category='scopeNames'}}
         </td>
-        <td align="right" width="10%">
+        <td style="width: 10%; text-align: right">
             {{#if isEditable}}
                 <a role="button" tabindex="0" data-action="editLink" data-link="{{link}}">
                     {{translate 'Edit'}}
                 </a>
             {{/if}}
         </td>
-        <td align="right" width="10%">
+        <td style="width: 10%; ; text-align: right">
             {{#if isRemovable}}
             <a role="button" tabindex="0" data-action="removeLink" data-link="{{link}}">
                 {{translate 'Remove'}}

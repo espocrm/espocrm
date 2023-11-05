@@ -23,10 +23,10 @@
 
 <table class="table fields-table table-panel table-hover">
     <thead>
-        <th width="35%">{{translate 'Name' scope='FieldManager'}}</th>
-        <th width="35%">{{translate 'Label' scope='FieldManager'}}</th>
-        <th width="20%">{{translate 'Type' scope='FieldManager'}}</th>
-        <th width="10%" align="right"></th>
+        <th style="width: 35%">{{translate 'Name' scope='FieldManager'}}</th>
+        <th style="width: 35%">{{translate 'Label' scope='FieldManager'}}</th>
+        <th style="width: 20%">{{translate 'Type' scope='FieldManager'}}</th>
+        <th style="width: 10%; text-align: right;"></th>
     </thead>
     <tbody>
     {{#each fieldDefsArray}}

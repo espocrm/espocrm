@@ -3,9 +3,9 @@
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th width="20%"></th>
+                <th style="width: 20%"></th>
                 {{#each dataList}}
-                <th width="5%" style="vertical-align: middle;">
+                <th style="vertical-align: middle; width: 5%">
                     <input
                         type="radio"
                         name="check-all"
@@ -14,7 +14,7 @@
                         class="pull-right form-radio"
                     >
                 </th>
-                <th width="{{../width}}%">
+                <th style="width: {{../width}}%">
                     <a href="#{{../scope}}/view/{{id}}" target="_BLANK" class="text-large">{{name}}</a>
                 </th>
                 {{/each}}

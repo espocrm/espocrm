@@ -980,7 +980,7 @@ class ListRecordView extends View {
                 this.massActionList || this.buttonList.length || this.dropdownItemList.length,
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
             moreCountFormatted: this.getNumberUtil().formatInt(moreCount),
-            checkboxColumnWidth: this.checkboxColumnWidth,
+            checkboxColumnWidth: this.checkboxColumnWidth + 'px',
             noDataDisabled: noDataDisabled,
         };
     }
@@ -2381,7 +2381,7 @@ class ListRecordView extends View {
                 width = this.listLayout[i].width + '%';
             }
             else if ('widthPx' in this.listLayout[i]) {
-                width = this.listLayout[i].widthPx;
+                width = this.listLayout[i].widthPx + 'px';
             }
 
             const itemName = this.listLayout[i].name;
@@ -2439,7 +2439,7 @@ class ListRecordView extends View {
             }
 
             defs.push({
-                width: this.rowActionsColumnWidth,
+                width: this.rowActionsColumnWidth + 'px',
                 html: html,
                 className: 'action-cell',
             });

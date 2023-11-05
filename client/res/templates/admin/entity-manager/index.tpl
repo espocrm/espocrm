@@ -55,10 +55,10 @@
                 {{name}}
                 {{/if}}
             </td>
-            <td width="33%">
+            <td style="width: 33%">
                 {{label}}
             </td>
-            <td width="30%">
+            <td style="width: 30%">
                 {{#if type}}
                 {{translateOption type field='type' scope='EntityManager'}}
                 {{/if}}

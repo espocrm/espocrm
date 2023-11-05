@@ -132,7 +132,10 @@
         <thead>
             <tr>
                 {{#if checkboxes}}
-                <th width="{{checkboxColumnWidth}}" data-name="r-checkbox">
+                <th
+                    style="width: {{checkboxColumnWidth}}"
+                    data-name="r-checkbox"
+                >
                     <span class="select-all-container"><input type="checkbox" class="select-all form-checkbox form-checkbox-small"></span>
                     {{#unless checkAllResultDisabled}}
                     <div class="btn-group checkbox-dropdown">
@@ -159,8 +162,7 @@
                 {{/if}}
                 {{#each headerDefs}}
                 <th
-                    {{#if width}}width="{{width}}"{{/if}}
-                    {{#if align}}style="text-align: {{align}};"{{/if}}
+                    style="{{#if width}}width: {{width}};{{/if}}{{#if align}} text-align: {{align}};{{/if}}"
                     {{#if className}}class="{{className}}"{{/if}}
                     {{#if name}}data-name="{{name}}"{{/if}}
                 >
