@@ -33,7 +33,6 @@ use Espo\Core\Utils\DataUtil;
 use Espo\Core\Utils\Resource\Reader as ResourceReader;
 use Espo\Core\Utils\Resource\Reader\Params as ResourceReaderParams;
 use Espo\Core\Utils\Util;
-use Espo\ORM\Defs\FieldDefs;
 use stdClass;
 
 class Builder
