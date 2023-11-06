@@ -324,11 +324,11 @@ class App {
             return Promise.resolve();
         }
 
-        let cacheTimestamp = options.cacheTimestamp || null;
+        const cacheTimestamp = options.cacheTimestamp || null;
 
         this.cache = new Cache(cacheTimestamp);
 
-        let storedCacheTimestamp = this.cache.getCacheTimestamp();
+        const storedCacheTimestamp = this.cache.getCacheTimestamp();
 
         cacheTimestamp ?
             this.cache.handleActuality(cacheTimestamp) :
@@ -339,7 +339,7 @@ class App {
         }
 
         return new Promise(resolve => {
-            let deleteCache = !cacheTimestamp ||
+            const deleteCache = !cacheTimestamp ||
                 !storedCacheTimestamp ||
                 cacheTimestamp !== storedCacheTimestamp;
 
@@ -474,15 +474,15 @@ class App {
                 this.webSocketManager.connect(this.auth, this.user.id);
             }
 
-            let promiseList = [];
-            let aclImplementationClassMap = {};
+            const promiseList = [];
+            const aclImplementationClassMap = {};
 
-            let clientDefs = this.metadata.get('clientDefs') || {};
+            const clientDefs = this.metadata.get('clientDefs') || {};
 
             Object.keys(clientDefs).forEach(scope => {
-                let o = clientDefs[scope];
+                const o = clientDefs[scope];
 
-                let implClassName = (o || {})[this.aclName];
+                const implClassName = (o || {})[this.aclName];
 
                 if (!implClassName) {
                     return;
@@ -536,7 +536,7 @@ class App {
      * @private
      */
     initRouter() {
-        let routes = this.metadata.get(['app', 'clientRoutes']) || {};
+        const routes = this.metadata.get(['app', 'clientRoutes']) || {};
 
         this.router = new Router({routes: routes});
 
@@ -574,13 +574,12 @@ class App {
 
         this.baseController.trigger('action');
 
-        let callback = controller => {
+        const callback = controller => {
             try {
                 controller.doAction(params.action, params.options);
 
                 this.trigger('action:done');
-            }
-            catch (e) {
+            } catch (e) {
                 console.error(e);
 
                 switch (e.name) {
@@ -662,7 +661,7 @@ class App {
             let className = this.metadata.get(['clientDefs', name, 'controller']);
 
             if (!className) {
-                let module = this.metadata.get(['scopes', name, 'module']);
+                const module = this.metadata.get(['scopes', name, 'module']);
 
                 className = Utils.composeClassName(module, name, 'controllers');
             }
@@ -682,9 +681,9 @@ class App {
         Espo.loader.require(
             className,
             controllerClass => {
-                let injections = this.getControllerInjection();
+                const injections = this.getControllerInjection();
 
-                let controller = new controllerClass(this.baseController.params, injections);
+                const controller = new controllerClass(this.baseController.params, injections);
 
                 controller.name = name;
                 controller.masterView = this.masterView;
@@ -721,7 +720,7 @@ class App {
      * @private
      */
     initView() {
-        let helper = this.viewHelper = new ViewHelper();
+        const helper = this.viewHelper = new ViewHelper();
 
         helper.layoutManager = new LayoutManager(this.cache, this.id);
         helper.settings = this.settings;
@@ -750,7 +749,7 @@ class App {
             this.loader.require(Utils.composeViewClassName(viewName), callback);
         };
 
-        let internalModuleMap = {};
+        const internalModuleMap = {};
 
         const isModuleInternal = (module) => {
             if (!(module in internalModuleMap)) {
@@ -787,7 +786,7 @@ class App {
                 return 'client/' + getResourceInnerPath(type, name);
             }
 
-            let [mod, path] = name.split(':');
+            const [mod, path] = name.split(':');
 
             if (mod === 'custom') {
                 return 'client/custom/' + getResourceInnerPath(type, path);
@@ -807,7 +806,7 @@ class App {
             resources: {
                 loaders: {
                     template: (name, callback) => {
-                        let path = getResourcePath('template', name);
+                        const path = getResourcePath('template', name);
 
                         this.loader.require('res!' + path, callback);
                     },
@@ -818,7 +817,7 @@ class App {
                             return;
                         }
 
-                        let path = getResourcePath('layoutTemplate', name);
+                        const path = getResourcePath('layoutTemplate', name);
 
                         this.loader.require('res!' + path, callback);
                     },
@@ -836,15 +835,15 @@ class App {
         this.anotherUser = this.storage.get('user', 'anotherUser') || null;
 
         this.baseController.on('login', data => {
-            let userId = data.user.id;
-            let userName = data.auth.userName;
-            let token = data.auth.token;
-            let anotherUser = data.auth.anotherUser || null;
+            const userId = data.user.id;
+            const userName = data.auth.userName;
+            const token = data.auth.token;
+            const anotherUser = data.auth.anotherUser || null;
 
             this.auth = Base64.encode(userName  + ':' + token);
             this.anotherUser = anotherUser;
 
-            let lastUserId = this.storage.get('user', 'lastUserId');
+            const lastUserId = this.storage.get('user', 'lastUserId');
 
             if (lastUserId !== userId) {
                 this.metadata.clearCache();
@@ -870,14 +869,14 @@ class App {
         let logoutWait = false;
 
         if (this.auth && !afterFail) {
-            let arr = Base64.decode(this.auth).split(':');
+            const arr = Base64.decode(this.auth).split(':');
 
             if (arr.length > 1) {
                 logoutWait = this.appParams.logoutWait || false;
 
                 Ajax.postRequest('App/destroyAuthToken', {token: arr[1]}, {resolveWithXhr: true})
                     .then(/** XMLHttpRequest */xhr => {
-                        let redirectUrl = xhr.getResponseHeader('X-Logout-Redirect-Url');
+                        const redirectUrl = xhr.getResponseHeader('X-Logout-Redirect-Url');
 
                         if (redirectUrl) {
                             setTimeout(() => window.location.href = redirectUrl, 50);
@@ -912,7 +911,7 @@ class App {
             this.storage.clear('user', 'anotherUser');
         }
 
-        let action = logoutWait ? 'logoutWait' : 'login';
+        const action = logoutWait ? 'logoutWait' : 'login';
 
         this.doAction({action: action});
 
@@ -937,7 +936,7 @@ class App {
      * @private
      */
     sendLogoutRequest() {
-        let xhr = new XMLHttpRequest;
+        const xhr = new XMLHttpRequest;
 
         xhr.open('GET', this.basePath + this.apiUrl + '/');
         xhr.setRequestHeader('Authorization', 'Basic ' + Base64.encode('**logout:logout'));
@@ -953,7 +952,7 @@ class App {
             return;
         }
 
-        let stylesheetPath = this.basePath + this.themeManager.getStylesheet();
+        const stylesheetPath = this.basePath + this.themeManager.getStylesheet();
 
         $('#main-stylesheet').attr('href', stylesheetPath);
     }
@@ -962,7 +961,7 @@ class App {
      * @private
      */
     setCookieAuth(username, token) {
-        let date = new Date();
+        const date = new Date();
 
         date.setTime(date.getTime() + (1000 * 24 * 60 * 60 * 1000));
 
@@ -1007,11 +1006,11 @@ class App {
             .then(() => {
                 this.dateTime.setLanguage(this.language);
 
-                let userData = options.user || null;
-                let preferencesData = options.preferences || null;
-                let aclData = options.acl || null;
+                const userData = options.user || null;
+                const preferencesData = options.preferences || null;
+                const aclData = options.acl || null;
 
-                let settingData = options.settings || {};
+                const settingData = options.settings || {};
 
                 this.user.set(userData);
                 this.preferences.set(preferencesData);
@@ -1019,7 +1018,7 @@ class App {
                 this.settings.set(settingData);
                 this.acl.set(aclData);
 
-                for (let param in options.appParams) {
+                for (const param in options.appParams) {
                     this.appParams[param] = options.appParams[param];
                 }
 
@@ -1027,14 +1026,14 @@ class App {
                     return;
                 }
 
-                let xhr = new XMLHttpRequest();
+                const xhr = new XMLHttpRequest();
 
                 xhr.open('GET', this.basePath + this.apiUrl + '/');
                 xhr.setRequestHeader('Authorization', 'Basic ' + this.auth);
 
                 xhr.onreadystatechange = () => {
                     if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-                        let arr = Base64.decode(this.auth).split(':');
+                        const arr = Base64.decode(this.auth).split(':');
 
                         this.setCookieAuth(arr[0], arr[1]);
 
@@ -1085,16 +1084,16 @@ class App {
          * @param {Object.<string, *>} options
          */
         const onSuccess = (xhr, options) => {
-            let appTimestampHeader = xhr.getResponseHeader('X-App-Timestamp');
+            const appTimestampHeader = xhr.getResponseHeader('X-App-Timestamp');
 
             if (!appTimestampHeader || appTimestampChangeProcessed) {
                 return;
             }
 
-            let appTimestamp = parseInt(appTimestampHeader);
+            const appTimestamp = parseInt(appTimestampHeader);
 
             // noinspection JSUnresolvedReference
-            let bypassAppReload = options.bypassAppReload;
+            const bypassAppReload = options.bypassAppReload;
 
             if (
                 this.appTimestamp &&
@@ -1164,7 +1163,7 @@ class App {
 
                         if (this.auth) {
                             // noinspection JSUnresolvedReference
-                            let silent = !options.appStart;
+                            const silent = !options.appStart;
 
                             this.logout(true, silent);
                         }
@@ -1206,7 +1205,7 @@ class App {
                         this._processErrorAlert(xhr, null);
                 }
 
-                let statusReason = xhr.getResponseHeader('X-Status-Reason');
+                const statusReason = xhr.getResponseHeader('X-Status-Reason');
 
                 if (statusReason) {
                     console.error('Server side error ' + xhr.status + ': ' + statusReason);
@@ -1271,7 +1270,7 @@ class App {
             msg += ': ' + this.language.translate(label);
         }
 
-        let obj = {
+        const obj = {
             msg: msg,
             closeButton: false,
         };
@@ -1298,9 +1297,9 @@ class App {
                     data.messageTranslation.scope
                 );
 
-                let msgData = data.messageTranslation.data || {};
+                const msgData = data.messageTranslation.data || {};
 
-                for (let key in msgData) {
+                for (const key in msgData) {
                     msgDetail = msgDetail.replace('{' + key + '}', msgData[key]);
                 }
 
@@ -1312,7 +1311,7 @@ class App {
         }
 
         if (!isMessageDone) {
-            let statusReason = xhr.getResponseHeader('X-Status-Reason');
+            const statusReason = xhr.getResponseHeader('X-Status-Reason');
 
             if (statusReason) {
                 obj.msg += '\n' + statusReason;
@@ -1432,21 +1431,21 @@ class App {
             return Promise.resolve();
         }
 
-        let files = ['client/lib/templates.tpl'];
+        const files = ['client/lib/templates.tpl'];
 
         this.bundledModuleList.forEach(mod => {
-            let file = this.internalModuleList.includes(mod) ?
+            const file = this.internalModuleList.includes(mod) ?
                 `client/modules/${mod}/lib/templates.tpl` :
                 `client/custom/modules/${mod}/lib/templates.tpl`;
 
             files.push(file);
         });
 
-        let baseUrl = Utils.obtainBaseUrl();
-        let timestamp = this.loader.getCacheTimestamp();
+        const baseUrl = Utils.obtainBaseUrl();
+        const timestamp = this.loader.getCacheTimestamp();
 
-        let promiseList = files.map(file => {
-            let url = new URL(baseUrl + this.basePath + file);
+        const promiseList = files.map(file => {
+            const url = new URL(baseUrl + this.basePath + file);
             url.searchParams.append('t', this.appTimestamp);
 
             return new Promise(resolve => {
@@ -1459,10 +1458,10 @@ class App {
                             return;
                         }
 
-                        let promiseList = [];
+                        const promiseList = [];
 
                         response.text().then(text => {
-                            let index = text.indexOf('\n');
+                            const index = text.indexOf('\n');
 
                             if (index <= 0) {
                                 resolve();
@@ -1470,18 +1469,18 @@ class App {
                                 return;
                             }
 
-                            let delimiter = text.slice(0, index + 1);
+                            const delimiter = text.slice(0, index + 1);
                             text = text.slice(index + 1);
 
                             text.split(delimiter).forEach(item => {
-                                let index = item.indexOf('\n');
+                                const index = item.indexOf('\n');
 
-                                let file = item.slice(0, index);
-                                let content = item.slice(index + 1);
+                                const file = item.slice(0, index);
+                                const content = item.slice(index + 1);
 
-                                let url = baseUrl + this.basePath + 'client/' + file;
+                                const url = baseUrl + this.basePath + 'client/' + file;
 
-                                let urlObj = new URL(url);
+                                const urlObj = new URL(url);
                                 urlObj.searchParams.append('r', timestamp);
 
                                 promiseList.push(
