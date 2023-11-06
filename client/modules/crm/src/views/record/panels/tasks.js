@@ -32,7 +32,7 @@ define('crm:views/record/panels/tasks', ['views/record/panels/relationship'], fu
 
         name: 'tasks',
 
-        scope: 'Task',
+        entityType: 'Task',
 
         filterList: ['all', 'actual', 'completed'],
 

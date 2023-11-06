@@ -87,6 +87,7 @@ class BottomPanelView extends View {
     data() {
         return {
             scope: this.scope,
+            entityType: this.entityType,
             name: this.panelName,
             hiddenFields: this.recordHelper.getHiddenFields(),
             fieldList: this.getFieldList(),

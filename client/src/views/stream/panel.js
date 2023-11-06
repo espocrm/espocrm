@@ -184,7 +184,7 @@ class PanelStreamView extends RelationshipPanelView {
             ...this.events,
         };
 
-        this.scope = this.model.entityType;
+        this.entityType = this.model.entityType;
         this.filter = this.getStoredFilter();
 
         this.setupTitle();
@@ -193,7 +193,7 @@ class PanelStreamView extends RelationshipPanelView {
         this.allowInternalNotes = false;
 
         if (!this.getUser().isPortal()) {
-            this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.scope, 'allowInternalNotes']);
+            this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.entityType, 'allowInternalNotes']);
         }
 
         this.isInternalNoteMode = false;
@@ -684,15 +684,15 @@ class PanelStreamView extends RelationshipPanelView {
     }
 
     getStoredFilter() {
-        return this.getStorage().get('state', 'streamPanelFilter' + this.scope) || null;
+        return this.getStorage().get('state', 'streamPanelFilter' + this.entityType) || null;
     }
 
     storeFilter(filter) {
         if (filter) {
-            this.getStorage().set('state', 'streamPanelFilter' + this.scope, filter);
+            this.getStorage().set('state', 'streamPanelFilter' + this.entityType, filter);
         }
         else {
-            this.getStorage().clear('state', 'streamPanelFilter' + this.scope);
+            this.getStorage().clear('state', 'streamPanelFilter' + this.entityType);
         }
     }
 

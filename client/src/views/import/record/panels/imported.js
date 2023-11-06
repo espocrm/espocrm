@@ -35,7 +35,7 @@ class ImportImportedPanelView extends RelationshipPanelView {
     rowActionsView = 'views/record/row-actions/relationship-no-unlink'
 
     setup() {
-        this.scope = this.model.get('entityType');
+        this.entityType = this.model.get('entityType');
         this.title = this.title || this.translate('Imported', 'labels', 'Import');
 
         super.setup();

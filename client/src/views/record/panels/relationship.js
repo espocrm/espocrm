@@ -56,11 +56,16 @@ class RelationshipPanelView extends BottomPanelView {
     url = null
 
     /**
-     * A scope.
-     *
-     * @type {string|null}
+     * @type {string}
+     * @deprecated Use `entityType`.
      */
-    scope = null
+    scope
+
+    /**
+     * An entity type.
+     * @type {string}
+     */
+    entityType
 
     /**
      * Read-only.
@@ -94,11 +99,33 @@ class RelationshipPanelView extends BottomPanelView {
 
         this.link = this.link || this.defs.link || this.panelName;
 
-        if (!this.scope && !(this.link in this.model.defs.links)) {
-            throw new Error(`Link '${this.link}' is not defined in model '${this.model.entityType}'`);
+        if (!this.link) {
+            throw new Error(`No link or panelName.`);
         }
 
-        this.scope = this.scope || this.model.defs.links[this.link].entity;
+        // noinspection JSDeprecatedSymbols
+        if (!this.scope && !this.entityType) {
+            if (!this.model) {
+                throw new Error(`No model passed.`);
+            }
+
+            if (!(this.link in this.model.defs.links)) {
+                throw new Error(`Link '${this.link}' is not defined in model '${this.model.entityType}'.`);
+            }
+        }
+
+        this.entityType = this.entityType || this.model.defs.links[this.link].entity;
+
+        // noinspection JSDeprecatedSymbols
+        if (this.scope) {
+            // For backward compatibility.
+            // noinspection JSDeprecatedSymbols
+            this.entityType = this.scope;
+        }
+
+        // For backward compatibility.
+        // noinspection JSDeprecatedSymbols
+        this.scope = this.entityType;
 
         const linkReadOnly = this.getMetadata()
             .get(['entityDefs', this.model.entityType, 'links', this.link, 'readOnly']) || false;
@@ -150,8 +177,8 @@ class RelationshipPanelView extends BottomPanelView {
 
         if (this.defs.create) {
             if (
-                this.getAcl().check(this.scope, 'create') &&
-                !~this.noCreateScopeList.indexOf(this.scope)
+                this.getAcl().check(this.entityType, 'create') &&
+                !~this.noCreateScopeList.indexOf(this.entityType)
             ) {
                 this.buttonList.push({
                     title: 'Create',
@@ -227,7 +254,7 @@ class RelationshipPanelView extends BottomPanelView {
 
         this.wait(true);
 
-        this.getCollectionFactory().create(this.scope, collection => {
+        this.getCollectionFactory().create(this.entityType, collection => {
             collection.maxSize = this.recordsPerPage || this.getConfig().get('recordsPerPageSmall') || 5;
 
             if (this.defs.filters) {
@@ -257,8 +284,8 @@ class RelationshipPanelView extends BottomPanelView {
 
             const viewName =
                 this.defs.recordListView ||
-                this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listRelated']) ||
-                this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'list']) ||
+                this.getMetadata().get(['clientDefs', this.entityType, 'recordViews', 'listRelated']) ||
+                this.getMetadata().get(['clientDefs', this.entityType, 'recordViews', 'list']) ||
                 'views/record/list';
 
             this.listViewName = viewName;
@@ -323,13 +350,13 @@ class RelationshipPanelView extends BottomPanelView {
         let iconHtml = '';
 
         if (!this.getConfig().get('scopeColorsDisabled')) {
-            iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+            iconHtml = this.getHelper().getScopeColorIconHtml(this.entityType);
         }
 
         this.titleHtml = this.title;
 
         if (this.defs.label) {
-            this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.scope);
+            this.titleHtml = iconHtml + this.translate(this.defs.label, 'labels', this.entityType);
         } else {
             this.titleHtml = iconHtml + this.title;
         }
@@ -353,8 +380,8 @@ class RelationshipPanelView extends BottomPanelView {
         }
 
         if (!orderBy) {
-            orderBy = this.getMetadata().get(['entityDefs', this.scope, 'collection', 'orderBy']);
-            order = this.getMetadata().get(['entityDefs', this.scope, 'collection', 'order'])
+            orderBy = this.getMetadata().get(['entityDefs', this.entityType, 'collection', 'orderBy']);
+            order = this.getMetadata().get(['entityDefs', this.entityType, 'collection', 'order'])
         }
 
         if (orderBy && !order) {
@@ -428,7 +455,7 @@ class RelationshipPanelView extends BottomPanelView {
      * @return {string}
      */
     translateFilter(name) {
-        return this.translate(name, 'presetFilters', this.scope);
+        return this.translate(name, 'presetFilters', this.entityType);
     }
 
     /**
@@ -540,11 +567,11 @@ class RelationshipPanelView extends BottomPanelView {
             this.getMetadata().get(
                 ['clientDefs', this.model.entityType, 'relationshipPanels', this.name, 'viewModalView']
             ) ||
-            this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'relatedList']) ||
+            this.getMetadata().get(['clientDefs', this.entityType, 'modalViews', 'relatedList']) ||
             this.viewModalView ||
             'views/modals/related-list';
 
-        const scope = data.scope || this.scope;
+        const scope = data.scope || this.entityType;
 
         let filter = this.filter;
 
