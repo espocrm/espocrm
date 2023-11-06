@@ -32,8 +32,10 @@ namespace Espo\Tools\Attachment;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\ErrorSilent;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Utils\File\MimeType;
 use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Security\UrlCheck;
 use Espo\Entities\Attachment as Attachment;
 use Espo\ORM\EntityManager;
 use Espo\Repositories\Attachment as AttachmentRepository;
@@ -51,7 +53,8 @@ class UploadUrlService
         Metadata $metadata,
         EntityManager $entityManager,
         MimeType $mimeType,
-        DetailsObtainer $detailsObtainer
+        DetailsObtainer $detailsObtainer,
+        private UrlCheck $urlCheck
     ) {
         $this->accessChecker = $accessChecker;
         $this->metadata = $metadata;
@@ -68,6 +71,10 @@ class UploadUrlService
      */
     public function uploadImage(string $url, FieldData $data): Attachment
     {
+        if (!$this->urlCheck->isNotInternalUrl($url)) {
+            throw new ForbiddenSilent("Not allowed URL.");
+        }
+
         $attachment = $this->getAttachmentRepository()->getNew();
 
         $this->accessChecker->check($data);
@@ -130,9 +137,12 @@ class UploadUrlService
         $opts[\CURLOPT_SSL_VERIFYPEER] = true;
         $opts[\CURLOPT_SSL_VERIFYHOST] = 2;
         $opts[\CURLOPT_RETURNTRANSFER] = true;
-        $opts[\CURLOPT_FOLLOWLOCATION] = true;
+        // Prevents Server Side Request Forgery by redirecting to an internal host.
+        $opts[\CURLOPT_FOLLOWLOCATION] = false;
         $opts[\CURLOPT_MAXREDIRS] = 2;
         $opts[\CURLOPT_IPRESOLVE] = \CURL_IPRESOLVE_V4;
+        $opts[\CURLOPT_PROTOCOLS] = \CURLPROTO_HTTPS | \CURLPROTO_HTTP;
+        $opts[\CURLOPT_REDIR_PROTOCOLS] = \CURLPROTO_HTTPS;
 
         $ch = curl_init();
 
