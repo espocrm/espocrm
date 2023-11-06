@@ -32,6 +32,7 @@ namespace Espo\Core\Authentication;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Utils\Language;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
@@ -87,7 +88,8 @@ class Authentication
         private Log $log,
         private LogoutFactory $logoutFactory,
         private MethodProvider $methodProvider,
-        private Util $util
+        private Util $util,
+        private Language $language
     ) {}
 
     /**
@@ -204,8 +206,7 @@ class Authentication
             throw ServiceUnavailable::createWithBody(
                 "Application is in maintenance mod1e.",
                 Body::create()
-                    ->withMessageTranslation('maintenanceModeError', 'messages')
-                    ->encode()
+                    ->withMessage($this->language->translateLabel('maintenanceModeError', 'messages'))
             );
         }
 

@@ -1308,6 +1308,18 @@ class App {
 
                 isMessageDone = true;
             }
+
+            if (
+                !isMessageDone &&
+                data &&
+                'message'in data &&
+                data.message
+            ) {
+                obj.msg += '\n' + data.message;
+                obj.closeButton = true;
+
+                isMessageDone = true;
+            }
         }
 
         if (!isMessageDone) {
