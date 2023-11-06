@@ -92,6 +92,8 @@ class Sender
         curl_setopt($handler, \CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($handler, \CURLOPT_CONNECTTIMEOUT, $connectTimeout);
         curl_setopt($handler, \CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($handler, \CURLOPT_PROTOCOLS, \CURLPROTO_HTTPS | \CURLPROTO_HTTP);
+        curl_setopt($handler, \CURLOPT_REDIR_PROTOCOLS, \CURLPROTO_HTTPS);
         curl_setopt($handler, \CURLOPT_HTTPHEADER, $headerList);
         curl_setopt($handler, \CURLOPT_POSTFIELDS, $payload);
 
