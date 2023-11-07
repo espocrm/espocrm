@@ -1216,7 +1216,7 @@ class ListRecordView extends View {
         const handler = defs.handler;
 
         if (handler) {
-            const method = 'action' + Espo.Utils.upperCaseFirst(name);
+            const method = defs.actionFunction || 'action' + Espo.Utils.upperCaseFirst(name);
 
             const data = {
                 entityType: this.entityType,

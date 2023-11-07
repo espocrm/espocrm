@@ -518,7 +518,11 @@
                         "type": "string"
                     },
                     "initFunction": {
-                        "description": "An init function of the handler.",
+                        "description": "An init method in the handler.",
+                        "type": "string"
+                    },
+                    "actionFunction": {
+                        "description": "An action method in the handler. As of v8.1.",
                         "type": "string"
                     },
                     "configCheck": {
