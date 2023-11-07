@@ -26,6 +26,16 @@
             ]
         }
     },
+    "modalDetailActionList": [
+        {
+            "name": "complete",
+            "label": "Complete",
+            "acl": "edit",
+            "handler": "crm:handlers/task/detail-actions",
+            "actionFunction": "complete",
+            "checkVisibilityFunction": "isCompleteAvailable"
+        }
+    ],
     "dynamicLogic": {
         "fields": {
             "dateCompleted": {

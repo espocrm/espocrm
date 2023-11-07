@@ -512,11 +512,13 @@ class ModalView extends View {
             }
 
             o.onClick = o.onClick || ((d, e) => {
+                // noinspection ES6ConvertLetToConst
                 let handler = o.handler || (o.data || {}).handler;
 
                 Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
                     action: o.name,
                     handler: handler,
+                    actionFunction: o.actionFunction,
                 });
             });
 

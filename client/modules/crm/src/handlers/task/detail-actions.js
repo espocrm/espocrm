@@ -28,7 +28,7 @@
 
 import ActionHandler from 'action-handler';
 
-class TaskMenuHandler extends ActionHandler {
+class DetailActions extends ActionHandler {
 
     complete() {
         const model = this.view.model;
@@ -42,16 +42,10 @@ class TaskMenuHandler extends ActionHandler {
 
     // noinspection JSUnusedGlobalSymbols
     isCompleteAvailable() {
-        const view = /** @type {module:views/detail} */this.view;
-
-        if (view.getRecordView().isEditMode()) {
-            return false;
-        }
-
-        const status = view.model.get('status');
+        const status = this.view.model.get('status');
 
         return !['Completed', 'Canceled'].includes(status);
     }
 }
 
-export default TaskMenuHandler;
+export default DetailActions;
