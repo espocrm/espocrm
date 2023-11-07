@@ -148,7 +148,7 @@ class NavbarSiteView extends View {
             !isSide &&
             !$target.parent().hasClass('more-dropdown-menu')
         ) {
-            let maxHeight = windowHeight - rectItem.bottom;
+            const maxHeight = windowHeight - rectItem.bottom;
 
             this.handleGroupMenuScrolling($menu, $target, maxHeight);
 
