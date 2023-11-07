@@ -5,18 +5,7 @@
     "description": "Navbar definitions.",
     "type": "object",
     "properties": {
-        "itemList": {
-            "type": "array",
-            "description": "Navbar items.",
-            "items": {
-                "type": "string",
-                "anyOf": [
-                    {"type": "string"},
-                    {"const": "__APPEND__"}
-                ]
-            }
-        },
-        "itemDefs": {
+        "items": {
             "description": "Navbar item definitions",
             "type": "object",
             "additionalProperties": {
@@ -30,6 +19,14 @@
                     "class": {
                         "type": "string",
                         "description": "A CSS class."
+                    },
+                    "order": {
+                        "type": "integer",
+                        "description": "An order position."
+                    },
+                    "disabled": {
+                        "type": "boolean",
+                        "description": "To disable."
                     }
                 }
             }

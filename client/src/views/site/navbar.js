@@ -362,8 +362,17 @@ class NavbarSiteView extends View {
             this.selectTab(false);
         });
 
+        const itemDefs = this.getMetadata().get(['app', 'clientNavbar', 'items']) || {};
+
         /** @type {string[]} */
-        this.itemList = this.getMetadata().get(['app', 'clientNavbar', 'itemList']) || [];
+        this.itemList = Object.keys(itemDefs)
+            .filter(name => !itemDefs[name].disabled)
+            .sort((name1, name2) => {
+                const order1 = itemDefs[name1].order || 0;
+                const order2 = itemDefs[name2].order || 0;
+
+                return order1 - order2;
+            });
 
         this.createView('notificationsBadge', 'views/notification/badge', {
             selector: '.notifications-badge-container',
@@ -433,7 +442,7 @@ class NavbarSiteView extends View {
      * @return {{view: string, class: string}}
      */
     getItemDefs(name) {
-        return this.getMetadata().get(['app', 'clientNavbar', 'itemDefs', name]);
+        return this.getMetadata().get(['app', 'clientNavbar', 'items', name]);
     }
 
     /**
