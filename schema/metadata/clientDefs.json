@@ -739,7 +739,7 @@
                 },
                 "checkVisibilityFunction": {
                     "type": "string",
-                    "description": "The handler function that checks whether the action is available. Should return a boolean value. As of v8.1."
+                    "description": "A handler function that checks whether the action is available. Should return a boolean value. As of v8.1."
                 },
                 "accessDataList": {
                     "$ref": "#/definitions/accessDataList"
@@ -979,7 +979,7 @@
                 },
                 "checkVisibilityFunction": {
                     "type": "string",
-                    "description": "The handler function that checks whether the action is available. Should return a boolean value. Called on model sync."
+                    "description": "A handler function that checks whether the action is available. Should return a boolean value. Called on model sync."
                 },
                 "configCheck": {
                     "description": "A config path (separated by the .) to check whether the action is enabled. The ! prefix reverts.",
