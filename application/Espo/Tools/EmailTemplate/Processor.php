@@ -35,7 +35,6 @@ use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
-
 use Espo\Core\AclManager;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\Config;
@@ -45,13 +44,10 @@ use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
 use Espo\Core\Htmlizer\Htmlizer;
 use Espo\Core\Acl\GlobalRestriction;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
-
 use Espo\Entities\EmailTemplate;
 use Espo\Entities\User;
 use Espo\Entities\Attachment;
 use Espo\Entities\EmailAddress;
-
-use Espo\ORM\Type\AttributeType;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Exception;
@@ -212,6 +208,9 @@ class Processor
             );
         }
 
+        $subject = $this->processPlaceholders($subject, $data);
+        $body = $this->processPlaceholders($body, $data);
+
         $attachmentList = $params->copyAttachments() ?
             $this->copyAttachments($template) :
             [];
@@ -222,6 +221,29 @@ class Processor
             $template->isHtml(),
             $attachmentList
         );
+    }
+
+    /** @noinspection PhpUnusedParameterInspection */
+    private function processPlaceholders(string $text, Data $data): string
+    {
+        try {
+            $now = new DateTime('now', new DateTimezone($this->config->get('timeZone')));
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+
+        $replaceData = [
+            'today' => $this->dateTime->getTodayString(),
+            'now' => $this->dateTime->getNowString(),
+            'currentYear' => $now->format('Y'),
+        ];
+
+        foreach ($replaceData as $key => $value) {
+            $text = str_replace('{' . $key . '}', $value, $text);
+        }
+
+        return $text;
     }
 
     private function processText(
@@ -290,23 +312,6 @@ class Processor
                 $skipAcl,
                 $isHtml
             );
-        }
-
-        try {
-            $now = new DateTime('now', new DateTimezone($this->config->get('timeZone')));
-        }
-        catch (Exception $e) {
-            throw new RuntimeException($e->getMessage());
-        }
-
-        $replaceData = [
-            'today' => $this->dateTime->getTodayString(),
-            'now' => $this->dateTime->getNowString(),
-            'currentYear' => $now->format('Y'),
-        ];
-
-        foreach ($replaceData as $key => $value) {
-            $text = str_replace('{' . $key . '}', $value, $text);
         }
 
         return $text;
