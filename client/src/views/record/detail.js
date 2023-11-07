@@ -1643,7 +1643,7 @@ class DetailRecordView extends BaseRecordView {
      * @return {boolean}
      */
     isEditMode() {
-        return this.mode === 'edit' || this.inlineEditModeIsOn === true;
+        return this.mode === 'edit';
     }
 
     resetModelChanges() {
