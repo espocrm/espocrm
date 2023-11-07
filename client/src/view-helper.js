@@ -450,12 +450,12 @@ class ViewHelper {
             }
 
             if (iconHtml) {
-                html = iconHtml + ' ' + html;
+                html = iconHtml + ' ' + '<span>' + html + '</span>';
             }
             else if (iconClass) {
                 const iconHtml = $('<span>').addClass(iconClass).get(0).outerHTML;
 
-                html = iconHtml + ' ' + html;
+                html = iconHtml + ' ' + '<span>' + html + '</span>';
             }
 
             const tag = link ? '<a>' : '<button>';

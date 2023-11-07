@@ -21,7 +21,9 @@
                         <span class="{{iconClass}}"></span>
                     {{/if}}
                 {{/if}}
+                <span>
                 {{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}
+                </span>
                 </a>
             {{/each}}
 
