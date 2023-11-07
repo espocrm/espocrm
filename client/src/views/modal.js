@@ -330,7 +330,7 @@ class ModalView extends View {
                 headerHtml = Handlebars.Utils.escapeExpression(this.headerText);
             }
 
-            let footerAtTheTop = (this.footerAtTheTop !== null) ? this.footerAtTheTop :
+            const footerAtTheTop = (this.footerAtTheTop !== null) ? this.footerAtTheTop :
                 this.getThemeManager().getParam('modalFooterAtTheTop');
 
             this.dialog = new Espo.Ui.Dialog({
@@ -387,7 +387,7 @@ class ModalView extends View {
     setupFinal() {
         if (this.shortcutKeys) {
             this.events['keydown.modal-base'] = e => {
-                let key = Espo.Utils.getKeyFromKeyEvent(e);
+                const key = Espo.Utils.getKeyFromKeyEvent(e);
 
                 if (typeof this.shortcutKeys[key] === 'function') {
                     this.shortcutKeys[key].call(this, e.originalEvent);
@@ -395,7 +395,7 @@ class ModalView extends View {
                     return;
                 }
 
-                let actionName = this.shortcutKeys[key];
+                const actionName = this.shortcutKeys[key];
 
                 if (!actionName) {
                     return;
@@ -408,7 +408,7 @@ class ModalView extends View {
                 e.preventDefault();
                 e.stopPropagation();
 
-                let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+                const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
                 if (typeof this[methodName] === 'function') {
                     this[methodName]();
@@ -428,11 +428,11 @@ class ModalView extends View {
      * @return {module:ui.Dialog~Button[]}
      */
     getDialogButtonList() {
-        let buttonListExt = [];
+        const buttonListExt = [];
 
         // @todo remove it as deprecated.
         this.buttons.forEach(item => {
-            let o = Espo.Utils.clone(item);
+            const o = Espo.Utils.clone(item);
 
             if (!('text' in o) && ('label' in o)) {
                 o.text = this.getLanguage().translate(o.label);
@@ -465,7 +465,7 @@ class ModalView extends View {
             }
 
             o.onClick = o.onClick || ((d, e) => {
-                let handler = o.handler || (o.data || {}).handler;
+                const handler = o.handler || (o.data || {}).handler;
 
                 Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
                     action: o.name,
@@ -486,7 +486,7 @@ class ModalView extends View {
      * @return {module:ui.Dialog~Button[]}
      */
     getDialogDropdownItemList() {
-        let dropdownItemListExt = [];
+        const dropdownItemListExt = [];
 
         this.dropdownItemList.forEach(item => {
             let o = {};
@@ -686,13 +686,13 @@ class ModalView extends View {
             return;
         }
 
-        let name = o.name;
+        const name = o.name;
 
         if (!name) {
             return;
         }
 
-        for (let item of this.dropdownItemList) {
+        for (const item of this.dropdownItemList) {
             if (item.name === name) {
                 return;
             }
@@ -715,7 +715,7 @@ class ModalView extends View {
 
         this.updateDialog();
 
-        let $footer = this.dialog.getFooter();
+        const $footer = this.dialog.getFooter();
 
         this.$el.find('footer.modal-footer')
             .empty()
@@ -769,7 +769,7 @@ class ModalView extends View {
      * @param {string} name
      */
     showButton(name) {
-        for (let item of this.buttonList) {
+        for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = false;
 
@@ -793,7 +793,7 @@ class ModalView extends View {
      * @param {string} name
      */
     hideButton(name) {
-        for (let item of this.buttonList) {
+        for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = true;
 
@@ -816,7 +816,7 @@ class ModalView extends View {
      * @param {string} name A name.
      */
     showActionItem(name) {
-        for (let item of this.buttonList) {
+        for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = false;
 
@@ -824,7 +824,7 @@ class ModalView extends View {
             }
         }
 
-        for (let item of this.dropdownItemList) {
+        for (const item of this.dropdownItemList) {
             if (item.name === name) {
                 item.hidden = false;
 
@@ -840,7 +840,7 @@ class ModalView extends View {
         this.$el.find('footer li > a[data-name="'+name+'"]').parent().removeClass('hidden');
 
         if (!this.isDropdownItemListEmpty()) {
-            let $dropdownGroup = this.$el.find('footer .main-btn-group > .btn-group');
+            const $dropdownGroup = this.$el.find('footer .main-btn-group > .btn-group');
 
             $dropdownGroup.removeClass('hidden');
             $dropdownGroup.find('> button').removeClass('hidden');
@@ -855,7 +855,7 @@ class ModalView extends View {
      * @param {string} name A name.
      */
     hideActionItem(name) {
-        for (let item of this.buttonList) {
+        for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = true;
 
@@ -863,7 +863,7 @@ class ModalView extends View {
             }
         }
 
-        for (let item of this.dropdownItemList) {
+        for (const item of this.dropdownItemList) {
             if (item.name === name) {
                 item.hidden = true;
 
@@ -879,7 +879,7 @@ class ModalView extends View {
         this.$el.find('footer li > a[data-name="'+name+'"]').parent().addClass('hidden');
 
         if (this.isDropdownItemListEmpty()) {
-            let $dropdownGroup = this.$el.find('footer .main-btn-group > .btn-group');
+            const $dropdownGroup = this.$el.find('footer .main-btn-group > .btn-group');
 
             $dropdownGroup.addClass('hidden');
             $dropdownGroup.find('> button').addClass('hidden');
@@ -894,7 +894,7 @@ class ModalView extends View {
      * @param {string} name An action item name.
      */
     hasActionItem(name) {
-        let hasButton = this.buttonList
+        const hasButton = this.buttonList
             .findIndex(item => item.name === name) !== -1;
 
         if (hasButton) {
@@ -911,7 +911,7 @@ class ModalView extends View {
      * @param {string} name An action item name.
      */
     hasAvailableActionItem(name) {
-        let hasButton = this.buttonList
+        const hasButton = this.buttonList
             .findIndex(item => item.name === name && !item.disabled && !item.hidden) !== -1;
 
         if (hasButton) {
@@ -953,9 +953,9 @@ class ModalView extends View {
             this.fontSizePercentage = 100;
         }
 
-        let $titleText = this.$el.find('.modal-title > .modal-title-text');
+        const $titleText = this.$el.find('.modal-title > .modal-title-text');
 
-        let containerWidth = $titleText.parent().width();
+        const containerWidth = $titleText.parent().width();
         let textWidth = 0;
 
         $titleText.children().each((i, el) => {
@@ -964,7 +964,7 @@ class ModalView extends View {
 
         if (containerWidth < textWidth) {
             if (step > 5) {
-                let $title = this.$el.find('.modal-title');
+                const $title = this.$el.find('.modal-title');
 
                 $title.attr('title', $titleText.text());
                 $title.addClass('overlapped');
@@ -1004,11 +1004,7 @@ class ModalView extends View {
                 title = data.title;
             }
             else {
-                let $title = this.$el.find('.modal-header .modal-title .modal-title-text');
-
-                /*if ($title.children().length) {
-                    $title.children()[0];
-                }*/
+                const $title = this.$el.find('.modal-header .modal-title .modal-title-text');
 
                 title = $title.text();
             }
@@ -1066,13 +1062,13 @@ class ModalView extends View {
 
     /** @private */
     adjustLeftButtons() {
-        let $buttons = this.$el.find('footer.modal-footer > .main-btn-group button.btn');
+        const $buttons = this.$el.find('footer.modal-footer > .main-btn-group button.btn');
 
         $buttons
             .removeClass('radius-left')
             .removeClass('radius-right');
 
-        let $buttonsVisible = $buttons.filter('button:not(.hidden)');
+        const $buttonsVisible = $buttons.filter('button:not(.hidden)');
 
         $buttonsVisible.first().addClass('radius-left');
         $buttonsVisible.last().addClass('radius-right');
@@ -1080,14 +1076,14 @@ class ModalView extends View {
 
     /** @private */
     adjustRightButtons() {
-        let $buttons = this.$el.find('footer.modal-footer > .additional-btn-group button.btn:not(.btn-text)');
+        const $buttons = this.$el.find('footer.modal-footer > .additional-btn-group button.btn:not(.btn-text)');
 
         $buttons
             .removeClass('radius-left')
             .removeClass('radius-right')
             .removeClass('margin-right');
 
-        let $buttonsVisible = $buttons.filter('button:not(.hidden)');
+        const $buttonsVisible = $buttons.filter('button:not(.hidden)');
 
         $buttonsVisible.first().addClass('radius-left');
         $buttonsVisible.last().addClass('radius-right');
@@ -1101,8 +1097,8 @@ class ModalView extends View {
      * @protected
      */
     initBodyScrollListener() {
-        let $body = this.$el.find('> .dialog > .modal-dialog > .modal-content > .modal-body');
-        let $footer = $body.parent().find('> .modal-footer');
+        const $body = this.$el.find('> .dialog > .modal-dialog > .modal-content > .modal-body');
+        const $footer = $body.parent().find('> .modal-footer');
 
         if (!$footer.length) {
             return;
