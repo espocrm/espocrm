@@ -42,15 +42,18 @@ class TaskMenuHandler extends ActionHandler {
 
     // noinspection JSUnusedGlobalSymbols
     isCompleteAvailable() {
+        const status = this.view.model.get('status');
+
         const view = /** @type {module:views/detail} */this.view;
 
         if (view.getRecordView().isEditMode()) {
             return false;
         }
 
-        const status = view.model.get('status');
+        /** @type {string[]} */
+        const notActualStatuses = this.view.getMetadata().get('entityDefs.Task.fields.status.notActualOptions') || [];
 
-        return !['Completed', 'Canceled'].includes(status);
+        return !notActualStatuses.includes(status);
     }
 }
 

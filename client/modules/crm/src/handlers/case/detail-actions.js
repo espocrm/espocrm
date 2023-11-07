@@ -63,7 +63,10 @@ class CaseDetailActionHandler extends ActionHandler {
         const acl = this.view.getAcl();
         const metadata = this.view.getMetadata();
 
-        if (['Closed', 'Rejected', 'Duplicate'].includes(model.get('status'))) {
+        /** @type {string[]} */
+        const notActualStatuses = metadata.get('entityDefs.Case.fields.status.notActualOptions') || [];
+
+        if (notActualStatuses.includes(model.get('status'))) {
             return false;
         }
 

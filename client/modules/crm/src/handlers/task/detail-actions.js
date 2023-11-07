@@ -44,7 +44,10 @@ class DetailActions extends ActionHandler {
     isCompleteAvailable() {
         const status = this.view.model.get('status');
 
-        return !['Completed', 'Canceled'].includes(status);
+        /** @type {string[]} */
+        const notActualStatuses = this.view.getMetadata().get('entityDefs.Task.fields.status.notActualOptions') || [];
+
+        return !notActualStatuses.includes(status);
     }
 }
 
