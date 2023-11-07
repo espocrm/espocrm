@@ -225,7 +225,7 @@ class DetailModalView extends ModalView {
 
     /** @private */
     setupActionItems() {
-        let actionItemSetup = new ActionItemSetup(
+        const actionItemSetup = new ActionItemSetup(
             this.getMetadata(),
             this.getHelper(),
             this.getAcl(),
@@ -303,8 +303,8 @@ class DetailModalView extends ModalView {
     }
 
     createRecordView(callback) {
-        let model = this.model;
-        let scope = this.getScope();
+        const model = this.model;
+        const scope = this.getScope();
 
         this.headerHtml = '';
 
@@ -325,7 +325,7 @@ class DetailModalView extends ModalView {
         }
 
         if (!this.fullFormDisabled) {
-            let url = '#' + scope + '/view/' + this.id;
+            const url = '#' + scope + '/view/' + this.id;
 
             this.headerHtml =
                 $('<a>')
@@ -340,7 +340,7 @@ class DetailModalView extends ModalView {
         this.headerHtml = this.getHelper().getScopeColorIconHtml(this.scope) + this.headerHtml;
 
         if (!this.editDisabled) {
-            let editAccess = this.getAcl().check(model, 'edit', true);
+            const editAccess = this.getAcl().check(model, 'edit', true);
 
             if (editAccess) {
                 this.showButton('edit');
@@ -376,14 +376,14 @@ class DetailModalView extends ModalView {
             }
         }
 
-        let viewName =
+        const viewName =
             this.detailViewName ||
             this.detailView ||
             this.getMetadata().get(['clientDefs', model.entityType, 'recordViews', 'detailSmall']) ||
             this.getMetadata().get(['clientDefs', model.entityType, 'recordViews', 'detailQuick']) ||
             'views/record/detail-small';
 
-        let options = {
+        const options = {
             model: model,
             fullSelector: this.containerSelector + ' .record-container',
             type: 'detailSmall',
@@ -392,7 +392,8 @@ class DetailModalView extends ModalView {
             inlineEditDisabled: true,
             sideDisabled: this.sideDisabled,
             bottomDisabled: this.bottomDisabled,
-            exit: function () {},
+            exit: function () {
+            },
         };
 
         this.createView('record', viewName, options, callback);
@@ -418,13 +419,13 @@ class DetailModalView extends ModalView {
     }
 
     controlNavigationButtons() {
-        let recordView = this.getRecordView();
+        const recordView = this.getRecordView();
 
         if (!recordView) {
             return;
         }
 
-        let indexOfRecord = this.indexOfRecord;
+        const indexOfRecord = this.indexOfRecord;
 
         let previousButtonEnabled = false;
         let nextButtonEnabled = false;
@@ -464,7 +465,7 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        let previousModel = this.model;
+        const previousModel = this.model;
 
         this.sourceModel = this.model.collection.at(indexOfRecord);
 
@@ -513,7 +514,7 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        let indexOfRecord = this.indexOfRecord - 1;
+        const indexOfRecord = this.indexOfRecord - 1;
 
         this.switchToModelByIndex(indexOfRecord);
     }
@@ -531,9 +532,9 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        let collection = this.model.collection;
+        const collection = this.model.collection;
 
-        let indexOfRecord = this.indexOfRecord + 1;
+        const indexOfRecord = this.indexOfRecord + 1;
 
         if (indexOfRecord <= collection.length - 1) {
             this.switchToModelByIndex(indexOfRecord);
@@ -556,7 +557,7 @@ class DetailModalView extends ModalView {
      */
     actionEdit() {
         if (this.options.quickEditDisabled) {
-            let options = {
+            const options = {
                 id: this.id,
                 model: this.model,
                 returnUrl: this.getRouter().getCurrentUrl(),
@@ -572,7 +573,7 @@ class DetailModalView extends ModalView {
             return Promise.reject();
         }
 
-        let viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
+        const viewName = this.getMetadata().get(['clientDefs', this.scope, 'modalViews', 'edit']) ||
             'views/modals/edit';
 
         Espo.Ui.notify(' ... ');
@@ -613,10 +614,10 @@ class DetailModalView extends ModalView {
     }
 
     actionRemove() {
-        let model = this.getRecordView().model;
+        const model = this.getRecordView().model;
 
         this.confirm(this.translate('removeRecordConfirmation', 'messages'), () => {
-            let $buttons = this.dialog.$el.find('.modal-footer button');
+            const $buttons = this.dialog.$el.find('.modal-footer button');
 
             $buttons.addClass('disabled').attr('disabled', 'disabled');
 
@@ -633,18 +634,18 @@ class DetailModalView extends ModalView {
 
     actionFullForm() {
         let url;
-        let router = this.getRouter();
+        const router = this.getRouter();
 
-        let scope = this.getScope();
+        const scope = this.getScope();
 
         url = '#' + scope + '/view/' + this.id;
 
         let attributes = this.getRecordView().fetch();
-        let model = this.getRecordView().model;
+        const model = this.getRecordView().model;
 
         attributes = _.extend(attributes, model.getClonedAttributes());
 
-        let options = {
+        const options = {
             attributes: attributes,
             returnUrl: Backbone.history.fragment,
             model: this.sourceModel || this.model,
@@ -672,7 +673,7 @@ class DetailModalView extends ModalView {
             .then(attributes => {
                 Espo.Ui.notify(false);
 
-                let url = '#' + this.scope + '/create';
+                const url = '#' + this.scope + '/create';
 
                 this.getRouter().dispatch(this.scope, 'create', {
                     attributes: attributes,

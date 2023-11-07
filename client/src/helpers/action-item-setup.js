@@ -53,15 +53,16 @@ class ActionItemSetupHelper {
      */
     setup(view, type, waitFunc, addFunc, showFunc, hideFunc, options) {
         options = options || {};
-        let actionList = [];
+        const actionList = [];
 
-        let scope = view.scope || view.model.entityType;
+        // noinspection JSUnresolvedReference
+        const scope = view.scope || view.model.entityType;
 
         if (!scope) {
             throw new Error();
         }
 
-        let actionDefsList = [
+        const actionDefsList = [
             ...this.metadata.get(['clientDefs', 'Global', type + 'ActionList']) || [],
             ...this.metadata.get(['clientDefs', scope, type + 'ActionList']) || [],
         ];
@@ -73,7 +74,7 @@ class ActionItemSetupHelper {
 
             item = Espo.Utils.cloneDeep(item);
 
-            let name = item.name;
+            const name = item.name;
 
             if (!item.label) {
                 item.html = this.language.translate(name, 'actions', scope);
@@ -81,7 +82,7 @@ class ActionItemSetupHelper {
 
             item.data = item.data || {};
 
-            let handlerName = item.handler || item.data.handler;
+            const handlerName = item.handler || item.data.handler;
 
             if (handlerName && !item.data.handler) {
                 item.data.handler = handlerName;
@@ -109,14 +110,14 @@ class ActionItemSetupHelper {
 
             waitFunc(new Promise(resolve => {
                 Espo.loader.require(handlerName, Handler => {
-                    let handler = new Handler(view);
+                    const handler = new Handler(view);
 
                     if (item.initFunction) {
                         handler[item.initFunction].call(handler);
                     }
 
                     if (item.checkVisibilityFunction) {
-                        let isNotVisible = !handler[item.checkVisibilityFunction].call(handler);
+                        const isNotVisible = !handler[item.checkVisibilityFunction].call(handler);
 
                         if (isNotVisible) {
                             hideFunc(item.name);
@@ -134,10 +135,10 @@ class ActionItemSetupHelper {
             return;
         }
 
-        let onSync = () => {
+        const onSync = () => {
             actionList.forEach(item => {
                 if (item.handlerInstance && item.checkVisibilityFunction) {
-                    let isNotVisible = !item.handlerInstance[item.checkVisibilityFunction]
+                    const isNotVisible = !item.handlerInstance[item.checkVisibilityFunction]
                         .call(item.handlerInstance);
 
                     if (isNotVisible) {
