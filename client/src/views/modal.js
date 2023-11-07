@@ -470,6 +470,7 @@ class ModalView extends View {
                 Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
                     action: o.name,
                     handler: handler,
+                    actionFunction: o.actionFunction,
                 });
             });
 
