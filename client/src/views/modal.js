@@ -58,6 +58,7 @@ class ModalView extends View {
      * @property {string} [className] An additional class name.
      * @property {string} [title] A title text.
      * @property {'primary'|'danger'|'success'|'warning'|'text'} [style] A style.
+     * @property {string} [iconHtml] An icon HTML.
      */
 
     /**
@@ -462,6 +463,10 @@ class ModalView extends View {
                 else {
                     o.text = this.translate(o.name, 'modalActions', this.scope);
                 }
+            }
+
+            if (o.iconHtml && !o.html) {
+                o.html = o.iconHtml + ' ' + this.getHelper().escapeString(o.text);
             }
 
             o.onClick = o.onClick || ((d, e) => {
