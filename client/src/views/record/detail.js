@@ -1638,6 +1638,14 @@ class DetailRecordView extends BaseRecordView {
         this.setIsNotChanged();
     }
 
+    /**
+     * Whether in edit mode.
+     * @return {boolean}
+     */
+    isEditMode() {
+        return this.mode === 'edit' || this.inlineEditModeIsOn === true;
+    }
+
     resetModelChanges() {
         let skipReRender = true;
 

@@ -17,9 +17,11 @@
                 {
                     "label": "Complete",
                     "name": "setCompletedMain",
-                    "action": "setCompletedMain",
                     "iconHtml": "<span class=\"fas fa-check fa-sm\"></span>",
-                    "acl": "edit"
+                    "acl": "edit",
+                    "handler": "crm:handlers/task/menu",
+                    "actionFunction": "complete",
+                    "checkVisibilityFunction": "isCompleteAvailable"
                 }
             ]
         }

@@ -44,7 +44,13 @@ Espo.Utils = {
      * @param {{
      *     action?: string,
      *     handler?: string,
-     *     actionItems?: Array<{onClick?: function(), name?: string}>,
+     *     actionFunction?: string,
+     *     actionItems?: Array<{
+     *         onClick?: function(),
+     *         name?: string,
+     *         handler?: string,
+     *         actionFunction?: string,
+     *     }>,
      *     className?: string,
      * }} [actionData] Data. If an action is not specified, it will be fetched from a target element.
      * @return {boolean} True if handled.
@@ -56,6 +62,9 @@ Espo.Utils = {
         const action = actionData.action || $target.data('action');
 
         const name = $target.data('name') || action;
+
+        let method;
+        let handler;
 
         if (
             name &&
@@ -74,9 +83,12 @@ Espo.Utils = {
 
                 return true;
             }
+
+            handler = data.handler;
+            method = data.actionFunction;
         }
 
-        if (!action) {
+        if (!action && !actionData.actionFunction && !method) {
             return false;
         }
 
@@ -89,8 +101,8 @@ Espo.Utils = {
         }
 
         const data = $target.data();
-        const method = 'action' + Espo.Utils.upperCaseFirst(action);
-        const handler = actionData.handler || data.handler;
+        method = actionData.actionFunction || method || 'action' + Espo.Utils.upperCaseFirst(action);
+        handler = actionData.handler || handler || data.handler;
 
         let fired = false;
 
@@ -101,7 +113,7 @@ Espo.Utils = {
             fired = true;
 
             Espo.loader.require(handler, Handler => {
-                let handler = new Handler(view);
+                const handler = new Handler(view);
 
                 handler[method].call(handler, data, event);
             });

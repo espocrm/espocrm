@@ -721,9 +721,21 @@
                         }
                     }
                 },
+                "handler": {
+                    "type": "string",
+                    "description": "A handler. Should extend `action-handler`. As of v8.1."
+                },
                 "initFunction": {
                     "type": "string",
-                    "description": "An init function of the handler."
+                    "description": "An init method in the handler."
+                },
+                "actionFunction": {
+                    "description": "An action method in the handler. As of v8.1.",
+                    "type": "string"
+                },
+                "checkVisibilityFunction": {
+                    "type": "string",
+                    "description": "The handler function that checks whether the action is available. Should return a boolean value. As of v8.1."
                 },
                 "accessDataList": {
                     "$ref": "#/definitions/accessDataList"
@@ -955,7 +967,11 @@
                 },
                 "initFunction": {
                     "type": "string",
-                    "description": "An init function of the handler."
+                    "description": "An init function in the handler."
+                },
+                "actionFunction": {
+                    "type": "string",
+                    "description": "An action function in the handler. As of v8.1."
                 },
                 "checkVisibilityFunction": {
                     "type": "string",

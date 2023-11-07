@@ -206,7 +206,9 @@ class DetailView extends MainView {
             o.readOnly = true;
         }
 
-        return this.createView('record', this.getRecordViewName(), o);
+        return this.createView('record', this.getRecordViewName(), o, view => {
+            this.listenTo(view, 'after:mode-change', () => this.getHeaderView().reRender());
+        });
     }
 
     /**

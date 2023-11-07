@@ -3,6 +3,22 @@
     "recordViews": {
         "detail": "crm:views/case/record/detail"
     },
+    "detailActionList": [
+        {
+            "name": "close",
+            "label": "Close",
+            "handler": "crm:handlers/case/detail-actions",
+            "actionFunction": "close",
+            "checkVisibilityFunction": "isCloseAvailable"
+        },
+        {
+            "name": "reject",
+            "label": "Reject",
+            "handler": "crm:handlers/case/detail-actions",
+            "actionFunction": "reject",
+            "checkVisibilityFunction": "isRejectAvailable"
+        }
+    ],
     "sidePanels":{
         "detail":[
              {

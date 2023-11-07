@@ -75,7 +75,10 @@ class MainView extends View {
      * @property {string} [configCheck] A config parameter defining a menu item availability.
      *   If starts with `!`, then the result is negated.
      * @property {module:utils~AccessDefs[]} [accessDataList] Access definitions.
-     * @property {string} [initFunction] An init function.
+     * @property {string} [handler] A handler.
+     * @property {string} [initFunction] An init method in the handler.
+     * @property {string} [actionFunction] An action method in the handler.
+     * @property {string} [checkVisibilityFunction] A method in the handler that determine whether an item is available.
      * @property {function()} [onClick] A click handler.
      */
 
@@ -150,21 +153,42 @@ class MainView extends View {
             );
         }
 
+        this._reRenderHeaderOnSync = false;
+
+        this._menuHandlers = {};
+
         this.headerActionItemTypeList.forEach(type => {
             this.menu[type] = this.menu[type] || [];
             this.menu[type] = this.menu[type].concat(globalMenu[type] || []);
 
-            let itemList = this.menu[type];
+            const itemList = this.menu[type];
 
             itemList.forEach(item => {
-                let viewObject = this;
+                const viewObject = this;
 
-                if (item.initFunction && item.data.handler) {
+                if (
+                    (item.initFunction || item.checkVisibilityFunction) &&
+                    (item.handler || item.data && item.data.handler)
+                ) {
                     this.wait(new Promise(resolve => {
-                        Espo.loader.require(item.data.handler, Handler => {
-                            let handler = new Handler(viewObject);
+                        const handler = item.handler || item.data.handler;
 
-                            handler[item.initFunction].call(handler);
+                        Espo.loader.require(handler, Handler => {
+                            const handler = new Handler(viewObject);
+
+                            const name = item.name || item.action;
+
+                            if (name) {
+                                this._menuHandlers[name] = handler;
+                            }
+
+                            if (item.initFunction) {
+                                handler[item.initFunction].call(handler);
+                            }
+
+                            if (item.checkVisibilityFunction && this.model) {
+                                this._reRenderHeaderOnSync = true;
+                            }
 
                             resolve();
                         });
@@ -172,6 +196,22 @@ class MainView extends View {
                 }
             });
         });
+
+        if (this.model) {
+            this.whenReady().then(() => {
+                if (!this._reRenderHeaderOnSync) {
+                    return;
+                }
+
+                this.listenTo(this.model, 'sync', () => {
+                    if (!this.getHeaderView()) {
+                        return;
+                    }
+
+                    this.getHeaderView().reRender();
+                });
+            });
+        }
 
         this.updateLastUrl();
 
@@ -245,7 +285,7 @@ class MainView extends View {
             return {};
         }
 
-        let menu = {};
+        const menu = {};
 
         this.headerActionItemTypeList.forEach(type => {
             (this.menu[type] || []).forEach(item => {
@@ -277,6 +317,14 @@ class MainView extends View {
 
                 item.name = item.name || item.action;
                 item.action = item.action || null;
+
+                if (this._menuHandlers[item.name] && item.checkVisibilityFunction) {
+                    const handler = this._menuHandlers[item.name];
+
+                    if (!handler[item.checkVisibilityFunction](item.name)) {
+                        return;
+                    }
+                }
 
                 if (item.labelTranslation) {
                     item.html = this.getHelper().escapeString(

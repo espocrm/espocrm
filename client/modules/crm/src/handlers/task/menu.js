@@ -26,7 +26,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/task/detail', ['views/detail'], function (Dep) {
+import ActionHandler from 'action-handler';
 
-    return Dep.extend({});
-});
+class TaskMenuHandler extends ActionHandler {
+
+    complete() {
+        const model = this.view.model;
+
+        model
+            .save({status: 'Completed'}, {patch: true})
+            .then(() => {
+                Espo.Ui.success(this.view.translate('Saved'));
+            });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    isCompleteAvailable() {
+        const view = /** @type {module:views/detail} */this.view;
+
+        if (view.getRecordView().isEditMode()) {
+            return false;
+        }
+
+        const status = view.model.get('status');
+
+        return !['Completed', 'Canceled'].includes(status);
+    }
+}
+
+export default TaskMenuHandler;
