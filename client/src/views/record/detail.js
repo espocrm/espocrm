@@ -687,10 +687,10 @@ class DetailRecordView extends BaseRecordView {
         };
 
         if ('getSelfAssignAttributes' in this) {
-            let attributesAdditional = this.getSelfAssignAttributes();
+            const attributesAdditional = this.getSelfAssignAttributes();
 
             if (attributesAdditional) {
-                for (let i in attributesAdditional) {
+                for (const i in attributesAdditional) {
                     attributes[i] = attributesAdditional[i];
                 }
             }
@@ -717,7 +717,7 @@ class DetailRecordView extends BaseRecordView {
             this.listenToOnce(view, 'after:update', attributes => {
                 let isChanged = false;
 
-                for (let a in attributes) {
+                for (const a in attributes) {
                     if (attributes[a] !== this.model.get(a)) {
                         isChanged = true;
 
@@ -908,7 +908,7 @@ class DetailRecordView extends BaseRecordView {
      * @param {string} name A name.
      */
     hideActionItem(name) {
-        for (let item of this.buttonList) {
+        for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = true;
 
@@ -916,7 +916,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.dropdownItemList) {
+        for (const item of this.dropdownItemList) {
             if (item.name === name) {
                 item.hidden = true;
 
@@ -924,7 +924,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.dropdownEditItemList) {
+        for (const item of this.dropdownEditItemList) {
             if (item.name === name) {
                 item.hidden = true;
 
@@ -932,7 +932,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.buttonEditList) {
+        for (const item of this.buttonEditList) {
             if (item.name === name) {
                 item.hidden = true;
 
@@ -968,7 +968,7 @@ class DetailRecordView extends BaseRecordView {
      * @param {string} name A name.
      */
     showActionItem(name) {
-        for (let item of this.buttonList) {
+        for (const item of this.buttonList) {
             if (item.name === name) {
                 item.hidden = false;
 
@@ -976,7 +976,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.dropdownItemList) {
+        for (const item of this.dropdownItemList) {
             if (item.name === name) {
                 item.hidden = false;
 
@@ -984,7 +984,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.dropdownEditItemList) {
+        for (const item of this.dropdownEditItemList) {
             if (item.name === name) {
                 item.hidden = false;
 
@@ -992,7 +992,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.buttonEditList) {
+        for (const item of this.buttonEditList) {
             if (item.name === name) {
                 item.hidden = false;
 
@@ -1029,7 +1029,7 @@ class DetailRecordView extends BaseRecordView {
      * @param {string} name A name.
      */
     disableActionItem(name) {
-        for (let item of this.buttonList) {
+        for (const item of this.buttonList) {
             if (item.name === name) {
                 item.disabled = true;
 
@@ -1037,7 +1037,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.dropdownItemList) {
+        for (const item of this.dropdownItemList) {
             if (item.name === name) {
                 item.disabled = true;
 
@@ -1045,7 +1045,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.dropdownEditItemList) {
+        for (const item of this.dropdownEditItemList) {
             if (item.name === name) {
                 item.disabled = true;
 
@@ -1053,7 +1053,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.buttonEditList) {
+        for (const item of this.buttonEditList) {
             if (item.name === name) {
                 item.disabled = true;
 
@@ -1082,7 +1082,7 @@ class DetailRecordView extends BaseRecordView {
      * @param {string} name A name.
      */
     enableActionItem(name) {
-        for (let item of this.buttonList) {
+        for (const item of this.buttonList) {
             if (item.name === name) {
                 item.disabled = false;
 
@@ -1090,7 +1090,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.dropdownItemList) {
+        for (const item of this.dropdownItemList) {
             if (item.name === name) {
                 item.disabled = false;
 
@@ -1098,7 +1098,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.dropdownEditItemList) {
+        for (const item of this.dropdownEditItemList) {
             if (item.name === name) {
                 item.disabled = false;
 
@@ -1106,7 +1106,7 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        for (let item of this.buttonEditList) {
+        for (const item of this.buttonEditList) {
             if (item.name === name) {
                 item.disabled = false;
 
@@ -1186,26 +1186,26 @@ class DetailRecordView extends BaseRecordView {
         }
 
         for (let i = 0; i < this.panelSoftLockedTypeList.length; i++) {
-            let iType = this.panelSoftLockedTypeList[i];
+            const iType = this.panelSoftLockedTypeList[i];
 
             if (iType === softLockedType) {
                 continue;
             }
 
-            let iParam = 'hidden' +  Espo.Utils.upperCaseFirst(iType) + 'Locked';
+            const iParam = 'hidden' + Espo.Utils.upperCaseFirst(iType) + 'Locked';
 
             if (this.recordHelper.getPanelStateParam(name, iParam)) {
                 return;
             }
         }
 
-        let middleView = this.getMiddleView();
+        const middleView = this.getMiddleView();
 
         if (middleView) {
             middleView.showPanelInternal(name);
         }
 
-        let bottomView = this.getBottomView();
+        const bottomView = this.getBottomView();
 
         if (bottomView) {
             if ('showPanel' in bottomView) {
@@ -1214,7 +1214,7 @@ class DetailRecordView extends BaseRecordView {
         }
         else if (this.bottomView) {
             this.once('ready', () => {
-                let view = this.getBottomView();
+                const view = this.getBottomView();
 
                 if (view) {
                     if ('processShowPanel' in view) {
@@ -1378,12 +1378,12 @@ class DetailRecordView extends BaseRecordView {
      * @private
      */
     initFieldsControlBehaviour() {
-        let fields = this.getFieldViews();
+        const fields = this.getFieldViews();
 
         let fieldInEditMode = null;
 
-        for (let field in fields) {
-            let fieldView = fields[field];
+        for (const field in fields) {
+            const fieldView = fields[field];
 
             this.listenTo(fieldView, 'edit', (view) => {
                 if (fieldInEditMode && fieldInEditMode.isEditMode()) {
@@ -1560,7 +1560,7 @@ class DetailRecordView extends BaseRecordView {
 
             let promiseList = [];
 
-            for (let field in fields) {
+            for (const field in fields) {
                 let fieldView = fields[field];
 
                 if (fieldView.readOnly) {
@@ -1604,7 +1604,7 @@ class DetailRecordView extends BaseRecordView {
 
             let promiseList = [];
 
-            for (let field in fields) {
+            for (const field in fields) {
                 let fieldView = fields[field];
 
                 if (!fieldView.isDetailMode()) {
@@ -1658,7 +1658,7 @@ class DetailRecordView extends BaseRecordView {
 
         let attributes = this.model.attributes;
 
-        for (let attr in attributes) {
+        for (const attr in attributes) {
             if (!(attr in this.attributes)) {
                 this.model.unset(attr);
             }
@@ -2039,7 +2039,7 @@ class DetailRecordView extends BaseRecordView {
 
         this.listenTo(this.model, 'change', (m, o) => {
             if (o.sync) {
-                for (let attribute in m.attributes) {
+                for (const attribute in m.attributes) {
                     if (!m.hasChanged(attribute)) {
                         continue;
                     }
@@ -2200,10 +2200,10 @@ class DetailRecordView extends BaseRecordView {
                     dynamicHandler.onChange.call(dynamicHandler, model, o);
                 }
 
-                let changedAttributes = model.changedAttributes();
+                const changedAttributes = model.changedAttributes();
 
-                for (let attribute in changedAttributes) {
-                    let methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
+                for (const attribute in changedAttributes) {
+                    const methodName = 'onChange' + Espo.Utils.upperCaseFirst(attribute);
 
                     if (methodName in dynamicHandler) {
                         dynamicHandler[methodName]
@@ -2459,7 +2459,7 @@ class DetailRecordView extends BaseRecordView {
         };
 
         if (data.viewOptions) {
-            for (let item in data.viewOptions) {
+            for (const item in data.viewOptions) {
                 options[item] = data.viewOptions[item];
             }
         }
@@ -2630,7 +2630,7 @@ class DetailRecordView extends BaseRecordView {
                 this.model.set('versionNumber', versionNumber, {silent: true});
                 this.attributes.versionNumber = versionNumber;
 
-                for (let attribute in values) {
+                for (const attribute in values) {
                     this.setInitialAttributeValue(attribute, values[attribute]);
                 }
             });
@@ -2834,7 +2834,7 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        for (let item of this.buttonList) {
+        for (const item of this.buttonList) {
             if (item.name === name) {
                 return;
             }
@@ -2866,7 +2866,7 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        for (let item of this.dropdownItemList) {
+        for (const item of this.dropdownItemList) {
             if (item.name === name) {
                 return;
             }
@@ -2890,7 +2890,7 @@ class DetailRecordView extends BaseRecordView {
             return;
         }
 
-        for (let item of this.buttonEditList) {
+        for (const item of this.buttonEditList) {
             if (item.name === name) {
                 return;
             }
@@ -3022,11 +3022,11 @@ class DetailRecordView extends BaseRecordView {
         let tabNumber = -1;
 
         for (let p = 0; p < simplifiedLayout.length; p++) {
-            let item = simplifiedLayout[p];
+            const item = simplifiedLayout[p];
 
-            let panel = {};
+            const panel = {};
 
-            let tabBreak = item.tabBreak || p === 0;
+            const tabBreak = item.tabBreak || p === 0;
 
             if (tabBreak) {
                 tabNumber++;
@@ -3203,7 +3203,7 @@ class DetailRecordView extends BaseRecordView {
                     o.dataObject = this.options.dataObject || {};
 
                     if (cellDefs.options) {
-                        for (let optionName in cellDefs.options) {
+                        for (const optionName in cellDefs.options) {
                             if (typeof o[optionName] !== 'undefined') {
                                 continue;
                             }
@@ -3606,7 +3606,7 @@ class DetailRecordView extends BaseRecordView {
             return false;
         }
 
-        for (let item of this.detailLayout) {
+        for (const item of this.detailLayout) {
             if (item.tabBreak) {
                 this._hasMiddleTabs = true;
 
@@ -3729,18 +3729,18 @@ class DetailRecordView extends BaseRecordView {
 
         let tabList = [];
 
-        for (let field of invalidFieldList) {
-            let view = this.getMiddleView().getFieldView(field);
+        for (const field of invalidFieldList) {
+            const view = this.getMiddleView().getFieldView(field);
 
             if (!view) {
                 continue;
             }
 
-            let tabString = view.$el
+            const tabString = view.$el
                 .closest('.panel.tab-hidden')
                 .attr('data-tab');
 
-            let tab = parseInt(tabString);
+            const tab = parseInt(tabString);
 
             if (tabList.indexOf(tab) !== -1) {
                 continue;
@@ -4181,7 +4181,7 @@ class DetailRecordView extends BaseRecordView {
      * Get a current mode.
      *
      * @since 8.0.0
-     * @return {string}
+     * @return {'detail'|'edit'}
      */
     getMode() {
         return this.mode;
