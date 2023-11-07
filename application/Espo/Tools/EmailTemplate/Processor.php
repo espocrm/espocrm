@@ -43,7 +43,6 @@ use Espo\Core\Entities\Person;
 use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
 use Espo\Core\Htmlizer\Htmlizer;
 use Espo\Core\Acl\GlobalRestriction;
-use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Entities\EmailTemplate;
 use Espo\Entities\User;
 use Espo\Entities\Attachment;
@@ -51,9 +50,6 @@ use Espo\Entities\EmailAddress;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Exception;
-use DateTime;
-use DateTimezone;
-use RuntimeException;
 
 class Processor
 {
@@ -68,7 +64,7 @@ class Processor
         private FileStorageManager $fileStorageManager,
         private User $user,
         private HtmlizerFactory $htmlizerFactory,
-        private DateTimeUtil $dateTime
+        private PlaceholdersProvider $placeholdersProvider
     ) {}
 
     public function process(EmailTemplate $template, Params $params, Data $data): Result
@@ -223,23 +219,11 @@ class Processor
         );
     }
 
-    /** @noinspection PhpUnusedParameterInspection */
     private function processPlaceholders(string $text, Data $data): string
     {
-        try {
-            $now = new DateTime('now', new DateTimezone($this->config->get('timeZone')));
-        }
-        catch (Exception $e) {
-            throw new RuntimeException($e->getMessage());
-        }
+        foreach ($this->placeholdersProvider->get() as [$key, $placeholder]) {
+            $value = $placeholder->get($data);
 
-        $replaceData = [
-            'today' => $this->dateTime->getTodayString(),
-            'now' => $this->dateTime->getNowString(),
-            'currentYear' => $now->format('Y'),
-        ];
-
-        foreach ($replaceData as $key => $value) {
             $text = str_replace('{' . $key . '}', $value, $text);
         }
 

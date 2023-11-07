@@ -550,6 +550,25 @@
             </SchemaInfo>
           </value>
         </entry>
+        <entry key="metadata/app/emailTemplate">
+          <value>
+            <SchemaInfo>
+              <option name="generatedName" value="New Schema" />
+              <option name="name" value="metadata/app/emailTemplate" />
+              <option name="relativePathToSchema" value="schema/metadata/app/emailTemplate.json" />
+              <option name="schemaVersion" value="JSON Schema version 7" />
+              <option name="patterns">
+                <list>
+                  <Item>
+                    <option name="pattern" value="true" />
+                    <option name="path" value="*/Resources/metadata/app/emailTemplate.json" />
+                    <option name="mappingKind" value="Pattern" />
+                  </Item>
+                </list>
+              </option>
+            </SchemaInfo>
+          </value>
+        </entry>
         <entry key="metadata/app/entityManagerParams">
           <value>
             <SchemaInfo>

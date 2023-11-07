@@ -1,0 +1,16 @@
+{
+    "placeholders": {
+        "today": {
+            "className": "Espo\\Tools\\EmailTemplate\\Placeholders\\Today",
+            "order": 0
+        },
+        "now": {
+            "className": "Espo\\Tools\\EmailTemplate\\Placeholders\\Now",
+            "order": 1
+        },
+        "currentYear": {
+            "className": "Espo\\Tools\\EmailTemplate\\Placeholders\\CurrentYear",
+            "order": 2
+        }
+    }
+}

@@ -258,6 +258,12 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/emailTemplate.json"
+            ],
+            "url": "./schema/metadata/app/emailTemplate.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/entityManagerParams.json"
             ],
             "url": "./schema/metadata/app/entityManagerParams.json"
