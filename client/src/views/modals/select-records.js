@@ -151,7 +151,7 @@ class SelectRecordsModalView extends ModalView {
                 name: 'create',
                 position: 'right',
                 onClick: () => this.create(),
-                iconHtml: '<span class="fas fa-plus fa-sm"></span>',
+                iconClass: 'fas fa-plus fa-sm',
                 label: 'Create',
             });
         }

@@ -59,6 +59,7 @@ class ModalView extends View {
      * @property {string} [title] A title text.
      * @property {'primary'|'danger'|'success'|'warning'|'text'} [style] A style.
      * @property {string} [iconHtml] An icon HTML.
+     * @property {string} [iconClass] An icon class.
      */
 
     /**
@@ -467,6 +468,10 @@ class ModalView extends View {
 
             if (o.iconHtml && !o.html) {
                 o.html = o.iconHtml + ' <span>' + this.getHelper().escapeString(o.text) + '</span>';
+            }
+            else if (o.iconClass && !o.html) {
+                o.html = `<span class="${o.iconClass}"></span> ` +
+                    '<span>' + this.getHelper().escapeString(o.text) + '</span>';
             }
 
             o.onClick = o.onClick || ((d, e) => {
