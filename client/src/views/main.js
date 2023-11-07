@@ -130,7 +130,7 @@ class MainView extends View {
         this.options.params = this.options.params || {};
 
         if (this.name && this.scope) {
-            let key = this.name.charAt(0).toLowerCase() + this.name.slice(1);
+            const key = this.name.charAt(0).toLowerCase() + this.name.slice(1);
 
             this.menu = this.getMetadata().get(['clientDefs', this.scope, 'menu', key]) || {};
         }
@@ -235,7 +235,7 @@ class MainView extends View {
     setupFinal() {
         if (this.shortcutKeys) {
             this.events['keydown.main'] = e => {
-                let key = Espo.Utils.getKeyFromKeyEvent(e);
+                const key = Espo.Utils.getKeyFromKeyEvent(e);
 
                 if (typeof this.shortcutKeys[key] === 'function') {
                     this.shortcutKeys[key].call(this, e.originalEvent);
@@ -243,7 +243,7 @@ class MainView extends View {
                     return;
                 }
 
-                let actionName = this.shortcutKeys[key];
+                const actionName = this.shortcutKeys[key];
 
                 if (!actionName) {
                     return;
@@ -252,7 +252,7 @@ class MainView extends View {
                 e.preventDefault();
                 e.stopPropagation();
 
-                let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+                const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
 
                 if (typeof this[methodName] === 'function') {
                     this[methodName]();
@@ -356,13 +356,13 @@ class MainView extends View {
      * @returns {string} HTML
      */
     buildHeaderHtml(itemList) {
-        let $itemList = itemList.map(item => {
+        const $itemList = itemList.map(item => {
             return $('<div>')
                 .addClass('breadcrumb-item')
                 .append(item);
         });
 
-        let $div = $('<div>')
+        const $div = $('<div>')
             .addClass('header-breadcrumbs');
 
         $itemList.forEach(($item, i) => {
@@ -403,7 +403,7 @@ class MainView extends View {
      * @param {Object} data
      */
     actionShowModal(data) {
-        let view = data.view;
+        const view = data.view;
 
         if (!view) {
             return;
@@ -439,7 +439,7 @@ class MainView extends View {
         if (item) {
             item.name = item.name || item.action || Espo.Utils.generateId();
 
-            let name = item.name;
+            const name = item.name;
 
             let index = -1;
 
@@ -557,11 +557,11 @@ class MainView extends View {
         event.stopPropagation();
 
         this.getRouter().checkConfirmLeaveOut(() => {
-            let options = {
+            const options = {
                 isReturn: true,
             };
 
-            let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+            const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
             this.getRouter().navigate(rootUrl, {trigger: false});
             this.getRouter().dispatch(this.scope, null, options);
@@ -611,9 +611,9 @@ class MainView extends View {
             });
         });
 
-        let processUi = () => {
-            this.$headerActionsContainer.find('li > .action[data-name="'+name+'"]').parent().removeClass('hidden');
-            this.$headerActionsContainer.find('a.action[data-name="'+name+'"]').removeClass('hidden');
+        const processUi = () => {
+            this.$headerActionsContainer.find('li > .action[data-name="' + name + '"]').parent().removeClass('hidden');
+            this.$headerActionsContainer.find('a.action[data-name="' + name + '"]').removeClass('hidden');
 
             this.controlMenuDropdownVisibility();
             this.adjustButtons();
@@ -652,7 +652,7 @@ class MainView extends View {
      * @private
      */
     controlMenuDropdownVisibility() {
-        let $group = this.$headerActionsContainer.find('.dropdown-group');
+        const $group = this.$headerActionsContainer.find('.dropdown-group');
 
         if (this.hasMenuVisibleDropdownItems()) {
             $group.removeClass('hidden');
@@ -677,13 +677,13 @@ class MainView extends View {
      * @private
      */
     adjustButtons() {
-        let $buttons = this.$headerActionsContainer.find('.btn');
+        const $buttons = this.$headerActionsContainer.find('.btn');
 
         $buttons
             .removeClass('radius-left')
             .removeClass('radius-right');
 
-        let $buttonsVisible = $buttons.filter(':not(.hidden)');
+        const $buttonsVisible = $buttons.filter(':not(.hidden)');
 
         $buttonsVisible.first().addClass('radius-left');
         $buttonsVisible.last().addClass('radius-right');

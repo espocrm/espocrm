@@ -141,13 +141,13 @@ Espo.Utils = {
      * @param {JQuery} $target
      */
     _processAfterActionDropdown: function ($target) {
-        let $dropdown = $target.closest('.dropdown-menu');
+        const $dropdown = $target.closest('.dropdown-menu');
 
         if (!$dropdown.length) {
             return;
         }
 
-        let $dropdownToggle = $dropdown.parent().find('[data-toggle="dropdown"]');
+        const $dropdownToggle = $dropdown.parent().find('[data-toggle="dropdown"]');
 
         if (!$dropdownToggle.length) {
             return;
@@ -187,7 +187,7 @@ Espo.Utils = {
      * @returns {boolean}
      */
     checkActionAvailability: function (helper, item) {
-        let config = helper.config;
+        const config = helper.config;
 
         if (item.configCheck) {
             let configCheck = item.configCheck;
@@ -622,11 +622,11 @@ Espo.Utils = {
             return {};
         }
 
-        let options = {};
+        const options = {};
 
         if (typeof string !== 'undefined') {
             string.split('&').forEach(item => {
-                let p = item.split('=');
+                const p = item.split('=');
 
                 options[p[0]] = true;
 
