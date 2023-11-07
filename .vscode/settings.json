@@ -354,6 +354,12 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/clientNavbar.json"
+            ],
+            "url": "./schema/metadata/app/clientNavbar.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/orm.json"
             ],
             "url": "./schema/metadata/app/orm.json"

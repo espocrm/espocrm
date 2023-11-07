@@ -56,14 +56,6 @@ class NavbarSiteView extends View {
             this.xsCollapse();
         },
         /** @this NavbarSiteView */
-        'click a[data-action="quick-create"]': function (e) {
-            e.preventDefault();
-
-            const scope = $(e.currentTarget).data('name');
-
-            this.quickCreate(scope);
-        },
-        /** @this NavbarSiteView */
         'click a.minimizer': function () {
             this.switchMinimizer();
         },
@@ -100,10 +92,9 @@ class NavbarSiteView extends View {
             tabDefsList2: this.tabDefsList.filter(item => item.isInMore),
             title: this.options.title,
             menuDataList: this.getMenuDataList(),
-            quickCreateList: this.quickCreateList,
-            enableQuickCreate: this.quickCreateList.length > 0,
             userId: this.getUser().id,
             logoSrc: this.getLogoSrc(),
+            itemDataList: this.getItemDataList(),
         };
     }
 
@@ -360,10 +351,6 @@ class NavbarSiteView extends View {
         return tabList;
     }
 
-    getQuickCreateList() {
-        return this.getConfig().get('quickCreateList') || [];
-    }
-
     setup() {
         this.getRouter().on('routed', (e) => {
             if (e.controller) {
@@ -375,30 +362,29 @@ class NavbarSiteView extends View {
             this.selectTab(false);
         });
 
+        /** @type {string[]} */
+        this.itemList = this.getMetadata().get(['app', 'clientNavbar', 'itemList']) || [];
+
         this.createView('notificationsBadge', 'views/notification/badge', {
             selector: '.notifications-badge-container',
         });
 
         const setup = () => {
-            this.setupQuickCreateList();
             this.setupTabDefsList();
+
+            return Promise
+                .all(this.itemList.map(item => this.createItemView(item)));
+        };
+
+        const update = () => {
+            setup().then(() => this.reRender());
         };
 
         this.setupGlobalSearch();
-
         setup();
 
-        this.listenTo(this.getHelper().settings, 'sync', () => {
-            setup();
-
-            this.reRender();
-        });
-
-        this.listenTo(this.getHelper().language, 'sync', () => {
-            setup();
-
-            this.reRender();
-        });
+        this.listenTo(this.getHelper().settings, 'sync', () => update());
+        this.listenTo(this.getHelper().language, 'sync', () => update());
 
         this.once('remove', () => {
             $(window).off('resize.navbar');
@@ -409,24 +395,61 @@ class NavbarSiteView extends View {
         });
     }
 
-    setupQuickCreateList() {
-        const scopes = this.getMetadata().get('scopes') || {};
+    getItemDataList() {
+        const defsMap = {};
 
-        this.quickCreateList = this.getQuickCreateList().filter(scope =>{
-            if (!scopes[scope]) {
-                return false;
-            }
-
-            if ((scopes[scope] || {}).disabled) {
-                return;
-            }
-
-            if ((scopes[scope] || {}).acl) {
-                return this.getAcl().check(scope, 'create');
-            }
-
-            return true;
+        this.itemList.forEach(name => {
+            defsMap[name] = this.getItemDefs(name);
         });
+
+        return this.itemList
+            .filter(name => {
+                const defs = defsMap[name];
+
+                if (!defs) {
+                    return false;
+                }
+
+                const view = this.getView(name + 'Item');
+
+                if ('isAvailable' in view) {
+                    return view.isAvailable();
+                }
+
+                return true;
+            })
+            .map(name => {
+                return {
+                    key: name + 'Item',
+                    name: name,
+                    class: defsMap[name].class || '',
+                };
+            });
+    }
+
+    /**
+     *
+     * @param {string} name
+     * @return {{view: string, class: string}}
+     */
+    getItemDefs(name) {
+        return this.getMetadata().get(['app', 'clientNavbar', 'itemDefs', name]);
+    }
+
+    /**
+     * @param {string} name
+     * @return {Promise}
+     */
+    createItemView(name) {
+        const defs = this.getItemDefs(name)
+
+        if (!defs || !defs.view) {
+            return Promise.resolve();
+        }
+
+        const key = name + 'Item';
+
+        return this.createView(key, defs.view, {selector: `[data-item="${name}"]`});
     }
 
     filterTabItem(scope) {
@@ -1198,19 +1221,6 @@ class NavbarSiteView extends View {
         ]);
 
         return list;
-    }
-
-    quickCreate(scope) {
-        Espo.Ui.notify(' ... ');
-
-        const type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
-        const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
-
-        this.createView('quickCreate', viewName , {scope: scope}, (view) => {
-            view.once('after:render', () => Espo.Ui.notify(false));
-
-            view.render();
-        });
     }
 
     // noinspection JSUnusedGlobalSymbols

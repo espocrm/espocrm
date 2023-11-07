@@ -174,28 +174,9 @@
             <li class="nav navbar-nav navbar-form global-search-container">
                 {{{globalSearch}}}
             </li>
-            {{#if enableQuickCreate}}
-            <li class="dropdown hidden-xs quick-create-container">
-                <a
-                    id="nav-quick-create-dropdown"
-                    class="dropdown-toggle"
-                    data-toggle="dropdown"
-                    role="button"
-                    tabindex="0"
-                    title="{{translate 'Create'}}"
-                ><i class="fas fa-plus icon"></i></a>
-                <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
-                    <li class="dropdown-header">{{translate 'Create'}}</li>
-                    {{#each quickCreateList}}
-                    <li><a
-                            href="#{{./this}}/create"
-                            data-name="{{./this}}"
-                            data-action="quick-create"
-                        >{{translate this category='scopeNames'}}</a></li>
-                    {{/each}}
-                </ul>
-            </li>
-            {{/if}}
+            {{#each itemDataList}}
+                <li class="{{class}}" data-item="{{name}}">{{{var key ../this}}}</li>
+            {{/each}}
             <li class="dropdown notifications-badge-container">
                 {{{notificationsBadge}}}
             </li>

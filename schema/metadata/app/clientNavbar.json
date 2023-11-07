@@ -1,0 +1,38 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/client.json",
+    "title": "app/navbar",
+    "description": "Navbar definitions.",
+    "type": "object",
+    "properties": {
+        "itemList": {
+            "type": "array",
+            "description": "Navbar items.",
+            "items": {
+                "type": "string",
+                "anyOf": [
+                    {"type": "string"},
+                    {"const": "__APPEND__"}
+                ]
+            }
+        },
+        "itemDefs": {
+            "description": "Navbar item definitions",
+            "type": "object",
+            "additionalProperties": {
+                "description": "An item.",
+                "type": "object",
+                "properties": {
+                    "view": {
+                        "type": "string",
+                        "description": "A view."
+                    },
+                    "class": {
+                        "type": "string",
+                        "description": "A CSS class."
+                    }
+                }
+            }
+        }
+    }
+}
