@@ -3386,7 +3386,10 @@ class ListRecordView extends View {
             return;
         }
 
-        if (!this.getMetadata().get(`scopes.${this.entityType}.object`)) {
+        if (
+            !this.getMetadata().get(`scopes.${this.entityType}.object`) ||
+            this.getConfig().get('listViewSettingsDisabled')
+        ) {
             return;
         }
 

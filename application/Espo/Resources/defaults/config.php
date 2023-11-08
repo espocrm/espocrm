@@ -277,5 +277,6 @@ return [
     'oidcUsernameClaim' => 'sub',
     'oidcFallback' => true,
     'oidcScopes' => ['profile', 'email', 'phone'],
+    'listViewSettingsDisabled' => false,
     'isInstalled' => false,
 ];
