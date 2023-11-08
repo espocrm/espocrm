@@ -1,7 +1,6 @@
 [
-    {"name":"name","width":30,"link":"true"},
-    {"name":"status"},
-    {"name":"priority"},
-    {"name":"dateEnd"},
-    {"name":"createdAt"}
+    {"name":"name", "link":"true"},
+    {"name":"status", "width": 20},
+    {"name":"priority", "width": 20},
+    {"name":"dateEnd", "width": 20}
 ]
