@@ -790,8 +790,8 @@ class Processor
 
         foreach ($eaList as $ea) {
             if (
-                $emailRepository->isRelated($emailSubject, 'toEmailAddresses', $ea) ||
-                $emailRepository->isRelated($emailSubject, 'ccEmailAddresses', $ea)
+                $emailRepository->getRelation($emailSubject, 'toEmailAddresses')->isRelated($ea) ||
+                $emailRepository->getRelation($emailSubject, 'ccEmailAddresses')->isRelated($ea)
             ) {
                 return;
             }

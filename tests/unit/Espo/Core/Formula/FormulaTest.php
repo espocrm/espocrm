@@ -297,46 +297,6 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($result);
     }
 
-    function testHasValue()
-    {
-        $item = new Argument(self::stringToNode('
-            {
-                "type": "entity\\\\isRelated",
-                "value": [
-                    {
-                        "type": "value",
-                        "value": "teams"
-                    },
-                    {
-                        "type": "value",
-                        "value": "1"
-                    }
-                ]
-            }
-        '));
-
-        $this->entity
-            ->expects($this->any())
-            ->method('getEntityType')
-            ->will($this->returnValue('Test'));
-
-        $this->repository
-            ->expects($this->any())
-            ->method('isRelated')
-            ->will($this->returnValueMap([
-                [$this->entity, 'teams', '1', true]
-            ]));
-
-        $this->entityManager
-            ->expects($this->any())
-            ->method('getRDBRepository')
-            ->will($this->returnValue($this->repository));
-
-        $result = $this->createProcessor()->process($item);
-
-        $this->assertTrue($result);
-    }
-
     function testAddLinkMultipleId()
     {
         $item = new Argument(self::stringToNode('

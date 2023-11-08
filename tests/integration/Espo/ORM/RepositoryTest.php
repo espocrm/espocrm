@@ -30,6 +30,8 @@
 namespace tests\integration\Espo\ORM;
 
 use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
 
 class RepositoryTest extends \tests\integration\Core\BaseTestCase
@@ -69,5 +71,55 @@ class RepositoryTest extends \tests\integration\Core\BaseTestCase
         $em->saveEntity($account);
 
         $this->assertEquals($user2->getId(), $account->get('modifiedById'));
+    }
+
+    public function testIsRelated(): void
+    {
+        $em = $this->getEntityManager();
+
+        $acc1 = $em->createEntity(Account::ENTITY_TYPE, []);
+        $acc2 = $em->createEntity(Account::ENTITY_TYPE, []);
+
+        $opp1 = $em->createEntity(Opportunity::ENTITY_TYPE, []);
+
+        $contact1 = $em->createEntity(Contact::ENTITY_TYPE, []);
+        $contact2 = $em->createEntity(Contact::ENTITY_TYPE, []);
+
+        $oppRepo = $em->getRDBRepositoryByClass(Opportunity::class);
+
+        $oppRepo->getRelation($opp1, 'account')->relate($acc1);
+        $oppRepo->getRelation($opp1, 'contacts')->relate($contact1);
+
+        $this->assertTrue(
+            $oppRepo->getRelation($opp1, 'account')->isRelatedById($acc1->getId())
+        );
+
+        $this->assertTrue(
+            $oppRepo->getRelation($opp1, 'account')->isRelated($acc1)
+        );
+
+        $this->assertFalse(
+            $oppRepo->getRelation($opp1, 'account')->isRelatedById($acc2->getId())
+        );
+
+        $this->assertFalse(
+            $oppRepo->getRelation($opp1, 'account')->isRelated($acc2)
+        );
+
+        $this->assertTrue(
+            $oppRepo->getRelation($opp1, 'contacts')->isRelatedById($contact1->getId())
+        );
+
+        $this->assertTrue(
+            $oppRepo->getRelation($opp1, 'contacts')->isRelated($contact1)
+        );
+
+        $this->assertFalse(
+            $oppRepo->getRelation($opp1, 'contacts')->isRelatedById($contact2->getId())
+        );
+
+        $this->assertFalse(
+            $oppRepo->getRelation($opp1, 'contacts')->isRelated($contact2)
+        );
     }
 }

@@ -33,7 +33,9 @@ use Espo\Core\Field\DateTime;
 use Espo\Core\Field\DateTimeOptional;
 use Espo\Core\Formula\Manager;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
 
 class FormulaTest extends \tests\integration\Core\BaseTestCase
@@ -870,5 +872,27 @@ class FormulaTest extends \tests\integration\Core\BaseTestCase
             $meeting->getId()
         );
         $this->assertFalse($fm->run($script));
+    }
+
+    public function testIsRelated(): void
+    {
+        $em = $this->getEntityManager();
+        $fm = $this->getContainer()->getByClass(Manager::class);
+
+        $account = $em->createEntity(Account::ENTITY_TYPE, []);
+        $opp = $em->createEntity(Opportunity::ENTITY_TYPE, []);
+
+        $em
+            ->getRDBRepositoryByClass(Account::class)
+            ->getRelation($account, 'opportunities')
+            ->relate($opp);
+
+        $script = sprintf(
+            "entity\\isRelated('opportunities', '%s')",
+            $opp->getId()
+        );
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assertTrue($fm->run($script, $account));
     }
 }

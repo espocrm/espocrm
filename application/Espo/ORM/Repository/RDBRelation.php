@@ -74,7 +74,7 @@ class RDBRelation
         }
 
         if (!$entity->hasRelation($relationName)) {
-            throw new RuntimeException("Entity does not have a relation '{$relationName}'.");
+            throw new RuntimeException("Entity does not have a relation '$relationName'.");
         }
 
         $this->relationName = $relationName;
@@ -103,7 +103,7 @@ class RDBRelation
     private function createSelectBuilder(?Select $query = null): Builder
     {
         if ($this->noBuilder) {
-            throw new RuntimeException("Can't use query builder for the '{$this->relationType}' relation type.");
+            throw new RuntimeException("Can't use query builder for the '$this->relationType' relation type.");
         }
 
         return new Builder($this->entityManager, $this->entity, $this->relationName, $query);
@@ -115,7 +115,7 @@ class RDBRelation
     public function clone(Select $query): Builder
     {
         if ($this->noBuilder) {
-            throw new RuntimeException("Can't use clone for the '{$this->relationType}' relation type.");
+            throw new RuntimeException("Can't use clone for the '$this->relationType' relation type.");
         }
 
         if ($query->getFrom() !== $this->foreignEntityType) {
@@ -134,6 +134,7 @@ class RDBRelation
     {
         $mapper = $this->entityManager->getMapper();
 
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
         if (!$mapper instanceof RDBMapper) {
             throw new LogicException();
         }
@@ -251,7 +252,7 @@ class RDBRelation
      * * `where(string $key, string $value)`
      *
      * @param WhereItem|array<string|int, mixed>|string $clause A key or where clause.
-     * @param mixed[]|scalar|null $value A value. Should be omitted if the first argument is not string.
+     * @param array<int, mixed>|scalar|null $value A value. Should be omitted if the first argument is not string.
      */
     public function where($clause = [], $value = null): Builder
     {
@@ -267,7 +268,7 @@ class RDBRelation
      * * `having(string $key, string $value)`
      *
      * @param WhereItem|array<string|int, mixed>|string $clause A key or where clause.
-     * @param mixed[]|string|null $value A value. Should be omitted if the first argument is not string.
+     * @param array<int, mixed>|string|null $value A value. Should be omitted if the first argument is not string.
      */
     public function having($clause = [], $value = null): Builder
     {
@@ -393,6 +394,22 @@ class RDBRelation
         return (bool) $this->createSelectBuilder()
             ->select(['id'])
             ->where(['id' => $entity->getId()])
+            ->findOne();
+    }
+
+    /**
+     * Whether related with another entity. An entity is specified by an ID.
+     * Does not work with 'belongsToParent' relations.
+     */
+    public function isRelatedById(string $id): bool
+    {
+        if ($this->isBelongsToParentType()) {
+            throw new LogicException("Can't use isRelatedById for 'belongsToParent'.");
+        }
+
+        return (bool) $this->createSelectBuilder()
+            ->select(['id'])
+            ->where(['id' => $id])
             ->findOne();
     }
 

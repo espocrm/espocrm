@@ -61,6 +61,7 @@ class IsRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
         return $this->entityManager
             ->getRDBRepository($this->getEntity()->getEntityType())
-            ->isRelated($this->getEntity(), $link, $id);
+            ->getRelation($this->getEntity(), $link)
+            ->isRelatedById($id);
     }
 }
