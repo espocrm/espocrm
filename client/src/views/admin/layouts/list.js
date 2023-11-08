@@ -41,6 +41,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             'view',
             'customLabel',
             'label',
+            'hidden',
         ],
 
         dataAttributesDefs: {
@@ -87,6 +88,9 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             label: {
                 type: 'varchar',
                 readOnly: true,
+            },
+            hidden: {
+                type: 'bool',
             },
         },
 

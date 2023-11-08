@@ -115,6 +115,10 @@
     </div>
     {{/if}}
 
+    {{#if settings}}
+    <div class="settings-container pull-right">{{{settings}}}</div>
+    {{/if}}
+
     {{#if displayTotalCount}}
     <div class="text-muted total-count">
         <span

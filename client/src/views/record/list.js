@@ -33,6 +33,8 @@ import MassActionHelper from 'helpers/mass-action';
 import ExportHelper from 'helpers/export';
 import RecordModal from 'helpers/record-modal';
 import SelectProvider from 'helpers/list/select-provider';
+import RecordListSettingsView from 'views/record/list/settings';
+import ListSettingsHelper from 'helpers/list/settings';
 
 /**
  * A record-list view. Renders and processes list items, actions.
@@ -1985,6 +1987,7 @@ class ListRecordView extends View {
         }
 
         this.setupRowActionDefs();
+        this.setupSettings();
 
         this.wait(
             this.getHelper().processSetupHandlers(this, this.setupHandlerType)
@@ -2374,6 +2377,9 @@ class ListRecordView extends View {
     _getHeaderDefs() {
         const defs = [];
 
+        const hiddenMap = this._listSettingsHelper ?
+            this._listSettingsHelper.getHiddenColumnMap() : {};
+
         for (const i in this.listLayout) {
             let width = false;
 
@@ -2412,6 +2418,20 @@ class ListRecordView extends View {
 
                 if (item.isSorted) {
                     item.isDesc = this.collection.order === 'desc' ;
+                }
+            }
+
+            if (itemName && hiddenMap[itemName]) {
+                continue;
+            }
+
+            if (itemName) {
+                if (hiddenMap[itemName]) {
+                    continue;
+                }
+
+                if (this.listLayout[i].hidden && !(itemName in hiddenMap)) {
+                    continue;
                 }
             }
 
@@ -2464,6 +2484,9 @@ class ListRecordView extends View {
             });
         }
 
+        const hiddenMap = this._listSettingsHelper ?
+            this._listSettingsHelper.getHiddenColumnMap() : {};
+
         for (const i in listLayout) {
             const col = listLayout[i];
             const type = col.type || model.getFieldType(col.name) || 'base';
@@ -2509,6 +2532,16 @@ class ListRecordView extends View {
                     }
 
                     item.options[optionName] = col.options[optionName];
+                }
+            }
+
+            if (col.name) {
+                if (hiddenMap[col.name]) {
+                    continue;
+                }
+
+                if (col.hidden && !(col.name in hiddenMap)) {
+                    continue;
                 }
             }
 
@@ -3343,6 +3376,37 @@ class ListRecordView extends View {
         }
 
         handler.process(model, action);
+    }
+
+    /**
+     * @private
+     */
+    setupSettings() {
+        if (!this.options.settingsEnabled || !this.collection.entityType || !this.layoutName) {
+            return;
+        }
+
+        this._listSettingsHelper = new ListSettingsHelper(
+            this.entityType,
+            this.layoutName,
+            this.getStorage(),
+        );
+
+        const view = new RecordListSettingsView({
+            layoutProvider: () => this.listLayout,
+            helper: this._listSettingsHelper,
+            entityType: this.entityType,
+            onChange: () => {
+                this._internalLayout = null;
+
+                Espo.Ui.notify(' ... ');
+
+                this.collection.fetch()
+                    .then(() => Espo.Ui.notify(false));
+            },
+        });
+
+        this.assignView('settings', view, '.settings-container');
     }
 }
 

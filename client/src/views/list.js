@@ -594,6 +594,7 @@ class ListView extends MainView {
             shortcutKeysEnabled: true,
             forceDisplayTopBar: true,
             additionalRowActionList: this.getMetadata().get(`clientDefs.${this.scope}.rowActionList`),
+            settingsEnabled: true,
         };
 
         if (this.getHelper().isXsScreen()) {
