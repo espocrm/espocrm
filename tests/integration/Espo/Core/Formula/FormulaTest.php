@@ -29,7 +29,6 @@
 
 namespace tests\integration\Espo\Core\Formula;
 
-use Espo\Core\Field\DateTime;
 use Espo\Core\Field\DateTimeOptional;
 use Espo\Core\Formula\Manager;
 use Espo\Entities\User;
@@ -37,10 +36,10 @@ use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Meeting;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\EntityManager;
+use tests\integration\Core\BaseTestCase;
 
-class FormulaTest extends \tests\integration\Core\BaseTestCase
+class FormulaTest extends BaseTestCase
 {
-
     public function testCountRelatedAndSumRelated()
     {
         $entityManager = $this->getContainer()->get('entityManager');
