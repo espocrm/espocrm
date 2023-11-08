@@ -141,7 +141,7 @@ class EditModalView extends ModalView {
             title: 'Esc',
         });
 
-        this.scope = this.scope || this.options.scope;
+        this.scope = this.scope || this.options.scope || this.options.entityType;
         this.entityType = this.options.entityType || this.scope;
         this.id = this.options.id;
 

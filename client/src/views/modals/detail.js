@@ -94,7 +94,8 @@ class DetailModalView extends ModalView {
     }
 
     setup() {
-        this.scope = this.scope || this.options.scope;
+        this.scope = this.scope || this.options.scope || this.options.entityType;
+        this.entityType = this.options.entityType || this.scope;
         this.id = this.options.id;
 
         this.buttonList = [];
@@ -107,9 +108,9 @@ class DetailModalView extends ModalView {
             this.removeDisabled = this.options.removeDisabled;
         }
 
-        this.editDisabled = this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) ||
+        this.editDisabled = this.getMetadata().get(['clientDefs', this.entityType, 'editDisabled']) ||
             this.editDisabled;
-        this.removeDisabled = this.getMetadata().get(['clientDefs', this.scope, 'removeDisabled']) ||
+        this.removeDisabled = this.getMetadata().get(['clientDefs', this.entityType, 'removeDisabled']) ||
             this.removeDisabled;
 
         this.fullFormDisabled = this.options.fullFormDisabled || this.fullFormDisabled;
@@ -165,7 +166,7 @@ class DetailModalView extends ModalView {
 
         this.sourceModel = this.model;
 
-        this.getModelFactory().create(this.scope).then(model => {
+        this.getModelFactory().create(this.entityType).then(model => {
             if (!this.sourceModel) {
                 this.model = model;
                 this.model.id = this.id;
@@ -215,7 +216,7 @@ class DetailModalView extends ModalView {
             this.remove();
         });
 
-        if (this.duplicateAction && this.getAcl().checkScope(this.scope, 'create')) {
+        if (this.duplicateAction && this.getAcl().checkScope(this.entityType, 'create')) {
             this.addDropdownItem({
                 name: 'duplicate',
                 label: 'Duplicate',
@@ -298,6 +299,9 @@ class DetailModalView extends ModalView {
         this.removeButton('remove');
     }
 
+    /**
+     * @internal Used. Do not remove.
+     */
     getScope() {
         return this.scope;
     }
@@ -337,7 +341,7 @@ class DetailModalView extends ModalView {
                     .get(0).outerHTML;
         }
 
-        this.headerHtml = this.getHelper().getScopeColorIconHtml(this.scope) + this.headerHtml;
+        this.headerHtml = this.getHelper().getScopeColorIconHtml(this.entityType) + this.headerHtml;
 
         if (!this.editDisabled) {
             const editAccess = this.getAcl().check(model, 'edit', true);
