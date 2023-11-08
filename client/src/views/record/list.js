@@ -3386,6 +3386,10 @@ class ListRecordView extends View {
             return;
         }
 
+        if (!this.getMetadata().get(`scopes.${this.entityType}.object`)) {
+            return;
+        }
+
         this._listSettingsHelper = new ListSettingsHelper(
             this.entityType,
             this.layoutName,
