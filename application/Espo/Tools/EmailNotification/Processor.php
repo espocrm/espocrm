@@ -268,6 +268,7 @@ class Processor
 
         $userId = $notification->get('userId');
 
+        /** @var ?User $user */
         $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
@@ -294,6 +295,7 @@ class Processor
             return;
         }
 
+        /** @var ?Note $note */
         $note = $this->entityManager->getEntity(Note::ENTITY_TYPE, $notification->get('relatedId'));
 
         if (!$note) {
@@ -339,6 +341,7 @@ class Processor
         $subject = $this->getHtmlizer()->render($note, $subjectTpl, 'mention-email-subject', $data, true);
         $body = $this->getHtmlizer()->render($note, $bodyTpl, 'mention-email-body', $data, true);
 
+        /** @var Email $email */
         $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set([
@@ -476,6 +479,7 @@ class Processor
             }
         }
 
+        /** @noinspection PhpExpressionAlwaysNullInspection */
         return $this->emailNotificationEntityHandlerHash[$key];
     }
 
@@ -552,7 +556,8 @@ class Processor
             $body = $this->getHtmlizer()->render($note, $bodyTpl, 'note-post-email-body', $data, true);
         }
 
-        $email = $this->entityManager->getNewEntity('Email');
+        /** @var Email $email */
+        $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set([
             'subject' => $subject,
@@ -602,7 +607,6 @@ class Processor
         if (!array_key_exists($user->getId(), $this->userIdPortalCacheMap)) {
             $this->userIdPortalCacheMap[$user->getId()] = null;
 
-            /** @var string[] $portalIdList */
             $portalIdList = $user->getLinkMultipleIdList('portals');
 
             $defaultPortalId = $this->config->get('defaultPortalId');
@@ -617,6 +621,7 @@ class Processor
             }
 
             if ($portalId) {
+                /** @var ?Portal $portal */
                 $portal = $this->entityManager->getEntityById(Portal::ENTITY_TYPE, $portalId);
             }
 
@@ -716,6 +721,7 @@ class Processor
             true
         );
 
+        /** @var Email $email */
         $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set([
@@ -857,6 +863,7 @@ class Processor
             true
         );
 
+        /** @var Email $email */
         $email = $this->entityManager->getNewEntity(Email::ENTITY_TYPE);
 
         $email->set([
