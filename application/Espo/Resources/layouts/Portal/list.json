@@ -1,8 +1,7 @@
 [
     {
         "name":"name",
-        "link":true,
-        "width": 40
+        "link":true
     },
     {
         "name": "url",
@@ -10,6 +9,7 @@
         "notSortable": true
     },
     {
-        "name": "isActive"
+        "name": "isActive",
+        "width": 15
     }
 ]
