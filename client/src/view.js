@@ -99,6 +99,7 @@ class View extends BullView {
         const fullAction = `click [data-action="${action}"]`;
 
         this.events[fullAction] = e => {
+            // noinspection JSUnresolvedReference
             handler.call(this, e.originalEvent, e.currentTarget);
         };
     }
@@ -136,7 +137,7 @@ class View extends BullView {
             timeout = void 0;
         }
 
-        let text = this.getLanguage().translate(label, 'labels', scope);
+        const text = this.getLanguage().translate(label, 'labels', scope);
 
         Espo.Ui.notify(text, type, timeout);
     }
@@ -427,9 +428,9 @@ class View extends BullView {
                 .toString();
         }
 
-        let confirmText = o.confirmText || this.translate('Yes');
-        let confirmStyle = o.confirmStyle || null;
-        let cancelText = o.cancelText || this.translate('Cancel');
+        const confirmText = o.confirmText || this.translate('Yes');
+        const confirmStyle = o.confirmStyle || null;
+        const cancelText = o.cancelText || this.translate('Cancel');
 
         return Espo.Ui.confirm(message, {
             confirmText: confirmText,
