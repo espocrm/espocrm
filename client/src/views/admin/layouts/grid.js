@@ -72,10 +72,10 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
 
                 $(e.target).closest('ul.panels > li').remove();
 
-                var number = $(e.currentTarget).data('number');
+                const number = $(e.currentTarget).data('number');
                 this.clearView('panels-' + number);
 
-                var index = -1;
+                let index = -1;
 
                 this.panels.forEach((item, i) => {
                     if (item.number === number) {
@@ -92,8 +92,8 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                 this.setIsChanged();
             },
             'click #layout a[data-action="addRow"]': function (e) {
-                var tpl = this.unescape($("#layout-row-tpl").html());
-                var html = _.template(tpl);
+                const tpl = this.unescape($("#layout-row-tpl").html());
+                const html = _.template(tpl);
 
                 $(e.target).closest('ul.panels > li').find('ul.rows').append(html);
 
@@ -114,27 +114,27 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                 this.setIsChanged();
             },
             'click #layout a[data-action="removeField"]': function (e) {
-                var $li = $(e.target).closest('li');
-                var index = $li.index();
-                var $ul = $li.parent();
+                const $li = $(e.target).closest('li');
+                const index = $li.index();
+                const $ul = $li.parent();
 
                 $li.appendTo($('ul.disabled'));
 
-                var $empty = $($('#empty-cell-tpl').html());
+                const $empty = $($('#empty-cell-tpl').html());
 
                 if (parseInt($ul.attr('data-cell-count')) === 1) {
-                    for (var i = 0; i < this.columnCount; i++) {
+                    for (let i = 0; i < this.columnCount; i++) {
                         $ul.append($empty.clone());
                     }
                 } else {
-                    if (index == 0) {
+                    if (index === 0) {
                         $ul.prepend($empty);
                     } else {
                         $empty.insertAfter($ul.children(':nth-child(' + index + ')'));
                     }
                 }
 
-                var cellCount = $ul.children().length;
+                const cellCount = $ul.children().length;
                 $ul.attr('data-cell-count', cellCount.toString());
                 $ul.closest('li').attr('data-cell-count', cellCount.toString());
 
@@ -147,12 +147,12 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                     return;
                 }
 
-                var $li = $(e.currentTarget).closest('li');
-                var $ul = $li.parent();
+                const $li = $(e.currentTarget).closest('li');
+                const $ul = $li.parent();
 
                 $li.remove();
 
-                var cellCount = parseInt($ul.children().length || 2);
+                const cellCount = parseInt($ul.children().length || 2);
 
                 this.setIsChanged();
 
@@ -162,14 +162,14 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                 $ul.closest('li').attr('data-cell-count', cellCount.toString());
             },
             'click #layout a[data-action="plusCell"]': function (e) {
-                let $li = $(e.currentTarget).closest('li');
-                let $ul = $li.find('ul');
+                const $li = $(e.currentTarget).closest('li');
+                const $ul = $li.find('ul');
 
-                let $empty = $($('#empty-cell-tpl').html());
+                const $empty = $($('#empty-cell-tpl').html());
 
                 $ul.append($empty);
 
-                let cellCount = $ul.children().length;
+                const cellCount = $ul.children().length;
 
                 $ul.attr('data-cell-count', cellCount.toString());
                 $ul.closest('li').attr('data-cell-count', cellCount.toString());
@@ -179,13 +179,13 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                 this.makeDraggable();
             },
             'click #layout a[data-action="edit-panel-label"]': function (e) {
-                let $header = $(e.target).closest('header');
-                let $label = $header.children('label');
-                let panelName = $label.text();
+                const $header = $(e.target).closest('header');
+                const $label = $header.children('label');
+                const panelName = $label.text();
 
-                let id = $header.closest('li').data('number').toString();
+                const id = $header.closest('li').data('number').toString();
 
-                let attributes = {
+                const attributes = {
                     panelName: panelName,
                 };
 
@@ -197,8 +197,8 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                     attributes[item] = this.panelsData[id][item];
                 });
 
-                var attributeList = this.panelDataAttributeList;
-                var attributeDefs = this.panelDataAttributesDefs;
+                const attributeList = this.panelDataAttributeList;
+                const attributeDefs = this.panelDataAttributesDefs;
 
                 this.createView('dialog', 'views/admin/layouts/modals/panel-attributes', {
                     attributeList: attributeList,
@@ -256,9 +256,9 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
         addPanel: function () {
             this.lastPanelNumber ++;
 
-            let number = this.lastPanelNumber;
+            const number = this.lastPanelNumber;
 
-            let data = {
+            const data = {
                 customLabel: null,
                 rows: [[]],
                 number: number,
@@ -266,10 +266,10 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
 
             this.panels.push(data);
 
-            let attributes = {};
+            const attributes = {};
 
-            for (let attribute in this.panelDataAttributesDefs) {
-                let item = this.panelDataAttributesDefs[attribute];
+            for (const attribute in this.panelDataAttributesDefs) {
+                const item = this.panelDataAttributesDefs[attribute];
 
                 if ('default' in item) {
                     attributes[attribute] = item.default;
@@ -278,7 +278,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
 
             this.panelsData[number.toString()] = attributes;
 
-            var $li = $('<li class="panel-layout"></li>');
+            const $li = $('<li class="panel-layout"></li>');
 
             $li.attr('data-number', number);
 
@@ -290,10 +290,10 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
         },
 
         getPanelDataList: function () {
-            var panelDataList = [];
+            const panelDataList = [];
 
             this.panels.forEach((item) => {
-                var o = {};
+                const o = {};
 
                 o.viewKey = 'panel-' + item.number;
                 o.number = item.number;
@@ -345,8 +345,8 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
 
             data.style = data.style || null;
 
-            data.rows.forEach((row) => {
-                let rest = this.columnCount - row.length;
+            data.rows.forEach(row => {
+                const rest = this.columnCount - row.length;
 
                 if (empty) {
                     for (let i = 0; i < rest; i++) {
@@ -354,7 +354,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                     }
                 }
 
-                for (let i in row) {
+                for (const i in row) {
                     if (row[i] !== false) {
                         row[i].label = this.getLanguage().translate(row[i].name, 'fields', this.scope);
 
@@ -369,7 +369,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                 selector: 'li.panel-layout[data-number="'+data.number+'"]',
                 template: 'admin/layouts/grid-panel',
                 data: () => {
-                    var o = Espo.Utils.clone(data);
+                    const o = Espo.Utils.clone(data);
 
                     o.dataAttributeList = [];
 
@@ -387,41 +387,45 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
         },
 
         makeDraggable: function () {
-            var self = this;
+            const self = this;
 
-            $('#layout ul.panels').sortable({
+            const $panels = $('#layout ul.panels');
+            const $rows = $('#layout ul.rows');
+
+            $panels.sortable({
                 distance: 4,
                 update: () => {
                     this.setIsChanged();
                 },
             });
 
-            $('#layout ul.panels').disableSelection();
+            $panels.disableSelection();
 
-            $('#layout ul.rows').sortable({
+            $rows.sortable({
                 distance: 4,
                 connectWith: '.rows',
                 update: () => {
                     this.setIsChanged();
                 },
             });
-            $('#layout ul.rows').disableSelection();
+            $rows.disableSelection();
 
-            $('#layout ul.cells > li')
-                .draggable({revert: 'invalid', revertDuration: 200, zIndex: 10})
+            const $li = $('#layout ul.cells > li');
+
+            $li.draggable({revert: 'invalid', revertDuration: 200, zIndex: 10})
                 .css('cursor', 'pointer');
 
-            $('#layout ul.cells > li').droppable().droppable('destroy');
+            $li.droppable().droppable('destroy');
 
             $('#layout ul.cells:not(.disabled) > li').droppable({
                 accept: '.cell',
                 zIndex: 10,
                 hoverClass: 'ui-state-hover',
                 drop: function (e, ui) {
-                    var index = ui.draggable.index();
-                    var parent = ui.draggable.parent();
+                    const index = ui.draggable.index();
+                    const parent = ui.draggable.parent();
 
-                    if (parent.get(0) == $(this).parent().get(0)) {
+                    if (parent.get(0) === $(this).parent().get(0)) {
                         if ($(this).index() < ui.draggable.index()) {
                             $(this).before(ui.draggable);
                         } else {
@@ -430,15 +434,12 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                     } else {
                         ui.draggable.insertAfter($(this));
 
-                        if (index == 0) {
+                        if (index === 0) {
                             $(this).prependTo(parent);
                         } else {
                             $(this).insertAfter(parent.children(':nth-child(' + (index) + ')'));
                         }
                     }
-
-                    var $target = $(this);
-                    var $draggable = $(ui.draggable);
 
                     ui.draggable.css({
                         top: 0,
@@ -459,20 +460,20 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
         afterRender: function () {
             this.makeDraggable();
 
-            let wellElement = /** @type {HTMLElement} */this.$el.find('.enabled-well').get(0)
+            const wellElement = /** @type {HTMLElement} */this.$el.find('.enabled-well').get(0);
 
             wellElement.focus({preventScroll: true});
         },
 
         fetch: function () {
-            var layout = [];
+            const layout = [];
 
             $("#layout ul.panels > li").each((i, el) => {
-                var $label = $(el).find('header label');
+                const $label = $(el).find('header label');
 
-                var id = $(el).data('number').toString();
+                const id = $(el).data('number').toString();
 
-                var o = {
+                const o = {
                     rows: []
                 };
 
@@ -486,7 +487,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
 
                 o.style = o.style || 'default';
 
-                var name = $(el).find('header').data('name');
+                const name = $(el).find('header').data('name');
 
                 if (name) {
                     o.name = name;
@@ -499,10 +500,10 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                 }
 
                 $(el).find('ul.rows > li').each((i, li) => {
-                    var row = [];
+                    const row = [];
 
                     $(li).find('ul.cells > li').each((i, li) => {
-                        var cell = false;
+                        let cell = false;
 
                         if (!$(li).hasClass('empty')) {
                             cell = {};
@@ -516,7 +517,7 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                                     return;
                                 }
 
-                                var value = $(li).data(Espo.Utils.toDom(attr)) || null;
+                                const value = $(li).data(Espo.Utils.toDom(attr)) || null;
 
                                 if (value) {
                                     cell[attr] = value;
