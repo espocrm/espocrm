@@ -56,7 +56,7 @@ define('views/admin/layouts/rows', ['views/admin/layouts/base'], function (Dep) 
             Dep.prototype.setup.call(this);
 
             this.events['click a[data-action="editItem"]'] = e => {
-                let name = $(e.target).closest('li').data('name');
+                const name = $(e.target).closest('li').data('name');
 
                 this.editRow(name);
             };
@@ -71,11 +71,13 @@ define('views/admin/layouts/rows', ['views/admin/layouts/base'], function (Dep) 
         },
 
         onRemove: function () {
-            if (this.$style) this.$style.remove();
+            if (this.$style) {
+                this.$style.remove();
+            }
         },
 
         editRow: function (name) {
-            var attributes = Espo.Utils.cloneDeep(this.itemsData[name] || {});
+            const attributes = Espo.Utils.cloneDeep(this.itemsData[name] || {});
             attributes.name = name;
 
             this.openEditDialog(attributes)
@@ -98,18 +100,18 @@ define('views/admin/layouts/rows', ['views/admin/layouts/base'], function (Dep) 
         onDrop: function (e) {},
 
         fetch: function () {
-            var layout = [];
+            const layout = [];
 
             $("#layout ul.enabled > li").each((i, el) => {
-                var o = {};
+                const o = {};
 
-                var name = $(el).data('name');
+                const name = $(el).data('name');
 
-                var attributes = this.itemsData[name] || {};
+                const attributes = this.itemsData[name] || {};
                 attributes.name = name;
 
                 this.dataAttributeList.forEach(attribute => {
-                    var value = attributes[attribute] || null;
+                    const value = attributes[attribute] || null;
 
                     if (value) {
                         o[attribute] = value;
