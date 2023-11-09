@@ -109,6 +109,7 @@
         "adminNotificationsNewVersion": "Show notification when new EspoCRM version is available",
         "adminNotificationsNewExtensionVersion": "Show notification when new versions of extensions are available",
         "textFilterUseContainsForVarchar": "Use 'contains' operator when filtering varchar fields",
+        "phoneNumberNumericSearch": "Numeric phone number search",
         "authTokenPreventConcurrent": "Only one auth token per user",
         "scopeColorsDisabled": "Disable scope colors",
         "tabColorsDisabled": "Disable tab colors",

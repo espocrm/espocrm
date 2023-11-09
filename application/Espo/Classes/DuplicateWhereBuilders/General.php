@@ -33,6 +33,7 @@ use Espo\Core\Duplicate\WhereBuilder;
 use Espo\Core\Field\EmailAddressGroup;
 use Espo\Core\Field\PhoneNumberGroup;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs;
 use Espo\ORM\Entity;
@@ -49,7 +50,8 @@ class General implements WhereBuilder
 {
     public function __construct(
         private Metadata $metadata,
-        private Defs $ormDefs
+        private Defs $ormDefs,
+        private Config $config
     ) {}
 
     /**
@@ -177,6 +179,12 @@ class General implements WhereBuilder
 
         $toCheck = false;
 
+        $isNumeric = $this->config->get('phoneNumberNumericSearch');
+
+        $column = $isNumeric ?
+            $field . 'Numeric' :
+            $field;
+
         if (
             ($entity->get($field) || $entity->get($field . 'Data')) &&
             (
@@ -185,11 +193,15 @@ class General implements WhereBuilder
                 $entity->isAttributeChanged($field . 'Data')
             )
         ) {
-            foreach ($this->getPhoneNumberList($entity) as $phoneNumber) {
+            foreach ($this->getPhoneNumberList($entity) as $number) {
+                if ($isNumeric) {
+                    $number = preg_replace('/[^0-9]/', '', $number);
+                }
+
                 $orBuilder->add(
                     Cond::equal(
-                        Cond::column($field),
-                        $phoneNumber
+                        Cond::column($column),
+                        $number
                     )
                 );
 

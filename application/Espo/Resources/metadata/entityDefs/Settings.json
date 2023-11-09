@@ -688,6 +688,9 @@
             "type": "bool",
             "tooltip": true
         },
+        "phoneNumberNumericSearch": {
+            "type": "bool"
+        },
         "scopeColorsDisabled": {
             "type": "bool"
         },

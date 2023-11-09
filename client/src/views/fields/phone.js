@@ -42,9 +42,9 @@ class PhoneFieldView extends VarcharFieldView {
     events = {
         /** @this PhoneFieldView */
         'click [data-action="switchPhoneProperty"]': function (e) {
-            let $target = $(e.currentTarget);
-            let $block = $(e.currentTarget).closest('div.phone-number-block');
-            let property = $target.data('property-type');
+            const $target = $(e.currentTarget);
+            const $block = $(e.currentTarget).closest('div.phone-number-block');
+            const property = $target.data('property-type');
 
             if (property === 'primary') {
                 if (!$target.hasClass('active')) {
@@ -68,13 +68,13 @@ class PhoneFieldView extends VarcharFieldView {
         },
         /** @this PhoneFieldView */
         'click [data-action="removePhoneNumber"]': function (e) {
-            let $block = $(e.currentTarget).closest('div.phone-number-block');
+            const $block = $(e.currentTarget).closest('div.phone-number-block');
 
             this.removePhoneNumber($block);
 
             this.trigger('change');
 
-            let $last = this.$el.find('.phone-number').last();
+            const $last = this.$el.find('.phone-number').last();
 
             if ($last.length) {
                 $last[0].focus({preventScroll: true});
@@ -82,8 +82,8 @@ class PhoneFieldView extends VarcharFieldView {
         },
         /** @this PhoneFieldView */
         'change input.phone-number': function (e) {
-            let $input = $(e.currentTarget);
-            let $block = $input.closest('div.phone-number-block');
+            const $input = $(e.currentTarget);
+            const $block = $input.closest('div.phone-number-block');
 
             if (this._itemJustRemoved) {
                 return;
@@ -112,9 +112,9 @@ class PhoneFieldView extends VarcharFieldView {
         },
         /** @this PhoneFieldView */
         'keydown input.phone-number': function (e) {
-            let key = Espo.Utils.getKeyFromKeyEvent(e);
+            const key = Espo.Utils.getKeyFromKeyEvent(e);
 
-            let $target = $(e.currentTarget);
+            const $target = $(e.currentTarget);
 
             if (key === 'Enter') {
                 if (!this.$el.find('[data-action="addPhoneNumber"]').hasClass('disabled')) {
@@ -127,7 +127,7 @@ class PhoneFieldView extends VarcharFieldView {
             }
 
             if (key === 'Backspace' && $target.val() === '') {
-                let $block = $target.closest('div.phone-number-block');
+                const $block = $target.closest('div.phone-number-block');
 
                 this._itemJustRemoved = true;
                 setTimeout(() => this._itemJustRemoved = false, 100);
@@ -147,7 +147,7 @@ class PhoneFieldView extends VarcharFieldView {
         }
 
         if (!this.model.get(this.name)) {
-            let msg = this.translate('fieldIsRequired', 'messages')
+            const msg = this.translate('fieldIsRequired', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg, 'div.phone-number-block:nth-child(1) input.phone-number');
@@ -158,37 +158,37 @@ class PhoneFieldView extends VarcharFieldView {
 
     // noinspection JSUnusedGlobalSymbols
     validatePhoneData() {
-        let data = this.model.get(this.dataFieldName);
+        const data = this.model.get(this.dataFieldName);
 
         if (!data || !data.length) {
             return;
         }
 
         /** @var {string} */
-        let pattern = '^' + this.getMetadata().get(['app', 'regExpPatterns', 'phoneNumberLoose', 'pattern']) + '$';
-        let regExp = new RegExp(pattern);
+        const pattern = '^' + this.getMetadata().get(['app', 'regExpPatterns', 'phoneNumberLoose', 'pattern']) + '$';
+        const regExp = new RegExp(pattern);
 
-        let numberList = [];
+        const numberList = [];
         let notValid = false;
 
         data.forEach((row, i) => {
-            let number = row.phoneNumber;
+            const msg = this.translate('fieldValueDuplicate', 'messages')
+                .replace('{field}', this.getLabelText());
+            const number = row.phoneNumber;
 
             if (!regExp.test(number)) {
                 notValid = true;
 
-                let msg = this.translate('fieldPhoneInvalidCharacters', 'messages')
+                const msg = this.translate('fieldPhoneInvalidCharacters', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
                     .toString() + ') input.phone-number');
             }
 
-            let numberClean = String(number).replace(/[\s+]/g, '');
+            const numberClean = String(number).replace(/[\s+]/g, '');
 
             if (~numberList.indexOf(numberClean)) {
-                let msg = this.translate('fieldValueDuplicate', 'messages')
-                    .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
                     .toString() + ') input.phone-number');
@@ -207,6 +207,7 @@ class PhoneFieldView extends VarcharFieldView {
     }
 
     data() {
+        const number = this.model.get(this.name);
         let phoneNumberData;
 
         if (this.mode === this.MODE_EDIT) {
@@ -239,7 +240,7 @@ class PhoneFieldView extends VarcharFieldView {
             phoneNumberData = Espo.Utils.cloneDeep(phoneNumberData);
 
             phoneNumberData.forEach((item) => {
-                let number = item.phoneNumber || '';
+                const number = item.phoneNumber || '';
 
                 item.erased = number.indexOf(this.erasedPlaceholder) === 0;
 
@@ -252,9 +253,8 @@ class PhoneFieldView extends VarcharFieldView {
         }
 
         if ((!phoneNumberData || phoneNumberData.length === 0) && this.model.get(this.name)) {
-            let number = this.model.get(this.name);
 
-            let o = {
+            const o = {
                 phoneNumber: number,
                 primary: true,
                 valueForLink: number.replace(/ /g, ''),
@@ -267,7 +267,7 @@ class PhoneFieldView extends VarcharFieldView {
             phoneNumberData = [o];
         }
 
-        let data = {
+        const data = {
             ...super.data(),
             phoneNumberData: phoneNumberData,
             doNotCall: this.model.get('doNotCall'),
@@ -295,7 +295,7 @@ class PhoneFieldView extends VarcharFieldView {
     }
 
     focusOnLast(cursorAtEnd) {
-        let $item = this.$el.find('input.form-control').last();
+        const $item = this.$el.find('input.form-control').last();
 
         $item.focus();
 
@@ -315,9 +315,9 @@ class PhoneFieldView extends VarcharFieldView {
     }
 
     addPhoneNumber() {
-        let data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
+        const data = Espo.Utils.cloneDeep(this.fetchPhoneNumberData());
 
-        let o = {
+        const o = {
             phoneNumber: '',
             primary: !data.length,
             type: false,
@@ -346,6 +346,12 @@ class PhoneFieldView extends VarcharFieldView {
         }
     }
 
+    afterRenderSearch() {
+        super.afterRenderSearch();
+
+        // @todo If numeric search enabled, allow only digits to enter.
+    }
+
     removePhoneNumberBlock($block) {
         let changePrimary = false;
 
@@ -368,7 +374,7 @@ class PhoneFieldView extends VarcharFieldView {
     }
 
     manageAddButton() {
-        let $input = this.$el.find('input.phone-number');
+        const $input = this.$el.find('input.phone-number');
         let c = 0;
 
         $input.each((i, input) => {
@@ -391,9 +397,9 @@ class PhoneFieldView extends VarcharFieldView {
     }
 
     manageButtonsVisibility() {
-        let $primary = this.$el.find('button[data-property-type="primary"]');
-        let $remove = this.$el.find('button[data-action="removePhoneNumber"]');
-        let $container = this.$el.find('.phone-number-block-container');
+        const $primary = this.$el.find('button[data-property-type="primary"]');
+        const $remove = this.$el.find('button[data-action="removePhoneNumber"]');
+        const $container = this.$el.find('.phone-number-block-container');
 
         if ($primary.length > 1) {
             $primary.removeClass('hidden');
@@ -440,14 +446,14 @@ class PhoneFieldView extends VarcharFieldView {
     }
 
     fetchPhoneNumberData() {
-        let data = [];
+        const data = [];
 
-        let $list = this.$el.find('div.phone-number-block');
+        const $list = this.$el.find('div.phone-number-block');
 
         if ($list.length) {
             $list.each((i, d) => {
-                let row = {};
-                let $d = $(d);
+                const row = {};
+                const $d = $(d);
 
                 row.phoneNumber = $d.find('input.phone-number').val().trim();
 
@@ -468,9 +474,9 @@ class PhoneFieldView extends VarcharFieldView {
     }
 
     fetch() {
-        let data = {};
+        const data = {};
 
-        let addressData = this.fetchPhoneNumberData() || [];
+        const addressData = this.fetchPhoneNumberData() || [];
 
         data[this.dataFieldName] = addressData;
         data[this.name] = null;
@@ -494,7 +500,7 @@ class PhoneFieldView extends VarcharFieldView {
         });
 
         if (addressData.length && primaryIndex > 0) {
-            let t = addressData[0];
+            const t = addressData[0];
 
             addressData[0] = addressData[primaryIndex];
             addressData[primaryIndex] = t;
@@ -508,6 +514,59 @@ class PhoneFieldView extends VarcharFieldView {
         }
 
         return data;
+    }
+
+    /** @inheritDoc */
+    fetchSearch() {
+        const type = this.fetchSearchType() || 'startsWith';
+
+        const isNumeric = this.getConfig().get('phoneNumberNumericSearch');
+
+        const name = isNumeric ?
+            this.name + 'Numeric' :
+            this.name;
+
+        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+            if (type === 'isEmpty') {
+                return {
+                    type: 'isNull',
+                    attribute: name,
+                    data: {
+                        type: type,
+                    },
+                };
+            }
+
+            return {
+                type: 'isNotNull',
+                attribute: name,
+                data: {
+                    type: type,
+                },
+            };
+        }
+
+        /** @type {string} */
+        let value = this.$element.val()
+            .toString()
+            .trim();
+
+        if (isNumeric && value) {
+            value = value.replace(/[^0-9]/g, '');
+        }
+
+        if (!value) {
+            return null;
+        }
+
+        return {
+            type: type,
+            value: value,
+            attribute: name,
+            data: {
+                type: type,
+            },
+        };
     }
 }
 

@@ -112,6 +112,25 @@ class DefaultFilter implements Filter
             return;
         }
 
+        if (
+            !str_contains($attribute, '.') &&
+            $this->metadataProvider->getFieldType($this->entityType, $attribute) === 'phone'
+        ) {
+            if (str_contains($filter, ' ')) {
+                return;
+            }
+
+            if ($this->config->usePhoneNumberNumericSearch()) {
+                $attribute = $attribute . 'Numeric';
+
+                $filter = preg_replace('/[^0-9]/', '', $filter);
+            }
+
+            if (!$filter) {
+                return;
+            }
+        }
+
         $expression = $filter;
 
         if (!$skipWildcards) {

@@ -48,4 +48,9 @@ class ConfigProvider
     {
         return $this->config->get('textFilterUseContainsForVarchar') ?? false;
     }
+
+    public function usePhoneNumberNumericSearch(): bool
+    {
+        return $this->config->get('phoneNumberNumericSearch') ?? false;
+    }
 }
