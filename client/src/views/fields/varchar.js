@@ -399,11 +399,11 @@ class VarcharFieldView extends BaseFieldView {
                     value: [
                         {
                             type: 'isNull',
-                            field: this.name,
+                            attribute: this.name,
                         },
                         {
                             type: 'equals',
-                            field: this.name,
+                            attribute: this.name,
                             value: '',
                         },
                     ],
@@ -416,7 +416,7 @@ class VarcharFieldView extends BaseFieldView {
             const value = [
                 {
                     type: 'isNotNull',
-                    field: this.name,
+                    attribute: this.name,
                     value: null,
                 },
             ];
@@ -424,7 +424,7 @@ class VarcharFieldView extends BaseFieldView {
             if (!this.model.getFieldParam(this.name, 'notStorable')) {
                 value.push({
                     type: 'notEquals',
-                    field: this.name,
+                    attribute: this.name,
                     value: '',
                 });
             }
