@@ -47,6 +47,7 @@ class BaseFieldView extends View {
      * @property {boolean} [inlineEditDisabled] Disable inline edit.
      * @property {boolean} [readOnly] Read-only.
      * @property {string} [labelText] A custom label text.
+     * @property {'detail'|'edit'|'list'|'search'} [mode] A mode.
      */
 
     /**
