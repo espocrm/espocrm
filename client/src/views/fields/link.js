@@ -376,6 +376,8 @@ class LinkFieldView extends BaseFieldView {
 
         this.trigger('change');
 
+        this.controlCreateButtonVisibility();
+
         this.getSelectFieldHandler().then(handler => {
             handler.getAttributes(model)
                 .then(attributes => {
@@ -393,12 +395,27 @@ class LinkFieldView extends BaseFieldView {
 
         this.trigger('change');
 
+        this.controlCreateButtonVisibility();
+
         this.getSelectFieldHandler().then(handler => {
             handler.getClearAttributes()
                 .then(attributes => {
-                    this.model.set(attributes)
+                    this.model.set(attributes);
                 });
         });
+    }
+
+    /** @private */
+    controlCreateButtonVisibility() {
+        if (!this.createButton) {
+            return;
+        }
+
+        const $btn = this.$el.find('[data-action="createLink"]');
+
+        this.model.get(this.idName) ?
+            $btn.addClass('hidden') :
+            $btn.removeClass('hidden');
     }
 
     /**

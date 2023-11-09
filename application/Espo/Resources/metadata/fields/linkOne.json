@@ -16,6 +16,10 @@
         {
             "name": "readOnlyAfterCreate",
             "type": "bool"
+        },
+        {
+            "name": "createButton",
+            "type": "bool"
         }
     ],
     "actualFields": [

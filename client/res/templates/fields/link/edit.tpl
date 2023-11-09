@@ -12,7 +12,7 @@
         {{#if createButton}}
         <button
             data-action="createLink"
-            class="btn btn-default btn-icon"
+            class="btn btn-default btn-icon{{#if idValue}} hidden{{/if}}"
             type="button"
             title="{{translate 'Create'}}"
         ><i class="fas fa-plus"></i></button>
