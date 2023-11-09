@@ -236,6 +236,10 @@ class VarcharFieldView extends BaseFieldView {
             if (typeof this.searchParams.value === 'string') {
                 this.searchData.value = this.searchParams.value;
             }
+
+            if (this.searchParams.data && typeof this.searchParams.data.value === 'string') {
+                this.searchData.value = this.searchParams.data.value;
+            }
         }
 
         data.noSpellCheck = this.noSpellCheck;

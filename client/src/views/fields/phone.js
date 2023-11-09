@@ -551,6 +551,8 @@ class PhoneFieldView extends VarcharFieldView {
             .toString()
             .trim();
 
+        const originalValue = value;
+
         if (isNumeric && value) {
             value = value.replace(/[^0-9]/g, '');
         }
@@ -565,6 +567,7 @@ class PhoneFieldView extends VarcharFieldView {
             attribute: name,
             data: {
                 type: type,
+                value: originalValue,
             },
         };
     }
