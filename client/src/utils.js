@@ -84,8 +84,10 @@ Espo.Utils = {
                 return true;
             }
 
-            handler = data.handler;
-            method = data.actionFunction;
+            if (data) {
+                handler = data.handler;
+                method = data.actionFunction;
+            }
         }
 
         if (!action && !actionData.actionFunction && !method) {
