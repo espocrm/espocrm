@@ -29,10 +29,9 @@
 
 namespace Espo\Core\Authentication;
 
-
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Utils\Language;
+use Espo\Core\Utils\Language\LanguageProxy;
 use Espo\Repositories\UserData as UserDataRepository;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
@@ -89,7 +88,7 @@ class Authentication
         private LogoutFactory $logoutFactory,
         private MethodProvider $methodProvider,
         private Util $util,
-        private Language $language
+        private LanguageProxy $language
     ) {}
 
     /**
