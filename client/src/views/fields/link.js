@@ -1020,6 +1020,7 @@ class LinkFieldView extends BaseFieldView {
     }
 
     /**
+     * @protected
      * @return {function(): Promise<Object.<string, *>>}
      */
     getCreateAttributesProvider() {
