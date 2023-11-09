@@ -22,6 +22,10 @@
             "name": "default",
             "type": "link",
             "view": "views/admin/field-manager/fields/link/default"
+        },
+        {
+            "name": "createButton",
+            "type": "bool"
         }
     ],
     "actualFields": [

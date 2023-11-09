@@ -246,6 +246,13 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             hasRequired = true;
                         }
 
+                        if (
+                            item === 'createButton' &&
+                            ['assignedUser', 'assignedUsers', 'teams'].includes(this.field)
+                        ) {
+                            return;
+                        }
+
                         let disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
 
                         let isDisabled =

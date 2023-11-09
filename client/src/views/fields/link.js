@@ -340,6 +340,8 @@ class LinkFieldView extends BaseFieldView {
             };
         }
 
+        this.createButton = this.params.createButton || this.createButton;
+
         if (this.createButton && !this.getAcl().checkScope(this.foreignScope, 'create')) {
             this.createButton = false;
         }
