@@ -345,6 +345,11 @@ class ListRecordView extends View {
      * @property {string} [type] An overridden field type.
      * @property {Object.<string, *>} [params] Overridden field parameters.
      * @property {Object.<string, *>} [options] Field view options.
+     * @property {string} [label] A label.
+     * @property {boolean} [notSortable] Not sortable.
+     * @property {boolean} [hidden] Hidden by default.
+     * @property {boolean} [noLabel] No label.
+     * @property {string} [customLabel] A custom label.
      */
 
     /**
@@ -2258,6 +2263,8 @@ class ListRecordView extends View {
     setupMassActionItems() {}
 
     /**
+     * @param {module:views/record/list~columnDefs[]} listLayout
+     * @return {module:views/record/list~columnDefs[]}
      * @protected
      */
     filterListLayout(listLayout) {
@@ -2279,16 +2286,22 @@ class ListRecordView extends View {
             return this._cachedFilteredListLayout;
         }
 
-        const filteredListLayout = Espo.Utils.clone(listLayout);
+        const filteredListLayout = Espo.Utils.cloneDeep(listLayout);
 
-        for (const i in listLayout) {
-            const name = listLayout[i].name;
+        const deleteIndexes = [];
 
-            if (name && ~forbiddenFieldList.indexOf(name)) {
-                filteredListLayout[i].customLabel = '';
-                filteredListLayout[i].notSortable = true;
+        for (const [i, item] of listLayout.entries()) {
+            if (item.name && forbiddenFieldList.includes(item.name)) {
+                item.customLabel = '';
+                item.notSortable = true;
+
+                deleteIndexes.push(i)
             }
         }
+
+        deleteIndexes
+            .reverse()
+            .forEach(index => filteredListLayout.splice(index, 1));
 
         this._cachedFilteredListLayout = filteredListLayout;
 
@@ -2297,7 +2310,7 @@ class ListRecordView extends View {
 
     /**
      * @protected
-     * @param {function(Object[]):void} callback A callback.
+     * @param {function(module:views/record/list~columnDefs[]): void} callback A callback.
      * @private
      */
     _loadListLayout(callback) {
@@ -2380,28 +2393,28 @@ class ListRecordView extends View {
         const hiddenMap = this._listSettingsHelper ?
             this._listSettingsHelper.getHiddenColumnMap() : {};
 
-        for (const i in this.listLayout) {
+        for (const col of this.listLayout) {
             let width = false;
 
-            if ('width' in this.listLayout[i] && this.listLayout[i].width !== null) {
-                width = this.listLayout[i].width + '%';
+            if ('width' in col && col.width !== null) {
+                width = col.width + '%';
             }
-            else if ('widthPx' in this.listLayout[i]) {
-                width = this.listLayout[i].widthPx + 'px';
+            else if ('widthPx' in col) {
+                width = col.widthPx + 'px';
             }
 
-            const itemName = this.listLayout[i].name;
-            const label = this.listLayout[i].label || itemName;
+            const itemName = col.name;
+            const label = col.label || itemName;
 
             const item = {
                 name: itemName,
-                isSortable: !(this.listLayout[i].notSortable || false),
+                isSortable: !(col.notSortable || false),
                 width: width,
-                align: ('align' in this.listLayout[i]) ? this.listLayout[i].align : false,
+                align: ('align' in col) ? col.align : false,
             };
 
-            if ('customLabel' in this.listLayout[i]) {
-                item.customLabel = this.listLayout[i].customLabel;
+            if ('customLabel' in col) {
+                item.customLabel = col.customLabel;
                 item.hasCustomLabel = true;
                 item.label = item.customLabel;
             }
@@ -2409,7 +2422,7 @@ class ListRecordView extends View {
                 item.label = this.translate(label, 'fields', this.collection.entityType);
             }
 
-            if (this.listLayout[i].noLabel) {
+            if (col.noLabel) {
                 item.label = null;
             }
 
@@ -2430,7 +2443,7 @@ class ListRecordView extends View {
                     continue;
                 }
 
-                if (this.listLayout[i].hidden && !(itemName in hiddenMap)) {
+                if (col.hidden && !(itemName in hiddenMap)) {
                     continue;
                 }
             }
@@ -2487,8 +2500,7 @@ class ListRecordView extends View {
         const hiddenMap = this._listSettingsHelper ?
             this._listSettingsHelper.getHiddenColumnMap() : {};
 
-        for (const i in listLayout) {
-            const col = listLayout[i];
+        for (const col of listLayout) {
             const type = col.type || model.getFieldType(col.name) || 'base';
 
             if (!col.name) {
@@ -3396,7 +3408,8 @@ class ListRecordView extends View {
         this._listSettingsHelper = new ListSettingsHelper(
             this.entityType,
             this.layoutName,
-            this.getStorage(),
+            this.getUser().id,
+            this.getStorage()
         );
 
         const view = new RecordListSettingsView({

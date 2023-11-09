@@ -31,17 +31,14 @@ class ListSettingsHelper {
     /**
      * @param {string} entityType
      * @param {string} type
+     * @param {string} userId
      * @param {module:storage} storage
      */
-    constructor(entityType, type, storage) {
-        /** @private */
-        this.entityType = entityType;
-        /** @private */
-        this.type = type;
+    constructor(entityType, type, userId, storage) {
         /** @private */
         this.storage = storage;
 
-        this.layoutColumnsKey = `${this.type}-${this.entityType}`;
+        this.layoutColumnsKey = `${type}-${entityType}-${userId}`;
         this.hiddenColumnMapCache = {};
     }
 
