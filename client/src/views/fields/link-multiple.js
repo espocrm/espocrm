@@ -344,6 +344,10 @@ class LinkMultipleFieldView extends BaseFieldView {
             };
         }
 
+        if (this.createButton && !this.getAcl().checkScope(this.foreignScope, 'create')) {
+            this.createButton = false;
+        }
+
         if (this.createButton) {
             this.addActionHandler('createLink', () => this.actionCreateLink());
         }
