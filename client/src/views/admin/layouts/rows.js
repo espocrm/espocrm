@@ -111,6 +111,12 @@ define('views/admin/layouts/rows', ['views/admin/layouts/base'], function (Dep) 
                 attributes.name = name;
 
                 this.dataAttributeList.forEach(attribute => {
+                    const defs = this.dataAttributesDefs[attribute] || {};
+
+                    if (defs.notStorable) {
+                        return;
+                    }
+
                     const value = attributes[attribute] || null;
 
                     if (value) {

@@ -508,7 +508,13 @@ define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) 
                         if (!$(li).hasClass('empty')) {
                             cell = {};
 
-                            this.dataAttributeList.forEach((attr) => {
+                            this.dataAttributeList.forEach(attr => {
+                                const defs = this.dataAttributesDefs[attr] || {};
+
+                                if (defs.notStorable) {
+                                    return;
+                                }
+
                                 if (attr === 'customLabel') {
                                     if ($(li).get(0).hasAttribute('data-custom-label')) {
                                         cell[attr] = $(li).attr('data-custom-label');

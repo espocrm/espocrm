@@ -32,6 +32,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
 
         dataAttributeList: [
             'name',
+            'widthComplex',
             'width',
             'widthPx',
             'link',
@@ -45,6 +46,13 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
         ],
 
         dataAttributesDefs: {
+            widthComplex: {
+                label: 'width',
+                type: 'base',
+                view: 'views/admin/layouts/fields/width-complex',
+                tooltip: 'width',
+                notStorable: true,
+            },
             link: {
                 type: 'bool',
                 tooltip: true,
@@ -53,13 +61,13 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
                 type: 'float',
                 min: 0,
                 max: 100,
-                tooltip: true,
+                hidden: true,
             },
             widthPx: {
                 type: 'int',
                 min: 0,
                 max: 720,
-                tooltip: true,
+                hidden: true,
             },
             notSortable: {
                 type: 'bool',

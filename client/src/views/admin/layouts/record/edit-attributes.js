@@ -44,15 +44,19 @@ define('views/admin/layouts/record/edit-attributes', ['views/record/base'], func
         getAttributeDataList: function () {
             const list = [];
 
-            this.attributeList.forEach(item => {
-                const type = (this.attributeDefs[item] || {}).type;
+            this.attributeList.forEach(attribute => {
+                const defs = this.attributeDefs[attribute] || {};
 
-                const isWide = !['enum', 'bool', 'int', 'float', 'varchar'].includes(type);
+                const type = defs.type;
+
+                const isWide = !['enum', 'bool', 'int', 'float', 'varchar'].includes(type) &&
+                    attribute !== 'widthComplex';
 
                 list.push({
-                    name: item,
-                    viewKey: item + 'Field',
+                    name: attribute,
+                    viewKey: attribute + 'Field',
                     isWide: isWide,
+                    label: this.translate(defs.label || attribute, 'fields', 'LayoutManager'),
                 });
             });
 

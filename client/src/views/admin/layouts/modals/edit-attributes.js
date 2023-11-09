@@ -85,7 +85,7 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
             attributeList.forEach(item => {
                 const defs = this.options.attributeDefs[item] || {};
 
-                if (defs.readOnly) {
+                if (defs.readOnly || defs.hidden) {
                     return;
                 }
 
