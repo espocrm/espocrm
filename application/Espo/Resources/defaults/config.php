@@ -278,5 +278,6 @@ return [
     'oidcFallback' => true,
     'oidcScopes' => ['profile', 'email', 'phone'],
     'listViewSettingsDisabled' => false,
+    'cleanupDeletedRecords' => true,
     'isInstalled' => false,
 ];
