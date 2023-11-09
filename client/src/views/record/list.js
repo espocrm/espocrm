@@ -2384,7 +2384,6 @@ class ListRecordView extends View {
         return selectProvider.getFromLayout(this.entityType, this.listLayout);
     }
 
-
     /**
      * @protected
      */
@@ -2395,7 +2394,7 @@ class ListRecordView extends View {
             this._listSettingsHelper.getHiddenColumnMap() : {};
 
         // noinspection JSIncompatibleTypesComparison
-        if (!this.listLayout || this.listLayout[Symbol.iterator] !== 'function') {
+        if (!this.listLayout || !Array.isArray(this.listLayout)) {
             return [];
         }
 
