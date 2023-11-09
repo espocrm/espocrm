@@ -49,7 +49,7 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @protected
      * @type {string}
      */
-    nameHashName = null
+    nameHashName
 
     /**
      * A IDs attribute name.
@@ -57,7 +57,7 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @protected
      * @type {string}
      */
-    idsName = null
+    idsName
 
     /**
      * @protected
@@ -77,7 +77,7 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @protected
      * @type {string}
      */
-    foreignScope = null
+    foreignScope
 
     /**
      * Autocomplete disabled.
@@ -193,13 +193,13 @@ class LinkMultipleFieldView extends BaseFieldView {
                 return;
             }
 
-            let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
 
             if (!isCombination) {
                 return;
             }
 
-            let id = $(e.currentTarget).attr('data-id');
+            const id = $(e.currentTarget).attr('data-id');
 
             if (!id) {
                 return;
@@ -212,10 +212,12 @@ class LinkMultipleFieldView extends BaseFieldView {
         },
     }
 
+    // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
-        let ids = this.model.get(this.idsName);
+        const ids = this.model.get(this.idsName);
 
+        // noinspection JSValidateTypes
         return {
             ...super.data(),
             idValues: this.model.get(this.idsName),
@@ -276,10 +278,10 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @return {Object.<string, *>|null}
      */
     getCreateAttributes() {
-        let attributeMap = this.getMetadata()
+        const attributeMap = this.getMetadata()
             .get(['clientDefs', this.entityType, 'relationshipPanels', this.name, 'createAttributeMap']) || {};
 
-        let attributes = {};
+        const attributes = {};
 
         Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
 
@@ -301,8 +303,8 @@ class LinkMultipleFieldView extends BaseFieldView {
         }
 
         if (this.isSearchMode()) {
-            let nameHash = this.getSearchParamsData().nameHash || this.searchParams.nameHash || {};
-            let idList = this.getSearchParamsData().idList || this.searchParams.value || [];
+            const nameHash = this.getSearchParamsData().nameHash || this.searchParams.nameHash || {};
+            const idList = this.getSearchParamsData().idList || this.searchParams.value || [];
 
             this.nameHash = Espo.Utils.clone(nameHash);
             this.ids = Espo.Utils.clone(idList);
@@ -323,7 +325,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             this.addActionHandler('selectLink', () => this.actionSelect());
 
             this.events['click a[data-action="clearLink"]'] = (e) => {
-                let id = $(e.currentTarget).attr('data-id');
+                const id = $(e.currentTarget).attr('data-id');
 
                 this.deleteLink(id);
 
@@ -364,7 +366,7 @@ class LinkMultipleFieldView extends BaseFieldView {
     setupSearch() {
         this.events = _.extend({
             'change select.search-type': (e) => {
-                let type = $(e.currentTarget).val();
+                const type = $(e.currentTarget).val();
 
                 this.handleSearchType(type);
             },
@@ -385,13 +387,15 @@ class LinkMultipleFieldView extends BaseFieldView {
         return this.getConfig().get('recordsPerPage');
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * Compose an autocomplete URL. Can be extended.
      *
      * @protected
+     * @param {string} [q] A query.
      * @return {string|Promise<string>}
      */
-    getAutocompleteUrl() {
+    getAutocompleteUrl(q) {
         let url = this.foreignScope + '?&maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.forceSelectAllAttributes) {
@@ -454,7 +458,7 @@ class LinkMultipleFieldView extends BaseFieldView {
         if (this.isEditMode() || this.isSearchMode()) {
             this.$element = this.$el.find('input.main-element');
 
-            let $element = this.$element;
+            const $element = this.$element;
 
             if (!this.autocompleteDisabled) {
                 this.$element.on('blur', () => {
@@ -491,7 +495,7 @@ class LinkMultipleFieldView extends BaseFieldView {
                     transformResult: response => {
                         response = JSON.parse(response);
 
-                        let list = [];
+                        const list = [];
 
                         response.list.forEach((item) => {
                             list.push({
@@ -508,6 +512,7 @@ class LinkMultipleFieldView extends BaseFieldView {
                     },
                     onSelect: s => {
                         this.getModelFactory().create(this.foreignScope, model => {
+                            // noinspection JSUnresolvedReference
                             model.set(s.attributes);
 
                             this.select([model])
@@ -548,7 +553,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             }
 
             if (this.isSearchMode()) {
-                let type = this.$el.find('select.search-type').val();
+                const type = this.$el.find('select.search-type').val();
 
                 this.handleSearchType(type);
 
@@ -582,7 +587,7 @@ class LinkMultipleFieldView extends BaseFieldView {
 
         this.deleteLinkHtml(id);
 
-        let index = this.ids.indexOf(id);
+        const index = this.ids.indexOf(id);
 
         if (index > -1) {
             this.ids.splice(index, 1);
@@ -650,9 +655,9 @@ class LinkMultipleFieldView extends BaseFieldView {
 
         name = name || id;
 
-        let $container = this.$el.find('.link-container');
+        const $container = this.$el.find('.link-container');
 
-        let $el = $('<div>')
+        const $el = $('<div>')
             .addClass('link-' + id)
             .addClass('list-group-item')
             .attr('data-id', id);
@@ -701,10 +706,10 @@ class LinkMultipleFieldView extends BaseFieldView {
             name = this.translate(this.foreignScope, 'scopeNames');
         }
 
-        let iconHtml = this.isDetailMode() ?
+        const iconHtml = this.isDetailMode() ?
             this.getIconHtml(id) : '';
 
-        let $a = $('<a>')
+        const $a = $('<a>')
             .attr('href', this.getUrl(id))
             .attr('data-id', id)
             .text(name);
@@ -731,7 +736,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             return null;
         }
 
-        let itemList = [];
+        const itemList = [];
 
         this.ids.forEach(id => {
             itemList.push(this.getDetailLinkHtml(id));
@@ -756,10 +761,10 @@ class LinkMultipleFieldView extends BaseFieldView {
             return false;
         }
 
-        let idList = this.model.get(this.idsName) || [];
+        const idList = this.model.get(this.idsName) || [];
 
         if (idList.length === 0) {
-            let msg = this.translate('fieldIsRequired', 'messages')
+            const msg = this.translate('fieldIsRequired', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);
@@ -772,7 +777,7 @@ class LinkMultipleFieldView extends BaseFieldView {
 
     /** @inheritDoc */
     fetch() {
-        let data = {};
+        const data = {};
 
         data[this.idsName] = Espo.Utils.clone(this.ids);
         data[this.nameHashName] = Espo.Utils.clone(this.nameHash);
@@ -785,7 +790,7 @@ class LinkMultipleFieldView extends BaseFieldView {
         this.ids = [];
 
         this.$el.find('.link-container').children().each((i, li) => {
-            let id = $(li).attr('data-id');
+            const id = $(li).attr('data-id');
 
             if (!id) {
                 return;
@@ -797,8 +802,8 @@ class LinkMultipleFieldView extends BaseFieldView {
 
     /** @inheritDoc */
     fetchSearch() {
-        let type = this.$el.find('select.search-type').val();
-        let idList = this.ids || [];
+        const type = this.$el.find('select.search-type').val();
+        const idList = this.ids || [];
 
         if (~['anyOf', 'allOf', 'noneOf'].indexOf(type) && !idList.length) {
             return {
@@ -890,9 +895,9 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @param {string} id
      */
     quickView(id) {
-        let entityType = this.foreignScope;
+        const entityType = this.foreignScope;
 
-        let helper = new RecordModal(this.getMetadata(), this.getAcl());
+        const helper = new RecordModal(this.getMetadata(), this.getAcl());
 
         helper.showDetail(this, {
             id: id,
@@ -922,7 +927,7 @@ class LinkMultipleFieldView extends BaseFieldView {
 
         if (createButton) {
             createAttributesProvider = () => {
-                let attributes = this.getCreateAttributes() || {};
+                const attributes = this.getCreateAttributes() || {};
 
                 if (!panelDefs.createHandler) {
                     return Promise.resolve(attributes);

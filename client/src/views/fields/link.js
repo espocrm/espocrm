@@ -186,7 +186,7 @@ class LinkFieldView extends BaseFieldView {
                 return;
             }
 
-            let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
 
             if (!isCombination) {
                 return;
@@ -199,6 +199,7 @@ class LinkFieldView extends BaseFieldView {
         },
     }
 
+    // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
         let nameValue = this.model.has(this.nameName) ?
@@ -221,6 +222,7 @@ class LinkFieldView extends BaseFieldView {
 
         const createButton = this.createButton && (!this.createDisabled || this.forceCreateButton);
 
+        // noinspection JSValidateTypes
         return {
             ...super.data(),
             idName: this.idName,
@@ -240,7 +242,7 @@ class LinkFieldView extends BaseFieldView {
      * @return {?string}
      */
     getUrl() {
-        let id = this.model.get(this.idName);
+        const id = this.model.get(this.idName);
 
         if (!id) {
             return null;
@@ -299,10 +301,10 @@ class LinkFieldView extends BaseFieldView {
      * @return {Object.<string,*>|null}
      */
     getCreateAttributes() {
-        let attributeMap = this.getMetadata()
+        const attributeMap = this.getMetadata()
             .get(['clientDefs', this.entityType, 'relationshipPanels', this.name, 'createAttributeMap']) || {};
 
-        let attributes = {};
+        const attributes = {};
 
         Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
 
@@ -332,7 +334,7 @@ class LinkFieldView extends BaseFieldView {
             this.addActionHandler('selectLinkOneOf', () => this.actionSelectOneOf());
 
             this.events['click a[data-action="clearLinkOneOf"]'] = e =>{
-                let id = $(e.currentTarget).data('id').toString();
+                const id = $(e.currentTarget).data('id').toString();
 
                 this.deleteLinkOneOf(id);
             };
@@ -435,7 +437,7 @@ class LinkFieldView extends BaseFieldView {
         }
 
         this.events['change select.search-type'] = e => {
-            let type = $(e.currentTarget).val();
+            const type = $(e.currentTarget).val();
 
             this.handleSearchType(type);
         };
@@ -477,13 +479,15 @@ class LinkFieldView extends BaseFieldView {
         return this.getConfig().get('recordsPerPage');
     }
 
+    // noinspection JSUnusedLocalSymbols
     /**
      * Compose an autocomplete URL. Can be extended.
      *
      * @protected
+     * @param {string} [q] A query.
      * @return {string|Promise<string>}
      */
-    getAutocompleteUrl() {
+    getAutocompleteUrl(q) {
         let url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.forceSelectAllAttributes) {
@@ -561,7 +565,7 @@ class LinkFieldView extends BaseFieldView {
                 }
             });
 
-            let $elementName = this.$elementName;
+            const $elementName = this.$elementName;
 
             if (!this.autocompleteDisabled) {
                 let isEmptyQueryResult = false;
@@ -609,10 +613,12 @@ class LinkFieldView extends BaseFieldView {
                     autoSelectFirst: true,
                     noCache: true,
                     formatResult: suggestion => {
+                        // noinspection JSUnresolvedReference
                         return this.getHelper().escapeString(suggestion.name);
                     },
                     onSelect: s => {
                         this.getModelFactory().create(this.foreignScope, (model) => {
+                            // noinspection JSUnresolvedReference
                             model.set(s.attributes);
 
                             this.select(model);
@@ -645,8 +651,9 @@ class LinkFieldView extends BaseFieldView {
                 });
 
                 if (this.isSearchMode()) {
-                    let $elementOneOf = this.$el.find('input.element-one-of');
+                    const $elementOneOf = this.$el.find('input.element-one-of');
 
+                    // noinspection JSCheckFunctionSignatures
                     $elementOneOf.autocomplete({
                         beforeRender: $c => {
                             if (this.$elementName.hasClass('input-sm')) {
@@ -703,7 +710,7 @@ class LinkFieldView extends BaseFieldView {
         }
 
         if (this.isSearchMode()) {
-            var type = this.$el.find('select.search-type').val();
+            const type = this.$el.find('select.search-type').val();
 
             this.handleSearchType(type);
 
@@ -743,7 +750,7 @@ class LinkFieldView extends BaseFieldView {
     validateRequired() {
         if (this.isRequired()) {
             if (this.model.get(this.idName) == null) {
-                var msg = this.translate('fieldIsRequired', 'messages')
+                const msg = this.translate('fieldIsRequired', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
@@ -761,7 +768,7 @@ class LinkFieldView extends BaseFieldView {
     deleteLinkOneOf(id) {
         this.deleteLinkOneOfHtml(id);
 
-        var index = this.searchData.oneOfIdList.indexOf(id);
+        const index = this.searchData.oneOfIdList.indexOf(id);
 
         if (index > -1) {
             this.searchData.oneOfIdList.splice(index, 1);
@@ -803,9 +810,9 @@ class LinkFieldView extends BaseFieldView {
      * @return {JQuery}
      */
     addLinkOneOfHtml(id, name) {
-        let $container = this.$el.find('.link-one-of-container');
+        const $container = this.$el.find('.link-one-of-container');
 
-        let $el = $('<div>')
+        const $el = $('<div>')
             .addClass('link-' + id)
             .addClass('list-group-item');
 
@@ -829,7 +836,7 @@ class LinkFieldView extends BaseFieldView {
 
     /** @inheritDoc */
     fetch() {
-        var data = {};
+        const data = {};
 
         data[this.nameName] = this.$el.find('[data-name="'+this.nameName+'"]').val() || null;
         data[this.idName] = this.$el.find('[data-name="'+this.idName+'"]').val() || null;
@@ -839,8 +846,8 @@ class LinkFieldView extends BaseFieldView {
 
     /** @inheritDoc */
     fetchSearch() {
-        var type = this.$el.find('select.search-type').val();
-        var value = this.$el.find('[data-name="' + this.idName + '"]').val();
+        const type = this.$el.find('select.search-type').val();
+        const value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
         if (~['isOneOf', 'isNotOneOf'].indexOf(type) && !this.searchData.oneOfIdList.length) {
             return {
@@ -925,7 +932,7 @@ class LinkFieldView extends BaseFieldView {
                 return false;
             }
 
-            let nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+            const nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
 
             return {
                 type: 'or',
@@ -953,7 +960,7 @@ class LinkFieldView extends BaseFieldView {
                 return false;
             }
 
-            let nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+            const nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
 
             return {
                 type: 'notEquals',
@@ -971,7 +978,7 @@ class LinkFieldView extends BaseFieldView {
             return false;
         }
 
-        let nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+        const nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
 
         return {
             type: 'equals',
@@ -996,15 +1003,15 @@ class LinkFieldView extends BaseFieldView {
      * @protected
      */
     quickView() {
-        let id = this.model.get(this.idName);
+        const id = this.model.get(this.idName);
 
         if (!id) {
             return;
         }
 
-        let entityType = this.foreignScope;
+        const entityType = this.foreignScope;
 
-        let helper = new RecordModal(this.getMetadata(), this.getAcl());
+        const helper = new RecordModal(this.getMetadata(), this.getAcl());
 
         helper.showDetail(this, {
             id: id,
@@ -1141,8 +1148,7 @@ class LinkFieldView extends BaseFieldView {
     actionSelectOneOf() {
         Espo.Ui.notify(' ... ');
 
-        let viewName = this.getMetadata()
-                .get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
+        const viewName = this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
             this.selectRecordsView;
 
         this.createView('dialog', viewName, {
