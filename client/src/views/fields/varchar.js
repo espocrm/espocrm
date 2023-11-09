@@ -171,7 +171,7 @@ class VarcharFieldView extends BaseFieldView {
      * @protected
      */
     copyToClipboard() {
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         navigator.clipboard.writeText(value).then(() => {
             Espo.Ui.success(this.translate('Copied to clipboard'));
@@ -190,11 +190,11 @@ class VarcharFieldView extends BaseFieldView {
     }
 
     transformAutocompleteResult(response) {
-        let responseParsed = typeof response === 'string' ?
+        const responseParsed = typeof response === 'string' ?
             JSON.parse(response) :
             response;
 
-        let list = [];
+        const list = [];
 
         responseParsed.list.forEach(item => {
             list.push({
@@ -213,14 +213,14 @@ class VarcharFieldView extends BaseFieldView {
 
     setupSearch() {
         this.events['change select.search-type'] = e => {
-            let type = $(e.currentTarget).val();
+            const type = $(e.currentTarget).val();
 
             this.handleSearchType(type);
         };
     }
 
     data() {
-        let data = super.data()
+        const data = super.data();
 
         if (
             this.model.get(this.name) !== null &&
@@ -258,7 +258,7 @@ class VarcharFieldView extends BaseFieldView {
         super.afterRender();
 
         if (this.isSearchMode()) {
-            let type = this.$el.find('select.search-type').val();
+            const type = this.$el.find('select.search-type').val();
 
             this.handleSearchType(type);
         }
@@ -343,7 +343,7 @@ class VarcharFieldView extends BaseFieldView {
 
     // noinspection JSUnusedGlobalSymbols
     validatePattern() {
-        let pattern = this.params.pattern;
+        const pattern = this.params.pattern;
 
         return this.fieldValidatePattern(this.name, pattern);
     }
@@ -357,21 +357,20 @@ class VarcharFieldView extends BaseFieldView {
     fieldValidatePattern(name, pattern) {
         pattern = pattern || this.model.getFieldParam(name, 'pattern');
         /** @var {string|null} value */
-        let value = this.model.get(name);
+        const value = this.model.get(name);
 
         if (!pattern) {
             return false;
         }
 
-        let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
-
-        let result = helper.validate(pattern, value, name, this.entityType);
+        const helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+        const result = helper.validate(pattern, value, name, this.entityType);
 
         if (!result) {
             return false;
         }
 
-        let message = result.message.replace('{field}', this.getLanguage().translate(this.getLabelText()));
+        const message = result.message.replace('{field}', this.getLanguage().translate(this.getLabelText()));
 
         this.showValidationMessage(message, '[data-name="' + name + '"]');
 
@@ -380,9 +379,9 @@ class VarcharFieldView extends BaseFieldView {
 
     /** @inheritDoc */
     fetch() {
-        let data = {};
+        const data = {};
 
-        let value = this.$element.val().trim();
+        const value = this.$element.val().trim();
 
         data[this.name] = value || null;
 
@@ -391,7 +390,7 @@ class VarcharFieldView extends BaseFieldView {
 
     /** @inheritDoc */
     fetchSearch() {
-        let type = this.fetchSearchType() || 'startsWith';
+        const type = this.fetchSearchType() || 'startsWith';
 
         if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
             if (type === 'isEmpty') {
@@ -414,7 +413,7 @@ class VarcharFieldView extends BaseFieldView {
                 };
             }
 
-            let value = [
+            const value = [
                 {
                     type: 'isNotNull',
                     field: this.name,
@@ -439,7 +438,7 @@ class VarcharFieldView extends BaseFieldView {
             };
         }
 
-        let value = this.$element.val().toString().trim();
+        const value = this.$element.val().toString().trim();
 
         if (!value) {
             return null;
