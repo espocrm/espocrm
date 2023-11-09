@@ -42,12 +42,12 @@ define('views/admin/layouts/record/edit-attributes', ['views/record/base'], func
         },
 
         getAttributeDataList: function () {
-            var list = [];
+            const list = [];
 
             this.attributeList.forEach(item => {
-                let type = (this.attributeDefs[item] || {}).type;
+                const type = (this.attributeDefs[item] || {}).type;
 
-                let isWide = !['enum', 'bool', 'int', 'float', 'varchar'].includes(type);
+                const isWide = !['enum', 'bool', 'int', 'float', 'varchar'].includes(type);
 
                 list.push({
                     name: item,
@@ -66,10 +66,10 @@ define('views/admin/layouts/record/edit-attributes', ['views/record/base'], func
             this.attributeDefs = this.options.attributeDefs || {};
 
             this.attributeList.forEach(field => {
-                var params = this.attributeDefs[field] || {};
-                var type = params.type || 'base';
+                const params = this.attributeDefs[field] || {};
+                const type = params.type || 'base';
 
-                var viewName = params.view || this.getFieldManager().getViewName(type);
+                const viewName = params.view || this.getFieldManager().getViewName(type);
 
                 this.createField(field, viewName, params);
             });

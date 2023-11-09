@@ -62,7 +62,7 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
                 },
             ];
 
-            let model = new Model();
+            const model = new Model();
 
             model.name = 'LayoutManager';
 
@@ -80,10 +80,12 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
 
             let attributeList = Espo.Utils.clone(this.options.attributeList || []);
 
-            let filteredAttributeList = [];
+            const filteredAttributeList = [];
 
             attributeList.forEach(item => {
-                if ((this.options.attributeDefs[item] || {}).readOnly) {
+                const defs = this.options.attributeDefs[item] || {};
+
+                if (defs.readOnly) {
                     return;
                 }
 
@@ -102,9 +104,9 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
         },
 
         actionSave: function () {
-            let editView = this.getView('edit');
+            const editView = this.getView('edit');
 
-            let attrs = editView.fetch();
+            const attrs = editView.fetch();
 
             editView.model.set(attrs, {silent: true});
 
@@ -112,7 +114,7 @@ define('views/admin/layouts/modals/edit-attributes', ['views/modal', 'model'], f
                 return;
             }
 
-            let attributes = editView.model.attributes;
+            const attributes = editView.model.attributes;
 
             this.trigger('after:save', attributes);
 

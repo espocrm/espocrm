@@ -87,7 +87,7 @@ class LayoutBaseView extends View {
         this.setId = this.options.setId;
         this.em = this.options.em;
 
-        let defs = this.getMetadata()
+        const defs = this.getMetadata()
             .get(['clientDefs', this.scope, 'additionalLayouts', this.type]) ?? {};
 
         this.typeDefs = defs;
@@ -141,7 +141,7 @@ class LayoutBaseView extends View {
     }
 
     save(callback) {
-        var layout = this.fetch();
+        const layout = this.fetch();
 
         if (!this.validate(layout)) {
             this.enableButtons();
@@ -191,7 +191,7 @@ class LayoutBaseView extends View {
             return '';
         }
 
-        var map = {
+        const map = {
             '&amp;': '&',
             '&lt;': '<',
             '&gt;': '>',
@@ -199,7 +199,7 @@ class LayoutBaseView extends View {
             '&#x27;': "'",
         };
 
-        var reg = new RegExp('(' + _.keys(map).join('|') + ')', 'g');
+        const reg = new RegExp('(' + _.keys(map).join('|') + ')', 'g');
 
         return ('' + string).replace(reg, match => {
             return map[match];
@@ -220,9 +220,9 @@ class LayoutBaseView extends View {
     }
 
     openEditDialog(attributes) {
-        let name = attributes.name;
+        const name = attributes.name;
 
-        let viewOptions = this.getEditAttributesModalViewOptions(attributes);
+        const viewOptions = this.getEditAttributesModalViewOptions(attributes);
 
         this.createView('editModal', 'views/admin/layouts/modals/edit-attributes', viewOptions, view => {
             view.render();
@@ -230,9 +230,9 @@ class LayoutBaseView extends View {
             this.listenToOnce(view, 'after:save', attributes => {
                 this.trigger('update-item', name, attributes);
 
-                let $li = $("#layout ul > li[data-name='" + name + "']");
+                const $li = $("#layout ul > li[data-name='" + name + "']");
 
-                for (let key in attributes) {
+                for (const key in attributes) {
                     $li.attr('data-' + key, attributes[key]);
                     $li.data(key, attributes[key]);
                     $li.find('.' + key + '-value').text(attributes[key]);
