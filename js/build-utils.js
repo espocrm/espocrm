@@ -26,9 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-let BuildUtils = {
+const BuildUtils = {
     getBundleLibList: function(libs) {
-        let list = [];
+        const list = [];
 
         libs.forEach(item => {
             if (!item.bundle) {
@@ -57,7 +57,7 @@ let BuildUtils = {
     },
 
     destToOriginalDest: function (dest) {
-        let path = dest.split('/');
+        const path = dest.split('/');
 
         return path.slice(0, -1)
             .concat('original')
@@ -75,19 +75,19 @@ let BuildUtils = {
      * }[]}
      */
     getCopyLibDataList: function (libs) {
-        let list = [];
+        const list = [];
 
         /**
          * @param {Object} item
          * @return {string}
          */
-        let getItemDest = item => item.dest || 'client/lib/' + item.src.split('/').pop();
+        const getItemDest = item => item.dest || 'client/lib/' + item.src.split('/').pop();
 
         /**
          * @param {Object} item
          * @return {string}
          */
-        let getItemOriginalDest = item => {
+        const getItemOriginalDest = item => {
             return BuildUtils.destToOriginalDest(
                 getItemDest(item)
             );
@@ -98,7 +98,7 @@ let BuildUtils = {
                 return;
             }
 
-            let minify = !!item.minify;
+            const minify = !!item.minify;
 
             if (item.files) {
                 item.files.forEach(item => {

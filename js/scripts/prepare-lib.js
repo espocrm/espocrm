@@ -31,20 +31,20 @@ const buildUtils = require('../build-utils');
 
 const libs = require('./../../frontend/libs.json');
 
-let stripSourceMappingUrl = path => {
+const stripSourceMappingUrl = path => {
     /** @var {string} */
-    let originalContents = fs.readFileSync(path, {encoding: 'utf-8'});
+    const originalContents = fs.readFileSync(path, {encoding: 'utf-8'});
 
-    let re = /\/\/# sourceMappingURL.*/g;
+    const re = /\/\/# sourceMappingURL.*/g;
 
     if (!originalContents.match(re)) {
         return;
     }
 
-    let contents = originalContents.replaceAll(re, '');
+    const contents = originalContents.replaceAll(re, '');
 
     fs.writeFileSync(path, contents, {encoding: 'utf-8'});
-}
+};
 
 buildUtils.getCopyLibDataList(libs)
     .filter(item => !item.minify)

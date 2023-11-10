@@ -41,9 +41,9 @@ const originalLibCrmDir = './client/modules/crm/lib/original';
     .filter(path => !fs.existsSync(path))
     .forEach(path => fs.mkdirSync(path));
 
-let bundleFiles = Object.keys(bundleConfig.chunks)
+const bundleFiles = Object.keys(bundleConfig.chunks)
     .map(name => {
-        let namePart = 'espo-' + name;
+        const namePart = 'espo-' + name;
 
         return namePart + '.js';
     });
@@ -57,15 +57,15 @@ fs.readdirSync(originalLibCrmDir)
 
 const stripSourceMappingUrl = path => {
     /** @var {string} */
-    let originalContents = fs.readFileSync(path, {encoding: 'utf-8'});
+    const originalContents = fs.readFileSync(path, {encoding: 'utf-8'});
 
-    let re = /^\/\/# sourceMappingURL.*/gm;
+    const re = /^\/\/# sourceMappingURL.*/gm;
 
     if (!originalContents.match(re)) {
         return;
     }
 
-    let contents = originalContents.replaceAll(re, '');
+    const contents = originalContents.replaceAll(re, '');
 
     fs.writeFileSync(path, contents, {encoding: 'utf-8'});
 }
@@ -97,8 +97,8 @@ const addSuppressAmd = path => {
 /** @var {string[]} */
 const libSrcList = buildUtils.getBundleLibList(libs);
 
-let amdIdMap = {};
-let suppressAmdMap = {};
+const amdIdMap = {};
+const suppressAmdMap = {};
 
 libs.forEach(item => {
     if (!item.amdId || !item.bundle || item.files) {
@@ -115,7 +115,7 @@ libs.forEach(item => {
 });
 
 libSrcList.forEach(src => {
-    let dest = originalLibDir + '/' + src.split('/').slice(-1);
+    const dest = originalLibDir + '/' + src.split('/').slice(-1);
 
     fs.copyFileSync(src, dest);
     stripSourceMappingUrl(dest);
@@ -124,7 +124,7 @@ libSrcList.forEach(src => {
         addSuppressAmd(dest);
     }
 
-    let key = amdIdMap[src];
+    const key = amdIdMap[src];
 
     if (key) {
         addLoadingSubject(dest, key);
@@ -141,7 +141,7 @@ buildUtils.getCopyLibDataList(libs)
             addSuppressAmd(item.originalDest);
         }
 
-        let key = amdIdMap[item.src];
+        const key = amdIdMap[item.src];
 
         if (key) {
             addLoadingSubject(item.originalDest, key);
