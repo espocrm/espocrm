@@ -556,19 +556,27 @@ class Diff
                 .parse(
                     cp.execSync("git show " + commitHash + ":frontend/libs.json").toString() || '[]'
                 )
-                .filter(item => item.bundle);
+                .filter(item => item.bundle)
+                .filter(item => item.src || item.files);
         }
 
         let libNewDataList = require(this.espoPath + '/frontend/libs.json')
             .filter(item => !item.bundle);
 
         let bundledNewDataList = require(this.espoPath + '/frontend/libs.json')
-            .filter(item => item.bundle);
+            .filter(item => item.bundle)
+            .filter(item => item.src || item.files);
 
         let resolveItemDest = item =>
             item.dest || 'client/lib/' + item.src.split('/').pop();
 
-        let resolveBundledItemDest = item => 'client/lib/original/' + item.src.split('/').pop();
+        const resolveBundledItemDest = item => {
+            if (item.amdId) {
+                return `'client/lib/original/${item.amdId}.js`;
+            }
+
+            return 'client/lib/original/' + item.src.split('/').pop();
+        };
 
         let resolveItemName = item => {
             if (item.name) {
@@ -759,6 +767,10 @@ class Diff
                 return;
             }
 
+            if (!item.src) {
+                return;
+            }
+
             data.filesToCopy.push(resolveBundledItemDest(item));
         });
 
@@ -783,6 +795,10 @@ class Diff
                     data.filesToDelete.push(resolveBundledItemDest(item))
                 );
 
+                return;
+            }
+
+            if (!item.src) {
                 return;
             }
 

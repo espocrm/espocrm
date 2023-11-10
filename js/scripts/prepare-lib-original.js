@@ -94,8 +94,7 @@ const addSuppressAmd = path => {
     fs.writeFileSync(path, contents, {encoding: 'utf-8'});
 }
 
-/** @var {string[]} */
-const libSrcList = buildUtils.getBundleLibList(libs);
+const bundleLibDataList = buildUtils.getBundleLibList(libs);
 
 const amdIdMap = {};
 const suppressAmdMap = {};
@@ -114,8 +113,10 @@ libs.forEach(item => {
     amdIdMap[item.src] = 'lib!' + item.amdId;
 });
 
-libSrcList.forEach(src => {
-    const dest = originalLibDir + '/' + src.split('/').slice(-1);
+bundleLibDataList.forEach(item => {
+    const src = item.src;
+
+    const dest = originalLibDir + '/' + item.file;
 
     fs.copyFileSync(src, dest);
     stripSourceMappingUrl(dest);

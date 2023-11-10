@@ -30,6 +30,7 @@
 namespace Espo\Core\Utils\Client;
 
 use Espo\Core\Utils\File\Manager as FileManager;
+use RuntimeException;
 
 /**
  * @internal Also used by the installer w/o DI.
@@ -61,38 +62,40 @@ class DevModeJsFileListProvider
                 $list = array_merge(
                     $list,
                     array_map(
-                        fn($item) => self::prepareBundleLibFilePath($item),
-                        $this->getLibFileListFromItems($files)
+                        fn ($item) => self::prepareBundleLibFilePath($item),
+                        $files
                     )
                 );
 
                 continue;
             }
 
-            $list[] = self::prepareBundleLibFilePath($item->src);
+            if (!isset($item->src)) {
+                continue;
+            }
+
+            $list[] = self::prepareBundleLibFilePath($item);
         }
 
         return $list;
     }
 
-    /**
-     * @param \stdClass[] $items
-     * @return string[]
-     */
-    private function getLibFileListFromItems(array $items): array
-    {
-        $list = [];
 
-        foreach ($items as $item) {
-            $list[] = $item->src;
+    private function prepareBundleLibFilePath(object $item): string
+    {
+        $amdId = $item->amdId ?? null;
+
+        if ($amdId) {
+            return 'client/lib/original/' . $amdId . '.js';
         }
 
-        return $list;
-    }
+        $src = $item->src ?? null;
 
-    private function prepareBundleLibFilePath(string $path): string
-    {
-        $arr = explode('/', $path);
+        if (!$src) {
+            throw new RuntimeException("Missing 'src' in bundled lib definition.");
+        }
+
+        $arr = explode('/', $src);
 
         return 'client/lib/original/' . array_slice($arr, -1)[0];
     }

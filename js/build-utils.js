@@ -27,33 +27,48 @@
  ************************************************************************/
 
 const BuildUtils = {
+    /**
+     * @param {Array} libs
+     * @return {{src: string, file: string}[]}
+     */
     getBundleLibList: function(libs) {
         const list = [];
 
-        libs.forEach(item => {
-            if (!item.bundle) {
-                return;
+        const getFile = item => {
+            if (item.amdId) {
+                return item.amdId + '.js';
             }
 
-            if (item.files) {
-                item.files.forEach(item => list.push(item.src));
+            return item.src.split('/').slice(-1);
+        };
 
-                return;
-            }
+        libs.filter(item => item.bundle)
+            .forEach(item => {
+                if (item.files) {
+                    item.files.forEach(item => list.push({
+                        src: item.src,
+                        file: getFile(item),
+                    }));
 
-            if (!item.src) {
-                throw new Error("No lib src.");
-            }
+                    return;
+                }
 
-            list.push(item.src);
-        });
+                if (!item.src) {
+                    return;
+                }
+
+                list.push({
+                    src: item.src,
+                    file: getFile(item),
+                });
+            });
 
         return list;
     },
 
     getPreparedBundleLibList: function (libs) {
         return BuildUtils.getBundleLibList(libs)
-            .map(file => 'client/lib/original/' + file.split('/').slice(-1));
+            .map(item => 'client/lib/original/' + item.file);
     },
 
     destToOriginalDest: function (dest) {
@@ -114,7 +129,7 @@ const BuildUtils = {
             }
 
             if (!item.src) {
-                throw new Error("No lib src.");
+                return;
             }
 
             list.push({
