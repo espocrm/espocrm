@@ -210,6 +210,10 @@ class PhoneType
             return false;
         }
 
+        if ((string) $numberObj !== $number) {
+            return false;
+        }
+
         return $numberObj->isPossibleNumber();
     }
 

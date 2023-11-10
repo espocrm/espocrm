@@ -1259,7 +1259,13 @@ class Import
 
     private function formatPhoneNumber(string $value, Params $params): string
     {
+        $value = trim($value);
+
         if (str_starts_with($value, '+')) {
+            if ($this->config->get('phoneNumberInternational')) {
+                return $this->parsePhoneNumber($value, null);
+            }
+
             return $value;
         }
 
@@ -1269,6 +1275,11 @@ class Import
 
         $code = strtoupper($params->getPhoneNumberCountry());
 
+        return $this->parsePhoneNumber($value, $code);
+    }
+
+    private function parsePhoneNumber(string $value, ?string $code): string
+    {
         try {
             $number = PhoneNumber::parse($value, $code);
 
