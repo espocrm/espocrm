@@ -61,6 +61,7 @@ return [
         'apiSecretKeys',
         'hashSecretKey',
         'restrictedMode',
+        'adminUpgradeDisabled',
         'userLimit',
         'portalUserLimit',
         'stylesheet',

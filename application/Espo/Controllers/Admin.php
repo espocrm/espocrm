@@ -107,6 +107,10 @@ class Admin
             throw new Forbidden();
         }
 
+        if ($this->config->get('adminUpgradeDisabled')) {
+            throw new Forbidden("Disabled with 'adminUpgradeDisabled' parameter.");
+        }
+
         $data = $request->getBodyContents();
 
         if (!$data) {

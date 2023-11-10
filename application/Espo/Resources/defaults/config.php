@@ -282,5 +282,6 @@ return [
     'phoneNumberNumericSearch' => true,
     'phoneNumberInternational' => true,
     'phoneNumberPreferredCountryList' => ['us', 'de'],
+    'adminUpgradeDisabled' => false,
     'isInstalled' => false,
 ];

@@ -29,6 +29,7 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 
@@ -46,8 +47,21 @@ class Extension extends RecordBase
         return $this->user->isAdmin();
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     */
     public function postActionUpload(Request $request): stdClass
     {
+        if ($this->config->get('restrictedMode') && !$this->user->isSuperAdmin()) {
+            throw new Forbidden();
+        }
+
+        if ($this->config->get('adminUpgradeDisabled')) {
+            throw new Forbidden("Disabled with 'adminUpgradeDisabled' parameter.");
+        }
+
         $body = $request->getBodyContents();
 
         if ($body === null) {
@@ -68,14 +82,16 @@ class Extension extends RecordBase
         ];
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     */
     public function postActionInstall(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        if ($this->config->get('restrictedMode')) {
-            if (!$this->user->isSuperAdmin()) {
-                throw new Forbidden();
-            }
+        if ($this->config->get('restrictedMode') && !$this->user->isSuperAdmin()) {
+            throw new Forbidden();
         }
 
         $manager = new ExtensionManager($this->getContainer());
@@ -85,14 +101,16 @@ class Extension extends RecordBase
         return true;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     */
     public function postActionUninstall(Request $request): bool
     {
         $data = $request->getParsedBody();
 
-        if ($this->config->get('restrictedMode')) {
-            if (!$this->user->isSuperAdmin()) {
-                throw new Forbidden();
-            }
+        if ($this->config->get('restrictedMode') && !$this->user->isSuperAdmin()) {
+            throw new Forbidden();
         }
 
         $manager = new ExtensionManager($this->getContainer());
@@ -102,15 +120,16 @@ class Extension extends RecordBase
         return true;
     }
 
-
+    /**
+     * @throws Forbidden
+     * @throws Error
+     */
     public function deleteActionDelete(Request $request, Response $response): bool
     {
         $params = $request->getRouteParams();
 
-        if ($this->config->get('restrictedMode')) {
-            if (!$this->user->isSuperAdmin()) {
-                throw new Forbidden();
-            }
+        if ($this->config->get('restrictedMode') && !$this->user->isSuperAdmin()) {
+            throw new Forbidden();
         }
 
         $manager = new ExtensionManager($this->getContainer());
