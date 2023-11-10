@@ -691,6 +691,13 @@
         "phoneNumberNumericSearch": {
             "type": "bool"
         },
+        "phoneNumberInternational": {
+            "type": "bool"
+        },
+        "phoneNumberPreferredCountryList": {
+            "type": "multiEnum",
+            "view": "views/settings/fields/phone-number-preferred-country-list"
+        },
         "scopeColorsDisabled": {
             "type": "bool"
         },

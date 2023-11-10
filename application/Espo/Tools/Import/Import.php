@@ -29,6 +29,8 @@
 
 namespace Espo\Tools\Import;
 
+use Brick\PhoneNumber\PhoneNumber;
+use Brick\PhoneNumber\PhoneNumberParseException;
 use Espo\Core\FieldValidation\Exceptions\ValidationError;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Entities\Attachment;
@@ -770,7 +772,7 @@ class Import
                     }
 
                     $o = (object) [
-                        'phoneNumber' => $value,
+                        'phoneNumber' => $this->formatPhoneNumber($value, $params),
                         'primary' => true,
                     ];
 
@@ -867,7 +869,7 @@ class Import
             }
 
             $o = (object) [
-                'phoneNumber' => $value,
+                'phoneNumber' => $this->formatPhoneNumber($value, $params),
                 'type' => $type,
                 'primary' => $isPrimary,
             ];
@@ -917,7 +919,6 @@ class Import
     {
         $params = $this->params;
 
-        /** @noinspection PhpRedundantVariableDocTypeInspection */
         /** @var non-empty-string $decimalMark */
         $decimalMark = $params->getDecimalMark() ?? self::DEFAULT_DECIMAL_MARK;
 
@@ -1254,5 +1255,27 @@ class Import
         ]);
 
         $errorIndex++;
+    }
+
+    private function formatPhoneNumber(string $value, Params $params): string
+    {
+        if (str_starts_with($value, '+')) {
+            return $value;
+        }
+
+        if (!$params->getPhoneNumberCountry()) {
+            return $value;
+        }
+
+        $code = strtoupper($params->getPhoneNumberCountry());
+
+        try {
+            $number = PhoneNumber::parse($value, $code);
+
+            return (string) $number;
+        }
+        catch (PhoneNumberParseException) {
+            return $value;
+        }
     }
 }

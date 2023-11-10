@@ -29,25 +29,27 @@
 
 namespace Espo\Classes\FieldValidators;
 
+use Brick\PhoneNumber\PhoneNumber;
+use Brick\PhoneNumber\PhoneNumberParseException;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class PhoneType
 {
-    private Metadata $metadata;
-
-    private Defs $defs;
-
     private const DEFAULT_MAX_LENGTH = 36;
 
-    public function __construct(Metadata $metadata, Defs $defs)
-    {
-        $this->metadata = $metadata;
-        $this->defs = $defs;
-    }
+    public function __construct(
+        private Metadata $metadata,
+        private Defs $defs,
+        private Config $config
+    ) {}
 
     public function checkRequired(Entity $entity, string $field): bool
     {
@@ -193,7 +195,22 @@ class PhoneType
 
         $preparedPattern = '/^' . $pattern . '$/';
 
-        return (bool) preg_match($preparedPattern, $number);
+        if (!preg_match($preparedPattern, $number)) {
+            return false;
+        }
+
+        if (!$this->config->get('phoneNumberInternational')) {
+            return true;
+        }
+
+        try {
+            $numberObj = PhoneNumber::parse($number);
+        }
+        catch (PhoneNumberParseException) {
+            return false;
+        }
+
+        return $numberObj->isPossibleNumber();
     }
 
     protected function isNotEmpty(Entity $entity, string $field): bool

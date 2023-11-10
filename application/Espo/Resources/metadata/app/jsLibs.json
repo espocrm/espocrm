@@ -78,6 +78,18 @@
         "exportsAs": "Selectize"
     },
     "autonumeric": {},
+    "intl-tel-input": {
+        "exportsTo": "window",
+        "exportsAs": "intlTelInput"
+    },
+    "intl-tel-input-utils": {
+        "exportsTo": "window",
+        "exportsAs": "intlTelInputUtils"
+    },
+    "intl-tel-input-globals": {
+        "exportsTo": "window",
+        "exportsAs": "intlTelInputGlobals"
+    },
     "cronstrue": {
         "path": "client/lib/cronstrue-i18n.js",
         "devPath": "client/lib/original/cronstrue-i18n.js",

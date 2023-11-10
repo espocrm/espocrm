@@ -43,7 +43,8 @@ button.btn.active:focus-visible,
 input[type=radio]:focus-visible,
 input[type=checkbox]:focus-visible,
 input[type=file]:focus-visible,
-label.attach-file-label:focus-visible {
+label.attach-file-label:focus-visible,
+.iti__selected-flag:focus-visible {
     outline: 1px solid var(--input-border-focus-rgba);
     outline-offset: -1px;
 }
@@ -3533,6 +3534,88 @@ body > .autocomplete-suggestions.text-search-suggestions {
 
     .popover-title {
         line-height: 1.5;
+    }
+}
+
+.input-group-item > .iti {
+    top: 3px;
+    margin-left: -1px;
+    width: ~"calc(100% + 1px)";
+
+    .iti__flag-container {
+        user-select: none;
+
+        &,
+        &:hover {
+            .iti__selected-flag {
+                background-color: transparent;
+
+                &[aria-expanded="true"] {
+                    background-color: var(--dropdown-link-hover-bg);
+                }
+            }
+        }
+
+        .iti__country-list {
+            z-index: 5;
+            max-height: 300px;
+            background-color: var(--dropdown-bg);
+            border: var(--dropdown-border) solid var(--dropdown-border-width);
+            border-radius: var(--dropdown-border-radius);
+            box-shadow: var(--dropdown-box-shadow);
+
+            .iti__dial-code {
+                color: var(--text-muted-color);
+            }
+
+            .iti__country {
+                color: var(--dropdown-link-color);
+                padding: 4px 10px;
+
+                &.iti__highlight {
+                    background-color: var(--dropdown-link-hover-bg);
+                }
+            }
+
+            .iti__divider {
+                border-bottom-color: var(--dropdown-divider-bg);
+            }
+
+            padding: 5px 0;
+        }
+    }
+
+    .iti__selected-flag {
+        z-index: 4;
+        padding: 0 8px 0 8px;
+        color: var(--gray-soft);
+
+        > .iti__arrow {
+            visibility: hidden;
+            display: none;
+        }
+
+        &:after {
+            content: " ";
+            color: var(--text-muted-color);
+            //display: inline-block;
+            display: none;
+            width: 0;
+            height: 0;
+            top: 15px;
+            right: 8px;
+            margin-left: 2px;
+            vertical-align: middle;
+            border-top: 4px dashed;
+            border-right: 4px solid transparent;
+            border-left: 4px solid transparent;
+            position: absolute;
+        }
+    }
+
+    > input {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
     }
 }
 

@@ -109,6 +109,10 @@
                         </div>
                     </div>
                     <div class="col-sm-4 form-group cell">
+                        <label class="control-label">{{translate 'phoneNumberCountry' category='params' scope='Import'}}</label>
+                        <div data-name="phoneNumberCountry" class="field">
+                            {{{phoneNumberCountryField}}}
+                        </div>
                     </div>
                 </div>
                 <div class="row">

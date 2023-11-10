@@ -28,6 +28,8 @@
 
 import View from 'view';
 import Model from 'model';
+// noinspection NpmUsedModulesInstalled
+import intlTelInputGlobals from 'intl-tel-input-globals';
 
 class Step1ImportView extends View {
 
@@ -100,6 +102,7 @@ class Step1ImportView extends View {
             'idleMode',
             'skipDuplicateChecking',
             'manualMode',
+            'phoneNumberCountry',
         ];
 
         this.paramList.forEach(item => {
@@ -353,6 +356,22 @@ class Step1ImportView extends View {
             mode: 'edit',
             tooltip: true,
             tooltipText: this.translate('manualMode', 'tooltips', 'Import'),
+        });
+
+        this.createView('phoneNumberCountryField', 'views/fields/enum', {
+            selector: '.field[data-name="phoneNumberCountry"]',
+            model: this.model,
+            name: 'phoneNumberCountry',
+            mode: 'edit',
+            params: {
+                options: ['', ...intlTelInputGlobals.getCountryData().map(item => item.iso2)],
+            },
+            translatedOptions: intlTelInputGlobals.getCountryData()
+                .reduce((map, item) => {
+                    map[item.iso2] = `${item.iso2.toUpperCase()} +${item.dialCode}`;
+
+                    return map;
+                }, {})
         });
 
         this.listenTo(this.model, 'change', (m, o) => {

@@ -10,8 +10,7 @@
     {
         "label": "Search",
         "rows": [
-            [{"name": "textFilterUseContainsForVarchar"}, {"name": "globalSearchEntityList"}],
-            [{"name": "phoneNumberNumericSearch"}, false]
+            [{"name": "textFilterUseContainsForVarchar"}, {"name": "globalSearchEntityList"}]
         ]
     },
     {
@@ -34,6 +33,13 @@
             [{"name": "addressFormat"}, {"name": "addressPreview"}],
             [{"name": "addressCountryList"}, {"name": "addressCityList"}],
             [{"name": "addressStateList"}, false]
+        ]
+    },
+    {
+        "label": "Phone Numbers",
+        "rows": [
+            [{"name": "phoneNumberInternational"}, {"name": "phoneNumberPreferredCountryList"}],
+            [{"name": "phoneNumberNumericSearch"}, false]
         ]
     },
     {

@@ -279,6 +279,8 @@ return [
     'oidcScopes' => ['profile', 'email', 'phone'],
     'listViewSettingsDisabled' => false,
     'cleanupDeletedRecords' => true,
-    'phoneNumberNumericSearch' => false,
+    'phoneNumberNumericSearch' => true,
+    'phoneNumberInternational' => true,
+    'phoneNumberPreferredCountryList' => ['us', 'de'],
     'isInstalled' => false,
 ];

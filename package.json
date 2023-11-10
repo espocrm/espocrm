@@ -58,6 +58,7 @@
     "getobject": ">=1.0.0",
     "gridstack": "github:yurikuzn/gridstack.js#5.1.1.e3",
     "handlebars": "^4.7.7",
+    "intl-tel-input": "^18.2.1",
     "jquery": "^3.7.0",
     "jquery-textcomplete": "^1.8.5",
     "jquery-ui-espo": "github:yurikuzn/jquery-ui-espo#0.2.2",
