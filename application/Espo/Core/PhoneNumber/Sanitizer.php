@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Field\PhoneNumber;
+namespace Espo\Core\PhoneNumber;
 
 use Brick\PhoneNumber\PhoneNumber;
 use Brick\PhoneNumber\PhoneNumberParseException;

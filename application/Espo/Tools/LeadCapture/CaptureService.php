@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\LeadCapture;
 
-use Espo\Core\Field\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
+use Espo\Core\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;

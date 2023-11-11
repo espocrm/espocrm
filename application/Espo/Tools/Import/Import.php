@@ -29,7 +29,7 @@
 
 namespace Espo\Tools\Import;
 
-use Espo\Core\Field\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
+use Espo\Core\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
 use Espo\Core\FieldValidation\Exceptions\ValidationError;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Entities\Attachment;
