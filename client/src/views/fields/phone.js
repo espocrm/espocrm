@@ -415,7 +415,9 @@ class PhoneFieldView extends VarcharFieldView {
                     showFlags: false,
                     preferredCountries: this.preferredCountryList,
                     localizedCountries: this._codeNames,
-                    //customPlaceholder: (placeholder, data) => {},
+                    customPlaceholder: /** string */placeholder => {
+                        return placeholder.replace(/[0-9]/g, '0');
+                    },
                 });
 
                 this.intlTelInputMap.set(inputElement, obj);
