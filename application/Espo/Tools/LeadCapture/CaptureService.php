@@ -195,7 +195,7 @@ class CaptureService
      * @throws NotFound
      * @throws Error
      */
-    protected function proceed(
+    private function proceed(
         LeadCaptureEntity $leadCapture,
         stdClass $data,
         ?string $leadId = null,
@@ -496,7 +496,7 @@ class CaptureService
      *   lead: ?Lead,
      * }
      */
-    protected function findLeadDuplicates(LeadCaptureEntity $leadCapture, Lead $lead): array
+    private function findLeadDuplicates(LeadCaptureEntity $leadCapture, Lead $lead): array
     {
         $duplicate = null;
         $contact = null;
@@ -536,7 +536,7 @@ class CaptureService
         ];
     }
 
-    protected function isTargetOptedIn(Entity $target, string $targetListId): bool
+    private function isTargetOptedIn(Entity $target, string $targetListId): bool
     {
         $targetList = $this->entityManager->getEntityById(TargetList::ENTITY_TYPE, $targetListId);
 
@@ -582,7 +582,7 @@ class CaptureService
         return true;
     }
 
-    protected function log(
+    private function log(
         LeadCaptureEntity $leadCapture,
         Entity $target,
         stdClass $data,
@@ -611,7 +611,6 @@ class CaptureService
      * @throws BadRequest
      */
     private function setFields(array $fieldList, stdClass $data, Lead $lead): void
-
     {
         $isEmpty = true;
 
