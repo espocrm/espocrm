@@ -630,6 +630,24 @@ input.global-search-input {
 .list-group {
     border-radius: var(--border-radius);
 
+    &.list-group-no-border {
+        border-radius: 0;
+        border: 0;
+
+        > .list-group-item {
+            &:first-child {
+                border-top-left-radius: 0;
+                border-top-right-radius: 0;
+            }
+
+            &:last-child {
+                border-bottom-left-radius: 0;
+                border-bottom-right-radius: 0;
+                border-bottom-width: 0;
+            }
+        }
+    }
+
     > .list-group-item {
         &:first-child {
             border-top-left-radius: var(--border-radius);
