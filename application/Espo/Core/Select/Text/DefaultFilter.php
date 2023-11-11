@@ -116,14 +116,14 @@ class DefaultFilter implements Filter
             !str_contains($attribute, '.') &&
             $this->metadataProvider->getFieldType($this->entityType, $attribute) === 'phone'
         ) {
-            if (str_contains($filter, ' ')) {
+            if (!preg_match("#[0-9()\-+% ]+$#", $filter)) {
                 return;
             }
 
             if ($this->config->usePhoneNumberNumericSearch()) {
                 $attribute = $attribute . 'Numeric';
 
-                $filter = preg_replace('/[^0-9]/', '', $filter);
+                $filter = preg_replace('/[^0-9%]/', '', $filter);
             }
 
             if (!$filter) {
