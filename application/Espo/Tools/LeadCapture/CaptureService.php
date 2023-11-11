@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\LeadCapture;
 
+use Espo\Core\Field\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
@@ -57,35 +58,17 @@ use DateTime;
 
 class CaptureService
 {
-    private EntityManager $entityManager;
-    private FieldUtil $fieldUtil;
-    private Language $defaultLanguage;
-    private HookManager $hookManager;
-    private Log $log;
-
-    private FieldValidationManager $fieldValidationManager;
-    private JobSchedulerFactory $jobSchedulerFactory;
-    private CampaignService $campaignService;
-
     public function __construct(
-        EntityManager $entityManager,
-        FieldUtil $fieldUtil,
-        Language $defaultLanguage,
-        HookManager $hookManager,
-        Log $log,
-        FieldValidationManager $fieldValidationManager,
-        JobSchedulerFactory $jobSchedulerFactory,
-        CampaignService $campaignService
-    ) {
-        $this->entityManager = $entityManager;
-        $this->fieldUtil = $fieldUtil;
-        $this->defaultLanguage = $defaultLanguage;
-        $this->hookManager = $hookManager;
-        $this->log = $log;
-        $this->fieldValidationManager = $fieldValidationManager;
-        $this->jobSchedulerFactory = $jobSchedulerFactory;
-        $this->campaignService = $campaignService;
-    }
+        private EntityManager $entityManager,
+        private FieldUtil $fieldUtil,
+        private Language $defaultLanguage,
+        private HookManager $hookManager,
+        private Log $log,
+        private FieldValidationManager $fieldValidationManager,
+        private JobSchedulerFactory $jobSchedulerFactory,
+        private CampaignService $campaignService,
+        private PhoneNumberSanitizer $phoneNumberSanitizer
+    ) {}
 
     /**
      * Capture a lead. A main entry method.
@@ -472,7 +455,7 @@ class CaptureService
      * @throws BadRequest
      * @throws Error
      */
-    protected function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, stdClass $data): Lead
+    private function getLeadWithPopulatedData(LeadCaptureEntity $leadCapture, stdClass $data): Lead
     {
         /** @var Lead $lead */
         $lead = $this->entityManager->getNewEntity(Lead::ENTITY_TYPE);
@@ -483,49 +466,9 @@ class CaptureService
             throw new Error('No field list specified.');
         }
 
-        $isEmpty = true;
+        $this->setFields($fieldList, $data, $lead);
 
-        foreach ($fieldList as $field) {
-            if ($field === 'name') {
-                if (property_exists($data, 'name') && $data->name) {
-                    $value = trim($data->name);
-
-                    $parts = explode(' ', $value);
-
-                    $lastName = array_pop($parts);
-                    $firstName = implode(' ', $parts);
-
-                    $lead->set('firstName', $firstName);
-                    $lead->set('lastName', $lastName);
-
-                    $isEmpty = false;
-                }
-
-                continue;
-            }
-
-            $attributeList = $this->fieldUtil->getActualAttributeList(Lead::ENTITY_TYPE, $field);
-
-            if (empty($attributeList)) {
-                continue;
-            }
-
-            foreach ($attributeList as $attribute) {
-                if (!property_exists($data, $attribute)) {
-                    continue;
-                }
-
-                $lead->set($attribute, $data->$attribute);
-
-                if (!empty($data->$attribute)) {
-                    $isEmpty = false;
-                }
-            }
-        }
-
-        if ($isEmpty) {
-            throw new BadRequest('noRequiredFields');
-        }
+        $this->sanitizePhoneNumber($fieldList, $data, $lead, $leadCapture);
 
         if ($leadCapture->getLeadSource()) {
             $lead->set('source', $leadCapture->getLeadSource());
@@ -535,13 +478,10 @@ class CaptureService
             $lead->set('campaignId', $leadCapture->getCampaignId());
         }
 
-        $teamId = $leadCapture->getTargetTeamId();
-
-        if ($teamId) {
-            $lead->addLinkMultipleId('teams', $teamId);
+        if ($leadCapture->getTargetTeamId()) {
+            $lead->addLinkMultipleId('teams', $leadCapture->getTargetTeamId());
         }
 
-        // Skipping the 'required' validation.
         $validationParams = FieldValidationParams::create()->withTypeSkipFieldList('required', $fieldList);
 
         $this->fieldValidationManager->process($lead, $data, $validationParams);
@@ -663,5 +603,81 @@ class CaptureService
         }
 
         $this->entityManager->saveEntity($logRecord);
+    }
+
+    /**
+     * @param string[] $fieldList
+     * @throws BadRequest
+     */
+    private function setFields(array $fieldList, stdClass $data, Lead $lead): void
+
+    {
+        $isEmpty = true;
+
+        foreach ($fieldList as $field) {
+            if ($field === 'name') {
+                if (property_exists($data, 'name') && $data->name) {
+                    $value = trim($data->name);
+
+                    $parts = explode(' ', $value);
+
+                    $lastName = array_pop($parts);
+                    $firstName = implode(' ', $parts);
+
+                    $lead->set('firstName', $firstName);
+                    $lead->set('lastName', $lastName);
+
+                    $isEmpty = false;
+                }
+
+                continue;
+            }
+
+            $attributeList = $this->fieldUtil->getActualAttributeList(Lead::ENTITY_TYPE, $field);
+
+            if (empty($attributeList)) {
+                continue;
+            }
+
+            foreach ($attributeList as $attribute) {
+                if (!property_exists($data, $attribute)) {
+                    continue;
+                }
+
+                $lead->set($attribute, $data->$attribute);
+
+                if (!empty($data->$attribute)) {
+                    $isEmpty = false;
+                }
+            }
+        }
+
+        if ($isEmpty) {
+            throw new BadRequest('noRequiredFields');
+        }
+    }
+
+    /**
+     * @param string[] $fieldList
+     */
+    private function sanitizePhoneNumber(
+        array $fieldList,
+        stdClass $data,
+        Lead $lead,
+        LeadCaptureEntity $leadCapture
+    ): void {
+
+        if (
+            !in_array('phoneNumber', $fieldList) ||
+            !isset($data->phoneNumber) ||
+            $lead->getPhoneNumber() === null
+        ) {
+            return;
+        }
+
+        $value = $this->phoneNumberSanitizer
+            ->sanitize($lead->getPhoneNumber(), $leadCapture->getPhoneNumberCountry());
+
+        $lead->set('phoneNumber', $value);
     }
 }

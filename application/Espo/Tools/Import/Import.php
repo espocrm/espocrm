@@ -29,8 +29,7 @@
 
 namespace Espo\Tools\Import;
 
-use Brick\PhoneNumber\PhoneNumber;
-use Brick\PhoneNumber\PhoneNumberParseException;
+use Espo\Core\Field\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
 use Espo\Core\FieldValidation\Exceptions\ValidationError;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Entities\Attachment;
@@ -91,9 +90,9 @@ class Import
         private RecordServiceContainer $recordServiceContainer,
         private JobSchedulerFactory $jobSchedulerFactory,
         private Log $log,
-        private FieldValidationManager $fieldValidationManager
+        private FieldValidationManager $fieldValidationManager,
+        private PhoneNumberSanitizer $phoneNumberSanitizer
     ) {
-
         $this->params = Params::create();
     }
 
@@ -1259,34 +1258,6 @@ class Import
 
     private function formatPhoneNumber(string $value, Params $params): string
     {
-        $value = trim($value);
-
-        if (str_starts_with($value, '+')) {
-            if ($this->config->get('phoneNumberInternational')) {
-                return $this->parsePhoneNumber($value, null);
-            }
-
-            return $value;
-        }
-
-        if (!$params->getPhoneNumberCountry()) {
-            return $value;
-        }
-
-        $code = strtoupper($params->getPhoneNumberCountry());
-
-        return $this->parsePhoneNumber($value, $code);
-    }
-
-    private function parsePhoneNumber(string $value, ?string $code): string
-    {
-        try {
-            $number = PhoneNumber::parse($value, $code);
-
-            return (string) $number;
-        }
-        catch (PhoneNumberParseException) {
-            return $value;
-        }
+        return $this->phoneNumberSanitizer->sanitize($value, $params->getPhoneNumberCountry());
     }
 }

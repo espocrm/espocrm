@@ -110,6 +110,11 @@
             "notStorable": true,
             "view": "views/lead-capture/fields/smtp-account"
         },
+        "phoneNumberCountry": {
+            "type": "enum",
+            "view": "views/lead-capture/fields/phone-number-country",
+            "maxLength": 2
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true
