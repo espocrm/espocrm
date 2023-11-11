@@ -76,12 +76,12 @@ class PhoneFieldView extends VarcharFieldView {
             const $block = $(e.currentTarget).closest('div.phone-number-block');
 
             this.removePhoneNumber($block);
-
             this.trigger('change');
 
             const $last = this.$el.find('.phone-number').last();
 
             if ($last.length) {
+                // noinspection JSUnresolvedReference
                 $last[0].focus({preventScroll: true});
             }
         },
@@ -342,6 +342,7 @@ class PhoneFieldView extends VarcharFieldView {
         $item.focus();
 
         if (cursorAtEnd && $item[0]) {
+            // noinspection JSUnresolvedReference
             $item[0].setSelectionRange($item[0].value.length, $item[0].value.length);
         }
     }
@@ -408,6 +409,7 @@ class PhoneFieldView extends VarcharFieldView {
             const inputElements = this.element.querySelectorAll('input.phone-number');
 
             inputElements.forEach(inputElement => {
+                // noinspection JSUnusedGlobalSymbols
                 const obj = intlTelInput(inputElement, {
                     nationalMode: false,
                     autoInsertDialCode: false,
@@ -459,6 +461,7 @@ class PhoneFieldView extends VarcharFieldView {
         let c = 0;
 
         $input.each((i, input) => {
+            // noinspection JSUnresolvedReference
             if (input.value !== '') {
                 c++;
             }
