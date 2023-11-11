@@ -37,6 +37,10 @@ class FieldUtil
     public function __construct(private Metadata $metadata)
     {}
 
+    /**
+     * Get a field type.
+     * @since 8.1.0
+     */
     public function getFieldType(string $entityType, string $field): ?string
     {
         return $this->metadata->get("entityDefs.$entityType.fields.$field.type");
