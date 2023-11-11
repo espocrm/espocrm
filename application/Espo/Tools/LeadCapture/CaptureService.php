@@ -147,6 +147,7 @@ class CaptureService
         if ($leadCapture->createLeadBeforeOptInConfirmation() && !$hasDuplicate) {
             $this->entityManager->saveEntity($lead);
 
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
             $this->log($leadCapture, $target, $data, true);
 
             $isLogged = true;
@@ -206,7 +207,7 @@ class CaptureService
             $lead = $this->entityManager->getEntityById(Lead::ENTITY_TYPE, $leadId);
 
             if (!$lead) {
-                throw new NotFound("Lead '{$leadId}' not found.");
+                throw new NotFound("Lead '$leadId' not found.");
             }
         }
         else {
