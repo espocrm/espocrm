@@ -409,6 +409,7 @@ class PhoneFieldView extends VarcharFieldView {
 
             inputElements.forEach(inputElement => {
                 const obj = intlTelInput(inputElement, {
+                    nationalMode: false,
                     autoInsertDialCode: false,
                     separateDialCode: true,
                     showFlags: false,
