@@ -59,7 +59,7 @@ class SanitizeManager
     private function processField(string $entityType, string $field, Data $data): void
     {
         foreach ($this->getSanitizerList($entityType, $field) as $sanitizer) {
-            $sanitizer->sanitize($data, $entityType, $field);
+            $sanitizer->sanitize($data, $field);
         }
     }
 
@@ -107,7 +107,7 @@ class SanitizeManager
         );
 
         return array_map(
-            fn ($className) => $this->injectableFactory->create($className),
+            fn ($className) => $this->injectableFactory->createWith($className, ['entityType' => $entityType]),
             $classNameList
         );
     }

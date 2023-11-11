@@ -40,7 +40,7 @@ class Phone implements Sanitizer
         private PhoneNumberSanitizer $phoneNumberSanitizer
     ) {}
 
-    public function sanitize(Data $data, string $entityType, string $field): void
+    public function sanitize(Data $data, string $field): void
     {
         $number = $data->get($field);
 
