@@ -39,6 +39,7 @@ use Espo\Core\FieldValidation\FieldValidationParams;
 use Espo\Core\HookManager;
 use Espo\Core\Job\QueueName;
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Language;
@@ -67,7 +68,8 @@ class CaptureService
         private FieldValidationManager $fieldValidationManager,
         private JobSchedulerFactory $jobSchedulerFactory,
         private CampaignService $campaignService,
-        private PhoneNumberSanitizer $phoneNumberSanitizer
+        private PhoneNumberSanitizer $phoneNumberSanitizer,
+        private ServiceContainer $serviceContainer
     ) {}
 
     /**
@@ -467,9 +469,10 @@ class CaptureService
             throw new Error('No field list specified.');
         }
 
-        $this->setFields($fieldList, $data, $lead);
+        $this->sanitizePhoneNumber($fieldList, $data, $leadCapture);
+        $this->serviceContainer->getByClass(Lead::class)->sanitizeInput($data);
 
-        $this->sanitizePhoneNumber($fieldList, $data, $lead, $leadCapture);
+        $this->setFields($fieldList, $data, $lead);
 
         if ($leadCapture->getLeadSource()) {
             $lead->set('source', $leadCapture->getLeadSource());
@@ -663,21 +666,18 @@ class CaptureService
     private function sanitizePhoneNumber(
         array $fieldList,
         stdClass $data,
-        Lead $lead,
         LeadCaptureEntity $leadCapture
     ): void {
 
         if (
             !in_array('phoneNumber', $fieldList) ||
             !isset($data->phoneNumber) ||
-            $lead->getPhoneNumber() === null
+            !is_string($data->phoneNumber)
         ) {
             return;
         }
 
-        $value = $this->phoneNumberSanitizer
-            ->sanitize($lead->getPhoneNumber(), $leadCapture->getPhoneNumberCountry());
-
-        $lead->set('phoneNumber', $value);
+        $data->phoneNumber = $this->phoneNumberSanitizer
+            ->sanitize($data->phoneNumber, $leadCapture->getPhoneNumberCountry());
     }
 }

@@ -36,21 +36,16 @@ use Espo\Core\FieldProcessing\Loader\Params as LoaderParams;
 use Espo\Core\MassAction\QueryBuilder;
 use Espo\Core\MassAction\Params;
 use Espo\Core\MassAction\Result;
-
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action as RecordAction;
 use Espo\Core\Record\ServiceFactory;
 use Espo\Core\Record\Service;
-
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Exceptions\Forbidden;
-
-use Espo\Entities\ActionHistoryRecord;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
-
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Entities\User;
 use Espo\Entities\Attachment;
@@ -137,6 +132,7 @@ class Processor
         $values = $data->getValues();
 
         $service->filterUpdateInput($values);
+        $service->sanitizeInput($values);
 
         foreach ($data->getAttributeList() as $attribute) {
             if (!property_exists($values, $attribute)) {
