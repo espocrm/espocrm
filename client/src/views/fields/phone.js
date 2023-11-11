@@ -409,6 +409,7 @@ class PhoneFieldView extends VarcharFieldView {
 
             inputElements.forEach(inputElement => {
                 const obj = intlTelInput(inputElement, {
+                    autoInsertDialCode: false,
                     separateDialCode: true,
                     showFlags: false,
                     preferredCountries: this.preferredCountryList,
@@ -417,14 +418,16 @@ class PhoneFieldView extends VarcharFieldView {
                 });
 
                 this.intlTelInputMap.set(inputElement, obj);
+
+                inputElement.addEventListener('blur', () => {
+                    if (!obj.isPossibleNumber()) {
+                        return;
+                    }
+
+                    obj.setNumber(obj.getNumber());
+                });
             });
         }
-    }
-
-    afterRenderSearch() {
-        super.afterRenderSearch();
-
-        // @todo If numeric search enabled, allow only digits to enter.
     }
 
     removePhoneNumberBlock($block) {
