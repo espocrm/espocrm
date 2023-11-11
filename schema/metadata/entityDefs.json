@@ -536,6 +536,13 @@
                     },
                     "description": "Validations to be bypassed for the field."
                 },
+                "sanitizerClassNameList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of sanitizers. Should implement Espo\\Core\\FieldSanitize\\Sanitizer."
+                },
                 "inlineEditDisabled": {
                     "type": "boolean",
                     "default": "Disable inline edit."

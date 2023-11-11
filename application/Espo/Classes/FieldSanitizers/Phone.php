@@ -27,48 +27,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\PhoneNumber;
+namespace Espo\Classes\FieldSanitizers;
 
-use Brick\PhoneNumber\PhoneNumber;
-use Brick\PhoneNumber\PhoneNumberParseException;
-use Espo\Core\Utils\Config;
+use Espo\Core\FieldSanitize\Sanitizer;
+use Espo\Core\FieldSanitize\Sanitizer\Data;
+use Espo\Core\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
+use stdClass;
 
-class Sanitizer
+class Phone implements Sanitizer
 {
     public function __construct(
-        private Config $config
+        private PhoneNumberSanitizer $phoneNumberSanitizer
     ) {}
 
-    public function sanitize(string $value, ?string $countryCode = null): string
+    public function sanitize(Data $data, string $entityType, string $field): void
     {
-        $value = trim($value);
+        $number = $data->get($field);
 
-        if (str_starts_with($value, '+')) {
-            if ($this->config->get('phoneNumberInternational')) {
-                return $this->parsePhoneNumber($value, null);
+        if ($number !== null) {
+            $number = $this->phoneNumberSanitizer->sanitize($number);
+
+            $data->set($field, $number);
+        }
+
+        $items = $data->get($field . 'Data');
+
+        if (!is_array($items)) {
+            return;
+        }
+
+        foreach ($items as $item) {
+            if (!$item instanceof stdClass) {
+                continue;
             }
 
-            return $value;
+            $number = $item->phoneNumber ?? null;
+
+            if (!is_scalar($number)) {
+                continue;
+            }
+
+            $number = (string) $number;
+
+            $item->phoneNumber = $this->phoneNumberSanitizer->sanitize($number);
         }
 
-        if (!$countryCode) {
-            return $value;
-        }
-
-        $code = strtoupper($countryCode);
-
-        return $this->parsePhoneNumber($value, $code);
-    }
-
-    private function parsePhoneNumber(string $value, ?string $countryCode): string
-    {
-        try {
-            $number = PhoneNumber::parse($value, $countryCode);
-
-            return (string) $number;
-        }
-        catch (PhoneNumberParseException) {
-            return $value;
-        }
+        $data->set($field . 'Data', $items);
     }
 }

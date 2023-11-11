@@ -27,48 +27,52 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\PhoneNumber;
+namespace Espo\Core\FieldSanitize\Sanitizer;
 
-use Brick\PhoneNumber\PhoneNumber;
-use Brick\PhoneNumber\PhoneNumberParseException;
-use Espo\Core\Utils\Config;
+use stdClass;
 
-class Sanitizer
+/**
+ * Input data. No 'clear' method, as unsetting is not supposed to happen in sanitization.
+ */
+class Data
 {
-    public function __construct(
-        private Config $config
-    ) {}
+    public function __construct(private stdClass $data)
+    {}
 
-    public function sanitize(string $value, ?string $countryCode = null): string
+    /**
+     * Get a value.
+     */
+    public function get(string $attribute): mixed
     {
-        $value = trim($value);
-
-        if (str_starts_with($value, '+')) {
-            if ($this->config->get('phoneNumberInternational')) {
-                return $this->parsePhoneNumber($value, null);
-            }
-
-            return $value;
-        }
-
-        if (!$countryCode) {
-            return $value;
-        }
-
-        $code = strtoupper($countryCode);
-
-        return $this->parsePhoneNumber($value, $code);
+        return $this->data->$attribute ?? null;
     }
 
-    private function parsePhoneNumber(string $value, ?string $countryCode): string
-    {
-        try {
-            $number = PhoneNumber::parse($value, $countryCode);
 
-            return (string) $number;
-        }
-        catch (PhoneNumberParseException) {
-            return $value;
-        }
+    /**
+     * Whether a value is set.
+     */
+    public function has(string $attribute): bool
+    {
+        return property_exists($this->data, $attribute);
+    }
+
+    /**
+     * Update a value.
+     */
+    public function set(string $attribute, mixed $value): self
+    {
+        $this->data->$attribute = $value;
+
+        return $this;
+    }
+
+    /**
+     * Unset an attribute.
+     */
+    public function clear(string $attribute): self
+    {
+        unset($this->data->$attribute);
+
+        return $this;
     }
 }

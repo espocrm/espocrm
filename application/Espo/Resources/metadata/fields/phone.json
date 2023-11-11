@@ -77,5 +77,6 @@
     "personalData": true,
     "valueFactoryClassName": "Espo\\Core\\Field\\PhoneNumber\\PhoneNumberGroupFactory",
     "attributeExtractorClassName": "Espo\\Core\\Field\\PhoneNumber\\PhoneNumberGroupAttributeExtractor",
+    "sanitizerClassName": "Espo\\Classes\\FieldSanitizers\\Phone",
     "default": null
 }

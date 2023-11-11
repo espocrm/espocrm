@@ -27,48 +27,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\PhoneNumber;
+namespace Espo\Core\FieldSanitize;
 
-use Brick\PhoneNumber\PhoneNumber;
-use Brick\PhoneNumber\PhoneNumberParseException;
-use Espo\Core\Utils\Config;
+use Espo\Core\FieldSanitize\Sanitizer\Data;
 
-class Sanitizer
+interface Sanitizer
 {
-    public function __construct(
-        private Config $config
-    ) {}
-
-    public function sanitize(string $value, ?string $countryCode = null): string
-    {
-        $value = trim($value);
-
-        if (str_starts_with($value, '+')) {
-            if ($this->config->get('phoneNumberInternational')) {
-                return $this->parsePhoneNumber($value, null);
-            }
-
-            return $value;
-        }
-
-        if (!$countryCode) {
-            return $value;
-        }
-
-        $code = strtoupper($countryCode);
-
-        return $this->parsePhoneNumber($value, $code);
-    }
-
-    private function parsePhoneNumber(string $value, ?string $countryCode): string
-    {
-        try {
-            $number = PhoneNumber::parse($value, $countryCode);
-
-            return (string) $number;
-        }
-        catch (PhoneNumberParseException) {
-            return $value;
-        }
-    }
+    public function sanitize(Data $data, string $entityType, string $field): void;
 }

@@ -40,6 +40,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
+use Espo\Core\FieldSanitize\SanitizeManager;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Access\LinkCheck;
@@ -367,6 +368,9 @@ class Service implements Crud,
     }
 
     /**
+     * Warning: Do not extend.
+     *
+     * @todo Fix signature.
      * @param TEntity $entity
      * @param stdClass $data
      * @return void
@@ -429,6 +433,19 @@ class Service implements Crud,
         }
 
         return $this->linkCheck;
+    }
+
+    /**
+     * Sanitize input data.
+     *
+     * @param stdClass $data Input data.
+     * @since 8.1.0
+     */
+    public function sanitizeInput(stdClass $data): void
+    {
+        $manager = $this->injectableFactory->create(SanitizeManager::class);
+
+        $manager->process($this->entityType, $data);
     }
 
     /**
@@ -705,6 +722,7 @@ class Service implements Crud,
         $entity = $this->getRepository()->getNew();
 
         $this->filterCreateInput($data);
+        $this->sanitizeInput($data);
 
         $entity->set($data);
 
@@ -758,6 +776,7 @@ class Service implements Crud,
         }
 
         $this->filterUpdateInput($data);
+        $this->sanitizeInput($data);
 
         $entity = $this->getEntityBeforeUpdate ?
             $this->getEntity($id) :

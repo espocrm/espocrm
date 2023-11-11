@@ -167,6 +167,10 @@
         "converterClassName": {
             "type": "string",
             "description": "A metadata converter. Converts field metadata to ORM metadata. Should implement Espo\\Core\\Utils\\Database\\Orm\\FieldConverter."
+        },
+        "sanitizerClassName": {
+            "type": "string",
+            "description": "A sanitizer. Should implement Espo\\Core\\FieldSanitize\\Sanitizer."
         }
     }
 }

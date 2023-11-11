@@ -37,12 +37,17 @@ class FieldUtil
     public function __construct(private Metadata $metadata)
     {}
 
+    public function getFieldType(string $entityType, string $field): ?string
+    {
+        return $this->metadata->get("entityDefs.$entityType.fields.$field.type");
+    }
+
     /**
      * @return string[]
      */
     private function getAttributeListByType(string $entityType, string $name, string $type): array
     {
-        $fieldType = $this->metadata->get('entityDefs.' . $entityType . '.fields.' . $name . '.type');
+        $fieldType = $this->getFieldType($entityType, $name);
 
         if (!$fieldType) {
             return [];
