@@ -257,6 +257,7 @@ class HtmlComposer
             $options = new QROptions();
 
             $options->outputType = QRCode::OUTPUT_MARKUP_SVG;
+            $options->eccLevel = QRCode::ECC_H;
 
             $code = (new QRCode($options))->render($value);
 
