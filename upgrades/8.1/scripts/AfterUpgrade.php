@@ -35,6 +35,8 @@ class AfterUpgrade
 {
     public function run(Container $container): void
     {
+        $config = $container->getByClass(Espo\Core\Utils\Config::class);
+
         $configWriter = $container->getByClass(InjectableFactory::class)
             ->create(ConfigWriter::class);
 
@@ -42,6 +44,17 @@ class AfterUpgrade
             'phoneNumberNumericSearch' => false,
             'phoneNumberInternational' => false,
         ]);
+
+        if ($config->get('pdfEngine') === 'Tcpdf') {
+            $configWriter->set('pdfEngine', 'Dompdf');
+
+            if (php_sapi_name() === 'cli') {
+                echo "Important. The 'Tcpdf' PDF engine has been removed from EspoCRM. " .
+                    "Now PDF printing is handled by the 'Dompdf' engine. " .
+                    "If you would like to continue using the 'Tcpdf', download and install a free extension: {link}. " .
+                    "After that, set 'Tcpdf' at Administration > Settings > PDF Engine.";
+            }
+        }
 
         $configWriter->save();
     }

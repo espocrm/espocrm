@@ -1,40 +1,4 @@
 {
-    "Tcpdf": {
-        "implementationClassNameMap": {
-            "entity": "Espo\\Tools\\Pdf\\Tcpdf\\TcpdfEntityPrinter",
-            "collection": "Espo\\Tools\\Pdf\\Tcpdf\\TcpdfCollectionPrinter"
-        },
-        "fontFaceList": [
-            "aealarabiya",
-            "aefurat",
-            "cid0cs",
-            "cid0ct",
-            "cid0jp",
-            "cid0kr",
-            "courier",
-            "dejavusans",
-            "dejavusanscondensed",
-            "dejavusansextralight",
-            "dejavusansmono",
-            "dejavuserif",
-            "dejavuserifcondensed",
-            "freemono",
-            "freesans",
-            "freeserif",
-            "helvetica",
-            "hysmyeongjostdmedium",
-            "kozgopromedium",
-            "kozminproregular",
-            "msungstdlight",
-            "pdfacourier",
-            "pdfahelvetica",
-            "pdfasymbol",
-            "pdfatimes",
-            "stsongstdlight",
-            "symbol",
-            "times"
-        ]
-    },
     "Dompdf": {
         "implementationClassNameMap": {
             "entity": "Espo\\Tools\\Pdf\\Dompdf\\EntityPrinter"

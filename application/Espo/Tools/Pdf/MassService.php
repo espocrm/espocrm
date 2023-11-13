@@ -51,7 +51,7 @@ use Espo\Tools\Pdf\Jobs\RemoveMassFile;
 
 class MassService
 {
-    private const DEFAULT_ENGINE = 'Tcpdf';
+    private const DEFAULT_ENGINE = 'Dompdf';
     private const ATTACHMENT_MASS_PDF_ROLE = 'Mass Pdf';
     private const REMOVE_MASS_PDF_PERIOD = '1 hour';
 
