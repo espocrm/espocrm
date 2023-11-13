@@ -266,7 +266,7 @@ class HtmlComposer
             return "<img src=\"$code\" style=\"$css\">";
         }
 
-        if (!$type) {
+        if (!$type || $type === 'QRCODE,H') {
             $this->log->warning("Not supported barcode type $codeType.");
 
             return '';
