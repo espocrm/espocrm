@@ -308,6 +308,8 @@ class AfterFetch implements AfterFetchInterface
 
             $sender = $this->emailSender->create();
 
+            $senderParams = SenderParams::create();
+
             if ($inboundEmail->isAvailableForSending()) {
                 $groupAccount = $this->groupAccountFactory->create($inboundEmail->getId());
 
@@ -316,9 +318,11 @@ class AfterFetch implements AfterFetchInterface
                 if ($smtpParams) {
                     $sender->withSmtpParams($smtpParams);
                 }
-            }
 
-            $senderParams = SenderParams::create();
+                if ($groupAccount->getEmailAddress()) {
+                    $senderParams = $senderParams->withFromAddress($groupAccount->getEmailAddress());
+                }
+            }
 
             if ($inboundEmail->getFromName()) {
                 $senderParams = $senderParams->withFromName($inboundEmail->getFromName());
