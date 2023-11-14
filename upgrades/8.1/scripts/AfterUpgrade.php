@@ -51,7 +51,7 @@ class AfterUpgrade
             if (php_sapi_name() === 'cli') {
                 echo "Important. The 'Tcpdf' PDF engine has been removed from EspoCRM. " .
                     "Now PDF printing is handled by the 'Dompdf' engine. " .
-                    "If you would like to continue using the 'Tcpdf', download and install a free extension: {link}. " .
+                    "If you would like to continue using the 'Tcpdf', download and install the free extension: {link}. " .
                     "After that, set 'Tcpdf' at Administration > Settings > PDF Engine.";
             }
         }
