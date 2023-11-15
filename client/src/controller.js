@@ -598,7 +598,9 @@ class Controller {
         if (masterView.currentViewKey) {
             this.set('storedScrollTop-' + masterView.currentViewKey, $(window).scrollTop());
 
-            this._unchainMainView(masterView);
+            if (!dto.isSet) {
+                this._unchainMainView(masterView);
+            }
         }
 
         masterView.currentViewKey = key;
