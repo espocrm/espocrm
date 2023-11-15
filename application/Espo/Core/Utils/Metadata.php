@@ -355,12 +355,29 @@ class Metadata
     }
 
     /**
-     * Set Metadata data.
+     * Set metadata. Will be merged with the current data.
      *
      * @param array<string, mixed>|scalar|null $data
-     * @param bool $allowEmptyArray As of v8.0.6. To fix an issue. Maybe will be removed.
      */
-    public function set(string $key1, string $key2, $data, bool $allowEmptyArray = false): void
+    public function set(string $key1, string $key2, $data): void
+    {
+        $this->setInternal($key1, $key2, $data);
+    }
+
+    /**
+     * Set a first-level param. Allows setting empty arrays.
+     *
+     * @since 8.0.6
+     */
+    public function setParam(string $key1, string $key2, string $param, mixed $value): void
+    {
+        $this->setInternal($key1, $key2, [$param => $value], true);
+    }
+
+    /**
+     * @param array<string, mixed>|scalar|null $data
+     */
+    private function setInternal(string $key1, string $key2, $data, bool $allowEmptyArray = false): void
     {
         if (!$allowEmptyArray && is_array($data)) {
             foreach ($data as $key => $item) {
