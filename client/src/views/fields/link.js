@@ -537,7 +537,7 @@ class LinkFieldView extends BaseFieldView {
                         url += '&' + $.param({'primaryFilter': filters.primary});
                     }
 
-                    if (filters.advanced) {
+                    if (filters.advanced && Object.keys(filters.advanced).length) {
                         url += '&' + $.param({'where': filters.advanced});
                     }
 
@@ -1118,6 +1118,48 @@ class LinkFieldView extends BaseFieldView {
     }
 
     /**
+     * @param {Object} advanced
+     * @private
+     */
+    _applyAdditionalFilter(advanced) {
+        const foreignLink = this.model.getLinkParam(this.name, 'foreign');
+
+        if (!foreignLink) {
+            return;
+        }
+
+        if (advanced[foreignLink]) {
+            return;
+        }
+
+        const linkType = this.model.getLinkParam(this.name, 'type');
+        const foreignLinkType = this.getMetadata()
+            .get(['entityDefs', this.foreignScope, 'links', foreignLink, 'type']);
+        const foreignFieldType = this.getMetadata()
+            .get(['entityDefs', this.foreignScope, 'fields', foreignLink, 'type']);
+
+        if (!foreignFieldType) {
+            return;
+        }
+
+        const isOneToOne =
+            (linkType === 'hasOne' || foreignLinkType === 'hasOne') &&
+            ['link', 'linkOne'].includes(foreignFieldType);
+
+        if (!isOneToOne) {
+            return;
+        }
+
+        advanced[foreignLink] = {
+            type: 'isNull',
+            attribute: foreignLink + 'Id',
+            data: {
+                type: 'isEmpty',
+            },
+        };
+    }
+
+    /**
      * @private
      * @return {Promise<{bool?: string[], advanced?: Object, primary?: string}>}
      */
@@ -1134,10 +1176,14 @@ class LinkFieldView extends BaseFieldView {
                 ] :
                 undefined;
 
+            const advanced = this.getSelectFilters() || {};
+
+            this._applyAdditionalFilter(advanced);
+
             return Promise.resolve({
                 primary: this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName,
                 bool: boolFilterList,
-                advanced: this.getSelectFilters() || undefined,
+                advanced: advanced,
             });
         }
 
@@ -1159,6 +1205,8 @@ class LinkFieldView extends BaseFieldView {
                             ...(this.panelDefs.selectBoolFilterList || []),
                         ] :
                         undefined;
+
+                    this._applyAdditionalFilter(advanced);
 
                     resolve({
                         bool: boolFilterList,
