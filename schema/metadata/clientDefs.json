@@ -421,6 +421,10 @@
                             "type": "string"
                         }
                     },
+                    "primaryFilter": {
+                        "description": "A default primary filter. As of v8.1.",
+                        "type": "string"
+                    },
                     "filterList": {
                         "description": "Filters available in the dropdown.",
                         "type": "array",

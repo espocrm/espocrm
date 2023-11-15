@@ -264,6 +264,10 @@ class RelationshipPanelView extends BottomPanelView {
                 collection.where = searchManager.getWhere();
             }
 
+            if (this.defs.primaryFilter) {
+                this.filter = this.defs.primaryFilter;
+            }
+
             collection.url = collection.urlRoot = url;
 
             if (this.defaultOrderBy) {
