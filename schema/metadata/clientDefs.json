@@ -171,6 +171,10 @@
             "description": "Disable the record merge functionality.",
             "type": "boolean"
         },
+        "duplicateDisabled": {
+            "description": "Disable the duplicate action.",
+            "type": "boolean"
+        },
         "filterList": {
             "description": "A list of primary filters.",
             "type": "array",
