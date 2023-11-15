@@ -92,11 +92,13 @@ class BarcodeFieldView extends VarcharFieldView {
         this.listenTo(this.recordHelper, 'panel-show', () => this.controlWidth());
     }
 
+
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.isSvg = this.isSvg;
 
+        // noinspection JSValidateTypes
         return data;
     }
 
@@ -108,7 +110,7 @@ class BarcodeFieldView extends VarcharFieldView {
         super.afterRender();
 
         if (this.isListMode() || this.isDetailMode) {
-            let value = this.model.get(this.name);
+            const value = this.model.get(this.name);
 
             if (value) {
                 // noinspection SpellCheckingInspection
@@ -116,7 +118,7 @@ class BarcodeFieldView extends VarcharFieldView {
                     this.initQrcode(value);
                 }
                 else {
-                    let $barcode = $(this.getSelector() + ' .barcode');
+                    const $barcode = $(this.getSelector() + ' .barcode');
 
                     if ($barcode.length) {
                         this.initBarcode(value);
@@ -147,22 +149,22 @@ class BarcodeFieldView extends VarcharFieldView {
             size = 64;
         }
 
-        let containerWidth = this.$el.width() ;
+        const containerWidth = this.$el.width();
 
         if (containerWidth < size && containerWidth) {
             size = containerWidth;
         }
 
-        let $barcode = this.$el.find('.barcode');
+        const $barcode = this.$el.find('.barcode');
 
-        let init = (level) => {
-            let options = {
+        const init = (level) => {
+            const options = {
                 text: value,
                 width: size,
                 height: size,
-                colorDark : '#000000',
-                colorLight : '#ffffff',
-                correctLevel : level || QRCode.CorrectLevel.H,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: level || QRCode.CorrectLevel.H,
             };
 
             new QRCode($barcode.get(0), options);
