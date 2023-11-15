@@ -722,7 +722,7 @@ class EntityManagerEditView extends View {
 
                             this.model.fetchedAttributes = this.model.getClonedAttributes();
 
-                            Espo.Ui.notify(this.translate('Done'), 'success');
+                            Espo.Ui.success(this.translate('Done'));
 
                             this.enableButtons();
                             this.broadcastUpdate();
