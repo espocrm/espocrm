@@ -726,7 +726,7 @@ class EntityManager
 
             $value = $data[$param];
 
-            $this->metadata->set($location, $entityType, [$param => $value]);
+            $this->metadata->set($location, $entityType, [$param => $value], true);
         }
     }
 

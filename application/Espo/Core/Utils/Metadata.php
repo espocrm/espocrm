@@ -358,12 +358,14 @@ class Metadata
      * Set Metadata data.
      *
      * @param array<string, mixed>|scalar|null $data
+     * @param bool $allowEmptyArray As of v8.0.6. To fix an issue. Maybe will be removed.
      */
-    public function set(string $key1, string $key2, $data): void
+    public function set(string $key1, string $key2, $data, bool $allowEmptyArray = false): void
     {
-        if (is_array($data)) {
+        if (!$allowEmptyArray && is_array($data)) {
             foreach ($data as $key => $item) {
                 if (is_array($item) && empty($item)) {
+                    // @todo Revise.
                     unset($data[$key]);
                 }
             }
