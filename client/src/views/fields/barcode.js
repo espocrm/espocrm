@@ -109,7 +109,7 @@ class BarcodeFieldView extends VarcharFieldView {
     afterRender() {
         super.afterRender();
 
-        if (this.isListMode() || this.isDetailMode) {
+        if (this.isListMode() || this.isDetailMode()) {
             const value = this.model.get(this.name);
 
             if (value) {
