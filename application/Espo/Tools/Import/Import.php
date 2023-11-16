@@ -968,19 +968,27 @@ class Import
             case Entity::FLOAT:
                 $a = explode($decimalMark, $value);
 
-                if (!is_numeric($a[0])) {
+                $left = $a[0];
+                $right = $a[1] ?? null;
+
+                $replaceList = [
+                    ' ',
+                    $decimalMark === '.' ? ',' : '.',
+                ];
+
+                $left = str_replace($replaceList, '', $left);
+
+                if (!is_numeric($left)) {
                     throw ValidationError::create(
                         new Failure($entity->getEntityType(), $attribute, 'valid')
                     );
                 }
 
-                //$a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
-
-                if (count($a) > 1) {
-                    return floatval($a[0] . '.' . $a[1]);
+                if ($right !== null) {
+                    return floatval($left . '.' . $right);
                 }
 
-                return floatval($a[0]);
+                return floatval($left);
 
             case Entity::INT:
                 if (!is_numeric($value)) {
