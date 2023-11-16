@@ -88,7 +88,7 @@ class FieldValidationManager
         try {
             return $this->processInternal($entity, $data, $params, false);
         }
-        catch (ValidationError $e) {
+        catch (ValidationError) {
             throw new LogicException();
         }
     }
@@ -252,8 +252,6 @@ class FieldValidationManager
 
         $validationList = $this->getAllValidationList($entity->getEntityType(), $field, $params);
 
-        $failureList = [];
-
         foreach ($validationList as $type) {
             $result = $this->check($entity, $field, $type, $data);
 
@@ -263,20 +261,24 @@ class FieldValidationManager
 
             $failure = new Failure($entity->getEntityType(), $field, $type);
 
-            $failureList[] = $failure;
-
             if ($throw) {
                 throw ValidationError::create($failure);
             }
+
+            return [$failure];
         }
 
-        $additionalFailureList = $this->checkAdditional($entity, $field, new Data($data));
+        $failure = $this->checkAdditional($entity, $field, new Data($data));
 
-        if ($throw && $additionalFailureList !== []) {
-            throw ValidationError::create($additionalFailureList[0]);
+        if (!$failure) {
+            return [];
         }
 
-        return array_merge($failureList, $additionalFailureList);
+        if ($throw) {
+            throw ValidationError::create($failure);
+        }
+
+        return [$failure];
     }
 
     /**
@@ -398,14 +400,9 @@ class FieldValidationManager
         return $isSet;
     }
 
-    /**
-     * @return Failure[]
-     */
-    private function checkAdditional(Entity $entity, string $field, Data $data): array
+    private function checkAdditional(Entity $entity, string $field, Data $data): ?Failure
     {
         $validatorList = $this->validatorFactory->createAdditionalList($entity->getEntityType(), $field);
-
-        $failureList = [];
 
         foreach ($validatorList as $validator) {
             $itemFailure = $validator->validate($entity, $field, $data);
@@ -416,9 +413,9 @@ class FieldValidationManager
 
             $type = lcfirst((new ReflectionClass($validator))->getShortName());
 
-            $failureList[] = new Failure($entity->getEntityType(), $field, $type);
+            return new Failure($entity->getEntityType(), $field, $type);
         }
 
-        return $failureList;
+        return null;
     }
 }
