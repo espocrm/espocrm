@@ -770,6 +770,8 @@ class Authentication
             return [null, FailReason::ANOTHER_USER_NOT_ALLOWED];
         }
 
+        $loggedUser->loadLinkMultipleField('teams');
+
         return [$loggedUser, null];
     }
 }
