@@ -952,9 +952,15 @@ class NavbarSiteView extends View {
     }
 
     setupTabDefsList() {
-        const tabList = this.getTabList();
+        function isMoreDelimiter(item) {
+            return item === '_delimiter_' || item === '_delimiter-ext_';
+        }
 
-        this.tabList = tabList.filter(item => {
+        function isDivider(item) {
+            return typeof item === 'object' && item.type === 'divider';
+        }
+
+        this.tabList = this.getTabList().filter(item => {
             if (!item) {
                 return false;
             }
@@ -968,25 +974,51 @@ class NavbarSiteView extends View {
                     return true;
                 }
 
-                item.itemList = item.itemList || [];
+                let itemList = (item.itemList || []).filter((item) => {
+                    if (isDivider(item)) {
+                        return true;
+                    }
 
-                item.itemList = item.itemList.filter(item => {
                     return this.filterTabItem(item);
                 });
 
-                return !!item.itemList.length;
+                itemList = itemList.filter((item, i) => {
+                    if (!isDivider(item)) {
+                        return true;
+                    }
+
+                    const nextItem = itemList[i + 1];
+
+                    if (!nextItem) {
+                        return true;
+                    }
+
+                    if (isDivider(nextItem)) {
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                itemList = itemList.filter((item, i) => {
+                    if (!isDivider(item)) {
+                        return true;
+                    }
+
+                    if (i === 0 || i === itemList.length - 1) {
+                        return false;
+                    }
+
+                    return true;
+                });
+
+                item.itemList = itemList;
+
+                return !!itemList.length;
             }
 
             return this.filterTabItem(item);
         });
-
-        function isMoreDelimiter(item) {
-            return item === '_delimiter_' || item === '_delimiter-ext_';
-        }
-
-        function isDivider(item) {
-            return typeof item === 'object' && item.type === 'divider';
-        }
 
         let moreIsMet = false;
 
