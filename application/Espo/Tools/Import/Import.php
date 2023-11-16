@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
 use Espo\Core\FieldValidation\Exceptions\ValidationError;
 use Espo\Core\Job\JobSchedulerFactory;
@@ -937,6 +938,30 @@ class Import
             return null;
         }
 
+        $fieldDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->tryGetField($attribute);
+
+        if ($fieldDefs) {
+            $fieldType = $fieldDefs->getType();
+
+            if (
+                $fieldType === FieldType::CURRENCY &&
+                $fieldDefs->getParam('decimal')
+            ) {
+                $value = $this->transformFloatString($decimalMark, $value);
+
+                if ($value === null) {
+                    throw ValidationError::create(
+                        new Failure($entity->getEntityType(), $attribute, 'valid')
+                    );
+                }
+
+                return $value;
+            }
+        }
+
         switch ($type) {
             case Entity::DATE:
                 $dt = DateTime::createFromFormat($dateFormat, $value);
@@ -966,29 +991,15 @@ class Import
                 return $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
             case Entity::FLOAT:
-                $a = explode($decimalMark, $value);
+                $value = $this->transformFloatString($decimalMark, $value);
 
-                $left = $a[0];
-                $right = $a[1] ?? null;
-
-                $replaceList = [
-                    ' ',
-                    $decimalMark === '.' ? ',' : '.',
-                ];
-
-                $left = str_replace($replaceList, '', $left);
-
-                if (!is_numeric($left)) {
+                if ($value === null) {
                     throw ValidationError::create(
                         new Failure($entity->getEntityType(), $attribute, 'valid')
                     );
                 }
 
-                if ($right !== null) {
-                    return floatval($left . '.' . $right);
-                }
-
-                return floatval($left);
+                return floatval($value);
 
             case Entity::INT:
                 $replaceList = [
@@ -1274,5 +1285,33 @@ class Import
     private function formatPhoneNumber(string $value, Params $params): string
     {
         return $this->phoneNumberSanitizer->sanitize($value, $params->getPhoneNumberCountry());
+    }
+
+    /**
+     * @param non-empty-string $decimalMark
+     */
+    private function transformFloatString(string $decimalMark, string $value): ?string
+    {
+        $a = explode($decimalMark, $value);
+
+        $left = $a[0];
+        $right = $a[1] ?? null;
+
+        $replaceList = [
+            ' ',
+            $decimalMark === '.' ? ',' : '.',
+        ];
+
+        $left = str_replace($replaceList, '', $left);
+
+        if (!is_numeric($left)) {
+            return null;
+        }
+
+        if ($right !== null) {
+            return $left . '.' . $right;
+        }
+
+        return $left;
     }
 }
