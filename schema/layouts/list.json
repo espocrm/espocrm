@@ -62,6 +62,10 @@
                 "type": "object",
                 "additionalProperties": true,
                 "description": "Field view options."
+            },
+            "hidden": {
+                "type": "boolean",
+                "description": "Hidden by default."
             }
         }
     }
