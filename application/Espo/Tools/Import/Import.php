@@ -991,7 +991,14 @@ class Import
                 return floatval($left);
 
             case Entity::INT:
-                if (!is_numeric($value)) {
+                $replaceList = [
+                    ' ',
+                    $decimalMark === '.' ? ',' : '.',
+                ];
+
+                $value = str_replace($replaceList, '', $value);
+
+                if (str_contains($value, $decimalMark) || !is_numeric($value)) {
                     throw ValidationError::create(
                         new Failure($entity->getEntityType(), $attribute, 'valid')
                     );
