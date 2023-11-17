@@ -70,6 +70,7 @@ class DateTimeOptional implements DateTimeable
 
     /**
      * Create from a string with a date-time in `Y-m-d H:i:s` format.
+     * @noinspection PhpUnused
      */
     public static function fromDateTimeString(string $value): self
     {
@@ -137,7 +138,7 @@ class DateTimeOptional implements DateTimeable
     }
 
     /**
-     * Get a hour.
+     * Get an hour.
      */
     public function getHour(): int
     {
@@ -197,10 +198,7 @@ class DateTimeOptional implements DateTimeable
         return $this->toDateTime()->getTimezone();
     }
 
-    /**
-     * @return Date|DateTime
-     */
-    private function getActualValue(): object
+    private function getActualValue(): Date|DateTime
     {
         /** @var Date|DateTime */
         return $this->dateValue ?? $this->dateTimeValue;
@@ -421,6 +419,7 @@ class DateTimeOptional implements DateTimeable
 
     /**
      * Create from a string with a date in `Y-m-d` format.
+     * @noinspection PhpUnused
      */
     public static function fromDateString(string $value): self
     {
