@@ -286,7 +286,17 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
 
             var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
 
-            if (layoutList && !layoutList.includes(this.type)) {
+            let realType = this.realType;
+
+            if (realType === 'detailSmall') {
+                realType = 'detail';
+            }
+
+            if (
+                layoutList &&
+                !layoutList.includes(this.type) &&
+                !layoutList.includes(realType)
+            ) {
                 return;
             }
 

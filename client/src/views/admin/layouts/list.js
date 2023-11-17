@@ -259,10 +259,21 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
                 return false;
             }
 
+            /** @type {string[]|null} */
             const layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
 
-            if (layoutList && !~layoutList.indexOf(this.type)) {
-                return;
+            let realType = this.realType;
+
+            if (realType === 'listSmall') {
+                realType = 'list';
+            }
+
+            if (
+                layoutList &&
+                !layoutList.includes(this.type) &&
+                !layoutList.includes(realType)
+            ) {
+                return false;
             }
 
             return !model.getFieldParam(name, 'disabled') &&

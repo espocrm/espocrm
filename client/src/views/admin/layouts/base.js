@@ -84,6 +84,7 @@ class LayoutBaseView extends View {
         this.events = _.clone(this.events);
         this.scope = this.options.scope;
         this.type = this.options.type;
+        this.realType = this.options.realType;
         this.setId = this.options.setId;
         this.em = this.options.em;
 

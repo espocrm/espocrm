@@ -272,6 +272,7 @@ class LayoutIndexView extends View {
             fullSelector: '#layout-content',
             scope: scope,
             type: type,
+            realType: typeReal,
             setId: this.setId,
             em: this.em,
         }, view => {
