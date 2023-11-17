@@ -156,10 +156,10 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
         },
 
         loadLayout: function (callback) {
-            var layout;
-            var model;
+            let layout;
+            let model;
 
-            var promiseList = [];
+            const promiseList = [];
 
             promiseList.push(
                 new Promise(resolve => {
@@ -213,7 +213,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                             this.defaultPanelFieldList = Espo.Utils.clone(this.defaultPanelFieldList);
 
                             layoutLoaded.forEach(item => {
-                                var field = item.name;
+                                let field = item.name;
 
                                 if (!field) {
                                     return;
@@ -244,9 +244,9 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
         },
 
         readDataFromLayout: function (model, layout) {
-            var allFields = [];
+            const allFields = [];
 
-            for (var field in model.defs.fields) {
+            for (const field in model.defs.fields) {
                 if (this.isFieldEnabled(model, field)) {
                     allFields.push(field);
                 }
@@ -259,7 +259,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
 
             layout.forEach((panel) => {
                 panel.rows.forEach((row) => {
-                    row.forEach((cell, i) => {
+                    row.forEach(cell => {
                         this.enabledFields.push(cell.name);
                     });
                 });
@@ -270,7 +270,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                     .localeCompare(this.translate(v2, 'fields', this.scope));
             });
 
-            for (var i in allFields) {
+            for (const i in allFields) {
                 if (!_.contains(this.enabledFields, allFields[i])) {
                     this.disabledFields.push(allFields[i]);
                 }
@@ -284,7 +284,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                 }
             }
 
-            var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+            const layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
 
             let realType = this.realType;
 
@@ -315,7 +315,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
             }
 
             if (this.sidePanelsLayout) {
-                for (var name in this.sidePanelsLayout) {
+                for (const name in this.sidePanelsLayout) {
                     if (name === 'default' && this.sidePanelsLayout[name].disabled) {
                         return false;
                     }
@@ -330,7 +330,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                 return false;
             }
 
-            let fieldList = [];
+            const fieldList = [];
 
             layout.forEach(panel => {
                 panel.rows.forEach(row => {
@@ -353,9 +353,9 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                     return;
                 }
 
-                let defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) || {};
+                const defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) || {};
 
-                let targetFieldList = defs.detailLayoutIncompatibleFieldList || [];
+                const targetFieldList = defs.detailLayoutIncompatibleFieldList || [];
 
                 targetFieldList.forEach(itemField => {
                     if (isIncompatible) {
