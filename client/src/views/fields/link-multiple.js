@@ -344,6 +344,8 @@ class LinkMultipleFieldView extends BaseFieldView {
             };
         }
 
+        this.autocompleteOnEmpty = this.params.autocompleteOnEmpty || this.autocompleteOnEmpty;
+
         this.createButton = this.params.createButton || this.createButton;
 
         if (this.createButton && !this.getAcl().checkScope(this.foreignScope, 'create')) {
@@ -435,19 +437,34 @@ class LinkMultipleFieldView extends BaseFieldView {
             url += '&select=' + select.join(',')
         }
 
+        const notSelectedFilter = this.ids && this.ids.length ?
+            {
+                id: {
+                    type: 'notIn',
+                    attribute: 'id',
+                    value: this.ids,
+                }
+            } :
+            {};
+
         if (this.panelDefs.selectHandler) {
             return new Promise(resolve => {
                 this._getSelectFilters().then(filters => {
                     if (filters.bool) {
-                        url += '&' + $.param({'boolFilterList': filters.bool});
+                        url += '&' + $.param({boolFilterList: filters.bool});
                     }
 
                     if (filters.primary) {
-                        url += '&' + $.param({'primaryFilter': filters.primary});
+                        url += '&' + $.param({primaryFilter: filters.primary});
                     }
 
-                    if (filters.advanced) {
-                        url += '&' + $.param({'where': filters.advanced});
+                    const advanced = {
+                        ...notSelectedFilter,
+                        ...(filters.advanced || {}),
+                    };
+
+                    if (Object.keys(advanced).length) {
+                        url += '&' + $.param({where: advanced});
                     }
 
                     resolve(url);
@@ -470,6 +487,10 @@ class LinkMultipleFieldView extends BaseFieldView {
             url += '&' + $.param({'primaryFilter': primary});
         }
 
+        if (Object.keys(notSelectedFilter).length) {
+            url += '&' + $.param({'where': notSelectedFilter});
+        }
+
         return url;
     }
 
@@ -481,9 +502,10 @@ class LinkMultipleFieldView extends BaseFieldView {
             const $element = this.$element;
 
             if (!this.autocompleteDisabled) {
-                this.$element.on('blur', () => {
+                // Does not work well with autocompleteOnEmpty.
+                /*this.$element.on('blur', () => {
                     setTimeout(() => this.$element.autocomplete('clear'), 300);
-                });
+                });*/
 
                 const minChar = this.autocompleteOnEmpty ? 0 : 1;
 

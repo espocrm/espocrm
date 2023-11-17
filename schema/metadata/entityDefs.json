@@ -388,6 +388,27 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "link"},
+                                    {"const": "linkMultiple"},
+                                    {"const": "linkOne"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "autocompleteOnEmpty": {
+                                "type": "boolean",
+                                "description": "Autocomplete on empty input."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "linkMultiple"}
                                 ]
                             }

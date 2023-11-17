@@ -253,6 +253,13 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             return;
                         }
 
+                        if (
+                            item === 'autocompleteOnEmpty' &&
+                            ['assignedUser'].includes(this.field)
+                        ) {
+                            return;
+                        }
+
                         const disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
 
                         const isDisabled =

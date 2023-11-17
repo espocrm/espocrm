@@ -224,7 +224,8 @@
         "pattern": "Pattern",
         "globalRestrictions": "Global Restrictions",
         "copyToClipboard": "Copy to clipboard button",
-        "createButton": "Create Button"
+        "createButton": "Create Button",
+        "autocompleteOnEmpty": "Autocomplete on empty input"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"

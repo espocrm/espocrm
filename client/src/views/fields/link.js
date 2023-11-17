@@ -340,6 +340,8 @@ class LinkFieldView extends BaseFieldView {
             };
         }
 
+        this.autocompleteOnEmpty = this.params.autocompleteOnEmpty || this.autocompleteOnEmpty;
+
         this.createButton = this.params.createButton || this.createButton;
 
         if (this.createButton && !this.getAcl().checkScope(this.foreignScope, 'create')) {
