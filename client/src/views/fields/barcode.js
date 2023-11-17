@@ -39,6 +39,8 @@ class BarcodeFieldView extends VarcharFieldView {
     detailTemplate = 'fields/barcode/detail'
 
     setup() {
+        this.validations.push('valid');
+
         let maxLength = 255;
 
         // noinspection SpellCheckingInspection
@@ -186,17 +188,60 @@ class BarcodeFieldView extends VarcharFieldView {
     }
 
     initBarcode(value) {
-        JsBarcode(this.getSelector() + ' .barcode', value, {
-            format: this.params.codeType,
-            height: 50,
-            fontSize: 14,
-            margin: 0,
-            lastChar: this.params.lastChar,
-        });
+        try {
+            JsBarcode(this.getSelector() + ' .barcode', value, {
+                format: this.params.codeType,
+                height: 50,
+                fontSize: 14,
+                margin: 0,
+                lastChar: this.params.lastChar,
+            });
+        }
+        catch (e) {
+            console.error(this.name, e);
+        }
     }
 
     controlWidth() {
         this.$el.find('.barcode').css('max-width', this.$el.width() + 'px');
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateValid() {
+        if (this.params.codeType === 'QRcode') {
+            return;
+        }
+
+        const value = this.model.get(this.name);
+
+        if (!value) {
+            return;
+        }
+
+        let isValid;
+
+        try {
+            JsBarcode({}, value, {
+                format: this.params.codeType,
+                lastChar: this.params.lastChar,
+                valid: valid => isValid = valid,
+            });
+        }
+        catch (e) {
+            return true;
+        }
+
+        if (isValid) {
+            return;
+        }
+
+        const msg = this.translate('barcodeInvalid', 'messages')
+            .replace('{field}', this.getLabelText())
+            .replace('{type}', this.params.codeType);
+
+        this.showValidationMessage(msg);
+
+        return true;
     }
 }
 

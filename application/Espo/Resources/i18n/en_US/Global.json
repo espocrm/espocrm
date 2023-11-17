@@ -326,6 +326,7 @@
         "fieldValueDuplicate": "Duplicate value",
         "fieldIsUploading": "Uploading in progress",
         "fieldExceedsMaxCount": "Count exceeds max allowed {maxCount}",
+        "barcodeInvalid": "{field} is not valid {type}",
         "arrayItemMaxLength": "Item shouldn't be longer than {max} characters",
         "resetPreferencesDone": "Preferences has been reset to defaults",
         "confirmation": "Are you sure?",
