@@ -132,7 +132,7 @@ class Sms extends Entity implements SmsInterface
         $this->set('status', Sms::STATUS_SENT);
 
         if (!$this->get('dateSent')) {
-            $this->set('dateSent', DateTime::createNow()->getString());
+            $this->set('dateSent', DateTime::createNow()->toString());
         }
 
         return $this;

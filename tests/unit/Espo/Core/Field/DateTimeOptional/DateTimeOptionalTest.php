@@ -44,7 +44,7 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
     {
         $value = DateTimeOptional::fromString('2021-05-01 10:20:30');
 
-        $this->assertEquals('2021-05-01 10:20:30', $value->getString());
+        $this->assertEquals('2021-05-01 10:20:30', $value->toString());
 
         $this->assertFalse($value->isAllDay());
     }
@@ -53,7 +53,7 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
     {
         $value = DateTimeOptional::fromString('2021-05-01 10:20');
 
-        $this->assertEquals('2021-05-01 10:20:00', $value->getString());
+        $this->assertEquals('2021-05-01 10:20:00', $value->toString());
 
         $this->assertFalse($value->isAllDay());
     }
@@ -64,7 +64,7 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
 
         $value = DateTimeOptional::fromDateTime($dt);
 
-        $this->assertEquals('2021-05-01 10:20:30', $value->getString());
+        $this->assertEquals('2021-05-01 10:20:30', $value->toString());
     }
 
     public function testFromDateTime2()
@@ -73,7 +73,7 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
 
         $value = DateTimeOptional::fromDateTime($dt);
 
-        $this->assertEquals('2021-05-01 07:20:30', $value->getString());
+        $this->assertEquals('2021-05-01 07:20:30', $value->toString());
     }
 
     public function testBad1()
@@ -101,7 +101,7 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
     {
         $value = DateTimeOptional::fromString('2021-05-01 10:20:30');
 
-        $this->assertEquals('2021-05-01', $value->getDateTime()->format('Y-m-d'));
+        $this->assertEquals('2021-05-01', $value->toDateTime()->format('Y-m-d'));
     }
 
     public function testGetMethods()
@@ -127,7 +127,7 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->add(DateInterval::createFromDateString('1 day'));
 
-        $this->assertEquals('2021-05-02 10:20:30', $modifiedValue->getString());
+        $this->assertEquals('2021-05-02 10:20:30', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -138,7 +138,7 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->subtract(DateInterval::createFromDateString('1 day'));
 
-        $this->assertEquals('2021-04-30 10:20:30', $modifiedValue->getString());
+        $this->assertEquals('2021-04-30 10:20:30', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -149,7 +149,7 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->modify('+1 month');
 
-        $this->assertEquals('2021-06-01 10:20:30', $modifiedValue->getString());
+        $this->assertEquals('2021-06-01 10:20:30', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -160,7 +160,7 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
             ::fromString('2021-05-01 10:20:30')
             ->withTimezone(new DateTimeZone('Europe/Kiev'));
 
-        $this->assertEquals('2021-05-01 10:20:30', $value->getString());
+        $this->assertEquals('2021-05-01 10:20:30', $value->toString());
 
         $this->assertEquals(13, $value->getHour());
     }
@@ -197,22 +197,22 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             '2021-05-01 00:00:00',
-            $value->withTime(0, 0, 0)->getString()
+            $value->withTime(0, 0, 0)->toString()
         );
 
         $this->assertEquals(
             '2021-05-01 00:10:30',
-            $value->withTime(0, null, null)->getString()
+            $value->withTime(0, null, null)->toString()
         );
 
         $this->assertEquals(
             '2021-05-01 10:00:00',
-            $value->withTime(null, 0)->getString()
+            $value->withTime(null, 0)->toString()
         );
 
         $this->assertEquals(
             '2021-05-01 10:00:10',
-            $value->withTime(null, 0, 10)->getString()
+            $value->withTime(null, 0, 10)->toString()
         );
     }
 
@@ -222,22 +222,22 @@ class DateTimeOptionalTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             '2021-05-01 00:00:00',
-            $value->withTime(0, 0, 0)->getString()
+            $value->withTime(0, 0, 0)->toString()
         );
 
         $this->assertEquals(
             '2021-05-01 00:00:00',
-            $value->withTime(0, null, null)->getString()
+            $value->withTime(0, null, null)->toString()
         );
 
         $this->assertEquals(
             '2021-05-01 00:00:00',
-            $value->withTime(null, 0)->getString()
+            $value->withTime(null, 0)->toString()
         );
 
         $this->assertEquals(
             '2021-05-01 00:00:10',
-            $value->withTime(null, 0, 10)->getString()
+            $value->withTime(null, 0, 10)->toString()
         );
     }
 

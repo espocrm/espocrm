@@ -85,8 +85,8 @@ class Service
      */
     public function fetch(string $userId, FetchParams $fetchParams): array
     {
-        $from = $fetchParams->getFrom()->getString();
-        $to = $fetchParams->getTo()->getString();
+        $from = $fetchParams->getFrom()->toString();
+        $to = $fetchParams->getTo()->toString();
         $scopeList = $fetchParams->getScopeList();
         $skipAcl = $fetchParams->skipAcl();
 
@@ -784,26 +784,26 @@ class Service
             try {
                 foreach ($rangeList as $range) {
                     if (
-                        $start->getTimestamp() < $range->start->getTimestamp() &&
-                        $end->getTimestamp() > $range->end->getTimestamp()
+                        $start->toTimestamp() < $range->start->getTimestamp() &&
+                        $end->toTimestamp() > $range->end->getTimestamp()
                     ) {
-                        $range->dateStart = $start->getString();
+                        $range->dateStart = $start->toString();
                         $range->start = $start;
-                        $range->dateEnd = $end->getString();
+                        $range->dateEnd = $end->toString();
                         $range->end = $end;
 
                         continue 2;
                     }
 
                     if (
-                        $start->getTimestamp() < $range->start->getTimestamp() &&
-                        $end->getTimestamp() > $range->start->getTimestamp()
+                        $start->toTimestamp() < $range->start->getTimestamp() &&
+                        $end->toTimestamp() > $range->start->getTimestamp()
                     ) {
-                        $range->dateStart = $start->getString();
+                        $range->dateStart = $start->toString();
                         $range->start = $start;
 
-                        if ($end->getTimestamp() > $range->end->getTimestamp()) {
-                            $range->dateEnd = $end->getString();
+                        if ($end->toTimestamp() > $range->end->getTimestamp()) {
+                            $range->dateEnd = $end->toString();
                             $range->end = $end;
                         }
 
@@ -811,14 +811,14 @@ class Service
                     }
 
                     if (
-                        $start->getTimestamp() < $range->end->getTimestamp() &&
-                        $end->getTimestamp() > $range->end->getTimestamp()
+                        $start->toTimestamp() < $range->end->getTimestamp() &&
+                        $end->toTimestamp() > $range->end->getTimestamp()
                     ) {
-                        $range->dateEnd = $end->getString();
+                        $range->dateEnd = $end->toString();
                         $range->end = $end;
 
-                        if ($start->getTimestamp() < $range->start->getTimestamp()) {
-                            $range->dateStart = $start->getString();
+                        if ($start->toTimestamp() < $range->start->getTimestamp()) {
+                            $range->dateStart = $start->toString();
                             $range->start = $start;
                         }
 
@@ -827,8 +827,8 @@ class Service
                 }
 
                 $busyItem = (object) [
-                    'dateStart' => $start->getString(),
-                    'dateEnd' => $end->getString(),
+                    'dateStart' => $start->toString(),
+                    'dateEnd' => $end->toString(),
                     'start' => $start,
                     'end' => $end,
                 ];
@@ -926,7 +926,7 @@ class Service
         $toReturn = true;
 
         try {
-            $diff = $to->getDateTime()->diff($from->getDateTime(), true);
+            $diff = $to->toDateTime()->diff($from->toDateTime(), true);
 
             if ($diff->days > $this->config->get('busyRangesMaxRange', self::BUSY_RANGES_MAX_RANGE_DAYS)) {
                 $toReturn = false;

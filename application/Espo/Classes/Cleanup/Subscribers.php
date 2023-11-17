@@ -122,7 +122,7 @@ class Subscribers implements Cleanup
                     ),
                     Cond::less(
                         Cond::column('entity.' . $dateField),
-                        $before->getString()
+                        $before->toString()
                     ),
                     Cond::in(
                         Cond::column('entity.' . $statusField),

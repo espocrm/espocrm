@@ -129,7 +129,7 @@ class LinkTest extends BaseTestCase
             'amount' => 1.0,
             'amountCurrency' => 'USD',
             'probability' => 10,
-            'closeDate' => Date::createToday()->getString(),
+            'closeDate' => Date::createToday()->toString(),
         ], CreateParams::create());
 
         $isThrown = false;
@@ -143,7 +143,7 @@ class LinkTest extends BaseTestCase
                 'amount' => 1.0,
                 'amountCurrency' => 'USD',
                 'probability' => 10,
-                'closeDate' => Date::createToday()->getString(),
+                'closeDate' => Date::createToday()->toString(),
             ], CreateParams::create());
         }
         catch (Forbidden) {
@@ -229,7 +229,7 @@ class LinkTest extends BaseTestCase
             'amount' => 1.0,
             'amountCurrency' => 'USD',
             'probability' => 10,
-            'closeDate' => Date::createToday()->getString(),
+            'closeDate' => Date::createToday()->toString(),
         ], CreateParams::create());
     }
 }

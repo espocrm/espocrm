@@ -172,7 +172,7 @@ class KeysProvider
 
         $period = '-' . $this->configDataProvider->getJwksCachePeriod();
 
-        if ($timestamp < DateTime::createNow()->modify($period)->getTimestamp()) {
+        if ($timestamp < DateTime::createNow()->modify($period)->toTimestamp()) {
             return null;
         }
 

@@ -97,8 +97,8 @@ class SalesByMonth
         ];
 
         $whereClause[] = [
-            'closeDate>=' => $from->getString(),
-            'closeDate<' => $to->getString(),
+            'closeDate>=' => $from->toString(),
+            'closeDate<' => $to->toString(),
         ];
 
         $queryBuilder
@@ -138,8 +138,8 @@ class SalesByMonth
             $dtTo = $dtTo->addDays(1 - $dtTo->getDay());
         }
 
-        while ($dt->getTimestamp() < $dtTo->getTimestamp()) {
-            $month = $dt->getDateTime()->format('Y-m');
+        while ($dt->toTimestamp() < $dtTo->toTimestamp()) {
+            $month = $dt->toDateTime()->format('Y-m');
 
             if (!array_key_exists($month, $result)) {
                 $result[$month] = 0;

@@ -100,20 +100,20 @@ class ByLeadSource
 
         if ($from && $to) {
             $whereClause[] = [
-                'closeDate>=' => $from->getString(),
-                'closeDate<' => $to->getString(),
+                'closeDate>=' => $from->toString(),
+                'closeDate<' => $to->toString(),
             ];
         }
 
         if ($from && !$to) {
             $whereClause[] = [
-                'closeDate>=' => $from->getString(),
+                'closeDate>=' => $from->toString(),
             ];
         }
 
         if (!$from && $to) {
             $whereClause[] = [
-                'closeDate<' => $to->getString(),
+                'closeDate<' => $to->toString(),
             ];
         }
 

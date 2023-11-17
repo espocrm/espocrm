@@ -57,7 +57,7 @@ class Exports implements Cleanup
 
         $before = DateTime::createNow()
             ->modify($period)
-            ->getString();
+            ->toString();
 
         $delete = $this->entityManager
             ->getQueryBuilder()

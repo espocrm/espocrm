@@ -42,14 +42,14 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
     {
         $value = DateTime::fromString('2021-05-01 10:20:30');
 
-        $this->assertEquals('2021-05-01 10:20:30', $value->getString());
+        $this->assertEquals('2021-05-01 10:20:30', $value->toString());
     }
 
     public function testFromString2()
     {
         $value = DateTime::fromString('2021-05-01 10:20');
 
-        $this->assertEquals('2021-05-01 10:20:00', $value->getString());
+        $this->assertEquals('2021-05-01 10:20:00', $value->toString());
     }
 
     public function testFromDateTime1()
@@ -58,7 +58,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
         $value = DateTime::fromDateTime($dt);
 
-        $this->assertEquals('2021-05-01 10:20:30', $value->getString());
+        $this->assertEquals('2021-05-01 10:20:30', $value->toString());
     }
 
     public function testFromDateTime2()
@@ -67,7 +67,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
         $value = DateTime::fromDateTime($dt);
 
-        $this->assertEquals('2021-05-01 07:20:30', $value->getString());
+        $this->assertEquals('2021-05-01 07:20:30', $value->toString());
     }
 
     public function testBad1()
@@ -95,7 +95,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
     {
         $value = DateTime::fromString('2021-05-01 10:20:30');
 
-        $this->assertEquals('2021-05-01', $value->getDateTime()->format('Y-m-d'));
+        $this->assertEquals('2021-05-01', $value->toDateTime()->format('Y-m-d'));
     }
 
     public function testGetMethods()
@@ -112,7 +112,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(20, $value->getMinute());
         $this->assertEquals(30, $value->getSecond());
 
-        $this->assertEquals($dt->getTimestamp(), $value->getTimestamp());
+        $this->assertEquals($dt->getTimestamp(), $value->toTimestamp());
     }
 
     public function testAdd()
@@ -121,7 +121,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->add(DateInterval::createFromDateString('1 day'));
 
-        $this->assertEquals('2021-05-02 10:20:30', $modifiedValue->getString());
+        $this->assertEquals('2021-05-02 10:20:30', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -132,7 +132,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->subtract(DateInterval::createFromDateString('1 day'));
 
-        $this->assertEquals('2021-04-30 10:20:30', $modifiedValue->getString());
+        $this->assertEquals('2021-04-30 10:20:30', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -143,7 +143,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->modify('+1 month');
 
-        $this->assertEquals('2021-06-01 10:20:30', $modifiedValue->getString());
+        $this->assertEquals('2021-06-01 10:20:30', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -154,7 +154,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
             ::fromString('2021-05-01 10:20:30')
             ->withTimezone(new DateTimeZone('Europe/Kiev'));
 
-        $this->assertEquals('2021-05-01 10:20:30', $value->getString());
+        $this->assertEquals('2021-05-01 10:20:30', $value->toString());
 
         $this->assertEquals(13, $value->getHour());
     }
@@ -190,22 +190,22 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(
             '2021-05-01 00:00:00',
-            $value->withTime(0, 0, 0)->getString()
+            $value->withTime(0, 0, 0)->toString()
         );
 
         $this->assertEquals(
             '2021-05-01 00:10:30',
-            $value->withTime(0, null, null)->getString()
+            $value->withTime(0, null, null)->toString()
         );
 
         $this->assertEquals(
             '2021-05-01 10:00:00',
-            $value->withTime(null, 0)->getString()
+            $value->withTime(null, 0)->toString()
         );
 
         $this->assertEquals(
             '2021-05-01 10:00:10',
-            $value->withTime(null, 0, 10)->getString()
+            $value->withTime(null, 0, 10)->toString()
         );
     }
 
@@ -377,7 +377,7 @@ class DateTimeTest extends \PHPUnit\Framework\TestCase
 
         $value = DateTime::fromTimestamp($timestamp);
 
-        $this->assertEquals($timestamp, $value->getTimestamp());
+        $this->assertEquals($timestamp, $value->toTimestamp());
     }
 }
 

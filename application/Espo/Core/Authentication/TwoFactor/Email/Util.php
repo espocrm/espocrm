@@ -244,7 +244,7 @@ class Util
 
         $from = DateTime::createNow()
             ->modify('-' . $period)
-            ->getString();
+            ->toString();
 
         $count = $this->entityManager
             ->getRDBRepository(TwoFactorCode::ENTITY_TYPE)

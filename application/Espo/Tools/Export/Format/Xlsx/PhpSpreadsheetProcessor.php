@@ -422,7 +422,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
             $sheet->setCellValue(
                 $coordinate,
                 SharedDate::PHPToExcel(
-                    strtotime($value->getString())
+                    strtotime($value->toString())
                 )
             );
         }
@@ -430,7 +430,7 @@ class PhpSpreadsheetProcessor implements ProcessorInterface
             $sheet->setCellValue(
                 $coordinate,
                 SharedDate::PHPToExcel(
-                    strtotime($value->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT))
+                    strtotime($value->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT))
                 )
             );
         }

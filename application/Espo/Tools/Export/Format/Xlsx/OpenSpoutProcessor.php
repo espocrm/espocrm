@@ -195,7 +195,7 @@ class OpenSpoutProcessor implements ProcessorInterface
             $style = new Style();
             $style->setFormat($dateFormat);
 
-            return Cell\DateTimeCell::fromValue($value->getDateTime(), $style);
+            return Cell\DateTimeCell::fromValue($value->toDateTime(), $style);
         }
 
         if ($value instanceof DateTime) {
@@ -204,7 +204,7 @@ class OpenSpoutProcessor implements ProcessorInterface
             $style = new Style();
             $style->setFormat($dateTimeFormat);
 
-            return Cell\DateTimeCell::fromValue($value->getDateTime(), $style);
+            return Cell\DateTimeCell::fromValue($value->toDateTime(), $style);
         }
 
         if ($value instanceof Currency) {

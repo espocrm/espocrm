@@ -51,7 +51,7 @@ class DateTimeAttributeExtractor implements AttributeExtractor
         }
 
         return (object) [
-            $field => $value->getString(),
+            $field => $value->toString(),
         ];
     }
 

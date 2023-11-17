@@ -61,7 +61,7 @@ class LogService
 
         $logRecord->set([
             'campaignId' => $campaignId,
-            'actionDate' => $actionDate->getString(),
+            'actionDate' => $actionDate->toString(),
             'parentId' => $target->getId(),
             'parentType' => $target->getEntityType(),
             'action' => CampaignLogRecord::ACTION_LEAD_CREATED,
@@ -81,7 +81,7 @@ class LogService
 
         $logRecord->set([
             'campaignId' => $campaignId,
-            'actionDate' => $actionDate->getString(),
+            'actionDate' => $actionDate->toString(),
             'parentId' => $queueItem->getTargetId(),
             'parentType' => $queueItem->getTargetType(),
             'action' => CampaignLogRecord::ACTION_SENT,
@@ -125,7 +125,7 @@ class LogService
 
         $logRecord->set([
             'campaignId' => $campaignId,
-            'actionDate' => $actionDate->getString(),
+            'actionDate' => $actionDate->toString(),
             'parentId' => $queueItem->getTargetId(),
             'parentType' => $queueItem->getTargetType(),
             'action' => CampaignLogRecord::ACTION_BOUNCED,
@@ -184,7 +184,7 @@ class LogService
 
         $logRecord->set([
             'campaignId' => $campaignId,
-            'actionDate' => $actionDate->getString(),
+            'actionDate' => $actionDate->toString(),
             'parentId' => $target->getId(),
             'parentType' => $target->getEntityType(),
             'action' => CampaignLogRecord::ACTION_OPTED_IN,
@@ -235,7 +235,7 @@ class LogService
 
         $logRecord->set([
             'campaignId' => $campaignId,
-            'actionDate' => $actionDate->getString(),
+            'actionDate' => $actionDate->toString(),
             'parentId' => $target->getId(),
             'parentType' => $target->getEntityType(),
             'action' => CampaignLogRecord::ACTION_OPTED_OUT,
@@ -281,7 +281,7 @@ class LogService
 
         $logRecord->set([
             'campaignId' => $campaignId,
-            'actionDate' => $actionDate->getString(),
+            'actionDate' => $actionDate->toString(),
             'parentId' => $queueItem->getTargetId(),
             'parentType' => $queueItem->getTargetType(),
             'action' => CampaignLogRecord::ACTION_OPENED,
@@ -325,7 +325,7 @@ class LogService
 
         $logRecord->set([
             'campaignId' => $campaignId,
-            'actionDate' => $actionDate->getString(),
+            'actionDate' => $actionDate->toString(),
             'parentId' => $queueItem->getTargetId(),
             'parentType' => $queueItem->getTargetType(),
             'action' => CampaignLogRecord::ACTION_CLICKED,

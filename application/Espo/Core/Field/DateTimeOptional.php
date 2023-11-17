@@ -83,25 +83,25 @@ class DateTimeOptional implements DateTimeable
     /**
      * Get a string value in `Y-m-d H:i:s` format.
      */
-    public function getString(): string
+    public function toString(): string
     {
-        return $this->getActualValue()->getString();
+        return $this->getActualValue()->toString();
     }
 
     /**
      * Get DateTimeImmutable.
      */
-    public function getDateTime(): DateTimeImmutable
+    public function toDateTime(): DateTimeImmutable
     {
-        return $this->getActualValue()->getDateTime();
+        return $this->getActualValue()->toDateTime();
     }
 
     /**
      * Get a timestamp.
      */
-    public function getTimestamp(): int
+    public function toTimestamp(): int
     {
-        return $this->getActualValue()->getDateTime()->getTimestamp();
+        return $this->getActualValue()->toDateTime()->getTimestamp();
     }
 
     /**
@@ -194,7 +194,7 @@ class DateTimeOptional implements DateTimeable
      */
     public function getTimezone(): DateTimeZone
     {
-        return $this->getDateTime()->getTimezone();
+        return $this->toDateTime()->getTimezone();
     }
 
     /**
@@ -212,7 +212,7 @@ class DateTimeOptional implements DateTimeable
     public function withTimezone(DateTimeZone $timezone): self
     {
         if ($this->isAllDay()) {
-            $dateTime = $this->getActualValue()->getDateTime()->setTimezone($timezone);
+            $dateTime = $this->getActualValue()->toDateTime()->setTimezone($timezone);
 
             return self::fromDateTime($dateTime);
         }
@@ -220,7 +220,7 @@ class DateTimeOptional implements DateTimeable
         /** @var DateTime $value */
         $value = $this->getActualValue();
 
-        $dateTime = $value->withTimezone($timezone)->getDateTime();
+        $dateTime = $value->withTimezone($timezone)->toDateTime();
 
         return self::fromDateTime($dateTime);
     }
@@ -231,10 +231,10 @@ class DateTimeOptional implements DateTimeable
     public function withTime(?int $hour, ?int $minute, ?int $second = 0): self
     {
         if ($this->isAllDay()) {
-            $dateTime = DateTime::fromDateTime($this->getActualValue()->getDateTime())
+            $dateTime = DateTime::fromDateTime($this->getActualValue()->toDateTime())
                 ->withTime($hour, $minute, $second);
 
-            return self::fromDateTime($dateTime->getDateTime());
+            return self::fromDateTime($dateTime->toDateTime());
         }
 
         /** @var DateTime $value */
@@ -242,7 +242,7 @@ class DateTimeOptional implements DateTimeable
 
         $dateTime = $value->withTime($hour, $minute, $second);
 
-        return self::fromDateTime($dateTime->getDateTime());
+        return self::fromDateTime($dateTime->toDateTime());
     }
 
     /**
@@ -254,14 +254,14 @@ class DateTimeOptional implements DateTimeable
             assert($this->dateValue !== null);
 
             return self::fromDateTimeAllDay(
-                $this->dateValue->modify($modifier)->getDateTime()
+                $this->dateValue->modify($modifier)->toDateTime()
             );
         }
 
         assert($this->dateTimeValue !== null);
 
         return self::fromDateTime(
-            $this->dateTimeValue->modify($modifier)->getDateTime()
+            $this->dateTimeValue->modify($modifier)->toDateTime()
         );
     }
 
@@ -274,14 +274,14 @@ class DateTimeOptional implements DateTimeable
             assert($this->dateValue !== null);
 
             return self::fromDateTimeAllDay(
-                $this->dateValue->add($interval)->getDateTime()
+                $this->dateValue->add($interval)->toDateTime()
             );
         }
 
         assert($this->dateTimeValue !== null);
 
         return self::fromDateTime(
-            $this->dateTimeValue->add($interval)->getDateTime()
+            $this->dateTimeValue->add($interval)->toDateTime()
         );
     }
 
@@ -294,14 +294,14 @@ class DateTimeOptional implements DateTimeable
             assert($this->dateValue !== null);
 
             return self::fromDateTimeAllDay(
-                $this->dateValue->subtract($interval)->getDateTime()
+                $this->dateValue->subtract($interval)->toDateTime()
             );
         }
 
         assert($this->dateTimeValue !== null);
 
         return self::fromDateTime(
-            $this->dateTimeValue->subtract($interval)->getDateTime()
+            $this->dateTimeValue->subtract($interval)->toDateTime()
         );
     }
 
@@ -370,7 +370,7 @@ class DateTimeOptional implements DateTimeable
      */
     public function diff(DateTimeable $other): DateInterval
     {
-        return $this->getDateTime()->diff($other->getDateTime());
+        return $this->toDateTime()->diff($other->toDateTime());
     }
 
     /**
@@ -378,7 +378,7 @@ class DateTimeOptional implements DateTimeable
      */
     public function isGreaterThan(DateTimeable $other): bool
     {
-        return $this->getDateTime() > $other->getDateTime();
+        return $this->toDateTime() > $other->toDateTime();
     }
 
     /**
@@ -386,7 +386,7 @@ class DateTimeOptional implements DateTimeable
      */
     public function isLessThan(DateTimeable $other): bool
     {
-        return $this->getDateTime() < $other->getDateTime();
+        return $this->toDateTime() < $other->toDateTime();
     }
 
     /**
@@ -394,7 +394,7 @@ class DateTimeOptional implements DateTimeable
      */
     public function isEqualTo(DateTimeable $other): bool
     {
-        return $this->getDateTime() == $other->getDateTime();
+        return $this->toDateTime() == $other->toDateTime();
     }
 
     /**
@@ -483,5 +483,32 @@ class DateTimeOptional implements DateTimeable
         }
 
         return false;
+    }
+
+    /**
+     * @deprecated As of v8.1. Use `toString` instead.
+     * @todo Remove in v10.0.
+     */
+    public function getString(): string
+    {
+        return $this->toString();
+    }
+
+    /**
+     * @deprecated As of v8.1. Use `toDateTime` instead.
+     * @todo Remove in v10.0.
+     */
+    public function getDateTime(): DateTimeImmutable
+    {
+        return $this->toDateTime();
+    }
+
+    /**
+     * @deprecated As of v8.1. Use `getTimestamp` instead.
+     * @todo Remove in v10.0.
+     */
+    public function getTimestamp(): int
+    {
+        return $this->toTimestamp();
     }
 }

@@ -118,7 +118,7 @@ class AuthToken extends BaseEntity implements AuthTokenInterface
 
     public function setLastAccessNow(): self
     {
-        $this->set('lastAccess', DateTime::createNow()->getString());
+        $this->set('lastAccess', DateTime::createNow()->toString());
 
         return $this;
     }

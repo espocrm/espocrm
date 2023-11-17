@@ -841,32 +841,32 @@ class FormulaTest extends BaseTestCase
         $script = sprintf(
             "ext\\calendar\\userIsBusy('%s', '%s', '%s')",
             $user->getId(),
-            $dateStart->getString(),
-            $dateEnd->getString()
+            $dateStart->toString(),
+            $dateEnd->toString()
         );
         $this->assertTrue($fm->run($script));
 
         $script = sprintf(
             "ext\\calendar\\userIsBusy('%s', '%s', '%s')",
             $user->getId(),
-            $dateStart->addHours(-1)->getString(),
-            $dateEnd->addHours(1)->getString()
+            $dateStart->addHours(-1)->toString(),
+            $dateEnd->addHours(1)->toString()
         );
         $this->assertTrue($fm->run($script));
 
         $script = sprintf(
             "ext\\calendar\\userIsBusy('%s', '%s', '%s')",
             $user->getId(),
-            $dateStart->addDays(-1)->getString(),
-            $dateEnd->addDays(-1)->getString()
+            $dateStart->addDays(-1)->toString(),
+            $dateEnd->addDays(-1)->toString()
         );
         $this->assertFalse($fm->run($script));
 
         $script = sprintf(
             "ext\\calendar\\userIsBusy('%s', '%s', '%s', '%s', '%s')",
             $user->getId(),
-            $dateStart->getString(),
-            $dateEnd->getString(),
+            $dateStart->toString(),
+            $dateEnd->toString(),
             $meeting->getEntityType(),
             $meeting->getId()
         );

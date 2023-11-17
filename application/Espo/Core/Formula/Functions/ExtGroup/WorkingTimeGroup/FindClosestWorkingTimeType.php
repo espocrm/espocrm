@@ -66,6 +66,6 @@ class FindClosestWorkingTimeType extends Base
             return null;
         }
 
-        return $result->getString();
+        return $result->toString();
     }
 }

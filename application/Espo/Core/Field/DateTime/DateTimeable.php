@@ -33,5 +33,5 @@ use DateTimeImmutable;
 
 interface DateTimeable
 {
-    public function getDateTime(): DateTimeImmutable;
+    public function toDateTime(): DateTimeImmutable;
 }

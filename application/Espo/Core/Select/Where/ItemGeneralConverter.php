@@ -959,7 +959,7 @@ class ItemGeneralConverter implements ItemConverter
             ->withTimezone($this->getSystemTimeZone());
 
         return [
-            $attribute . '=' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            $attribute . '=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
@@ -972,7 +972,7 @@ class ItemGeneralConverter implements ItemConverter
             ->withTimezone($this->getSystemTimeZone());
 
         return [
-            $attribute . '<' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            $attribute . '<' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
@@ -985,7 +985,7 @@ class ItemGeneralConverter implements ItemConverter
             ->withTimezone($this->getSystemTimeZone());
 
         return [
-            $attribute . '>' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            $attribute . '>' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
@@ -1001,8 +1001,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<=' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1022,8 +1022,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<=' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1043,8 +1043,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $today->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<=' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<=' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1062,7 +1062,7 @@ class ItemGeneralConverter implements ItemConverter
             ->addDays(- $number);
 
         return [
-            $attribute . '<' =>  $date->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            $attribute . '<' =>  $date->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
@@ -1079,7 +1079,7 @@ class ItemGeneralConverter implements ItemConverter
             ->addDays($number);
 
         return [
-            $attribute . '>' => $date->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            $attribute . '>' => $date->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
@@ -1096,8 +1096,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1115,8 +1115,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1134,8 +1134,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1158,8 +1158,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1189,8 +1189,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1208,8 +1208,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1227,8 +1227,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1255,8 +1255,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1284,8 +1284,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1311,8 +1311,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1339,8 +1339,8 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             'AND' => [
-                $attribute . '>=' => $from->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
-                $attribute . '<' => $to->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }

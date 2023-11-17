@@ -421,7 +421,7 @@ class CaptureService
 
         $terminateAt = $uniqueId->getTerminateAt();
 
-        if ($terminateAt && time() > strtotime($terminateAt->getString())) {
+        if ($terminateAt && time() > strtotime($terminateAt->toString())) {
             return new ConfirmResult(
                 ConfirmResult::STATUS_EXPIRED,
                 $this->defaultLanguage

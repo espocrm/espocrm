@@ -45,8 +45,8 @@ class Extractor
     {
         $pointer = $from->withTimezone($calendar->getTimezone());
 
-        $fromDate = Date::fromDateTime($from->modify('-1 day')->getDateTime());
-        $toDate = Date::fromDateTime($from->modify('+1 day')->getDateTime());
+        $fromDate = Date::fromDateTime($from->modify('-1 day')->toDateTime());
+        $toDate = Date::fromDateTime($from->modify('+1 day')->toDateTime());
 
         $workingDates = $calendar->getWorkingDates($fromDate, $toDate);
         $nonWorkingDates = $calendar->getNonWorkingDates($fromDate, $toDate);
@@ -56,7 +56,7 @@ class Extractor
 
         $end = $to->withTimezone($calendar->getTimezone())->withTime(23, 59, 59);
 
-        while ($pointer->getTimestamp() < $end->getTimestamp()) {
+        while ($pointer->toTimestamp() < $end->toTimestamp()) {
             $list = array_merge(
                 $list,
                 $this->extractIteration(
@@ -143,8 +143,8 @@ class Extractor
             ->withTimezone($calendar->getTimezone())
             ->withTime(0, 0, 0);
 
-        $fromDate = Date::fromDateTime($from->modify('-1 day')->getDateTime());
-        $toDate = Date::fromDateTime($from->modify('+1 day')->getDateTime());
+        $fromDate = Date::fromDateTime($from->modify('-1 day')->toDateTime());
+        $toDate = Date::fromDateTime($from->modify('+1 day')->toDateTime());
 
         $workingDates = $calendar->getWorkingDates($fromDate, $toDate);
         $nonWorkingDates = $calendar->getNonWorkingDates($fromDate, $toDate);
@@ -154,7 +154,7 @@ class Extractor
 
         $end = $to->withTimezone($calendar->getTimezone())->withTime(23, 59, 59);
 
-        while ($pointer->getTimestamp() < $end->getTimestamp()) {
+        while ($pointer->toTimestamp() < $end->toTimestamp()) {
             $isWorkingDay = $this->isWorkingDay(
                 $pointer,
                 $workingDates,
@@ -370,7 +370,7 @@ class Extractor
      */
     private function extractFromDay(DateTime $dateTime, HavingRanges $day): array
     {
-        $pointer = $dateTime->getDateTime();
+        $pointer = $dateTime->toDateTime();
 
         $list = [];
 

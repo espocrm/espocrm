@@ -57,8 +57,8 @@ class NonWorkingRange implements Item
     public function getRaw(): stdClass
     {
         return (object) [
-            'dateStart' => $this->start->getString(),
-            'dateEnd' => $this->end->getString(),
+            'dateStart' => $this->start->toString(),
+            'dateEnd' => $this->end->toString(),
             'isNonWorkingRange' => true,
         ];
     }

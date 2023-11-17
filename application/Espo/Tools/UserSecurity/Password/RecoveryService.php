@@ -353,7 +353,7 @@ class RecoveryService
             ->setTime(
                 DateTime::createNow()
                     ->modify('+' . $lifetime)
-                    ->getDateTime()
+                    ->toDateTime()
             )
             ->setQueue(QueueName::Q1)
             ->schedule();
@@ -555,7 +555,7 @@ class RecoveryService
             return;
         }
 
-        $data->set('lastPasswordRecoveryDate', DateTime::createNow()->getString());
+        $data->set('lastPasswordRecoveryDate', DateTime::createNow()->toString());
 
         $this->entityManager->saveEntity($data);
     }

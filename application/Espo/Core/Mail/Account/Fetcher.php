@@ -170,7 +170,7 @@ class Fetcher
                 if ($email && $email->getDateSent()) {
                     $lastDate = $email->getDateSent();
 
-                    if ($lastDate->getTimestamp() >= (new DateTime())->getTimestamp()) {
+                    if ($lastDate->toTimestamp() >= (new DateTime())->getTimestamp()) {
                         $lastDate = DateTimeField::createNow();
                     }
                 }
@@ -237,7 +237,7 @@ class Fetcher
             throw new Error("{$account->getEntityType()} {$account->getId()}, no fetch-since.");
         }
 
-        $fetchSince = $account->getFetchSince()->getDateTime();
+        $fetchSince = $account->getFetchSince()->toDateTime();
 
         return $storage->getIdsSinceDate(
             DateTimeField::fromDateTime($fetchSince)

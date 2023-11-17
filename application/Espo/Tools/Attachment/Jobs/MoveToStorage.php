@@ -111,7 +111,7 @@ class MoveToStorage implements Job
             ->setTime(
                 DateTime::createNow()
                     ->modify('+' . self::REMOVE_FILE_PERIOD)
-                    ->getDateTime()
+                    ->toDateTime()
             )
             ->schedule();
     }

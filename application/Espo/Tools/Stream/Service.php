@@ -1416,11 +1416,11 @@ class Service
         }
 
         if (!$entity->isNew()) {
-            if ($createdAt->getTimestamp() < $notificationThreshold->getTimestamp()) {
+            if ($createdAt->toTimestamp() < $notificationThreshold->getTimestamp()) {
                 $forceProcessNoteNotifications = false;
             }
 
-            if ($createdAt->getTimestamp() < $aclThreshold->getTimestamp()) {
+            if ($createdAt->toTimestamp() < $aclThreshold->getTimestamp()) {
                 return;
             }
         }
