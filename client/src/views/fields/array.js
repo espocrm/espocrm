@@ -73,14 +73,16 @@ class ArrayFieldView extends BaseFieldView {
      */
     translatedOptions = null
 
+
     /** @inheritDoc */
     data() {
-        let itemHtmlList = [];
+        const itemHtmlList = [];
 
         (this.selected || []).forEach(value => {
             itemHtmlList.push(this.getItemHtml(value));
         });
 
+        // noinspection JSValidateTypes
         return {
             ...super.data(),
             selected: this.selected,
@@ -98,7 +100,7 @@ class ArrayFieldView extends BaseFieldView {
     events = {
         /** @this ArrayFieldView */
         'click [data-action="removeValue"]': function (e) {
-            let value = $(e.currentTarget).attr('data-value').toString();
+            const value = $(e.currentTarget).attr('data-value').toString();
 
             this.removeValue(value);
             this.focusOnElement();
@@ -126,10 +128,10 @@ class ArrayFieldView extends BaseFieldView {
 
         let optionsPath = this.params.optionsPath;
         /** @type {?string} */
-        let optionsReference = this.params.optionsReference;
+        const optionsReference = this.params.optionsReference;
 
         if (!optionsPath && optionsReference) {
-            let [refEntityType, refField] = optionsReference.split('.');
+            const [refEntityType, refField] = optionsReference.split('.');
 
             optionsPath = `entityDefs.${refEntityType}.fields.${refField}.options`;
         }
@@ -174,17 +176,19 @@ class ArrayFieldView extends BaseFieldView {
     }
 
     focusOnElement() {
-        let $button = this.$el.find('button[data-action="showAddModal"]');
+        const $button = this.$el.find('button[data-action="showAddModal"]');
 
         if ($button[0]) {
+            // noinspection JSUnresolvedReference
             $button[0].focus({preventScroll: true});
 
             return;
         }
 
-        let $input = this.$el.find('input');
+        const $input = this.$el.find('input');
 
         if ($input[0]) {
+            // noinspection JSUnresolvedReference
             $input[0].focus({preventScroll: true});
         }
     }
@@ -196,7 +200,7 @@ class ArrayFieldView extends BaseFieldView {
     }
 
     handleSearchType(type) {
-        let $inputContainer = this.$el.find('div.input-container');
+        const $inputContainer = this.$el.find('div.input-container');
 
         if (~['anyOf', 'noneOf', 'allOf'].indexOf(type)) {
             $inputContainer.removeClass('hidden');
@@ -210,10 +214,10 @@ class ArrayFieldView extends BaseFieldView {
 
         let translation = this.params.translation;
         /** @type {?string} */
-        let optionsReference = this.params.optionsReference;
+        const optionsReference = this.params.optionsReference;
 
         if (!translation && optionsReference) {
-            let [refEntityType, refField] = optionsReference.split('.');
+            const [refEntityType, refField] = optionsReference.split('.');
 
             translation = `${refEntityType}.options.${refField}`;
         }
@@ -228,7 +232,7 @@ class ArrayFieldView extends BaseFieldView {
             this.getLanguage().translatePath(translation) :
             this.translate(this.name, 'options', this.model.name);
 
-        let map = {};
+        const map = {};
 
         this.params.options.forEach(o => {
             if (typeof obj === 'object' && o in obj) {
@@ -246,7 +250,7 @@ class ArrayFieldView extends BaseFieldView {
     setupOptions() {}
 
     setOptionList(optionList, silent) {
-        let previousOptions = this.params.options;
+        const previousOptions = this.params.options;
 
         if (!this.originalOptionList) {
             this.originalOptionList = this.params.options;
@@ -254,10 +258,10 @@ class ArrayFieldView extends BaseFieldView {
 
         this.params.options = Espo.Utils.clone(optionList);
 
-        let isChanged = !_(previousOptions).isEqual(optionList);
+        const isChanged = !_(previousOptions).isEqual(optionList);
 
         if (this.isEditMode() && !silent && isChanged) {
-            let selectedOptionList = [];
+            const selectedOptionList = [];
 
             this.selected.forEach(option => {
                 if (~optionList.indexOf(option)) {
@@ -289,11 +293,11 @@ class ArrayFieldView extends BaseFieldView {
             return;
         }
 
-        let previousOptions = this.params.options;
+        const previousOptions = this.params.options;
 
         this.params.options = Espo.Utils.clone(this.originalOptionList);
 
-        let isChanged = !_(previousOptions).isEqual(this.originalOptionList);
+        const isChanged = !_(previousOptions).isEqual(this.originalOptionList);
 
         if (!this.isEditMode() || !isChanged) {
             return;
@@ -305,7 +309,7 @@ class ArrayFieldView extends BaseFieldView {
     }
 
     controlAddItemButton() {
-        let $select = this.$select;
+        const $select = this.$select;
 
         if (!$select) {
             return;
@@ -315,7 +319,7 @@ class ArrayFieldView extends BaseFieldView {
             return;
         }
 
-        let value = $select.val().toString().trim();
+        const value = $select.val().toString().trim();
 
         if (!value && this.params.noEmptyString) {
             this.$addButton.addClass('disabled').attr('disabled', 'disabled');
@@ -329,13 +333,13 @@ class ArrayFieldView extends BaseFieldView {
         if (this.isEditMode()) {
             this.$list = this.$el.find('.list-group');
 
-            let $select = this.$select = this.$el.find('.select');
+            const $select = this.$select = this.$el.find('.select');
 
             if (this.allowCustomOptions) {
                 this.$addButton = this.$el.find('button[data-action="addItem"]');
 
                 this.$addButton.on('click', () => {
-                    let value = $select.val().toString();
+                    const value = $select.val().toString();
 
                     this.addValueFromUi(value);
 
@@ -345,10 +349,10 @@ class ArrayFieldView extends BaseFieldView {
                 $select.on('input', () => this.controlAddItemButton());
 
                 $select.on('keydown', e => {
-                    let key = Espo.Utils.getKeyFromKeyEvent(e);
+                    const key = Espo.Utils.getKeyFromKeyEvent(e);
 
                     if (key === 'Enter') {
-                        let value = $select.val().toString();
+                        const value = $select.val().toString();
 
                         this.addValueFromUi(value);
                     }
@@ -384,9 +388,9 @@ class ArrayFieldView extends BaseFieldView {
         }
 
         if (this.params.pattern) {
-            let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+            const helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
 
-            let result = helper.validate(this.params.pattern, value, this.name, this.entityType);
+            const result = helper.validate(this.params.pattern, value, this.name, this.entityType);
 
             if (result) {
                 setTimeout(() => this.showValidationMessage(result.message, 'input.select'), 10);
@@ -405,11 +409,11 @@ class ArrayFieldView extends BaseFieldView {
     renderSearch() {
         this.$element = this.$el.find('.main-element');
 
-        let valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
+        const valueList = this.getSearchParamsData().valueList || this.searchParams.valueFront || [];
 
         this.$element.val(valueList.join(this.itemDelimiter));
 
-        let items = [];
+        const items = [];
 
         (this.params.options || []).forEach(value => {
             let label = this.getLanguage().translateOption(value, this.name, this.scope);
@@ -440,7 +444,7 @@ class ArrayFieldView extends BaseFieldView {
             });
 
         /** @type {module:ui/multi-select~Options} */
-        let multiSelectOptions = {
+        const multiSelectOptions = {
             items: items,
             delimiter: this.itemDelimiter,
             matchAnyWord: this.matchAnyWord,
@@ -457,7 +461,7 @@ class ArrayFieldView extends BaseFieldView {
 
         this.$el.find('.selectize-dropdown-content').addClass('small');
 
-        let type = this.$el.find('select.search-type').val();
+        const type = this.$el.find('select.search-type').val();
 
         this.handleSearchType(type);
 
@@ -471,10 +475,10 @@ class ArrayFieldView extends BaseFieldView {
     }
 
     fetchFromDom() {
-        let selected = [];
+        const selected = [];
 
         this.$el.find('.list-group .list-group-item').each((i, el) => {
-            let value = $(el).attr('data-value').toString();
+            const value = $(el).attr('data-value').toString();
 
             selected.push(value);
         });
@@ -486,7 +490,7 @@ class ArrayFieldView extends BaseFieldView {
         // Do not use the `html` method to avoid XSS.
 
         /** @var {string[]} */
-        let list = this.selected.map(item => {
+        const list = this.selected.map(item => {
             let label = null;
 
             if (this.translatedOptions !== null) {
@@ -503,7 +507,7 @@ class ArrayFieldView extends BaseFieldView {
                 label = this.translate('None');
             }
 
-            let style = this.styleMap[item] || 'default';
+            const style = this.styleMap[item] || 'default';
 
             if (this.params.displayAsLabel) {
                 return $('<span>')
@@ -557,7 +561,7 @@ class ArrayFieldView extends BaseFieldView {
         // Do not use the `html` method to avoid XSS.
 
         if (this.translatedOptions !== null) {
-            for (let item in this.translatedOptions) {
+            for (const item in this.translatedOptions) {
                 if (this.translatedOptions[item] === value) {
                     value = item;
 
@@ -568,7 +572,7 @@ class ArrayFieldView extends BaseFieldView {
 
         value = value.toString();
 
-        let text = this.translatedOptions && value in this.translatedOptions ?
+        const text = this.translatedOptions && value in this.translatedOptions ?
             this.translatedOptions[value].toString() :
             value;
 
@@ -599,7 +603,7 @@ class ArrayFieldView extends BaseFieldView {
 
     addValue(value) {
         if (this.selected.indexOf(value) === -1) {
-            let html = this.getItemHtml(value);
+            const html = this.getItemHtml(value);
 
             this.$list.append(html);
             this.selected.push(value);
@@ -608,18 +612,18 @@ class ArrayFieldView extends BaseFieldView {
     }
 
     removeValue(value) {
-        let valueInternal = value.replace(/"/g, '\\"');
+        const valueInternal = value.replace(/"/g, '\\"');
 
         this.$list.children('[data-value="' + valueInternal + '"]').remove();
 
-        let index = this.selected.indexOf(value);
+        const index = this.selected.indexOf(value);
 
         this.selected.splice(index, 1);
         this.trigger('change');
     }
 
     fetch() {
-        let data = {};
+        const data = {};
 
         let list = Espo.Utils.clone(this.selected || []);
 
@@ -636,7 +640,7 @@ class ArrayFieldView extends BaseFieldView {
     }
 
     fetchSearch() {
-        let type = this.$el.find('select.search-type').val() || 'anyOf';
+        const type = this.$el.find('select.search-type').val() || 'anyOf';
 
         let valueList;
 
@@ -681,7 +685,7 @@ class ArrayFieldView extends BaseFieldView {
         }
 
         if (type === 'anyOf') {
-            let data = {
+            const data = {
                 type: 'arrayAnyOf',
                 value: valueList,
                 data: {
@@ -709,7 +713,7 @@ class ArrayFieldView extends BaseFieldView {
         }
 
         if (type === 'allOf') {
-            let data = {
+            const data = {
                 type: 'arrayAllOf',
                 value: valueList,
                 data: {
@@ -748,10 +752,10 @@ class ArrayFieldView extends BaseFieldView {
 
     validateRequired() {
         if (this.isRequired()) {
-            let value = this.model.get(this.name);
+            const value = this.model.get(this.name);
 
             if (!value || value.length === 0) {
-                let msg = this.translate('fieldIsRequired', 'messages')
+                const msg = this.translate('fieldIsRequired', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, '.array-control-container');
@@ -763,12 +767,13 @@ class ArrayFieldView extends BaseFieldView {
         return false;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateMaxCount() {
         if (this.params.maxCount) {
-            let itemList = this.model.get(this.name) || [];
+            const itemList = this.model.get(this.name) || [];
 
             if (itemList.length > this.params.maxCount) {
-                let msg =
+                const msg =
                     this.translate('fieldExceedsMaxCount', 'messages')
                         .replace('{field}', this.getLabelText())
                         .replace('{maxCount}', this.params.maxCount.toString());
@@ -793,7 +798,7 @@ class ArrayFieldView extends BaseFieldView {
      * } | Object.<string, *>}
      */
     getAddItemModalOptions() {
-        let options = [];
+        const options = [];
 
         this.params.options.forEach(item => {
             if (!~this.selected.indexOf(item)) {
