@@ -118,11 +118,8 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
         },
 
         editable: true,
-
         languageCategory: 'fields',
-
         ignoreList: [],
-
         ignoreTypeList: [],
 
         setup: function () {
@@ -148,9 +145,9 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
         },
 
         readDataFromLayout: function (model, layout) {
-            var allFields = [];
+            const allFields = [];
 
-            for (let field in model.defs.fields) {
+            for (const field in model.defs.fields) {
                 if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
 
                     allFields.push(field);
@@ -167,11 +164,11 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             this.enabledFields = [];
             this.disabledFields = [];
 
-            var labelList = [];
-            var duplicateLabelList = [];
+            const labelList = [];
+            const duplicateLabelList = [];
 
-            for (let i in layout) {
-                let label = this.getLanguage().translate(layout[i].name, 'fields', this.scope);
+            for (const i in layout) {
+                const label = this.getLanguage().translate(layout[i].name, 'fields', this.scope);
 
                 if (~labelList.indexOf(label)) {
                     duplicateLabelList.push(label);
@@ -187,9 +184,9 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
                 this.enabledFieldsList.push(layout[i].name);
             }
 
-            for (let i in allFields) {
+            for (const i in allFields) {
                 if (!_.contains(this.enabledFieldsList, allFields[i])) {
-                    let label = this.getLanguage().translate(allFields[i], 'fields', this.scope);
+                    const label = this.getLanguage().translate(allFields[i], 'fields', this.scope);
 
                     if (~labelList.indexOf(label)) {
 
@@ -198,14 +195,14 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
 
                     labelList.push(label);
 
-                    let fieldName = allFields[i];
+                    const fieldName = allFields[i];
 
-                    let o = {
+                    const o = {
                         name: fieldName,
                         label: label,
                     };
 
-                    let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
+                    const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
 
                     if (fieldType) {
                         if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
@@ -234,7 +231,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
 
             this.rowLayout = layout;
 
-            for (let i in this.rowLayout) {
+            for (const i in this.rowLayout) {
                 let label = this.getLanguage().translate(this.rowLayout[i].name, 'fields', this.scope);
 
                 this.enabledFields.forEach(item => {
@@ -248,6 +245,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             }
         },
 
+        // noinspection JSUnusedLocalSymbols
         checkFieldType: function (type) {
             return true;
         },
@@ -261,7 +259,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
                 return false;
             }
 
-            var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+            const layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
 
             if (layoutList && !~layoutList.indexOf(this.type)) {
                 return;

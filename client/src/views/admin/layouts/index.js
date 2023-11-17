@@ -82,7 +82,7 @@ class LayoutIndexView extends View {
 
         this.scopeList = [];
 
-        let scopeFullList = this.getMetadata().getScopeList().sort((v1, v2) => {
+        const scopeFullList = this.getMetadata().getScopeList().sort((v1, v2) => {
             return this.translate(v1, 'scopeNamesPlural')
                 .localeCompare(this.translate(v2, 'scopeNamesPlural'));
         });
@@ -153,7 +153,7 @@ class LayoutIndexView extends View {
             return;
         }
 
-        let $header = this.$el.find(`.accordion-toggle[data-scope="${this.scope}"]`);
+        const $header = this.$el.find(`.accordion-toggle[data-scope="${this.scope}"]`);
 
         this.undisableLinks();
 
@@ -175,8 +175,8 @@ class LayoutIndexView extends View {
     onLayoutLinkClick(e) {
         e.preventDefault();
 
-        let scope = $(e.target).data('scope');
-        let type = $(e.target).data('type');
+        const scope = $(e.target).data('scope');
+        const type = $(e.target).data('type');
 
         if (this.getContentView()) {
             if (this.scope === scope && this.type === type) {
@@ -219,9 +219,9 @@ class LayoutIndexView extends View {
             return;
         }
 
-        let $target = $(e.target);
-        let scope = $target.data('scope');
-        let $collapse = $('.collapse[data-scope="' + scope + '"]');
+        const $target = $(e.target);
+        const scope = $target.data('scope');
+        const $collapse = $('.collapse[data-scope="' + scope + '"]');
 
         $collapse.hasClass('in') ?
             $collapse.collapse('hide') :
@@ -232,7 +232,7 @@ class LayoutIndexView extends View {
      * @param {KeyboardEvent} e
      */
     onKeyDown(e) {
-        let key = Espo.Utils.getKeyFromKeyEvent(e);
+        const key = Espo.Utils.getKeyFromKeyEvent(e);
 
         if (!this.hasView('content')) {
             return;
@@ -265,7 +265,7 @@ class LayoutIndexView extends View {
 
         Espo.Ui.notify(' ... ');
 
-        let typeReal = this.getMetadata()
+        const typeReal = this.getMetadata()
             .get('clientDefs.' + scope + '.additionalLayouts.' + type + '.type') || type;
 
         this.createView('content', 'views/admin/layouts/' + Espo.Utils.camelCaseToHyphen(typeReal), {
@@ -332,7 +332,7 @@ class LayoutIndexView extends View {
     }
 
     renderLayoutHeader() {
-        let $header = $('#layout-header');
+        const $header = $('#layout-header');
 
         if (!this.scope) {
             $header.html('');
@@ -340,9 +340,9 @@ class LayoutIndexView extends View {
             return;
         }
 
-        let list = [];
+        const list = [];
 
-        let separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
+        const separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
 
         if (!this.em) {
             list.push(
@@ -354,7 +354,7 @@ class LayoutIndexView extends View {
             $('<span>').text(this.translateLayoutName(this.type, this.scope))
         );
 
-        let html = list.map($item => $item.get(0).outerHTML).join(' ' + separatorHtml + ' ');
+        const html = list.map($item => $item.get(0).outerHTML).join(' ' + separatorHtml + ' ');
 
         $header.show().html(html);
     }
@@ -364,11 +364,11 @@ class LayoutIndexView extends View {
     }
 
     getHeaderHtml() {
-        let separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
+        const separatorHtml = '<span class="breadcrumb-separator"><span class="chevron-right"></span></span>';
 
-        let list = [];
+        const list = [];
 
-        let $root = $('<a>')
+        const $root = $('<a>')
             .attr('href', '#Admin')
             .text(this.translate('Administration'));
 
