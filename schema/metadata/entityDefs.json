@@ -365,6 +365,29 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "foreign"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "link": {
+                                "type": "string",
+                                "description": "A link."
+                            },
+                            "field": {
+                                "type": "string",
+                                "description": "A field if the foreign entity type."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "linkMultiple"}
                                 ]
                             }
