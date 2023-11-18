@@ -32,7 +32,6 @@ namespace Espo\Tools\UserSecurity;
 use Espo\Core\Authentication\TwoFactor\Exceptions\NotConfigured;
 use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\Log;
