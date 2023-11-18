@@ -50,7 +50,7 @@ use const STR_PAD_LEFT;
 
 class Util
 {
-    private const METHOD = 'Sms';
+    private const METHOD = SmsLogin::NAME;
 
     /**
      * A lifetime of a code.

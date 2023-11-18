@@ -29,21 +29,19 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Sms;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Entities\User;
-
 use Espo\Core\Authentication\TwoFactor\UserSetup;
-use Espo\Core\Exceptions\Error;
 
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class SmsUserSetup implements UserSetup
 {
-    private $util;
-
-    public function __construct(Util $util)
-    {
-        $this->util = $util;
-    }
+    public function __construct(private Util $util)
+    {}
 
     public function getData(User $user): stdClass
     {
@@ -57,7 +55,7 @@ class SmsUserSetup implements UserSetup
         $code = $payloadData->code ?? null;
 
         if ($code === null) {
-            throw new Error("No code.");
+            throw new BadRequest("No code.");
         }
 
         $codeModified = str_replace(' ', '', trim($code));

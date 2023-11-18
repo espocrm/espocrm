@@ -30,17 +30,13 @@
 namespace Espo\Core\Authentication\TwoFactor\Email;
 
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 use Espo\Entities\UserData;
-
 use Espo\Repositories\UserData as UserDataRepository;
-
 use Espo\Core\Authentication\TwoFactor\Login;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\Result\Data as ResultData;
 use Espo\Core\Authentication\Result\FailReason;
-
 use Espo\Core\Api\Request;
 
 use RuntimeException;
@@ -49,14 +45,10 @@ class EmailLogin implements Login
 {
     public const NAME = 'Email';
 
-    private EntityManager $entityManager;
-    private Util $util;
-
-    public function __construct(EntityManager $entityManager, Util $util)
-    {
-        $this->entityManager = $entityManager;
-        $this->util = $util;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private Util $util
+    ) {}
 
     public function login(Result $result, Request $request): Result
     {
@@ -69,6 +61,7 @@ class EmailLogin implements Login
         }
 
         if (!$code) {
+            // @todo Catch errors, return fail with a corresponding reason. Introduce internal exceptions.
             $this->util->sendCode($user);
 
             return Result::secondStepRequired($user, $this->getResultData());

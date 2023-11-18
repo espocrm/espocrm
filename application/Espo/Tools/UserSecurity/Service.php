@@ -29,7 +29,6 @@
 
 namespace Espo\Tools\UserSecurity;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
@@ -95,7 +94,6 @@ class Service
 
     /**
      * @throws BadRequest
-     * @throws Error
      * @throws Forbidden
      * @throws NotFound
      */
@@ -171,9 +169,9 @@ class Service
     }
 
     /**
-     * @throws Error
      * @throws Forbidden
      * @throws NotFound
+     * @throws BadRequest
      */
     public function update(string $id, stdClass $data): stdClass
     {

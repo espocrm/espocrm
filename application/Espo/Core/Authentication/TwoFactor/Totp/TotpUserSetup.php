@@ -29,34 +29,27 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Totp;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Entities\UserData;
 use Espo\Entities\User;
-
 use Espo\Repositories\UserData as UserDataRepository;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Core\Authentication\TwoFactor\UserSetup;
 use Espo\Core\Utils\Config;
 
-use Espo\Core\Exceptions\Error;
-
+use RuntimeException;
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class TotpUserSetup implements UserSetup
 {
-    private $totp;
-
-    private $config;
-
-    private $entityManager;
-
-    public function __construct(Util $totp, Config $config, EntityManager $entityManager)
-    {
-        $this->totp = $totp;
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private Util $totp,
+        private Config $config,
+        private EntityManager $entityManager
+    ) {}
 
     public function getData(User $user): stdClass
     {
@@ -79,7 +72,7 @@ class TotpUserSetup implements UserSetup
         $code = $payloadData->code ?? null;
 
         if ($code === null) {
-            throw new Error("No code.");
+            throw new BadRequest("No code.");
         }
 
         $codeModified = str_replace(' ', '', trim($code));
@@ -91,7 +84,7 @@ class TotpUserSetup implements UserSetup
         $userData = $this->getUserDataRepository()->getByUserId($user->getId());
 
         if (!$userData) {
-            throw new Error("User not found.");
+            throw new RuntimeException("User not found.");
         }
 
         $secret = $userData->get('auth2FATotpSecret');
@@ -104,7 +97,7 @@ class TotpUserSetup implements UserSetup
         $userData = $this->getUserDataRepository()->getByUserId($user->getId());
 
         if (!$userData) {
-            throw new Error();
+            throw new RuntimeException();
         }
 
         $userData->set('auth2FATotpSecret', $secret);

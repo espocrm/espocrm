@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication\TwoFactor;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Entities\User;
 
 use stdClass;
@@ -45,6 +46,8 @@ interface UserSetup
 
     /**
      * Verify input data before making 2FA enabled for a user.
+     *
+     * @throws BadRequest
      */
     public function verifyData(User $user, stdClass $payloadData): bool;
 }

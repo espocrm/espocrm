@@ -31,23 +31,22 @@ namespace Espo\Core\Authentication\TwoFactor\Email;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-
+use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Utils\Config;
 use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\EmailFactory;
 use Espo\Core\Utils\TemplateFileManager;
 use Espo\Core\Htmlizer\HtmlizerFactory;
 use Espo\Core\Field\DateTime;
-
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Condition as Cond;
-
 use Espo\Entities\User;
 use Espo\Entities\Email;
 use Espo\Entities\TwoFactorCode;
 use Espo\Entities\UserData;
-
 use Espo\Repositories\UserData as UserDataRepository;
+
+use RuntimeException;
 
 use const STR_PAD_LEFT;
 
@@ -58,7 +57,7 @@ class Util
      */
     private const CODE_LIFETIME_PERIOD = '10 minutes';
 
-    /*
+    /**
      * A max number of attempts to try a single code.
      */
     private const CODE_ATTEMPTS_COUNT = 5;
@@ -78,37 +77,18 @@ class Util
      */
     private const CODE_LIMIT_PERIOD = '10 minutes';
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    private $config;
-
-    private $emailSender;
-
-    private $templateFileManager;
-
-    private $htmlizerFactory;
-
-    private $emailFactory;
-
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        EmailSender $emailSender,
-        TemplateFileManager $templateFileManager,
-        HtmlizerFactory $htmlizerFactory,
-        EmailFactory $emailFactory
-    ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->emailSender = $emailSender;
-        $this->templateFileManager = $templateFileManager;
-        $this->htmlizerFactory = $htmlizerFactory;
-        $this->emailFactory = $emailFactory;
-    }
+        private EntityManager $entityManager,
+        private Config $config,
+        private EmailSender $emailSender,
+        private TemplateFileManager $templateFileManager,
+        private HtmlizerFactory $htmlizerFactory,
+        private EmailFactory $emailFactory
+    ) {}
 
+    /**
+     * @throws Forbidden
+     */
     public function storeEmailAddress(User $user, string $emailAddress): void
     {
         $this->checkEmailAddressIsUsers($user, $emailAddress);
@@ -116,7 +96,7 @@ class Util
         $userData = $this->getUserDataRepository()->getByUserId($user->getId());
 
         if (!$userData) {
-            throw new Error("UserData not found.");
+            throw new RuntimeException("UserData not found.");
         }
 
         $userData->set('auth2FAEmailAddress', $emailAddress);
@@ -156,6 +136,11 @@ class Util
         return true;
     }
 
+    /**
+     * @throws SendingError
+     * @throws Forbidden
+     * @throws Error
+     */
     public function sendCode(User $user, ?string $emailAddress = null): void
     {
         if ($emailAddress === null) {
@@ -201,12 +186,15 @@ class Util
             ->findOne();
     }
 
+    /**
+     * @throws Error
+     */
     private function getEmailAddress(User $user): string
     {
         $userData = $this->getUserDataRepository()->getByUserId($user->getId());
 
         if (!$userData) {
-            throw new Error("UserData not found.");
+            throw new RuntimeException("UserData not found.");
         }
 
         $emailAddress = $userData->get('auth2FAEmailAddress');
@@ -223,6 +211,9 @@ class Util
         return $user->getEmailAddressGroup()->getPrimaryAddress();
     }
 
+    /**
+     * @throws Forbidden
+     */
     private function checkEmailAddressIsUsers(User $user, string $emailAddress): void
     {
         $userAddressList = array_map(
@@ -237,6 +228,9 @@ class Util
         }
     }
 
+    /**
+     * @throws Forbidden
+     */
     private function checkCodeLimit(User $user): void
     {
         $limit = $this->config->get('auth2FAEmailCodeLimit') ?? self::CODE_LIMIT;
@@ -269,6 +263,7 @@ class Util
 
         $max = pow(10, $codeLength) - 1;
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         return str_pad(
             (string) random_int(0, $max),
             $codeLength,
@@ -308,7 +303,7 @@ class Util
             ->in(TwoFactorCode::ENTITY_TYPE)
             ->where([
                 'userId' => $user->getId(),
-                'method' => 'Email',
+                'method' => EmailLogin::NAME,
             ])
             ->set([
                 'isActive' => false,
@@ -325,7 +320,7 @@ class Util
         $this->entityManager->createEntity(TwoFactorCode::ENTITY_TYPE, [
             'code' => $code,
             'userId' => $user->getId(),
-            'method' => 'Email',
+            'method' => EmailLogin::NAME,
             'attemptsLeft' => $this->getCodeAttemptsCount(),
         ]);
     }
