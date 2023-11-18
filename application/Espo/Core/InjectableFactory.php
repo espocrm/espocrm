@@ -100,7 +100,7 @@ class InjectableFactory
     /**
      * Create an instance by an interface with an optional additional binding.
      * An interface will be resolved by the global binding. If a class is provided, it will be tried to
-     * be resolved (if it's bound to an extended class). If class is not bound, it will be instantiated
+     * be resolved (if it's bound to an extended class). If the class is not bound, it will be instantiated
      * (with the same behavior as with the `createWithBinding` method).
      *
      * @template T of object
