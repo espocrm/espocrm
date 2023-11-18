@@ -50,7 +50,7 @@ class SmsUserSetup implements UserSetup
     public function getData(User $user): stdClass
     {
         if (!$this->config->get('smsProvider')) {
-            throw new NotConfigured("No SMS provider. Need to configure an SMS provider.");
+            throw new NotConfigured("No SMS provider.");
         }
 
         return (object) [

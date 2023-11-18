@@ -30,9 +30,12 @@
 namespace Espo\Tools\UserSecurity;
 
 use Espo\Core\Authentication\TwoFactor\Exceptions\NotConfigured;
+use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Entities\UserData;
@@ -52,7 +55,8 @@ class Service
         private User $user,
         private Config $config,
         private LoginFactory $authLoginFactory,
-        private TwoFactorUserSetupFactory $twoFactorUserSetupFactory
+        private TwoFactorUserSetupFactory $twoFactorUserSetupFactory,
+        private Log $log
     ) {}
 
     /**
@@ -154,7 +158,12 @@ class Service
                 ->getData($user);
         }
         catch (NotConfigured $e) {
-            throw new Forbidden($e->getMessage());
+            $this->log->error($e->getMessage());
+
+            throw Forbidden::createWithBody(
+                "2FA method '$auth2FAMethod' is not fully configured.",
+                Body::create()->withMessageTranslation('2faMethodNotConfigured', 'User')
+            );
         }
 
         if ($isReset) {

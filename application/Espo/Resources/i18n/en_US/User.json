@@ -99,6 +99,7 @@
         "layoutSet": "Layouts from a specified set will be applied for the user instead of default ones."
     },
     "messages": {
+        "2faMethodNotConfigured": "The 2FA method is not fully configured in the system.",
         "loginAs": "Open the login link in an incognito window to preserve your current session. Use your admin credentials to log in.",
         "sendPasswordChangeLinkConfirmation": "An email with a unique link will be sent to the user allowing them to change their password. The link will expire after a specific amount of time.",
         "passwordRecoverySentIfMatched": "Assuming the entered data matched any user account.",
