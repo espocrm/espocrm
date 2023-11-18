@@ -108,7 +108,7 @@ class Authentication
             !$this->configDataProvider->authenticationMethodIsApi($method)
         ) {
             $this->log
-                ->warning("AUTH: Trying to use not allowed authentication method '{$method}'.");
+                ->warning("AUTH: Trying to use not allowed authentication method '$method'.");
 
             return $this->processFail(Result::fail(FailReason::METHOD_NOT_ALLOWED), $data, $request);
         }
@@ -157,7 +157,7 @@ class Authentication
 
         if (($byTokenAndUsername || $byTokenOnly) && !$authToken) {
             if ($username) {
-                $this->log->info("AUTH: Trying to login as user '{$username}' by token but token is not found.");
+                $this->log->info("AUTH: Trying to login as user '$username' by token but token is not found.");
             }
 
             return $this->processFail(Result::fail(FailReason::TOKEN_NOT_FOUND), $data, $request);
@@ -484,6 +484,7 @@ class Authentication
             $this->setSecretInCookie($authToken->getSecret(), $response, $request);
         }
 
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
         if (
             $this->configDataProvider->preventConcurrentAuthToken() &&
             $authToken instanceof AuthTokenEntity
@@ -729,11 +730,7 @@ class Authentication
             ->where(['id' => $authToken->getUserId()])
             ->findOne();
 
-        if (!$user) {
-            return null;
-        }
-
-        return $user->getUserName();
+        return $user?->getUserName();
     }
 
     /**
