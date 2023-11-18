@@ -33,14 +33,10 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 use Espo\Entities\UserData;
-
 use Espo\Repositories\UserData as UserDataRepository;
-
 use Espo\Core\Api\RequestNull;
 use Espo\Core\Authentication\Login\Data as LoginData;
 use Espo\Core\Authentication\LoginFactory;
@@ -165,6 +161,7 @@ class Service
             }
 
             $userData->set('auth2FA', false);
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
             $userData->set('auth2FAMethod', null);
 
             $this->entityManager->saveEntity($userData);
@@ -225,6 +222,7 @@ class Service
         }
 
         if (!$userData->get('auth2FA')) {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
             $userData->set('auth2FAMethod', null);
         }
 

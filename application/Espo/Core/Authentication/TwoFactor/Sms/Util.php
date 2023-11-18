@@ -31,79 +31,59 @@ namespace Espo\Core\Authentication\TwoFactor\Sms;
 
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
-
 use Espo\Core\Utils\Config;
 use Espo\Core\Sms\SmsSender;
 use Espo\Core\Sms\SmsFactory;
 use Espo\Core\Utils\Language;
 use Espo\Core\Field\DateTime;
-
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Condition as Cond;
-
 use Espo\Entities\User;
 use Espo\Entities\Sms;
 use Espo\Entities\TwoFactorCode;
 use Espo\Entities\UserData;
-
 use Espo\Repositories\UserData as UserDataRepository;
+
+use RuntimeException;
 
 use const STR_PAD_LEFT;
 
 class Util
 {
+    private const METHOD = 'Sms';
+
     /**
      * A lifetime of a code.
      */
     private const CODE_LIFETIME_PERIOD = '10 minutes';
-
-    /*
+    /**
      * A max number of attempts to try a single code.
      */
     private const CODE_ATTEMPTS_COUNT = 5;
-
     /**
      * A length of a code.
      */
     private const CODE_LENGTH = 6;
-
     /**
      * A max number of codes tried by a user in a period defined by `CODE_LIMIT_PERIOD`.
      */
     private const CODE_LIMIT = 5;
-
     /**
      * A period for limiting trying to too many codes.
      */
     private const CODE_LIMIT_PERIOD = '20 minutes';
 
-    /**
-     * @var EntityManager
-     */
-    private $entityManager;
-
-    private $config;
-
-    private $smsSender;
-
-    private $language;
-
-    private $smsFactory;
-
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        SmsSender $smsSender,
-        Language $language,
-        SmsFactory $smsFactory
-    ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->smsSender = $smsSender;
-        $this->language = $language;
-        $this->smsFactory = $smsFactory;
-    }
+        private EntityManager $entityManager,
+        private Config $config,
+        private SmsSender $smsSender,
+        private Language $language,
+        private SmsFactory $smsFactory
+    ) {}
 
+    /**
+     * @throws Forbidden
+     */
     public function storePhoneNumber(User $user, string $phoneNumber): void
     {
         $this->checkPhoneNumberIsUsers($user, $phoneNumber);
@@ -111,7 +91,7 @@ class Util
         $userData = $this->getUserDataRepository()->getByUserId($user->getId());
 
         if (!$userData) {
-            throw new Error();
+            throw new RuntimeException();
         }
 
         $userData->set('auth2FASmsPhoneNumber', $phoneNumber);
@@ -151,6 +131,10 @@ class Util
         return true;
     }
 
+    /**
+     * @throws Forbidden
+     * @throws Error
+     */
     public function sendCode(User $user, ?string $phoneNumber = null): void
     {
         if ($phoneNumber === null) {
@@ -165,7 +149,7 @@ class Util
         $this->inactivateExistingCodeRecords($user);
         $this->createCodeRecord($user, $code);
 
-        $sms = $this->createSms($user, $code, $phoneNumber);
+        $sms = $this->createSms($code, $phoneNumber);
 
         $this->smsSender->send($sms);
     }
@@ -189,19 +173,22 @@ class Util
         return $this->entityManager
             ->getRDBRepository(TwoFactorCode::ENTITY_TYPE)
             ->where([
-                'method' => 'Sms',
+                'method' => self::METHOD,
                 'userId' => $user->getId(),
                 'isActive' => true,
             ])
             ->findOne();
     }
 
+    /**
+     * @throws Error
+     */
     private function getPhoneNumber(User $user): string
     {
         $userData = $this->getUserDataRepository()->getByUserId($user->getId());
 
         if (!$userData) {
-            throw new Error("UserData not found.");
+            throw new RuntimeException("UserData not found.");
         }
 
         $phoneNumber = $userData->get('auth2FASmsPhoneNumber');
@@ -218,6 +205,9 @@ class Util
         return $user->getPhoneNumberGroup()->getPrimaryNumber();
     }
 
+    /**
+     * @throws Forbidden
+     */
     private function checkPhoneNumberIsUsers(User $user, string $phoneNumber): void
     {
         $userNumberList = array_map(
@@ -232,6 +222,9 @@ class Util
         }
     }
 
+    /**
+     * @throws Forbidden
+     */
     private function checkCodeLimit(User $user): void
     {
         $limit = $this->config->get('auth2FASmsCodeLimit') ?? self::CODE_LIMIT;
@@ -245,7 +238,7 @@ class Util
             ->getRDBRepository(TwoFactorCode::ENTITY_TYPE)
             ->where(
                 Cond::and(
-                    Cond::equal(Cond::column('method'), 'Sms'),
+                    Cond::equal(Cond::column('method'), self::METHOD),
                     Cond::equal(Cond::column('userId'), $user->getId()),
                     Cond::greaterOrEqual(Cond::column('createdAt'), $from),
                     Cond::lessOrEqual(Cond::column('attemptsLeft'), 0),
@@ -264,6 +257,7 @@ class Util
 
         $max = pow(10, $codeLength) - 1;
 
+        /** @noinspection PhpUnhandledExceptionInspection */
         return str_pad(
             (string) random_int(0, $max),
             $codeLength,
@@ -272,7 +266,7 @@ class Util
         );
     }
 
-    private function createSms(User $user, string $code, string $phoneNumber): Sms
+    private function createSms(string $code, string $phoneNumber): Sms
     {
         $fromNumber = $this->config->get('outboundSmsFromNumber');
 
@@ -297,7 +291,7 @@ class Util
             ->in(TwoFactorCode::ENTITY_TYPE)
             ->where([
                 'userId' => $user->getId(),
-                'method' => 'Sms',
+                'method' => self::METHOD,
             ])
             ->set([
                 'isActive' => false,
@@ -314,7 +308,7 @@ class Util
         $this->entityManager->createEntity(TwoFactorCode::ENTITY_TYPE, [
             'code' => $code,
             'userId' => $user->getId(),
-            'method' => 'Sms',
+            'method' => self::METHOD,
             'attemptsLeft' => $this->getCodeAttemptsCount(),
         ]);
     }
