@@ -29,16 +29,30 @@
 
 namespace Espo\Core\Sms;
 
+use Espo\Core\InjectableFactory;
 use Espo\Entities\Sms as SmsEntity;
-
 use Espo\Core\Utils\Config;
 
 class SmsSender
 {
+    private ?Sender $sender;
+
     public function __construct(
-        private Sender $sender,
+        private InjectableFactory $injectableFactory,
         private Config $config
     ) {}
+
+    private function getSender(): Sender
+    {
+        if ($this->sender === null) {
+            // Sender factory can throw an exception (if no 'smsProvider' in config).
+            // Better it be thrown when sending rather than when instantiating
+            // constructor dependencies.
+            $this->sender = $this->injectableFactory->createResolved(Sender::class);
+        }
+
+        return $this->sender;
+    }
 
     public function send(SmsEntity $sms): void
     {
@@ -48,7 +62,7 @@ class SmsSender
             $sms->setFromNumber($systemFromNumber);
         }
 
-        $this->sender->send($sms);
+        $this->getSender()->send($sms);
 
         $sms->setAsSent();
     }

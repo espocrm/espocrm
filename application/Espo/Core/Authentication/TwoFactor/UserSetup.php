@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication\TwoFactor;
 
+use Espo\Core\Authentication\TwoFactor\Exceptions\NotConfigured;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Entities\User;
 
@@ -41,6 +42,8 @@ interface UserSetup
 {
     /**
      * Get data needed for configuration for a user. Data will be passed to the front-end.
+     *
+     * @throws NotConfigured
      */
     public function getData(User $user): stdClass;
 

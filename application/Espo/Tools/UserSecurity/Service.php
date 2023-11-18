@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\UserSecurity;
 
+use Espo\Core\Authentication\TwoFactor\Exceptions\NotConfigured;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
@@ -147,9 +148,14 @@ class Service
             throw new BadRequest();
         }
 
-        $clientData = $this->twoFactorUserSetupFactory
-            ->create($auth2FAMethod)
-            ->getData($user);
+        try {
+            $clientData = $this->twoFactorUserSetupFactory
+                ->create($auth2FAMethod)
+                ->getData($user);
+        }
+        catch (NotConfigured $e) {
+            throw new Forbidden($e->getMessage());
+        }
 
         if ($isReset) {
             $userData = $this->getUserDataRepository()->getByUserId($id);

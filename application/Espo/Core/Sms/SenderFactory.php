@@ -59,7 +59,7 @@ class SenderFactory implements Factory
         $className = $this->metadata->get(['app', 'smsProviders', $provider, 'senderClassName']);
 
         if (!$className) {
-            throw new RuntimeException("No `senderClassName` for '{$provider}' provider.");
+            throw new RuntimeException("No `senderClassName` for '$provider' provider.");
         }
 
         return $this->injectableFactory->create($className);
