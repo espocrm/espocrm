@@ -115,11 +115,11 @@ class LoginSecondStepView extends View {
 
     /** @private */
     send() {
-        let code = this.$code.val().trim().replace(/\s/g, '');
+        const code = this.$code.val().trim().replace(/\s/g, '');
 
-        let userName = this.options.userName;
-        let token = this.loginData.token;
-        let headers = Espo.Utils.clone(this.headers);
+        const userName = this.options.userName;
+        const token = this.loginData.token;
+        const headers = Espo.Utils.clone(this.headers);
 
         if (code === '') {
             this.processEmptyCode();
@@ -130,7 +130,7 @@ class LoginSecondStepView extends View {
         this.disableForm();
 
         if (userName && token) {
-            let authString = Base64.encode(userName  + ':' + token);
+            const authString = Base64.encode(userName + ':' + token);
 
             headers['Authorization'] = 'Basic ' + authString;
             headers['Espo-Authorization'] = authString;
@@ -187,9 +187,9 @@ class LoginSecondStepView extends View {
     processEmptyCode() {
         this.isPopoverDestroyed = false;
 
-        let message = this.getLanguage().translate('codeIsRequired', 'messages', 'User');
+        const message = this.getLanguage().translate('codeIsRequired', 'messages', 'User');
 
-        let $el = this.$code;
+        const $el = this.$code;
 
         $el
             .popover({
@@ -200,7 +200,7 @@ class LoginSecondStepView extends View {
             })
             .popover('show');
 
-        let $cell = $el.closest('.form-group');
+        const $cell = $el.closest('.form-group');
 
         $cell.addClass('has-error');
 
@@ -219,7 +219,7 @@ class LoginSecondStepView extends View {
 
     /** @private */
     onWrongCredentials() {
-        let $cell = $('#login .form-group');
+        const $cell = $('#login .form-group');
 
         $cell.addClass('has-error');
 
