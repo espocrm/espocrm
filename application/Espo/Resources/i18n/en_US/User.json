@@ -119,6 +119,7 @@
         "passwordChangedByRequest": "Password has been changed.",
         "setupSmtpBefore": "You need to setup [SMTP settings]({url}) to make the system be able to send password in email.",
         "userNameExists": "User Name already exists",
+        "loginError": "Error occurred",
         "wrongCode": "Wrong code",
         "codeIsRequired": "Code is required",
         "yourAuthenticationCode": "Your authentication code: {code}.",

@@ -279,12 +279,18 @@ class LoginView extends View {
                 this.undisableForm();
 
                 if (xhr.status === 401) {
-                    let data = xhr.responseJSON || {};
-                    let statusReason = xhr.getResponseHeader('X-Status-Reason');
+                    const data = xhr.responseJSON || {};
+                    const statusReason = xhr.getResponseHeader('X-Status-Reason');
 
                     if (statusReason === 'second-step-required') {
                         xhr.errorIsHandled = true;
                         this.onSecondStepRequired(initialHeaders, userName, password, data);
+
+                        return;
+                    }
+
+                    if (statusReason === 'error') {
+                        this.onError();
 
                         return;
                     }
@@ -373,8 +379,22 @@ class LoginView extends View {
     }
 
     /** @private */
+    onError() {
+        this.onFail('loginError');
+    }
+
+    /** @private */
     onWrongCredentials() {
-        let $cell = $('#login .form-group');
+        const msg = this.handler ?
+            'failedToLogIn' :
+            'wrongUsernamePassword';
+
+        this.onFail(msg);
+    }
+
+    /** @private */
+    onFail(msg) {
+        const $cell = $('#login .form-group');
 
         $cell.addClass('has-error');
 
@@ -382,11 +402,7 @@ class LoginView extends View {
             $cell.removeClass('has-error');
         });
 
-        let messageKey = this.handler ?
-            'failedToLogIn' :
-            'wrongUsernamePassword';
-
-        Espo.Ui.error(this.translate(messageKey, 'messages', 'User'));
+        Espo.Ui.error(this.translate(msg, 'messages', 'User'));
     }
 
     /** @private */

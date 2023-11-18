@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Email;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Utils\Config;
@@ -139,7 +138,6 @@ class Util
     /**
      * @throws SendingError
      * @throws Forbidden
-     * @throws Error
      */
     public function sendCode(User $user, ?string $emailAddress = null): void
     {
@@ -179,7 +177,7 @@ class Util
         return $this->entityManager
             ->getRDBRepository(TwoFactorCode::ENTITY_TYPE)
             ->where([
-                'method' => 'Email',
+                'method' => EmailLogin::NAME,
                 'userId' => $user->getId(),
                 'isActive' => true,
             ])
@@ -187,7 +185,7 @@ class Util
     }
 
     /**
-     * @throws Error
+     * @throws Forbidden
      */
     private function getEmailAddress(User $user): string
     {
@@ -204,7 +202,7 @@ class Util
         }
 
         if ($user->getEmailAddressGroup()->getCount() === 0) {
-            throw new Error("User does not have email address.");
+            throw new Forbidden("User does not have email address.");
         }
 
         /** @var string */

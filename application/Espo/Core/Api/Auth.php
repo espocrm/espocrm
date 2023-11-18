@@ -115,7 +115,7 @@ class Auth
             ($this->isEntryPoint || !$this->isXMLHttpRequest($request)) &&
             !$request->getHeader('Referer');
 
-        $this->handleUnauthorized($response, $showDialog);
+        $this->handleUnauthorized($response, null, $showDialog);
 
         return AuthResult::createNotResolved();
     }
@@ -172,7 +172,7 @@ class Auth
                 $this->isEntryPoint &&
                 !$request->getHeader('Referer');
 
-            $this->handleUnauthorized($response, $showDialog);
+            $this->handleUnauthorized($response, $result, $showDialog);
         }
 
         if ($result->isSecondStepRequired()) {
@@ -245,10 +245,14 @@ class Auth
         throw $e;
     }
 
-    private function handleUnauthorized(Response $response, bool $showDialog): void
+    private function handleUnauthorized(Response $response, ?Result $result, bool $showDialog): void
     {
         if ($showDialog) {
             $response->setHeader('WWW-Authenticate', 'Basic realm=""');
+        }
+
+        if ($result && $result->getFailReason() === Result\FailReason::ERROR) {
+            $response = $response->setHeader('X-Status-Reason', 'error');
         }
 
         $response->setStatus(401);

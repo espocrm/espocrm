@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Sms;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\Config;
 use Espo\Core\Sms\SmsSender;
@@ -133,7 +132,6 @@ class Util
 
     /**
      * @throws Forbidden
-     * @throws Error
      */
     public function sendCode(User $user, ?string $phoneNumber = null): void
     {
@@ -181,7 +179,7 @@ class Util
     }
 
     /**
-     * @throws Error
+     * @throws Forbidden
      */
     private function getPhoneNumber(User $user): string
     {
@@ -198,7 +196,7 @@ class Util
         }
 
         if ($user->getPhoneNumberGroup()->getCount() === 0) {
-            throw new Error("User does not have phone number.");
+            throw new Forbidden("User does not have phone number.");
         }
 
         /** @var string */

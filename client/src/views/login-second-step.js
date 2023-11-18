@@ -158,7 +158,16 @@ class LoginSecondStepView extends View {
             .catch(xhr => {
                 this.undisableForm();
 
+
                 if (xhr.status === 401) {
+                    const statusReason = xhr.getResponseHeader('X-Status-Reason');
+
+                    if (statusReason === 'error') {
+                        this.onError();
+
+                        return;
+                    }
+
                     this.onWrongCredentials();
                 }
             });
@@ -218,7 +227,7 @@ class LoginSecondStepView extends View {
     }
 
     /** @private */
-    onWrongCredentials() {
+    onFail(msg) {
         const $cell = $('#login .form-group');
 
         $cell.addClass('has-error');
@@ -227,7 +236,17 @@ class LoginSecondStepView extends View {
             $cell.removeClass('has-error');
         });
 
-        Espo.Ui.error(this.translate('wrongCode', 'messages', 'User'));
+        Espo.Ui.error(this.translate(msg, 'messages', 'User'));
+    }
+
+    /** @private */
+    onError() {
+        this.onFail('loginError');
+    }
+
+    /** @private */
+    onWrongCredentials() {
+        this.onFail('wrongCode');
     }
 
     /** @private */

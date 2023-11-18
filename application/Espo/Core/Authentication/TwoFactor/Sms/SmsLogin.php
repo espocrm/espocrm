@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Sms;
 
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Entities\UserData;
@@ -47,7 +49,8 @@ class SmsLogin implements Login
 
     public function __construct(
         private EntityManager $entityManager,
-        private Util $util
+        private Util $util,
+        private Log $log
     ) {}
 
     public function login(Result $result, Request $request): Result
@@ -67,8 +70,14 @@ class SmsLogin implements Login
                 throw new RuntimeException("No user.");
             }
 
-            // @todo Catch errors, return fail with a corresponding reason. Introduce internal exceptions.
-            $this->util->sendCode($user);
+            try {
+                $this->util->sendCode($user);
+            }
+            catch (Forbidden $e) {
+                $this->log->error("Could not send 2FA code for user {$user->getUserName()}. " . $e->getMessage());
+
+                return Result::fail(FailReason::ERROR);
+            }
 
             return Result::secondStepRequired($user, $this->getResultData());
         }
