@@ -38,12 +38,21 @@ use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\FieldProcessing\ListLoadProcessor;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\SearchParams;
+use Espo\Tools\Export\Params as ExportParams;
+use Espo\Tools\Export\Export as ExportTool;
+
 
 /**
  * @extends Record<ImportEntity>
  */
 class Import extends Record
 {
+    public function __construct(
+	 private ExportTool $exportTool
+    ) {
+        parent::__construct();
+    }
+
     public function findLinked(string $id, string $link, SearchParams $searchParams): RecordCollection
     {
         if (!in_array($link, ['imported', 'duplicates', 'updated'])) {
@@ -95,5 +104,44 @@ class Import extends Record
     {
         /** @var Repository */
         return $this->getRepository();
+    }
+
+    public function getLinkedRecords(string $importId, string $link): RecordCollection
+    {
+	$searchParams = SearchParams::create()
+	    ->withOrderBy('createdAt')
+	    ->withOrder(SearchParams::ORDER_ASC);
+	   
+	$linkedRecords = $this->findLinked(
+		$importId,
+		$link,
+		$searchParams);
+
+	return $linkedRecords;
+    }
+
+    public function exportRecords(RecordCollection $records): ?string
+    {
+	if ($this->acl->getPermissionLevel('exportPermission') !== Table::LEVEL_YES) {
+	        throw new ForbiddenSilent("User has no 'export' permission.");
+	}
+
+	if ($records->getTotal() === 0) {
+	    return null;
+	}
+
+	$exportEntityType = $records->getCollection()->getEntityType();
+	
+	$exportParams = ExportParams::create($exportEntityType)
+	        ->withFormat('csv')
+	        ->withAccessControl();
+
+	$attachment_id = $this->exportTool
+	        ->setParams($exportParams)
+	        ->setCollection($records->getCollection())
+	        ->run()
+	        ->getAttachmentId();
+
+	return $attachment_id;
     }
 }
