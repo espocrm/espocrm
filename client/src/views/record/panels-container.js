@@ -662,6 +662,10 @@ class PanelsContainerRecordView extends View {
          */
         this.tabDataList = tabDataList.sort((v1, v2) => v1.index - v2.index);
 
+        this.panelList = this.panelList.filter(item => {
+            return !this.recordHelper.getPanelStateParam(item.name, 'hiddenLocked');
+        });
+
         let newList = [];
 
         this.panelList.forEach((item, i) => {
@@ -786,10 +790,6 @@ class PanelsContainerRecordView extends View {
         if (~index) {
             this.panelList.splice(index, 1);
         }
-
-        this.panelList = this.panelList.filter((p) => {
-            return !this.recordHelper.getPanelStateParam(p.name, 'hiddenLocked');
-        });
 
         this.panelsAreSet = true;
 
