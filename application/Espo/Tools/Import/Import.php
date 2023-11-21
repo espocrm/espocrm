@@ -966,7 +966,9 @@ class Import
             case Entity::DATE:
                 $dt = DateTime::createFromFormat($dateFormat, $value);
 
-                if (!$dt) {
+                $errorData = DateTime::getLastErrors();
+
+                if (!$dt || ($errorData && $errorData['warnings'] !== [])) {
                     throw ValidationError::create(
                         new Failure($entity->getEntityType(), $attribute, 'valid')
                     );
@@ -980,7 +982,9 @@ class Import
 
                 $dt = DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
 
-                if (!$dt) {
+                $errorData = DateTime::getLastErrors();
+
+                if (!$dt || ($errorData && $errorData['warnings'] !== [])) {
                     throw ValidationError::create(
                         new Failure($entity->getEntityType(), $attribute, 'valid')
                     );
