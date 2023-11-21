@@ -48,8 +48,8 @@ class ImportHandler extends ActionHandler {
     }
 
     // noinspection JSUnusedGlobalSymbols
-	actionExportImportRelationship() {
-	    Espo.Ajax
+    actionExportImportRelationship() {
+        Espo.Ajax
             .postRequest(`Import/${this.view.model.id}/exportRelationship/${this.view.link}`)
             .then(data => {
                 if (!data.attachmentId) {

@@ -48,7 +48,7 @@ use Espo\Tools\Export\Export as ExportTool;
 class Import extends Record
 {
     public function __construct(
-	 private ExportTool $exportTool
+        private ExportTool $exportTool
     ) {
         parent::__construct();
     }
@@ -108,40 +108,40 @@ class Import extends Record
 
     public function getLinkedRecords(string $importId, string $link): RecordCollection
     {
-	$searchParams = SearchParams::create()
-	    ->withOrderBy('createdAt')
-	    ->withOrder(SearchParams::ORDER_ASC);
-	   
-	$linkedRecords = $this->findLinked(
-		$importId,
-		$link,
-		$searchParams);
+        $searchParams = SearchParams::create()
+            ->withOrderBy('createdAt')
+            ->withOrder(SearchParams::ORDER_ASC);
 
-	return $linkedRecords;
+        $linkedRecords = $this->findLinked(
+            $importId,
+            $link,
+            $searchParams);
+
+        return $linkedRecords;
     }
 
     public function exportRecords(RecordCollection $records): ?string
     {
-	if ($this->acl->getPermissionLevel('exportPermission') !== Table::LEVEL_YES) {
-	        throw new ForbiddenSilent("User has no 'export' permission.");
-	}
+        if ($this->acl->getPermissionLevel('exportPermission') !== Table::LEVEL_YES) {
+            throw new ForbiddenSilent("User has no 'export' permission.");
+        }
 
-	if ($records->getTotal() === 0) {
-	    return null;
-	}
+        if ($records->getTotal() === 0) {
+            return null;
+        }
 
-	$exportEntityType = $records->getCollection()->getEntityType();
-	
-	$exportParams = ExportParams::create($exportEntityType)
-	        ->withFormat('csv')
-	        ->withAccessControl();
+        $exportEntityType = $records->getCollection()->getEntityType();
 
-	$attachment_id = $this->exportTool
-	        ->setParams($exportParams)
-	        ->setCollection($records->getCollection())
-	        ->run()
-	        ->getAttachmentId();
+        $exportParams = ExportParams::create($exportEntityType)
+            ->withFormat('csv')
+            ->withAccessControl();
 
-	return $attachment_id;
+        $attachment_id = $this->exportTool
+                              ->setParams($exportParams)
+                              ->setCollection($records->getCollection())
+                              ->run()
+                              ->getAttachmentId();
+
+        return $attachment_id;
     }
 }
