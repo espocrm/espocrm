@@ -34,10 +34,13 @@ use Espo\Entities\Import as ImportEntity;
 
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\FieldProcessing\ListLoadProcessor;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\SearchParams;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\Tools\Export\Params as ExportParams;
 use Espo\Tools\Export\Export as ExportTool;
 
@@ -53,6 +56,11 @@ class Import extends Record
         parent::__construct();
     }
 
+    /**
+     * @param non-empty-string $link
+     * @throws NotFoundSilent If a record not found.
+     * @throws Forbidden If no access.
+     */
     public function findLinked(string $id, string $link, SearchParams $searchParams): RecordCollection
     {
         if (!in_array($link, ['imported', 'duplicates', 'updated'])) {
@@ -106,6 +114,10 @@ class Import extends Record
         return $this->getRepository();
     }
 
+    /**
+     * @param non-empty-string $link
+     * @return RecordCollection<Entity>
+     */
     public function getLinkedRecords(string $importId, string $link): RecordCollection
     {
         $searchParams = SearchParams::create()
@@ -120,6 +132,9 @@ class Import extends Record
         return $linkedRecords;
     }
 
+    /**
+     * @param RecordCollection<Entity> $records
+     */
     public function exportRecords(RecordCollection $records): ?string
     {
         if ($this->acl->getPermissionLevel('exportPermission') !== Table::LEVEL_YES) {
@@ -127,6 +142,11 @@ class Import extends Record
         }
 
         if ($records->getTotal() === 0) {
+            return null;
+        }
+
+        if (!$records->getCollection() instanceof EntityCollection ||
+            !$records->getCollection()->getEntityType()) {
             return null;
         }
 
