@@ -657,6 +657,10 @@
                     "type": "string",
                     "description": "Converts field defs to ORM metadata. Should implement Espo\\Core\\Utils\\Database\\Orm\\FieldConverter."
                 },
+                "duplicateIgnore": {
+                    "type": "boolean",
+                    "description": "Ignore when duplicating a record."
+                },
                 "duplicatorClassName": {
                     "type": "string",
                     "description": "Duplicates attributes of a field. Some fields can require some processing when an entity is being duplicated. Should implement Espo\\Core\\Record\\Duplicator\\FieldDuplicator."
