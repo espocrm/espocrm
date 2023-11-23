@@ -30,7 +30,6 @@
 namespace Espo\Core\Log;
 
 use Monolog\Handler\HandlerInterface;
-use Monolog\Logger;
 
 use Espo\Core\InjectableFactory;
 
