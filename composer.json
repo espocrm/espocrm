@@ -24,7 +24,7 @@
         "laminas/laminas-mail": "^2.25.1",
         "laminas/laminas-ldap": "^2.16",
         "laminas/laminas-servicemanager": "^3.22",
-        "laminas/laminas-crypt": "^3.9",
+        "laminas/laminas-crypt": "^3.11",
         "monolog/monolog": "2.*",
         "yzalis/identicon": "~2.0.0",
         "zordius/lightncandy": "dev-espo#v1.2.5e",
