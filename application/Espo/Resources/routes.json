@@ -285,6 +285,11 @@
         "actionClassName": "Espo\\Tools\\Import\\Api\\PostExportErrors"
     },
     {
+        "route": "/Import/:id/exportRelationship/:link",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Import\\Api\\PostExportRelationship"
+    },
+    {
         "route": "/Kanban/order",
         "method": "put",
         "actionClassName": "Espo\\Tools\\Kanban\\Api\\PutOrder"

@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,43 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import ActionHandler from 'action-handler';
+namespace Espo\Tools\Import\Api;
 
-class ImportHandler extends ActionHandler {
+use Espo\Core\Acl;
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Entities\Import;
+use Espo\Services\Import as Service;
 
-    // noinspection JSUnusedGlobalSymbols
-    actionErrorExport() {
-        Espo.Ajax
-            .postRequest(`Import/${this.view.model.id}/exportErrors`)
-            .then(data => {
-                if (!data.attachmentId) {
-                    let message = this.view.translate('noErrors', 'messages', 'Import');
+/**
+ * Exports records related to an import.
+ */
+class PostExportRelationship implements Action
+{
+    public function __construct(private Service $service, private Acl $acl) {}
 
-                    Espo.Ui.warning(message);
+    public function process(Request $request): Response
+    {
+        if (!$this->acl->checkScope(Import::ENTITY_TYPE)) {
+            throw new Forbidden();
+        }
 
-                    return;
-                }
+        $id = $request->getRouteParam('id');
 
-                window.location = this.view.getBasePath() + '?entryPoint=download&id=' + data.attachmentId;
-            });
-    }
+        if (!$id) {
+            throw new BadRequest();
+        }
 
-    // noinspection JSUnusedGlobalSymbols
-    actionExportImportRelationship() {
-        Espo.Ajax
-            .postRequest(`Import/${this.view.model.id}/exportRelationship/${this.view.link}`)
-            .then(data => {
-                if (!data.attachmentId) {
-                    let message = this.view.translate('noRecords', 'messages', 'Import');
+        $link = $request->getRouteParam('link');
+        if (!$link) {
+            throw new BadRequest();
+        }
 
-                    Espo.Ui.warning(message);
+        $linkedRecords = $this->service->getLinkedRecords($id, $link);
 
-                    return;
-                }
+        $attachmentId = $this->service->exportRecords($linkedRecords);
 
-                window.location = this.view.getBasePath() + '?entryPoint=download&id=' + data.attachmentId;
-            });
+        return ResponseComposer::json(['attachmentId' => $attachmentId]);
     }
 }
-
-export default ImportHandler;

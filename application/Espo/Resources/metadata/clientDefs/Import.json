@@ -15,6 +15,16 @@
 	    		"name": "imported",
 	    		"label": "Imported",
 	    		"view": "views/import/record/panels/imported",
+                "actionList": [
+                    {
+                        "name": "exportImportRelationship",
+                        "action": "exportImportRelationship",
+                        "label": "Export",
+                        "data": {
+                            "handler": "handlers/import"
+                        }
+                    }
+                ],
                 "createDisabled": true,
                 "selectDisabled": true,
                 "unlinkDisabled": true
@@ -24,6 +34,16 @@
 	    		"label": "Duplicates",
 	    		"view": "views/import/record/panels/duplicates",
                 "rowActionsView": "views/import/record/row-actions/duplicates",
+                "actionList": [
+                    {
+                        "name": "exportImportRelationship",
+                        "action": "exportImportRelationship",
+                        "label": "Export",
+                        "data": {
+                            "handler": "handlers/import"
+                        }
+                    }
+                ],
                 "createDisabled": true,
                 "selectDisabled": true,
                 "unlinkDisabled": true
@@ -32,6 +52,16 @@
 	    		"name": "updated",
 	    		"label": "Updated",
 	    		"view": "views/import/record/panels/updated",
+                "actionList": [
+                    {
+                        "name": "exportImportRelationship",
+                        "action": "exportImportRelationship",
+                        "label": "Export",
+                        "data": {
+                            "handler": "handlers/import"
+                        }
+                    }
+                ],
                 "createDisabled": true,
                 "selectDisabled": true,
                 "unlinkDisabled": true
