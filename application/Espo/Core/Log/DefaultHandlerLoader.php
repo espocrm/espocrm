@@ -41,7 +41,7 @@ use RuntimeException;
  * @phpstan-type DefaultHandlerLoaderData array{
  *     className?: ?class-string<HandlerInterface>,
  *     params?: ?array<string, mixed>,
- *     level?: ?string,
+ *     level?: string|null,
  *     formatter?: ?FormatterData,
  * }
  * @phpstan-type FormatterData array{
@@ -60,6 +60,7 @@ class DefaultHandlerLoader
         $level = $data['level'] ?? $defaultLevel;
 
         if ($level) {
+            /** @phpstan-ignore-next-line */
             $params['level'] = Logger::toMonologLevel($level);
         }
 
@@ -83,7 +84,7 @@ class DefaultHandlerLoader
     /**
      * @param DefaultHandlerLoaderData $data
      */
-    protected function loadFormatter(array $data): ?FormatterInterface
+    private function loadFormatter(array $data): ?FormatterInterface
     {
         $formatterData = $data['formatter'] ?? null;
 
@@ -108,7 +109,7 @@ class DefaultHandlerLoader
      * @param array<string, mixed> $params
      * @return T
      */
-    protected function createInstance(string $className, array $params): object
+    private function createInstance(string $className, array $params): object
     {
         $class = new ReflectionClass($className);
 

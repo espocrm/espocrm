@@ -29,11 +29,12 @@
 
 namespace Espo\Core\Log\Handler;
 
-use Monolog\Handler\StreamHandler as MonologStreamHandler;
-use Monolog\Logger;
-
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\File\Manager as FileManager;
+
+use Monolog\Handler\StreamHandler as MonologStreamHandler;
+use Monolog\Level;
+use Monolog\LogRecord;
 
 use RuntimeException;
 use Throwable;
@@ -42,13 +43,12 @@ class EspoFileHandler extends MonologStreamHandler
 {
     protected FileManager $fileManager;
 
-    /** @var int */
-    protected $maxErrorMessageLength = 10000;
+    protected int $maxErrorMessageLength = 10000;
 
     public function __construct(
         Config $config,
         string $filename,
-        int $level = Logger::DEBUG,
+        Level $level = Level::Debug,
         bool $bubble = true
     ) {
         parent::__construct($filename, $level, $bubble);
@@ -58,13 +58,7 @@ class EspoFileHandler extends MonologStreamHandler
         $this->fileManager = new FileManager($defaultPermissions);
     }
 
-    /**
-     * @param array{
-     *   message: string,
-     *   formatted: string,
-     * } $record
-     */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         if (!$this->url) {
             throw new RuntimeException("Missing a logger file path. Check logger params in config.");
@@ -85,7 +79,7 @@ class EspoFileHandler extends MonologStreamHandler
             );
         }
         catch (Throwable $e) {
-            $msg = "Could not write file `" . $this->url . "`.";
+            $msg = "Could not write file `$this->url`.";
 
             if ($e->getMessage()) {
                 $msg .= " Error message: " . $e->getMessage();
@@ -95,23 +89,16 @@ class EspoFileHandler extends MonologStreamHandler
         }
     }
 
-    /**
-     * @param array{
-     *   message: string,
-     *   formatted: string,
-     * } $record
-     * @return string
-     */
-    protected function pruneMessage(array $record)
+    private function pruneMessage(LogRecord $record): string
     {
-        $message = (string) $record['message'];
-
-        if (strlen($message) > $this->maxErrorMessageLength) {
-            $record['message'] = substr($message, 0, $this->maxErrorMessageLength) . '...';
-
-            $record['formatted'] = $this->getFormatter()->format($record);
+        if (strlen($record->message) <= $this->maxErrorMessageLength) {
+            return $record->formatted;
         }
 
-        return (string) $record['formatted'];
+        $message = substr($record->message, 0, $this->maxErrorMessageLength) . '...';
+
+        $record = $record->with('message', $message);
+
+        return $this->getFormatter()->format($record);
     }
 }

@@ -50,8 +50,8 @@ class LogLoader
     private const DEFAULT_LEVEL = 'WARNING';
 
     public function __construct(
-        private Config $config,
-        private InjectableFactory $injectableFactory
+        private readonly Config $config,
+        private readonly InjectableFactory $injectableFactory
     ) {}
 
     public function load(): Log
@@ -76,13 +76,13 @@ class LogLoader
 
         $errorHandler = new MonologErrorHandler($log);
 
-        $errorHandler->registerExceptionHandler(null, false);
+        $errorHandler->registerExceptionHandler([], false);
         $errorHandler->registerErrorHandler([], false);
 
         return $log;
     }
 
-    protected function createDefaultHandler(): HandlerInterface
+    private function createDefaultHandler(): HandlerInterface
     {
         $path = $this->config->get('logger.path') ?? self::PATH;
         $rotation = $this->config->get('logger.rotation') ?? true;
