@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5d70e299806f1eea7eb0429939ef1bfa",
+    "content-hash": "345d9c965877bb974241a2a33c49c1fa",
     "packages": [
         {
             "name": "async-aws/core",
@@ -2161,23 +2161,26 @@
         },
         {
             "name": "league/flysystem-async-aws-s3",
-            "version": "2.0.4",
+            "version": "3.0.22",
             "source": {
                 "type": "git",
                 "url": "https://github.com/thephpleague/flysystem-async-aws-s3.git",
-                "reference": "2a2e566cf1dae8e0ebfca49c6eda8050935d1c0d"
+                "reference": "39493aa67371d927f18091e9aaf60ac40e11ca00"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/thephpleague/flysystem-async-aws-s3/zipball/2a2e566cf1dae8e0ebfca49c6eda8050935d1c0d",
-                "reference": "2a2e566cf1dae8e0ebfca49c6eda8050935d1c0d",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-async-aws-s3/zipball/39493aa67371d927f18091e9aaf60ac40e11ca00",
+                "reference": "39493aa67371d927f18091e9aaf60ac40e11ca00",
                 "shasum": ""
             },
             "require": {
                 "async-aws/s3": "^1.5",
-                "league/flysystem": "^2.0.0",
+                "league/flysystem": "^2.0.0 || ^3.0.0",
                 "league/mime-type-detection": "^1.0.0",
-                "php": "^7.2 || ^8.0"
+                "php": "^8.0.2"
+            },
+            "conflict": {
+                "symfony/http-client": "<5.2"
             },
             "require-dev": {
                 "async-aws/simple-s3": "^1.0"
@@ -2211,7 +2214,7 @@
             ],
             "support": {
                 "issues": "https://github.com/thephpleague/flysystem-async-aws-s3/issues",
-                "source": "https://github.com/thephpleague/flysystem-async-aws-s3/tree/2.0.4"
+                "source": "https://github.com/thephpleague/flysystem-async-aws-s3/tree/3.0.22"
             },
             "funding": [
                 {
@@ -2227,7 +2230,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-12-02T13:23:21+00:00"
+            "time": "2022-06-29T07:24:13+00:00"
         },
         {
             "name": "league/mime-type-detection",
