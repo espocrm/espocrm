@@ -15,7 +15,7 @@
         "ext-curl": "*",
         "ext-exif": "*",
         "ext-pdo": "*",
-        "psr/log": "~2",
+        "psr/log": "~3",
         "psr/http-message": "^1.0",
         "psr/container": "^1.1",
         "slim/slim": "^4.12",
