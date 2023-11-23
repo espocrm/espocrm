@@ -20,7 +20,7 @@ You can try the CRM on the online [demo](https://www.espocrm.com/demo/).
 
 ### Requirements
 
-* PHP 8.0 and later;
+* PHP 8.1 - 8.3;
 * MySQL 5.7 (and later), or MariaDB 10.2 (and later).
 * PostgreSQL 15 (and later) (yet experimental, officially supported soon)
 
@@ -38,7 +38,7 @@ Create a [GitHub issue](https://github.com/espocrm/espocrm/issues/new/choose) or
 
 See installation instructions:
 
-* [Manual installation](https://docs.espocrm.com/administration/installation/) 
+* [Manual installation](https://docs.espocrm.com/administration/installation/)
 * [Installation by script](https://docs.espocrm.com/administration/installation-by-script/)
 * [Installation with Docker](https://docs.espocrm.com/administration/docker/installation/)
 * [Installation with Traefik](https://docs.espocrm.com/administration/docker/traefik/)

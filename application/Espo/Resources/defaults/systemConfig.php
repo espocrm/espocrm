@@ -250,7 +250,7 @@ return [
         'aclAllowDeleteCreated',
     ],
     'isInstalled' => false,
-    'requiredPhpVersion' => '8.0.0',
+    'requiredPhpVersion' => '8.1.0',
     'requiredPhpLibs' => [
         'json',
         'openssl',
