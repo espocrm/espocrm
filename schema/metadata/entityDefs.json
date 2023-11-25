@@ -134,6 +134,7 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "bool"},
                                     {"const": "varchar"},
                                     {"const": "text"},
                                     {"const": "wysiwyg"},
@@ -152,14 +153,6 @@
                     "then": {
                         "properties": {
                             "default": {
-                                "anyOf": [
-                                    {"type": "boolean"},
-                                    {"type": "string"},
-                                    {"type": "array"},
-                                    {"type": "integer"},
-                                    {"type": "number"},
-                                    {"type": "null"}
-                                ],
                                 "description": "A default value."
                             }
                         }
