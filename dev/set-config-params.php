@@ -27,6 +27,56 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/**
+ * Creates the config file if it does not exist. Sets the 'version' from the `package.json` in the config.
+ */
+
 include "bootstrap.php";
 
-(new EspoDev\SetConfigParams())->process();
+use Espo\Core\Application;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Config\ConfigWriterFileManager;
+use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Json;
+
+if (!str_starts_with(php_sapi_name(), 'cli')) {
+    return;
+}
+
+$fileManager = new FileManager();
+
+$packageData = Json::decode(
+    $fileManager->getContents('package.json')
+);
+
+$version = $packageData->version ?? null;
+
+if (!$version) {
+    return;
+}
+
+$configPath = 'data/config.php';
+
+$configWriterFileManager = new ConfigWriterFileManager();
+
+if (!$configWriterFileManager->isFile($configPath)) {
+    $configWriterFileManager->putPhpContents($configPath, []);
+}
+
+$app = new Application();
+
+$injectableFactory = $app->getContainer()->getByClass(InjectableFactory::class);
+$config = $app->getContainer()->getByClass(Config::class);
+
+if ($config->get('version') === $version) {
+    return;
+}
+
+$configWriter = $injectableFactory->create(ConfigWriter::class);
+
+$configWriter->set('version', $version);
+$configWriter->save();
+
+
