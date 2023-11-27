@@ -114,14 +114,14 @@ class RelationshipPanelView extends BottomPanelView {
             }
         }
 
-        this.entityType = this.entityType || this.model.defs.links[this.link].entity;
-
         // noinspection JSDeprecatedSymbols
-        if (this.scope) {
+        if (this.scope && !this.entityType) {
             // For backward compatibility.
             // noinspection JSDeprecatedSymbols
             this.entityType = this.scope;
         }
+
+        this.entityType = this.entityType || this.model.defs.links[this.link].entity;
 
         // For backward compatibility.
         // noinspection JSDeprecatedSymbols
