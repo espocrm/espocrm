@@ -108,6 +108,6 @@
         }
     ],
     "scripts": {
-        "setConfigParams": "EspoDev\\SetConfigParams::process"
+        "setConfigParams": "php dev/set-config-params.php"
     }
 }
