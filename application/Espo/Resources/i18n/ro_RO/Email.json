@@ -7,7 +7,6 @@
     "to": "Către",
     "replyTo": "Răspunde la",
     "replyToString": "Răspunde la (Șir)",
-    "isHtml": "În format Html",
     "body": "Conținut",
     "subject": "Subiect",
     "attachments": "Atașamente",
@@ -90,7 +89,6 @@
     "Folders": "Dosare"
   },
   "messages": {
-    "noSmtpSetup": "Nici o setare SMTP. {link}.",
     "testEmailSent": "Email-ul test a fost trmimis",
     "emailSent": "Email-ul a fost trimis",
     "savedAsDraft": "Salvat ca schiță"

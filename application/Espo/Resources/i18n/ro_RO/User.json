@@ -34,7 +34,8 @@
     "portalRoles": "Roluri Portaluri",
     "accounts": "Conturi",
     "account": "Cont (Principal)",
-    "tasks": "Sarcini"
+    "tasks": "Sarcini",
+    "userData": "Date Utilizator"
   },
   "labels": {
     "Create User": "Creare Utilizator",
