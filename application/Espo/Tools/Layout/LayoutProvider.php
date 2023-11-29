@@ -32,6 +32,7 @@ namespace Espo\Tools\Layout;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Json;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Resource\FileReader;
 use Espo\Core\Utils\Resource\FileReader\Params as FileReaderParams;
 use RuntimeException;
@@ -46,6 +47,7 @@ class LayoutProvider
     public function __construct(
         private FileManager $fileManager,
         private InjectableFactory $injectableFactory,
+        private Metadata $metadata,
         FileReader $fileReader
     ) {
         $this->fileReader = $fileReader;
@@ -62,14 +64,26 @@ class LayoutProvider
 
         $path = 'layouts/' . $scope . '/' . $name . '.json';
 
-        $params = FileReaderParams::create()
-            ->withScope($scope);
+        $params = FileReaderParams::create()->withScope($scope);
+
+        $module = $this->getLayoutLocationModule($scope, $name);
+
+        if ($module) {
+            $params = $params
+                ->withScope(null)
+                ->withModuleName($module);
+        }
 
         if ($this->fileReader->exists($path, $params)) {
             return $this->fileReader->read($path, $params);
         }
 
         return $this->getDefault($scope, $name);
+    }
+
+    private function getLayoutLocationModule(string $scope, string $name): ?string
+    {
+        return $this->metadata->get("app.layouts.{$scope}.{$name}.module");
     }
 
     private function getDefault(string $scope, string $name): ?string

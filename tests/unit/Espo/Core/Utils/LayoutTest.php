@@ -29,43 +29,38 @@
 
 namespace tests\unit\Espo\Core\Utils;
 
+use Espo\Core\Utils\Metadata;
 use Espo\Tools\Layout\LayoutProvider;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\InjectableFactory;
 
-use Espo\Core\{
-    Utils\Resource\FileReader,
-    Utils\Resource\FileReader\Params as FileReaderParams,
-};
+use Espo\Core\Utils\Resource\FileReader;
+use Espo\Core\Utils\Resource\FileReader\Params as FileReaderParams;
 
 class LayoutTest extends \PHPUnit\Framework\TestCase
 {
-    /**
-     * @var LayoutProvider
-     */
+    /** @var LayoutProvider */
     private $layout;
-
-    /**
-     * @var InjectableFactory
-     */
+    /** @var InjectableFactory */
     private $injectableFactory;
-
-    /**
-     * @var FileManager
-     */
+    /** @var FileManager */
     private $fileManager;
-
     private $fileReader;
 
     protected function setUp(): void
     {
         $this->fileManager = $this->createMock(FileManager::class);
-
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
-
         $this->fileReader = $this->createMock(FileReader::class);
 
-        $this->layout = new \Espo\Tools\Layout\LayoutProvider($this->fileManager, $this->injectableFactory, $this->fileReader);
+        $metadata = $this->createMock(Metadata::class);
+
+        $this->layout = new LayoutProvider(
+            $this->fileManager,
+            $this->injectableFactory,
+            $metadata,
+            $this->fileReader
+        );
     }
 
     public function testGet1(): void

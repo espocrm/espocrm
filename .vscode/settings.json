@@ -336,6 +336,12 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/layouts.json"
+            ],
+            "url": "./schema/metadata/app/layouts.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/linkManager.json"
             ],
             "url": "./schema/metadata/app/linkManager.json"
