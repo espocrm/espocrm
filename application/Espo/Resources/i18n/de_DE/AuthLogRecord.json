@@ -1,7 +1,7 @@
 {
   "fields": {
     "username": "Benutzername",
-    "ipAddress": "IP Adresse",
+    "ipAddress": "IP-Adresse",
     "requestTime": "Anforderungszeit",
     "createdAt": "Zeitstempel",
     "isDenied": "Verweigert",

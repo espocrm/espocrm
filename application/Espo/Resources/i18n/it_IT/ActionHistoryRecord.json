@@ -15,10 +15,10 @@
   },
   "options": {
     "action": {
-      "read": "Leggere",
-      "update": "Aggiorna",
-      "delete": "Elimina",
-      "create": "Crea"
+      "read": "Lettura",
+      "update": "Aggiornamento",
+      "delete": "Eliminazione",
+      "create": "Creazione"
     }
   }
 }

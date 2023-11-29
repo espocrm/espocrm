@@ -77,7 +77,8 @@
     "Configuration Instructions": "Configuratie-instructies",
     "Formula Sandbox": "Formule Sandbox",
     "Working Time Calendars": "Werktijd kalenders",
-    "Group Email Folders": "Groep e-mailmappen"
+    "Group Email Folders": "Groep e-mailmappen",
+    "Authentication Providers": "Authenticatieproviders"
   },
   "layouts": {
     "list": "Lijst",
@@ -134,7 +135,8 @@
     "jsonObject": "Json object",
     "datetime": "Datum tijd",
     "datetimeOptional": "Datum / tijd",
-    "linkOne": "Link één"
+    "linkOne": "Link één",
+    "urlMultiple": "Meerdere Url"
   },
   "fields": {
     "name": "Naam",
@@ -193,7 +195,10 @@
     "conversionDisabled": "Conversie uitschakelen",
     "decimalPlaces": "Decimale posities",
     "pattern": "Patroon",
-    "globalRestrictions": "Globale beperkingen"
+    "globalRestrictions": "Globale beperkingen",
+    "decimal": "Decimaal",
+    "optionsReference": "Opties Referentie",
+    "copyToClipboard": "Kopieer naar klembord knop"
   },
   "messages": {
     "selectEntityType": "Selecteer de eenheid soort in het linker menu.",
@@ -263,7 +268,8 @@
     "sms": "SMS instellingen.",
     "formulaSandbox": "Formulescripts schrijven en testen.",
     "workingTimeCalendars": "Werkschema.",
-    "groupEmailFolders": "E-mailmappen gedeeld voor teams."
+    "groupEmailFolders": "E-mailmappen gedeeld voor teams.",
+    "authenticationProviders": "Extra authenticatieproviders voor portalen."
   },
   "options": {
     "previewSize": {
@@ -286,7 +292,8 @@
     "user": "Gebruikersnaam",
     "writable": "Schrijfbaar",
     "readable": "Leesbaar",
-    "requiredMariadbVersion": "MariaDB versie"
+    "requiredMariadbVersion": "MariaDB versie",
+    "requiredPostgresqlVersion": "PostgreSQL versie"
   },
   "templates": {
     "accessInfo": "Toegangs info",
@@ -301,7 +308,7 @@
     "twoFactorCode": "2FA-code"
   },
   "strings": {
-    "rebuildRequired": "Herbouw is nodig"
+    "rebuildRequired": "Reconstrueren vereist"
   },
   "keywords": {
     "settings": "systeem",

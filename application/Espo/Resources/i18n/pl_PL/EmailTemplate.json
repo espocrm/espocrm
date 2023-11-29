@@ -1,7 +1,6 @@
 {
   "fields": {
     "name": "Nazwa",
-    "isHtml": "Format HTML",
     "body": "Treść",
     "subject": "Temat",
     "attachments": "Załączniki",

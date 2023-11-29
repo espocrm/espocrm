@@ -1,1 +1,11 @@
-{}
+{
+  "labels": {
+    "Check Syntax": "Sprawdź składnię",
+    "Run": "Uruchom"
+  },
+  "fields": {
+    "target": "Obiekt",
+    "targetType": "Typ obiektu",
+    "script": "Skrypt"
+  }
+}

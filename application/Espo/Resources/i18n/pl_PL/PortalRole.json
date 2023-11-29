@@ -8,9 +8,5 @@
   "fields": {
     "exportPermission": "Eksportuj uprawnienia",
     "massUpdatePermission": "Uprawnienie do masowej aktualizacji"
-  },
-  "tooltips": {
-    "exportPermission": "Określa czy użytkownicy portalu mają możliwość eksportowania rekordów.",
-    "massUpdatePermission": "Określa czy użytkownicy portalu mają możliwość masowej aktualizacji rekordów."
   }
 }

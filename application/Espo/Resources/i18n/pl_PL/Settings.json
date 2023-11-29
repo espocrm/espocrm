@@ -124,7 +124,8 @@
     "busyRangesEntityList": "Lista wolnych / zajętych podmiotów",
     "passwordRecoveryForInternalUsersDisabled": "Wyłącz odzyskiwanie hasła dla użytkowników wewnętrznych",
     "passwordRecoveryNoExposure": "Zapobiegaj ujawnianiu adresu e-mail w formularzu odzyskiwania hasła",
-    "auth2FAForced": "Zmuszaj zwykłych użytkowników do konfigurowania 2FA"
+    "auth2FAForced": "Zmuszaj zwykłych użytkowników do konfigurowania 2FA",
+    "smsProvider": "Dostawca SMS"
   },
   "tooltips": {
     "recordsPerPage": "Ilość rekordów wyświetlanych w widoku listy.",

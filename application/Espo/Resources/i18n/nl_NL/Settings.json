@@ -149,7 +149,9 @@
     "oidcSync": "OIDC synchronisatie",
     "oidcAllowRegularUserFallback": "OIDC fallback login toestaan voor gewone gebruikers",
     "oidcAllowAdminUser": "OIDC Inlog OIDC toestaan voor admin-gebruikers",
-    "oidcLogoutUrl": "OIDC Uitlog URL"
+    "oidcLogoutUrl": "OIDC Uitlog URL",
+    "recordsPerPageKanban": "Records per pagina (Kanban)",
+    "auth2FAInPortal": "Sta 2FA toe in portalen"
   },
   "tooltips": {
     "recordsPerPage": "Aantal zichtbare records in lijsten.",
@@ -231,7 +233,8 @@
     "oidcSyncTeams": "Gebruikers teams synchroniseren (bij elke aanmelding).",
     "oidcUsernameClaim": "Een claim om te gebruiken voor een gebruikersnaam (voor het matchen en aanmaken van gebruikers).",
     "oidcTeams": "Espo-teams gemapt tegen groepen/teams/rollen van de identity provider. Teams met een lege mapping waarde worden altijd toegewezen aan een gebruiker (bij het aanmaken of synchroniseren).",
-    "oidcLogoutUrl": "Een URL waarnaar de browser zal doorverwijzen na het afmelden bij Espo. Bedoeld voor het wissen van de sessiegegevens in de browser en het afmelden aan de providerzijde. Meestal bevat de URL een redirect-URL parameter, om terug te keren naar Espo.\n\nBeschikbare plaatshouders:\n* `{siteUrl}`\n* `{clientId}`"
+    "oidcLogoutUrl": "Een URL waarnaar de browser zal doorverwijzen na het afmelden bij Espo. Bedoeld voor het wissen van de sessiegegevens in de browser en het afmelden aan de providerzijde. Meestal bevat de URL een redirect-URL parameter, om terug te keren naar Espo.\n\nBeschikbare plaatshouders:\n* `{siteUrl}`\n* `{clientId}`",
+    "recordsPerPageKanban": "Aantal records dat aanvankelijk in kanban-kolommen wordt weergegeven."
   },
   "labels": {
     "System": "Systeem",
@@ -252,7 +255,10 @@
     "2-Factor Authentication": "2-Factor authenticatie",
     "Group Tab": "Tabblad Groep",
     "Attachments": "Bijlagen",
-    "IdP Group": "IdP Groep"
+    "IdP Group": "IdP Groep",
+    "Divider": "Scheider",
+    "General": "Algemeen",
+    "Navbar": "Navigatiebalk"
   },
   "messages": {
     "ldapTestConnection": "De verbinding is succesvol tot stand gebracht."

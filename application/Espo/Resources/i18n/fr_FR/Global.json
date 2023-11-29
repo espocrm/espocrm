@@ -246,6 +246,7 @@
     "notUpdated": "Pas à jour",
     "maintenanceMode": "L'application est actuellement en mode maintenance. Seuls les utilisateurs administrateurs ont accès. \n\nLe mode maintenance peut être désactivé dans Administration → Paramètres.",
     "fieldInvalid": "{field} n'est pas valide",
+    "fieldPhoneInvalid": "{field} n'est pas valide",
     "fieldNotMatchingPattern": "{field} ne correspond pas au modèle `{pattern}`",
     "fieldNotMatchingPattern$noBadCharacters": "{field} contient des caractères interdits",
     "fieldNotMatchingPattern$noAsciiSpecialCharacters": "{field} ne devrait pas contenir des caractères spéciaux ASCII",

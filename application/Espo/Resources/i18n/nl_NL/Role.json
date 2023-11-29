@@ -9,21 +9,14 @@
     "exportPermission": "Exporteer rechten",
     "dataPrivacyPermission": "Data privacy rechten",
     "massUpdatePermission": "Rechten voor massale update",
-    "followerManagementPermission": "Volgersbeheer Toestemming"
+    "followerManagementPermission": "Volgersbeheer Toestemming",
+    "data": "Gegevens",
+    "fieldData": "Veldgegevens",
+    "messagePermission": "Toestemming voor berichten"
   },
   "links": {
     "users": "Gebruikers",
     "teams": "Groepen"
-  },
-  "tooltips": {
-    "assignmentPermission": "Maakt het mogelijk om de mogelijkheid voor gebruikers om records en posts aan andere gebruikers toe te wijzen te beperken.\n\nalle - geen beperking\n\ngroep - kan toewijzen aan gebruikers van eigen groepen\n\nnee - kan alleen aan zichzelf toewijzen",
-    "userPermission": "Hiermee kunnen gebruikers de activiteiten van andere gebruikers bekijken.\n\nalle - kan alle bekijken\n\ngroep - kan activiteiten van gebruikers uit eigen groepen bekijken\n\nnee - kan niet bekijken",
-    "portalPermission": "Definieert een toegang tot portaalinformatie, mogelijkheid om berichten naar portaalgebruikers te posten.",
-    "groupEmailAccountPermission": "Definieert een toegang tot groeps E-mail accounts, een mogelijkheid om e-mails te verzenden vanuit groep SMTP.",
-    "dataPrivacyPermission": "Toestaan ​​om persoonlijke gegevens te bekijken en te wissen.",
-    "exportPermission": "Bepaalt of gebruikers de mogelijkheid hebben om records te exporteren.",
-    "massUpdatePermission": "Definieert of gebruikers de mogelijkheid hebben om een grote hoeveelheid records bij te werken.",
-    "followerManagementPermission": "Maakt het mogelijk om volgers van specifieke records te beheren."
   },
   "labels": {
     "Access": "Toegang",
@@ -55,5 +48,16 @@
   },
   "messages": {
     "changesAfterClearCache": "Alle wijzigingen in een toegangscontrolesysteem worden toegepast nadat de cache is geschoond."
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "Toestaan ​​om persoonlijke gegevens te bekijken en te wissen.",
+    "followerManagementPermission": "Maakt het mogelijk om volgers van specifieke records te beheren.",
+    "messagePermission": "Berichten naar andere gebruikers sturen.\n\n* all - naar iedereen sturen\n* team - alleen naar teamleden sturen\n* nee - niet sturen",
+    "assignmentPermission": "Records aan andere gebruikers toewijzen.\n\n* alle - geen beperking\n* team - alleen aan teamgenoten toewijzen\n* no - alleen aan zichzelf toewijzen",
+    "userPermission": "Activiteiten, agenda en stream van andere gebruikers bekijken.\n\n* alles - alles bekijken\n* team - alleen activiteiten van teamgenoten bekijken\n* nee - niet bekijken",
+    "portalPermission": "Toegang tot portaalinformatie, de mogelijkheid om berichten te posten voor portaalgebruikers.",
+    "groupEmailAccountPermission": "Toegang tot e-mailaccounts van groepen, de mogelijkheid om e-mails te versturen via SMTP van groepen.",
+    "exportPermission": "Het kunnen exporteren van records.",
+    "massUpdatePermission": "Het uitvoeren van massale updates van records."
   }
 }

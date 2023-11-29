@@ -8,7 +8,8 @@
     "isGlobal": "Is globaal",
     "emailFolder": "Map",
     "groupEmailFolder": "Groep e-mail map",
-    "markAsRead": "Markeer als gelezen"
+    "markAsRead": "Markeer als gelezen",
+    "bodyContainsAll": "Inhoud bevat alles"
   },
   "labels": {
     "Create EmailFilter": "Creëer E-mail Filter",
@@ -20,7 +21,8 @@
     "name": "Geef het filter een beschrijvende naam.",
     "bodyContains": "De inhoud van de e-mail bevat een van de opgegeven woorden of zinnen.",
     "isGlobal": "Past dit filter toe op alle e-mails die binnenkomen op het systeem.",
-    "subject": "Gebruik een wildcard *: \n\n * `tekst*` - begint met tekst,\n * `*tekst*` - bevat tekst,\n * `*tekst` - eindigt met tekst."
+    "subject": "Gebruik een wildcard *: \n\n * `tekst*` - begint met tekst,\n * `*tekst*` - bevat tekst,\n * `*tekst` - eindigt met tekst.",
+    "bodyContainsAll": "De inhoud van een e-mail bevat alle opgegeven woorden of zinsdelen."
   },
   "options": {
     "action": {

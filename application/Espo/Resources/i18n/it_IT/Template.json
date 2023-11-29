@@ -37,13 +37,6 @@
       "now": "Ora (data-ora)",
       "pagebreak": "Interruzione pagina"
     },
-    "fontFace": {
-      "aealarabiya": "Al Arabiya",
-      "pdfasymbol": "Simbolo PDFA",
-      "stsongstdlight": "STSong STD Light",
-      "symbol": "Simbolo",
-      "times": "Tempi"
-    },
     "pageFormat": {
       "Custom": "Personalizzato"
     }

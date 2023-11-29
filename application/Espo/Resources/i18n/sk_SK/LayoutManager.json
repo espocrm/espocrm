@@ -1,6 +1,5 @@
 {
   "fields": {
-    "width": "Šírka (%)",
     "link": "Odkaz",
     "notSortable": "Nezoraditeľné",
     "align": "Zarovnať",
@@ -26,5 +25,9 @@
   "labels": {
     "New panel": "Nový panel",
     "Layout": "Rozmiestnenie"
+  },
+  "messages": {
+    "alreadyExists": "Rozloženie `{name}` už existuje.",
+    "createInfo": "Panely vzťahov môžu používať vlastné rozloženia zoznamu."
   }
 }

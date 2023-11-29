@@ -1,6 +1,5 @@
 {
   "fields": {
-    "width": "Breite (%)",
     "notSortable": "Nicht sortierbar",
     "align": "Ausrichten",
     "sticked": "Gepinnt",
@@ -8,7 +7,6 @@
     "dynamicLogicVisible": "Bedingungen, die das Panel sichtbar machen",
     "hidden": "Versteckt",
     "dynamicLogicStyled": "Bedingungen für die Anwendung des Stils",
-    "widthPx": "Breit (px)",
     "noLabel": "Kein Label",
     "tabLabel": "Registerkartenbeschriftung",
     "tabBreak": "Registerkartenumbruch"
@@ -38,9 +36,7 @@
     "dynamicLogicStyled": "Eine Farbe wird angewendet, wenn eine bestimmte Bedingung erfüllt ist. Die Farbe wird durch den Parameter *Style* definiert.",
     "tabBreak": "Eine eigene Registerkarte für das Panel und alle folgenden Paneele bis zum nächsten Registerkartenumbruch.",
     "noLabel": "Zeige keine Spaltenbeschriftung in der Kopfzeile an.",
-    "notSortable": "Deaktiviert die Möglichkeit, nach der Spalte zu sortieren.",
-    "width": "Eine Spaltenbreite in Prozent. Es wird empfohlen, eine Spalte ohne festgesetzte Breite zu haben, normalerweise ist es das Feld *Name*.",
-    "widthPx": "Eine Spaltenbreite in Pixeln. Tritt nur in Kraft, wenn der Wert (%) nicht festgelegt ist. Dies setzt die Spaltenbreite auf einen festen Wert."
+    "notSortable": "Deaktiviert die Möglichkeit, nach der Spalte zu sortieren."
   },
   "messages": {
     "cantBeEmpty": "Layout kann nicht leer sein.",

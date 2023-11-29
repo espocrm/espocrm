@@ -38,10 +38,6 @@
       "now": "Nu (datum-tijd)",
       "pagebreak": "Pagina-einde"
     },
-    "fontFace": {
-      "pdfasymbol": "PDFA-symbool",
-      "symbol": "Symbool"
-    },
     "pageFormat": {
       "Custom": "Aangepast"
     }

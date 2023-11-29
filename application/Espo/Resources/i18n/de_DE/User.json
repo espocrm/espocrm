@@ -22,7 +22,7 @@
     "sendAccessInfo": "E-Mail mit Zugangsinformationen an Benutzer senden",
     "gender": "Geschlecht",
     "position": "Position im Team",
-    "ipAddress": "IP Adresse",
+    "ipAddress": "IP-Adresse",
     "passwordPreview": "Passwortvorschau",
     "isSuperAdmin": "Ist Super-Admin",
     "lastAccess": "Letzter Zugriff",
@@ -91,7 +91,7 @@
     "layoutSet": "Layouts aus einem bestimmten Satz werden anstelle der Standardlayouts für den Benutzer verwendet."
   },
   "messages": {
-    "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet",
+    "passwordWillBeSent": "Das Passwort wird an die E-Mail Adresse des Benutzers gesendet.",
     "passwordChanged": "Das Passwort wurde geändert",
     "userCantBeEmpty": "Der Benutzername darf nicht leer sein!",
     "wrongUsernamePassword": "Falscher Benutzername/Passwort",

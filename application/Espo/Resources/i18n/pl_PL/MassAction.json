@@ -1,1 +1,8 @@
-{}
+{
+  "options": {
+    "status": {
+      "Success": "Sukces",
+      "Failed": "Błąd"
+    }
+  }
+}

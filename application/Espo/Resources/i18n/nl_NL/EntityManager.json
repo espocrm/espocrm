@@ -33,7 +33,13 @@
     "parentEntityTypeList": "Bovenliggende entiteit type",
     "foreignLinkEntityTypeList": "Externe links",
     "entity": "Entiteit",
-    "optimisticConcurrencyControl": "Optimistische gelijktijdigheidscontrole"
+    "optimisticConcurrencyControl": "Optimistische gelijktijdigheidscontrole",
+    "beforeSaveApiScript": "API voor opslaan script",
+    "updateDuplicateCheck": "Duplicaatcontrole bij update",
+    "duplicateCheckFieldList": "Duplicaat controlevelden",
+    "layout": "Lay-out",
+    "author": "Auteur",
+    "version": "Versie"
   },
   "options": {
     "type": {
@@ -63,7 +69,12 @@
     "entityCreated": "Entiteit is gecreëerd",
     "linkAlreadyExists": "Link naam conflict.",
     "linkConflict": "Naam conflict : link of veld met dezelfde naam bestaat al.",
-    "confirmRemove": "Weet u zeker dat u het entiteittype uit het systeem wilt verwijderen?"
+    "confirmRemove": "Weet u zeker dat u het entiteittype uit het systeem wilt verwijderen?",
+    "beforeSaveCustomScript": "Een script dat elke keer wordt aangeroepen voordat een entiteit wordt opgeslagen. Te gebruiken voor het instellen van berekende velden.",
+    "beforeSaveApiScript": "Een script dat wordt aangeroepen bij aanmaken en update API requests voordat een entiteit wordt opgeslagen. Te gebruiken voor aangepaste validatie en duplicaat controle.",
+    "nameIsAlreadyUsed": "Naam '{name}' wordt al gebruikt.",
+    "nameIsNotAllowed": "Naam '{name}' is niet toegestaan.",
+    "nameIsTooLong": "Naam is te lang."
   },
   "tooltips": {
     "statusField": "Updates van dit veld zijn gelogd in stream.",
@@ -75,6 +86,8 @@
     "entityType": "Basis plus - heeft panelen Activiteiten, Geschiedenis en Taken.\n\nEvenement - beschikbaar in het paneel Agenda en Activiteiten.",
     "fullTextSearch": "Reconstrueren is vereist.",
     "countDisabled": "Het totale aantal wordt niet weergegeven in de lijstweergave. Kan de laadtijd verkorten wanneer de DB-tabel groot is.",
-    "optimisticConcurrencyControl": "Voorkomt schrijfconflicten."
+    "optimisticConcurrencyControl": "Voorkomt schrijfconflicten.",
+    "duplicateCheckFieldList": "Welke velden te controleren bij het controleren op duplicaten.",
+    "updateDuplicateCheck": "Controleren op duplicaten bij het bijwerken van een record."
   }
 }

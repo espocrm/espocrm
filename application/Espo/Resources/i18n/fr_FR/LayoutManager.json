@@ -1,6 +1,5 @@
 {
   "fields": {
-    "width": "Largeur (%)",
     "link": "Lien",
     "panelName": "Nom du volet",
     "isLarge": "Grande taille de police",

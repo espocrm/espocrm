@@ -320,6 +320,7 @@
     "notUpdated": "Nicht aktualisiert",
     "maintenanceMode": "Die Anwendung befindet sich derzeit im Wartungsmodus. Nur Admin-Benutzer haben Zugriff.\n\nDer Wartungsmodus kann unter Administration → Einstellungen deaktiviert werden.",
     "fieldInvalid": "{field} ist ungültig",
+    "fieldPhoneInvalid": "{field} ist ungültig",
     "resolveSaveConflict": "Der Eintrag wurde bearbeitet. Um den Eintrag speichern zu können, müssen Sie den Konflikt beheben.",
     "massActionProcessed": "Die Massenänderung wurde abgeschlossen.",
     "fieldUrlExceedsMaxLength": "Enkodierte URL überschreitet die maximale Länge von {maxLength}",

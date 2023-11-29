@@ -2,7 +2,9 @@
   "fields": {
     "fieldList": "Lijst met velden",
     "exportAllFields": "Exporteer alle velden",
-    "format": "Formaat"
+    "format": "Formaat",
+    "xlsxRecordLinks": "Record links",
+    "xlsxTitle": "Titel"
   },
   "options": {
     "status": {
@@ -15,5 +17,9 @@
   "messages": {
     "exportProcessed": "Export is verwerkt. Download het [file]({url}).",
     "infoText": "De export wordt in idle door cron verwerkt. Het kan enige tijd duren voordat het klaar is. Het sluiten van dit modale dialoogvenster heeft geen invloed op het uitvoeringsproces."
+  },
+  "tooltips": {
+    "xlsxLite": "Verbruikt veel minder geheugen. Aanbevolen indien een groot aantal records wordt geëxporteerd.",
+    "xlsxTitle": "Print een titel en de huidige datum in de kopregel."
   }
 }

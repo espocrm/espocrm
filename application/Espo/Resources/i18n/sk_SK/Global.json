@@ -272,7 +272,8 @@
     "fieldMaxFileSizeError": "Súbor by nemal prekročiť {max} MB",
     "fieldIsUploading": "Prebieha nahrávanie",
     "erasePersonalDataConfirmation": "Označené polia budú zmazané natrvalo. Ste si istý?",
-    "massPrintPdfMaxCountError": "Nedá sa tlačiť viac ako {maxCount}  zázanmov"
+    "massPrintPdfMaxCountError": "Nedá sa tlačiť viac ako {maxCount}  zázanmov",
+    "cannotUnrelateRequiredLink": "Nie je možné zrušiť prepojenie požadovaného odkazu."
   },
   "boolFilters": {
     "onlyMy": "Len moje",
@@ -633,5 +634,9 @@
   },
   "listViewModes": {
     "list": "Zoznam"
+  },
+  "fieldValidationExplanations": {
+    "int_valid": "Neplatná celočíselná hodnota.",
+    "float_valid": "Neplatná hodnota čísla."
   }
 }

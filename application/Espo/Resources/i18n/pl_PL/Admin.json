@@ -126,7 +126,7 @@
     "rangeInt": "Zakres liczb całkowitych",
     "rangeFloat": "Zakres liczb rzeczywistych",
     "rangeCurrency": "Zakres waluty",
-    "wysiwyg": "edytor wysiwyg",
+    "wysiwyg": "Tekst formatowany",
     "map": "Mapa",
     "currencyConverted": "Obecny (Konwertowany)",
     "colorpicker": "Próbnik kolorów",
@@ -266,7 +266,8 @@
     "dashboardTemplates": "Wdróż pulpity nawigacyjne dla użytkowników.",
     "phoneNumbers": "Wszystkie numery telefonów przechowywane w EspoCRM",
     "emailAddresses": "Wszystkie adresy e-mail przechowywane w systemie.",
-    "layoutSets": "Kolekcje układów które można przypisać do zespołów i portali."
+    "layoutSets": "Kolekcje układów które można przypisać do zespołów i portali.",
+    "sms": "Ustawienia SMS"
   },
   "options": {
     "previewSize": {

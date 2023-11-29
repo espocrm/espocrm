@@ -88,7 +88,9 @@
     "optionsArray": "Een lijst met mogelijke waarden en hun labels. Als het veld leeg is, kunnen er aangepaste waarden worden ingevoerd.",
     "maxCount": "Maximum aantal items dat mag worden geselecteerd.",
     "displayAsList": "Elk item op een nieuwe regel.",
-    "optionsVarchar": "Een lijst van autocomplete waarden."
+    "optionsVarchar": "Een lijst van autocomplete waarden.",
+    "currencyDecimal": "Gebruik het Decimale DB type. In de app worden waarden weergegeven als strings. Vink deze parameter aan als precisie vereist is.",
+    "optionsReference": "Hergebruik opties van een ander veld."
   },
   "fieldParts": {
     "address": {
@@ -140,6 +142,12 @@
     "foreign": "Een veld van een verwante record. Alleen-lezen.",
     "link": "Een record gerelateerd via Behoort-tot (meer-tot-één of één-op-één) relatie.",
     "linkParent": "Een record gerelateerd door Behoort-Toe-Ouder relatie. Kan van verschillende soorten entiteiten zijn.",
-    "linkMultiple": "Een reeks records die via een Has-Many (veel-op-veel of één-op-veel) relatie met elkaar zijn verbonden. Niet alle relaties hebben hun link-multiple velden. Alleen die waar de parameter(s) Link-Multiple is ingeschakeld."
+    "linkMultiple": "Een reeks records die via een Has-Many (veel-op-veel of één-op-veel) relatie met elkaar zijn verbonden. Niet alle relaties hebben hun link-multiple velden. Alleen die waar de parameter(s) Link-Multiple is ingeschakeld.",
+    "urlMultiple": "Meerdere links."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Veldnaam '{field}' is niet toegestaan.",
+    "fieldAlreadyExists": "Veld '{field}' bestaat al in '{entityType}'.",
+    "linkWithSameNameAlreadyExists": "Link met de naam '{field}' bestaat al in '{entityType}'."
   }
 }

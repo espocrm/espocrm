@@ -27,7 +27,8 @@
     "ipAddress": "IP Adresa",
     "passwordPreview": "Ukážka hesla",
     "isSuperAdmin": "Je super admin",
-    "lastAccess": "Posledný prístup"
+    "lastAccess": "Posledný prístup",
+    "layoutSet": "Nastavenie rozloženia"
   },
   "links": {
     "teams": "Tímy",
@@ -38,7 +39,8 @@
     "contact": "Kontakt",
     "accounts": "Organizácie",
     "account": "Organizácia (Primárna)",
-    "tasks": "Úlohy"
+    "tasks": "Úlohy",
+    "layoutSet": "Nastavenie rozloženia"
   },
   "labels": {
     "Create User": "Vytvoriť používateľa",

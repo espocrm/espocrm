@@ -36,9 +36,6 @@
       "now": "Teraz (data-godzina)",
       "pagebreak": "Podział strony"
     },
-    "fontFace": {
-      "courier": "Kurier"
-    },
     "pageFormat": {
       "Custom": "Niestandardowe"
     }

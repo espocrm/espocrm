@@ -79,7 +79,8 @@
     "readOnly": "Wartość pola nie może być określona przez użytkownika. Ale można to obliczyć według formuły.",
     "maxFileSize": "Jesli pusty lub 0 to bez limitu.",
     "fileAccept": "Jakie typy plików akceptować. Istnieje możliwość dodania niestandardowych elementów.",
-    "barcodeLastChar": "Dla typu EAN-13."
+    "barcodeLastChar": "Dla typu EAN-13.",
+    "conversionDisabled": "Przeliczanie waluty nie zostanie zastosowane do tego pola."
   },
   "fieldParts": {
     "address": {

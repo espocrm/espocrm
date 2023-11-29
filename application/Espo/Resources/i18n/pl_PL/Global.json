@@ -104,7 +104,6 @@
     "Loading...": "Ładuje...",
     "Uploading...": "Wgrywam na serwer...",
     "Sending...": "Wysyłam...",
-    "Merging...": "Łączenie ...",
     "Merged": "Połączono",
     "Removed": "Usunięty",
     "Posted": "Opublikowany",
@@ -116,13 +115,10 @@
     "Record has been removed": "Rekord został usunięty",
     "Wrong username/password": "Zła nazwa użytkownika/hasło",
     "Post cannot be empty": "Notatka nie może byc pusta",
-    "Removing...": "Usuwam...",
-    "Posting...": "Nadaje...",
     "Username can not be empty!": "Nazwa użytkownika nie może byc pusta!",
     "Cache is not enabled": "Pamięć podręczna jest nie dostępna",
     "Cache has been cleared": "Pamięć podręczna została wyczyszczona",
     "Rebuild has been done": "Przebudowanie zostało zakończone",
-    "Saving...": "Zapisuje...",
     "Modified": "Zmieniony",
     "Created": "Utworzony",
     "Create": "Utwórz",
@@ -244,7 +240,6 @@
   },
   "messages": {
     "pleaseWait": "Proszę czekać...",
-    "posting": "Nadaje...",
     "confirmLeaveOutMessage": "Na pewno chcesz wyjść z formularza?",
     "notModified": "Nie zmodyfikowałeś żadnych danych",
     "fieldIsRequired": "Pole {field} jest wymagane",
@@ -293,8 +288,6 @@
     "loading": "Ładowanie...",
     "saving": "Zapisywanie...",
     "fieldMaxFileSizeError": "Plik nie może przekraczać {max} Mb",
-    "fieldShouldBeLess": "{field} powinno być mniejsze niż {value}",
-    "fieldShouldBeGreater": "{field} powinno być większe niż {value}",
     "fieldIsUploading": "Trwa wgrywanie",
     "erasePersonalDataConfirmation": "Zaznaczone pola zostaną trwale usunięte. Jesteś pewny?",
     "massPrintPdfMaxCountError": "Nie można wydrukować więcej niż {maxCount} rekordów.",
@@ -304,7 +297,14 @@
     "fieldExceedsMaxCount": "Liczba przekracza maksymalnie dozwolone {maxCount}",
     "notUpdated": "Nie zaaktualizowane",
     "maintenanceMode": "EspoCRM obecnie jest w trybie konserwacji. Tylko użytkownicy z uprawnieniami administratora mają dostęp. \n\nTryb konserwacji może zostać wyłączony w sekcji Administracja → Ustawienia",
-    "fieldInvalid": "{field} jest nieprawidłowy"
+    "fieldInvalid": "{field} jest nieprawidłowy",
+    "fieldPhoneInvalid": "{field} jest nieprawidłowy",
+    "resolveSaveConflict": "Pozycja została zmodyfikowana. Zanim zapiszesz zmiany, musisz rozwiązać konflikt.",
+    "fieldNotMatchingPattern$noBadCharacters": "{field} zawiera nie dozwolone znaki",
+    "fieldNotMatchingPattern$latinLetters": "{field} może zawierać tylko litery",
+    "fieldNotMatchingPattern$latinLettersDigits": "{field} może zawierać tylko litery lub cyfry",
+    "fieldNotMatchingPattern$digits": "{field} może zawierać tylko cyfry",
+    "fieldShouldBeLess": "{field} nie powinna być większa niż {value}"
   },
   "boolFilters": {
     "onlyMy": "Tylko Moje",
@@ -675,5 +675,8 @@
   },
   "listViewModes": {
     "list": "Lista"
+  },
+  "themes": {
+    "Dark": "Ciemny"
   }
 }
