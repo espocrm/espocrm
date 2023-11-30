@@ -26,158 +26,156 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions/field-types/base', ['view'], function (Dep) {
+import View from 'view';
+import Select from 'ui/select';
 
-    return Dep.extend({
+export default class extends View {
 
-        template: 'admin/dynamic-logic/conditions/field-types/base',
+    template = 'admin/dynamic-logic/conditions/field-types/base'
 
-        data: function () {
-            return {
-                type: this.type,
-                field: this.field,
-                scope: this.scope,
-                typeList: this.typeList,
-            };
-        },
+    events = {
+        'click > div > div > [data-action="remove"]': function (e) {
+            e.stopPropagation();
 
-        events: {
-            'click > div > div > [data-action="remove"]': function (e) {
-                e.stopPropagation();
+            this.trigger('remove-item');
+        }
+    }
 
-                this.trigger('remove-item');
-            }
-        },
+    data() {
+        return {
+            type: this.type,
+            field: this.field,
+            scope: this.scope,
+            typeList: this.typeList,
+        };
+    }
 
-        setup: function () {
-            this.type = this.options.type;
-            this.field = this.options.field;
-            this.scope = this.options.scope;
-            this.fieldType = this.options.fieldType;
+    setup() {
+        this.type = this.options.type;
+        this.field = this.options.field;
+        this.scope = this.options.scope;
+        this.fieldType = this.options.fieldType;
 
-            this.itemData = this.options.itemData;
-            this.additionalData = (this.itemData.data || {});
+        this.itemData = this.options.itemData;
+        this.additionalData = (this.itemData.data || {});
 
-            this.typeList = this.getMetadata()
-                .get(['clientDefs', 'DynamicLogic', 'fieldTypes', this.fieldType, 'typeList']);
+        this.typeList = this.getMetadata()
+            .get(['clientDefs', 'DynamicLogic', 'fieldTypes', this.fieldType, 'typeList']);
 
-            this.wait(true);
+        this.wait(true);
 
-            this.getModelFactory().create(this.scope, function (model) {
-                this.model = model;
-                this.populateValues();
+        this.getModelFactory().create(this.scope, model => {
+            this.model = model;
+            this.populateValues();
 
-                this.manageValue();
+            this.manageValue();
 
-                this.wait(false);
+            this.wait(false);
+        });
+    }
+
+    afterRender() {
+        this.$type = this.$el.find('select[data-name="type"]');
+
+        Select.init(this.$type.get(0));
+
+        this.$type.on('change', () => {
+            this.type = this.$type.val();
+
+            this.manageValue();
+        });
+    }
+
+    populateValues() {
+        if (this.itemData.attribute) {
+            this.model.set(this.itemData.attribute, this.itemData.value);
+        }
+
+        this.model.set(this.additionalData.values || {});
+    }
+
+    getValueViewName() {
+        const fieldType = this.getMetadata()
+            .get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
+
+        return this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
+            this.getFieldManager().getViewName(fieldType);
+    }
+
+    getValueFieldName() {
+        return this.field;
+    }
+
+    manageValue() {
+        const valueType =
+            this.getMetadata()
+                .get([
+                    'clientDefs',
+                    'DynamicLogic',
+                    'fieldTypes',
+                    this.fieldType,
+                    'conditionTypes',
+                    this.type,
+                    'valueType'
+                ]) ||
+            this.getMetadata()
+                .get(['clientDefs', 'DynamicLogic', 'conditionTypes', this.type, 'valueType']);
+
+        if (valueType === 'field') {
+            const viewName = this.getValueViewName();
+            const fieldName = this.getValueFieldName();
+
+            this.createView('value', viewName, {
+                model: this.model,
+                name: fieldName,
+                selector: '.value-container',
+                mode: 'edit',
+                readOnlyDisabled: true,
+            }, view => {
+                if (this.isRendered()) {
+                    view.render();
+                }
+            });
+        }
+        else if (valueType === 'custom') {
+            this.clearView('value');
+
+            const methodName = 'createValueView' + Espo.Utils.upperCaseFirst(this.type);
+
+            this[methodName]();
+        }
+        else if (valueType === 'varchar') {
+            this.createView('value', 'views/fields/varchar', {
+                model: this.model,
+                name: this.getValueFieldName(),
+                selector: '.value-container',
+                mode: 'edit',
+                readOnlyDisabled: true,
+            }, function (view) {
+                if (this.isRendered()) {
+                    view.render();
+                }
             }, this);
-        },
+        }
+        else {
+            this.clearView('value');
+        }
+    }
 
-        afterRender: function () {
-            this.$type = this.$el.find('select[data-name="type"]');
+    fetch() {
+        const valueView = this.getView('value');
 
-            this.$type.on('change', function () {
-                this.type = this.$type.val();
+        const item = {
+            type: this.type,
+            attribute: this.field,
+        };
 
-                this.manageValue();
-            }.bind(this));
-        },
+        if (valueView) {
+            valueView.fetchToModel();
 
-        populateValues: function () {
-            if (this.itemData.attribute) {
-                this.model.set(this.itemData.attribute, this.itemData.value);
-            }
+            item.value = this.model.get(this.field);
+        }
 
-            this.model.set(this.additionalData.values || {});
-        },
-
-        getValueViewName: function () {
-            var fieldType = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
-
-            var viewName = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
-                this.getFieldManager().getViewName(fieldType);
-
-            return viewName;
-        },
-
-        getValueFieldName: function () {
-            return this.field;
-        },
-
-        manageValue: function () {
-            var valueType =
-                this.getMetadata()
-                    .get([
-                        'clientDefs',
-                        'DynamicLogic',
-                        'fieldTypes',
-                        this.fieldType,
-                        'conditionTypes',
-                        this.type,
-                        'valueType'
-                    ]) ||
-                    this.getMetadata()
-                        .get(['clientDefs', 'DynamicLogic', 'conditionTypes', this.type, 'valueType']);
-
-            if (valueType === 'field') {
-                var viewName = this.getValueViewName();
-                var fieldName = this.getValueFieldName();
-
-                this.createView('value', viewName, {
-                    model: this.model,
-                    name: fieldName,
-                    selector: '.value-container',
-                    mode: 'edit',
-                    readOnlyDisabled: true,
-                }, function (view) {
-                    if (this.isRendered()) {
-                        view.render();
-                    }
-                }, this);
-
-            }
-            else if (valueType === 'custom') {
-                this.clearView('value');
-
-                var methodName = 'createValueView' + Espo.Utils.upperCaseFirst(this.type);
-
-                this[methodName]();
-            }
-            else if (valueType === 'varchar') {
-                this.createView('value', 'views/fields/varchar', {
-                    model: this.model,
-                    name: this.getValueFieldName(),
-                    selector: '.value-container',
-                    mode: 'edit',
-                    readOnlyDisabled: true,
-                }, function (view) {
-                    if (this.isRendered()) {
-                        view.render();
-                    }
-                }, this);
-            }
-            else {
-                this.clearView('value');
-            }
-        },
-
-        fetch: function () {
-            var valueView = this.getView('value');
-
-            var item = {
-                type: this.type,
-                attribute: this.field,
-            };
-
-            if (valueView) {
-                valueView.fetchToModel();
-
-                item.value = this.model.get(this.field);
-            }
-
-            return item;
-        },
-    });
-});
+        return item;
+    }
+}

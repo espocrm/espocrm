@@ -2666,26 +2666,39 @@ table.table td.cell .html-container {
     div.item-list[data-level="0"] {
         margin-left: 0;
     }
+
     div.item-list {
         margin-left: 30px;
     }
+
     div.item-list > div {
         margin: 0 0 10px 0;
     }
+
     div.group-head {
         line-height: @input-height-base;
     }
+
     .dynamic-logic-edit-item-row {
-        > div {
-            line-height: @input-height-base;
+        > div:first-child,
+        > div:last-child {
+            padding-top: 7px;
         }
     }
+
+    .not-operator,
+    .group-operator {
+        color: var(--gray-soft);
+    }
+
     .group-operator:last-child {
         display: none;
     }
+
     .group-bottom[data-level="0"] {
         margin-left: 0;
     }
+
     .group-bottom {
         margin-left: 30px;
     }

@@ -1,7 +1,7 @@
 
 <div class="group-head" data-level="{{level}}">
     <a class="pull-right" role="button" data-action="remove"><span class="fas fa-times"></span></a>
-    <div>{{translate 'not' category='logicalOperators' scope='Admin'}} (</div>
+    <div><span class="not-operator">{{translate 'not' category='logicalOperators' scope='Admin'}}</span> (</div>
 </div>
 
 <div class="item-list" data-level="{{level}}">
