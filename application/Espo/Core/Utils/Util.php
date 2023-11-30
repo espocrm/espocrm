@@ -516,7 +516,7 @@ class Util
 
 
     /**
-     * Get class name from the file path.
+     * Get class name from a file path.
      *
      * @return class-string<object>
      */
@@ -526,10 +526,8 @@ class Util
         $className = preg_replace('/\.php$/i', '', $filePath);
         /** @var string $className */
         $className = preg_replace('/^(application|custom)(\/|\\\)/i', '', $className);
-        $className = static::toFormat($className, '\\');
-
         /** @var class-string<object> */
-        return $className;
+        return static::toFormat($className, '\\');
     }
 
     /**

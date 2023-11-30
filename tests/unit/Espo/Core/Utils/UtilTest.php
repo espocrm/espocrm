@@ -1163,7 +1163,7 @@ class UtilTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @dataProvider dp_classNames
+     * @dataProvider getClassNames
      */
     public function testGetClassName1($path, $expectedClassName = 'Espo\EntryPoints\Download')
     {
@@ -1179,14 +1179,14 @@ class UtilTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function dp_classNames()
+    public function getClassNames(): array
     {
         return [
-            "application/Espo/EntryPoints/Download.php" => ['application/Espo/EntryPoints/Download.php'],
-            "custom/Espo/Modules/MyModule/EntryPoints/Download.php" => ['custom/Espo/EntryPoints/Download.php'],
-            "Espo/EntryPoints/Download.php" => ['Espo/EntryPoints/Download.php'],
-            "application/Espo/EntryPoints/Download" => ['application/Espo/EntryPoints/Download'],
-            "\application\Espo\EntryPoints\Download" => ['application\Espo\EntryPoints\Download'],
+            'application/Espo/EntryPoints/Download.php' => ['application/Espo/EntryPoints/Download.php'],
+            'custom/Espo/Modules/MyModule/EntryPoints/Download.php' => ['custom/Espo/EntryPoints/Download.php'],
+            'Espo/EntryPoints/Download.php' => ['Espo/EntryPoints/Download.php'],
+            'application/Espo/EntryPoints/Download' => ['application/Espo/EntryPoints/Download'],
+            '\application\Espo\EntryPoints\Download' => ['application\Espo\EntryPoints\Download'],
         ];
     }
 
