@@ -43,7 +43,7 @@ class TextFieldView extends BaseFieldView {
     searchTemplate = 'fields/text/search'
 
     seeMoreText = false
-    rowsDefault = 10
+    rowsDefault = 50000
     rowsMin = 2
     seeMoreDisabled = false
     cutHeight = 200
@@ -164,8 +164,8 @@ class TextFieldView extends BaseFieldView {
     }
 
     controlTextareaHeight(lastHeight) {
-        var scrollHeight = this.$element.prop('scrollHeight');
-        var clientHeight = this.$element.prop('clientHeight');
+        const scrollHeight = this.$element.prop('scrollHeight');
+        const clientHeight = this.$element.prop('clientHeight');
 
         if (typeof lastHeight === 'undefined' && clientHeight === 0) {
             setTimeout(this.controlTextareaHeight.bind(this), 10);
@@ -178,7 +178,7 @@ class TextFieldView extends BaseFieldView {
         }
 
         if (scrollHeight > clientHeight + 1) {
-            var rows = this.$element.prop('rows');
+            const rows = this.$element.prop('rows');
 
             if (this.params.rows && rows >= this.params.rows) {
                 return;
@@ -261,11 +261,11 @@ class TextFieldView extends BaseFieldView {
         }
 
         if (this.mode === this.MODE_EDIT && !this.autoHeightDisabled) {
-            this.controlTextareaHeight();
-
-            this.$element.on('input', () => {
+            if (!this.autoHeightDisabled) {
                 this.controlTextareaHeight();
-            });
+
+                this.$element.on('input', () => this.controlTextareaHeight());
+            }
 
             let lastChangeKeydown = new Date();
             const changeKeydownInterval = this.changeInterval * 1000;

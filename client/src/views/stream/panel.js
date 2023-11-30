@@ -253,7 +253,6 @@ class PanelStreamView extends RelationshipPanelView {
                 params: {
                     required: true,
                     rowsMin: 1,
-                    rows: 25,
                 },
                 model: this.seed,
                 placeholderText: this.placeholderText,

@@ -181,7 +181,6 @@ class EditStreamView extends BaseRecordView {
         this.createField('post', 'views/note/fields/post', {
             required: true,
             rowsMin: 1,
-            rows: 25,
             noResize: true,
         });
 

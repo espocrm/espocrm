@@ -185,7 +185,7 @@
         "minHeight": "Min Height (px)",
         "provider": "Provider",
         "typeList": "Type List",
-        "rows": "Number of rows of textarea",
+        "rows": "Max number of rows",
         "lengthOfCut": "Length of cut",
         "sourceList": "Source List",
         "prefix": "Prefix",
