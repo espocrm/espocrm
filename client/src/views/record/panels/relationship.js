@@ -159,6 +159,8 @@ class RelationshipPanelView extends BottomPanelView {
             }
         }
 
+        this.setupCreateAvailability();
+
         this.setupTitle();
 
         if (this.defs.createDisabled) {
@@ -794,6 +796,33 @@ class RelationshipPanelView extends BottomPanelView {
                     this.model.trigger('after:unrelate:' + this.link);
                 });
         });
+    }
+
+    /**
+     * @private
+     */
+    setupCreateAvailability() {
+        if (!this.link || !this.entityType || !this.model) {
+            return;
+        }
+
+        /** @type {module:model} */
+        const model = this.model;
+
+        const entityType = model.getLinkParam(this.link, 'entity');
+        const foreignLink = model.getLinkParam(this.link, 'foreign');
+
+        if (!entityType || !foreignLink) {
+            return;
+        }
+
+        const readOnly = this.getMetadata().get(`entityDefs.${entityType}.fields.${foreignLink}.readOnly`);
+
+        if (!readOnly) {
+            return;
+        }
+
+        this.defs.create = false;
     }
 }
 
