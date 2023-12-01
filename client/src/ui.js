@@ -1041,7 +1041,7 @@ Espo.Ui = {
     /**
      * Show a notify-message.
      *
-     * @param {string|false} message A message. False removes an already displayed message.
+     * @param {string|false} [message=false] A message. False removes an already displayed message.
      * @param {'warning'|'danger'|'success'|'info'} [type='warning'] A type.
      * @param {number} [timeout] Microseconds. If empty, then won't be hidden.
      *   Should be hidden manually or by displaying another message.
