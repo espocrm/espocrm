@@ -222,6 +222,24 @@ class DynamicLogic {
     }
 
     /**
+     * @private
+     * @param {string} attribute
+     */
+    getAttributeValue(attribute) {
+        if (attribute.startsWith('$')) {
+            if (attribute === '$user.id') {
+                return this.recordView.getUser().id;
+            }
+
+            if (attribute === '$user.teamsIds') {
+                return this.recordView.getUser().getTeamIdList();
+            }
+        }
+
+        return this.recordView.model.get(attribute);
+    }
+
+    /**
      * Check a condition.
      *
      * @param {Object} defs Definitions.
@@ -243,7 +261,7 @@ class DynamicLogic {
             return false;
         }
 
-        const setValue = this.recordView.model.get(attribute);
+        const setValue = this.getAttributeValue(attribute);
 
         if (type === 'equals') {
             if (!value) {

@@ -31,6 +31,7 @@
                     tabindex="0"
                     data-action="addField"
                 >{{translate 'Field' scope='DynamicLogic'}}</a></li>
+            <li class="divider"></li>
             <li><a
                     role="button"
                     tabindex="0"
@@ -46,6 +47,17 @@
                     tabindex="0"
                     data-action="addNot"
                 >{{translate 'not' category='logicalOperators' scope='Admin'}} (...)</a></li>
+            <li class="divider"></li>
+            <li><a
+                role="button"
+                tabindex="0"
+                data-action="addCurrentUser"
+            >${{translate 'User' scope='scopeNames'}}</a></li>
+            <li><a
+                role="button"
+                tabindex="0"
+                data-action="addCurrentUserTeams"
+            >${{translate 'User' scope='scopeNames'}}.{{translate 'teams' category='fields' scope='User'}}</a></li>
         </ul>
     </div>
 </div>

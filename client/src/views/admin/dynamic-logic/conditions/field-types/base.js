@@ -38,7 +38,7 @@ export default class extends View {
             e.stopPropagation();
 
             this.trigger('remove-item');
-        }
+        },
     }
 
     data() {
@@ -47,7 +47,12 @@ export default class extends View {
             field: this.field,
             scope: this.scope,
             typeList: this.typeList,
+            leftString: this.translateLeftString(),
         };
+    }
+
+    translateLeftString() {
+        return this.translate(this.field, 'fields', this.scope);
     }
 
     setup() {
@@ -64,14 +69,18 @@ export default class extends View {
 
         this.wait(true);
 
-        this.getModelFactory().create(this.scope, model => {
+        this.createModel().then(model => {
             this.model = model;
-            this.populateValues();
 
+            this.populateValues();
             this.manageValue();
 
             this.wait(false);
         });
+    }
+
+    createModel() {
+        return this.getModelFactory().create(this.scope);
     }
 
     afterRender() {
@@ -107,19 +116,10 @@ export default class extends View {
     }
 
     manageValue() {
-        const valueType =
-            this.getMetadata()
-                .get([
-                    'clientDefs',
-                    'DynamicLogic',
-                    'fieldTypes',
-                    this.fieldType,
-                    'conditionTypes',
-                    this.type,
-                    'valueType'
-                ]) ||
-            this.getMetadata()
-                .get(['clientDefs', 'DynamicLogic', 'conditionTypes', this.type, 'valueType']);
+        const valueType = this.getMetadata()
+            .get(['clientDefs', 'DynamicLogic', 'fieldTypes', this.fieldType, 'conditionTypes',
+                this.type, 'valueType']) ||
+            this.getMetadata() .get(['clientDefs', 'DynamicLogic', 'conditionTypes', this.type, 'valueType']);
 
         if (valueType === 'field') {
             const viewName = this.getValueViewName();
@@ -151,11 +151,11 @@ export default class extends View {
                 selector: '.value-container',
                 mode: 'edit',
                 readOnlyDisabled: true,
-            }, function (view) {
+            }, (view) => {
                 if (this.isRendered()) {
                     view.render();
                 }
-            }, this);
+            });
         }
         else {
             this.clearView('value');

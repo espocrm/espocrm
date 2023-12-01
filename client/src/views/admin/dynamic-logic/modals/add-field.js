@@ -30,19 +30,19 @@ define('views/admin/dynamic-logic/modals/add-field', ['views/modal', 'model'], f
 
     return Dep.extend({
 
-        templateContent: '<div class="field" data-name="field">{{{field}}}</div>',
+        templateContent: `<div class="field" data-name="field">{{{field}}}</div>`,
 
         events: {
             'click a[data-action="addField"]': function (e) {
                 this.trigger('add-field', $(e.currentTarget).data().name);
-            }
+            },
         },
 
         setup: function () {
             this.header = this.translate('Add Field');
             this.scope = this.options.scope;
 
-            var model = new Model();
+            const model = new Model();
 
             this.createView('field', 'views/admin/dynamic-logic/fields/field', {
                 selector: '[data-name="field"]',
@@ -51,14 +51,18 @@ define('views/admin/dynamic-logic/modals/add-field', ['views/modal', 'model'], f
                 scope: this.scope,
                 defs: {
                     name: 'field',
-                    params: {}
-                }
-            }, function (view) {
-                this.listenTo(view, 'change', function () {
-                    var list = model.get('field') || [];
-                    if (!list.length) return;
+                    params: {},
+                },
+            }, (view) => {
+                this.listenTo(view, 'change', () => {
+                    const list = model.get('field') || [];
+
+                    if (!list.length) {
+                        return;
+                    }
+
                     this.trigger('add-field', list[0]);
-                }, this);
+                });
             });
         },
     });

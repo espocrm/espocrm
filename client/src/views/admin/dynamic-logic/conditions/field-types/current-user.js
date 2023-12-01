@@ -26,36 +26,63 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions-string/group-not',
-['views/admin/dynamic-logic/conditions-string/group-base'], function (Dep) {
+import Base from 'views/admin/dynamic-logic/conditions/field-types/base';
+import Model from 'model';
 
-    return Dep.extend({
+export default class extends Base {
 
-        template: 'admin/dynamic-logic/conditions-string/group-not',
+    getValueViewName() {
+        return 'views/fields/user';
+    }
 
-        data: function () {
-            return {
-                viewKey: this.viewKey,
-                operator: this.operator,
-            };
-        },
+    getValueFieldName() {
+        return 'link';
+    }
 
-        setup: function () {
-            this.level = this.options.level || 0;
-            this.number = this.options.number || 0;
-            this.scope = this.options.scope;
+    createModel() {
+        const model = new Model();
 
-            this.operator = this.options.operator || this.operator;
+        model.setDefs({
+            fields: {
+                link: {
+                    type: 'link',
+                    entity: 'User',
+                },
+            }
+        });
 
-            this.itemData = this.options.itemData || {};
-            this.viewList = [];
+        return Promise.resolve(model);
+    }
 
-            const i = 0;
-            const key = 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
+    populateValues() {
+        if (this.itemData.attribute) {
+            this.model.set('linkId', this.itemData.value);
+        }
 
-            this.createItemView(i, key, this.itemData.value);
-            this.viewKey = key;
-        },
-    });
-});
+        const name = (this.additionalData.values || {}).name;
+
+        this.model.set('linkName', name);
+    }
+
+    translateLeftString() {
+        return '$' + this.translate('User', 'scopeNames');
+    }
+
+    fetch() {
+        const valueView = this.getView('value');
+
+        valueView.fetchToModel();
+
+        return {
+            type: this.type,
+            attribute: '$user.id',
+            data: {
+                values: {
+                    name: this.model.get('linkName'),
+                },
+            },
+            value: this.model.get('linkId'),
+        };
+    }
+}
 

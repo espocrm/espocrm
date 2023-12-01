@@ -251,6 +251,14 @@
         "urlMultiple": {
             "view": "views/admin/dynamic-logic/conditions/field-types/multi-enum",
             "typeList": ["isEmpty", "isNotEmpty"]
+        },
+        "currentUser": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/current-user",
+            "typeList": ["equals", "notEquals"]
+        },
+        "currentUserTeams": {
+            "view": "views/admin/dynamic-logic/conditions/field-types/current-user-teams",
+            "typeList": ["contains", "notContains"]
         }
     },
     "conditionTypes": {

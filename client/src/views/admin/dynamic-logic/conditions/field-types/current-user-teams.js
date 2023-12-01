@@ -26,36 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/dynamic-logic/conditions-string/group-not',
-['views/admin/dynamic-logic/conditions-string/group-base'], function (Dep) {
+import LinkMultiple from 'views/admin/dynamic-logic/conditions/field-types/link-multiple';
 
-    return Dep.extend({
+export default class extends LinkMultiple {
 
-        template: 'admin/dynamic-logic/conditions-string/group-not',
+    translateLeftString() {
+        return '$' + this.translate('User', 'scopeNames') + '.' + super.translateLeftString();
+    }
 
-        data: function () {
-            return {
-                viewKey: this.viewKey,
-                operator: this.operator,
-            };
-        },
+    fetch() {
+        const data = super.fetch();
 
-        setup: function () {
-            this.level = this.options.level || 0;
-            this.number = this.options.number || 0;
-            this.scope = this.options.scope;
+        data.attribute = '$user.teamsIds';
 
-            this.operator = this.options.operator || this.operator;
-
-            this.itemData = this.options.itemData || {};
-            this.viewList = [];
-
-            const i = 0;
-            const key = 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
-
-            this.createItemView(i, key, this.itemData.value);
-            this.viewKey = key;
-        },
-    });
-});
-
+        return data;
+    }
+}

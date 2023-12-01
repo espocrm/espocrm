@@ -59,6 +59,12 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
             'click > div.group-bottom [data-action="addNot"]': function () {
                 this.actionAddGroup('not');
             },
+            'click > div.group-bottom [data-action="addCurrentUser"]': function () {
+                this.addCurrentUser();
+            },
+            'click > div.group-bottom [data-action="addCurrentUserTeams"]': function () {
+                this.addCurrentUserTeams();
+            },
         },
 
         setup: function () {
@@ -96,6 +102,10 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
         createItemView: function (number, key, item) {
             this.viewList.push(key);
 
+            this.isCurrentUser = item.attribute && item.attribute.startsWith('$user.');
+
+            const scope = this.isCurrentUser ? 'User' : this.scope;
+
             item = item || {};
 
             const additionalData = item.data || {};
@@ -106,19 +116,26 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
             let viewName;
             let fieldType;
 
-            if (~['and', 'or', 'not'].indexOf(type)) {
+            if (['and', 'or', 'not'].includes(type)) {
                 viewName = 'views/admin/dynamic-logic/conditions/' + type;
             } else {
-                fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                fieldType = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
 
                 if (field === 'id') {
                     fieldType = 'id';
                 }
 
+                if (item.attribute === '$user.id') {
+                    fieldType = 'currentUser';
+                }
+
+                if (item.attribute === '$user.teamsIds') {
+                    fieldType = 'currentUserTeams';
+                }
+
                 if (fieldType) {
                     viewName = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'view']);
                 }
-
             }
 
             if (!viewName) {
@@ -127,9 +144,9 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
 
             this.createView(key, viewName, {
                 itemData: item,
-                scope: this.scope,
+                scope: scope,
                 level: this.level + 1,
-                selector: '[data-view-key="'+key+'"]',
+                selector: '[data-view-key="' + key + '"]',
                 number: number,
                 type: type,
                 field: field,
@@ -199,6 +216,37 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
             });
         },
 
+        addCurrentUser: function () {
+            const i = this.getIndexForNewItem();
+            const key = this.getKey(i);
+
+            this.addItemContainer(i);
+            this.addViewDataListItem(i, key);
+
+            this.createItemView(i, key, {
+                attribute: '$user.id',
+                data: {
+                    type: 'equals',
+                },
+            });
+        },
+
+        addCurrentUserTeams: function () {
+            const i = this.getIndexForNewItem();
+            const key = this.getKey(i);
+
+            this.addItemContainer(i);
+            this.addViewDataListItem(i, key);
+
+            this.createItemView(i, key, {
+                attribute: '$user.teamsIds',
+                data: {
+                    type: 'contains',
+                    field: 'teams',
+                },
+            });
+        },
+
         addField: function (field) {
             let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
 
@@ -222,7 +270,7 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
                 data: {
                     field: field,
                     type: type
-                }
+                },
             });
         },
 
@@ -263,7 +311,7 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
 
             this.createItemView(i, key, {
                 type: operator,
-                value: []
+                value: [],
             });
         },
 

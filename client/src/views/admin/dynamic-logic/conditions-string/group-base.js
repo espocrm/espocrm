@@ -51,7 +51,6 @@ define('views/admin/dynamic-logic/conditions-string/group-base', ['view'], funct
             this.number = this.options.number || 0;
             this.scope = this.options.scope;
 
-
             this.operator = this.options.operator || this.operator;
 
             this.itemData = this.options.itemData || {};
@@ -85,7 +84,6 @@ define('views/admin/dynamic-logic/conditions-string/group-base', ['view'], funct
             const additionalData = item.data || {};
 
             const type = additionalData.type || item.type || 'equals';
-
             const fieldType = this.getFieldType(item);
 
             const viewName = this.getMetadata()

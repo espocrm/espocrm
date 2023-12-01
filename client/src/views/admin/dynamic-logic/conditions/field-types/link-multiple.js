@@ -48,8 +48,8 @@ define('views/admin/dynamic-logic/conditions/field-types/link-multiple',
         },
 
         createLinkValueField: function () {
-            var viewName = 'views/fields/link'
-            var fieldName = 'link';
+            const viewName = 'views/fields/link';
+            const fieldName = 'link';
 
             this.createView('value', viewName, {
                 model: this.model,
@@ -60,21 +60,21 @@ define('views/admin/dynamic-logic/conditions/field-types/link-multiple',
                 foreignScope: this.getMetadata()
                     .get(['entityDefs', this.scope, 'fields', this.field, 'entity']) ||
                     this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity']),
-            }, function (view) {
+            }, (view) => {
                 if (this.isRendered()) {
                     view.render();
                 }
-            }, this);
+            });
         },
 
         fetch: function () {
-            var valueView = this.getView('value');
+            const valueView = this.getView('value');
 
-            var item = {
+            const item = {
                 type: this.type,
                 attribute: this.field + 'Ids',
                 data: {
-                    field: this.field
+                    field: this.field,
                 },
             };
 
@@ -83,7 +83,7 @@ define('views/admin/dynamic-logic/conditions/field-types/link-multiple',
 
                 item.value = this.model.get('linkId');
 
-                var values = {};
+                const values = {};
 
                 values['linkName'] = this.model.get('linkName');
                 values['linkId'] = this.model.get('linkId');
