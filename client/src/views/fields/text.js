@@ -101,14 +101,14 @@ class TextFieldView extends BaseFieldView {
 
     setupSearch() {
         this.events['change select.search-type'] = e => {
-            let type = $(e.currentTarget).val();
+            const type = $(e.currentTarget).val();
 
             this.handleSearchType(type);
         };
     }
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         if (
             this.model.get(this.name) !== null &&
@@ -158,7 +158,7 @@ class TextFieldView extends BaseFieldView {
     }
 
     getValueForDisplay() {
-        let text = this.model.get(this.name);
+        const text = this.model.get(this.name);
 
         return text || '';
     }
@@ -240,14 +240,15 @@ class TextFieldView extends BaseFieldView {
         }
 
         if (this.mode === this.MODE_EDIT) {
-            var text = this.getValueForDisplay();
+            const text = this.getValueForDisplay();
+
             if (text) {
                 this.$element.val(text);
             }
         }
 
         if (this.mode === this.MODE_SEARCH) {
-            var type = this.$el.find('select.search-type').val();
+            const type = this.$el.find('select.search-type').val();
 
             this.handleSearchType(type);
 
@@ -280,7 +281,7 @@ class TextFieldView extends BaseFieldView {
     }
 
     fetch() {
-        let data = {};
+        const data = {};
 
         let value = this.$element.val() || null;
 
@@ -294,7 +295,7 @@ class TextFieldView extends BaseFieldView {
     }
 
     fetchSearch() {
-        let type = this.fetchSearchType() || 'startsWith';
+        const type = this.fetchSearchType() || 'startsWith';
 
         if (type === 'isEmpty') {
             return  {
@@ -337,7 +338,7 @@ class TextFieldView extends BaseFieldView {
             };
         }
 
-        let value = this.$element.val().toString().trim();
+        const value = this.$element.val().toString().trim();
 
         if (value) {
             return {
@@ -355,7 +356,7 @@ class TextFieldView extends BaseFieldView {
     }
 
     mailTo(emailAddress) {
-        let attributes = {
+        const attributes = {
             status: 'Draft',
             to: emailAddress,
         };
@@ -366,7 +367,7 @@ class TextFieldView extends BaseFieldView {
             !this.getAcl().checkScope('Email', 'create')
         ) {
             Espo.loader.require('email-helper', EmailHelper => {
-                let emailHelper = new EmailHelper();
+                const emailHelper = new EmailHelper();
 
                 document.location.href = emailHelper
                     .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
@@ -375,7 +376,7 @@ class TextFieldView extends BaseFieldView {
             return;
         }
 
-        let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
+        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
             'views/modals/compose-email';
 
         Espo.Ui.notify(' ... ');
@@ -384,7 +385,8 @@ class TextFieldView extends BaseFieldView {
             attributes: attributes,
         }, view => {
             view.render();
-            view.notify(false);
+
+            Espo.Ui.notify(false);
         });
     }
 }
