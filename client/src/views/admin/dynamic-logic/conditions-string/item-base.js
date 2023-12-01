@@ -58,7 +58,7 @@ define('views/admin/dynamic-logic/conditions-string/item-base', ['view'], functi
 
             this.wait(true);
 
-            this.getModelFactory().create(this.scope, function (model) {
+            this.getModelFactory().create(this.scope, (model) => {
                 this.model = model;
 
                 this.populateValues();
@@ -66,13 +66,14 @@ define('views/admin/dynamic-logic/conditions-string/item-base', ['view'], functi
                 this.createValueFieldView();
 
                 this.wait(false);
-            }, this);
+            });
         },
 
         populateValues: function () {
             if (this.itemData.attribute) {
                 this.model.set(this.itemData.attribute, this.itemData.value);
             }
+
             this.model.set(this.additionalData.values || {});
         },
 
@@ -81,18 +82,19 @@ define('views/admin/dynamic-logic/conditions-string/item-base', ['view'], functi
         },
 
         createValueFieldView: function () {
-            var key = this.getValueViewKey();
+            const key = this.getValueViewKey();
 
-            var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
-            var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
+            const fieldType = this.getMetadata()
+                .get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
+
+            const viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
                 this.getFieldManager().getViewName(fieldType);
 
             this.createView('value', viewName, {
                 model: this.model,
                 name: this.field,
-                selector: '[data-view-key="'+key+'"]'
+                selector: '[data-view-key="'+key+'"]',
             });
         },
     });
 });
-

@@ -34,9 +34,9 @@ define('views/admin/dynamic-logic/conditions-string/item-value-link',
         template: 'admin/dynamic-logic/conditions-string/item-base',
 
         createValueFieldView: function () {
-            var key = this.getValueViewKey();
+            const key = this.getValueViewKey();
 
-            var viewName = 'views/fields/link';
+            const viewName = 'views/fields/link';
 
             this.createView('value', viewName, {
                 model: this.model,

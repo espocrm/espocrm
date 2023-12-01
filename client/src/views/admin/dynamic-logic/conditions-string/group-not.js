@@ -50,8 +50,8 @@ define('views/admin/dynamic-logic/conditions-string/group-not',
             this.itemData = this.options.itemData || {};
             this.viewList = [];
 
-            var i = 0;
-            var key = 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
+            const i = 0;
+            const key = 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
 
             this.createItemView(i, key, this.itemData.value);
             this.viewKey = key;

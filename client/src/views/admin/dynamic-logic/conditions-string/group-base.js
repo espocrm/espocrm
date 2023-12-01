@@ -57,19 +57,19 @@ define('views/admin/dynamic-logic/conditions-string/group-base', ['view'], funct
             this.itemData = this.options.itemData || {};
             this.viewList = [];
 
-            var conditionList = this.conditionList = this.itemData.value || [];
+            const conditionList = this.conditionList = this.itemData.value || [];
 
             this.viewDataList = [];
 
-            conditionList.forEach(function (item, i) {
-                var key = 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
+            conditionList.forEach((item, i) => {
+                const key = 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
 
                 this.createItemView(i, key, item);
                 this.viewDataList.push({
                     key: key,
                     isEnd: i === conditionList.length - 1,
                 });
-            }, this);
+            });
         },
 
         getFieldType: function (item) {
@@ -82,33 +82,26 @@ define('views/admin/dynamic-logic/conditions-string/group-base', ['view'], funct
 
             item = item || {};
 
-            var additionalData = item.data || {};
+            const additionalData = item.data || {};
 
-            var type = additionalData.type || item.type || 'equals';
+            const type = additionalData.type || item.type || 'equals';
 
-            var fieldType = this.getFieldType(item);
+            const fieldType = this.getFieldType(item);
 
-            var viewName = this.getMetadata()
-                .get([
-                    'clientDefs',
-                    'DynamicLogic',
-                    'fieldTypes',
-                    fieldType,
-                    'conditionTypes',
-                    type,
-                    'itemView'
-                ]) ||
-                this.getMetadata().get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'view']);
+            const viewName = this.getMetadata()
+                .get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'conditionTypes', type, 'itemView']) ||
+                this.getMetadata()
+                    .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'view']);
 
             if (!viewName) {
                 return;
             }
 
-            var operator = this.getMetadata()
+            const operator = this.getMetadata()
                 .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operator']);
 
-            var operatorString = this.getMetadata()
-                    .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operatorString']);
+            let operatorString = this.getMetadata()
+                .get(['clientDefs', 'DynamicLogic', 'itemTypes', type, 'operatorString']);
 
             if (!operatorString) {
                 operatorString = this.getLanguage()
