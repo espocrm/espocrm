@@ -44,20 +44,21 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
         events: {
             'click > div.group-head > [data-action="remove"]': function (e) {
                 e.stopPropagation();
+
                 this.trigger('remove-item');
             },
-            'click > div.group-bottom [data-action="addField"]': function (e) {
+            'click > div.group-bottom [data-action="addField"]': function () {
                 this.actionAddField();
             },
-            'click > div.group-bottom [data-action="addAnd"]': function (e) {
+            'click > div.group-bottom [data-action="addAnd"]': function () {
                 this.actionAddGroup('and');
             },
-            'click > div.group-bottom [data-action="addOr"]': function (e) {
+            'click > div.group-bottom [data-action="addOr"]': function () {
                 this.actionAddGroup('or');
             },
-            'click > div.group-bottom [data-action="addNot"]': function (e) {
+            'click > div.group-bottom [data-action="addNot"]': function () {
                 this.actionAddGroup('not');
-            }
+            },
         },
 
         setup: function () {
@@ -68,20 +69,22 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
             this.itemData = this.options.itemData || {};
             this.viewList = [];
 
-            var conditionList = this.conditionList = this.itemData.value || [];
+            const conditionList = this.conditionList = this.itemData.value || [];
 
             this.viewDataList = [];
 
-            conditionList.forEach(function (item, i) {
-                var key = this.getKey(i);
+            conditionList.forEach((item, i) => {
+                const key = this.getKey(i);
 
                 this.createItemView(i, key, item);
                 this.addViewDataListItem(i, key);
-            }, this);
+            });
         },
 
         getGroupOperator: function () {
-            if (this.operator === 'or') return 'or';
+            if (this.operator === 'or') {
+                return 'or';
+            }
 
             return 'and';
         },
@@ -95,13 +98,13 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
 
             item = item || {};
 
-            var additionalData = item.data || {};
+            const additionalData = item.data || {};
 
-            var type = additionalData.type || item.type || 'equals';
-            var field = additionalData.field || item.attribute;
+            const type = additionalData.type || item.type || 'equals';
+            const field = additionalData.field || item.attribute;
 
-            var viewName;
-            var fieldType;
+            let viewName;
+            let fieldType;
 
             if (~['and', 'or', 'not'].indexOf(type)) {
                 viewName = 'views/admin/dynamic-logic/conditions/' + type;
@@ -131,27 +134,27 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
                 type: type,
                 field: field,
                 fieldType: fieldType,
-            }, function (view) {
+            }, (view) => {
                 if (this.isRendered()) {
                     view.render()
                 }
 
                 this.controlAddItemVisibility();
 
-                this.listenToOnce(view, 'remove-item', function () {
+                this.listenToOnce(view, 'remove-item', () => {
                     this.removeItem(number);
-                }, this);
-            }, this);
+                });
+            });
         },
 
         fetch: function () {
-            var list = [];
+            const list = [];
 
-            this.viewDataList.forEach(function (item) {
-                var view = this.getView(item.key);
+            this.viewDataList.forEach(item => {
+                const view = this.getView(item.key);
 
                 list.push(view.fetch());
-            }, this);
+            });
 
             return {
                 type: this.operator,
@@ -160,18 +163,21 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
         },
 
         removeItem: function (number) {
-            var key = this.getKey(number);
+            const key = this.getKey(number);
+
             this.clearView(key);
 
             this.$el.find('[data-view-key="'+key+'"]').remove();
             this.$el.find('[data-view-ref-key="'+key+'"]').remove();
 
-            var index = -1;
-            this.viewDataList.forEach(function (data, i) {
+            let index = -1;
+
+            this.viewDataList.forEach((data, i) => {
                 if (data.index === number) {
                     index = i;
                 }
-            }, this);
+            });
+
             if (~index) {
                 this.viewDataList.splice(index, 1);
             }
@@ -182,20 +188,21 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
         actionAddField: function () {
             this.createView('modal', 'views/admin/dynamic-logic/modals/add-field', {
                 scope: this.scope
-            }, function (view) {
+            }, (view) => {
                 view.render();
 
-                this.listenToOnce(view, 'add-field', function (field) {
+                this.listenToOnce(view, 'add-field', (field) => {
                     this.addField(field);
+
                     view.close();
-                }, this);
-            }, this);
+                });
+            });
         },
 
         addField: function (field) {
-            var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+            let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
 
-            if (!fieldType && field == 'id') {
+            if (!fieldType && field === 'id') {
                 fieldType = 'id';
             }
 
@@ -203,10 +210,10 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
                 throw new Error();
             }
 
-            var type = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'typeList'])[0];
+            const type = this.getMetadata().get(['clientDefs', 'DynamicLogic', 'fieldTypes', fieldType, 'typeList'])[0];
 
-            var i = this.getIndexForNewItem();
-            var key = this.getKey(i);
+            const i = this.getIndexForNewItem();
+            const key = this.getKey(i);
 
             this.addItemContainer(i);
             this.addViewDataListItem(i, key);
@@ -235,21 +242,21 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
         },
 
         addItemContainer: function (i) {
-            var $item = $('<div data-view-key="'+this.getKey(i)+'"></div>');
+            const $item = $('<div data-view-key="' + this.getKey(i) + '"></div>');
             this.$el.find('> .item-list').append($item);
 
-            var groupOperatorLabel = this.translate(this.getGroupOperator(), 'logicalOperators', 'Admin');
+            const groupOperatorLabel = this.translate(this.getGroupOperator(), 'logicalOperators', 'Admin');
 
-            var $operatorItem = $(
-                '<div class="group-operator" data-view-ref-key="' + this.getKey(i)+'">' + groupOperatorLabel +'</div>'
-            );
+            const $operatorItem = $(
+                '<div class="group-operator" data-view-ref-key="' + this.getKey(i) + '">' +
+                groupOperatorLabel + '</div>');
 
             this.$el.find('> .item-list').append($operatorItem);
         },
 
         actionAddGroup: function (operator) {
-            var i = this.getIndexForNewItem();
-            var key = this.getKey(i);
+            const i = this.getIndexForNewItem();
+            const key = this.getKey(i);
 
             this.addItemContainer(i);
             this.addViewDataListItem(i, key);
@@ -265,7 +272,5 @@ define('views/admin/dynamic-logic/conditions/group-base', ['view'], function (De
         },
 
         controlAddItemVisibility: function () {},
-
     });
 });
-
