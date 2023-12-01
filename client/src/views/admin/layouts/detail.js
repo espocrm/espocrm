@@ -78,7 +78,8 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                     'default',
                     'success',
                     'danger',
-                    'warning'
+                    'warning',
+                    'info',
                 ],
                 default: 'default',
                 translation: 'LayoutManager.options.style',
