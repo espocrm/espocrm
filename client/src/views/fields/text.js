@@ -49,6 +49,7 @@ class TextFieldView extends BaseFieldView {
     cutHeight = 200
     noResize = false
     changeInterval = 5
+    shrinkThreshold = 10;
 
     searchTypeList = [
         'contains',
@@ -75,10 +76,16 @@ class TextFieldView extends BaseFieldView {
         },
     }
 
+    /** @private */
+    _lastLength
+
+    /** @private */
+    maxRows
+
     setup() {
         super.setup();
 
-        this.params.rows = this.params.rows || this.rowsDefault;
+        this.maxRows = this.params.rows || this.rowsDefault;
         this.noResize = this.options.noResize || this.params.noResize || this.noResize;
         this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
         this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled ||
@@ -90,8 +97,8 @@ class TextFieldView extends BaseFieldView {
 
         this.rowsMin = this.options.rowsMin || this.params.rowsMin || this.rowsMin;
 
-        if (this.params.rows < this.rowsMin) {
-            this.rowsMin = this.params.rows;
+        if (this.maxRows < this.rowsMin) {
+            this.rowsMin = this.maxRows;
         }
 
         this.on('remove', () => {
@@ -107,6 +114,7 @@ class TextFieldView extends BaseFieldView {
         };
     }
 
+    // noinspection JSCheckFunctionSignatures
     data() {
         const data = super.data();
 
@@ -125,11 +133,9 @@ class TextFieldView extends BaseFieldView {
         }
 
         if (this.mode === this.MODE_EDIT) {
-            if (this.autoHeightDisabled) {
-                data.rows = this.params.rows;
-            } else {
-                data.rows = this.rowsMin;
-            }
+            data.rows = this.autoHeightDisabled ?
+                this.maxRows :
+                this.rowsMin;
         }
 
         data.valueIsSet = this.model.has(this.name);
@@ -144,8 +150,9 @@ class TextFieldView extends BaseFieldView {
             data.displayRawText = this.params.displayRawText;
         }
 
-        data.noResize = this.noResize;
+        data.noResize = this.noResize || (!this.autoHeightDisabled && !this.params.rows);
 
+        // noinspection JSValidateTypes
         return data;
     }
 
@@ -163,6 +170,10 @@ class TextFieldView extends BaseFieldView {
         return text || '';
     }
 
+    /**
+     * @private
+     * @param {Number} [lastHeight]
+     */
     controlTextareaHeight(lastHeight) {
         const scrollHeight = this.$element.prop('scrollHeight');
         const clientHeight = this.$element.prop('clientHeight');
@@ -173,23 +184,70 @@ class TextFieldView extends BaseFieldView {
             return;
         }
 
+        /** @type {HTMLTextAreaElement} */
+        const element = this.$element.get(0);
+
+        if (!element) {
+            return;
+        }
+
+        const length = element.value.length;
+
+        if (this._lastLength === undefined) {
+            this._lastLength = length;
+        }
+
+        if (length > this._lastLength) {
+            this._lastLength = length;
+        }
+
         if (clientHeight === lastHeight) {
+            // @todo Revise.
             return;
         }
 
         if (scrollHeight > clientHeight + 1) {
-            const rows = this.$element.prop('rows');
+            const rows = element.rows;
 
-            if (this.params.rows && rows >= this.params.rows) {
+            if (this.maxRows && rows >= this.maxRows) {
                 return;
             }
 
-            this.$element.attr('rows', rows + 1);
+            element.rows ++;
+
             this.controlTextareaHeight(clientHeight);
+
+            return;
         }
 
         if (this.$element.val().length === 0) {
-            this.$element.attr('rows', this.rowsMin);
+            element.rows = this.rowsMin;
+
+            return;
+        }
+
+        const tryShrink = () => {
+            const rows = element.rows;
+
+            if (this.rowsMin && rows - 1 <= this.rowsMin) {
+                return;
+            }
+
+            element.rows --;
+
+            if (element.scrollHeight > element.clientHeight + 1) {
+                this.controlTextareaHeight();
+
+                return;
+            }
+
+            tryShrink();
+        };
+
+        if (length < this._lastLength - this.shrinkThreshold) {
+            this._lastLength = length;
+
+            tryShrink();
         }
     }
 
