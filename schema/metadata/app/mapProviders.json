@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/mapProviders.json",
+    "title": "app/mapProviders",
+    "description": "Map providers.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A provider name.",
+        "properties": {
+            "renderer": {
+                "type": "string",
+                "description": "A frontend renderer. Should extend handlers/map/renderer."
+            }
+        }
+    }
+}

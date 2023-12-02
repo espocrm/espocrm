@@ -354,6 +354,12 @@
         },
         {
             "fileMatch": [
+                "*/Resources/metadata/app/mapProviders.json"
+            ],
+            "url": "./schema/metadata/app/mapProviders.json"
+        },
+        {
+            "fileMatch": [
                 "*/Resources/metadata/app/massActions.json"
             ],
             "url": "./schema/metadata/app/massActions.json"

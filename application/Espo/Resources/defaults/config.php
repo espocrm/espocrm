@@ -256,6 +256,7 @@ return [
     'newNotificationCountInTitle' => false,
     'pdfEngine' => 'Dompdf',
     'smsProvider' => null,
+    'mapProvider' => 'Google',
     'defaultFileStorage' => 'EspoUploadDir',
     'ldapUserNameAttribute' => 'sAMAccountName',
     'ldapUserFirstNameAttribute' => 'givenName',

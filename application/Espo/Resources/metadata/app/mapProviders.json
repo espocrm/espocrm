@@ -1,0 +1,5 @@
+{
+    "Google": {
+        "renderer": "handlers/map/google-maps-renderer"
+    }
+}
