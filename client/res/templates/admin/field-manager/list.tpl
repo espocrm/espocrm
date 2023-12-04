@@ -23,10 +23,10 @@
 
 <table class="table fields-table table-panel table-hover">
     <thead>
-        <th width="35%">{{translate 'Name' scope='FieldManager'}}</th>
-        <th width="35%">{{translate 'Label' scope='FieldManager'}}</th>
-        <th width="20%">{{translate 'Type' scope='FieldManager'}}</th>
-        <th width="10%" align="right"></th>
+        <th style="width: 35%">{{translate 'Name' scope='FieldManager'}}</th>
+        <th style="width: 35%">{{translate 'Label' scope='FieldManager'}}</th>
+        <th style="width: 20%">{{translate 'Type' scope='FieldManager'}}</th>
+        <th style="width: 10%; text-align: right;"></th>
     </thead>
     <tbody>
     {{#each fieldDefsArray}}
@@ -45,7 +45,7 @@
         </td>
         <td>{{translate name scope=../scope category='fields'}}</td>
         <td>{{translate type category='fieldTypes' scope='Admin'}}</td>
-        <td align="right">
+        <td style="text-align: right">
             {{#if isCustom}}
             <a role="button" tabindex="0" data-action="removeField" data-name="{{name}}">{{translate 'Remove'}}</a>
             {{/if}}

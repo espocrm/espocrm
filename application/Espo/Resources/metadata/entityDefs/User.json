@@ -40,7 +40,8 @@
             "type": "password",
             "maxLength": 150,
             "internal": true,
-            "disabled": true,
+            "utility": true,
+            "directAccessDisabled": true,
             "fieldManagerParamList": [
                 "tooltipText"
             ]
@@ -49,8 +50,9 @@
             "type": "password",
             "maxLength": 150,
             "internal": true,
-            "disabled": true,
+            "utility": true,
             "notStorable": true,
+            "directAccessDisabled": true,
             "fieldManagerParamList": []
         },
         "authMethod": {
@@ -96,12 +98,14 @@
         },
         "firstName": {
             "type": "varchar",
-            "maxLength": 100
+            "maxLength": 100,
+            "suppressValidationList": ["required"]
         },
         "lastName": {
             "type": "varchar",
             "maxLength": 100,
-            "required": true
+            "required": true,
+            "suppressValidationList": ["required"]
         },
         "isActive": {
             "type": "bool",
@@ -122,51 +126,96 @@
             "notStorable": true,
             "where": {
                 "LIKE": {
-                    "leftJoins": [["teams", "teamsPosition"]],
                     "whereClause": {
-                        "teamsPositionMiddle.role*": "{value}"
-                    },
-                    "distinct": true
+                        "id=s": {
+                            "from": "TeamUser",
+                            "select": ["userId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role*": "{value}"
+                            }
+                        }
+                    }
                 },
                 "NOT LIKE": {
-                    "leftJoins": [["teams", "teamsPosition"]],
-                    "whereClause": {
-                        "teamsPositionMiddle.role!*": "{value}"
-                    },
-                    "distinct": true
-                },
-                "=": {
-                    "leftJoins": [["teams", "teamsPosition"]],
-                    "whereClause": {
-                        "teamsPositionMiddle.role": "{value}"
-                    },
-                    "distinct": true
-                },
-                "<>": {
                     "whereClause": {
                         "id!=s": {
                             "from": "TeamUser",
                             "select": ["userId"],
                             "whereClause": {
-                                "deleted": 0,
+                                "deleted": false,
+                                "role*": "{value}"
+                            }
+                        }
+                    }
+                },
+                "=": {
+                    "whereClause": {
+                        "id=s": {
+                            "from": "TeamUser",
+                            "select": ["userId"],
+                            "whereClause": {
+                                "deleted": false,
+                                "role": "{value}"
+                            }
+                        }
+                    }
+                },
+                "<>": {
+                    "whereClause": {
+                        "id=!s": {
+                            "from": "TeamUser",
+                            "select": ["userId"],
+                            "whereClause": {
+                                "deleted": false,
                                 "role": "{value}"
                             }
                         }
                     }
                 },
                 "IS NULL": {
-                    "leftJoins": [["teams", "teamsPosition"]],
                     "whereClause": {
-                        "teamsPositionMiddle.role": null
-                    },
-                    "distinct": true
+                        "NOT": {
+                            "EXISTS": {
+                                "from": "User",
+                                "fromAlias": "sq",
+                                "select": ["id"],
+                                "leftJoins": [
+                                    [
+                                        "teams",
+                                        "m",
+                                        {},
+                                        {"onlyMiddle": true}
+                                    ]
+                                ],
+                                "whereClause": {
+                                    "m.role!=": null,
+                                    "sq.id:": "user.id"
+                                }
+                            }
+                        }
+                    }
                 },
                 "IS NOT NULL": {
-                    "leftJoins": [["teams", "teamsPosition"]],
                     "whereClause": {
-                        "teamsPositionMiddle.role!=": null
-                    },
-                    "distinct": true
+                        "EXISTS": {
+                            "from": "User",
+                            "fromAlias": "sq",
+                            "select": ["id"],
+                            "leftJoins": [
+                                [
+                                    "teams",
+                                    "m",
+                                    {},
+                                    {"onlyMiddle": true}
+                                ]
+                            ],
+                            "whereClause": {
+                                "m.role!=": null,
+                                "sq.id:": "user.id"
+                            }
+                        }
+                    }
                 }
             },
             "directUpdateDisabled": true,
@@ -193,25 +242,25 @@
         "token": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "authTokenId": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "authLogRecordId": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "ipAddress": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "defaultTeam": {
@@ -224,7 +273,7 @@
             "type": "varchar",
             "notStorable": true,
             "exportDisabled": true,
-            "disabled": true,
+            "utility": true,
             "fieldManagerParamList": []
         },
         "acceptanceStatusMeetings": {
@@ -254,7 +303,7 @@
         "teamRole": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true,
+            "utility": true,
             "fieldManagerParamList": []
         },
         "teams": {
@@ -315,7 +364,7 @@
             "type": "link",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true
+            "utility": true
         },
         "avatar": {
             "type": "image",
@@ -327,7 +376,7 @@
         "sendAccessInfo": {
             "type": "bool",
             "notStorable": true,
-            "disabled": true
+            "utility": true
         },
         "gender": {
             "type": "enum",
@@ -365,6 +414,13 @@
             "layoutListDisabled": true,
             "customizationAuditedDisabled": true
         },
+        "layoutSet": {
+            "type": "link",
+            "layoutDetailDisabled": true,
+            "layoutListDisabled": true,
+            "customizationAuditedDisabled": true,
+            "tooltip": true
+        },
         "auth2FA": {
             "type": "foreign",
             "link": "userData",
@@ -374,7 +430,7 @@
         },
         "userData": {
             "type": "linkOne",
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         },
         "lastAccess": {
@@ -394,7 +450,7 @@
             "readOnly": true,
             "notNull": true,
             "default": "0",
-            "disabled": true,
+            "utility": true,
             "customizationDisabled": true
         }
     },
@@ -453,6 +509,11 @@
             "type": "hasMany",
             "foreign": "users",
             "entity": "WorkingTimeRange"
+        },
+        "layoutSet": {
+            "type": "belongsTo",
+            "entity": "LayoutSet",
+            "noJoin": true
         },
         "preferences": {
             "type": "hasOne",

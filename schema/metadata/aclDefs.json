@@ -1,0 +1,40 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/aclDefs.json",
+    "title": "aclDefs",
+    "description": "ACL framework definitions for a scope.",
+    "type": "object",
+    "properties": {
+        "accessCheckerClassName": {
+            "description": "An access checker class.",
+            "type": "string"
+        },
+        "portalAccessCheckerClassName": {
+            "description": "A portal access checker class.",
+            "type": "string"
+        },
+        "ownershipCheckerClassName": {
+            "description": "An ownership access checker class.",
+            "type": "string"
+        },
+        "portalOwnershipCheckerClassName": {
+            "description": "A portal ownership access checker class.",
+            "type": "string"
+        },
+        "assignmentCheckerClassName": {
+            "description": "assignment checker class.",
+            "type": "string"
+        },
+        "readOwnerUserField": {
+            "description": "Indicates what field is used for ownership checking.",
+            "type": "string"
+        },
+        "linkCheckerClassNameMap": {
+            "description": "Link checker classes for specific links.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        }
+    }
+}

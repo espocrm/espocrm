@@ -146,6 +146,7 @@ class Params
         return $obj;
     }
 
+    /** @noinspection PhpUnused */
     public function withFileName(?string $fileName): self
     {
         $obj = clone $this;
@@ -213,11 +214,17 @@ class Params
      */
     public function getSearchParams(): SearchParams
     {
-        if (!$this->searchParams) {
-            return SearchParams::create();
+        $searchParams = $this->searchParams ?? SearchParams::create();
+
+        if ($searchParams->getSelect() !== null) {
+            return $searchParams;
         }
 
-        return $this->searchParams;
+        if ($this->getAttributeList()) {
+            $searchParams = $searchParams->withSelect($this->getAttributeList());
+        }
+
+        return $searchParams;
     }
 
     /**

@@ -1,6 +1,6 @@
 ---
 name: Bug report
-about: Create a bug report. Not to be used for help requests or server configuration issues. We appreciate if you prefer posting bug reports on weekdays rather than weekends.
+about: Create a bug report. Not to be used for help requests or server configuration issues. Only for issues related to open source EspoCRM. Issues related to extensions should not to be posted here.
 title: ''
 labels: ''
 assignees: ''
@@ -10,8 +10,8 @@ assignees: ''
 **Describe the bug**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
-Steps to reproduce the behavior:
+**To Reproduce (MANDATORY, DO NOT REMOVE)**
+Explicit steps to reproduce the behavior:
 1. ...
 2. ...
 3. ...

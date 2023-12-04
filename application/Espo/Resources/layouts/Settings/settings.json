@@ -36,6 +36,13 @@
         ]
     },
     {
+        "label": "Phone Numbers",
+        "rows": [
+            [{"name": "phoneNumberInternational"}, {"name": "phoneNumberPreferredCountryList"}],
+            [{"name": "phoneNumberNumericSearch"}, false]
+        ]
+    },
+    {
         "label": "Activities",
         "rows": [
             [{"name": "calendarEntityList"}, {"name": "activitiesEntityList"}],

@@ -48,6 +48,7 @@ class Type
     public const STARTS_WITH = 'startsWith';
     public const ENDS_WITH = 'endsWith';
     public const CONTAINS = 'contains';
+    public const NOT_CONTAINS = 'notContains';
     public const GREATER_THAN = 'greaterThan';
     public const LESS_THAN = 'lessThan';
     public const GREATER_THAN_OR_EQUALS = 'greaterThanOrEquals';
@@ -55,6 +56,7 @@ class Type
     public const AFTER = 'after';
     public const BEFORE = 'before';
     public const BETWEEN = 'between';
+    public const EVER = 'ever';
     public const ANY = 'any';
     public const NONE = 'none';
     public const IS_NULL = 'isNull';
@@ -64,6 +66,7 @@ class Type
     public const TODAY = 'today';
     public const PAST = 'past';
     public const FUTURE = 'future';
+    public const LAST_SEVEN_DAYS = 'lastSevenDays';
     public const LAST_X_DAYS = 'lastXDays';
     public const NEXT_X_DAYS = 'nextXDays';
     public const OLDER_THAN_X_DAYS = 'olderThanXDays';

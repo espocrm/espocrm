@@ -41,6 +41,10 @@
         "awsS3Storage": {
             "level": "system"
         },
+        "defaultFileStorage": {
+            "level": "admin",
+            "readOnly": true
+        },
         "smsProvider": {
             "level": "admin"
         },
@@ -118,6 +122,21 @@
             "level": "admin"
         },
         "oidcLogoutUrl": {
+            "level": "admin"
+        },
+        "apiCorsAllowedMethodList": {
+            "level": "admin"
+        },
+        "apiCorsAllowedHeaderList": {
+            "level": "admin"
+        },
+        "apiCorsAllowedOriginList": {
+            "level": "admin"
+        },
+        "apiCorsMaxAge": {
+            "level": "admin"
+        },
+        "customExportManifest": {
             "level": "admin"
         }
     }

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/password-change-request', ['view', 'model', 'lib!Espo'], function (Dep, Model, Espo) {
+define('views/user/password-change-request', ['view', 'model'], function (Dep, Model) {
 
     return Dep.extend({
 
@@ -47,14 +47,13 @@ define('views/user/password-change-request', ['view', 'model', 'lib!Espo'], func
         },
 
         setup: function () {
-            var model = this.model = new Model;
-
-            model.name = 'User';
+            let model = this.model = new Model();
+            model.entityType = model.name = 'User';
 
             this.createView('password', 'views/user/fields/password', {
                 model: model,
                 mode: 'edit',
-                el: this.getSelector() + ' .field[data-name="password"]',
+                selector: '.field[data-name="password"]',
                 defs: {
                     name: 'password',
                     params: {
@@ -68,7 +67,7 @@ define('views/user/password-change-request', ['view', 'model', 'lib!Espo'], func
             this.createView('passwordConfirm', 'views/fields/password', {
                 model: model,
                 mode: 'edit',
-                el: this.getSelector() + ' .field[data-name="passwordConfirm"]',
+                selector: '.field[data-name="passwordConfirm"]',
                 defs: {
                     name: 'passwordConfirm',
                     params: {
@@ -82,7 +81,7 @@ define('views/user/password-change-request', ['view', 'model', 'lib!Espo'], func
                 model: model,
                 mode: 'detail',
                 readOnly: true,
-                el: this.getSelector() + ' .field[data-name="generatePassword"]',
+                selector: '.field[data-name="generatePassword"]',
                 defs: {
                     name: 'generatePassword',
                 },
@@ -93,7 +92,7 @@ define('views/user/password-change-request', ['view', 'model', 'lib!Espo'], func
                 model: model,
                 mode: 'detail',
                 readOnly: true,
-                el: this.getSelector() + ' .field[data-name="passwordPreview"]',
+                selector: '.field[data-name="passwordPreview"]',
                 defs: {
                     name: 'passwordPreview',
                 },

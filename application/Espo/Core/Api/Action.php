@@ -30,6 +30,7 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -47,6 +48,7 @@ interface Action
      * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
+     * @throws Conflict
      * @throws Error
      */
     public function process(Request $request): Response;

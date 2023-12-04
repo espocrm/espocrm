@@ -26,61 +26,74 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module ui */
+
+import {marked} from 'marked';
+import DOMPurify from 'dompurify';
+import $ from 'jquery';
+
 /**
- * @module ui
+ * Dialog parameters.
+ *
+ * @typedef {Object} module:ui.Dialog~Params
+ *
+ * @property {string} [className='dialog'] A class-name or multiple space separated.
+ * @property {'static'|true|false} [backdrop='static'] A backdrop.
+ * @property {boolean} [closeButton=true] A close button.
+ * @property {boolean} [collapseButton=false] A collapse button.
+ * @property {string|null} [header] A header HTML.
+ * @property {string} [body] A body HTML.
+ * @property {number|null} [width] A width.
+ * @property {boolean} [removeOnClose=true] To remove on close.
+ * @property {boolean} [draggable=false] Is draggable.
+ * @property {function (): void} [onRemove] An on-remove callback.
+ * @property {function (): void} [onClose] An on-close callback.
+ * @property {function (): void} [onBackdropClick] An on-backdrop-click callback.
+ * @property {string} [container='body'] A container selector.
+ * @property {boolean} [keyboard=true] Enable a keyboard control. The `Esc` key closes a dialog.
+ * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
+ * @property {module:ui.Dialog~Button[]} [buttonList] Buttons.
+ * @property {module:ui.Dialog~Button[]} [dropdownItemList] Dropdown action items.
+ * @property {boolean} [fullHeight] Deprecated.
+ * @property {Number} [bodyDiffHeight]
+ * @property {Number} [screenWidthXs]
  */
-define('ui', ['lib!marked', 'lib!dompurify'],
-function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
+
+/**
+ * A button or dropdown action item.
+ *
+ * @typedef {Object} module:ui.Dialog~Button
+ *
+ * @property {string} name A name.
+ * @property {boolean} [pullLeft=false] Deprecated. Use the `position` property.
+ * @property {'left'|'right'} [position='left'] A position.
+ * @property {string} [html] HTML.
+ * @property {string} [text] A text.
+ * @property {boolean} [disabled=false] Disabled.
+ * @property {boolean} [hidden=false] Hidden.
+ * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
+ * @property {function(Espo.Ui.Dialog, JQueryEventObject): void} [onClick] An on-click callback.
+ * @property {string} [className] An additional class name.
+ * @property {string} [title] A title.
+ */
+
+/**
+ * @alias Espo.Ui.Dialog
+ */
+class Dialog {
+
+    height
+    fitHeight
+    onRemove
+    onClose
+    onBackdropClick
+    buttons
+    screenWidthXs
 
     /**
-     * Dialog parameters.
-     *
-     * @typedef {Object} module:ui.Dialog~Params
-     *
-     * @property {string} [className='dialog'] A class-name or multiple space separated.
-     * @property {'static'|true|false} [backdrop='static'] A backdrop.
-     * @property {boolean} [closeButton=true] A close button.
-     * @property {boolean} [collapseButton=false] A collapse button.
-     * @property {string|null} [header] A header HTML.
-     * @property {string} [body] A body HTML.
-     * @property {number|null} [width] A width.
-     * @property {boolean} [removeOnClose=true] To remove on close.
-     * @property {boolean} [draggable=false] Is draggable.
-     * @property {function (): void} [onRemove] An on-remove callback.
-     * @property {function (): void} [onClose] An on-close callback.
-     * @property {function (): void} [onBackdropClick] An on-backdrop-click callback.
-     * @property {string} [container='body'] A container selector.
-     * @property {boolean} [keyboard=true] Enable a keyboard control. The `Esc` key closes a dialog.
-     * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
-     * @property {module:ui.Dialog~Button[]} [buttonList] Buttons.
-     * @property {module:ui.Dialog~Button[]} [dropdownItemList] Dropdown action items.
-     */
-
-    /**
-     * A button or dropdown action item.
-     *
-     * @typedef {Object} module:ui.Dialog~Button
-     *
-     * @property {string} name A name.
-     * @property {boolean} [pullLeft=false] Deprecated. Use the `position` property.
-     * @property {'left'|'right'} [position='left'] A position.
-     * @property {string} [html] HTML.
-     * @property {string} [text] A text.
-     * @property {boolean} [disabled=false] Disabled.
-     * @property {boolean} [hidden=false] Hidden.
-     * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
-     * @property {function():void} [onClick] An on-click callback.
-     * @property {string} [className] An additional class name.
-     * @property {string} [title] A title.
-     */
-
-    /**
-     * @class
-     * @name Espo.Ui.Dialog
-     *
      * @param {module:ui.Dialog~Params} options Options.
      */
-    let Dialog = function (options) {
+    constructor(options) {
         options = options || {};
 
         /** @private */
@@ -114,13 +127,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         /** @private */
         this.container = 'body';
         /** @private */
-        this.onRemove = function () {};
-        /** @private */
-        this.onClose = function () {};
-        /** @private */
         this.options = options;
-        /** @private */
-        this.onBackdropClick = function () {};
         /** @private */
         this.keyboard = true;
 
@@ -231,6 +238,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         if (this.draggable) {
             this.$el.find('header').css('cursor', 'pointer');
 
+            // noinspection JSUnresolvedReference
             this.$el.draggable({
                 handle: 'header',
             });
@@ -261,7 +269,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
         let $window = $(window);
 
-        this.$el.on('shown.bs.modal', (e, r) => {
+        this.$el.on('shown.bs.modal', () => {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
 
             let headerHeight = this.$el.find('.modal-header').outerHeight() || 0;
@@ -317,41 +325,71 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
         let $documentBody = $(document.body);
 
-        this.$el.on('hidden.bs.modal', e => {
+        this.$el.on('hidden.bs.modal', () => {
             if ($('.modal:visible').length > 0) {
                 $documentBody.addClass('modal-open');
             }
         });
-    };
+    }
+
+    /** @private */
+    callOnClose() {
+        if (this.onClose) {
+            this.onClose()
+        }
+    }
+
+    /** @private */
+    callOnBackdropClick() {
+        if (this.onBackdropClick) {
+            this.onBackdropClick()
+        }
+    }
+
+    /** @private */
+    callOnRemove() {
+        if (this.onRemove) {
+            this.onRemove()
+        }
+    }
 
     /**
-     * @private
+     * Set action items.
+     *
+     * @param {module:ui.Dialog~Button[]} buttonList
+     * @param {module:ui.Dialog~Button[]} dropdownItemList
      */
-    Dialog.prototype.initButtonEvents = function () {
+    setActionItems(buttonList, dropdownItemList) {
+        this.buttonList = buttonList;
+        this.dropdownItemList = dropdownItemList;
+    }
+
+    /**
+     * Init button events.
+     */
+    initButtonEvents() {
         this.buttonList.forEach(o => {
             if (typeof o.onClick === 'function') {
-                $('#' + this.id + ' .modal-footer button[data-name="' + o.name + '"]')
-                    .on('click', (e) => {
-                        o.onClick(this, e);
-                    });
+                let $button = $('#' + this.id + ' .modal-footer button[data-name="' + o.name + '"]');
+
+                $button.on('click', e => o.onClick(this, e));
             }
         });
 
         this.dropdownItemList.forEach(o => {
             if (typeof o.onClick === 'function') {
-                $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]')
-                    .on('click', (e) => {
-                        o.onClick(this, e);
-                    });
+                let $button = $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]');
+
+                $button.on('click', e => o.onClick(this, e));
             }
         });
-    };
+    }
 
     /**
      * @private
      * @return {JQuery|null}
      */
-    Dialog.prototype.getHeader = function () {
+    getHeader() {
         if (!this.header) {
             return null;
         }
@@ -403,10 +441,11 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
     }
 
     /**
-     * @private
+     * Get a footer.
+     *
      * @return {JQuery|null}
      */
-    Dialog.prototype.getFooter = function () {
+    getFooter() {
         if (!this.buttonList.length && !this.dropdownItemList.length) {
             return null;
         }
@@ -523,7 +562,8 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
     /**
      * Show.
      */
-    Dialog.prototype.show = function () {
+    show() {
+        // noinspection JSUnresolvedReference
         this.$el.modal({
              backdrop: this.backdrop,
              keyboard: this.keyboard,
@@ -571,7 +611,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                 return;
             }
 
-            this.onBackdropClick();
+            this.callOnBackdropClick();
 
             if (this.backdrop === 'static') {
                 return;
@@ -581,19 +621,19 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         });
 
         $('body > .popover').addClass('hidden');
-    };
+    }
 
     /**
      * Hide.
      */
-    Dialog.prototype.hide = function () {
+    hide() {
         this.$el.find('.modal-content').addClass('hidden');
-    };
+    }
 
     /**
      * Hide with a backdrop.
      */
-    Dialog.prototype.hideWithBackdrop = function () {
+    hideWithBackdrop() {
         let $modalBackdrop = $('.modal-backdrop');
 
         $modalBackdrop.last().addClass('hidden');
@@ -609,14 +649,15 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
             this.skipRemove = false;
         }, 50);
 
+        // noinspection JSUnresolvedReference
         this.$el.modal('hide');
         this.$el.find('.modal-content').addClass('hidden');
-    };
+    }
 
     /**
      * @private
      */
-    Dialog.prototype._close = function () {
+    _close() {
         let $modalBackdrop = $('.modal-backdrop');
 
         $modalBackdrop.last().removeClass('hidden');
@@ -624,14 +665,15 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         let $modalContainer = $('.modal-container');
 
         $($modalContainer.get($modalContainer.length - 2)).removeClass('overlaid');
-    };
+    }
 
     /**
      * @private
      * @param {Element} element
      * @return {Element|null}
      */
-    Dialog.prototype._findClosestFocusableElement = function (element) {
+    _findClosestFocusableElement(element) {
+        // noinspection JSUnresolvedReference
         let isVisible = !!(
             element.offsetWidth ||
             element.offsetHeight ||
@@ -639,6 +681,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         );
 
         if (isVisible) {
+            // noinspection JSUnresolvedReference
             element.focus({preventScroll: true});
 
             return element;
@@ -649,7 +692,9 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         if ($element.closest('.dropdown-menu').length) {
             let $button = $element.closest('.btn-group').find(`[data-toggle="dropdown"]`);
 
+
             if ($button.length) {
+                // noinspection JSUnresolvedReference
                 $button.get(0).focus({preventScroll: true});
 
                 return $button.get(0);
@@ -657,14 +702,14 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         }
 
         return null;
-    };
+    }
 
     /**
      * Close.
      */
-    Dialog.prototype.close = function () {
+    close() {
         if (!this.onCloseIsCalled) {
-            this.onClose();
+            this.callOnClose();
             this.onCloseIsCalled = true;
 
             if (this.activeElement) {
@@ -672,6 +717,7 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                     let element = this._findClosestFocusableElement(this.activeElement);
 
                     if (element) {
+                        // noinspection JSUnresolvedReference
                         element.focus({preventScroll: true});
                     }
                 }, 50);
@@ -679,15 +725,16 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
         }
 
         this._close();
+        // noinspection JSUnresolvedReference
         this.$el.modal('hide');
         $(this).trigger('dialog:close');
-    };
+    }
 
     /**
      * Remove.
      */
-    Dialog.prototype.remove = function () {
-        this.onRemove();
+    remove() {
+        this.callOnRemove();
 
         // Hack allowing multiple backdrops.
         // `close` function may be called twice.
@@ -696,187 +743,194 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
 
         $(this).off();
         $(window).off('resize.modal-height');
-    };
+    }
+}
+
+
+/**
+ * UI utils.
+ */
+Espo.Ui = {
+
+    Dialog: Dialog,
 
     /**
-     * UI utils.
+     * @typedef {Object} Espo.Ui~ConfirmOptions
+     *
+     * @property {string} confirmText A confirm-button text.
+     * @property {string} cancelText A cancel-button text.
+     * @property {'danger'|'success'|'warning'|'default'} [confirmStyle='danger']
+     *   A confirm-button style.
+     * @property {'static'|boolean} [backdrop=false] A backdrop.
+     * @property {function():void} [cancelCallback] A cancel-callback.
+     * @property {boolean} [isHtml=false] Whether the message is HTML.
      */
-    Espo.Ui = {
 
-        Dialog: Dialog,
+    /**
+     * Show a confirmation dialog.
+     *
+     * @param {string} message A message.
+     * @param {Espo.Ui~ConfirmOptions|{}} o Options.
+     * @param {function} [callback] Deprecated. Use a promise.
+     * @param {Object} [context] Deprecated.
+     * @returns {Promise} Resolves if confirmed.
+     */
+    confirm: function (message, o, callback, context) {
+        o = o || {};
 
-        /**
-         * @typedef {Object} Espo.Ui~ConfirmOptions
-         *
-         * @property {string} confirmText A confirm-button text.
-         * @property {string} cancelText A cancel-button text.
-         * @property {'danger'|'success'|'warning'|'default'} [confirmStyle='danger']
-         *   A confirm-button style.
-         * @property {'static'|boolean} [backdrop=false] A backdrop.
-         * @property {function():void} [cancelCallback] A cancel-callback.
-         * @property {boolean} [isHtml=false] Whether the message is HTML.
-         */
+        let confirmText = o.confirmText;
+        let cancelText = o.cancelText;
+        let confirmStyle = o.confirmStyle || 'danger';
+        let backdrop = o.backdrop;
 
-        /**
-         * Show a confirmation dialog.
-         *
-         * @param {string} message A message.
-         * @param {Espo.Ui~ConfirmOptions|{}} o Options.
-         * @param {function} [callback] Deprecated. Use a promise.
-         * @param {Object} [context] Deprecated.
-         * @returns {Promise} Resolves if confirmed.
-         */
-        confirm: function (message, o, callback, context) {
-            o = o || {};
+        if (typeof backdrop === 'undefined') {
+            backdrop = false;
+        }
 
-            let confirmText = o.confirmText;
-            let cancelText = o.cancelText;
-            let confirmStyle = o.confirmStyle || 'danger';
-            let backdrop = o.backdrop;
+        let isResolved = false;
 
-            if (typeof backdrop === 'undefined') {
-                backdrop = false;
+        let processCancel = () => {
+            if (!o.cancelCallback) {
+                return;
             }
 
-            let isResolved = false;
+            if (context) {
+                o.cancelCallback.call(context);
 
-            let processCancel = () => {
-                if (!o.cancelCallback) {
-                    return;
-                }
-
-                if (context) {
-                    o.cancelCallback.call(context);
-
-                    return;
-                }
-
-                o.cancelCallback();
-            };
-
-            if (!o.isHtml) {
-                message = Handlebars.Utils.escapeExpression(message);
+                return;
             }
 
-            return new Promise(resolve => {
-                let dialog = new Dialog({
-                    backdrop: backdrop,
-                    header: false,
-                    className: 'dialog-confirm',
-                    body: '<span class="confirm-message">' + message + '</a>',
-                    buttonList: [
-                        {
-                            text: ' ' + confirmText + ' ',
-                            name: 'confirm',
-                            className: 'btn-s-wide',
-                            onClick: () => {
-                                isResolved = true;
+            o.cancelCallback();
+        };
 
-                                if (callback) {
-                                    if (context) {
-                                        callback.call(context);
-                                    } else {
-                                        callback();
-                                    }
+        if (!o.isHtml) {
+            message = Handlebars.Utils.escapeExpression(message);
+        }
+
+        return new Promise(resolve => {
+            let dialog = new Dialog({
+                backdrop: backdrop,
+                header: null,
+                className: 'dialog-confirm',
+                body: '<span class="confirm-message">' + message + '</a>',
+                buttonList: [
+                    {
+                        text: ' ' + confirmText + ' ',
+                        name: 'confirm',
+                        className: 'btn-s-wide',
+                        onClick: () => {
+                            isResolved = true;
+
+                            if (callback) {
+                                if (context) {
+                                    callback.call(context);
+                                } else {
+                                    callback();
                                 }
+                            }
 
-                                resolve();
+                            resolve();
 
-                                dialog.close();
-                            },
-                            style: confirmStyle,
-                            position: 'right',
+                            dialog.close();
                         },
-                        {
-                            text: cancelText,
-                            name: 'cancel',
-                            className: 'btn-s-wide',
-                            onClick: () => {
-                                isResolved = true;
-
-                                dialog.close();
-                                processCancel();
-                            },
-                            position: 'left',
-                        }
-                    ],
-                    onClose: () => {
-                        if (isResolved) {
-                            return;
-                        }
-
-                        processCancel();
+                        style: confirmStyle,
+                        position: 'right',
                     },
-                });
+                    {
+                        text: cancelText,
+                        name: 'cancel',
+                        className: 'btn-s-wide',
+                        onClick: () => {
+                            isResolved = true;
 
-                dialog.show();
-                dialog.$el.find('button[data-name="confirm"]').focus();
-            });
-        },
-
-        /**
-         * Create a dialog.
-         *
-         * @param {module:ui.Dialog~Params} options Options.
-         * @returns {Dialog}
-         */
-        dialog: function (options) {
-            return new Dialog(options);
-        },
-
-
-        /**
-         * Popover options.
-         *
-         * @typedef {Object} Espo.Ui~PopoverOptions
-         *
-         * @property {'bottom'|'top'|'left'|'right'} [placement='bottom'] A placement.
-         * @property {string|JQuery} [container] A container selector.
-         * @property {string} [content] An HTML content.
-         * @property {string} [text] A text.
-         * @property {'manual'|'click'|'hover'|'focus'} [trigger='manual'] A trigger type.
-         * @property {boolean} [noToggleInit=false] Skip init toggle on click.
-         * @property {boolean} [preventDestroyOnRender=false] Don't destroy on re-render.
-         * @property {function(): void} [onShow] On-show callback.
-         * @property {function(): void} [onHide] On-hide callback.
-         */
-
-        /**
-         * Init a popover.
-         *
-         * @param {JQuery} $el An element.
-         * @param {Espo.Ui~PopoverOptions} o Options.
-         * @param {module:view} [view] A view.
-         */
-        popover: function ($el, o, view) {
-            let $body = $('body')
-            let content = o.content || Handlebars.Utils.escapeExpression(o.text || '');
-            let isShown = false;
-
-            let container = o.container;
-
-            if (!container) {
-                let $modalBody = $el.closest('.modal-body');
-
-                container = $modalBody.length ? $modalBody : 'body';
-            }
-
-            $el
-                .popover({
-                    placement: o.placement || 'bottom',
-                    container: container,
-                    viewport: container,
-                    html: true,
-                    content: content,
-                    trigger: o.trigger || 'manual',
-                })
-                .on('shown.bs.popover', () => {
-                    isShown = true;
-
-                    if (!view) {
+                            dialog.close();
+                            processCancel();
+                        },
+                        position: 'left',
+                    }
+                ],
+                onClose: () => {
+                    if (isResolved) {
                         return;
                     }
 
+                    processCancel();
+                },
+            });
+
+            dialog.show();
+            dialog.$el.find('button[data-name="confirm"]').focus();
+        });
+    },
+
+    /**
+     * Create a dialog.
+     *
+     * @param {module:ui.Dialog~Params} options Options.
+     * @returns {Dialog}
+     */
+    dialog: function (options) {
+        return new Dialog(options);
+    },
+
+
+    /**
+     * Popover options.
+     *
+     * @typedef {Object} Espo.Ui~PopoverOptions
+     *
+     * @property {'bottom'|'top'|'left'|'right'} [placement='bottom'] A placement.
+     * @property {string|JQuery} [container] A container selector.
+     * @property {string} [content] An HTML content.
+     * @property {string} [text] A text.
+     * @property {'manual'|'click'|'hover'|'focus'} [trigger='manual'] A trigger type.
+     * @property {boolean} [noToggleInit=false] Skip init toggle on click.
+     * @property {boolean} [preventDestroyOnRender=false] Don't destroy on re-render.
+     * @property {boolean} [noHideOnOutsideClick=false] Don't hide on clicking outside.
+     * @property {function(): void} [onShow] On-show callback.
+     * @property {function(): void} [onHide] On-hide callback.
+     */
+
+    /**
+     * Init a popover.
+     *
+     * @param {Element|JQuery} element An element.
+     * @param {Espo.Ui~PopoverOptions} o Options.
+     * @param {module:view} [view] A view.
+     * @return {{hide: function(), destroy: function(), show: function(), detach: function()}}
+     */
+    popover: function (element, o, view) {
+        const $el = $(element);
+        const $body = $('body');
+        const content = o.content || Handlebars.Utils.escapeExpression(o.text || '');
+        let isShown = false;
+
+        let container = o.container;
+
+        if (!container) {
+            const $modalBody = $el.closest('.modal-body');
+
+            container = $modalBody.length ? $modalBody : 'body';
+        }
+
+        // noinspection JSUnresolvedReference
+        $el
+            .popover({
+                placement: o.placement || 'bottom',
+                container: container,
+                viewport: container,
+                html: true,
+                content: content,
+                trigger: o.trigger || 'manual',
+            })
+            .on('shown.bs.popover', () => {
+                isShown = true;
+
+                if (!view) {
+                    return;
+                }
+
+                if (view && !o.noHideOnOutsideClick) {
                     $body.off('click.popover-' + view.cid);
 
                     $body.on('click.popover-' + view.cid, e => {
@@ -893,178 +947,237 @@ function (/** marked~ */marked, /** DOMPurify~ */ DOMPurify) {
                         }
 
                         $body.off('click.popover-' + view.cid);
+                        // noinspection JSUnresolvedReference
                         $el.popover('hide');
                     });
+                }
 
-                    if (o.onShow) {
-                        o.onShow();
-                    }
-                })
-                .on('hidden.bs.popover', () => {
-                    isShown = false;
+                if (o.onShow) {
+                    o.onShow();
+                }
+            })
+            .on('hidden.bs.popover', () => {
+                isShown = false;
 
-                    if (o.onHide) {
-                        o.onHide();
-                    }
-                });
+                if (o.onHide) {
+                    o.onHide();
+                }
+            });
 
-            if (!o.noToggleInit) {
-                $el.on('click', () => {
-                    $el.popover('toggle');
-                });
-            }
+        if (!o.noToggleInit) {
+            $el.on('click', () => {
+                // noinspection JSUnresolvedReference
+                $el.popover('toggle');
+            });
+        }
 
+        let isDetached = false;
+
+        const detach = () => {
             if (view) {
-                let hide = () => {
-                    if (!isShown) {
-                        return;
-                    }
+                $body.off('click.popover-' + view.cid);
 
-                    $el.popover('hide');
-                };
-
-                let destroy = () => {
-                    $el.popover('destroy');
-                    $body.off('click.popover-' + view.cid);
-
-                    view.off('remove', destroy);
-                    view.off('render', destroy);
-                    view.off('render', hide);
-                };
-
-                view.once('remove', destroy);
-
-                if (!o.preventDestroyOnRender) {
-                    view.once('render', destroy);
-                }
-
-                if (o.preventDestroyOnRender) {
-                    view.on('render', hide);
-                }
+                view.off('remove', destroy);
+                view.off('render', destroy);
+                view.off('render', hide);
             }
-        },
 
-        /**
-         * Show a notify-message.
-         *
-         * @param {string|false} message A message. False removes an already displayed message.
-         * @param {'warning'|'danger'|'success'|'info'} [type='warning'] A type.
-         * @param {number} [timeout] Microseconds. If empty, then won't be hidden.
-         *   Should be hidden manually or by displaying another message.
-         * @param {boolean} [closeButton] A close button.
-         */
-        notify: function (message, type, timeout, closeButton) {
-            $('#notification').remove();
+            isDetached = true;
+        };
 
-            if (!message) {
+        const destroy = () => {
+            if (isDetached) {
                 return;
             }
 
-            let parsedMessage = message.indexOf('\n') !== -1 ?
-                marked.parse(message) :
-                marked.parseInline(message);
+            // noinspection JSUnresolvedReference
+            $el.popover('destroy');
 
-            let sanitizedMessage = DOMPurify.sanitize(parsedMessage).toString();
+            detach();
+        };
 
-            type = type || 'warning';
-            closeButton = closeButton || false;
-
-            if (type === 'error') {
-                // For bc.
-                type = 'danger';
+        const hide = () => {
+            if (!isShown) {
+                return;
             }
 
-            if (sanitizedMessage === ' ... ') {
-                sanitizedMessage = ' <span class="fas fa-spinner fa-spin"> ';
+            // noinspection JSUnresolvedReference
+            $el.popover('hide');
+        };
+
+        const show = () => {
+            // noinspection JSUnresolvedReference
+            $el.popover('show');
+        };
+
+        if (view) {
+            view.once('remove', destroy);
+
+            if (!o.preventDestroyOnRender) {
+                view.once('render', destroy);
             }
 
-            let additionalClassName = closeButton ? ' alert-closable' : '';
-
-            let $el = $('<div>')
-                .addClass('alert alert-' + type + additionalClassName + ' fade in')
-                .attr('id', 'notification')
-                .css({
-                    'position': 'fixed',
-                    'top': '0',
-                    'left': '50vw',
-                    'transform': 'translate(-50%, 0)',
-                    'z-index': 2000,
-                })
-                .append(
-                    $('<div>')
-                        .addClass('message')
-                        .html(sanitizedMessage)
-                );
-
-            if (closeButton) {
-                let $close = $('<button>')
-                    .attr('type', 'button')
-                    .attr('data-dismiss', 'modal')
-                    .attr('aria-hidden', 'true')
-                    .addClass('close')
-                    .html('&times;');
-
-                $el.append(
-                    $('<div>')
-                        .addClass('close-container')
-                        .append($close)
-                );
-
-                $close.on('click', () => $el.alert('close'));
+            if (o.preventDestroyOnRender) {
+                view.on('render', hide);
             }
+        }
 
-            if (timeout) {
-                setTimeout(() => $el.alert('close'), timeout);
-            }
-
-            $el.appendTo('body')
-        },
-
-        /**
-         * Show a warning message.
-         *
-         * @param {string} message A message.
-         */
-        warning: function (message) {
-            Espo.Ui.notify(message, 'warning', 2000);
-        },
-
-        /**
-         * Show a success message.
-         *
-         * @param {string} message A message.
-         */
-        success: function (message) {
-            Espo.Ui.notify(message, 'success', 2000);
-        },
-
-        /**
-         * Show an error message.
-         *
-         * @param {string} message A message.
-         * @param {boolean} [closeButton] A close button.
-         */
-        error: function (message, closeButton) {
-            closeButton = closeButton || false;
-            let timeout = closeButton ? 0 : 4000;
-
-            Espo.Ui.notify(message, 'danger', timeout, closeButton);
-        },
-
-        /**
-         * Show an info message.
-         *
-         * @param {string} message A message.
-         */
-        info: function (message) {
-            Espo.Ui.notify(message, 'info', 2000);
-        },
-    };
+        return {
+            hide: () => hide(),
+            destroy: () => destroy(),
+            show: () => show(),
+            detach: () => detach(),
+        };
+    },
 
     /**
-     * @deprecated Use `Espo.Ui`.
+     * Notify options.
+     *
+     * @typedef {Object} Espo.Ui~NotifyOptions
+     * @property {boolean} [closeButton] A close button.
+     * @property {boolean} [suppress] Suppress other warning alerts while this is displayed.
      */
-    Espo.ui = Espo.Ui;
 
-    return Espo.Ui;
-});
+    /**
+     * Show a notify-message.
+     *
+     * @param {string|false} [message=false] A message. False removes an already displayed message.
+     * @param {'warning'|'danger'|'success'|'info'} [type='warning'] A type.
+     * @param {number} [timeout] Microseconds. If empty, then won't be hidden.
+     *   Should be hidden manually or by displaying another message.
+     * @param {Espo.Ui~NotifyOptions} [options] Options.
+     */
+    notify: function (message, type, timeout, options) {
+        type = type || 'warning';
+        options = {...options};
+
+        if (type === 'warning' && notifySuppressed) {
+            return;
+        }
+
+        $('#notification').remove();
+
+        if (!message) {
+            return;
+        }
+
+        if (options.suppress && timeout) {
+            notifySuppressed = true;
+
+            setTimeout(() => notifySuppressed = false, timeout)
+        }
+
+        let parsedMessage = message.indexOf('\n') !== -1 ?
+            marked.parse(message) :
+            marked.parseInline(message);
+
+        let sanitizedMessage = DOMPurify.sanitize(parsedMessage, {}).toString();
+
+        let closeButton = options.closeButton || false;
+
+        if (type === 'error') {
+            // For bc.
+            type = 'danger';
+        }
+
+        if (sanitizedMessage === ' ... ') {
+            sanitizedMessage = ' <span class="fas fa-spinner fa-spin"> ';
+        }
+
+        let additionalClassName = closeButton ? ' alert-closable' : '';
+
+        let $el = $('<div>')
+            .addClass('alert alert-' + type + additionalClassName + ' fade in')
+            .attr('id', 'notification')
+            .css({
+                'position': 'fixed',
+                'top': '0',
+                'left': '50vw',
+                'transform': 'translate(-50%, 0)',
+                'z-index': 2000,
+            })
+            .append(
+                $('<div>')
+                    .addClass('message')
+                    .html(sanitizedMessage)
+            );
+
+        if (closeButton) {
+            let $close = $('<button>')
+                .attr('type', 'button')
+                .attr('data-dismiss', 'modal')
+                .attr('aria-hidden', 'true')
+                .addClass('close')
+                .html('&times;');
+
+            $el.append(
+                $('<div>')
+                    .addClass('close-container')
+                    .append($close)
+            );
+
+            $close.on('click', () => $el.alert('close'));
+        }
+
+        if (timeout) {
+            setTimeout(() => $el.alert('close'), timeout);
+        }
+
+        $el.appendTo('body')
+    },
+
+    /**
+     * Show a warning message.
+     *
+     * @param {string} message A message.
+     * @param {Espo.Ui~NotifyOptions} [options] Options.
+     */
+    warning: function (message, options) {
+        Espo.Ui.notify(message, 'warning', 2000, options);
+    },
+
+    /**
+     * Show a success message.
+     *
+     * @param {string} message A message.
+     * @param {Espo.Ui~NotifyOptions} [options] Options.
+     */
+    success: function (message, options) {
+        Espo.Ui.notify(message, 'success', 2000, options);
+    },
+
+    /**
+     * Show an error message.
+     *
+     * @param {string} message A message.
+     * @param {Espo.Ui~NotifyOptions|true} [options] Options. If true, then only closeButton option will be applied.
+     */
+    error: function (message, options) {
+        options = typeof options === 'boolean' ?
+            {closeButton: options} :
+            {...options};
+
+        let timeout = options.closeButton ? 0 : 4000;
+
+        Espo.Ui.notify(message, 'danger', timeout, options);
+    },
+
+    /**
+     * Show an info message.
+     *
+     * @param {string} message A message.
+     * @param {Espo.Ui~NotifyOptions} [options] Options.
+     */
+    info: function (message, options) {
+        Espo.Ui.notify(message, 'info', 2000, options);
+    },
+};
+
+let notifySuppressed = false;
+
+/**
+ * @deprecated Use `Espo.Ui`.
+ */
+Espo.ui = Espo.Ui;
+
+export default Espo.Ui;

@@ -28,31 +28,5 @@
 
 define('crm:views/task/detail', ['views/detail'], function (Dep) {
 
-    return Dep.extend({
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.controlCompleteButton();
-            this.listenTo(this.model, 'sync', () => this.controlCompleteButton());
-        },
-
-        controlCompleteButton: function () {
-            let status = this.model.get('status');
-
-            if (['Completed', 'Canceled'].includes(status)) {
-                this.hideHeaderActionItem('setCompletedMain');
-            }
-        },
-
-        actionSetCompletedMain: function () {
-            this.model
-                .save({status: 'Completed'}, {patch: true})
-                .then(() => {
-                    Espo.Ui.success(this.translate('Saved'));
-
-                    this.hideHeaderActionItem('setCompletedMain');
-                });
-        },
-    });
+    return Dep.extend({});
 });

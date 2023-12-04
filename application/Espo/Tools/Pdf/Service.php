@@ -41,7 +41,7 @@ use Espo\Tools\Pdf\Data\DataLoaderManager;
 
 class Service
 {
-    private const DEFAULT_ENGINE = 'Tcpdf';
+    private const DEFAULT_ENGINE = 'Dompdf';
 
     private EntityManager $entityManager;
     private Acl $acl;

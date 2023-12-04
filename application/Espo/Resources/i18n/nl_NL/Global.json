@@ -52,7 +52,8 @@
     "ImportError": "Importfout",
     "WorkingTimeCalendar": "Werktijd Kalender",
     "WorkingTimeRange": "Werktijdbereik",
-    "GroupEmailFolder": "Groep e-mail map"
+    "GroupEmailFolder": "Groep e-mail map",
+    "AuthenticationProvider": "Authenticatie aanbieder"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -96,7 +97,8 @@
     "ImportError": "Importfouten",
     "WorkingTimeCalendar": "Werktijd kalenders",
     "WorkingTimeRange": "Werktijdbereiken",
-    "GroupEmailFolder": "Groep e-mailmappen"
+    "GroupEmailFolder": "Groep e-mailmappen",
+    "AuthenticationProvider": "Authenticatie aanbieders"
   },
   "labels": {
     "Misc": "Overig",
@@ -112,7 +114,6 @@
     "Loading...": "Laden...",
     "Uploading...": "Uploaden...",
     "Sending...": "Verzenden...",
-    "Merging...": "Samenvoegen...",
     "Merged": "Samengevoegd",
     "Removed": "Verwijderd",
     "Posted": "Geplaatst",
@@ -126,14 +127,10 @@
     "Record has been removed": "Record is verwijderd",
     "Wrong username/password": "Onjuiste gebruikersnaam/wachtwoord",
     "Post cannot be empty": "Veld mag niet leeg zijn",
-    "Removing...": "Verwijderen...",
-    "Unlinking...": "Ontkoppelen...",
-    "Posting...": "Plaatsen...",
     "Username can not be empty!": "Gebruikersnaam mag niet leeg zijn!",
     "Cache is not enabled": "Cache is niet ingeschakeld",
     "Cache has been cleared": "Cache is leeg gemaakt",
     "Rebuild has been done": "Het reconstrueren is klaar",
-    "Saving...": "Opslaan...",
     "Modified": "Aangepast",
     "Created": "Gemaakt",
     "Create": "Creëer",
@@ -257,11 +254,12 @@
     "Sign in": "Aanmelden",
     "Global Search": "Uitgebreid zoeken",
     "Show Navigation Panel": "Toon navigatiepaneel",
-    "Hide Navigation Panel": "Verberg navigatiepaneel"
+    "Hide Navigation Panel": "Verberg navigatiepaneel",
+    "Copy to Clipboard": "Kopiëren naar klembord",
+    "Copied to clipboard": "Gekopieerd naar klembord"
   },
   "messages": {
     "pleaseWait": "Even geduld...",
-    "posting": "Plaatsen...",
     "confirmLeaveOutMessage": "Weet u zeker dat u het formulier wilt verlaten?",
     "notModified": "U heeft niets gewijzigd",
     "fieldIsRequired": "{field} is verplicht",
@@ -310,8 +308,6 @@
     "loading": "Bezig met laden...",
     "saving": "Opslaan...",
     "fieldMaxFileSizeError": "Bestand mag niet groter zijn dan {max} Mb",
-    "fieldShouldBeLess": "{field} moet minder zijn dan {value}",
-    "fieldShouldBeGreater": "{field} moet groter zijn dan {value}",
     "fieldIsUploading": "Bezig met uploaden",
     "erasePersonalDataConfirmation": "De aangevinkte velden worden permanent verwijderd. Weet je het zeker?",
     "massPrintPdfMaxCountError": "Kan niet meer dan {maxCount} records afdrukken.",
@@ -322,6 +318,7 @@
     "notUpdated": "Niet bijgewerkt",
     "maintenanceMode": "De applicatie staat momenteel in onderhoudsmodus. Alleen beheerders hebben toegang.\n\nDe onderhoudsmodus kan worden uitgeschakeld via Beheer → Instellingen.",
     "fieldInvalid": "{field} is ongeldig",
+    "fieldPhoneInvalid": "{field} is ongeldig",
     "resolveSaveConflict": "Het record is gewijzigd. U moet het conflict oplossen voordat u het record kunt opslaan.",
     "massActionProcessed": "De massa-actie is verwerkt.",
     "fieldUrlExceedsMaxLength": "Gecodeerde URL overschrijdt maximale lengte van {maxLength}",
@@ -344,7 +341,18 @@
     "extensionLicenseSoftExpired": "Het '{name}' uitbreidingslicentieabonnement is verlopen.",
     "loggedOutLeaveOut": "Uitgelogd. De sessie is inactief. Niet-opgeslagen formuliergegevens kunnen verloren gaan na het vernieuwen van de pagina. Mogelijk moet u een kopie maken.",
     "noAccessToRecord": "Operatie vereist `{action}` toegang tot record.",
-    "noAccessToForeignRecord": "Operatie vereist `{action}` toegang tot vreemd record."
+    "noAccessToForeignRecord": "Operatie vereist `{action}` toegang tot vreemd record.",
+    "fieldShouldBeNumber": "{field} moet een geldig nummer zijn",
+    "maintenanceModeError": "De applicatie staat momenteel in onderhoudsmodus.",
+    "noLinkAccess": "Geen toegang tot de linkoperatie voor een specifieke record.",
+    "cannotRelateNonExisting": "Kan geen relatie leggen met niet bestaande {foreignEntityType} record.",
+    "cannotRelateForbidden": "Kan geen relatie leggen met verboden {foreignEntityType} record. `{action}` toegang vereist.",
+    "cannotRelateForbiddenLink": "Geen toegang tot link \"{link}\".",
+    "emptyMassUpdate": "Geen velden beschikbaar voor massale update.",
+    "fieldNotMatchingPattern$uriOptionalProtocol": "{field} moet een geldige URL zijn",
+    "fieldShouldBeLess": "{field} mag niet groter zijn dan {value}",
+    "fieldShouldBeGreater": "{field} mag niet kleiner zijn dan {value}",
+    "cannotUnrelateRequiredLink": "Kan vereiste link niet ontkoppelen."
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",
@@ -365,7 +373,8 @@
     "convertCurrency": "Valuta omrekenen",
     "printPdf": "Print als PDF",
     "unlink": "Ontkoppel",
-    "recalculateFormula": "Formule herberekenen"
+    "recalculateFormula": "Formule herberekenen",
+    "delete": "Verwijder"
   },
   "fields": {
     "name": "Naam",
@@ -476,7 +485,8 @@
     "assignThisVoid": "{user} heeft dit {entityType} niet toegewezen",
     "assignVoid": "{user} niet-toegewezen {entityType} {entity}",
     "assignThisSelf": "{user} heeft dit {entityType} zelf toegewezen",
-    "assignSelf": "{user} zichzelf toegewezen {entityType} {entity}"
+    "assignSelf": "{user} zichzelf toegewezen {entityType} {entity}",
+    "unrelateThis": "{user} unlinked {relatedEntityType} {relatedEntity} van deze {entityType}"
   },
   "lists": {
     "monthNames": [
@@ -732,7 +742,8 @@
     "list": "Lijst"
   },
   "themes": {
-    "Dark": "Donker"
+    "Dark": "Donker",
+    "Light": "Licht"
   },
   "themeNavbars": {
     "side": "Navigatiebalk zijkant",
@@ -751,5 +762,24 @@
     "noEmptyString": "Geen lege string",
     "max": "Max. waarde",
     "min": "Min. waarde"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Ongeldige URL-waarde.",
+    "currency_valid": "Ongeldige bedrag waarde.",
+    "currency_validCurrency": "De waarde van de valutacode is ongeldig of niet toegestaan.",
+    "varchar_pattern": "Waarschijnlijk bevat de waarde niet toegestane tekens.",
+    "email_emailAddress": "Ongeldige e-mail adres.",
+    "phone_phoneNumber": "Ongeldige telefoonnummer.",
+    "datetimeOptional_valid": "Ongeldige datum-tijd.",
+    "datetime_valid": "Ongeldige datum-tijd.",
+    "date_valid": "Ongeldige datum.",
+    "enum_valid": "Ongeldige enum waarde. De waarde moet één van de gedefinieerde enum opties zijn. Een lege waarde is alleen toegestaan als het veld een lege optie heeft.",
+    "multiEnum_valid": "Ongeldige multi-enum waarde. De waarde moet een van de gedefinieerde veldopties zijn.",
+    "int_valid": "Ongeldige integer getalswaarde.",
+    "float_valid": "Ongeldige getalswaarde."
+  },
+  "navbarTabs": {
+    "Business": "Zakelijk",
+    "Activities": "Activiteiten"
   }
 }

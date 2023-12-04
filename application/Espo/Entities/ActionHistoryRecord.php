@@ -31,18 +31,19 @@ namespace Espo\Entities;
 
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity;
+use Espo\Core\Record\ActionHistory\Action;
 
 class ActionHistoryRecord extends Entity
 {
     public const ENTITY_TYPE = 'ActionHistoryRecord';
 
-    public const ACTION_READ = 'read';
-    public const ACTION_UPDATE = 'update';
-    public const ACTION_CREATE = 'create';
-    public const ACTION_DELETE = 'delete';
+    public const ACTION_CREATE = Action::CREATE;
+    public const ACTION_READ = Action::READ;
+    public const ACTION_UPDATE = Action::UPDATE;
+    public const ACTION_DELETE = Action::DELETE;
 
     /**
-     * @param self::ACTION_* $action
+     * @param Action::* $action
      */
     public function setAction(string $action): self
     {

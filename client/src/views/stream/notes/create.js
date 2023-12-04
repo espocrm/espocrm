@@ -26,77 +26,79 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/notes/create', ['views/stream/note'], function (Dep) {
+import NoteStreamView from 'views/stream/note';
 
-    return Dep.extend({
+class CreateNoteStreamView extends NoteStreamView {
 
-        template: 'stream/notes/create',
+    template = 'stream/notes/create'
+    assigned = false
+    messageName = 'create'
+    isRemovable = false
 
-        assigned: false,
+    data() {
+        return {
+            ...super.data(),
+            statusText: this.statusText,
+            statusStyle: this.statusStyle,
+        };
+    }
 
-        messageName: 'create',
+    setup() {
+        if (this.model.get('data')) {
+            this.setupData();
+        }
 
-        isRemovable: false,
+        this.createMessage();
+    }
 
-        data: function () {
-            return _.extend({
-                statusText: this.statusText,
-                statusStyle: this.statusStyle
-            }, Dep.prototype.data.call(this));
-        },
+    setupData() {
+        let data = /** @type Object.<string, *> */this.model.get('data');
 
-        setup: function () {
-            if (this.model.get('data')) {
-                let data = this.model.get('data');
+        this.assignedUserId = data.assignedUserId || null;
+        this.assignedUserName = data.assignedUserName || null;
 
-                this.assignedUserId = data.assignedUserId || null;
-                this.assignedUserName = data.assignedUserName || null;
+        this.messageData['assignee'] =
+            $('<a>')
+                .attr('href', '#User/view/' + this.assignedUserId)
+                .text(this.assignedUserName);
 
-                this.messageData['assignee'] =
-                    $('<a>')
-                        .attr('href', '#User/view/' + this.assignedUserId)
-                        .text(this.assignedUserName);
+        let isYou = false;
 
-                let isYou = false;
+        if (this.isUserStream) {
+            if (this.assignedUserId === this.getUser().id) {
+                isYou = true;
+            }
+        }
 
-                if (this.isUserStream) {
-                    if (this.assignedUserId === this.getUser().id) {
-                        isYou = true;
-                    }
+        if (this.assignedUserId) {
+            this.messageName = 'createAssigned';
+
+            if (this.isThis) {
+                this.messageName += 'This';
+
+                if (this.assignedUserId === this.model.get('createdById')) {
+                    this.messageName += 'Self';
                 }
-
-                if (this.assignedUserId) {
-                    this.messageName = 'createAssigned';
-
-                    if (this.isThis) {
-                        this.messageName += 'This';
-
-                        if (this.assignedUserId === this.model.get('createdById')) {
-                            this.messageName += 'Self';
-                        }
-                    } else {
-                        if (this.assignedUserId === this.model.get('createdById')) {
-                            this.messageName += 'Self';
-                        } else {
-                            if (isYou) {
-                                this.messageName += 'You';
-                            }
-                        }
-                    }
+            } else {
+                if (this.assignedUserId === this.model.get('createdById')) {
+                    this.messageName += 'Self';
                 }
-
-                if (data.statusField) {
-                    let statusField = this.statusField = data.statusField;
-                    let statusValue = data.statusValue;
-
-                    this.statusStyle = data.statusStyle || 'default';
-                    this.statusText = this.getLanguage()
-                        .translateOption(statusValue, statusField, this.model.get('parentType'));
+                else if (isYou) {
+                    this.messageName += 'You';
                 }
             }
+        }
 
-            this.createMessage();
-        },
-    });
-});
+        if (data.statusField) {
+            let statusField = this.statusField = data.statusField;
+            let statusValue = data.statusValue;
+
+            this.statusStyle = data.statusStyle || 'default';
+            this.statusText = this.getLanguage()
+                .translateOption(statusValue, statusField, this.model.get('parentType'));
+        }
+    }
+}
+
+export default CreateNoteStreamView;
 

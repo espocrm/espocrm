@@ -33,9 +33,6 @@ use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingData;
 use Espo\Core\InjectableFactory;
-use Espo\Core\ORM\Entity as BaseEntity;
-use Espo\Core\Utils\ClassFinder;
-
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory as EntityFactoryInterface;
 use Espo\ORM\EntityManager;
@@ -49,19 +46,10 @@ class EntityFactory implements EntityFactoryInterface
     private ?ValueAccessorFactory $valueAccessorFactory = null;
 
     public function __construct(
-        private ClassFinder $classFinder,
+        private ClassNameProvider $classNameProvider,
         private Helper $helper,
         private InjectableFactory $injectableFactory
     ) {}
-
-    /**
-     * @return ?class-string<Entity>
-     */
-    private function getClassName(string $entityType): ?string
-    {
-        /** @var ?class-string<Entity> */
-        return $this->classFinder->find('Entities', $entityType);
-    }
 
     public function setEntityManager(EntityManager $entityManager): void
     {
@@ -85,10 +73,6 @@ class EntityFactory implements EntityFactoryInterface
     {
         $className = $this->getClassName($entityType);
 
-        if (!$className) {
-            $className = BaseEntity::class;
-        }
-
         if (!$this->entityManager) {
             throw new RuntimeException();
         }
@@ -96,12 +80,21 @@ class EntityFactory implements EntityFactoryInterface
         $defs = $this->entityManager->getMetadata()->get($entityType);
 
         if (is_null($defs)) {
-            throw new RuntimeException("Entity '{$entityType}' is not defined in metadata.");
+            throw new RuntimeException("Entity '$entityType' is not defined in metadata.");
         }
 
         $bindingContainer = $this->getBindingContainer($className, $entityType, $defs);
 
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);
+    }
+
+    /**
+     * @return class-string<Entity>
+     */
+    private function getClassName(string $entityType): string
+    {
+        /** @var class-string<Entity> */
+        return $this->classNameProvider->getEntityClassName($entityType);
     }
 
     /**

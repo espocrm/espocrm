@@ -1,0 +1,1 @@
+{{valueTranslated}}: [{{entityType}}] {{name}}

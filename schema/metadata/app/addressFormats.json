@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/addressFormats.json",
+    "title": "app/addressFormats",
+    "description": "Address formats.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A format name.",
+        "properties": {
+            "formatterClassName": {
+                "type": "string",
+                "description": "A formatter class. Should implement Espo\\Core\\Field\\Address\\AddressFormatter interface."
+            }
+        }
+    }
+}

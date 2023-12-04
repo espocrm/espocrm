@@ -185,7 +185,7 @@
         "minHeight": "Min Height (px)",
         "provider": "Provider",
         "typeList": "Type List",
-        "rows": "Number of rows of textarea",
+        "rows": "Max number of rows",
         "lengthOfCut": "Length of cut",
         "sourceList": "Source List",
         "prefix": "Prefix",
@@ -200,6 +200,7 @@
         "probabilityMap": "Stage Probabilities (%)",
         "notActualOptions": "Not Actual Options",
         "readOnly": "Read-only",
+        "readOnlyAfterCreate": "Read-only After Create",
         "maxFileSize": "Max File Size (Mb)",
         "isPersonalData": "Is Personal Data",
         "useIframe": "Use Iframe",
@@ -222,7 +223,9 @@
         "decimalPlaces": "Decimal Places",
         "pattern": "Pattern",
         "globalRestrictions": "Global Restrictions",
-        "copyToClipboard": "Copy to clipboard button"
+        "copyToClipboard": "Copy to clipboard button",
+        "createButton": "Create Button",
+        "autocompleteOnEmpty": "Autocomplete on empty input"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"
@@ -330,6 +333,7 @@
         "requiredPhpVersion": "PHP Version",
         "requiredMysqlVersion": "MySQL Version",
         "requiredMariadbVersion": "MariaDB version",
+        "requiredPostgresqlVersion": "PostgreSQL version",
         "host": "Host Name",
         "dbname": "Database Name",
         "user": "User Name",

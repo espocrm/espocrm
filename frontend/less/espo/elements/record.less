@@ -15,6 +15,8 @@
     &.record-grid-small {
         grid-template-columns: minmax(auto, 60%) minmax(auto, 40%);
     }
+
+    max-width: var(--record-grid-max-width);
 }
 
 .record > div[tabindex="-1"]:focus-visible {
@@ -138,7 +140,7 @@
 
         margin-bottom: 0;
 
-        &:last-child {
+        &:last-child:not(.first):not(.in-middle) {
             border-bottom-width: var(--panel-border-width);
         }
     }
@@ -149,7 +151,7 @@
         border-top-width: var(--panel-border-width);
     }
 
-    > .panel:last-child {
+    > .panel:last-child:not(.first):not(.in-middle) {
         border-bottom-width: var(--panel-border-width);
     }
 

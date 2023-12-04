@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/layouts.json",
+    "title": "app/layouts",
+    "description": "Layouts.",
+    "type": "object",
+    "propertyNames": {
+        "anyOf": [
+            {"type": "string"}
+        ]
+    },
+    "additionalProperties": {
+        "type": "object",
+        "description": "A scope name.",
+        "additionalProperties": {
+            "type": "object",
+            "description": "A layout name.",
+            "properties": {
+                "module": {
+                    "type": "string",
+                    "description": "A module in which the layout is located."
+                }
+            }
+        }
+    }
+}

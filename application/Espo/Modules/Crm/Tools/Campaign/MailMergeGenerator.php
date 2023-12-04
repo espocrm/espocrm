@@ -50,7 +50,7 @@ use Espo\Tools\Pdf\ZipContents;
 
 class MailMergeGenerator
 {
-    private const DEFAULT_ENGINE = 'Tcpdf';
+    private const DEFAULT_ENGINE = 'Dompdf';
     private const ATTACHMENT_MAIL_MERGE_ROLE = 'Mail Merge';
 
     private EntityManager $entityManager;

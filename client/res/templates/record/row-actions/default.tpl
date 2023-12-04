@@ -14,7 +14,7 @@
                 class="action"
                 {{#if action}}data-action="{{action}}"{{/if}}
                 {{#each data}}
-                data-{{@key}}="{{./this}}"
+                data-{{hyphen @key}}="{{./this}}"
                 {{/each}}
             >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label scope=../scope}}{{/if}}{{/if}}
             </a>

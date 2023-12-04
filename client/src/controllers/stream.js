@@ -26,36 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/stream', ['controller'], function (Dep) {
+import Controller from 'controller';
 
-    return Dep.extend({
+class StreamController extends Controller {
 
-        defaultAction: 'index',
+    defaultAction = 'index'
 
-        actionIndex: function () {
-            this.main('views/stream', {
-                displayTitle: true,
-            }, function (view) {
-                view.render();
-            });
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionIndex() {
+        this.main('views/stream', {
+            displayTitle: true,
+        }, view => {
+            view.render();
+        });
+    }
 
-        actionPosts: function () {
-            this.main('views/stream', {
-                displayTitle: true,
-                filter: 'posts',
-            }, function (view) {
-                view.render();
-            });
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionPosts() {
+        this.main('views/stream', {
+            displayTitle: true,
+            filter: 'posts',
+        }, view => {
+            view.render();
+        });
+    }
 
-        actionUpdates: function () {
-            this.main('views/stream', {
-                displayTitle: true,
-                filter: 'updates',
-            }, function (view) {
-                view.render();
-            });
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionUpdates() {
+        this.main('views/stream', {
+            displayTitle: true,
+            filter: 'updates',
+        }, view => {
+            view.render();
+        });
+    }
+}
+
+export default StreamController;

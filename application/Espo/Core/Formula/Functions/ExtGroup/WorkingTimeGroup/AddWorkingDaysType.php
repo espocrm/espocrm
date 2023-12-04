@@ -74,7 +74,7 @@ class AddWorkingDaysType extends Base
             $dateTime = $dateTime->withTimezone($calendar->getTimezone());
         }
 
-        $dateTime = DateTime::fromDateTime($dateTime->getDateTime());
+        $dateTime = DateTime::fromDateTime($dateTime->toDateTime());
 
         $result = $this->createCalendarUtility($calendar)->addWorkingDays($dateTime, $days);
 
@@ -83,9 +83,9 @@ class AddWorkingDaysType extends Base
         }
 
         if ($isAllDay) {
-            return $result->getDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
+            return $result->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
         }
 
-        return $result->getString();
+        return $result->toString();
     }
 }

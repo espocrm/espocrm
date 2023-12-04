@@ -318,7 +318,7 @@ class BaseMapper implements RDBMapper
             case Entity::BELONGS_TO:
                 /** @var Entity $relEntity */
 
-                $params['whereClause'][$foreignKey] = $entity->get($key);
+                $params['whereClause'][] = [$foreignKey =>$entity->get($key)];
                 $params['offset'] = 0;
                 $params['limit'] = 1;
                 $params['from'] = $relEntity->getEntityType();
@@ -358,7 +358,7 @@ class BaseMapper implements RDBMapper
 
                 $params['from'] = $relEntity->getEntityType();
                 $params['fromAlias'] ??= lcfirst($relEntity->getEntityType());
-                $params['whereClause'][$foreignKey] = $entity->get($key);
+                $params['whereClause'][] = [$foreignKey => $entity->get($key)];
 
                 if ($relType == Entity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'] ?? null;
@@ -367,7 +367,7 @@ class BaseMapper implements RDBMapper
                         throw new RuntimeException("Bad relation key.");
                     }
 
-                    $params['whereClause'][$foreignType] = $entity->getEntityType();
+                    $params['whereClause'][] = [$foreignType => $entity->getEntityType()];
                 }
 
                 $relConditions = $this->getRelationParam($entity, $relationName, 'conditions');
@@ -456,7 +456,7 @@ class BaseMapper implements RDBMapper
                     return null;
                 }
 
-                $params['whereClause'][$foreignKey] = $foreignEntityId;
+                $params['whereClause'][] = [$foreignKey => $foreignEntityId];
                 $params['offset'] = 0;
                 $params['limit'] = 1;
 

@@ -26,19 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:controllers/event-confirmation', ['controller'], function (Dep) {
+import Controller from 'controller';
 
-    return Dep.extend({
+class EventConfirmationController extends Controller {
 
-        actionConfirmEvent: function (actionData) {
-            let viewName = this.getMetadata().get(['clientDefs', 'EventConfirmation', 'confirmationView']) ||
-                'crm:views/event-confirmation/confirmation'
+    // noinspection JSUnusedGlobalSymbols
+    actionConfirmEvent(actionData) {
+        const viewName = this.getMetadata().get(['clientDefs', 'EventConfirmation', 'confirmationView']) ||
+            'crm:views/event-confirmation/confirmation';
 
-            this.entire(viewName, {
-                actionData: actionData,
-            }, view => {
-                view.render();
-            });
-        },
-    });
-});
+        this.entire(viewName, {
+            actionData: actionData,
+        }, view => {
+            view.render();
+        });
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default EventConfirmationController;

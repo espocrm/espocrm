@@ -37,8 +37,9 @@ use Espo\Tools\Pdf\Data;
 use Espo\Tools\Pdf\Params;
 use Espo\Tools\Pdf\Template;
 
-use TCPDF2DBarcode;
-use TCPDFBarcode;
+use Picqer\Barcode\BarcodeGeneratorSVG;
+use chillerlan\QRCode\QRCode;
+use chillerlan\QRCode\QROptions;
 
 class HtmlComposer
 {
@@ -70,7 +71,8 @@ class HtmlComposer
             $titleHtml = "<title>" . htmlspecialchars($title) . "</title>";
         }
 
-        $html = "
+        /** @noinspection HtmlRequiredTitleElement */
+        return "
             <head>
                 {$titleHtml}
             </head>
@@ -110,8 +112,6 @@ class HtmlComposer
             }
             </style>
         ";
-
-        return $html;
     }
 
     public function composeHeaderFooter(Template $template, Entity $entity, Params $params, Data $data): string
@@ -122,7 +122,7 @@ class HtmlComposer
             ->create()
             ->setApplyAcl($params->applyAcl())
             ->setEntity($entity)
-            ->setSkipInlineAttachmentHandling(true)
+            ->setSkipInlineAttachmentHandling()
             ->setData($data->getAdditionalTemplateData());
 
         if ($template->hasHeader()) {
@@ -130,7 +130,7 @@ class HtmlComposer
 
             $htmlHeader = $this->replaceHeadTags($htmlHeader);
 
-            $html .= "<header>{$htmlHeader}</header>";
+            $html .= "<header>$htmlHeader</header>";
         }
 
         if ($template->hasFooter()) {
@@ -138,7 +138,7 @@ class HtmlComposer
 
             $htmlFooter = $this->replaceHeadTags($htmlFooter);
 
-            $html .= "<footer>{$htmlFooter}</footer>";
+            $html .= "<footer>$htmlFooter</footer>";
         }
 
         return $html;
@@ -155,7 +155,7 @@ class HtmlComposer
             ->create()
             ->setApplyAcl($params->applyAcl())
             ->setEntity($entity)
-            ->setSkipInlineAttachmentHandling(true)
+            ->setSkipInlineAttachmentHandling()
             ->setData($data->getAdditionalTemplateData());
 
         $bodyTemplate = $template->getBody();
@@ -164,13 +164,14 @@ class HtmlComposer
 
         $html = $this->replaceTags($html);
 
-        return "<main>{$html}</main>";
+        return "<main>$html</main>";
     }
 
     private function replaceTags(string $html): string
     {
+        /** @noinspection HtmlUnknownAttribute */
         $html = str_replace('<br pagebreak="true">', '<div style="page-break-after: always;"></div>', $html);
-        $html = preg_replace('/src="\@([A-Za-z0-9\+\/]*={0,2})"/', 'src="data:image/jpeg;base64,$1"', $html);
+        $html = preg_replace('/src="@([A-Za-z0-9+\/]*={0,2})"/', 'src="data:image/jpeg;base64,$1"', $html);
         $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html ?? '');
 
         $html = preg_replace_callback(
@@ -185,8 +186,8 @@ class HtmlComposer
             $html
         ) ?? '';
 
-        $html = preg_replace_callback(
-            "/src=\"\?entryPoint=attachment\&id=([A-Za-z0-9]*)\"/",
+        return preg_replace_callback(
+            "/src=\"\?entryPoint=attachment&id=([A-Za-z0-9]*)\"/",
             function ($matches) {
                 $id = $matches[1];
 
@@ -200,12 +201,10 @@ class HtmlComposer
                     return '';
                 }
 
-                return "src=\"{$src}\"";
+                return "src=\"$src\"";
             },
             $html
         ) ?? '';
-
-        return $html;
     }
 
     private function replaceHeadTags(string $html): string
@@ -230,6 +229,7 @@ class HtmlComposer
 
         $codeType = $data['type'] ?? 'CODE128';
 
+        /** @noinspection SpellCheckingInspection */
         $typeMap = [
             "CODE128" => 'C128',
             "CODE128A" => 'C128A',
@@ -248,39 +248,43 @@ class HtmlComposer
 
         $type = $typeMap[$codeType] ?? null;
 
+        /** @noinspection SpellCheckingInspection */
         if ($codeType === 'QRcode') {
             $width = $data['width'] ?? 40;
             $height = $data['height'] ?? 40;
-            $color = $data['color'] ?? [0, 0, 0];
+            //$color = $data['color'] ?? '#000';
 
-            $barcode = new TCPDF2DBarcode($value, $type);
-            $code = $barcode->getBarcodeSVGcode($width, $height, $color);
+            $options = new QROptions();
 
-            $encoded = base64_encode($code);
+            $options->outputType = QRCode::OUTPUT_MARKUP_SVG;
+            $options->eccLevel = QRCode::ECC_H;
+
+            $code = (new QRCode($options))->render($value);
 
             $css = "width: {$width}mm; height: {$height}mm;";
 
-            return "<img src=\"data:image/svg+xml;base64,{$encoded}\" style=\"{$css}\">";
+            /** @noinspection HtmlRequiredAltAttribute */
+            return "<img src=\"$code\" style=\"$css\">";
         }
 
-        if (!$type) {
-            $this->log->warning("Not supported barcode type {$codeType}.");
+        if (!$type || $type === 'QRCODE,H') {
+            $this->log->warning("Not supported barcode type $codeType.");
 
             return '';
         }
 
         $width = $data['width'] ?? 60;
         $height = $data['height'] ?? 30;
-        $color = $data['color'] ?? [0, 0, 0];
+        $color = $data['color'] ?? '#000';
 
-        $barcode = new TCPDFBarcode($value, $type);
-        $code = $barcode->getBarcodeSVGcode($width, $height, $color);
+        $code = (new BarcodeGeneratorSVG())->getBarcode($value, $type, 2, $height, $color);
 
         $encoded = base64_encode($code);
 
         $css = "width: {$width}mm; height: {$height}mm;";
 
-        return "<img src=\"data:image/svg+xml;base64,{$encoded}\" style=\"{$css}\">";
+        /** @noinspection HtmlRequiredAltAttribute */
+        return "<img src=\"data:image/svg+xml;base64,$encoded\" style=\"$css\">";
     }
 
     private function replacePlaceholders(string $string, Entity $entity): string

@@ -340,6 +340,20 @@ class Database extends RDBRepository
             return;
         }
 
+        $isChanged = false;
+
+        foreach ($entity->getAttributeList() as $attribute) {
+            if ($entity->isAttributeChanged($attribute)) {
+                $isChanged = true;
+
+                break;
+            }
+        }
+
+        if (!$isChanged && empty($options[SaveOption::MODIFIED_BY_ID])) {
+            return;
+        }
+
         if ($entity->hasAttribute(self::ATTR_MODIFIED_AT)) {
             $entity->set(self::ATTR_MODIFIED_AT, $nowString);
         }

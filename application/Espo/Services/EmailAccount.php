@@ -110,6 +110,7 @@ class EmailAccount extends Record implements
      * @throws NoSmtp
      * @internal Left for bc.
      * @deprecated As of v7.3. Use Espo\Core\Mail\Account\PersonalAccount.
+     * @todo Remove in v9.0.
      */
     public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount): ?array
     {

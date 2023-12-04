@@ -26,107 +26,105 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/select-records-with-categories',
-['views/modals/select-records', 'views/list-with-categories'],
-function (Dep, List) {
+import SelectRecordsModal from 'views/modals/select-records';
+import ListWithCategories from 'views/list-with-categories';
 
-    return Dep.extend({
+class SelectRecordsWithCategoriesModalView extends SelectRecordsModal {
 
-        template: 'modals/select-records-with-categories',
+    template = 'modals/select-records-with-categories'
 
-        categoryScope: null,
+    // Used in applyCategoryToCollection.
+    // noinspection JSUnusedGlobalSymbols
+    categoryField = 'category'
+    // noinspection JSUnusedGlobalSymbols
+    categoryFilterType = 'inCategory'
+    categoryScope = ''
+    isExpanded = true
 
-        categoryField: 'category',
+    data() {
+        return {
+            ...super.data(),
+            categoriesDisabled: this.categoriesDisabled,
+        };
+    }
 
-        categoryFilterType: 'inCategory',
+    setup() {
+        this.scope = this.entityType = this.options.scope || this.scope;
+        this.categoryScope = this.categoryScope || this.scope + 'Category';
 
-        isExpanded: true,
+        this.categoriesDisabled = this.categoriesDisabled ||
+           this.getMetadata().get(['scopes',  this.categoryScope, 'disabled']) ||
+           !this.getAcl().checkScope(this.categoryScope);
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+        super.setup();
+    }
 
-            data.categoriesDisabled = this.categoriesDisabled;
+    setupList() {
+        if (!this.categoriesDisabled) {
+            this.setupCategories();
+        }
 
-            return data;
-        },
+        super.setupList();
+    }
 
-        setup: function () {
-            this.scope = this.entityType = this.options.scope || this.scope;
-            this.categoryScope = this.categoryScope || this.scope + 'Category';
+    setupCategories() {
+        this.getCollectionFactory().create(this.categoryScope, collection => {
+            this.treeCollection = collection;
 
-            this.categoriesDisabled = this.categoriesDisabled ||
-               this.getMetadata().get('scopes.' + this.categoryScope + '.disabled') ||
-               !this.getAcl().checkScope(this.categoryScope);
+            collection.url = collection.entityType + '/action/listTree';
+            collection.data.onlyNotEmpty = true;
 
-            Dep.prototype.setup.call(this);
-        },
+            collection.fetch()
+                .then(() => this.createCategoriesView());
+        });
+    }
 
-        loadList: function () {
-            if (!this.categoriesDisabled) {
-                this.loadCategories();
+    createCategoriesView() {
+        this.createView('categories', 'views/record/list-tree', {
+            collection: this.treeCollection,
+            selector: '.categories-container',
+            selectable: true,
+            readOnly: true,
+            showRoot: true,
+            rootName: this.translate(this.scope, 'scopeNamesPlural'),
+            buttonsDisabled: true,
+            checkboxes: false,
+            isExpanded: this.isExpanded,
+        }, view => {
+            if (this.isRendered()) {
+                view.render();
+            } else {
+                this.listenToOnce(this, 'after:render', () => view.render());
             }
 
-            Dep.prototype.loadList.call(this);
-        },
+            this.listenTo(view, 'select', model => {
+                this.currentCategoryId = null;
+                this.currentCategoryName = '';
 
-        loadCategories: function () {
-            this.getCollectionFactory().create(this.categoryScope, (collection) => {
-                collection.url = collection.name + '/action/listTree';
+                if (model && model.id) {
+                    this.currentCategoryId = model.id;
+                    this.currentCategoryName = model.get('name');
+                }
 
-                collection.data.onlyNotEmpty = true;
+                this.applyCategoryToCollection();
 
-                this.listenToOnce(collection, 'sync', () => {
-                    this.createView('categories', 'views/record/list-tree', {
-                        collection: collection,
-                        el: this.options.el + ' .categories-container',
-                        selectable: true,
-                        readOnly: true,
-                        showRoot: true,
-                        rootName: this.translate(this.scope, 'scopeNamesPlural'),
-                        buttonsDisabled: true,
-                        checkboxes: false,
-                        isExpanded: this.isExpanded,
-                    }, (view) => {
-                        if (this.isRendered()) {
-                            view.render();
-                        } else {
-                            this.listenToOnce(this, 'after:render', () => {
-                                view.render();
-                            });
-                        }
+                Espo.Ui.notify(' ... ');
 
-                        this.listenTo(view, 'select', (model) => {
-                            this.currentCategoryId = null;
-                            this.currentCategoryName = '';
-
-                            if (model && model.id) {
-                                this.currentCategoryId = model.id;
-                                this.currentCategoryName = model.get('name');
-                            }
-
-                            this.applyCategoryToCollection();
-
-                            Espo.Ui.notify(' ... ');
-
-                            this.listenToOnce(this.collection, 'sync', () => {
-                                this.notify(false);
-                            });
-
-                            this.collection.fetch();
-                        });
-                    });
-                });
-
-                collection.fetch();
+                this.collection.fetch()
+                    .then(() => Espo.Ui.notify(false));
             });
-        },
+        });
+    }
 
-        applyCategoryToCollection: function () {
-            List.prototype.applyCategoryToCollection.call(this);
-        },
+    applyCategoryToCollection() {
+        ListWithCategories.prototype.applyCategoryToCollection.call(this);
+    }
 
-        isCategoryMultiple: function () {
-            List.prototype.isCategoryMultiple.call(this);
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    isCategoryMultiple() {
+        ListWithCategories.prototype.isCategoryMultiple.call(this);
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default SelectRecordsWithCategoriesModalView;

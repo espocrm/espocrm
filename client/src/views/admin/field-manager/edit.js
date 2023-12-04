@@ -31,7 +31,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
     /**
      * @class
      * @name Class
-     * @extends module:view.Class
+     * @extends module:view
      * @memberOf module:views/admin/field-manager/edit
      */
     return Dep.extend(/** @lends module:views/admin/field-manager/edit.Class# */{
@@ -50,6 +50,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
             'after',
             'before',
             'readOnly',
+            'readOnlyAfterCreate',
         ],
 
         /**
@@ -102,7 +103,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.resetToDefault();
             },
             'keydown.form': function (e) {
-                let key = Espo.Utils.getKeyFromKeyEvent(e);
+                const key = Espo.Utils.getKeyFromKeyEvent(e);
 
                 if (key === 'Control+KeyS' || key === 'Control+Enter') {
                     this.save();
@@ -123,7 +124,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
             this.model.defs = {
                 fields: {
-                    name: {required: true, maxLength: 100},
+                    name: {required: true, maxLength: 50},
                     label: {required: true},
                     tooltipText: {},
                 }
@@ -152,7 +153,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
                 this.globalRestriction = this.getMetadata().get(['entityAcl', this.scope, 'fields', this.field]) || {};
 
-                let globalRestrictions = this.globalRestrictionTypeList.filter(item => this.globalRestriction[item]);
+                const globalRestrictions = this.globalRestrictionTypeList.filter(item => this.globalRestriction[item]);
 
                 if (globalRestrictions.length) {
                     this.model.set('globalRestrictions', globalRestrictions);
@@ -205,12 +206,12 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                         });
                 })
                 .then(() => {
-                    let promiseList = [];
+                    const promiseList = [];
                     this.paramList = [];
-                    let paramList = Espo.Utils.clone(this.getFieldManager().getParamList(this.type) || []);
+                    const paramList = Espo.Utils.clone(this.getFieldManager().getParamList(this.type) || []);
 
                     if (!this.isNew) {
-                        let fieldManagerAdditionalParamList =
+                        const fieldManagerAdditionalParamList =
                             this.getMetadata()
                                 .get([
                                     'entityDefs', this.scope, 'fields',
@@ -223,11 +224,11 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                     }
 
                     /** @var {string[]|null} */
-                    let fieldManagerParamList = this.getMetadata()
+                    const fieldManagerParamList = this.getMetadata()
                         .get(['entityDefs', this.scope, 'fields', this.field, 'fieldManagerParamList']);
 
                     paramList.forEach(o => {
-                        let item = o.name;
+                        const item = o.name;
 
                         if (fieldManagerParamList && fieldManagerParamList.indexOf(item) === -1) {
                             return;
@@ -245,9 +246,23 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             hasRequired = true;
                         }
 
-                        let disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
+                        if (
+                            item === 'createButton' &&
+                            ['assignedUser', 'assignedUsers', 'teams'].includes(this.field)
+                        ) {
+                            return;
+                        }
 
-                        let isDisabled =
+                        if (
+                            item === 'autocompleteOnEmpty' &&
+                            ['assignedUser'].includes(this.field)
+                        ) {
+                            return;
+                        }
+
+                        const disableParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'Disabled';
+
+                        const isDisabled =
                             this.getMetadata()
                                 .get(['entityDefs', this.scope, 'fields', this.field, disableParamName]);
 
@@ -255,9 +270,9 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             return;
                         }
 
-                        let viewParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'View';
+                        const viewParamName = 'customization' + Espo.Utils.upperCaseFirst(item) + 'View';
 
-                        let view = this.getMetadata()
+                        const view = this.getMetadata()
                             .get(['entityDefs', this.scope, 'fields', this.field, viewParamName]);
 
                         if (view) {
@@ -303,7 +318,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             return !(this.globalRestriction.readOnly && item.name === 'required');
                         });
 
-                    let customizationDisabled = this.getMetadata()
+                    const customizationDisabled = this.getMetadata()
                         .get(['entityDefs', this.scope, 'fields', this.field, 'customizationDisabled']);
 
                     if (
@@ -355,7 +370,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                             return;
                         }
 
-                        let options = {};
+                        const options = {};
 
                         if (o.tooltip || ~this.paramWithTooltipList.indexOf(o.name)) {
                             options.tooltip = true;
@@ -398,6 +413,19 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
             this.isNew = !this.field;
 
+            if (
+                !this.getMetadata().get(['scopes', this.scope, 'customizable']) ||
+                this.getMetadata().get(`scopes.${this.scope}.entityManager.fields`) === false ||
+                (
+                    this.field &&
+                    this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.field}.customizationDisabled`)
+                )
+            ) {
+                Espo.Ui.notify(false);
+
+                throw new Espo.Exceptions.NotFound("Entity type is not customizable.");
+            }
+
             this.wait(true);
 
             this.setupFieldData(() => {
@@ -406,24 +434,21 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         setupDynamicLogicFields: function (hasRequired) {
+            const defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field]) || {};
+
             if (
-                this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'disabled']) ||
-                this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicDisabled']) ||
-                this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'layoutDetailDisabled'])
+                defs.disabled ||
+                defs.dynamicLogicDisabled ||
+                defs.layoutDetailDisabled ||
+                defs.utility
             ) {
                 return Promise.resolve();
             }
 
-            let promiseList = [];
+            const promiseList = [];
 
-            let dynamicLogicVisibleDisabled = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicVisibleDisabled']);
-
-            if (!dynamicLogicVisibleDisabled) {
-                let isVisible = this.getMetadata()
+            if (!defs.dynamicLogicVisibleDisabled) {
+                const isVisible = this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'visible']);
 
                 this.model.set(
@@ -441,13 +466,10 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.hasDynamicLogicPanel = true;
             }
 
-            let readOnly = this.getMetadata().get(['fields', this.type, 'readOnly']);
+            const readOnly = this.getMetadata().get(['fields', this.type, 'readOnly']);
 
-            let dynamicLogicRequiredDisabled = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicRequiredDisabled']);
-
-            if (!dynamicLogicRequiredDisabled && !readOnly && hasRequired) {
-                let dynamicLogicRequired = this.getMetadata()
+            if (!defs.dynamicLogicRequiredDisabled && !readOnly && hasRequired) {
+                const dynamicLogicRequired = this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'required']);
 
                 this.model.set('dynamicLogicRequired', dynamicLogicRequired);
@@ -462,11 +484,8 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.hasDynamicLogicPanel = true;
             }
 
-            let dynamicLogicReadOnlyDisabled = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicReadOnlyDisabled']);
-
-            if (!dynamicLogicReadOnlyDisabled && !readOnly) {
-                let dynamicLogicReadOnly = this.getMetadata()
+            if (!defs.dynamicLogicReadOnlyDisabled && !readOnly) {
+                const dynamicLogicReadOnly = this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'readOnly']);
 
                 this.model.set('dynamicLogicReadOnly', dynamicLogicReadOnly);
@@ -481,14 +500,10 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.hasDynamicLogicPanel = true;
             }
 
-            let typeDynamicLogicOptions = this.getMetadata()
-                .get(['fields', this.type, 'dynamicLogicOptions']);
+            const typeDynamicLogicOptions = this.getMetadata().get(['fields', this.type, 'dynamicLogicOptions']);
 
-            let dynamicLogicOptionsDisabled = this.getMetadata()
-                .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicOptionsDisabled']);
-
-            if (typeDynamicLogicOptions && !dynamicLogicOptionsDisabled) {
-                let dynamicLogicOptions =  this.getMetadata()
+            if (typeDynamicLogicOptions && !defs.dynamicLogicOptionsDisabled) {
+                const dynamicLogicOptions = this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'options', this.field]);
 
                 this.model.set('dynamicLogicOptions', dynamicLogicOptions);
@@ -503,11 +518,8 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 this.hasDynamicLogicPanel = true;
             }
 
-            let dynamicLogicInvalidDisabled = this.getMetadata()
-                    .get(['entityDefs', this.scope, 'fields', this.field, 'dynamicLogicInvalidDisabled']);
-
-            if (!dynamicLogicInvalidDisabled && !readOnly) {
-                let dynamicLogicInvalid = this.getMetadata()
+            if (!defs.dynamicLogicInvalidDisabled && !readOnly) {
+                const dynamicLogicInvalid = this.getMetadata()
                     .get(['clientDefs', this.scope, 'dynamicLogic', 'fields', this.field, 'invalid']);
 
                 this.model.set('dynamicLogicInvalid', dynamicLogicInvalid);
@@ -526,7 +538,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         afterRender: function () {
-            this.getView('name').on('change', (m) => {
+            this.getView('name').on('change', () => {
                 let name = this.model.get('name');
 
                 let label = name;
@@ -572,11 +584,11 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         hideField: function (name) {
-            let f = () => {
-                let view = this.getView(name);
+            const f = () => {
+                const view = this.getView(name);
 
                 if (view) {
-                    this.$el.find('.cell[data-name="'+name+'"]').addClass('hidden');
+                    this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden');
 
                     view.setDisabled();
                 }
@@ -591,11 +603,11 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         showField: function (name) {
-            let f = () => {
-                let view = this.getView(name);
+            const f = () => {
+                const view = this.getView(name);
 
                 if (view) {
-                    this.$el.find('.cell[data-name="'+name+'"]').removeClass('hidden');
+                    this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden');
 
                     view.setNotDisabled();
                 }
@@ -610,11 +622,11 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         createFieldView: function (type, name, readOnly, params, options, callback) {
-            let viewName = (params || {}).view || this.getFieldManager().getViewName(type);
+            const viewName = (params || {}).view || this.getFieldManager().getViewName(type);
 
-            let o = {
+            const o = {
                 model: this.model,
-                el: this.options.el + ' .field[data-name="' + name + '"]',
+                selector: '.field[data-name="' + name + '"]',
                 defs: {
                     name: name,
                     params: params
@@ -627,7 +639,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
 
             _.extend(o, options || {});
 
-            let promise = this.createView(name, viewName, o, callback);
+            const promise = this.createView(name, viewName, o, callback);
 
             this.fieldList.push(name);
 
@@ -648,7 +660,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
             this.disableButtons();
 
             this.fieldList.forEach(field => {
-                let view = this.getView(field);
+                const view = this.getView(field);
 
                 if (!view.readOnly) {
                     view.fetchToModel();
@@ -703,7 +715,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
                 return;
             }
 
-            let attributes = this.model.getClonedAttributes();
+            const attributes = this.model.getClonedAttributes();
 
             if (this.model.fetchedAttributes.label === attributes.label) {
                 delete attributes.label;
@@ -728,7 +740,7 @@ define('views/admin/field-manager/edit', ['view', 'model'], function (Dep, Model
         },
 
         updateLanguage: function () {
-            let langData = this.getLanguage().data;
+            const langData = this.getLanguage().data;
 
             if (this.scope in langData) {
                 if (!('fields' in langData[this.scope])) {

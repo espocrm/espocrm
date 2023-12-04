@@ -34,14 +34,14 @@ define('views/admin/dynamic-logic/conditions-string/item-value-link',
         template: 'admin/dynamic-logic/conditions-string/item-base',
 
         createValueFieldView: function () {
-            var key = this.getValueViewKey();
+            const key = this.getValueViewKey();
 
-            var viewName = 'views/fields/link';
+            const viewName = 'views/fields/link';
 
             this.createView('value', viewName, {
                 model: this.model,
                 name: 'link',
-                el: '[data-view-key="'+key+'"]',
+                selector: '[data-view-key="' + key + '"]',
                 foreignScope: this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'entity']) ||
                     this.getMetadata().get(['entityDefs', this.scope, 'links', this.field, 'entity'])
             });

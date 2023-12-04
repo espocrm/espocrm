@@ -26,387 +26,427 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/text', ['views/fields/base'], function (Dep) {
+/** @module views/fields/text */
+
+import BaseFieldView from 'views/fields/base';
+
+/**
+ * A text field.
+ */
+class TextFieldView extends BaseFieldView {
+
+    type = 'text'
+
+    listTemplate = 'fields/text/list'
+    detailTemplate = 'fields/text/detail'
+    editTemplate = 'fields/text/edit'
+    searchTemplate = 'fields/text/search'
+
+    seeMoreText = false
+    rowsDefault = 50000
+    rowsMin = 2
+    seeMoreDisabled = false
+    cutHeight = 200
+    noResize = false
+    changeInterval = 5
+    shrinkThreshold = 10;
+
+    searchTypeList = [
+        'contains',
+        'startsWith',
+        'equals',
+        'endsWith',
+        'like',
+        'notContains',
+        'notLike',
+        'isEmpty',
+        'isNotEmpty',
+    ]
+
+    events = {
+        /** @this TextFieldView */
+        'click a[data-action="seeMoreText"]': function () {
+            this.seeMoreText = true;
+
+            this.reRender();
+        },
+        /** @this TextFieldView */
+        'click [data-action="mailTo"]': function (e) {
+            this.mailTo($(e.currentTarget).data('email-address'));
+        },
+    }
+
+    /** @private */
+    _lastLength
+
+    /** @private */
+    maxRows
+
+    setup() {
+        super.setup();
+
+        this.maxRows = this.params.rows || this.rowsDefault;
+        this.noResize = this.options.noResize || this.params.noResize || this.noResize;
+        this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
+        this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled ||
+            this.autoHeightDisabled;
+
+        if (this.params.cutHeight) {
+            this.cutHeight = this.params.cutHeight;
+        }
+
+        this.rowsMin = this.options.rowsMin || this.params.rowsMin || this.rowsMin;
+
+        if (this.maxRows < this.rowsMin) {
+            this.rowsMin = this.maxRows;
+        }
+
+        this.on('remove', () => {
+            $(window).off('resize.see-more-' + this.cid);
+        });
+    }
+
+    setupSearch() {
+        this.events['change select.search-type'] = e => {
+            const type = $(e.currentTarget).val();
+
+            this.handleSearchType(type);
+        };
+    }
+
+    // noinspection JSCheckFunctionSignatures
+    data() {
+        const data = super.data();
+
+        if (
+            this.model.get(this.name) !== null &&
+            this.model.get(this.name) !== '' &&
+            this.model.has(this.name)
+        ) {
+            data.isNotEmpty = true;
+        }
+
+        if (this.mode === this.MODE_SEARCH) {
+            if (typeof this.searchParams.value === 'string') {
+                this.searchData.value = this.searchParams.value;
+            }
+        }
+
+        if (this.mode === this.MODE_EDIT) {
+            data.rows = this.autoHeightDisabled ?
+                this.maxRows :
+                this.rowsMin;
+        }
+
+        data.valueIsSet = this.model.has(this.name);
+
+        if (this.isReadMode()) {
+            data.isCut = this.isCut();
+
+            if (data.isCut) {
+                data.cutHeight = this.cutHeight;
+            }
+
+            data.displayRawText = this.params.displayRawText;
+        }
+
+        data.noResize = this.noResize || (!this.autoHeightDisabled && !this.params.rows);
+
+        // noinspection JSValidateTypes
+        return data;
+    }
+
+    handleSearchType(type) {
+        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+            this.$el.find('input.main-element').addClass('hidden');
+        } else {
+            this.$el.find('input.main-element').removeClass('hidden');
+        }
+    }
+
+    getValueForDisplay() {
+        const text = this.model.get(this.name);
+
+        return text || '';
+    }
 
     /**
-     * A text field.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/text
+     * @private
+     * @param {Number} [lastHeight]
      */
-    return Dep.extend(/** @lends module:views/fields/text.Class# */{
+    controlTextareaHeight(lastHeight) {
+        const scrollHeight = this.$element.prop('scrollHeight');
+        const clientHeight = this.$element.prop('clientHeight');
 
-        type: 'text',
+        if (typeof lastHeight === 'undefined' && clientHeight === 0) {
+            setTimeout(this.controlTextareaHeight.bind(this), 10);
 
-        listTemplate: 'fields/text/list',
+            return;
+        }
 
-        detailTemplate: 'fields/text/detail',
+        /** @type {HTMLTextAreaElement} */
+        const element = this.$element.get(0);
 
-        editTemplate: 'fields/text/edit',
+        if (!element) {
+            return;
+        }
 
-        searchTemplate: 'fields/text/search',
+        const length = element.value.length;
 
-        seeMoreText: false,
+        if (this._lastLength === undefined) {
+            this._lastLength = length;
+        }
 
-        rowsDefault: 10,
+        if (length > this._lastLength) {
+            this._lastLength = length;
+        }
 
-        rowsMin: 2,
+        if (clientHeight === lastHeight) {
+            // @todo Revise.
+            return;
+        }
 
-        seeMoreDisabled: false,
+        if (scrollHeight > clientHeight + 1) {
+            const rows = element.rows;
 
-        cutHeight: 200,
-
-        searchTypeList: [
-            'contains',
-            'startsWith',
-            'equals',
-            'endsWith',
-            'like',
-            'notContains',
-            'notLike',
-            'isEmpty',
-            'isNotEmpty',
-        ],
-
-        noResize: false,
-
-        changeInterval: 5,
-
-        events: {
-            'click a[data-action="seeMoreText"]': function (e) {
-                this.seeMoreText = true;
-                this.reRender();
-            },
-            'click [data-action="mailTo"]': function (e) {
-                this.mailTo($(e.currentTarget).data('email-address'));
-            },
-        },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.params.rows = this.params.rows || this.rowsDefault;
-            this.noResize = this.options.noResize || this.params.noResize || this.noResize;
-            this.seeMoreDisabled = this.seeMoreDisabled || this.params.seeMoreDisabled;
-            this.autoHeightDisabled = this.options.autoHeightDisabled || this.params.autoHeightDisabled ||
-                this.autoHeightDisabled;
-
-            if (this.params.cutHeight) {
-                this.cutHeight = this.params.cutHeight;
-            }
-
-            this.rowsMin = this.options.rowsMin || this.params.rowsMin || this.rowsMin;
-
-            if (this.params.rows < this.rowsMin) {
-                this.rowsMin = this.params.rows;
-            }
-
-            this.on('remove', () => {
-                $(window).off('resize.see-more-' + this.cid);
-            });
-        },
-
-        setupSearch: function () {
-            this.events = _.extend({
-                'change select.search-type': function (e) {
-                    var type = $(e.currentTarget).val();
-                    this.handleSearchType(type);
-                },
-            }, this.events || {});
-        },
-
-        data: function () {
-            var data = Dep.prototype.data.call(this);
-
-            if (
-                this.model.get(this.name) !== null &&
-                this.model.get(this.name) !== '' &&
-                this.model.has(this.name)
-            ) {
-                data.isNotEmpty = true;
-            }
-
-            if (this.mode === this.MODE_SEARCH) {
-                if (typeof this.searchParams.value === 'string') {
-                    this.searchData.value = this.searchParams.value;
-                }
-            }
-
-            if (this.mode === this.MODE_EDIT) {
-                if (this.autoHeightDisabled) {
-                    data.rows = this.params.rows;
-                } else {
-                    data.rows = this.rowsMin;
-                }
-            }
-
-            data.valueIsSet = this.model.has(this.name);
-
-            if (this.isReadMode()) {
-                data.isCut = this.isCut();
-
-                if (data.isCut) {
-                    data.cutHeight = this.cutHeight;
-                }
-
-                data.displayRawText = this.params.displayRawText;
-            }
-
-            data.noResize = this.noResize;
-
-            return data;
-        },
-
-        handleSearchType: function (type) {
-            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                this.$el.find('input.main-element').addClass('hidden');
-            } else {
-                this.$el.find('input.main-element').removeClass('hidden');
-            }
-        },
-
-        getValueForDisplay: function () {
-            var text = this.model.get(this.name);
-
-            return text || '';
-        },
-
-        controlTextareaHeight: function (lastHeight) {
-            var scrollHeight = this.$element.prop('scrollHeight');
-            var clientHeight = this.$element.prop('clientHeight');
-
-            if (typeof lastHeight === 'undefined' && clientHeight === 0) {
-                setTimeout(this.controlTextareaHeight.bind(this), 10);
-
+            if (this.maxRows && rows >= this.maxRows) {
                 return;
             }
 
-            if (clientHeight === lastHeight) {
+            element.rows ++;
+
+            this.controlTextareaHeight(clientHeight);
+
+            return;
+        }
+
+        if (this.$element.val().length === 0) {
+            element.rows = this.rowsMin;
+
+            return;
+        }
+
+        const tryShrink = () => {
+            const rows = element.rows;
+
+            if (this.rowsMin && rows - 1 <= this.rowsMin) {
                 return;
             }
 
-            if (scrollHeight > clientHeight + 1) {
-                var rows = this.$element.prop('rows');
+            element.rows --;
 
-                if (this.params.rows && rows >= this.params.rows) {
-                    return;
-                }
-
-                this.$element.attr('rows', rows + 1);
-                this.controlTextareaHeight(clientHeight);
-            }
-
-            if (this.$element.val().length === 0) {
-                this.$element.attr('rows', this.rowsMin);
-            }
-        },
-
-        isCut: function () {
-            return !this.seeMoreText && !this.seeMoreDisabled;
-        },
-
-        controlSeeMore: function () {
-            if (!this.isCut()) {
-                return;
-            }
-
-            if (this.$text.height() > this.cutHeight) {
-                this.$seeMoreContainer.removeClass('hidden');
-                this.$textContainer.addClass('cut');
-            } else {
-                this.$seeMoreContainer.addClass('hidden');
-                this.$textContainer.removeClass('cut');
-            }
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.isReadMode()) {
-                $(window).off('resize.see-more-' + this.cid);
-
-                this.$textContainer = this.$el.find('> .complex-text-container');
-                this.$text = this.$textContainer.find('> .complex-text');
-                this.$seeMoreContainer = this.$el.find('> .see-more-container');
-
-                if (this.isCut()) {
-                    this.controlSeeMore();
-
-                    if (this.model.get(this.name) && this.$text.height() === 0) {
-                        this.$textContainer.addClass('cut');
-
-                        setTimeout(this.controlSeeMore.bind(this), 50);
-                    }
-
-                    this.listenTo(this.recordHelper, 'panel-show', () => this.controlSeeMore());
-                    this.on('panel-show-propagated', () => this.controlSeeMore());
-
-                    $(window).on('resize.see-more-' + this.cid, () => {
-                        this.controlSeeMore();
-                    });
-                }
-            }
-
-            if (this.mode === this.MODE_EDIT) {
-                var text = this.getValueForDisplay();
-                if (text) {
-                    this.$element.val(text);
-                }
-            }
-
-            if (this.mode === this.MODE_SEARCH) {
-                var type = this.$el.find('select.search-type').val();
-
-                this.handleSearchType(type);
-
-                this.$el.find('select.search-type').on('change', () => {
-                    this.trigger('change');
-                });
-
-                this.$element.on('input', () => {
-                    this.trigger('change');
-                });
-            }
-
-            if (this.mode === this.MODE_EDIT && !this.autoHeightDisabled) {
+            if (element.scrollHeight > element.clientHeight + 1) {
                 this.controlTextareaHeight();
 
-                this.$element.on('input', () => {
-                    this.controlTextareaHeight();
-                });
-
-                let lastChangeKeydown = new Date();
-                const changeKeydownInterval = this.changeInterval * 1000;
-
-                this.$element.on('keydown', () => {
-                    if (Date.now() - lastChangeKeydown > changeKeydownInterval) {
-                        this.trigger('change');
-                        lastChangeKeydown = Date.now();
-                    }
-                });
-            }
-        },
-
-        fetch: function () {
-            let data = {};
-
-            let value = this.$element.val() || null;
-
-            if (value && value.trim() === '') {
-                value = '';
-            }
-
-            data[this.name] = value
-
-            return data;
-        },
-
-        fetchSearch: function () {
-            var type = this.fetchSearchType() || 'startsWith';
-
-            var data;
-
-            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                if (type === 'isEmpty') {
-                    data = {
-                        type: 'or',
-                        value: [
-                            {
-                                type: 'isNull',
-                                field: this.name,
-                            },
-                            {
-                                type: 'equals',
-                                field: this.name,
-                                value: ''
-                            }
-                        ],
-                        data: {
-                            type: type
-                        }
-                    };
-                } else {
-                    data = {
-                        type: 'and',
-                        value: [
-                            {
-                                type: 'notEquals',
-                                field: this.name,
-                                value: ''
-                            },
-                            {
-                                type: 'isNotNull',
-                                field: this.name,
-                                value: null
-                            }
-                        ],
-                        data: {
-                            type: type
-                        }
-                    };
-                }
-
-                return data;
-            }
-            else {
-                var value = this.$element.val().toString().trim();
-
-                value = value.trim();
-
-                if (value) {
-                    data = {
-                        value: value,
-                        type: type
-                    };
-
-                    return data;
-                }
-            }
-
-            return false;
-        },
-
-        getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.typeFront ||
-                this.searchParams.type;
-        },
-
-        mailTo: function (emailAddress) {
-            var attributes = {
-                status: 'Draft',
-                to: emailAddress
-            };
-
-            if (
-                this.getConfig().get('emailForceUseExternalClient') ||
-                this.getPreferences().get('emailUseExternalClient') ||
-                !this.getAcl().checkScope('Email', 'create')
-            ) {
-                require('email-helper', (EmailHelper) => {
-                    var emailHelper = new EmailHelper();
-
-                    var link = emailHelper
-                        .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
-
-                    document.location.href = link;
-                });
-
                 return;
             }
 
-            var viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
-                'views/modals/compose-email';
+            tryShrink();
+        };
 
-            Espo.Ui.notify(' ... ');
+        if (length < this._lastLength - this.shrinkThreshold) {
+            this._lastLength = length;
 
-            this.createView('quickCreate', viewName, {
-                attributes: attributes,
-            }, (view) => {
-                view.render();
-                view.notify(false);
+            tryShrink();
+        }
+    }
+
+    isCut() {
+        return !this.seeMoreText && !this.seeMoreDisabled;
+    }
+
+    controlSeeMore() {
+        if (!this.isCut()) {
+            return;
+        }
+
+        if (this.$text.height() > this.cutHeight) {
+            this.$seeMoreContainer.removeClass('hidden');
+            this.$textContainer.addClass('cut');
+        } else {
+            this.$seeMoreContainer.addClass('hidden');
+            this.$textContainer.removeClass('cut');
+        }
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.isReadMode()) {
+            $(window).off('resize.see-more-' + this.cid);
+
+            this.$textContainer = this.$el.find('> .complex-text-container');
+            this.$text = this.$textContainer.find('> .complex-text');
+            this.$seeMoreContainer = this.$el.find('> .see-more-container');
+
+            if (this.isCut()) {
+                this.controlSeeMore();
+
+                if (this.model.get(this.name) && this.$text.height() === 0) {
+                    this.$textContainer.addClass('cut');
+
+                    setTimeout(this.controlSeeMore.bind(this), 50);
+                }
+
+                this.listenTo(this.recordHelper, 'panel-show', () => this.controlSeeMore());
+                this.on('panel-show-propagated', () => this.controlSeeMore());
+
+                $(window).on('resize.see-more-' + this.cid, () => {
+                    this.controlSeeMore();
+                });
+            }
+        }
+
+        if (this.mode === this.MODE_EDIT) {
+            const text = this.getValueForDisplay();
+
+            if (text) {
+                this.$element.val(text);
+            }
+        }
+
+        if (this.mode === this.MODE_SEARCH) {
+            const type = this.$el.find('select.search-type').val();
+
+            this.handleSearchType(type);
+
+            this.$el.find('select.search-type').on('change', () => {
+                this.trigger('change');
             });
-        },
-    });
-});
+
+            this.$element.on('input', () => {
+                this.trigger('change');
+            });
+        }
+
+        if (this.mode === this.MODE_EDIT && !this.autoHeightDisabled) {
+            if (!this.autoHeightDisabled) {
+                this.controlTextareaHeight();
+
+                this.$element.on('input', () => this.controlTextareaHeight());
+            }
+
+            let lastChangeKeydown = new Date();
+            const changeKeydownInterval = this.changeInterval * 1000;
+
+            this.$element.on('keydown', () => {
+                if (Date.now() - lastChangeKeydown > changeKeydownInterval) {
+                    this.trigger('change');
+                    lastChangeKeydown = Date.now();
+                }
+            });
+        }
+    }
+
+    fetch() {
+        const data = {};
+
+        let value = this.$element.val() || null;
+
+        if (value && value.trim() === '') {
+            value = '';
+        }
+
+        data[this.name] = value
+
+        return data;
+    }
+
+    fetchSearch() {
+        const type = this.fetchSearchType() || 'startsWith';
+
+        if (type === 'isEmpty') {
+            return  {
+                type: 'or',
+                value: [
+                    {
+                        type: 'isNull',
+                        field: this.name,
+                    },
+                    {
+                        type: 'equals',
+                        field: this.name,
+                        value: ''
+                    }
+                ],
+                data: {
+                    type: type,
+                },
+            };
+        }
+
+        if (type === 'isNotEmpty') {
+            return  {
+                type: 'and',
+                value: [
+                    {
+                        type: 'notEquals',
+                        field: this.name,
+                        value: '',
+                    },
+                    {
+                        type: 'isNotNull',
+                        field: this.name,
+                        value: null,
+                    }
+                ],
+                data: {
+                    type: type,
+                },
+            };
+        }
+
+        const value = this.$element.val().toString().trim();
+
+        if (value) {
+            return {
+                value: value,
+                type: type,
+            };
+        }
+
+        return false;
+    }
+
+    getSearchType() {
+        return this.getSearchParamsData().type || this.searchParams.typeFront ||
+            this.searchParams.type;
+    }
+
+    mailTo(emailAddress) {
+        const attributes = {
+            status: 'Draft',
+            to: emailAddress,
+        };
+
+        if (
+            this.getConfig().get('emailForceUseExternalClient') ||
+            this.getPreferences().get('emailUseExternalClient') ||
+            !this.getAcl().checkScope('Email', 'create')
+        ) {
+            Espo.loader.require('email-helper', EmailHelper => {
+                const emailHelper = new EmailHelper();
+
+                document.location.href = emailHelper
+                    .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
+            });
+
+            return;
+        }
+
+        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.compose') ||
+            'views/modals/compose-email';
+
+        Espo.Ui.notify(' ... ');
+
+        this.createView('quickCreate', viewName, {
+            attributes: attributes,
+        }, view => {
+            view.render();
+
+            Espo.Ui.notify(false);
+        });
+    }
+}
+
+export default TextFieldView;

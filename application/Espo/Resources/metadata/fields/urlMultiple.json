@@ -24,6 +24,10 @@
         {
             "name": "readOnly",
             "type": "bool"
+        },
+        {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
         }
     ],
     "validationList": [
@@ -50,5 +54,6 @@
         "update",
         "add",
         "remove"
-    ]
+    ],
+    "default": []
 }

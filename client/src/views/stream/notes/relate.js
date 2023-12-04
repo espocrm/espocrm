@@ -26,44 +26,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/notes/relate', ['views/stream/note'], function (Dep) {
+import NoteStreamView from 'views/stream/note';
 
-    return Dep.extend({
+class RelateNoteStreamView extends NoteStreamView {
 
-        template: 'stream/notes/create-related',
+    template = 'stream/notes/create-related'
+    messageName = 'relate'
 
-        messageName: 'relate',
+    data() {
+        return {
+            ...super.data(),
+            relatedTypeString: this.translateEntityType(this.entityType),
+            iconHtml: this.getIconHtml(this.entityType, this.entityId),
+        };
+    }
 
-        data: function () {
-            return _.extend({
-                relatedTypeString: this.translateEntityType(this.entityType),
-                iconHtml: this.getIconHtml(this.entityType, this.entityId),
-            }, Dep.prototype.data.call(this));
-        },
+    init() {
+        if (this.getUser().isAdmin()) {
+            this.isRemovable = true;
+        }
 
-        init: function () {
-            if (this.getUser().isAdmin()) {
-                this.isRemovable = true;
-            }
+        super.init();
+    }
 
-            Dep.prototype.init.call(this);
-        },
+    setup() {
+        let data = this.model.get('data') || {};
 
-        setup: function () {
-            let data = this.model.get('data') || {};
+        this.entityType = this.model.get('relatedType') || data.entityType || null;
+        this.entityId = this.model.get('relatedId') || data.entityId || null;
+        this.entityName = this.model.get('relatedName') ||  data.entityName || null;
 
-            this.entityType = this.model.get('relatedType') || data.entityType || null;
-            this.entityId = this.model.get('relatedId') || data.entityId || null;
-            this.entityName = this.model.get('relatedName') ||  data.entityName || null;
+        this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
 
-            this.messageData['relatedEntityType'] = this.translateEntityType(this.entityType);
+        this.messageData['relatedEntity'] =
+            $('<a>')
+                .attr('href', '#' + this.entityType + '/view/' + this.entityId)
+                .text(this.entityName);
 
-            this.messageData['relatedEntity'] =
-                $('<a>')
-                    .attr('href', '#' + this.entityType + '/view/' + this.entityId)
-                    .text(this.entityName);
+        this.createMessage();
+    }
+}
 
-            this.createMessage();
-        },
-    });
-});
+export default RelateNoteStreamView;

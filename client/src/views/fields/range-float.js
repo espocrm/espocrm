@@ -26,57 +26,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/range-float', ['views/fields/range-int', 'views/fields/float'], function (Dep, Float) {
+import RangeIntFieldView from 'views/fields/range-int';
+import FloatFieldView from 'views/fields/float';
 
-    return Dep.extend({
+class RangeFloatFieldView extends RangeIntFieldView {
 
-        type: 'rangeFloat',
+    type = 'rangeFloat'
 
-        validations: ['required', 'float', 'range', 'order'],
+    validations = ['required', 'float', 'range', 'order']
+    decimalPlacesRawValue = 10
 
-        decimalPlacesRawValue: 10,
+    setupAutoNumericOptions() {
+        this.autoNumericOptions = {
+            digitGroupSeparator: this.thousandSeparator || '',
+            decimalCharacter: this.decimalMark,
+            modifyValueOnWheel: false,
+            selectOnFocus: false,
+            decimalPlaces: this.decimalPlacesRawValue,
+            decimalPlacesRawValue: this.decimalPlacesRawValue,
+            allowDecimalPadding: false,
+            showWarnings: false,
+            formulaMode: true,
+        };
+    }
 
-        setupAutoNumericOptions: function () {
-            this.autoNumericOptions = {
-                digitGroupSeparator: this.thousandSeparator || '',
-                decimalCharacter: this.decimalMark,
-                modifyValueOnWheel: false,
-                selectOnFocus: false,
-                decimalPlaces: this.decimalPlacesRawValue,
-                decimalPlacesRawValue: this.decimalPlacesRawValue,
-                allowDecimalPadding: false,
-                showWarnings: false,
-                formulaMode: true,
-            };
-        },
+    // noinspection JSUnusedGlobalSymbols
+    validateFloat() {
+        const validate = (name) => {
+            if (isNaN(this.model.get(name))) {
+                let msg = this.translate('fieldShouldBeFloat', 'messages')
+                    .replace('{field}', this.getLabelText());
 
-        validateFloat: function () {
-            let validate = (name) => {
-                if (isNaN(this.model.get(name))) {
-                    let msg = this.translate('fieldShouldBeFloat', 'messages')
-                        .replace('{field}', this.getLabelText());
+                this.showValidationMessage(msg, '[data-name="' + name + '"]');
 
-                    this.showValidationMessage(msg, '[data-name="'+name+'"]');
+                return true;
+            }
+        };
 
-                    return true;
-                }
-            };
+        let result = false;
 
-            let result = false;
+        result = validate(this.fromField) || result;
+        result = validate(this.toField) || result;
 
-            result = validate(this.fromField) || result;
-            result = validate(this.toField) || result;
+        return result;
+    }
 
-            return result;
-        },
+    parse(value) {
+        return FloatFieldView.prototype.parse.call(this, value);
+    }
 
-        parse: function (value) {
-            return Float.prototype.parse.call(this, value);
-        },
+    formatNumber(value) {
+        return FloatFieldView.prototype.formatNumberDetail.call(this, value);
+    }
+}
 
-        formatNumber: function (value) {
-            return Float.prototype.formatNumberDetail.call(this, value);
-        },
-    });
-});
+export default RangeFloatFieldView;
 

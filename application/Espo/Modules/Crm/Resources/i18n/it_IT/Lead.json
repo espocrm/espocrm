@@ -28,7 +28,7 @@
     "opportunityAmountCurrency": "Valuta dell'importo della proposta",
     "acceptanceStatusMeetings": "Stato Accettazione (Riunioni)",
     "acceptanceStatusCalls": "Stato Accettazione (Chiamate)",
-    "convertedAt": "Convertito a"
+    "convertedAt": "Convertito"
   },
   "links": {
     "targetLists": "Liste di Destinazione",

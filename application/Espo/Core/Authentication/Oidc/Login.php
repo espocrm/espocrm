@@ -229,6 +229,7 @@ class Login implements LoginInterface
             CURLOPT_CUSTOMREQUEST => 'POST',
             CURLOPT_POSTFIELDS => http_build_query($params),
             CURLOPT_HTTPHEADER => ['content-type: application/x-www-form-urlencoded'],
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTPS | CURLPROTO_HTTP,
         ]);
 
         /** @var string|false $response */

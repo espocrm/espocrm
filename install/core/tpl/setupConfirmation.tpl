@@ -83,17 +83,16 @@
                 </tbody>
             </table>
 
-            <div class="cell cell-website pull-right margin-top" align="right">
-                <a target="_blank" href="https://www.espocrm.com/documentation/administration/server-configuration/" style="font-weight:600;">{$langs['labels']['Configuration Instructions']}</a>
+            <div class="cell cell-website pull-right margin-top" style="text-align: right">
+                <a
+                    target="_blank"
+                    href="https://www.espocrm.com/documentation/administration/server-configuration/"
+                    style="font-weight: 600;"
+                >{$langs['labels']['Configuration Instructions']}</a>
             </div>
         </div>
     </form>
     <div class="space"></div>
-</div>
-<div class="loading-panel hide">
-    <div class="text-right">
-        <i class="fas fa-spinner fa-spin"></i>
-    </div>
 </div>
 <footer class="modal-footer">
     <button class="btn btn-default btn-s-wide pull-left" type="button" id="back">{$langs['labels']['Back']}</button>

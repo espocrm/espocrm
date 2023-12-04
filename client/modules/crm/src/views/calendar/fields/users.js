@@ -26,22 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/calendar/fields/users', ['views/fields/link-multiple'], function (Dep) {
+import LinkMultipleFieldView from 'views/fields/link-multiple';
 
-    return Dep.extend({
+class CalendarUsersFieldView extends LinkMultipleFieldView {
 
-        foreignScope: 'User',
+    foreignScope = 'User'
+    sortable = true
 
-        sortable: true,
-
-        getSelectBoolFilterList: function () {
-            if (this.getAcl().get('userPermission') === 'team') {
-                return ['onlyMyTeam'];
-            }
-        },
-
-        getSelectPrimaryFilterName: function () {
-            return 'active';
+    getSelectBoolFilterList() {
+        if (this.getAcl().getPermissionLevel('userPermission') === 'team') {
+            return ['onlyMyTeam'];
         }
-    });
-});
+    }
+
+    getSelectPrimaryFilterName() {
+        return 'active';
+    }
+}
+
+export default CalendarUsersFieldView;

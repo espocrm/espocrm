@@ -78,9 +78,15 @@ class EmailFolder extends RecordBase
         return true;
     }
 
-    public function getActionListAll(): stdClass
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    public function getActionListAll(Request $request): stdClass
     {
-        $list = $this->getEmailFolderService()->listAll();
+        $userId = $request->getQueryParam('userId');
+
+        $list = $this->getEmailFolderService()->listAll($userId);
 
         return (object) ['list' => $list];
     }

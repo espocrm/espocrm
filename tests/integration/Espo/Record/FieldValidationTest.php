@@ -29,16 +29,18 @@
 
 namespace tests\integration\Espo\Record;
 
-use Espo\Core\{
-    Exceptions\BadRequest,
-    Application,
-    Record\CreateParams,
-    Record\UpdateParams,
-};
-
+use Espo\Core\Application;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Record\CreateParams;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Record\UpdateParams;
+use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\ORM\EntityManager;
 use Espo\Tools\App\SettingsService as SettingsService;
+use tests\integration\Core\BaseTestCase;
 
-class FieldValidationTest extends \tests\integration\Core\BaseTestCase
+class FieldValidationTest extends BaseTestCase
 {
     private function setFieldsDefs(Application $app, string $entityType, array $data)
     {
@@ -211,6 +213,27 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ], CreateParams::create());
     }
 
+    private function getAdminUser(): User
+    {
+        $repository = $this->getContainer()
+            ->getByClass(EntityManager::class)
+            ->getRDBRepositoryByClass(User::class);
+
+        $user = $repository
+            ->where(['type' => User::TYPE_ADMIN])
+            ->findOne();
+
+        if (!$user) {
+            $user = $repository->getNew();
+            $user->set('userName', 'test-admin');
+            $user->set('type', User::TYPE_ADMIN);
+
+            $repository->save($user);
+        }
+
+        return $user;
+    }
+
     public function testRequiredLink2()
     {
         $app = $this->createApplication();
@@ -226,7 +249,7 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
             ->create('Account')
             ->create((object) [
                 'name' => 'test',
-                'assignedUserId' => '1',
+                'assignedUserId' => $this->getAdminUser()->getId(),
             ], CreateParams::create());
 
         $this->assertTrue(true);
@@ -392,7 +415,7 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
                 'name' => 'test',
                 'dateStart' => '2021-01-01 00:00:00',
                 'duration' => 1000,
-                'assignedUserId' => '1',
+                'assignedUserId' => $this->getAdminUser()->getId(),
             ], CreateParams::create());
 
         $this->assertTrue(true);
@@ -407,5 +430,44 @@ class FieldValidationTest extends \tests\integration\Core\BaseTestCase
         $service->setConfigData((object) [
             'activitiesEntityList' => 'should-be-array',
         ]);
+    }
+
+    public function testCurrencyValid(): void
+    {
+        $service = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Lead::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object) [
+            'lastName' => 'Test 1',
+            'opportunityAmount' => '100.10',
+        ], CreateParams::create());
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object) [
+            'lastName' => 'Test 2',
+            'opportunityAmount' => '100',
+        ], CreateParams::create());
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object) [
+            'lastName' => 'Test 3',
+            'opportunityAmount' => '',
+        ], CreateParams::create());
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object) [
+            'lastName' => 'Test 4',
+            'opportunityAmount' => null,
+        ], CreateParams::create());
+
+        $this->expectException(BadRequest::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object) [
+            'lastName' => 'Test Bad 1',
+            'opportunityAmount' => 'bad-value',
+        ], CreateParams::create());
     }
 }

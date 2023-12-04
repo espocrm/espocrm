@@ -36,7 +36,7 @@ define('crm:views/record/panels/target-lists', ['views/record/panels/relationshi
                     .postRequest('TargetList/action/optOut', {
                         id: data.id,
                         targetId: this.model.id,
-                        targetType: this.model.name,
+                        targetType: this.model.entityType,
                     })
                     .then(() => {
                         this.collection.fetch();
@@ -52,7 +52,7 @@ define('crm:views/record/panels/target-lists', ['views/record/panels/relationshi
                     .postRequest('TargetList/action/cancelOptOut', {
                         id: data.id,
                         targetId: this.model.id,
-                        targetType: this.model.name,
+                        targetType: this.model.entityType,
                     })
                     .then(() => {
                         this.collection.fetch();

@@ -1,1 +1,23 @@
-{}
+{
+  "fields": {
+    "type": "Typ",
+    "validationFailures": "Validierungsfehler",
+    "rowIndex": "Zeilenindex",
+    "exportRowIndex": "Exportiere Zeilenindex",
+    "lineNumber": "Zeilennummer",
+    "exportLineNumber": "Exportiere Zeilennummer",
+    "row": "Zeile",
+    "entityType": "Entitätstyp"
+  },
+  "options": {
+    "type": {
+      "Validation": "Validierung",
+      "Access": "Zugriff",
+      "Not-Found": "Nicht gefunden"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "Eine Zeilennummer in der ursprünglichen CSV-Datei.",
+    "exportLineNumber": "Eine Zeilennummer in der Export-CSV-Datei."
+  }
+}

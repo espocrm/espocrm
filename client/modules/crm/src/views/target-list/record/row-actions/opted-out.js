@@ -37,7 +37,7 @@ define('crm:views/target-list/record/row-actions/opted-out', ['views/record/row-
                     label: 'Cancel Opt-Out',
                     data: {
                         id: this.model.id,
-                        type: this.model.name
+                        type: this.model.entityType,
                     },
                 },
             ];

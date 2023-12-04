@@ -1,0 +1,74 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/image.json",
+    "title": "app/image",
+    "description": "Image definitions.",
+    "type": "object",
+    "properties": {
+        "allowedFileTypeList": {
+            "type": "array",
+            "description": "A list of allowed image mime types. Use __APPEND__ for extending.",
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^[-\\w.]+/[-\\w.+]+$"
+                    },
+                    {"const": "__APPEND__"}
+                ]
+            }
+        },
+        "resizableFileTypeList": {
+            "type": "array",
+            "description": "A list of image mime types that can be resized to be served in a smaller size. Use __APPEND__ for extending.",
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^[-\\w.]+/[-\\w.+]+$"
+                    },
+                    {"const": "__APPEND__"}
+                ]
+            }
+        },
+        "fixOrientationFileTypeList": {
+            "type": "array",
+            "description": "A list of image mime types orientation of which can be fixed using exif data. Use __APPEND__ for extending.",
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^[-\\w.]+/[-\\w.+]+$"
+                    },
+                    {"const": "__APPEND__"}
+                ]
+            }
+        },
+        "previewFileTypeList": {
+            "type": "array",
+            "description": "A list of image mime types that can be previewed in the File or Attachment-Multiple fields. Use __APPEND__ for extending.",
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "string",
+                        "pattern": "^[-\\w.]+/[-\\w.+]+$"
+                    },
+                    {"const": "__APPEND__"}
+                ]
+            }
+        },
+        "sizes": {
+            "type": "object",
+            "description": "Size dimensions.",
+            "additionalProperties": {
+                "type": "array",
+                "description": "A size name.",
+                "minLength": 2,
+                "maxLength": 2,
+                "items": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

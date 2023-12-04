@@ -85,6 +85,22 @@
 </div>
 
 <div class="row">
+    <div class="cell form-group col-md-4" data-name="layoutForeign">
+        <label class="control-label" data-name="layoutForeign">{{translate 'layout' category='fields' scope='EntityManager'}}</label>
+        <div class="field" data-name="layoutForeign">
+            {{{layoutForeign}}}
+        </div>
+    </div>
+    <div class="cell form-group col-md-4"></div>
+    <div class="cell form-group col-md-4" data-name="layout">
+        <label class="control-label" data-name="layout">{{translate 'layout' category='fields' scope='EntityManager'}}</label>
+        <div class="field" data-name="layout">
+            {{{layout}}}
+        </div>
+    </div>
+</div>
+
+<div class="row">
 	<div class="cell form-group col-md-4"></div>
 	<div class="cell form-group col-md-4" data-name="parentEntityTypeList">
 		<label class="control-label" data-name="parentEntityTypeList">
@@ -94,7 +110,6 @@
 			{{{parentEntityTypeList}}}
 		</div>
 	</div>
-
 </div>
 <div class="row">
 	<div class="cell form-group col-md-4"></div>

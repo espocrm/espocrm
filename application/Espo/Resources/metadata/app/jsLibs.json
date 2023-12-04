@@ -1,49 +1,101 @@
 {
-    "Flotr": {
+    "jquery": {
+        "exposeAs": "$"
+    },
+    "backbone": {
+        "exportsTo": "window",
+        "exportsAs": "Backbone"
+    },
+    "bullbone": {
+        "exposeAs": "Bull"
+    },
+    "handlebars": {
+        "exposeAs": "Handlebars"
+    },
+    "underscore": {
+        "exposeAs": "_"
+    },
+    "marked": {},
+    "dompurify": {
+        "exposeAs": "DOMPurify"
+    },
+    "js-base64": {
+        "exportsTo": "window",
+        "exportsAs": "Base64"
+    },
+    "moment": {
+        "exportsTo": "window",
+        "exportsAs": "moment"
+    },
+    "flotr2": {
         "path": "client/lib/flotr2.js",
         "devPath": "client/lib/original/flotr2.js",
         "exportsTo": "window",
         "exportsAs": "Flotr",
-        "sourceMap": true
-    },
-    "Base64": {
-        "exportsTo": "window",
-        "exportsAs": "Base64"
+        "sourceMap": true,
+        "aliases": ["lib!Flotr"]
     },
     "espo-funnel-chart": {
         "path": "client/lib/espo-funnel-chart.js",
         "exportsTo": "window",
         "exportsAs": "EspoFunnel"
     },
-    "Summernote": {
+    "summernote": {
         "path": "client/lib/summernote.js",
         "devPath": "client/lib/original/summernote.js",
         "exportsTo": "$.fn",
         "exportsAs": "summernote",
         "sourceMap": true
     },
-    "Textcomplete": {
+    "jquery-ui": {
+        "exportsTo": "$",
+        "exportsAs": "ui"
+    },
+    "jquery-ui-touch-punch": {
+        "exportsTo": "$",
+        "exportsAs": "ui"
+    },
+    "jquery-textcomplete": {
         "exportsTo": "$.fn",
         "exportsAs": "textcomplete"
     },
-    "Selectize": {
+    "autocomplete": {
+        "exportsTo": "$.fn",
+        "exportsAs": "autocomplete"
+    },
+    "timepicker": {
+        "exportsTo": "$.fn",
+        "exportsAs": "timepicker"
+    },
+    "bootstrap-datepicker": {
+        "exportsTo": "$.fn",
+        "exportsAs": "datepicker"
+    },
+    "selectize": {
         "path": "client/lib/selectize.js",
         "devPath": "client/lib/original/selectize.js",
         "exportsTo": "window",
         "exportsAs": "Selectize"
     },
-    "autonumeric": {
+    "autonumeric": {},
+    "intl-tel-input": {
         "exportsTo": "window",
-        "exportsAs": "AutoNumeric"
+        "exportsAs": "intlTelInput"
+    },
+    "intl-tel-input-utils": {
+        "exportsTo": "window",
+        "exportsAs": "intlTelInputUtils"
+    },
+    "intl-tel-input-globals": {
+        "exportsTo": "window",
+        "exportsAs": "intlTelInputGlobals"
     },
     "cronstrue": {
         "path": "client/lib/cronstrue-i18n.js",
         "devPath": "client/lib/original/cronstrue-i18n.js",
-        "exportsTo": "window",
-        "exportsAs": "cronstrue",
         "sourceMap": true
     },
-    "Cropper": {
+    "cropper": {
         "path": "client/lib/cropper.js",
         "exportsTo": "$.fn",
         "exportsAs": "cropper",
@@ -53,30 +105,28 @@
         "exportsTo": "window",
         "exportsAs": "GridStack"
     },
-    "Colorpicker": {
+    "bootstrap-colorpicker": {
         "path": "client/lib/bootstrap-colorpicker.js",
         "exportsTo": "$.fn",
-        "exportsAs": "colorpicker"
+        "exportsAs": "colorpicker",
+        "aliases": ["lib!Colorpicker"]
     },
-    "exif": {
+    "exif-js": {
         "path": "client/lib/exif.js",
         "devPath": "client/lib/original/exif.js",
-        "exportsTo": "window",
-        "exportsAs": "EXIF",
         "sourceMap": true
     },
-    "JsBarcode": {
+    "jsbarcode": {
         "path": "client/lib/JsBarcode.all.js",
         "devPath": "client/lib/original/JsBarcode.all.js",
         "exportsTo": "window",
         "exportsAs": "JsBarcode",
         "sourceMap": true
     },
-    "qrcode": {
+    "qrcodejs": {
         "path": "client/lib/qrcode.js",
         "exportsTo": "window",
-        "exportsAs": "QRCode",
-        "exportVariable": "QRCode"
+        "exportsAs": "QRCode"
     },
     "ace": {
         "path": "client/lib/ace.js",

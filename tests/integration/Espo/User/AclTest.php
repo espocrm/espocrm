@@ -623,7 +623,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'probability' => 10,
             'amount' => 1,
             'contactsIds' => [],
-            'closeDate' => Date::createToday()->getString(),
+            'closeDate' => Date::createToday()->toString(),
             'assignedUserId' => $userId,
         ], CreateParams::create());
 
@@ -633,7 +633,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'amount' => 1,
             'probability' => 10,
             'contactsIds' => [$contact1->getId()],
-            'closeDate' => Date::createToday()->getString(),
+            'closeDate' => Date::createToday()->toString(),
             'assignedUserId' => $userId,
         ], CreateParams::create());
 
@@ -669,7 +669,7 @@ class AclTest extends \tests\integration\Core\BaseTestCase
             'amount' => 1,
             'probability' => 10,
             'contactsIds' => [$contact2->getId()],
-            'closeDate' => Date::createToday()->getString(),
+            'closeDate' => Date::createToday()->toString(),
             'assignedUserId' => $userId,
         ], CreateParams::create());
     }

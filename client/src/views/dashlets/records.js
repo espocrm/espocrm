@@ -26,55 +26,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/records', ['views/dashlets/abstract/record-list'], function (Dep) {
+import RecordListDashletView from 'views/dashlets/abstract/record-list';
 
-    return Dep.extend({
+class RecordsDashletView extends RecordListDashletView {
 
-        name: 'Records',
+    name = 'Records'
 
-        scope: null,
+    rowActionsView = 'views/record/row-actions/view-and-edit'
+    listView = 'views/email/record/list-expanded'
 
-        rowActionsView: 'views/record/row-actions/view-and-edit',
+    init() {
+        super.init();
 
-        listView: 'views/email/record/list-expanded',
+        this.scope = this.getOption('entityType');
+    }
 
-        init: function () {
-            Dep.prototype.init.call(this);
+    getSearchData() {
+        const data = {
+            primary: /** @type string */this.getOption('primaryFilter'),
+        };
 
-            this.scope = this.getOption('entityType');
-        },
+        if (data.primary === 'all') {
+            delete data.primary;
+        }
 
-        getSearchData: function () {
-            var data = {
-                primary: this.getOption('primaryFilter'),
-            };
+        const bool = {};
 
-            if (data.primary === 'all') {
-                data.primary = null;
-            }
+        (this.getOption('boolFilterList') || []).forEach(item => {
+            bool[item] = true;
+        });
 
-            var bool = {};
+        data.bool = bool;
 
-            (this.getOption('boolFilterList') || []).forEach(item => {
-                bool[item] = true;
+        return data;
+    }
+
+    setupActionList() {
+        const scope = this.getOption('entityType');
+
+        if (scope && this.getAcl().checkScope(scope, 'create')) {
+            this.actionList.unshift({
+                name: 'create',
+                text: this.translate('Create ' + scope, 'labels', scope),
+                iconHtml: '<span class="fas fa-plus"></span>',
+                url: '#' + scope + '/create',
             });
+        }
+    }
+}
 
-            data.bool = bool;
-
-            return data;
-        },
-
-        setupActionList: function () {
-            var scope = this.getOption('entityType');
-
-            if (scope && this.getAcl().checkScope(scope, 'create')) {
-                this.actionList.unshift({
-                    name: 'create',
-                    text: this.translate('Create ' + scope, 'labels', scope),
-                    iconHtml: '<span class="fas fa-plus"></span>',
-                    url: '#' + scope + '/create',
-                });
-            }
-        },
-    });
-});
+export default RecordsDashletView;

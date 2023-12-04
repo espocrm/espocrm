@@ -67,7 +67,18 @@ class MetadataTest extends \PHPUnit\Framework\TestCase
 
         $reader = new Reader($unifier, $unifierObj);
 
-        $this->object = new Metadata($this->fileManager, $this->dataCache, $reader, $module, true);
+        $builderHelper = new Metadata\BuilderHelper();
+
+        $builder = new Metadata\Builder($reader, $builderHelper);
+
+        $this->object = new Metadata(
+            $this->fileManager,
+            $this->dataCache,
+            $module,
+            $builder,
+            $builderHelper,
+            true
+        );
 
         $this->reflection = new ReflectionHelper($this->object);
 

@@ -1,0 +1,19 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/pdfDefs.json",
+    "title": "pdfDefs",
+    "description": "PDF printing definitions for a scope.",
+    "type": "object",
+    "properties": {
+        "dataLoaderClassNameList": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
+            },
+            "description": "List of classes that loads additional data for PDF. Classes should implement the interface Espo\\Tools\\Pdf\\DataLoader. Use __APPEND__ for extending."
+        }
+    }
+}

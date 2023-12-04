@@ -3,13 +3,13 @@
     "User": "Utente",
     "Role": "Ruolo",
     "EmailTemplate": "Modello email",
-    "EmailAccount": "Account email personale",
-    "EmailAccountScope": "Account email personale",
+    "EmailAccount": "Account Email Personale",
+    "EmailAccountScope": "Account Email Personale",
     "OutboundEmail": "Email in Uscita",
     "ScheduledJob": "Lavoro programmato",
     "ExternalAccount": "Account Esterno",
     "Extension": "Estensione",
-    "InboundEmail": "Gruppo account email",
+    "InboundEmail": "Gruppo Account Email",
     "Stream": "Flusso Attività",
     "Import": "Importa",
     "Template": "Modello",
@@ -19,7 +19,7 @@
     "PortalRole": "Ruolo Portale",
     "Attachment": "Allegato",
     "EmailFolder": "Casella Email",
-    "PortalUser": "Utente portale",
+    "PortalUser": "Utente Portale",
     "ScheduledJobLogRecord": "Registro Lavoro Pianificato",
     "PasswordChangeRequest": "Richiesta di Cambio Password",
     "ActionHistoryRecord": "Record di cronologia delle azioni",
@@ -42,7 +42,7 @@
     "AuthFailLogRecord": "Autorizzazione log record fallita",
     "EmailTemplateCategory": "Categorie Modelli email",
     "LeadCapture": "Punto di ingresso cattura lead",
-    "LeadCaptureLogRecord": "Record del registro di acquisizione lead",
+    "LeadCaptureLogRecord": "Registro Acquisizioni Lead",
     "ArrayValue": "Valore di matrice",
     "ApiUser": "Utente API",
     "DashboardTemplate": "Modello di dashboard",
@@ -53,15 +53,16 @@
     "ImportError": "Errore di importazione",
     "WorkingTimeCalendar": "Calendario Lavorativo",
     "WorkingTimeRange": "Intervallo di Lavoro",
-    "GroupEmailFolder": "Cartella Email di Gruppo"
+    "GroupEmailFolder": "Cartella Email di Gruppo",
+    "AuthenticationProvider": "Provider di Autenticazione"
   },
   "scopeNamesPlural": {
     "Email": "Email",
     "User": "Utenti",
     "Role": "Ruoli",
     "EmailTemplate": "Modelli Email",
-    "EmailAccount": "Account email Personale",
-    "EmailAccountScope": "Account email Personale",
+    "EmailAccount": "Account Email Personale",
+    "EmailAccountScope": "Account Email Personale",
     "OutboundEmail": "Email in Uscita",
     "ScheduledJob": "Lavori Pianificati",
     "ExternalAccount": "Account Esterni",
@@ -73,10 +74,10 @@
     "EmailFilter": "Filtri Email",
     "Portal": "Portali",
     "PortalRole": "Ruoli Portale",
-    "Attachment": "Allegato",
+    "Attachment": "Allegati",
     "EmailFolder": "Caselle Email",
     "PortalUser": "Utenti Portale",
-    "ScheduledJobLogRecord": "Record Registro Lavoro Pianificato",
+    "ScheduledJobLogRecord": "Registro Lavori Pianificati",
     "PasswordChangeRequest": "Richiesta di Cambio Password",
     "ActionHistoryRecord": "Storico Azioni",
     "AuthToken": "Tokens di Autenticazione",
@@ -87,7 +88,7 @@
     "EmailTemplateCategory": "Categorie Modeli Email",
     "Import": "Importa",
     "LeadCapture": "Cattura Lead",
-    "LeadCaptureLogRecord": "Registro acquisizione lead",
+    "LeadCaptureLogRecord": "Registro Acquisizioni Lead",
     "ArrayValue": "Valori di matrice",
     "ApiUser": "Utenti API",
     "DashboardTemplate": "Template Dashboard",
@@ -99,7 +100,8 @@
     "ImportError": "Errori di importazione",
     "WorkingTimeCalendar": "Calendari Lavorativi",
     "WorkingTimeRange": "Intervalli di Lavoro",
-    "GroupEmailFolder": "Cartelle Email di Gruppo"
+    "GroupEmailFolder": "Cartelle Email di Gruppo",
+    "AuthenticationProvider": "Provider di Autenticazione"
   },
   "labels": {
     "Misc": "Varie",
@@ -115,7 +117,6 @@
     "Loading...": "Caricamento in corso...",
     "Uploading...": "Caricamento...",
     "Sending...": "Invio...",
-    "Merging...": "Unione in corso...",
     "Merged": "Fusione",
     "Removed": "Rimosso",
     "Posted": "Postato",
@@ -129,13 +130,10 @@
     "Record has been removed": "Il record è stato rimosso",
     "Wrong username/password": "I dati forniti non sono corretti",
     "Post cannot be empty": "Il post non può essere vuoto",
-    "Removing...": "Rimozione...",
-    "Unlinking...": "Scollegamento...",
     "Username can not be empty!": "L'Username non può essere vuota!",
     "Cache is not enabled": "Cache non abilitata",
     "Cache has been cleared": "La cache è stata svuotata",
     "Rebuild has been done": "Ricostruzione effettuata",
-    "Saving...": "Salvataggio...",
     "Modified": "Modificato",
     "Created": "Creato",
     "Create": "Crea",
@@ -147,7 +145,7 @@
     "Filter": "Filtro",
     "Edit Dashboard": "Modifica Dashboard",
     "Add": "Aggiungi",
-    "Add Item": "Aggiungi articolo",
+    "Add Item": "Aggiungi Elemento",
     "More": "Altro",
     "Search": "Cerca",
     "Only My": "Solo i miei",
@@ -189,10 +187,10 @@
     "Stream": "Flusso Attività",
     "Show more": "Mostra altro",
     "Dashlet Options": "Opzioni dashlet",
-    "Full Form": "Modulo completo",
+    "Full Form": "Modulo Completo",
     "Insert": "Inserisci",
     "Person": "Persona",
-    "First Name": "Nome",
+    "First Name": "Nominativo",
     "Last Name": "Cognome",
     "Original": "Originale",
     "You": "Tu",
@@ -205,7 +203,7 @@
     "Run Import": "Avvia importazione",
     "Duplicate": "Duplica",
     "Notifications": "Notifiche",
-    "Mark all read": "Contrassegna tutte come lette",
+    "Mark all read": "Segna Tutte Come Lette",
     "See more": "Vedi altro",
     "Today": "Oggi",
     "Tomorrow": "Domani",
@@ -266,11 +264,13 @@
     "Sign in": "Accedi",
     "Global Search": "Ricerca Globale",
     "Show Navigation Panel": "Mostra Pannello di Navigazione",
-    "Hide Navigation Panel": "Nascondi Pannello di Navigazione"
+    "Hide Navigation Panel": "Nascondi Pannello di Navigazione",
+    "Print": "Stampa",
+    "Copy to Clipboard": "Copia negli Appunti",
+    "Copied to clipboard": "Copiato negli appunti"
   },
   "messages": {
     "pleaseWait": "Attendere...",
-    "posting": "Spedizione...",
     "confirmLeaveOutMessage": "Sei sicuro di volere lasciare il form?",
     "notModified": "Non hai modificato il record",
     "fieldIsRequired": "{field} è richiesto",
@@ -319,8 +319,6 @@
     "loading": "Caricamento...",
     "saving": "Salvataggio...",
     "fieldMaxFileSizeError": "Il file non dovrebbe superare {max} Mb",
-    "fieldShouldBeLess": "{field} deve essere minore di {value}",
-    "fieldShouldBeGreater": "{field} deve essere maggiore di {value}",
     "fieldIsUploading": "Caricamento in corso",
     "erasePersonalDataConfirmation": "I campi selezionati verranno cancellati in modo permanente. Sei sicuro?",
     "massPrintPdfMaxCountError": "Impossibile stampare più record {maxCount}.",
@@ -331,6 +329,7 @@
     "notUpdated": "Non aggiornato",
     "maintenanceMode": "L'applicazione è attualmente in modalità manutenzione. Solo gli utenti amministratori hanno accesso.\n\nLa modalità di manutenzione può essere disabilitata in Amministrazione → Impostazioni.",
     "fieldInvalid": "{field} non è valido",
+    "fieldPhoneInvalid": "{field} non è valido",
     "resolveSaveConflict": "Il record è stato modificato. È necessario risolvere il conflitto prima di poter salvare il record.",
     "massActionProcessed": "L'azione di massa è stata elaborata.",
     "fieldUrlExceedsMaxLength": "L'URL codificato supera la lunghezza massima di {maxLength}",
@@ -353,7 +352,18 @@
     "extensionLicenseSoftExpired": "L'abbonamento alla licenza dell'estensione '{name}' è scaduto.",
     "loggedOutLeaveOut": "Disconnesso. La sessione è inattiva. I dati dei moduli non salvati potrebbero essere persi dopo l'aggiornamento della pagina. Potrebbe essere necessario farne una copia.",
     "noAccessToRecord": "L'operazione richiede l'accesso `{action}` al record.",
-    "noAccessToForeignRecord": "L'operazione richiede l'accesso `{action}` al record esterno."
+    "noAccessToForeignRecord": "L'operazione richiede l'accesso `{action}` al record esterno.",
+    "fieldShouldBeNumber": "{field} deve essere un numero valido",
+    "maintenanceModeError": "L'applicazione è attualmente in modalità di manutenzione.",
+    "noLinkAccess": "Nessun accesso all'operazione di collegamento per un record specifico.",
+    "cannotRelateNonExisting": "Impossibile collegarsi a un record {foreignEntityType} inesistente.",
+    "cannotRelateForbidden": "Impossibile collegarsi a un record {foreignEntityType} proibito. È richiesto l'accesso a `{action}`.",
+    "cannotRelateForbiddenLink": "Nessun accesso al collegamento '{link}'.",
+    "emptyMassUpdate": "Nessun campo disponibile per l'Aggiornamento Massivo.",
+    "fieldNotMatchingPattern$uriOptionalProtocol": "{field} deve essere un URL valido",
+    "fieldShouldBeLess": "{field} non dovrebbe essere maggiore di {value}",
+    "fieldShouldBeGreater": "{field} non dovrebbe essere inferiore a {value}",
+    "cannotUnrelateRequiredLink": "Impossibile scollegare il collegamento in quanto richiesto."
   },
   "boolFilters": {
     "onlyMy": "Solo i miei",
@@ -375,11 +385,12 @@
     "printPdf": "Stampa in PDF",
     "unlink": "Scollega",
     "recalculateFormula": "Ricalcola Formula",
-    "update": "Aggiorna"
+    "update": "Aggiorna",
+    "delete": "Elimina"
   },
   "fields": {
     "name": "Nome",
-    "firstName": "Nome",
+    "firstName": "Nominativo",
     "lastName": "Cognome",
     "salutationName": "Saluto",
     "assignedUser": "Utente Assegnato",
@@ -462,8 +473,8 @@
     "attachThis": "{user} ha allegato",
     "statusThis": "{user} ha aggiornato {field}",
     "updateThis": "{user} ha aggiornato {entityType}",
-    "createRelatedThis": "{user} ha creato {relatedEntityType} {relatedEntity} correlato al {entityType}",
-    "createRelated": "{user} ha creato {relatedEntityType} {relatedEntity} correlato al {entityType} {entity}",
+    "createRelatedThis": "{user} ha creato {relatedEntityType} {relatedEntity} correlato a {entityType}",
+    "createRelated": "{user} ha creato {relatedEntityType} {relatedEntity} correlato a {entityType} {entity}",
     "relate": "{user} si è collegato a {relatedEntityType} {relatedEntity} con {entityType} {entity}",
     "relateThis": "{user} si è collegato a {relatedEntityType} {relatedEntity} con {entityType}",
     "emailReceivedFromThis": "Email ricevuta da {from}",
@@ -486,7 +497,9 @@
     "assignThisVoid": "{user} Ha revocato questo {entityType}",
     "assignVoid": "{user} Ha revocato {entityType} {entity}",
     "assignThisSelf": "{user} Ha auto-assegnato {entityType}",
-    "assignSelf": "{user} Ha auto-assegnato {entityType} {entity}"
+    "assignSelf": "{user} Ha auto-assegnato {entityType} {entity}",
+    "unrelate": "{user} ha scollegato {relatedEntityType} {relatedEntity} da {entityType} {entity}",
+    "unrelateThis": "{user} ha scollegato {relatedEntityType} {relatedEntity} da questa {entityType}"
   },
   "lists": {
     "monthNames": [
@@ -584,7 +597,7 @@
       "isNot": "Non è",
       "isNotOneOf": "Nessuno di",
       "noneOf": "Nessuno di",
-      "allOf": "Tutto di",
+      "allOf": "Tutto Di",
       "any": "Qualunque"
     },
     "varcharSearchRanges": {
@@ -654,7 +667,7 @@
         "dragImageHere": "Trascina un'immagine qui",
         "selectFromFiles": "Seleziona da File",
         "url": "URL dell'Immagine",
-        "remove": "Rimuovi l'Immagine"
+        "remove": "Rimuovi L'Immagine"
       },
       "link": {
         "insert": "Inserisci Link",
@@ -728,10 +741,14 @@
     }
   },
   "streamMessagesMale": {
-    "postTargetSelfAndOthers": "{user} Ha postato a {target} e se stesso"
+    "postTargetSelfAndOthers": "{user} ha postato a {target} e se stesso"
   },
   "streamMessagesFemale": {
-    "postTargetSelfAndOthers": "{user} Ha postato a {target} e se stessa"
+    "postTargetSelfAndOthers": "{user} ha postato a {target} e se stessa"
+  },
+  "durationUnits": {
+    "d": "g",
+    "h": "o"
   },
   "listViewModes": {
     "list": "Lista"
@@ -740,7 +757,8 @@
     "Dark": "Scuro",
     "Violet": "Violetto",
     "Hazyblue": "Blu Nebuloso",
-    "Glass": "Vetro"
+    "Glass": "Vetro",
+    "Light": "Chiaro"
   },
   "themeNavbars": {
     "side": "Navbar Verticale",
@@ -757,5 +775,24 @@
     "noEmptyString": "Nessuna Stringa Vuota",
     "max": "Valore Max",
     "min": "Valore Min"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Valore URL non valido.",
+    "currency_valid": "Valore importo non valido.",
+    "currency_validCurrency": "Il codice della valuta non è valido o non è consentito.",
+    "varchar_pattern": "Probabilmente il valore contiene caratteri non consentiti.",
+    "email_emailAddress": "Valore indirizzo email non valido.",
+    "phone_phoneNumber": "Valore telefono non valido.",
+    "datetimeOptional_valid": "Valore data-ora non valido.",
+    "datetime_valid": "Valore data-ora non valido.",
+    "date_valid": "Valore data non valido.",
+    "enum_valid": "Valore enum non valido. Il valore deve essere una delle opzioni enum definite. Un valore vuoto è consentito solo se il campo ha un'opzione vuota.",
+    "multiEnum_valid": "Valore multi-enum non valido. I valori devono rientrare tra le opzioni di campo stabilite.",
+    "int_valid": "Valore numerico intero non valido.",
+    "float_valid": "Valore numerico non valido."
+  },
+  "navbarTabs": {
+    "Support": "Supporto",
+    "Activities": "Attività"
   }
 }

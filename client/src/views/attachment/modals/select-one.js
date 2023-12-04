@@ -32,6 +32,7 @@ define('views/attachment/modals/select-one', ['views/modal'], function (Dep) {
 
         backdrop: true,
 
+        // language=Handlebars
         templateContent:
             '<ul class="list-group no-side-margin">{{#each viewObject.options.dataList}}'+
             '<li class="list-group-item">'+

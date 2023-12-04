@@ -4,7 +4,8 @@
             "type": "enum",
             "translation": "Global.scopeNames",
             "required": true,
-            "readOnly": true
+            "readOnly": true,
+            "view": "views/fields/entity-type"
         },
         "status": {
             "type": "enum",

@@ -1,0 +1,11 @@
+{
+    "logo": "client/img/logo-light.svg",
+    "stylesheet": "client/css/espo/light.css",
+    "stylesheetIframe": "client/css/espo/light-iframe.css",
+    "textColor": "#0f0f0f",
+    "chartGridColor": "#ddd",
+    "chartTickColor": "#e8eced",
+    "chartSuccessColor": "#80ce8e",
+    "chartColorList": ["#6FA8D6", "#4E6CAD", "#EDC555", "#ED8F42", "#DE6666", "#7CC4A4", "#8A7CC2", "#D4729B", "#bfbfbf"],
+    "chartColorAlternativeList": ["#6FA8D6", "#EDC555", "#ED8F42", "#7CC4A4", "#D4729B"]
+}

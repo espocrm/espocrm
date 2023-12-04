@@ -26,459 +26,420 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('view', [], function () {
+/** @module view */
+
+import {View as BullView} from 'bullbone';
+
+/**
+ * A base view. All views should extend this class.
+ *
+ * @see https://docs.espocrm.com/development/view/
+ * @mixes Bull.Events
+ */
+class View extends BullView {
 
     /**
-     * A base view.
-     *
-     * @see {@link https://docs.espocrm.com/development/view/}
-     *
-     * @class
-     * @name Class
-     * @extends Bull.View
-     * @memberOf module:view
+     * @callback module:view~actionHandlerCallback
+     * @param {MouseEvent} event A DOM event.
+     * @param {HTMLElement} element A target element.
      */
-    return Bull.View.extend(/** @lends module:view.Class# */{
 
-        /**
-         * @callback module:view.Class~actionHandlerCallback
-         * @param {Event} e A DOM event.
-         */
+    /**
+     * A model.
+     *
+     * @name model
+     * @type {module:model|null}
+     * @memberOf View.prototype
+     * @public
+     */
 
-        /**
-         * A model.
-         *
-         * @name model
-         * @type {module:model.Class|null}
-         * @memberOf module:view.Class.prototype
-         * @public
-         */
+    /**
+     * A collection.
+     *
+     * @name collection
+     * @type {module:collection|null}
+     * @memberOf View.prototype
+     * @public
+     */
 
-        /**
-         * A collection.
-         *
-         * @name collection
-         * @type {module:collection.Class|null}
-         * @memberOf module:view.Class.prototype
-         * @public
-         */
+    /**
+     * A helper.
+     *
+     * @name _helper
+     * @type {module:view-helper}
+     * @memberOf View.prototype
+     * @private
+     */
 
-        /**
-         * A helper.
-         *
-         * @name _helper
-         * @type {module:view-helper.Class}
-         * @memberOf module:view.Class.prototype
-         * @private
-         */
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * When the view is ready. Can be useful to prevent race condition when re-initialization is needed
+     * in-between initialization and render.
+     *
+     * @return Promise
+     * @todo Move to Bull.View.
+     */
+    whenReady() {
+        if (this.isReady) {
+            return Promise.resolve();
+        }
 
-        /**
-         * Add a DOM button-action event handler.
-         *
-         * @todo Add an `<a>` tag support.
-         * @param {string} action An action name.
-         * @param {module:view.Class~actionHandlerCallback} handler A handler.
-         */
-        addActionHandler: function (action, handler) {
-            let fullAction = 'click button[data-action=\"'+action+'\"]';
+        return new Promise(resolve => {
+            this.once('ready', () => resolve());
+        });
+    }
 
-            this.events[fullAction] = handler;
-        },
+    /**
+     * Add a DOM click event handler for a target defined by `data-action="{name}"` attribute.
+     *
+     * @param {string} action An action name.
+     * @param {module:view~actionHandlerCallback} handler A handler.
+     */
+    addActionHandler(action, handler) {
+        const fullAction = `click [data-action="${action}"]`;
 
-        /**
-         * Escape a string.
-         *
-         * @param {string} string
-         * @returns {string}
-         */
-        escapeString: function (string) {
-            return Handlebars.Utils.escapeExpression(string);
-        },
+        this.events[fullAction] = e => {
+            // noinspection JSUnresolvedReference
+            handler.call(this, e.originalEvent, e.currentTarget);
+        };
+    }
 
-        /**
-         * Show a notify-message.
-         *
-         * @deprecated Use `Espo.Ui.notify`.
-         * @param {string} label
-         * @param {string} [type]
-         * @param {number} [timeout]
-         * @param {string} [scope]
-         */
-        notify: function (label, type, timeout, scope) {
-            if (label == false) {
-                Espo.Ui.notify(false);
+    /**
+     * Escape a string.
+     *
+     * @param {string} string
+     * @returns {string}
+     */
+    escapeString(string) {
+        return Handlebars.Utils.escapeExpression(string);
+    }
 
-                return;
-            }
+    /**
+     * Show a notify-message.
+     *
+     * @deprecated Use `Espo.Ui.notify`.
+     * @param {string|false} label
+     * @param {string} [type]
+     * @param {number} [timeout]
+     * @param {string} [scope]
+     */
+    notify(label, type, timeout, scope) {
+        if (!label) {
+            Espo.Ui.notify(false);
 
-            scope = scope || null;
-            timeout = timeout || 2000;
+            return;
+        }
 
-            if (!type) {
-                timeout = null;
-            }
+        scope = scope || null;
+        timeout = timeout || 2000;
 
-            let text = this.getLanguage().translate(label, 'labels', scope);
+        if (!type) {
+            timeout = void 0;
+        }
 
-            Espo.Ui.notify(text, type, timeout);
-        },
+        const text = this.getLanguage().translate(label, 'labels', scope);
 
-        /**
-         * Get a view-helper.
-         *
-         * @returns {module:view-helper.Class}
-         */
-        getHelper: function () {
-            return this._helper;
-        },
+        Espo.Ui.notify(text, type, timeout);
+    }
 
-        /**
-         * Get a current user.
-         *
-         * @returns {module:models/user.Class}
-         */
-        getUser: function () {
-            return this._helper.user;
-        },
+    /**
+     * Get a view-helper.
+     *
+     * @returns {module:view-helper}
+     */
+    getHelper() {
+        return this._helper;
+    }
 
-        /**
-         * Get the preferences.
-         *
-         * @returns {module:models/preferences.Class}
-         */
-        getPreferences: function () {
-            return this._helper.preferences;
-        },
+    /**
+     * Get a current user.
+     *
+     * @returns {module:models/user}
+     */
+    getUser() {
+        return this._helper.user;
+    }
 
-        /**
-         * Get the config.
-         *
-         * @returns {module:models/settings.Class}
-         */
-        getConfig: function () {
-            return this._helper.settings;
-        },
+    /**
+     * Get the preferences.
+     *
+     * @returns {module:models/preferences}
+     */
+    getPreferences() {
+        return this._helper.preferences;
+    }
 
-        /**
-         * Get the ACL.
-         *
-         * @returns {module:acl-manager.Class}
-         */
-        getAcl: function () {
-            return this._helper.acl;
-        },
+    /**
+     * Get the config.
+     *
+     * @returns {module:models/settings}
+     */
+    getConfig() {
+        return this._helper.settings;
+    }
 
-        /**
-         * Get the model factory.
-         *
-         * @returns {module:model-factory.Class}
-         */
-        getModelFactory: function () {
-            return this._helper.modelFactory;
-        },
+    /**
+     * Get the ACL.
+     *
+     * @returns {module:acl-manager}
+     */
+    getAcl() {
+        return this._helper.acl;
+    }
 
-        /**
-         * Get the collection factory.
-         *
-         * @returns {module:collection-factory.Class}
-         */
-        getCollectionFactory: function () {
-            return this._helper.collectionFactory;
-        },
+    /**
+     * Get the model factory.
+     *
+     * @returns {module:model-factory}
+     */
+    getModelFactory() {
+        return this._helper.modelFactory;
+    }
 
-        /**
-         * Get the router.
-         *
-         * @returns {module:router.Class}
-         */
-        getRouter: function () {
-            return this._helper.router;
-        },
+    /**
+     * Get the collection factory.
+     *
+     * @returns {module:collection-factory}
+     */
+    getCollectionFactory() {
+        return this._helper.collectionFactory;
+    }
 
-        /**
-         * Get the storage-util.
-         *
-         * @returns {module:storage.Class}
-         */
-        getStorage: function () {
-            return this._helper.storage;
-        },
+    /**
+     * Get the router.
+     *
+     * @returns {module:router}
+     */
+    getRouter() {
+        return this._helper.router;
+    }
 
-        /**
-         * Get the session-storage-util.
-         *
-         * @returns {module:session-storage.Class}
-         */
-        getSessionStorage: function () {
-            return this._helper.sessionStorage;
-        },
+    /**
+     * Get the storage-util.
+     *
+     * @returns {module:storage}
+     */
+    getStorage() {
+        return this._helper.storage;
+    }
 
-        /**
-         * Get the language-util.
-         *
-         * @returns {module:language.Class}
-         */
-        getLanguage: function () {
-            return this._helper.language;
-        },
+    /**
+     * Get the session-storage-util.
+     *
+     * @returns {module:session-storage}
+     */
+    getSessionStorage() {
+        return this._helper.sessionStorage;
+    }
 
-        /**
-         * Get metadata.
-         *
-         * @returns {module:metadata.Class}
-         */
-        getMetadata: function () {
-            return this._helper.metadata;
-        },
+    /**
+     * Get the language-util.
+     *
+     * @returns {module:language}
+     */
+    getLanguage() {
+        return this._helper.language;
+    }
 
-        /**
-         * Get the cache-util.
-         *
-         * @returns {module:cache.Class}
-         */
-        getCache: function () {
-            return this._helper.cache;
-        },
+    /**
+     * Get metadata.
+     *
+     * @returns {module:metadata}
+     */
+    getMetadata() {
+        return this._helper.metadata;
+    }
 
-        /**
-         * Get the date-time util.
-         *
-         * @returns {module:date-time.Class}
-         */
-        getDateTime: function () {
-            return this._helper.dateTime;
-        },
+    /**
+     * Get the cache-util.
+     *
+     * @returns {module:cache}
+     */
+    getCache() {
+        return this._helper.cache;
+    }
 
-        /**
-         * Get the number-util.
-         *
-         * @returns {module:number.Class}
-         */
-        getNumberUtil: function () {
-            return this._helper.numberUtil;
-        },
+    /**
+     * Get the date-time util.
+     *
+     * @returns {module:date-time}
+     */
+    getDateTime() {
+        return this._helper.dateTime;
+    }
 
-        /**
-         * Get the field manager.
-         *
-         * @returns {module:field-manager.Class}
-         */
-        getFieldManager: function () {
-            return this._helper.fieldManager;
-        },
+    /**
+     * Get the number-util.
+     *
+     * @returns {module:num-util}
+     */
+    getNumberUtil() {
+        return this._helper.numberUtil;
+    }
 
-        /**
-         * Get the base-controller.
-         *
-         * @returns {module:controllers/base.Class}
-         */
-        getBaseController: function () {
-            return this._helper.baseController;
-        },
+    /**
+     * Get the field manager.
+     *
+     * @returns {module:field-manager}
+     */
+    getFieldManager() {
+        return this._helper.fieldManager;
+    }
 
-        /**
-         * Get the theme manager.
-         *
-         * @returns {module:theme-manager.Class}
-         */
-        getThemeManager: function () {
-            return this._helper.themeManager;
-        },
+    /**
+     * Get the base-controller.
+     *
+     * @returns {module:controllers/base}
+     */
+    getBaseController() {
+        return this._helper.baseController;
+    }
 
-        /**
-         * Update a page title. Supposed to be overridden if needed.
-         */
-        updatePageTitle: function () {
-            var title = this.getConfig().get('applicationName') || 'EspoCRM';
+    /**
+     * Get the theme manager.
+     *
+     * @returns {module:theme-manager}
+     */
+    getThemeManager() {
+        return this._helper.themeManager;
+    }
 
-            this.setPageTitle(title);
-        },
+    /**
+     * Update a page title. Supposed to be overridden if needed.
+     */
+    updatePageTitle() {
+        var title = this.getConfig().get('applicationName') || 'EspoCRM';
 
-        /**
-         * Set a page title.
-         *
-         * @param {string} title A title.
-         */
-        setPageTitle: function (title) {
-            this.getHelper().pageTitle.setTitle(title);
-        },
+        this.setPageTitle(title);
+    }
 
-        /**
-         * Translate a label.
-         *
-         * @param {string} label Label.
-         * @param {string} [category] Category.
-         * @param {string} [scope] Scope.
-         * @returns {string}
-         */
-        translate: function (label, category, scope) {
-            return this.getLanguage().translate(label, category, scope);
-        },
+    /**
+     * Set a page title.
+     *
+     * @param {string} title A title.
+     */
+    setPageTitle(title) {
+        this.getHelper().pageTitle.setTitle(title);
+    }
 
-        /**
-         * Get a base path.
-         *
-         * @returns {string}
-         */
-        getBasePath: function () {
-            return this._helper.basePath || '';
-        },
+    /**
+     * Translate a label.
+     *
+     * @param {string} label Label.
+     * @param {string} [category] Category.
+     * @param {string} [scope] Scope.
+     * @returns {string}
+     */
+    translate(label, category, scope) {
+        return this.getLanguage().translate(label, category, scope);
+    }
 
-        /**
-         * Ajax request.
-         *
-         * @deprecated Use `Espo.Ajax`.
-         * @param {string} url An URL.
-         * @param {string} type A method.
-         * @param {any} [data] Data.
-         * @param {Object} [options] Options.
-         * @returns {Promise<any>}
-         */
-        ajaxRequest: function (url, type, data, options) {
-            options = options || {};
+    /**
+     * Get a base path.
+     *
+     * @returns {string}
+     */
+    getBasePath() {
+        return this._helper.basePath || '';
+    }
 
-            options.type = type;
-            options.url = url;
-            options.context = this;
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Ajax request.
+     *
+     * @deprecated Use `Espo.Ajax`.
+     * @todo Remove in v9.0.
+     * @param {string} url An URL.
+     * @param {string} type A method.
+     * @param {any} [data] Data.
+     * @param {Object} [options] Options.
+     * @returns {Promise<*>}
+     */
+    ajaxRequest(url, type, data, options) {
+        return /** @type {Promise<*>} */ Espo.Ajax.request(url, type, data, options);
+    }
 
-            if (data) {
-                options.data = data;
-            }
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * POST request.
+     *
+     * @deprecated Use `Espo.Ajax.postRequest`.
+     * @todo Remove in v9.0.
+     * @param {string} url An URL.
+     * @param {any} [data] Data.
+     * @param {Object} [options] Options.
+     * @returns {Promise<any>}
+     */
+    ajaxPostRequest(url, data, options) {
+        return Espo.Ajax.postRequest(url, data, options);
+    }
 
-            return $.ajax(options);
-        },
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * GET request.
+     *
+     * @deprecated Use `Espo.Ajax.getRequest`.
+     * @todo Remove in v9.0.
+     * @param {string} url An URL.
+     * @param {any} [data] Data.
+     * @param {Object} [options] Options.
+     * @returns {Promise<any>}
+     */
+    ajaxGetRequest(url, data, options) {
+        return Espo.Ajax.getRequest(url, data, options);
+    }
 
-        /**
-         * POST request.
-         *
-         * @deprecated Use `Espo.Ajax.postRequest`.
-         * @param {string} url An URL.
-         * @param {any} [data] Data.
-         * @param {Object} [options] Options.
-         * @returns {Promise<any>}
-         */
-        ajaxPostRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
+    /**
+     * @typedef {Object} module:view~ConfirmOptions
+     *
+     * @property {string} message A message.
+     * @property {string} [confirmText] A confirm-button text.
+     * @property {string} [cancelText] A cancel-button text.
+     * @property {'danger'|'success'|'warning'|'default'} [confirmStyle='danger'] A confirm-button style.
+     * @property {'static'|boolean} [backdrop=false] A backdrop.
+     * @property {function():void} [cancelCallback] A cancel-callback.
+     */
 
-            return this.ajaxRequest(url, 'POST', data, options);
-        },
+    /**
+     * Show a confirmation dialog.
+     *
+     * @param {string|module:view~ConfirmOptions} o A message or options.
+     * @param [callback] A callback. Deprecated, use a promise.
+     * @param [context] A context. Deprecated.
+     * @returns {Promise} To be resolved if confirmed.
+     */
+    confirm(o, callback, context) {
+        let message;
 
-        /**
-         * PATCH request.
-         *
-         * @deprecated Use `Espo.Ajax.patchRequest`.
-         * @param {string} url An URL.
-         * @param {any} [data] Data.
-         * @param {Object} [options] Options.
-         * @returns {Promise<any>}
-         */
-        ajaxPatchRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
+        if (typeof o === 'string' || o instanceof String) {
+            message = o;
 
-            return this.ajaxRequest(url, 'PATCH', data, options);
-        },
+            o = /** @type {module:view~ConfirmOptions} */{};
+        }
+        else {
+            o = o || {};
 
-        /**
-         * PUT request.
-         *
-         * @deprecated Use `Espo.Ajax.putRequest`.
-         * @param {string} url An URL.
-         * @param {any} [data] Data.
-         * @param {Object} [options] Options.
-         * @returns {Promise<any>}
-         */
-        ajaxPutRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
+            message = o.message;
+        }
 
-            return this.ajaxRequest(url, 'PUT', data, options);
-        },
+        if (message) {
+            message = this.getHelper()
+                .transformMarkdownText(message, {linksInNewTab: true})
+                .toString();
+        }
 
-        /**
-         * GET request.
-         *
-         * @deprecated Use `Espo.Ajax.getRequest`.
-         * @param {string} url An URL.
-         * @param {any} [data] Data.
-         * @param {Object} [options] Options.
-         * @returns {Promise<any>}
-         */
-        ajaxGetRequest: function (url, data, options) {
-            return this.ajaxRequest(url, 'GET', data, options);
-        },
+        const confirmText = o.confirmText || this.translate('Yes');
+        const confirmStyle = o.confirmStyle || null;
+        const cancelText = o.cancelText || this.translate('Cancel');
 
-        /**
-         * DELETE request.
-         *
-         * @deprecated Use `Espo.Ajax.deleteRequest`.
-         * @param {string} url An URL.
-         * @param {any} [data] Data.
-         * @param {Object} [options] Options.
-         * @returns {Promise<any>}
-         */
-        ajaxDeleteRequest: function (url, data, options) {
-            if (data) {
-                data = JSON.stringify(data);
-            }
+        return Espo.Ui.confirm(message, {
+            confirmText: confirmText,
+            cancelText: cancelText,
+            confirmStyle: confirmStyle,
+            backdrop: ('backdrop' in o) ? o.backdrop : true,
+            isHtml: true,
+        }, callback, context);
+    }
+}
 
-            return this.ajaxRequest(url, 'DELETE', data, options);
-        },
-
-        /**
-         * @typedef {Object} module:view.Class~ConfirmOptions
-         *
-         * @property {string} message A message.
-         * @property {string} [confirmText] A confirm-button text.
-         * @property {string} [cancelText] A cancel-button text.
-         * @property {'danger'|'success'|'warning'|'default'} [confirmStyle='danger'] A confirm-button style.
-         * @property {'static'|boolean} [backdrop=false] A backdrop.
-         * @property {function():void} [cancelCallback] A cancel-callback.
-         */
-
-        /**
-         * Show a confirmation dialog.
-         *
-         * @param {string|module:view.Class~ConfirmOptions} o A message or options.
-         * @param [callback] A callback. Deprecated, use a promise.
-         * @param [context] A context. Deprecated.
-         * @returns {Promise} To be resolved if confirmed.
-         */
-        confirm: function (o, callback, context) {
-            let message;
-
-            if (typeof o === 'string' || o instanceof String) {
-                message = o;
-
-                o = {};
-            }
-            else {
-                o = o || {};
-
-                message = o.message;
-            }
-
-            if (message) {
-                message = this.getHelper()
-                    .transformMarkdownText(message, {linksInNewTab: true})
-                    .toString();
-            }
-
-            let confirmText = o.confirmText || this.translate('Yes');
-            let confirmStyle = o.confirmStyle || null;
-            let cancelText = o.cancelText || this.translate('Cancel');
-
-            return Espo.Ui.confirm(message, {
-                confirmText: confirmText,
-                cancelText: cancelText,
-                confirmStyle: confirmStyle,
-                backdrop: ('backdrop' in o) ? o.backdrop : true,
-                isHtml: true,
-            }, callback, context);
-        },
-    });
-});
+export default View;

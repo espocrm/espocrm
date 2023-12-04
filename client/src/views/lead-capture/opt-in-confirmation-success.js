@@ -41,7 +41,7 @@ define('views/lead-capture/opt-in-confirmation-success', ['view', 'model'], func
                 model.set('message', this.resultData.message);
 
                 this.createView('messageField', 'views/fields/text', {
-                    el: this.getSelector() + ' .field[data-name="message"]',
+                    selector: '.field[data-name="message"]',
                     mode: 'detail',
                     inlineEditDisabled: true,
                     model: model,

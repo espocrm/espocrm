@@ -47,9 +47,14 @@ class Url
         return explode('/', $url)[count(explode('/', $scriptNameModified)) - 1] ?? null;
     }
 
+    public static function getPortalIdFromEnv(): ?string
+    {
+        return $_SERVER['ESPO_PORTAL_ID'] ?? null;
+    }
+
     public static function detectPortalId(): ?string
     {
-        $portalId = $_SERVER['ESPO_PORTAL_ID'] ?? null;
+        $portalId = self::getPortalIdFromEnv();
 
         if ($portalId) {
             return $portalId;

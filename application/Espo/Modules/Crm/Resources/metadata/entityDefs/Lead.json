@@ -161,7 +161,7 @@
             "type": "varchar",
             "notStorable": true,
             "exportDisabled": true,
-            "disabled": true,
+            "utility": true,
             "fieldManagerParamList": []
         },
         "acceptanceStatusMeetings": {
@@ -216,7 +216,6 @@
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "layoutMassUpdateDisabled": true,
             "importDisabled": true,
             "noLoad": true
         },
@@ -234,7 +233,7 @@
             "type": "bool",
             "notStorable": true,
             "readOnly": true,
-            "disabled": true
+            "utility": true
         }
     },
     "links": {

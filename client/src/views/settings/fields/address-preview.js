@@ -36,6 +36,7 @@ define('views/settings/fields/address-preview', ['views/fields/address'], functi
             var mainModel = this.model;
             var model = mainModel.clone();
 
+            model.entityType = mainModel.entityType;
             model.name = mainModel.name;
 
             model.set({

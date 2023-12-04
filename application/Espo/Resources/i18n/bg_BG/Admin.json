@@ -79,7 +79,10 @@
     "Misc": "Разни",
     "Job Settings": "Настройки на системни задачи",
     "Configuration Instructions": "Инструкции за конфигуриране",
-    "Formula Sandbox": "Тестър за формули"
+    "Formula Sandbox": "Тестър за формули",
+    "Working Time Calendars": "Календари на работното време",
+    "Group Email Folders": "Групови имейл папки",
+    "Authentication Providers": "Доставчици на удостоверяване"
   },
   "layouts": {
     "list": "Лист",
@@ -124,7 +127,8 @@
     "datetime": "Дата-час",
     "datetimeOptional": "Дата / Дата-час",
     "checklist": "Чеклист",
-    "barcode": "Баркод"
+    "barcode": "Баркод",
+    "urlMultiple": "Множество URL адреси"
   },
   "fields": {
     "type": "Тип",
@@ -188,7 +192,12 @@
     "onlyDefaultCurrency": "Само валута по подразбиране",
     "dynamicLogicInvalid": "Условия, които правят полето невалидно",
     "conversionDisabled": "Деактивирайте преобразуването",
-    "decimalPlaces": "Десетични знаци"
+    "decimalPlaces": "Десетични знаци",
+    "pattern": "Структура",
+    "globalRestrictions": "Глобални рестрикции",
+    "decimal": "Десетична",
+    "optionsReference": "Избор на опции от други полета",
+    "copyToClipboard": "Бутон за копиране"
   },
   "messages": {
     "selectEntityType": "Изберете вида обект от лявото меню.",
@@ -257,7 +266,10 @@
     "layoutSets": "Колекции от оформления, които могат да бъдат приложени на отдели, потребители или портали.",
     "jobsSettings": "Настройки за обработка на системни задачи. Задачите изпълняват други действия във фонов режим.",
     "sms": "SMS настройки.",
-    "formulaSandbox": "Може да пишете и тествате скриптове за формули, преди да ги приложите в системата."
+    "formulaSandbox": "Може да пишете и тествате скриптове за формули, преди да ги приложите в системата.",
+    "workingTimeCalendars": "Управление на работно време.",
+    "groupEmailFolders": "Споделени имейл акаунти с другите потребители.",
+    "authenticationProviders": "Допълнителни доставчици на удостоверяване за порталите."
   },
   "options": {
     "previewSize": {
@@ -279,7 +291,8 @@
     "host": "Сървър",
     "dbname": "Име на базата данни",
     "user": "Потребителско име",
-    "requiredMariadbVersion": "MariaDB версия"
+    "requiredMariadbVersion": "MariaDB версия",
+    "requiredPostgresqlVersion": "Версия на PostgreSQL"
   },
   "templates": {
     "accessInfo": "Информация за достъп",
@@ -297,6 +310,7 @@
     "rebuildRequired": "Нужно е регенериране на кеша на системата"
   },
   "keywords": {
-    "settings": "Система"
+    "settings": "Система",
+    "labelManager": "език,превод"
   }
 }

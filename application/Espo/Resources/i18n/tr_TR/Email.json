@@ -1,18 +1,17 @@
 {
   "fields": {
-    "parent": "Üst Seçenek",
+    "parent": "Üst seçenek",
     "status": "Durum",
     "dateSent": "Gönderilen Tariht",
     "from": "Kimden",
     "to": "Kime",
     "replyTo": "Cevapla",
-    "replyToString": "Cevapla (dize)",
-    "isHtml": "Html olarak gönder",
+    "replyToString": "Cevapla (dizi)",
     "body": "Mesaj",
     "subject": "Konu",
     "attachments": "Dosya Ekle",
     "selectTemplate": "Şablonu Seçin",
-    "fromAddress": "Gönderen Adresi",
+    "fromAddress": "Kimden",
     "emailAddress": "Eposta Adresi",
     "deliveryDate": "Teslim Tarih",
     "account": "Hesap",
@@ -22,7 +21,7 @@
     "isRead": "Okundu",
     "isNotRead": "Okunmadı",
     "isImportant": "Önemli",
-    "isUsers": "Kullanıcının ",
+    "isUsers": "Kullanıcı",
     "inTrash": "Çöpte",
     "name": "İsim (Konu)",
     "isReplied": "Yanıtlandı",
@@ -31,21 +30,37 @@
     "inboundEmails": "Grup Hesapları",
     "emailAccounts": "Kişisel Hesaplar",
     "hasAttachment": "Eki Olan",
-    "sentBy": "Gönderen (Kullanıcı)"
+    "sentBy": "Gönderen (Kullanıcı)",
+    "assignedUsers": "Atanmış Kişi",
+    "ccEmailAddresses": "CC Email Adresi",
+    "messageId": "Mesaj Kimliği",
+    "messageIdInternal": "Mesaj Kimliği (Dahili)",
+    "folderId": "Klasör Kimliği",
+    "fromName": "Kimden",
+    "toEmailAddresses": "Gönderilecek e-mail Adresi",
+    "bccEmailAddresses": "BCC e-mail Adresi",
+    "fromEmailAddress": "Kimden (Bağlantı)",
+    "replyToAddress": "Yanıt Adresi"
   },
   "links": {
     "replied": "Cevaplandı",
     "replies": "Cevaplar",
     "inboundEmails": "Grup Hesapları",
     "emailAccounts": "Kişisel Hesaplar",
-    "sentBy": "Gönderen"
+    "assignedUsers": "Atanmış Kullanıcılar",
+    "sentBy": "Gönderen",
+    "attachments": "Ekler",
+    "fromEmailAddress": "Kimden",
+    "toEmailAddresses": "E-posta Adreslerine",
+    "ccEmailAddresses": "E-posta Adreslerine CC",
+    "bccEmailAddresses": "E-posta Adreslerine BCC"
   },
   "options": {
     "status": {
       "Draft": "Taslak",
       "Sending": "Gönderiliyor",
       "Sent": "Gönderildi",
-      "Archived": "Taslakta ",
+      "Archived": "Arşivlendi",
       "Received": "Alındı",
       "Failed": "Başarısız Oldu"
     }
@@ -53,9 +68,9 @@
   "labels": {
     "Create Email": "Arşiv E-mail",
     "Archive Email": "Arşiv E-mail",
-    "Compose": "Yeni Eposta",
+    "Compose": "Yeni E-posta",
     "Reply": "Cevapla",
-    "Reply to All": "Tümüne Cevapla",
+    "Reply to All": "Tümünü Cevapla",
     "Forward": "İlet",
     "Original message": "Orijinal Mesaj",
     "Forwarded message": "İletilmiş mesaj",
@@ -65,9 +80,9 @@
     "Send Test Email": "Test e-mail Gönder",
     "Send": "Gönder",
     "Email Address": "E-mail Adresi",
-    "Mark Read": "Okundu İşaretle",
+    "Mark Read": "Okundu olarak İşaretle",
     "Sending...": "Gönderiliyor...",
-    "Save Draft": "Taslak Kaydet",
+    "Save Draft": "Taslağı Kaydet",
     "Mark all as read": "Tümünü okundu işaretle",
     "Show Plain Text": "Düz Metin Göster",
     "Mark as Important": "Önemli olarak işaretle",
@@ -76,18 +91,18 @@
     "Retrieve from Trash": "Çöpten Al",
     "Move to Folder": "Klasöre taşı",
     "Filters": "Filtreler ",
-    "Folders": "Klasörler"
+    "Folders": "Klasörler",
+    "View Users": "Kullanıcıları Görüntüle"
   },
   "messages": {
-    "noSmtpSetup": "SMTP Kurulum Yok. {link}",
     "testEmailSent": "Test e-maili gönderilmiştir",
-    "emailSent": "E-mail gönderildi ",
+    "emailSent": "E-mail gönderildi",
     "savedAsDraft": "Taslak olarak kayıt edildi"
   },
   "presetFilters": {
     "sent": "Gönderildi",
     "archived": "Arşivlendi",
-    "inbox": "Gelen",
+    "inbox": "Gelen Kutusu",
     "drafts": "Taslaklar",
     "trash": "Çöp",
     "important": "Önemli"

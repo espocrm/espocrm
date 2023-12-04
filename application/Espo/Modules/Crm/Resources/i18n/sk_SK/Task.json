@@ -10,7 +10,7 @@
     "priority": "Priorita",
     "description": "Popis",
     "isOverdue": "Je prešlý",
-    "account": "Účet",
+    "account": "Organizácia",
     "dateCompleted": "Dátum dokončenia",
     "attachments": "Prílohy",
     "reminders": "Pripomienky",
@@ -18,7 +18,7 @@
   },
   "links": {
     "attachments": "Prílohy",
-    "account": "Účet",
+    "account": "Organizácia",
     "contact": "Kontakt"
   },
   "options": {

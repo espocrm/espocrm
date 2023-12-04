@@ -32,22 +32,18 @@ namespace Espo\Core\Notificators;
 use Espo\ORM\Entity;
 use Espo\Entities\User;
 use Espo\Core\Notification\AssignmentNotificator\Params;
-
 use Espo\Core\Notification\DefaultAssignmentNotificator;
 use Espo\Core\ORM\EntityManager;
 
 /**
  * @deprecated As of v7.0. Use plain classes that implement `Espo\Core\Notification\AssignmentNotificator`.
- * @todo Remove in v8.0.
+ * @todo Remove in v9.0.
  */
 class DefaultNotificator
 {
     protected $entityType; /** @phpstan-ignore-line */
-
     protected $user; /** @phpstan-ignore-line */
-
     protected $entityManager; /** @phpstan-ignore-line */
-
     private $base; /** @phpstan-ignore-line */
 
     public function __construct(User $user, EntityManager $entityManager, DefaultAssignmentNotificator $base)

@@ -35,6 +35,10 @@ use Espo\ORM\Metadata;
 use Espo\ORM\MetadataDataProvider;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Query\InsertBuilder;
+use Espo\ORM\Query\Part\Condition;
+use Espo\ORM\Query\Part\Expression;
+use Espo\ORM\Query\Part\Join;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Query\UpdateBuilder;
 use Espo\ORM\QueryBuilder;
 use Espo\ORM\QueryComposer\PostgresqlQueryComposer as QueryComposer;
@@ -203,6 +207,39 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $expectedSql =
             "INSERT INTO \"account\" (\"id\", \"name\") VALUES ('1', 'name') " .
             "ON CONFLICT(\"id\") DO UPDATE SET \"deleted\" = 0";
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testAlias4(): void
+    {
+        $subQuery =
+            SelectBuilder::create()
+                ->select('id', 'someId')
+                ->from('Test')
+                ->withDeleted()
+                ->build();
+
+        $query = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->leftJoin(
+                Join::createWithSubQuery($subQuery, 'sqAlias')
+                    ->withConditions(
+                        Condition::equal(
+                            Expression::alias('sqAlias.someId'),
+                            Expression::column('id')
+                        )
+                    )
+            )
+            ->withDeleted()
+            ->build();
+
+        $expectedSql =
+            "SELECT \"post\".\"id\" AS \"id\" FROM \"post\" LEFT JOIN " .
+            "(SELECT \"test\".\"id\" AS \"someId\" FROM \"test\") AS \"sqAlias\" ON \"sqAlias\".\"someId\" = \"post\".\"id\"";
+
+        $sql = $this->queryComposer->composeSelect($query);
 
         $this->assertEquals($expectedSql, $sql);
     }

@@ -33,11 +33,11 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
         getActionList: function () {
             var actionList = Dep.prototype.getActionList.call(this);
 
-            var scope = this.model.name;
+            var scope = this.model.entityType;
 
             actionList.forEach(function (item) {
                 item.data = item.data || {};
-                item.data.scope = this.model.name;
+                item.data.scope = this.model.entityType;
             }, this);
 
             if (scope === 'Task') {
@@ -57,7 +57,7 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
                         label: 'Set Held',
                         data: {
                             id: this.model.id,
-                            scope: this.model.name
+                            scope: this.model.entityType
                         }
                     });
                     actionList.push({
@@ -65,7 +65,7 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
                         label: 'Set Not Held',
                         data: {
                             id: this.model.id,
-                            scope: this.model.name
+                            scope: this.model.entityType
                         }
                     });
                 }
@@ -77,7 +77,7 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
                     label: 'Remove',
                     data: {
                         id: this.model.id,
-                        scope: this.model.name
+                        scope: this.model.entityType
                     }
                 });
             }

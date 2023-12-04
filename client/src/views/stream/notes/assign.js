@@ -26,56 +26,56 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/notes/assign', ['views/stream/note'], function (Dep) {
+import NoteStreamView from 'views/stream/note';
 
-    return Dep.extend({
+class AssignNoteStreamView extends NoteStreamView {
 
-        template: 'stream/notes/assign',
+    template = 'stream/notes/assign'
+    messageName = 'assign'
 
-        messageName: 'assign',
+    init() {
+        if (this.getUser().isAdmin()) {
+            this.isRemovable = true;
+        }
 
-        init: function () {
-            if (this.getUser().isAdmin()) {
-                this.isRemovable = true;
-            }
+        super.init();
+    }
 
-            Dep.prototype.init.call(this);
-        },
+    setup() {
+        let data = this.model.get('data');
 
-        setup: function () {
-            let data = this.model.get('data');
+        this.assignedUserId = data.assignedUserId || null;
+        this.assignedUserName = data.assignedUserName || null;
 
-            this.assignedUserId = data.assignedUserId || null;
-            this.assignedUserName = data.assignedUserName || null;
+        this.messageData['assignee'] =
+            $('<a>')
+                .attr('href', '#User/view/' + data.assignedUserId)
+                .text(data.assignedUserName);
 
-            this.messageData['assignee'] =
-                $('<a>')
-                    .attr('href', '#User/view/' + data.assignedUserId)
-                    .text(data.assignedUserName);
-
-            if (this.isUserStream) {
-                if (this.assignedUserId) {
-                    if (this.assignedUserId === this.model.get('createdById')) {
-                        this.messageName += 'Self';
-                    } else {
-                        if (this.assignedUserId === this.getUser().id) {
-                            this.messageName += 'You';
-                        }
-                    }
+        if (this.isUserStream) {
+            if (this.assignedUserId) {
+                if (this.assignedUserId === this.model.get('createdById')) {
+                    this.messageName += 'Self';
                 } else {
-                    this.messageName += 'Void';
+                    if (this.assignedUserId === this.getUser().id) {
+                        this.messageName += 'You';
+                    }
                 }
             } else {
-                if (this.assignedUserId) {
-                    if (this.assignedUserId === this.model.get('createdById')) {
-                        this.messageName += 'Self';
-                    }
-                } else {
-                    this.messageName += 'Void';
-                }
+                this.messageName += 'Void';
             }
+        } else {
+            if (this.assignedUserId) {
+                if (this.assignedUserId === this.model.get('createdById')) {
+                    this.messageName += 'Self';
+                }
+            } else {
+                this.messageName += 'Void';
+            }
+        }
 
-            this.createMessage();
-        },
-    });
-});
+        this.createMessage();
+    }
+}
+
+export default AssignNoteStreamView;

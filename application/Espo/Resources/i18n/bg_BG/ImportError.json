@@ -1,0 +1,24 @@
+{
+  "fields": {
+    "type": "Тип",
+    "validationFailures": "Грешки при валидирането",
+    "import": "Импортиране",
+    "rowIndex": "Индекс на ред",
+    "exportRowIndex": "Експортиране на индекс на ред",
+    "lineNumber": "Номер на ред",
+    "exportLineNumber": "Номер на ред за експортиране",
+    "row": "Ред",
+    "entityType": "Тип на обекта"
+  },
+  "options": {
+    "type": {
+      "Validation": "Валидация",
+      "Access": "Достъп",
+      "Not-Found": "Не е открит"
+    }
+  },
+  "tooltips": {
+    "lineNumber": "Номер на ред в оригиналния CSV файл.",
+    "exportLineNumber": "Номер на ред в CSV файла за експортиране."
+  }
+}

@@ -36,23 +36,11 @@ define('views/settings/record/edit', ['views/record/edit'], function (Dep) {
 
         layoutName: 'settings',
 
-        buttons: [
-            {
-                name: 'save',
-                label: 'Save',
-                style: 'primary',
-            },
-            {
-                name: 'cancel',
-                label: 'Cancel',
-            }
-        ],
-
         setup: function () {
             Dep.prototype.setup.call(this);
 
             this.listenTo(this.model, 'after:save', () => {
-                this.getConfig().set(this.model.toJSON());
+                this.getConfig().set(this.model.getClonedAttributes());
             });
         },
 

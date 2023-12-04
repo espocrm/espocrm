@@ -1,0 +1,117 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/layouts/detail.json",
+    "description": "A detail view layout.",
+    "type": "array",
+    "items": {
+        "$ref": "#/definitions/panel"
+    },
+    "definitions": {
+        "panel": {
+            "type": "object",
+            "description": "A panel.",
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "description": "A translatable label."
+                },
+                "customLabel": {
+                    "type": "string",
+                    "description": "A custom label."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "A name."
+                },
+                "style": {
+                    "enum": [
+                        "default",
+                        "success",
+                        "warning",
+                        "danger"
+                    ]
+                },
+                "tabBreak": {
+                    "type": "boolean",
+                    "description": "Is a tab-break. The panel will be the first one in a tab."
+                },
+                "tabLabel": {
+                    "type": "string",
+                    "description": "A tab label. If starts with `$`, a translation of the `tabs` category is used."
+                },
+                "rows": {
+                    "type": "array",
+                    "description": "Rows.",
+                    "items": {
+                        "$ref": "#/definitions/row"
+                    }
+                }
+            }
+        },
+        "row": {
+            "type": "array",
+            "description": "A cell.",
+            "items": {
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "A name. Usually a field name."
+                            },
+                            "span": {
+                                "type": "integer",
+                                "minimum": 1,
+                                "maximum": 4,
+                                "description": "A cell width."
+                            },
+                            "label": {
+                                "type": "string",
+                                "description": "A translatable label (using the `fields` category)."
+                            },
+                            "labelText": {
+                                "type": "string",
+                                "description": "A label text (not-translatable)."
+                            },
+                            "noLabel": {
+                                "type": "boolean",
+                                "description": "Do not show a label."
+                            },
+                            "view": {
+                                "type": "string",
+                                "description": "An overridden field view name."
+                            },
+                            "type": {
+                                "type": "string",
+                                "description": "An overridden field type."
+                            },
+                            "readOnly": {
+                                "type": "boolean",
+                                "description": "Makes the field read-only."
+                            },
+                            "inlineEditDisabled": {
+                                "type": "boolean",
+                                "description": "Disable inline edit."
+                            },
+                            "params": {
+                                "type": "object",
+                                "additionalProperties": true ,
+                                "description": "Overridden field parameters."
+                            },
+                            "options": {
+                                "type": "object",
+                                "additionalProperties": true ,
+                                "description": "Field view options."
+                            }
+                        }
+                    },
+                    {
+                        "const": false,
+                        "description": "False designates an empty cell."
+                    }
+                ]
+            }
+        }
+    }
+}

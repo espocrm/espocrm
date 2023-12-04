@@ -26,38 +26,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-let BuildUtils = {
+const BuildUtils = {
+    /**
+     * @param {Array} libs
+     * @return {{src: string, file: string}[]}
+     */
     getBundleLibList: function(libs) {
-        let list = [];
+        const list = [];
 
-        libs.forEach(item => {
-            if (!item.bundle) {
-                return;
+        const getFile = item => {
+            if (item.amdId) {
+                return item.amdId + '.js';
             }
 
-            if (item.files) {
-                item.files.forEach(item => list.push(item.src));
+            return item.src.split('/').slice(-1);
+        };
 
-                return;
-            }
+        libs.filter(item => item.bundle)
+            .forEach(item => {
+                if (item.files) {
+                    item.files.forEach(item => list.push({
+                        src: item.src,
+                        file: getFile(item),
+                    }));
 
-            if (!item.src) {
-                throw new Error("No lib src.");
-            }
+                    return;
+                }
 
-            list.push(item.src);
-        });
+                if (!item.src) {
+                    return;
+                }
+
+                list.push({
+                    src: item.src,
+                    file: getFile(item),
+                });
+            });
 
         return list;
     },
 
     getPreparedBundleLibList: function (libs) {
         return BuildUtils.getBundleLibList(libs)
-            .map(file => 'client/lib/original/' + file.split('/').slice(-1));
+            .map(item => 'client/lib/original/' + item.file);
     },
 
     destToOriginalDest: function (dest) {
-        let path = dest.split('/');
+        const path = dest.split('/');
 
         return path.slice(0, -1)
             .concat('original')
@@ -71,23 +86,23 @@ let BuildUtils = {
      *   src: string,
      *   dest: string,
      *   originalDest: string|null,
-     *   minify: boolean
-     *   }[]}
+     *   minify: boolean,
+     * }[]}
      */
     getCopyLibDataList: function (libs) {
-        let list = [];
+        const list = [];
 
         /**
          * @param {Object} item
          * @return {string}
          */
-        let getItemDest = item => item.dest || 'client/lib/' + item.src.split('/').pop();
+        const getItemDest = item => item.dest || 'client/lib/' + item.src.split('/').pop();
 
         /**
          * @param {Object} item
          * @return {string}
          */
-        let getItemOriginalDest = item => {
+        const getItemOriginalDest = item => {
             return BuildUtils.destToOriginalDest(
                 getItemDest(item)
             );
@@ -98,7 +113,7 @@ let BuildUtils = {
                 return;
             }
 
-            let minify = !!item.minify;
+            const minify = !!item.minify;
 
             if (item.files) {
                 item.files.forEach(item => {
@@ -114,7 +129,7 @@ let BuildUtils = {
             }
 
             if (!item.src) {
-                throw new Error("No lib src.");
+                return;
             }
 
             list.push({

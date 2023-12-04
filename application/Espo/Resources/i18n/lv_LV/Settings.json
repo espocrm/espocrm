@@ -158,7 +158,10 @@
     "oidcFallback": "OIDC rezerves pieteikšanās",
     "oidcAllowRegularUserFallback": "OIDC Atļaut rezerves pieteikšanos parastajiem lietotājiem",
     "oidcAllowAdminUser": "OIDC Atļaut OIDC pieteikšanos admin lietotājiem",
-    "oidcLogoutUrl": "OIDC izrakstīšanās URL"
+    "oidcLogoutUrl": "OIDC izrakstīšanās URL",
+    "pdfEngine": "Dzinējs PDF formātā",
+    "recordsPerPageKanban": "Ieraksti uz lapu (Kanban)",
+    "auth2FAInPortal": "Portālos atļaut 2FA"
   },
   "tooltips": {
     "recordsPerPage": "Saraksta skatījumos sākotnēji parādāmo ierakstu skaits.",
@@ -240,7 +243,8 @@
     "oidcSyncTeams": "Lietotāju komandu sinhronizēšana (pēc katras pieteikšanās).",
     "oidcUsernameClaim": "Pretenzija, kas jāizmanto kā lietotājvārds (lietotāju saskaņošanai un izveidei).",
     "oidcTeams": "Espo komandas, kas kartētas pret identitātes nodrošinātāja grupām/komandām/ lomām. Komandas ar tukšu kartēšanas vērtību vienmēr tiks piešķirtas lietotājam (izveidojot vai sinhronizējot).",
-    "oidcLogoutUrl": "URL, uz kuru pārlūkprogramma tiks novirzīta pēc izrakstīšanās no Espo. Paredzēts sesijas informācijas dzēšanai pārlūkprogrammā un izrakstīšanai no pakalpojuma sniedzēja puses. Parasti URL satur parametru redirect-URL, lai atgrieztos atpakaļ Espo.\n\nPieejamie vietrāži:\n* `{siteUrl}`\n* `{{clientId}}"
+    "oidcLogoutUrl": "URL, uz kuru pārlūkprogramma tiks novirzīta pēc izrakstīšanās no Espo. Paredzēts sesijas informācijas dzēšanai pārlūkprogrammā un izrakstīšanai no pakalpojuma sniedzēja puses. Parasti URL satur parametru redirect-URL, lai atgrieztos atpakaļ Espo.\n\nPieejamie vietrāži:\n* `{siteUrl}`\n* `{{clientId}}",
+    "recordsPerPageKanban": "Kanban kolonnās sākotnēji parādīto ierakstu skaits."
   },
   "labels": {
     "System": "Sistēma",
@@ -261,7 +265,11 @@
     "2-Factor Authentication": "2 faktoru autentifikācija",
     "Group Tab": "Grupas cilne",
     "Attachments": "Pielikumi",
-    "IdP Group": "IdP grupa"
+    "IdP Group": "IdP grupa",
+    "Divider": "Dalītājs",
+    "General": "Vispārīgi",
+    "Navbar": "Navigācijas josla",
+    "Dashboard": "Vadības panelis"
   },
   "messages": {
     "ldapTestConnection": "Savienojums sekmīgi izveidots."

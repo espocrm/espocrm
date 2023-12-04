@@ -10,6 +10,14 @@
         spellcheck="false"
     >
     <span class="input-group-btn">
+        {{#if createButton}}
+            <button
+                data-action="createLink"
+                class="btn btn-default btn-icon"
+                type="button"
+                title="{{translate 'Create'}}"
+            ><i class="fas fa-plus"></i></button>
+        {{/if}}
         <button
             data-action="selectLink"
             class="btn btn-default btn-icon"

@@ -56,7 +56,8 @@
     "ImportError": "Importēšanas kļūda",
     "WorkingTimeCalendar": "Darba laika kalendārs",
     "WorkingTimeRange": "Darba laika diapazons",
-    "GroupEmailFolder": "Grupas e-pasta mape"
+    "GroupEmailFolder": "Grupas e-pasta mape",
+    "AuthenticationProvider": "Autentifikācijas nodrošinātājs"
   },
   "scopeNamesPlural": {
     "Email": "E-pasti",
@@ -104,7 +105,8 @@
     "ImportError": "Importēšanas kļūdas",
     "WorkingTimeCalendar": "Darba laika kalendāri",
     "WorkingTimeRange": "Darba laika diapazoni",
-    "GroupEmailFolder": "Grupas e-pasta mapes"
+    "GroupEmailFolder": "Grupas e-pasta mapes",
+    "AuthenticationProvider": "Autentifikācijas nodrošinātāji"
   },
   "labels": {
     "Misc": "Dažādi",
@@ -121,7 +123,6 @@
     "Loading...": "Notiek ielāde...",
     "Uploading...": "Notiek augšupielāde...",
     "Sending...": "Notiek sūtīšana...",
-    "Merging...": "Notiek sapludināšana…",
     "Merged": "Sapludināts",
     "Removed": "Dzēsts",
     "Posted": "Publicēts",
@@ -135,14 +136,10 @@
     "Record has been removed": "Ieraksts dzēsts",
     "Wrong username/password": "Nepareizs lietotājvārds/parole",
     "Post cannot be empty": "Publicējums nedrīkst būt tukšs",
-    "Removing...": "Notiek noņemšana...",
-    "Unlinking...": "Notiek atsaistīšana...",
-    "Posting...": "Notiek publicēšana...",
     "Username can not be empty!": "Lietotājvārds nedrīkst būt tukšs!",
     "Cache is not enabled": "Kešatmiņa nav iespējota",
     "Cache has been cleared": "Kešatmiņa notīrīta",
     "Rebuild has been done": "Atkārtota izveide ir veikta",
-    "Saving...": "Notiek saglabāšana…",
     "Modified": "Pārveidots",
     "Created": "Izveidots",
     "Create": "Izveidot",
@@ -279,11 +276,13 @@
     "Sign in": "Pierakstīties",
     "Global Search": "Globālā meklēšana",
     "Show Navigation Panel": "Rādīt navigācijas paneli",
-    "Hide Navigation Panel": "Navigācijas paneļa paslēpšana"
+    "Hide Navigation Panel": "Navigācijas paneļa paslēpšana",
+    "Print": "Drukāt",
+    "Copy to Clipboard": "Kopēt uz starpliktuvi",
+    "Copied to clipboard": "Kopēts uz starpliktuvi"
   },
   "messages": {
     "pleaseWait": "Lūdzu, uzgaidiet...",
-    "posting": "Notiek publicēšana...",
     "confirmLeaveOutMessage": "Vai tiešām vēlaties aizvērt formu?",
     "notModified": "Jūs neveicāt izmaiņas ierakstā",
     "fieldIsRequired": "{field} ir obligāts",
@@ -332,8 +331,6 @@
     "loading": "Tiek ielādēts...",
     "saving": "Tiek saglabāts...",
     "fieldMaxFileSizeError": "Fails nedrīkst pārsniegt {max} Mb",
-    "fieldShouldBeLess": "{field} nedrīkst būt lielāks nekā {value}",
-    "fieldShouldBeGreater": "{field} nedrīkst būt lielāks nekā {value}",
     "fieldIsUploading": "Notiek augšupielāde",
     "erasePersonalDataConfirmation": "Atzīmētie lauki tiks neatgriezeniski dzēstu. Vai tiešām vēlaties turpināt?",
     "massPrintPdfMaxCountError": "Nevar izdrukāt vairāk kā {maxCount} ierakstus.",
@@ -366,7 +363,18 @@
     "extensionLicenseSoftExpired": "Paplašinājuma '{nosaukums}' licences abonēšanas termiņš ir beidzies.",
     "loggedOutLeaveOut": "Izrakstījies. Sesija ir neaktīva. Pēc lapas atsvaidzināšanas var tikt zaudēti nesaglabātie veidlapas dati. Jums var būt nepieciešams izveidot kopiju.",
     "noAccessToRecord": "Operācijai nepieciešama `{action}` piekļuve ierakstam.",
-    "noAccessToForeignRecord": "Operācijai nepieciešama `{action}` piekļuve svešam ierakstam."
+    "noAccessToForeignRecord": "Operācijai nepieciešama `{action}` piekļuve svešam ierakstam.",
+    "fieldShouldBeNumber": "{field} jābūt derīgam skaitlim",
+    "maintenanceModeError": "Pašlaik lietojumprogramma ir uzturēšanas režīmā.",
+    "noLinkAccess": "Konkrētam ierakstam nav piekļuves sasaistes operācijai.",
+    "cannotRelateNonExisting": "Nevar saistīt ar neesošu {foreignEntityType} ierakstu.",
+    "cannotRelateForbidden": "Nevar saistīt ar aizliegto {foreignEntityType} ierakstu. Nepieciešama piekļuve `{action}`.",
+    "cannotRelateForbiddenLink": "Nav piekļuves saitei '{link}'.",
+    "emptyMassUpdate": "Masveida atjaunināšanai nav pieejami lauki.",
+    "fieldNotMatchingPattern$uriOptionalProtocol": "{field} jābūt derīgam URL",
+    "fieldShouldBeLess": "{field} nedrīkst būt lielāks par {value}",
+    "fieldShouldBeGreater": "{field} nedrīkst būt mazāks par {value}",
+    "cannotUnrelateRequiredLink": "Nevarat atvienot pieprasīto saiti."
   },
   "boolFilters": {
     "onlyMy": "Tikai manējie",
@@ -388,7 +396,8 @@
     "printPdf": "Izdrukāt PDF formātā",
     "unlink": "Atvienojiet saiti",
     "recalculateFormula": "Pārrēķināt formulu",
-    "update": "Atjaunināt"
+    "update": "Atjaunināt",
+    "delete": "Dzēst"
   },
   "fields": {
     "name": "Nosaukums/vārds",
@@ -502,7 +511,9 @@
     "assignThisVoid": "{user} atcēla šī {entityType} piešķiršanu",
     "assignVoid": "{user} atcēla šīs {entityType} {entity} piešķiršanu",
     "assignThisSelf": "{user} iecēla sevi {entityType} atbildīgo",
-    "assignSelf": "{user} iecēla sevi par {entityType} {entity} atbildīgo"
+    "assignSelf": "{user} iecēla sevi par {entityType} {entity} atbildīgo",
+    "unrelate": "{lietotājs} nesaistīts {relatedEntityType} {relatedEntity} no {entityType} {entity}",
+    "unrelateThis": "{lietotājs} nesaistīts {relatedEntityType} {relatedEntity} no šī {entityType}"
   },
   "lists": {
     "monthNames": [
@@ -767,7 +778,8 @@
   "themes": {
     "Dark": "Tumšs",
     "Violet": "Violeta",
-    "Glass": "Stikls"
+    "Glass": "Stikls",
+    "Light": "Gaisma"
   },
   "themeNavbars": {
     "side": "Sānu navigācijas josla",
@@ -785,5 +797,26 @@
     "noEmptyString": "Nav tukšas virknes",
     "max": "Maksimālā vērtība",
     "min": "Minimālā vērtība"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Nederīga URL vērtība.",
+    "currency_valid": "Nederīga summas vērtība.",
+    "currency_validCurrency": "Valūtas koda vērtība ir nederīga vai nav atļauta.",
+    "varchar_pattern": "Iespējams, vērtība satur neatļautas rakstzīmes.",
+    "email_emailAddress": "Nederīga e-pasta adreses vērtība.",
+    "phone_phoneNumber": "Nederīga tālruņa numura vērtība.",
+    "datetimeOptional_valid": "Nederīga datuma un laika vērtība.",
+    "datetime_valid": "Nederīga datuma un laika vērtība.",
+    "date_valid": "Nederīga datuma vērtība.",
+    "enum_valid": "Nederīga enuma vērtība. Vērtībai jābūt vienai no definētajām enuma opcijām. Tukša vērtība ir atļauta tikai tad, ja laukam ir tukša opcija.",
+    "multiEnum_valid": "Nederīga daudznosaukuma vērtība. Vērtībai jābūt vienai no definētajām lauka opcijām.",
+    "int_valid": "Nederīga veselā skaitļa vērtība.",
+    "float_valid": "Nederīga skaitļa vērtība."
+  },
+  "navbarTabs": {
+    "Business": "Uzņēmējdarbība",
+    "Marketing": "Mārketings",
+    "Support": "Atbalsts",
+    "Activities": "Aktivitātes"
   }
 }

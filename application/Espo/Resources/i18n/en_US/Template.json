@@ -39,36 +39,7 @@
             "today": "Today (date)",
             "now": "Now (date-time)"
         },
-        "fontFace": {
-            "aealarabiya": "AlArabiya",
-            "aefurat": "Aefurat",
-            "cid0cs": "CID-0 cs",
-            "cid0ct": "CID-0 ct",
-            "cid0jp": "CID-0 jp",
-            "cid0kr": "CID-0 kr",
-            "courier": "Courier",
-            "dejavusans": "DejaVu Sans",
-            "dejavusanscondensed": "DejaVu Sans Condensed",
-            "dejavusansextralight": "DejaVu Sans ExtraLight",
-            "dejavusansmono": "DejaVu Sans Mono",
-            "dejavuserif": "DejaVu Serif",
-            "dejavuserifcondensed": "DejaVu Serif Condensed",
-            "freemono": "FreeMono",
-            "freesans": "FreeSans",
-            "freeserif": "FreeSerif",
-            "helvetica": "Helvetica",
-            "hysmyeongjostdmedium": "Hysmyeongjostd Medium",
-            "kozgopromedium": "Kozgo Pro Medium",
-            "kozminproregular": "Kozmin Pro Regular",
-            "msungstdlight": "Msung Std Light",
-            "pdfacourier": "PDFA Courier",
-            "pdfahelvetica": "PDFA Helvetica",
-            "pdfasymbol": "PDFA Symbol",
-            "pdfatimes": "PDFA Times",
-            "stsongstdlight": "STSong Std Light",
-            "symbol": "Symbol",
-            "times": "Times"
-        }
+        "fontFace": {}
     },
     "tooltips": {
         "footer": "Use {pageNumber} to print page number.",

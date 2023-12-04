@@ -45,7 +45,7 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         $this->entityManager = $this->createMock(EntityManager::class);
 
         $this->emailDefs = [
-            'fields' => [
+            'attributes' => [
                 'from' => [
                     'type' => 'varchar'
                 ],
@@ -68,7 +68,7 @@ class FiltersMatcherTest extends \PHPUnit\Framework\TestCase
         ];
 
         $this->filterDefs = [
-            'fields' => [
+            'attributes' => [
                 'from' => [
                     'type' => 'varchar'
                 ],

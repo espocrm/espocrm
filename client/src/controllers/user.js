@@ -26,45 +26,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/user', ['controllers/record'], function (Dep) {
+import RecordController from 'controllers/record';
 
-    /**
-     * @class
-     * @name Class
-     * @extends module:controllers/record.Class
-     * @memberOf module:controllers/user
-     */
-    return Dep.extend(/** @lends module:controllers/user.Class */{
+class UserController extends RecordController {
 
-        getCollection: function (callback, context, usePreviouslyFetched) {
-            return Dep.prototype.getCollection.call(this, (collection) => {
+    getCollection(usePreviouslyFetched) {
+        return super.getCollection()
+            .then(collection => {
                 collection.data.userType = 'internal';
 
-                callback.call(context, collection);
-            }, context, usePreviouslyFetched);
-        },
+                return collection;
+            });
+    }
 
-        createViewView: function (options, model, view) {
-            if (model.get('deleted')) {
-                view = 'views/deleted-detail';
-                Dep.prototype.createViewView.call(this, options, model, view);
+    /**
+     * @protected
+     * @param {Object} options
+     * @param {module:models/user} model
+     * @param {string} view
+     */
+    createViewView(options, model, view) {
+        if (model.get('deleted')) {
+            view = 'views/deleted-detail';
 
-                return;
-            }
+            super.createViewView(options, model, view);
 
-            if (model.isPortal()) {
-                this.getRouter().dispatch('PortalUser', 'view', {id: model.id, model: model});
+            return;
+        }
 
-                return;
-            }
+        if (model.isPortal()) {
+            this.getRouter().dispatch('PortalUser', 'view', {id: model.id, model: model});
 
-            if (model.isApi()) {
-                this.getRouter().dispatch('ApiUser', 'view', {id: model.id, model: model});
+            return;
+        }
 
-                return;
-            }
+        if (model.isApi()) {
+            this.getRouter().dispatch('ApiUser', 'view', {id: model.id, model: model});
 
-            Dep.prototype.createViewView.call(this, options, model, view);
-        },
-    });
-});
+            return;
+        }
+
+        super.createViewView(options, model, view);
+    }
+}
+
+export default UserController;

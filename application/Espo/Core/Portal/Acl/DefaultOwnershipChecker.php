@@ -105,7 +105,11 @@ class DefaultOwnershipChecker implements
             $repository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
             foreach ($accountIdList as $accountId) {
-                if ($repository->isRelated($entity, self::FIELD_ACCOUNTS, $accountId)) {
+                if (
+                    $repository
+                        ->getRelation($entity, self::FIELD_ACCOUNTS)
+                        ->isRelatedById($accountId)
+                ) {
                     return true;
                 }
             }
@@ -146,7 +150,11 @@ class DefaultOwnershipChecker implements
         ) {
             $repository = $this->entityManager->getRDBRepository($entity->getEntityType());
 
-            if ($repository->isRelated($entity, self::FIELD_CONTACTS, $contactId)) {
+            if (
+                $repository
+                    ->getRelation($entity, self::FIELD_CONTACTS)
+                    ->isRelatedById($contactId)
+            ) {
                 return true;
             }
         }

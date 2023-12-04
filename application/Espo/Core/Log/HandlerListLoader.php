@@ -30,15 +30,14 @@
 namespace Espo\Core\Log;
 
 use Monolog\Handler\HandlerInterface;
-use Monolog\Logger;
 
 use Espo\Core\InjectableFactory;
 
 class HandlerListLoader
 {
     public function __construct(
-        private InjectableFactory $injectableFactory,
-        private DefaultHandlerLoader $defaultLoader
+        private readonly InjectableFactory $injectableFactory,
+        private readonly DefaultHandlerLoader $defaultLoader
     ) {}
 
     /**
@@ -52,10 +51,6 @@ class HandlerListLoader
         foreach ($dataList as $item) {
             $handler = $this->loadHandler($item, $defaultLevel);
 
-            if (!$handler) {
-                continue;
-            }
-
             $handlerList[] = $handler;
         }
 
@@ -65,14 +60,10 @@ class HandlerListLoader
     /**
      * @param array<string, mixed> $data
      */
-    protected function loadHandler(array $data, ?string $defaultLevel = null): ?HandlerInterface
+    private function loadHandler(array $data, ?string $defaultLevel = null): HandlerInterface
     {
         $params = $data['params'] ?? [];
-        $level = $data['level'] ?? $defaultLevel;
-
-        if ($level) {
-            $params['level'] = Logger::toMonologLevel($level);
-        }
+        $params['level'] ??= $defaultLevel;
 
         /** @var ?class-string<HandlerLoader> $loaderClassName */
         $loaderClassName = $data['loaderClassName'] ?? null;

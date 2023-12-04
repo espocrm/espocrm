@@ -30,7 +30,7 @@
 namespace Espo\Core\Formula\Exceptions;
 
 /**
- * Too few function arguments passsed.
+ * Too few function arguments passed.
  */
 class TooFewArguments extends Error
 {

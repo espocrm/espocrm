@@ -80,6 +80,7 @@ class InboundEmail extends RecordService implements
      * @throws NoSmtp
      * @internal Left for bc.
      * @deprecated
+     * @todo Remove in v9.0.
      */
     public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount): ?array
     {

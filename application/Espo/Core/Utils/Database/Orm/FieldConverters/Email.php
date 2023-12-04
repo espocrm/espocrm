@@ -46,8 +46,8 @@ class Email implements FieldConverter
     {
         $name = $fieldDefs->getName();
 
-        $foreignJoinAlias = "{$name}{$entityType}{alias}Foreign";
-        $foreignJoinMiddleAlias = "{$name}{$entityType}{alias}ForeignMiddle";
+        $foreignJoinAlias = "$name$entityType{alias}Foreign";
+        $foreignJoinMiddleAlias = "$name$entityType{alias}ForeignMiddle";
 
         $emailAddressDefs = AttributeDefs
             ::create($name)
@@ -125,23 +125,23 @@ class Email implements FieldConverter
                 'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
             ],
             'selectForeign' => [
-                "select" => "{$foreignJoinAlias}.name",
+                "select" => "$foreignJoinAlias.name",
                 'leftJoins' => [
                     [
                         'EntityEmailAddress',
                         $foreignJoinMiddleAlias,
                         [
-                            "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                            "{$foreignJoinMiddleAlias}.primary" => true,
-                            "{$foreignJoinMiddleAlias}.deleted" => false,
+                            "$foreignJoinMiddleAlias.entityId:" => "{alias}.id",
+                            "$foreignJoinMiddleAlias.primary" => true,
+                            "$foreignJoinMiddleAlias.deleted" => false,
                         ]
                     ],
                     [
                         EmailAddress::ENTITY_TYPE,
                         $foreignJoinAlias,
                         [
-                            "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.emailAddressId",
-                            "{$foreignJoinAlias}.deleted" => false,
+                            "$foreignJoinAlias.id:" => "$foreignJoinMiddleAlias.emailAddressId",
+                            "$foreignJoinAlias.deleted" => false,
                         ]
                     ]
                 ],
@@ -258,23 +258,23 @@ class Email implements FieldConverter
                 'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
             ],
             'selectForeign' => [
-                'select' => "{$foreignJoinAlias}.optOut",
+                'select' => "$foreignJoinAlias.optOut",
                 'leftJoins' => [
                     [
                         'EntityEmailAddress',
                         $foreignJoinMiddleAlias,
                         [
-                            "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                            "{$foreignJoinMiddleAlias}.primary" => true,
-                            "{$foreignJoinMiddleAlias}.deleted" => false,
+                            "$foreignJoinMiddleAlias.entityId:" => "{alias}.id",
+                            "$foreignJoinMiddleAlias.primary" => true,
+                            "$foreignJoinMiddleAlias.deleted" => false,
                         ]
                     ],
                     [
                         EmailAddress::ENTITY_TYPE,
                         $foreignJoinAlias,
                         [
-                            "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.emailAddressId",
-                            "{$foreignJoinAlias}.deleted" => false,
+                            "$foreignJoinAlias.id:" => "$foreignJoinMiddleAlias.emailAddressId",
+                            "$foreignJoinAlias.deleted" => false,
                         ]
                     ]
                 ],
@@ -318,23 +318,23 @@ class Email implements FieldConverter
                 'leftJoins' => [['emailAddresses', 'emailAddresses', ['primary' => true]]],
             ],
             'selectForeign' => [
-                'select' => "{$foreignJoinAlias}.invalid",
+                'select' => "$foreignJoinAlias.invalid",
                 'leftJoins' => [
                     [
                         'EntityEmailAddress',
                         $foreignJoinMiddleAlias,
                         [
-                            "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                            "{$foreignJoinMiddleAlias}.primary" => true,
-                            "{$foreignJoinMiddleAlias}.deleted" => false,
+                            "$foreignJoinMiddleAlias.entityId:" => "{alias}.id",
+                            "$foreignJoinMiddleAlias.primary" => true,
+                            "$foreignJoinMiddleAlias.deleted" => false,
                         ]
                     ],
                     [
                         EmailAddress::ENTITY_TYPE,
                         $foreignJoinAlias,
                         [
-                            "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.emailAddressId",
-                            "{$foreignJoinAlias}.deleted" => false,
+                            "$foreignJoinAlias.id:" => "$foreignJoinMiddleAlias.emailAddressId",
+                            "$foreignJoinAlias.deleted" => false,
                         ]
                     ]
                 ],

@@ -26,71 +26,79 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/import', ['controllers/record'], function (Dep) {
+import RecordController from 'controllers/record';
 
-    return Dep.extend({
+class ImportController extends RecordController {
 
-        defaultAction: 'index',
+    defaultAction = 'index'
 
-        checkAccessGlobal: function () {
-            if (this.getAcl().checkScope('Import')) {
-                return true;
-            }
+    checkAccessGlobal() {
+        if (this.getAcl().checkScope('Import')) {
+            return true;
+        }
 
-            return false;
-        },
+        return false;
+    }
 
-        checkAccess: function () {
-            if (this.getAcl().checkScope('Import')) {
-                return true;
-            }
+    checkAccess(action) {
+        if (this.getAcl().checkScope('Import')) {
+            return true;
+        }
 
-            return false;
-        },
+        return false;
+    }
 
-        actionIndex: function (o) {
-            o = o || {};
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {{
+     *     step?: int|string,
+     *     fromAdmin?: boolean,
+     *     formData?: Object
+     * }} o
+     */
+    actionIndex(o) {
+        o = o || {};
 
-            var step = null;
+        let step = null;
 
-            if (o.step) {
-                step = parseInt(step);
-            }
+        if (o.step) {
+            step = parseInt(step);
+        }
 
-            var formData = null;
-            var fileContents = null;
+        let formData = null;
+        let fileContents = null;
 
-            if (this.storedData) {
-                formData = this.storedData.formData;
-                fileContents = this.storedData.fileContents;
-            }
+        if (this.storedData) {
+            formData = this.storedData.formData;
+            fileContents = this.storedData.fileContents;
+        }
 
-            if (!formData) {
-                step = null;
-            }
+        if (!formData) {
+            step = null;
+        }
 
-            formData = formData || o.formData;
+        formData = formData || o.formData;
 
-            this.main('views/import/index', {
-                step: step,
-                formData: formData,
-                fileContents: fileContents,
-                fromAdmin: o.fromAdmin,
-            }, (view) => {
-                this.listenTo(view, 'change', () => {
-                    this.storedData = {
-                        formData: view.formData,
-                        fileContents: view.fileContents,
-                    };
-                });
-
-                this.listenTo(view, 'done', () => {
-                    delete this.storedData;
-                });
-
-                view.render();
+        this.main('views/import/index', {
+            step: step,
+            formData: formData,
+            fileContents: fileContents,
+            fromAdmin: o.fromAdmin,
+        }, /** module:views/import/index */ view => {
+            this.listenTo(view, 'change', () => {
+                this.storedData = {
+                    formData: view.formData,
+                    fileContents: view.fileContents,
+                };
             });
-        },
 
-    });
-});
+            this.listenTo(view, 'done', () => {
+                delete this.storedData;
+            });
+
+            view.render();
+        });
+    }
+}
+
+export default ImportController;

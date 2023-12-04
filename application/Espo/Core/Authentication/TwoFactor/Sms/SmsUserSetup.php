@@ -29,24 +29,30 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Sms;
 
+use Espo\Core\Authentication\TwoFactor\Exceptions\NotConfigured;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Portal\Utils\Config;
 use Espo\Entities\User;
-
 use Espo\Core\Authentication\TwoFactor\UserSetup;
-use Espo\Core\Exceptions\Error;
 
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class SmsUserSetup implements UserSetup
 {
-    private $util;
-
-    public function __construct(Util $util)
-    {
-        $this->util = $util;
-    }
+    public function __construct(
+        private Util $util,
+        private Config $config
+    ) {}
 
     public function getData(User $user): stdClass
     {
+        if (!$this->config->get('smsProvider')) {
+            throw new NotConfigured("No SMS provider.");
+        }
+
         return (object) [
             'phoneNumberList' => $user->getPhoneNumberGroup()->getNumberList(),
         ];
@@ -57,7 +63,7 @@ class SmsUserSetup implements UserSetup
         $code = $payloadData->code ?? null;
 
         if ($code === null) {
-            throw new Error("No code.");
+            throw new BadRequest("No code.");
         }
 
         $codeModified = str_replace(' ', '', trim($code));

@@ -79,7 +79,8 @@
     "Archive Email": "Archiveer e-mail",
     "Create Task": "Creëer Taak",
     "Tasks": "Taken",
-    "Scheduler": "Planner"
+    "Scheduler": "Planner",
+    "Schedule": "Schema"
   },
   "fields": {
     "billingAddressCity": "Plaats",

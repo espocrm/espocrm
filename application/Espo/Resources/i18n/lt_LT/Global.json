@@ -56,7 +56,8 @@
     "ImportError": "Importo klaida",
     "WorkingTimeCalendar": "Darbo laiko kalendorius",
     "WorkingTimeRange": "Darbo laiko diapazonas",
-    "GroupEmailFolder": "Grupės el. pašto aplankas"
+    "GroupEmailFolder": "Grupės el. pašto aplankas",
+    "AuthenticationProvider": "Autentifikavimo teikėjas"
   },
   "scopeNamesPlural": {
     "Email": "El. laiškai",
@@ -104,7 +105,8 @@
     "ImportError": "Importo klaidos",
     "WorkingTimeCalendar": "Darbo laiko kalendoriai",
     "WorkingTimeRange": "Darbo laiko intervalai",
-    "GroupEmailFolder": "Grupės el. pašto aplankai"
+    "GroupEmailFolder": "Grupės el. pašto aplankai",
+    "AuthenticationProvider": "Autentifikavimo paslaugų teikėjai"
   },
   "labels": {
     "Misc": "Įvairūs",
@@ -121,7 +123,6 @@
     "Loading...": "Kraunama...",
     "Uploading...": "įkeliama...",
     "Sending...": "Siunčiama...",
-    "Merging...": "Sujungiama...",
     "Merged": "Sujungta",
     "Removed": "Ištrinta",
     "Posted": "Paskelbta",
@@ -135,14 +136,10 @@
     "Record has been removed": "Įrašas buvo Ištrintas",
     "Wrong username/password": "Neteisingas prisijungimo vardas/slaptažodis",
     "Post cannot be empty": "Pranešimas negali būti tuščias",
-    "Removing...": "Šalinama...",
-    "Unlinking...": "Atsiejama...",
-    "Posting...": "Skelbiama...",
     "Username can not be empty!": "Vartotojo vardas negali būti tuščias!",
     "Cache is not enabled": "Talpykla yra išjungta",
     "Cache has been cleared": "Talpykla buvo išvalyta",
     "Rebuild has been done": "Atstatymas buvo įvykdytas",
-    "Saving...": "Saugoma...",
     "Modified": "Pakeista",
     "Created": "Sukurta",
     "Create": "Sukurti",
@@ -279,11 +276,13 @@
     "Sign in": "Prisijunkite",
     "Global Search": "Visuotinė paieška",
     "Show Navigation Panel": "Rodyti navigacijos skydelį",
-    "Hide Navigation Panel": "Paslėpti navigacijos skydelį"
+    "Hide Navigation Panel": "Paslėpti navigacijos skydelį",
+    "Print": "Spausdinti",
+    "Copy to Clipboard": "Kopijuoti į iškarpinę",
+    "Copied to clipboard": "Nukopijuota į iškarpinę"
   },
   "messages": {
     "pleaseWait": "Prašome palaukti...",
-    "posting": "Skelbiama...",
     "confirmLeaveOutMessage": "Ar tikrai norite palikti formą?",
     "notModified": "Jūs nepakeitėte įrašo",
     "fieldIsRequired": "{field} yra privalomas",
@@ -332,8 +331,6 @@
     "loading": "Kraunama...",
     "saving": "Saugoma...",
     "fieldMaxFileSizeError": "Failas neturėtų viršyti {max} Mb",
-    "fieldShouldBeLess": "{field} neturėtų būti didesnis nei {value}",
-    "fieldShouldBeGreater": "{field} neturėtų būti mažesnis nei {value}",
     "fieldIsUploading": "Įkėlimas vykdomas",
     "erasePersonalDataConfirmation": "Pažymėti laukai bus ištrinti visam laikui. Ar tu tuo tikras?",
     "massPrintPdfMaxCountError": "Negalima spausdinti daugiau {maxCount} įrašų.",
@@ -366,7 +363,18 @@
     "extensionLicenseSoftExpired": "Pratęsimo \"{name}\" licencijos prenumerata baigėsi.",
     "loggedOutLeaveOut": "Išregistruotas. Sesija yra neaktyvi. Po puslapio atnaujinimo galite prarasti neišsaugotus formos duomenis. Gali tekti pasidaryti kopiją.",
     "noAccessToRecord": "Operacijai reikia `{action}` prieigos prie įrašo.",
-    "noAccessToForeignRecord": "Operacijai reikalinga `{veiksmų}` prieiga prie svetimo įrašo."
+    "noAccessToForeignRecord": "Operacijai reikalinga `{veiksmų}` prieiga prie svetimo įrašo.",
+    "fieldShouldBeNumber": "{field} turėtų būti galiojantis skaičius",
+    "maintenanceModeError": "Šiuo metu programa veikia techninės priežiūros režimu.",
+    "noLinkAccess": "Nėra prieigos prie konkretaus įrašo susiejimo operacijos.",
+    "cannotRelateNonExisting": "Negalima susieti su neegzistuojančiu {foreignEntityType} įrašu.",
+    "cannotRelateForbidden": "Negalima susieti su draudžiamu {foreignEntityType} įrašu. Reikalinga `{action}` prieiga.",
+    "cannotRelateForbiddenLink": "Nėra prieigos prie nuorodos \"{link}\".",
+    "emptyMassUpdate": "Masinio atnaujinimo laukų nėra.",
+    "fieldNotMatchingPattern$uriOptionalProtocol": "{field} turi būti galiojantis URL",
+    "fieldShouldBeLess": "{field} neturėtų būti didesnis už {value}",
+    "fieldShouldBeGreater": "{field} neturėtų būti mažesnis už {value}",
+    "cannotUnrelateRequiredLink": "Negalima panaikinti reikalaujamos nuorodos."
   },
   "boolFilters": {
     "onlyMy": "Tik mano",
@@ -388,7 +396,8 @@
     "printPdf": "Spausdinti PDF formatu",
     "unlink": "Atsieti",
     "recalculateFormula": "Perskaičiuoti formulę",
-    "update": "Atnaujinti"
+    "update": "Atnaujinti",
+    "delete": "Ištrinti"
   },
   "fields": {
     "name": "Vardas",
@@ -442,7 +451,8 @@
   "dashlets": {
     "Stream": "Srautas",
     "Emails": "Gautieji",
-    "Records": "Įrašų sąrašas"
+    "Records": "Įrašų sąrašas",
+    "Memo": "Atmintinė"
   },
   "notificationMessages": {
     "assign": "\n{entityType} {entity} buvo priskirta tau",
@@ -502,7 +512,9 @@
     "assignThisVoid": "{user} nusiėmė priskyrimą  nuo šio {entityType}",
     "assignVoid": "{user} nusiėmė priskyrimą {entityType} {entity}",
     "assignThisSelf": "{user} prisiskyrė sau šį {entityType}",
-    "assignSelf": "{user} prisiskyrė sau {entityType} {entity}"
+    "assignSelf": "{user} prisiskyrė sau {entityType} {entity}",
+    "unrelate": "{user} nesusijęs {relatedEntityType} {relatedEntity} iš {entityType} {entity}",
+    "unrelateThis": "{user} nesusijęs {relatedEntityType} {relatedEntity} iš šio {entityType}"
   },
   "lists": {
     "monthNames": [
@@ -767,7 +779,8 @@
   "themes": {
     "Dark": "Tamsus",
     "Violet": "Violetinė",
-    "Glass": "Stiklas"
+    "Glass": "Stiklas",
+    "Light": "Šviesa"
   },
   "themeNavbars": {
     "side": "Šoninė naršymo juosta",
@@ -786,5 +799,26 @@
     "noEmptyString": "Nėra tuščios eilutės",
     "max": "Didžiausia vertė",
     "min": "Mažiausia vertė"
+  },
+  "fieldValidationExplanations": {
+    "url_valid": "Netinkama URL reikšmė.",
+    "currency_valid": "Netinkama sumos vertė.",
+    "currency_validCurrency": "Valiutos kodo reikšmė yra negaliojanti arba neleidžiama.",
+    "varchar_pattern": "Tikėtina, kad reikšmėje yra neleistinų simbolių.",
+    "email_emailAddress": "Netinkama el. pašto adreso reikšmė.",
+    "phone_phoneNumber": "Netinkama telefono numerio reikšmė.",
+    "datetimeOptional_valid": "Netinkama datos ir laiko reikšmė.",
+    "datetime_valid": "Netinkama datos ir laiko reikšmė.",
+    "date_valid": "Netinkama datos reikšmė.",
+    "enum_valid": "Netinkama sąrašo reikšmė. Reikšmė turi būti viena iš apibrėžtų enumo parinkčių. Tuščia reikšmė leidžiama tik tuo atveju, jei laukas turi tuščią parinktį.",
+    "multiEnum_valid": "Netinkama daugiareikšmė reikšmė. Vertės turi būti viena iš apibrėžtų lauko parinkčių.",
+    "int_valid": "Netinkama sveikojo skaičiaus reikšmė.",
+    "float_valid": "Netinkama skaičiaus reikšmė."
+  },
+  "navbarTabs": {
+    "Business": "Verslas",
+    "Marketing": "Rinkodara",
+    "Support": "Parama",
+    "Activities": "Veikla"
   }
 }

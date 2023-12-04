@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/fileStorage.json",
+    "title": "app/fileStorage",
+    "description": "File storages.",
+    "type": "object",
+    "properties": {
+        "implementationClassNameMap": {
+            "type": "object",
+            "description": "Implementation classes for file storages. Should implement Espo\\Core\\FileStorage\\Storage.",
+            "additionalProperties": {
+                "description": "A storage name.",
+                "type": "string"
+            }
+        }
+    }
+}

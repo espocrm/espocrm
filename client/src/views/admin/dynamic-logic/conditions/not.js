@@ -52,22 +52,23 @@ define('views/admin/dynamic-logic/conditions/not', ['views/admin/dynamic-logic/c
             this.itemData = this.options.itemData || {};
             this.viewList = [];
 
-            var i = 0;
-            var key = this.getKey();
+            const i = 0;
+            const key = this.getKey();
 
             this.createItemView(i, key, this.itemData.value);
             this.viewKey = key;
         },
 
         removeItem: function () {
-            var key = this.getKey();
+            const key = this.getKey();
+
             this.clearView(key);
 
             this.controlAddItemVisibility();
         },
 
         getKey: function () {
-            var i = 0;
+            const i = 0;
 
             return 'view-' + this.level.toString() + '-' + this.number.toString() + '-' + i.toString();
         },
@@ -81,7 +82,7 @@ define('views/admin/dynamic-logic/conditions/not', ['views/admin/dynamic-logic/c
         addViewDataListItem: function () {},
 
         fetch: function () {
-            var view = this.getView(this.viewKey);
+            const view = this.getView(this.viewKey);
 
             if (!view) {
                 return {
@@ -90,7 +91,7 @@ define('views/admin/dynamic-logic/conditions/not', ['views/admin/dynamic-logic/c
                 };
             }
 
-            var value = view.fetch();
+            const value = view.fetch();
 
             return {
                 type: this.operator,

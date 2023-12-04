@@ -26,11 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/template/fields/body', ['views/fields/wysiwyg'], function (Dep) {
+import WysiwygFieldView from 'views/fields/wysiwyg';
 
-    return Dep.extend({
+class BodyTemplateFieldView extends WysiwygFieldView {
 
-        htmlPurificationForEditDisabled: true,
+    htmlPurificationForEditDisabled = true
+    noStylesheet = true
+    useIframe = true
+    tableClassName = ''
+    tableBorderWidth = 1
+    tableCellPadding = 2
+}
 
-    });
-});
+export default BodyTemplateFieldView;
+

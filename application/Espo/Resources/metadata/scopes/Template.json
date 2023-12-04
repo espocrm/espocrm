@@ -2,11 +2,12 @@
     "entity": true,
     "layouts": false,
     "tab": true,
-    "acl": "recordAllTeamNo",
+    "acl": true,
+    "aclLevelList": ["all", "team", "no"],
     "aclPortal": true,
     "aclPortalLevelList": ["all", "no"],
     "aclPortalActionList": ["read"],
-    "customizable": true,
+    "customizable": false,
     "importable": true,
     "disabled": false
 }

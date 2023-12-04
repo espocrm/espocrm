@@ -111,7 +111,7 @@ define('views/admin/upgrade/index', ['view'], function (Dep) {
                         return;
                     }
 
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     this.createView('popup', 'views/admin/upgrade/ready', {
                         upgradeData: data,

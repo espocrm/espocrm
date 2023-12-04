@@ -4,16 +4,17 @@
     "roles": "Görevler",
     "assignmentPermission": "Görevlendirme Yetkisi",
     "userPermission": "Kullanıcı Yetkisi",
-    "portalPermission": "Portal Yetkisi"
+    "portalPermission": "Portal Yetkisi",
+    "groupEmailAccountPermission": "Grup Email Erişim İzni",
+    "exportPermission": "Yetkileri Dışa Aktar",
+    "dataPrivacyPermission": "Veri Gizliliği İzni",
+    "massUpdatePermission": "Toplu Güncelleme Yetkisi",
+    "data": "Veri",
+    "fieldData": "Alan Verileri"
   },
   "links": {
     "users": "Kullanıcılar",
     "teams": "Takımlar"
-  },
-  "tooltips": {
-    "assignmentPermission": "Kayıtları atama ve diğer kullanıcılara mesaj gönderme yeteneğini kısıtlamaya izin verir. \\ N \\ n - kısıtlama yok \\ n \\ nteam - yalnızca takım arkadaşlarına atayabilir ve yayınlayabilir \\ n \\ nno - yalnızca kendine atayabilir ve kendisine gönderebilir",
-    "userPermission": "Kullanıcıların diğer kullanıcıların etkinliklerini, takvimlerini ve akışlarını görüntüleme olanağını kısıtlamasına izin verir. \\ N \\ n - hepsini görüntüleyebilir \\ n \\ nteam - yalnızca takım arkadaşlarının etkinliklerini görüntüleyebilir \\ n \\ n - görüntüleyemezsiniz.",
-    "portalPermission": "Portal bilgilerine bir erişimi, kişileri portal kullanıcılarına dönüştürme yeteneğini ve portal kullanıcılarına mesaj göndermeyi tanımlar."
   },
   "labels": {
     "Access": "Giriş",
@@ -47,5 +48,8 @@
   },
   "messages": {
     "changesAfterClearCache": "Erişim kontrolündeki tüm değişiklikler, önbellek silindikten sonra uygulanır."
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "Kişisel verileri görüntülemeye ve silmeye izin verir."
   }
 }

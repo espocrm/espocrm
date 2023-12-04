@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Templates\Entities;
 
-class Base extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class Base extends Entity
 {
+    public const TEMPLATE_TYPE = 'Base';
 }

@@ -231,74 +231,16 @@
             "customizationIsSortedDisabled": true,
             "customizationAuditedDisabled": true,
             "customizationReadOnlyDisabled": true,
-            "where": {
-                "=": {
-                    "leftJoins": ["contacts"],
-                    "whereClause": {
-                        "contactsMiddle.role": "{value}"
-                    },
-                    "distinct": true
-                },
-                "<>": {
-                    "whereClause": {
-                        "id!=s": {
-                            "from": "ContactOpportunity",
-                            "select": ["opportunityId"],
-                            "whereClause": {
-                                "deleted": 0,
-                                "role": "{value}"
-                            }
-                        }
-                    }
-                },
-                "IN": {
-                    "leftJoins": ["contacts"],
-                    "whereClause": {
-                        "contactsMiddle.role": "{value}"
-                    },
-                    "distinct": true
-                },
-                "NOT IN": {
-                    "whereClause": {
-                        "id!=s": {
-                            "from": "ContactOpportunity",
-                            "select": ["opportunityId"],
-                            "whereClause": {
-                                "deleted": 0,
-                                "role": "{value}"
-                            }
-                        }
-                    }
-                },
-                "LIKE": {
-                    "leftJoins": ["contacts"],
-                    "whereClause": {
-                        "contactsMiddle.role*": "{value}"
-                    },
-                    "distinct": true
-                },
-                "IS NULL": {
-                    "leftJoins": ["contacts"],
-                    "whereClause": {
-                        "contactsMiddle.role": null
-                    },
-                    "distinct": true
-                },
-                "IS NOT NULL": {
-                    "whereClause": {
-                        "id!=s": {
-                            "from": "ContactOpportunity",
-                            "select": ["opportunityId"],
-                            "whereClause": {
-                                "deleted": 0,
-                                "role": null
-                            }
-                        }
-                    }
-                }
+            "customizationOptionsDisabled": true,
+            "converterClassName": "Espo\\Classes\\FieldConverters\\RelationshipRole",
+            "converterData": {
+                "column": "role",
+                "link": "contacts",
+                "relationName": "contactOpportunity",
+                "nearKey": "opportunityId"
             },
             "view": "crm:views/opportunity/fields/contact-role",
-            "customizationOptionsDisabled": true
+            "optionsReference": "Contact.opportunityRole"
         },
         "createdAt": {
             "type": "datetime",

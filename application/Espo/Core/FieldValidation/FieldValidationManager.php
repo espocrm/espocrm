@@ -88,7 +88,7 @@ class FieldValidationManager
         try {
             return $this->processInternal($entity, $data, $params, false);
         }
-        catch (ValidationError $e) {
+        catch (ValidationError) {
             throw new LogicException();
         }
     }
@@ -138,11 +138,12 @@ class FieldValidationManager
      */
     private function getMandatoryValidationList(string $entityType, string $field): array
     {
+        /** @var ?string $fieldType */
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
 
         return
             $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'mandatoryValidationList']) ??
-            $this->metadata->get(['fields', $fieldType, 'mandatoryValidationList']) ?? [];
+            $this->metadata->get(['fields', $fieldType ?? '', 'mandatoryValidationList']) ?? [];
     }
 
     /**
@@ -150,11 +151,12 @@ class FieldValidationManager
      */
     private function getValidationList(string $entityType, string $field): array
     {
+        /** @var ?string $fieldType */
         $fieldType = $this->fieldUtil->getEntityTypeFieldParam($entityType, $field, 'type');
 
         return
             $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'validationList']) ??
-            $this->metadata->get(['fields', $fieldType, 'validationList']) ?? [];
+            $this->metadata->get(['fields', $fieldType ?? '', 'validationList']) ?? [];
     }
 
     /**
@@ -248,19 +250,7 @@ class FieldValidationManager
         bool $throw
     ): array {
 
-        $entityType = $entity->getEntityType();
-
-        $validationList = array_unique(array_merge(
-            $this->getValidationList($entityType, $field),
-            $this->getMandatoryValidationList($entityType, $field)
-        ));
-
-        $validationList = array_filter(
-            $validationList,
-            fn ($type) => !in_array($field, $params->getTypeSkipFieldList($type))
-        );
-
-        $failureList = [];
+        $validationList = $this->getAllValidationList($entity->getEntityType(), $field, $params);
 
         foreach ($validationList as $type) {
             $result = $this->check($entity, $field, $type, $data);
@@ -269,22 +259,52 @@ class FieldValidationManager
                 continue;
             }
 
-            $failure = new Failure($entityType, $field, $type);
-
-            $failureList[] = $failure;
+            $failure = new Failure($entity->getEntityType(), $field, $type);
 
             if ($throw) {
                 throw ValidationError::create($failure);
             }
+
+            return [$failure];
         }
 
-        $additionalFailureList = $this->checkAdditional($entity, $field, new Data($data));
+        $failure = $this->checkAdditional($entity, $field, new Data($data));
 
-        if ($throw && $additionalFailureList !== []) {
-            throw ValidationError::create($additionalFailureList[0]);
+        if (!$failure) {
+            return [];
         }
 
-        return array_merge($failureList, $additionalFailureList);
+        if ($throw) {
+            throw ValidationError::create($failure);
+        }
+
+        return [$failure];
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getAllValidationList(string $entityType, string $field, FieldValidationParams $params): array
+    {
+        $validationList = array_unique(array_merge(
+            $this->getValidationList($entityType, $field),
+            $this->getMandatoryValidationList($entityType, $field)
+        ));
+
+        /** @var string[] $suppressList */
+        $suppressList = $this->metadata->get("entityDefs.$entityType.fields.$field.suppressValidationList") ?? [];
+
+        $validationList = array_filter(
+            $validationList,
+            fn ($type) => !in_array($type, $suppressList)
+        );
+
+        $validationList = array_filter(
+            $validationList,
+            fn ($type) => !in_array($field, $params->getTypeSkipFieldList($type))
+        );
+
+        return array_values($validationList);
     }
 
     /**
@@ -380,14 +400,9 @@ class FieldValidationManager
         return $isSet;
     }
 
-    /**
-     * @return Failure[]
-     */
-    private function checkAdditional(Entity $entity, string $field, Data $data): array
+    private function checkAdditional(Entity $entity, string $field, Data $data): ?Failure
     {
         $validatorList = $this->validatorFactory->createAdditionalList($entity->getEntityType(), $field);
-
-        $failureList = [];
 
         foreach ($validatorList as $validator) {
             $itemFailure = $validator->validate($entity, $field, $data);
@@ -398,9 +413,9 @@ class FieldValidationManager
 
             $type = lcfirst((new ReflectionClass($validator))->getShortName());
 
-            $failureList[] = new Failure($entity->getEntityType(), $field, $type);
+            return new Failure($entity->getEntityType(), $field, $type);
         }
 
-        return $failureList;
+        return null;
     }
 }

@@ -22,7 +22,8 @@
         "skipOptInConfirmationIfSubscribed": "Skip confirmation if lead is already in target list",
         "smtpAccount": "SMTP Account",
         "inboundEmail": "Group Email Account",
-        "duplicateCheck": "Duplicate Check"
+        "duplicateCheck": "Duplicate Check",
+        "phoneNumberCountry": "Telephone country code"
     },
     "links": {
         "targetList": "Target List",

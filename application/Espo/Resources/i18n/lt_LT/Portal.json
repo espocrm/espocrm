@@ -18,13 +18,15 @@
     "defaultCurrency": "Pagrindinė valiuta",
     "customUrl": "Pritaikytas URL",
     "customId": "Pritaikytas ID",
-    "layoutSet": "Maketų rinkinys"
+    "layoutSet": "Maketų rinkinys",
+    "authenticationProvider": "Autentifikavimo teikėjas"
   },
   "links": {
     "users": "Vartotojai",
     "portalRoles": "Rolės",
     "notes": "Pastabos",
-    "layoutSet": "Maketų rinkinys"
+    "layoutSet": "Maketų rinkinys",
+    "authenticationProvider": "Autentifikavimo teikėjas"
   },
   "tooltips": {
     "portalRoles": "Nurodyti portalo vaidmenys bus taikomi visiems šio portalo naudotojams.",

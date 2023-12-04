@@ -27,7 +27,7 @@
 * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
 ************************************************************************/
 
-/** @todo Remove in v8.0. */
+/** @todo Remove in v9.0. */
 
 $map = [
     ['Laminas\\Mail\\Protocol\\Smtp', 'Zend\\Mail\\Protocol\\Smtp'],

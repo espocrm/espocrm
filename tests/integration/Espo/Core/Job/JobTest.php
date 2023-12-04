@@ -93,7 +93,7 @@ class JobTest extends \tests\integration\Core\BaseTestCase
 
         $this->jobManager->processQueue('q0', 10);
 
-        $jobReloaded = $this->entityManager->getEntity('Job', $job->id);
+        $jobReloaded = $this->entityManager->getEntity('Job', $job->getId());
 
         $this->assertEquals(Status::SUCCESS, $jobReloaded->getStatus());
     }

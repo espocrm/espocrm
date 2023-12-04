@@ -77,7 +77,7 @@ class Date implements DateTimeable
     /**
      * Get a string value in `Y-m-d` format.
      */
-    public function getString(): string
+    public function toString(): string
     {
         return $this->value;
     }
@@ -85,7 +85,7 @@ class Date implements DateTimeable
     /**
      * Get DateTimeImmutable.
      */
-    public function getDateTime(): DateTimeImmutable
+    public function toDateTime(): DateTimeImmutable
     {
         return $this->dateTime;
     }
@@ -93,7 +93,7 @@ class Date implements DateTimeable
     /**
      * Get a timestamp.
      */
-    public function getTimestamp(): int
+    public function toTimestamp(): int
     {
         return $this->dateTime->getTimestamp();
     }
@@ -200,7 +200,7 @@ class Date implements DateTimeable
      */
     public function diff(DateTimeable $other): DateInterval
     {
-        return $this->getDateTime()->diff($other->getDateTime());
+        return $this->toDateTime()->diff($other->toDateTime());
     }
 
     /**
@@ -208,7 +208,7 @@ class Date implements DateTimeable
      */
     public function isGreaterThan(DateTimeable $other): bool
     {
-        return $this->getDateTime() > $other->getDateTime();
+        return $this->toDateTime() > $other->toDateTime();
     }
 
     /**
@@ -216,7 +216,7 @@ class Date implements DateTimeable
      */
     public function isLessThan(DateTimeable $other): bool
     {
-        return $this->getDateTime() < $other->getDateTime();
+        return $this->toDateTime() < $other->toDateTime();
     }
 
     /**
@@ -224,7 +224,7 @@ class Date implements DateTimeable
      */
     public function isEqualTo(DateTimeable $other): bool
     {
-        return $this->getDateTime() == $other->getDateTime();
+        return $this->toDateTime() == $other->toDateTime();
     }
 
     /**
@@ -257,5 +257,32 @@ class Date implements DateTimeable
         $value = $dateTime->format(self::SYSTEM_FORMAT);
 
         return new self($value);
+    }
+
+    /**
+     * @deprecated As of v8.1. Use `toString` instead.
+     * @todo Remove in v10.0.
+     */
+    public function getString(): string
+    {
+        return $this->toString();
+    }
+
+    /**
+     * @deprecated As of v8.1. Use `toDateTime` instead.
+     * @todo Remove in v10.0.
+     */
+    public function getDateTime(): DateTimeImmutable
+    {
+        return $this->toDateTime();
+    }
+
+    /**
+     * @deprecated As of v8.1. Use `getTimestamp` instead.
+     * @todo Remove in v10.0.
+     */
+    public function getTimestamp(): int
+    {
+        return $this->toTimestamp();
     }
 }

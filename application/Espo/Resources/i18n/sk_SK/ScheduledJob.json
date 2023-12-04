@@ -31,8 +31,5 @@
       "Active": "Aktívny",
       "Inactive": "Neaktívny"
     }
-  },
-  "tooltips": {
-    "scheduling": "Zápis Crontab. Definuje frekvenciu spúšťania behov.\n\n*/5 * * * * - každých 5 minút\n\n0 */2 * * * - každé 2 hodiny\n\n30 1 * * * - o 01:30 raz za deň\n\n0 0 1 * * - v prvý deň mesiaca"
   }
 }

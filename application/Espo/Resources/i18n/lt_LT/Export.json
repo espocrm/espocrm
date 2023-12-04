@@ -3,7 +3,9 @@
     "fieldList": "Laukelių sąrašas",
     "exportAllFields": "Eksportuoti visus laukus",
     "format": "Formatas",
-    "status": "Statusas"
+    "status": "Statusas",
+    "xlsxRecordLinks": "Įrašų nuorodos",
+    "xlsxTitle": "Pavadinimas"
   },
   "options": {
     "format": {
@@ -19,5 +21,9 @@
   "messages": {
     "exportProcessed": "Eksportas apdorotas. Atsisiųskite [failą]({url}).",
     "infoText": "Eksportas apdorojamas neveikiant cron. Tai gali užtrukti šiek tiek laiko. Šio modalinio dialogo uždarymas neturės įtakos vykdymo procesui."
+  },
+  "tooltips": {
+    "xlsxLite": "Sunaudojama daug mažiau atminties. Rekomenduojama, jei eksportuojama daug įrašų.",
+    "xlsxTitle": "Spausdinti antraštę ir einamąją datą antraštėje."
   }
 }

@@ -68,7 +68,7 @@ define('views/dashboard-template/modals/deploy-to-team', ['views/modal', 'model'
             this.createView('record', 'views/record/edit-for-modal', {
                 scope: 'None',
                 model: this.formModel,
-                el: this.getSelector() + ' .record',
+                selector: '.record',
                 detailLayout: [
                     {
                         rows: [

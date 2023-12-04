@@ -60,7 +60,6 @@
     "removeDuplicates": "Toto navždy odstráni všetky naimportované záznamy, ktoré boli identofikované ako duplikáty.",
     "confirmRevert": "Toto odstráni všetky importované záznamy natrvalo. Ste si istý?",
     "confirmRemoveDuplicates": "Toto navždy odstráni všetky naimportované záznamy, ktoré boli identofikované ako duplikáty. Ste si istý?",
-    "confirmRemoveImportLog": "Toto odstráni protokol importu. Všetky naimportované záznamy zostanú zachované. Nebudte mať možnosť vrátiť výsledky importu. Ste si istý?",
     "removeImportLog": "Toto odstráni protokol importu. Všetky importované záznamy budú zachované. Použite to, ak ste si istý, že import je v poriadku."
   },
   "fields": {

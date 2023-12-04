@@ -1,5 +1,5 @@
 {
-    "controller": "controllers/email-account",
+    "controller": "controllers/record",
     "recordViews": {
         "list":"views/email-account/record/list",
         "detail": "views/email-account/record/detail",

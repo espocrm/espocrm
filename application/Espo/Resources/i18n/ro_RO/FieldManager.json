@@ -94,5 +94,12 @@
     "datetimeOptional": {
       "date": "Dată"
     }
+  },
+  "fieldInfo": {
+    "datetime": "Data și ora",
+    "int": "Un număr întreg.",
+    "file": "Pentru încărcarea fișierelor.",
+    "image": "Pentru încărarea imaginilor.",
+    "attachmentMultiple": "Permite încărcarea mai multor fișiere."
   }
 }

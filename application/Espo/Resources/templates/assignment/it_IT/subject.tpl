@@ -1,0 +1,1 @@
+Assegnazione: [{{entityType}}] {{name}}

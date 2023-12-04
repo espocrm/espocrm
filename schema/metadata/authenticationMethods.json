@@ -1,0 +1,111 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/authenticationMethods.json",
+    "title": "authenticationMethods",
+    "description": "An authentication method.",
+    "type": "object",
+    "properties": {
+        "api": {
+            "type": "boolean",
+            "description": "Defines that the method is to be used for pure API request, not from the front-end."
+        },
+        "credentialsHeader": {
+            "type": "string",
+            "description": "A header that is supposed to contain credentials. Actual only for API methods."
+        },
+        "login": {
+            "type": "object",
+            "description": "A framework providing the ability to call custom code on Sign-In button click on the login page.",
+            "properties": {
+                "handler": {
+                    "type": "string",
+                    "description": "A front-end class (should extend the abstract class handlers/login)."
+                },
+                "fallback": {
+                    "type": "boolean",
+                    "description": "Defines that a regular username/password login method is also available on the login page."
+                },
+                "fallbackConfigParam": {
+                    "type": "string",
+                    "description": "A config parameter name to be used to check whether fallback login is allowed."
+                },
+                "portal": {
+                    "type": "boolean",
+                    "description": "Whether the handler will be available for portals, (bool)."
+                },
+                "portalConfigParam": {
+                    "type": "string",
+                    "description": "A config parameter name to be used to check whether the handler will be available for portals."
+                },
+                "data": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Arbitrary data to be passed to the handler. Can be actual as application metadata is not yet available on the login page."
+                }
+            }
+        },
+        "portalDefault": {
+            "type": "boolean",
+            "description": "If true, the method will be applied for portals when the method is selected as the default in the settings and the portal does not have a specific authentication provider."
+        },
+        "settings": {
+            "type": "object",
+            "description": "Defines config parameters and a form on the admin UI.",
+            "properties": {
+                "isAvailable": {
+                    "type": "boolean",
+                    "description": "Whether the method is available in the settings."
+                },
+                "layout": {
+                    "description": "A layout.",
+                    "$ref": "./../layouts/detail.json#/definitions/panel"
+                },
+                "fieldList": {
+                    "description": "Settings fields.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "dynamicLogic": {
+                    "type": "object",
+                    "description": "Dynamic logic.",
+                    "properties": {
+                        "fields": {
+                            "type": "object",
+                            "description": "Fields.",
+                            "additionalProperties": {
+                                "type": "object",
+                                "description": "A field.",
+                                "properties": {
+                                    "visible": {
+                                        "description": "Conditions making the field visible.",
+                                        "$ref": "./clientDefs.json#/definitions/dynamicLogicVisible"
+                                    },
+                                    "required": {
+                                        "$ref": "./clientDefs.json#/definitions/dynamicLogicRequired"
+                                    },
+                                    "readOnly": {
+                                        "$ref": "./clientDefs.json#/definitions/dynamicLogicReadOnly"
+                                    },
+                                    "invalid": {
+                                        "$ref": "./clientDefs.json#/definitions/dynamicLogicInvalid"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "provider": {
+            "type": "object",
+            "properties": {
+                "isAvailable": {
+                    "type": "boolean",
+                    "description": "Whether is available in the Authentication Provider entity."
+                }
+            }
+        }
+    }
+}

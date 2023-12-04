@@ -38,7 +38,14 @@
     "parentEntityTypeList": "Mātesuzņēmumu tipi",
     "foreignLinkEntityTypeList": "Ārvalstu saites",
     "entity": "Subjekts",
-    "optimisticConcurrencyControl": "Optimistiska vienlaicīguma kontrole"
+    "optimisticConcurrencyControl": "Optimistiska vienlaicīguma kontrole",
+    "beforeSaveApiScript": "API pirms saglabāšanas skripts",
+    "updateDuplicateCheck": "Dublēšanas pārbaude atjaunināšanas laikā",
+    "duplicateCheckFieldList": "Divkāršoti pārbaudes lauki",
+    "layout": "Izkārtojums",
+    "author": "Autors",
+    "module": "Modulis",
+    "version": "Versija"
   },
   "options": {
     "type": {
@@ -68,7 +75,12 @@
     "entityCreated": "Vienība ir izveidota",
     "linkAlreadyExists": "Saišu nosaukumu konflikts.",
     "linkConflict": "Nosaukumu konflikts: saite vai lauks ar šādu nosaukumu jau pastāv.",
-    "confirmRemove": "Vai esat pārliecināts, ka vēlaties no sistēmas dzēst vienības tipu?"
+    "confirmRemove": "Vai esat pārliecināts, ka vēlaties no sistēmas dzēst vienības tipu?",
+    "beforeSaveCustomScript": "Skripts, kas tiek izsaukts katru reizi pirms vienības saglabāšanas. Izmanto aprēķināto lauku iestatīšanai.",
+    "beforeSaveApiScript": "Skripts, kas tiek izsaukts API izveides un atjaunināšanas pieprasījumos, pirms tiek saglabāta vienība. Izmanto pielāgotai validācijai un dublēšanās pārbaudei.",
+    "nameIsAlreadyUsed": "Nosaukums '{vārds}' jau ir izmantots.",
+    "nameIsNotAllowed": "Vārds '{vārds}' nav atļauts.",
+    "nameIsTooLong": "Nosaukums ir pārāk garš."
   },
   "tooltips": {
     "statusField": "Šī lauka atjauninājumi ir reģistrēti straumēšanā.",
@@ -80,6 +92,8 @@
     "entityType": "Pamats un vēl - ietver paneļus aktivitātēm, vēsturei un uzdevumiem.\n\nNotikums - pieejams kalendāra un aktivitāšu panelī.",
     "fullTextSearch": "Atkārtotas izveides izpildīšana ir obligāta.",
     "countDisabled": "Kopējais skaits netiks parādīts saraksta skatā. Var samazināt ielādes laiku, ja DB tabula ir liela.",
-    "optimisticConcurrencyControl": "Novērš rakstīšanas konfliktus."
+    "optimisticConcurrencyControl": "Novērš rakstīšanas konfliktus.",
+    "duplicateCheckFieldList": "Kādus laukus pārbaudīt, veicot dublēšanās pārbaudi.",
+    "updateDuplicateCheck": "Veiciet dublējošu ierakstu pārbaudi, atjauninot ierakstu."
   }
 }

@@ -26,31 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/memo', ['views/dashlets/abstract/base'], (Dep) => {
+import BaseDashletView from 'views/dashlets/abstract/base';
 
-    /**
-     * @class
-     * @name Class
-     * @memberOf module:views/dashlets/memo
-     * @extends module:views/dashlets/abstract/base.Class
-     */
-    return Dep.extend(/** @lends module:views/dashlets/memo.Class# */{
+class MemoDashletView extends BaseDashletView {
 
-        name: 'Iframe',
+    name = 'Memo'
 
-        templateContent:
-            `{{#if text}}
-                <div class="complex-text complex-text-memo">{{complexText text}}</div>{{/if}}
-        `,
+    templateContent = `
+        {{#if text}}
+        <div class="complex-text complex-text-memo">{{complexText text}}</div>
+        {{/if}}
+    `
 
-        data: function () {
-            return {
-                text: this.getOption('text'),
-            };
-        },
+    data() {
+        return {
+            text: this.getOption('text'),
+        };
+    }
 
-        afterAdding: function () {
-            this.getParentView().actionOptions();
-        },
-    });
-});
+    afterAdding() {
+        this.getContainerView().actionOptions();
+    }
+}
+
+export default MemoDashletView;

@@ -26,46 +26,48 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/items/email-received', ['views/notification/items/base'], function (Dep) {
+import BaseNotificationItemView from 'views/notification/items/base';
 
-    return Dep.extend({
+class EmailReceivedNotificationItemView extends BaseNotificationItemView {
 
-        messageName: 'emailReceived',
+    messageName = 'emailReceived'
 
-        template: 'notification/items/email-received',
+    template = 'notification/items/email-received'
 
-        data: function () {
-            return _.extend({
-                emailId: this.emailId,
-                emailName: this.emailName
-            }, Dep.prototype.data.call(this));
-        },
+    data() {
+        return {
+            ...super.data(),
+            emailId: this.emailId,
+            emailName: this.emailName,
+        };
+    }
 
-        setup: function () {
-            let data = this.model.get('data') || {};
+    setup() {
+        let data = /** @type Object.<string, *> */this.model.get('data') || {};
 
-            this.userId = data.userId;
+        this.userId = data.userId;
 
-            this.messageData['entityType'] = this.translateEntityType(data.entityType);
+        this.messageData['entityType'] = this.translateEntityType(data.entityType);
 
-            if (data.personEntityId) {
-                this.messageData['from'] =
-                    $('<a>')
-                        .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
-                        .attr('data-id', data.personEntityId)
-                        .attr('data-scope', data.personEntityType)
-                        .text(data.personEntityName);
-            }
-            else {
-                let text = data.fromString || this.translate('empty address');
+        if (data.personEntityId) {
+            this.messageData['from'] =
+                $('<a>')
+                    .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
+                    .attr('data-id', data.personEntityId)
+                    .attr('data-scope', data.personEntityType)
+                    .text(data.personEntityName);
+        }
+        else {
+            let text = data.fromString || this.translate('empty address');
 
-                this.messageData['from'] = $('<span>').text(text);
-            }
+            this.messageData['from'] = $('<span>').text(text);
+        }
 
-            this.emailId = data.emailId;
-            this.emailName = data.emailName;
+        this.emailId = data.emailId;
+        this.emailName = data.emailName;
 
-            this.createMessage();
-        },
-    });
-});
+        this.createMessage();
+    }
+}
+
+export default EmailReceivedNotificationItemView;

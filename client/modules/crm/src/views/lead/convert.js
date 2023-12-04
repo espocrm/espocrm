@@ -35,7 +35,7 @@ define('crm:views/lead/convert', ['view'], function (Dep) {
         data: function () {
             return {
                 scopeList: this.scopeList,
-                scope: this.model.name,
+                scope: this.model.entityType,
             };
         },
 
@@ -118,7 +118,7 @@ define('crm:views/lead/convert', ['view'], function (Dep) {
 
                                 this.createView(scope, convertEntityViewName, {
                                     model: model,
-                                    el: '#main .edit-container-' + Espo.Utils.toDom(scope),
+                                    fullSelector: '#main .edit-container-' + Espo.Utils.toDom(scope),
                                     buttonsPosition: false,
                                     buttonsDisabled: true,
                                     layoutName: 'detailConvert',
@@ -128,7 +128,7 @@ define('crm:views/lead/convert', ['view'], function (Dep) {
 
                                     if (i === scopeList.length) {
                                         this.wait(false);
-                                        this.notify(false);
+                                        Espo.Ui.notify(false);
                                     }
                                 });
                             });

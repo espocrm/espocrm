@@ -26,12 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-email', ['views/fields/email'], function (Dep) {
+import EmailFieldView from 'views/fields/email';
 
-    return Dep.extend({
+class ForeignEmailFieldView extends EmailFieldView {
 
-        type: 'foreign',
+    type = 'foreign'
+    readOnly = true
+}
 
-        readOnly: true,
-    });
-});
+export default ForeignEmailFieldView;

@@ -96,7 +96,9 @@
     "optionsArray": "Galimų reikšmių ir jų etikečių sąrašas. Jei laukas tuščias, jame bus galima įvesti pasirinktines reikšmes.",
     "maxCount": "Didžiausias leistinas pasirinkti elementų skaičius.",
     "displayAsList": "Kiekvienas elementas įrašomas į naują eilutę.",
-    "optionsVarchar": "Automatinio užbaigimo reikšmių sąrašas."
+    "optionsVarchar": "Automatinio užbaigimo reikšmių sąrašas.",
+    "currencyDecimal": "Naudokite dešimtainės trupmenos DB tipą. Programoje reikšmės bus pateikiamos kaip eilutės. Pažymėkite šį parametrą, jei reikalingas tikslumas.",
+    "optionsReference": "Pakartotinai naudokite kitos srities parinktis."
   },
   "fieldParts": {
     "address": {
@@ -148,6 +150,12 @@
     "foreign": "Susijusio įrašo laukas. Tik nuskaitymui.",
     "link": "Įrašas, susijęs per ryšį \"Priklauso-tam\" (daug-prieš-vieną arba vienas-prieš-vieną).",
     "linkParent": "Įrašas, susijęs per \"priklauso tėvams\" ryšį. Gali būti skirtingų tipų.",
-    "linkMultiple": "Įrašų rinkinys, susijęs Has-Many (daugelio su daugeliu arba vieno su daugeliu) ryšiu. Ne visi ryšiai turi savo nuorodų daugybinius laukus. Juos turi tik tie, kuriuose įjungtas (-i) parametras (-ai) Link-Multiple."
+    "linkMultiple": "Įrašų rinkinys, susijęs Has-Many (daugelio su daugeliu arba vieno su daugeliu) ryšiu. Ne visi ryšiai turi savo nuorodų daugybinius laukus. Juos turi tik tie, kuriuose įjungtas (-i) parametras (-ai) Link-Multiple.",
+    "urlMultiple": "Kelios nuorodos."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Lauko pavadinimas \"{field}\" neleidžiamas.",
+    "fieldAlreadyExists": "Laukas \"{field}\" jau egzistuoja laukelyje \"{entityType}\".",
+    "linkWithSameNameAlreadyExists": "Nuoroda su pavadinimu \"{field}\" jau egzistuoja \"{entityType}\"."
   }
 }

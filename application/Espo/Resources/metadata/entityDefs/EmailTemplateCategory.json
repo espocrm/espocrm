@@ -77,7 +77,7 @@
     },
     "additionalTables": {
         "EmailTemplateCategoryPath": {
-            "fields": {
+            "attributes": {
                 "id": {
                     "type": "id",
                     "dbType": "integer",

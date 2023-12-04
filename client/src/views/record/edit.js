@@ -26,271 +26,237 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/edit', ['views/record/detail'], function (Dep) {
+/** @module views/record/edit */
+
+import DetailRecordView from 'views/record/detail';
+
+/**
+ * An edit-record view. Used for create and edit.
+ */
+class EditRecordView extends DetailRecordView {
+
+    /** @inheritDoc */
+    template = 'record/edit'
+
+    /** @inheritDoc */
+    type = 'edit'
+    /** @inheritDoc */
+    fieldsMode = 'edit'
+    /** @inheritDoc */
+    mode = 'edit'
+    /** @inheritDoc */
+    buttonList = [
+        {
+            name: 'save',
+            label: 'Save',
+            style: 'primary',
+            title: 'Ctrl+Enter',
+        },
+        {
+            name: 'cancel',
+            label: 'Cancel',
+            title: 'Esc',
+        }
+    ]
+    /** @inheritDoc */
+    dropdownItemList = []
+    /** @inheritDoc */
+    sideView = 'views/record/edit-side'
+    /** @inheritDoc */
+    bottomView = 'views/record/edit-bottom'
+    /** @inheritDoc */
+    duplicateAction = false
+    /** @inheritDoc */
+    saveAndContinueEditingAction = true
+    /** @inheritDoc */
+    saveAndNewAction = true
+    /** @inheritDoc */
+    setupHandlerType = 'record/edit'
 
     /**
-     * An edit-record view. Used for create and edit.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/record/detail.Class
-     * @memberOf module:views/record/edit
+     * @param {
+     *     module:views/record/detail~options |
+     *     {
+     *         duplicateSourceId?: string,
+     *         focusForCreate?: boolean,
+     *     }
+     * } options Options.
      */
-    return Dep.extend(/** @lends module:views/record/edit.Class# */{
+    constructor(options) {
+        super(options);
+    }
 
-        /**
-         * @inheritDoc
-         */
-        template: 'record/edit',
+    /** @inheritDoc */
+    actionSave(data) {
+        data = data || {};
 
-        /**
-         * @inheritDoc
-         */
-        type: 'edit',
+        let isNew = this.isNew;
 
-        /**
-         * @inheritDoc
-         */
-        name: 'edit',
+        return this.save(data.options)
+            .then(() => {
+                if (this.options.duplicateSourceId) {
+                    this.returnUrl = null;
+                }
 
-        /**
-         * @inheritDoc
-         */
-        fieldsMode: 'edit',
+                this.exit(isNew ? 'create' : 'save');
+            })
+            .catch(reason => Promise.reject(reason));
+    }
 
-        /**
-         * @inheritDoc
-         */
-        mode: 'edit',
+    /**
+     * A `cancel` action.
+     */
+    actionCancel() {
+        this.cancel();
+    }
 
-        /**
-         * @inheritDoc
-         */
-        buttonList: [
-            {
-                name: 'save',
-                label: 'Save',
-                style: 'primary',
-                title: 'Ctrl+Enter',
-            },
-            {
-                name: 'cancel',
-                label: 'Cancel',
-                title: 'Esc',
-            }
-        ],
+    /**
+     * Cancel.
+     */
+    cancel() {
+        if (this.isChanged) {
+            this.resetModelChanges();
+        }
 
-        /**
-         * @inheritDoc
-         */
-        dropdownItemList: [],
+        this.setIsNotChanged();
+        this.exit('cancel');
+    }
 
-        /**
-         * @inheritDoc
-         */
-        sideView: 'views/record/edit-side',
+    /** @inheritDoc */
+    setupBeforeFinal() {
+        if (this.model.isNew()) {
+            this.populateDefaults();
+        }
 
-        /**
-         * @inheritDoc
-         */
-        bottomView: 'views/record/edit-bottom',
+        super.setupBeforeFinal();
 
-        /**
-         * @inheritDoc
-         */
-        duplicateAction: false,
+        if (this.model.isNew()) {
+            this.once('after:render', () => {
+                this.model.set(this.fetch(), {silent: true});
+            })
+        }
 
-        /**
-         * @inheritDoc
-         */
-        saveAndContinueEditingAction: true,
+        if (this.options.focusForCreate) {
+            this.once('after:render', () => {
+                if (this.$el.closest('.modal').length) {
+                    setTimeout(() => this.focusForCreate(), 50);
 
-        /**
-         * @inheritDoc
-         */
-        saveAndNewAction: true,
+                    return;
+                }
 
-        /**
-         * @inheritDoc
-         */
-        setupHandlerType: 'record/edit',
+                this.focusForCreate();
+            });
+        }
+    }
 
-        /**
-         * @inheritDoc
-         */
-        actionSave: function (data) {
-            data = data || {};
+    /** @inheritDoc */
+    setupActionItems() {
+        super.setupActionItems();
 
-            let isNew = this.isNew;
+        if (
+            this.saveAndContinueEditingAction &&
+            this.getAcl().checkScope(this.entityType, 'edit')
+        ) {
+            this.dropdownItemList.push({
+                name: 'saveAndContinueEditing',
+                label: 'Save & Continue Editing',
+                title: 'Ctrl+S',
+            });
+        }
 
-            this.save(data.options)
-                .then(() => {
-                    if (this.options.duplicateSourceId) {
-                        this.returnUrl = null;
-                    }
+        if (
+            this.isNew &&
+            this.saveAndNewAction &&
+            this.getAcl().checkScope(this.entityType, 'create')
+        ) {
+            this.dropdownItemList.push({
+                name: 'saveAndNew',
+                label: 'Save & New',
+                title: 'Ctrl+Alt+Enter',
+            });
+        }
+    }
 
-                    this.exit(isNew ? 'create' : 'save');
-                })
-                .catch(() => {});
-        },
+    /**
+     * A `save-and-create-new` action.
+     */
+    actionSaveAndNew(data) {
+        data = data || {};
 
-        /**
-         * A `cancel` action.
-         */
-        actionCancel: function () {
-            this.cancel();
-        },
+        let proceedCallback = () => {
+            Espo.Ui.success(this.translate('Created'));
 
-        /**
-         * Cancel.
-         */
-        cancel: function () {
-            if (this.isChanged) {
-                this.resetModelChanges();
-            }
+            this.getRouter().dispatch(this.scope, 'create', {
+                rootUrl: this.options.rootUrl,
+                focusForCreate: !!data.focusForCreate,
+            });
 
-            this.setIsNotChanged();
-            this.exit('cancel');
-        },
+            this.getRouter().navigate('#' + this.scope + '/create', {trigger: false});
+        };
 
-        /**
-         * @inheritDoc
-         */
-        setupBeforeFinal: function () {
-            if (this.model.isNew()) {
-                this.populateDefaults();
-            }
+        this.save(data.options)
+            .then(proceedCallback)
+            .catch(() => {});
 
-            Dep.prototype.setupBeforeFinal.call(this);
+        if (this.lastSaveCancelReason === 'notModified') {
+             proceedCallback();
+        }
+    }
 
-            if (this.model.isNew()) {
-                this.once('after:render', () => {
-                    this.model.set(this.fetch(), {silent: true});
-                })
-            }
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyEscape(e) {
+        if (this.buttonsDisabled) {
+            return;
+        }
 
-            if (this.options.focusForCreate) {
-                this.once('after:render', () => {
-                    if (this.$el.closest('.modal').length) {
-                        setTimeout(() => this.focusForCreate(), 50);
+        if (this.buttonList.findIndex(item => item.name === 'cancel' && !item.hidden) === -1) {
+            return;
+        }
 
-                        return;
-                    }
+        e.preventDefault();
+        e.stopPropagation();
 
-                    this.focusForCreate();
-                });
-            }
-        },
+        let focusedFieldView = this.getFocusedFieldView();
 
-        /**
-         * @inheritDoc
-         */
-        setupActionItems: function () {
-            Dep.prototype.setupActionItems.call(this);
+        if (focusedFieldView) {
+            this.model.set(focusedFieldView.fetch());
+        }
 
-            if (
-                this.saveAndContinueEditingAction &&
-                this.getAcl().checkScope(this.entityType, 'edit')
-            ) {
-                this.dropdownItemList.push({
-                    name: 'saveAndContinueEditing',
-                    label: 'Save & Continue Editing',
-                    title: 'Ctrl+S',
-                });
-            }
+        if (this.isChanged) {
+            this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                .then(() => this.actionCancel());
 
-            if (
-                this.isNew &&
-                this.saveAndNewAction &&
-                this.getAcl().checkScope(this.entityType, 'create')
-            ) {
-                this.dropdownItemList.push({
-                    name: 'saveAndNew',
-                    label: 'Save & New',
-                    title: 'Ctrl+Alt+Enter',
-                });
-            }
-        },
+            return;
+        }
 
-        /**
-         * A `save-and-create-new` action.
-         */
-        actionSaveAndNew: function (data) {
-            data = data || {};
+        this.actionCancel();
+    }
 
-            let proceedCallback = () => {
-                Espo.Ui.success(this.translate('Created'));
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlAltEnter(e) {
+        if (this.buttonsDisabled) {
+            return;
+        }
 
-                this.getRouter().dispatch(this.scope, 'create', {
-                    rootUrl: this.options.rootUrl,
-                    focusForCreate: !!data.focusForCreate,
-                });
+        e.preventDefault();
+        e.stopPropagation();
 
-                this.getRouter().navigate('#' + this.scope + '/create', {trigger: false});
-            };
+        if (!this.saveAndNewAction) {
+            return;
+        }
 
-            this.save(data.options)
-                .then(proceedCallback)
-                .catch(() => {});
+        if (!this.hasAvailableActionItem('saveAndNew')) {
+            return;
+        }
 
-            if (this.lastSaveCancelReason === 'notModified') {
-                 proceedCallback();
-            }
-        },
+        this.actionSaveAndNew({focusForCreate: true});
+    }
+}
 
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyEscape: function (e) {
-            if (this.buttonsDisabled) {
-                return;
-            }
-
-            if (this.buttonList.findIndex(item => item.name === 'cancel' && !item.hidden) === -1) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            let focusedFieldView = this.getFocusedFieldView();
-
-            if (focusedFieldView) {
-                this.model.set(focusedFieldView.fetch());
-            }
-
-            if (this.isChanged) {
-                this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
-                    .then(() => this.actionCancel());
-
-                return;
-            }
-
-            this.actionCancel();
-        },
-
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlAltEnter: function (e) {
-            if (this.buttonsDisabled) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            if (!this.saveAndNewAction) {
-                return;
-            }
-
-            if (!this.hasAvailableActionItem('saveAndNew')) {
-                return;
-            }
-
-            this.actionSaveAndNew({focusForCreate: true});
-        },
-    });
-});
+export default EditRecordView;

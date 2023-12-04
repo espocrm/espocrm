@@ -19,7 +19,14 @@
         {{/if}}
         {{#if buttonList.length}}
         {{#each buttonList}}
-            {{button name scope=../scope label=label style=style hidden=hidden}}
+            {{button
+                name
+                scope=../scope
+                label=label
+                style=style
+                hidden=hidden
+                class='list-action-item'
+            }}
         {{/each}}
         {{/if}}
 
@@ -37,8 +44,9 @@
                 <a
                     role="button"
                     tabindex="0"
-                    class="action"
+                    class="action list-action-item"
                     data-action="{{name}}"
+                    data-name="{{name}}"
                 >{{#if html}}{{{html}}}{{else}}{{translate label scope=../entityType}}{{/if}}</a></li>
                 {{else}}
                     {{#unless @first}}
@@ -107,6 +115,10 @@
     </div>
     {{/if}}
 
+    {{#if settings}}
+    <div class="settings-container pull-right">{{{settings}}}</div>
+    {{/if}}
+
     {{#if displayTotalCount}}
     <div class="text-muted total-count">
         <span
@@ -118,13 +130,16 @@
 </div>
 {{/if}}
 
-<div class="list{{#if tableMinWidth}} scrollable{{/if}}" data-scope="{{scope}}">
+<div class="list{{#if tableMinWidth}} scrollable{{/if}}{{#if showMoreActive}} has-show-more{{/if}}" data-scope="{{scope}}">
     <table class="table"{{#if tableMinWidth}} style="min-width: {{tableMinWidth}}px;"{{/if}}>
         {{#if header}}
         <thead>
             <tr>
                 {{#if checkboxes}}
-                <th width="{{checkboxColumnWidth}}" data-name="r-checkbox">
+                <th
+                    style="width: {{checkboxColumnWidth}}"
+                    data-name="r-checkbox"
+                >
                     <span class="select-all-container"><input type="checkbox" class="select-all form-checkbox form-checkbox-small"></span>
                     {{#unless checkAllResultDisabled}}
                     <div class="btn-group checkbox-dropdown">
@@ -151,8 +166,7 @@
                 {{/if}}
                 {{#each headerDefs}}
                 <th
-                    {{#if width}}width="{{width}}"{{/if}}
-                    {{#if align}}style="text-align: {{align}};"{{/if}}
+                    style="{{#if width}}width: {{width}};{{/if}}{{#if align}} text-align: {{align}};{{/if}}"
                     {{#if className}}class="{{className}}"{{/if}}
                     {{#if name}}data-name="{{name}}"{{/if}}
                 >

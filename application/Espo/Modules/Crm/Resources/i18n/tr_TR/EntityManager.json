@@ -1,0 +1,11 @@
+{
+  "fields": {
+    "activityStatusList": "Etkinlik Durumları",
+    "historyStatusList": "Geçmiş Durumları",
+    "completedStatusList": "Tamamlanmış Durumlar",
+    "canceledStatusList": "İptal Edilen Durumlar"
+  },
+  "tooltips": {
+    "completedStatusList": "Bir etkinliğin tamamlandığını belirleyen durum değerleri."
+  }
+}

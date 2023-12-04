@@ -6,5 +6,8 @@
     "Create Case": "Fall erstellen",
     "Add to Contact": "als Kontakt hinzufügen",
     "Add to Lead": "als Interessent hinzufügen"
+  },
+  "fields": {
+    "tasks": "Aufgaben"
   }
 }

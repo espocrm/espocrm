@@ -13,7 +13,8 @@
     "inboundEmail": "E-posta hesabı",
     "targetLists": "Hedef Listeler",
     "excludingTargetLists": "Hariç Tutulan Hedef Listeleri",
-    "optOutEntirely": "Tamamından Vazgeç"
+    "optOutEntirely": "Tamamından Vazgeç",
+    "smtpAccount": "SMTP Hesabı"
   },
   "links": {
     "targetLists": "Hedef Listeler",
@@ -35,7 +36,10 @@
   },
   "labels": {
     "Create MassEmail": "Toplu E-posta Oluştur",
-    "Send Test": "Test Gönder"
+    "Send Test": "Test Gönder",
+    "System SMTP": "Sistem SMTP",
+    "system": "sistem",
+    "group": "grup"
   },
   "messages": {
     "selectAtLeastOneTarget": "En az bir hedef seçin.",
@@ -44,7 +48,8 @@
   "tooltips": {
     "optOutEntirely": "Aboneliğini kaldıran alıcıların e-posta adresleri devre dışı bırakılmış olarak işaretlenecek ve artık toplu e-postalar almazlar.",
     "targetLists": "Mesaj alması gereken hedefler.",
-    "excludingTargetLists": "Mesaj almaması gereken hedefler."
+    "excludingTargetLists": "Mesaj almaması gereken hedefler.",
+    "storeSentEmails": "E-postalar CRM'de saklanacaktır."
   },
   "presetFilters": {
     "actual": "Gerçek",

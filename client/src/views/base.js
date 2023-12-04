@@ -26,7 +26,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/base', ['view'], function (Dep) {
+/** @module views/base */
 
-    return Dep.extend({});
-});
+import View from 'view';
+
+class BaseView extends View {
+
+    /**
+     * @typedef {Object} module:views/base~options
+     * @property {string} [template] A template.
+     */
+
+    /**
+     * @param {module:views/base~options & Object.<string, *>} [options] Options.
+     */
+    constructor(options) {
+        super(options);
+    }
+}
+
+export default BaseView

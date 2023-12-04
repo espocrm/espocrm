@@ -18,7 +18,8 @@
     "duplicateCheck": "Dublettenprüfung",
     "skipOptInConfirmationIfSubscribed": "Bestätigung überspringen, wenn Lead bereits in der Zielliste ist",
     "smtpAccount": "SMTP-Konto",
-    "inboundEmail": "Gruppen-E-Mail-Konto"
+    "inboundEmail": "Gruppen-E-Mail-Konto",
+    "exampleRequestHeaders": "Kopfzeilen"
   },
   "links": {
     "targetList": "Kontaktliste",

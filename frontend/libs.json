@@ -1,39 +1,46 @@
 [
     {
         "src": "node_modules/jquery/dist/jquery.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "jquery"
     },
     {
-        "src": "node_modules/underscore/underscore.js",
-        "bundle": true
-    },
-    {
-        "src": "node_modules/es6-promise/dist/es6-promise.js",
-        "bundle": true
+        "src": "node_modules/underscore/underscore-umd.js",
+        "bundle": true,
+        "amdId": "underscore"
     },
     {
         "src": "node_modules/backbone/backbone.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "backbone"
     },
     {
         "src": "node_modules/handlebars/dist/handlebars.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "handlebars"
     },
     {
-        "src": "node_modules/bullbone/dist/bullbone.js",
-        "bundle": true
+        "src": "node_modules/bullbone/dist/bullbone.umd.js",
+        "bundle": true,
+        "amdId": "bullbone"
     },
     {
         "src": "node_modules/js-base64/base64.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "js-base64",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/moment/moment.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "moment",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/moment-timezone/moment-timezone.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "moment-timezone",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/moment-timezone-data-build/build/moment-timezone-data.js",
@@ -41,15 +48,20 @@
     },
     {
         "src": "node_modules/timepicker/jquery.timepicker.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "timepicker",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/devbridge-autocomplete/dist/jquery.autocomplete.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "autocomplete",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/jquery-textcomplete/dist/jquery.textcomplete.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "jquery-textcomplete"
     },
     {
         "src": "node_modules/bootstrap/dist/js/bootstrap.js",
@@ -57,15 +69,19 @@
     },
     {
         "src": "node_modules/bootstrap-datepicker/dist/js/bootstrap-datepicker.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "bootstrap-datepicker",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/marked/lib/marked.umd.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "marked"
     },
     {
         "src": "node_modules/dompurify/dist/purify.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "dompurify"
     },
     {
         "src": "node_modules/autobahn-espo/autobahn.js",
@@ -73,7 +89,9 @@
     },
     {
         "src": "node_modules/jquery-ui-espo/dist/jquery-ui.js",
-        "bundle": true
+        "bundle": true,
+        "suppressAmd": true,
+        "amdId": "jquery-ui"
     },
     {
         "src": "node_modules/jquery-ui-touch-punch/jquery.ui.touch-punch.js",
@@ -81,52 +99,78 @@
     },
     {
         "name": "gridstack",
-        "files": [
-            {
-                "src": "node_modules/gridstack/dist/gridstack-jq.js"
-            }
-        ],
-        "bundle": true
+        "src": "node_modules/gridstack/dist/gridstack-jq.js",
+        "bundle": true,
+        "amdId": "gridstack"
     },
     {
         "src": "node_modules/selectize/dist/js/standalone/selectize.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "selectize",
+        "suppressAmd": true
     },
     {
         "src": "node_modules/autonumeric/dist/autoNumeric.js",
-        "bundle": true
+        "bundle": true,
+        "amdId": "autonumeric"
     },
     {
-        "src": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js"
+        "src": "node_modules/intl-tel-input/build/js/intlTelInput.js",
+        "bundle": true,
+        "amdId": "intl-tel-input",
+        "suppressAmd": true
     },
     {
-        "src": "node_modules/cropper/dist/cropper.js"
+        "src": "node_modules/intl-tel-input/build/js/utils.js",
+        "bundle": true,
+        "amdId": "intl-tel-input-utils"
     },
     {
-        "src": "node_modules/cronstrue/dist/cronstrue-i18n.js",
-        "minify": true
-    },
-    {
-        "src": "node_modules/exif-js/exif.js",
-        "minify": true
-    },
-    {
-        "src": "node_modules/jsbarcode/dist/JsBarcode.all.js",
-        "minify": true
-    },
-    {
-        "src": "node_modules/qrcodejs/qrcode.js"
+        "bundle": true,
+        "amdId": "intl-tel-input-globals"
     },
     {
         "src": "node_modules/summernote/dist/summernote.js",
+        "amdId": "summernote",
         "minify": true
     },
     {
-        "src": "node_modules/espo-funnel-chart/build/espo-funnel-chart.js"
+        "src": "node_modules/espo-funnel-chart/build/espo-funnel-chart.js",
+        "amdId": "espo-funnel-chart",
+        "minify": true
     },
     {
         "src": "node_modules/flotr2/flotr2.js",
+        "amdId": "flotr2",
         "minify": true
+    },
+    {
+        "src": "node_modules/bootstrap-colorpicker/dist/js/bootstrap-colorpicker.js",
+        "amdId": "bootstrap-colorpicker"
+    },
+    {
+        "src": "node_modules/cropper/dist/cropper.js",
+        "amdId": "cropper",
+        "minify": true
+    },
+    {
+        "src": "node_modules/cronstrue/dist/cronstrue-i18n.js",
+        "minify": true,
+        "amdId": "cronstrue"
+    },
+    {
+        "src": "node_modules/exif-js/exif.js",
+        "minify": true,
+        "amdId": "exif-js"
+    },
+    {
+        "src": "node_modules/jsbarcode/dist/JsBarcode.all.js",
+        "minify": true,
+        "amdId": "jsbarcode"
+    },
+    {
+        "src": "node_modules/qrcodejs/qrcode.js",
+        "amdId": "qrcodejs"
     },
     {
         "name": "ace-builds",
@@ -147,16 +191,37 @@
                 "src": "node_modules/ace-builds/src-noconflict/theme-tomorrow_night.js",
                 "dest": "client/lib/ace-theme-tomorrow_night.js"
             }
-        ]
+        ],
+        "amdId": "ace"
     },
     {
-        "src": "node_modules/fullcalendar/dist/fullcalendar.js",
+        "src": "node_modules/fullcalendar/index.global.js",
         "dest": "client/modules/crm/lib/fullcalendar.js",
-        "minify": true
+        "minify": true,
+        "amdId": "fullcalendar"
     },
     {
-        "src": "node_modules/vis/dist/vis.js",
-        "dest": "client/modules/crm/lib/vis.js",
-        "minify": true
+        "src": "node_modules/@fullcalendar/moment/index.global.js",
+        "dest": "client/modules/crm/lib/fullcalendar-moment.js",
+        "minify": true,
+        "amdId": "@fullcalendar/moment"
+    },
+    {
+        "src": "node_modules/@fullcalendar/moment-timezone/index.global.js",
+        "dest": "client/modules/crm/lib/fullcalendar-moment-timezone.js",
+        "minify": true,
+        "amdId": "@fullcalendar/moment-timezone"
+    },
+    {
+        "src": "node_modules/vis-timeline/peer/umd/vis-timeline-graph2d.js",
+        "dest": "client/modules/crm/lib/vis-timeline.js",
+        "minify": true,
+        "amdId": "vis-timeline"
+    },
+    {
+        "src": "node_modules/vis-data/peer/umd/vis-data.js",
+        "dest": "client/modules/crm/lib/vis-data.js",
+        "minify": true,
+        "amdId": "vis-data"
     }
 ]

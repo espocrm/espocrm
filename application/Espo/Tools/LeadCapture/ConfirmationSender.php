@@ -112,7 +112,7 @@ class ConfirmationSender
 
         $terminateAt = $uniqueId->getTerminateAt();
 
-        if ($terminateAt && time() > strtotime($terminateAt->getString())) {
+        if ($terminateAt && time() > strtotime($terminateAt->toString())) {
             throw new Error("LeadCapture: Opt-in confirmation expired.");
         }
 
@@ -192,7 +192,7 @@ class ConfirmationSender
         $body = str_replace('{optInUrl}', $url, $body);
         $body = str_replace('{optInLink}', $linkHtml, $body);
 
-        $createdAt = $uniqueId->getCreatedAt()->getString();
+        $createdAt = $uniqueId->getCreatedAt()->toString();
 
         if ($createdAt) {
             $dateString = $this->dateTime->convertSystemDateTime($createdAt, null, $this->config->get('dateFormat'));

@@ -9,14 +9,6 @@
     "defaultCurrency": "Валута по подразбиране",
     "currencyList": "Списък с валути",
     "language": "Език по подразбиране",
-    "smtpServer": "Сървър",
-    "smtpPort": "Порт",
-    "smtpAuth": "Удостоверяване",
-    "smtpSecurity": "Сигурност",
-    "smtpUsername": "Потребител",
-    "emailAddress": "Електронна поща",
-    "smtpPassword": "Парола",
-    "smtpEmailAddress": "Имейл адрес",
     "exportDelimiter": "Разделител за експортиране на данни",
     "signature": "Имейл подпис",
     "dashboardTabList": "Списък с менюта",
@@ -39,7 +31,9 @@
     "scopeColorsDisabled": "Забранете цветовете",
     "tabColorsDisabled": "Забранете цветове за табовете",
     "assignmentNotificationsIgnoreEntityTypeList": "Известия за назначения на записи (в приложението)",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Известия за назначения на записи (по имейл)"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Известия за назначения на записи (по имейл)",
+    "dashboardLocked": "Заключи дашборда",
+    "textSearchStoringDisabled": "Деактивиране на съхраняването на текстови филтри"
   },
   "options": {
     "weekStart": {

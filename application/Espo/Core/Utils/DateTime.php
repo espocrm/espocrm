@@ -31,10 +31,15 @@ namespace Espo\Core\Utils;
 
 use Carbon\Carbon;
 
-use DateTimeZone;
-use DateTime as DateTimeStd;
+use Espo\Core\Field\Date;
+use Espo\Core\Field\DateTime as DateTimeField;
 
+use DateTime as DateTimeStd;
+use DateTimeImmutable;
+use DateTimeZone;
+use Exception;
 use RuntimeException;
+
 
 /**
  * Util for a date-time formatting and conversion.
@@ -58,8 +63,14 @@ class DateTime
     ) {
         $this->dateFormat = $dateFormat ?? 'YYYY-MM-DD';
         $this->timeFormat = $timeFormat ?? 'HH:mm';
-        $this->timezone = new DateTimeZone($timeZone ?? 'UTC');
         $this->language = $language ?? 'en_US';
+
+        try {
+            $this->timezone = new DateTimeZone($timeZone ?? 'UTC');
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
     }
 
     /**
@@ -84,7 +95,7 @@ class DateTime
      * @param string $string A system date.
      * @param string|null $format A target format. If not specified then the default format will be used.
      * @param string|null $language A language. If not specified then the default language will be used.
-     * @throws RuntimeException If could not parse.
+     * @throws RuntimeException If it could not parse.
      */
     public function convertSystemDate(
         string $string,
@@ -95,7 +106,7 @@ class DateTime
         $dateTime = DateTimeStd::createFromFormat('Y-m-d', $string);
 
         if ($dateTime === false) {
-            throw new RuntimeException("Could not parse date `{$string}`.");
+            throw new RuntimeException("Could not parse date `$string`.");
         }
 
         $carbon = Carbon::instance($dateTime);
@@ -112,7 +123,7 @@ class DateTime
      * @param ?string $timezone A target timezone. If not specified then the default timezone will be used.
      * @param ?string $format A target format. If not specified then the default format will be used.
      * @param ?string $language A language. If not specified then the default language will be used.
-     * @throws RuntimeException If could not parse.
+     * @throws RuntimeException If it could not parse.
      */
     public function convertSystemDateTime(
         string $string,
@@ -128,10 +139,15 @@ class DateTime
         $dateTime = DateTimeStd::createFromFormat('Y-m-d H:i:s', $string);
 
         if ($dateTime === false) {
-            throw new RuntimeException("Could not parse date-time `{$string}`.");
+            throw new RuntimeException("Could not parse date-time `$string`.");
         }
 
-        $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
+        try {
+            $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $dateTime->setTimezone($tz);
 
@@ -149,7 +165,12 @@ class DateTime
      */
     public function getTodayString(?string $timezone = null, ?string $format = null): string
     {
-        $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
+        try {
+            $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $dateTime = new DateTimeStd();
         $dateTime->setTimezone($tz);
@@ -168,7 +189,12 @@ class DateTime
      */
     public function getNowString(?string $timezone = null, ?string $format = null): string
     {
-        $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
+        try {
+            $tz = $timezone ? new DateTimeZone($timezone) : $this->timezone;
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $dateTime = new DateTimeStd();
 
@@ -217,6 +243,41 @@ class DateTime
             array_values($map),
             $format
         );
+    }
+
+    /**
+     * Get the default time zone.
+     *
+     * @since 8.0.0
+     */
+    public function getTimezone(): DateTimeZone
+    {
+        return $this->timezone;
+    }
+
+    /**
+     * Get a today's date according the default time zone.
+     *
+     * @since 8.0.0
+     */
+    public function getToday(): Date
+    {
+        $string = (new DateTimeImmutable)
+            ->setTimezone($this->timezone)
+            ->format(self::SYSTEM_DATE_FORMAT);
+
+        return Date::fromString($string);
+    }
+
+    /**
+     * Get a now date-time with the default time zone applied.
+     *
+     * @since 8.0.0
+     */
+    public function getNow(): DateTimeField
+    {
+        return DateTimeField::createNow()
+            ->withTimezone($this->timezone);
     }
 
     /**

@@ -26,16 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/global-search/scope-badge', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class GlobalSearchScopeBadgeView extends View {
 
-        template: 'global-search/scope-badge',
+    template = 'global-search/scope-badge'
 
-        data: function () {
-            return {
-                label: this.translate(this.model.get('_scope'), 'scopeNames'),
-            };
-        },
-    });
-});
+    data() {
+        return {
+            label: this.translate(this.model.get('_scope'), 'scopeNames'),
+        };
+    }
+}
+
+export default GlobalSearchScopeBadgeView;

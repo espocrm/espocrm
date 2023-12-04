@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Record\Hook;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Entity;
 use Espo\Core\Record\CreateParams;
 
@@ -39,6 +42,9 @@ interface CreateHook
 {
     /**
      * @param TEntity $entity
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
      */
     public function process(Entity $entity, CreateParams $params): void;
 }

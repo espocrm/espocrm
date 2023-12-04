@@ -26,7 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/enum-styled', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({});
-});
+class EnumStyledFieldView extends EnumFieldView {}
+
+// noinspection JSUnusedGlobalSymbols
+export default EnumStyledFieldView;

@@ -26,71 +26,143 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/array-field-add', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class ArrayFieldAddModalView extends ModalView {
 
-        cssName: 'add-modal',
+    template = 'modals/array-field-add'
 
-        template: 'modals/array-field-add',
+    cssName = 'add-modal'
+    backdrop = true
 
-        backdrop: true,
+    data() {
+        return {
+            optionList: this.optionList,
+            translatedOptions: this.translations,
+        };
+    }
 
-        fitHeight: true,
+    events = {
+        /** @this ArrayFieldAddModalView */
+        'click .add': function (e) {
+            let value = $(e.currentTarget).attr('data-value');
 
-        data: function () {
-            return {
-                optionList: this.options.options,
-                translatedOptions: this.options.translatedOptions,
-            };
+            this.trigger('add', value);
         },
+        /** @this ArrayFieldAddModalView */
+        'click input[type="checkbox"]': function (e) {
+            let value = $(e.currentTarget).attr('data-value');
 
-        events: {
-            'click .add': function (e) {
-                var value = $(e.currentTarget).attr('data-value');
-                this.trigger('add', value);
-            },
-            'click input[type="checkbox"]': function (e) {
-                var value = $(e.currentTarget).attr('data-value');
-                if (e.target.checked) {
-                    this.checkedList.push(value);
-                } else {
-                    var index = this.checkedList.indexOf(value);
+            if (e.target.checked) {
+                this.checkedList.push(value);
+            } else {
+                let index = this.checkedList.indexOf(value);
 
-                    if (index !== -1) {
-                        this.checkedList.splice(index, 1);
-                    }
+                if (index !== -1) {
+                    this.checkedList.splice(index, 1);
                 }
+            }
 
-                if (this.checkedList.length) {
-                    this.enableButton('select');
-                } else {
-                    this.disableButton('select');
-                }
+            this.checkedList.length ?
+                this.enableButton('select') :
+                this.disableButton('select');
+        },
+        /** @this ArrayFieldAddModalView */
+        'keyup input[data-name="quick-search"]': function (e) {
+            this.processQuickSearch(e.currentTarget.value);
+        },
+    }
+
+    setup() {
+        this.headerText = this.translate('Add Item');
+        this.checkedList = [];
+        this.translations = Espo.Utils.clone(this.options.translatedOptions || {});
+        this.optionList = this.options.options || [];
+
+        this.optionList.forEach(item => {
+            if (item in this.translations) {
+                return;
+            }
+
+            this.translations[item] = item;
+        });
+
+        this.buttonList = [
+            {
+                name: 'select',
+                style: 'danger',
+                label: 'Select',
+                disabled: true,
+                onClick: () => {
+                    this.trigger('add-mass', this.checkedList);
+                },
             },
-        },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+            },
+        ];
+    }
 
-        setup: function () {
-            this.header = this.translate('Add Item');
-            this.checkedList = [];
+    afterRender() {
+        this.$noData = this.$el.find('.no-data');
 
-            this.buttonList = [
-                {
-                    name: 'select',
-                    style: 'danger',
-                    label: 'Select',
-                    disabled: true,
-                    onClick: function (dialog) {
-                        this.trigger('add-mass', this.checkedList);
-                    }.bind(this),
-                },
-                {
-                    name: 'cancel',
-                    label: 'Cancel'
-                },
-            ];
+        setTimeout(() => {
+            this.$el.find('input[data-name="quick-search"]').focus();
+        }, 100);
+    }
 
-        },
+    processQuickSearch(text) {
+        text = text.trim();
 
-    });
-});
+        let $noData = this.$noData;
+
+        $noData.addClass('hidden');
+
+        if (!text) {
+            this.$el.find('ul .list-group-item').removeClass('hidden');
+
+            return;
+        }
+
+        let matchedList = [];
+
+        let lowerCaseText = text.toLowerCase();
+
+        this.optionList.forEach(item => {
+            let label = this.translations[item].toLowerCase();
+
+            for (let word of label.split(' ')) {
+                let matched = word.indexOf(lowerCaseText) === 0;
+
+                if (matched) {
+                    matchedList.push(item);
+
+                    return;
+                }
+            }
+        });
+
+        if (matchedList.length === 0) {
+            this.$el.find('ul .list-group-item').addClass('hidden');
+
+            $noData.removeClass('hidden');
+
+            return;
+        }
+
+        this.optionList.forEach(item => {
+            let $row = this.$el.find(`ul .list-group-item[data-name="${item}"]`);
+
+            if (!~matchedList.indexOf(item)) {
+                $row.addClass('hidden');
+
+                return;
+            }
+
+            $row.removeClass('hidden');
+        });
+    }
+}
+
+export default ArrayFieldAddModalView;

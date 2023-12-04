@@ -32,66 +32,6 @@ define('crm:views/case/record/detail', ['views/record/detail'], function (Dep) {
 
         selfAssignAction: true,
 
-        setupActionItems: function () {
-            Dep.prototype.setupActionItems.call(this);
-
-            if (
-                this.getAcl().checkModel(this.model, 'edit') &&
-                !~['Closed', 'Rejected', 'Duplicate'].indexOf(this.model.get('status')) &&
-                this.getAcl().checkField(this.entityType, 'status', 'edit')
-            ) {
-
-                var statusList = this.getMetadata().get(
-                    ['entityDefs', 'Case', 'fields', 'status', 'options']
-                ) || [];
-
-                if (~statusList.indexOf('Closed')) {
-                    this.dropdownItemList.push({
-                        'label': 'Close',
-                        'name': 'close',
-                    });
-                }
-
-                if (~statusList.indexOf('Rejected')) {
-                    this.dropdownItemList.push({
-                        'label': 'Reject',
-                        'name': 'reject',
-                    });
-                }
-            }
-        },
-
-        manageAccessEdit: function (second) {
-            Dep.prototype.manageAccessEdit.call(this, second);
-
-            if (second) {
-                if (!this.getAcl().checkModel(this.model, 'edit', true)) {
-                    this.hideActionItem('close');
-                    this.hideActionItem('reject');
-                }
-            }
-        },
-
-        actionClose: function () {
-            this.model.save({status: 'Closed'}, {patch: true})
-                .then(() => {
-                    Espo.Ui.success(this.translate('Closed', 'labels', 'Case'));
-
-                    this.removeButton('close');
-                    this.removeButton('reject');
-                });
-        },
-
-        actionReject: function () {
-            this.model.save({status: 'Rejected'}, {patch: true})
-                .then(() => {
-                    Espo.Ui.success(this.translate('Rejected', 'labels', 'Case'));
-
-                    this.removeButton('close');
-                    this.removeButton('reject');
-                });
-        },
-
         getSelfAssignAttributes: function () {
             if (this.model.get('status') === 'New') {
                 if (~(this.getMetadata().get(['entityDefs', 'Case', 'fields', 'status', 'options']) || [])

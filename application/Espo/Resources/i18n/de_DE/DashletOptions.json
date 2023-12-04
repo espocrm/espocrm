@@ -15,7 +15,8 @@
     "sortBy": "Reihenfolge (Feld)",
     "sortDirection": "Reihenfolge (Richtung)",
     "dateFilter": "Datumsfilter",
-    "skipOwn": "Eigene Einträge nicht zeigen"
+    "skipOwn": "Eigene Einträge nicht zeigen",
+    "folder": "Ordner"
   },
   "options": {
     "mode": {

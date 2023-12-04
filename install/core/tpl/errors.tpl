@@ -3,16 +3,11 @@
     <form id="nav">
         <div class="row">
             <div class=" col-md-13">
-                <div class="panel-body" align="center">
+                <div class="panel-body" style="text-align: center">
                 </div>
             </div>
         </div>
     </form>
-</div>
-<div class="loading-panel hide">
-    <div class="text-right">
-        <i class="fas fa-spinner fa-spin"></i>
-    </div>
 </div>
 <footer class="modal-footer">
     <button class="btn btn-warning btn-s-wide" type="button" id="re-check">{$langs['labels']['Re-check']}</button>

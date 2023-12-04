@@ -26,63 +26,60 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/datetime-short', ['views/fields/datetime'], function (Dep) {
+/** @module views/fields/datetime-short */
 
-    return Dep.extend({
+import DatetimeFieldView from 'views/fields/datetime';
+import moment from 'moment';
 
-        listTemplate: 'fields/datetime-short/list',
+class DatetimeShortFieldView extends DatetimeFieldView {
 
-        detailTemplate: 'fields/datetime-short/detail',
+    listTemplate = 'fields/datetime-short/list'
+    detailTemplate = 'fields/datetime-short/detail'
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+    data() {
+        let data = super.data();
 
-            if (this.mode === 'list' || this.mode === 'detail') {
-                data.fullDateValue = Dep.prototype.getDateStringValue.call(this);
-            }
+        if (this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL) {
+            data.fullDateValue = super.getDateStringValue();
+        }
 
-            return data;
-        },
+        return data;
+    }
 
-        getDateStringValue: function () {
-            if (this.mode === 'list' || this.mode === 'detail') {
-                var value = this.model.get(this.name)
+    getDateStringValue() {
+        if (!(this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL)) {
+            return super.getDateStringValue();
+        }
 
-                if (value) {
-                    var string;
+        let value = this.model.get(this.name)
 
-                    var timeFormat = this.getDateTime().timeFormat;
+        if (!value) {
+            return super.getDateStringValue();
+        }
 
-                    if (this.params.hasSeconds) {
-                        timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
-                    }
+        let timeFormat = this.getDateTime().timeFormat;
 
-                    var d = this.getDateTime().toMoment(value);
+        if (this.params.hasSeconds) {
+            timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
+        }
 
-                    var now = moment().tz(this.getDateTime().timeZone || 'UTC');
+        let m = this.getDateTime().toMoment(value);
+        let now = moment().tz(this.getDateTime().timeZone || 'UTC');
 
-                    if (
-                        d.unix() > now.clone().startOf('day').unix() &&
-                        d.unix() < now.clone().add(1, 'days').startOf('day').unix()
-                    ) {
-                        string = d.format(timeFormat);
+        if (
+            m.unix() > now.clone().startOf('day').unix() &&
+            m.unix() < now.clone().add(1, 'days').startOf('day').unix()
+        ) {
+            return m.format(timeFormat);
+        }
 
-                        return string;
-                    }
+        let readableFormat = this.getDateTime().getReadableShortDateFormat();
 
-                    var readableFormat = this.getDateTime().getReadableShortDateFormat();
+        return m.format('YYYY') === now.format('YYYY') ?
+            m.format(readableFormat) :
+            m.format(readableFormat + ', YY');
+    }
+}
 
-                    if (d.format('YYYY') === now.format('YYYY')) {
-                        string = d.format(readableFormat);
-                    } else {
-                        string = d.format(readableFormat + ', YY');
-                    }
-
-                    return string;
-                }
-            }
-
-            return Dep.prototype.getDateStringValue.call(this);
-        },
-    });
-});
+// noinspection JSUnusedGlobalSymbols
+export default DatetimeShortFieldView;

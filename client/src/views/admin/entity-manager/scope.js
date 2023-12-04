@@ -89,6 +89,10 @@ define('views/admin/entity-manager/scope', ['view'], function (Dep) {
             this.hasFields = this.isCustomizable;
             this.hasRelationships = this.isCustomizable;
 
+            if (!scopeData.customizable) {
+                this.isEditable = false;
+            }
+
             if ('edit' in entityManagerData) {
                 this.isEditable = entityManagerData.edit;
             }
@@ -117,7 +121,7 @@ define('views/admin/entity-manager/scope', ['view'], function (Dep) {
 
             Espo.loader.requirePromise('views/admin/entity-manager/modals/select-formula')
                 .then(View => {
-                    /** @type {module:views/modal.Class} */
+                    /** @type {module:views/modal} */
                     let view = new View({
                         scope: this.scope,
                     });

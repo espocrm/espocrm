@@ -28,39 +28,5 @@
 
 define('crm:views/task/modals/detail', ['views/modals/detail'], function (Dep) {
 
-    return Dep.extend({
-
-        setupRecordButtons: function () {
-            this.addDropdownItem({
-                name: 'setCompleted',
-                label: 'Complete',
-            }, true);
-
-            Dep.prototype.setupRecordButtons.call(this);
-        },
-
-        controlRecordButtonsVisibility: function () {
-            if (
-                !~['Completed', 'Canceled'].indexOf(this.model.get('status')) &&
-                this.getAcl().check(this.model, 'edit')
-            ) {
-                this.showActionItem('setCompleted');
-            } else {
-                this.hideActionItem('setCompleted');
-            }
-
-            Dep.prototype.controlRecordButtonsVisibility.call(this);
-        },
-
-        actionSetCompleted: function () {
-            this.model
-                .save({status: 'Completed'}, {patch: true})
-                .then(() => {
-                    this.hideActionItem('setCompleted');
-                    Espo.Ui.success(this.getLanguage().translateOption('Completed', 'status', 'Task'));
-
-                    this.trigger('after:save', this.model);
-                })
-        }
-    });
+    return Dep.extend({});
 });

@@ -6,7 +6,9 @@
     "align": "Hizala",
     "panelName": "Panel Adı",
     "style": "Stil",
-    "sticked": "Yapışmış"
+    "sticked": "Yapışmış",
+    "isLarge": "Büyük yazı boyutu",
+    "dynamicLogicVisible": "Paneli görünür kılan koşullar"
   },
   "options": {
     "align": {
@@ -21,5 +23,13 @@
       "warning": "Uyarı",
       "primary": "Öncelikli"
     }
+  },
+  "labels": {
+    "New panel": "Yeni Pano",
+    "Layout": "Görünüm"
+  },
+  "messages": {
+    "alreadyExists": "`{name}` düzeni zaten var.",
+    "createInfo": "Özel liste düzenleri, ilişki panelleri tarafından kullanılabilir."
   }
 }

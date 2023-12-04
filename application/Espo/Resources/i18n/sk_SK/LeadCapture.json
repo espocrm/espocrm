@@ -1,1 +1,47 @@
-{}
+{
+  "fields": {
+    "name": "Meno",
+    "campaign": "Kampaň",
+    "isActive": "Je aktívny",
+    "subscribeToTargetList": "Prihláste sa na odber zoznamu cieľov",
+    "subscribeContactToTargetList": "Prihlásiť sa na odber Kontakt, ak existuje",
+    "targetList": "Zoznam cieľov",
+    "fieldList": "Polia užitočného zaťaženia",
+    "optInConfirmation": "Dvojité prihlásenie",
+    "optInConfirmationEmailTemplate": "Šablóna e-mailu na potvrdenie súhlasu",
+    "optInConfirmationLifetime": "Životnosť potvrdenia prihlásenia (hodiny)",
+    "optInConfirmationSuccessMessage": "Text, ktorý sa zobrazí po potvrdení prihlásenia",
+    "leadSource": "Zdroj prvého kontaktu",
+    "apiKey": "API kľúč",
+    "targetTeam": "Cieľový tím",
+    "exampleRequestMethod": "Metóda",
+    "exampleRequestPayload": "Užitočné zaťaženie",
+    "createLeadBeforeOptInConfirmation": "Pred prvým kontaktom vytvorte potenciálneho zákazníka",
+    "duplicateCheck": "Duplicitná kontrola",
+    "skipOptInConfirmationIfSubscribed": "Preskočte potvrdenie, ak je potenciálny zákazník už v zozname cieľov",
+    "smtpAccount": "SMTP účet",
+    "inboundEmail": "Skupinový e-mailový účet",
+    "exampleRequestHeaders": "Hlavičky"
+  },
+  "links": {
+    "targetList": "Zoznam cieľov",
+    "campaign": "Kampaň",
+    "optInConfirmationEmailTemplate": "Šablóna e-mailu na potvrdenie súhlasu",
+    "targetTeam": "Cieľový tím",
+    "inboundEmail": "Skupinový e-mailový účet"
+  },
+  "labels": {
+    "Create LeadCapture": "Vytvorte vstupný bod",
+    "Generate New API Key": "Vygenerovať nový kľúč API",
+    "Request": "Žiadosť",
+    "Confirm Opt-In": "Potvrďte prihlásenie"
+  },
+  "messages": {
+    "generateApiKey": "Vytvorte nový kľúč API",
+    "optInConfirmationExpired": "Platnosť odkazu na potvrdenie prihlásenia vypršala.",
+    "optInIsConfirmed": "Prihlásenie je potvrdené."
+  },
+  "tooltips": {
+    "optInConfirmationSuccessMessage": "Markdown je podporovaný."
+  }
+}

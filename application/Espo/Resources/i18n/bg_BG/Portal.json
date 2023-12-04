@@ -15,13 +15,15 @@
     "defaultCurrency": "По подразбиране валути",
     "customUrl": "персонализиран URL адрес",
     "customId": "Персонализиран идентификатор",
-    "layoutSet": "Оформление"
+    "layoutSet": "Оформление",
+    "authenticationProvider": "Доставчик на удостоверяване"
   },
   "links": {
     "users": "Потребители",
     "portalRoles": "Роли",
     "notes": "бележки",
-    "layoutSet": "Оформление"
+    "layoutSet": "Оформление",
+    "authenticationProvider": "Доставчик на удостоверяване"
   },
   "tooltips": {
     "portalRoles": "Избраните роли за портала ще се приложат на всички потребители, които са част от този портал.",

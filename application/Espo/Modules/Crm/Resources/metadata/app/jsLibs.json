@@ -1,15 +1,34 @@
 {
-    "full-calendar": {
+    "fullcalendar": {
         "path": "client/modules/crm/lib/fullcalendar.js",
         "devPath": "client/modules/crm/lib/original/fullcalendar.js",
-        "exportsTo": "$.fn",
-        "exportsAs": "fullCalendar",
+        "exportsTo": "window",
+        "exportsAs": "FullCalendar",
         "sourceMap": true
     },
-    "vis": {
-        "path": "client/modules/crm/lib/vis.js",
-        "devPath": "client/modules/crm/lib/original/vis.js",
-        "exportsAs": "vis",
+    "@fullcalendar/moment": {
+        "path": "client/modules/crm/lib/fullcalendar-moment.js",
+        "devPath": "client/modules/crm/lib/original/fullcalendar-moment.js",
+        "exportsTo": "FullCalendar",
+        "exportsAs": "Moment",
+        "sourceMap": true
+    },
+    "@fullcalendar/moment-timezone": {
+        "path": "client/modules/crm/lib/fullcalendar-moment-timezone.js",
+        "devPath": "client/modules/crm/lib/original/fullcalendar-moment-timezone.js",
+        "exportsTo": "FullCalendar",
+        "exportsAs": "MomentTimezone",
+        "sourceMap": true
+    },
+    "vis-timeline": {
+        "path": "client/modules/crm/lib/vis-timeline.js",
+        "devPath": "client/modules/crm/lib/original/vis-timeline.js",
+        "sourceMap": true
+    },
+    "vis-data": {
+        "path": "client/modules/crm/lib/vis-data.js",
+        "devPath": "client/modules/crm/lib/original/vis-data.js",
+        "aliases": ["vis-data/peer/umd/vis-data.js"],
         "sourceMap": true
     }
 }

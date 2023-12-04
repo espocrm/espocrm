@@ -103,7 +103,7 @@ function (Dep, /** module:ui/select */Select) {
                             return;
                         }
 
-                        if (links[link].disabled) {
+                        if (links[link].disabled || links[link].utility) {
                             return;
                         }
 
@@ -145,12 +145,23 @@ function (Dep, /** module:ui/select */Select) {
                 return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
             });
 
-            fieldList.forEach((field) => {
+            fieldList.forEach(field => {
                 var fieldType = this.getMetadata().get(['entityDefs', scope, 'fields', field, 'type']);
 
-                if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'disabled'])) return;
-                if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'directAccessDisabled'])) return;
-                if (this.getMetadata().get(['entityDefs', scope, 'fields', field, 'templatePlaceholderDisabled'])) return;
+                let aclDefs = this.getMetadata().get(['entityAcl', scope, 'fields', field]) || {};
+                let fieldDefs = this.getMetadata().get(['entityDefs', scope, 'fields', field]) || {};
+
+                if (
+                    aclDefs.onlyAdmin ||
+                    aclDefs.forbidden ||
+                    aclDefs.internal ||
+                    fieldDefs.disabled ||
+                    fieldDefs.utility ||
+                    fieldDefs.directAccessDisabled ||
+                    fieldDefs.templatePlaceholderDisabled
+                ) {
+                    return false;
+                }
 
                 if (fieldType === 'map') return;
                 if (fieldType === 'linkMultiple') return;

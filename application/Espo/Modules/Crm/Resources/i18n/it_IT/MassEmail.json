@@ -6,8 +6,8 @@
     "startAt": "Data Inizio",
     "fromAddress": "Indirizzo mittente",
     "fromName": "Dal Nome",
-    "replyToAddress": "Rispondi a Indirizzo",
-    "replyToName": "Rispondi a Nome",
+    "replyToAddress": "Rispondi A (indirizzo)",
+    "replyToName": "Rispondi A (Nome)",
     "campaign": "Campagna",
     "emailTemplate": "Modello Email",
     "targetLists": "Liste di Destinazione",
@@ -25,7 +25,7 @@
   "options": {
     "status": {
       "Draft": "Bozza",
-      "Pending": "In attesa",
+      "Pending": "In Attesa",
       "In Process": "In corso",
       "Complete": "Completo",
       "Canceled": "Cancellato",

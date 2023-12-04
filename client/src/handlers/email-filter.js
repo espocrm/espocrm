@@ -26,101 +26,101 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('handlers/email-filter', ['dynamic-handler'], (Dep) => {
+import DynamicHandler from 'dynamic-handler';
 
-    return Dep.extend({
+class EmailFilterHandler extends DynamicHandler {
 
-        init: function () {
-            if (this.model.isNew()) {
-                if (!this.recordView.getUser().isAdmin()) {
-                    this.recordView.hideField('isGlobal');
-                }
-            }
-
-            if (
-                !this.model.isNew() &&
-                !this.recordView.getUser().isAdmin() &&
-                !this.model.get('isGlobal')
-            ) {
+    init() {
+        if (this.model.isNew()) {
+            if (!this.recordView.getUser().isAdmin()) {
                 this.recordView.hideField('isGlobal');
             }
+        }
 
-            if (this.model.isNew() && !this.model.get('parentId')) {
-                this.model.set('parentType', 'User');
-                this.model.set('parentId', this.recordView.getUser().id);
-                this.model.set('parentName', this.recordView.getUser().get('name'));
+        if (
+            !this.model.isNew() &&
+            !this.recordView.getUser().isAdmin() &&
+            !this.model.get('isGlobal')
+        ) {
+            this.recordView.hideField('isGlobal');
+        }
 
-                if (!this.recordView.getUser().isAdmin()) {
-                    this.recordView.setFieldReadOnly('parent');
-                }
-            }
-            else if (
-                this.model.get('parentType') &&
-                !this.recordView.options.duplicateSourceId
-            ) {
+        if (this.model.isNew() && !this.model.get('parentId')) {
+            this.model.set('parentType', 'User');
+            this.model.set('parentId', this.recordView.getUser().id);
+            this.model.set('parentName', this.recordView.getUser().get('name'));
+
+            if (!this.recordView.getUser().isAdmin()) {
                 this.recordView.setFieldReadOnly('parent');
-                this.recordView.setFieldReadOnly('isGlobal');
+            }
+        }
+        else if (
+            this.model.get('parentType') &&
+            !this.recordView.options.duplicateSourceId
+        ) {
+            this.recordView.setFieldReadOnly('parent');
+            this.recordView.setFieldReadOnly('isGlobal');
+        }
+
+        this.recordView.listenTo(this.model, 'change:isGlobal', (model, value, o) => {
+            if (!o.ui) {
+                return;
             }
 
-            this.recordView.listenTo(this.model, 'change:isGlobal', (model, value, o) => {
-                if (!o.ui) {
+            if (value) {
+                this.model.set({
+                    action: 'Skip',
+                    parentName: null,
+                    parentType: null,
+                    parentId: null,
+                    emailFolderId: null,
+                    groupEmailFolderId: null,
+                    markAsRead: false,
+                });
+            }
+        });
+
+        this.recordView.listenTo(this.model, 'change:parentType', (model, value, o) => {
+            if (!o.ui) {
+                return;
+            }
+
+            // Avoiding side effects.
+            setTimeout(() => {
+                if (value !== 'User') {
+                    this.model.set('markAsRead', false);
+                }
+
+                if (value === 'EmailAccount') {
+                    this.model.set('action', 'Skip');
+                    this.model.set('emailFolderId', null);
+                    this.model.set('groupEmailFolderId', null);
+                    this.model.set('markAsRead', false);
+
                     return;
                 }
 
-                if (value) {
-                    this.model.set({
-                        action: 'Skip',
-                        parentName: null,
-                        parentType: null,
-                        parentId: null,
-                        emailFolderId: null,
-                        groupEmailFolderId: null,
-                        markAsRead: false,
-                    });
-                }
-            });
-
-            this.recordView.listenTo(this.model, 'change:parentType', (model, value, o) => {
-                if (!o.ui) {
-                    return;
-                }
-
-                // Avoiding side effects.
-                setTimeout(() => {
-                    if (value !== 'User') {
-                        this.model.set('markAsRead', false);
-                    }
-
-                    if (value === 'EmailAccount') {
+                if (value !== 'InboundEmail') {
+                    if (this.model.get('action') === 'Move to Group Folder') {
                         this.model.set('action', 'Skip');
-                        this.model.set('emailFolderId', null);
-                        this.model.set('groupEmailFolderId', null);
-                        this.model.set('markAsRead', false);
-
-                        return;
                     }
 
-                    if (value !== 'InboundEmail') {
-                        if (this.model.get('action') === 'Move to Group Folder') {
-                            this.model.set('action', 'Skip');
-                        }
+                    this.model.set('groupEmailFolderId', null);
 
-                        this.model.set('groupEmailFolderId', null);
+                    return;
+                }
 
-                        return;
+                if (value !== 'User') {
+                    if (this.model.get('action') === 'Move to Folder') {
+                        this.model.set('action', 'Skip');
                     }
 
-                    if (value !== 'User') {
-                        if (this.model.get('action') === 'Move to Folder') {
-                            this.model.set('action', 'Skip');
-                        }
+                    this.model.set('groupFolderId', null);
+                }
+            }, 40);
+        });
+    }
+}
 
-                        this.model.set('groupFolderId', null);
+export default EmailFilterHandler;
 
-                        return;
-                    }
-                }, 40);
-            });
-        },
-    });
-});

@@ -37,7 +37,11 @@
             "validationList": [
                 "array",
                 "required"
-            ]
+            ],
+            "suppressValidationList": [
+                "arrayOfString"
+            ],
+            "doNotStoreArrayValues": true
         },
         "quickCreateList": {
             "type": "array",
@@ -87,7 +91,7 @@
         },
         "dashletsOptions": {
             "type": "jsonObject",
-            "disabled": true
+            "utility": true
         },
         "customUrl": {
             "type": "url"

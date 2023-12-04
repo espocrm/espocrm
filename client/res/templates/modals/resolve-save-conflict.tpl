@@ -5,8 +5,8 @@
 <table class="table" style="table-layout: fixed;">
     <thead>
         <tr>
-            <th width="25%">{{translate 'Field'}}</th>
-            <th width="25%">{{translate 'Resolution'}}</th>
+            <th style="width: 25%">{{translate 'Field'}}</th>
+            <th style="width: 25%">{{translate 'Resolution'}}</th>
             <th>{{translate 'Value'}}</th>
         </tr>
     </thead>

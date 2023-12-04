@@ -2,10 +2,10 @@
   "fields": {
     "name": "Názov",
     "accountRole": "Titul",
-    "account": "Účet",
-    "accounts": "Účty",
+    "account": "Organizácia",
+    "accounts": "Organizácie",
     "phoneNumber": "Telefón",
-    "accountType": "Typ účtu",
+    "accountType": "Typ organizácie",
     "doNotCall": "Nevolať",
     "address": "Adresa",
     "opportunityRole": "Rola príležitosti",
@@ -14,11 +14,12 @@
     "targetLists": "Zoznamy cieľov",
     "targetList": "Zoznam cieľov",
     "portalUser": "Portálový používateľ",
-    "originalLead": "Pôvodná stopa",
+    "originalLead": "Pôvodný prvý kontakt",
     "acceptanceStatus": "Akceptačný status",
     "accountIsInactive": "Účet neaktívny",
     "acceptanceStatusMeetings": "Akceptačný stav (stretnutia)",
-    "acceptanceStatusCalls": "Akceptačný stav (Hovory)"
+    "acceptanceStatusCalls": "Akceptačný stav (Hovory)",
+    "title": "Názov spoločnosti"
   },
   "links": {
     "opportunities": "Príležitosti",
@@ -26,11 +27,11 @@
     "targetLists": "Zoznamy cieľov",
     "campaignLogRecords": "Protokol kampane",
     "campaign": "Kampaň",
-    "account": "Účet (Primárny)",
-    "accounts": "Účty",
+    "account": "Organizácia (Primárna)",
+    "accounts": "Organizácie",
     "casesPrimary": "Prípady (Primárne)",
     "portalUser": "Portálový používateľ",
-    "originalLead": "Pôvodná stopa",
+    "originalLead": "Pôvodný prvý kontakt",
     "documents": "Dokumenty",
     "tasksPrimary": "Úlohy (rozbalené)"
   },

@@ -43,6 +43,10 @@
             "type": "bool"
         },
         {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "noSpellCheck",
             "type": "bool",
             "default": false,
@@ -67,5 +71,6 @@
     "textFilter": true,
     "textFilterForeign": true,
     "dynamicLogicOptions": true,
-    "fullTextSearch": true
+    "fullTextSearch": true,
+    "default": null
 }

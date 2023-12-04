@@ -139,6 +139,7 @@ class SthCollection implements Collection, IteratorAggregate, Countable
 
     /**
      * @deprecated As of v6.0. Use `getValueMapList`.
+     * @todo Remove in v9.0.
      * @return array<int, array<string, mixed>>|stdClass[]
      */
     public function toArray(bool $itemsAsObjects = false): array
@@ -146,14 +147,10 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         $arr = [];
 
         foreach ($this as $entity) {
-            if ($itemsAsObjects) {
-                $item = $entity->getValueMap();
-            }
-            else if (method_exists($entity, 'toArray')) {
-                $item = $entity->toArray();
-            }
-            else {
-                $item = get_object_vars($entity->getValueMap());
+            $item = $entity->getValueMap();
+
+            if (!$itemsAsObjects) {
+                $item = get_object_vars($item);
             }
 
             $arr[] = $item;
@@ -170,7 +167,6 @@ class SthCollection implements Collection, IteratorAggregate, Countable
         /** @var stdClass[] */
         return $this->toArray(true);
     }
-
 
     /**
      * Whether is fetched from DB. SthCollection is always fetched.

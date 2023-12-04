@@ -1,1 +1,23 @@
-{}
+{
+  "labels": {
+    "Check Syntax": "Перевірити синтаксис",
+    "Run": "Виконати"
+  },
+  "fields": {
+    "target": "Ціль",
+    "targetType": "Тип цілі",
+    "script": "Скрипт",
+    "output": "Вихід",
+    "error": "Помилка"
+  },
+  "messages": {
+    "runSuccess": "Виконано успішно.",
+    "runError": "Помилка.",
+    "checkSyntaxSuccess": "Синтаксис правильний.",
+    "checkSyntaxError": "Синтаксична помилка.",
+    "emptyScript": "Скрипт порожній."
+  },
+  "tooltips": {
+    "output": "Вивести значення за допомогою функції `output\\printLine`."
+  }
+}

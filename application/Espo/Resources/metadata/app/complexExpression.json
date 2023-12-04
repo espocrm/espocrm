@@ -236,6 +236,31 @@
             "name": "ROUND",
             "insertText": "ROUND:(VALUE, PRECISION)",
             "returnType": "float"
+        },
+        {
+            "name": "COUNT",
+            "insertText": "COUNT:(EXPR)",
+            "returnType": "int"
+        },
+        {
+            "name": "SUM",
+            "insertText": "SUM:(EXPR)",
+            "returnType": "int|float"
+        },
+        {
+            "name": "AVG",
+            "insertText": "AVG:(EXPR)",
+            "returnType": "float"
+        },
+        {
+            "name": "MAX",
+            "insertText": "MAX:(EXPR)",
+            "returnType": "int|float"
+        },
+        {
+            "name": "MIN",
+            "insertText": "MIN:(EXPR)",
+            "returnType": "int|float"
         }
     ]
 }

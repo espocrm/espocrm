@@ -11,7 +11,7 @@
     "Updated": "Aggiornati",
     "Result": "Risultato",
     "Show records": "Mostra i record",
-    "Remove Duplicates": "Rimuovi duplicati",
+    "Remove Duplicates": "Rimuovi Duplicati",
     "importedCount": "Importati (conteggio)",
     "duplicateCount": "Duplicati (conteggio)",
     "updatedCount": "Aggiornati (conteggio)",
@@ -44,7 +44,7 @@
     "Duplicates": "Duplicati",
     "Skip searching for duplicates": "Salta la ricerca per duplicati",
     "Timezone": "Fuso Orario",
-    "Remove Import Log": "Rimuovi log di import",
+    "Remove Import Log": "Rimuovi Log di Import",
     "New Import": "Nuova importazione",
     "Import Results": "Risultati Importazioni",
     "Silent Mode": "Modalità silenziosa",
@@ -62,7 +62,7 @@
     "confirmRemoveDuplicates": "Questo rimuoverà permanentemente tutti i record importati che sono stati riconosciuti come duplicati. Sei sicuro?",
     "removeImportLog": "Questo rimuoverà il registro di importazione. Tutti i record importati verranno mantenuti. Usalo se sei sicuro che l'importazione va bene.",
     "confirmRemoveImportLog": "Così facendo rimuoverai il log di importazione. Tutti i record importati rimarranno a sistema. Non sarai in grado di ripristinare i risultati di importazione. Sei sicuro?",
-    "noErrors": "Nessun errore."
+    "importRunning": "Importazione in corso..."
   },
   "fields": {
     "entityType": "Tipo di entità",

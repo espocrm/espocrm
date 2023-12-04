@@ -48,9 +48,6 @@ use Espo\Core\Utils\Metadata;
 
 use Espo\Entities\Attachment;
 
-/**
- * @todo Remove PHPStan ignores when PHP v8.0 is the min supported.
- */
 class Image implements EntryPoint
 {
     /** @var ?string[] */

@@ -244,6 +244,15 @@ a.btn {
     }
 }
 
+.btn:not(.btn-icon) {
+    > .fas,
+    > .far {
+        &:first-child + span {
+            padding-left: 2px;
+        }
+    }
+}
+
 .btn-text {
     color: var(--btn-text-color);
     //border-radius: 0;

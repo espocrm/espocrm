@@ -3,7 +3,10 @@
     "fieldList": "Elenco Campi",
     "exportAllFields": "Esporta tutti i campi",
     "format": "Formato",
-    "status": "Stato"
+    "status": "Stato",
+    "xlsxLite": "Leggero",
+    "xlsxRecordLinks": "Collegamenti dei Record",
+    "xlsxTitle": "Titolo"
   },
   "options": {
     "status": {
@@ -16,5 +19,9 @@
   "messages": {
     "exportProcessed": "L'esportazione è stata elaborata. Scarica il [file]({url}).",
     "infoText": "L'esportazione è in fase di elaborazione in idle da parte di cron. Può richiedere un po' di tempo per essere completata. La chiusura di questa finestra di dialogo non influirà sul processo di esecuzione."
+  },
+  "tooltips": {
+    "xlsxLite": "Consuma molta meno memoria. Consigliato se si esporta un numero elevato di record.",
+    "xlsxTitle": "Stampa un titolo e la data corrente nell'intestazione."
   }
 }

@@ -79,7 +79,8 @@
     "smtpAuth": "Autentifikācija",
     "smtpSecurity": "Drošība",
     "smtpUsername": "Lietotājvārds",
-    "emailAddress": "E-pasts"
+    "emailAddress": "E-pasts",
+    "Platform": "Platforma"
   },
   "messages": {
     "1045": "Piekļuve liegta lietotājam",

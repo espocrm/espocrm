@@ -124,8 +124,7 @@ define('views/email/fields/email-address', ['views/fields/base'], function (Dep)
                 };
             }
 
-            return false;
+            return null;
         },
-
     });
 });

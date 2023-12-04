@@ -9,5 +9,6 @@
     },
     "hookClassName": "Espo\\Tools\\FieldManager\\Hooks\\AutoincrementType",
     "textFilter": true,
-    "readOnly": true
+    "readOnly": true,
+    "default": null
 }

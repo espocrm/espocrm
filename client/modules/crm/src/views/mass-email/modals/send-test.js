@@ -50,7 +50,7 @@ define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], functi
 
             this.createView('users', 'views/fields/link-multiple', {
                 model: model,
-                el: this.options.el + ' .field[data-name="users"]',
+                selector: '.field[data-name="users"]',
                 foreignScope: 'User',
                 defs: {
                     name: 'users',
@@ -62,7 +62,7 @@ define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], functi
 
             this.createView('contacts', 'views/fields/link-multiple', {
                 model: model,
-                el: this.options.el + ' .field[data-name="contacts"]',
+                selector: '.field[data-name="contacts"]',
                 foreignScope: 'Contact',
                 defs: {
                     name: 'contacts',
@@ -74,7 +74,7 @@ define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], functi
 
             this.createView('leads', 'views/fields/link-multiple', {
                 model: model,
-                el: this.options.el + ' .field[data-name="leads"]',
+                selector: '.field[data-name="leads"]',
                 foreignScope: 'Lead',
                 defs: {
                     name: 'leads',
@@ -86,7 +86,7 @@ define('crm:views/mass-email/modals/send-test', ['views/modal', 'model'], functi
 
             this.createView('accounts', 'views/fields/link-multiple', {
                 model: model,
-                el: this.options.el + ' .field[data-name="accounts"]',
+                selector: '.field[data-name="accounts"]',
                 foreignScope: 'Account',
                 defs: {
                     name: 'accounts',

@@ -33,10 +33,7 @@ use Espo\Services\Record;
 
 /**
  * @extends Record<\Espo\Core\Templates\Entities\Event>
+ * @deprecated Left for backward compatibility.
  */
 class Event extends Record
-{
-    protected $validateRequiredSkipFieldList = [
-        'dateEnd'
-    ];
-}
+{}

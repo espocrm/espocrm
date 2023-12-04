@@ -15,12 +15,14 @@
     "weekStart": "Haftanın ilk günü",
     "defaultCurrency": "Ön Tanımlı Döviz",
     "customUrl": "Özel URL",
-    "customId": "Özel kimlik"
+    "customId": "Özel kimlik",
+    "authenticationProvider": "Kimlik Doğrulama Sağlayıcı"
   },
   "links": {
     "users": "Kullanıcılar",
     "portalRoles": "Roller",
-    "notes": "Notlar "
+    "notes": "Notlar ",
+    "authenticationProvider": "Kimlik Doğrulama Sağlayıcı"
   },
   "tooltips": {
     "portalRoles": "Belirtilen Portal Rolleri, bu portalın tüm kullanıcılarına uygulanacaktır."

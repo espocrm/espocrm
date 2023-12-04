@@ -61,7 +61,7 @@ class CurrencyType extends FloatType
         /** @var string $value */
         $value = $entity->get($field);
 
-        if (preg_match('/-?[0-9]+\\.?[0-9]*/', $value)) {
+        if (preg_match('/^-?[0-9]+\.?[0-9]*$/', $value)) {
             return true;
         }
 
@@ -114,6 +114,14 @@ class CurrencyType extends FloatType
 
         $currency = $entity->get($attribute);
         $currencyList = $this->config->get('currencyList') ?? [$this->config->get('defaultCurrency')];
+
+        if (
+            $currency === null &&
+            !$entity->has($field) &&
+            $entity->isNew()
+        ) {
+            return true;
+        }
 
         if (
             $currency === null &&

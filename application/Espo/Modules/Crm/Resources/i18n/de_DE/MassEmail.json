@@ -45,8 +45,8 @@
   },
   "tooltips": {
     "optOutEntirely": "Für E-Mail Adressen von Empfängern, die sich abgemeldet haben, wird ein Opt-out gesetzt. Diese werden keine Massenaussendungen mehr erhalten.",
-    "targetLists": "Zielkontakte die Nachrichten empfangen sollen",
-    "excludingTargetLists": "Zielkontakte die keine Nachrichten empfangen sollen",
+    "targetLists": "Zielkontakte, die Nachrichten empfangen sollen.",
+    "excludingTargetLists": "Zielkontakte, die keine Nachrichten empfangen sollen.",
     "storeSentEmails": "E-Mails werden in CRM gespeichert."
   },
   "presetFilters": {

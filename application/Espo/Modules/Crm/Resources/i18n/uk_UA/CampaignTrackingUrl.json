@@ -9,7 +9,7 @@
     "campaign": "Кампанія"
   },
   "labels": {
-    "Create CampaignTrackingUrl": "Створити відстежувану URL"
+    "Create CampaignTrackingUrl": "Створити URL для відстеження"
   },
   "options": {
     "action": {

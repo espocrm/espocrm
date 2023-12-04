@@ -243,9 +243,9 @@ class Preferences implements Repository,
             throw new RuntimeException("ID is not set.");
         }
 
-        $this->data[$entity->getId()] = $entity->toArray();
+        $this->data[$entity->getId()] = get_object_vars($entity->getValueMap());
 
-        $fields = $fields = $this->metadata->get('entityDefs.Preferences.fields');
+        $fields = $this->metadata->get('entityDefs.Preferences.fields');
 
         $data = [];
 

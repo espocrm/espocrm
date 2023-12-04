@@ -1,12 +1,13 @@
 {
   "fields": {
-    "name": "İsim ",
-    "version": "Versiyon",
+    "name": "İsim",
+    "version": "Sürüm",
     "description": "Açıklama",
-    "isInstalled": "Yüklendi"
+    "isInstalled": "Yüklendi",
+    "checkVersionUrl": "Yeni sürüm kontrol URL'i"
   },
   "labels": {
-    "Uninstall": "Sil",
+    "Uninstall": "Kaldır",
     "Install": "Yükle"
   },
   "messages": {

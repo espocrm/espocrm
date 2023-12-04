@@ -32,13 +32,6 @@
       "today": "La date d'aujourd'hui)",
       "now": "Maintenant (date-heure)"
     },
-    "fontFace": {
-      "courier": "Courrier",
-      "pdfacourier": "PDFA Courrier",
-      "pdfasymbol": "Symbole PDFA",
-      "symbol": "symbole",
-      "times": "Fois"
-    },
     "pageFormat": {
       "Custom": "Douane"
     }

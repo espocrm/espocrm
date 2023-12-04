@@ -26,28 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/edit-for-modal', ['views/record/edit'], function (Dep) {
+/** @module views/record/edit-for-modal */
 
-    /**
-     * An edit-record view to used for custom forms.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/record/edit.Class
-     * @memberOf module:views/record/edit-for-modal
-     */
-    return Dep.extend(/** @lends module:views/record/edit-for-modal.Class# */{
+import EditRecordView from 'views/record/edit';
 
-        bottomView: null,
+/**
+ * An edit-record view to used for custom forms.
+ */
+class EditForModalRecordView extends EditRecordView {
 
-        sideView: null,
+    bottomView = null
+    sideView = null
+    buttonsDisabled = true
+    isWide = true
+    accessControlDisabled = true
+    confirmLeaveDisabled = true
+}
 
-        buttonsDisabled: true,
-
-        isWide: true,
-
-        accessControlDisabled: true,
-
-        confirmLeaveDisabled: true,
-    });
-});
+export default EditForModalRecordView;

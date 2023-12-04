@@ -5,5 +5,5 @@
 {{/if}}
 
 {{#if isLoading}}
-<span class="loading-value">...</span>
+<span class="loading-value"></span>
 {{/if}}

@@ -62,8 +62,8 @@ class Event implements Item
     {
         $obj = (object) [
             'scope' => $this->entityType,
-            'dateStart' => $this->start?->getString(),
-            'dateEnd' => $this->end?->getString(),
+            'dateStart' => $this->start?->toString(),
+            'dateEnd' => $this->end?->toString(),
         ];
 
         if ($this->userIdList !== []) {

@@ -33,7 +33,19 @@ define('views/email-template/record/panels/information', ['views/record/panels/s
         templateContent: '{{{infoText}}}',
 
         data: function () {
-            let placeholderList = this.getMetadata().get(['clientDefs', 'EmailTemplate', 'placeholderList']) || [];
+            const list2 = this.getMetadata().get(['clientDefs', 'EmailTemplate', 'placeholderList']) || [];
+
+            const defs = this.getMetadata().get('app.emailTemplate.placeholders') || {};
+
+            const list1 = Object.keys(defs)
+                .sort((a, b) => {
+                    const o1 = defs[a].order || 0;
+                    const o2 = defs[b].order || 0;
+
+                    return o1 - o2;
+                });
+
+            const placeholderList = [...list1, ...list2];
 
             if (!placeholderList.length) {
                 return {
@@ -41,9 +53,9 @@ define('views/email-template/record/panels/information', ['views/record/panels/s
                 };
             }
 
-            let $header = $('<h4>').text(this.translate('Available placeholders', 'labels', 'EmailTemplate') + ':');
+            const $header = $('<h4>').text(this.translate('Available placeholders', 'labels', 'EmailTemplate') + ':');
 
-            let $liList = placeholderList.map(item => {
+            const $liList = placeholderList.map(item => {
                 return $('<li>').append(
                     $('<code>').text('{' + item + '}'),
                     ' &#8211; ',
@@ -51,11 +63,11 @@ define('views/email-template/record/panels/information', ['views/record/panels/s
                 )
             });
 
-            let $ul = $('<ul>').append($liList);
+            const $ul = $('<ul>').append($liList);
 
-            let $text = $('<span>')
+            const $text = $('<span>')
                 .addClass('complex-text')
-                .append($header, $ul)
+                .append($header, $ul);
 
             return {
                 infoText: $text[0].outerHTML,

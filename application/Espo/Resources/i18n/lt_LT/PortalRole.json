@@ -10,10 +10,8 @@
   },
   "fields": {
     "exportPermission": "Eksportuoti leidimą",
-    "massUpdatePermission": "Masinio atnaujinimo teisės"
-  },
-  "tooltips": {
-    "exportPermission": "Nustato, ar portalo naudotojai gali eksportuoti įrašus.",
-    "massUpdatePermission": "Nurodo, ar portalo naudotojai turi galimybę atlikti masinius įrašų atnaujinimus."
+    "massUpdatePermission": "Masinio atnaujinimo teisės",
+    "data": "Duomenys",
+    "fieldData": "Lauko duomenys"
   }
 }

@@ -299,6 +299,11 @@
             "returnType": "string"
         },
         {
+            "name": "record\\findMany",
+            "insertText": "record\\findMany(ENTITY_TYPE, LIMIT, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)",
+            "returnType": "string"
+        },
+        {
             "name": "record\\findRelatedOne",
             "insertText": "record\\findRelatedOne(ENTITY_TYPE, ID, LINK, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)",
             "returnType": "string"

@@ -26,1050 +26,1269 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link', ['views/fields/base', 'helpers/record-modal'], function (Dep, RecordModal) {
+/** @module views/fields/link */
+
+import BaseFieldView from 'views/fields/base';
+import RecordModal from 'helpers/record-modal';
+
+/**
+ * A link field (belongs-to relation).
+ */
+class LinkFieldView extends BaseFieldView {
+
+    /** @inheritDoc */
+    type = 'link'
+
+    /** @inheritDoc */
+    listTemplate = 'fields/link/list'
+    /** @inheritDoc */
+    detailTemplate = 'fields/link/detail'
+    /** @inheritDoc */
+    editTemplate = 'fields/link/edit'
+    /** @inheritDoc */
+    searchTemplate = 'fields/link/search'
 
     /**
-     * A link field (belongs-to relation).
+     * A name attribute name.
      *
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/link
+     * @type {string}
      */
-    return Dep.extend(/** @lends module:views/fields/link.Class# */{
+    nameName
 
-        /**
-         * @inheritDoc
-         */
-        type: 'link',
+    /**
+     * An ID attribute name.
+     *
+     * @type {string}
+     */
+    idName
 
-        /**
-         * @inheritDoc
-         */
-        listTemplate: 'fields/link/list',
+    /**
+     * A foreign entity type.
+     *
+     * @type {string|null}
+     */
+    foreignScope = null
 
-        /**
-         * @inheritDoc
-         */
-        detailTemplate: 'fields/link/detail',
+    /**
+     * A select-record view.
+     *
+     * @protected
+     * @type {string}
+     */
+    selectRecordsView = 'views/modals/select-records'
 
-        /**
-         * @inheritDoc
-         */
-        editTemplate: 'fields/link/edit',
+    /**
+     * Autocomplete disabled.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    autocompleteDisabled = false
 
-        /**
-         * @inheritDoc
-         */
-        searchTemplate: 'fields/link/search',
+    /**
+     * Create disabled.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    createDisabled = false
 
-        /**
-         * A name attribute name.
-         *
-         * @type {string}
-         */
-        nameName: null,
+    /**
+     * To display the create button.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    createButton = false
 
-        /**
-         * An ID attribute name.
-         *
-         * @type {string}
-         */
-        idName: null,
+    /**
+     * Force create button even is disabled in clientDefs > relationshipPanels.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    forceCreateButton = false
 
-        /**
-         * A foreign entity type.
-         *
-         * @type {string}
-         */
-        foreignScope: null,
+    /**
+     * A search type list.
+     *
+     * @protected
+     * @type {string[]}
+     */
+    searchTypeList = [
+        'is',
+        'isEmpty',
+        'isNotEmpty',
+        'isNot',
+        'isOneOf',
+        'isNotOneOf',
+    ]
 
-        /**
-         * A select-record view.
-         *
-         * @protected
-         * @type {string}
-         */
-        selectRecordsView: 'views/modals/select-records',
+    /**
+     * A primary filter list that will be available when selecting a record.
+     *
+     * @protected
+     * @type {string[]|null}
+     */
+    selectFilterList = null
 
-        /**
-         * Autocomplete disabled.
-         *
-         * @protected
-         * @type {boolean}
-         */
-        autocompleteDisabled: false,
+    /**
+     * A select primary filter.
+     *
+     * @protected
+     * @type {string|null}
+     */
+    selectPrimaryFilterName = null
 
-        /**
-         * Create disabled.
-         *
-         * @protected
-         * @type {boolean}
-         */
-        createDisabled: false,
+    /**
+     * A select bool filter list.
+     *
+     * @protected
+     * @type {string[]|null}
+     */
+    selectBoolFilterList = null
 
-        /**
-         * Force create button even is disabled in clientDefs > relationshipPanels.
-         *
-         * @protected
-         * @type {boolean}
-         */
-        forceCreateButton: false,
+    /**
+     * An autocomplete max record number.
+     *
+     * @protected
+     * @type {number|null}
+     */
+    autocompleteMaxCount = null
 
-        /**
-         * A search type list.
-         *
-         * @protected
-         * @type {string[]}
-         */
-        searchTypeList: [
-            'is',
-            'isEmpty',
-            'isNotEmpty',
-            'isNot',
-            'isOneOf',
-            'isNotOneOf',
-        ],
+    /**
+     * Select all attributes.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    forceSelectAllAttributes = false
 
-        /**
-         * A primary filter list that will be available when selecting a record.
-         *
-         * @protected
-         * @type {string[]|null}
-         */
-        selectFilterList: null,
+    /**
+     * @protected
+     * @type {string[]|null}
+     */
+    mandatorySelectAttributeList = null
 
-        /**
-         * A select primary filter.
-         *
-         * @protected
-         * @type {string|null}
-         */
-        selectPrimaryFilterName: null,
+    /**
+     * Trigger autocomplete on empty input.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    autocompleteOnEmpty = false
 
-        /**
-         * A select bool filter list.
-         *
-         * @protected
-         * @type {string[]|null}
-         */
-        selectBoolFilterList: null,
+    /** @inheritDoc */
+    events = {
+        /** @this LinkFieldView */
+        'auxclick a[href]:not([role="button"])': function (e) {
+            if (!this.isReadMode()) {
+                return;
+            }
 
-        /**
-         * An autocomplete max record number.
-         *
-         * @protected
-         * @type {number|null}
-         */
-        autocompleteMaxCount: null,
+            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
 
-        /**
-         * Select all attributes.
-         *
-         * @protected
-         * @type {boolean}
-         */
-        forceSelectAllAttributes: false,
+            if (!isCombination) {
+                return;
+            }
 
-        /**
-         * @protected
-         * @type {string[]|null}
-         */
-        mandatorySelectAttributeList: null,
+            e.preventDefault();
+            e.stopPropagation();
 
-        /**
-         * @inheritDoc
-         */
-        events: {
-            /**
-             * @param {JQueryMouseEventObject} e
-             * @this module:views/fields/link.Class
-             */
-            'auxclick a[href]:not([role="button"])': function (e) {
-                if (!this.isReadMode()) {
-                    return;
-                }
-
-                let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
-
-                if (!isCombination) {
-                    return;
-                }
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                this.quickView();
-            },
+            this.quickView();
         },
+    }
 
-        /**
-         * @inheritDoc
-         */
-        data: function () {
-            var nameValue = this.model.has(this.nameName) ?
-                this.model.get(this.nameName) :
-                this.model.get(this.idName);
+    // noinspection JSCheckFunctionSignatures
+    /** @inheritDoc */
+    data() {
+        let nameValue = this.model.has(this.nameName) ?
+            this.model.get(this.nameName) :
+            this.model.get(this.idName);
 
-            if (nameValue === null) {
-                nameValue = this.model.get(this.idName);
-            }
+        if (nameValue === null) {
+            nameValue = this.model.get(this.idName);
+        }
 
-            if (this.isReadMode() && !nameValue && this.model.get(this.idName)) {
-                nameValue = this.translate(this.foreignScope, 'scopeNames');
-            }
+        if (this.isReadMode() && !nameValue && this.model.get(this.idName)) {
+            nameValue = this.translate(this.foreignScope, 'scopeNames');
+        }
 
-            var iconHtml = null;
+        let iconHtml = null;
 
-            if (this.isDetailMode()) {
-                iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
-            }
+        if (this.isDetailMode()) {
+            iconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
+        }
 
-            return _.extend({
-                idName: this.idName,
-                nameName: this.nameName,
-                idValue: this.model.get(this.idName),
-                nameValue: nameValue,
-                foreignScope: this.foreignScope,
-                valueIsSet: this.model.has(this.idName),
-                iconHtml: iconHtml,
-                url: this.getUrl(),
-            }, Dep.prototype.data.call(this));
-        },
+        const createButton = this.createButton && (!this.createDisabled || this.forceCreateButton);
 
-        getEmptyAutocompleteResult: null,
+        // noinspection JSValidateTypes
+        return {
+            ...super.data(),
+            idName: this.idName,
+            nameName: this.nameName,
+            idValue: this.model.get(this.idName),
+            nameValue: nameValue,
+            foreignScope: this.foreignScope,
+            valueIsSet: this.model.has(this.idName),
+            iconHtml: iconHtml,
+            url: this.getUrl(),
+            createButton: createButton,
+        };
+    }
 
-        /**
-         * @protected
-         * @return {?string}
-         */
-        getUrl: function () {
-            let id = this.model.get(this.idName);
+    /**
+     * @protected
+     * @return {?string}
+     */
+    getUrl() {
+        const id = this.model.get(this.idName);
 
-            if (!id) {
-                return null;
-            }
-
-            return '#' + this.foreignScope + '/view/' + id;
-        },
-
-        /**
-         * Get advanced filters (field filters) to be applied when select a record.
-         * Can be extended.
-         *
-         * @protected
-         * @return {Object.<string,module:search-manager~advancedFilter>|null}
-         */
-        getSelectFilters: function () {
+        if (!id) {
             return null;
-        },
+        }
 
-        /**
-         * Get a select bool filter list. Applied when select a record.
-         * Can be extended.
-         *
-         * @protected
-         * @return {string[]|null}
-         */
-        getSelectBoolFilterList: function () {
-            return this.selectBoolFilterList;
-        },
+        return '#' + this.foreignScope + '/view/' + id;
+    }
 
-        /**
-         * Get a select primary filter. Applied when select a record.
-         * Can be extended.
-         *
-         * @protected
-         * @return {string|null}
-         */
-        getSelectPrimaryFilterName: function () {
-            return this.selectPrimaryFilterName;
-        },
+    /**
+     * Get advanced filters (field filters) to be applied when select a record.
+     * Can be extended.
+     *
+     * @protected
+     * @return {Object.<string,module:search-manager~advancedFilter>|null}
+     */
+    getSelectFilters() {
+        return null;
+    }
 
-        /**
-         * Get a primary filter list that will be available when selecting a record.
-         * Can be extended.
-         *
-         * @return {string[]|null}
-         */
-        getSelectFilterList: function () {
-            return this.selectFilterList;
-        },
+    /**
+     * Get a select bool filter list. Applied when select a record.
+     * Can be extended.
+     *
+     * @protected
+     * @return {string[]|null}
+     */
+    getSelectBoolFilterList() {
+        return this.selectBoolFilterList;
+    }
 
-        /**
-         * Attributes to pass to a model when creating a new record.
-         * Can be extended.
-         *
-         * @return {Object.<string,*>|null}
-         */
-        getCreateAttributes: function () {
-            let attributeMap = this.getMetadata()
-                .get(['clientDefs', this.entityType, 'relationshipPanels', this.name, 'createAttributeMap']) || {};
+    /**
+     * Get a select primary filter. Applied when select a record.
+     * Can be extended.
+     *
+     * @protected
+     * @return {string|null}
+     */
+    getSelectPrimaryFilterName() {
+        return this.selectPrimaryFilterName;
+    }
 
-            let attributes = {};
+    /**
+     * Get a primary filter list that will be available when selecting a record.
+     * Can be extended.
+     *
+     * @return {string[]|null}
+     */
+    getSelectFilterList() {
+        return this.selectFilterList;
+    }
 
-            Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
+    /**
+     * Attributes to pass to a model when creating a new record.
+     * Can be extended.
+     *
+     * @return {Object.<string,*>|null}
+     */
+    getCreateAttributes() {
+        const attributeMap = this.getMetadata()
+            .get(['clientDefs', this.entityType, 'relationshipPanels', this.name, 'createAttributeMap']) || {};
 
-            return attributes;
-        },
+        const attributes = {};
 
-        /**
-         * @inheritDoc
-         */
-        setup: function () {
-            this.nameName = this.name + 'Name';
-            this.idName = this.name + 'Id';
+        Object.keys(attributeMap).forEach(attr => attributes[attributeMap[attr]] = this.model.get(attr));
 
-            this.foreignScope = this.options.foreignScope || this.foreignScope;
+        return attributes;
+    }
 
-            this.foreignScope = this.foreignScope ||
-                this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
+    /** @inheritDoc */
+    setup() {
+        this.nameName = this.name + 'Name';
+        this.idName = this.name + 'Id';
 
-            if ('createDisabled' in this.options) {
-                this.createDisabled = this.options.createDisabled;
+        this.foreignScope = this.options.foreignScope || this.foreignScope;
+
+        this.foreignScope = this.foreignScope ||
+            this.model.getFieldParam(this.name, 'entity') || this.model.getLinkParam(this.name, 'entity');
+
+        if ('createDisabled' in this.options) {
+            this.createDisabled = this.options.createDisabled;
+        }
+
+        if (!this.isListMode()) {
+            this.addActionHandler('selectLink', () => this.actionSelect());
+            this.addActionHandler('clearLink', () => this.clearLink());
+        }
+
+        if (this.isSearchMode()) {
+            this.addActionHandler('selectLinkOneOf', () => this.actionSelectOneOf());
+
+            this.events['click a[data-action="clearLinkOneOf"]'] = e =>{
+                const id = $(e.currentTarget).data('id').toString();
+
+                this.deleteLinkOneOf(id);
+            };
+        }
+
+        this.autocompleteOnEmpty = this.params.autocompleteOnEmpty || this.autocompleteOnEmpty;
+
+        this.createButton = this.params.createButton || this.createButton;
+
+        if (this.createButton && !this.getAcl().checkScope(this.foreignScope, 'create')) {
+            this.createButton = false;
+        }
+
+        if (this.createButton) {
+            this.addActionHandler('createLink', () => this.actionCreateLink());
+        }
+
+        /** @type {Object.<string, *>} */
+        this.panelDefs = this.getMetadata()
+            .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
+
+        if (this.panelDefs.createDisabled) {
+            this.createDisabled = true;
+        }
+    }
+
+    /**
+     * Select.
+     *
+     * @param {module:model} model A model.
+     * @protected
+     */
+    select(model) {
+        this.$elementName.val(model.get('name') || model.id);
+        this.$elementId.val(model.get('id'));
+
+        if (this.mode === this.MODE_SEARCH) {
+            this.searchData.idValue = model.get('id');
+            this.searchData.nameValue = model.get('name') || model.id;
+        }
+
+        this.trigger('change');
+
+        this.controlCreateButtonVisibility();
+
+        this.getSelectFieldHandler().then(handler => {
+            handler.getAttributes(model)
+                .then(attributes => {
+                    this.model.set(attributes)
+                });
+        });
+    }
+
+    /**
+     * Clear.
+     */
+    clearLink() {
+        this.$elementName.val('');
+        this.$elementId.val('');
+
+        this.trigger('change');
+
+        this.controlCreateButtonVisibility();
+
+        this.getSelectFieldHandler().then(handler => {
+            handler.getClearAttributes()
+                .then(attributes => {
+                    this.model.set(attributes);
+                });
+        });
+    }
+
+    /** @private */
+    controlCreateButtonVisibility() {
+        if (!this.createButton) {
+            return;
+        }
+
+        const $btn = this.$el.find('[data-action="createLink"]');
+
+        this.model.get(this.idName) ?
+            $btn.addClass('hidden') :
+            $btn.removeClass('hidden');
+    }
+
+    /**
+     * @private
+     * @return {Promise<{
+     *     getAttributes: function (module:model): Promise<Object.<string, *>>,
+     *     getClearAttributes: function(): Promise<Object.<string, *>>,
+     * }>}
+     */
+    getSelectFieldHandler() {
+        if (!this.panelDefs.selectFieldHandler) {
+            return Promise.resolve({
+                getClearAttributes: () => Promise.resolve({}),
+                getAttributes: () => Promise.resolve({}),
+            });
+        }
+
+        return new Promise(resolve => {
+            Espo.loader.requirePromise(this.panelDefs.selectFieldHandler)
+                .then(Handler => {
+                    const handler = new Handler(this.getHelper());
+
+                    resolve(handler);
+                });
+        });
+    }
+
+    /** @inheritDoc */
+    setupSearch() {
+        this.searchData.oneOfIdList = this.getSearchParamsData().oneOfIdList ||
+            this.searchParams.oneOfIdList || [];
+
+        this.searchData.oneOfNameHash = this.getSearchParamsData().oneOfNameHash ||
+            this.searchParams.oneOfNameHash || {};
+
+        if (~['is', 'isNot', 'equals'].indexOf(this.getSearchType())) {
+            this.searchData.idValue = this.getSearchParamsData().idValue ||
+                this.searchParams.idValue || this.searchParams.value;
+
+            this.searchData.nameValue = this.getSearchParamsData().nameValue ||
+                this.searchParams.nameValue || this.searchParams.valueName;
+        }
+
+        this.events['change select.search-type'] = e => {
+            const type = $(e.currentTarget).val();
+
+            this.handleSearchType(type);
+        };
+    }
+
+    /**
+     * Handle a search type.
+     *
+     * @protected
+     * @param {string} type A type.
+     */
+    handleSearchType(type) {
+        if (~['is', 'isNot', 'isNotAndIsNotEmpty'].indexOf(type)) {
+            this.$el.find('div.primary').removeClass('hidden');
+        }
+        else {
+            this.$el.find('div.primary').addClass('hidden');
+        }
+
+        if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
+            this.$el.find('div.one-of-container').removeClass('hidden');
+        }
+        else {
+            this.$el.find('div.one-of-container').addClass('hidden');
+        }
+    }
+
+    /**
+     * Get an autocomplete max record number. Can be extended.
+     *
+     * @protected
+     * @return {number}
+     */
+    getAutocompleteMaxCount() {
+        if (this.autocompleteMaxCount) {
+            return this.autocompleteMaxCount;
+        }
+
+        return this.getConfig().get('recordsPerPage');
+    }
+
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * Compose an autocomplete URL. Can be extended.
+     *
+     * @protected
+     * @param {string} [q] A query.
+     * @return {string|Promise<string>}
+     */
+    getAutocompleteUrl(q) {
+        let url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
+
+        if (!this.forceSelectAllAttributes) {
+            const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
+                this.panelDefs.selectMandatoryAttributeList;
+
+            let select = ['id', 'name'];
+
+            if (mandatorySelectAttributeList) {
+                select = select.concat(mandatorySelectAttributeList);
             }
 
-            if (!this.isListMode()) {
-                this.addActionHandler('selectLink', () => this.actionSelect());
-                this.addActionHandler('clearLink', () => this.clearLink());
-            }
+            url += '&select=' + select.join(',');
+        }
 
-            if (this.isSearchMode()) {
-                this.addActionHandler('selectLinkOneOf', () => this.actionSelectOneOf());
+        if (this.panelDefs.selectHandler) {
+            return new Promise(resolve => {
+                this._getSelectFilters().then(filters => {
+                    if (filters.bool) {
+                        url += '&' + $.param({'boolFilterList': filters.bool});
+                    }
 
-                this.events['click a[data-action="clearLinkOneOf"]'] = e =>{
-                    let id = $(e.currentTarget).data('id').toString();
+                    if (filters.primary) {
+                        url += '&' + $.param({'primaryFilter': filters.primary});
+                    }
 
-                    this.deleteLinkOneOf(id);
-                };
-            }
-        },
+                    if (filters.advanced && Object.keys(filters.advanced).length) {
+                        url += '&' + $.param({'where': filters.advanced});
+                    }
 
-        /**
-         * Select.
-         *
-         * @param {module:model.Class} model A model.
-         * @protected
-         */
-        select: function (model) {
-            this.$elementName.val(model.get('name') || model.id);
-            this.$elementId.val(model.get('id'));
+                    resolve(url);
+                });
+            });
+        }
 
-            if (this.mode === this.MODE_SEARCH) {
-                this.searchData.idValue = model.get('id');
-                this.searchData.nameValue = model.get('name') || model.id;
-            }
+        const boolList = [
+            ...(this.getSelectBoolFilterList() || []),
+            ...(this.panelDefs.selectBoolFilterList || []),
+        ];
 
-            this.trigger('change');
-        },
+        const primary = this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName;
 
-        /**
-         * Clear.
-         */
-        clearLink: function () {
-            this.$elementName.val('');
-            this.$elementId.val('');
-            this.trigger('change');
-        },
+        if (boolList.length) {
+            url += '&' + $.param({'boolFilterList': boolList});
+        }
 
-        /**
-         * @inheritDoc
-         */
-        setupSearch: function () {
-            this.searchData.oneOfIdList = this.getSearchParamsData().oneOfIdList ||
-                this.searchParams.oneOfIdList || [];
+        if (primary) {
+            url += '&' + $.param({'primaryFilter': primary});
+        }
 
-            this.searchData.oneOfNameHash = this.getSearchParamsData().oneOfNameHash ||
-                this.searchParams.oneOfNameHash || {};
+        return url;
+    }
 
-            if (~['is', 'isNot', 'equals'].indexOf(this.getSearchType())) {
-                this.searchData.idValue = this.getSearchParamsData().idValue ||
-                    this.searchParams.idValue || this.searchParams.value;
+    /** @inheritDoc */
+    afterRender() {
+        if (this.isEditMode() || this.isSearchMode()) {
+            this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
+            this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
 
-                this.searchData.nameValue = this.getSearchParamsData().nameValue ||
-                    this.searchParams.nameValue || this.searchParams.valueName;
-            }
-
-            this.events = _.extend({
-                'change select.search-type': function (e) {
-                    var type = $(e.currentTarget).val();
-                    this.handleSearchType(type);
-                },
-            }, this.events || {});
-        },
-
-        /**
-         * Handle a search type.
-         *
-         * @protected
-         * @param {string} type A type.
-         */
-        handleSearchType: function (type) {
-            if (~['is', 'isNot', 'isNotAndIsNotEmpty'].indexOf(type)) {
-                this.$el.find('div.primary').removeClass('hidden');
-            }
-            else {
-                this.$el.find('div.primary').addClass('hidden');
-            }
-
-            if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
-                this.$el.find('div.one-of-container').removeClass('hidden');
-            }
-            else {
-                this.$el.find('div.one-of-container').addClass('hidden');
-            }
-        },
-
-        /**
-         * Get an autocomplete max record number. Can be extended.
-         *
-         * @protected
-         * @return {number}
-         */
-        getAutocompleteMaxCount: function () {
-            if (this.autocompleteMaxCount) {
-                return this.autocompleteMaxCount;
-            }
-
-            return this.getConfig().get('recordsPerPage');
-        },
-
-        /**
-         * Compose an autocomplete URL. Can be extended.
-         *
-         * @protected
-         * @return {string}
-         */
-        getAutocompleteUrl: function () {
-            var url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
-
-            if (!this.forceSelectAllAttributes) {
-                var select = ['id', 'name'];
-
-                if (this.mandatorySelectAttributeList) {
-                    select = select.concat(this.mandatorySelectAttributeList);
+            this.$elementName.on('change', () => {
+                if (this.$elementName.val() === '') {
+                    this.clearLink();
                 }
+            });
 
-                url += '&select=' + select.join(',');
-            }
-
-            var boolList = this.getSelectBoolFilterList();
-
-            if (boolList) {
-                url += '&' + $.param({'boolFilterList': boolList});
-            }
-
-            var primary = this.getSelectPrimaryFilterName();
-
-            if (primary) {
-                url += '&' + $.param({'primaryFilter': primary});
-            }
-
-            return url;
-        },
-
-        /**
-         * @inheritDoc
-         */
-        afterRender: function () {
-            if (this.isEditMode() || this.isSearchMode()) {
-                this.$elementId = this.$el.find('input[data-name="' + this.idName + '"]');
-                this.$elementName = this.$el.find('input[data-name="' + this.nameName + '"]');
-
-                this.$elementName.on('change', () => {
-                    if (this.$elementName.val() === '') {
-                        this.$elementName.val('');
-                        this.$elementId.val('');
-
-                        this.trigger('change');
+            this.$elementName.on('blur', e => {
+                setTimeout(() => {
+                    if (this.mode === this.MODE_EDIT && this.model.has(this.nameName)) {
+                        e.currentTarget.value = this.model.get(this.nameName);
                     }
-                });
-
-                this.$elementName.on('blur', e => {
-                    setTimeout(() => {
-                        if (this.mode === this.MODE_EDIT && this.model.has(this.nameName)) {
-                            e.currentTarget.value = this.model.get(this.nameName);
-                        }
-                    }, 100);
-
-                    if (!this.autocompleteDisabled) {
-                        setTimeout(() => this.$elementName.autocomplete('clear'), 300);
-                    }
-                });
-
-                let $elementName = this.$elementName;
+                }, 100);
 
                 if (!this.autocompleteDisabled) {
-                    let isEmptyQueryResult = false;
+                    setTimeout(() => this.$elementName.autocomplete('clear'), 300);
+                }
+            });
 
-                    if (this.getEmptyAutocompleteResult) {
-                        this.$elementName.on('keydown', e => {
-                            if (e.code === 'Tab' && isEmptyQueryResult) {
-                                e.stopImmediatePropagation();
+            const $elementName = this.$elementName;
+
+            if (!this.autocompleteDisabled) {
+                let isEmptyQueryResult = false;
+
+                if (this.getEmptyAutocompleteResult()) {
+                    this.$elementName.on('keydown', e => {
+                        if (e.code === 'Tab' && isEmptyQueryResult) {
+                            e.stopImmediatePropagation();
+                        }
+                    });
+                }
+
+                this.$elementName.autocomplete({
+                    beforeRender: $c => {
+                        if (this.$elementName.hasClass('input-sm')) {
+                            $c.addClass('small');
+                        }
+                    },
+                    lookup: (q, callback) => {
+                        if (!this.autocompleteOnEmpty && q.length === 0) {
+                            isEmptyQueryResult = true;
+
+                            const emptyResult = this.getEmptyAutocompleteResult();
+
+                            if (emptyResult) {
+                                callback(this._transformAutocompleteResult(emptyResult));
                             }
+
+                            return;
+                        }
+
+                        isEmptyQueryResult = false;
+
+                        Promise.resolve(this.getAutocompleteUrl(q))
+                            .then(url => {
+                                Espo.Ajax
+                                    .getRequest(url, {q: q})
+                                    .then(response => {
+                                        callback(this._transformAutocompleteResult(response));
+                                    });
+                            });
+                    },
+                    minChars: 0,
+                    triggerSelectOnValidInput: false,
+                    autoSelectFirst: true,
+                    noCache: true,
+                    formatResult: suggestion => {
+                        // noinspection JSUnresolvedReference
+                        return this.getHelper().escapeString(suggestion.name);
+                    },
+                    onSelect: s => {
+                        this.getModelFactory().create(this.foreignScope, (model) => {
+                            // noinspection JSUnresolvedReference
+                            model.set(s.attributes);
+
+                            this.select(model);
+
+                            this.$elementName.focus();
                         });
+                    },
+                });
+
+                this.$elementName.off('focus.autocomplete');
+
+                this.$elementName.on('focus', () => {
+                    if (this.$elementName.val()) {
+                        this.$elementName.get(0).select();
+
+                        return;
                     }
 
-                    this.$elementName.autocomplete({
+                    this.$elementName.autocomplete('onFocus');
+                });
+
+                this.$elementName.attr('autocomplete', 'espo-' + this.name);
+
+                this.once('render', () => {
+                    $elementName.autocomplete('dispose');
+                });
+
+                this.once('remove', () => {
+                    $elementName.autocomplete('dispose');
+                });
+
+                if (this.isSearchMode()) {
+                    const $elementOneOf = this.$el.find('input.element-one-of');
+
+                    // noinspection JSCheckFunctionSignatures
+                    $elementOneOf.autocomplete({
                         beforeRender: $c => {
                             if (this.$elementName.hasClass('input-sm')) {
                                 $c.addClass('small');
                             }
                         },
-                        serviceUrl: q => {
-                            return this.getAutocompleteUrl(q);
+                        serviceUrl: () => {
+                            return this.getAutocompleteUrl();
                         },
-                        lookup: (q, callback) => {
-                            if (q.length === 0) {
-                                isEmptyQueryResult = true;
-
-                                if (this.getEmptyAutocompleteResult) {
-                                    callback(
-                                        this._transformAutocompleteResult(this.getEmptyAutocompleteResult())
-                                    );
-                                }
-
-                                return;
-                            }
-
-                            isEmptyQueryResult = false;
-
-                            Espo.Ajax
-                                .getRequest(this.getAutocompleteUrl(q), {q: q})
-                                .then(response => {
-                                    callback(this._transformAutocompleteResult(response));
-                                });
-                        },
-                        minChars: 0,
-                        triggerSelectOnValidInput: false,
-                        autoSelectFirst: true,
+                        minChars: 1,
+                        paramName: 'q',
                         noCache: true,
                         formatResult: suggestion => {
+                            // noinspection JSUnresolvedReference
                             return this.getHelper().escapeString(suggestion.name);
                         },
-                        onSelect: (s) => {
-                            this.getModelFactory().create(this.foreignScope, (model) => {
+                        transformResult: response => {
+                            return this._transformAutocompleteResult(JSON.parse(response));
+                        },
+                        onSelect: s => {
+                            this.getModelFactory().create(this.foreignScope, model => {
+                                // noinspection JSUnresolvedReference
                                 model.set(s.attributes);
 
-                                this.select(model);
+                                this.selectOneOf([model]);
 
-                                this.$elementName.focus();
+                                $elementOneOf.val('');
+                                setTimeout(() => $elementOneOf.focus(), 50);
                             });
                         },
                     });
 
-                    this.$elementName.off('focus.autocomplete');
-
-                    this.$elementName.on('focus', () => {
-                        if (this.$elementName.val()) {
-                            this.$elementName.get(0).select();
-
-                            return;
-                        }
-
-                        this.$elementName.autocomplete('onFocus');
-                    });
-
-                    this.$elementName.attr('autocomplete', 'espo-' + this.name);
+                    $elementOneOf.attr('autocomplete', 'espo-' + this.name);
 
                     this.once('render', () => {
-                        $elementName.autocomplete('dispose');
+                        $elementOneOf.autocomplete('dispose');
                     });
 
                     this.once('remove', () => {
-                        $elementName.autocomplete('dispose');
+                        $elementOneOf.autocomplete('dispose');
                     });
 
-                    if (this.isSearchMode()) {
-                        let $elementOneOf = this.$el.find('input.element-one-of');
-
-                        $elementOneOf.autocomplete({
-                            serviceUrl: q => {
-                                return this.getAutocompleteUrl(q);
-                            },
-                            minChars: 1,
-                            paramName: 'q',
-                            noCache: true,
-                            formatResult: suggestion => {
-                                return this.getHelper().escapeString(suggestion.name);
-                            },
-                            transformResult: response => {
-                                return this._transformAutocompleteResult(JSON.parse(response));
-                            },
-                            onSelect: s => {
-                                this.addLinkOneOf(s.id, s.name);
-
-                                $elementOneOf.val('');
-                                setTimeout(() => $elementOneOf.focus(), 50);
-                            },
-                        });
-
-                        $elementOneOf.attr('autocomplete', 'espo-' + this.name);
-
-                        this.once('render', () => {
-                            $elementOneOf.autocomplete('dispose');
-                        });
-
-                        this.once('remove', () => {
-                            $elementOneOf.autocomplete('dispose');
-                        });
-
-                        this.$el.find('select.search-type').on('change', () => {
-                            this.trigger('change');
-                        });
-                    }
-                }
-
-                $elementName.on('change', () => {
-                    if (!this.isSearchMode() && !this.model.get(this.idName)) {
-                        $elementName.val(this.model.get(this.nameName));
-                    }
-                });
-            }
-
-            if (this.isSearchMode()) {
-                var type = this.$el.find('select.search-type').val();
-
-                this.handleSearchType(type);
-
-                if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
-                    this.searchData.oneOfIdList.forEach(id => {
-                        this.addLinkOneOfHtml(id, this.searchData.oneOfNameHash[id]);
+                    this.$el.find('select.search-type').on('change', () => {
+                        this.trigger('change');
                     });
                 }
             }
-        },
 
-        /**
-         * @private
-         */
-        _transformAutocompleteResult: function (response) {
-            let list = [];
-
-            response.list.forEach(item => {
-                list.push({
-                    id: item.id,
-                    name: item.name || item.id,
-                    data: item.id,
-                    value: item.name || item.id,
-                    attributes: item,
-                });
+            $elementName.on('change', () => {
+                if (!this.isSearchMode() && !this.model.get(this.idName)) {
+                    $elementName.val(this.model.get(this.nameName));
+                }
             });
+        }
 
-            return {suggestions: list};
-        },
+        if (this.isSearchMode()) {
+            const type = this.$el.find('select.search-type').val();
 
-        /**
-         * @inheritDoc
-         */
-        getValueForDisplay: function () {
-            return this.model.get(this.nameName);
-        },
+            this.handleSearchType(type);
 
-        /**
-         * @inheritDoc
-         */
-        validateRequired: function () {
-            if (this.isRequired()) {
-                if (this.model.get(this.idName) == null) {
-                    var msg = this.translate('fieldIsRequired', 'messages')
-                        .replace('{field}', this.getLabelText());
-
-                    this.showValidationMessage(msg);
-
-                    return true;
-                }
+            if (~['isOneOf', 'isNotOneOf', 'isNotOneOfAndIsNotEmpty'].indexOf(type)) {
+                this.searchData.oneOfIdList.forEach(id => {
+                    this.addLinkOneOfHtml(id, this.searchData.oneOfNameHash[id]);
+                });
             }
-        },
+        }
+    }
 
-        /**
-         * Delete a one-of item. For search mode.
-         *
-         * @param {string} id An ID.
-         */
-        deleteLinkOneOf: function (id) {
-            this.deleteLinkOneOfHtml(id);
+    /**
+     * @private
+     */
+    _transformAutocompleteResult(response) {
+        const list = [];
 
-            var index = this.searchData.oneOfIdList.indexOf(id);
+        response.list.forEach(item => {
+            list.push({
+                id: item.id,
+                name: item.name || item.id,
+                data: item.id,
+                value: item.name || item.id,
+                attributes: item,
+            });
+        });
 
-            if (index > -1) {
-                this.searchData.oneOfIdList.splice(index, 1);
+        return {suggestions: list};
+    }
+
+    /** @inheritDoc */
+    getValueForDisplay() {
+        return this.model.get(this.nameName);
+    }
+
+    /** @inheritDoc */
+    validateRequired() {
+        if (this.isRequired()) {
+            if (this.model.get(this.idName) == null) {
+                const msg = this.translate('fieldIsRequired', 'messages')
+                    .replace('{field}', this.getLabelText());
+
+                this.showValidationMessage(msg);
+
+                return true;
             }
+        }
+    }
 
-            delete this.searchData.oneOfNameHash[id];
+    /**
+     * Delete a one-of item. For search mode.
+     *
+     * @param {string} id An ID.
+     */
+    deleteLinkOneOf(id) {
+        this.deleteLinkOneOfHtml(id);
+
+        const index = this.searchData.oneOfIdList.indexOf(id);
+
+        if (index > -1) {
+            this.searchData.oneOfIdList.splice(index, 1);
+        }
+
+        delete this.searchData.oneOfNameHash[id];
+
+        this.trigger('change');
+    }
+
+    /**
+     * Add a one-of item. For search mode.
+     *
+     * @param {string} id An ID.
+     * @param {string} name A name.
+     */
+    addLinkOneOf(id, name) {
+        if (!~this.searchData.oneOfIdList.indexOf(id)) {
+            this.searchData.oneOfIdList.push(id);
+            this.searchData.oneOfNameHash[id] = name;
+            this.addLinkOneOfHtml(id, name);
 
             this.trigger('change');
-        },
+        }
+    }
 
-        /**
-         * Add a one-of item. For search mode.
-         *
-         * @param {string} id An ID.
-         * @param {string} name A name.
-         */
-        addLinkOneOf: function (id, name) {
-            if (!~this.searchData.oneOfIdList.indexOf(id)) {
-                this.searchData.oneOfIdList.push(id);
-                this.searchData.oneOfNameHash[id] = name;
-                this.addLinkOneOfHtml(id, name);
+    /**
+     * @protected
+     * @param {string} id An ID.
+     */
+    deleteLinkOneOfHtml(id) {
+        this.$el.find('.link-one-of-container .link-' + id).remove();
+    }
 
-                this.trigger('change');
-            }
-        },
+    /**
+     * @protected
+     * @param {string} id An ID.
+     * @param {string} name A name.
+     * @return {JQuery}
+     */
+    addLinkOneOfHtml(id, name) {
+        const $container = this.$el.find('.link-one-of-container');
 
-        /**
-         * @protected
-         * @param {string} id An ID.
-         */
-        deleteLinkOneOfHtml: function (id) {
-            this.$el.find('.link-one-of-container .link-' + id).remove();
-        },
+        const $el = $('<div>')
+            .addClass('link-' + id)
+            .addClass('list-group-item');
 
-        /**
-         * @protected
-         * @param {string} id An ID.
-         * @param {string} name A name.
-         * @return {JQuery}
-         */
-        addLinkOneOfHtml: function (id, name) {
-            let $container = this.$el.find('.link-one-of-container');
+        $el.append(
+            $('<a>')
+                .attr('role', 'button')
+                .addClass('pull-right')
+                .attr('data-id', id)
+                .attr('data-action', 'clearLinkOneOf')
+                .append(
+                    $('<span>').addClass('fas fa-times')
+                ),
+            $('<span>').text(name),
+            ' '
+        );
 
-            let $el = $('<div>')
-                .addClass('link-' + id)
-                .addClass('list-group-item');
+        $container.append($el);
 
-            $el.append(
-                $('<a>')
-                    .attr('role', 'button')
-                    .addClass('pull-right')
-                    .attr('data-id', id)
-                    .attr('data-action', 'clearLinkOneOf')
-                    .append(
-                        $('<span>').addClass('fas fa-times')
-                    ),
-                $('<span>').text(name),
-                ' '
-            );
+        return $el;
+    }
 
-            $container.append($el);
+    /** @inheritDoc */
+    fetch() {
+        const data = {};
 
-            return $el;
-        },
+        data[this.nameName] = this.$el.find('[data-name="'+this.nameName+'"]').val() || null;
+        data[this.idName] = this.$el.find('[data-name="'+this.idName+'"]').val() || null;
 
-        /**
-         * @inheritDoc
-         */
-        fetch: function () {
-            var data = {};
+        return data;
+    }
 
-            data[this.nameName] = this.$el.find('[data-name="'+this.nameName+'"]').val() || null;
-            data[this.idName] = this.$el.find('[data-name="'+this.idName+'"]').val() || null;
+    /** @inheritDoc */
+    fetchSearch() {
+        const type = this.$el.find('select.search-type').val();
+        const value = this.$el.find('[data-name="' + this.idName + '"]').val();
 
-            return data;
-        },
+        if (~['isOneOf', 'isNotOneOf'].indexOf(type) && !this.searchData.oneOfIdList.length) {
+            return {
+                type: 'isNotNull',
+                attribute: 'id',
+                data: {
+                    type: type,
+                },
+            };
+        }
 
-        /**
-         * @inheritDoc
-         */
-        fetchSearch: function () {
-            var type = this.$el.find('select.search-type').val();
-            var value = this.$el.find('[data-name="' + this.idName + '"]').val();
-
-            if (~['isOneOf', 'isNotOneOf'].indexOf(type) && !this.searchData.oneOfIdList.length) {
-                return {
-                    type: 'isNotNull',
-                    attribute: 'id',
-                    data: {
-                        type: type,
-                    },
-                };
-            }
-
-            if (type === 'isEmpty') {
-                return {
-                    type: 'isNull',
-                    attribute: this.idName,
-                    data: {
-                        type: type,
-                    }
-                };
-            }
-
-            if (type === 'isNotEmpty') {
-                return {
-                    type: 'isNotNull',
-                    attribute: this.idName,
-                    data: {
-                        type: type,
-                    },
-                };
-            }
-
-            if (type === 'isOneOf') {
-                return {
-                    type: 'in',
-                    attribute: this.idName,
-                    value: this.searchData.oneOfIdList,
-                    data: {
-                        type: type,
-                        oneOfIdList: this.searchData.oneOfIdList,
-                        oneOfNameHash: this.searchData.oneOfNameHash,
-                    },
-                };
-            }
-
-            if (type === 'isNotOneOf') {
-                return {
-                    type: 'or',
-                    value: [
-                        {
-                            type: 'notIn',
-                            attribute: this.idName,
-                            value: this.searchData.oneOfIdList,
-                        },
-                        {
-                            type: 'isNull',
-                            attribute: this.idName,
-                        },
-                    ],
-                    data: {
-                        type: type,
-                        oneOfIdList: this.searchData.oneOfIdList,
-                        oneOfNameHash: this.searchData.oneOfNameHash,
-                    }
-                };
-            }
-
-            if (type === 'isNotOneOfAndIsNotEmpty') {
-                return {
-                    type: 'notIn',
-                    attribute: this.idName,
-                    value: this.searchData.oneOfIdList,
-                    data: {
-                        type: type,
-                        oneOfIdList: this.searchData.oneOfIdList,
-                        oneOfNameHash: this.searchData.oneOfNameHash,
-                    },
-                };
-            }
-
-            if (type === 'isNot') {
-                if (!value) {
-                    return false;
+        if (type === 'isEmpty') {
+            return {
+                type: 'isNull',
+                attribute: this.idName,
+                data: {
+                    type: type,
                 }
+            };
+        }
 
-                let nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+        if (type === 'isNotEmpty') {
+            return {
+                type: 'isNotNull',
+                attribute: this.idName,
+                data: {
+                    type: type,
+                },
+            };
+        }
 
-                return {
-                    type: 'or',
-                    value: [
-                        {
-                            type: 'notEquals',
-                            attribute: this.idName,
-                            value: value
-                        },
-                        {
-                            type: 'isNull',
-                            attribute: this.idName,
-                        }
-                    ],
-                    data: {
-                        type: type,
-                        idValue: value,
-                        nameValue: nameValue,
-                    }
-                };
-            }
+        if (type === 'isOneOf') {
+            return {
+                type: 'in',
+                attribute: this.idName,
+                value: this.searchData.oneOfIdList,
+                data: {
+                    type: type,
+                    oneOfIdList: this.searchData.oneOfIdList,
+                    oneOfNameHash: this.searchData.oneOfNameHash,
+                },
+            };
+        }
 
-            if (type === 'isNotAndIsNotEmpty') {
-                if (!value) {
-                    return false;
-                }
-
-                let nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
-
-                return {
-                    type: 'notEquals',
-                    attribute: this.idName,
-                    value: value,
-                    data: {
-                        type: type,
-                        idValue: value,
-                        nameValue: nameValue,
+        if (type === 'isNotOneOf') {
+            return {
+                type: 'or',
+                value: [
+                    {
+                        type: 'notIn',
+                        attribute: this.idName,
+                        value: this.searchData.oneOfIdList,
                     },
-                };
-            }
+                    {
+                        type: 'isNull',
+                        attribute: this.idName,
+                    },
+                ],
+                data: {
+                    type: type,
+                    oneOfIdList: this.searchData.oneOfIdList,
+                    oneOfNameHash: this.searchData.oneOfNameHash,
+                }
+            };
+        }
 
+        if (type === 'isNotOneOfAndIsNotEmpty') {
+            return {
+                type: 'notIn',
+                attribute: this.idName,
+                value: this.searchData.oneOfIdList,
+                data: {
+                    type: type,
+                    oneOfIdList: this.searchData.oneOfIdList,
+                    oneOfNameHash: this.searchData.oneOfNameHash,
+                },
+            };
+        }
+
+        if (type === 'isNot') {
             if (!value) {
                 return false;
             }
 
-            let nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
+            const nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
 
             return {
-                type: 'equals',
-                attribute: this.idName,
-                value: value,
+                type: 'or',
+                value: [
+                    {
+                        type: 'notEquals',
+                        attribute: this.idName,
+                        value: value
+                    },
+                    {
+                        type: 'isNull',
+                        attribute: this.idName,
+                    }
+                ],
                 data: {
                     type: type,
                     idValue: value,
                     nameValue: nameValue,
                 }
             };
-        },
+        }
 
-        /**
-         * @inheritDoc
-         */
-        getSearchType: function () {
-            return this.getSearchParamsData().type ||
-                this.searchParams.typeFront ||
-                this.searchParams.type;
-        },
-
-        /**
-         * @protected
-         */
-        quickView: function () {
-            let id = this.model.get(this.idName);
-
-            if (!id) {
-                return;
+        if (type === 'isNotAndIsNotEmpty') {
+            if (!value) {
+                return false;
             }
 
-            let entityType = this.foreignScope;
+            const nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
 
-            let helper = new RecordModal(this.getMetadata(), this.getAcl());
+            return {
+                type: 'notEquals',
+                attribute: this.idName,
+                value: value,
+                data: {
+                    type: type,
+                    idValue: value,
+                    nameValue: nameValue,
+                },
+            };
+        }
 
-            helper.showDetail(this, {
-                id: id,
-                scope: entityType,
-            });
-        },
+        if (!value) {
+            return false;
+        }
 
-        /**
-         * @protected
-         */
-        actionSelect: function () {
-            Espo.Ui.notify(' ... ');
+        const nameValue = this.$el.find('[data-name="' + this.nameName + '"]').val();
 
-            /** @var {Object.<string, *>} */
-            let panelDefs = this.getMetadata()
-                .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
+        return {
+            type: 'equals',
+            attribute: this.idName,
+            value: value,
+            data: {
+                type: type,
+                idValue: value,
+                nameValue: nameValue,
+            }
+        };
+    }
 
-            let viewName = panelDefs.selectModalView ||
-                this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
-                this.selectRecordsView;
+    /** @inheritDoc */
+    getSearchType() {
+        return this.getSearchParamsData().type ||
+            this.searchParams.typeFront ||
+            this.searchParams.type;
+    }
 
-            let handler = panelDefs.selectHandler || null;
+    /**
+     * @protected
+     */
+    quickView() {
+        const id = this.model.get(this.idName);
 
-            let createButton = this.isEditMode() &&
-                (!this.createDisabled && !panelDefs.createDisabled || this.forceCreateButton);
+        if (!id) {
+            return;
+        }
 
-            let createAttributesProvider = null;
+        const entityType = this.foreignScope;
 
-            if (createButton) {
-                createAttributesProvider = () => {
-                    let attributes = this.getCreateAttributes() || {};
+        const helper = new RecordModal(this.getMetadata(), this.getAcl());
 
-                    if (!panelDefs.createHandler) {
-                        return Promise.resolve(attributes);
-                    }
+        helper.showDetail(this, {
+            id: id,
+            scope: entityType,
+        });
+    }
 
-                    return new Promise(resolve => {
-                        Espo.loader.requirePromise(panelDefs.createHandler)
-                            .then(Handler => new Handler(this.getHelper()))
-                            .then(handler => {
-                                handler.getAttributes(this.model)
-                                    .then(additionalAttributes => {
-                                        resolve({
-                                            ...attributes,
-                                            ...additionalAttributes,
-                                        });
-                                    });
-                            });
-                    });
-                };
+    /**
+     * @protected
+     * @return {function(): Promise<Object.<string, *>>}
+     */
+    getCreateAttributesProvider() {
+        return () => {
+            const attributes = this.getCreateAttributes() || {};
+
+            if (!this.panelDefs.createHandler) {
+                return Promise.resolve(attributes);
             }
 
-            new Promise(resolve => {
-                if (!handler || this.isSearchMode()) {
-                    resolve({});
-
-                    return;
-                }
-
-                Espo.loader.requirePromise(handler)
+            return new Promise(resolve => {
+                Espo.loader.requirePromise(this.panelDefs.createHandler)
                     .then(Handler => new Handler(this.getHelper()))
                     .then(handler => {
-                        handler.getFilters(this.model)
-                            .then(filters => resolve(filters));
+                        handler.getAttributes(this.model)
+                            .then(additionalAttributes => {
+                                resolve({
+                                    ...attributes,
+                                    ...additionalAttributes,
+                                });
+                            });
                     });
-            }).then(filters => {
-                let advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
-                let boolFilterList = [
-                    ...(this.getSelectBoolFilterList() || []),
-                    ...(filters.bool || []),
-                    ...(panelDefs.selectBoolFilterList || []),
-                ];
-                let primaryFilter = this.getSelectPrimaryFilterName() ||
-                    filters.primary || panelDefs.selectPrimaryFilter;
-
-                this.createView('dialog', viewName, {
-                    scope: this.foreignScope,
-                    createButton: createButton,
-                    filters: advanced,
-                    boolFilterList: boolFilterList,
-                    primaryFilterName: primaryFilter,
-                    mandatorySelectAttributeList: this.mandatorySelectAttributeList,
-                    forceSelectAllAttributes: this.forceSelectAllAttributes,
-                    filterList: this.getSelectFilterList(),
-                    createAttributesProvider: createAttributesProvider,
-                }, view => {
-                    view.render();
-
-                    Espo.Ui.notify(false);
-
-                    this.listenToOnce(view, 'select', model => {
-                        this.clearView('dialog');
-
-                        this.select(model);
-                    });
-                });
             });
-        },
+        };
+    }
 
-        actionSelectOneOf: function () {
-            Espo.Ui.notify(' ... ');
+    /**
+     * @protected
+     */
+    actionSelect() {
+        Espo.Ui.notify(' ... ');
 
-            let viewName = this.getMetadata()
-                    .get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
-                this.selectRecordsView;
+        const panelDefs = this.panelDefs;
 
+        const viewName = panelDefs.selectModalView ||
+            this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
+            this.selectRecordsView;
+
+        const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
+            panelDefs.selectMandatoryAttributeList;
+
+        const createButton = this.isEditMode() && (!this.createDisabled || this.forceCreateButton);
+
+        const createAttributesProvider = createButton ?
+            this.getCreateAttributesProvider() :
+            null;
+
+        this._getSelectFilters().then(filters => {
             this.createView('dialog', viewName, {
                 scope: this.foreignScope,
-                createButton: false,
-                filters: this.getSelectFilters(),
-                boolFilterList: this.getSelectBoolFilterList(),
-                primaryFilterName: this.getSelectPrimaryFilterName(),
-                multiple: true,
+                createButton: createButton,
+                filters: filters.advanced,
+                boolFilterList: filters.bool,
+                primaryFilterName: filters.primary,
+                mandatorySelectAttributeList: mandatorySelectAttributeList,
+                forceSelectAllAttributes: this.forceSelectAllAttributes,
+                filterList: this.getSelectFilterList(),
+                createAttributesProvider: createAttributesProvider,
+                layoutName: this.panelDefs.selectLayout,
             }, view => {
                 view.render();
 
                 Espo.Ui.notify(false);
 
-                this.listenToOnce(view, 'select', models => {
+                this.listenToOnce(view, 'select', model => {
                     this.clearView('dialog');
 
-                    if (Object.prototype.toString.call(models) !== '[object Array]') {
-                        models = [models];
-                    }
-
-                    models.forEach(model => {
-                        this.addLinkOneOf(model.id, model.get('name'));
-                    });
+                    this.select(model);
                 });
             });
-        },
-    });
-});
+        });
+    }
+
+    /**
+     * @param {Object} advanced
+     * @private
+     */
+    _applyAdditionalFilter(advanced) {
+        const foreignLink = this.model.getLinkParam(this.name, 'foreign');
+
+        if (!foreignLink) {
+            return;
+        }
+
+        if (advanced[foreignLink]) {
+            return;
+        }
+
+        const linkType = this.model.getLinkParam(this.name, 'type');
+        const foreignLinkType = this.getMetadata()
+            .get(['entityDefs', this.foreignScope, 'links', foreignLink, 'type']);
+        const foreignFieldType = this.getMetadata()
+            .get(['entityDefs', this.foreignScope, 'fields', foreignLink, 'type']);
+
+        if (!foreignFieldType) {
+            return;
+        }
+
+        const isOneToOne =
+            (linkType === 'hasOne' || foreignLinkType === 'hasOne') &&
+            ['link', 'linkOne'].includes(foreignFieldType);
+
+        if (!isOneToOne) {
+            return;
+        }
+
+        advanced[foreignLink] = {
+            type: 'isNull',
+            attribute: foreignLink + 'Id',
+            data: {
+                type: 'isEmpty',
+            },
+        };
+    }
+
+    /**
+     * @private
+     * @return {Promise<{bool?: string[], advanced?: Object, primary?: string}>}
+     */
+    _getSelectFilters() {
+        const handler = this.panelDefs.selectHandler;
+
+        const localBoolFilterList = this.getSelectBoolFilterList();
+
+        if (!handler || this.isSearchMode()) {
+            const boolFilterList = (localBoolFilterList || this.panelDefs.selectBoolFilterList) ?
+                [
+                    ...(localBoolFilterList || []),
+                    ...(this.panelDefs.selectBoolFilterList || []),
+                ] :
+                undefined;
+
+            const advanced = this.getSelectFilters() || {};
+
+            this._applyAdditionalFilter(advanced);
+
+            return Promise.resolve({
+                primary: this.getSelectPrimaryFilterName() || this.panelDefs.selectPrimaryFilterName,
+                bool: boolFilterList,
+                advanced: advanced,
+            });
+        }
+
+        return new Promise(resolve => {
+            Espo.loader.requirePromise(handler)
+                .then(Handler => new Handler(this.getHelper()))
+                .then(/** module:handlers/select-related */handler => {
+                    return handler.getFilters(this.model);
+                })
+                .then(filters => {
+                    const advanced = {...(this.getSelectFilters() || {}), ...(filters.advanced || {})};
+                    const primaryFilter = this.getSelectPrimaryFilterName() ||
+                        filters.primary || this.panelDefs.selectPrimaryFilterName;
+
+                    const boolFilterList = (localBoolFilterList || filters.bool || this.panelDefs.selectBoolFilterList) ?
+                        [
+                            ...(localBoolFilterList || []),
+                            ...(filters.bool || []),
+                            ...(this.panelDefs.selectBoolFilterList || []),
+                        ] :
+                        undefined;
+
+                    this._applyAdditionalFilter(advanced);
+
+                    resolve({
+                        bool: boolFilterList,
+                        primary: primaryFilter,
+                        advanced: advanced,
+                    });
+                });
+        });
+    }
+
+    actionSelectOneOf() {
+        Espo.Ui.notify(' ... ');
+
+        const viewName = this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
+            this.selectRecordsView;
+
+        this.createView('dialog', viewName, {
+            scope: this.foreignScope,
+            createButton: false,
+            filters: this.getSelectFilters(),
+            boolFilterList: this.getSelectBoolFilterList(),
+            primaryFilterName: this.getSelectPrimaryFilterName(),
+            multiple: true,
+            layoutName: this.panelDefs.selectLayout,
+        }, view => {
+            view.render();
+
+            Espo.Ui.notify(false);
+
+            this.listenToOnce(view, 'select', models => {
+                this.clearView('dialog');
+
+                if (Object.prototype.toString.call(models) !== '[object Array]') {
+                    models = [models];
+                }
+
+                this.selectOneOf(models);
+            });
+        });
+    }
+
+    getEmptyAutocompleteResult() {
+        return undefined;
+    }
+
+    actionCreateLink() {
+        const viewName = this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'edit']) ||
+            'views/modals/edit';
+
+        Espo.Ui.notify(' ... ');
+
+        this.getCreateAttributesProvider()().then(attributes => {
+            this.createView('dialog', viewName, {
+                scope: this.foreignScope,
+                fullFormDisabled: true,
+                attributes: attributes,
+            }, view => {
+                view.render()
+                    .then(() => Espo.Ui.notify(false));
+
+                this.listenToOnce(view, 'after:save', model => {
+                    view.close();
+                    this.clearView('dialog');
+
+                    this.select(model);
+                });
+            });
+        });
+    }
+
+    /**
+     * @protected
+     * @param {module:model[]} models
+     * @since 8.0.4
+     */
+    selectOneOf(models) {
+        models.forEach(model => {
+            this.addLinkOneOf(model.id, model.get('name'));
+        });
+    }
+}
+
+export default LinkFieldView;

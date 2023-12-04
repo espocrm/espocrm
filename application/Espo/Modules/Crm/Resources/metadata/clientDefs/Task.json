@@ -17,13 +17,25 @@
                 {
                     "label": "Complete",
                     "name": "setCompletedMain",
-                    "action": "setCompletedMain",
                     "iconHtml": "<span class=\"fas fa-check fa-sm\"></span>",
-                    "acl": "edit"
+                    "acl": "edit",
+                    "handler": "crm:handlers/task/menu",
+                    "actionFunction": "complete",
+                    "checkVisibilityFunction": "isCompleteAvailable"
                 }
             ]
         }
     },
+    "modalDetailActionList": [
+        {
+            "name": "complete",
+            "label": "Complete",
+            "acl": "edit",
+            "handler": "crm:handlers/task/detail-actions",
+            "actionFunction": "complete",
+            "checkVisibilityFunction": "isCompleteAvailable"
+        }
+    ],
     "dynamicLogic": {
         "fields": {
             "dateCompleted": {

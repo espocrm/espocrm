@@ -1,0 +1,53 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/jsLibs.json",
+    "title": "app/jsLibs",
+    "description": "JS libraries definitions for the loader.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A lib name.",
+        "properties": {
+            "path": {
+                "type": "string",
+                "description": "A path to the lib file.",
+                "examples": [
+                    "client/custom/modules/my-module/lib/some-lib.js"
+                ]
+            },
+            "devPath": {
+                "type": "string",
+                "description": "A path to the lib file for the developer mode.",
+                "examples": [
+                    "client/custom/modules/my-module/lib/original/some-lib.js"
+                ]
+            },
+            "exportsTo": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["window", "$.fn"]}
+                ],
+                "description": "If the lib exposes itself w/o a module, an object to which the lib is exported. Use dots to define a path."
+            },
+            "exportsAs": {
+                "type": "string",
+                "description": "A key name by which the lib is available in a containing object."
+            },
+            "sourceMap": {
+                "type": "boolean",
+                "description": "Whether the source map file is available."
+            },
+            "exposeAs": {
+                "type": "string",
+                "description": "If set, the lib will be exposed to the window object. A variable name the lib will be set to. To be used for backward compatibility reasons."
+            },
+            "aliases": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "Additional module IDs the lib will be available by. Can be useful for establishing backward compatibility or when another lib requires this lib by a different ID."
+            }
+        }
+    }
+}

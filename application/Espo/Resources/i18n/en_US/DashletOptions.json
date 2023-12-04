@@ -18,7 +18,8 @@
         "skipOwn": "Don't show own records",
         "url": "URL",
         "dateFilter": "Date Filter",
-        "text": "Text"
+        "text": "Text",
+        "folder": "Folder"
     },
     "options": {
     	"mode": {

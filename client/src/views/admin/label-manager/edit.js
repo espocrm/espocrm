@@ -188,7 +188,7 @@ define('views/admin/label-manager/edit', ['view'], function (Dep) {
             }
 
             this.createView(category, 'views/admin/label-manager/category', {
-                el: this.getSelector() + ' .panel-body[data-name="'+category+'"]',
+                selector: '.panel-body[data-name="'+category+'"]',
                 categoryData: this.getCategoryData(category),
                 scope: this.scope,
                 language: this.language,

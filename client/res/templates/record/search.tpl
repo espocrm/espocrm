@@ -88,7 +88,7 @@
             <div class="input-group-btn">
                 <button
                     type="button"
-                    class="btn btn-text btn-icon-wide dropdown-toggle add-filter-button"
+                    class="btn btn-text btn-icon btn-icon-wide dropdown-toggle add-filter-button"
                     data-toggle="dropdown"
                     tabindex="0"
                 >
@@ -96,7 +96,7 @@
                 </button>
                 <button
                     type="button"
-                    class="btn btn-text btn-icon-wide"
+                    class="btn btn-text btn-icon btn-icon-wide"
                     data-action="reset"
                     title="{{translate 'Reset'}}"
                     tabindex="0"
@@ -135,7 +135,7 @@
                 type="button"
                 data-name="{{name}}"
                 data-action="switchViewMode"
-                class="btn btn-icon btn-icon btn-text{{#ifEqual name ../viewMode}} active{{/ifEqual}}"
+                class="btn btn-icon btn-text{{#ifEqual name ../viewMode}} active{{/ifEqual}}"
                 tabindex="0"
                 title="{{title}}"
             ><span class="{{iconClass}}"></span></button>

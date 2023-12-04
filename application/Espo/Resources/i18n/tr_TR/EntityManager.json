@@ -7,28 +7,35 @@
     "Formula": "formül"
   },
   "fields": {
-    "name": "İsim ",
+    "name": "İsim",
     "type": "Tip",
     "labelSingular": "Tekil Etiket",
     "labelPlural": "Çoğul Etiket",
     "stream": "Akış",
     "label": "Etiket",
     "linkType": "Bağlantı Tipi",
-    "entityForeign": "Yabancı Varlık",
-    "linkForeign": "Yabancı Bağlantı ",
+    "entityForeign": "Dış Varlık",
+    "linkForeign": "Dış Bağlantı",
     "link": "Bağlantı",
-    "labelForeign": "Yabancı Etiket",
+    "labelForeign": "Dış Etiket",
     "sortBy": "Ön Tanımlı Sıralama (alan)",
     "sortDirection": "Ön Tanımlı Sıralama (yön)",
     "relationName": "Orta Tablo İsmi",
     "linkMultipleField": "Birden Çok Alanı Bağla",
-    "linkMultipleFieldForeign": "Birden Çok Alana Yabancı Bağlantı ",
+    "linkMultipleFieldForeign": "Birden Çok Alana Dış Bağlantı",
     "disabled": "Devre dışı",
     "textFilterFields": "Metin Filtre Alanları",
     "audited": "Denetlenmiş",
     "auditedForeign": "Dış Kaynak Denetimden Geçmiş",
     "statusField": "Durum Alanı",
-    "beforeSaveCustomScript": "Özel Komut Dosyasını Kaydetmeden Önce"
+    "beforeSaveCustomScript": "Özel Komut Dosyasını Kaydetmeden Önce",
+    "color": "Renk",
+    "kanbanViewMode": "Kanban Görünümü",
+    "kanbanStatusIgnoreList": "Kanban görünümünde yok sayılan gruplar",
+    "iconClass": "Simge",
+    "fullTextSearch": "Tam Metin Arama",
+    "module": "Modül",
+    "version": "Sürüm"
   },
   "options": {
     "type": {
@@ -41,9 +48,9 @@
       "Company": "Şirket"
     },
     "linkType": {
-      "manyToMany": "Çoktan Çoğa",
-      "oneToMany": "Tekten Çoğa",
-      "manyToOne": "Çoktan Teke ",
+      "manyToMany": "Çoktan Çok'a",
+      "oneToMany": "Tekten Çok'a",
+      "manyToOne": "Çoktan Tek'e",
       "parentToChildren": "Ebeveyn - çocuk",
       "childrenToParent": "Çocuk - ebeveyn"
     },
@@ -53,8 +60,8 @@
     }
   },
   "messages": {
-    "entityCreated": "Varlık yaratıldı",
-    "linkAlreadyExists": "İsim çakışmalarını bağla",
+    "entityCreated": "Varlık oluşturuldu",
+    "linkAlreadyExists": "İsim çakışmalarını bağla.",
     "linkConflict": "İsim çakışması: aynı isimde bağlantı veya alan zaten var"
   },
   "tooltips": {
@@ -64,6 +71,7 @@
     "disabled": "Sisteminizde bu öğeye ihtiyacınız yok mu kontrol edin.",
     "linkAudited": "Ilgili kayıt oluşturma ve varolan kayıt ile bağlantı Akış kaydedilecektir.",
     "linkMultipleField": "Bağlantı Çoklu alan ilişkileri düzenlemenin kullanışlı bir yoludur. Çok sayıda ilgili kayıt olabiliyorsa kullanmayın.",
-    "entityType": "Taban Artı - Etkinlikler, Geçmiş ve Görevler panellerine sahiptir. \\ N \\ nEvent - Takvim ve Etkinlikler panelinde kullanılabilir."
+    "entityType": "Taban Artı - Etkinlikler, Geçmiş ve Görevler panellerine sahiptir. \\ N \\ nEvent - Takvim ve Etkinlikler panelinde kullanılabilir.",
+    "fullTextSearch": "Yeniden oluşturmanın çalıştırılması gerekiyor."
   }
 }

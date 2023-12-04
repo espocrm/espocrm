@@ -1,6 +1,7 @@
 {
     "stylesheet": "client/css/espo/espo.css",
     "stylesheetIframe": "client/css/espo/espo-iframe.css",
+    "logo": "client/img/logo.svg",
     "params": {
         "navbar": {
             "type": "enum",
@@ -18,13 +19,6 @@
                 "side": 30,
                 "top": 43
             }
-        },
-        "logo": {
-            "param": "navbar",
-            "valueMap": {
-                "side": "client/img/logo.svg",
-                "top": "client/img/logo.svg"
-            }
         }
     },
     "dashboardCellHeight": 155,
@@ -36,7 +30,7 @@
     "textColor": "#333",
     "hoverColor": "#FF3F19",
     "chartGridColor": "#ddd",
-    "chartSuccessColor": "#76cb75",
+    "chartSuccessColor": "#6fc374",
     "chartTickColor": "#e8eced",
     "chartColorList": ["#6FA8D6", "#4E6CAD", "#EDC555", "#ED8F42", "#DE6666", "#7CC4A4", "#8A7CC2", "#D4729B", "#bfbfbf"],
     "chartColorAlternativeList": ["#6FA8D6", "#EDC555", "#ED8F42", "#7CC4A4", "#D4729B"],

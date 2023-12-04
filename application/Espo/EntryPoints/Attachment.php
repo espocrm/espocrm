@@ -58,8 +58,9 @@ class Attachment implements EntryPoint
             throw new BadRequest();
         }
 
-        /** @var ?AttachmentEntity $attachment */
-        $attachment = $this->entityManager->getEntityById(AttachmentEntity::ENTITY_TYPE, $id);
+        $attachment = $this->entityManager
+            ->getRDBRepositoryByClass(AttachmentEntity::class)
+            ->getById($id);
 
         if (!$attachment) {
             throw new NotFound();

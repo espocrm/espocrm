@@ -29,6 +29,9 @@
 
 namespace Espo\Tools\Import;
 
+use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\PhoneNumber\Sanitizer as PhoneNumberSanitizer;
+use Espo\Core\FieldValidation\Exceptions\ValidationError;
 use Espo\Core\Job\JobSchedulerFactory;
 use Espo\Entities\Attachment;
 use Espo\Entities\ImportError;
@@ -88,9 +91,9 @@ class Import
         private RecordServiceContainer $recordServiceContainer,
         private JobSchedulerFactory $jobSchedulerFactory,
         private Log $log,
-        private FieldValidationManager $fieldValidationManager
+        private FieldValidationManager $fieldValidationManager,
+        private PhoneNumberSanitizer $phoneNumberSanitizer
     ) {
-
         $this->params = Params::create();
     }
 
@@ -205,7 +208,7 @@ class Import
             }
 
             if (!$this->aclManager->checkScope($this->user, $this->entityType, Table::ACTION_CREATE)) {
-                throw new Forbidden("Import: Create is forbidden for {$this->entityType}.");
+                throw new Forbidden("Import: Create is forbidden for $this->entityType.");
             }
         }
 
@@ -512,6 +515,8 @@ class Import
             $valueMap->$attribute = $value;
         }
 
+        $failureList = [];
+
         foreach ($attributeList as $i => $attribute) {
             if (empty($attribute)) {
                 continue;
@@ -523,7 +528,12 @@ class Import
 
             $value = $row[$i];
 
-            $this->processRowItem($entity, $attribute, $value, $valueMap);
+            try {
+                $this->processRowItem($entity, $attribute, $value, $valueMap);
+            }
+            catch (ValidationError $e) {
+                $failureList[] = $e->getFailure();
+            }
         }
 
         $defaultCurrency = $params->getCurrency() ?? $this->config->get('defaultCurrency');
@@ -554,7 +564,10 @@ class Import
         }
 
         try {
-            $failureList = $this->fieldValidationManager->processAll($entity);
+            $failureList = array_merge(
+                $failureList,
+                $this->fieldValidationManager->processAll($entity)
+            );
 
             if ($failureList !== []) {
                 $this->createError(
@@ -580,11 +593,11 @@ class Import
             }
 
             if ($entity->hasId()) {
+                /** @noinspection PhpDeprecationInspection */
                 $this->entityManager
                     ->getRDBRepository($entity->getEntityType())
                     ->deleteFromDb($entity->getId(), true);
             }
-
 
             $this->entityManager->saveEntity($entity, [
                 'noStream' => true,
@@ -696,7 +709,7 @@ class Import
             $entity->set($relation . 'Id', $found->getId());
             $entity->set($relation . 'Name', $found->get('name'));
 
-            return;
+            //return;
         }
 
         //if (!in_array($foreignEntityType, ['User', 'Team'])) {
@@ -705,10 +718,15 @@ class Import
     }
 
     /**
-     * @param mixed $value
+     * @throws ValidationError
      */
-    private function processRowItem(CoreEntity $entity, string $attribute, $value, stdClass $valueMap): void
-    {
+    private function processRowItem(
+        CoreEntity $entity,
+        string $attribute,
+        string $value,
+        stdClass $valueMap
+    ): void {
+
         assert(is_string($this->entityType));
 
         $params = $this->params;
@@ -754,7 +772,7 @@ class Import
                     }
 
                     $o = (object) [
-                        'phoneNumber' => $value,
+                        'phoneNumber' => $this->formatPhoneNumber($value, $params),
                         'primary' => true,
                     ];
 
@@ -851,7 +869,7 @@ class Import
             }
 
             $o = (object) [
-                'phoneNumber' => $value,
+                'phoneNumber' => $this->formatPhoneNumber($value, $params),
                 'type' => $type,
                 'primary' => $isPrimary,
             ];
@@ -895,10 +913,9 @@ class Import
     }
 
     /**
-     * @param mixed $value
-     * @return mixed
+     * @throws ValidationError
      */
-    private function parseValue(CoreEntity $entity, string $attribute, $value)
+    private function parseValue(CoreEntity $entity, string $attribute, string $value): mixed
     {
         $params = $this->params;
 
@@ -917,40 +934,91 @@ class Import
 
         $type = $entity->getAttributeType($attribute);
 
+        if ($type !== Entity::BOOL && strtolower($value) === 'null') {
+            return null;
+        }
+
+        $fieldDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entity->getEntityType())
+            ->tryGetField($attribute);
+
+        if ($fieldDefs) {
+            $fieldType = $fieldDefs->getType();
+
+            if (
+                $fieldType === FieldType::CURRENCY &&
+                $fieldDefs->getParam('decimal')
+            ) {
+                $value = $this->transformFloatString($decimalMark, $value);
+
+                if ($value === null) {
+                    throw ValidationError::create(
+                        new Failure($entity->getEntityType(), $attribute, 'valid')
+                    );
+                }
+
+                return $value;
+            }
+        }
+
         switch ($type) {
             case Entity::DATE:
                 $dt = DateTime::createFromFormat($dateFormat, $value);
 
-                if ($dt) {
-                    return $dt->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
+                $errorData = DateTime::getLastErrors();
+
+                if (!$dt || ($errorData && $errorData['warnings'] !== [])) {
+                    throw ValidationError::create(
+                        new Failure($entity->getEntityType(), $attribute, 'valid')
+                    );
                 }
 
-                return null;
+                return $dt->format(DateTimeUtil::SYSTEM_DATE_FORMAT);
 
             case Entity::DATETIME:
+                /** @noinspection PhpUnhandledExceptionInspection */
                 $timezone = new DateTimeZone($timezone);
 
                 $dt = DateTime::createFromFormat($dateFormat . ' ' . $timeFormat, $value, $timezone);
 
-                if ($dt) {
-                    $dt->setTimezone(new DateTimeZone('UTC'));
+                $errorData = DateTime::getLastErrors();
 
-                    return $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+                if (!$dt || ($errorData && $errorData['warnings'] !== [])) {
+                    throw ValidationError::create(
+                        new Failure($entity->getEntityType(), $attribute, 'valid')
+                    );
                 }
 
-                return null;
+                $dt->setTimezone(new DateTimeZone('UTC'));
+
+                return $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
             case Entity::FLOAT:
-                $a = explode($decimalMark, $value);
-                $a[0] = preg_replace('/[^A-Za-z0-9\-]/', '', $a[0]);
+                $value = $this->transformFloatString($decimalMark, $value);
 
-                if (count($a) > 1) {
-                    return floatval($a[0] . '.' . $a[1]);
+                if ($value === null) {
+                    throw ValidationError::create(
+                        new Failure($entity->getEntityType(), $attribute, 'valid')
+                    );
                 }
 
-                return floatval($a[0]);
+                return floatval($value);
 
             case Entity::INT:
+                $replaceList = [
+                    ' ',
+                    $decimalMark === '.' ? ',' : '.',
+                ];
+
+                $value = str_replace($replaceList, '', $value);
+
+                if (str_contains($value, $decimalMark) || !is_numeric($value)) {
+                    throw ValidationError::create(
+                        new Failure($entity->getEntityType(), $attribute, 'valid')
+                    );
+                }
+
                 return intval($value);
 
             case Entity::BOOL:
@@ -964,12 +1032,8 @@ class Import
                 return Json::decode($value);
 
             case Entity::JSON_ARRAY:
-                if (!is_string($value)) {
-                    return null;
-                }
-
                 if (!strlen($value)) {
-                    return null;
+                    return [];
                 }
 
                 if ($value[0] === '[') {
@@ -1110,7 +1174,7 @@ class Import
 
         $cnt = strlen($string);
         $esc = false;
-        $escesc = false;
+        $escEsc = false;
 
         $num = 0;
         $i = 0;
@@ -1132,32 +1196,32 @@ class Import
                 } else {
                     $num++;
 
-                    $esc = false;
-                    $escesc = false;
+                    //$esc = false;
+                    $escEsc = false;
                 }
             } else if ($s == $enclosure) {
-                if ($escesc) {
-                    $o[$num].= $enclosure;
+                if ($escEsc) {
+                    $o[$num] .= $enclosure;
                 }
 
                 if ($esc) {
                     $esc = false;
 
-                    $escesc = true;
+                    $escEsc = true;
                 } else {
                     $esc = true;
 
-                    $escesc = false;
+                    $escEsc = false;
                 }
             } else {
                 if (!array_key_exists($num, $o)) {
                     $o[$num] = '';
                 }
 
-                if ($escesc) {
+                if ($escEsc) {
                     $o[$num] .= $enclosure;
 
-                    $escesc = false;
+                    $escEsc = false;
                 }
 
                 $o[$num] .= $s;
@@ -1177,6 +1241,8 @@ class Import
             }
         }
 
+        ksort($o);
+
         return $o;
     }
 
@@ -1184,6 +1250,7 @@ class Import
      * @param ImportError::TYPE_*|null $type
      * @param string[] $row
      * @param Failure[] $failureList
+     * @noinspection PhpDocSignatureInspection
      */
     private function createError(
         ?string $type,
@@ -1217,5 +1284,38 @@ class Import
         ]);
 
         $errorIndex++;
+    }
+
+    private function formatPhoneNumber(string $value, Params $params): string
+    {
+        return $this->phoneNumberSanitizer->sanitize($value, $params->getPhoneNumberCountry());
+    }
+
+    /**
+     * @param non-empty-string $decimalMark
+     */
+    private function transformFloatString(string $decimalMark, string $value): ?string
+    {
+        $a = explode($decimalMark, $value);
+
+        $left = $a[0];
+        $right = $a[1] ?? null;
+
+        $replaceList = [
+            ' ',
+            $decimalMark === '.' ? ',' : '.',
+        ];
+
+        $left = str_replace($replaceList, '', $left);
+
+        if (!is_numeric($left)) {
+            return null;
+        }
+
+        if ($right !== null) {
+            return $left . '.' . $right;
+        }
+
+        return $left;
     }
 }

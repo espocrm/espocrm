@@ -45,6 +45,11 @@ class SaveOption
      */
     public const IMPORT = 'import';
     /**
+     * Called from a Record service.
+     * @since 8.0.1
+     */
+    public const API = 'api';
+    /**
      * Skip all additional processing. Boolean.
      */
     public const SKIP_ALL = BaseSaveOption::SKIP_ALL;

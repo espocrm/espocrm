@@ -1,5 +1,28 @@
 {
   "insertFromSourceLabels": {
-    "Document": "Döküman ekle."
+    "Document": "Döküman ekle"
+  },
+  "fields": {
+    "role": "Rol",
+    "related": "İlgili",
+    "file": "Dosya",
+    "type": "Tip",
+    "field": "Alan",
+    "sourceId": "Kaynak Kimliği",
+    "storage": "Depolama",
+    "size": "Boyut (bytes)"
+  },
+  "options": {
+    "role": {
+      "Attachment": "Ek",
+      "Inline Attachment": "Satır İçi Ek",
+      "Import File": "İçeri al",
+      "Export File": "Dışarı Çıkart",
+      "Mail Merge": "Mail Birleştirme",
+      "Mass Pdf": "Toplu PDF"
+    }
+  },
+  "presetFilters": {
+    "orphan": "Sahipsiz"
   }
 }

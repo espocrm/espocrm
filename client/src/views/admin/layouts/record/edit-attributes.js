@@ -32,6 +32,9 @@ define('views/admin/layouts/record/edit-attributes', ['views/record/base'], func
 
         template: 'admin/layouts/record/edit-attributes',
 
+        /** @internal Important for dynamic logic working. */
+        mode: 'edit',
+
         data: function () {
             return {
                 attributeDataList: this.getAttributeDataList()
@@ -39,17 +42,21 @@ define('views/admin/layouts/record/edit-attributes', ['views/record/base'], func
         },
 
         getAttributeDataList: function () {
-            var list = [];
+            const list = [];
 
-            this.attributeList.forEach(item => {
-                let type = (this.attributeDefs[item] || {}).type;
+            this.attributeList.forEach(attribute => {
+                const defs = this.attributeDefs[attribute] || {};
 
-                let isWide = !['enum', 'bool', 'int', 'float', 'varchar'].includes(type);
+                const type = defs.type;
+
+                const isWide = !['enum', 'bool', 'int', 'float', 'varchar'].includes(type) &&
+                    attribute !== 'widthComplex';
 
                 list.push({
-                    name: item,
-                    viewKey: item + 'Field',
+                    name: attribute,
+                    viewKey: attribute + 'Field',
                     isWide: isWide,
+                    label: this.translate(defs.label || attribute, 'fields', 'LayoutManager'),
                 });
             });
 
@@ -63,10 +70,10 @@ define('views/admin/layouts/record/edit-attributes', ['views/record/base'], func
             this.attributeDefs = this.options.attributeDefs || {};
 
             this.attributeList.forEach(field => {
-                var params = this.attributeDefs[field] || {};
-                var type = params.type || 'base';
+                const params = this.attributeDefs[field] || {};
+                const type = params.type || 'base';
 
-                var viewName = params.view || this.getFieldManager().getViewName(type);
+                const viewName = params.view || this.getFieldManager().getViewName(type);
 
                 this.createField(field, viewName, params);
             });

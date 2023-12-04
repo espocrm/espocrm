@@ -22,6 +22,10 @@
             "type": "bool"
         },
         {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "attachmentField",
             "type": "varchar",
             "hidden": true
@@ -52,5 +56,6 @@
     "textFilter": true,
     "fullTextSearch": true,
     "duplicatorClassName": "Espo\\Classes\\FieldDuplicators\\Wysiwyg",
-    "validatorClassName": "Espo\\Classes\\FieldValidators\\TextType"
+    "validatorClassName": "Espo\\Classes\\FieldValidators\\TextType",
+    "default": null
 }

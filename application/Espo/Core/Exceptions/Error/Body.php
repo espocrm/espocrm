@@ -41,6 +41,7 @@ class Body
     private ?string $messageTranslationScope = null;
     /** @var ?array<string, string> */
     private ?array $messageTranslationData = null;
+    private ?string $message = null;
 
     public static function create(): self
     {
@@ -63,6 +64,14 @@ class Body
         return $obj;
     }
 
+    public function withMessage(string $message): self
+    {
+        $obj = clone $this;
+        $obj->message = $message;
+
+        return $obj;
+    }
+
     public function encode(): string
     {
         $data = (object) [];
@@ -75,6 +84,10 @@ class Body
                 'scope' => $this->messageTranslationScope,
                 'data' => $messageTranslationData,
             ];
+        }
+
+        if ($this->message) {
+            $data->message = $this->message;
         }
 
         return Json::encode($data);

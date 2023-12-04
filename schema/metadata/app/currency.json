@@ -1,0 +1,32 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/currency.json",
+    "title": "app/currency",
+    "description": "Currency definitions.",
+    "type": "object",
+    "properties": {
+        "symbolMap": {
+            "type": "object",
+            "description": "A currency-code => symbol mapping.",
+            "additionalProperties": {
+                "type": "string",
+                "description": "A 3-letter ISO 4217 currency code."
+            }
+        },
+        "list": {
+            "type": "array",
+            "description": "A list of currencies available in the system. Values defined as 3-letter currency codes in ISO 4217 standard. Use __APPEND__ to add new currencies w/o deleting existing.",
+            "items": {
+                "anyOf": [
+                    {"enum": ["__APPEND__"]},
+                    {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 3,
+                        "pattern": "^[A-Z]{3}$"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -1,5 +1,5 @@
 <a
-    href="#{{model.name}}/view/{{model.id}}"
+    href="#{{model.entityType}}/view/{{model.id}}"
     class="link"
     data-id="{{model.id}}"
     title="{{value}}"

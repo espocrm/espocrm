@@ -27,7 +27,6 @@
     "audited": "Revisionato",
     "auditedForeign": "Revisionato Esternamente",
     "statusField": "Campo di Stato",
-    "beforeSaveCustomScript": "Prima di salvare lo script personalizzato",
     "color": "Colore",
     "kanbanViewMode": "Vista Kanban",
     "kanbanStatusIgnoreList": "Gruppi ignorati in vista Kanban",
@@ -36,7 +35,12 @@
     "countDisabled": "Disabilita il conteggio dei record",
     "parentEntityTypeList": "Tipo Genitore Entità",
     "foreignLinkEntityTypeList": "Collegamenti Esterni",
-    "entity": "Entità"
+    "entity": "Entità",
+    "updateDuplicateCheck": "Controllo duplicati durante l'aggiornamento",
+    "duplicateCheckFieldList": "Campi controllo duplicati",
+    "author": "Autore",
+    "module": "Modulo",
+    "version": "Versione"
   },
   "options": {
     "type": {
@@ -64,7 +68,12 @@
     "entityCreated": "L'Entità è stata creata",
     "linkAlreadyExists": "Nome del collegamento in conflitto.",
     "linkConflict": "Conflitto: collegamento o campo con lo stesso nome già esistente.",
-    "confirmRemove": "Sei sicuro di voler rimuovere questo tipo di entità dal sistema?"
+    "confirmRemove": "Sei sicuro di voler rimuovere questo tipo di entità dal sistema?",
+    "beforeSaveCustomScript": "Uno script chiamato ogni volta prima che un'entità venga salvata. Si usa per impostare i campi calcolati.",
+    "beforeSaveApiScript": "Uno script chiamato nelle richieste API di creazione e aggiornamento prima che un'entità venga salvata. Da utilizzare per la convalida personalizzata e il controllo dei duplicati.",
+    "nameIsAlreadyUsed": "Nome '{name}' è già in uso.",
+    "nameIsNotAllowed": "Nome '{name}' non permesso.",
+    "nameIsTooLong": "Nome troppo lungo."
   },
   "tooltips": {
     "statusField": "Gli aggiornamenti a questo campo verranno registrati nel flusso attività.",
@@ -76,6 +85,8 @@
     "entityType": "Base Plus - dispone di pannelli Attività, Storico e Compiti.\n\nEvento - disponibile nei pannelli Calendario ed Attività.",
     "fullTextSearch": "È necessario eseguire la ricostruzione.",
     "countDisabled": "Il numero totale non verrà visualizzato nella visualizzazione lista. Può ridurre il tempo di caricamento quando la tabella DB è grande.",
-    "optimisticConcurrencyControl": "Previene i conflitti."
+    "optimisticConcurrencyControl": "Previene i conflitti.",
+    "duplicateCheckFieldList": "Quali campi controllare quando viene eseguito il controllo duplicati.",
+    "updateDuplicateCheck": "Esegui il controllo duplicati quando un record viene aggiornato."
   }
 }

@@ -23,7 +23,7 @@
     "Opportunity": "Възможност",
     "Meeting": "Среща",
     "Calendar": "Календар",
-    "Call": "Обадете се",
+    "Call": "Обаждания",
     "Task": "Задача",
     "Case": "Тикет",
     "Document": "Документ",
@@ -88,7 +88,9 @@
     "Archive Email": "Архивиране на имейл",
     "Create Task": "Създаване на задача",
     "Tasks": "Задачи",
-    "Scheduler": "График"
+    "Scheduler": "График",
+    "Schedule": "График",
+    "Log": "Журнал"
   },
   "fields": {
     "billingAddressCity": "Град",
@@ -115,5 +117,16 @@
       "Popup": "Попъп",
       "Email": "Електронна поща"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} ви добави към {entityType} {entity}"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} прие участие в {entityType} {entity}",
+    "eventConfirmationDeclined": "{invitee} отказа участие в {entityType} {entity}",
+    "eventConfirmationTentative": "{invitee} е колеблив за участие в {entityType} {entity}",
+    "eventConfirmationAcceptedThis": "{invitee} прие участие",
+    "eventConfirmationDeclinedThis": "{invitee} отказа участие",
+    "eventConfirmationTentativeThis": "{invitee} е колеблив за участие"
   }
 }

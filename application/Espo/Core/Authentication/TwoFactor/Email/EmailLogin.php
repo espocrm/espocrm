@@ -29,18 +29,17 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Email;
 
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 use Espo\Entities\UserData;
-
 use Espo\Repositories\UserData as UserDataRepository;
-
 use Espo\Core\Authentication\TwoFactor\Login;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\Result\Data as ResultData;
 use Espo\Core\Authentication\Result\FailReason;
-
 use Espo\Core\Api\Request;
 
 use RuntimeException;
@@ -49,14 +48,11 @@ class EmailLogin implements Login
 {
     public const NAME = 'Email';
 
-    private EntityManager $entityManager;
-    private Util $util;
-
-    public function __construct(EntityManager $entityManager, Util $util)
-    {
-        $this->entityManager = $entityManager;
-        $this->util = $util;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private Util $util,
+        private Log $log
+    ) {}
 
     public function login(Result $result, Request $request): Result
     {
@@ -69,7 +65,14 @@ class EmailLogin implements Login
         }
 
         if (!$code) {
-            $this->util->sendCode($user);
+            try {
+                $this->util->sendCode($user);
+            }
+            catch (Forbidden|SendingError $e) {
+                $this->log->error("Could not send 2FA code for user {$user->getUserName()}. " . $e->getMessage());
+
+                return Result::fail(FailReason::ERROR);
+            }
 
             return Result::secondStepRequired($user, $this->getResultData());
         }

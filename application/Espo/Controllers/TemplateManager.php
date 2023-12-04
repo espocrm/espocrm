@@ -31,6 +31,7 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\TemplateFileManager;
 use Espo\Core\ApplicationState;
@@ -38,16 +39,20 @@ use Espo\Core\Api\Request;
 
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ * @todo Move to a service class.
+ */
 class TemplateManager
 {
-
     /**
      * @throws Forbidden
      */
     public function __construct(
         private Metadata $metadata,
         private TemplateFileManager $templateFileManager,
-        private ApplicationState $applicationState
+        private ApplicationState $applicationState,
+        private Config $config
     ) {
 
         if (!$this->applicationState->isAdmin()) {
@@ -55,6 +60,9 @@ class TemplateManager
         }
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function getActionGetTemplate(Request $request): stdClass
     {
         $name = $request->getQueryParam('name');
@@ -66,7 +74,6 @@ class TemplateManager
         $scope = $request->getQueryParam('scope');
 
         $module = $this->metadata->get(['app', 'templates', $name, 'module']);
-
         $hasSubject = !$this->metadata->get(['app', 'templates', $name, 'noSubject']);
 
         $templateFileManager = $this->templateFileManager;
@@ -82,6 +89,10 @@ class TemplateManager
         return $returnData;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     public function postActionSaveTemplate(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -89,7 +100,16 @@ class TemplateManager
         $scope = null;
 
         if (empty($data->name)) {
+            /** @noinspection PhpUnhandledExceptionInspection */
             throw new BadRequest();
+        }
+
+        if (
+            $data->name === 'passwordChangeLink' &&
+            $this->config->get('restrictedMode') &&
+            !$this->applicationState->getUser()->isSuperAdmin()
+        ) {
+            throw new Forbidden();
         }
 
         if (!empty($data->scope)) {
@@ -109,6 +129,9 @@ class TemplateManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
     public function postActionResetTemplate(Request $request): stdClass
     {
         $data = $request->getParsedBody();
@@ -124,7 +147,6 @@ class TemplateManager
         }
 
         $module = $this->metadata->get(['app', 'templates', $data->name, 'module']);
-
         $hasSubject = !$this->metadata->get(['app', 'templates', $data->name, 'noSubject']);
 
         $templateFileManager = $this->templateFileManager;

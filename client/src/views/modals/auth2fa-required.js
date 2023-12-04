@@ -26,48 +26,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/auth2fa-required', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class Auth2faRequiredModalView extends ModalView {
 
-        fitHeight: true,
+    noCloseButton = true
+    escapeDisabled = true
 
-        noCloseButton: true,
+    events = {
+        'click [data-action="proceed"]': 'actionProceed',
+        'click [data-action="logout"]': 'actionLogout',
+    }
 
-        escapeDisabled: true,
+    // language=Handlebars
+    templateContent = `
+        <div class="complex-text">{{complexText viewObject.messageText}}</div>
+        <div class="button-container btn-group" style="margin-top: 30px">
+        <button class="btn btn-primary" data-action="proceed">{{translate 'Proceed'}}</button>
+        <button class="btn btn-default" data-action="logout">{{translate 'Log Out'}}</button></div>
+    `
 
-        events: {
-            'click [data-action="proceed"]': 'actionProceed',
-            'click [data-action="logout"]': 'actionLogout',
-        },
+    setup() {
+        this.buttonList = [];
 
-        templateContent: '<div class="complex-text">{{complexText viewObject.messageText}}</div>' +
-            '<div class="button-container btn-group" style="margin-top: 30px">' +
-            '<button class="btn btn-primary" data-action="proceed">{{translate \'Proceed\'}}</button>' +
-            '<button class="btn btn-default" data-action="logout">{{translate \'Log Out\'}}</button></div>',
+        this.headerText = this.translate('auth2FARequiredHeader', 'messages', 'User');
+        // noinspection JSUnusedGlobalSymbols
+        this.messageText = this.translate('auth2FARequired', 'messages', 'User');
+    }
 
-        setup: function () {
-            this.buttonList = [];
+    actionProceed() {
+        this.createView('dialog', 'views/user/modals/security', {
+            userModel: this.getUser(),
+        }, view => {
+            view.render();
 
-            this.headerText = this.translate('auth2FARequiredHeader', 'messages', 'User');
-            this.messageText = this.translate('auth2FARequired', 'messages', 'User');
-        },
-
-        actionProceed: function () {
-            this.createView('dialog', 'views/user/modals/security', {
-                userModel: this.getUser(),
-            }, (view) => {
-                view.render();
-
-                this.listenToOnce(view, 'done', () => {
-                    this.clearView('dialog');
-                    this.close();
-                });
+            this.listenToOnce(view, 'done', () => {
+                this.clearView('dialog');
+                this.close();
             });
-        },
+        });
+    }
 
-        actionLogout: function () {
-            this.getRouter().logout();
-        },
-    });
-});
+    actionLogout() {
+        this.getRouter().logout();
+    }
+}
+
+export default Auth2faRequiredModalView;

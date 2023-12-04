@@ -25,7 +25,8 @@
             "type": "datetimeOptional",
             "view": "crm:views/meeting/fields/date-end",
             "required": true,
-            "after": "dateStart"
+            "after": "dateStart",
+            "suppressValidationList": ["required"]
         },
         "isAllDay": {
             "type": "bool",

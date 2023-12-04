@@ -126,7 +126,11 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                 var linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
 
                 Object.keys(linkDefs).forEach(link => {
-                    if (linkDefs[link].disabled || linkDefs[link].layoutRelationshipsDisabled) {
+                    if (
+                        linkDefs[link].disabled ||
+                        linkDefs[link].utility ||
+                        linkDefs[link].layoutRelationshipsDisabled
+                    ) {
                         return;
                     }
 

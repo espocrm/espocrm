@@ -33,19 +33,35 @@ const fs = require('fs');
 const cp = require('child_process');
 const path = require('path');
 const buildUtils = require('./js/build-utils');
+const {TemplateBundler, Bundler} = require('espo-frontend-build-tools');
+const LayoutTypeBundler = require('./js/layout-template-bundler');
+
+const bundleConfig = require('./frontend/bundle-config.json');
+const libs = require('./frontend/libs.json');
 
 module.exports = grunt => {
 
     const pkg = grunt.file.readJSON('package.json');
-    const bundleConfig = require('./frontend/bundle-config.json');
-    const libs = require('./frontend/libs.json');
 
     const originalLibDir = 'client/lib/original';
 
-    let bundleJsFileList = buildUtils.getPreparedBundleLibList(libs).concat(originalLibDir + '/espo.js');
-    let copyJsFileList = buildUtils.getCopyLibDataList(libs);
+    const libsBundleFileList = [
+        'client/src/namespace.js',
+        'client/src/loader.js',
+        ...buildUtils.getPreparedBundleLibList(libs),
+    ];
 
-    let minifyLibFileList = copyJsFileList
+    const bundleFileMap = {'client/lib/espo.js': libsBundleFileList};
+
+    for (const name in bundleConfig.chunks) {
+        const namePart = 'espo-' + name;
+
+        bundleFileMap[`client/lib/${namePart}.js`] = originalLibDir + `/${namePart}.js`
+    }
+
+    const copyJsFileList = buildUtils.getCopyLibDataList(libs);
+
+    const minifyLibFileList = copyJsFileList
         .filter(item => item.minify)
         .map(item => {
             return {
@@ -54,21 +70,21 @@ module.exports = grunt => {
             };
         });
 
-    let currentPath = path.dirname(fs.realpathSync(__filename));
+    const currentPath = path.dirname(fs.realpathSync(__filename));
 
-    let themeList = [];
+    const themeList = [];
 
     fs.readdirSync('application/Espo/Resources/metadata/themes').forEach(file => {
         themeList.push(file.substring(0, file.length - 5));
     });
 
-    let cssminFilesData = {};
-    let lessData = {};
+    const cssminFilesData = {};
+    const lessData = {};
 
     themeList.forEach(theme => {
-        let name = buildUtils.camelCaseToHyphen(theme);
+        const name = buildUtils.camelCaseToHyphen(theme);
 
-        let files = {};
+        const files = {};
 
         files['client/css/espo/'+name+'.css'] = 'frontend/less/'+name+'/main.less';
         files['client/css/espo/'+name+'-iframe.css'] = 'frontend/less/'+name+'/iframe/main.less';
@@ -90,7 +106,7 @@ module.exports = grunt => {
         mkdir: {
             tmp: {
                 options: {
-                    mode: 0755,
+                    mode: 0o755,
                     create: [
                         'build/tmp',
                     ],
@@ -110,9 +126,7 @@ module.exports = grunt => {
             beforeFinal: {
                 src: [
                     'build/tmp/custom/Espo/Custom/*',
-                    'build/tmp/custom/Espo/Modules/*',
                     '!build/tmp/custom/Espo/Custom/.htaccess',
-                    '!build/tmp/custom/Espo/Modules/.htaccess',
                     'build/tmp/install/config.php',
                     'build/tmp/vendor/*/*/.git',
                     'build/tmp/custom/Espo/Custom/*',
@@ -120,6 +134,10 @@ module.exports = grunt => {
                     '!build/tmp/client/custom/modules',
                     'build/tmp/client/custom/modules/*',
                     '!build/tmp/client/custom/modules/dummy.txt',
+                    'build/tmp/client/lib/original/espo.js',
+                    'build/tmp/client/lib/original/espo-*.js',
+                    '!build/tmp/client/lib/original/espo-funnel-chart.js',
+                    'build/tmp/client/lib/transpiled',
                 ]
             },
         },
@@ -134,19 +152,19 @@ module.exports = grunt => {
 
         uglify: {
             options: {
-                mangle: true,
                 sourceMap: true,
                 output: {
                     comments: /^!/,
                 },
+                beautify: false,
+                mangle: true,
+                compress: true
             },
             bundle: {
                 options: {
                     banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
                 },
-                files: {
-                    'client/lib/espo.min.js': bundleJsFileList,
-                },
+                files: bundleFileMap,
             },
             lib: {
                 files: minifyLibFileList,
@@ -164,7 +182,6 @@ module.exports = grunt => {
                     'src/**',
                     'res/**',
                     'fonts/**',
-                    'cfg/**',
                     'modules/**',
                     'img/**',
                     'css/**',
@@ -236,7 +253,7 @@ module.exports = grunt => {
                 options: {
                     patterns: [
                         {
-                            match: /\# \{\#dev\}(.*)\{\/dev\}/gs,
+                            match: /# \{#dev}(.*)\{\/dev}/gs,
                             replacement: '',
                         }
                     ]
@@ -251,16 +268,43 @@ module.exports = grunt => {
         },
     });
 
-    grunt.registerTask('espo-bundle', () => {
-        const Bundler = require('./js/bundler');
-
-        let contents = (new Bundler()).bundle(bundleConfig.jsFiles);
-
+    const writeOriginalLib = (name, contents) => {
         if (!fs.existsSync(originalLibDir)) {
             fs.mkdirSync(originalLibDir);
         }
 
-        fs.writeFileSync(originalLibDir + '/espo.js', contents, 'utf8');
+        const file = originalLibDir + `/${name}.js`;
+
+        fs.writeFileSync(file, contents, 'utf8');
+    };
+
+    grunt.registerTask('bundle', () => {
+        const bundler = new Bundler(bundleConfig, libs);
+
+        const result = bundler.bundle();
+
+        for (const name in result) {
+            let contents = result[name];
+
+            const key = 'espo-' + name;
+
+            if (name === 'main') {
+                contents += '\n' + (new LayoutTypeBundler()).bundle();
+            }
+
+            writeOriginalLib(key, contents);
+        }
+    });
+
+    grunt.registerTask('bundle-templates', () => {
+        const templateBundler = new TemplateBundler({
+            dirs: [
+                'client/res/templates',
+                'client/modules/crm/res/templates',
+            ],
+        });
+
+        templateBundler.process();
     });
 
     grunt.registerTask('prepare-lib-original', () => {
@@ -272,6 +316,10 @@ module.exports = grunt => {
         cp.execSync("node js/scripts/prepare-lib");
     });
 
+    grunt.registerTask('transpile', () => {
+        cp.execSync("node js/transpile");
+    });
+
     grunt.registerTask('chmod-folders', () => {
         cp.execSync(
             "find . -type d -exec chmod 755 {} +",
@@ -280,9 +328,9 @@ module.exports = grunt => {
     });
 
     grunt.registerTask('chmod-multiple', () => {
-        let dirPath = 'build/EspoCRM-' + pkg.version;
+        const dirPath = 'build/EspoCRM-' + pkg.version;
 
-        let fileList = [
+        const fileList = [
             {
                 name: '*.php',
             },
@@ -315,7 +363,7 @@ module.exports = grunt => {
             },
         ];
 
-        let dirReadableList = [
+        const dirReadableList = [
             'public/install',
             'public/portal',
             'public/api',
@@ -324,7 +372,7 @@ module.exports = grunt => {
             '.',
         ];
 
-        let dirWritableList = [
+        const dirWritableList = [
             'data',
             'custom',
             'custom/Espo',
@@ -335,8 +383,8 @@ module.exports = grunt => {
         ];
 
         fileList.forEach(item => {
-            let path = item.folder || '.';
-            let name = item.name;
+            const path = item.folder || '.';
+            const name = item.name;
 
             cp.execSync(
                 `find ${path} -type f -iname "${name}" -exec chmod 644 {} +`,
@@ -399,23 +447,22 @@ module.exports = grunt => {
     grunt.registerTask('zip', function () { // Don't change to arrow-function.
         const archiver = require('archiver');
 
-        let resolve = this.async();
+        const resolve = this.async();
 
-        let folder = 'EspoCRM-' + pkg.version;
-
-        let zipPath = 'build/' + folder +'.zip';
+        const folder = 'EspoCRM-' + pkg.version;
+        const zipPath = 'build/' + folder + '.zip';
 
         if (fs.existsSync(zipPath)) {
             fs.unlinkSync(zipPath);
         }
 
-        let archive = archiver('zip');
+        const archive = archiver('zip');
 
         archive.on('error', err => {
             grunt.fail.warn(err);
         });
 
-        let zipOutput = fs.createWriteStream(zipPath);
+        const zipOutput = fs.createWriteStream(zipPath);
 
         zipOutput.on('close', () => {
             console.log("EspoCRM package has been built.");
@@ -445,8 +492,10 @@ module.exports = grunt => {
     grunt.registerTask('internal', [
         'less',
         'cssmin',
-        'espo-bundle',
         'prepare-lib-original',
+        'transpile',
+        'bundle',
+        'bundle-templates',
         'uglify:bundle',
         'copy:frontendLib',
         'prepare-lib',

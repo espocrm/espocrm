@@ -26,53 +26,54 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/array-int', ['views/fields/array'], function (Dep) {
+import ArrayFieldView from 'views/fields/array';
 
-    return Dep.extend({
+class ArrayIntFieldView extends ArrayFieldView {
 
-        type: 'arrayInt',
+    type = 'arrayInt'
 
-        fetchFromDom: function () {
-            var selected = [];
+    fetchFromDom() {
+        let selected = [];
 
-            this.$el.find('.list-group .list-group-item').each(function (i, el) {
-                var value = $(el).data('value');
+        this.$el.find('.list-group .list-group-item').each((i, el) => {
+            let value = $(el).data('value');
 
-                if (typeof value === 'string' || value instanceof String) {
-                    value = parseInt($(el).data('value'));
-                }
-
-                selected.push(value);
-            });
-
-            this.selected = selected;
-        },
-
-        addValue: function (value) {
-            value = parseInt(value);
-
-            if (isNaN(value)) {
-                return;
+            if (typeof value === 'string' || value instanceof String) {
+                value = parseInt($(el).data('value'));
             }
 
-            Dep.prototype.addValue.call(this, value);
-        },
+            selected.push(value);
+        });
 
-        removeValue: function (value) {
-            value = parseInt(value);
+        this.selected = selected;
+    }
 
-            if (isNaN(value)) {
-                return;
-            }
+    addValue(value) {
+        value = parseInt(value);
 
-            var valueInternal = value.toString().replace(/"/g, '\\"');
+        if (isNaN(value)) {
+            return;
+        }
 
-            this.$list.children('[data-value="' + valueInternal + '"]').remove();
+        super.addValue(value);
+    }
 
-            var index = this.selected.indexOf(value);
+    removeValue(value) {
+        value = parseInt(value);
 
-            this.selected.splice(index, 1);
-            this.trigger('change');
-        },
-    });
-});
+        if (isNaN(value)) {
+            return;
+        }
+
+        let valueInternal = value.toString().replace(/"/g, '\\"');
+
+        this.$list.children('[data-value="' + valueInternal + '"]').remove();
+
+        let index = this.selected.indexOf(value);
+
+        this.selected.splice(index, 1);
+        this.trigger('change');
+    }
+}
+
+export default ArrayIntFieldView;

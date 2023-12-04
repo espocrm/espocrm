@@ -1,0 +1,35 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/authentication2FAMethods.json",
+    "title": "app/authentication2FAMethods",
+    "description": "Definitions for 2-factor authentication methods.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A method name.",
+        "properties": {
+            "settings": {
+                "type": "object",
+                "description": "Settings.",
+                "properties": {
+                    "isAvailable": {
+                        "type": "boolean",
+                        "description": "Whether the method should be available as an option at Administration > Authentication > Available 2FA methods."
+                    }
+                }
+            },
+            "userApplyView": {
+                "type": "string",
+                "description": "A front-end view for a user when they apply the 2FA method to their account."
+            },
+            "loginClassName": {
+                "type": "string",
+                "description": "A login class. Processes the second step of the login process. Should implement Espo\\Core\\Authentication\\TwoFactor\\Login interface."
+            },
+            "userSetupClassName": {
+                "type": "string",
+                "description": "A user-setup class. Provides needed data for a front-end for a user when they setup the 2FA method. Verifies entered user data before establishing the 2FA method for a user. Should implement Espo\\Core\\Authentication\\TwoFactor\\UserSetup interface."
+            }
+        }
+    }
+}

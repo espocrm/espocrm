@@ -11,14 +11,14 @@
     "publishDate": "Dátum publikovania",
     "expirationDate": "Dátum expirácie",
     "description": "Popis",
-    "accounts": "Účty",
+    "accounts": "Organizácie",
     "folder": "Priečinok"
   },
   "links": {
-    "accounts": "Účty",
+    "accounts": "Organizácie",
     "opportunities": "Príležitosti",
     "folder": "Priečinok",
-    "leads": "Stopy",
+    "leads": "Prvé kontakty",
     "contacts": "Kontakty"
   },
   "options": {

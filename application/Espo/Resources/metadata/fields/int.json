@@ -28,12 +28,19 @@
         {
             "name": "readOnly",
             "type": "bool"
+        },
+        {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
         }
     ],
     "validationList": [
         "required",
         "min",
         "max"
+    ],
+    "mandatoryValidationList": [
+        "valid"
     ],
     "filter": true,
     "textFilter": true,

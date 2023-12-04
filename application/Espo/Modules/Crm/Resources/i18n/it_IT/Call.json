@@ -27,7 +27,7 @@
       "None": "Nessuno",
       "Accepted": "Accettato",
       "Declined": "Rifiutato",
-      "Tentative": "Provvisorio"
+      "Tentative": "Incerto"
     }
   },
   "massActions": {
@@ -43,6 +43,6 @@
   "presetFilters": {
     "planned": "Pianificata",
     "held": "Effettuata",
-    "todays": "Di oggi"
+    "todays": "Di Oggi"
   }
 }

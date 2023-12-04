@@ -55,7 +55,9 @@ class QueryComposerFactory implements \Espo\ORM\QueryComposer\QueryComposerFacto
     public function create(string $platform): QueryComposer
     {
         /** @var ?class-string<QueryComposer> $className */
-        $className = $this->metadata->get(['app', 'orm', 'queryComposerClassNameMap', $platform]);
+        $className =
+            $this->metadata->get(['app', 'orm', 'platforms', $platform, 'queryComposerClassName']) ??
+            $this->metadata->get(['app', 'orm', 'queryComposerClassNameMap', $platform]);
 
         if (!$className) {
             /** @var class-string<QueryComposer> $className */

@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/create-event', ['views/fields/base', 'lib!espo'], function (Dep, Espo) {
+define('views/email/fields/create-event', ['views/fields/base'], function (Dep) {
 
     return Dep.extend({
 

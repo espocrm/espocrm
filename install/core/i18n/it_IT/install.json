@@ -66,14 +66,15 @@
     "Date Format": "Formato Data",
     "Time Format": "Formato Ora",
     "Time Zone": "Fuso Orario",
-    "First Day of Week": "Primo giorno della settimana",
+    "First Day of Week": "Primo Giorno della Settimana",
     "Thousand Separator": "Separatore delle migliaia",
     "Decimal Mark": "Marcatore dei decimali",
     "Default Currency": "Valuta Predefinita",
     "Currency List": "Elenco Valute",
     "Language": "Lingua",
     "smtpAuth": "Autenticazione",
-    "smtpSecurity": "Sicurezza"
+    "smtpSecurity": "Sicurezza",
+    "Platform": "Piattaforma"
   },
   "messages": {
     "1045": "Accesso negato all'utente",

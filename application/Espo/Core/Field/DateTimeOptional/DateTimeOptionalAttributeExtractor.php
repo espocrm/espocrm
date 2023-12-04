@@ -52,13 +52,13 @@ class DateTimeOptionalAttributeExtractor implements AttributeExtractor
 
         if ($value->isAllDay()) {
             return (object) [
-                $field . 'Date' => $value->getString(),
+                $field . 'Date' => $value->toString(),
                 $field => null,
             ];
         }
 
         return (object) [
-            $field => $value->getString(),
+            $field => $value->toString(),
             $field . 'Date' => null,
         ];
     }

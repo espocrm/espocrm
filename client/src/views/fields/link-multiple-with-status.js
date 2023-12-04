@@ -26,61 +26,63 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-multiple-with-status', ['views/fields/link-multiple'], function (Dep) {
+import LinkMultipleFieldView from 'views/fields/link-multiple';
 
-    return Dep.extend({
+class LinkMultipleWithStatusFieldView extends LinkMultipleFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.columnsName = this.name + 'Columns';
+        this.columnsName = this.name + 'Columns';
+        this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
+
+        this.listenTo(this.model, 'change:' + this.columnsName, () => {
             this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
+        });
 
-            this.listenTo(this.model, 'change:' + this.columnsName, () => {
-                this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
-            });
+        this.statusField = this.getMetadata()
+            .get(['entityDefs', this.model.entityType,  'fields', this.name, 'columns', 'status']);
 
-            this.statusField = this.getMetadata()
-                .get(['entityDefs', this.model.entityType,  'fields', this.name, 'columns', 'status']);
+        this.styleMap = this.getMetadata()
+            .get(['entityDefs', this.foreignScope, 'fields', this.statusField, 'style']) || {};
+    }
 
-            this.styleMap = this.getMetadata()
-                .get(['entityDefs', this.foreignScope, 'fields', this.statusField, 'style']) || {};
-        },
+    getAttributeList() {
+        const list = super.getAttributeList();
 
-        getAttributeList: function () {
-            let list = Dep.prototype.getAttributeList.call(this);
+        list.push(this.name + 'Columns');
 
-            list.push(this.name + 'Columns');
+        return list;
+    }
 
-            return list;
-        },
+    getDetailLinkHtml(id, name) {
+        let status = (this.columns[id] || {}).status;
 
-        getDetailLinkHtml: function (id, name) {
-            let status = (this.columns[id] || {}).status;
+        if (!status) {
+            return super.getDetailLinkHtml(id, name);
+        }
 
-            if (!status) {
-                return Dep.prototype.getDetailLinkHtml.call(this, id, name);
-            }
+        let style = this.styleMap[status];
 
-            let style = this.styleMap[status];
+        let targetStyleList = ['success', 'danger'];
 
-            let targetStyleList = ['success', 'danger'];
+        if (!style || !~targetStyleList.indexOf(style)) {
+            return super.getDetailLinkHtml(id, name);
+        }
 
-            if (!style || !~targetStyleList.indexOf(style)) {
-                return Dep.prototype.getDetailLinkHtml.call(this, id, name);
-            }
+        let iconStyle = '';
 
-            let iconStyle = '';
+        if (style === 'success') {
+            iconStyle = 'fas fa-check text-success small';
+        }
+        else if (style === 'danger') {
+            iconStyle = 'fas fa-times text-danger small';
+        }
 
-            if (style === 'success') {
-                iconStyle = 'fas fa-check text-success small';
-            }
-            else if (style === 'danger') {
-                iconStyle = 'fas fa-times text-danger small';
-            }
+        return '<span class="' + iconStyle + '"></span> ' +
+            super.getDetailLinkHtml(id, name);
+    }
+}
 
-            return '<span class="' + iconStyle + '"></span> ' +
-                Dep.prototype.getDetailLinkHtml.call(this, id, name);
-        },
-    });
-});
+// noinspection JSUnusedGlobalSymbols
+export default LinkMultipleWithStatusFieldView;

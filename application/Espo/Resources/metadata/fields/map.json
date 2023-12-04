@@ -1,14 +1,6 @@
 {
     "params": [
         {
-            "name": "provider",
-            "type": "enum",
-            "options": [
-                "Google"
-            ],
-            "default": "Google"
-        },
-        {
             "name": "height",
             "type": "int",
             "default": 300

@@ -29,7 +29,10 @@
 
 ob_start();
 
-$result = array('success' => true, 'errors' => array());
+$result = [
+    'success' => true,
+    'errors' => [],
+];
 
 $phpRequiredList = $installer->getSystemRequirementList('php', true);
 
@@ -40,11 +43,13 @@ foreach ($phpRequiredList as $name => $details) {
             case 'version':
                 $result['success'] = false;
                 $result['errors']['phpVersion'] = $details['required'];
+
                 break;
 
             default:
                 $result['success'] = false;
                 $result['errors']['phpRequires'][] = $name;
+
                 break;
         }
     }
@@ -52,14 +57,22 @@ foreach ($phpRequiredList as $name => $details) {
 
 $allPostData = $postData->getAll();
 
-if ($result['success'] && !empty($allPostData['dbName']) && !empty($allPostData['hostName']) && !empty($allPostData['dbUserName'])) {
+if (
+    $result['success'] &&
+    !empty($allPostData['dbName']) &&
+    !empty($allPostData['hostName']) &&
+    !empty($allPostData['dbUserName'])
+) {
     $connect = false;
 
     $dbName = trim($allPostData['dbName']);
-    if (strpos($allPostData['hostName'],':') === false) {
+
+    if (!str_contains($allPostData['hostName'], ':')) {
         $allPostData['hostName'] .= ":";
     }
-    list($hostName, $port) = explode(':', trim($allPostData['hostName']));
+
+    [$hostName, $port] = explode(':', trim($allPostData['hostName']));
+
     $dbUserName = trim($allPostData['dbUserName']);
     $dbUserPass = trim($allPostData['dbUserPass']);
 
@@ -67,7 +80,10 @@ if ($result['success'] && !empty($allPostData['dbName']) && !empty($allPostData[
         $port = null;
     }
 
+    $platform = $allPostData['dbPlatform'] ?? 'Mysql';
+
     $databaseParams = [
+        'platform' => $platform,
         'host' => $hostName,
         'port' => $port,
         'user' => $dbUserName,
@@ -79,7 +95,8 @@ if ($result['success'] && !empty($allPostData['dbName']) && !empty($allPostData[
 
     try {
         $installer->checkDatabaseConnection($databaseParams, true);
-    } catch (\Exception $e) {
+    }
+    catch (\Exception $e) {
         $isConnected = false;
         $result['success'] = false;
         $result['errors']['dbConnect']['errorCode'] = $e->getCode();
@@ -92,16 +109,17 @@ if ($result['success'] && !empty($allPostData['dbName']) && !empty($allPostData[
 
         foreach ($databaseRequiredList as $name => $details) {
             if (!$details['acceptable']) {
-
                 switch ($details['type']) {
                     case 'version':
                         $result['success'] = false;
                         $result['errors'][$name] = $details['required'];
+
                         break;
 
                     default:
                         $result['success'] = false;
                         $result['errors'][$name][] = $name;
+
                         break;
                 }
             }

@@ -26,17 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('cache', [], function () {
+/** @module cache */
+
+/**
+ * Cache for source and resource files.
+ */
+class Cache {
 
     /**
-     * Cache for source and resource files.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:cache
      * @param {Number} [cacheTimestamp] A cache timestamp.
      */
-    var Cache = function (cacheTimestamp) {
+    constructor(cacheTimestamp) {
         this.basePrefix = this.prefix;
 
         if (cacheTimestamp) {
@@ -46,183 +46,177 @@ define('cache', [], function () {
         if (!this.get('app', 'timestamp')) {
             this.storeTimestamp();
         }
-    };
+    }
 
-    _.extend(Cache.prototype, /** @lends module:cache.Class# */ {
+    /** @private */
+    prefix = 'cache'
 
-        /**
-         * @private
-         */
-        prefix: 'cache',
+    /**
+     * Handle actuality. Clears cache if not actual.
+     *
+     * @param {Number} cacheTimestamp A cache timestamp.
+     */
+    handleActuality(cacheTimestamp) {
+        let storedTimestamp = this.getCacheTimestamp();
 
-        /**
-         * Handle actuality. Clears cache if not actual.
-         *
-         * @param {Number} cacheTimestamp A cache timestamp.
-         */
-        handleActuality: function (cacheTimestamp) {
-            let storedTimestamp = this.getCacheTimestamp();
-
-            if (storedTimestamp) {
-                if (storedTimestamp !== cacheTimestamp) {
-                    this.clear();
-                    this.set('app', 'cacheTimestamp', cacheTimestamp);
-                    this.storeTimestamp();
-                }
-
-                return;
+        if (storedTimestamp) {
+            if (storedTimestamp !== cacheTimestamp) {
+                this.clear();
+                this.set('app', 'cacheTimestamp', cacheTimestamp);
+                this.storeTimestamp();
             }
 
-            this.clear();
-            this.set('app', 'cacheTimestamp', cacheTimestamp);
-            this.storeTimestamp();
-        },
+            return;
+        }
 
-        /**
-         * Get a cache timestamp.
-         *
-         * @returns {number}
-         */
-        getCacheTimestamp: function () {
-            return parseInt(this.get('app', 'cacheTimestamp') || 0);
-        },
+        this.clear();
+        this.set('app', 'cacheTimestamp', cacheTimestamp);
+        this.storeTimestamp();
+    }
 
-        /**
-         * @deprecated
-         * @todo Revise whether is needed.
-         */
-        storeTimestamp: function () {
-            let frontendCacheTimestamp = Date.now();
+    /**
+     * Get a cache timestamp.
+     *
+     * @returns {number}
+     */
+    getCacheTimestamp() {
+        return parseInt(this.get('app', 'cacheTimestamp') || 0);
+    }
 
-            this.set('app', 'timestamp', frontendCacheTimestamp);
-        },
+    /**
+     * @todo Revise whether is needed.
+     */
+    storeTimestamp() {
+        let frontendCacheTimestamp = Date.now();
 
-        /**
-         * @private
-         * @param {string} type
-         * @returns {string}
-         */
-        composeFullPrefix: function (type) {
-            return this.prefix + '-' + type;
-        },
+        this.set('app', 'timestamp', frontendCacheTimestamp);
+    }
 
-        /**
-         * @private
-         * @param {string} type
-         * @param {string} name
-         * @returns {string}
-         */
-        composeKey: function (type, name) {
-            return this.composeFullPrefix(type) + '-' + name;
-        },
+    /**
+     * @private
+     * @param {string} type
+     * @returns {string}
+     */
+    composeFullPrefix(type) {
+        return this.prefix + '-' + type;
+    }
 
-        /**
-         * @private
-         * @param {string} type
-         */
-        checkType: function (type) {
-            if (typeof type === 'undefined' && toString.call(type) !== '[object String]') {
-                throw new TypeError("Bad type \"" + type + "\" passed to Cache().");
-            }
-        },
+    /**
+     * @private
+     * @param {string} type
+     * @param {string} name
+     * @returns {string}
+     */
+    composeKey(type, name) {
+        return this.composeFullPrefix(type) + '-' + name;
+    }
 
-        /**
-         * Get a stored value.
-         *
-         * @param {string} type A type/category.
-         * @param {string} name A name.
-         * @returns {string|null} Null if no stored value.
-         */
-        get: function (type, name) {
-            this.checkType(type);
+    /**
+     * @private
+     * @param {string} type
+     */
+    checkType(type) {
+        if (typeof type === 'undefined' && toString.call(type) !== '[object String]') {
+            throw new TypeError("Bad type \"" + type + "\" passed to Cache().");
+        }
+    }
 
-            let key = this.composeKey(type, name);
+    /**
+     * Get a stored value.
+     *
+     * @param {string} type A type/category.
+     * @param {string} name A name.
+     * @returns {string|null} Null if no stored value.
+     */
+    get(type, name) {
+        this.checkType(type);
 
-            let stored;
+        let key = this.composeKey(type, name);
 
-            try {
-                stored = localStorage.getItem(key);
-            }
-            catch (error) {
-                console.error(error);
+        let stored;
 
-                return null;
-            }
-
-            if (stored) {
-                let result = stored;
-
-                if (stored.length > 9 && stored.substr(0, 9) === '__JSON__:') {
-                    let jsonString = stored.substr(9);
-
-                    try {
-                        result = JSON.parse(jsonString);
-                    }
-                    catch (error) {
-                        result = stored;
-                    }
-                }
-
-                return result;
-            }
+        try {
+            stored = localStorage.getItem(key);
+        }
+        catch (error) {
+            console.error(error);
 
             return null;
-        },
+        }
 
-        /**
-         * Store a value.
-         *
-         * @param {string} type A type/category.
-         * @param {string} name A name.
-         * @param {any} value A value.
-         */
-        set: function (type, name, value) {
-            this.checkType(type);
+        if (stored) {
+            let result = stored;
 
-            let key = this.composeKey(type, name);
+            if (stored.length > 9 && stored.substring(0, 9) === '__JSON__:') {
+                let jsonString = stored.slice(9);
 
-            if (value instanceof Object || Array.isArray(value)) {
-                value = '__JSON__:' + JSON.stringify(value);
-            }
-
-            try {
-                localStorage.setItem(key, value);
-            }
-            catch (error) {
-                console.log('Local storage limit exceeded.');
-            }
-        },
-
-        /**
-         * Clear a stored value.
-         *
-         * @param {string} [type] A type/category.
-         * @param {string} [name] A name.
-         */
-        clear: function (type, name) {
-            let reText;
-
-            if (typeof type !== 'undefined') {
-                if (typeof name === 'undefined') {
-                    reText = '^' + this.composeFullPrefix(type);
+                try {
+                    result = JSON.parse(jsonString);
                 }
-                else {
-                    reText = '^' + this.composeKey(type, name);
+                catch (error) {
+                    result = stored;
                 }
+            }
+
+            return result;
+        }
+
+        return null;
+    }
+
+    /**
+     * Store a value.
+     *
+     * @param {string} type A type/category.
+     * @param {string} name A name.
+     * @param {any} value A value.
+     */
+    set(type, name, value) {
+        this.checkType(type);
+
+        let key = this.composeKey(type, name);
+
+        if (value instanceof Object || Array.isArray(value)) {
+            value = '__JSON__:' + JSON.stringify(value);
+        }
+
+        try {
+            localStorage.setItem(key, value);
+        }
+        catch (error) {
+            console.log('Local storage limit exceeded.');
+        }
+    }
+
+    /**
+     * Clear a stored value.
+     *
+     * @param {string} [type] A type/category.
+     * @param {string} [name] A name.
+     */
+    clear(type, name) {
+        let reText;
+
+        if (typeof type !== 'undefined') {
+            if (typeof name === 'undefined') {
+                reText = '^' + this.composeFullPrefix(type);
             }
             else {
-                reText = '^' + this.basePrefix + '-';
+                reText = '^' + this.composeKey(type, name);
             }
+        }
+        else {
+            reText = '^' + this.basePrefix + '-';
+        }
 
-            let re = new RegExp(reText);
+        let re = new RegExp(reText);
 
-            for (var i in localStorage) {
-                if (re.test(i)) {
-                    delete localStorage[i];
-                }
+        for (let i in localStorage) {
+            if (re.test(i)) {
+                delete localStorage[i];
             }
-        },
-    });
+        }
+    }
+}
 
-    return Cache;
-});
+export default Cache;

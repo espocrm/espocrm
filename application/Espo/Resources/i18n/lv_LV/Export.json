@@ -3,7 +3,9 @@
     "fieldList": "Lauku saraksts",
     "exportAllFields": "Eksportēt visus laukus",
     "format": "Formāts",
-    "status": "Statuss"
+    "status": "Statuss",
+    "xlsxRecordLinks": "Ierakstu saites",
+    "xlsxTitle": "Nosaukums"
   },
   "options": {
     "format": {
@@ -18,5 +20,9 @@
   "messages": {
     "exportProcessed": "Eksports ir apstrādāts. Lejupielādēt [failu]({url}).",
     "infoText": "Eksports tiek apstrādāts dīkstāves režīmā cron. Tas var aizņemt kādu laiku. Šī modālā dialoglodziņa aizvēršana neietekmēs izpildes procesu."
+  },
+  "tooltips": {
+    "xlsxLite": "Patērē daudz mazāk atmiņas. Ieteicams, ja tiek eksportēts liels ierakstu skaits.",
+    "xlsxTitle": "Ierakstiet virsrakstā virsrakstu un pašreizējo datumu."
   }
 }

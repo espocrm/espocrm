@@ -29,14 +29,17 @@
 
 namespace Espo\Core\Utils\Acl;
 
+use Espo\Core\Acl\Exceptions\NotAvailable;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Core\AclManager;
 use Espo\Core\Portal\AclManagerContainer as PortalAclManagerContainer;
 use Espo\Core\ApplicationState;
-use RuntimeException;
 
+/**
+ * @todo Use WeakMap (User as a key).
+ */
 class UserAclManagerProvider
 {
     /** @var array<string, AclManager> */
@@ -49,6 +52,9 @@ class UserAclManagerProvider
         private ApplicationState $applicationState
     ) {}
 
+    /**
+     * @throws NotAvailable
+     */
     public function get(User $user): AclManager
     {
         $key = $user->hasId() ? $user->getId() : spl_object_hash($user);
@@ -60,6 +66,9 @@ class UserAclManagerProvider
         return $this->map[$key];
     }
 
+    /**
+     * @throws NotAvailable
+     */
     private function load(User $user): AclManager
     {
         $aclManager = $this->aclManager;
@@ -72,7 +81,7 @@ class UserAclManagerProvider
                 ->findOne();
 
             if (!$portal) {
-                throw new RuntimeException("No portal for portal user '" . $user->getId() . "'.");
+                throw new NotAvailable("No portal for portal user '" . $user->getId() . "'.");
             }
 
             $aclManager = $this->portalAclManagerContainer->get($portal);

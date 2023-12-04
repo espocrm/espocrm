@@ -213,25 +213,28 @@ define('views/admin/layouts/default-side-panel', ['views/admin/layouts/rows'], f
 
         isFieldEnabled: function (model, name) {
             if (~['modifiedAt', 'createdAt', 'modifiedBy', 'createdBy'].indexOf(name)) {
-                return;
+                return false;
             }
 
             let layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
 
             if (layoutList && !~layoutList.indexOf(this.type)) {
-                return;
+                return false;
             }
 
-            if (model.getFieldParam(name, 'disabled')) {
-                return;
+            if (
+                model.getFieldParam(name, 'disabled') ||
+                model.getFieldParam(name, 'utility')
+            ) {
+                return false;
             }
 
             if (model.getFieldParam(name, 'layoutDefaultSidePanelDisabled')) {
-                return;
+                return false;
             }
 
             if (model.getFieldParam(name, 'layoutDetailDisabled')) {
-                return;
+                return false;
             }
 
             return true;

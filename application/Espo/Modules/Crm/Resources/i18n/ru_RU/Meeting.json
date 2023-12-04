@@ -16,7 +16,7 @@
     "dateStartDate": "Дата начала (весь день)",
     "dateEndDate": "Дата окончания (весь день)",
     "isAllDay": "Весь день",
-    "sourceEmail": "Источник Электронная почта"
+    "sourceEmail": "Электронная почта источника"
   },
   "options": {
     "status": {
@@ -42,7 +42,9 @@
     "Send Invitations": "Отправить приглашения",
     "on time": "во время",
     "before": "до начала",
-    "All-Day": "Весь день"
+    "All-Day": "Весь день",
+    "Send Cancellation": "Отправить отмену",
+    "Acceptance": "Принятие"
   },
   "presetFilters": {
     "planned": "Запланированные",
@@ -51,6 +53,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "Ничего не было отправлено",
-    "selectAcceptanceStatus": "Установите свой статус принятия."
+    "selectAcceptanceStatus": "Установите свой статус принятия.",
+    "sendInvitationsToSelectedAttendees": "Выбранным участникам будут отправлены электронные письма с приглашениями.",
+    "sendCancellationsToSelectedAttendees": "Выбранным участникам будут отправлены электронные письма об отмене участия."
   }
 }

@@ -30,33 +30,28 @@
 namespace Espo\Core\Authentication\TwoFactor\Totp;
 
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 use Espo\Entities\UserData;
-
 use Espo\Repositories\UserData as UserDataRepository;
-
 use Espo\Core\Authentication\TwoFactor\Login;
 use Espo\Core\Authentication\Result;
 use Espo\Core\Authentication\Result\Data as ResultData;
 use Espo\Core\Authentication\Result\FailReason;
-
 use Espo\Core\Api\Request;
 
 use RuntimeException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class TotpLogin implements Login
 {
     public const NAME = 'Totp';
 
-    private EntityManager $entityManager;
-    private Util $totp;
-
-    public function __construct(EntityManager $entityManager, Util $totp)
-    {
-        $this->entityManager = $entityManager;
-        $this->totp = $totp;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private Util $totp
+    ) {}
 
     public function login(Result $result, Request $request): Result
     {

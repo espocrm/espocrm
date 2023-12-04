@@ -44,7 +44,9 @@ class PDOFactoryFactory
     public function create(string $platform): PDOFactory
     {
         /** @var ?class-string<PDOFactory> $className */
-        $className = $this->metadata->get(['app', 'orm', 'pdoFactoryClassNameMap', $platform]);
+        $className =
+            $this->metadata->get(['app', 'orm', 'platforms', $platform, 'pdoFactoryClassName']) ??
+            $this->metadata->get(['app', 'orm', 'pdoFactoryClassNameMap', $platform]);
 
         if (!$className) {
             throw new RuntimeException("Could not create PDOFactory.");

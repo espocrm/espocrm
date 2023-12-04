@@ -29,10 +29,14 @@
 
 namespace Espo\Core\Record;
 
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\Hook\CreateHook;
 use Espo\Core\Record\Hook\DeleteHook;
 use Espo\Core\Record\Hook\LinkHook;
 use Espo\Core\Record\Hook\ReadHook;
+use Espo\Core\Record\Hook\SaveHook;
 use Espo\Core\Record\Hook\UnlinkHook;
 use Espo\Core\Record\Hook\UpdateHook;
 use Espo\Core\Record\Hook\Provider;
@@ -44,9 +48,20 @@ class HookManager
     public function __construct(private Provider $provider)
     {}
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
     public function processBeforeCreate(Entity $entity, CreateParams $params): void
     {
         foreach ($this->getBeforeCreateHookList($entity->getEntityType()) as $hook) {
+            if ($hook instanceof SaveHook) {
+                $hook->process($entity);
+
+                continue;
+            }
+
             $hook->process($entity, $params);
         }
     }
@@ -58,13 +73,29 @@ class HookManager
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
     public function processBeforeUpdate(Entity $entity, UpdateParams $params): void
     {
         foreach ($this->getBeforeUpdateHookList($entity->getEntityType()) as $hook) {
+            if ($hook instanceof SaveHook) {
+                $hook->process($entity);
+
+                continue;
+            }
+
             $hook->process($entity, $params);
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Conflict
+     */
     public function processBeforeDelete(Entity $entity, DeleteParams $params): void
     {
         foreach ($this->getBeforeDeleteHookList($entity->getEntityType()) as $hook) {
@@ -96,7 +127,7 @@ class HookManager
     }
 
     /**
-     * @return CreateHook<Entity>[]
+     * @return (CreateHook<Entity>|SaveHook<Entity>)[]
      */
     private function getBeforeCreateHookList(string $entityType): array
     {
@@ -105,7 +136,7 @@ class HookManager
     }
 
     /**
-     * @return UpdateHook<Entity>[]
+     * @return (UpdateHook<Entity>|SaveHook<Entity>)[]
      */
     private function getBeforeUpdateHookList(string $entityType): array
     {

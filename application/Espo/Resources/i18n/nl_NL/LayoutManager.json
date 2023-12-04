@@ -1,6 +1,5 @@
 {
   "fields": {
-    "width": "Breedte (%)",
     "notSortable": "Niet sorteerbaar",
     "align": "Uitlijnen",
     "panelName": "Paneel naam",
@@ -10,7 +9,6 @@
     "dynamicLogicVisible": "Condities waardoor paneel zichtbaar is",
     "hidden": "Verborgen",
     "dynamicLogicStyled": "Voorwaarden voor toegepaste stijl",
-    "widthPx": "Breedte (px)",
     "noLabel": "Geen label"
   },
   "options": {
@@ -39,12 +37,12 @@
     "dynamicLogicStyled": "Een kleur zal worden toegepast indien aan een specifieke voorwaarde is voldaan . De kleur wordt bepaald door de *Stijl* parameter.",
     "tabBreak": "Een apart tabblad voor het paneel en alle volgende panelen tot de volgende tab-break.",
     "noLabel": "Toon geen kolomlabel in de kop.",
-    "notSortable": "Schakelt de mogelijkheid uit om te sorteren op de kolom.",
-    "width": "Een kolombreedte in percentage. Het is aanbevolen één kolom te hebben met de niet ingestelde breedte, meestal is dat het veld *Name*.",
-    "widthPx": "Een kolombreedte in pixels. Werkt alleen als de waarde (%) niet is ingesteld. Maakt de kolombreedte vast."
+    "notSortable": "Schakelt de mogelijkheid uit om te sorteren op de kolom."
   },
   "messages": {
     "cantBeEmpty": "Lay-out kan niet leeg zijn.",
-    "fieldsIncompatible": "Velden kunnen niet samen op de lay-out staan: {fields}."
+    "fieldsIncompatible": "Velden kunnen niet samen op de lay-out staan: {fields}.",
+    "alreadyExists": "Layout `{name}` bestaat al.",
+    "createInfo": "Aangepaste lijstindelingen kunnen worden gebruikt door relatiepanelen."
   }
 }

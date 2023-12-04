@@ -11,17 +11,19 @@
     "dateFormat": "Formato Data",
     "timeFormat": "Formato Ora",
     "timeZone": "Fuso Orario",
-    "weekStart": "Primo giorno della settimana",
+    "weekStart": "Primo Giorno della Settimana",
     "defaultCurrency": "Valuta Predefinita",
     "customUrl": "URL personalizzato",
     "customId": "ID personalizzato",
-    "layoutSet": "Layout"
+    "layoutSet": "Layout",
+    "authenticationProvider": "Provider di Autenticazione"
   },
   "links": {
     "users": "Utenti",
     "portalRoles": "Ruoli",
     "notes": "Appunti",
-    "layoutSet": "Layout"
+    "layoutSet": "Layout",
+    "authenticationProvider": "Provider di Autenticazione"
   },
   "tooltips": {
     "portalRoles": "I Ruoli specificati verranno applicati a tutti gli utenti di questo portale.",

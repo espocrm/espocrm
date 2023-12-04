@@ -68,13 +68,13 @@ return [
     'currencyNoJoinMode' => false,
     'outboundEmailIsShared' => true,
     'outboundEmailFromName' => 'EspoCRM',
-    'outboundEmailFromAddress' => '',
-    'smtpServer' => '',
+    'outboundEmailFromAddress' => null,
+    'smtpServer' => null,
     'smtpPort' => 587,
     'smtpAuth' => true,
     'smtpSecurity' => 'TLS',
-    'smtpUsername' => '',
-    'smtpPassword' => '',
+    'smtpUsername' => null,
+    'smtpPassword' => null,
     'language' => 'en_US',
     'logger' => [
         'path' => 'data/logs/espo.log',
@@ -91,22 +91,67 @@ return [
         'Opportunity',
     ],
     'tabList' => [
-        "Account",
-        "Contact",
-        "Lead",
-        "Opportunity",
-        "Case",
-        "Email",
-        "Calendar",
-        "Meeting",
-        "Call",
-        "Task",
-        "_delimiter_",
-        "Document",
-        "Campaign",
-        "KnowledgeBaseArticle",
-        "Stream",
-        "User"
+        (object) [
+            'type' => 'divider',
+            'id' => '342567',
+            'text' => '$CRM'
+        ],
+        'Account',
+        'Contact',
+        'Lead',
+        'Opportunity',
+        (object) [
+            'type' => 'divider',
+            'text' => '$Activities',
+            'id' => '219419'
+        ],
+        'Email',
+        'Meeting',
+        'Call',
+        'Task',
+        'Calendar',
+        (object) [
+            'type' => 'divider',
+            'id' => '655187',
+            'text' => '$Support'
+        ],
+        'Case',
+        'KnowledgeBaseArticle',
+        (object) [
+            'type' => 'divider',
+            'text' => NULL,
+            'id' => '137994'
+        ],
+        '_delimiter_',
+        (object) [
+            'type' => 'divider',
+            'text' => '$Marketing',
+            'id' => '463280'
+        ],
+        'Campaign',
+        'TargetList',
+        (object) [
+            'type' => 'divider',
+            'text' => '$Business',
+            'id' => '518202'
+        ],
+        'Document',
+        (object) [
+            'type' => 'divider',
+            'text' => '$Organization',
+            'id' => '566592'
+        ],
+        'User',
+        'Team',
+        'WorkingTimeCalendar',
+        (object) [
+            'type' => 'divider',
+            'text' => NULL,
+            'id' => '898671'
+        ],
+        'EmailTemplate',
+        'Template',
+        'Import',
     ],
     'quickCreateList' => [
         "Account",
@@ -211,6 +256,7 @@ return [
     'newNotificationCountInTitle' => false,
     'pdfEngine' => 'Dompdf',
     'smsProvider' => null,
+    'mapProvider' => 'Google',
     'defaultFileStorage' => 'EspoUploadDir',
     'ldapUserNameAttribute' => 'sAMAccountName',
     'ldapUserFirstNameAttribute' => 'givenName',
@@ -232,5 +278,11 @@ return [
     'oidcUsernameClaim' => 'sub',
     'oidcFallback' => true,
     'oidcScopes' => ['profile', 'email', 'phone'],
+    'listViewSettingsDisabled' => false,
+    'cleanupDeletedRecords' => true,
+    'phoneNumberNumericSearch' => true,
+    'phoneNumberInternational' => true,
+    'phoneNumberPreferredCountryList' => ['us', 'de'],
+    'adminUpgradeDisabled' => false,
     'isInstalled' => false,
 ];

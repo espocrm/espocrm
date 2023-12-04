@@ -96,6 +96,12 @@ body {
                 background-color: transparent;
             }
         }
+        &.panel-info {
+            background-color: var(--panel-info-bg);
+            > .panel-heading {
+                background-color: transparent;
+            }
+        }
 
         .panel-body .field > .link-container .list-group-item {
             background-color: transparent;
@@ -189,11 +195,11 @@ select.form-control > option {
     }
 }
 
-.calendar {
+/*.calendar {
     td.fc-day-top.fc-today {
         background-color: transparent !important;
     }
-}
+}*/
 
 .popup-notification {
     border-width: 1px;
@@ -279,4 +285,9 @@ select.form-control > option {
     .text-bold {
         font-weight: 700;
     }
+}
+
+.list-kanban .kanban-head-container.sticked {
+    background-color: unset;
+    backdrop-filter: @backdrop-filter;
 }

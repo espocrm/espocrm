@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "method": "Metodo"
+  },
+  "labels": {
+    "Create AuthenticationProvider": "Crea Provider"
+  }
+}

@@ -31,12 +31,19 @@ namespace Espo\Controllers;
 
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\InjectableFactory;
 use Espo\Entities\User;
 use Espo\Tools\EntityManager\EntityManager as EntityManagerTool;
-
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Tools\ExportCustom\ExportCustom;
+use Espo\Tools\ExportCustom\Params as ExportCustomParams;
+use Espo\Tools\ExportCustom\Service as ExportCustomService;
+use Espo\Tools\LinkManager\LinkManager;
+use stdClass;
+
+use const FILTER_SANITIZE_STRING;
 
 class EntityManager
 {
@@ -45,9 +52,10 @@ class EntityManager
      */
     public function __construct(
         private User $user,
-        private EntityManagerTool $entityManagerTool
+        private EntityManagerTool $entityManagerTool,
+        private LinkManager $linkManager,
+        private InjectableFactory $injectableFactory
     ) {
-
         if (!$this->user->isAdmin()) {
             throw new Forbidden();
         }
@@ -71,8 +79,8 @@ class EntityManager
         $name = $data['name'];
         $type = $data['type'];
 
-        $name = filter_var($name, \FILTER_SANITIZE_STRING);
-        $type = filter_var($type, \FILTER_SANITIZE_STRING);
+        $name = filter_var($name, FILTER_SANITIZE_STRING);
+        $type = filter_var($type, FILTER_SANITIZE_STRING);
 
         if (!is_string($name) || !is_string($type)) {
             throw new BadRequest();
@@ -155,7 +163,7 @@ class EntityManager
 
         $name = $data['name'];
 
-        $name = filter_var($name, \FILTER_SANITIZE_STRING);
+        $name = filter_var($name, FILTER_SANITIZE_STRING);
 
         if (!is_string($name)) {
             throw new BadRequest();
@@ -183,7 +191,7 @@ class EntityManager
 
         $name = $data['name'];
 
-        $name = filter_var($name, \FILTER_SANITIZE_STRING);
+        $name = filter_var($name, FILTER_SANITIZE_STRING);
 
         if (!is_string($name)) {
             throw new BadRequest();
@@ -226,11 +234,11 @@ class EntityManager
                 throw new BadRequest();
             }
 
-            $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+            $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
         }
 
         foreach ($additionalParamList as $item) {
-            $params[$item] = filter_var($data[$item] ?? null, \FILTER_SANITIZE_STRING);
+            $params[$item] = filter_var($data[$item] ?? null, FILTER_SANITIZE_STRING);
         }
 
         $params['labelForeign'] = $params['labelForeign'] ?? $params['linkForeign'];
@@ -259,6 +267,14 @@ class EntityManager
             $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
 
+        if (array_key_exists('layout', $data)) {
+            $params['layout'] = $data['layout'];
+        }
+
+        if (array_key_exists('layoutForeign', $data)) {
+            $params['layoutForeign'] = $data['layoutForeign'];
+        }
+
         /** @var array{
          *   linkType: string,
          *   entity: string,
@@ -272,14 +288,20 @@ class EntityManager
          *   linkMultipleFieldForeign?: bool,
          *   audited?: bool,
          *   auditedForeign?: bool,
+         *   layout?: string,
+         *   layoutForeign?: string,
          * } $params
          */
 
-        $this->entityManagerTool->createLink($params);
+        $this->linkManager->create($params);
 
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function postActionUpdateLink(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -299,7 +321,7 @@ class EntityManager
 
         foreach ($paramList as $item) {
             if (array_key_exists($item, $data)) {
-                $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+                $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
             }
         }
 
@@ -326,6 +348,14 @@ class EntityManager
             $params['foreignLinkEntityTypeList'] = $data['foreignLinkEntityTypeList'];
         }
 
+        if (array_key_exists('layout', $data)) {
+            $params['layout'] = $data['layout'];
+        }
+
+        if (array_key_exists('auditedForeign', $data)) {
+            $params['layoutForeign'] = $data['layoutForeign'];
+        }
+
         /**
          * @var array{
          *   entity: string,
@@ -340,14 +370,20 @@ class EntityManager
          *   auditedForeign?: bool,
          *   parentEntityTypeList?: string[],
          *   foreignLinkEntityTypeList?: string[],
+         *   layout?: string,
+         *   layoutForeign?: string,
          * } $params
          */
 
-        $this->entityManagerTool->updateLink($params);
+        $this->linkManager->update($params);
 
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function postActionRemoveLink(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -362,7 +398,7 @@ class EntityManager
         $params = [];
 
         foreach ($paramList as $item) {
-            $params[$item] = filter_var($data[$item], \FILTER_SANITIZE_STRING);
+            $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
         }
 
         /**
@@ -372,7 +408,7 @@ class EntityManager
          * } $params
          */
 
-        $this->entityManagerTool->deleteLink($params);
+        $this->linkManager->delete($params);
 
         return true;
     }
@@ -400,6 +436,29 @@ class EntityManager
         return true;
     }
 
+    /**
+     * @throws BadRequest
+     */
+    public function postActionResetFormulaToDefault(Request $request): bool
+    {
+        $data = $request->getParsedBody();
+
+        $scope = $data->scope ?? null;
+        $type = $data->type ?? null;
+
+        if (!$scope || !$type) {
+            throw new BadRequest();
+        }
+
+        $this->entityManagerTool->resetFormulaToDefault($scope, $type);
+
+        return true;
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Error
+     */
     public function postActionResetToDefault(Request $request): bool
     {
         $data = $request->getParsedBody();
@@ -411,5 +470,46 @@ class EntityManager
         $this->entityManagerTool->resetToDefaults($data->scope);
 
         return true;
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    public function postActionExportCustom(Request $request): stdClass
+    {
+        $data = $request->getParsedBody();
+
+        $name = $data->name ?? null;
+        $version = $data->version ?? null;
+        $author = $data->author ?? null;
+        $module = $data->module ?? null;
+        $description = $data->description ?? null;
+
+        if (
+            !is_string($name) ||
+            !is_string($version) ||
+            !is_string($author) ||
+            !is_string($module) ||
+            !is_string($description) && !is_null($description)
+        ) {
+            throw new BadRequest();
+        }
+
+        $params = new ExportCustomParams(
+            name: $name,
+            module: $module,
+            version: $version,
+            author: $author,
+            description: $description
+        );
+
+        $export = $this->injectableFactory->create(ExportCustom::class);
+        $service = $this->injectableFactory->create(ExportCustomService::class);
+
+        $service->storeToConfig($params);
+
+        $result = $export->process($params);
+
+        return (object) ['id' => $result->getAttachmentId()];
     }
 }

@@ -48,16 +48,18 @@ define('views/external-account/index', ['view'], function (Dep) {
         },
 
         setup: function () {
-            this.externalAccountList = this.collection.toJSON();
+            this.externalAccountList = this.collection.models.map(model => model.getClonedAttributes());
 
             this.userId = this.getUser().id;
             this.id = this.options.id || null;
+
             if (this.id) {
                 this.userId = this.id.split('__')[1];
             }
 
             this.on('after:render', function () {
                 this.renderHeader();
+
                 if (!this.id) {
                     this.renderDefaultPage();
                 } else {
@@ -83,15 +85,16 @@ define('views/external-account/index', ['view'], function (Dep) {
             Espo.Ui.notify(' ... ');
 
             this.createView('content', viewName, {
-                el: '#external-account-content',
+                fullSelector: '#external-account-content',
                 id: id,
                 integration: integration
-            }, function (view) {
+            }, view => {
                 this.renderHeader();
                 view.render();
-                this.notify(false);
+                Espo.Ui.notify(false);
+
                 $(window).scrollTop(0);
-            }.bind(this));
+            });
         },
 
         renderDefaultPage: function () {
@@ -104,6 +107,7 @@ define('views/external-account/index', ['view'], function (Dep) {
                 $('#external-account-header').html('');
                 return;
             }
+
             $('#external-account-header').show().html(this.integration);
         },
 

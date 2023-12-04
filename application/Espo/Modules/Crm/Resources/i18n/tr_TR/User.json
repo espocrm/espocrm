@@ -3,6 +3,7 @@
     "targetLists": "Hedef Listeler"
   },
   "fields": {
-    "acceptanceStatus": "Kabul Durumu"
+    "acceptanceStatus": "Kabul Durumu",
+    "acceptanceStatusCalls": "Kabul Durumu (Aramalar)"
   }
 }

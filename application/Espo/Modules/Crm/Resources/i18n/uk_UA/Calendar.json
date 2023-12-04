@@ -5,15 +5,15 @@
     "agendaWeek": "тиждень",
     "day": "день",
     "agendaDay": "день",
-    "timeline": "Часова шкала"
+    "timeline": "часова шкала"
   },
   "labels": {
     "Today": "Сьогодні",
     "Create": "Створити",
-    "Shared": "Загальний",
+    "Shared": "Спільний",
     "Add User": "Додати користувача",
-    "current": "Потік",
-    "time": "Час",
+    "current": "поточний",
+    "time": "час",
     "User List": "Список користувачів",
     "Manage Users": "Управління користувачами",
     "View Calendar": "Переглянути календар",

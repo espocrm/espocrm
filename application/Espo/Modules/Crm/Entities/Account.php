@@ -40,6 +40,10 @@ class Account extends Entity
 {
     public const ENTITY_TYPE = 'Account';
 
+    public const TYPE_CUSTOMER = 'Customer';
+    public const TYPE_PARTNER = 'Partner';
+    public const TYPE_RESELLER = 'Reseller';
+
     public function getName(): ?string
     {
         return $this->get('name');

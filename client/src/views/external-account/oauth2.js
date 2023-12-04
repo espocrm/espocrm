@@ -70,7 +70,7 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
 
             this.model = new Model();
             this.model.id = this.id;
-            this.model.name = 'ExternalAccount';
+            this.model.entityType = this.model.name = 'ExternalAccount';
             this.model.urlRoot = 'ExternalAccount';
 
             this.model.defs = {
@@ -144,7 +144,7 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
         createFieldView: function (type, name, readOnly, params) {
             this.createView(name, this.getFieldManager().getViewName(type), {
                 model: this.model,
-                el: this.options.el + ' .field[data-name="' + name + '"]',
+                selector: '.field[data-name="' + name + '"]',
                 defs: {
                     name: name,
                     params: params
@@ -271,7 +271,7 @@ define('views/external-account/oauth2', ['view', 'model'], function (Dep, Model)
                 }
             }, function (res) {
                 if (res.error) {
-                    this.notify(false);
+                    Espo.Ui.notify(false);
 
                     return;
                 }

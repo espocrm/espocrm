@@ -1,0 +1,26 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/emailTemplates.json",
+    "title": "app/databasePlatforms",
+    "description": "Email template definitions.",
+    "type": "object",
+    "properties": {
+        "placeholders": {
+            "description": "Placeholders.",
+            "additionalProperties": {
+                "description": "A placeholder.",
+                "type": "object",
+                "properties": {
+                    "className": {
+                        "type": "string",
+                        "description": "A class. Should implement Espo\\Tools\\EmailTemplate\\Placeholder."
+                    },
+                    "order": {
+                        "type": "integer",
+                        "description": "An order position."
+                    }
+                }
+            }
+        }
+    }
+}

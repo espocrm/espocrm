@@ -82,7 +82,8 @@
     "Log Call": "Anruf erfassen",
     "Archive Email": "E-Mail archivieren",
     "Create Task": "Neue Aufgabe",
-    "Tasks": "Aufgaben"
+    "Tasks": "Aufgaben",
+    "Schedule": "Zeitplan"
   },
   "fields": {
     "billingAddressCity": "Ort",
@@ -108,5 +109,16 @@
     "reminderTypes": {
       "Email": "E-Mail"
     }
+  },
+  "notificationMessages": {
+    "eventAttendee": "{user} hat dich zu {entityType} {entity} hinzugefügt"
+  },
+  "streamMessages": {
+    "eventConfirmationAccepted": "{invitee} hat die Einladung zu {entityType} {entity} akzeptiert",
+    "eventConfirmationDeclined": "{invitee} hat die Einladung zu {entityType} {entity} abgelehnt",
+    "eventConfirmationTentative": "{invitee} ist vorläufig an der Teilnahme an {entityType} {entity} interessiert",
+    "eventConfirmationAcceptedThis": "{invitee} hat zugesagt",
+    "eventConfirmationDeclinedThis": "{invitee} hat abgesagt",
+    "eventConfirmationTentativeThis": "{invitee} stimmt der Teilnahme vorläufig zu"
   }
 }

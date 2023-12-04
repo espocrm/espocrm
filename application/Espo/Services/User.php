@@ -50,6 +50,7 @@ use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\UserSecurity\Password\Checker as PasswordChecker;
+use Espo\Tools\UserSecurity\Password\Generator as PasswordGenerator;
 use Espo\Tools\UserSecurity\Password\Sender as PasswordSender;
 use Espo\Tools\UserSecurity\Password\Service as PasswordService;
 use stdClass;
@@ -69,13 +70,6 @@ class User extends Record implements
         'isActive',
         'userName',
         'type',
-    ];
-
-    /** @var string[] */
-    protected $validateSkipFieldList = [
-        'name',
-        'firstName',
-        'lastName',
     ];
 
     /** @var string[] */
@@ -131,25 +125,44 @@ class User extends Record implements
         }
     }
 
+    /**
+     * @throws BadRequest
+     */
+    private function fetchPassword(stdClass $data): ?string
+    {
+        $password = $data->password ?? null;
+
+        if ($password === '') {
+            $password = null;
+        }
+
+        if ($password !== null && !is_string($password)) {
+            throw new BadRequest("Bad password value.");
+        }
+
+        return $password;
+    }
+
     public function create(stdClass $data, CreateParams $params): Entity
     {
-        $newPassword = $data->password ?? null;
+        $newPassword = $this->fetchPassword($data);
 
-        if ($newPassword === '') {
-            $newPassword = null;
+        $passwordSpecified = $newPassword !== null;
+
+        if (
+            $newPassword !== null &&
+            !$this->createPasswordChecker()->checkStrength($newPassword)
+        ) {
+            throw new Forbidden("Password is weak.");
         }
 
-        if ($newPassword !== null && !is_string($newPassword)) {
-            throw new BadRequest();
+        if (!$newPassword) {
+            // Generate a password as authentication implementations may require user records
+            // to have passwords for auth token mechanism functioning.
+            $newPassword = $this->createPasswordGenerator()->generate();
         }
 
-        if ($newPassword !== null) {
-            if (!$this->createPasswordChecker()->checkStrength($newPassword)) {
-                throw new Forbidden("Password is weak.");
-            }
-
-            $data->password = $this->hashPassword($data->password);
-        }
+        $data->password = $this->hashPassword($newPassword);
 
         /** @var UserEntity $user */
         $user = parent::create($data, $params);
@@ -161,7 +174,7 @@ class User extends Record implements
         }
 
         try {
-            if ($newPassword !== null) {
+            if ($passwordSpecified) {
                 $this->sendPassword($user, $newPassword);
 
                 return $user;
@@ -232,6 +245,8 @@ class User extends Record implements
         assert($entity instanceof UserEntity);
 
         parent::prepareEntityForOutput($entity);
+
+        $entity->clear('sendAccessInfo');
 
         if ($entity->isApi()) {
             if ($this->user->isAdmin()) {
@@ -555,5 +570,10 @@ class User extends Record implements
     private function createAclCacheClearer(): AclCacheClearer
     {
         return $this->injectableFactory->create(AclCacheClearer::class);
+    }
+
+    private function createPasswordGenerator(): PasswordGenerator
+    {
+        return $this->injectableFactory->create(PasswordGenerator::class);
     }
 }

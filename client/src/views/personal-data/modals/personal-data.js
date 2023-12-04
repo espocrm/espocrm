@@ -60,10 +60,10 @@ define('views/personal-data/modals/personal-data', ['views/modal'], function (De
 
             this.fieldList = [];
 
-            this.scope = this.model.name;
+            this.scope = this.model.entityType;
 
             this.createView('record', 'views/personal-data/record/record', {
-                el: this.getSelector() + ' .record',
+                selector: '.record',
                 model: this.model
             }, (view) => {
                 this.listenTo(view, 'check', (fieldList) => {

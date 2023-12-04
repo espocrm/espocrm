@@ -1,0 +1,72 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/layouts/list.json",
+    "description": "A list view layout.",
+    "type": "array",
+    "items": {
+        "type": "object",
+        "description": "A column.",
+        "properties": {
+            "name": {
+                "type": "string",
+                "description": "A name. Usually a field name."
+            },
+            "label": {
+                "type": "string",
+                "description": "A translatable label. The `fields` category is used."
+            },
+            "customLabel": {
+                "type": "string",
+                "description": "A custom label."
+            },
+            "noLabel": {
+                "type": "boolean",
+                "description": "Disables label displaying in the header."
+            },
+            "width": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100,
+                "description": "A width in percents."
+            },
+            "widthPx": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "A width in pixels. Ignored if the `width` is defined."
+            },
+            "align": {
+                "enum": [
+                    "left",
+                    "right"
+                ],
+                "description": "An alignment."
+            },
+            "notSortable": {
+                "type": "boolean",
+                "description": "Disables the ability to sort by the column."
+            },
+            "link": {
+                "type": "boolean",
+                "description": "A field value will be displayed as a link pointing to the detail view of the record. Usually it is used for Name fields."
+            },
+            "view": {
+                "type": "string",
+                "description": "An overridden field view name."
+            },
+            "params": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Overridden field parameters."
+            },
+            "options": {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Field view options."
+            },
+            "hidden": {
+                "type": "boolean",
+                "description": "Hidden by default."
+            }
+        }
+    }
+}

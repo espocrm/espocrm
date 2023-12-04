@@ -26,198 +26,201 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/list-expanded', ['views/record/list'], function (Dep) {
+/** @module module:views/record/list-expanded */
 
-    return Dep.extend({
+import ListRecordView from 'views/record/list';
 
-        template: 'record/list-expanded',
+class ListExpandedRecordView extends ListRecordView {
 
-        checkboxes: false,
+    template = 'record/list-expanded'
 
-        selectable: false,
+    checkboxes = false
+    selectable = false
+    rowActionsView = false
+    _internalLayoutType = 'list-row-expanded'
+    presentationType = 'expanded'
+    pagination = false
+    header = false
+    _internalLayout = null
+    checkedList = null
+    listContainerEl = '.list > ul'
 
-        rowActionsView: false,
+    setup() {
+        super.setup();
 
-        _internalLayoutType: 'list-row-expanded',
+        this.on('after:save', model => {
+            let view = this.getView(model.id);
 
-        presentationType: 'expanded',
-
-        pagination: false,
-
-        header: false,
-
-        _internalLayout: null,
-
-        checkedList: null,
-
-        listContainerEl: '.list > ul',
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.on('after:save', model => {
-                let view = this.getView(model.id);
-
-                if (!view) {
-                    return;
-                }
-
-                view.reRender();
-            });
-
-            // Prevents displaying an empty buttons container.
-            this.displayTotalCount = false;
-        },
-
-        _loadListLayout: function (callback) {
-            var type = this.type + 'Expanded';
-
-            this.layoutLoadCallbackList.push(callback);
-
-            if (this.layoutIsBeingLoaded) {
+            if (!view) {
                 return;
             }
 
-            this.layoutIsBeingLoaded = true;
+            view.reRender();
+        });
 
-            this._helper.layoutManager.get(this.collection.name, type, (listLayout) => {
-                this.layoutLoadCallbackList.forEach(c => {
-                    c(listLayout);
+        // Prevents displaying an empty buttons container.
+        this.displayTotalCount = false;
+    }
 
-                    this.layoutLoadCallbackList = [];
-                    this.layoutIsBeingLoaded = false;
-                });
+    _loadListLayout(callback) {
+        let type = this.type + 'Expanded';
+
+        this.layoutLoadCallbackList.push(callback);
+
+        if (this.layoutIsBeingLoaded) {
+            return;
+        }
+
+        this.layoutIsBeingLoaded = true;
+
+        this._helper.layoutManager.get(this.collection.entityType, type, listLayout => {
+            this.layoutLoadCallbackList.forEach(c => {
+                c(listLayout);
+
+                this.layoutLoadCallbackList = [];
+                this.layoutIsBeingLoaded = false;
             });
-        },
+        });
+    }
 
-        _convertLayout: function (listLayout, model) {
-            model = model || this.collection.model.prototype;
+    _convertLayout(listLayout, model) {
+        model = model || this.collection.prepareModel();
 
-            var layout = {
-                rows: [],
-                right: false,
-            };
+        let layout = {
+            rows: [],
+            right: false,
+        };
 
-            for (var i in listLayout.rows) {
-                var row = listLayout.rows[i];
-                var layoutRow = [];
+        for (let i in listLayout.rows) {
+            let row = listLayout.rows[i];
+            let layoutRow = [];
 
-                for (var j in row) {
+            for (let j in row) {
+                let rowItem = row[j];
+                let type = rowItem.type || model.getFieldType(rowItem.name) || 'base';
 
-                    var e = row[j];
-                    var type = e.type || model.getFieldType(e.name) || 'base';
-
-                    var item = {
-                        name: e.name + 'Field',
-                        field: e.name,
-                        view: e.view ||
-                            model.getFieldParam(e.name, 'view') ||
-                            this.getFieldManager().getViewName(type),
-                        options: {
-                            defs: {
-                                name: e.name,
-                                params: e.params || {}
-                            },
-                            mode: 'list',
+                let item = {
+                    name: rowItem.name + 'Field',
+                    field: rowItem.name,
+                    view: rowItem.view ||
+                        model.getFieldParam(rowItem.name, 'view') ||
+                        this.getFieldManager().getViewName(type),
+                    options: {
+                        defs: {
+                            name: rowItem.name,
+                            params: rowItem.params || {}
                         },
-                    };
+                        mode: 'list',
+                    },
+                };
 
-                    if (e.link) {
-                        item.options.mode = 'listLink';
+                if (rowItem.options) {
+                    for (let optionName in rowItem.options) {
+                        if (typeof item.options[optionName] !== 'undefined') {
+                            continue;
+                        }
+
+                        item.options[optionName] = rowItem.options[optionName];
+                    }
+                }
+
+                if (rowItem.link) {
+                    item.options.mode = 'listLink';
+                }
+
+                layoutRow.push(item);
+            }
+
+            layout.rows.push(layoutRow);
+        }
+
+        if ('right' in listLayout) {
+            if (listLayout.right) {
+                let name = listLayout.right.name || 'right';
+
+                layout.right = {
+                    field: name,
+                    name: name,
+                    view: listLayout.right.view,
+                    options: {
+                        defs: {
+                            params: {
+                                width: listLayout.right.width || '7%',
+                            }
+                        }
+                    },
+                };
+            }
+        }
+        else {
+            if (this.rowActionsView) {
+                layout.right = this.getRowActionsDefs();
+            }
+        }
+
+        return layout;
+    }
+
+    getRowSelector(id) {
+        return 'li[data-id="' + id + '"]';
+    }
+
+    getItemEl(model, item) {
+        let name = item.field || item.columnName;
+
+        return this.getSelector() + ' li[data-id="' + model.id + '"] .cell[data-name="' + name+ '"]';
+    }
+
+    getRowContainerHtml(id) {
+        return $('<li>')
+            .attr('data-id', id)
+            .addClass('list-group-item list-row')
+            .get(0).outerHTML;
+    }
+
+    prepareInternalLayout(internalLayout, model) {
+        let rows = internalLayout.rows || [];
+
+        rows.forEach((row) => {
+            row.forEach((col) => {
+                col.el = this.getItemEl(model, col);
+            });
+        });
+
+        if (internalLayout.right) {
+            internalLayout.right.el = this.getItemEl(model, internalLayout.right);
+        }
+    }
+
+    fetchAttributeListFromLayout() {
+        var list = [];
+
+        if (this.listLayout.rows) {
+            this.listLayout.rows.forEach((row) => {
+                row.forEach(item => {
+                    if (!item.name) {
+                        return;
                     }
 
-                    layoutRow.push(item);
-                }
+                    var field = item.name;
 
-                layout.rows.push(layoutRow);
-            }
+                    var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
 
-            if ('right' in listLayout) {
-                if (listLayout.right != false) {
-                    var name = listLayout.right.name || 'right';
+                    if (!fieldType) {
+                        return;
+                    }
 
-                    layout.right = {
-                        field: name,
-                        name: name,
-                        view: listLayout.right.view,
-                        options: {
-                            defs: {
-                                params: {
-                                    width: listLayout.right.width || '7%',
-                                }
-                            }
-                        },
-                    };
-                }
-            }
-            else {
-                if (this.rowActionsView) {
-                    layout.right = this.getRowActionsDefs();
-                }
-            }
-
-            return layout;
-        },
-
-        getRowSelector: function (id) {
-            return 'li[data-id="' + id + '"]';
-        },
-
-        getItemEl: function (model, item) {
-            let name = item.field || item.columnName;
-
-            return this.options.el + ' li[data-id="' + model.id + '"] .cell[data-name="' + name+ '"]';
-        },
-
-        getRowContainerHtml: function (id) {
-            return $('<li>')
-                .attr('data-id', id)
-                .addClass('list-group-item list-row')
-                .get(0).outerHTML;
-        },
-
-        prepareInternalLayout: function (internalLayout, model) {
-            var rows = internalLayout.rows || [];
-
-            rows.forEach((row) => {
-                row.forEach((col) => {
-                    col.el = this.getItemEl(model, col);
+                    this.getFieldManager()
+                        .getEntityTypeFieldAttributeList(this.scope, field)
+                        .forEach((attribute) => {
+                            list.push(attribute);
+                        });
                 });
             });
+        }
 
-            if (internalLayout.right) {
-                internalLayout.right.el = this.getItemEl(model, internalLayout.right);
-            }
-        },
+        return list;
+    }
+}
 
-        fetchAttributeListFromLayout: function () {
-            var list = [];
-
-            if (this.listLayout.rows) {
-                this.listLayout.rows.forEach((row) => {
-                    row.forEach(item => {
-                        if (!item.name) {
-                            return;
-                        }
-
-                        var field = item.name;
-
-                        var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
-
-                        if (!fieldType) {
-                            return;
-                        }
-
-                        this.getFieldManager()
-                            .getEntityTypeFieldAttributeList(this.scope, field)
-                            .forEach((attribute) => {
-                                list.push(attribute);
-                            });
-                    });
-                });
-            }
-
-            return list;
-        },
-    });
-});
+export default ListExpandedRecordView;

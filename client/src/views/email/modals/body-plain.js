@@ -45,7 +45,7 @@ define('views/email/modals/body-plain', ['views/modal'], function (Dep) {
             this.headerText = this.model.get('name');
 
             this.createView('bodyPlain', 'views/fields/text', {
-                el: this.options.el + ' .field[data-name="bodyPlain"]',
+                selector: '.field[data-name="bodyPlain"]',
                 model: this.model,
                 defs: {
                     name: 'bodyPlain',

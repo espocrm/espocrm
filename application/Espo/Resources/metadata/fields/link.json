@@ -11,12 +11,25 @@
         },
         {
             "name": "readOnly",
+            "type": "bool",
+            "tooltip": "linkReadOnly"
+        },
+        {
+            "name": "readOnlyAfterCreate",
             "type": "bool"
         },
         {
             "name": "default",
             "type": "link",
             "view": "views/admin/field-manager/fields/link/default"
+        },
+        {
+            "name": "createButton",
+            "type": "bool"
+        },
+        {
+            "name": "autocompleteOnEmpty",
+            "type": "bool"
         }
     ],
     "actualFields": [

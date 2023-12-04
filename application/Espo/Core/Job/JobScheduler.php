@@ -60,7 +60,7 @@ class JobScheduler
     /**
      * A class name of the job. Should implement the `Job` interface.
      *
-     * @param class-string<Job> $className
+     * @param class-string<Job|JobDataLess> $className
      */
     public function setClassName(string $className): self
     {
@@ -70,8 +70,11 @@ class JobScheduler
 
         $class = new ReflectionClass($className);
 
-        if (!$class->implementsInterface(Job::class)) {
-            throw new RuntimeException("Class '{$className}' does not implement 'Job' interface.");
+        if (
+            !$class->implementsInterface(Job::class) &&
+            !$class->implementsInterface(JobDataLess::class)
+        ) {
+            throw new RuntimeException("Class '{$className}' does not implement 'Job' or 'JobDataLess' interface.");
         }
 
         $this->className = $className;

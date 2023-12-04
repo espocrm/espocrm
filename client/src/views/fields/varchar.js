@@ -26,366 +26,390 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/varchar', ['views/fields/base', 'helpers/reg-exp-pattern'], function (Dep, RegExpPattern) {
+/** @module views/fields/varchar */
+
+import BaseFieldView from 'views/fields/base';
+import RegExpPattern from 'helpers/reg-exp-pattern';
+
+/**
+ * A varchar field.
+ */
+class VarcharFieldView extends BaseFieldView {
 
     /**
-     * A varchar field.
-     *
-     * @class
-     * @name Class
-     * @extends module:views/fields/base.Class
-     * @memberOf module:views/fields/varchar
+     * @typedef {Object} module:views/fields/varchar~options
+     * @property {
+     *     module:views/fields/varchar~params &
+     *     module:views/fields/base~params &
+     *     Object.<string, *>
+     * } [params] Parameters.
      */
-    return Dep.extend(/** @lends module:views/fields/varchar.Class# */{
 
-        type: 'varchar',
+    /**
+     * @typedef {Object} module:views/fields/varchar~params
+     * @property {number} [maxLength] A max length.
+     * @property {string[]} [options] Select options.
+     * @property {boolean} [required] Required.
+     * @property {string} [optionsPath] An options metadata path.
+     * @property {boolean} [noSpellCheck] Disable spell check.
+     * @property {string} [pattern] A validation pattern. If starts with `$`, then a predefined pattern is used.
+     * @property {boolean} [copyToClipboard] To display a Copy-to-clipboard button.
+     */
 
-        listTemplate: 'fields/varchar/list',
+    /**
+     * @param {
+     *     module:views/fields/varchar~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
-        detailTemplate: 'fields/varchar/detail',
+    type = 'varchar'
 
-        searchTemplate: 'fields/varchar/search',
+    listTemplate = 'fields/varchar/list'
+    detailTemplate = 'fields/varchar/detail'
+    searchTemplate = 'fields/varchar/search'
 
-        searchTypeList: [
-            'startsWith',
-            'contains',
-            'equals',
-            'endsWith',
-            'like',
-            'notContains',
-            'notEquals',
-            'notLike',
-            'isEmpty',
-            'isNotEmpty',
-        ],
+    searchTypeList = [
+        'startsWith',
+        'contains',
+        'equals',
+        'endsWith',
+        'like',
+        'notContains',
+        'notEquals',
+        'notLike',
+        'isEmpty',
+        'isNotEmpty',
+    ]
 
-        /**
-         * @inheritDoc
-         */
-        validations: [
-            'required',
-            'pattern',
-        ],
+    /** @inheritDoc */
+    validations = [
+        'required',
+        'pattern',
+    ]
 
-        /**
-         * Use an autocomplete requesting data from the backend.
-         *
-         * @protected
-         * @type {boolean}
-         */
-        useAutocompleteUrl: false,
+    /**
+     * Use an autocomplete requesting data from the backend.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    useAutocompleteUrl = false
 
-        /**
-         * No spell-check.
-         *
-         * @protected
-         * @type {boolean}
-         */
-        noSpellCheck: false,
+    /**
+     * No spell-check.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    noSpellCheck = false
 
-        setup: function () {
-            this.setupOptions();
+    setup() {
+        this.setupOptions();
 
-            this.noSpellCheck = this.noSpellCheck || this.params.noSpellCheck;
+        this.noSpellCheck = this.noSpellCheck || this.params.noSpellCheck;
 
-            if (this.params.optionsPath) {
-                this.params.options = Espo.Utils.clone(
-                    this.getMetadata().get(this.params.optionsPath) || []);
+        if (this.params.optionsPath) {
+            this.params.options = Espo.Utils.clone(
+                this.getMetadata().get(this.params.optionsPath) || []);
+        }
+
+        if (this.options.customOptionList) {
+            this.setOptionList(this.options.customOptionList);
+        }
+
+        if (this.mode === this.MODE_DETAIL) {
+            if (this.params.copyToClipboard) {
+                this.events['click [data-action="copyToClipboard"]'] = () => this.copyToClipboard();
             }
+        }
+    }
 
-            if (this.options.customOptionList) {
-                this.setOptionList(this.options.customOptionList);
+    /**
+     * Set up options.
+     */
+    setupOptions() {}
+
+    /**
+     * Set options.
+     *
+     * @param {string[]} optionList Options.
+     */
+    setOptionList(optionList) {
+        if (!this.originalOptionList) {
+            this.originalOptionList = this.params.options || [];
+        }
+
+        this.params.options = Espo.Utils.clone(optionList);
+
+        if (this.isEditMode()) {
+            if (this.isRendered()) {
+                this.reRender();
             }
+        }
+    }
 
-            if (this.mode === this.MODE_DETAIL) {
-                if (this.params.copyToClipboard) {
-                    this.events['click [data-action="copyToClipboard"]'] = () => this.copyToClipboard();
-                }
+    /**
+     * Reset options.
+     */
+    resetOptionList() {
+        if (this.originalOptionList) {
+            this.params.options = Espo.Utils.clone(this.originalOptionList);
+        }
+
+        if (this.isEditMode()) {
+            if (this.isRendered()) {
+                this.reRender();
             }
-        },
+        }
+    }
 
-        /**
-         * Set up options.
-         */
-        setupOptions: function () {},
+    /**
+     * @protected
+     */
+    copyToClipboard() {
+        const value = this.model.get(this.name);
 
-        /**
-         * Set options.
-         *
-         * @param {string[]} optionList Options.
-         */
-        setOptionList: function (optionList) {
-            if (!this.originalOptionList) {
-                this.originalOptionList = this.params.options || [];
-            }
+        navigator.clipboard.writeText(value).then(() => {
+            Espo.Ui.success(this.translate('Copied to clipboard'));
+        });
+    }
 
-            this.params.options = Espo.Utils.clone(optionList);
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * Compose an autocomplete URL.
+     *
+     * @param {string} q A query.
+     * @return {string}
+     */
+    getAutocompleteUrl(q) {
+        return '';
+    }
 
-            if (this.isEditMode()) {
-                if (this.isRendered()) {
-                    this.reRender();
-                }
-            }
-        },
+    transformAutocompleteResult(response) {
+        const responseParsed = typeof response === 'string' ?
+            JSON.parse(response) :
+            response;
 
-        /**
-         * Reset options.
-         */
-        resetOptionList: function () {
-            if (this.originalOptionList) {
-                this.params.options = Espo.Utils.clone(this.originalOptionList);
-            }
+        const list = [];
 
-            if (this.isEditMode()) {
-                if (this.isRendered()) {
-                    this.reRender();
-                }
-            }
-        },
-
-        /**
-         * @protected
-         */
-        copyToClipboard: function () {
-            let value = this.model.get(this.name);
-
-            navigator.clipboard.writeText(value).then(() => {
-                Espo.Ui.success(this.translate('Copied to clipboard'));
+        responseParsed.list.forEach(item => {
+            list.push({
+                id: item.id,
+                name: item.name || item.id,
+                data: item.id,
+                value: item.name || item.id,
+                attributes: item,
             });
-        },
+        });
 
-        /**
-         * Compose an autocomplete URL.
-         *
-         * @param {string} q A query.
-         * @return {string}
-         */
-        getAutocompleteUrl: function (q) {
-            return '';
-        },
+        return {
+            suggestions: list,
+        };
+    }
 
-        transformAutocompleteResult: function (response) {
-            let responseParsed = JSON.parse(response);
+    setupSearch() {
+        this.events['change select.search-type'] = e => {
+            const type = $(e.currentTarget).val();
 
-            let list = [];
+            this.handleSearchType(type);
+        };
+    }
 
-            responseParsed.list.forEach(item => {
-                list.push({
-                    id: item.id,
-                    name: item.name || item.id,
-                    data: item.id,
-                    value: item.name || item.id,
-                    attributes: item,
-                });
-            });
+    data() {
+        const data = super.data();
 
-            return {
-                suggestions: list,
-            };
-        },
+        if (
+            this.model.get(this.name) !== null &&
+            this.model.get(this.name) !== '' &&
+            this.model.has(this.name)
+        ) {
+            data.isNotEmpty = true;
+        }
 
-        setupSearch: function () {
-            this.events = _.extend({
-                'change select.search-type': function (e) {
-                    var type = $(e.currentTarget).val();
-                    this.handleSearchType(type);
+        data.valueIsSet = this.model.has(this.name);
+
+        if (this.isSearchMode()) {
+            if (typeof this.searchParams.value === 'string') {
+                this.searchData.value = this.searchParams.value;
+            }
+
+            if (this.searchParams.data && typeof this.searchParams.data.value === 'string') {
+                this.searchData.value = this.searchParams.data.value;
+            }
+        }
+
+        data.noSpellCheck = this.noSpellCheck;
+        data.copyToClipboard = this.params.copyToClipboard;
+
+        return data;
+    }
+
+    handleSearchType(type) {
+        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+            this.$el.find('input.main-element').addClass('hidden');
+
+            return;
+        }
+
+        this.$el.find('input.main-element').removeClass('hidden');
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.isSearchMode()) {
+            const type = this.$el.find('select.search-type').val();
+
+            this.handleSearchType(type);
+        }
+
+        if (
+            (this.isEditMode() || this.isSearchMode()) &&
+            (
+                this.params.options && this.params.options.length ||
+                this.useAutocompleteUrl
+            )
+        ) {
+            // noinspection JSUnusedGlobalSymbols
+            const autocompleteOptions = {
+                minChars: 0,
+                lookup: this.params.options,
+                maxHeight: 200,
+                triggerSelectOnValidInput: false,
+                autoSelectFirst: true,
+                beforeRender: $c => {
+                    if (this.$element.hasClass('input-sm')) {
+                        $c.addClass('small');
+                    }
                 },
-            }, this.events || {});
-        },
-
-        data: function () {
-            let data = Dep.prototype.data.call(this);
-
-            if (
-                this.model.get(this.name) !== null &&
-                this.model.get(this.name) !== '' &&
-                this.model.has(this.name)
-            ) {
-                data.isNotEmpty = true;
-            }
-
-            data.valueIsSet = this.model.has(this.name);
-
-            if (this.isSearchMode()) {
-                if (typeof this.searchParams.value === 'string') {
-                    this.searchData.value = this.searchParams.value;
-                }
-            }
-
-            data.noSpellCheck = this.noSpellCheck;
-            data.copyToClipboard = this.params.copyToClipboard;
-
-            return data;
-        },
-
-        handleSearchType: function (type) {
-            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                this.$el.find('input.main-element').addClass('hidden');
-
-                return;
-            }
-
-            this.$el.find('input.main-element').removeClass('hidden');
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.isSearchMode()) {
-                let type = this.$el.find('select.search-type').val();
-
-                this.handleSearchType(type);
-            }
-
-            if (
-                (this.isEditMode() || this.isSearchMode()) &&
-                (
-                    this.params.options && this.params.options.length ||
-                    this.useAutocompleteUrl
-                )
-            ) {
-                let autocompleteOptions = {
-                    minChars: 0,
-                    lookup: this.params.options,
-                    maxHeight: 200,
-                    beforeRender: ($c) => {
-                        if (this.$element.hasClass('input-sm')) {
-                            $c.addClass('small');
-                        }
-                    },
-                    formatResult: (suggestion) => {
-                        return this.getHelper().escapeString(suggestion.value);
-                    },
-                    lookupFilter: (suggestion, query, queryLowerCase) => {
-                        if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
-                            return suggestion.value.length !== queryLowerCase.length;
-                        }
-
-                        return false;
-                    },
-                    onSelect: () => {
-                        this.trigger('change');
-
-                        this.$element.focus();
-                    },
-                };
-
-                if (this.useAutocompleteUrl) {
-                    autocompleteOptions.serviceUrl = q => this.getAutocompleteUrl(q);
-                    autocompleteOptions.transformResult = response =>
-                        this.transformAutocompleteResult(response);
-                    autocompleteOptions.noCache = true;
-                    autocompleteOptions.lookup = null;
-                }
-
-                this.$element.autocomplete(autocompleteOptions);
-                this.$element.attr('autocomplete', 'espo-' + this.name);
-
-                this.$element.on('focus', () => {
-                    if (this.$element.val()) {
-                        return;
+                formatResult: suggestion => {
+                    return this.getHelper().escapeString(suggestion.value);
+                },
+                lookupFilter: (suggestion, query, queryLowerCase) => {
+                    if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
+                        return suggestion.value.length !== queryLowerCase.length;
                     }
 
-                    this.$element.autocomplete('onValueChange');
-                });
-
-                this.once('render', () => this.$element.autocomplete('dispose'));
-                this.once('remove', () => this.$element.autocomplete('dispose'));
-            }
-
-            if (this.isSearchMode()) {
-                this.$el.find('select.search-type').on('change', () => {
+                    return false;
+                },
+                onSelect: () => {
                     this.trigger('change');
-                });
 
-                this.$element.on('input', () => {
-                    this.trigger('change');
-                });
-            }
-        },
+                    this.$element.focus();
+                },
+            };
 
-        validatePattern: function () {
-            let pattern = this.params.pattern;
-
-            return this.fieldValidatePattern(this.name, pattern);
-        },
-
-        /**
-         * Used by other field views.
-         *
-         * @param {string} name
-         * @param {string} [pattern]
-         */
-        fieldValidatePattern: function (name, pattern) {
-            pattern = pattern || this.model.getFieldParam(name, 'pattern');
-            /** @var {string|null} value */
-            let value = this.model.get(name);
-
-            if (!pattern) {
-                return false;
+            if (this.useAutocompleteUrl) {
+                autocompleteOptions.noCache = true;
+                autocompleteOptions.lookup = (query, done) => {
+                    Espo.Ajax.getRequest(this.getAutocompleteUrl(query))
+                        .then(response => {
+                            return this.transformAutocompleteResult(response);
+                        })
+                        .then(result => {
+                            done(result);
+                        });
+                };
             }
 
-            /** @type module:helpers/reg-exp-pattern.Class */
-            let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+            this.$element.autocomplete(autocompleteOptions);
+            this.$element.attr('autocomplete', 'espo-' + this.name);
 
-            let result = helper.validate(pattern, value, name, this.entityType);
+            // Prevent showing suggestions after select.
+            this.$element.off('focus.autocomplete');
 
-            if (!result) {
-                return false;
-            }
-
-            this.showValidationMessage(result.message, '[data-name="' + name + '"]');
-
-            return true;
-        },
-
-        fetch: function () {
-            let data = {};
-
-            let value = this.$element.val().trim();
-
-            data[this.name] = value || null;
-
-            return data;
-        },
-
-        fetchSearch: function () {
-            let type = this.fetchSearchType() || 'startsWith';
-
-            if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
-                if (type === 'isEmpty') {
-                    return {
-                        type: 'or',
-                        value: [
-                            {
-                                type: 'isNull',
-                                field: this.name,
-                            },
-                            {
-                                type: 'equals',
-                                field: this.name,
-                                value: '',
-                            }
-                        ],
-                        data: {
-                            type: type,
-                        },
-                    };
+            this.$element.on('focus', () => {
+                if (this.$element.val()) {
+                    return;
                 }
 
+                this.$element.autocomplete('onValueChange');
+            });
+
+            this.once('render', () => this.$element.autocomplete('dispose'));
+            this.once('remove', () => this.$element.autocomplete('dispose'));
+        }
+
+        if (this.isSearchMode()) {
+            this.$el.find('select.search-type').on('change', () => {
+                this.trigger('change');
+            });
+
+            this.$element.on('input', () => {
+                this.trigger('change');
+            });
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validatePattern() {
+        const pattern = this.params.pattern;
+
+        return this.fieldValidatePattern(this.name, pattern);
+    }
+
+    /**
+     * Used by other field views.
+     *
+     * @param {string} name
+     * @param {string} [pattern]
+     */
+    fieldValidatePattern(name, pattern) {
+        pattern = pattern || this.model.getFieldParam(name, 'pattern');
+        /** @var {string|null} value */
+        const value = this.model.get(name);
+
+        if (!pattern) {
+            return false;
+        }
+
+        const helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+        const result = helper.validate(pattern, value, name, this.entityType);
+
+        if (!result) {
+            return false;
+        }
+
+        const message = result.message.replace('{field}', this.getLanguage().translate(this.getLabelText()));
+
+        this.showValidationMessage(message, '[data-name="' + name + '"]');
+
+        return true;
+    }
+
+    /** @inheritDoc */
+    fetch() {
+        const data = {};
+
+        const value = this.$element.val().trim();
+
+        data[this.name] = value || null;
+
+        return data;
+    }
+
+    /** @inheritDoc */
+    fetchSearch() {
+        const type = this.fetchSearchType() || 'startsWith';
+
+        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+            if (type === 'isEmpty') {
                 return {
-                    type: 'and',
+                    type: 'or',
                     value: [
                         {
-                            type: 'notEquals',
-                            field: this.name,
-                            value: '',
+                            type: 'isNull',
+                            attribute: this.name,
                         },
                         {
-                            type: 'isNotNull',
-                            field: this.name,
-                            value: null,
-                        }
+                            type: 'equals',
+                            attribute: this.name,
+                            value: '',
+                        },
                     ],
                     data: {
                         type: type,
@@ -393,25 +417,50 @@ define('views/fields/varchar', ['views/fields/base', 'helpers/reg-exp-pattern'],
                 };
             }
 
-            let value = this.$element.val().toString().trim();
+            const value = [
+                {
+                    type: 'isNotNull',
+                    attribute: this.name,
+                    value: null,
+                },
+            ];
 
-            if (!value) {
-                // @todo Change to `null` in v7.4 (and for all other fields).
-                return false;
+            if (!this.model.getFieldParam(this.name, 'notStorable')) {
+                value.push({
+                    type: 'notEquals',
+                    attribute: this.name,
+                    value: '',
+                });
             }
 
             return {
+                type: 'and',
                 value: value,
-                type: type,
                 data: {
                     type: type,
                 },
             };
-        },
+        }
 
-        getSearchType: function () {
-            return this.getSearchParamsData().type || this.searchParams.typeFront ||
-                this.searchParams.type;
-        },
-    });
-});
+        const value = this.$element.val().toString().trim();
+
+        if (!value) {
+            return null;
+        }
+
+        return {
+            value: value,
+            type: type,
+            data: {
+                type: type,
+            },
+        };
+    }
+
+    getSearchType() {
+        return this.getSearchParamsData().type || this.searchParams.typeFront ||
+            this.searchParams.type;
+    }
+}
+
+export default VarcharFieldView;

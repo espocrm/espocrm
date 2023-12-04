@@ -26,254 +26,217 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/options/base',
-['views/modal', 'views/record/detail', 'model', 'view-record-helper'],
-function (Dep, Detail, Model, ViewRecordHelper) {
+import ModalView from 'views/modal';
+import Model from 'model';
+import EditForModalRecordView from 'views/record/edit-for-modal';
 
-    return Dep.extend({
+class BaseDashletOptionsModalView extends ModalView {
 
-        name: null,
+    template = 'dashlets/options/base'
 
-        template: 'dashlets/options/base',
+    cssName = 'options-modal'
+    className = 'dialog dialog-record'
+    name = ''
+    escapeDisabled = true
+    saveDisabled = false;
 
-        cssName: 'options-modal',
-
-        className: 'dialog dialog-record',
-
-        fieldsMode: 'edit',
-
-        data: function () {
-            return {
-                options: this.optionsData,
-            };
+    buttonList = [
+        {
+            name: 'save',
+            label: 'Apply',
+            style: 'primary',
+            title: 'Ctrl+Enter',
         },
-
-        buttonList: [
-            {
-                name: 'save',
-                label: 'Apply',
-                style: 'primary',
-                title: 'Ctrl+Enter',
-            },
-            {
-                name: 'cancel',
-                label: 'Cancel',
-                title: 'Esc',
-            },
-        ],
-
-        shortcutKeys: {
-            'Control+Enter': 'save',
+        {
+            name: 'cancel',
+            label: 'Cancel',
+            title: 'Esc',
         },
+    ]
 
-        getDetailLayout: function () {
-            let layout = this.getMetadata().get(['dashlets', this.name, 'options', 'layout']);
-
-            if (layout) {
-                return layout;
+    shortcutKeys = {
+        /** @this BaseDashletOptionsModalView */
+        'Control+Enter': 'save',
+        /** @this BaseDashletOptionsModalView */
+        'Escape': function (e) {
+            if (this.saveDisabled) {
+                return;
             }
 
-            layout = [{rows: []}];
+            e.stopPropagation();
+            e.preventDefault();
 
-            let i = 0;
-            let a = [];
+            let focusedFieldView = this.getRecordView().getFocusedFieldView();
 
-            for (let field in this.fields) {
-                if (!(i % 2)) {
-                    a = [];
-
-                    layout[0].rows.push(a);
-                }
-
-                a.push({name: field});
-
-                i++;
+            if (focusedFieldView) {
+                this.model.set(focusedFieldView.fetch(), {skipReRender: true});
             }
 
+            if (this.getRecordView().isChanged) {
+                this.confirm(this.translate('confirmLeaveOutMessage', 'messages'))
+                    .then(() => this.actionClose());
+
+                return;
+            }
+
+            this.actionClose();
+        },
+    }
+
+    data() {
+        return {
+            options: this.optionsData,
+        };
+    }
+
+    getDetailLayout() {
+        let layout = this.getMetadata().get(['dashlets', this.name, 'options', 'layout']);
+
+        if (layout) {
             return layout;
-        },
+        }
 
-        init: function () {
-            Dep.prototype.init.call(this);
+        layout = [{rows: []}];
 
-            this.fields = Espo.Utils.cloneDeep(this.options.fields);
-            this.fieldList = Object.keys(this.fields);
-            this.optionsData = this.options.optionsData;
-        },
+        let i = 0;
+        let row = [];
 
-        setup: function () {
-            this.id = 'dashlet-options';
+        for (let field in this.fields) {
+            if (!(i % 2)) {
+                row = [];
 
-            this.recordHelper = new ViewRecordHelper();
-
-            let model = this.model = new Model();
-
-            model.name = 'DashletOptions';
-            model.defs = {
-                fields: this.fields
-            };
-
-            model.set(this.optionsData);
-
-            model.dashletName = this.name;
-
-            this.middlePanelDefs = {};
-            this.middlePanelDefsList = [];
-
-            this.setupBeforeFinal();
-
-            this.createView('record', 'views/record/detail-middle', {
-                model: model,
-                recordHelper: this.recordHelper,
-                layoutDefs: {
-                    type: 'record',
-                    layout: Detail.prototype.convertDetailLayout.call(this, this.getDetailLayout())
-                },
-                el: this.options.el + ' .record',
-                layoutData: {
-                    model: model,
-                },
-            });
-
-            this.header =
-                this.getLanguage().translate('Dashlet Options') + ': ' +
-                Handlebars.Utils.escapeExpression(this.getLanguage().translate(this.name, 'dashlets'));
-        },
-
-        setupBeforeFinal: function () {},
-
-        fetchAttributes: function () {
-            let attributes = {};
-
-            this.fieldList.forEach(field => {
-                let fieldView = this.getView('record').getFieldView(field);
-
-                _.extend(attributes, fieldView.fetch());
-            });
-
-            this.model.set(attributes, {silent: true});
-
-            let valid = true;
-
-            this.fieldList.forEach(field => {
-                let fieldView = this.getView('record').getFieldView(field);
-
-                if (fieldView && fieldView.isEditMode() && !fieldView.disabled && !fieldView.readOnly) {
-                    valid = !fieldView.validate() && valid;
-                }
-            });
-
-            if (!valid) {
-                this.notify('Not Valid', 'error');
-
-                return null;
+                layout[0].rows.push(row);
             }
 
-            return attributes;
-        },
+            row.push({name: field});
 
-        actionSave: function () {
-            var attributes = this.fetchAttributes();
+            i++;
+        }
 
-            if (attributes == null) {
-                return;
-            }
+        return layout;
+    }
 
-            this.trigger('save', attributes);
-        },
+    init() {
+        super.init();
 
-        getFieldViews: function (withHidden) {
-            if (this.hasView('record')) {
-                return this.getView('record').getFieldViews(withHidden) || {};
-            }
+        this.fields = Espo.Utils.cloneDeep(this.options.fields);
+        this.fieldList = Object.keys(this.fields);
+        this.optionsData = this.options.optionsData;
+        this.name = this.options.name;
+    }
 
+    setup() {
+        this.id = 'dashlet-options';
+
+        /** @var {module:model} */
+        let model = this.model = new Model();
+
+        model.name = 'DashletOptions';
+        model.setDefs({fields: this.fields});
+        model.set(this.optionsData);
+
+        this.dataObject = {
+            dashletName: this.name,
+            userId: this.options.userId,
+        };
+
+        model.dashletName = this.name;
+        model.userId = this.options.userId;
+
+        this.middlePanelDefs = {};
+        this.middlePanelDefsList = [];
+
+        this.setupBeforeFinal();
+
+        this.recordView = new EditForModalRecordView({
+            model: model,
+            detailLayout: this.getDetailLayout(),
+            dataObject: this.dataObject,
+        });
+
+        this.assignView('record', this.recordView, '.record');
+
+        this.$header =
+            $('<span>')
+                .append(
+                    $('<span>').text(this.getLanguage().translate('Dashlet Options')),
+                    ' &middot; ',
+                    $('<span>').text(this.getLanguage().translate(this.name, 'dashlets')),
+                );
+    }
+
+    setupBeforeFinal() {}
+
+    onBackdropClick() {
+        if (this.getRecordView().isChanged) {
+            return;
+        }
+
+        this.close();
+    }
+
+    /**
+     * @return {module:views/record/edit}
+     */
+    getRecordView() {
+        return this.recordView;
+    }
+
+    /**
+     * @return {Object|null}
+     */
+    fetchAttributes() {
+        let attributes = this.getRecordView().fetch();
+
+        if (this.getRecordView().validate()) {
+            return null;
+        }
+
+        return attributes;
+    }
+
+    actionSave() {
+        let attributes = this.fetchAttributes();
+
+        if (attributes == null) {
+            return;
+        }
+
+        this.trigger('save', attributes);
+    }
+
+    getFieldViews(withHidden) {
+        if (!this.hasView('record')) {
             return {};
-        },
+        }
 
-        getFieldView: function (name) {
-            return (this.getFieldViews(true) || {})[name] || null;
-        },
+        return this.getRecordView().getFieldViews(withHidden);
+    }
 
-        hideField: function (name, locked) {
-            this.recordHelper.setFieldStateParam(name, 'hidden', true);
+    getFieldView(name) {
+        return (this.getFieldViews(true) || {})[name] || null;
+    }
 
-            if (locked) {
-                this.recordHelper.setFieldStateParam(name, 'hiddenLocked', true);
-            }
+    hideField(name, locked) {
+        if (!this.getRecordView()) {
+            this.whenRendered().then(() => this.hideField(name), locked);
 
-            var processHtml = () => {
-                let fieldView = this.getFieldView(name);
+            return;
+        }
 
-                if (fieldView) {
-                    let $field = fieldView.$el;
-                    let $cell = $field.closest('.cell[data-name="' + name + '"]');
-                    let $label = $cell.find('label.control-label[data-name="' + name + '"]');
+        this.getRecordView().hideField(name, locked);
+    }
 
-                    $field.addClass('hidden');
-                    $label.addClass('hidden');
-                    $cell.addClass('hidden-cell');
+    showField(name) {
+        if (!this.getRecordView()) {
+            this.whenRendered().then(() => this.showField(name));
 
-                    return;
-                }
+            return;
+        }
 
-                this.$el.find('.cell[data-name="' + name + '"]').addClass('hidden-cell');
-                this.$el.find('.field[data-name="' + name + '"]').addClass('hidden');
-            };
+        this.getRecordView().showField(name);
+    }
+}
 
-            if (this.isRendered()) {
-                processHtml();
-            } else {
-                this.once('after:render', () => processHtml());
-            }
-
-            let view = this.getFieldView(name);
-
-            if (view) {
-                view.setDisabled(locked);
-            }
-        },
-
-        showField: function (name) {
-            if (this.recordHelper.getFieldStateParam(name, 'hiddenLocked')) {
-                return;
-            }
-
-            this.recordHelper.setFieldStateParam(name, 'hidden', false);
-
-            let processHtml = () => {
-                let fieldView = this.getFieldView(name);
-
-                if (fieldView) {
-                    let $field = fieldView.$el;
-                    let $cell = $field.closest('.cell[data-name="' + name + '"]');
-                    let $label = $cell.find('label.control-label[data-name="' + name + '"]');
-
-                    $field.removeClass('hidden');
-                    $label.removeClass('hidden');
-                    $cell.removeClass('hidden-cell');
-
-                    return;
-                }
-
-                this.$el.find('.cell[data-name="' + name + '"]').removeClass('hidden-cell');
-                this.$el.find('.field[data-name="' + name + '"]').removeClass('hidden');
-                this.$el.find('label.control-label[data-name="' + name + '"]').removeClass('hidden');
-            };
-
-            if (this.isRendered()) {
-                processHtml();
-            } else {
-                this.once('after:render', () => processHtml());
-            }
-
-            let view = this.getFieldView(name);
-
-            if (view) {
-                if (!view.disabledLocked) {
-                    view.setNotDisabled();
-                }
-            }
-        },
-    });
-});
+export default BaseDashletOptionsModalView;
 

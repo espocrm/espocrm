@@ -1,0 +1,13 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/entityTemplateList.json",
+    "title": "app/entityTemplateList",
+    "description": "A list of entity templates available when creating a new entity type in the Entity Manager tool. Use __APPEND__ to add new values without deleting existing.",
+    "type": "array",
+    "items": {
+        "anyOf": [
+            {"const": "__APPEND__"},
+            {"type": "string"}
+        ]
+    }
+}

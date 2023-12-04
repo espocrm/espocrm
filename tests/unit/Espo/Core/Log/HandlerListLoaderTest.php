@@ -35,9 +35,10 @@ use Espo\Core\Log\EspoRotatingFileHandlerLoader;
 use Espo\Core\Log\Handler\EspoRotatingFileHandler;
 use Espo\Core\Log\HandlerListLoader;
 
-use Monolog\Logger;
+use PHPUnit\Framework\TestCase;
+use Psr\Log\LogLevel;
 
-class HandlerListLoaderTest extends \PHPUnit\Framework\TestCase
+class HandlerListLoaderTest extends TestCase
 {
     protected function setUp() : void
     {
@@ -103,7 +104,7 @@ class HandlerListLoaderTest extends \PHPUnit\Framework\TestCase
 
         $params = [
             'filename' => 'data/logs/test-2.log',
-            'level' => Logger::NOTICE,
+            'level' => 'NOTICE',
         ];
 
         $loader
@@ -114,7 +115,7 @@ class HandlerListLoaderTest extends \PHPUnit\Framework\TestCase
 
         $list = $listLoader->load($dataList, 'NOTICE');
 
-        $this->assertEquals(2, count($list));
+        $this->assertCount(2, $list);
 
         $this->assertInstanceOf(EspoRotatingFileHandler::class, $list[0]);
     }

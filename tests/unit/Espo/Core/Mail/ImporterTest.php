@@ -182,7 +182,7 @@ class ImporterTest extends \PHPUnit\Framework\TestCase
 
         $contents = file_get_contents('tests/unit/testData/Core/Mail/test_email_1.eml');
 
-        $importer = new Importer(
+        $importer = new Importer\DefaultImporter(
             $entityManager,
             $config,
             $this->assignmentNotificatorFactory,

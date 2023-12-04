@@ -37,7 +37,10 @@ function (Dep, /** module:ui/multi-select */MultiSelect) {
             let filterList = Object.keys(fields).filter(field => {
                 let fieldType = fields[field].type || null;
 
-                if (fields[field].disabled) {
+                if (
+                    fields[field].disabled ||
+                    fields[field].utility
+                ) {
                     return;
                 }
 

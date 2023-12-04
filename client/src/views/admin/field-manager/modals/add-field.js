@@ -105,6 +105,8 @@ define('views/admin/field-manager/modals/add-field', ['views/modal'], function (
                     placement: 'left',
                 }, this);
             });
+
+            setTimeout(() => this.$el.find('input[data-name="quick-search"]').focus(), 50);
         },
 
         processQuickSearch: function (text) {

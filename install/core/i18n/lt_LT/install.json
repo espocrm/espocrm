@@ -75,7 +75,8 @@
     "smtpServer": "Serveris",
     "smtpSecurity": "Sauga",
     "smtpUsername": "Vartotojo vardas",
-    "emailAddress": "El. paštas"
+    "emailAddress": "El. paštas",
+    "Platform": "Platforma"
   },
   "messages": {
     "1045": "Vartotojui prieiga yra uždrausta ",

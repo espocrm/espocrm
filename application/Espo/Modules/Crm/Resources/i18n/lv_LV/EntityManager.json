@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "activityStatusList": "Darbības statusi",
+    "historyStatusList": "Vēstures statusi",
+    "completedStatusList": "Pabeigtie statusi",
+    "canceledStatusList": "Atceltie statusi"
+  },
+  "tooltips": {
+    "activityStatusList": "Statusa vērtības, kas nosaka, ka darbības ierakstam jābūt redzamam darbības panelī un uzskatāmam par aktuālu.",
+    "historyStatusList": "Statusa vērtības, kas nosaka, ka darbības ierakstam jābūt redzamam vēstures panelī.",
+    "completedStatusList": "Statusa vērtības, kas nosaka, ka darbība ir pabeigta.",
+    "canceledStatusList": "Stāvokļa vērtības, kas nosaka, ka darbība ir atcelta un netiks ņemta vērā brīvas/nodarbinātas darbības diapazonos."
+  }
+}

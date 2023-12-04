@@ -78,7 +78,8 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                     'default',
                     'success',
                     'danger',
-                    'warning'
+                    'warning',
+                    'info',
                 ],
                 default: 'default',
                 translation: 'LayoutManager.options.style',
@@ -156,13 +157,13 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
         },
 
         loadLayout: function (callback) {
-            var layout;
-            var model;
+            let layout;
+            let model;
 
-            var promiseList = [];
+            const promiseList = [];
 
             promiseList.push(
-                new Promise((resolve) => {
+                new Promise(resolve => {
                     this.getModelFactory().create(this.scope, (m) => {
                         this.getHelper()
                             .layoutManager
@@ -175,13 +176,13 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                 })
             );
 
-            if (~['detail', 'detailSmall'].indexOf(this.type)) {
+            if (['detail', 'detailSmall'].includes(this.type)) {
                 promiseList.push(
-                    new Promise((resolve) => {
+                    new Promise(resolve => {
                         this.getHelper().layoutManager.getOriginal(
                             this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type),
                             this.setId,
-                            (layoutLoaded) => {
+                            layoutLoaded => {
                                 this.sidePanelsLayout = layoutLoaded;
 
                                 resolve();
@@ -192,22 +193,28 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
             }
 
             promiseList.push(
-                new Promise((resolve) => {
+                new Promise(resolve => {
                     if (this.getMetadata().get(['clientDefs', this.scope, 'layoutDefaultSidePanelDisabled'])) {
                         resolve();
+
+                        return;
+                    }
+
+                    if (this.typeDefs.allFields) {
+                        resolve();
+
+                        return;
                     }
 
                     this.getHelper().layoutManager.getOriginal(
                         this.scope,
                         'defaultSidePanel',
                         this.setId,
-                        (layoutLoaded) => {
-                            this.defaultSidePanelLayout = layoutLoaded;
-
+                        layoutLoaded => {
                             this.defaultPanelFieldList = Espo.Utils.clone(this.defaultPanelFieldList);
 
-                            layoutLoaded.forEach((item) => {
-                                var field = item.name;
+                            layoutLoaded.forEach(item => {
+                                let field = item.name;
 
                                 if (!field) {
                                     return;
@@ -217,7 +224,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                                     field = 'assignedUser';
                                 }
 
-                                if (!~this.defaultPanelFieldList.indexOf(field)) {
+                                if (!this.defaultPanelFieldList.includes(field)) {
                                     this.defaultPanelFieldList.push(field);
                                 }
                             });
@@ -238,9 +245,9 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
         },
 
         readDataFromLayout: function (model, layout) {
-            var allFields = [];
+            const allFields = [];
 
-            for (var field in model.defs.fields) {
+            for (const field in model.defs.fields) {
                 if (this.isFieldEnabled(model, field)) {
                     allFields.push(field);
                 }
@@ -253,7 +260,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
 
             layout.forEach((panel) => {
                 panel.rows.forEach((row) => {
-                    row.forEach((cell, i) => {
+                    row.forEach(cell => {
                         this.enabledFields.push(cell.name);
                     });
                 });
@@ -264,7 +271,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                     .localeCompare(this.translate(v2, 'fields', this.scope));
             });
 
-            for (var i in allFields) {
+            for (const i in allFields) {
                 if (!_.contains(this.enabledFields, allFields[i])) {
                     this.disabledFields.push(allFields[i]);
                 }
@@ -273,18 +280,30 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
 
         isFieldEnabled: function (model, name) {
             if (this.hasDefaultPanel()) {
-                if (this.defaultPanelFieldList.indexOf(name) !== -1) {
+                if (this.defaultPanelFieldList.includes(name)) {
                     return false;
                 }
             }
 
-            var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+            const layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
 
-            if (layoutList && !~layoutList.indexOf(this.type)) {
+            let realType = this.realType;
+
+            if (realType === 'detailSmall') {
+                realType = 'detail';
+            }
+
+            if (
+                layoutList &&
+                !layoutList.includes(this.type) &&
+                !layoutList.includes(realType)
+            ) {
                 return;
             }
 
-            return !model.getFieldParam(name, 'disabled') && !model.getFieldParam(name, 'layoutDetailDisabled');
+            return !model.getFieldParam(name, 'disabled') &&
+                !model.getFieldParam(name, 'utility') &&
+                !model.getFieldParam(name, 'layoutDetailDisabled');
         },
 
         hasDefaultPanel: function () {
@@ -297,7 +316,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
             }
 
             if (this.sidePanelsLayout) {
-                for (var name in this.sidePanelsLayout) {
+                for (const name in this.sidePanelsLayout) {
                     if (name === 'default' && this.sidePanelsLayout[name].disabled) {
                         return false;
                     }
@@ -312,9 +331,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                 return false;
             }
 
-            let fieldCount = 0;
-
-            let fieldList = [];
+            const fieldList = [];
 
             layout.forEach(panel => {
                 panel.rows.forEach(row => {
@@ -328,7 +345,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                 });
             });
 
-            let incopatibleFieldList = [];
+            let incompatibleFieldList = [];
 
             let isIncompatible = false;
 
@@ -337,9 +354,9 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                     return;
                 }
 
-                let defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) || {};
+                const defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) || {};
 
-                let targetFieldList = defs.detailLayoutIncompatibleFieldList || [];
+                const targetFieldList = defs.detailLayoutIncompatibleFieldList || [];
 
                 targetFieldList.forEach(itemField => {
                     if (isIncompatible) {
@@ -349,7 +366,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                     if (~fieldList.indexOf(itemField)) {
                         isIncompatible = true;
 
-                        incopatibleFieldList = [field].concat(targetFieldList);
+                        incompatibleFieldList = [field].concat(targetFieldList);
                     }
                 });
             });
@@ -359,7 +376,7 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                     this.translate('fieldsIncompatible', 'messages', 'LayoutManager')
                         .replace(
                             '{fields}',
-                            incopatibleFieldList
+                            incompatibleFieldList
                                 .map(field => this.translate(field, 'fields', this.scope))
                                 .join(', ')
                         )

@@ -26,236 +26,244 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/login-second-step', ['view'], function (Dep) {
+import View from 'view';
+import Base64 from 'js-base64';
+import $ from 'jquery';
+
+class LoginSecondStepView extends View {
+
+    /** @inheritDoc */
+    template = 'login-second-step'
+
+    /** @inheritDoc */
+    views =  {
+        footer: {
+            fullSelector: 'body > footer',
+            view: 'views/site/footer',
+        },
+    }
 
     /**
-     * @class
-     * @name Class
-     * @extends module:view.Class
-     * @memberOf module:views/login-second-step
+     * @type {string|null}
+     * @private
      */
-    return Dep.extend(/** @lends module:views/login-second-step.Class# */{
+    anotherUser = null
 
-        /** @inheritDoc */
-        template: 'login-second-step',
+    /**
+     * Response from the first step.
+     *
+     * @type {Object.<string, *>}
+     * @private
+     */
+    loginData =  null
 
-        /** @inheritDoc */
-        views: {
-            footer: {
-                el: 'body > footer',
-                view: 'views/site/footer'
-            },
+    /**
+     * Headers composed in the first step.
+     *
+     * @type {Object.<string, string>}
+     * @private
+     */
+    headers =  null
+
+    /** @private */
+    isPopoverDestroyed =  false
+
+    /** @inheritDoc */
+    events = {
+        /** @this LoginSecondStepView */
+        'submit #login-form': function (e) {
+            e.preventDefault();
+
+            this.send();
         },
-
-        /**
-         * @type {?string}
-         * @private
-         */
-        anotherUser: null,
-
-        /**
-         * Response from the first step.
-         *
-         * @type {Object.<string, *>}
-         * @private
-         */
-        loginData: null,
-
-        /**
-         * Headers composed in the first step.
-         *
-         * @type {Object.<string, string>}
-         * @private
-         */
-        headers: null,
-
-        /** @private */
-        isPopoverDestroyed: false,
-
-        /** @inheritDoc */
-        events: {
-            'submit #login-form': function (e) {
+        /** @this LoginSecondStepView */
+        'click [data-action="backToLogin"]': function () {
+            this.trigger('back');
+        },
+        /** @this LoginSecondStepView */
+        'keydown': function (e) {
+            if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                 e.preventDefault();
 
                 this.send();
-            },
-            'click [data-action="backToLogin"]': function () {
-                this.trigger('back');
-            },
-            'keydown': function (e) {
-                if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
-                    e.preventDefault();
+            }
+        },
+    }
 
-                    this.send();
+    /** @inheritDoc */
+    data() {
+        return {
+            message: this.message,
+        };
+    }
+
+    /** @inheritDoc */
+    setup() {
+        this.message = this.translate(this.options.loginData.message, 'messages', 'User');
+        this.anotherUser = this.options.anotherUser || null;
+        this.headers = this.options.headers || {};
+        this.loginData = this.options.loginData;
+    }
+
+    /** @inheritDoc */
+    afterRender() {
+        this.$code = $('[data-name="field-code"]');
+        this.$submit = this.$el.find('#btn-send');
+
+        this.$code.focus();
+    }
+
+    /** @private */
+    send() {
+        const code = this.$code.val().trim().replace(/\s/g, '');
+
+        const userName = this.options.userName;
+        const token = this.loginData.token;
+        const headers = Espo.Utils.clone(this.headers);
+
+        if (code === '') {
+            this.processEmptyCode();
+
+            return;
+        }
+
+        this.disableForm();
+
+        if (userName && token) {
+            const authString = Base64.encode(userName + ':' + token);
+
+            headers['Authorization'] = 'Basic ' + authString;
+            headers['Espo-Authorization'] = authString;
+        }
+
+        headers['Espo-Authorization-Code'] = code;
+        headers['Espo-Authorization-Create-Token-Secret'] = 'true';
+
+        if (this.anotherUser !== null) {
+            headers['X-Another-User'] = this.anotherUser;
+        }
+
+        this.notifyLoading();
+
+        Espo.Ajax
+            .getRequest('App/user', null, {
+                login: true,
+                headers: headers,
+            })
+            .then(data => {
+                Espo.Ui.notify(false);
+
+                this.triggerLogin(userName, data);
+            })
+            .catch(xhr => {
+                this.undisableForm();
+
+
+                if (xhr.status === 401) {
+                    const statusReason = xhr.getResponseHeader('X-Status-Reason');
+
+                    if (statusReason === 'error') {
+                        this.onError();
+
+                        return;
+                    }
+
+                    this.onWrongCredentials();
                 }
-            },
-        },
+            });
+    }
 
-        /** @inheritDoc */
-        data: function () {
-            return {
-                message: this.message,
-            };
-        },
+    /**
+     * Trigger login to proceed to the application.
+     *
+     * @private
+     * @param {string} userName A username.
+     * @param {Object.<string, *>} data Data returned from the `App/user` request.
+     */
+    triggerLogin(userName, data) {
+        if (this.anotherUser) {
+            data.anotherUser = this.anotherUser;
+        }
 
-        /** @inheritDoc */
-        setup: function () {
-            this.message = this.translate(this.options.loginData.message, 'messages', 'User');
-            this.anotherUser = this.options.anotherUser || null;
-            this.headers = this.options.headers || {};
-            this.loginData = this.options.loginData;
-        },
+        if (!userName) {
+            userName = (data.user || {}).userName;
+        }
 
-        /** @inheritDoc */
-        afterRender: function () {
-            this.$code = $('[data-name="field-code"]');
-            this.$submit = this.$el.find('#btn-send');
+        this.trigger('login', userName, data);
+    }
 
-            this.$code.focus();
-        },
+    /** @private */
+    processEmptyCode() {
+        this.isPopoverDestroyed = false;
 
-        /**
-         * @private
-         */
-        send: function () {
-            let code = this.$code.val().trim().replace(/\s/g, '');
+        const message = this.getLanguage().translate('codeIsRequired', 'messages', 'User');
 
-            let userName = this.options.userName;
-            let token = this.loginData.token;
-            let headers = Espo.Utils.clone(this.headers);
+        const $el = this.$code;
 
-            if (code === '') {
-                this.processEmptyCode();
+        $el
+            .popover({
+                placement: 'bottom',
+                container: 'body',
+                content: message,
+                trigger: 'manual',
+            })
+            .popover('show');
 
+        const $cell = $el.closest('.form-group');
+
+        $cell.addClass('has-error');
+
+        $el.one('mousedown click', () => {
+            $cell.removeClass('has-error');
+
+            if (this.isPopoverDestroyed) {
                 return;
             }
 
-            this.disableForm();
+            $el.popover('destroy');
 
-            if (userName && token) {
-                let authString = Base64.encode(userName  + ':' + token);
+            this.isPopoverDestroyed = true;
+        });
+    }
 
-                headers['Authorization'] = 'Basic ' + authString;
-                headers['Espo-Authorization'] = authString;
-            }
+    /** @private */
+    onFail(msg) {
+        const $cell = $('#login .form-group');
 
-            headers['Espo-Authorization-Code'] = code;
-            headers['Espo-Authorization-Create-Token-Secret'] = 'true';
+        $cell.addClass('has-error');
 
-            if (this.anotherUser !== null) {
-                headers['X-Another-User'] = this.anotherUser;
-            }
+        this.$el.one('mousedown click', () => {
+            $cell.removeClass('has-error');
+        });
 
-            this.notifyLoading();
+        Espo.Ui.error(this.translate(msg, 'messages', 'User'));
+    }
 
-            Espo.Ajax
-                .getRequest('App/user', null, {
-                    login: true,
-                    headers: headers,
-                })
-                .then(data => {
-                    Espo.Ui.notify(false);
+    /** @private */
+    onError() {
+        this.onFail('loginError');
+    }
 
-                    this.triggerLogin(userName, data);
-                })
-                .catch(xhr => {
-                    this.undisableForm();
+    /** @private */
+    onWrongCredentials() {
+        this.onFail('wrongCode');
+    }
 
-                    if (xhr.status === 401) {
-                        this.onWrongCredentials();
-                    }
-                });
-        },
+    /** @private */
+    notifyLoading() {
+        Espo.Ui.notify(' ... ');
+    }
 
-        /**
-         * Trigger login to proceed to the application.
-         *
-         * @private
-         * @param {string} userName A username.
-         * @param {Object.<string, *>} data Data returned from the `App/user` request.
-         */
-        triggerLogin: function (userName, data) {
-            if (this.anotherUser) {
-                data.anotherUser = this.anotherUser;
-            }
+    /** @private */
+    disableForm() {
+        this.$submit.addClass('disabled').attr('disabled', 'disabled');
+    }
 
-            if (!userName) {
-                userName = (data.user || {}).userName;
-            }
+    /** @private */
+    undisableForm() {
+        this.$submit.removeClass('disabled').removeAttr('disabled');
+    }
+}
 
-            this.trigger('login', userName, data);
-        },
-
-        /**
-         * @private
-         */
-        processEmptyCode: function () {
-            this.isPopoverDestroyed = false;
-
-            let $el = this.$code;
-
-            let message = this.getLanguage().translate('codeIsRequired', 'messages', 'User');
-
-            $el
-                .popover({
-                    placement: 'bottom',
-                    container: 'body',
-                    content: message,
-                    trigger: 'manual',
-                })
-                .popover('show');
-
-            let $cell = $el.closest('.form-group');
-
-            $cell.addClass('has-error');
-
-            $el.one('mousedown click', () => {
-                $cell.removeClass('has-error');
-
-                if (this.isPopoverDestroyed) {
-                    return;
-                }
-
-                $el.popover('destroy');
-
-                this.isPopoverDestroyed = true;
-            });
-        },
-
-        /**
-         * @private
-         */
-        onWrongCredentials: function () {
-            let $cell = $('#login .form-group');
-
-            $cell.addClass('has-error');
-
-            this.$el.one('mousedown click', () => {
-                $cell.removeClass('has-error');
-            });
-
-            Espo.Ui.error(this.translate('wrongCode', 'messages', 'User'));
-        },
-
-        /**
-         * @private
-         */
-        notifyLoading: function () {
-            Espo.Ui.notify(' ... ');
-        },
-
-        /**
-         * @private
-         */
-        disableForm: function () {
-            this.$submit.addClass('disabled').attr('disabled', 'disabled');
-        },
-
-        /**
-         * @private
-         */
-        undisableForm: function () {
-            this.$submit.removeClass('disabled').removeAttr('disabled');
-        },
-    });
-});
+// noinspection JSUnusedGlobalSymbols
+export default LoginSecondStepView;

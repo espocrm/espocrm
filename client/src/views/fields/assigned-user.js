@@ -26,39 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/assigned-user', ['views/fields/user-with-avatar'], function (Dep) {
+import UserWithAvatarFieldView from 'views/fields/user-with-avatar';
 
-    return Dep.extend({
+class AssignedUserFieldView extends UserWithAvatarFieldView {
 
-        init: function () {
-            this.assignmentPermission = this.getAcl().get('assignmentPermission');
+    init() {
+        this.assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
 
-            if (this.assignmentPermission === 'no') {
-                this.setReadOnly(true);
-            }
+        if (this.assignmentPermission === 'no') {
+            this.setReadOnly(true);
+        }
 
-            Dep.prototype.init.call(this);
-        },
+        super.init();
+    }
 
-        getSelectBoolFilterList: function () {
-            if (this.assignmentPermission === 'team') {
-                return ['onlyMyTeam'];
-            }
-        },
+    getSelectBoolFilterList() {
+        if (this.assignmentPermission === 'team') {
+            return ['onlyMyTeam'];
+        }
+    }
 
-        getSelectPrimaryFilterName: function () {
-            return 'active';
-        },
+    getSelectPrimaryFilterName() {
+        return 'active';
+    }
 
-        getEmptyAutocompleteResult: function () {
-            return {
-                list: [
-                    {
-                        id: this.getUser().id,
-                        name: this.getUser().get('name'),
-                    }
-                ]
-            };
-        },
-    });
-});
+    getEmptyAutocompleteResult() {
+        return {
+            list: [
+                {
+                    id: this.getUser().id,
+                    name: this.getUser().get('name'),
+                }
+            ]
+        };
+    }
+}
+
+export default AssignedUserFieldView;

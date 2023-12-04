@@ -26,553 +26,556 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/detail', ['views/record/detail'], function (Dep) {
+/** @module views/email/record/detail */
 
-    return Dep.extend({
+import DetailRecordView from 'views/record/detail';
 
-        sideView: 'views/email/record/detail-side',
+class EmailDetailRecordView extends DetailRecordView {
 
-        duplicateAction: false,
+    sideView = 'views/email/record/detail-side'
+    duplicateAction = false
+    shortcutKeyCtrlEnterAction = 'send'
 
-        shortcutKeyCtrlEnterAction: 'send',
+    layoutNameConfigure() {
+        if (this.model.isNew()) {
+            return;
+        }
 
-        layoutNameConfigure: function () {
-            if (this.model.isNew()) {
-                return;
-            }
+        let status = this.model.get('status');
 
-            let status = this.model.get('status');
+        if (status === 'Draft') {
+            this.layoutName = 'composeSmall';
 
-            if (status === 'Draft') {
-                this.layoutName = 'composeSmall';
+            return;
+        }
 
-                return;
-            }
+        let isRestricted = false;
 
-            let isRestricted = false;
+        if (status === 'Sent') {
+            isRestricted = true;
+        }
 
-            if (status === 'Sent') {
+        if (status === 'Archived') {
+            if (
+                this.model.get('createdById') === this.getHelper().getAppParam('systemUserId') ||
+                !this.model.get('createdById') || this.model.get('isImported')
+            ) {
                 isRestricted = true;
             }
+        }
 
-            if (status === 'Archived') {
-                if (
-                    this.model.get('createdById') === this.getHelper().getAppParam('systemUserId') ||
-                    !this.model.get('createdById') || this.model.get('isImported')
-                ) {
-                    isRestricted = true;
-                }
-            }
+        if (isRestricted) {
+            this.layoutName += 'Restricted';
+        }
 
-            if (isRestricted) {
-                this.layoutName += 'Restricted';
-            }
+        this.isRestricted = isRestricted;
+    }
 
-            this.isRestricted = isRestricted;
-        },
+    init() {
+        super.init();
 
-        init: function () {
-            Dep.prototype.init.call(this);
+        this.layoutNameConfigure();
+    }
 
-            this.layoutNameConfigure();
-        },
+    setup() {
+        super.setup();
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        if (['Archived', 'Sent'].includes(this.model.get('status'))) {
+            this.shortcutKeyCtrlEnterAction = 'save';
+        }
 
-            if (['Archived', 'Sent'].includes(this.model.get('status'))) {
-                this.shortcutKeyCtrlEnterAction = 'save';
-            }
+        this.addButtonEdit({
+            name: 'send',
+            action: 'send',
+            label: 'Send',
+            style: 'primary',
+            title: 'Ctrl+Enter',
+        }, true);
 
-            this.addButtonEdit({
-                name: 'send',
-                action: 'send',
-                label: 'Send',
-                style: 'primary',
-                title: 'Ctrl+Enter',
-            }, true);
+        this.addButtonEdit({
+            name: 'saveDraft',
+            action: 'save',
+            label: 'Save Draft',
+            title: 'Ctrl+S',
+        }, true);
 
-            this.addButtonEdit({
-                name: 'saveDraft',
-                action: 'save',
-                label: 'Save Draft',
-                title: 'Ctrl+S',
-            }, true);
+        this.addButton({
+            name: 'sendFromDetail',
+            label: 'Send',
+            hidden: true,
+        });
 
-            this.addButton({
-                name: 'sendFromDetail',
-                label: 'Send',
-                hidden: true,
-            });
+        this.controlSendButton();
 
-            this.controlSendButton();
+        this.listenTo(this.model, 'change:status', () => this.controlSendButton());
 
-            this.listenTo(this.model, 'change:status', () => this.controlSendButton());
+        if (this.model.get('status') !== 'Draft' && this.model.has('isRead') && !this.model.get('isRead')) {
+            this.model.set('isRead', true);
+        }
 
-            if (this.model.get('status') !== 'Draft' && this.model.has('isRead') && !this.model.get('isRead')) {
+        this.listenTo(this.model, 'sync', () => {
+            if (!this.model.get('isRead') && this.model.get('status') !== 'Draft') {
                 this.model.set('isRead', true);
             }
+        });
 
-            this.listenTo(this.model, 'sync', () => {
-                if (!this.model.get('isRead') && this.model.get('status') !== 'Draft') {
-                    this.model.set('isRead', true);
+        if (!(this.model.get('isHtml') && this.model.get('bodyPlain'))) {
+            this.listenToOnce(this.model, 'sync', () => {
+                if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
+                    this.showActionItem('showBodyPlain');
                 }
             });
+        }
 
-            if (!(this.model.get('isHtml') && this.model.get('bodyPlain'))) {
-                this.listenToOnce(this.model, 'sync', () => {
-                    if (this.model.get('isHtml') && this.model.get('bodyPlain')) {
-                        this.showActionItem('showBodyPlain');
-                    }
-                });
-            }
-
-            if (this.model.get('isUsers')) {
-                this.addDropdownItem({
-                    'label': 'Mark as Important',
-                    'name': 'markAsImportant',
-                    'hidden': this.model.get('isImportant')
-                });
-
-                this.addDropdownItem({
-                    'label': 'Unmark Importance',
-                    'name': 'markAsNotImportant',
-                    'hidden': !this.model.get('isImportant')
-                });
-
-                this.addDropdownItem({
-                    'label': 'Move to Trash',
-                    'name': 'moveToTrash',
-                    'hidden': this.model.get('inTrash')
-                });
-
-                this.addDropdownItem({
-                    'label': 'Retrieve from Trash',
-                    'name': 'retrieveFromTrash',
-                    'hidden': !this.model.get('inTrash')
-                });
-
-                this.addDropdownItem({
-                    'label': 'Move to Folder',
-                    'name': 'moveToFolder'
-                });
-            }
-
+        if (this.model.get('isUsers')) {
             this.addDropdownItem({
-                label: 'Show Plain Text',
-                name: 'showBodyPlain',
-                hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain'))
+                'label': 'Mark as Important',
+                'name': 'markAsImportant',
+                'hidden': this.model.get('isImportant')
             });
 
             this.addDropdownItem({
-                label: 'Print',
-                name: 'print',
+                'label': 'Unmark Importance',
+                'name': 'markAsNotImportant',
+                'hidden': !this.model.get('isImportant')
             });
 
-            this.listenTo(this.model, 'change:isImportant', () => {
-                if (this.model.get('isImportant')) {
-                    this.hideActionItem('markAsImportant');
-                    this.showActionItem('markAsNotImportant');
-                } else {
-                    this.hideActionItem('markAsNotImportant');
-                    this.showActionItem('markAsImportant');
-                }
+            this.addDropdownItem({
+                'label': 'Move to Trash',
+                'name': 'moveToTrash',
+                'hidden': this.model.get('inTrash')
             });
 
-            this.listenTo(this.model, 'change:inTrash', () => {
-                if (this.model.get('inTrash')) {
-                    this.hideActionItem('moveToTrash');
-                    this.showActionItem('retrieveFromTrash');
-                } else {
-                    this.hideActionItem('retrieveFromTrash');
-                    this.showActionItem('moveToTrash');
-                }
+            this.addDropdownItem({
+                'label': 'Retrieve from Trash',
+                'name': 'retrieveFromTrash',
+                'hidden': !this.model.get('inTrash')
             });
 
-            this.handleTasksField();
-            this.listenTo(this.model, 'change:tasksIds', () => this.handleTasksField());
+            this.addDropdownItem({
+                'label': 'Move to Folder',
+                'name': 'moveToFolder'
+            });
+        }
 
-            if (this.getUser().isAdmin()) {
-                this.addDropdownItem({
-                    label: 'View Users',
-                    name: 'viewUsers'
-                });
+        this.addDropdownItem({
+            label: 'Show Plain Text',
+            name: 'showBodyPlain',
+            hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain'))
+        });
+
+        this.addDropdownItem({
+            label: 'Print',
+            name: 'print',
+        });
+
+        this.listenTo(this.model, 'change:isImportant', () => {
+            if (this.model.get('isImportant')) {
+                this.hideActionItem('markAsImportant');
+                this.showActionItem('markAsNotImportant');
+            } else {
+                this.hideActionItem('markAsNotImportant');
+                this.showActionItem('markAsImportant');
             }
+        });
 
-            this.setFieldReadOnly('replied');
-
-            if (this.model.get('status') === 'Draft') {
-                this.setFieldReadOnly('dateSent');
-
-                this.controlSelectTemplateField();
-
-                this.on('after:mode-change', () => this.controlSelectTemplateField());
+        this.listenTo(this.model, 'change:inTrash', () => {
+            if (this.model.get('inTrash')) {
+                this.hideActionItem('moveToTrash');
+                this.showActionItem('retrieveFromTrash');
+            } else {
+                this.hideActionItem('retrieveFromTrash');
+                this.showActionItem('moveToTrash');
             }
+        });
 
-            if (this.isRestricted) {
-                this.handleAttachmentField();
-                this.listenTo(this.model, 'change:attachmentsIds', () => this.handleAttachmentField());
+        this.handleTasksField();
+        this.listenTo(this.model, 'change:tasksIds', () => this.handleTasksField());
 
-                this.handleCcField();
-                this.listenTo(this.model, 'change:cc', () => this.handleCcField());
+        if (this.getUser().isAdmin()) {
+            this.addDropdownItem({
+                label: 'View Users',
+                name: 'viewUsers'
+            });
+        }
 
-                this.handleBccField();
-                this.listenTo(this.model, 'change:bcc', () => this.handleBccField());
-            }
-        },
+        this.setFieldReadOnly('replied');
 
-        controlSelectTemplateField: function () {
-            if (this.mode === this.MODE_EDIT) {
-                // Not implemented for detail view yet.
-                this.hideField('selectTemplate');
+        if (this.model.get('status') === 'Draft') {
+            this.setFieldReadOnly('dateSent');
 
-                return;
-            }
+            this.controlSelectTemplateField();
 
+            this.on('after:mode-change', () => this.controlSelectTemplateField());
+        }
+
+        if (this.isRestricted) {
+            this.handleAttachmentField();
+            this.listenTo(this.model, 'change:attachmentsIds', () => this.handleAttachmentField());
+
+            this.handleCcField();
+            this.listenTo(this.model, 'change:cc', () => this.handleCcField());
+
+            this.handleBccField();
+            this.listenTo(this.model, 'change:bcc', () => this.handleBccField());
+        }
+    }
+
+    controlSelectTemplateField() {
+        if (this.mode === this.MODE_EDIT) {
+            // Not implemented for detail view yet.
             this.hideField('selectTemplate');
-        },
 
-        controlSendButton: function ()  {
-            let status = this.model.get('status');
+            return;
+        }
 
-            if (status === 'Draft') {
-                this.showActionItem('send');
-                this.showActionItem('saveDraft');
-                this.showActionItem('sendFromDetail');
-                this.hideActionItem('save');
-                this.hideActionItem('saveAndContinueEditing');
+        this.hideField('selectTemplate');
+    }
 
-                return;
+    controlSendButton()  {
+        let status = this.model.get('status');
+
+        if (status === 'Draft') {
+            this.showActionItem('send');
+            this.showActionItem('saveDraft');
+            this.showActionItem('sendFromDetail');
+            this.hideActionItem('save');
+            this.hideActionItem('saveAndContinueEditing');
+
+            return;
+        }
+
+        this.hideActionItem('sendFromDetail');
+        this.hideActionItem('send');
+        this.hideActionItem('saveDraft');
+        this.showActionItem('save');
+        this.showActionItem('saveAndContinueEditing');
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionSaveDraft() {
+        this.actionSaveAndContinueEditing();
+    }
+
+    actionMarkAsImportant() {
+        Espo.Ajax.postRequest('Email/inbox/important', {id: this.model.id});
+
+        this.model.set('isImportant', true);
+    }
+
+    actionMarkAsNotImportant() {
+        Espo.Ajax.deleteRequest('Email/inbox/important', {id: this.model.id});
+
+        this.model.set('isImportant', false);
+    }
+
+    actionMoveToTrash() {
+        Espo.Ajax.postRequest('Email/inbox/inTrash', {id: this.model.id}).then(() => {
+            Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
+        });
+
+        this.model.set('inTrash', true);
+
+        if (this.model.collection) {
+            this.model.collection.trigger('moving-to-trash', this.model.id);
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionRetrieveFromTrash() {
+        Espo.Ajax.deleteRequest('Email/inbox/inTrash', {id: this.model.id}).then(() => {
+            Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
+        });
+
+        this.model.set('inTrash', false);
+
+        if (this.model.collection) {
+            this.model.collection.trigger('retrieving-from-trash', this.model.id);
+        }
+    }
+
+    actionMoveToFolder() {
+        this.createView('dialog', 'views/email-folder/modals/select-folder', {}, (view) => {
+            view.render();
+
+            this.listenToOnce(view, 'select', folderId => {
+                this.clearView('dialog');
+
+                Espo.Ajax.postRequest(`Email/inbox/folders/${folderId}`, {id: this.model.id})
+                    .then(() => {
+                        if (folderId === 'inbox') {
+                            folderId = null;
+                        }
+
+                        this.model.set('folderId', folderId);
+
+                        Espo.Ui.success(this.translate('Done'));
+                    });
+            });
+        });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionShowBodyPlain() {
+        this.createView('bodyPlain', 'views/email/modals/body-plain', {
+            model: this.model
+        }, view => {
+            view.render();
+        });
+    }
+
+    handleAttachmentField() {
+        if ((this.model.get('attachmentsIds') || []).length === 0) {
+            this.hideField('attachments');
+        } else {
+            this.showField('attachments');
+        }
+    }
+
+    handleCcField() {
+        if (!this.model.get('cc')) {
+            this.hideField('cc');
+        } else {
+            this.showField('cc');
+        }
+    }
+
+    handleBccField() {
+        if (!this.model.get('bcc')) {
+            this.hideField('bcc');
+        } else {
+            this.showField('bcc');
+        }
+    }
+
+    send() {
+        var model = this.model;
+
+        let status = model.get('status');
+
+        model.set('status', 'Sending');
+
+        this.isSending = true;
+
+        var afterSend = () => {
+            model.trigger('after:send');
+
+            this.trigger('after:send');
+            this.isSending = false;
+        };
+
+        this.once('after:save', afterSend, this);
+
+        this.once('cancel:save', () => {
+            this.off('after:save', afterSend);
+            this.isSending = false;
+
+            model.set('status', status);
+        });
+
+        this.once('before:save', () => {
+            Espo.Ui.notify(this.translate('Sending...', 'labels', 'Email'));
+        });
+
+        return this.save();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionSendFromDetail() {
+        this.setEditMode()
+            .then(() => {
+                return this.send();
+            })
+            .then(() => {
+                this.setDetailMode();
+            });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    exitAfterDelete() {
+        var folderId = ((this.collection || {}).data || {}).folderId || null;
+
+        if (folderId === 'inbox') {
+            folderId = null;
+        }
+
+        var options = {
+            isReturn: true,
+            isReturnThroughLink: false,
+            folder: folderId,
+        };
+
+        var url = '#' + this.scope;
+        var action = null;
+
+        if (folderId) {
+            action = 'list';
+            url += '/list/folder=' + folderId;
+        }
+
+        this.getRouter().dispatch(this.scope, action, options);
+        this.getRouter().navigate(url, {trigger: false});
+
+        return true;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionViewUsers(data) {
+        var viewName =
+            this.getMetadata()
+                .get(['clientDefs', this.model.entityType, 'relationshipPanels', 'users', 'viewModalView']) ||
+            this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
+            'views/modals/related-list';
+
+        var options = {
+            model: this.model,
+            link: 'users',
+            scope: 'User',
+            filtersDisabled: true,
+            url: this.model.entityType + '/' + this.model.id + '/users',
+            createDisabled: true,
+            selectDisabled: !this.getUser().isAdmin(),
+            rowActionsView: 'views/record/row-actions/relationship-view-and-unlink',
+        };
+
+        if (data.viewOptions) {
+            for (var item in data.viewOptions) {
+                options[item] = data.viewOptions[item];
             }
+        }
 
-            this.hideActionItem('sendFromDetail');
-            this.hideActionItem('send');
-            this.hideActionItem('saveDraft');
-            this.showActionItem('save');
-            this.showActionItem('saveAndContinueEditing');
-        },
+        Espo.Ui.notify(' ... ');
 
-        actionSaveDraft: function () {
-            this.actionSaveAndContinueEditing();
-        },
+        this.createView('modalRelatedList', viewName, options, (view) => {
+            Espo.Ui.notify(false);
 
-        actionMarkAsImportant: function () {
-            Espo.Ajax.postRequest('Email/inbox/important', {id: this.model.id});
+            view.render();
 
-            this.model.set('isImportant', true);
-        },
-
-        actionMarkAsNotImportant: function () {
-            Espo.Ajax.deleteRequest('Email/inbox/important', {id: this.model.id});
-
-            this.model.set('isImportant', false);
-        },
-
-        actionMoveToTrash: function () {
-            Espo.Ajax.postRequest('Email/inbox/inTrash', {id: this.model.id}).then(() => {
-                Espo.Ui.warning(this.translate('Moved to Trash', 'labels', 'Email'));
+            this.listenTo(view, 'action', (event, element) => {
+                Espo.Utils.handleAction(this, event, element);
             });
 
-            this.model.set('inTrash', true);
-
-            if (this.model.collection) {
-                this.model.collection.trigger('moving-to-trash', this.model.id);
-            }
-        },
-
-        actionRetrieveFromTrash: function () {
-            Espo.Ajax.deleteRequest('Email/inbox/inTrash', {id: this.model.id}).then(() => {
-                Espo.Ui.warning(this.translate('Retrieved from Trash', 'labels', 'Email'));
+            this.listenToOnce(view, 'close', () => {
+                this.clearView('modalRelatedList');
             });
+        });
+    }
 
-            this.model.set('inTrash', false);
+    // noinspection JSUnusedGlobalSymbols
+    actionSend() {
+        this.send()
+            .then(() => {
+                this.model.set('status', 'Sent');
 
-            if (this.model.collection) {
-                this.model.collection.trigger('retrieving-from-trash', this.model.id);
-            }
-        },
-
-        actionMoveToFolder: function () {
-            this.createView('dialog', 'views/email-folder/modals/select-folder', {}, (view) => {
-                view.render();
-
-                this.listenToOnce(view, 'select', folderId => {
-                    this.clearView('dialog');
-
-                    Espo.Ajax.postRequest(`Email/inbox/folders/${folderId}`, {id: this.model.id})
-                        .then(() => {
-                            if (folderId === 'inbox') {
-                                folderId = null;
-                            }
-
-                            this.model.set('folderId', folderId);
-
-                            Espo.Ui.success(this.translate('Done'));
-                        });
-                });
-            });
-        },
-
-        actionShowBodyPlain: function () {
-            this.createView('bodyPlain', 'views/email/modals/body-plain', {
-                model: this.model
-            }, (view) => {
-                view.render();
-            });
-        },
-
-        handleAttachmentField: function () {
-            if ((this.model.get('attachmentsIds') || []).length === 0) {
-                this.hideField('attachments');
-            } else {
-                this.showField('attachments');
-            }
-        },
-
-        handleCcField: function () {
-            if (!this.model.get('cc')) {
-                this.hideField('cc');
-            } else {
-                this.showField('cc');
-            }
-        },
-
-        handleBccField: function () {
-            if (!this.model.get('bcc')) {
-                this.hideField('bcc');
-            } else {
-                this.showField('bcc');
-            }
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-
-        },
-
-        send: function () {
-            var model = this.model;
-
-            let status = model.get('status');
-
-            model.set('status', 'Sending');
-
-            this.isSending = true;
-
-            var afterSend = () => {
-                model.trigger('after:send');
-
-                this.trigger('after:send');
-                this.isSending = false;
-            };
-
-            this.once('after:save', afterSend, this);
-
-            this.once('cancel:save', () => {
-                this.off('after:save', afterSend);
-                this.isSending = false;
-
-                model.set('status', status);
-            });
-
-            this.once('before:save', () => {
-                Espo.Ui.notify(this.translate('Sending...', 'labels', 'Email'));
-            });
-
-            return this.save();
-        },
-
-        actionSendFromDetail: function () {
-            this.setEditMode()
-                .then(() => {
-                    return this.send();
-                })
-                .then(() => {
+                if (this.mode !== this.MODE_DETAIL) {
                     this.setDetailMode();
-                });
-        },
-
-        exitAfterDelete: function () {
-            var folderId = ((this.collection || {}).data || {}).folderId || null;
-
-            if (folderId === 'inbox') {
-                folderId = null;
-            }
-
-            var options = {
-                isReturn: true,
-                isReturnThroughLink: false,
-                folder: folderId,
-            };
-
-            var url = '#' + this.scope;
-            var action = null;
-
-            if (folderId) {
-                action = 'list';
-                url += '/list/folder=' + folderId;
-            }
-
-            this.getRouter().dispatch(this.scope, action, options);
-            this.getRouter().navigate(url, {trigger: false});
-
-            return true;
-        },
-
-        actionViewUsers: function (data) {
-            var viewName =
-                this.getMetadata()
-                    .get(['clientDefs', this.model.name, 'relationshipPanels', 'users', 'viewModalView']) ||
-                this.getMetadata().get(['clientDefs', 'User', 'modalViews', 'relatedList']) ||
-                'views/modals/related-list';
-
-            var options = {
-                model: this.model,
-                link: 'users',
-                scope: 'User',
-                filtersDisabled: true,
-                url: this.model.entityType + '/' + this.model.id + '/users',
-                createDisabled: true,
-                selectDisabled: !this.getUser().isAdmin(),
-                rowActionsView: 'views/record/row-actions/relationship-view-and-unlink',
-            };
-
-            if (data.viewOptions) {
-                for (var item in data.viewOptions) {
-                    options[item] = data.viewOptions[item];
+                    this.setFieldReadOnly('dateSent');
+                    this.setFieldReadOnly('name');
+                    this.setFieldReadOnly('attachments');
+                    this.setFieldReadOnly('isHtml');
+                    this.setFieldReadOnly('from');
+                    this.setFieldReadOnly('to');
+                    this.setFieldReadOnly('cc');
+                    this.setFieldReadOnly('bcc');
                 }
-            }
-
-            Espo.Ui.notify(' ... ');
-
-            this.createView('modalRelatedList', viewName, options, (view) => {
-                Espo.Ui.notify(false);
-
-                view.render();
-
-                this.listenTo(view, 'action', (action, data, e) => {
-                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
-
-                    if (typeof this[method] == 'function') {
-                        this[method](data, e);
-
-                        e.preventDefault();
-                    }
-                });
-
-                this.listenToOnce(view, 'close', () => {
-                    this.clearView('modalRelatedList');
-                });
             });
-        },
+    }
 
-        actionSend: function () {
-            this.send()
-                .then(() => {
-                    this.model.set('status', 'Sent');
+    // noinspection JSUnusedGlobalSymbols
+    actionPrint() {
+        /** @type {module:views/fields/wysiwyg} */
+        let bodyView = this.getFieldView('body');
 
-                    if (this.mode !== this.MODE_DETAIL) {
-                        this.setDetailMode();
-                        this.setFieldReadOnly('dateSent');
-                        this.setFieldReadOnly('name');
-                        this.setFieldReadOnly('attachments');
-                        this.setFieldReadOnly('isHtml');
-                        this.setFieldReadOnly('from');
-                        this.setFieldReadOnly('to');
-                        this.setFieldReadOnly('cc');
-                        this.setFieldReadOnly('bcc');
-                    }
-                });
-        },
+        if (!bodyView) {
+            return;
+        }
 
-        actionPrint: function () {
-            /** @type {module:views/fields/wysiwyg.Class} */
-            let bodyView = this.getFieldView('body');
+        let iframe = /** @type HTMLIFrameElement */bodyView.$el.find('iframe').get(0);
 
-            if (!bodyView) {
-                return;
+        if (iframe) {
+            iframe.contentWindow.print();
+
+            return;
+        }
+
+        let el = bodyView.$el.get(0);
+        /** @type {Element} */
+        let recordElement = this.$el.get(0);
+
+        iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+
+        recordElement.append(iframe);
+
+        let contentWindow = iframe.contentWindow;
+
+        contentWindow.document.open();
+        contentWindow.document.write(el.innerHTML);
+        contentWindow.document.close();
+        contentWindow.focus();
+        contentWindow.print();
+        contentWindow.onafterprint = () => {
+            recordElement.removeChild(iframe);
+        }
+    }
+
+    errorHandlerSendingFail(data) {
+        if (!this.model.id) {
+            this.model.id = data.id;
+        }
+
+        let msg = this.translate('sendingFailed', 'strings', 'Email');
+
+        if (data.message) {
+            let part = data.message;
+
+            if (this.getLanguage().has(part, 'messages', 'Email')) {
+                part = this.translate(part, 'messages', 'Email');
             }
 
-            let iframe = bodyView.$el.find('iframe').get(0);
+            msg += ': ' + part;
+        }
 
-            if (iframe) {
-                iframe.contentWindow.print();
+        Espo.Ui.error(msg, true);
+        console.error(msg);
+    }
 
-                return;
-            }
+    handleTasksField() {
+        if ((this.model.get('tasksIds') || []).length === 0) {
+            this.hideField('tasks');
 
-            let el = bodyView.$el.get(0);
-            /** @type {Element} */
-            let recordElement = this.$el.get(0);
+            return;
+        }
 
-            iframe = document.createElement('iframe');
-            iframe.style.display = 'none';
+        this.showField('tasks');
+    }
 
-            recordElement.append(iframe);
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyCtrlS(e) {
+        if (this.inlineEditModeIsOn || this.buttonsDisabled) {
+            return;
+        }
 
-            let contentWindow = iframe.contentWindow;
+        e.preventDefault();
+        e.stopPropagation();
 
-            contentWindow.document.open();
-            contentWindow.document.write(el.innerHTML);
-            contentWindow.document.close();
-            contentWindow.focus();
-            contentWindow.print();
-            contentWindow.onafterprint = () => {
-                recordElement.removeChild(iframe);
-            }
-        },
+        if (this.mode !== this.MODE_EDIT) {
+            return;
+        }
 
-        errorHandlerSendingFail: function (data) {
-            if (!this.model.id) {
-                this.model.id = data.id;
-            }
+        if (!this.saveAndContinueEditingAction) {
+            return;
+        }
 
-            let msg = this.translate('sendingFailed', 'strings', 'Email');
+        if (!this.hasAvailableActionItem('saveDraft') && !this.hasAvailableActionItem('saveAndContinueEditing')) {
+            return;
+        }
 
-            if (data.message) {
-                msg += ': ' + data.message;
-            }
+        this.actionSaveAndContinueEditing();
+    }
+}
 
-            Espo.Ui.error(msg, true);
-            console.error(msg);
-        },
-
-        handleTasksField: function () {
-            if ((this.model.get('tasksIds') || []).length === 0) {
-                this.hideField('tasks');
-
-                return;
-            }
-
-            this.showField('tasks');
-        },
-
-        /**
-         * @protected
-         * @param {JQueryKeyEventObject} e
-         */
-        handleShortcutKeyCtrlS: function (e) {
-            if (this.inlineEditModeIsOn || this.buttonsDisabled) {
-                return;
-            }
-
-            e.preventDefault();
-            e.stopPropagation();
-
-            if (this.mode !== this.MODE_EDIT) {
-                return;
-            }
-
-            if (!this.saveAndContinueEditingAction) {
-                return;
-            }
-
-            if (!this.hasAvailableActionItem('saveDraft') && !this.hasAvailableActionItem('saveAndContinueEditing')) {
-                return;
-            }
-
-            this.actionSaveAndContinueEditing();
-        },
-    });
-});
+export default EmailDetailRecordView;

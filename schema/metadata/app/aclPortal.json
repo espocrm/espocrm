@@ -1,0 +1,166 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/aclPortal.json",
+    "title": "app/aclPortal",
+    "description": "Access control level parameters for portals.",
+    "type": "object",
+    "properties": {
+        "mandatory": {
+            "description": "Mandatory access levels for specific scopes. Forcibly applied.",
+            "$ref": "#/definitions/group"
+        },
+        "adminMandatory": {
+            "description": "Access levels forcibly applied for admin users. This section has the same parameters as the mandatory section: scopeLevel, scopeFieldLevel, fieldLevel.",
+            "$ref": "#/definitions/group"
+        },
+        "strictDefault": {
+            "description": "Access levels applied for regular and API users when access is not defined by Roles assigned to those users. This section has the same parameters as the mandatory section: scopeLevel, scopeFieldLevel, fieldLevel.",
+            "$ref": "#/definitions/group"
+        },
+        "valuePermissionList": {
+            "type": "array",
+            "description": "A list of all available permissions in the system.",
+            "anyOf": [
+                {"const": "__APPEND__"},
+                {"type": "string"}
+            ]
+        },
+        "valuePermissionHighestLevels": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/levelsAll"
+            },
+            "description": "Highest levels for permissions."
+        },
+        "permissionsStrictDefaults": {
+            "type": "object",
+            "additionalProperties": {
+                "$ref": "#/definitions/levelsAll"
+            },
+            "description": "Default permissions. Not to be modified."
+        },
+        "scopeLevelTypesStrictDefaults": {
+            "type": "object",
+            "description": "Defaults by type. Not to be modified.",
+            "properties": {
+                "boolean": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/levelsBoolean"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                },
+                "record": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/levels"
+                        },
+                        {
+                            "type": "boolean"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "definitions": {
+        "levelsBoolean": {
+            "enum": ["yes", "no"]
+        },
+        "levelsAll": {
+            "enum": ["yes", "all", "account", "contact", "own", "no"]
+        },
+        "levels": {
+            "enum": ["all", "account", "contact", "own", "no"]
+        },
+        "group": {
+            "type": "object",
+            "properties": {
+                "scopeLevel": {
+                    "$ref": "#/definitions/scopeLevel"
+                },
+                "scopeFieldLevel": {
+                    "$ref": "#/definitions/scopeFieldLevel"
+                },
+                "fieldLevel": {
+                    "$ref": "#/definitions/fieldLevel"
+                }
+            }
+        },
+        "scopeLevel": {
+            "type": "object",
+            "description": "A scope level.",
+            "additionalProperties": {
+                "description": "A scope. True enables access to scopes that don't have actions. False fully restricts access to a scope. A string value makes the framework to use roles from another scope and apply it to our scope. It can be useful to have roles only for one parent scope, when child scopes uses roles of the parent scope.",
+                "anyOf": [
+                    {
+                        "type": "object",
+                        "properties": {
+                            "create": {
+                                "$ref": "#/definitions/levelsBoolean",
+                                "description": "A 'create' access level."
+                            },
+                            "read": {
+                                "$ref": "#/definitions/levels",
+                                "description": "A 'read' access level."
+                            },
+                            "edit": {
+                                "$ref": "#/definitions/levels"
+                            },
+                            "delete": {
+                                "$ref": "#/definitions/levels"
+                            },
+                            "stream": {
+                                "$ref": "#/definitions/levels"
+                            }
+                        }
+                    },
+                    {
+                        "type": "boolean"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "fieldAccess": {
+            "description": "Field levels. False disables access to a field.",
+            "anyOf": [
+                {
+                    "type": "object",
+                    "properties": {
+                        "read": {
+                            "$ref": "#/definitions/levelsBoolean",
+                            "description": "A 'read' access level."
+                        },
+                        "edit": {
+                            "$ref": "#/definitions/levelsBoolean",
+                            "description": "An 'edit' access level."
+                        }
+                    }
+                },
+                {
+                    "type": "boolean"
+                }
+            ]
+        },
+        "scopeFieldLevel": {
+            "type": "object",
+            "description": "Access for specific fields of specific scopes.",
+            "additionalProperties": {
+                "$ref": "#/definitions/fieldLevel"
+            }
+        },
+        "fieldLevel": {
+            "type": "object",
+            "description": "A scope.",
+            "additionalProperties": {
+                "$ref": "#/definitions/fieldAccess"
+            }
+        }
+    }
+}

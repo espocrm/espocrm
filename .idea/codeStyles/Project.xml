@@ -1,5 +1,8 @@
 <component name="ProjectCodeStyleConfiguration">
   <code_scheme name="Project" version="173">
+    <JSCodeStyleSettings version="0">
+      <option name="USE_DOUBLE_QUOTES" value="false" />
+    </JSCodeStyleSettings>
     <PHPCodeStyleSettings>
       <option name="GROUP_USE_WRAP" value="2" />
       <option name="VARIABLE_NAMING_STYLE" value="CAMEL_CASE" />

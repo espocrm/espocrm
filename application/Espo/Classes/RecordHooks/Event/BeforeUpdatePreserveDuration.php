@@ -93,7 +93,7 @@ class BeforeUpdatePreserveDuration implements UpdateHook
 
         $dateEndModified = $dateStart->add($diff);
 
-        $entity->set('dateEnd', $dateEndModified->getString());
+        $entity->set('dateEnd', $dateEndModified->toString());
     }
 
     private function processDate(Entity $entity): void
@@ -114,6 +114,6 @@ class BeforeUpdatePreserveDuration implements UpdateHook
 
         $dateEndModified = $dateStart->add($diff);
 
-        $entity->set('dateEndDate', $dateEndModified->getString());
+        $entity->set('dateEndDate', $dateEndModified->toString());
     }
 }

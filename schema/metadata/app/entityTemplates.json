@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/entityTemplates.json",
+    "title": "app/entityTemplates",
+    "description": "Definitions for entity templates.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A template name.",
+        "properties": {
+            "entityClassName": {
+                "type": "string",
+                "description": "An entity class name. Should implement Espo\\ORM\\Entity."
+            },
+            "repositoryClassName": {
+                "type": "string",
+                "description": "An repository class name. Should implement Espo\\ORM\\Repository\\Repository."
+            }
+        }
+    }
+}

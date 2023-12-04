@@ -9,21 +9,14 @@
     "exportPermission": "Eksportuoti leidimą",
     "dataPrivacyPermission": "Duomenų privatumo leidimas",
     "massUpdatePermission": "Masinio atnaujinimo teisė",
-    "followerManagementPermission": "Sekėjų valdymo leidimas"
+    "followerManagementPermission": "Sekėjų valdymo leidimas",
+    "data": "Duomenys",
+    "fieldData": "Lauko duomenys",
+    "messagePermission": "Pranešimo leidimas"
   },
   "links": {
     "users": "Vartotojai",
     "teams": "Komandos"
-  },
-  "tooltips": {
-    "assignmentPermission": "Leidžia apriboti galimybę priskirti įrašus ir siųsti pranešimus kitiems vartotojams.\n\nvisi - jokių apribojimų\n\nkomanda - gali priskirti  tik komandos narius ir skelbti tik komandos nariams\n\nne - gali priskirti save ir skelbti tik sau",
-    "userPermission": "Leidžia apriboti vartotojų galimybę peržiūrėti kitų vartotojų veiklą, kalendorių ir srautą.\n\nvisi - gali peržiūrėti visus\n\nkomanda - gali matyti tik komandos narių veiklą\n\nNe - negali peržiūrėti",
-    "portalPermission": "Nurodo prieigą prie portalo informacijos, galimybė skelbti pranešimus portalo vartotojams.",
-    "groupEmailAccountPermission": "Nurodo prieigą prie grupės el. pašto abonementų, galimybę siųsti el. laiškus iš grupės SMTP.",
-    "dataPrivacyPermission": "Leidžia peržiūrėti ir ištrinti asmens duomenis.",
-    "exportPermission": "Nurodo, ar vartotojai gali eksportuoti įrašus.",
-    "massUpdatePermission": "Nurodo, ar vartotojai gali atlikti masinius įrašų atnaujinimus.",
-    "followerManagementPermission": "Leidžia valdyti konkrečių įrašų sekėjus."
   },
   "labels": {
     "Access": "Prieiga",
@@ -57,5 +50,16 @@
   },
   "messages": {
     "changesAfterClearCache": "Visi prieigos kontrolės pakeitimai bus taikomi, kai išvaloma talpyklos atmintinė."
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "Leidžia peržiūrėti ir ištrinti asmens duomenis.",
+    "followerManagementPermission": "Leidžia valdyti konkrečių įrašų sekėjus.",
+    "messagePermission": "Leidžia siųsti pranešimus kitiems naudotojams.\n\n* all - gali siųsti visiems\n* komanda - gali siųsti tik komandos draugams\n* ne - negalima siųsti",
+    "assignmentPermission": "Leidžia priskirti įrašus kitiems naudotojams.\n\n* visi - be apribojimų\n* komanda - galima priskirti tik komandos nariams\n* ne - galima priskirti tik sau",
+    "userPermission": "Leidžia peržiūrėti kitų naudotojų veiklą, kalendorių ir srautą.\n\n* visi - gali peržiūrėti visus\n* komanda - galima peržiūrėti tik komandos draugų veiklą\n* ne - negalima peržiūrėti",
+    "portalPermission": "Prieiga prie portalo informacijos, galimybė rašyti pranešimus portalo naudotojams.",
+    "groupEmailAccountPermission": "Prieiga prie grupės el. pašto paskyrų, galimybė siųsti el. laiškus iš grupės SMTP.",
+    "exportPermission": "Leidžia eksportuoti įrašus.",
+    "massUpdatePermission": "Galimybė masiškai atnaujinti įrašus."
   }
 }

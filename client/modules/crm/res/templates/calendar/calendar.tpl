@@ -1,6 +1,3 @@
-<link href="{{basePath}}client/modules/crm/css/fullcalendar.css" rel="stylesheet">
-<link href="{{basePath}}client/modules/crm/css/fullcalendar.print.css" rel="stylesheet" media="print">
-
 {{#if header}}
 <div class="row button-container">
     <div class="col-sm-4 col-xs-5">

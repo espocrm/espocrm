@@ -1,0 +1,33 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/linkManager.json",
+    "title": "app/linkManager",
+    "description": "Link manager definitions.",
+    "type": "object",
+    "properties": {
+        "createHookClassNameList": {
+            "type": "array",
+            "description": "Hooks called when creating a new relationship (in the Entity Manager tool). Use __APPEND__ for extending. Should implement Espo\\Tools\\LinkManager\\Hook\\CreateHook.",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {
+                        "type": "string"
+                    }
+                ]
+            }
+        },
+        "deleteHookClassNameList": {
+            "type": "array",
+            "description": "Hooks called when deleting a relationship (in the Entity Manager tool). Use __APPEND__ for extending. Should implement Espo\\Tools\\LinkManager\\Hook\\DeleteHook.",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {
+                        "type": "string"
+                    }
+                ]
+            }
+        }
+    }
+}

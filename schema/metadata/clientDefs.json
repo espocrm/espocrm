@@ -1,0 +1,1063 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/clientDefs.json",
+    "title": "clientDefs",
+    "description": "Front-end definitions for a scope.",
+    "type": "object",
+    "properties": {
+        "controller": {
+            "description": "Defines a client controller class.",
+            "type": "string"
+        },
+        "collection": {
+            "description": "Defines a client record collection class.",
+            "type": "string"
+        },
+        "model": {
+            "description": "Defines a client model class.",
+            "type": "string"
+        },
+        "acl": {
+            "description": "Defines a client ACL class.",
+            "type": "string"
+        },
+        "aclPortal": {
+            "description": "Defines a client ACL class for portals.",
+            "type": "string"
+        },
+        "createDisabled": {
+            "description": "Disable the ability to create a  record from the user interface.",
+            "type": "boolean"
+        },
+        "searchPanelDisabled": {
+            "description": "Hides the search panel on the list view.",
+            "type": "boolean"
+        },
+        "searchPanelInPortalDisabled": {
+            "description": "Hides the search panel on the list view in portals.",
+            "type": "boolean"
+        },
+        "textFilterDisabled": {
+            "type": "boolean",
+            "description": "Disables text search."
+        },
+        "editDisabled": {
+            "type": "boolean",
+            "description": "Disables edit."
+        },
+        "removeDisabled": {
+            "type": "boolean",
+            "description": "Disables remove."
+        },
+        "views": {
+            "description": "View classes. Available views: list, detail, edit, listRelated.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "recordViews": {
+            "description": "Record view classes. Available views: list, detail, edit, detailQuick, editQuick, kanban, listRelated.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "modalViews": {
+            "description": "Modal view classes. Available views: detail, edit, select, relatedList.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "saveErrorHandlers": {
+            "description": "Save error handlers. https://docs.espocrm.com/development/frontend/save-error-handlers/",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        },
+        "viewSetupHandlers": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "items": {
+                    "anyOf": [
+                        {"type": "string"},
+                        {"enum": ["__APPEND__"]}
+                    ]
+                }
+            },
+            "propertyNames": {
+                "anyOf": [
+                    {"type": "string"},
+                    {
+                        "enum": [
+                            "list",
+                            "detail",
+                            "edit",
+                            "record/list",
+                            "record/search",
+                            "record/detail",
+                            "record/edit",
+                            "record/kanban"
+                        ]
+                    }
+                ]
+            },
+            "description": "View setup handlers. https://docs.espocrm.com/development/frontend/view-setup-handlers/"
+        },
+        "rowActionList": {
+            "description": "Row actions for the main list view.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "rowActionDefs": {
+            "description": "Row actions definitions.",
+            "type": "object",
+            "additionalProperties": {
+                "description": "An action",
+                "type": "object",
+                "properties": {
+                    "label": {
+                        "type": "string",
+                        "description": "A translatable label."
+                    },
+                    "labelTranslation": {
+                        "type": "string",
+                        "description": "A label translation path."
+                    },
+                    "acl": {
+                        "enum": [
+                            "edit",
+                            "delete"
+                        ],
+                        "description": "Required access."
+                    },
+                    "handler": {
+                        "type": "string",
+                        "description": "A handler. Should extend handlers/row-action."
+                    }
+                }
+            }
+        },
+        "inlineEditDisabled": {
+            "description": "Disable inline edit.",
+            "type": "boolean"
+        },
+        "exportDisabled": {
+            "description": "Disable the export mass-action.",
+            "type": "boolean"
+        },
+        "massUpdateDisabled": {
+            "description": "Disable the mass-update mass action.",
+            "type": "boolean"
+        },
+        "massRemoveDisabled": {
+            "description": "Disable the remove mass action.",
+            "type": "boolean"
+        },
+        "massFollowDisabled": {
+            "description": "Disable the follow mass-action.",
+            "type": "boolean"
+        },
+        "convertCurrencyDisabled": {
+            "description": "Disable the convert-currency mass-action and action.",
+            "type": "boolean"
+        },
+        "mergeDisabled": {
+            "description": "Disable the record merge functionality.",
+            "type": "boolean"
+        },
+        "duplicateDisabled": {
+            "description": "Disable the duplicate action.",
+            "type": "boolean"
+        },
+        "filterList": {
+            "description": "A list of primary filters.",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"},
+                    {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "A name."
+                            },
+                            "style": {
+                                "enum": ["default", "success", "warning", "danger", "info"],
+                                "description": "A style."
+                            },
+                            "accessDataList": {
+                                "$ref": "#/definitions/accessDataList"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "boolFilterList": {
+            "description": "A list of bool filters.",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"},
+                    {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "description": "A filter name."
+                            },
+                            "accessDataList": {
+                                "$ref": "#/definitions/accessDataList"
+                            }
+                        }
+                    }
+                ]
+            }
+        },
+        "defaultFilterData": {
+            "description": "A default filter data.",
+            "type": "object"
+        },
+        "selectDefaultFilters": {
+            "description": "A default filter on the select-records modal.",
+            "type": "object",
+            "properties": {
+                "filter": {
+                    "description": "A primary filter.",
+                    "type": "string"
+                },
+                "boolFilterList": {
+                    "description": "Bool filters.",
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "menu": {
+            "description": "Top-right menu for views (list, detail, edit). Action types: buttons, dropdowns. https://docs.espocrm.com/development/custom-buttons/",
+            "type": "object",
+            "propertyNames": {
+                "enum": [
+                    "list",
+                    "detail",
+                    "edit",
+                    "listRelated",
+                    "listTree"
+                ]
+            },
+            "additionalProperties": {
+                "type": "object",
+                "propertyNames": {
+                    "enum": ["buttons", "dropdown"]
+                },
+                "additionalProperties": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {"enum": ["__APPEND__"]},
+                            {"const": false},
+                            {"$ref": "#/definitions/menuItem"}
+                        ]
+                    }
+                }
+            }
+        },
+        "sidePanels": {
+            "description": "Definitions of side-panels for views (detail, edit, detailSmall, editSmall). Defined panels will be available in the layout manager.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "array",
+                "items": {
+                    "anyOf": [
+                        {"const": "__APPEND__"},
+                        {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "description": "A name.",
+                                    "type": "string"
+                                },
+                                "label": {
+                                    "description": "A translatable label.",
+                                    "type": "string"
+                                },
+                                "view": {
+                                    "description": "A view class.",
+                                    "type": "string"
+                                },
+                                "options": {
+                                    "description": "Options to be passed to the view.",
+                                    "type": "object"
+                                },
+                                "isForm": {
+                                    "description": "Whether the panel should display a form.",
+                                    "type": "boolean"
+                                },
+                                "notRefreshable": {
+                                    "description": "Disable the ability to refresh the panel.",
+                                    "type": "boolean"
+                                },
+                                "style": {
+                                    "description": "A style.",
+                                    "enum": ["default", "success", "warning", "danger"]
+                                },
+                                "hidden": {
+                                    "description": "Hidden by default.",
+                                    "type": "boolean"
+                                },
+                                "aclScope": {
+                                    "description": "A scope access to which is required for the panel being visible.",
+                                    "type": "string"
+                                },
+                                "acl": {
+                                    "description": "An ACL action access to which is required for the panel being visible.",
+                                    "type": "string",
+                                    "enum": [
+                                        "create",
+                                        "read",
+                                        "edit",
+                                        "delete",
+                                        "stream"
+                                    ]
+                                },
+                                "accessDataList": {
+                                    "$ref": "#/definitions/accessDataList"
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        "bottomPanels": {
+            "description": "Definitions of bottom-panels for views (detail, edit, detailSmall, editSmall). Defined panels will be available in the layout manager.",
+            "$ref": "#/properties/sidePanels"
+        },
+        "relationshipPanels": {
+            "description": "Parameters to be applied for specific relationship panels.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "description": "A link.",
+                "properties": {
+                    "view": {
+                        "description": "A view class.",
+                        "type": "string"
+                    },
+                    "recordListView": {
+                        "description": "A record list view class.",
+                        "type": "string"
+                    },
+                    "rowActionsView": {
+                        "description": "A row-actions view class.",
+                        "type": "string"
+                    },
+                    "label": {
+                        "description": "A translatable label.",
+                        "type": "string"
+                    },
+                    "readOnly": {
+                        "description": "Read-only.",
+                        "type": "boolean"
+                    },
+                    "selectDisabled": {
+                        "description": "Disable the ability to select related records.",
+                        "type": "boolean"
+                    },
+                    "createDisabled": {
+                        "description": "Disable the ability to create related records.",
+                        "type": "boolean"
+                    },
+                    "viewDisabled": {
+                        "description": "Disable the ability to view related records in a modal.",
+                        "type": "boolean"
+                    },
+                    "unlinkDisabled": {
+                        "description": "Disable the ability to unlink related records.",
+                        "type": "boolean"
+                    },
+                    "editDisabled": {
+                        "description": "Disable edit.",
+                        "type": "boolean"
+                    },
+                    "removeDisabled": {
+                        "description": "Disable remove.",
+                        "type": "boolean"
+                    },
+                    "rowActionList": {
+                        "description": "Row actions.",
+                        "type": "array",
+                        "items": {"type": "string"}
+                    },
+                    "createRequiredAccess": {
+                        "description": "Access (to a current entity type) required for creating related records.",
+                        "type": "string",
+                        "enum": ["create", "read", "edit", "delete", "stream"]
+                    },
+                    "selectRequiredAccess": {
+                        "description": "Access (to a current entity type) required for selecting related records.",
+                        "type": "string",
+                        "enum": ["create", "read", "edit", "delete", "stream"]
+                    },
+                    "selectPrimaryFilterName": {
+                        "type": "string",
+                        "description": "A primary filter applied when selecting records."
+                    },
+                    "selectBoolFilterList": {
+                        "description": "Bool filters applied when selecting records.",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "primaryFilter": {
+                        "description": "A default primary filter. As of v8.1.",
+                        "type": "string"
+                    },
+                    "filterList": {
+                        "description": "Filters available in the dropdown.",
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "orderBy": {
+                        "description": "An order-by field.",
+                        "type": "string"
+                    },
+                    "orderDirection": {
+                        "description": "An order direction.",
+                        "type": "string",
+                        "enum": ["asc", "desc"]
+                    },
+                    "selectHandler": {
+                        "type": "string",
+                        "description": "A select handler for providing filters when selecting related records. Should have a method *getFilters* returning a promise."
+                    },
+                    "createHandler": {
+                        "type": "string",
+                        "description": "A create handler. Provides attributes when creating a new related record. Should have a method *getAttributes* returning a promise."
+                    },
+                    "selectFieldHandler": {
+                        "type": "string",
+                        "description": "A handler called when change a link field. Only for belongs-to and has-one relations. Should have *getAttributes* and *getClearAttributes* methods."
+                    },
+                    "layout": {
+                        "type": "string",
+                        "description": "A list layout name."
+                    },
+                    "selectMandatoryAttributeList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Attributes to be selected when selecting records."
+                    },
+                    "selectLayout": {
+                        "type": "string",
+                        "description": "A list layout name for the select dialog."
+                    }
+                }
+            }
+        },
+        "additionalLayouts": {
+            "description": "Additional layouts for the entity type.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "A type. E.g. list, listSmall."
+                    },
+                    "dataAttributeList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "Data attributes."
+                    },
+                    "allFields": {
+                        "type": "boolean",
+                        "description": "All fields. Actual for the detail type. If false, fields added in the side panel layout won't be available."
+                    }
+                }
+            }
+        },
+        "massActionList": {
+            "description": "Mass actions.",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
+            }
+        },
+        "checkAllResultMassActionList": {
+            "description": "Mass actions available when selecting all results.",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {"type": "string"}
+                ]
+            }
+        },
+        "massActionDefs": {
+            "description": "Definitions for mass actions.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "object",
+                "properties": {
+                    "handler": {
+                        "description": "A handler class for the mass action.",
+                        "type": "string"
+                    },
+                    "initFunction": {
+                        "description": "An init method in the handler.",
+                        "type": "string"
+                    },
+                    "actionFunction": {
+                        "description": "An action method in the handler. As of v8.1.",
+                        "type": "string"
+                    },
+                    "configCheck": {
+                        "description": "A config path (separated by the .) to check whether the action is enabled. The ! prefix reverts.",
+                        "type": "string"
+                    },
+                    "aclScope": {
+                        "description": "A scope access to which is required for the action.",
+                        "type": "string"
+                    },
+                    "acl": {
+                        "description": "An ACL action access to which is required for the action.",
+                        "type": "string",
+                        "enum": [
+                            "create",
+                            "read",
+                            "edit",
+                            "delete",
+                            "stream"
+                        ]
+                    }
+                }
+            }
+        },
+        "detailActionList": {
+            "description": "Detail view actions (available from the dropdown next to the Edit button).",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {
+                        "$ref": "#/definitions/actionDefs"
+                    }
+                ]
+            }
+        },
+        "modalDetailActionList": {
+            "description": "Modal detail view actions.",
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"const": "__APPEND__"},
+                    {
+                        "$ref": "#/definitions/actionDefs"
+                    }
+                ]
+            }
+        },
+        "iconClass": {
+            "description": "A scope icon CSS class.",
+            "type": "string"
+        },
+        "color": {
+            "description": "A scope color in HEX.",
+            "type": "string"
+        },
+        "kanbanViewMode": {
+            "description": "Whether the scope has the kanban view mode on the list view.",
+            "type": "boolean"
+        },
+        "allowInternalNotes": {
+            "description": "If true, it will be possible to post internal posts in the stream. Internal posts are not visible in portals.",
+            "type": "boolean"
+        },
+        "isExpandedByDefault": {
+            "description": "Actual for category scopes (e.g. DocumentFolder). If true, then by default it will be in expanded mode.",
+            "type": "boolean"
+        },
+        "dynamicLogic": {
+            "description": "Dynamic logic definitions making a form dynamic.",
+            "type": "object",
+            "properties": {
+                "fields": {
+                    "type": "object",
+                    "description": "Fields.",
+                    "additionalProperties": {
+                        "type": "object",
+                        "description": "A field name.",
+                        "properties": {
+                            "visible": {
+                                "description": "Conditions making the field visible.",
+                                "$ref": "#/definitions/dynamicLogicVisible"
+                            },
+                            "required": {
+                                "$ref": "#/definitions/dynamicLogicRequired"
+                            },
+                            "readOnly": {
+                                "$ref": "#/definitions/dynamicLogicReadOnly"
+                            },
+                            "invalid": {
+                                "$ref": "#/definitions/dynamicLogicInvalid"
+                            }
+                        }
+                    }
+                },
+                "panels": {
+                    "type": "object",
+                    "description": "Panels.",
+                    "additionalProperties": {
+                        "type": "object",
+                        "description": "A panel name.",
+                        "properties": {
+                            "visible": {
+                                "description": "Conditions making the panel visible.",
+                                "$ref": "#/definitions/dynamicLogicVisible"
+                            }
+                        }
+                    }
+                },
+                "options": {
+                    "type": "object",
+                    "description": "Enum options.",
+                    "additionalProperties": {
+                        "type": "array",
+                        "description": "A field name.",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "optionList": {
+                                    "type": "array",
+                                    "items": {"type": "string"},
+                                    "description": "Options."
+                                },
+                                "conditionGroup": {
+                                    "type": "array",
+                                    "description": "An AND where clause.",
+                                    "items": {
+                                        "$ref": "#/definitions/dynamicLogicItem"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "menuItem": {
+            "type": "object",
+            "properties": {
+                "label": {
+                    "type": "string",
+                    "description": "A translatable label."
+                },
+                "labelTranslation": {
+                    "type": "string",
+                    "description": "A label translation path. Example: 'Campaign.links.trackingUrls'."
+                },
+                "link": {
+                    "type": "string",
+                    "description": "A link (href)."
+                },
+                "acl": {
+                    "enum": [
+                        "create",
+                        "read",
+                        "edit",
+                        "delete",
+                        "stream"
+                    ],
+                    "description": "An action to check access to. If no access, the item is not displayed."
+                },
+                "aclScope": {
+                    "type": "string",
+                    "description": "A scope to check access to. If no access, the item is not displayed."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "A name."
+                },
+                "action": {
+                    "type": "string",
+                    "description": "An action. To be used in javascript code for handling."
+                },
+                "style": {
+                    "enum": [
+                        "default",
+                        "success",
+                        "warning",
+                        "danger",
+                        "info"
+                    ],
+                    "description": "A style."
+                },
+                "title": {
+                    "type": "string",
+                    "description": "A title."
+                },
+                "iconClass": {
+                    "type": "string",
+                    "description": "An icon class."
+                },
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "handler": {
+                            "type": "string",
+                            "description": "A handler class."
+                        }
+                    }
+                },
+                "handler": {
+                    "type": "string",
+                    "description": "A handler. Should extend `action-handler`. As of v8.1."
+                },
+                "initFunction": {
+                    "type": "string",
+                    "description": "An init method in the handler."
+                },
+                "actionFunction": {
+                    "description": "An action method in the handler. As of v8.1.",
+                    "type": "string"
+                },
+                "checkVisibilityFunction": {
+                    "type": "string",
+                    "description": "A handler function that checks whether the action is available. Should return a boolean value. As of v8.1."
+                },
+                "accessDataList": {
+                    "$ref": "#/definitions/accessDataList"
+                },
+                "configCheck": {
+                    "type": "string",
+                    "description": "A config path to check. Path items are separated by a dot. If a config value is not empty, then the action is allowed. The `!` prefix reverses the check."
+                }
+            }
+        },
+        "dynamicLogicVisible": {
+            "type": "object",
+            "description": "Conditions making the element visible.",
+            "properties": {
+                "conditionGroup": {
+                    "description": "An AND where clause.",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/dynamicLogicItem"
+                    }
+                }
+            }
+        },
+        "dynamicLogicRequired": {
+            "type": "object",
+            "description": "Conditions making the field required.",
+            "properties": {
+                "conditionGroup": {
+                    "type": "array",
+                    "description": "An AND where clause.",
+                    "items": {
+                        "$ref": "#/definitions/dynamicLogicItem"
+                    }
+                }
+            }
+        },
+        "dynamicLogicReadOnly": {
+            "type": "object",
+            "description": "Conditions making the field read-only.",
+            "properties": {
+                "conditionGroup": {
+                    "type": "array",
+                    "description": "An AND where clause.",
+                    "items": {
+                        "$ref": "#/definitions/dynamicLogicItem"
+                    }
+                }
+            }
+        },
+        "dynamicLogicInvalid": {
+            "type": "object",
+            "description": "Conditions making the field invalid.",
+            "properties": {
+                "conditionGroup": {
+                    "type": "array",
+                    "description": "An AND where clause.",
+                    "items": {
+                        "$ref": "#/definitions/dynamicLogicItem"
+                    }
+                }
+            }
+        },
+        "dynamicLogicItem": {
+            "type": "object",
+            "description": "A logic node.",
+            "allOf": [
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "and"},
+                                    {"const": "or"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "value": {
+                                "type": "array",
+                                "description": "Sub-items.",
+                                "items": {
+                                    "$ref": "#/definitions/dynamicLogicItem"
+                                }
+                            }
+                        },
+                        "required": ["type", "value"]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "not"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "value": {
+                                "type": "object",
+                                "$ref": "#/definitions/dynamicLogicItem"
+                            }
+                        },
+                        "required": ["type", "value"]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "equals"},
+                                    {"const": "notEquals"},
+                                    {"const": "greaterThan"},
+                                    {"const": "lessThan"},
+                                    {"const": "greaterThanOrEquals"},
+                                    {"const": "lessThanOrEquals"},
+                                    {"const": "isEmpty"},
+                                    {"const": "isNotEmpty"},
+                                    {"const": "isTrue"},
+                                    {"const": "isFalse"},
+                                    {"const": "in"},
+                                    {"const": "notIn"},
+                                    {"const": "isToday"},
+                                    {"const": "inFuture"},
+                                    {"const": "inPast"},
+                                    {"const": "contains"},
+                                    {"const": "notContains"},
+                                    {"const": "has"},
+                                    {"const": "notHas"},
+                                    {"const": "startsWith"},
+                                    {"const": "endsWith"},
+                                    {"const": "matches"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "value": {
+                                "description": "A value.",
+                                "anyOf": [
+                                    {"type": "string"},
+                                    {"type": "boolean"},
+                                    {"type": "integer"},
+                                    {"type": "integer"},
+                                    {"type": "number"},
+                                    {"type": "null"},
+                                    {
+                                        "type": "array",
+                                        "items": {"type": "string"}
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {"type": "integer"}
+                                    },
+                                    {
+                                        "type": "array",
+                                        "items": {"type": "number"}
+                                    }
+                                ]
+                            },
+                            "attribute": {
+                                "type": "string",
+                                "description": "An attribute."
+                            }
+                        },
+                        "required": ["type", "attribute"]
+                    }
+                }
+            ],
+            "properties": {
+                "type": {
+                    "description": "A type.",
+                    "enum": [
+                        "and",
+                        "or",
+                        "not",
+                        "equals",
+                        "notEquals",
+                        "greaterThan",
+                        "lessThan",
+                        "greaterThanOrEquals",
+                        "lessThanOrEquals",
+                        "isEmpty",
+                        "isNotEmpty",
+                        "isTrue",
+                        "isFalse",
+                        "in",
+                        "notIn",
+                        "isToday",
+                        "inFuture",
+                        "inPast",
+                        "contains",
+                        "notContains",
+                        "has",
+                        "notHas",
+                        "startsWith",
+                        "endsWith",
+                        "matches"
+                    ]
+                },
+                "data": {
+                    "type": "object",
+                    "description": "Additional data. Not used for logic.",
+                    "additionalProperties": true
+                }
+            },
+            "required": ["type"]
+        },
+        "actionDefs": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "A name."
+                },
+                "label": {
+                    "type": "string",
+                    "description": "A translatable label."
+                },
+                "handler": {
+                    "type": "string",
+                    "description": "A handler class for the action."
+                },
+                "initFunction": {
+                    "type": "string",
+                    "description": "An init function in the handler."
+                },
+                "actionFunction": {
+                    "type": "string",
+                    "description": "An action function in the handler. As of v8.1."
+                },
+                "checkVisibilityFunction": {
+                    "type": "string",
+                    "description": "A handler function that checks whether the action is available. Should return a boolean value. Called on model sync."
+                },
+                "configCheck": {
+                    "description": "A config path (separated by the .) to check whether the action is enabled. The ! prefix reverts.",
+                    "type": "string"
+                },
+                "aclScope": {
+                    "description": "A scope access to which is required for the action.",
+                    "type": "string"
+                },
+                "acl": {
+                    "description": "An acl action access to which is required for the action.",
+                    "type": "string",
+                    "enum": [
+                        "create",
+                        "read",
+                        "edit",
+                        "delete",
+                        "stream"
+                    ]
+                }
+            }
+        },
+        "accessDataList": {
+            "type": "array",
+            "description": "Frontend access rules.",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "enum": [
+                            "create",
+                            "read",
+                            "edit",
+                            "stream",
+                            "delete"
+                        ],
+                        "description": "An ACL action to check."
+                    },
+                    "scope": {
+                        "type": "string",
+                        "description": "A scope to check."
+                    },
+                    "portalIdList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A portal ID list. To check whether a user in one of portals."
+                    },
+                    "teamIdList": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "A team ID list. To check whether a user in one of teams."
+                    },
+                    "isPortalOnly": {
+                        "type": "boolean",
+                        "description": "Allow for portal users only."
+                    },
+                    "inPortalDisabled": {
+                        "type": "boolean",
+                        "description": "Disable for portal users."
+                    },
+                    "isAdminOnly": {
+                        "type": "boolean",
+                        "description": "Allow for admin users only."
+                    }
+                }
+            }
+        }
+    }
+}

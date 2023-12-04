@@ -44,7 +44,7 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
     {
         $value = DateTimeOptional::fromString('2021-05-01');
 
-        $this->assertEquals('2021-05-01', $value->getString());
+        $this->assertEquals('2021-05-01', $value->toString());
 
         $this->assertTrue($value->isAllDay());
     }
@@ -55,7 +55,7 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
 
         $value = DateTimeOptional::fromDateTimeAllDay($dt);
 
-        $this->assertEquals('2021-05-01', $value->getString());
+        $this->assertEquals('2021-05-01', $value->toString());
     }
 
     public function testBad1()
@@ -83,14 +83,14 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
     {
         $value = DateTimeOptional::fromString('2021-05-01');
 
-        $this->assertEquals('2021-05-01', $value->getDateTime()->format('Y-m-d'));
+        $this->assertEquals('2021-05-01', $value->toDateTime()->format('Y-m-d'));
     }
 
     public function testGetTimezone()
     {
         $value = DateTimeOptional::fromString('2021-05-01');
 
-        $this->assertEquals(new DateTimeZone('UTC'), $value->getDateTime()->getTimezone());
+        $this->assertEquals(new DateTimeZone('UTC'), $value->toDateTime()->getTimezone());
     }
 
     public function testGetMethods()
@@ -104,7 +104,7 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(2021, $value->getYear());
         $this->assertEquals(6, $value->getDayOfWeek());
 
-        $this->assertEquals($dt->getTimestamp(), $value->getTimestamp());
+        $this->assertEquals($dt->getTimestamp(), $value->toTimestamp());
     }
 
     public function testAdd()
@@ -113,7 +113,7 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->add(DateInterval::createFromDateString('1 day'));
 
-        $this->assertEquals('2021-05-02', $modifiedValue->getString());
+        $this->assertEquals('2021-05-02', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -124,7 +124,7 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->subtract(DateInterval::createFromDateString('1 day'));
 
-        $this->assertEquals('2021-04-30', $modifiedValue->getString());
+        $this->assertEquals('2021-04-30', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -135,7 +135,7 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->modify('+1 month');
 
-        $this->assertEquals('2021-06-01', $modifiedValue->getString());
+        $this->assertEquals('2021-06-01', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -146,7 +146,7 @@ class DateTimeOptionalDateTest extends \PHPUnit\Framework\TestCase
             ::fromString('2021-05-01')
             ->withTimezone(new DateTimeZone('Europe/Kiev'));
 
-        $this->assertEquals('2021-05-01 00:00:00', $value->getString());
+        $this->assertEquals('2021-05-01 00:00:00', $value->toString());
 
         $this->assertEquals(new DateTimeZone('Europe/Kiev'), $value->getTimezone());
 

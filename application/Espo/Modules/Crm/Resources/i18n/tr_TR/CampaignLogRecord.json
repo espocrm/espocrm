@@ -9,7 +9,8 @@
     "application": "Uygulama",
     "queueItem": "Sıra Öğesi",
     "stringData": "Dize Verileri",
-    "stringAdditionalData": "Dize Ek Veri"
+    "stringAdditionalData": "Dize Ek Veri",
+    "isTest": "Test mi?"
   },
   "links": {
     "queueItem": "Sıra Öğesi",

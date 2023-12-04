@@ -8,7 +8,11 @@
     "methodName": "Metod",
     "scheduledJob": "İş planla",
     "data": "Veri",
-    "method": "Metod"
+    "method": "Metod",
+    "scheduledJobJob": "Zamanlanmış Görev Adı",
+    "number": "Numara",
+    "queue": "Kuyruk",
+    "job": "Görev"
   },
   "options": {
     "status": {

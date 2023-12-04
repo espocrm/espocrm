@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "activityStatusList": "Aktivitätsstati",
+    "historyStatusList": "Verlaufsstati",
+    "completedStatusList": "Abgeschlossene Stati",
+    "canceledStatusList": "Abgebrochene Stati"
+  },
+  "tooltips": {
+    "activityStatusList": "Statuswerte, die festlegen, dass ein Aktivitätsdatensatz im Aktivitätspanel angezeigt und als aktuell betrachtet werden soll.",
+    "historyStatusList": "Statuswerte, die festlegen, dass ein Aktivitätsdatensatz im Verlaufspanel angezeigt werden soll.",
+    "completedStatusList": "Statuswerte, die festlegen, dass eine Aktivität abgeschlossen ist.",
+    "canceledStatusList": "Statuswerte, die festlegen, dass eine Aktivität abgebrochen ist und nicht in den Frei/Gebucht Zeitbereichen berücksichtigt wird."
+  }
+}

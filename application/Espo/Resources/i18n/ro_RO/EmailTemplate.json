@@ -1,11 +1,9 @@
 {
   "fields": {
     "name": "Nume",
-    "isHtml": "În format Html",
     "body": "Conținutul",
     "subject": "Subiect",
     "attachments": "Atașamente",
-    "insertField": "Inserează Câmp",
     "oneOff": "Pornit-oprit"
   },
   "labels": {

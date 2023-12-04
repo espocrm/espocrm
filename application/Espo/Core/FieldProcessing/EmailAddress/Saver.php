@@ -416,9 +416,8 @@ class Saver implements SaverInterface
             if ($emailAddressOld) {
                 $this->entityManager
                     ->getRDBRepository($entity->getEntityType())
-                    ->unrelate($entity, 'emailAddresses', $emailAddressOld, [
-                        SaveOption::SKIP_HOOKS => true,
-                    ]);
+                    ->getRelation($entity, 'emailAddresses')
+                    ->unrelate($emailAddressOld, [SaveOption::SKIP_HOOKS => true]);
             }
         }
     }
@@ -490,15 +489,15 @@ class Saver implements SaverInterface
             $emailAddressOld = $this->getByAddress($emailAddressValueOld);
 
             if ($emailAddressOld) {
-                $entityRepository->unrelate($entity, 'emailAddresses', $emailAddressOld, [
-                    SaveOption::SKIP_HOOKS => true,
-                ]);
+                $entityRepository
+                    ->getRelation($entity, 'emailAddresses')
+                    ->unrelate($emailAddressOld, [SaveOption::SKIP_HOOKS => true]);
             }
         }
 
-        $entityRepository->relate($entity, 'emailAddresses', $emailAddressNew, null, [
-            SaveOption::SKIP_HOOKS => true,
-        ]);
+        $entityRepository
+            ->getRelation($entity, 'emailAddresses')
+            ->relate($emailAddressNew, null, [SaveOption::SKIP_HOOKS => true]);
 
         if ($entity->has('emailAddressIsOptedOut')) {
             $this->markAddressOptedOut($emailAddressValue, (bool) $entity->get('emailAddressIsOptedOut'));

@@ -516,7 +516,7 @@ class Util
 
 
     /**
-     * Get class name from the file path.
+     * Get class name from a file path.
      *
      * @return class-string<object>
      */
@@ -526,10 +526,8 @@ class Util
         $className = preg_replace('/\.php$/i', '', $filePath);
         /** @var string $className */
         $className = preg_replace('/^(application|custom)(\/|\\\)/i', '', $className);
-        $className = static::toFormat($className, '\\');
-
         /** @var class-string<object> */
-        return $className;
+        return static::toFormat($className, '\\');
     }
 
     /**
@@ -638,7 +636,11 @@ class Util
     public static function generateUuid4(): string
     {
         try {
-            $hex = bin2hex(random_bytes(16));
+            $data = random_bytes(16);
+            $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
+            $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
+
+            $hex = bin2hex($data);
         }
         catch (Exception) {
             throw new RuntimeException("Could not generate UUID.");

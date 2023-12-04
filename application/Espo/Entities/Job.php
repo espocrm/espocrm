@@ -29,7 +29,9 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Job\Job as JobJob;
 use Espo\Core\Job\Job\Status;
+use Espo\Core\Job\JobDataLess;
 use Espo\Core\ORM\Entity;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 
@@ -113,6 +115,8 @@ class Job extends Entity
 
     /**
      * Get a class name.
+     *
+     * @return ?class-string<JobJob|JobDataLess>
      */
     public function getClassName(): ?string
     {

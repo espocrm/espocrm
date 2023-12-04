@@ -1,0 +1,41 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/language.json",
+    "title": "app/language",
+    "description": "Application languages.",
+    "type": "object",
+    "properties": {
+        "list": {
+            "type": "array",
+            "description": "A list of languages available in the application. The name format: en_US.",
+            "items": {
+                "type": "string",
+                "pattern": "^[a-z]{2}_[A-Z]{2}$"
+            }
+        },
+        "aclDependencies": {
+            "type": "object",
+            "description": "Rules making language translations available for a user when they don't have access to a scope.",
+            "additionalProperties": {
+                "description": "A language path, items are separated by dots.",
+                "properties": {
+                    "scope": {
+                        "type": "string",
+                        "description": "If a user has access to the scope, they will have access to translations defined by a key."
+                    },
+                    "field": {
+                        "type": "string",
+                        "description": "If a user has access to the field (of a scope), they will have access to translations defined by a key."
+                    },
+                    "anyScopeList": {
+                        "type": "array",
+                        "description": "If a user has access to any of listed scopes, they will have access to translations defined by a key.",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -3,7 +3,7 @@
     "dateFormat": "Formato Data",
     "timeFormat": "Formato Ora",
     "timeZone": "Fuso Orario",
-    "weekStart": "Primo giorno della settimana",
+    "weekStart": "Primo Giorno della Settimana",
     "thousandSeparator": "Separatore delle migliaia",
     "decimalMark": "Marcatore dei decimali",
     "defaultCurrency": "Valuta Predefinita",
@@ -31,7 +31,9 @@
     "scopeColorsDisabled": "Disabilita colori entità",
     "tabColorsDisabled": "Disabilita colori schede",
     "assignmentNotificationsIgnoreEntityTypeList": "Notifiche di assegnazione in-app",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notifiche di assegnazione e-mail"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Notifiche di assegnazione e-mail",
+    "dashboardLocked": "Blocca Dashboard",
+    "textSearchStoringDisabled": "Disabilita la memorizzazione dei filtri di testo"
   },
   "options": {
     "weekStart": {

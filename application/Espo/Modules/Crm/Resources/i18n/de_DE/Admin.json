@@ -6,6 +6,7 @@
   },
   "templates": {
     "invitation": "Einladung",
-    "reminder": "Erinnerung"
+    "reminder": "Erinnerung",
+    "cancellation": "Stornierung"
   }
 }

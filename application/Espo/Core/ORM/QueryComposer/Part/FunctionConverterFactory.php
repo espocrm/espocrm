@@ -74,8 +74,12 @@ class FunctionConverterFactory implements FunctionConverterFactoryInterface
     private function getClassName(string $name): ?string
     {
         if (!array_key_exists($name, $this->hash)) {
-            $this->hash[$name] = $this->metadata
-                ->get(['app', 'orm', 'functionConverterClassNameMap_' . $this->databaseParams->getPlatform(), $name]);
+            /** @var string $platform */
+            $platform = $this->databaseParams->getPlatform();
+
+            $this->hash[$name] =
+                $this->metadata->get(['app', 'orm', 'platforms', $platform, 'functionConverterClassNameMap', $name]) ??
+                $this->metadata->get(['app', 'orm', 'functionConverterClassNameMap_' . $platform, $name]);
 
         }
 

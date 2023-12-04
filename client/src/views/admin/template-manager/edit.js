@@ -106,17 +106,19 @@ define('views/admin/template-manager/edit', ['view', 'model'], function (Dep, Mo
                 this.createView('bodyField', 'views/fields/wysiwyg', {
                     name: 'body',
                     model: model,
-                    el: this.getSelector() + ' .body-field',
+                    selector: '.body-field',
                     mode: 'edit'
                 });
+
                 if (this.hasSubject) {
                     this.createView('subjectField', 'views/fields/varchar', {
                         name: 'subject',
                         model: model,
-                        el: this.getSelector() + ' .subject-field',
+                        selector: '.subject-field',
                         mode: 'edit'
                     });
                 }
+
                 this.wait(false);
             }.bind(this));
         },

@@ -26,19 +26,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/list-tree', ['views/list'], function (Dep) {
+import ListView from 'views/list';
 
-    return Dep.extend({
+class ListTreeView extends ListView {
 
-        searchPanel: false,
+    searchPanel = false
+    createButton = false
 
-        createButton: false,
+    name = 'listTree'
 
-        name: 'listTree',
+    getRecordViewName() {
+        return this.getMetadata().get(['clientDefs', this.scope, 'recordViews', 'listTree']) ||
+            'views/record/list-tree';
+    }
+}
 
-        getRecordViewName: function () {
-            return this.getMetadata()
-                .get('clientDefs.' + this.scope + '.recordViews.listTree') || 'views/record/list-tree';
-        },
-    });
-});
+export default ListTreeView

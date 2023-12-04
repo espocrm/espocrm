@@ -119,7 +119,7 @@ class User extends Database
      */
     public function checkBelongsToAnyOfTeams(string $userId, array $teamIds): bool
     {
-        if (empty($teamIds)) {
+        if ($teamIds === []) {
             return false;
         }
 

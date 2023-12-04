@@ -85,8 +85,10 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
 
             if (this.model.id === this.getUser().id) {
                 this.on('after:save', () => {
-                    var data = this.model.toJSON();
+                    let data = this.model.getClonedAttributes();
+
                     delete data['smtpPassword'];
+
                     this.getPreferences().set(data);
                     this.getPreferences().trigger('update');
                 });
@@ -215,7 +217,7 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
                             this.setInitialAttributeValue(attribute, data[attribute]);
                         }
 
-                        this.getPreferences().set(this.model.toJSON());
+                        this.getPreferences().set(this.model.getClonedAttributes());
                         this.getPreferences().trigger('update');
 
                         this.setIsNotChanged();
@@ -235,7 +237,7 @@ define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
                             this.setInitialAttributeValue(attribute, data[attribute]);
                         }
 
-                        this.getPreferences().set(this.model.toJSON());
+                        this.getPreferences().set(this.model.getClonedAttributes());
                         this.getPreferences().trigger('update');
                     });
             });

@@ -38,7 +38,8 @@ define('views/admin/dynamic-logic/conditions-string/item-base', ['view'], functi
                 scope: this.scope,
                 operator: this.operator,
                 operatorString: this.operatorString,
-                field: this.field
+                field: this.field,
+                leftString: this.getLeftPartString(),
             };
         },
 
@@ -58,21 +59,41 @@ define('views/admin/dynamic-logic/conditions-string/item-base', ['view'], functi
 
             this.wait(true);
 
-            this.getModelFactory().create(this.scope, function (model) {
+            this.isCurrentUser = this.itemData.attribute && this.itemData.attribute.startsWith('$user.');
+
+            if (this.isCurrentUser) {
+                this.scope = 'User'
+            }
+
+            this.getModelFactory().create(this.scope, (model) => {
                 this.model = model;
 
                 this.populateValues();
-
                 this.createValueFieldView();
 
                 this.wait(false);
-            }, this);
+            });
+        },
+
+        getLeftPartString: function () {
+            if (this.itemData.attribute === '$user.id') {
+                return '$' + this.translate('User', 'scopeNames');
+            }
+
+            let label = this.translate(this.field, 'fields', this.scope);
+
+            if (this.isCurrentUser) {
+                label = '$' + this.translate('User', 'scopeNames') + '.' + label;
+            }
+
+            return label;
         },
 
         populateValues: function () {
             if (this.itemData.attribute) {
                 this.model.set(this.itemData.attribute, this.itemData.value);
             }
+
             this.model.set(this.additionalData.values || {});
         },
 
@@ -80,19 +101,28 @@ define('views/admin/dynamic-logic/conditions-string/item-base', ['view'], functi
             return 'view-' + this.level.toString() + '-' + this.number.toString() + '-0';
         },
 
-        createValueFieldView: function () {
-            var key = this.getValueViewKey();
+        getFieldValueView: function () {
+            if (this.itemData.attribute === '$user.id') {
+                return 'views/admin/dynamic-logic/fields/user-id';
+            }
 
-            var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
-            var viewName = this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
+            const fieldType = this.getMetadata()
+                .get(['entityDefs', this.scope, 'fields', this.field, 'type']) || 'base';
+
+            return this.getMetadata().get(['entityDefs', this.scope, 'fields', this.field, 'view']) ||
                 this.getFieldManager().getViewName(fieldType);
+        },
+
+        createValueFieldView: function () {
+            const key = this.getValueViewKey();
+
+            const viewName = this.getFieldValueView();
 
             this.createView('value', viewName, {
                 model: this.model,
                 name: this.field,
-                el: this.getSelector() + ' [data-view-key="'+key+'"]'
+                selector: '[data-view-key="' + key + '"]',
             });
         },
     });
 });
-

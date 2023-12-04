@@ -19,7 +19,12 @@
     "revenue": "Gelir",
     "revenueConverted": "Gelir (dönüştürülmüş)",
     "budget": "Bütçe",
-    "budgetConverted": "Bütçe (dönüştürülmüş)"
+    "budgetConverted": "Bütçe (dönüştürülmüş)",
+    "contactsTemplate": "Kişi ŞAblonu",
+    "leadsTemplate": "Fırsat Şabonu",
+    "accountsTemplate": "Hesap Şablonu",
+    "usersTemplate": "Kullanıcı Şablonları",
+    "budgetCurrency": "Bütçe Para Birimi"
   },
   "links": {
     "targetLists": "Hedef Listeler",
@@ -30,7 +35,11 @@
     "opportunities": "Fırsatlar",
     "campaignLogRecords": "Kütük",
     "massEmails": "Toplu E-postalar",
-    "trackingUrls": "İzleme URL'leri"
+    "trackingUrls": "İzleme URL'leri",
+    "contactsTemplate": "Kişi Şablonu",
+    "leadsTemplate": "Fırsat Şabonu ",
+    "accountsTemplate": "Hesap ŞAblonu",
+    "usersTemplate": "Kullanıcı Şablonu"
   },
   "options": {
     "type": {
@@ -59,7 +68,8 @@
     "Email Templates": "E-posta şablonları",
     "Unsubscribe again": "Tekrar abonelikten çık",
     "Subscribe again": "Tekrar üye olun",
-    "Create Target List": "Hedef Liste Yarat"
+    "Create Target List": "Hedef Liste Yarat",
+    "Mail Merge": "Eposta Birleştirme"
   },
   "presetFilters": {
     "active": "Aktif "

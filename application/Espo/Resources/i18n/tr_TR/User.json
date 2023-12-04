@@ -25,7 +25,16 @@
     "gender": "Cinsiyet",
     "position": "Takım halinde pozisyon",
     "ipAddress": "IP Adresi",
-    "passwordPreview": "Şifre Ön İzleme"
+    "passwordPreview": "Şifre Ön İzleme",
+    "lastAccess": "Son Erişim",
+    "type": "Tip",
+    "apiKey": "API Anahtarı",
+    "secretKey": "Gizli Kelime",
+    "authMethod": "Kimlik Doğrulama Yöntemi",
+    "yourPassword": "Geçerli şifreniz",
+    "dashboardTemplate": "Pano Şablonu",
+    "auth2FAMethod": "2FA Yöntemi",
+    "layoutSet": "Düzen Kümesi"
   },
   "links": {
     "teams": "Takımlar",
@@ -36,7 +45,10 @@
     "contact": "Temas",
     "accounts": "Hesaplar",
     "account": "Hesap (Birincil)",
-    "tasks": "Görevler"
+    "tasks": "Görevler",
+    "defaultTeam": "Varsayılan Takım",
+    "dashboardTemplate": "Pano Şablonu",
+    "layoutSet": "Düzen Kümesi"
   },
   "labels": {
     "Create User": "Kullanıcı Oluştur",
@@ -50,7 +62,14 @@
     "Email Accounts": "E-posta hesapları",
     "Portal": "Internet anakapısı",
     "Create Portal User": "Portal Kullanıcısı Yarat",
-    "Proceed w/o Contact": "İletişimsiz olarak devam et"
+    "Proceed w/o Contact": "İletişimsiz olarak devam et",
+    "Generate New API Key": "Yeni API Anahtarı Oluştur",
+    "Generate New Password": "Yeni Şifre Oluştur",
+    "Code": "Kod",
+    "Back to login form": "Giriş sayfasına geri dön",
+    "Requirements": "Gereksinimler",
+    "Security": "Güvenlik",
+    "Reset 2FA": "2FA'yı sıfırla"
   },
   "tooltips": {
     "defaultTeam": "Bu kullanıcı tarafından oluşturulan tüm kayıtlar varsayılan olarak bu takımla ilişkilendirilir.",
@@ -60,7 +79,8 @@
     "teams": "Bu kullanıcının bağlı olduğu takımlar. Erişim kontrol seviyesi takımın rollerinden devralınmıştır.",
     "roles": "Ek erişim rolleri. Kullanıcı herhangi bir ekibe üye değilse veya bu kullanıcı için yalnızca erişim denetimi düzeyini genişletmeniz gerekiyorsa kullanın.",
     "portalRoles": "Ek portal rolleri. Bu kullanıcı için erişim denetimi düzeyini yalnızca mülkten genişletmek için kullanın.",
-    "portals": "Bu kullanıcının erişebildiği portallar."
+    "portals": "Bu kullanıcının erişebildiği portallar.",
+    "layoutSet": "Kullanıcı için varsayılanlar yerine belirli bir kümedeki düzenler uygulanacaktır."
   },
   "messages": {
     "userCantBeEmpty": "Kullanıcı adı boş olamaz.",
@@ -70,7 +90,10 @@
     "forbidden": "Yasak, lütfen daha sonra deneyin",
     "uniqueLinkHasBeenSent": "Benzersiz URL belirtilen e-posta adresine gönderilmiştir.",
     "passwordChangedByRequest": "Şifre değiştirildi.",
-    "userNameExists": "Kullanıcı Adı"
+    "userNameExists": "Kullanıcı adı zaten var",
+    "passwordStrengthLength": "En az {length} karakter uzunluğunda olmalıdır.",
+    "passwordStrengthLetterCount": "En az {count} harf(ler) içermelidir.",
+    "passwordStrengthNumberCount": "En az {count} basamak içermelidir."
   },
   "boolFilters": {
     "onlyMyTeam": "Yalnızca Ekibim"
@@ -85,6 +108,12 @@
       "Male": "Erkek",
       "Female": "Kadın",
       "Neutral": "Belirtilmedi"
+    },
+    "type": {
+      "regular": "Düzenli",
+      "admin": "Yönetici",
+      "system": "Sistem",
+      "super-admin": "Süper Admin"
     }
   }
 }

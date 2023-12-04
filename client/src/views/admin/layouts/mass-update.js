@@ -141,6 +141,7 @@ define('views/admin/layouts/mass-update', ['views/admin/layouts/rows'], function
             }
 
             return !model.getFieldParam(name, 'disabled') &&
+                !model.getFieldParam(name, 'utility') &&
                 !model.getFieldParam(name, 'layoutMassUpdateDisabled') &&
                 !model.getFieldParam(name, 'readOnly');
         },

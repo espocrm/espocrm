@@ -26,12 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-phone', ['views/fields/phone'], function (Dep) {
+import PhoneFieldView from 'views/fields/phone';
 
-    return Dep.extend({
+class ForeignPhoneFieldView extends PhoneFieldView {
 
-        type: 'foreign',
+    type = 'foreign'
+    readOnly = true
+}
 
-        readOnly: true,
-    });
-});
+export default ForeignPhoneFieldView;

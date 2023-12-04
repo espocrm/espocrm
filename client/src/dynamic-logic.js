@@ -26,21 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('dynamic-logic', [], function () {
+/** @module dynamic-logic */
+
+/**
+ * Dynamic logic. Handles form appearance and behaviour depending on conditions.
+ *
+ * @internal Instantiated in advanced-pack.
+ */
+class DynamicLogic {
 
     /**
-     * Dynamic logic. Handles form appearance and behaviour depending on conditions.
-     *
-     * @class
-     * @name Class
-     * @memberOf module:dynamic-logic
-     *
      * @param {Object} defs Definitions.
-     * @param {module:views/record/base.Class} recordView A record view.
-     *
-     * @internal Instantiated in advanced-pack.
+     * @param {module:views/record/base} recordView A record view.
      */
-    let DynamicLogic = function (defs, recordView) {
+    constructor(defs, recordView) {
+
         /**
          * @type {Object} Definitions.
          * @private
@@ -49,7 +49,7 @@ define('dynamic-logic', [], function () {
 
         /**
          *
-         * @type {module:views/record/base.Class}
+         * @type {module:views/record/base}
          * @private
          */
         this.recordView = recordView;
@@ -65,471 +65,496 @@ define('dynamic-logic', [], function () {
          * @private
          */
         this.panelTypeList = ['visible', 'styled'];
-    };
+    }
 
-    _.extend(DynamicLogic.prototype, /** @lends module:dynamic-logic.Class# */{
+    /**
+     * Process.
+     */
+    process() {
+        const fields = this.defs.fields || {};
 
-        /**
-         * Process.
-         */
-        process: function () {
-            let fields = this.defs.fields || {};
+        Object.keys(fields).forEach(field => {
+            const item = (fields[field] || {});
 
-            Object.keys(fields).forEach(field => {
-                var item = (fields[field] || {});
-
-                this.fieldTypeList.forEach(type => {
-                    if (!(type in item)) {
-                        return;
-                    }
-
-                    if (!item[type]) {
-                        return;
-                    }
-
-                    let typeItem = (item[type] || {});
-
-                    if (!typeItem.conditionGroup) {
-                        return;
-                    }
-
-                    let result = this.checkConditionGroup(typeItem.conditionGroup);
-
-                    let methodName;
-
-                    if (result) {
-                        methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
-                    }
-                    else {
-                        methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
-                    }
-
-                    this[methodName](field);
-                });
-            });
-
-            let panels = this.defs.panels || {};
-
-            Object.keys(panels).forEach(panel => {
-                this.panelTypeList.forEach(type => {
-                    this.processPanel(panel, type);
-                });
-            });
-
-            let options = this.defs.options || {};
-
-            Object.keys(options).forEach(field => {
-                let itemList = options[field];
-
-                if (!options[field]) {
+            this.fieldTypeList.forEach(type => {
+                if (!(type in item)) {
                     return;
                 }
 
-                let isMet = false;
-
-                for (let i in itemList) {
-                    let item = itemList[i];
-
-                    if (this.checkConditionGroup(item.conditionGroup)) {
-                        this.setOptionList(field, item.optionList || []);
-
-                        isMet = true;
-
-                        break;
-                    }
+                if (!item[type]) {
+                    return;
                 }
 
-                if (!isMet) {
-                    this.resetOptionList(field);
+                const typeItem = (item[type] || {});
+
+                if (!typeItem.conditionGroup) {
+                    return;
                 }
+
+                const result = this.checkConditionGroup(typeItem.conditionGroup);
+
+                let methodName;
+
+                if (result) {
+                    methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
+                }
+                else {
+                    methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
+                }
+
+                this[methodName](field);
             });
-        },
+        });
 
-        /**
-         * @param {string} panel A panel name.
-         * @param {string} type A type.
-         * @private
-         */
-        processPanel: function (panel, type) {
-            let panels = this.defs.panels || {};
-            let item = (panels[panel] || {});
+        const panels = this.defs.panels || {};
 
-            if (!(type in item)) {
+        Object.keys(panels).forEach(panel => {
+            this.panelTypeList.forEach(type => {
+                this.processPanel(panel, type);
+            });
+        });
+
+        const options = this.defs.options || {};
+
+        Object.keys(options).forEach(field => {
+            const itemList = options[field];
+
+            if (!options[field]) {
                 return;
             }
 
-            let typeItem = (item[type] || {});
+            let isMet = false;
 
-            if (!typeItem.conditionGroup) {
-                return;
-            }
+            for (const i in itemList) {
+                const item = itemList[i];
 
-            let result = this.checkConditionGroup(typeItem.conditionGroup);
+                if (this.checkConditionGroup(item.conditionGroup)) {
+                    this.setOptionList(field, item.optionList || []);
 
-            let methodName;
+                    isMet = true;
 
-            if (result) {
-                methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'True';
-            }
-            else {
-                methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'False';
-            }
-
-            this[methodName](panel);
-        },
-
-        /**
-         * Check a condition group.
-         * @param {Object} data A condition group.
-         * @param {'and'|'or'|'not'} [type='and'] A type.
-         * @returns {boolean}
-         */
-        checkConditionGroup: function (data, type) {
-            type = type || 'and';
-
-            let list;
-            let result = false;
-
-            if (type === 'and') {
-                list =  data || [];
-
-                result = true;
-
-                for (let i in list) {
-                    if (!this.checkCondition(list[i])) {
-                        result = false;
-
-                        break;
-                    }
-                }
-            }
-            else if (type === 'or') {
-                list =  data || [];
-
-                for (let i in list) {
-                    if (this.checkCondition(list[i])) {
-                        result = true;
-
-                        break;
-                    }
-                }
-            }
-            else if (type === 'not') {
-                if (data) {
-                    result = !this.checkCondition(data);
+                    break;
                 }
             }
 
-            return result;
-        },
+            if (!isMet) {
+                this.resetOptionList(field);
+            }
+        });
+    }
 
-        /**
-         * Check a condition.
-         *
-         * @param {Object} defs Definitions.
-         * @returns {boolean}
-         */
-        checkCondition: function (defs) {
-            defs = defs || {};
+    /**
+     * @param {string} panel A panel name.
+     * @param {string} type A type.
+     * @private
+     */
+    processPanel(panel, type) {
+        const panels = this.defs.panels || {};
+        const item = (panels[panel] || {});
 
-            let type = defs.type || 'equals';
+        if (!(type in item)) {
+            return;
+        }
 
-            if (~['or', 'and', 'not'].indexOf(type)) {
-                return this.checkConditionGroup(defs.value, type);
+        const typeItem = (item[type] || {});
+
+        if (!typeItem.conditionGroup) {
+            return;
+        }
+
+        const result = this.checkConditionGroup(typeItem.conditionGroup);
+
+        let methodName;
+
+        if (result) {
+            methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'True';
+        }
+        else {
+            methodName = 'makePanel' + Espo.Utils.upperCaseFirst(type) + 'False';
+        }
+
+        this[methodName](panel);
+    }
+
+    /**
+     * Check a condition group.
+     * @param {Object} data A condition group.
+     * @param {'and'|'or'|'not'} [type='and'] A type.
+     * @returns {boolean}
+     */
+    checkConditionGroup(data, type) {
+        type = type || 'and';
+
+        let list;
+        let result = false;
+
+        if (type === 'and') {
+            list =  data || [];
+
+            result = true;
+
+            for (const i in list) {
+                if (!this.checkCondition(list[i])) {
+                    result = false;
+
+                    break;
+                }
+            }
+        }
+        else if (type === 'or') {
+            list =  data || [];
+
+            for (const i in list) {
+                if (this.checkCondition(list[i])) {
+                    result = true;
+
+                    break;
+                }
+            }
+        }
+        else if (type === 'not') {
+            if (data) {
+                result = !this.checkCondition(data);
+            }
+        }
+
+        return result;
+    }
+
+    /**
+     * @private
+     * @param {string} attribute
+     */
+    getAttributeValue(attribute) {
+        if (attribute.startsWith('$')) {
+            if (attribute === '$user.id') {
+                return this.recordView.getUser().id;
             }
 
-            let attribute = defs.attribute;
-            let value = defs.value;
+            if (attribute === '$user.teamsIds') {
+                return this.recordView.getUser().getTeamIdList();
+            }
+        }
 
-            if (!attribute) {
+        return this.recordView.model.get(attribute);
+    }
+
+    /**
+     * Check a condition.
+     *
+     * @param {Object} defs Definitions.
+     * @returns {boolean}
+     */
+    checkCondition(defs) {
+        defs = defs || {};
+
+        const type = defs.type || 'equals';
+
+        if (['or', 'and', 'not'].includes(type)) {
+            return this.checkConditionGroup(defs.value, /** @type {'or'|'and'|'not'} */ type);
+        }
+
+        const attribute = defs.attribute;
+        const value = defs.value;
+
+        if (!attribute) {
+            return false;
+        }
+
+        const setValue = this.getAttributeValue(attribute);
+
+        if (type === 'equals') {
+            if (!value) {
                 return false;
             }
 
-            var setValue = this.recordView.model.get(attribute);
+            return setValue === value;
+        }
 
-            if (type === 'equals') {
-                if (!value) {
-                    return false;
-                }
-
-                return setValue === value;
+        if (type === 'notEquals') {
+            if (!value) {
+                return false;
             }
 
-            if (type === 'notEquals') {
-                if (!value) {
-                    return false;
-                }
+            return setValue !== value;
+        }
 
-                return setValue !== value;
+        if (type === 'isEmpty') {
+            if (Array.isArray(setValue)) {
+                return !setValue.length;
             }
 
-            if (type === 'isEmpty') {
-                if (Array.isArray(setValue)) {
-                    return !setValue.length;
-                }
+            return setValue === null || (setValue === '') || typeof setValue === 'undefined';
+        }
 
-                return setValue === null || (setValue === '') || typeof setValue === 'undefined';
+        if (type === 'isNotEmpty') {
+            if (Array.isArray(setValue)) {
+                return !!setValue.length;
             }
 
-            if (type === 'isNotEmpty') {
-                if (Array.isArray(setValue)) {
-                    return !!setValue.length;
-                }
+            return setValue !== null && (setValue !== '') && typeof setValue !== 'undefined';
+        }
 
-                return setValue !== null && (setValue !== '') && typeof setValue !== 'undefined';
+        if (type === 'isTrue') {
+            return !!setValue;
+        }
+
+        if (type === 'isFalse') {
+            return !setValue;
+        }
+
+        if (type === 'contains' || type === 'has') {
+            if (!setValue) {
+                return false;
             }
 
-            if (type === 'isTrue') {
-                return !!setValue;
+            return !!~setValue.indexOf(value);
+        }
+
+        if (type === 'notContains' || type === 'notHas') {
+            if (!setValue) {
+                return true;
             }
 
-            if (type === 'isFalse') {
-                return !setValue;
+            return !~setValue.indexOf(value);
+        }
+
+        if (type === 'startsWith') {
+            if (!setValue) {
+                return false;
             }
 
-            if (type === 'contains' || type === 'has') {
-                if (!setValue) {
-                    return false;
-                }
+            return setValue.indexOf(value) === 0;
+        }
 
-                return !!~setValue.indexOf(value);
+        if (type === 'endsWith') {
+            if (!setValue) {
+                return false;
             }
 
-            if (type === 'notContains' || type === 'notHas') {
-                if (!setValue) {
-                    return true;
-                }
+            return setValue.indexOf(value) === setValue.length - value.length;
+        }
 
-                return !~setValue.indexOf(value);
+        if (type === 'matches') {
+            if (!setValue) {
+                return false;
             }
 
-            if (type === 'startsWith') {
-                if (!setValue) {
-                    return false;
-                }
+            const match = /^\/(.*)\/([a-z]*)$/.exec(value);
 
-                return setValue.indexOf(value) === 0;
+            if (!match || match.length < 2) {
+                return false;
             }
 
-            if (type === 'endsWith') {
-                if (!setValue) {
-                    return false;
-                }
+            return (new RegExp(match[1], match[2])).test(setValue);
+        }
 
-                return setValue.indexOf(value) === setValue.length - value.length;
+        if (type === 'greaterThan') {
+            return setValue > value;
+        }
+
+        if (type === 'lessThan') {
+            return setValue < value;
+        }
+
+        if (type === 'greaterThanOrEquals') {
+            return setValue >= value;
+        }
+
+        if (type === 'lessThanOrEquals') {
+            return setValue <= value;
+        }
+
+        if (type === 'in') {
+            return !!~value.indexOf(setValue);
+        }
+
+        if (type === 'notIn') {
+            return !~value.indexOf(setValue);
+        }
+
+        if (type === 'isToday') {
+            const dateTime = this.recordView.getDateTime();
+
+            if (!setValue) {
+                return false;
             }
 
-            if (type === 'matches') {
-                if (!setValue) {
-                    return false;
-                }
-
-                let match = /^\/(.*)\/([a-z]*)$/.exec(value);
-
-                if (!match || match.length < 2) {
-                    return false;
-                }
-
-                return (new RegExp(match[1], match[2])).test(setValue);
+            if (setValue.length > 10) {
+                return dateTime.toMoment(setValue).isSame(dateTime.getNowMoment(), 'day');
             }
 
-            if (type === 'greaterThan') {
-                return setValue > value;
+            return dateTime.toMomentDate(setValue).isSame(dateTime.getNowMoment(), 'day');
+        }
+
+        if (type === 'inFuture') {
+            const dateTime = this.recordView.getDateTime();
+
+            if (!setValue) {
+                return false;
             }
 
-            if (type === 'lessThan') {
-                return setValue < value;
+            if (setValue.length > 10) {
+                return dateTime.toMoment(setValue).isAfter(dateTime.getNowMoment(), 'day');
             }
 
-            if (type === 'greaterThanOrEquals') {
-                return setValue >= value;
+            return dateTime.toMomentDate(setValue).isAfter(dateTime.getNowMoment(), 'day');
+        }
+
+        if (type === 'inPast') {
+            const dateTime = this.recordView.getDateTime();
+
+            if (!setValue) {
+                return false;
             }
 
-            if (type === 'lessThanOrEquals') {
-                return setValue <= value;
+
+            if (setValue.length > 10) {
+                return dateTime.toMoment(setValue).isBefore(dateTime.getNowMoment(), 'day');
             }
 
-            if (type === 'in') {
-                return !!~value.indexOf(setValue);
-            }
+            return dateTime.toMomentDate(setValue).isBefore(dateTime.getNowMoment(), 'day');
+        }
 
-            if (type === 'notIn') {
-                return !~value.indexOf(setValue);
-            }
+        return false;
+    }
 
-            if (type === 'isToday') {
-                let dateTime = this.recordView.getDateTime();
+    /**
+     * @param {string} field
+     * @param {string[]} optionList
+     * @private
+     */
+    setOptionList(field, optionList) {
+        this.recordView.setFieldOptionList(field, optionList);
+    }
 
-                if (!setValue) {
-                    return false;
-                }
+    /**
+     * @param {string} field
+     * @private
+     */
+    resetOptionList(field) {
+        this.recordView.resetFieldOptionList(field);
+    }
 
-                if (setValue.length > 10) {
-                    return dateTime.toMoment(setValue).isSame(dateTime.getNowMoment(), 'day');
-                }
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {string} field
+     * @private
+     */
+    makeFieldVisibleTrue(field) {
+        this.recordView.showField(field);
+    }
 
-                return dateTime.toMomentDate(setValue).isSame(dateTime.getNowMoment(), 'day');
-            }
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {string} field
+     * @private
+     */
+    makeFieldVisibleFalse(field) {
+        this.recordView.hideField(field);
+    }
 
-            if (type === 'inFuture') {
-                let dateTime = this.recordView.getDateTime();
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {string} field
+     * @private
+     */
+    makeFieldRequiredTrue(field) {
+        this.recordView.setFieldRequired(field);
+    }
 
-                if (!setValue) {
-                    return false;
-                }
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {string} field
+     * @private
+     */
+    makeFieldRequiredFalse(field) {
+        this.recordView.setFieldNotRequired(field);
+    }
 
-                if (setValue.length > 10) {
-                    return dateTime.toMoment(setValue).isAfter(dateTime.getNowMoment(), 'day');
-                }
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {string} field
+     * @private
+     */
+    makeFieldReadOnlyTrue(field) {
+        this.recordView.setFieldReadOnly(field);
+    }
 
-                return dateTime.toMomentDate(setValue).isAfter(dateTime.getNowMoment(), 'day');
-            }
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {string} field
+     * @private
+     */
+    makeFieldReadOnlyFalse(field) {
+        this.recordView.setFieldNotReadOnly(field);
+    }
 
-            if (type === 'inPast') {
-                let dateTime = this.recordView.getDateTime();
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {string} panel
+     * @private
+     */
+    makePanelVisibleTrue(panel) {
+        this.recordView.showPanel(panel, 'dynamicLogic');
+    }
 
-                if (!setValue) {
-                    return false;
-                }
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {string} panel
+     * @private
+     */
+    makePanelVisibleFalse(panel) {
+        this.recordView.hidePanel(panel, false, 'dynamicLogic');
+    }
 
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {string} panel
+     * @private
+     */
+    makePanelStyledTrue(panel) {
+        this.recordView.stylePanel(panel);
+    }
 
-                if (setValue.length > 10) {
-                    return dateTime.toMoment(setValue).isBefore(dateTime.getNowMoment(), 'day');
-                }
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {string} panel
+     * @private
+     */
+    makePanelStyledFalse(panel) {
+        this.recordView.unstylePanel(panel);
+    }
 
-                return dateTime.toMomentDate(setValue).isBefore(dateTime.getNowMoment(), 'day');
-            }
+    /**
+     * Add a panel-visible condition.
+     *
+     * @param {string} name A panel name.
+     * @param {Object} item Condition definitions.
+     */
+    addPanelVisibleCondition(name, item) {
+        this.defs.panels = this.defs.panels || {};
+        this.defs.panels[name] = this.defs.panels[name] || {};
 
-            return false;
-        },
+        this.defs.panels[name].visible = item;
 
-        /**
-         * @param {string} field
-         * @param {string[]} optionList
-         * @private
-         */
-        setOptionList: function (field, optionList) {
-            this.recordView.setFieldOptionList(field, optionList);
-        },
+        this.processPanel(name, 'visible');
+    }
 
-        /**
-         * @param {string} field
-         * @private
-         */
-        resetOptionList: function (field) {
-            this.recordView.resetFieldOptionList(field);
-        },
+    /**
+     * Add a panel-styled condition.
+     *
+     * @param {string} name A panel name.
+     * @param {Object} item Condition definitions.
+     */
+    addPanelStyledCondition(name, item) {
+        this.defs.panels = this.defs.panels || {};
+        this.defs.panels[name] = this.defs.panels[name] || {};
 
-        /**
-         * @param {string} field
-         * @private
-         */
-        makeFieldVisibleTrue: function (field) {
-            this.recordView.showField(field);
-        },
+        this.defs.panels[name].styled = item;
 
-        /**
-         * @param {string} field
-         * @private
-         */
-        makeFieldVisibleFalse: function (field) {
-            this.recordView.hideField(field);
-        },
+        this.processPanel(name, 'styled');
+    }
+}
 
-        /**
-         * @param {string} field
-         * @private
-         */
-        makeFieldRequiredTrue: function (field) {
-            this.recordView.setFieldRequired(field);
-        },
-
-        /**
-         * @param {string} field
-         * @private
-         */
-        makeFieldRequiredFalse: function (field) {
-            this.recordView.setFieldNotRequired(field);
-        },
-
-        /**
-         * @param {string} field
-         * @private
-         */
-        makeFieldReadOnlyTrue: function (field) {
-            this.recordView.setFieldReadOnly(field);
-        },
-
-        /**
-         * @param {string} field
-         * @private
-         */
-        makeFieldReadOnlyFalse: function (field) {
-            this.recordView.setFieldNotReadOnly(field);
-        },
-
-        /**
-         * @param {string} panel
-         * @private
-         */
-        makePanelVisibleTrue: function (panel) {
-            this.recordView.showPanel(panel, 'dynamicLogic');
-        },
-
-        /**
-         * @param {string} panel
-         * @private
-         */
-        makePanelVisibleFalse: function (panel) {
-            this.recordView.hidePanel(panel, false, 'dynamicLogic');
-        },
-
-        /**
-         * @param {string} panel
-         * @private
-         */
-        makePanelStyledTrue: function (panel) {
-            this.recordView.stylePanel(panel, 'dynamicLogic');
-        },
-
-        /**
-         * @param {string} panel
-         * @private
-         */
-        makePanelStyledFalse: function (panel) {
-            this.recordView.unstylePanel(panel, false, 'dynamicLogic');
-        },
-
-        /**
-         * Add a panel-visible condition.
-         *
-         * @param {string} name A panel name.
-         * @param {Object} item Condition definitions.
-         */
-        addPanelVisibleCondition: function (name, item) {
-            this.defs.panels = this.defs.panels || {};
-            this.defs.panels[name] = this.defs.panels[name] || {};
-
-            this.defs.panels[name].visible = item;
-
-            this.processPanel(name, 'visible');
-        },
-
-        /**
-         * Add a panel-styled condition.
-         *
-         * @param {string} name A panel name.
-         * @param {Object} item Condition definitions.
-         */
-        addPanelStyledCondition: function (name, item) {
-            this.defs.panels = this.defs.panels || {};
-            this.defs.panels[name] = this.defs.panels[name] || {};
-
-            this.defs.panels[name].styled = item;
-
-            this.processPanel(name, 'styled');
-        },
-    });
-
-    return DynamicLogic;
-});
+export default DynamicLogic;

@@ -26,42 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/notes/status', ['views/stream/note'], function (Dep) {
+import NoteStreamView from 'views/stream/note';
 
-    return Dep.extend({
+class StatusNoteStreamView extends NoteStreamView {
 
-        template: 'stream/notes/status',
+    template = 'stream/notes/status'
+    messageName = 'status'
 
-        messageName: 'status',
+    data() {
+        return {
+            ...super.data(),
+            style: this.style,
+            statusText: this.statusText,
+        };
+    }
 
-        data: function () {
-            return _.extend({
-                style: this.style,
-                statusText: this.statusText,
-            }, Dep.prototype.data.call(this));
-        },
+    init() {
+        if (this.getUser().isAdmin()) {
+            this.isRemovable = true;
+        }
 
-        init: function () {
-            if (this.getUser().isAdmin()) {
-                this.isRemovable = true;
-            }
+        super.init();
+    }
 
-            Dep.prototype.init.call(this);
-        },
+    setup() {
+        let data = this.model.get('data');
 
-        setup: function () {
-            let data = this.model.get('data');
+        let field = data.field;
+        let value = data.value;
 
-            let field = data.field;
-            let value = data.value;
+        this.style = data.style || 'default';
+        this.statusText = this.getLanguage().translateOption(value, field, this.model.get('parentType'));
 
-            this.style = data.style || 'default';
+        this.messageData['field'] = this.translate(field, 'fields', this.model.get('parentType')).toLowerCase();
 
-            this.statusText = this.getLanguage().translateOption(value, field, this.model.get('parentType'));
+        this.createMessage();
+    }
+}
 
-            this.messageData['field'] = this.translate(field, 'fields', this.model.get('parentType')).toLowerCase();
-
-            this.createMessage();
-        },
-    });
-});
+export default StatusNoteStreamView;

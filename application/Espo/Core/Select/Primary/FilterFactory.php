@@ -58,7 +58,8 @@ class FilterFactory
         $binder
             ->bindInstance(User::class, $user)
             ->for($className)
-            ->bindValue('$entityType', $entityType);
+            ->bindValue('$entityType', $entityType)
+            ->bindValue('$name', $name);
 
         $bindingContainer = new BindingContainer($bindingData);
 

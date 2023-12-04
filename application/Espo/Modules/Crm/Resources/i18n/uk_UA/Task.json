@@ -5,10 +5,13 @@
     "status": "Статус",
     "dateStart": "Дата початку",
     "dateEnd": "Кінцева дата",
+    "dateStartDate": "Дата початку (цілий день)",
+    "dateEndDate": "Дата закінчення (цілий день)",
     "priority": "Пріоритет",
     "description": "Опис",
     "isOverdue": "Прострочено",
     "account": "Контрагент",
+    "dateCompleted": "Дата завершення",
     "attachments": "Вкладення",
     "reminders": "Нагадування",
     "contact": "Контакт"
@@ -16,7 +19,8 @@
   "links": {
     "attachments": "Вкладення",
     "account": "Контраґент",
-    "contact": "Контакт"
+    "contact": "Контакт",
+    "email": "Електронна пошта"
   },
   "options": {
     "status": {
@@ -24,12 +28,12 @@
       "Started": "Почалося",
       "Completed": "Завершено",
       "Canceled": "Скасовано",
-      "Deferred": "Відстрочено"
+      "Deferred": "Відкладено"
     },
     "priority": {
-      "Low": "Низько",
+      "Low": "Низький",
       "Normal": "Нормальний",
-      "High": "Високо",
+      "High": "Високий",
       "Urgent": "Терміново"
     }
   },
@@ -43,6 +47,9 @@
     "completed": "Завершені",
     "todays": "Сьогоднішні",
     "overdue": "Прострочені",
-    "deferred": "Відстрочені"
+    "deferred": "Відкладено"
+  },
+  "nameOptions": {
+    "replyToEmail": "Відповісти на електронну пошту"
   }
 }

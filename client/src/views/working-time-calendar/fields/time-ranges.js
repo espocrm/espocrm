@@ -32,7 +32,7 @@ define('views/working-time-calendar/fields/time-ranges', ['views/fields/base'], 
      * @class
      * @name Class
      * @memberOf module:views/working-time-calendar/fields/time-ranges
-     * @extends module:views/fields/base.Class
+     * @extends module:views/fields/base
      */
     return Dep.extend(/** @lends module:views/working-time-calendar/fields/time-ranges.Class# */{
 
@@ -135,7 +135,7 @@ define('views/working-time-calendar/fields/time-ranges', ['views/fields/base'], 
                 viewName,
                 {
                     value: item,
-                    el: this.getSelector() + ' .item[data-key="' + key + '"]',
+                    selector: '.item[data-key="' + key + '"]',
                     key: key,
                 }
             )

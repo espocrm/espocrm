@@ -26,10 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'crm:views/target-list/record/panels/opted-out',
-    ['views/record/panels/relationship', 'multi-collection'],
-    function (Dep, MultiCollection) {
+define('crm:views/target-list/record/panels/opted-out',  ['views/record/panels/relationship', 'multi-collection'],
+function (Dep, MultiCollection) {
 
     return Dep.extend({
 
@@ -47,7 +45,7 @@ define(
         },
 
         getStorageKey: function () {
-            return 'target-list-opted-out-' + this.model.name + '-' + this.name;
+            return 'target-list-opted-out-' + this.model.entityType + '-' + this.name;
         },
 
         setup: function () {
@@ -85,8 +83,8 @@ define(
 
                 var i = 0;
 
-                this.scopeList.forEach((scope) => {
-                    this.getModelFactory().getSeed(scope, (seed) => {
+                this.scopeList.forEach(scope => {
+                    this.getModelFactory().create(scope, seed => {
                         this.seeds[scope] = seed;
 
                         i++;
@@ -118,14 +116,14 @@ define(
 
             this.listenToOnce(this.collection, 'sync', () => {
                 this.createView('list', 'views/record/list-expanded', {
-                    el: this.getSelector() + ' > .list-container',
+                    selector: '> .list-container',
                     pagination: false,
                     type: 'listRelationship',
                     rowActionsView: 'crm:views/target-list/record/row-actions/opted-out',
                     checkboxes: false,
                     collection: this.collection,
                     listLayout: this.listLayout,
-                }, (view) => {
+                }, view => {
                     view.render();
                 });
             });

@@ -269,15 +269,6 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
     }
 
     /**
-     * @deprecated As of v6.0. Use `getEntityType`.
-     * @return ?string
-     */
-    public function getEntityName()
-    {
-        return $this->entityType;
-    }
-
-    /**
      * @return array<TEntity|array<string, mixed>>
      */
     public function getDataList(): array
@@ -361,6 +352,7 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
 
     /**
      * @deprecated As of v6.0. Use `getValueMapList`.
+     * @todo Remove in v9.0.
      * @return array<array<string, mixed>>|stdClass[]
      */
     public function toArray(bool $itemsAsObjects = false): array
@@ -368,11 +360,10 @@ class EntityCollection implements Collection, Iterator, Countable, ArrayAccess, 
         $arr = [];
 
         foreach ($this as $entity) {
-            if ($itemsAsObjects) {
-                $item = $entity->getValueMap();
-            }
-            else {
-                $item = $entity->toArray(); // @phpstan-ignore-line
+            $item = $entity->getValueMap();
+
+            if (!$itemsAsObjects) {
+                $item = get_object_vars($item);
             }
 
             $arr[] = $item;

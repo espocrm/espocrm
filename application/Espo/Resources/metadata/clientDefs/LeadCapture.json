@@ -132,6 +132,17 @@
                         }
                     ]
                 }
+            },
+            "phoneNumberCountry": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "contains",
+                            "attribute": "fieldList",
+                            "value": "phoneNumber"
+                        }
+                    ]
+                }
             }
         }
     },

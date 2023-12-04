@@ -44,7 +44,7 @@ class DateTest extends \PHPUnit\Framework\TestCase
     {
         $value = Date::fromString('2021-05-01');
 
-        $this->assertEquals('2021-05-01', $value->getString());
+        $this->assertEquals('2021-05-01', $value->toString());
     }
 
     public function testFromDateTime()
@@ -53,7 +53,7 @@ class DateTest extends \PHPUnit\Framework\TestCase
 
         $value = Date::fromDateTime($dt);
 
-        $this->assertEquals('2021-05-01', $value->getString());
+        $this->assertEquals('2021-05-01', $value->toString());
     }
 
     public function testBad1()
@@ -81,7 +81,7 @@ class DateTest extends \PHPUnit\Framework\TestCase
     {
         $value = Date::fromString('2021-05-01');
 
-        $this->assertEquals('2021-05-01', $value->getDateTime()->format('Y-m-d'));
+        $this->assertEquals('2021-05-01', $value->toDateTime()->format('Y-m-d'));
     }
 
     public function testGetMethods()
@@ -95,7 +95,7 @@ class DateTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(2021, $value->getYear());
         $this->assertEquals(6, $value->getDayOfWeek());
 
-        $this->assertEquals($dt->getTimestamp(), $value->getTimestamp());
+        $this->assertEquals($dt->getTimestamp(), $value->toTimestamp());
     }
 
     public function testAdd()
@@ -104,7 +104,7 @@ class DateTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->add(DateInterval::createFromDateString('1 day'));
 
-        $this->assertEquals('2021-05-02', $modifiedValue->getString());
+        $this->assertEquals('2021-05-02', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -115,7 +115,7 @@ class DateTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->subtract(DateInterval::createFromDateString('1 day'));
 
-        $this->assertEquals('2021-04-30', $modifiedValue->getString());
+        $this->assertEquals('2021-04-30', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }
@@ -126,7 +126,7 @@ class DateTest extends \PHPUnit\Framework\TestCase
 
         $modifiedValue = $value->modify('+1 month');
 
-        $this->assertEquals('2021-06-01', $modifiedValue->getString());
+        $this->assertEquals('2021-06-01', $modifiedValue->toString());
 
         $this->assertNotSame($modifiedValue, $value);
     }

@@ -77,7 +77,6 @@
     "historyEntityList": "Zoznam entít histórie",
     "currencyFormat": "Formát meny",
     "currencyDecimalPlaces": "Desatinné miesta meny",
-    "aclStrictMode": "ACL striktný režim",
     "followCreatedEntities": "Sledovať vytvorené záznamy",
     "aclAllowDeleteCreated": "Povoliť odstrániť vytvorené záznamy",
     "adminNotifications": "Systémové upozornenia v administračnom paneli",
@@ -92,17 +91,6 @@
     "textFilterUseContainsForVarchar": "Použite operátor 'obsahuje' keď filtrujete polia typu varchar",
     "emailAddressIsOptedOutByDefault": "Označiť adresu ako odregistrovanú",
     "outboundEmailBccAddress": "BCC adresa na externých klientov"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Nedeľa",
-      "1": "Pondelok"
-    },
-    "streamEmailNotificationsTypeList": {
-      "Post": "Príspevky",
-      "Status": "Aktualizácie stavu",
-      "EmailReceived": "Prijaté emaily"
-    }
   },
   "tooltips": {
     "recordsPerPage": "Počet záznamov na začiatku zobrazených v zozname.",
@@ -140,7 +128,10 @@
     "textFilterUseContainsForVarchar": "Ak nie je označené, potom je použitý operátor 'začína s'. Môžete použiť zástupnú znak '%'.",
     "streamEmailNotificationsEntityList": "Emailové upozornenia o zmenách v streamoch sledovaných záznamov.\nPoužívatelia budú prijímať emailové upozornenia len od daných typov entít.",
     "authTokenPreventConcurrent": "Používatelia sa nebudú môcť prihlásiť na viacerých zariadeniach súčasne.",
-    "emailAddressIsOptedOutByDefault": "Keď vytvárate nový záznam, emailová adresa bude označená ako odregistrovaná."
+    "emailAddressIsOptedOutByDefault": "Keď vytvárate nový záznam, emailová adresa bude označená ako odregistrovaná.",
+    "ldapAccountCanonicalForm": "Typ kanonického formulára vášho účtu. K dispozícii sú 4 možnosti: \n\n- 'Dn' - formulár vo formáte 'CN=tester,OU=espocrm,DC=test, DC=lan'. \n\n- 'Používateľské meno' - formulár 'tester'. \n\n- 'Spätná lomka' - tvar 'SPOLOČNOSŤ\\tester'. \n\n- 'Principal' - formulár 'tester@company.com'.",
+    "smtpServer": "Ak je prázdne, použije sa skupinový e-mailový účet s príslušnou e-mailovou adresou.",
+    "busyRangesEntityList": "Čo sa bude brať do úvahy pri zobrazovaní zaneprázdnených časových rozsahov v plánovači a časovej osi."
   },
   "labels": {
     "System": "Systém",
@@ -158,5 +149,12 @@
   },
   "messages": {
     "ldapTestConnection": "Spojenie bolo úspešne vytvorené."
+  },
+  "options": {
+    "streamEmailNotificationsTypeList": {
+      "Post": "Príspevky",
+      "Status": "Aktualizácie stavu",
+      "EmailReceived": "Prijaté emaily"
+    }
   }
 }

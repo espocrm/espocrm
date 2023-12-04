@@ -216,7 +216,7 @@ class Note extends Record
         $siteUrl = $this->config->getSiteUrl();
 
         $regexp = '/' . preg_quote($siteUrl, '/') .
-            '(\/portal|\/portal\/[a-zA-Z0-9]*)?\/#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9]*)/';
+            '(\/portal|\/portal\/[a-zA-Z0-9]*)?\/#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9-]*)/';
 
         $post = preg_replace($regexp, '[\2/\3](#\2/view/\3)', $post);
 
@@ -277,9 +277,9 @@ class Note extends Record
             }
         }
 
-        $assignmentPermission = $this->acl->getPermissionLevel('assignment');
+        $messagePermission = $this->acl->getPermissionLevel('message');
 
-        if ($assignmentPermission === AclTable::LEVEL_NO) {
+        if ($messagePermission === AclTable::LEVEL_NO) {
             if (
                 $targetType !== NoteEntity::TARGET_SELF &&
                 $targetType !== NoteEntity::TARGET_PORTALS &&
@@ -327,14 +327,14 @@ class Note extends Record
             }
         }
 
-        if ($assignmentPermission === AclTable::LEVEL_TEAM) {
+        if ($messagePermission === AclTable::LEVEL_TEAM) {
             if ($targetType === NoteEntity::TARGET_ALL) {
                 throw new Forbidden('Not permitted to post to all.');
             }
         }
 
         if (
-            $assignmentPermission === AclTable::LEVEL_TEAM &&
+            $messagePermission === AclTable::LEVEL_TEAM &&
             $targetType === NoteEntity::TARGET_TEAMS
         ) {
             if (empty($userTeamIdList)) {
@@ -349,7 +349,7 @@ class Note extends Record
         }
 
         if (
-            $assignmentPermission === AclTable::LEVEL_TEAM &&
+            $messagePermission === AclTable::LEVEL_TEAM &&
             $targetType === NoteEntity::TARGET_USERS
         ) {
             if (empty($userTeamIdList)) {

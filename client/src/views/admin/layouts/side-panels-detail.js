@@ -51,6 +51,7 @@ define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], f
                     'success',
                     'danger',
                     'warning',
+                    'info',
                 ],
                 default: 'default',
                 translation: 'LayoutManager.options.style',

@@ -15,7 +15,9 @@
     "sortDirection": "Sortering (richting)",
     "expandedLayout": "Lay-out",
     "dateFilter": "Datumfilter",
-    "skipOwn": "Geen eigen records tonen"
+    "skipOwn": "Geen eigen records tonen",
+    "text": "Tekst",
+    "folder": "Map"
   },
   "options": {
     "mode": {

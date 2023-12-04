@@ -41,7 +41,7 @@ define('crm:views/call/fields/date-end', ['views/fields/datetime'], function (De
                     if (moment(value).unix() < moment(otherValue).unix()) {
                         var msg = this.translate('fieldShouldAfter', 'messages')
                             .replace('{field}', this.getLabelText())
-                            .replace('{otherField}', this.translate(field, 'fields', this.model.name));
+                            .replace('{otherField}', this.translate(field, 'fields', this.entityType));
 
                         this.showValidationMessage(msg);
 

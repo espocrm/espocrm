@@ -50,6 +50,7 @@ define('views/admin/layouts/relationships', ['views/admin/layouts/rows'], functi
                     'success',
                     'danger',
                     'warning',
+                    'info',
                 ],
                 translation: 'LayoutManager.options.style',
             },
@@ -207,6 +208,7 @@ define('views/admin/layouts/relationships', ['views/admin/layouts/rows'], functi
 
         isLinkEnabled: function (model, name) {
             return !model.getLinkParam(name, 'disabled') &&
+                !model.getLinkParam(name, 'utility') &&
                 !model.getLinkParam(name, 'layoutRelationshipsDisabled');
         },
     });

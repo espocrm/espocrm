@@ -29,10 +29,13 @@
 
 namespace Espo\Core\Select\Where;
 
+use DateTimeZone;
+use Espo\Core\Field\DateTime;
 use Espo\Core\Select\Where\Item\Type;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\ArrayValue;
 use Espo\Entities\User;
@@ -45,8 +48,8 @@ use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
-use DateTime;
-use DateInterval;
+use Exception;
+use RuntimeException;
 
 /**
  * Converts a where item to a where clause (for ORM).
@@ -104,12 +107,12 @@ class ItemGeneralConverter implements ItemConverter
         switch ($type) {
             case Type::OR:
             case Type::AND:
-                return WhereClause::fromRaw($this->groupProcessAndOr($queryBuilder, $type, $attribute, $value));
+                return WhereClause::fromRaw($this->groupProcessAndOr($queryBuilder, $type, $value));
 
             case Type::NOT:
             case Type::SUBQUERY_NOT_IN:
             case Type::SUBQUERY_IN:
-                return WhereClause::fromRaw($this->groupProcessSubQuery($queryBuilder, $type, $attribute, $value));
+                return WhereClause::fromRaw($this->groupProcessSubQuery($type, $value));
         }
 
         if (!$attribute) {
@@ -134,56 +137,212 @@ class ItemGeneralConverter implements ItemConverter
                 return WhereClause::fromRaw($this->groupProcessArray($queryBuilder, $type, $attribute, $value));
         }
 
+        if ($type === Type::IN) {
+            return WhereClause::fromRaw($this->processIn($attribute, $value));
+        }
+
+        if ($type === Type::NOT_IN) {
+            return WhereClause::fromRaw($this->processNotIn($attribute, $value));
+        }
+
         if ($type === Type::IS_LINKED_WITH) {
-            return WhereClause::fromRaw($this->processLinkedWith($queryBuilder, $attribute, $value));
+            return WhereClause::fromRaw($this->processLinkedWith($attribute, $value));
         }
 
         if ($type === Type::IS_NOT_LINKED_WITH) {
-            return WhereClause::fromRaw($this->processNotLinkedWith($queryBuilder, $attribute, $value));
+            return WhereClause::fromRaw($this->processNotLinkedWith($attribute, $value));
         }
 
         if ($type === Type::IS_LINKED_WITH_ALL) {
-            return WhereClause::fromRaw($this->processLinkedWithAll($queryBuilder, $attribute, $value));
+            return WhereClause::fromRaw($this->processLinkedWithAll($attribute, $value));
         }
 
         if ($type === Type::IS_LINKED_WITH_ANY) {
-            return WhereClause::fromRaw($this->processIsLinked($queryBuilder, $attribute));
+            return WhereClause::fromRaw($this->processIsLinked($attribute));
         }
 
         if ($type === Type::IS_LINKED_WITH_NONE) {
-            return WhereClause::fromRaw($this->processIsNotLinked($queryBuilder, $attribute));
+            return WhereClause::fromRaw($this->processIsNotLinked($attribute));
         }
 
         if ($type === Type::EXPRESSION) {
-            return WhereClause::fromRaw($this->processExpression($queryBuilder, $attribute, $value));
+            return WhereClause::fromRaw($this->processExpression($attribute));
         }
 
         if ($type === Type::EQUALS) {
-            return WhereClause::fromRaw($this->processEquals($queryBuilder, $attribute, $value));
+            return WhereClause::fromRaw($this->processEquals($attribute, $value));
         }
 
         if ($type === Type::NOT_EQUALS) {
-            return WhereClause::fromRaw($this->processNotEquals($queryBuilder, $attribute, $value));
+            return WhereClause::fromRaw($this->processNotEquals($attribute, $value));
         }
 
         if ($type === Type::ON) {
-            return WhereClause::fromRaw($this->processOn($queryBuilder, $attribute, $value));
+            return WhereClause::fromRaw($this->processOn($attribute, $value));
         }
 
         if ($type === Type::NOT_ON) {
-            return WhereClause::fromRaw($this->processNotOn($queryBuilder, $attribute, $value));
+            return WhereClause::fromRaw($this->processNotOn($attribute, $value));
         }
 
-        $methodName = 'process' .  ucfirst($type);
+        if ($type === Type::EVER) {
+            return WhereClause::fromRaw($this->processEver($attribute));
+        }
 
-        if (method_exists($this, $methodName)) {
-            return WhereClause::fromRaw(
-                $this->$methodName($queryBuilder, $attribute, $value)
-            );
+        if ($type === Type::TODAY) {
+            return WhereClause::fromRaw($this->processToday($attribute));
+        }
+
+        if ($type === Type::PAST) {
+            return WhereClause::fromRaw($this->processPast($attribute));
+        }
+
+        if ($type === Type::FUTURE) {
+            return WhereClause::fromRaw($this->processFuture($attribute));
+        }
+
+        if ($type === Type::LAST_SEVEN_DAYS) {
+            return WhereClause::fromRaw($this->processLastSevenDays($attribute));
+        }
+
+        if ($type === Type::LAST_X_DAYS) {
+            return WhereClause::fromRaw($this->processLastXDays($attribute, $value));
+        }
+
+        if ($type === Type::NEXT_X_DAYS) {
+            return WhereClause::fromRaw($this->processNextXDays($attribute, $value));
+        }
+
+        if ($type === Type::OLDER_THAN_X_DAYS) {
+            return WhereClause::fromRaw($this->processOlderThanXDays($attribute, $value));
+        }
+
+        if ($type === Type::AFTER_X_DAYS) {
+            return WhereClause::fromRaw($this->processAfterXDays($attribute, $value));
+        }
+
+        if ($type === Type::CURRENT_MONTH) {
+            return WhereClause::fromRaw($this->processCurrentMonth($attribute));
+        }
+
+        if ($type === Type::LAST_MONTH) {
+            return WhereClause::fromRaw($this->processLastMonth($attribute));
+        }
+
+        if ($type === Type::NEXT_MONTH) {
+            return WhereClause::fromRaw($this->processNextMonth($attribute));
+        }
+
+        if ($type === Type::CURRENT_QUARTER) {
+            return WhereClause::fromRaw($this->processCurrentQuarter($attribute));
+        }
+
+        if ($type === Type::LAST_QUARTER) {
+            return WhereClause::fromRaw($this->processLastQuarter($attribute));
+        }
+
+        if ($type === Type::CURRENT_YEAR) {
+            return WhereClause::fromRaw($this->processCurrentYear($attribute));
+        }
+
+        if ($type === Type::LAST_YEAR) {
+            return WhereClause::fromRaw($this->processLastYear($attribute));
+        }
+
+        if ($type === Type::CURRENT_FISCAL_YEAR) {
+            return WhereClause::fromRaw($this->processCurrentFiscalYear($attribute));
+        }
+
+        if ($type === Type::LAST_FISCAL_YEAR) {
+            return WhereClause::fromRaw($this->processLastFiscalYear($attribute));
+        }
+
+        if ($type === Type::CURRENT_FISCAL_QUARTER) {
+            return WhereClause::fromRaw($this->processCurrentFiscalQuarter($attribute));
+        }
+
+        if ($type === Type::LAST_FISCAL_QUARTER) {
+            return WhereClause::fromRaw($this->processLastFiscalQuarter($attribute));
+        }
+
+        if ($type === Type::BEFORE) {
+            return WhereClause::fromRaw($this->processBefore($attribute, $value));
+        }
+
+        if ($type === Type::AFTER) {
+            return WhereClause::fromRaw($this->processAfter($attribute, $value));
+        }
+
+        if ($type === Type::BETWEEN) {
+            return WhereClause::fromRaw($this->processBetween($attribute, $value));
+        }
+
+        if ($type === Type::LIKE) {
+            return WhereClause::fromRaw($this->processLike($attribute, $value));
+        }
+
+        if ($type === Type::NOT_LIKE) {
+            return WhereClause::fromRaw($this->processNotLike($attribute, $value));
+        }
+
+        if ($type === Type::IS_NULL) {
+            return WhereClause::fromRaw($this->processIsNull($attribute));
+        }
+
+        if ($type === Type::NONE) {
+            return WhereClause::fromRaw($this->processNone());
+        }
+
+        if ($type === Type::ANY) {
+            return WhereClause::fromRaw($this->processAny());
+        }
+
+        if ($type === Type::IS_NOT_NULL) {
+            return WhereClause::fromRaw($this->processIsNotNull($attribute));
+        }
+
+        if ($type === Type::IS_TRUE) {
+            return WhereClause::fromRaw($this->processIsTrue($attribute));
+        }
+
+        if ($type === Type::IS_FALSE) {
+            return WhereClause::fromRaw($this->processIsFalse($attribute));
+        }
+
+        if ($type === Type::STARTS_WITH) {
+            return WhereClause::fromRaw($this->processStartsWith($attribute, $value));
+        }
+
+        if ($type === Type::ENDS_WITH) {
+            return WhereClause::fromRaw($this->processEndsWith($attribute, $value));
+        }
+
+        if ($type === Type::CONTAINS) {
+            return WhereClause::fromRaw($this->processContains($attribute, $value));
+        }
+
+        if ($type === Type::NOT_CONTAINS) {
+            return WhereClause::fromRaw($this->processNotContains($attribute, $value));
+        }
+
+        if ($type === Type::GREATER_THAN) {
+            return WhereClause::fromRaw($this->processGreaterThan($attribute, $value));
+        }
+
+        if ($type === Type::LESS_THAN) {
+            return WhereClause::fromRaw($this->processLessThan($attribute, $value));
+        }
+
+        if ($type === Type::GREATER_THAN_OR_EQUALS) {
+            return WhereClause::fromRaw($this->processGreaterThanOrEquals($attribute, $value));
+        }
+
+        if ($type === Type::LESS_THAN_OR_EQUALS) {
+            return WhereClause::fromRaw($this->processLessThanOrEquals($attribute, $value));
         }
 
         if (!$this->itemConverterFactory->hasForType($type)) {
-            throw new Error("Unknown where item type '{$type}'.");
+            throw new Error("Unknown where item type '$type'.");
         }
 
         $converter = $this->itemConverterFactory->createForType($type, $this->entityType, $this->user);
@@ -196,13 +355,8 @@ class ItemGeneralConverter implements ItemConverter
      * @return array<string|int, mixed>
      * @throws Error
      */
-    private function groupProcessAndOr(
-        QueryBuilder $queryBuilder,
-        string $type,
-        ?string $attribute,
-        $value
-    ): array {
-
+    private function groupProcessAndOr(QueryBuilder $queryBuilder, string $type, $value): array
+    {
         if (!is_array($value)) {
             throw new Error("Bad where item.");
         }
@@ -231,13 +385,8 @@ class ItemGeneralConverter implements ItemConverter
      * @return array<string|int, mixed>
      * @throws Error
      */
-    private function groupProcessSubQuery(
-        QueryBuilder $queryBuilder,
-        string $type,
-        ?string $attribute,
-        $value
-    ): array {
-
+    private function groupProcessSubQuery(string $type, $value): array
+    {
         if (!is_array($value)) {
             throw new Error("Bad where item.");
         }
@@ -499,10 +648,9 @@ class ItemGeneralConverter implements ItemConverter
     /**
      * A complex expression w/o a value.
      *
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processExpression(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processExpression(string $attribute): array
     {
         $key = $attribute;
 
@@ -519,7 +667,7 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLike(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLike(string $attribute, $value): array
     {
         return [
             $attribute . '*' => $value,
@@ -530,7 +678,7 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processNotLike(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processNotLike(string $attribute, $value): array
     {
         return [
             $attribute . '!*' => $value,
@@ -541,7 +689,7 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processEquals(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processEquals(string $attribute, $value): array
     {
         return [
             $attribute . '=' => $value,
@@ -552,16 +700,16 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processOn(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processOn(string $attribute, $value): array
     {
-        return $this->processEquals($queryBuilder, $attribute, $value);
+        return $this->processEquals($attribute, $value);
     }
 
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processNotEquals(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processNotEquals(string $attribute, $value): array
     {
         return [
             $attribute . '!=' => $value,
@@ -572,16 +720,16 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processNotOn(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processNotOn(string $attribute, $value): array
     {
-        return $this->processNotEquals($queryBuilder, $attribute, $value);
+        return $this->processNotEquals($attribute, $value);
     }
 
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processStartsWith(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processStartsWith(string $attribute, $value): array
     {
         return [
             $attribute . '*' => $value . '%',
@@ -592,7 +740,7 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processEndsWith(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processEndsWith(string $attribute, $value): array
     {
         return [
             $attribute . '*' => '%' . $value,
@@ -603,7 +751,7 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processContains(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processContains(string $attribute, $value): array
     {
         return [
             $attribute . '*' => '%' . $value . '%',
@@ -614,7 +762,7 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processNotContains(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processNotContains(string $attribute, $value): array
     {
         return [
             $attribute . '!*' => '%' . $value . '%',
@@ -625,7 +773,7 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processGreaterThan(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processGreaterThan(string $attribute, $value): array
     {
         return [
             $attribute . '>' => $value,
@@ -636,16 +784,16 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processAfter(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processAfter(string $attribute, $value): array
     {
-        return $this->processGreaterThan($queryBuilder, $attribute, $value);
+        return $this->processGreaterThan($attribute, $value);
     }
 
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLessThan(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLessThan(string $attribute, $value): array
     {
         return [
             $attribute . '<' => $value,
@@ -656,16 +804,16 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processBefore(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processBefore(string $attribute, $value): array
     {
-        return $this->processLessThan($queryBuilder, $attribute, $value);
+        return $this->processLessThan($attribute, $value);
     }
 
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processGreaterThanOrEquals(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processGreaterThanOrEquals(string $attribute, $value): array
     {
         return [
             $attribute . '>=' => $value,
@@ -676,7 +824,7 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLessThanOrEquals(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLessThanOrEquals(string $attribute, $value): array
     {
         return [
             $attribute . '<=' => $value,
@@ -688,7 +836,7 @@ class ItemGeneralConverter implements ItemConverter
      * @return array<string|int, mixed>
      * @throws Error
      */
-    private function processIn(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processIn(string $attribute, $value): array
     {
         if (!is_array($value)) {
             throw new Error("Bad where item 'in'.");
@@ -704,7 +852,7 @@ class ItemGeneralConverter implements ItemConverter
      * @return array<string|int, mixed>
      * @throws Error
      */
-    private function processNotIn(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processNotIn(string $attribute, $value): array
     {
         if (!is_array($value)) {
             throw new Error("Bad where item 'notIn'.");
@@ -720,7 +868,7 @@ class ItemGeneralConverter implements ItemConverter
      * @return array<string|int, mixed>
      * @throws Error
      */
-    private function processBetween(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processBetween(string $attribute, $value): array
     {
         if (!is_array($value) || count($value) < 2) {
             throw new Error("Bad where item 'between'.");
@@ -735,10 +883,9 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
-     * @return array<string|int, mixed>
+     * @return array<string, mixed>
      */
-    private function processAny(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processAny(): array
     {
         return [
             'true:' => null,
@@ -746,10 +893,9 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
-     * @return array<string|int, mixed>
+     * @return array<string, mixed>
      */
-    private function processNone(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processNone(): array
     {
         return [
             'false:' => null,
@@ -757,10 +903,9 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processIsNull(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processIsNull(string $attribute): array
     {
         return [
             $attribute . '=' => null,
@@ -768,10 +913,9 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processIsNotNull(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processIsNotNull(string $attribute): array
     {
         return [
             $attribute . '!=' => null,
@@ -779,19 +923,17 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processEver(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processEver(string $attribute): array
     {
-        return $this->processIsNotNull($queryBuilder, $attribute, $value);
+        return $this->processIsNotNull($attribute);
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processIsTrue(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processIsTrue(string $attribute): array
     {
         return [
             $attribute . '=' => true,
@@ -799,10 +941,9 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processIsFalse(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processIsFalse(string $attribute): array
     {
         return [
             $attribute . '=' => false,
@@ -810,54 +951,58 @@ class ItemGeneralConverter implements ItemConverter
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processToday(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processToday(string $attribute): array
     {
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
+
         return [
-            $attribute . '=' => date('Y-m-d'),
+            $attribute . '=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processPast(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processPast(string $attribute): array
     {
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
+
         return [
-            $attribute . '<' => date('Y-m-d'),
+            $attribute . '<' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processFuture(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processFuture(string $attribute): array
     {
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
+
         return [
-            $attribute . '>' => date('Y-m-d'),
+            $attribute . '>' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLastSevenDays(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastSevenDays(string $attribute): array
     {
-        $dt1 = new DateTime();
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $dt2 = clone $dt1;
-
-        $dt2->modify('-7 days');
+        $from = $today->addDays(-7);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt2->format('Y-m-d'),
-                $attribute . '<=' => $dt1->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -866,20 +1011,19 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLastXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastXDays(string $attribute, $value): array
     {
-        $dt1 = new DateTime();
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $dt2 = clone $dt1;
+        $number = intval($value);
 
-        $number = strval(intval($value));
-
-        $dt2->modify('-'.$number.' days');
+        $from = $today->addDays(- $number);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt2->format('Y-m-d'),
-                $attribute . '<=' => $dt1->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -888,20 +1032,19 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processNextXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processNextXDays(string $attribute, $value): array
     {
-        $dt1 = new DateTime();
+        $today = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $dt2 = clone $dt1;
+        $number = intval($value);
 
-        $number = strval(intval($value));
-
-        $dt2->modify('+' . $number . ' days');
+        $to = $today->addDays($number);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt1->format('Y-m-d'),
-                $attribute . '<=' => $dt2->format('Y-m-d'),
+                $attribute . '>=' => $today->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<=' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -910,16 +1053,16 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processOlderThanXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processOlderThanXDays(string $attribute, $value): array
     {
-        $dt = new DateTime();
+        $number = intval($value);
 
-        $number = strval(intval($value));
-
-        $dt->modify('-' . $number . ' days');
+        $date = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->addDays(- $number);
 
         return [
-            $attribute . '<' => $dt->format('Y-m-d'),
+            $attribute . '<' =>  $date->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
@@ -927,268 +1070,277 @@ class ItemGeneralConverter implements ItemConverter
      * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processAfterXDays(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processAfterXDays(string $attribute, $value): array
     {
-        $dt = new DateTime();
+        $number = intval($value);
 
-        $number = strval(intval($value));
-
-        $dt->modify('+' . $number . ' days');
+        $date = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->addDays($number);
 
         return [
-            $attribute . '>' => $dt->format('Y-m-d'),
+            $attribute . '>' => $date->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processCurrentMonth(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processCurrentMonth(string $attribute): array
     {
-        $dt = new DateTime();
+        $from = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->modify('first day of this month');
+
+        $to = $from->addMonths(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->modify('first day of this month')->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLastMonth(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastMonth( string $attribute): array
     {
-        $dt = new DateTime();
+        $from = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->modify('first day of last month');
+
+        $to = $from->addMonths(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->modify('first day of last month')->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processNextMonth(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processNextMonth(string $attribute): array
     {
-        $dt = new DateTime();
+        $from = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->modify('first day of next month');
+
+        $to = $from->addMonths(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->modify('first day of next month')->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws \Exception
      */
-    private function processCurrentQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processCurrentQuarter(string $attribute): array
     {
-        $dt = new DateTime();
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $quarter = ceil($dt->format('m') / 3);
+        $quarter = intval(ceil($now->getMonth() / 3));
 
-        $dt->modify('first day of January this year');
+        $from = $now
+            ->modify('first day of January this year')
+            ->addMonths(($quarter - 1) * 3);
+
+        $to = $from->addMonths(3);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->add(new DateInterval('P'.(($quarter - 1) * 3).'M'))->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws \Exception
      */
-    private function processLastQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastQuarter(string $attribute): array
     {
-        $dt = new DateTime();
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $quarter = ceil($dt->format('m') / 3);
+        $quarter = intval(ceil($now->getMonth() / 3));
 
-        $dt->modify('first day of January this year');
+        $from = $now->modify('first day of January this year');
 
         $quarter--;
 
         if ($quarter == 0) {
             $quarter = 4;
-            $dt->modify('-1 year');
+
+            $from = $from->addYears(-1);
         }
 
+        $from = $from->addMonths(($quarter - 1) * 3);
+        $to = $from->addMonths(3);
+
         return [
             'AND' => [
-                $attribute . '>=' => $dt->add(new DateInterval('P' . (($quarter - 1) * 3) . 'M'))->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processCurrentYear(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processCurrentYear(string $attribute): array
     {
-        $dt = new DateTime();
+        $from = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->modify('first day of January this year');
+
+        $to = $from->addYears(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->modify('first day of January this year')->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1Y'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLastYear(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastYear(string $attribute): array
     {
-        $dt = new DateTime();
+        $from = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone())
+            ->modify('first day of January last year');
+
+        $to = $from->addYears(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->modify('first day of January last year')->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1Y'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processCurrentFiscalYear(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processCurrentFiscalYear(string $attribute): array
     {
-        $dtToday = new DateTime();
-        $dt = new DateTime();
-
         $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
-        $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        if (intval($dtToday->format('m')) < $fiscalYearShift + 1) {
-            $dt->modify('-1 year');
+        $from = $now
+            ->modify('first day of January this year')
+            ->addMonths($fiscalYearShift);
+
+        if ($now->getMonth() < $fiscalYearShift + 1) {
+            $from = $from->addYears(-1);
         }
+
+        $to = $from->addYears(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1Y'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
      */
-    private function processLastFiscalYear(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastFiscalYear(string $attribute): array
     {
-        $dtToday = new DateTime();
-        $dt = new DateTime();
-
         $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
-        $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        if (intval($dtToday->format('m')) < $fiscalYearShift + 1) {
-            $dt->modify('-1 year');
+        $from = $now
+            ->modify('first day of January this year')
+            ->addMonths($fiscalYearShift)
+            ->addYears(-1);
+
+        if ($now->getMonth() < $fiscalYearShift + 1) {
+            $from = $from->addYears(-1);
         }
 
-        $dt->modify('-1 year');
+        $to = $from->addYears(1);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P1Y'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws \Exception
      */
-    private function processCurrentFiscalQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processCurrentFiscalQuarter(string $attribute): array
     {
-        $dtToday = new DateTime();
-        $dt = new DateTime();
-
         $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
-        $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $month = intval($dtToday->format('m'));
+        $quarterShift = (int) floor(($now->getMonth() - $fiscalYearShift - 1) / 3);
 
-        $quarterShift = floor(($month - $fiscalYearShift - 1) / 3);
+        $from = $now
+            ->modify('first day of January this year')
+            ->addMonths($fiscalYearShift)
+            ->addMonths($quarterShift * 3);
 
-        if ($quarterShift) {
-            if ($quarterShift >= 0) {
-                $dt->add(new DateInterval('P' . ($quarterShift * 3) . 'M'));
-            } else {
-                $quarterShift *= -1;
-                $dt->sub(new DateInterval('P' . ($quarterShift * 3) . 'M'));
-            }
-        }
+        $to = $from->addMonths(3);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
 
     /**
-     * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws \Exception
      */
-    private function processLastFiscalQuarter(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLastFiscalQuarter(string $attribute): array
     {
-        $dtToday = new DateTime();
-        $dt = new DateTime();
-
         $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
-        $dt->modify('first day of January this year')->modify('+' . $fiscalYearShift . ' months');
+        $now = DateTime::createNow()
+            ->withTimezone($this->getSystemTimeZone());
 
-        $month = intval($dtToday->format('m'));
+        $quarterShift = (int) floor(($now->getMonth() - $fiscalYearShift - 1) / 3);
 
-        $quarterShift = floor(($month - $fiscalYearShift - 1) / 3);
+        $from = $now
+            ->modify('first day of January this year')
+            ->addMonths($fiscalYearShift)
+            ->addMonths($quarterShift * 3);
 
-        if ($quarterShift) {
-            if ($quarterShift >= 0) {
-                $dt->add(new DateInterval('P' . ($quarterShift * 3) . 'M'));
-            } else {
-                $quarterShift *= -1;
-                $dt->sub(new DateInterval('P' . ($quarterShift * 3) . 'M'));
-            }
-        }
-
-        $dt->modify('-3 months');
+        $from = $from->addMonths(-3);
+        $to = $from->addMonths(3);
 
         return [
             'AND' => [
-                $attribute . '>=' => $dt->format('Y-m-d'),
-                $attribute . '<' => $dt->add(new DateInterval('P3M'))->format('Y-m-d'),
+                $attribute . '>=' => $from->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $to->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
             ]
         ];
     }
@@ -1196,20 +1348,20 @@ class ItemGeneralConverter implements ItemConverter
     /**
      * @return array<string|int, mixed>
      */
-    private function processIsNotLinked(QueryBuilder $queryBuilder, string $attribute): array
+    private function processIsNotLinked(string $attribute): array
     {
         $link = $attribute;
         $alias = $link . 'IsLinkedFilter' . $this->randomStringGenerator->generate();
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
 
-        $key = $defs->getForeignMidKey();
-        $nearKey = $defs->getMidKey();
-        $middleEntityType = ucfirst($defs->getRelationshipName());
-
         $relationType = $defs->getType();
 
         if ($relationType == Entity::MANY_MANY) {
+            $key = $defs->getForeignMidKey();
+            $nearKey = $defs->getMidKey();
+            $middleEntityType = ucfirst($defs->getRelationshipName());
+
             // The foreign table is not joined as it would perform much slower.
             // Trade off is that if a foreign record is deleted but the middle table
             // is not yet deleted, it will give a non-actual result.
@@ -1217,10 +1369,10 @@ class ItemGeneralConverter implements ItemConverter
                 ->select('id')
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, $alias, [
-                    "{$alias}.{$nearKey}:" => 'id',
-                    "{$alias}.deleted" => false,
+                    "$alias.$nearKey:" => 'id',
+                    "$alias.deleted" => false,
                 ])
-                ->where(["{$alias}.{$key}" => null])
+                ->where(["$alias.$key" => null])
                 ->build();
 
             return ['id=s' =>  $subQuery];
@@ -1229,7 +1381,8 @@ class ItemGeneralConverter implements ItemConverter
         if (
             $relationType == Entity::HAS_MANY ||
             $relationType == Entity::HAS_ONE ||
-            $relationType == Entity::BELONGS_TO
+            $relationType == Entity::BELONGS_TO ||
+            $relationType === Entity::HAS_CHILDREN
         ) {
             $subQuery = QueryBuilder::create()
                 ->select('id')
@@ -1241,26 +1394,26 @@ class ItemGeneralConverter implements ItemConverter
             return ['id=s' =>  $subQuery];
         }
 
-        throw new Error("Bad where item. Not supported relation type.");
+        throw new RuntimeException("Bad where item. Not supported relation type.");
     }
 
     /**
      * @return array<string|int, mixed>
      */
-    private function processIsLinked(QueryBuilder $queryBuilder, string $attribute): array
+    private function processIsLinked(string $attribute): array
     {
         $link = $attribute;
         $alias = $link . 'IsLinkedFilter' . $this->randomStringGenerator->generate();
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
 
-        $key = $defs->getForeignMidKey();
-        $nearKey = $defs->getMidKey();
-        $middleEntityType = ucfirst($defs->getRelationshipName());
-
         $relationType = $defs->getType();
 
         if ($relationType == Entity::MANY_MANY) {
+            $key = $defs->getForeignMidKey();
+            $nearKey = $defs->getMidKey();
+            $middleEntityType = ucfirst($defs->getRelationshipName());
+
             // The foreign table is not joined as it would perform much slower.
             // Trade off is that if a foreign record is deleted but the middle table
             // is not yet deleted, it will give a non-actual result.
@@ -1268,10 +1421,10 @@ class ItemGeneralConverter implements ItemConverter
                 ->select('id')
                 ->from($this->entityType)
                 ->leftJoin($middleEntityType, $alias, [
-                    "{$alias}.{$nearKey}:" => 'id',
-                    "{$alias}.deleted" => false,
+                    "$alias.$nearKey:" => 'id',
+                    "$alias.deleted" => false,
                 ])
-                ->where(["{$alias}.{$key}!=" => null])
+                ->where(["$alias.$key!=" => null])
                 ->build();
 
             return ['id=s' =>  $subQuery];
@@ -1280,7 +1433,8 @@ class ItemGeneralConverter implements ItemConverter
         if (
             $relationType == Entity::HAS_MANY ||
             $relationType == Entity::HAS_ONE ||
-            $relationType == Entity::BELONGS_TO
+            $relationType == Entity::BELONGS_TO ||
+            $relationType == Entity::HAS_CHILDREN
         ) {
             $subQuery = QueryBuilder::create()
                 ->select('id')
@@ -1292,7 +1446,7 @@ class ItemGeneralConverter implements ItemConverter
             return ['id=s' =>  $subQuery];
         }
 
-        throw new Error("Bad where item. Not supported relation type.");
+        throw new RuntimeException("Bad where item. Not supported relation type.");
     }
 
     /**
@@ -1300,12 +1454,12 @@ class ItemGeneralConverter implements ItemConverter
      * @return array<string|int, mixed>
      * @throws Error
      */
-    private function processLinkedWith(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLinkedWith(string $attribute, $value): array
     {
         $link = $attribute;
 
         if (!$this->ormDefs->getEntity($this->entityType)->hasRelation($link)) {
-            throw new Error("Not existing link '{$link}' in where item.");
+            throw new Error("Not existing link '$link' in where item.");
         }
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
@@ -1337,13 +1491,13 @@ class ItemGeneralConverter implements ItemConverter
                         Join::create($link, $alias)
                             ->withConditions(
                                 Cond::equal(
-                                    Cond::column("{$alias}.{$nearKey}"),
+                                    Cond::column("$alias.$nearKey"),
                                     Cond::column('id')
                                 )
                             )
                             ->withOnlyMiddle()
                     )
-                    ->where(["{$alias}.{$key}" => $value])
+                    ->where(["$alias.$key" => $value])
                     ->build()
             )->getRaw();
         }
@@ -1376,12 +1530,12 @@ class ItemGeneralConverter implements ItemConverter
      * @return array<string|int, mixed>
      * @throws Error
      */
-    private function processNotLinkedWith(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processNotLinkedWith(string $attribute, $value): array
     {
         $link = $attribute;
 
         if (!$this->ormDefs->getEntity($this->entityType)->hasRelation($link)) {
-            throw new Error("Not existing link '{$link}' in where item.");
+            throw new Error("Not existing link '$link' in where item.");
         }
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
@@ -1406,7 +1560,7 @@ class ItemGeneralConverter implements ItemConverter
                             Join::create($link, $alias)
                                 ->withOnlyMiddle()
                         )
-                        ->where(["{$alias}.{$key}" => $value])
+                        ->where(["$alias.$key" => $value])
                         ->where(
                             Cond::equal(
                                 Cond::column('sq.id'),
@@ -1428,7 +1582,7 @@ class ItemGeneralConverter implements ItemConverter
                         ->select('id')
                         ->from($this->entityType, 'sq')
                         ->join($link, $alias)
-                        ->where(["{$alias}.id" => $value])
+                        ->where(["$alias.id" => $value])
                         ->where(['sq.id:' => lcfirst($this->entityType) . '.id'])
                         ->build()
                 )
@@ -1449,12 +1603,12 @@ class ItemGeneralConverter implements ItemConverter
      * @return array<string|int, mixed>
      * @throws Error
      */
-    private function processLinkedWithAll(QueryBuilder $queryBuilder, string $attribute, $value): array
+    private function processLinkedWithAll(string $attribute, $value): array
     {
         $link = $attribute;
 
         if (!$this->ormDefs->getEntity($this->entityType)->hasRelation($link)) {
-            throw new Error("Not existing link '{$link}' in where item.");
+            throw new Error("Not existing link '$link' in where item.");
         }
 
         if (!$value && !is_array($value)) {
@@ -1509,5 +1663,17 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         throw new Error("Bad where item. Not supported relation type.");
+    }
+
+    private function getSystemTimeZone(): DateTimeZone
+    {
+        $timeZone = $this->config->get('timeZone') ?? 'UTC';
+
+        try {
+            return new DateTimeZone($timeZone);
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
     }
 }

@@ -40,8 +40,6 @@ use Espo\Tools\Export\Export as ExportTool;
 use Espo\Tools\Export\Params as ExportParams;
 use Espo\Core\Di;
 
-use stdClass;
-
 /**
  * @template TEntity of Entity
  * @extends RecordService<TEntity>
@@ -93,6 +91,7 @@ class Record extends RecordService implements
     /**
      * @deprecated For backward compatibility, to be removed.
      * @return void
+     * @todo Remove in v9.0.
      */
     protected function init() {}
 
@@ -103,6 +102,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->entityType`.
+     * @todo Remove in v9.0.
      */
     public function getEntityType(): string
     {
@@ -111,8 +111,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->config`.
-     *
      * @return \Espo\Core\Utils\Config
+     * @todo Remove in v9.0.
      */
     protected function getConfig()
     {
@@ -121,8 +121,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->serviceFactory`.
-     *
      * @return \Espo\Core\ServiceFactory
+     * @todo Remove in v9.0.
      */
     protected function getServiceFactory()
     {
@@ -132,6 +132,7 @@ class Record extends RecordService implements
     /**
      * @deprecated Since v7.0.
      * @return \Espo\Core\Select\SelectManagerFactory
+     * @todo Remove in v9.0.
      */
     protected function getSelectManagerFactory()
     {
@@ -140,8 +141,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->acl`.
-     *
      * @return \Espo\Core\Acl
+     * @todo Remove in v9.0.
      */
     protected function getAcl()
     {
@@ -150,8 +151,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->user`.
-     *
      * @return \Espo\Entities\User
+     * @todo Remove in v9.0.
      */
     protected function getUser()
     {
@@ -161,6 +162,7 @@ class Record extends RecordService implements
     /**
      * @deprecated Use `$this->aclManager`.
      * @return \Espo\Core\AclManager
+     * @todo Remove in v9.0.
      */
     protected function getAclManager()
     {
@@ -169,8 +171,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->fileManager`.
-     *
      * @return \Espo\Core\Utils\File\Manager
+     * @todo Remove in v9.0.
      */
     protected function getFileManager()
     {
@@ -179,8 +181,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->metadata`.
-     *
      * @return \Espo\Core\Utils\Metadata
+     * @todo Remove in v9.0.
      */
     protected function getMetadata()
     {
@@ -190,6 +192,7 @@ class Record extends RecordService implements
     /**
      * @deprecated Use `$this->fieldUtil`.
      * @return \Espo\Core\Utils\FieldUtil
+     * @todo Remove in v9.0.
      */
     protected function getFieldManagerUtil()
     {
@@ -198,8 +201,8 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->entityManager`.
-     *
      * @return \Espo\ORM\EntityManager
+     * @todo Remove in v9.0.
      */
     protected function getEntityManager()
     {
@@ -208,6 +211,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated
+     * @todo Remove in v9.0.
      * @param ?string $entityType
      * @return \Espo\Core\Select\SelectManager
      */
@@ -222,6 +226,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated
+     * @todo Remove in v9.0.
      * @param array<string, mixed> $params
      * @return array<string, mixed>
      */
@@ -240,7 +245,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `$this->recordServiceContainer->get($name)`.
-     *
+     * @todo Remove in v9.0.
      * @param string $name
      * @return \Espo\Core\Record\Service<Entity>
      */
@@ -254,6 +259,7 @@ class Record extends RecordService implements
      * @param Collection<TEntity> $collection
      * @throws ForbiddenSilent
      * @deprecated
+     * @todo Remove in v9.0.
      */
     public function exportCollection(array $params, Collection $collection): string
     {
@@ -287,6 +293,7 @@ class Record extends RecordService implements
     /**
      * @deprecated
      * @param string[] $selectAttributeList
+     * @todo Remove in v9.0.
      */
     public function loadLinkMultipleFieldsForList(Entity $entity, array $selectAttributeList): void
     {
@@ -315,6 +322,7 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `Espo\Core\FieldProcessing\ListLoadProcessor`.
+     * @todo Remove in v9.0.
      * @param TEntity $entity
      * @return void
      */
@@ -325,94 +333,10 @@ class Record extends RecordService implements
 
     /**
      * @deprecated Use `Espo\Core\FieldProcessing\ListLoadProcessor`.
+     * @todo Remove in v9.0.
      * @param TEntity $entity
      * @return void
      */
     public function loadAdditionalFieldsForExport(Entity $entity)
     {}
-
-    /**
-     * @deprecated
-     * @todo Remove in v8.0.
-     * @return string[]
-     */
-    protected function getConvertCurrencyFieldList()
-    {
-        $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList($this->entityType, 'edit');
-
-        $list = [];
-
-        foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
-            if (
-                $this->metadata
-                    ->get(['entityDefs', $this->entityType, 'fields', $field, 'type']) !== 'currency'
-            ) {
-                continue;
-            }
-
-            if (in_array($field, $forbiddenFieldList)) {
-                continue;
-            }
-
-            $list[] = $field;
-        }
-
-        return $list;
-    }
-
-    /**
-     * @deprecated Use `Espo\Core\Currency\Converter`.
-     * @todo Remove in v8.0.
-     * @param ?string[] $fieldList
-     * @return stdClass
-     */
-    public function getConvertCurrencyValues(
-        Entity $entity,
-        string $targetCurrency,
-        string $baseCurrency,
-        stdClass $rates,
-        bool $allFields = false,
-        ?array $fieldList = null
-    ) {
-        $fieldList = $fieldList ?? $this->getConvertCurrencyFieldList();
-
-        $data = (object) [];
-
-        foreach ($fieldList as $field) {
-            $currencyAttribute = $field . 'Currency';
-
-            $currentCurrency = $entity->get($currencyAttribute);
-            $value = $entity->get($field);
-
-            if ($value === null) {
-                continue;
-            }
-
-            if ($currentCurrency === $targetCurrency) {
-                continue;
-            }
-
-            if ($currentCurrency !== $baseCurrency && !property_exists($rates, $currentCurrency)) {
-                continue;
-            }
-
-            $rate1 = property_exists($rates, $currentCurrency) ? $rates->$currentCurrency : 1.0;
-            $value = $value * $rate1;
-
-            $rate2 = property_exists($rates, $targetCurrency) ? $rates->$targetCurrency : 1.0;
-            $value = $value / $rate2;
-
-            if (!$rate2) {
-                continue;
-            }
-
-            $value = round($value, 2);
-
-            $data->$currencyAttribute = $targetCurrency;
-
-            $data->$field = $value;
-        }
-
-        return $data;
-    }
 }

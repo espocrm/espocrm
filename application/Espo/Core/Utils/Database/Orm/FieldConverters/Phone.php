@@ -38,6 +38,9 @@ use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
+/**
+ * @noinspection PhpUnused
+ */
 class Phone implements FieldConverter
 {
     private const COLUMN_ENTITY_TYPE_LENGTH = 100;
@@ -46,8 +49,8 @@ class Phone implements FieldConverter
     {
         $name = $fieldDefs->getName();
 
-        $foreignJoinAlias = "{$name}{$entityType}{alias}Foreign";
-        $foreignJoinMiddleAlias = "{$name}{$entityType}{alias}ForeignMiddle";
+        $foreignJoinAlias = "$name$entityType{alias}Foreign";
+        $foreignJoinMiddleAlias = "$name$entityType{alias}ForeignMiddle";
 
         $emailAddressDefs = AttributeDefs
             ::create($name)
@@ -134,23 +137,23 @@ class Phone implements FieldConverter
                 'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
             ],
             'selectForeign' => [
-                "select" => "{$foreignJoinAlias}.name",
+                "select" => "$foreignJoinAlias.name",
                 'leftJoins' => [
                     [
                         'EntityPhoneNumber',
                         $foreignJoinMiddleAlias,
                         [
-                            "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                            "{$foreignJoinMiddleAlias}.primary" => true,
-                            "{$foreignJoinMiddleAlias}.deleted" => false,
+                            "$foreignJoinMiddleAlias.entityId:" => "{alias}.id",
+                            "$foreignJoinMiddleAlias.primary" => true,
+                            "$foreignJoinMiddleAlias.deleted" => false,
                         ]
                     ],
                     [
                         PhoneNumber::ENTITY_TYPE,
                         $foreignJoinAlias,
                         [
-                            "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
-                            "{$foreignJoinAlias}.deleted" => false,
+                            "$foreignJoinAlias.id:" => "$foreignJoinMiddleAlias.phoneNumberId",
+                            "$foreignJoinAlias.deleted" => false,
                         ]
                     ]
                 ],
@@ -267,23 +270,23 @@ class Phone implements FieldConverter
                 'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
             ],
             'selectForeign' => [
-                'select' => "{$foreignJoinAlias}.optOut",
+                'select' => "$foreignJoinAlias.optOut",
                 'leftJoins' => [
                     [
                         'EntityPhoneNumber',
                         $foreignJoinMiddleAlias,
                         [
-                            "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                            "{$foreignJoinMiddleAlias}.primary" => true,
-                            "{$foreignJoinMiddleAlias}.deleted" => false,
+                            "$foreignJoinMiddleAlias.entityId:" => "{alias}.id",
+                            "$foreignJoinMiddleAlias.primary" => true,
+                            "$foreignJoinMiddleAlias.deleted" => false,
                         ]
                     ],
                     [
                         PhoneNumber::ENTITY_TYPE,
                         $foreignJoinAlias,
                         [
-                            "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
-                            "{$foreignJoinAlias}.deleted" => false,
+                            "$foreignJoinAlias.id:" => "$foreignJoinMiddleAlias.phoneNumberId",
+                            "$foreignJoinAlias.deleted" => false,
                         ]
                     ]
                 ],
@@ -327,23 +330,23 @@ class Phone implements FieldConverter
                 'leftJoins' => [['phoneNumbers', 'phoneNumbers', ['primary' => true]]],
             ],
             'selectForeign' => [
-                'select' => "{$foreignJoinAlias}.invalid",
+                'select' => "$foreignJoinAlias.invalid",
                 'leftJoins' => [
                     [
                         'EntityPhoneNumber',
                         $foreignJoinMiddleAlias,
                         [
-                            "{$foreignJoinMiddleAlias}.entityId:" => "{alias}.id",
-                            "{$foreignJoinMiddleAlias}.primary" => true,
-                            "{$foreignJoinMiddleAlias}.deleted" => false,
+                            "$foreignJoinMiddleAlias.entityId:" => "{alias}.id",
+                            "$foreignJoinMiddleAlias.primary" => true,
+                            "$foreignJoinMiddleAlias.deleted" => false,
                         ]
                     ],
                     [
                         PhoneNumber::ENTITY_TYPE,
                         $foreignJoinAlias,
                         [
-                            "{$foreignJoinAlias}.id:" => "{$foreignJoinMiddleAlias}.phoneNumberId",
-                            "{$foreignJoinAlias}.deleted" => false,
+                            "$foreignJoinAlias.id:" => "$foreignJoinMiddleAlias.phoneNumberId",
+                            "$foreignJoinAlias.deleted" => false,
                         ]
                     ]
                 ],

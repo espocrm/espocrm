@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "activityStatusList": "Stati Attività",
+    "historyStatusList": "Stati Storico",
+    "completedStatusList": "Stati Completati",
+    "canceledStatusList": "Stati Cancellati"
+  },
+  "tooltips": {
+    "activityStatusList": "Valori di Stato che determinano che un'attività debba essere visualizzata nel pannello Attività e considerata come attuale.",
+    "historyStatusList": "Valori di Stato che determinano la visualizzazione di un'attività nel pannello Storico.",
+    "completedStatusList": "Valori di Stato che determinano il completamento di un'attività.",
+    "canceledStatusList": "Valori di stato che determinano l'annullamento di un'attività e che non saranno presi in considerazione negli intervalli libero/occupato."
+  }
+}

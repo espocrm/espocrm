@@ -52,6 +52,8 @@ use Espo\ORM\Query\Part\Condition;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\Update;
 
+use Espo\ORM\QueryComposer\Util;
+use LogicException;
 use RuntimeException;
 
 require_once 'tests/unit/testData/DB/Entities.php';
@@ -986,6 +988,89 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testJoinSubQuery1(): void
+    {
+        $sql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "JOIN (SELECT post.id AS `id` FROM `post` WHERE post.deleted = 0) AS `a` ON a.id = post.id " .
+            "WHERE post.deleted = 0";
+
+        $select = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->join(
+                Join
+                    ::createWithSubQuery(
+                        SelectBuilder::create()
+                            ->select('id')
+                            ->from('Post')
+                            ->build(),
+                        'a'
+                    )
+                    ->withConditions(
+                        WhereClause::create(
+                            Condition::equal(
+                                Expression::column('a.id'),
+                                Expression::column('post.id')
+                            )
+                        )
+                    )
+            )
+            ->build();
+
+        $this->assertEquals(
+            $sql,
+            $this->query->composeSelect($select)
+        );
+    }
+
+    public function testJoinSubQuery2(): void
+    {
+        $sql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "JOIN (SELECT post.id AS `id` FROM `post` WHERE post.deleted = 0) AS `a` ON a.id = post.id " .
+            "WHERE post.deleted = 0";
+
+        $select = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->join(
+                SelectBuilder::create()
+                    ->select('id')
+                    ->from('Post')
+                    ->build(),
+                'a',
+                Condition::equal(
+                    Expression::column('a.id'),
+                    Expression::column('post.id')
+                )
+            )
+            ->build();
+
+        $this->assertEquals(
+            $sql,
+            $this->query->composeSelect($select)
+        );
+    }
+
+    public function testJoinSubQueryException1(): void
+    {
+        $this->expectException(LogicException::class);
+
+        $select = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->join(
+                SelectBuilder::create()
+                    ->select('id')
+                    ->from('Post')
+                    ->build(),
+            )
+            ->build();
+
+        $this->query->composeSelect($select);
+    }
+
     public function testWhereNotValue1()
     {
         $sql = $this->query->compose(Select::fromRaw([
@@ -1282,7 +1367,32 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             ])
             ->build();
 
-        $sql = $this->query->compose($query);
+        $sql = $this->query->composeSelect($query);
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectExists2(): void
+    {
+        $expectedSql =
+            "SELECT post.id AS `id` FROM `post` AS `post` " .
+            "WHERE EXISTS (" .
+            "SELECT sq.id AS `id` FROM `post` AS `sq` WHERE sq.id = post.id AND sq.deleted = 0" .
+            ") AND post.deleted = 0";
+
+        $query = (new QueryBuilder())
+            ->select('id')
+            ->from('Post', 'post')
+            ->where([
+                'EXISTS' => (new QueryBuilder())
+                    ->select('id')
+                    ->from('Post', 'sq')
+                    ->where(['sq.id:' => 'post.id'])
+                    ->build()
+                    ->getRaw()
+            ])
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -1821,7 +1931,7 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             'withDeleted' => true
         ]));
         $expectedSql =
-            "SELECT IF('1' OR '0', '1', ' ') AS `IF:(OR:('1','0'),'1',' ')` FROM `comment`";
+            "SELECT IF(('1' OR '0'), '1', ' ') AS `IF:(OR:('1','0'),'1',' ')` FROM `comment`";
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -2118,6 +2228,15 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue(in_array('comment.test', $list));
     }
 
+    public function testGetAllAttributesFromComplexExpression3()
+    {
+        $expression = "SUM:(test, #test, sq.#test)";
+
+        $list = Util::getAllAttributesFromComplexExpression($expression);
+
+        $this->assertEquals(['test'], $list);
+    }
+
     public function testCustomWhere1()
     {
         $queryBuilder = new QueryBuilder();
@@ -2389,6 +2508,31 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             "FROM `test_where` ".
             "WHERE test_where.test = 4";
 
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testWhereExpression5(): void
+    {
+        $expectedSql =
+            "SELECT post.id AS `id` FROM `post` " .
+            "WHERE ((1 OR 0) AND 1)";
+
+        $query = SelectBuilder::create()
+            ->from('Post')
+            ->select('id')
+            ->where(
+                Expression::and(
+                    Expression::or(
+                        Expression::value(1),
+                        Expression::value(0)
+                    ),
+                    Expression::value(1)
+                )
+            )
+            ->withDeleted()
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
         $this->assertEquals($expectedSql, $sql);
     }
 
@@ -3127,5 +3271,120 @@ class MysqlQueryComposerTest extends \PHPUnit\Framework\TestCase
             $sql,
             $this->query->composeSelect($query)
         );
+    }
+
+    public function testSelections1(): void
+    {
+        $query1 = SelectBuilder::create()
+            ->select(['number'])
+            ->from('Post')
+            ->build();
+
+        $query2 = SelectBuilder::create()
+            ->select($query1->getSelect())
+            ->from('Post')
+            ->build();
+
+        $this->assertEquals(
+            $this->query->composeSelect($query1),
+            $this->query->composeSelect($query2)
+        );
+    }
+
+    public function testStringWithColon(): void
+    {
+        $query = SelectBuilder::create()
+            ->select(["'2020-10-10 20:20:20'"])
+            ->from('Post')
+            ->build();
+
+        $sql = $this->query->composeSelect($query);
+
+        $this->assertIsString($sql);
+    }
+
+    public function testAlias1(): void
+    {
+        $query = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->where(['subQuery.#someId' => '1'])
+            ->withDeleted()
+            ->build();
+
+        $expectedSql = "SELECT post.id AS `id` FROM `post` WHERE subQuery.someId = '1'";
+
+        $sql = $this->query->composeSelect($query);
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testAlias2(): void
+    {
+        $query = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->where(['#someId' => '1'])
+            ->withDeleted()
+            ->build();
+
+        $expectedSql = "SELECT post.id AS `id` FROM `post` WHERE someId = '1'";
+
+        $sql = $this->query->composeSelect($query);
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testAlias3(): void
+    {
+        $query = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->leftJoin(
+                'Test',
+                'test',
+                ['test.#testId' => '1']
+            )
+            ->withDeleted()
+            ->build();
+
+        $expectedSql = "SELECT post.id AS `id` FROM `post` LEFT JOIN `test` AS `test` ON test.testId = '1'";
+
+        $sql = $this->query->composeSelect($query);
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testAlias4(): void
+    {
+        $subQuery =
+            SelectBuilder::create()
+                ->select('id', 'someId')
+                ->from('Test')
+                ->withDeleted()
+                ->build();
+
+        $query = SelectBuilder::create()
+            ->select('id')
+            ->from('Post')
+            ->leftJoin(
+                Join::createWithSubQuery($subQuery, 'sqAlias')
+                    ->withConditions(
+                        Condition::equal(
+                            Expression::alias('sqAlias.someId'),
+                            Expression::column('id')
+                        )
+                    )
+            )
+            ->withDeleted()
+            ->build();
+
+        $expectedSql =
+            "SELECT post.id AS `id` FROM `post` LEFT JOIN " .
+            "(SELECT test.id AS `someId` FROM `test`) AS `sqAlias` ON sqAlias.someId = post.id";
+
+        $sql = $this->query->composeSelect($query);
+
+        $this->assertEquals($expectedSql, $sql);
     }
 }

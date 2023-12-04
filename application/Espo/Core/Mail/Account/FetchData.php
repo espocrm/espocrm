@@ -105,7 +105,7 @@ class FetchData
             return;
         }
 
-        $this->data->lastDate->$folder = $lastDate->getString();
+        $this->data->lastDate->$folder = $lastDate->toString();
     }
 
     public function setForceByDate(string $folder, bool $forceByDate): void

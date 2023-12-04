@@ -8,5 +8,6 @@
     "customizable": true,
     "importable": true,
     "notifications": true,
-    "hasPersonalData": true
+    "hasPersonalData": true,
+    "duplicateCheckFieldList": ["name", "emailAddress"]
 }

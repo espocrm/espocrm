@@ -9,9 +9,9 @@
     "description": "Popis",
     "users": "Používatelia",
     "contacts": "Kontakty",
-    "leads": "Stopy",
+    "leads": "Prvé kontakty",
     "reminders": "Pripomienky",
-    "account": "Účet",
+    "account": "Organizácia",
     "acceptanceStatus": "Akceptačný stav"
   },
   "options": {

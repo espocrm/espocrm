@@ -26,12 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-url', ['views/fields/url'], function (Dep) {
+import UrlFieldView from 'views/fields/url';
+import Helper from 'helpers/misc/foreign-field';
 
-    return Dep.extend({
+class ForeignUrlFieldView extends UrlFieldView {
 
-        type: 'foreign',
+    type = 'foreign'
+    readOnly = true
 
-        readOnly: true,
-    });
-});
+    setup() {
+        super.setup();
+
+        const helper = new Helper(this);
+
+        const foreignParams = helper.getForeignParams();
+
+        for (let param in foreignParams) {
+            this.params[param] = foreignParams[param];
+        }
+    }
+}
+
+export default ForeignUrlFieldView;

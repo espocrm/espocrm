@@ -1,0 +1,10 @@
+{
+    "items": {
+        "quickCreate": {
+            "view": "views/site/navbar/quick-create",
+            "class": "dropdown hidden-xs quick-create-container",
+            "order": 0,
+            "disabled": false
+        }
+    }
+}

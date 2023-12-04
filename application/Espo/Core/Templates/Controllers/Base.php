@@ -29,6 +29,9 @@
 
 namespace Espo\Core\Templates\Controllers;
 
+/**
+ * Do not remove. Used by exported custom modules.
+ */
 class Base extends \Espo\Core\Controllers\Record
 {
 }

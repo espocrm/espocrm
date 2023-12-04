@@ -15,25 +15,25 @@
   },
   "options": {
     "status": {
-      "Planned": "Плановий",
-      "Held": "Виконано",
-      "Not Held": "Не вміщений"
+      "Planned": "Заплановано",
+      "Held": "Проведено",
+      "Not Held": "Не проведено"
     }
   },
   "labels": {
     "Create {entityType}": "Створити {entityTypeTranslated}",
     "Schedule {entityType}": "Розклад {entityTypeTranslated}",
-    "Log {entityType}": "Лог {entityTypeTranslated}",
-    "Set Held": "Позначити виконаним",
-    "Set Not Held": "Позначити невиконаним"
+    "Log {entityType}": "Журнал {entityTypeTranslated}",
+    "Set Held": "Позначити проведеним",
+    "Set Not Held": "Позначити непроведеним"
   },
   "massActions": {
-    "setHeld": "Позначити виконаними",
-    "setNotHeld": "Позначити невиконаними"
+    "setHeld": "Позначити проведеним",
+    "setNotHeld": "Позначити непроведеним"
   },
   "presetFilters": {
-    "planned": "Планований",
-    "held": "Виконані",
+    "planned": "Заплановано",
+    "held": "Проведені",
     "todays": "Сьогоднішні"
   }
 }

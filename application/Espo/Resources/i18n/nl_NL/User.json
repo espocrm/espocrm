@@ -36,7 +36,8 @@
     "auth2FAEnable": "2-Factor authenticatie inschakelen",
     "auth2FAMethod": "2FA-methode",
     "auth2FATotpSecret": "2FA TOTP-geheim",
-    "workingTimeCalendar": "Werktijd Kalender"
+    "workingTimeCalendar": "Werktijd Kalender",
+    "layoutSet": "Lay-out Set"
   },
   "links": {
     "teams": "Groepen",
@@ -51,7 +52,8 @@
     "dashboardTemplate": "Dashboard sjabloon",
     "userData": "Gebruikers gegevens",
     "workingTimeCalendar": "Werktijd Kalender",
-    "workingTimeRanges": "Werktijd Bereiken"
+    "workingTimeRanges": "Werktijd Bereiken",
+    "layoutSet": "Lay-out Set"
   },
   "labels": {
     "Create User": "Creëer Gebruiker",
@@ -86,7 +88,8 @@
     "teams": "Tot welke groep deze gebruiker behoord. Toegang beheer is afhankelijk van groep regels.",
     "roles": "Aanvullende toegangs regels. Gebruik dit als een gebruiker tot geen enkele groep behoord of als er meer rechten gegeven moeten worden.",
     "portalRoles": "Extra portaal functies. Gebruik het om het toegangscontrole niveau exclusief voor deze gebruiker uit te breiden.",
-    "portals": "Portalen waartoe deze gebruiker toegang heeft."
+    "portals": "Portalen waartoe deze gebruiker toegang heeft.",
+    "layoutSet": "Lay-outs uit een opgegeven set worden toegepast voor de gebruiker in plaats van de standaard lay-outs."
   },
   "messages": {
     "passwordWillBeSent": "Wachtwoord wordt naar het e-mailadres van de gebruiker verzonden.",

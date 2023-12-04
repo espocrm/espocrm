@@ -26,60 +26,61 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/modals/followers-list', ['views/modals/related-list'], function (Dep) {
+import RelatedListModalView from 'views/modals/related-list';
 
-    return Dep.extend({
+class FollowersListModalView extends RelatedListModalView {
 
-        massActionRemoveDisabled: true,
+    massActionRemoveDisabled = true
+    massActionMassUpdateDisabled = true
+    mandatorySelectAttributeList = ['type']
 
-        massActionMassUpdateDisabled: true,
+    setup() {
+        if (
+            !this.getUser().isAdmin() &&
+            this.getAcl().getPermissionLevel('followerManagementPermission') === 'no' &&
+            this.getAcl().getPermissionLevel('portalPermission') === 'no'
+        ) {
+            this.unlinkDisabled = true;
+        }
 
-        mandatorySelectAttributeList: ['type'],
+        super.setup();
+    }
 
-        setup: function () {
-            if (
-                !this.getUser().isAdmin() &&
-                this.getAcl().get('followerManagementPermission') === 'no' &&
-                this.getAcl().get('portalPermission') === 'no'
-            ) {
-                this.unlinkDisabled = true;
+    actionSelectRelated() {
+        let p = this.getParentView();
+
+        let view = null;
+
+        while (p) {
+            // noinspection JSUnresolvedReference
+            if (p.actionSelectRelated) {
+                view = p;
+
+                break;
             }
 
-            Dep.prototype.setup.call(this);
-        },
+            p = p.getParentView();
+        }
 
-        actionSelectRelated: function () {
-            var p = this.getParentView();
+        let filter = 'active';
 
-            var view = null;
+        if (
+            !this.getUser().isAdmin() &&
+            this.getAcl().getPermissionLevel('followerManagementPermission') === 'no' &&
+            this.getAcl().getPermissionLevel('portalPermission') === 'yes'
+        ) {
+            filter = 'activePortal';
+        }
 
-            while (p) {
-                if (p.actionSelectRelated) {
-                    view = p;
+        // noinspection JSUnresolvedReference
+        p.actionSelectRelated({
+            link: this.link,
+            primaryFilterName: filter,
+            massSelect: false,
+            foreignEntityType: 'User',
+            viewKey: 'selectFollowers',
+        });
+    }
+}
 
-                    break;
-                }
-
-                p = p.getParentView();
-            }
-
-            var filter = 'active';
-
-            if (
-                !this.getUser().isAdmin() &&
-                this.getAcl().get('followerManagementPermission') === 'no' &&
-                this.getAcl().get('portalPermission') === 'yes'
-            ) {
-                filter = 'activePortal';
-            }
-
-            p.actionSelectRelated({
-                link: this.link,
-                primaryFilterName: filter,
-                massSelect: false,
-                foreignEntityType: 'User',
-                viewKey: 'selectFollowers',
-            });
-        },
-    });
-});
+export default FollowersListModalView;

@@ -1,1 +1,12 @@
-{}
+{
+  "fields": {
+    "number": "numara",
+    "data": "Veri",
+    "target": "Hedef",
+    "leadCapture": "Yakalanan Fırsat"
+  },
+  "links": {
+    "leadCapture": "Yakalanan Fırsat",
+    "target": "Hedef"
+  }
+}

@@ -95,7 +95,7 @@ class EnumType
         $value = $entity->get($field);
 
         // For bc.
-        // @todo Remove in v8.0.
+        // @todo Remove in v9.0.
         if ($value === '') {
             $value = null;
         }

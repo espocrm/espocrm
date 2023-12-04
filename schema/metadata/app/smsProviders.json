@@ -1,0 +1,17 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/smsProviders.json",
+    "title": "app/smsProviders",
+    "description": "SMS providers.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "object",
+        "description": "A provider name.",
+        "properties": {
+            "senderClassName": {
+                "type": "string",
+                "description": "A sender class. Should implement Espo\\Core\\Sms\\Sender."
+            }
+        }
+    }
+}

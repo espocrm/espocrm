@@ -1,1 +1,10 @@
-{}
+{
+  "syntaxItems": {
+    "code": "kod",
+    "multilineCode": "çok satırlı kod",
+    "emphasizedText": "vurgulanan metin",
+    "deletedText": "silinmiş metin",
+    "blockquote": "Alıntı",
+    "link": "bağlantı"
+  }
+}

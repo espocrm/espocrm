@@ -251,6 +251,7 @@ class RDBSelectBuilder
     public function forUpdate(): self
     {
         $this->builder->forUpdate();
+        $this->sth();
 
         return $this;
     }

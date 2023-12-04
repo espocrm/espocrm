@@ -26,120 +26,123 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/range-currency',
-['views/fields/range-float', 'views/fields/currency', 'ui/select'], function (Dep, Currency, Select) {
+import RangeFloatFieldView from 'views/fields/range-float';
+import CurrencyFieldView from 'views/fields/currency';
+import Select from 'ui/select';
 
-    return Dep.extend({
+class RangeCurrencyFieldView extends RangeFloatFieldView {
 
-        type: 'rangeCurrency',
+    type = 'rangeCurrency'
 
-        editTemplate: 'fields/range-currency/edit',
+    editTemplate = 'fields/range-currency/edit'
 
-        data: function () {
-            return _.extend({
-                currencyField: this.currencyField,
-                currencyValue: this.model.get(this.fromCurrencyField) ||
-                    this.getPreferences().get('defaultCurrency') ||
-                    this.getConfig().get('defaultCurrency'),
-                currencyOptions: this.currencyOptions,
-                currencyList: this.currencyList
-            }, Dep.prototype.data.call(this));
-        },
+    data() {
+        return {
+            currencyField: this.currencyField,
+            currencyValue: this.model.get(this.fromCurrencyField) ||
+                this.getPreferences().get('defaultCurrency') ||
+                this.getConfig().get('defaultCurrency'),
+            currencyList: this.currencyList,
+            ...super.data(),
+        }
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            var ucName = Espo.Utils.upperCaseFirst(this.name);
+        const ucName = Espo.Utils.upperCaseFirst(this.name);
 
-            this.fromCurrencyField = 'from' + ucName + 'Currency';
-            this.toCurrencyField = 'to' + ucName + 'Currency';
+        this.fromCurrencyField = 'from' + ucName + 'Currency';
+        this.toCurrencyField = 'to' + ucName + 'Currency';
 
-            this.currencyField = this.name + 'Currency';
-            this.currencyList = this.getConfig().get('currencyList') || ['USD'];
-            this.decimalPlaces = this.getConfig().get('currencyDecimalPlaces');
-        },
+        this.currencyField = this.name + 'Currency';
+        this.currencyList = this.getConfig().get('currencyList') || ['USD'];
+        this.decimalPlaces = this.getConfig().get('currencyDecimalPlaces');
+    }
 
-        setupAutoNumericOptions: function () {
-            this.autoNumericOptions = {
-                digitGroupSeparator: this.thousandSeparator || '',
-                decimalCharacter: this.decimalMark,
-                modifyValueOnWheel: false,
-                selectOnFocus: false,
-                decimalPlaces: this.decimalPlaces,
-                allowDecimalPadding: true,
-                showWarnings: false,
-                formulaMode: true,
-            };
+    setupAutoNumericOptions() {
+        this.autoNumericOptions = {
+            digitGroupSeparator: this.thousandSeparator || '',
+            decimalCharacter: this.decimalMark,
+            modifyValueOnWheel: false,
+            selectOnFocus: false,
+            decimalPlaces: this.decimalPlaces,
+            allowDecimalPadding: true,
+            showWarnings: false,
+            formulaMode: true,
+        };
 
-            if (this.decimalPlaces === null) {
-                this.autoNumericOptions.decimalPlaces = this.decimalPlacesRawValue;
-                this.autoNumericOptions.decimalPlacesRawValue = this.decimalPlacesRawValue;
-                this.autoNumericOptions.allowDecimalPadding = false;
-            }
-        },
+        if (this.decimalPlaces === null) {
+            this.autoNumericOptions.decimalPlaces = this.decimalPlacesRawValue;
+            this.autoNumericOptions.decimalPlacesRawValue = this.decimalPlacesRawValue;
+            this.autoNumericOptions.allowDecimalPadding = false;
+        }
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
-            if (this.mode === this.MODE_EDIT) {
-                this.$currency = this.$el.find('[data-name="' + this.currencyField + '"]');
+        if (this.mode === this.MODE_EDIT) {
+            this.$currency = this.$el.find('[data-name="' + this.currencyField + '"]');
 
-                Select.init(this.$currency);
-            }
-        },
+            Select.init(this.$currency);
+        }
+    }
 
-        formatNumber: function (value) {
-            return Currency.prototype.formatNumberDetail.call(this, value);
-        },
+    formatNumber(value) {
+        return CurrencyFieldView.prototype.formatNumberDetail.call(this, value);
+    }
 
-        getValueForDisplay: function () {
-            let fromValue = this.model.get(this.fromField);
-            let toValue = this.model.get(this.toField);
+    getValueForDisplay() {
+        let fromValue = this.model.get(this.fromField);
+        let toValue = this.model.get(this.toField);
 
-            fromValue = isNaN(fromValue) ? null : fromValue;
-            toValue = isNaN(toValue) ? null : toValue;
+        fromValue = isNaN(fromValue) ? null : fromValue;
+        toValue = isNaN(toValue) ? null : toValue;
 
-            let currencyValue = this.model.get(this.fromCurrencyField) ||
-                this.model.get(this.toCurrencyField);
+        let currencyValue = this.model.get(this.fromCurrencyField) ||
+            this.model.get(this.toCurrencyField);
 
-            let symbol = this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || currencyValue;
+        let symbol = this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || currencyValue;
 
-            if (fromValue !== null && toValue !== null) {
-                return this.formatNumber(fromValue) + ' &#8211 ' +
-                    this.formatNumber(toValue) + ' ' + symbol + '';
-            }
+        if (fromValue !== null && toValue !== null) {
+            return this.formatNumber(fromValue) + ' &#8211 ' +
+                this.formatNumber(toValue) + ' ' + symbol + '';
+        }
 
-            if (fromValue) {
-                return '&#62;&#61; ' + this.formatNumber(fromValue) + ' ' + symbol+'';
-            }
+        if (fromValue) {
+            return '&#62;&#61; ' + this.formatNumber(fromValue) + ' ' + symbol+'';
+        }
 
-            if (toValue) {
-                return '&#60;&#61; ' + this.formatNumber(toValue) + ' ' + symbol+'';
-            }
+        if (toValue) {
+            return '&#60;&#61; ' + this.formatNumber(toValue) + ' ' + symbol+'';
+        }
 
-            return this.translate('None');
-        },
+        return this.translate('None');
+    }
 
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+    fetch() {
+        const data = super.fetch();
 
-            let currencyValue = this.$currency.val();
+        let currencyValue = this.$currency.val();
 
-            if (data[this.fromField] !== null) {
-                data[this.fromCurrencyField] = currencyValue;
-            }
-            else {
-                data[this.fromCurrencyField] = null;
-            }
+        if (data[this.fromField] !== null) {
+            data[this.fromCurrencyField] = currencyValue;
+        }
+        else {
+            data[this.fromCurrencyField] = null;
+        }
 
-            if (data[this.toField] !== null) {
-                data[this.toCurrencyField] = currencyValue;
-            }
-            else {
-                data[this.toCurrencyField] = null;
-            }
+        if (data[this.toField] !== null) {
+            data[this.toCurrencyField] = currencyValue;
+        }
+        else {
+            data[this.toCurrencyField] = null;
+        }
 
-            return data;
-        },
-    });
-});
+        return data;
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default RangeCurrencyFieldView;

@@ -1,10 +1,10 @@
 {
   "fields": {
     "username": "Benutzername",
-    "ipAddress": "IP Adresse",
+    "ipAddress": "IP-Adresse",
     "requestTime": "Anforderungszeit",
-    "createdAt": "Angefordert bei",
-    "isDenied": "ist verweigert",
+    "createdAt": "Zeitstempel",
+    "isDenied": "Verweigert",
     "denialReason": "Verweigerungsgrund",
     "user": "Benutzer",
     "authToken": "Auth Token erstellt",

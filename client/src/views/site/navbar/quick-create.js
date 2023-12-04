@@ -1,0 +1,105 @@
+/************************************************************************
+ * This file is part of EspoCRM.
+ *
+ * EspoCRM - Open Source CRM application.
+ * Copyright (C) 2014-2023 Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko
+ * Website: https://www.espocrm.com
+ *
+ * EspoCRM is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * EspoCRM is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with EspoCRM. If not, see http://www.gnu.org/licenses/.
+ *
+ * The interactive user interfaces in modified source and object code versions
+ * of this program must display Appropriate Legal Notices, as required under
+ * Section 5 of the GNU General Public License version 3.
+ *
+ * In accordance with Section 7(b) of the GNU General Public License version 3,
+ * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
+ ************************************************************************/
+
+import View from 'view';
+
+class QuickCreateNavbarView extends View {
+
+    templateContent = `
+        <a
+            id="nav-quick-create-dropdown"
+            class="dropdown-toggle"
+            data-toggle="dropdown"
+            role="button"
+            tabindex="0"
+            title="{{translate 'Create'}}"
+        ><i class="fas fa-plus icon"></i></a>
+        <ul class="dropdown-menu" role="menu" aria-labelledby="nav-quick-create-dropdown">
+            <li class="dropdown-header">{{translate 'Create'}}</li>
+            {{#each list}}
+                <li><a
+                    href="#{{./this}}/create"
+                    data-name="{{./this}}"
+                    data-action="quickCreate"
+                >{{translate this category='scopeNames'}}</a></li>
+            {{/each}}
+        </ul>
+    `
+
+    data() {
+        return {
+            list: this.list,
+        };
+    }
+
+    setup() {
+        this.addActionHandler('quickCreate', (e, element) => {
+            e.preventDefault();
+
+            this.processCreate(element.dataset.name);
+        });
+
+        const scopes = this.getMetadata().get('scopes') || {};
+
+        /** @type {string[]} */
+        const list = this.getConfig().get('quickCreateList') || [];
+
+        this.list = list.filter(scope => {
+            if (!scopes[scope]) {
+                return false;
+            }
+
+            if ((scopes[scope] || {}).disabled) {
+                return;
+            }
+
+            if ((scopes[scope] || {}).acl) {
+                return this.getAcl().check(scope, 'create');
+            }
+
+            return true;
+        });
+    }
+
+    isAvailable() {
+        return this.list.length > 0;
+    }
+
+    processCreate(scope) {
+        Espo.Ui.notify(' ... ');
+
+        const type = this.getMetadata().get(['clientDefs', scope, 'quickCreateModalType']) || 'edit';
+        const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', type]) || 'views/modals/edit';
+
+        this.createView('dialog', viewName , {scope: scope})
+            .then(view => view.render())
+            .then(() => Espo.Ui.notify(false));
+    }
+}
+
+export default QuickCreateNavbarView;

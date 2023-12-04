@@ -62,6 +62,7 @@ class Params
     private ?string $currency = null;
     private ?string $timezone = null;
     private ?string $decimalMark = null;
+    private ?string $phoneNumberCountry = null;
 
     private function __construct()
     {
@@ -86,6 +87,11 @@ class Params
     public function getPersonNameFormat(): ?string
     {
         return $this->personNameFormat;
+    }
+
+    public function getPhoneNumberCountry(): ?string
+    {
+        return $this->phoneNumberCountry;
     }
 
     public function isIdleMode(): bool
@@ -189,6 +195,14 @@ class Params
     {
         $obj = clone $this;
         $obj->personNameFormat = $personNameFormat;
+
+        return $obj;
+    }
+
+    public function withPhoneNumberCountry(?string $phoneNumberCountry): self
+    {
+        $obj = clone $this;
+        $obj->phoneNumberCountry = $phoneNumberCountry;
 
         return $obj;
     }
@@ -339,6 +353,7 @@ class Params
             ->withIdleMode($raw->idleMode ?? false)
             ->withManualMode($raw->manualMode ?? false)
             ->withPersonNameFormat($raw->personNameFormat ?? null)
+            ->withPhoneNumberCountry($raw->phoneNumberCountry ?? null)
             ->withSilentMode($raw->silentMode ?? false)
             ->withSkipDuplicateChecking($raw->skipDuplicateChecking ?? false)
             ->withStartFromLastIndex($raw->startFromLastIndex ?? false)
@@ -368,6 +383,7 @@ class Params
             'skipDuplicateChecking' => $this->skipDuplicateChecking,
             'startFromLastIndex' => $this->startFromLastIndex,
             'textQualifier' => $this->textQualifier,
+            'phoneNumberCountry' => $this->phoneNumberCountry,
             'timeFormat' => $this->timeFormat,
             'timezone' => $this->timezone,
             'updateBy' => $this->updateBy,

@@ -9,7 +9,7 @@
     "sicCode": "ISIC Code",
     "industry": "Branche",
     "type": "Typ",
-    "contactRole": "Rolle",
+    "contactRole": "Funktion",
     "campaign": "Kampagne",
     "targetLists": "Kontaktlisten",
     "targetList": "Kontaktliste",
@@ -29,7 +29,8 @@
     "campaignLogRecords": "Kampagnen Log",
     "campaign": "Kampagne",
     "portalUsers": "Portal Benutzer",
-    "originalLead": "Ursprünglicher Interessent"
+    "originalLead": "Ursprünglicher Interessent",
+    "contactsPrimary": "Kontakte (Primär)"
   },
   "options": {
     "type": {

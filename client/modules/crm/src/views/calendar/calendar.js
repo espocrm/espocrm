@@ -26,1029 +26,1273 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/calendar/calendar', ['view', 'lib!full-calendar'], function (Dep, FullCalendar) {
+/** @module modules/crm/views/calendar/calendar */
 
-    return Dep.extend({
+import View from 'view';
+import moment from 'moment';
+import * as FullCalendar from 'fullcalendar';
 
-        template: 'crm:calendar/calendar',
+/**
+ * @typedef {import('@fullcalendar/core/internal-common.js').EventImpl} EventImpl
+ */
 
-        eventAttributes: [],
-        colors: {},
-        allDayScopeList: ['Task'],
-        scopeList: ['Meeting', 'Call', 'Task'],
-        header: true,
-        modeList: [],
-        fullCalendarModeList: [
-            'month',
-            'agendaWeek',
-            'agendaDay',
-            'basicWeek',
-            'basicDay',
-            'listWeek',
-        ],
-        defaultMode: 'agendaWeek',
-        slotDuration: 30,
-        titleFormat: {
-            month: 'MMMM YYYY',
-            week: 'MMMM YYYY',
-            day: 'dddd, MMMM D, YYYY',
+/**
+ * @typedef {import('@fullcalendar/core/internal-common.d.ts').CalendarOptions} CalendarOptions
+ */
+
+/**
+ * @typedef {import('@fullcalendar/interaction/index.d.ts').ExtraListenerRefiners} ExtraListenerRefiners
+ */
+
+class CalendarView extends View {
+
+    template = 'crm:calendar/calendar'
+
+    eventAttributes = []
+    colors = {}
+    allDayScopeList = ['Task']
+    scopeList = ['Meeting', 'Call', 'Task']
+    header = true
+    modeList = []
+    fullCalendarModeList = [
+        'month',
+        'agendaWeek',
+        'agendaDay',
+        'basicWeek',
+        'basicDay',
+        'listWeek',
+    ]
+    defaultMode = 'agendaWeek'
+    slotDuration = 30
+    titleFormat = {
+        month: 'MMMM YYYY',
+        week: 'MMMM YYYY',
+        day: 'dddd, MMMM D, YYYY',
+    }
+    rangeSeparator = ' – '
+
+    /** @private */
+    fetching = false
+
+    modeViewMap = {
+        month: 'dayGridMonth',
+        agendaWeek: 'timeGridWeek',
+        agendaDay: 'timeGridDay',
+        basicWeek: 'dayGridWeek',
+        basicDay: 'dayGridDay',
+        listWeek: 'listWeek',
+    }
+
+    extendedProps = [
+        'scope',
+        'recordId',
+        'dateStart',
+        'dateEnd',
+        'dateStartDate',
+        'dateEndDate',
+        'status',
+        'originalColor',
+        'duration',
+        'allDayCopy',
+    ]
+
+    /** @type {FullCalendar.Calendar} */
+    calendar
+
+    events = {
+        /** @this CalendarView */
+        'click button[data-action="prev"]': function () {
+            this.actionPrevious();
         },
-
-        /**
-         * @private
-         */
-        fetching: false,
-
-        data: function () {
-            return {
-                mode: this.mode,
-                header: this.header,
-                isCustomViewAvailable: this.isCustomViewAvailable,
-                isCustomView: this.isCustomView,
-                todayLabel: this.translate('Today', 'labels', 'Calendar'),
-                todayLabelShort: this.translate('Today', 'labels', 'Calendar').substr(0, 2),
-            };
+        /** @this CalendarView */
+        'click button[data-action="next"]': function () {
+            this.actionNext();
         },
+        /** @this CalendarView */
+        'click button[data-action="today"]': function () {
+            this.actionToday();
+        },
+        /** @this CalendarView */
+        'click [data-action="mode"]': function (e) {
+            const mode = $(e.currentTarget).data('mode');
 
-        events: {
-            'click button[data-action="prev"]': function () {
-                this.actionPrevious();
-            },
-            'click button[data-action="next"]': function () {
-                this.actionNext();
-            },
-            'click button[data-action="today"]': function () {
-                this.actionToday();
-            },
-            'click [data-action="mode"]': function (e) {
-                let mode = $(e.currentTarget).data('mode');
+            this.selectMode(mode);
+        },
+        /** @this CalendarView */
+        'click [data-action="refresh"]': function () {
+            this.actionRefresh();
+        },
+        /** @this CalendarView */
+        'click [data-action="toggleScopeFilter"]': function (e) {
+            const $target = $(e.currentTarget);
+            const filterName = $target.data('name');
 
-                this.selectMode(mode);
-            },
-            'click [data-action="refresh"]': function (e) {
-                this.actionRefresh();
-            },
-            'click [data-action="toggleScopeFilter"]': function (e) {
-                let $target = $(e.currentTarget);
-                let filterName = $target.data('name');
+            const $check = $target.find('.filter-check-icon');
 
-                let $check = $target.find('.filter-check-icon');
-
-                if ($check.hasClass('hidden')) {
-                    $check.removeClass('hidden');
-                } else {
-                    $check.addClass('hidden');
-                }
-
-                e.stopPropagation(e);
-
-                this.toggleScopeFilter(filterName);
+            if ($check.hasClass('hidden')) {
+                $check.removeClass('hidden');
+            } else {
+                $check.addClass('hidden');
             }
-        },
 
-        setup: function () {
-            this.date = this.options.date || null;
-            this.mode = this.options.mode || this.defaultMode;
-            this.header = ('header' in this.options) ? this.options.header : this.header;
-            this.slotDuration = this.options.slotDuration || this.slotDuration;
+            e.stopPropagation(e);
+
+            this.toggleScopeFilter(filterName);
+        },
+    }
+
+    data() {
+        return {
+            mode: this.mode,
+            header: this.header,
+            isCustomViewAvailable: this.isCustomViewAvailable,
+            isCustomView: this.isCustomView,
+            todayLabel: this.translate('Today', 'labels', 'Calendar'),
+            todayLabelShort: this.translate('Today', 'labels', 'Calendar').slice(0, 2),
+        };
+    }
+
+    setup() {
+        this.wait(
+            Espo.loader.requirePromise('lib!@fullcalendar/moment')
+        );
+
+        this.wait(
+            Espo.loader.requirePromise('lib!@fullcalendar/moment-timezone')
+        );
+
+        this.date = this.options.date || null;
+        this.mode = this.options.mode || this.defaultMode;
+        this.header = ('header' in this.options) ? this.options.header : this.header;
+
+        this.setupMode();
+
+        this.$container = this.options.$container;
+
+        this.colors = Espo.Utils
+            .clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors);
+
+        this.modeList = this.getMetadata()
+            .get('clientDefs.Calendar.modeList') || this.modeList;
+
+        this.scopeList = this.getConfig()
+            .get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
+
+        this.allDayScopeList = this.getMetadata()
+            .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
+
+        this.slotDuration = this.options.slotDuration ||
+            this.getMetadata().get('clientDefs.Calendar.slotDuration') ||
+            this.slotDuration;
+
+        this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
+
+        this.isCustomViewAvailable = this.getAcl().getPermissionLevel('userPermission') !== 'no';
+
+        if (this.options.userId) {
+            this.isCustomViewAvailable = false;
+        }
+
+        const scopeList = [];
+
+        this.scopeList.forEach(scope => {
+            if (this.getAcl().check(scope)) {
+                scopeList.push(scope);
+            }
+        });
+
+        this.scopeList = scopeList;
+
+        if (this.header) {
+            this.enabledScopeList = this.getStoredEnabledScopeList() || Espo.Utils.clone(this.scopeList);
+        } else {
+            this.enabledScopeList = this.options.enabledScopeList || Espo.Utils.clone(this.scopeList);
+        }
+
+        if (Object.prototype.toString.call(this.enabledScopeList) !== '[object Array]') {
+            this.enabledScopeList = [];
+        }
+
+        this.enabledScopeList.forEach(item => {
+            const color = this.getMetadata().get(['clientDefs', item, 'color']);
+
+            if (color) {
+                this.colors[item] = color;
+            }
+        });
+
+        if (this.header) {
+            this.createView('modeButtons', 'crm:views/calendar/mode-buttons', {
+                selector: '.mode-buttons',
+                isCustomViewAvailable: this.isCustomViewAvailable,
+                modeList: this.modeList,
+                scopeList: this.scopeList,
+                mode: this.mode,
+            });
+        }
+    }
+
+    setupMode() {
+        this.viewMode = this.mode;
+
+        this.isCustomView = false;
+        this.teamIdList = this.options.teamIdList || null;
+
+        if (this.teamIdList && !this.teamIdList.length) {
+            this.teamIdList = null;
+        }
+
+        if (~this.mode.indexOf('view-')) {
+            this.viewId = this.mode.slice(5);
+            this.isCustomView = true;
+
+            const calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+
+            calendarViewDataList.forEach(item => {
+                if (item.id === this.viewId) {
+                    this.viewMode = item.mode;
+                    this.teamIdList = item.teamIdList;
+                    this.viewName = item.name;
+                }
+            });
+        }
+    }
+
+    isAgendaMode() {
+        return this.mode.indexOf('agenda') === 0;
+    }
+
+    selectMode(mode) {
+        if (~this.fullCalendarModeList.indexOf(mode) || mode.indexOf('view-') === 0) {
+            const previousMode = this.mode;
+
+            if (
+                mode.indexOf('view-') === 0 ||
+                mode.indexOf('view-') !== 0 && previousMode.indexOf('view-') === 0
+            ) {
+                this.trigger('change:mode', mode, true);
+
+                return;
+            }
+
+            this.mode = mode;
 
             this.setupMode();
 
-            this.$container = this.options.$container;
-
-            this.colors = Espo.Utils
-                .clone(this.getMetadata().get('clientDefs.Calendar.colors') || this.colors);
-            this.modeList = this.getMetadata()
-                .get('clientDefs.Calendar.modeList') || this.modeList;
-            this.scopeList = this.getConfig()
-                .get('calendarEntityList') || Espo.Utils.clone(this.scopeList);
-            this.allDayScopeList = this.getMetadata()
-                .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
-
-            this.colors = _.extend(
-                this.colors,
-                Espo.Utils.clone(this.getHelper().themeManager.getParam('calendarColors') || {}),
-            );
-
-            this.scopeFilter = false;
-
-            this.isCustomViewAvailable = this.getAcl().get('userPermission') !== 'no';
-
-            if (this.options.userId) {
-                this.isCustomViewAvailable = false;
-            }
-
-            var scopeList = [];
-
-            this.scopeList.forEach(scope => {
-                if (this.getAcl().check(scope)) {
-                    scopeList.push(scope);
-                }
-            });
-
-            this.scopeList = scopeList;
-
-            if (this.header) {
-                this.enabledScopeList = this.getStoredEnabledScopeList() || Espo.Utils.clone(this.scopeList);
+            if (this.isCustomView) {
+                this.$el.find('button[data-action="editCustomView"]').removeClass('hidden');
             } else {
-                this.enabledScopeList = this.options.enabledScopeList || Espo.Utils.clone(this.scopeList);
+                this.$el.find('button[data-action="editCustomView"]').addClass('hidden');
             }
 
-            if (Object.prototype.toString.call(this.enabledScopeList) !== '[object Array]') {
-                this.enabledScopeList = [];
+            this.$el.find('[data-action="mode"]').removeClass('active');
+            this.$el.find('[data-mode="' + mode + '"]').addClass('active');
+
+            this.calendar.changeView(this.modeViewMap[this.viewMode]);
+
+            const toAgenda = previousMode.indexOf('agenda') !== 0 && mode.indexOf('agenda') === 0;
+            const fromAgenda = previousMode.indexOf('agenda') === 0 && mode.indexOf('agenda') !== 0;
+
+            if (
+                toAgenda && !this.fetching ||
+                fromAgenda && !this.fetching
+            ) {
+                this.calendar.refetchEvents();
             }
 
-            this.enabledScopeList.forEach(item => {
-                var color = this.getMetadata().get(['clientDefs', item, 'color']);
+            this.updateDate();
 
-                if (color) {
-                    this.colors[item] = color;
-                }
+            if (this.hasView('modeButtons')) {
+                this.getModeButtonsView().mode = mode;
+                this.getModeButtonsView().reRender();
+            }
+        }
+
+        this.trigger('change:mode', mode);
+    }
+
+    /**
+     * @return {module:modules/crm/views/calendar/mode-buttons}
+     */
+    getModeButtonsView() {
+        return this.getView('modeButtons');
+    }
+
+    toggleScopeFilter(name) {
+        const index = this.enabledScopeList.indexOf(name);
+
+        if (!~index) {
+            this.enabledScopeList.push(name);
+        } else {
+            this.enabledScopeList.splice(index, 1);
+        }
+
+        this.storeEnabledScopeList(this.enabledScopeList);
+
+        this.calendar.refetchEvents();
+    }
+
+    getStoredEnabledScopeList() {
+        const key = 'calendarEnabledScopeList';
+
+        return this.getStorage().get('state', key) || null;
+    }
+
+    storeEnabledScopeList(enabledScopeList) {
+        const key = 'calendarEnabledScopeList';
+
+        this.getStorage().set('state', key, enabledScopeList);
+    }
+
+    updateDate() {
+        if (!this.header) {
+            return;
+        }
+
+        if (this.isToday()) {
+            this.$el.find('button[data-action="today"]').addClass('active');
+        } else {
+            this.$el.find('button[data-action="today"]').removeClass('active');
+        }
+
+        const title = this.getTitle();
+
+        this.$el.find('.date-title h4 span').text(title);
+    }
+
+    isToday() {
+        const view = this.calendar.view;
+
+        const todayUnix = moment().unix();
+        const startUnix = moment(view.activeStart).unix();
+        const endUnix = moment(view.activeStart).unix();
+
+        return startUnix <= todayUnix && todayUnix < endUnix;
+    }
+
+    getTitle() {
+        const view = this.calendar.view;
+
+        const map = {
+            timeGridWeek: 'week',
+            timeGridDay: 'day',
+            dayGridWeek: 'week',
+            dayGridDay: 'day',
+            dayGridMonth: 'month',
+        };
+
+        const viewName = map[view.type] || view.type;
+
+        let title;
+
+        const format = this.titleFormat[viewName];
+
+        if (viewName === 'week') {
+            const start = this.dateToMoment(view.currentStart).format(format);
+            const end = this.dateToMoment(view.currentEnd).subtract(1, 'minute').format(format);
+
+            title = start !== end ?
+                start + this.rangeSeparator + end :
+                start;
+        } else {
+            title = moment(view.currentStart).format(format);
+        }
+
+        if (this.options.userId && this.options.userName) {
+            title += ' (' + this.options.userName + ')';
+        }
+
+        title = this.getHelper().escapeString(title);
+
+        return title;
+    }
+
+    /**
+     * @param {Object.<string, *>} o
+     * @return {{
+     *     recordId,
+     *     dateStart?: string,
+     *     originalColor?: string,
+     *     scope?: string,
+     *     display: string,
+     *     id: string,
+     *     dateEnd?: string,
+     *     dateStartDate?: ?string,
+     *     title: string,
+     *     dateEndDate?: ?string,
+     *     status?: string,
+     * }}
+     */
+    convertToFcEvent(o) {
+        const event = {
+            title: o.name || '',
+            scope: o.scope,
+            id: o.scope + '-' + o.id,
+            recordId: o.id,
+            dateStart: o.dateStart,
+            dateEnd: o.dateEnd,
+            dateStartDate: o.dateStartDate,
+            dateEndDate: o.dateEndDate,
+            status: o.status,
+            originalColor: o.color,
+            display: 'block',
+        };
+
+        if (o.isWorkingRange) {
+            event.display = 'inverse-background';
+            event.groupId = 'nonWorking';
+            event.color = this.colors['bg'];
+        }
+
+        if (this.teamIdList) {
+            event.userIdList = o.userIdList || [];
+            event.userNameMap = o.userNameMap || {};
+
+            event.userIdList = event.userIdList.sort((v1, v2) => {
+                return (event.userNameMap[v1] || '').localeCompare(event.userNameMap[v2] || '');
             });
+        }
 
-            if (this.header) {
-                this.createView('modeButtons', 'crm:views/calendar/mode-buttons', {
-                    el: this.getSelector() + ' .mode-buttons',
-                    isCustomViewAvailable: this.isCustomViewAvailable,
-                    modeList: this.modeList,
-                    scopeList: this.scopeList,
-                    mode: this.mode,
-                });
+        this.eventAttributes.forEach(attr => {
+            event[attr] = o[attr];
+        });
+
+        let start;
+        let end;
+
+        if (o.dateStart) {
+            start = !o.dateStartDate ?
+                this.getDateTime().toMoment(o.dateStart) :
+                this.dateToMoment(o.dateStartDate);
+        }
+
+        if (o.dateEnd) {
+            end = !o.dateEndDate ?
+                this.getDateTime().toMoment(o.dateEnd) :
+                this.dateToMoment(o.dateEndDate);
+        }
+
+        if (end && start) {
+            event.duration = end.unix() - start.unix();
+
+            if (event.duration < 1800) {
+                end = start.clone().add(30, 'm');
             }
-        },
+        }
 
-        setupMode: function () {
-            this.viewMode = this.mode;
+        if (start) {
+            event.start = start.toISOString(true);
+        }
 
-            this.isCustomView = false;
-            this.teamIdList = this.options.teamIdList || null;
+        if (end) {
+            event.end = end.toISOString(true);
+        }
 
-            if (this.teamIdList && !this.teamIdList.length) {
-                this.teamIdList = null;
-            }
+        event.allDay = false;
 
-            if (~this.mode.indexOf('view-')) {
-                this.viewId = this.mode.substr(5);
-                this.isCustomView = true;
+        if (!o.isWorkingRange) {
+            this.handleAllDay(event);
+            this.fillColor(event);
+            this.handleStatus(event);
+        }
 
-                var calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+        if (o.isWorkingRange && !this.isAgendaMode()) {
+            event.allDay = true;
+        }
 
-                calendarViewDataList.forEach(item => {
-                    if (item.id === this.viewId) {
-                        this.viewMode = item.mode;
-                        this.teamIdList = item.teamIdList;
-                        this.viewName = item.name;
-                    }
-                });
-            }
-        },
+        return event;
+    }
 
-        isAgendaMode: function () {
-            return this.mode.indexOf('agenda') === 0;
-        },
+    /**
+     * @private
+     * @param {string|Date} date
+     * @return {moment.Moment}
+     */
+    dateToMoment(date)  {
+        return moment.tz(
+            date,
+            this.getDateTime().getTimeZone()
+        );
+    }
 
-        selectMode: function (mode) {
-            if (~this.fullCalendarModeList.indexOf(mode) || mode.indexOf('view-') === 0) {
-                var previousMode = this.mode;
+    /**
+     * @param {string} scope
+     * @return {string[]}
+     */
+    getEventTypeCompletedStatusList(scope) {
+        return this.getMetadata().get(['scopes', scope, 'completedStatusList']) || [];
+    }
+
+    /**
+     * @param {string} scope
+     * @return {string[]}
+     */
+    getEventTypeCanceledStatusList(scope) {
+        return this.getMetadata().get(['scopes', scope, 'canceledStatusList']) || [];
+    }
+
+    fillColor(event) {
+        let color = this.colors[event.scope];
+
+        if (event.originalColor) {
+            color = event.originalColor;
+        }
+
+        if (!color) {
+            color = this.getColorFromScopeName(event.scope);
+        }
+
+        if (
+            color &&
+            (
+                this.getEventTypeCompletedStatusList(event.scope).includes(event.status) ||
+                this.getEventTypeCanceledStatusList(event.scope).includes(event.status)
+            )
+        ) {
+            color = this.shadeColor(color, 0.4);
+        }
+
+        event.color = color;
+    }
+
+    handleStatus(event) {
+        if (this.getEventTypeCanceledStatusList(event.scope).includes(event.status)) {
+            event.className = ['event-canceled'];
+        } else {
+            event.className = [];
+        }
+    }
+
+    shadeColor(color, percent) {
+        if (color === 'transparent') {
+            return color;
+        }
+
+        if (this.getThemeManager().getParam('isDark')) {
+            percent *= -1;
+        }
+
+        const alpha = color.substring(7);
+
+        const f = parseInt(color.slice(1, 7), 16),
+            t = percent < 0 ? 0 : 255,
+            p = percent < 0 ? percent * -1 : percent,
+            R = f >> 16,
+            G = f >> 8 & 0x00FF,
+            B = f & 0x0000FF;
+
+        return "#" + (
+            0x1000000 + (
+                Math.round((t - R) * p) + R) * 0x10000 +
+            (Math.round((t - G) * p) + G) * 0x100 +
+            (Math.round((t - B) * p) + B)
+        ).toString(16).slice(1) + alpha;
+    }
+
+    /**
+     * @param {EventImpl} event
+     * @param {boolean} [notInitial]
+     */
+    handleAllDay(event, notInitial) {
+        let start = event.start ? this.dateToMoment(event.start) : null;
+        const end = event.end ? this.dateToMoment(event.end) : null;
+
+        if (this.allDayScopeList.includes(event.scope)) {
+            event.allDay = event.allDayCopy = true;
+
+            if (!notInitial && end) {
+                start = end;
 
                 if (
-                    mode.indexOf('view-') === 0 ||
-                    mode.indexOf('view-') !== 0 && previousMode.indexOf('view-') === 0
+                    !event.dateEndDate &&
+                    end.hours() === 0 &&
+                    end.minutes() === 0
                 ) {
-                    this.trigger('change:mode', mode, true);
+                    start.add(-1, 'days');
+                }
+            }
+
+            if (start) {
+                event.start = start.toDate();
+            }
+
+            if (end) {
+                event.end = end.toDate();
+            }
+
+            return;
+        }
+
+        if (event.dateStartDate && event.dateEndDate) {
+            event.allDay = true;
+            event.allDayCopy = event.allDay;
+
+            if (!notInitial) {
+                end.add(1, 'days')
+            }
+
+            if (start) {
+                event.start = start.toDate();
+            }
+
+            if (end) {
+                event.end = end.toDate();
+            }
+
+            return;
+        }
+
+        if (!start || !end) {
+            event.allDay = true;
+
+            if (end) {
+                start = end;
+            }
+        } else {
+            if (
+                (
+                    start.format('d') !== end.format('d') &&
+                    (end.hours() !== 0 || end.minutes() !== 0)
+                ) &&
+                (end.unix() - start.unix() >= 86400)
+            ) {
+                event.allDay = true;
+
+                //if (!notInitial) {
+                    if (end.hours() !== 0 || end.minutes() !== 0) {
+                        end.add(1, 'days');
+                    }
+                //}
+            } else {
+                event.allDay = false;
+            }
+        }
+
+        event.allDayCopy = event.allDay;
+
+        if (start) {
+            event.start = start.toDate();
+        }
+
+        if (end) {
+            event.end = end.toDate();
+        }
+    }
+
+    convertToFcEvents(list) {
+        this.now = moment.tz(this.getDateTime().getTimeZone());
+
+        const events = [];
+
+        list.forEach(o => {
+            const event = this.convertToFcEvent(o);
+
+            events.push(event);
+        });
+
+        return events;
+    }
+
+    /**
+     * @param {string} date
+     * @return {string}
+     */
+    convertDateTime(date) {
+        const format = this.getDateTime().internalDateTimeFormat;
+        const timeZone = this.getDateTime().timeZone;
+
+        const m = timeZone ?
+            moment.tz(date, null, timeZone).utc() :
+            moment.utc(date, null);
+
+        return m.format(format) + ':00';
+    }
+
+    getCalculatedHeight() {
+        if (this.$container && this.$container.length) {
+            return this.$container.height();
+        }
+
+        return this.getHelper().calculateContentContainerHeight(this.$el.find('.calendar'));
+    }
+
+    adjustSize() {
+        if (this.isRemoved()) {
+            return;
+        }
+
+        const height = this.getCalculatedHeight();
+
+        this.calendar.setOption('contentHeight', height);
+        this.calendar.updateSize();
+    }
+
+    afterRender() {
+        if (this.options.containerSelector) {
+            this.$container = $(this.options.containerSelector);
+        }
+
+        this.$calendar = this.$el.find('div.calendar');
+
+        const slotDuration = '00:' + this.slotDuration + ':00';
+        const timeFormat = this.getDateTime().timeFormat;
+
+        let slotLabelFormat = timeFormat;
+
+        if (~timeFormat.indexOf('a')) {
+            slotLabelFormat = 'h:mma';
+        } else if (~timeFormat.indexOf('A')) {
+            slotLabelFormat = 'h:mmA';
+        }
+
+        /** @type {CalendarOptions & Object.<string, *>} */
+        const options = {
+            headerToolbar: false,
+            slotLabelFormat: slotLabelFormat,
+            eventTimeFormat: timeFormat,
+            initialView: this.modeViewMap[this.viewMode],
+            defaultRangeSeparator: this.rangeSeparator,
+            weekNumbers: true,
+            weekNumberCalculation: 'ISO',
+            editable: true,
+            selectable: true,
+            selectMirror: true,
+            height: this.options.height || void 0,
+            firstDay: this.getDateTime().weekStart,
+            slotEventOverlap: true,
+            slotDuration: slotDuration,
+            snapDuration: this.slotDuration * 60 * 1000,
+            timeZone: this.getDateTime().timeZone || undefined,
+            longPressDelay: 300,
+            eventColor: this.colors[''],
+            nowIndicator: true,
+            allDayText: '',
+            weekText: '',
+            views: {
+                week: {
+                    dayHeaderFormat: 'ddd DD',
+                },
+                day: {
+                    dayHeaderFormat: 'ddd DD',
+                },
+                month: {
+                    dayHeaderFormat: 'ddd',
+                },
+            },
+            windowResize: () => {
+                this.adjustSize();
+            },
+            select: info => {
+                const start = info.startStr;
+                const end = info.endStr;
+                const allDay = info.allDay;
+
+                let dateEndDate = null;
+                let dateStartDate = null;
+
+                const dateStart = this.convertDateTime(start);
+                const dateEnd = this.convertDateTime(end);
+
+                if (allDay) {
+                    dateStartDate = moment(start).format('YYYY-MM-DD');
+                    dateEndDate = moment(end).clone().add(-1, 'days').format('YYYY-MM-DD');
+                }
+
+                this.createEvent({
+                    dateStart: dateStart,
+                    dateEnd: dateEnd,
+                    allDay: allDay,
+                    dateStartDate: dateStartDate,
+                    dateEndDate: dateEndDate,
+                })
+
+                this.calendar.unselect();
+            },
+            eventClick: info => {
+                const event = info.event;
+
+                const scope = event.extendedProps.scope;
+                const recordId = event.extendedProps.recordId;
+
+                const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
+                    'views/modals/detail';
+
+                Espo.Ui.notify(' ... ');
+
+                this.createView('quickView', viewName, {
+                    scope: scope,
+                    id: recordId,
+                    removeDisabled: false,
+                }, view => {
+                    view.render();
+                    view.notify(false);
+
+                    this.listenToOnce(view, 'after:destroy', model => {
+                        this.removeModel(model);
+                    });
+
+                    this.listenTo(view, 'after:save', (model, o) => {
+                        o = o || {};
+
+                        if (!o.bypassClose) {
+                            view.close();
+                        }
+
+                        this.updateModel(model);
+                    });
+                });
+            },
+            datesSet: () => {
+                const date = this.getDateTime().fromIso(this.calendar.getDate().toISOString());
+                const m = this.dateToMoment(this.calendar.getDate());
+
+                this.date = date;
+
+                this.trigger('view', m.format('YYYY-MM-DD'), this.mode);
+            },
+            events: (info, callback) => {
+                const dateTimeFormat = this.getDateTime().internalDateTimeFormat;
+
+                const from = moment.tz(info.startStr, info.timeZone);
+                const to = moment.tz(info.endStr, info.timeZone);
+
+                const fromStr = from.utc().format(dateTimeFormat);
+                const toStr = to.utc().format(dateTimeFormat);
+
+                this.fetchEvents(fromStr, toStr, callback);
+            },
+            eventDrop: info => {
+                const event = /** @type {EventImpl} */info.event;
+                const delta = info.delta;
+
+                const scope = event.extendedProps.scope;
+
+                if (!event.allDay && event.extendedProps.allDayCopy) {
+                    info.revert();
 
                     return;
                 }
 
-                this.mode = mode;
+                if (event.allDay && !event.extendedProps.allDayCopy) {
+                    info.revert();
 
-                this.setupMode();
-
-                if (this.isCustomView) {
-                    this.$el.find('button[data-action="editCustomView"]').removeClass('hidden');
-                } else {
-                    this.$el.find('button[data-action="editCustomView"]').addClass('hidden');
+                    return;
                 }
 
-                this.$el.find('[data-action="mode"]').removeClass('active');
-                this.$el.find('[data-mode="' + mode + '"]').addClass('active');
+                const start = event.start;
+                const end = event.end;
 
-                this.$calendar.fullCalendar('changeView', this.viewMode);
+                const dateStart = event.extendedProps.dateStart;
+                const dateEnd = event.extendedProps.dateEnd;
+                const dateStartDate = event.extendedProps.dateStartDate;
+                const dateEndDate = event.extendedProps.dateEndDate;
 
-                let toAgenda = previousMode.indexOf('agenda') !== 0 && mode.indexOf('agenda') === 0;
-                let fromAgenda = previousMode.indexOf('agenda') === 0 && mode.indexOf('agenda') !== 0;
+                const attributes = {};
 
-                if (
-                    toAgenda && !this.fetching ||
-                    fromAgenda && !this.fetching
-                ) {
-                    this.$calendar.fullCalendar('refetchEvents')
+                if (dateStart) {
+                    const dateString = this.getDateTime()
+                        .toMoment(dateStart)
+                        .add(delta)
+                        .format(this.getDateTime().internalDateTimeFormat);
+
+                    attributes.dateStart = this.convertDateTime(dateString);
                 }
 
-                this.updateDate();
+                if (dateEnd) {
+                    const dateString = this.getDateTime()
+                        .toMoment(dateEnd)
+                        .add(delta)
+                        .format(this.getDateTime().internalDateTimeFormat);
 
-                if (this.hasView('modeButtons')) {
-                    this.getView('modeButtons').mode = mode;
-                    this.getView('modeButtons').reRender();
+                    attributes.dateEnd = this.convertDateTime(dateString);
                 }
-            }
 
-            this.trigger('change:mode', mode);
-        },
+                if (dateStartDate) {
+                    const m = this.dateToMoment(dateStartDate).add(delta);
 
-        toggleScopeFilter: function (name) {
-            var index = this.enabledScopeList.indexOf(name);
+                    attributes.dateStartDate = m.format(this.getDateTime().internalDateFormat);
+                }
 
-            if (!~index) {
-                this.enabledScopeList.push(name);
-            } else {
-                this.enabledScopeList.splice(index, 1);
-            }
+                if (dateEndDate) {
+                    const m = this.dateToMoment(dateEndDate).add(delta);
 
-            this.storeEnabledScopeList(this.enabledScopeList);
+                    attributes.dateEndDate = m.format(this.getDateTime().internalDateFormat);
+                }
 
-            this.$calendar.fullCalendar('refetchEvents');
-        },
+                const props = this.obtainPropsFromEvent(event);
 
-        getStoredEnabledScopeList: function () {
-            var key = 'calendarEnabledScopeList';
+                if (!end && !this.allDayScopeList.includes(scope)) {
+                    props.end = moment.tz(start.toISOString(), null, this.getDateTime().timeZone)
+                        .clone()
+                        .add(event.extendedProps.duration, 's')
+                        .toDate();
+                }
 
-            return this.getStorage().get('state', key) || null;
-        },
+                props.allDay = false;
 
-        storeEnabledScopeList: function (enabledScopeList) {
-            var key = 'calendarEnabledScopeList';
+                props.dateStart = attributes.dateStart;
+                props.dateEnd = attributes.dateEnd;
+                props.dateStartDate = attributes.dateStartDate;
+                props.dateEndDate = attributes.dateEndDate;
 
-            this.getStorage().set('state', key, enabledScopeList);
-        },
+                this.handleAllDay(props, true);
+                this.fillColor(props);
 
-        updateDate: function () {
-            if (!this.header) {
-                return;
-            }
+                Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            if (this.isToday()) {
-                this.$el.find('button[data-action="today"]').addClass('active');
-            } else {
-                this.$el.find('button[data-action="today"]').removeClass('active');
-            }
+                this.getModelFactory().create(scope, model => {
+                    model.id = props.recordId;
 
-            let title = this.getTitle();
+                    model.save(attributes, {patch: true})
+                        .then(() => {
+                            Espo.Ui.notify(false);
 
-            this.$el.find('.date-title h4 span').text(title);
-        },
-
-        isToday: function () {
-            let view = this.$calendar.fullCalendar('getView');
-            let today = moment();
-
-            return view.intervalStart.unix() <= today.unix() && today.unix() < view.intervalEnd.unix();
-        },
-
-        getTitle: function () {
-            let view = this.$calendar.fullCalendar('getView');
-
-            let map = {
-                'agendaWeek': 'week',
-                'agendaDay': 'day',
-                'basicWeek': 'week',
-                'basicDay': 'day',
-            };
-
-            let viewName = map[view.name] || view.name
-
-            let title;
-
-            if (viewName === 'week') {
-                title = $.fullCalendar.formatRange(view.start, view.end, this.titleFormat[viewName], ' – ');
-            } else {
-                title = view.intervalStart.format(this.titleFormat[viewName]);
-            }
-
-            if (this.options.userId && this.options.userName) {
-                title += ' (' + this.options.userName + ')';
-            }
-
-            title = this.getHelper().escapeString(title);
-
-            return title;
-        },
-
-        convertToFcEvent: function (o) {
-            var event = {
-                title: o.name,
-                scope: o.scope,
-                id: o.scope + '-' + o.id,
-                recordId: o.id,
-                dateStart: o.dateStart,
-                dateEnd: o.dateEnd,
-                dateStartDate: o.dateStartDate,
-                dateEndDate: o.dateEndDate,
-                status: o.status,
-                originalColor: o.color,
-            };
-
-            if (o.isWorkingRange) {
-                event.rendering = 'inverse-background';
-                //event.display = 'inverse-background';
-
-                event.color = this.colors['bg'];
-            }
-
-            if (this.teamIdList && o.userIdList) {
-                event.userIdList = o.userIdList;
-                event.userNameMap = o.userNameMap || {};
-
-                event.userIdList = event.userIdList.sort((v1, v2) => {
-                    return (event.userNameMap[v1] || '').localeCompare(event.userNameMap[v2] || '');
+                            this.applyPropsToEvent(event, props);
+                        })
+                        .catch(() => {
+                            info.revert();
+                        });
                 });
-            }
-
-            this.eventAttributes.forEach(attr => {
-                event[attr] = o[attr];
-            });
-
-            if (o.dateStart) {
-                if (!o.dateStartDate) {
-                    event.start = this.getDateTime().toMoment(o.dateStart);
-                } else {
-                    event.start = this.getDateTime().toMomentDate(o.dateStartDate);
-                }
-            }
-
-            if (o.dateEnd) {
-                if (!o.dateEndDate) {
-                    event.end = this.getDateTime().toMoment(o.dateEnd);
-                } else {
-                    event.end = this.getDateTime().toMomentDate(o.dateEndDate);
-                }
-            }
-
-            if (event.end && event.start) {
-                event.duration = event.end.unix() - event.start.unix();
-
-                if (event.duration < 1800) {
-                    event.end = event.start.clone().add(30, 'm');
-                }
-            }
-
-            event.allDay = false;
-
-            if (!o.isWorkingRange) {
-                this.handleAllDay(event);
-                this.fillColor(event);
-                this.handleStatus(event);
-            }
-
-            if (o.isWorkingRange && !this.isAgendaMode()) {
-                event.allDay = true;
-            }
-
-            return event;
-        },
-
-        /**
-         * @param {string} scope
-         * @return {string[]}
-         */
-        getEventTypeCompletedStatusList: function (scope) {
-            return this.getMetadata().get(['scopes', scope, 'completedStatusList']) || [];
-        },
-
-        /**
-         * @param {string} scope
-         * @return {string[]}
-         */
-        getEventTypeCanceledStatusList: function (scope) {
-            return this.getMetadata().get(['scopes', scope, 'canceledStatusList']) || [];
-        },
-
-        fillColor: function (event) {
-            let color = this.colors[event.scope];
-
-            if (event.originalColor) {
-                color = event.originalColor;
-            }
-
-            if (!color) {
-                color = this.getColorFromScopeName(event.scope);
-            }
-
-            if (
-                color &&
-                (
-                    this.getEventTypeCompletedStatusList(event.scope).includes(event.status) ||
-                    this.getEventTypeCanceledStatusList(event.scope).includes(event.status)
-                )
-            ) {
-            	color = this.shadeColor(color, 0.4);
-            }
-
-            event.color = color;
-        },
-
-        handleStatus: function (event) {
-        	if (this.getEventTypeCanceledStatusList(event.scope).includes(event.status)) {
-                event.className = ['event-canceled'];
-        	} else {
-                event.className = [];
-            }
-        },
-
-        shadeColor: function (color, percent) {
-            if (color === 'transparent') {
-                return color;
-            }
-
-            if (this.getThemeManager().getParam('isDark')) {
-                percent *= -1;
-            }
-
-            let alpha = color.substring(7);
-
-            let f = parseInt(color.slice(1, 7), 16),
-                t = percent<0?0:255,
-                p = percent < 0 ?percent *- 1 : percent,
-                R = f >> 16,
-                G = f >> 8&0x00FF,
-                B = f&0x0000FF;
-
-            return "#" + (
-                0x1000000 + (
-                    Math.round((t - R) * p) + R) * 0x10000 +
-                (Math.round((t - G) * p) + G) * 0x100 +
-                (Math.round((t - B) * p) + B)
-            ).toString(16).slice(1) + alpha;
-        },
-
-        handleAllDay: function (event, notInitial) {
-            if (~this.allDayScopeList.indexOf(event.scope)) {
-                event.allDay = event.allDayCopy = true;
-
-                if (!notInitial) {
-                    if (event.end) {
-                        event.start = event.end;
-                        if (!event.dateEndDate && event.end.hours() === 0 && event.end.minutes() === 0) {
-                            event.start.add(-1, 'days');
-                        }
-                    }
-                }
-
-                return;
-            }
-
-            if (event.dateStartDate && event.dateEndDate) {
-                event.allDay = true;
-                event.allDayCopy = event.allDay;
-
-                if (!notInitial) {
-                    event.end.add(1, 'days')
-                }
-
-                return;
-            }
-
-            if (!event.start || !event.end) {
-                event.allDay = true;
-
-                if (event.end) {
-                    event.start = event.end;
-                }
-            } else {
-                if (
-                    (
-                        event.start.format('d') !== event.end.format('d') &&
-                        (event.end.hours() !== 0 || event.end.minutes() !== 0)
-                    ) ||
-                    (event.end.unix() - event.start.unix() >= 86400)
-                ) {
-                    event.allDay = true;
-
-                    if (!notInitial) {
-                        if (event.end.hours() !== 0 || event.end.minutes() !== 0) {
-                            event.end.add(1, 'days');
-                        }
-                    }
-                } else {
-                    event.allDay = false;
-                }
-            }
-
-            event.allDayCopy = event.allDay;
-        },
-
-        convertToFcEvents: function (list) {
-            this.now = moment.tz(this.getDateTime().getTimeZone());
-
-            var events = [];
-
-            list.forEach(o => {
-                var event = this.convertToFcEvent(o);
-
-                events.push(event);
-            });
-
-            return events;
-        },
-
-        convertTime: function (d) {
-            var format = this.getDateTime().internalDateTimeFormat;
-            var timeZone = this.getDateTime().timeZone;
-            var string = d.format(format);
-
-            var m;
-
-            if (timeZone) {
-                m = moment.tz(string, format, timeZone).utc();
-            } else {
-                m = moment.utc(string, format);
-            }
-
-            return m.format(format) + ':00';
-        },
-
-        getCalculatedHeight: function () {
-            if (this.$container && this.$container.length) {
-                return this.$container.height();
-            }
-
-            return this.getHelper().calculateContentContainerHeight(this.$el.find('.calendar'));
-        },
-
-        adjustSize: function () {
-            if (this.isRemoved()) {
-                return;
-            }
-
-            var height = this.getCalculatedHeight();
-
-            this.$calendar.fullCalendar('option', 'contentHeight', height);
-        },
-
-        afterRender: function () {
-            if (this.options.containerSelector) {
-                this.$container = $(this.options.containerSelector);
-            }
-
-            var $calendar = this.$calendar = this.$el.find('div.calendar');
-
-            var slotDuration = '00:' + this.slotDuration + ':00';
-
-            var timeFormat = this.getDateTime().timeFormat;
-
-            var slotLabelFormat;
-
-            if (~timeFormat.indexOf('a')) {
-                slotLabelFormat = 'h(:mm)a';
-            } else if (~timeFormat.indexOf('A')) {
-                slotLabelFormat = 'h(:mm)A';
-            } else {
-                slotLabelFormat = timeFormat;
-            }
-
-            let options = {
-                header: false,
-                slotLabelFormat: slotLabelFormat,
-                timeFormat: timeFormat,
-                defaultView: this.viewMode,
-                weekNumbers: true,
-                weekNumberCalculation: 'ISO',
-                editable: true,
-                selectable: true,
-                selectHelper: true,
-                height: this.options.height || null,
-                firstDay: this.getDateTime().weekStart,
-                slotEventOverlap: true,
-                slotDuration: slotDuration,
-                snapDuration: this.slotDuration * 60 * 1000,
-                timezone: this.getDateTime().timeZone,
-                longPressDelay: 300,
-                //eventBackgroundColor: '#333',
-                eventColor: this.colors[''],
-                nowIndicator: true,
-                windowResize: () => {
-                    this.adjustSize();
-                },
-                select: (start, end) => {
-                    let dateStart = this.convertTime(start);
-                    let dateEnd = this.convertTime(end);
-                    let allDay = !start.hasTime();
-
-                    let dateEndDate = null;
-                    let dateStartDate = null;
-
-                    if (allDay) {
-                        dateStartDate = start.format('YYYY-MM-DD');
-                        dateEndDate = end.clone().add(-1, 'days').format('YYYY-MM-DD');
-                    }
-
-                    this.createEvent({
-                        dateStart: dateStart,
-                        dateEnd: dateEnd,
-                        allDay: allDay,
-                        dateStartDate: dateStartDate,
-                        dateEndDate: dateEndDate,
-                    })
-
-                    $calendar.fullCalendar('unselect');
-                },
-                eventClick: (event) => {
-                    Espo.Ui.notify(' ... ');
-
-                    let viewName = this.getMetadata().get(['clientDefs', event.scope, 'modalViews', 'detail']) ||
-                        'views/modals/detail';
-
-                    this.createView('quickView', viewName, {
-                        scope: event.scope,
-                        id: event.recordId,
-                        removeDisabled: false
-                    }, (view) => {
-                        view.render();
-                        view.notify(false);
-
-                        this.listenToOnce(view, 'after:destroy', model => {
-                            this.removeModel(model);
-                        });
-
-                        this.listenTo(view, 'after:save', (model, o) => {
-                            o = o || {};
-
-                            if (!o.bypassClose) {
-                                view.close();
-                            }
-
-                            this.updateModel(model);
-                        });
-                    });
-                },
-                viewRender: (view, el) => {
-                    let date = this.getDateTime().fromIso(this.$calendar.fullCalendar('getDate'));
-                    let m = moment(this.$calendar.fullCalendar('getDate'));
-
-                    this.date = date;
-
-                    this.trigger('view', m.format('YYYY-MM-DD'), this.mode);
-                },
-                events: (from, to, timezone, callback) => {
-                    var dateTimeFormat = this.getDateTime().internalDateTimeFormat;
-
-                    var fromStr = from.format(dateTimeFormat);
-                    var toStr = to.format(dateTimeFormat);
-
-                    from = moment.tz(fromStr, timezone);
-                    to = moment.tz(toStr, timezone);
-
-                    fromStr = from.utc().format(dateTimeFormat);
-                    toStr = to.utc().format(dateTimeFormat);
-
-                    this.fetchEvents(fromStr, toStr, callback);
-                },
-                eventDrop: (event, delta, revertFunc) => {
-                    if (event.start.hasTime()) {
-                        if (event.allDayCopy) {
-                            revertFunc();
-
-                            return;
-                        }
-                    } else {
-                        if (!event.allDayCopy) {
-                            revertFunc();
-
-                            return;
-                        }
-                    }
-
-                    let attributes = {};
-
-                    if (event.dateStart) {
-                        event.dateStart = this.convertTime(this.getDateTime().toMoment(event.dateStart).add(delta));
-                        attributes.dateStart = event.dateStart;
-                    }
-
-                    if (event.dateEnd) {
-                        event.dateEnd = this.convertTime(this.getDateTime().toMoment(event.dateEnd).add(delta));
-                        attributes.dateEnd = event.dateEnd;
-                    }
-
-                    if (event.dateStartDate) {
-                        let d = this.getDateTime().toMomentDate(event.dateStartDate).add(delta);
-
-                        event.dateStartDate = d.format(this.getDateTime().internalDateFormat);
-                        attributes.dateStartDate = event.dateStartDate;
-                    }
-
-                    if (event.dateEndDate) {
-                        let d = this.getDateTime().toMomentDate(event.dateEndDate).add(delta);
-
-                        event.dateEndDate = d.format(this.getDateTime().internalDateFormat);
-                        attributes.dateEndDate = event.dateEndDate;
-                    }
-
-                    if (!event.end) {
-                        if (!~this.allDayScopeList.indexOf(event.scope)) {
-                            event.end = event.start.clone().add(event.duration, 's');
-                        }
-                    }
-
-                    event.allDay = false;
-
-                    this.handleAllDay(event, true);
-                    this.fillColor(event);
-
-                    Espo.Ui.notify(this.translate('saving', 'messages'));
-
-                    this.getModelFactory().create(event.scope, (model) => {
-                        model.id = event.recordId;
-
-                        model
-                            .save(attributes, {patch: true})
-                            .then(() => {
-                                Espo.Ui.notify(false);
-
-                                this.$calendar.fullCalendar('updateEvent', event);
-                            })
-                            .catch(() => {
-                                revertFunc();
-                            });
-                    });
-                },
-                eventResize: (event, delta, revertFunc) => {
-                    var attributes = {
-                        dateEnd: this.convertTime(event.end),
-                    };
-
-                    event.dateEnd = attributes.dateEnd;
-                    event.duration = event.end.unix() - event.start.unix();
-
-                    this.fillColor(event);
-
-                    Espo.Ui.notify(this.translate('saving', 'messages'));
-
-                    this.getModelFactory().create(event.scope, (model) => {
-                        model.id = event.recordId;
-
-                        model
-                            .save(attributes, {patch: true})
-                            .then(() => {
-                                Espo.Ui.notify(false);
-
-                                this.$calendar.fullCalendar('updateEvent', event);
-                            })
-                            .catch(() => {
-                                revertFunc();
-                            });
-                    });
-                },
-                allDayText: '',
-                firstHour: 8,
-                weekNumberTitle: '',
-                views: {
-                    week: {
-                        columnFormat: 'ddd DD',
-                    },
-                    day: {
-                        columnFormat: 'ddd DD',
-                    },
-                },
-            };
-
-            if (this.teamIdList) {
-                options.eventRender = (event, element, view) => {
-                    let $el = $(element);
-                    let $content = $el.find('.fc-content');
-
-                    if (!event.userIdList) {
-                        return;
-                    }
-
-                    event.userIdList.forEach(userId => {
-                        let userName = event.userNameMap[userId] || '';
-                        let avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 13);
-
-                        if (avatarHtml) {
-                            avatarHtml += ' ';
-                        }
-
-                        let $div = $('<div>')
-                            .addClass('user')
-                            .append(avatarHtml)
-                            .append(
-                                $('<span>').text(userName)
-                            );
-
-                        $content.append($div);
-                    });
+            },
+            eventResize: info => {
+                const event = info.event;
+
+                const attributes = {
+                    dateEnd: this.convertDateTime(event.endStr),
                 };
-            }
 
-            if (!this.options.height) {
-                options.contentHeight = this.getCalculatedHeight();
-            } else {
-                options.aspectRatio = 1.62;
-            }
+                const duration = moment(event.end).unix() - moment(event.start).unix();
 
-            if (this.date) {
-                options.defaultDate = moment.utc(this.date);
-            } else {
-                this.$el.find('button[data-action="today"]').addClass('active');
-            }
+                Espo.Ui.notify(this.translate('saving', 'messages'));
 
-            setTimeout(() => {
-                $calendar.fullCalendar(options);
+                this.getModelFactory().create(event.extendedProps.scope, model => {
+                    model.id = event.extendedProps.recordId;
 
-                this.updateDate();
+                    model.save(attributes, {patch: true})
+                        .then(() => {
+                            Espo.Ui.notify(false);
 
-                if (this.$container && this.$container.length) {
-                    this.adjustSize();
-                }
-            }, 150);
-        },
+                            event.setExtendedProp('dateEnd', attributes.dateEnd);
+                            event.setExtendedProp('duration', duration);
+                        })
+                        .catch(() => {
+                            info.revert();
+                        });
+                });
+            },
+        };
 
-        /**
-         * @param {{
-         *   [allDay]: boolean,
-         *   [dateStart]: string,
-         *   [dateEnd]: string,
-         *   [dateStartDate]: ?string,
-         *   [dateEndDate]: ?string,
-         * }} [values]
-         */
-        createEvent: function (values) {
-            values = values || {};
+        if (this.teamIdList) {
+            options.eventContent = arg => {
+                const event = /** @type {EventImpl} */arg.event;
 
-            if (
-                !values.dateStart &&
-                this.date !== this.getDateTime().getToday() &&
-                (this.mode === 'day' || this.mode === 'agendaDay')
-            ) {
-                values.allDay = true;
-                values.dateStartDate = this.date;
-                values.dateEndDate = this.date;
-            }
+                const $content = $('<div>');
 
-            let attributes = {};
+                $content.append(
+                    $('<div>')
+                        .append(
+                            $('<div>')
+                                .addClass('fc-event-main-frame')
+                                .append(
+                                    arg.timeText ?
+                                        $('<div>').addClass('fc-event-time').text(arg.timeText) :
+                                        undefined
+                                )
+                                .append(
+                                    $('<div>').addClass('fc-event-title').text(event.title)
+                                )
+                        )
+                );
 
-            if (this.options.userId) {
-                attributes.assignedUserId = this.options.userId;
-                attributes.assignedUserName = this.options.userName || this.options.userId;
-            }
+                const userIdList = event.extendedProps.userIdList || [];
 
-            Espo.Ui.notify(' ... ');
+                userIdList.forEach(userId => {
+                    const userName = event.extendedProps.userNameMap[userId] || '';
+                    let avatarHtml = this.getHelper().getAvatarHtml(userId, 'small', 13);
 
-            this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
-                attributes: attributes,
-                enabledScopeList: this.enabledScopeList,
-                scopeList: this.scopeList,
-                allDay: values.allDay,
-                dateStartDate: values.dateStartDate,
-                dateEndDate: values.dateEndDate,
-                dateStart: values.dateStart,
-                dateEnd: values.dateEnd,
-            }, view => {
-                view.render();
-
-                Espo.Ui.notify(false);
-
-                let added = false;
-
-                this.listenTo(view, 'after:save', model => {
-                    if (!added) {
-                        this.addModel(model);
-                        added = true;
-
-                        return;
+                    if (avatarHtml) {
+                        avatarHtml += ' ';
                     }
 
-                    this.updateModel(model);
+                    const $div = $('<div>')
+                        .addClass('user')
+                        .css({overflow: 'hidden'})
+                        .append(avatarHtml)
+                        .append(
+                            $('<span>').text(userName)
+                        );
+
+                    $content.append($div);
                 });
-            });
-        },
 
-        fetchEvents: function (from, to, callback) {
-            var url = 'Activities?from=' + from + '&to=' + to;
+                return {html: $content.get(0).innerHTML};
+            };
+        }
 
-            if (this.options.userId) {
-                url += '&userId=' + this.options.userId;
-            }
+        if (!this.options.height) {
+            options.contentHeight = this.getCalculatedHeight();
+        } else {
+            options.aspectRatio = 1.62;
+        }
 
-            url += '&scopeList=' + encodeURIComponent(this.enabledScopeList.join(','));
+        if (this.date) {
+            options.initialDate = this.date;
+        } else {
+            this.$el.find('button[data-action="today"]').addClass('active');
+        }
 
-            if (this.teamIdList && this.teamIdList.length) {
-                url += '&teamIdList=' + encodeURIComponent(this.teamIdList.join(','));
-            }
+        setTimeout(() => {
+            this.calendar = new FullCalendar.Calendar(this.$calendar.get(0), options);
 
-            let agenda = this.mode === 'agendaWeek' || this.mode === 'agendaDay';
+            this.calendar.render();
 
-            url += '&agenda=' + encodeURIComponent(agenda);
-
-            Espo.Ajax.getRequest(url).then(data => {
-                let events = this.convertToFcEvents(data);
-
-                callback(events);
-
-                Espo.Ui.notify(false);
-            });
-
-            this.fetching = true;
-
-            setTimeout(() => this.fetching = false, 50)
-        },
-
-        addModel: function (model) {
-            let d = model.getClonedAttributes();
-
-            d.scope = model.name;
-
-            let event = this.convertToFcEvent(d);
-
-            this.$calendar.fullCalendar('renderEvent', event);
-        },
-
-        updateModel: function (model) {
-            let eventId = model.name + '-' + model.id;
-
-            let events = this.$calendar.fullCalendar('clientEvents', eventId);
-
-            if (!events.length) {
-                return;
-            }
-
-            let event = events[0];
-
-            let d = model.getClonedAttributes();
-
-            d.scope = model.name;
-
-            let data = this.convertToFcEvent(d);
-
-            for (let key in data) {
-                event[key] = data[key];
-            }
-
-            this.$calendar.fullCalendar('updateEvent', event);
-        },
-
-        removeModel: function (model) {
-            this.$calendar.fullCalendar('removeEvents', model.name + '-' + model.id);
-        },
-
-        actionRefresh: function () {
-            this.$calendar.fullCalendar('refetchEvents');
-        },
-
-        actionPrevious: function () {
-            this.$calendar.fullCalendar('prev');
             this.updateDate();
-        },
 
-        actionNext: function () {
-            this.$calendar.fullCalendar('next');
-            this.updateDate();
-        },
-
-        getColorFromScopeName: function (scope) {
-            let additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
-
-            if (!additionalColorList.length) {
-                return;
+            if (this.$container && this.$container.length) {
+                this.adjustSize();
             }
+        }, 150);
+    }
 
-            let colors = this.getMetadata().get('clientDefs.Calendar.colors') || {};
+    /**
+     * @param {{
+     *   [allDay]: boolean,
+     *   [dateStart]: string,
+     *   [dateEnd]: string,
+     *   [dateStartDate]: ?string,
+     *   [dateEndDate]: ?string,
+     * }} [values]
+     */
+    createEvent(values) {
+        values = values || {};
 
-            let scopeList = this.getConfig().get('calendarEntityList') || [];
+        if (
+            !values.dateStart &&
+            this.date !== this.getDateTime().getToday() &&
+            (this.mode === 'day' || this.mode === 'agendaDay')
+        ) {
+            values.allDay = true;
+            values.dateStartDate = this.date;
+            values.dateEndDate = this.date;
+        }
 
-            let index = 0;
-            let j = 0;
+        const attributes = {};
 
-            for (let i = 0; i < scopeList.length; i++) {
-                if (scopeList[i] in colors) {
-                    continue;
+        if (this.options.userId) {
+            attributes.assignedUserId = this.options.userId;
+            attributes.assignedUserName = this.options.userName || this.options.userId;
+        }
+
+        Espo.Ui.notify(' ... ');
+
+        this.createView('quickEdit', 'crm:views/calendar/modals/edit', {
+            attributes: attributes,
+            enabledScopeList: this.enabledScopeList,
+            scopeList: this.scopeList,
+            allDay: values.allDay,
+            dateStartDate: values.dateStartDate,
+            dateEndDate: values.dateEndDate,
+            dateStart: values.dateStart,
+            dateEnd: values.dateEnd,
+        }, view => {
+            view.render();
+
+            Espo.Ui.notify(false);
+
+            let added = false;
+
+            this.listenTo(view, 'after:save', model => {
+                if (!added) {
+                    this.addModel(model);
+                    added = true;
+
+                    return;
                 }
 
-                if (scopeList[i] === scope) {
-                    index = j;
+                this.updateModel(model);
+            });
+        });
+    }
 
-                    break;
-                }
+    fetchEvents(from, to, callback) {
+        let url = 'Activities?from=' + from + '&to=' + to;
 
-                j++;
+        if (this.options.userId) {
+            url += '&userId=' + this.options.userId;
+        }
+
+        url += '&scopeList=' + encodeURIComponent(this.enabledScopeList.join(','));
+
+        if (this.teamIdList && this.teamIdList.length) {
+            url += '&teamIdList=' + encodeURIComponent(this.teamIdList.join(','));
+        }
+
+        const agenda = this.mode === 'agendaWeek' || this.mode === 'agendaDay';
+
+        url += '&agenda=' + encodeURIComponent(agenda);
+
+        Espo.Ajax.getRequest(url).then(data => {
+            const events = this.convertToFcEvents(data);
+
+            callback(events);
+
+            Espo.Ui.notify(false);
+        });
+
+        this.fetching = true;
+
+        setTimeout(() => this.fetching = false, 50)
+    }
+
+    addModel(model) {
+        const attributes = model.getClonedAttributes();
+
+        attributes.scope = model.entityType;
+
+        const event = this.convertToFcEvent(attributes);
+
+        this.calendar.addEvent(event);
+    }
+
+    updateModel(model) {
+        const eventId = model.entityType + '-' + model.id;
+
+        const event = this.calendar.getEventById(eventId);
+
+        if (!event) {
+            return;
+        }
+
+        const attributes = model.getClonedAttributes();
+
+        attributes.scope = model.entityType;
+
+        const data = this.convertToFcEvent(attributes);
+
+        this.applyPropsToEvent(event, data);
+    }
+    /**
+     * @param {EventImpl} event
+     * @return {Object.<string, *>}
+     */
+    obtainPropsFromEvent(event) {
+        const props = {};
+
+        for (const key in event.extendedProps) {
+            props[key] = event.extendedProps[key];
+        }
+
+        props.allDay = event.allDay;
+        props.start = event.start;
+        props.end = event.end;
+        props.title = event.title;
+        props.id = event.id;
+        props.color = event.color;
+
+        return props;
+    }
+
+    /**
+     * @param {EventImpl} event
+     * @param {Object.<string, *>} props
+     */
+    applyPropsToEvent(event, props) {
+        if ('start' in props) {
+            event.setDates(props.start, props.end, {allDay: props.allDay});
+        }
+
+        for (const key in props) {
+            const value = props[key];
+
+            if (
+                key === 'start' ||
+                key === 'end' ||
+                key === 'allDay'
+            ) {
+                continue;
             }
 
-            index = index % additionalColorList.length;
-            this.colors[scope] = additionalColorList[index];
+            if (this.extendedProps.includes(key)) {
+                event.setExtendedProp(key, value);
 
-            return this.colors[scope];
-        },
-
-        actionToday: function () {
-            if (this.isToday()) {
-                this.actionRefresh();
-
-                return;
+                continue;
             }
 
-            this.$calendar.fullCalendar('today');
-            this.updateDate();
-        },
-    });
-});
+            event.setProp(key, value);
+        }
+    }
+
+    removeModel(model) {
+        const event = this.calendar.getEventById(model.entityType + '-' + model.id);
+
+        if (!event) {
+            return;
+        }
+
+        event.remove();
+    }
+
+    actionRefresh() {
+        this.calendar.refetchEvents();
+    }
+
+    actionPrevious() {
+        this.calendar.prev();
+
+        this.updateDate();
+    }
+
+    actionNext() {
+        this.calendar.next();
+
+        this.updateDate();
+    }
+
+    getColorFromScopeName(scope) {
+        const additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
+
+        if (!additionalColorList.length) {
+            return;
+        }
+
+        const colors = this.getMetadata().get('clientDefs.Calendar.colors') || {};
+
+        const scopeList = this.getConfig().get('calendarEntityList') || [];
+
+        let index = 0;
+        let j = 0;
+
+        for (let i = 0; i < scopeList.length; i++) {
+            if (scopeList[i] in colors) {
+                continue;
+            }
+
+            if (scopeList[i] === scope) {
+                index = j;
+
+                break;
+            }
+
+            j++;
+        }
+
+        index = index % additionalColorList.length;
+        this.colors[scope] = additionalColorList[index];
+
+        return this.colors[scope];
+    }
+
+    actionToday() {
+        if (this.isToday()) {
+            this.actionRefresh();
+
+            return;
+        }
+
+        this.calendar.today();
+
+        this.updateDate();
+    }
+}
+
+export default CalendarView;

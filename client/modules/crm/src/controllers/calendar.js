@@ -26,30 +26,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:controllers/calendar', ['controller'], function (Dep) {
+import Controller from 'controller';
 
-    return Dep.extend({
+class CalendarController extends Controller {
 
-        checkAccess: function () {
-            if (this.getAcl().check('Calendar')) {
-                return true;
-            }
-            return false;
-        },
+    checkAccess() {
+        if (this.getAcl().check('Calendar')) {
+            return true;
+        }
 
-        actionShow: function (options) {
-            this.actionIndex(options);
-        },
+        return false;
+    }
 
-        actionIndex: function (options) {
-            this.handleCheckAccess();
+    // noinspection JSUnusedGlobalSymbols
+    actionShow(options) {
+        this.actionIndex(options);
+    }
 
-            this.main('crm:views/calendar/calendar-page', {
-                date: options.date,
-                mode: options.mode,
-                userId: options.userId,
-                userName: options.userName
-            });
-        },
-    });
-});
+    actionIndex(options) {
+        this.handleCheckAccess('');
+
+        this.main('crm:views/calendar/calendar-page', {
+            date: options.date,
+            mode: options.mode,
+            userId: options.userId,
+            userName: options.userName,
+        });
+    }
+}
+
+export default CalendarController;

@@ -26,11 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/site/footer', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class FooterSiteView extends View {
 
-        template: 'site/footer',
+    template = 'site/footer'
+}
 
-    });
-});
+export default FooterSiteView;

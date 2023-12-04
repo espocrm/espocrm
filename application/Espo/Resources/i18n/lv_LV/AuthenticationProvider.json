@@ -1,0 +1,8 @@
+{
+  "fields": {
+    "method": "Metode"
+  },
+  "labels": {
+    "Create AuthenticationProvider": "Izveidot pakalpojumu sniedzēju"
+  }
+}

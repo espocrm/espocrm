@@ -26,14 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('acl/team', ['acl'], function (Dep) {
+import Acl from 'acl';
 
-    return Dep.extend({
+class TeamAcl extends Acl {
 
-        checkInTeam: function (model) {
-            var userTeamIdList = this.getUser().getTeamIdList();
+    checkInTeam(model) {
+        const userTeamIdList = this.getUser().getTeamIdList();
 
-            return (userTeamIdList.indexOf(model.id) != -1);
-        },
-    });
-});
+        return (userTeamIdList.indexOf(model.id) !== -1);
+    }
+}
+
+export default TeamAcl;

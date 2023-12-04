@@ -29,26 +29,22 @@
 
 namespace Espo\Core\Log\Handler;
 
-use Monolog\Logger;
-
 use Espo\Core\Utils\Config;
+
+use Monolog\Level;
 
 class EspoRotatingFileHandler extends EspoFileHandler
 {
-    /** @var string */
-    protected $dateFormat = 'Y-m-d';
-    /** @var string */
-    protected $filenameFormat = '{filename}-{date}';
-    /** @var string */
-    protected $filename;
-    /** @var int */
-    protected $maxFiles;
+    protected string $dateFormat = 'Y-m-d';
+    protected string $filenameFormat = '{filename}-{date}';
+    protected string $filename;
+    protected int $maxFiles;
 
     public function __construct(
         Config $config,
         string $filename,
         int $maxFiles = 0,
-        int $level = Logger::DEBUG,
+        Level $level = Level::Debug,
         bool $bubble = true
     ) {
         $this->filename = $filename;
@@ -59,10 +55,7 @@ class EspoRotatingFileHandler extends EspoFileHandler
         $this->rotate();
     }
 
-    /**
-     * @return void
-     */
-    protected function rotate()
+    protected function rotate(): void
     {
         if (0 === $this->maxFiles) {
             return; // unlimited number of files for 0
@@ -84,10 +77,7 @@ class EspoRotatingFileHandler extends EspoFileHandler
         }
     }
 
-    /**
-     * @return string
-     */
-    protected function getTimedFilename()
+    protected function getTimedFilename(): string
     {
         $fileInfo = pathinfo($this->filename);
 
@@ -104,10 +94,7 @@ class EspoRotatingFileHandler extends EspoFileHandler
         return $timedFilename;
     }
 
-    /**
-     * @return string
-     */
-    protected function getFilePattern()
+    protected function getFilePattern(): string
     {
         $fileInfo = pathinfo($this->filename);
 

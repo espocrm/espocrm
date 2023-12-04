@@ -43,4 +43,10 @@ class Team extends \Espo\Core\ORM\Entity
         /** @var ?Link */
         return $this->getValueObject('workingTimeCalendar');
     }
+
+    public function getLayoutSet(): ?Link
+    {
+        /** @var ?Link */
+        return $this->getValueObject('layoutSet');
+    }
 }

@@ -36,8 +36,6 @@ class AccountActive implements Filter
 {
     public function apply(SelectBuilder $queryBuilder): void
     {
-        $queryBuilder->where([
-            '@relation.isInactive' => false
-        ]);
+        $queryBuilder->where(['@relation.isInactive' => false]);
     }
 }

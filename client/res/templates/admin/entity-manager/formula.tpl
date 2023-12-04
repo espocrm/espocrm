@@ -18,6 +18,19 @@
         <button class="btn btn-default btn-xs-wide action" data-action="close">
             {{translate 'Close'}}
         </button>
+        <button
+            class="btn btn-default dropdown-toggle"
+            data-toggle="dropdown"
+        ><span class="fas fa-ellipsis-h"></span></button>
+        <ul class="dropdown-menu pull-right">
+            <li>
+                <a
+                    role="button"
+                    tabindex="0"
+                    data-action="resetToDefault"
+                >{{translate 'Reset to Default' scope='Admin'}}</a>
+            </li>
+        </ul>
     </div>
 </div>
 

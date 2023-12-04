@@ -1,7 +1,7 @@
 {
   "links": {
     "parent": "Ebeveyn",
-    "contacts": "Bağlantılar",
+    "contacts": "Kişiler",
     "opportunities": "Fırsatlar",
     "leads": "Müşteri Potansiyelleri",
     "meetings": "Toplantılar",
@@ -40,7 +40,7 @@
   },
   "scopeNamesPlural": {
     "Account": "Hesaplar",
-    "Contact": "Bağlantılar",
+    "Contact": "Kişiler",
     "Lead": "Müşteri Potansiyelleri",
     "Target": "Hedefler",
     "Opportunity": "Fırsatlar",
@@ -87,7 +87,9 @@
     "Log Call": "Günlük Arama",
     "Archive Email": "Epostayı Arşivle",
     "Create Task": "Görev Oluştur",
-    "Tasks": "Görevler"
+    "Tasks": "Görevler",
+    "Schedule": "Zamanlama",
+    "Log": "Kayıt"
   },
   "fields": {
     "billingAddressCity": "Şehir",

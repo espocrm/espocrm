@@ -41,7 +41,7 @@ define('views/admin/dynamic-logic/conditions-string/item-value-varchar',
             this.createView('value', viewName, {
                 model: this.model,
                 name: this.field,
-                el: this.getSelector() + '[data-view-key="'+key+'"]',
+                selector: '[data-view-key="'+key+'"]',
             });
         },
     });

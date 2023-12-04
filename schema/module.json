@@ -1,0 +1,21 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/module.json",
+    "title": "module",
+    "description": "An Espo module.",
+    "type": "object",
+    "properties": {
+        "order": {
+            "type": "integer",
+            "description": "The order is used by the system to define which module to load first."
+        },
+        "jsTranspiled": {
+            "type": "boolean",
+            "description": "Indicates that JS files in the module are transpiled."
+        },
+        "bundled": {
+            "type": "boolean",
+            "description": "Indicates that frontend files in the module are bundled."
+        }
+    }
+}

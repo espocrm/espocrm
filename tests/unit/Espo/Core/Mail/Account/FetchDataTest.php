@@ -49,7 +49,7 @@ class FetchDataTest extends \PHPUnit\Framework\TestCase
         $data = FetchData::fromRaw($raw);
 
         $this->assertEquals('10', $data->getLastUniqueId('test'));
-        $this->assertEquals('2022-01-01 00:00:00', $data->getLastDate('test')->getString());
+        $this->assertEquals('2022-01-01 00:00:00', $data->getLastDate('test')->toString());
         $this->assertEquals(null, $data->getLastUniqueId('not-existing'));
         $this->assertEquals(null, $data->getLastDate('not-existing'));
         $this->assertEquals(false, $data->getForceByDate('test'));

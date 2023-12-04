@@ -46,6 +46,10 @@
             "type": "bool"
         },
         {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "audited",
             "type": "bool",
             "tooltip": true
@@ -59,5 +63,6 @@
     "personalData": true,
     "textFilter": true,
     "textFilterForeign": true,
-    "fullTextSearch": true
+    "fullTextSearch": true,
+    "default": null
 }

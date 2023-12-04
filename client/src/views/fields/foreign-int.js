@@ -26,23 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/foreign-int',
-['views/fields/int', 'helpers/misc/foreign-field'], function (Dep, Helper) {
+import IntFieldView from 'views/fields/int';
+import Helper from 'helpers/misc/foreign-field';
 
-    return Dep.extend({
+class ForeignIntFieldView extends IntFieldView {
 
-        type: 'foreign',
+    type = 'foreign'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            /** @var {module:helpers/misc/foreign-field.Class} */
-            let helper = new Helper(this);
+        const helper = new Helper(this);
 
-            let foreignParams = helper.getForeignParams();
+        const foreignParams = helper.getForeignParams();
 
-            this.disableFormatting = foreignParams.disableFormatting;
-        },
-    });
-});
+        for (let param in foreignParams) {
+            this.params[param] = foreignParams[param];
+        }
+
+        this.disableFormatting = foreignParams.disableFormatting;
+    }
+}
+
+export default ForeignIntFieldView;
 

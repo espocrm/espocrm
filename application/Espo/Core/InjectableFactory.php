@@ -100,7 +100,7 @@ class InjectableFactory
     /**
      * Create an instance by an interface with an optional additional binding.
      * An interface will be resolved by the global binding. If a class is provided, it will be tried to
-     * be resolved (if it's bound to an extended class). If class is not bound, it will be instantiated
+     * be resolved (if it's bound to an extended class). If the class is not bound, it will be instantiated
      * (with the same behavior as with the `createWithBinding` method).
      *
      * @template T of object
@@ -118,13 +118,13 @@ class InjectableFactory
             $class = new ReflectionClass($interfaceName);
 
             if ($class->isInterface()) {
-                throw new RuntimeException("Could not resolve interface `{$interfaceName}`.");
+                throw new RuntimeException("Could not resolve interface `$interfaceName`.");
             }
 
             $obj = $this->createInternal($interfaceName, null, $bindingContainer);
 
             if (!$obj instanceof $interfaceName) {
-                throw new RuntimeException("Class `{$interfaceName}` resolved to another type.");
+                throw new RuntimeException("Class `$interfaceName` resolved to another type.");
             }
 
             return $obj;
@@ -137,13 +137,13 @@ class InjectableFactory
         ];
 
         if (!in_array($binding->getType(), $typeList)) {
-            throw new RuntimeException("Bad resolution for interface `{$interfaceName}`.");
+            throw new RuntimeException("Bad resolution for interface `$interfaceName`.");
         }
 
         $obj = $this->resolveBinding($binding, $bindingContainer);
 
         if (!$obj instanceof $interfaceName) {
-            throw new RuntimeException("Class `{$interfaceName}` resolved to another type.");
+            throw new RuntimeException("Class `$interfaceName` resolved to another type.");
         }
 
         return $obj;
@@ -162,7 +162,7 @@ class InjectableFactory
     ): object {
 
         if (!class_exists($className)) {
-            throw new RuntimeException("InjectableFactory: Class '{$className}' does not exist.");
+            throw new RuntimeException("InjectableFactory: Class '$className' does not exist.");
         }
 
         $class = new ReflectionClass($className);
@@ -171,7 +171,7 @@ class InjectableFactory
 
         $obj = $class->newInstanceArgs($injectionList);
 
-        // @todo Remove in 8.0.
+        // @todo Remove in v9.0.
         if ($class->implementsInterface(Injectable::class)) {
             $this->applyInjectable($class, $obj);
 
@@ -287,14 +287,14 @@ class InjectableFactory
 
         if (!$class) {
             throw new RuntimeException(
-                "InjectableFactory: Could not resolve the dependency '{$name}' for a callback."
+                "InjectableFactory: Could not resolve the dependency '$name' for a callback."
             );
         }
 
         $className = $class->getName();
 
         throw new RuntimeException(
-            "InjectableFactory: Could not create '{$className}', the dependency '{$name}' is not resolved."
+            "InjectableFactory: Could not create '$className', the dependency '$name' is not resolved."
         );
     }
 
@@ -389,7 +389,7 @@ class InjectableFactory
         foreach ($class->getInterfaces() as $interface) {
             $interfaceName = $interface->getShortName();
 
-            if (substr($interfaceName, -5) !== 'Aware' || strlen($interfaceName) <= 5) {
+            if (!str_ends_with($interfaceName, 'Aware') || strlen($interfaceName) <= 5) {
                 continue;
             }
 
@@ -476,7 +476,7 @@ class InjectableFactory
     /**
      * @deprecated
      * @param ReflectionClass<object> $class
-     * @todo Remove in 8.0.
+     * @todo Remove in v9.0.
      */
     private function applyInjectable(ReflectionClass $class, object $obj): void
     {

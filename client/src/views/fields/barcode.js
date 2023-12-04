@@ -26,121 +26,169 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/barcode',
-    ['views/fields/varchar', 'lib!JsBarcode', 'lib!qrcode'],
-function (Dep, JsBarcode, QRCode) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+let JsBarcode;
+let QRCode;
 
-        type: 'barcode',
+class BarcodeFieldView extends VarcharFieldView {
 
-        listTemplate: 'fields/barcode/detail',
+    type = 'barcode'
 
-        detailTemplate: 'fields/barcode/detail',
+    listTemplate = 'fields/barcode/detail'
+    detailTemplate = 'fields/barcode/detail'
 
-        setup: function () {
-            this.params.trim = true;
+    setup() {
+        this.validations.push('valid');
 
-            var maxLength = 255;
+        let maxLength = 255;
 
-            switch (this.params.codeType) {
-                case 'EAN2':
-                    maxLength = 2; break;
-                case 'EAN5':
-                    maxLength = 5; break;
-                case 'EAN8':
-                    maxLength = 8; break;
-                case 'EAN13':
-                    maxLength = 13; break;
-                case 'UPC':
-                    maxLength = 12; break;
-                case 'UPCE':
-                    maxLength = 11; break;
-                case 'ITF14':
-                    maxLength = 14; break;
-                case 'pharmacode':
-                    maxLength = 6; break;
+        // noinspection SpellCheckingInspection
+        switch (this.params.codeType) {
+            case 'EAN2':
+                maxLength = 2; break;
+            case 'EAN5':
+                maxLength = 5; break;
+            case 'EAN8':
+                maxLength = 8; break;
+            case 'EAN13':
+                maxLength = 13; break;
+            case 'UPC':
+                maxLength = 12; break;
+            case 'UPCE':
+                maxLength = 11; break;
+            case 'ITF14':
+                maxLength = 14; break;
+            case 'pharmacode':
+                maxLength = 6; break;
+        }
+
+        this.params.maxLength = maxLength;
+
+        // noinspection SpellCheckingInspection
+        if (this.params.codeType !== 'QRcode') {
+            this.isSvg = true;
+
+            this.wait(
+                Espo.loader.requirePromise('lib!jsbarcode')
+                    .then(lib => JsBarcode = lib)
+            );
+        }
+        else {
+            this.wait(
+                Espo.loader.requirePromise('lib!qrcodejs')
+                    .then(lib => QRCode = lib)
+            );
+        }
+
+        super.setup();
+
+        $(window).on('resize.' + this.cid, () => {
+            if (!this.isRendered()) {
+                return;
             }
 
-            this.params.maxLength = maxLength;
+            this.controlWidth();
+        });
 
-            if (this.params.codeType !== 'QRcode') {
-                this.isSvg = true;
-            }
+        this.listenTo(this.recordHelper, 'panel-show', () => this.controlWidth());
+    }
 
-            Dep.prototype.setup.call(this);
 
-            $(window).on('resize.' + this.cid, function () {
-                if (!this.isRendered()) {
-                    return;
+    data() {
+        const data = super.data();
+
+        data.isSvg = this.isSvg;
+
+        // noinspection JSValidateTypes
+        return data;
+    }
+
+    onRemove() {
+        $(window).off('resize.' + this.cid);
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.isListMode() || this.isDetailMode()) {
+            const value = this.model.get(this.name);
+
+            if (value) {
+                // noinspection SpellCheckingInspection
+                if (this.params.codeType === 'QRcode') {
+                    this.initQrcode(value);
                 }
+                else {
+                    const $barcode = $(this.getSelector() + ' .barcode');
 
-                this.controlWidth();
-            }.bind(this));
-
-            this.listenTo(this.recordHelper, 'panel-show', () => this.controlWidth());
-        },
-
-        onRemove: function () {
-            $(window).off('resize.' + this.cid);
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-
-            if (this.mode === 'list' || this.mode === 'detail') {
-                var value = this.model.get(this.name);
-
-                if (value) {
-                    if (this.params.codeType === 'QRcode') {
-                        var size = 128;
-
-                        if (this.isListMode()) {
-                            size = 64;
-                        }
-
-                        var containerWidth = this.$el.width() ;
-
-                        if (containerWidth < size && containerWidth) {
-                            size = containerWidth;
-                        }
-
-                        new QRCode(this.$el.find('.barcode').get(0), {
-                            text: value,
-                            width: size,
-                            height: size,
-                            colorDark : '#000000',
-                            colorLight : '#ffffff',
-                            correctLevel : QRCode.CorrectLevel.H,
-                        });
+                    if ($barcode.length) {
+                        this.initBarcode(value);
                     }
                     else {
-                        var $barcode = $(this.getSelector() + ' .barcode');
-
-                        if ($barcode.length) {
+                        // SVG may be not available yet (in webkit).
+                        setTimeout(() => {
                             this.initBarcode(value);
-                        }
-                        else {
-                            // SVG may be not available yet (in webkit).
-                            setTimeout(
-                                function () {
-                                    this.initBarcode(value);
-
-                                    this.controlWidth();
-                                }
-                                .bind(this),
-                                100
-                            );
-                        }
-
+                            this.controlWidth();
+                        }, 100);
                     }
+
                 }
-
-                this.controlWidth();
             }
-        },
 
-        initBarcode: function (value) {
+            this.controlWidth();
+        }
+    }
+
+    initQrcode(value) {
+        let size = 128;
+
+        if (value.length > 192) {
+            size *= 2;
+        }
+
+        if (this.isListMode()) {
+            size = 64;
+        }
+
+        const containerWidth = this.$el.width();
+
+        if (containerWidth < size && containerWidth) {
+            size = containerWidth;
+        }
+
+        const $barcode = this.$el.find('.barcode');
+
+        const init = (level) => {
+            const options = {
+                text: value,
+                width: size,
+                height: size,
+                colorDark: '#000000',
+                colorLight: '#ffffff',
+                correctLevel: level || QRCode.CorrectLevel.H,
+            };
+
+            new QRCode($barcode.get(0), options);
+        };
+
+        try {
+            init();
+        }
+        catch (e) {
+            try {
+                $barcode.empty();
+
+                init(QRCode.CorrectLevel.L);
+            }
+            catch (e) {
+                console.error(this.name + ': ' + e.message);
+            }
+        }
+    }
+
+    initBarcode(value) {
+        try {
             JsBarcode(this.getSelector() + ' .barcode', value, {
                 format: this.params.codeType,
                 height: 50,
@@ -148,10 +196,53 @@ function (Dep, JsBarcode, QRCode) {
                 margin: 0,
                 lastChar: this.params.lastChar,
             });
-        },
+        }
+        catch (e) {
+            console.error(this.name, e);
+        }
+    }
 
-        controlWidth: function () {
-            this.$el.find('.barcode').css('max-width', this.$el.width() + 'px');
-        },
-    });
-});
+    controlWidth() {
+        this.$el.find('.barcode').css('max-width', this.$el.width() + 'px');
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateValid() {
+        if (this.params.codeType === 'QRcode') {
+            return;
+        }
+
+        const value = this.model.get(this.name);
+
+        if (!value) {
+            return;
+        }
+
+        let isValid;
+
+        try {
+            JsBarcode({}, value, {
+                format: this.params.codeType,
+                lastChar: this.params.lastChar,
+                valid: valid => isValid = valid,
+            });
+        }
+        catch (e) {
+            return true;
+        }
+
+        if (isValid) {
+            return;
+        }
+
+        const msg = this.translate('barcodeInvalid', 'messages')
+            .replace('{field}', this.getLabelText())
+            .replace('{type}', this.params.codeType);
+
+        this.showValidationMessage(msg);
+
+        return true;
+    }
+}
+
+export default BarcodeFieldView;

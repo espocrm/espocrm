@@ -26,24 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/rows',
-['views/admin/layouts/base', 'res!client/css/misc/layout-manager-rows.css'],
-function (Dep, styleCss) {
+define('views/admin/layouts/rows', ['views/admin/layouts/base'], function (Dep) {
 
     return Dep.extend({
 
         template: 'admin/layouts/rows',
 
-        events: _.extend({
-            'click a[data-action="editItem"]': function (e) {
-                this.editRow($(e.target).closest('li').data('name'));
-            },
-        }, Dep.prototype.events),
-
         dataAttributeList: null,
-
         dataAttributesDefs: {},
-
         editable: false,
 
         data: function () {
@@ -62,21 +52,32 @@ function (Dep, styleCss) {
 
         setup: function () {
             this.itemsData = {};
+
             Dep.prototype.setup.call(this);
+
+            this.events['click a[data-action="editItem"]'] = e => {
+                const name = $(e.target).closest('li').data('name');
+
+                this.editRow(name);
+            };
 
             this.on('update-item', (name, attributes) => {
                 this.itemsData[name] = Espo.Utils.cloneDeep(attributes);
             });
 
-            this.$style = $('<style>').html(styleCss).appendTo($('body'));
+            Espo.loader.require('res!client/css/misc/layout-manager-rows.css', styleCss => {
+                this.$style = $('<style>').html(styleCss).appendTo($('body'));
+            });
         },
 
         onRemove: function () {
-            if (this.$style) this.$style.remove();
+            if (this.$style) {
+                this.$style.remove();
+            }
         },
 
         editRow: function (name) {
-            var attributes = Espo.Utils.cloneDeep(this.itemsData[name] || {});
+            const attributes = Espo.Utils.cloneDeep(this.itemsData[name] || {});
             attributes.name = name;
 
             this.openEditDialog(attributes)
@@ -99,18 +100,24 @@ function (Dep, styleCss) {
         onDrop: function (e) {},
 
         fetch: function () {
-            var layout = [];
+            const layout = [];
 
             $("#layout ul.enabled > li").each((i, el) => {
-                var o = {};
+                const o = {};
 
-                var name = $(el).data('name');
+                const name = $(el).data('name');
 
-                var attributes = this.itemsData[name] || {};
+                const attributes = this.itemsData[name] || {};
                 attributes.name = name;
 
                 this.dataAttributeList.forEach(attribute => {
-                    var value = attributes[attribute] || null;
+                    const defs = this.dataAttributesDefs[attribute] || {};
+
+                    if (defs.notStorable) {
+                        return;
+                    }
+
+                    const value = attributes[attribute] || null;
 
                     if (value) {
                         o[attribute] = value;

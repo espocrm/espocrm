@@ -264,6 +264,10 @@ class DiffModifier
             ->setNotnull(false)
             ->setDefault(null);
 
+        if ($name === 'id') {
+            $column->setNotnull(true);
+        }
+
         self::unsetChangedColumnProperty($tableDiff, $columnDiff, $name, 'autoincrement');
 
         return true;

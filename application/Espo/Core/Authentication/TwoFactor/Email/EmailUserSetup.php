@@ -29,22 +29,20 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Email;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Entities\User;
-
 use Espo\Core\Authentication\TwoFactor\UserSetup;
-
-use Espo\Core\Exceptions\Error;
 
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class EmailUserSetup implements UserSetup
 {
-    private $util;
 
-    public function __construct(Util $util)
-    {
-        $this->util = $util;
-    }
+    public function __construct(private Util $util)
+    {}
 
     public function getData(User $user): stdClass
     {
@@ -58,7 +56,7 @@ class EmailUserSetup implements UserSetup
         $code = $payloadData->code ?? null;
 
         if ($code === null) {
-            throw new Error("No code.");
+            throw new BadRequest("No code.");
         }
 
         $codeModified = str_replace(' ', '', trim($code));

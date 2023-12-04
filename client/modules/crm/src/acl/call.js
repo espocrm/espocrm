@@ -26,9 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:acl/call', ['crm:acl/meeting'], function (Dep) {
+import MeetingAcl from 'modules/crm/acl/meeting';
 
-    return Dep.extend({
+class CallAcl extends MeetingAcl {}
 
-    });
-});
+export default CallAcl;

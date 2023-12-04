@@ -3,7 +3,7 @@
     "body": "Inhalt",
     "subject": "Betreff",
     "attachments": "Anhänge",
-    "oneOff": "Ein-Aus",
+    "oneOff": "Einmalig",
     "category": "Kategorie",
     "insertField": "Platzhalter"
   },
@@ -12,7 +12,7 @@
     "Available placeholders": "Verfügbare Platzhalter"
   },
   "tooltips": {
-    "oneOff": "Überprüfen Sie, ob Sie die Vorlage nur einmal benutzen z.B. für eine Massenaussendung"
+    "oneOff": "Überprüfen Sie, ob Sie die Vorlage nur einmal benutzen wollen. Z.B. für eine Massenaussendung."
   },
   "presetFilters": {
     "actual": "Aktuell"
@@ -21,7 +21,8 @@
     "optOutLink": "ein Abmeldelink",
     "today": "Heutiges Datum",
     "now": "Aktuelles Datum & Uhrzeit",
-    "currentYear": "Laufendes Jahr"
+    "currentYear": "Laufendes Jahr",
+    "optOutUrl": "URL für einen Link zur Abbestellung"
   },
   "messages": {
     "infoText": "Verfügbare Platzhalter:\n\n{optOutUrl} &#8211; URL für einen Abmeldelink;\n\n{optOutLink} &#8211; ein Link zum Abbestellen des Abonnements."

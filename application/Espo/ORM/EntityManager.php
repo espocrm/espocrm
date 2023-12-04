@@ -192,7 +192,7 @@ class EntityManager
         }
 
         if (!$this->mapperFactory) {
-            throw new RuntimeException("Could not create mapper '{$name}'. No mapper factory.");
+            throw new RuntimeException("Could not create mapper '$name'. No mapper factory.");
         }
 
         $this->mappers[$name] = $this->mapperFactory->create($name);
@@ -205,7 +205,7 @@ class EntityManager
     public function getEntity(string $entityType, ?string $id = null): ?Entity
     {
         if (!$this->hasRepository($entityType)) {
-            throw new RuntimeException("ORM: Repository '{$entityType}' does not exist.");
+            throw new RuntimeException("ORM: Repository '$entityType' does not exist.");
         }
 
         if ($id === null) {
@@ -236,18 +236,12 @@ class EntityManager
      * Store an entity.
      *
      * @param array<string, mixed> $options Options.
-     * @return void
-     *
-     * @todo Change return type to void in v7.4.
      */
-    public function saveEntity(Entity $entity, array $options = [])
+    public function saveEntity(Entity $entity, array $options = []): void
     {
         $entityType = $entity->getEntityType();
 
         $this->getRepository($entityType)->save($entity, $options);
-
-        /** @phpstan-ignore-next-line */
-        return $entity->getId();
     }
 
     /**
@@ -319,7 +313,7 @@ class EntityManager
     public function getRepository(string $entityType): Repository
     {
         if (!$this->hasRepository($entityType)) {
-            throw new RuntimeException("Repository '{$entityType}' does not exist.");
+            throw new RuntimeException("Repository '$entityType' does not exist.");
         }
 
         if (!array_key_exists($entityType, $this->repositoryHash)) {
@@ -339,7 +333,7 @@ class EntityManager
         $repository = $this->getRepository($entityType);
 
         if (!$repository instanceof RDBRepository) {
-            throw new RuntimeException("Repository '{$entityType}' is not RDB.");
+            throw new RuntimeException("Repository '$entityType' is not RDB.");
         }
 
         return $repository;
@@ -450,7 +444,7 @@ class EntityManager
     }
 
     /**
-     * @todo Remove in v8.0.
+     * @todo Remove in v9.0.
      * @deprecated As of v6.0. Use `getQueryComposer`.
      */
     public function getQuery(): QueryComposer

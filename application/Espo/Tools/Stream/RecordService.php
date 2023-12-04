@@ -847,7 +847,7 @@ class RecordService
         try {
             return $this->userAclManagerProvider->get($user);
         }
-        catch (Error $e) {
+        catch (Acl\Exceptions\NotAvailable) {
             return null;
         }
     }

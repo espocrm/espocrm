@@ -10,10 +10,8 @@
   },
   "fields": {
     "exportPermission": "Exportberechtigung",
-    "massUpdatePermission": "Massenupdate Erlaubnis"
-  },
-  "tooltips": {
-    "exportPermission": "Definiert, ob Portalbenutzer Datensätze exportieren können.",
-    "massUpdatePermission": "Bestimmt, ob Portalbenutzer die Massenänderung von Datensätzen durchführen können."
+    "massUpdatePermission": "Massenänderungen Berechtigung",
+    "data": "Daten",
+    "fieldData": "Felddaten"
   }
 }

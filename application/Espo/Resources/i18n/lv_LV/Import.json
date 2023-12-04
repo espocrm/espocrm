@@ -68,7 +68,8 @@
     "confirmRemoveDuplicates": "Šī izvēle neatgriezeniski dzēsīs visus importētos ierakstus, kas būs atpazīti kā dublikāti. Vai tiešām vēlaties turpināt?",
     "removeImportLog": "Šī izvēle dzēsīs importēto ierakstu reģistru. Visi importētie ieraksti tiks saglabāti. Izmantojiet šo izvēli, ja vēlaties pieļaut importēšanu.",
     "confirmRemoveImportLog": "Tādējādi tiks dzēsts importa žurnāls. Visi importētie ieraksti tiks saglabāti. Jūs nevarēsiet atgriezt importa rezultātus. Vai esat pārliecināts?",
-    "noErrors": "Kļūdu nav."
+    "noErrors": "Kļūdu nav.",
+    "importRunning": "Importēt darbojas..."
   },
   "fields": {
     "file": "Fails",

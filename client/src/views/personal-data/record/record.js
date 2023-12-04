@@ -32,7 +32,7 @@ define('views/personal-data/record/record', ['views/record/base'], function (Dep
 
         template: 'personal-data/record/record',
 
-        events: _.extend({
+        additionalEvents: {
             'click .checkbox': function (e) {
                 var name = $(e.currentTarget).data('name');
 
@@ -72,7 +72,7 @@ define('views/personal-data/record/record', ['views/record/base'], function (Dep
 
                 this.trigger('check', this.checkedFieldList);
             },
-        }, Dep.prototype.events),
+        },
 
         data: function () {
             var data = {};
@@ -87,7 +87,12 @@ define('views/personal-data/record/record', ['views/record/base'], function (Dep
         setup: function () {
             Dep.prototype.setup.call(this);
 
-            this.scope = this.model.name;
+            this.events = {
+                ...this.additionalEvents,
+                ...this.events,
+            };
+
+            this.scope = this.model.entityType;
 
             this.fieldList = [];
             this.checkedFieldList = [];

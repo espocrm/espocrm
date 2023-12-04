@@ -81,7 +81,7 @@
     },
     "additionalTables": {
         "DocumentFolderPath": {
-            "fields": {
+            "attributes": {
                 "id": {
                     "type": "id",
                     "dbType": "integer",

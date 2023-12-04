@@ -1,7 +1,7 @@
 {
   "fields": {
     "name": "Ім'я",
-    "emailAddress": "Емейл",
+    "emailAddress": "Електронна пошта",
     "accountRole": "Посада",
     "account": "Контрагент",
     "accounts": "Контрагенти",
@@ -20,13 +20,14 @@
     "accountIsInactive": "Неактивний акаунт",
     "acceptanceStatusMeetings": "Статус підтвердження (Зустрічі)",
     "acceptanceStatusCalls": "Статус підтвердження (Дзвінки)",
-    "title": "Назва облікового запису"
+    "title": "Назва облікового запису",
+    "hasPortalUser": "Є користувачем порталу"
   },
   "links": {
     "opportunities": "Угоди",
     "cases": "Звернення",
     "targetLists": "Цільові списки",
-    "campaignLogRecords": "Лоґ кампанії",
+    "campaignLogRecords": "Журнал кампанії",
     "campaign": "Кампанія",
     "account": "Контрагент (основний)",
     "accounts": "Контрагенти",
@@ -49,7 +50,7 @@
   },
   "presetFilters": {
     "portalUsers": "Користувачі порталів",
-    "notPortalUsers": "Не користувачів порталу",
+    "notPortalUsers": "Не користувачі порталу",
     "accountActive": "Активний"
   }
 }

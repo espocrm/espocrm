@@ -128,4 +128,12 @@ class LeadCapture extends \Espo\Core\ORM\Entity
     {
         return $this->get('optInConfirmationEmailTemplateId');
     }
+
+    /**
+     * @since 8.1.0
+     */
+    public function getPhoneNumberCountry(): ?string
+    {
+        return $this->get('phoneNumberCountry');
+    }
 }

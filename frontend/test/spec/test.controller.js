@@ -34,11 +34,13 @@ describe('controller', function () {
 	var ControllerClass;
 
 	beforeEach(function (done) {
-		require('controller', function (Controller) {
+		Espo.loader.require('controller', function (Controller) {
 			ControllerClass = Controller;
+
 			viewFactory = {
 				create: {}
 			};
+
 			view = {
 				render: {},
 				setView: {}
@@ -48,6 +50,7 @@ describe('controller', function () {
 			spyOn(viewFactory, 'create').and.returnValue(view);
 			spyOn(view, 'render');
 			spyOn(view, 'setView');
+
 			done();
 		});
 	});
@@ -64,8 +67,8 @@ describe('controller', function () {
 
 	it ("different controllers should use same param set", function () {
 		var someController = new ControllerClass(controller.params, {viewFactory: viewFactory});
+
 		someController.set('some', 'test');
 		expect(controller.get('some')).toBe(someController.get('some'));
 	});
-
 });

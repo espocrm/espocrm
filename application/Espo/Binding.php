@@ -240,6 +240,11 @@ class Binding implements BindingProcessor
             'Espo\\ORM\\PDO\\PDOProvider',
             'Espo\\ORM\\PDO\\DefaultPDOProvider'
         );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Utils\\Database\\ConfigDataProvider',
+            'Espo\\Core\\Utils\\Database\\DefaultConfigDataProvider'
+        );
     }
 
     private function bindMisc(Binder $binder): void
@@ -281,6 +286,21 @@ class Binding implements BindingProcessor
         $binder->bindImplementation(
             'Espo\\Core\\Mail\\Importer\\DuplicateFinder',
             'Espo\\Core\\Mail\\Importer\\DefaultDuplicateFinder'
+        );
+
+        $binder->bindImplementation(
+            'Espo\\Tools\\Api\\Cors\\Helper',
+            'Espo\\Tools\\Api\\Cors\\DefaultHelper'
+        );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Record\\ActionHistory\\ActionLogger',
+            'Espo\\Core\\Record\\ActionHistory\\DefaultActionLogger'
+        );
+
+        $binder->bindImplementation(
+            'Espo\\Core\\Mail\\Importer',
+            'Espo\\Core\\Mail\\Importer\\DefaultImporter'
         );
     }
 

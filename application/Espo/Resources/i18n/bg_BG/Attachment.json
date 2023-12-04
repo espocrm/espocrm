@@ -10,7 +10,8 @@
     "field": "Поле",
     "sourceId": "Източник ID",
     "storage": "Съхранение",
-    "size": "Размер (байта)"
+    "size": "Размер (байта)",
+    "isBeingUploaded": "Качва се"
   },
   "options": {
     "role": {

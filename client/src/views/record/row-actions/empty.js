@@ -26,12 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/row-actions/empty', ['views/record/row-actions/default'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+class EmptyRowActionsView extends DefaultRowActionsView {
 
-        getActionList: function () {
-            return [];
-        },
-    });
-});
+    getActionList() {
+        return [];
+    }
+}
+
+export default EmptyRowActionsView;

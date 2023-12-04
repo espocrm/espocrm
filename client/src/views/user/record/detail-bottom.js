@@ -26,40 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/record/detail-bottom', ['views/record/detail-bottom'], function (Dep) {
+import DetailBottomRecordView from 'views/record/detail-bottom';
 
-    return Dep.extend({
+class UserDetailBottomRecordView extends  DetailBottomRecordView {
 
-        setupPanels: function () {
-            Dep.prototype.setupPanels.call(this);
+    setupPanels() {
+       super.setupPanels();
 
-            var streamAllowed = this.getAcl().checkUserPermission(this.model);
+        let streamAllowed = this.getAcl().checkUserPermission(this.model);
 
-            if (!streamAllowed) {
-                if (this.getAcl().get('userPermission') === 'team') {
-                    if (!this.model.has('teamsIds')) {
-                        this.listenToOnce(this.model, 'sync', () => {
-                            if (this.getAcl().checkUserPermission(this.model)) {
-                                this.onPanelsReady(() => {
-                                    this.showPanel('stream', 'acl');
-                                });
-                            }
-                        });
-                    }
+        if (
+            !streamAllowed &&
+            this.getAcl().getPermissionLevel('userPermission') === 'team' &&
+            !this.model.has('teamsIds')
+        ) {
+            this.listenToOnce(this.model, 'sync', () => {
+                if (this.getAcl().checkUserPermission(this.model)) {
+                    this.onPanelsReady(() => {
+                        this.showPanel('stream', 'acl');
+                    });
                 }
-            }
-
-            this.panelList.push({
-                "name": "stream",
-                "label": "Stream",
-                "view": "views/user/record/panels/stream",
-                "sticked": true,
-                "hidden": !streamAllowed,
             });
+        }
 
-            if (!streamAllowed) {
-                this.recordHelper.setPanelStateParam('stream', 'hiddenAclLocked', true);
-            }
-        },
-    });
-});
+        this.panelList.push({
+            "name": "stream",
+            "label": "Stream",
+            "view": "views/user/record/panels/stream",
+            "sticked": true,
+            "hidden": !streamAllowed,
+        });
+
+        if (!streamAllowed) {
+            this.recordHelper.setPanelStateParam('stream', 'hiddenAclLocked', true);
+        }
+    }
+}
+
+export default UserDetailBottomRecordView;

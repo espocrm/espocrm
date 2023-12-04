@@ -26,24 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/notification/items/system', ['views/notification/items/base'], function (Dep) {
+import BaseNotificationItemView from 'views/notification/items/base';
 
-    return Dep.extend({
+class SystemNotificationItemView extends BaseNotificationItemView {
 
-        template: 'notification/items/system',
+    template = 'notification/items/system'
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+    data() {
+        return {
+            ...super.data(),
+            message: this.model.get('message'),
+        };
+    }
 
-            data['message'] = this.model.get('message');
+    setup() {
+        let data = this.model.get('data') || {};
 
-            return data;
-        },
+        this.userId = data.userId;
+    }
+}
 
-        setup: function () {
-            let data = this.model.get('data') || {};
-
-            this.userId = data.userId;
-        },
-    });
-});
+export default SystemNotificationItemView;

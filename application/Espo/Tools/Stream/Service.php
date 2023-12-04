@@ -29,12 +29,14 @@
 
 namespace Espo\Tools\Stream;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Acl\Exceptions\NotAvailable;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\Subscription;
 use Espo\Modules\Crm\Entities\Account;
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Order;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
 use Espo\ORM\Entity;
@@ -1103,7 +1105,10 @@ class Service
             ->buildQueryBuilder();
 
         if (!$searchParams->getOrderBy()) {
-            $builder->order('LIST:id:' . $this->user->getId(), 'DESC');
+            $builder->order([]);
+            $builder->order(
+                Order::createByPositionInList(Expr::column('id'), [$this->user->getId()])
+            );
             $builder->order('name');
         }
 
@@ -1168,10 +1173,10 @@ class Service
             ->where([
                 'isActive' => true,
             ])
-            ->order([
-                ['LIST:id:' . $this->user->getId(), 'DESC'],
-                ['name'],
-            ])
+            ->order(
+                Order::createByPositionInList(Expr::column('id'), [$this->user->getId()])
+            )
+            ->order('name')
             ->find();
 
         $data = [
@@ -1195,7 +1200,7 @@ class Service
         try {
             return $this->userAclManagerProvider->get($user);
         }
-        catch (Error $e) {
+        catch (NotAvailable) {
             return null;
         }
     }
@@ -1411,11 +1416,11 @@ class Service
         }
 
         if (!$entity->isNew()) {
-            if ($createdAt->getTimestamp() < $notificationThreshold->getTimestamp()) {
+            if ($createdAt->toTimestamp() < $notificationThreshold->getTimestamp()) {
                 $forceProcessNoteNotifications = false;
             }
 
-            if ($createdAt->getTimestamp() < $aclThreshold->getTimestamp()) {
+            if ($createdAt->toTimestamp() < $aclThreshold->getTimestamp()) {
                 return;
             }
         }

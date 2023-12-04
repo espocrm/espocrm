@@ -26,625 +26,676 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/main', ['view'], function (Dep) {
+/** @module views/main */
+
+import View from 'view';
+
+/**
+ * A base main view. The detail, edit, list views to be extended from.
+ */
+class MainView extends View {
 
     /**
-     * A base main view. The detail, edit, list views to be extended from.
+     * A scope name.
      *
-     * @class
-     * @name Class
-     * @extends module:view.Class
-     * @memberOf module:views/main
+     * @type {string} scope
      */
-    return Dep.extend(/** @lends module:views/main.Class.prototype */{
+    scope = ''
 
-        /**
-         * A scope name.
-         *
-         * @type {string} scope
-         */
-        scope: null,
+    /**
+     * A name.
+     *
+     * @type {string} name
+     */
+    name = ''
 
-        /**
-         * A name.
-         *
-         * @type {string} name
-         */
-        name: null,
+    /**
+     * A top-right menu item (button or dropdown action).
+     * Handled by a class method `action{Action}`, a click handler or a handler class.
+     *
+     * @typedef {Object} module:views/main~MenuItem
+     *
+     * @property {string} [name] A name.
+     * @property {string} [action] An action.
+     * @property {string} [link] A link.
+     * @property {string} [label] A translatable label.
+     * @property {string} [labelTranslation] A label translation path.
+     * @property {'default'|'danger'|'success'|'warning'} [style] A style. Only for buttons.
+     * @property {boolean} [hidden]
+     * @property {Object.<string,string|number|boolean>} [data] Data attribute values.
+     * @property {string} [title] A title.
+     * @property {string} [iconHtml] An icon HTML.
+     * @property {string} [iconClass] An icon class.
+     * @property {string} [html] An HTML.
+     * @property {string} [text] A text.
+     * @property {string} [className] An additional class name. Only for buttons.
+     * @property {'create'|'read'|'edit'|'stream'|'delete'} [acl] Access to a record (or a scope if `aclScope` specified)
+     *   required for a menu item.
+     * @property {string} [aclScope] A scope to check access to with the `acl` parameter.
+     * @property {string} [configCheck] A config parameter defining a menu item availability.
+     *   If starts with `!`, then the result is negated.
+     * @property {module:utils~AccessDefs[]} [accessDataList] Access definitions.
+     * @property {string} [handler] A handler.
+     * @property {string} [initFunction] An init method in the handler.
+     * @property {string} [actionFunction] An action method in the handler.
+     * @property {string} [checkVisibilityFunction] A method in the handler that determine whether an item is available.
+     * @property {function()} [onClick] A click handler.
+     */
 
-        /**
-         * A top-right menu item (button or dropdown action).
-         * Handled by a class method `action{Action}`.
-         *
-         * @typedef {Object} module:views/main~MenuItem
-         *
-         * @property {string} name A name.
-         * @property {string} [action] An action.
-         * @property {string} [link] A link.
-         * @property {string} [label] A translatable label.
-         * @property {string} [labelTranslation] A label translation path.
-         * @property {'default'|'danger'|'success'|'warning'} [style] A style. Only for buttons.
-         * @property {boolean} [hidden]
-         * @property {Object.<string,string|number|boolean>} [data] Data attribute values.
-         * @property {string} [title] A title.
-         * @property {string} [iconHtml] An icon HTML.
-         * @property {string} [html] An HTML.
-         * @property {string} [text] A text.
-         * @property {string} [className] An additional class name. Only for buttons.
-         * @property {'read'|'edit'|'stream'|'delete'} [acl] Access to a record (or a scope if `aclScope` specified)
-         *   required for a menu item.
-         * @property {string} [aclScope] A scope to check access to with the `acl` parameter.
-         * @property {string} [configCheck] A config parameter defining a menu item availability.
-         *   If starts with `!`, then the result is negated.
-         * @property {module:utils~AccessDefs[]} [accessDataList] Access definitions.
-         */
+    /**
+     * Top-right menu definitions.
+     *
+     * @type {{
+     *     buttons: module:views/main~MenuItem[],
+     *     dropdown: module:views/main~MenuItem[],
+     *     actions: module:views/main~MenuItem[],
+     * }} menu
+     * @private
+     * @internal
+     */
+    menu = {}
 
-        /**
-         * Top-right menu definitions.
-         *
-         * @type {{
-         *     buttons: module:views/main~MenuItem[],
-         *     dropdown: module:views/main~MenuItem[],
-         *     actions: module:views/main~MenuItem[],
-         * }} menu
-         * @protected
-         * @internal
-         */
-        menu: null,
+    /**
+     * @private
+     * @type {JQuery|null}
+     */
+    $headerActionsContainer = null
+
+    /**
+     * A shortcut-key => action map.
+     *
+     * @protected
+     * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
+     */
+    shortcutKeys = null
+
+    /** @inheritDoc */
+    events = {
+        /** @this MainView */
+        'click .action': function (e) {
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget, {
+                actionItems: [...this.menu.buttons, ...this.menu.dropdown],
+                className: 'main-header-manu-action',
+            });
+        },
+    }
+
+    lastUrl
+
+    /** @inheritDoc */
+    init() {
+        this.scope = this.options.scope || this.scope;
+        this.menu = {};
+
+        this.options.params = this.options.params || {};
+
+        if (this.name && this.scope) {
+            const key = this.name.charAt(0).toLowerCase() + this.name.slice(1);
+
+            this.menu = this.getMetadata().get(['clientDefs', this.scope, 'menu', key]) || {};
+        }
 
         /**
          * @private
-         * @type {JQuery|null}
+         * @type {string[]}
          */
-        $headerActionsContainer: null,
+        this.headerActionItemTypeList = ['buttons', 'dropdown', 'actions'];
 
-        /**
-         * A shortcut-key => action map.
-         *
-         * @protected
-         * @type {?Object.<string,string|function (JQueryKeyEventObject): void>}
-         */
-        shortcutKeys: null,
+        this.menu = Espo.Utils.cloneDeep(this.menu);
 
-        /**
-         * @inheritDoc
-         */
-        events: {
-            'click .action': function (e) {
-                Espo.Utils.handleAction(this, e);
-            },
-        },
+        let globalMenu = {};
 
-        /**
-         * @inheritDoc
-         */
-        init: function () {
-            this.scope = this.options.scope || this.scope;
-            this.menu = {};
+        if (this.name) {
+            globalMenu = Espo.Utils.cloneDeep(
+                this.getMetadata()
+                    .get(['clientDefs', 'Global', 'menu',
+                        this.name.charAt(0).toLowerCase() + this.name.slice(1)]) || {}
+            );
+        }
 
-            this.options.params = this.options.params || {};
+        this._reRenderHeaderOnSync = false;
 
-            if (this.name && this.scope) {
-                this.menu = this.getMetadata()
-                    .get(['clientDefs', this.scope, 'menu',
-                        this.name.charAt(0).toLowerCase() + this.name.slice(1)]) || {};
-            }
+        this._menuHandlers = {};
 
-            /**
-             * @private
-             * @type {string[]}
-             */
-            this.headerActionItemTypeList = ['buttons', 'dropdown', 'actions'];
+        this.headerActionItemTypeList.forEach(type => {
+            this.menu[type] = this.menu[type] || [];
+            this.menu[type] = this.menu[type].concat(globalMenu[type] || []);
 
-            this.menu = Espo.Utils.cloneDeep(this.menu);
+            const itemList = this.menu[type];
 
-            let globalMenu = {};
+            itemList.forEach(item => {
+                const viewObject = this;
 
-            if (this.name) {
-                globalMenu = Espo.Utils.cloneDeep(
-                    this.getMetadata()
-                        .get(['clientDefs', 'Global', 'menu',
-                            this.name.charAt(0).toLowerCase() + this.name.slice(1)]) || {}
-                );
-            }
+                if (
+                    (item.initFunction || item.checkVisibilityFunction) &&
+                    (item.handler || item.data && item.data.handler)
+                ) {
+                    this.wait(new Promise(resolve => {
+                        const handler = item.handler || item.data.handler;
 
-            this.headerActionItemTypeList.forEach(type => {
-                this.menu[type] = this.menu[type] || [];
-                this.menu[type] = this.menu[type].concat(globalMenu[type] || []);
+                        Espo.loader.require(handler, Handler => {
+                            const handler = new Handler(viewObject);
 
-                let itemList = this.menu[type];
+                            const name = item.name || item.action;
 
-                itemList.forEach(item => {
-                    let viewObject = this;
-
-                    if (item.initFunction && item.data.handler) {
-                        this.wait(new Promise(resolve => {
-                            require(item.data.handler, Handler => {
-                                let handler = new Handler(viewObject);
-
-                                handler[item.initFunction].call(handler);
-
-                                resolve();
-                            });
-                        }));
-                    }
-                });
-            });
-
-            this.updateLastUrl();
-
-            this.on('after:render-internal', () => {
-                this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
-            });
-
-            this.on('header-rendered', () => {
-                this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
-
-                this.adjustButtons();
-            });
-
-            this.on('after:render', () => this.adjustButtons());
-
-            if (this.shortcutKeys) {
-                this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
-            }
-        },
-
-        setupFinal: function () {
-            if (this.shortcutKeys) {
-                this.events['keydown.main'] = e => {
-                    let key = Espo.Utils.getKeyFromKeyEvent(e);
-
-                    if (typeof this.shortcutKeys[key] === 'function') {
-                        this.shortcutKeys[key].call(this, e);
-
-                        return;
-                    }
-
-                    let actionName = this.shortcutKeys[key];
-
-                    if (!actionName) {
-                        return;
-                    }
-
-                    e.preventDefault();
-                    e.stopPropagation();
-
-                    let methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
-
-                    this[methodName]();
-                };
-            }
-        },
-
-        /**
-         * Update a last history URL.
-         */
-        updateLastUrl: function () {
-            this.lastUrl = this.getRouter().getCurrentUrl();
-        },
-
-        /**
-         * @internal
-         * @returns {{
-         *     buttons?: module:views/main~MenuItem[],
-         *     dropdown?: module:views/main~MenuItem[],
-         *     actions?: module:views/main~MenuItem[],
-         * }}
-         */
-        getMenu: function () {
-            if (this.menuDisabled) {
-                return {};
-            }
-
-            let menu = {};
-
-            if (this.menu) {
-                this.headerActionItemTypeList.forEach(type => {
-                    (this.menu[type] || []).forEach(item => {
-                        if (item === false) {
-                            menu[type].push(false);
-
-                            return;
-                        }
-
-                        item = Espo.Utils.clone(item);
-
-                        menu[type] = menu[type] || [];
-
-                        if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
-                            return;
-                        }
-
-                        if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
-                            return;
-                        }
-
-                        if (item.accessDataList) {
-                            if (!Espo.Utils
-                                .checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())
-                            ) {
-                                return;
+                            if (name) {
+                                this._menuHandlers[name] = handler;
                             }
-                        }
 
-                        item.name = item.name || item.action;
-                        item.action = item.action || null;
+                            if (item.initFunction) {
+                                handler[item.initFunction].call(handler);
+                            }
 
-                        if (item.labelTranslation) {
-                            item.html = this.getHelper().escapeString(
-                                this.getLanguage().translatePath(item.labelTranslation)
-                            );
-                        }
+                            if (item.checkVisibilityFunction && this.model) {
+                                this._reRenderHeaderOnSync = true;
+                            }
 
-                        menu[type].push(item);
-                    });
-                });
-            }
-
-            return menu;
-        },
-
-        /**
-         * Get a header HTML. To be overridden.
-         *
-         * @returns {string} HTML.
-         */
-        getHeader: function () {
-            return '';
-        },
-
-        /**
-         * Build a header HTML. To be called from the #getHeader method.
-         * Beware of XSS.
-         *
-         * @param {(string|Element|JQuery)[]} itemList A breadcrumb path. Like: Account > Name > edit.
-         * @returns {string} HTML
-         */
-        buildHeaderHtml: function (itemList) {
-            let $itemList = itemList.map(item => {
-                return $('<div>')
-                    .addClass('breadcrumb-item')
-                    .append(item);
+                            resolve();
+                        });
+                    }));
+                }
             });
+        });
 
-            let $div = $('<div>')
-                .addClass('header-breadcrumbs');
-
-            $itemList.forEach(($item, i) => {
-                $div.append($item);
-
-                if (i === $itemList.length - 1) {
+        if (this.model) {
+            this.whenReady().then(() => {
+                if (!this._reRenderHeaderOnSync) {
                     return;
                 }
 
-                $div.append(
-                    $('<div>')
-                        .addClass('breadcrumb-separator')
-                        .append(
-                            $('<span>').addClass('chevron-right')
-                        )
-                )
-            });
-
-            return $div.get(0).outerHTML;
-        },
-
-
-        /**
-         * Get an icon HTML.
-         *
-         * @returns {string} HTML
-         */
-        getHeaderIconHtml: function () {
-            return this.getHelper().getScopeColorIconHtml(this.scope);
-        },
-
-        /**
-         * Action 'showModal'.
-         *
-         * @todo Revise. To be removed?
-         *
-         * @param {Object} data
-         */
-        actionShowModal: function (data) {
-            let view = data.view;
-
-            if (!view) {
-                return;
-            }
-
-            this.createView('modal', view, {
-                model: this.model,
-                collection: this.collection,
-            }, view => {
-                view.render();
-
-                this.listenTo(view, 'after:save', () => {
-                    if (this.model) {
-                        this.model.fetch();
+                this.listenTo(this.model, 'sync', () => {
+                    if (!this.getHeaderView()) {
+                        return;
                     }
 
-                    if (this.collection) {
-                        this.collection.fetch();
-                    }
+                    this.getHeaderView().reRender();
                 });
             });
-        },
+        }
 
-        /**
-         * Add a menu item.
-         *
-         * @param {'buttons'|'dropdown'|'actions'} type A type.
-         * @param {module:views/main~MenuItem|false} item Item definitions.
-         * @param {boolean} [toBeginning=false] To beginning.
-         * @param {boolean} [doNotReRender=false] Skip re-render.
-         */
-        addMenuItem: function (type, item, toBeginning, doNotReRender) {
-            if (item) {
-                item.name = item.name || item.action;
+        this.updateLastUrl();
 
-                let name = item.name;
+        this.on('after:render-internal', () => {
+            this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
+        });
 
-                if (name) {
-                    let index = -1;
+        this.on('header-rendered', () => {
+            this.$headerActionsContainer = this.$el.find('.page-header .header-buttons');
 
-                    this.menu[type].forEach((data, i) => {
-                        data = data || {};
+            this.adjustButtons();
+        });
 
-                        if (data.name === name) {
-                            index = i;
-                        }
-                    });
+        this.on('after:render', () => this.adjustButtons());
 
-                    if (~index) {
-                        this.menu[type].splice(index, 1);
+        if (this.shortcutKeys) {
+            this.shortcutKeys = Espo.Utils.cloneDeep(this.shortcutKeys);
+        }
+    }
+
+    setupFinal() {
+        if (this.shortcutKeys) {
+            this.events['keydown.main'] = e => {
+                const key = Espo.Utils.getKeyFromKeyEvent(e);
+
+                if (typeof this.shortcutKeys[key] === 'function') {
+                    this.shortcutKeys[key].call(this, e.originalEvent);
+
+                    return;
+                }
+
+                const actionName = this.shortcutKeys[key];
+
+                if (!actionName) {
+                    return;
+                }
+
+                e.preventDefault();
+                e.stopPropagation();
+
+                const methodName = 'action' + Espo.Utils.upperCaseFirst(actionName);
+
+                if (typeof this[methodName] === 'function') {
+                    this[methodName]();
+
+                    return;
+                }
+
+                this[actionName]();
+            };
+        }
+    }
+
+    /**
+     * Update a last history URL.
+     */
+    updateLastUrl() {
+        this.lastUrl = this.getRouter().getCurrentUrl();
+    }
+
+    /**
+     * @internal
+     * @returns {{
+     *     buttons?: module:views/main~MenuItem[],
+     *     dropdown?: module:views/main~MenuItem[],
+     *     actions?: module:views/main~MenuItem[],
+     * }}
+     */
+    getMenu() {
+        if (this.menuDisabled || !this.menu) {
+            return {};
+        }
+
+        const menu = {};
+
+        this.headerActionItemTypeList.forEach(type => {
+            (this.menu[type] || []).forEach(item => {
+                if (item === false) {
+                    menu[type].push(false);
+
+                    return;
+                }
+
+                item = Espo.Utils.clone(item);
+
+                menu[type] = menu[type] || [];
+
+                if (!Espo.Utils.checkActionAvailability(this.getHelper(), item)) {
+                    return;
+                }
+
+                if (!Espo.Utils.checkActionAccess(this.getAcl(), this.model || this.scope, item)) {
+                    return;
+                }
+
+                if (item.accessDataList) {
+                    if (!Espo.Utils
+                        .checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())
+                    ) {
+                        return;
                     }
                 }
-            }
 
-            let method = 'push';
+                item.name = item.name || item.action;
+                item.action = item.action || null;
 
-            if (toBeginning) {
-                method  = 'unshift';
-            }
+                if (this._menuHandlers[item.name] && item.checkVisibilityFunction) {
+                    const handler = this._menuHandlers[item.name];
 
-            this.menu[type][method](item);
+                    if (!handler[item.checkVisibilityFunction](item.name)) {
+                        return;
+                    }
+                }
 
-            if (!doNotReRender && this.isRendered()) {
-                this.getHeaderView()
-                    .reRender();
+                if (item.labelTranslation) {
+                    item.html = this.getHelper().escapeString(
+                        this.getLanguage().translatePath(item.labelTranslation)
+                    );
+                }
 
+                menu[type].push(item);
+            });
+        });
+
+        return menu;
+    }
+
+    /**
+     * Get a header HTML. To be overridden.
+     *
+     * @returns {string} HTML.
+     */
+    getHeader() {
+        return '';
+    }
+
+    /**
+     * Build a header HTML. To be called from the #getHeader method.
+     * Beware of XSS.
+     *
+     * @param {(string|Element|JQuery)[]} itemList A breadcrumb path. Like: Account > Name > edit.
+     * @returns {string} HTML
+     */
+    buildHeaderHtml(itemList) {
+        const $itemList = itemList.map(item => {
+            return $('<div>')
+                .addClass('breadcrumb-item')
+                .append(item);
+        });
+
+        const $div = $('<div>')
+            .addClass('header-breadcrumbs');
+
+        $itemList.forEach(($item, i) => {
+            $div.append($item);
+
+            if (i === $itemList.length - 1) {
                 return;
             }
 
-            if (!doNotReRender && this.isBeingRendered()) {
-                this.once('after:render', () => {
-                    this.getHeaderView()
-                        .reRender();
-                });
-            }
-        },
+            $div.append(
+                $('<div>')
+                    .addClass('breadcrumb-separator')
+                    .append(
+                        $('<span>').addClass('chevron-right')
+                    )
+            )
+        });
 
-        /**
-         * Remove a menu item.
-         *
-         * @param {string} name An item name.
-         * @param {boolean} [doNotReRender] Skip re-render.
-         */
-        removeMenuItem: function (name, doNotReRender) {
+        return $div.get(0).outerHTML;
+    }
+
+
+    /**
+     * Get an icon HTML.
+     *
+     * @returns {string} HTML
+     */
+    getHeaderIconHtml() {
+        return this.getHelper().getScopeColorIconHtml(this.scope);
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Action 'showModal'.
+     *
+     * @todo Revise. To be removed?
+     *
+     * @param {Object} data
+     */
+    actionShowModal(data) {
+        const view = data.view;
+
+        if (!view) {
+            return;
+        }
+
+        this.createView('modal', view, {
+            model: this.model,
+            collection: this.collection,
+        }, view => {
+            view.render();
+
+            this.listenTo(view, 'after:save', () => {
+                if (this.model) {
+                    this.model.fetch();
+                }
+
+                if (this.collection) {
+                    this.collection.fetch();
+                }
+            });
+        });
+    }
+
+    /**
+     * Add a menu item.
+     *
+     * @param {'buttons'|'dropdown'} type A type.
+     * @param {module:views/main~MenuItem|false} item Item definitions.
+     * @param {boolean} [toBeginning=false] To beginning.
+     * @param {boolean} [doNotReRender=false] Skip re-render.
+     */
+    addMenuItem(type, item, toBeginning, doNotReRender) {
+        if (item) {
+            item.name = item.name || item.action || Espo.Utils.generateId();
+
+            const name = item.name;
+
             let index = -1;
-            let type = false;
 
-            this.headerActionItemTypeList.forEach(t => {
-                (this.menu[t] || []).forEach((item, i) => {
-                    item = item || {};
+            this.menu[type].forEach((data, i) => {
+                data = data || {};
 
-                    if (item.name === name) {
-                        index = i;
-                        type = t;
-                    }
-                });
+                if (data.name === name) {
+                    index = i;
+                }
             });
 
-            if (~index && type) {
+            if (~index) {
                 this.menu[type].splice(index, 1);
             }
+        }
 
-            if (!doNotReRender && this.isRendered()) {
-                this.getHeaderView()
-                    .reRender();
+        let method = 'push';
 
-                return;
-            }
+        if (toBeginning) {
+            method  = 'unshift';
+        }
 
-            if (!doNotReRender && this.isBeingRendered()) {
-                this.once('after:render', () => {
-                    this.getHeaderView()
-                        .reRender();
+        this.menu[type][method](item);
 
-                });
+        if (!doNotReRender && this.isRendered()) {
+            this.getHeaderView().reRender();
 
-                return;
-            }
+            return;
+        }
 
-            if (doNotReRender && this.isRendered()) {
-                this.$headerActionsContainer.find('[data-name="' + name + '"]').remove();
-            }
-        },
-
-        /**
-         * Disable a menu item.
-         *
-         * @param {string} name A name.
-         */
-        disableMenuItem: function (name) {
-            this.$headerActionsContainer
-                .find('[data-name="' + name + '"]')
-                .addClass('disabled')
-                .attr('disabled');
-        },
-
-        /**
-         * Enable a menu item.
-         *
-         * @param {string} name A name.
-         */
-        enableMenuItem: function (name) {
-            this.$headerActionsContainer
-                .find('[data-name="' + name + '"]')
-                .removeClass('disabled')
-                .removeAttr('disabled');
-        },
-
-        /**
-         * Action 'navigateToRoot'.
-         *
-         * @param {Object} data
-         * @param {jQuery.Event} e
-         */
-        actionNavigateToRoot: function (data, e) {
-            e.stopPropagation();
-
-            this.getRouter().checkConfirmLeaveOut(() => {
-                let options = {
-                    isReturn: true,
-                };
-
-                let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-
-                this.getRouter().navigate(rootUrl, {trigger: false});
-                this.getRouter().dispatch(this.scope, null, options);
+        if (!doNotReRender && this.isBeingRendered()) {
+            this.once('after:render', () => {
+                this.getHeaderView().reRender();
             });
-        },
+        }
+    }
 
-        /**
-         * Hide a menu item.
-         *
-         * @param {string} name A name.
-         */
-        hideHeaderActionItem: function (name) {
-            this.headerActionItemTypeList.forEach(t => {
-                (this.menu[t] || []).forEach((item, i) => {
-                    item = item || {};
+    /**
+     * Remove a menu item.
+     *
+     * @param {string} name An item name.
+     * @param {boolean} [doNotReRender] Skip re-render.
+     */
+    removeMenuItem(name, doNotReRender) {
+        let index = -1;
+        let type = false;
 
-                    if (item.name === name) {
-                        item.hidden = true;
-                    }
-                });
+        this.headerActionItemTypeList.forEach(t => {
+            (this.menu[t] || []).forEach((item, i) => {
+                item = item || {};
+
+                if (item.name === name) {
+                    index = i;
+                    type = t;
+                }
+            });
+        });
+
+        if (~index && type) {
+            this.menu[type].splice(index, 1);
+        }
+
+        if (!doNotReRender && this.isRendered()) {
+            this.getHeaderView().reRender();
+
+            return;
+        }
+
+        if (!doNotReRender && this.isBeingRendered()) {
+            this.once('after:render', () => {
+                this.getHeaderView().reRender();
+
             });
 
-            if (!this.isRendered()) {
-                return;
-            }
+            return;
+        }
 
-            this.$headerActionsContainer.find('li > .action[data-name="'+name+'"]').parent().addClass('hidden');
-            this.$headerActionsContainer.find('a.action[data-name="'+name+'"]').addClass('hidden');
+        if (doNotReRender && this.isRendered()) {
+            this.$headerActionsContainer.find('[data-name="' + name + '"]').remove();
+        }
+    }
+
+    /**
+     * Disable a menu item.
+     *
+     * @param {string} name A name.
+     */
+    disableMenuItem(name) {
+        this.$headerActionsContainer
+            .find('[data-name="' + name + '"]')
+            .addClass('disabled')
+            .attr('disabled');
+    }
+
+    /**
+     * Enable a menu item.
+     *
+     * @param {string} name A name.
+     */
+    enableMenuItem(name) {
+        this.$headerActionsContainer
+            .find('[data-name="' + name + '"]')
+            .removeClass('disabled')
+            .removeAttr('disabled');
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Action 'navigateToRoot'.
+     *
+     * @param {Object} data
+     * @param {MouseEvent} event
+     */
+    actionNavigateToRoot(data, event) {
+        event.stopPropagation();
+
+        this.getRouter().checkConfirmLeaveOut(() => {
+            const options = {
+                isReturn: true,
+            };
+
+            const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+
+            this.getRouter().navigate(rootUrl, {trigger: false});
+            this.getRouter().dispatch(this.scope, null, options);
+        });
+    }
+
+    /**
+     * Hide a menu item.
+     *
+     * @param {string} name A name.
+     */
+    hideHeaderActionItem(name) {
+        this.headerActionItemTypeList.forEach(t => {
+            (this.menu[t] || []).forEach(item => {
+                item = item || {};
+
+                if (item.name === name) {
+                    item.hidden = true;
+                }
+            });
+        });
+
+        if (!this.isRendered()) {
+            return;
+        }
+
+        this.$headerActionsContainer.find('li > .action[data-name="'+name+'"]').parent().addClass('hidden');
+        this.$headerActionsContainer.find('a.action[data-name="'+name+'"]').addClass('hidden');
+
+        this.controlMenuDropdownVisibility();
+        this.adjustButtons();
+    }
+
+    /**
+     * Show a hidden menu item.
+     *
+     * @param {string} name A name.
+     */
+    showHeaderActionItem(name) {
+        this.headerActionItemTypeList.forEach(t => {
+            (this.menu[t] || []).forEach(item => {
+                item = item || {};
+
+                if (item.name === name) {
+                    item.hidden = false;
+                }
+            });
+        });
+
+        const processUi = () => {
+            this.$headerActionsContainer.find('li > .action[data-name="' + name + '"]').parent().removeClass('hidden');
+            this.$headerActionsContainer.find('a.action[data-name="' + name + '"]').removeClass('hidden');
 
             this.controlMenuDropdownVisibility();
             this.adjustButtons();
-        },
+        };
 
-        /**
-         * Show a hidden menu item.
-         *
-         * @param {string} name A name.
-         */
-        showHeaderActionItem: function (name) {
-            this.headerActionItemTypeList.forEach(t => {
-                (this.menu[t] || []).forEach((item, i) => {
-                    item = item || {};
-
-                    if (item.name === name) {
-                        item.hidden = false;
-                    }
-                });
-            });
-
-            let processUi = () => {
-                this.$headerActionsContainer.find('li > .action[data-name="'+name+'"]').parent().removeClass('hidden');
-                this.$headerActionsContainer.find('a.action[data-name="'+name+'"]').removeClass('hidden');
-
-                this.controlMenuDropdownVisibility();
-                this.adjustButtons();
-            };
-
-            if (!this.isRendered()) {
-                if (this.isBeingRendered()) {
-                    this.whenRendered().then(() => processUi());
-                }
-
-                return;
+        if (!this.isRendered()) {
+            if (this.isBeingRendered()) {
+                this.whenRendered().then(() => processUi());
             }
 
-            processUi();
-        },
+            return;
+        }
 
-        /**
-         * Whether a menu has any non-hidden dropdown items.
-         *
-         * @private
-         * @returns {boolean}
-         */
-        hasMenuVisibleDropdownItems: function () {
-            let hasItems = false;
+        processUi();
+    }
 
-            (this.menu.dropdown || []).forEach(item => {
-                if (!item.hidden) {
-                    hasItems = true;
-                }
-            });
+    /**
+     * Whether a menu has any non-hidden dropdown items.
+     *
+     * @private
+     * @returns {boolean}
+     */
+    hasMenuVisibleDropdownItems() {
+        let hasItems = false;
 
-            return hasItems;
-        },
-
-        /**
-         * @private
-         */
-        controlMenuDropdownVisibility: function () {
-            let $group = this.$headerActionsContainer.find('.dropdown-group');
-
-            if (this.hasMenuVisibleDropdownItems()) {
-                $group.removeClass('hidden');
-                $group.find('> button').removeClass('hidden');
-
-                return;
+        (this.menu.dropdown || []).forEach(item => {
+            if (!item.hidden) {
+                hasItems = true;
             }
+        });
 
-            $group.addClass('hidden');
-            $group.find('> button').addClass('hidden');
-        },
+        return hasItems;
+    }
 
-        /**
-         * @protected
-         * @return {module:views/header.Class}
-         */
-        getHeaderView: function () {
-            return this.getView('header');
-        },
+    /**
+     * @private
+     */
+    controlMenuDropdownVisibility() {
+        const $group = this.$headerActionsContainer.find('.dropdown-group');
 
-        /**
-         * @private
-         */
-        adjustButtons: function () {
-            let $buttons = this.$headerActionsContainer.find('.btn');
+        if (this.hasMenuVisibleDropdownItems()) {
+            $group.removeClass('hidden');
+            $group.find('> button').removeClass('hidden');
 
-            $buttons
-                .removeClass('radius-left')
-                .removeClass('radius-right');
+            return;
+        }
 
-            let $buttonsVisible = $buttons.filter(':not(.hidden)');
+        $group.addClass('hidden');
+        $group.find('> button').addClass('hidden');
+    }
 
-            $buttonsVisible.first().addClass('radius-left');
-            $buttonsVisible.last().addClass('radius-right');
-        },
+    /**
+     * @protected
+     * @return {module:views/header}
+     */
+    getHeaderView() {
+        return this.getView('header');
+    }
 
-        /**
-         * Called when a stored view is reused (by the controller).
-         *
-         * @public
-         * @param {Object.<string, *>} params Routing params.
-         */
-        setupReuse: function (params) {},
-    });
-});
+    /**
+     * @private
+     */
+    adjustButtons() {
+        const $buttons = this.$headerActionsContainer.find('.btn');
+
+        $buttons
+            .removeClass('radius-left')
+            .removeClass('radius-right');
+
+        const $buttonsVisible = $buttons.filter(':not(.hidden)');
+
+        $buttonsVisible.first().addClass('radius-left');
+        $buttonsVisible.last().addClass('radius-right');
+    }
+
+    /**
+     * Called when a stored view is reused (by the controller).
+     *
+     * @public
+     * @param {Object.<string, *>} params Routing params.
+     */
+    setupReuse(params) {}
+}
+
+export default MainView;

@@ -46,19 +46,19 @@ define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
             };
         },
 
-        events: {
+        additionalEvents: {
             'change .scope-switcher input[name="scope"]': function () {
                 Espo.Ui.notify(' ... ');
 
-                var scope = $('.scope-switcher input[name="scope"]:checked').val();
+                let scope = $('.scope-switcher input[name="scope"]:checked').val();
                 this.scope = scope;
 
                 this.getModelFactory().create(this.scope, model => {
                     model.populateDefaults();
 
-                    var attributes = this.getView('edit').fetch();
+                    let attributes = this.getRecordView().fetch();
 
-                    attributes = _.extend(attributes, this.getView('edit').model.toJSON());
+                    attributes = {...attributes, ...this.getRecordView().model.getClonedAttributes()};
 
                     this.filterAttributesForEntityType(attributes, scope);
 
@@ -74,7 +74,6 @@ define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
                     this.handleAccess(model);
                 });
             },
-            ...Dep.prototype.events,
         },
 
         filterAttributesForEntityType: function (attributes, entityType) {
@@ -183,6 +182,11 @@ define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
         },
 
         setup: function () {
+            this.events = {
+                ...this.additionalEvents,
+                ...this.events,
+            };
+
             this.scopeList = Espo.Utils.clone(this.options.scopeList || this.scopeList);
             this.enabledScopeList = this.options.enabledScopeList || this.scopeList;
 
@@ -237,22 +241,21 @@ define('crm:views/calendar/modals/edit', ['views/modals/edit'], function (Dep) {
         },
 
         actionRemove: function () {
-            var model = this.getView('edit').model;
+            let model = this.getView('edit').model;
 
             this.confirm(this.translate('removeRecordConfirmation', 'messages'), () => {
-                var $buttons = this.dialog.$el.find('.modal-footer button');
+                let $buttons = this.dialog.$el.find('.modal-footer button');
 
                 $buttons.addClass('disabled');
 
-                model.destroy({
-                    success: () => {
+                model.destroy()
+                    .then(() => {
                         this.trigger('after:destroy', model);
                         this.dialog.close();
-                    },
-                    error: function () {
+                    })
+                    .catch(() => {
                         $buttons.removeClass('disabled');
-                    },
-                });
+                    });
             });
         },
     });

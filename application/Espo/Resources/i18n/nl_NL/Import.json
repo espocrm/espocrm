@@ -67,7 +67,7 @@
     "confirmRemoveDuplicates": "Hierdoor worden alle geïmporteerde records die als dubbelen werden herkend, permanent verwijderd. Weet u het zeker?",
     "removeImportLog": "Dit zal het importlogboek verwijderen. Alle geïmporteerde gegevens worden bewaard. Gebruik het als u zeker weet dat het importeren in orde is.",
     "confirmRemoveImportLog": "Dit zal het import logboek verwijderen. Alle geïmporteerde records blijven bewaard. U zult niet in staat zijn om de importresultaten terug te draaien. Ben je zeker?",
-    "noErrors": "Geen fouten."
+    "importRunning": "Import loopt..."
   },
   "fields": {
     "file": "Bestand",

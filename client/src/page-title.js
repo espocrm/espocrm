@@ -26,18 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('page-title', [], function () {
+/** @module page-title */
+
+import $ from 'jquery';
+
+/**
+ * A page-title util.
+ */
+class PageTitle {
 
     /**
-     * A page-title util.
-     *
      * @class
-     * @name Class
-     * @memberOf module:page-title
-     *
-     * @param {module:models/settings.Class} config A config.
+     * @param {module:models/settings} config A config.
      */
-    let PageTitle = function (config) {
+    constructor(config) {
+
         /**
          * @private
          * @type {boolean}
@@ -55,53 +58,50 @@ define('page-title', [], function () {
          * @type {number}
          */
         this.notificationNumber = 0;
-    };
+    }
 
-    _.extend(PageTitle.prototype, /** @lends module:page-title.Class# */{
+    /**
+     * Set a title.
+     *
+     * @param {string} title A title.
+     */
+    setTitle(title) {
+        this.title = title;
 
-        /**
-         * Set a title.
-         *
-         * @param {string} title A title.
-         */
-        setTitle: function (title) {
-            this.title = title;
+        this.update();
+    }
 
+    /**
+     * Set a notification number.
+     *
+     * @param {number} notificationNumber A number.
+     */
+    setNotificationNumber(notificationNumber) {
+        this.notificationNumber = notificationNumber;
+
+        if (this.displayNotificationNumber) {
             this.update();
-        },
+        }
+    }
 
-        /**
-         * Set a notification number.
-         *
-         * @param {number} notificationNumber A number.
-         */
-        setNotificationNumber: function (notificationNumber) {
-            this.notificationNumber = notificationNumber;
+    /**
+     * Update a page title.
+     */
+    update() {
+        let value = '';
 
-            if (this.displayNotificationNumber) {
-                this.update();
+        if (this.displayNotificationNumber && this.notificationNumber) {
+            value = '(' + this.notificationNumber.toString() + ')';
+
+            if (this.title) {
+                value += ' ';
             }
-        },
+        }
 
-        /**
-         * Update a page title.
-         */
-        update: function () {
-            let value = '';
+        value += this.title;
 
-            if (this.displayNotificationNumber && this.notificationNumber) {
-                value = '(' + this.notificationNumber.toString() + ')';
+        $('head title').text(value);
+    }
+}
 
-                if (this.title) {
-                    value += ' ';
-                }
-            }
-
-            value += this.title;
-
-            $('head title').text(value);
-        },
-    });
-
-    return PageTitle;
-});
+export default PageTitle;

@@ -1,0 +1,14 @@
+{
+  "fields": {
+    "activityStatusList": "Activiteit statussen",
+    "historyStatusList": "Geschiedenis statussens",
+    "completedStatusList": "Voltooide statussen",
+    "canceledStatusList": "Geannuleerde statussen"
+  },
+  "tooltips": {
+    "activityStatusList": "Statuswaarden die bepalen dat een activiteitrecord moet worden weergegeven in het Activiteitenpaneel en als actueel moet worden beschouwd.",
+    "historyStatusList": "Statuswaarden die bepalen of een activiteit moet worden weergegeven in het Geschiedenis-paneel.",
+    "completedStatusList": "Statuswaarden die aangeven dat een activiteit is voltooid.",
+    "canceledStatusList": "Statuswaarden die aangeven dat een activiteit is geannuleerd en niet in aanmerking wordt genomen in vrij/bezet-bereiken."
+  }
+}

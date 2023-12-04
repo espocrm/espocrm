@@ -1,0 +1,44 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/webSocket.json",
+    "title": "app/webSocket",
+    "description": "WebSocket definitions.",
+    "type": "object",
+    "properties": {
+        "categories": {
+            "type": "object",
+            "description": "Categories. Define custom WebSocket events here. You can use dots in category names. Must start with a lower case letter.",
+            "additionalProperties": {
+                "type": "object",
+                "description": "A category.",
+                "properties": {
+                    "paramList": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Parameters passed within a topic. E.g. the topic name myGroupName.myCustomName.Account.someId. This makes a topic name unique for a specific record. For global events, omit this parameter."
+                    },
+                    "accessCheckCommand": {
+                        "type": "string",
+                        "description": "A console command that will be used to check whether a topic is allowed for a user when they attempting to subscribe. Patameter placeholders starts with the colon :. The userId parameter contains a user ID. If access checking is not needed, omit this parameter."
+                    }
+                }
+            }
+        },
+        "messagers": {
+            "type": "object",
+            "description": "Provides the ability to implement other messagers rather than the default ZeroMQ. E.g. RabbitMQ.",
+            "additionalProperties": {
+                "type": "object",
+                "description": "A messager.",
+                "properties": {
+                    "senderClassName": {
+                        "description": "A sender. Should implement Espo\\Core\\WebSocket\\Sender."
+                    },
+                    "subscriberClassName": {
+                        "description": "A subscriber. Should implement Espo\\Core\\WebSocket\\Subscriber."
+                    }
+                }
+            }
+        }
+    }
+}

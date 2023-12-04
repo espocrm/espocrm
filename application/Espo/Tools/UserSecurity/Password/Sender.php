@@ -35,7 +35,6 @@ use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\Sender as EmailSenderSender;
-use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\TemplateFileManager;
 use Espo\Entities\Email;
@@ -47,25 +46,13 @@ use Espo\Repositories\Portal as PortalRepository;
 
 class Sender
 {
-    private Config $config;
-    private EmailSender $emailSender;
-    private EntityManager $entityManager;
-    private HtmlizerFactory $htmlizerFactory;
-    private TemplateFileManager $templateFileManager;
-
     public function __construct(
-        Config $config,
-        EmailSender $emailSender,
-        EntityManager $entityManager,
-        HtmlizerFactory $htmlizerFactory,
-        TemplateFileManager $templateFileManager
-    ) {
-        $this->config = $config;
-        $this->emailSender = $emailSender;
-        $this->entityManager = $entityManager;
-        $this->htmlizerFactory = $htmlizerFactory;
-        $this->templateFileManager = $templateFileManager;
-    }
+        private Config $config,
+        private EmailSender $emailSender,
+        private EntityManager $entityManager,
+        private HtmlizerFactory $htmlizerFactory,
+        private TemplateFileManager $templateFileManager
+    ) {}
 
     /**
      * Send access info for a new user.
@@ -108,7 +95,6 @@ class Sender
      * Send a plain password in email.
      *
      * @throws SendingError
-     * @throws Error
      */
     public function sendPassword(User $user, string $password): void
     {
@@ -144,20 +130,9 @@ class Sender
         $this->createSender()->send($email);
     }
 
-    /**
-     * @throws NoSmtp
-     */
     private function createSender(): EmailSenderSender
     {
-        $sender = $this->emailSender->create();
-
-        $smtpParams = $this->getSmtpParams();
-
-        if ($smtpParams) {
-            $sender = $sender->withSmtpParams($smtpParams);
-        }
-
-        return $sender;
+        return $this->emailSender->create();
     }
 
     /**
@@ -227,44 +202,12 @@ class Sender
 
     private function isSmtpConfigured(): bool
     {
-        return
-            $this->emailSender->hasSystemSmtp() ||
-            $this->config->get('internalSmtpServer');
+        return $this->emailSender->hasSystemSmtp();
     }
 
     private function getPortalRepository(): PortalRepository
     {
         /** @var PortalRepository */
         return $this->entityManager->getRDBRepository(Portal::ENTITY_TYPE);
-    }
-
-    /**
-     * @throws NoSmtp
-     */
-    private function getSmtpParams(): ?SmtpParams
-    {
-        if ($this->emailSender->hasSystemSmtp()) {
-            return null;
-        }
-
-        $server = $this->config->get('internalSmtpServer');
-
-        if (!$server) {
-            throw new NoSmtp("No SMTP configured to send access info.");
-        }
-
-        /** @var int $port */
-        $port = $this->config->get('internalSmtpPort');
-
-        return SmtpParams
-            ::create($server, $port)
-            ->withAuth($this->config->get('internalSmtpAuth'))
-            ->withUsername($this->config->get('internalSmtpUsername'))
-            ->withPassword($this->config->get('internalSmtpPassword'))
-            ->withSecurity($this->config->get('internalSmtpSecurity'))
-            ->withFromAddress(
-                $this->config->get('internalOutboundEmailFromAddress') ??
-                $this->config->get('outboundEmailFromAddress')
-            );
     }
 }

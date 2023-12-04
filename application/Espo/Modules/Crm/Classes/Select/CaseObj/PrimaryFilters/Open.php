@@ -36,12 +36,8 @@ use Espo\ORM\Query\Part\Condition as Cond;
 
 class Open implements Filter
 {
-    private $metadata;
-
-    public function __construct(Metadata $metadata)
-    {
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Metadata $metadata)
+    {}
 
     public function apply(SelectBuilder $queryBuilder): void
     {

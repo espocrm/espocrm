@@ -9,13 +9,6 @@
     "defaultCurrency": "Varsayılan Para Birimi",
     "currencyList": "para Birimi Listesi",
     "language": "Dil",
-    "smtpServer": "Sunucu",
-    "smtpPort": "Bağlantı Noktası",
-    "smtpSecurity": "Güvenlik",
-    "smtpUsername": "Kullanıcı Adı",
-    "emailAddress": "Eposta",
-    "smtpPassword": "Şifre",
-    "smtpEmailAddress": "Eposta Adresi",
     "signature": "E-mail İmzası",
     "dashboardTabList": "Sekme Listesi",
     "tabList": "Sekme Listesi",
@@ -28,9 +21,14 @@
     "dashboardLayout": "Kontrol Paneli Düzeni",
     "emailReplyForceHtml": "HTML'de Yanıtla E-postasını Yanıtla",
     "autoFollowEntityTypeList": "Oto-Takip",
-    "emailReplyToAllByDefault": "Ön Tanımlı Olarak Tümüne Yanıtla",
+    "emailReplyToAllByDefault": "Ön Tanımlı Olarak Tümünü Yanıtla",
     "doNotFillAssignedUserIfNotRequired": "Gerekli değilse, Atanmış Kullanıcıyı doldurmayın",
-    "followEntityOnStreamPost": "Akışta yayınlandıktan sonra varlığı otomatik olarak takip etme"
+    "followEntityOnStreamPost": "Akışta yayınlandıktan sonra varlığı otomatik olarak takip etme",
+    "followCreatedEntities": "Oluşturulan kayıtları otomatik takip et",
+    "followCreatedEntityTypeList": "Belirli varlık türlerinin kayıtlarını otomatik takip et",
+    "emailUseExternalClient": "Harici bir e-posta istemcisi kullanın",
+    "scopeColorsDisabled": "Kapsam renklerini devre dışı bırak",
+    "tabColorsDisabled": "Sekme renklerini devre dışı bırak"
   },
   "options": {
     "weekStart": {
@@ -42,9 +40,12 @@
     "Notifications": "Bildirimler",
     "User Interface": "Kullanıcı Arayüzü",
     "Misc": "Diğerleri",
-    "Locale": "Lokal"
+    "Locale": "Lokal",
+    "Reset Dashboard to Default": "Panoyu Varsayılan Ayarlara Sıfırla"
   },
   "tooltips": {
-    "autoFollowEntityTypeList": "Kullanıcı, seçili varlık türlerinin tüm yeni kayıtlarını otomatik olarak izleyecek, akışta bilgi görecek ve bildirim alacaktır."
+    "autoFollowEntityTypeList": "Kullanıcı, seçili varlık türlerinin tüm yeni kayıtlarını otomatik olarak izleyecek, akışta bilgi görecek ve bildirim alacaktır.",
+    "doNotFillAssignedUserIfNotRequired": "Kayıt oluştururken atanan kullanıcı, zorunlu olmadıkça kendi kullanıcısıyla doldurulmaz.",
+    "followCreatedEntities": "Yeni kayıtlar oluşturulduğunda, başka bir kullanıcıya atansa bile otomatik olarak takip edilecektir."
   }
 }

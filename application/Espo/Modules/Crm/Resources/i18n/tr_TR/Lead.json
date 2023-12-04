@@ -26,7 +26,9 @@
     "targetList": "Hedef Liste",
     "industry": "Endüstri",
     "acceptanceStatus": "Kabul Durumu",
-    "opportunityAmountCurrency": "Fırsat Döviz Tutarı"
+    "opportunityAmountCurrency": "Fırsat Döviz Tutarı",
+    "acceptanceStatusMeetings": "Kabul Durumu (Toplantılar)",
+    "acceptanceStatusCalls": "Kabul Durumu (Aramalar)"
   },
   "links": {
     "targetLists": "Hedef Listeler",

@@ -25,7 +25,7 @@
       "Opted Out": "Odregistrovaný",
       "Bounced": "Vrátený",
       "Clicked": "Kliknutý",
-      "Lead Created": "Stopa vytvorená"
+      "Lead Created": "Prvý kontakt vytvorený"
     }
   },
   "labels": {
@@ -37,6 +37,6 @@
     "optedOut": "Odregistrovaný",
     "bounced": "Vrátený",
     "clicked": "Kliknutý",
-    "leadCreated": "Stopa vytvorená"
+    "leadCreated": "Prvý kontakt vytvorený"
   }
 }

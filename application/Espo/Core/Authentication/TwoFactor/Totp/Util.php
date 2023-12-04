@@ -30,6 +30,8 @@
 namespace Espo\Core\Authentication\TwoFactor\Totp;
 
 use RobThree\Auth\TwoFactorAuth;
+use RobThree\Auth\TwoFactorAuthException;
+use RuntimeException;
 
 class Util
 {
@@ -44,6 +46,11 @@ class Util
     {
         $impl = new TwoFactorAuth();
 
-        return $impl->createSecret();
+        try {
+            return $impl->createSecret();
+        }
+        catch (TwoFactorAuthException $e) {
+            throw new RuntimeException($e->getMessage());
+        }
     }
 }

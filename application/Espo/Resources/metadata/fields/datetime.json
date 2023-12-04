@@ -75,6 +75,10 @@
         {
             "name": "readOnly",
             "type": "bool"
+        },
+        {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
         }
     ],
     "validationList": [
@@ -89,5 +93,6 @@
     },
     "personalData": true,
     "valueFactoryClassName": "Espo\\Core\\Field\\DateTime\\DateTimeFactory",
-    "attributeExtractorClassName": "Espo\\Core\\Field\\DateTime\\DateTimeAttributeExtractor"
+    "attributeExtractorClassName": "Espo\\Core\\Field\\DateTime\\DateTimeAttributeExtractor",
+    "default": null
 }

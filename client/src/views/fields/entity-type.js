@@ -26,40 +26,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/entity-type', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+class EntityTypeFieldView extends EnumFieldView {
 
-        checkAvailability: function (entityType) {
-            var defs = this.scopesMetadataDefs[entityType] || {};
+    checkAvailability(entityType) {
+        const defs = this.scopesMetadataDefs[entityType] || {};
 
-            if (defs.entity && defs.object) {
-                return true;
-            }
-        },
+        if (defs.entity && defs.object) {
+            return true;
+        }
+    }
 
-        setupOptions: function () {
-            var scopes = this.scopesMetadataDefs = this.getMetadata().get('scopes');
+    setupOptions() {
+        const scopes = this.scopesMetadataDefs = this.getMetadata().get('scopes');
 
-            this.params.options = Object.keys(scopes)
-                .filter((scope) => {
-                    if (this.checkAvailability(scope)) {
-                        return true;
-                    }
-                })
-                .sort((v1, v2) => {
-                     return this.translate(v1, 'scopeNames')
-                         .localeCompare(this.translate(v2, 'scopeNames'));
-                });
+        this.params.options = Object.keys(scopes)
+            .filter(scope => {
+                if (this.checkAvailability(scope)) {
+                    return true;
+                }
+            })
+            .sort((v1, v2) => {
+                 return this.translate(v1, 'scopeNames')
+                     .localeCompare(this.translate(v2, 'scopeNames'));
+            });
 
-            this.params.options.unshift('');
-        },
+        this.params.options.unshift('');
+    }
 
-        setup: function () {
-            this.params.translation = 'Global.scopeNames';
-            this.setupOptions();
+    setup() {
+        this.params.translation = 'Global.scopeNames';
+        this.setupOptions();
 
-            Dep.prototype.setup.call(this);
-        },
-    });
-});
+        super.setup();
+    }
+}
+
+export default EntityTypeFieldView;

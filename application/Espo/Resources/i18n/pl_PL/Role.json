@@ -13,15 +13,6 @@
     "users": "Użytkownik",
     "teams": "Zespoły"
   },
-  "tooltips": {
-    "assignmentPermission": "Pozwala ograniczyć możliwość przypisania rekordów oraz wysyłanie wiadomości do innych użytkowników.\n\nwszystko - brak ograniczeń\n\nzespół - może przydzielać i wysyłać wiadomości wyłącznie do członków swojego zespołu\n\nnie - może przypisywać i wysyłać wiadomości tylko do siebie",
-    "userPermission": "Pozwala ograniczyć użytkownikom możliwość wyświetlania aktywności, kalendarza i wiadomości innych użytkowników.\n\nwszystko - może przeglądać wszystko\n\nzespół - może wyświetlać wyłącznie aktywności użytkowników swojego zespołu\n\nnie - nic nie widzi",
-    "portalPermission": "Defines an access to portal information, ability to convert contacts to portal users and post messages to portal users.",
-    "groupEmailAccountPermission": "Definiuje dostęp do grupowych kont e-mail, możliwość wysyłania e-maili z grupowego SMTP.",
-    "dataPrivacyPermission": "Zezwól na przeglądanie oraz czyszczenie danych osobowych.",
-    "exportPermission": "Określa czy użytkownicy mają możliwość eksportowania rekordów.",
-    "massUpdatePermission": "Określa czy użytkownicy mają możliwość masowej aktualizacji rekordów."
-  },
   "labels": {
     "Access": "Dostęp",
     "Create Role": "Utwórz Role"
@@ -50,5 +41,8 @@
   },
   "messages": {
     "changesAfterClearCache": "Wszystkie zmiany w dostępie zostaną aktywowany w momencie wyczyszczenia pamięci."
+  },
+  "tooltips": {
+    "dataPrivacyPermission": "Zezwól na przeglądanie oraz czyszczenie danych osobowych."
   }
 }

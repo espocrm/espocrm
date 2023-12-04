@@ -29,27 +29,33 @@
 
 namespace Espo\Repositories;
 
+use Espo\Core\Repositories\Database;
+use Espo\Core\Utils\DateTime;
+use Espo\Entities\Job as JobEntity;
 use Espo\ORM\Entity;
 
 use Espo\Core\Di;
 
 /**
- * @extends \Espo\Core\Repositories\Database<\Espo\Entities\Job>
+ * @extends Database<JobEntity>
  */
-class Job extends \Espo\Core\Repositories\Database implements
+class Job extends Database implements
     Di\ConfigAware
 {
     use Di\ConfigSetter;
 
     protected $hooksDisabled = true;
 
+    /**
+     * @param JobEntity $entity
+     */
     public function beforeSave(Entity $entity, array $options = [])
     {
-        if (!$entity->has('executeTime') && $entity->isNew()) {
-            $entity->set('executeTime', date('Y-m-d H:i:s'));
+        if ($entity->get('executeTime') === null && $entity->isNew()) {
+            $entity->set('executeTime', DateTime::getSystemNowString());
         }
 
-        if (!$entity->has('attempts') && $entity->isNew()) {
+        if ($entity->get('attempts') === null && $entity->isNew()) {
             $attempts = $this->config->get('jobRerunAttemptNumber', 0);
 
             $entity->set('attempts', $attempts);

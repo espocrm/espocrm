@@ -26,37 +26,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/link-category-tree', ['views/fields/link'], function (Dep) {
+import LinkFieldView from 'views/fields/link';
 
-    return Dep.extend({
+class LinkCategoryTreeFieldView extends LinkFieldView {
 
-        selectRecordsView: 'views/modals/select-category-tree-records',
+    selectRecordsView = 'views/modals/select-category-tree-records'
+    autocompleteDisabled = false
 
-        autocompleteDisabled: false,
+    fetchSearch() {
+        const data = super.fetchSearch();
 
-        fetchSearch: function () {
-            var data = Dep.prototype.fetchSearch.call(this);
-
-            if (!data) {
-                return data;
-            }
-
-            if (data.typeFront === 'is') {
-                data.field = this.name;
-                data.type = 'inCategory';
-            }
-
+        if (!data) {
             return data;
-        },
+        }
 
-        getUrl: function () {
-            let id = this.model.get(this.idName);
+        if (data.typeFront === 'is') {
+            data.field = this.name;
+            data.type = 'inCategory';
+        }
 
-            if (!id) {
-                return null;
-            }
+        return data;
+    }
 
-            return '#' + this.entityType + '/list/categoryId=' + id;
-        },
-    });
-});
+    getUrl() {
+        const id = this.model.get(this.idName);
+
+        if (!id) {
+            return null;
+        }
+
+        return '#' + this.entityType + '/list/categoryId=' + id;
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default LinkCategoryTreeFieldView;

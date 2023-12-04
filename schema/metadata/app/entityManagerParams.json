@@ -1,0 +1,36 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/entityManagerParams.json",
+    "title": "app/entityManagerParams",
+    "description": "Additional entity parameters. Defined parameters are available in the entity manager. Global, template type and entity type specific parameters can be defined.",
+    "type": "object",
+    "propertyNames": {
+        "anyOf": [
+            {"const": "Global"},
+            {"type": "string"}
+        ]
+    },
+    "additionalProperties": {
+        "type": "object",
+        "description": "A scope name. If starts with `@`, then a template name.",
+        "additionalProperties": {
+            "type": "object",
+            "description": "A parameter name.",
+            "properties": {
+                "location": {
+                    "description": "A metadata location. Where the parameter will be stored.",
+                    "enum": [
+                        "scopes",
+                        "entityDefs",
+                        "clientDefs",
+                        "recordDefs"
+                    ]
+                },
+                "fieldDefs": {
+                    "description": "Field definitions. The defined field will be rendered on the entity manager edit view.",
+                    "$ref": "./../entityDefs.json#/definitions/fieldDefs"
+                }
+            }
+        }
+    }
+}

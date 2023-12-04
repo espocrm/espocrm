@@ -38,9 +38,8 @@ use Espo\ORM\Entity;
 
 class NameUtil
 {
-    public const MAX_ENTITY_NAME_LENGTH = 100;
+    public const MAX_ENTITY_NAME_LENGTH = 64;
     public const MIN_ENTITY_NAME_LENGTH = 3;
-    public const MAX_LINK_NAME_LENGTH = 100;
 
     /**
      * @var string[]
@@ -122,7 +121,7 @@ class NameUtil
 
     public function nameIsTooLong(string $name): bool
     {
-        return strlen($name) > NameUtil::MAX_ENTITY_NAME_LENGTH;
+        return strlen(Util::camelCaseToUnderscore($name)) > NameUtil::MAX_ENTITY_NAME_LENGTH;
     }
 
     public function nameIsNotAllowed(string $name): bool

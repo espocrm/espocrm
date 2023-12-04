@@ -11,12 +11,12 @@
 @gray-soft-value: #7c7c7c;
 @gray-light-value: #999;
 
-@body-bg-value: #f1f1f1;
+@body-bg-value: #f1f3f5;
 
 @brand-primary-value: #6791c5;
 @brand-danger-value: #CF605D;
 @brand-info-value: #a595c9;
-@brand-success-value: #76cb75;
+@brand-success-value: #6fc374;
 @brand-warning-value: #eda530;
 
 @brand-primary-text-value: #FFF;
@@ -26,7 +26,7 @@
 @state-success-bg-value: lighten(spin(@brand-success-value, 5), 30%);
 @state-success-text-value: darken(spin(@brand-success-value, 7), 17%);
 
-@state-info-bg-value: #e5ddf8;
+@state-info-bg-value: #ece7f9;
 @state-info-text-value: #83779c;
 
 @state-warning-bg-value: #fcf8e3;
@@ -44,16 +44,18 @@
 @navbar-link-hover-color-value: @gray-value;
 @navbar-link-hover-bg-value: @body-bg-value;
 @navbar-box-shadow-value: none;
+@navbar-border-width-value: 0;
 
-@navbar-inverse-color-value: @gray-light-value;
-@navbar-inverse-bg-value: #4A6492;
+@navbar-inverse-color-value: #c5c4c4;
+@navbar-inverse-bg-value: #566b90;
 @navbar-inverse-border-value: transparent;
-@navbar-inverse-link-color-value: #DFDFDF;
+@navbar-inverse-link-color-value: #EBEBEB;//#DFDFDF;
 @navbar-inverse-link-hover-color-value: #fff;
 @navbar-inverse-link-hover-bg-value: transparent;
 @navbar-inverse-link-disabled-color-value: #444;
 @navbar-inverse-link-disabled-bg-value: transparent;
 @navbar-inverse-link-active-bg-value: darken(@navbar-inverse-bg-value, 10%);
+
 
 @input-border-value: #D1D5D6;
 @input-border-focus-value: #66afe9;
@@ -112,7 +114,6 @@
 @panel-danger-border-value: @panel-danger-bg-value;
 @panel-danger-text-value: @state-danger-text-value;
 
-//@panel-warning-bg-value: #efda97;
 @panel-warning-bg-value: #f9eabb;
 @panel-warning-border-value: @panel-warning-bg-value;
 @panel-warning-text-value: @state-warning-text-value;
@@ -125,11 +126,11 @@
 @panel-info-border-value: @panel-info-bg-value;
 @panel-info-text-value: @state-info-text-value;
 
-@btn-default-bg-value: #d0d9db;
-@btn-default-border-value: @btn-default-bg-value;
+@btn-default-bg-value: #f6f6f6;
+@btn-default-border-value: #c2cacc;
 @btn-default-color-value: #585858;
-@btn-default-hover-bg-value: darken(@btn-default-bg-value, 4%);
-@btn-default-hover-border-value: darken(@btn-default-bg-value, 10%);
+@btn-default-hover-bg-value: darken(@btn-default-bg-value, 3%);
+@btn-default-hover-border-value: darken(@btn-default-border-value, 3%);
 @btn-default-active-bg-value: darken(@btn-default-bg-value, 17%);
 @btn-default-active-border-value: darken(@btn-default-bg-value, 25%);
 
@@ -228,3 +229,5 @@
 @border-radius-small-value: 4px;
 @panel-border-radius-value: 8px;
 @dropdown-border-radius-value: 6px;
+
+@record-grid-max-width-value: 1300px;

@@ -14,10 +14,12 @@
     "amountWeightedConverted": "Ağırlıklı Tutar",
     "campaign": "Kampanya",
     "originalLead": "Orijinal Müşteri Potansiyeli",
-    "amountCurrency": "Döviz Tutarı"
+    "amountCurrency": "Döviz Tutarı",
+    "contactRole": "İlgili Rolü",
+    "lastStage": "Son aşama"
   },
   "links": {
-    "contacts": "Bağlantılar",
+    "contacts": "Kişiler",
     "documents": "Belgeler",
     "campaign": "Kampanya",
     "originalLead": "Orijinal Müşteri Potansiyeli"
@@ -33,6 +35,7 @@
       "Negotiation/Review": "Görüşme/İnceleme",
       "Closed Won": "Kapalı Kazanç",
       "Closed Lost": "Kapalı Kayıp",
+      "Proposal": "Teklif",
       "Negotiation": "Görüşme"
     }
   },

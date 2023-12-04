@@ -10,10 +10,8 @@
   },
   "fields": {
     "exportPermission": "Exporteer rechten",
-    "massUpdatePermission": "Rechten voor massale update"
-  },
-  "tooltips": {
-    "exportPermission": "Bepaalt of portaalgebruikers de mogelijkheid hebben om records te exporteren.",
-    "massUpdatePermission": "Definieert of portaalgebruikers de mogelijkheid hebben om een grote hoeveelheid records bij te werken."
+    "massUpdatePermission": "Rechten voor massale update",
+    "data": "Gegevens",
+    "fieldData": "Veldgegevens"
   }
 }

@@ -61,12 +61,12 @@ class AfterUpgrade
                 continue;
             }
 
-            $data1 = $metadata->getCustom('selectDefs', $entityType);
+            $data1 = $metadata->getCustom('selectDefs', $entityType) ?? (object) [];
             $data1->primaryFilterClassNameMap = $primaryFilterClassNameMap;
 
             $metadata->saveCustom('selectDefs', $entityType, $data1);
 
-            $data2 = $metadata->getCustom('scopes', $entityType);
+            $data2 = $metadata->getCustom('scopes', $entityType) ?? (object) [];
             $data2->completedStatusList = ['Held'];
             $data2->canceledStatusList = ['Not Held'];
 

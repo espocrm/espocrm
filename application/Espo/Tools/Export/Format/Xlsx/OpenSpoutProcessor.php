@@ -195,7 +195,7 @@ class OpenSpoutProcessor implements ProcessorInterface
             $style = new Style();
             $style->setFormat($dateFormat);
 
-            return Cell\DateTimeCell::fromValue($value->getDateTime(), $style);
+            return Cell\DateTimeCell::fromValue($value->toDateTime(), $style);
         }
 
         if ($value instanceof DateTime) {
@@ -204,7 +204,7 @@ class OpenSpoutProcessor implements ProcessorInterface
             $style = new Style();
             $style->setFormat($dateTimeFormat);
 
-            return Cell\DateTimeCell::fromValue($value->getDateTime(), $style);
+            return Cell\DateTimeCell::fromValue($value->toDateTime(), $style);
         }
 
         if ($value instanceof Currency) {
@@ -280,6 +280,10 @@ class OpenSpoutProcessor implements ProcessorInterface
     private function sanitizeCellValue(string $value): string
     {
         if ($value === '') {
+            return $value;
+        }
+
+        if (is_numeric($value)) {
             return $value;
         }
 

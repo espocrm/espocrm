@@ -26,7 +26,7 @@
       "None": "Nessuno",
       "Accepted": "Accettato",
       "Declined": "Declinato",
-      "Tentative": "Provvisorio"
+      "Tentative": "Incerto"
     }
   },
   "massActions": {
@@ -47,7 +47,7 @@
   "presetFilters": {
     "planned": "Pianificate",
     "held": "Effettuate",
-    "todays": "Di oggi"
+    "todays": "Di Oggi"
   },
   "messages": {
     "nothingHasBeenSent": "Nulla è stato inviato",

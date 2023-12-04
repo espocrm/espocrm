@@ -1,7 +1,7 @@
 
 <div class="group-head" data-level="{{level}}">
     <a class="pull-right" role="button" data-action="remove"><span class="fas fa-times"></span></a>
-    <div>{{translate 'not' category='logicalOperators' scope='Admin'}} (</div>
+    <div><span class="not-operator">{{translate 'not' category='logicalOperators' scope='Admin'}}</span> (</div>
 </div>
 
 <div class="item-list" data-level="{{level}}">
@@ -17,6 +17,7 @@
                     tabindex="0"
                     data-action="addField"
                 >{{translate 'Field' scope='DynamicLogic'}}</a></li>
+            <li class="divider"></li>
             <li><a
                     role="button"
                     tabindex="0"
@@ -32,6 +33,17 @@
                     tabindex="0"
                     data-action="addNot"
                 >{{translate 'not' category='logicalOperators' scope='Admin'}} (...)</a></li>
+            <li class="divider"></li>
+            <li><a
+                role="button"
+                tabindex="0"
+                data-action="addCurrentUser"
+            >${{translate 'User' scope='scopeNames'}}</a></li>
+            <li><a
+                role="button"
+                tabindex="0"
+                data-action="addCurrentUserTeams"
+            >${{translate 'User' scope='scopeNames'}}.{{translate 'teams' category='fields' scope='User'}}</a></li>
         </ul>
     </div>
 </div>

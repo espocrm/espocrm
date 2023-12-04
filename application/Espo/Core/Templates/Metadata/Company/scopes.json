@@ -7,5 +7,6 @@
     "aclPortalLevelList": ["all", "account", "contact", "own", "no"],
     "customizable": true,
     "importable": true,
-    "notifications": true
+    "notifications": true,
+    "duplicateCheckFieldList": ["name", "emailAddress"]
 }

@@ -112,6 +112,7 @@ class KeysProvider
             CURLOPT_TIMEOUT => self::REQUEST_TIMEOUT,
             CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
             CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_PROTOCOLS => CURLPROTO_HTTPS | CURLPROTO_HTTP,
         ]);
 
         /** @var string|false $response */
@@ -171,7 +172,7 @@ class KeysProvider
 
         $period = '-' . $this->configDataProvider->getJwksCachePeriod();
 
-        if ($timestamp < DateTime::createNow()->modify($period)->getTimestamp()) {
+        if ($timestamp < DateTime::createNow()->modify($period)->toTimestamp()) {
             return null;
         }
 

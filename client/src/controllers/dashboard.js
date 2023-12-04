@@ -26,18 +26,20 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/dashboard', ['controller'], function (Dep) {
+import Controller from 'controller';
 
-    return Dep.extend({
+class DashboardController extends Controller {
 
-        defaultAction: 'index',
+    defaultAction = 'index'
 
-        actionIndex: function () {
-            this.main('views/dashboard', {
-                displayTitle: true,
-            }, (view) => {
-                view.render();
-            });
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionIndex() {
+        this.main('views/dashboard', {
+            displayTitle: true,
+        }, view => {
+            view.render();
+        });
+    }
+}
+
+export default DashboardController;

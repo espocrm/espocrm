@@ -9,7 +9,7 @@
     "type": "Tipo",
     "description": "Descrizione",
     "attachments": "Allegati",
-    "inboundEmail": "Gruppo di account email"
+    "inboundEmail": "Gruppo Account Email"
   },
   "links": {
     "contact": "Contatto (Primario)",
@@ -20,13 +20,13 @@
     "emails": "Email",
     "articles": "Articoli della Base di Conoscenza",
     "attachments": "Allegati",
-    "inboundEmail": "Gruppo di account email"
+    "inboundEmail": "Gruppo Account Email"
   },
   "options": {
     "status": {
       "New": "Nuovo",
       "Assigned": "Assegnato",
-      "Pending": "In attesa",
+      "Pending": "In Attesa",
       "Closed": "Chiuso",
       "Rejected": "Rigettato",
       "Duplicate": "Duplicato"
@@ -38,7 +38,7 @@
       "Urgent": "Urgente"
     },
     "type": {
-      "Question": "Domande",
+      "Question": "Domanda",
       "Incident": "Incidente",
       "Problem": "Problema"
     }

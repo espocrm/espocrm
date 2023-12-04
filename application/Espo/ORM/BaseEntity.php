@@ -35,9 +35,9 @@ use Espo\ORM\Value\ValueAccessor;
 use stdClass;
 use InvalidArgumentException;
 use RuntimeException;
-use JsonException;
 
 use const E_USER_DEPRECATED;
+use const JSON_THROW_ON_ERROR;
 
 class BaseEntity implements Entity
 {
@@ -56,34 +56,16 @@ class BaseEntity implements Entity
     private array $writtenMap = [];
     /** @var array<string, array<string, mixed>> */
     private array $attributes = [];
+    /** @var array<string, array<string, mixed>> */
+    private array $relations = [];
     /** @var array<string, mixed> */
     private array $fetchedValuesContainer = [];
-
-    /**
-     * @todo Make private, rename to `attributes` in v8.0.
-     * @deprecated As of v6.0. Use getAttributeList, getAttributeParam, ORM\Defs.
-     * @var array<string, array<string, mixed>>
-     */
-    public array $fields = [];
-
-    /**
-     * @todo Make private in v8.0.
-     * @deprecated As of v6.0. Use getRelationList, getRelationParam, ORM\Defs.
-     * @var array<string, array<string, mixed>>
-     */
-    protected array $relations = [];
-
-    /**
-     * @deprecated As of v7.0. `setInContainer`, `hasInContainer`, `getFromContainer`.
-     * @todo Make private in v8.0.
-     * @var array<string, mixed>
-     */
-    protected array $valuesContainer = [];
-
+    /** @var array<string, mixed> */
+    private array $valuesContainer = [];
 
     /**
      * @deprecated As of v7.0. Use `getId`. To be changed to protected.
-     * @todo Change to protected in v8.0.
+     * @todo Change to protected in v9.0.
      * @var ?string
      */
     public $id = null;
@@ -104,9 +86,8 @@ class BaseEntity implements Entity
         $this->entityType = $entityType;
         $this->entityManager = $entityManager;
 
-        $this->attributes = $defs['attributes'] ?? $defs['fields'] ?? $this->attributes;
+        $this->attributes = $defs['attributes'] /*?? $defs['fields']*/ ?? $this->attributes;
         $this->relations = $defs['relations'] ?? $this->relations;
-        $this->fields = $this->attributes;
 
         if ($valueAccessorFactory) {
             $this->valueAccessor = $valueAccessorFactory->create($this);
@@ -183,6 +164,7 @@ class BaseEntity implements Entity
             }
 
             if ($p2) {
+                // @todo Remove second parameter support in v9.0.
                 trigger_error(
                     'Second parameter is deprecated in Entity::set(array, onlyAccessible).',
                     E_USER_DEPRECATED
@@ -225,9 +207,20 @@ class BaseEntity implements Entity
     }
 
     /**
+     * Set multiple attributes.
+     *
+     * @param array<string, mixed>|stdClass $valueMap Values.
+     * @since v8.1.0.
+     */
+    public function setMultiple(array|stdClass $valueMap): void
+    {
+        $this->set($valueMap);
+    }
+
+    /**
      * Get an attribute value.
      *
-     * @param array<string, mixed> $params @deprecated
+     * @param array<string, mixed> $params @deprecated  @todo Remove in v9.0.
      * @retrun mixed
      */
     public function get(string $attribute, $params = [])
@@ -246,7 +239,7 @@ class BaseEntity implements Entity
             return $this->getFromContainer($attribute);
         }
 
-        // @todo Remove this.
+        // @todo Remove support in v9.0.
         if (!empty($params)) {
             trigger_error(
                 'Second parameter will be removed from the method Entity::get.',
@@ -254,7 +247,7 @@ class BaseEntity implements Entity
             );
         }
 
-        // @todo Remove this.
+        // @todo Remove support in v9.0.
         if ($this->hasRelation($attribute) && $this->id && $this->entityManager) {
             trigger_error(
                 "Accessing related records with Entity::get is deprecated. " .
@@ -303,7 +296,7 @@ class BaseEntity implements Entity
         $value = $this->valuesContainer[$attribute] ?? null;
 
         if ($value === null) {
-            return $value;
+            return null;
         }
 
         $type = $this->getAttributeType($attribute);
@@ -513,7 +506,7 @@ class BaseEntity implements Entity
         $preparedValue = $value;
 
         if (is_array($value)) {
-            $preparedValue = json_decode(json_encode($value, \JSON_THROW_ON_ERROR));
+            $preparedValue = json_decode(json_encode($value, JSON_THROW_ON_ERROR));
 
             if ($preparedValue instanceof stdClass) {
                 return $preparedValue;
@@ -610,15 +603,6 @@ class BaseEntity implements Entity
     }
 
     /**
-     * @deprecated As of v6.0. Use `getEntityType`.
-     * @return string
-     */
-    public function getEntityName()
-    {
-        return $this->getEntityType();
-    }
-
-    /**
      * Get an entity type.
      */
     public final function getEntityType(): string
@@ -657,7 +641,7 @@ class BaseEntity implements Entity
      */
     public function getAttributeList(): array
     {
-        return array_keys($this->getAttributes());
+        return array_keys($this->attributes);
     }
 
     /**
@@ -665,21 +649,12 @@ class BaseEntity implements Entity
      */
     public function getRelationList(): array
     {
-        return array_keys($this->getRelations());
+        return array_keys($this->relations);
     }
 
     /**
      * @deprecated As of v6.0. Use `getValueMap`.
-     * @return array<string, mixed>
-     */
-    public function getValues()
-    {
-        return $this->toArray();
-    }
-
-    /**
-     * @deprecated As of v6.0. Use `getValueMap`.
-     * @todo Make protected.
+     * @todo Remove in v9.0.
      * @return array<string, mixed>
      */
     public function toArray()
@@ -711,33 +686,6 @@ class BaseEntity implements Entity
         $array = $this->toArray();
 
         return (object) $array;
-    }
-
-    /**
-     * @deprecated As of v6.0. Use ORM\Defs instead.
-     * @return array<string, mixed>
-     */
-    public function getFields()
-    {
-        return $this->getAttributes();
-    }
-
-    /**
-     * @deprecated As of v7.0. Use ORM\Defs instead.
-     * @return array<string, mixed>
-     */
-    public function getAttributes()
-    {
-        return $this->attributes;
-    }
-
-    /**
-     * @deprecated As of v7.0. Use ORM\Defs instead.
-     * @return array<string, mixed>
-     */
-    public function getRelations()
-    {
-        return $this->relations;
     }
 
     /**
@@ -1022,8 +970,6 @@ class BaseEntity implements Entity
         }
     }
 
-
-
     /**
      * Clone an array value.
      *
@@ -1113,7 +1059,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated As of v7.0. Use `set` method instead.
-     * @todo Make protected.
+     * @todo Make protected in v9.0.
      * @param array<string, mixed> $data
      */
     public function populateFromArray(array $data, bool $onlyAccessible = true, bool $reset = false): void
@@ -1145,6 +1091,7 @@ class BaseEntity implements Entity
 
     /**
      * @deprecated As of v7.0. Use `setInContainer` method.
+     * @todo Remove in v9.0.
      *
      * @param string $attribute
      * @param mixed $value
@@ -1152,14 +1099,5 @@ class BaseEntity implements Entity
     protected function setValue($attribute, $value): void
     {
         $this->setInContainer($attribute, $value);
-    }
-
-    /**
-     * @deprecated As of v6.0. Access `entityManager` property.
-     */
-    protected function getEntityManager(): EntityManager
-    {
-        /** @var EntityManager */
-        return $this->entityManager;
     }
 }

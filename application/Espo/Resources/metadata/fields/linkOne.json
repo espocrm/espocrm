@@ -12,6 +12,18 @@
         {
             "name": "readOnly",
             "type": "bool"
+        },
+        {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
+            "name": "createButton",
+            "type": "bool"
+        },
+        {
+            "name": "autocompleteOnEmpty",
+            "type": "bool"
         }
     ],
     "actualFields": [

@@ -219,7 +219,7 @@ define('crm:views/contact/fields/accounts', ['views/fields/link-multiple-with-co
 
             data[this.primaryIdFieldName] = this.primaryId;
             data[this.primaryNameFieldName] = this.primaryName;
-            data[this.primaryRoleFieldName] = (this.columns[this.primaryId] || {}).role || '';
+            data[this.primaryRoleFieldName] = (this.columns[this.primaryId] || {}).role || null;
 
             data.accountIsInactive = (this.columns[this.primaryId] || {}).isInactive || false;
 

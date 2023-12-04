@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Log;
 
-use Espo\Core\InjectableFactory;
 use Espo\Core\Log\Handler\EspoFileHandler;
 use Espo\Core\Log\Handler\EspoRotatingFileHandler;
 use Espo\Core\Utils\Config;
@@ -50,8 +49,8 @@ class LogLoader
     private const DEFAULT_LEVEL = 'WARNING';
 
     public function __construct(
-        private Config $config,
-        private InjectableFactory $injectableFactory
+        private readonly Config $config,
+        private readonly HandlerListLoader $handlerListLoader
     ) {}
 
     public function load(): Log
@@ -63,8 +62,7 @@ class LogLoader
         if ($handlerDataList) {
             $level = $this->config->get('logger.level');
 
-            $loader = $this->injectableFactory->create(HandlerListLoader::class);
-            $handlerList = $loader->load($handlerDataList, $level);
+            $handlerList = $this->handlerListLoader->load($handlerDataList, $level);
         }
         else {
             $handlerList = [$this->createDefaultHandler()];
@@ -76,13 +74,13 @@ class LogLoader
 
         $errorHandler = new MonologErrorHandler($log);
 
-        $errorHandler->registerExceptionHandler(null, false);
+        $errorHandler->registerExceptionHandler([], false);
         $errorHandler->registerErrorHandler([], false);
 
         return $log;
     }
 
-    protected function createDefaultHandler(): HandlerInterface
+    private function createDefaultHandler(): HandlerInterface
     {
         $path = $this->config->get('logger.path') ?? self::PATH;
         $rotation = $this->config->get('logger.rotation') ?? true;

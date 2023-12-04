@@ -30,6 +30,7 @@ define('crm:views/stream/notes/event-confirmation', ['views/stream/note'], funct
 
     return Dep.extend({
 
+        // language=Handlebars
         templateContent: `
             {{#unless noEdit}}
             <div class="pull-right right-container cell-buttons">

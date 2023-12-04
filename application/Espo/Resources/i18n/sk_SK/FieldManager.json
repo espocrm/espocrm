@@ -96,5 +96,10 @@
     "datetimeOptional": {
       "date": "Dátum"
     }
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "Názov poľa '{field}' nie je povolený.",
+    "fieldAlreadyExists": "Pole '{field}' už v '{entityType}' existuje.",
+    "linkWithSameNameAlreadyExists": "Pole '{field}' už v '{entityType}' existuje."
   }
 }

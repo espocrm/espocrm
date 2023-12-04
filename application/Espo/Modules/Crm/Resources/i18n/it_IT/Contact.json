@@ -28,7 +28,7 @@
     "account": "Account (Primario)",
     "accounts": "Account",
     "casesPrimary": "Ticket (Primario)",
-    "portalUser": "Portale utente",
+    "portalUser": "Utente Portale",
     "originalLead": "Lead originale",
     "documents": "Documenti",
     "tasksPrimary": "Attività (espanso)",
@@ -44,8 +44,8 @@
     }
   },
   "presetFilters": {
-    "portalUsers": "Portale utenti",
-    "notPortalUsers": "Nessun portale utenti",
+    "portalUsers": "Utenti Portale",
+    "notPortalUsers": "Utenti Non Portale",
     "accountActive": "Attivo"
   }
 }

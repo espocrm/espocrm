@@ -16,7 +16,9 @@
     "sortDirection": "Rikiavimas kryptis)",
     "expandedLayout": "Išdėstymas",
     "dateFilter": "Datos filtras",
-    "skipOwn": "Nerodyti savo įrašų"
+    "skipOwn": "Nerodyti savo įrašų",
+    "text": "Tekstas",
+    "folder": "Aplankas"
   },
   "options": {
     "mode": {

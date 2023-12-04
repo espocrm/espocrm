@@ -48,17 +48,12 @@ class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
 
-    private AclManager $aclManager;
-    private EntityManager $entityManager;
-
     public function __construct(
         DefaultAccessChecker $defaultAccessChecker,
-        AclManager $aclManager,
-        EntityManager $entityManager
+        private AclManager $aclManager,
+        private EntityManager $entityManager
     ) {
         $this->defaultAccessChecker = $defaultAccessChecker;
-        $this->aclManager = $aclManager;
-        $this->entityManager = $entityManager;
     }
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
@@ -148,6 +143,10 @@ class AccessChecker implements AccessEntityCREDChecker
             }
 
             return null;
+        }
+
+        if ($note->getTargetType() === Note::TARGET_ALL) {
+            return true;
         }
 
         if (!$note->getParentId() || !$note->getParentType()) {

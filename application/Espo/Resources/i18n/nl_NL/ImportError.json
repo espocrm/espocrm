@@ -5,7 +5,8 @@
     "exportRowIndex": "Rij index exporteren",
     "lineNumber": "Lijnnummer",
     "exportLineNumber": "Exportregelnummer",
-    "row": "Rij"
+    "row": "Rij",
+    "entityType": "Type entiteit"
   },
   "options": {
     "type": {

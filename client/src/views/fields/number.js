@@ -26,21 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/number', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+class NumberFieldView extends VarcharFieldView {
 
-        type: 'number',
+    type = 'number'
 
-        validations: [],
+    validations = []
 
-        inlineEditDisabled: true,
+    inlineEditDisabled = true
+    readOnly = true
 
-        readOnly: true,
+    /** @inheritDoc */
+    fetch() {
+        return {};
+    }
+}
 
-        fetch: function () {
-            return {};
-        },
-    });
-});
-
+export default NumberFieldView;

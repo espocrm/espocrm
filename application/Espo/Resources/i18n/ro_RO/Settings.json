@@ -77,19 +77,12 @@
     "activitiesEntityList": "Activități Listă Entitate",
     "historyEntityList": "Istoric Listă Entitate",
     "currencyFormat": "Format Valută",
-    "aclStrictMode": "Mod Strict ACL",
     "followCreatedEntities": "Urmăriți înregistrările create",
     "aclAllowDeleteCreated": "Permite ștergerea înregistrărilor create",
     "adminNotifications": "Notificări de sistem în panoul de administrare",
     "adminNotificationsNewVersion": "Afișează notificări atunci când o nouă versiune EspoCRM este disponibilă",
     "massEmailMaxPerHourCount": "Numărul maxim de email-uri trimise pe oră",
     "maxEmailAccountCount": "Numărul max al conturile personale de email, per utilizator"
-  },
-  "options": {
-    "weekStart": {
-      "0": "Duminică",
-      "1": "Luni"
-    }
   },
   "tooltips": {
     "recordsPerPage": "Numărul de înregistrări afișate inițial în vizualizarea listei.",
@@ -121,7 +114,12 @@
     "ldapUserDefaultTeam": "Echipa implicită pentru utilizatorul creat. Pentru mai multe detalii, consultați profilul utilizatorului.",
     "b2cMode": "Implicit, EspoCRM este adaptat pentru B2B. Puteți comuta la B2C.",
     "outboundEmailIsShared": "Permite utilizatorilor să trimită email-uri de pe această adresă.",
-    "aclAllowDeleteCreated": "Utilizatorii vor putea elimina înregistrările pe care le-au creat chiar dacă nu au acces la ștergere."
+    "aclAllowDeleteCreated": "Utilizatorii vor putea elimina înregistrările pe care le-au creat chiar dacă nu au acces la ștergere.",
+    "useCache": "Nu se recomandă dezactivarea decât în scopul dezvoltării.",
+    "passwordRecoveryForInternalUsersDisabled": "Doar utilizatorii portalului vor putea să-și recupereze parola.",
+    "emailAddressLookupEntityTypeList": "Pentru completarea automată a adresei de email.",
+    "emailNotificationsDelay": "Un mesaj poate fi editat în intervalul de timp specificat, înainte ca notificarea să fie trimisă.",
+    "outboundEmailFromAddress": "Adresa de email a sistemului."
   },
   "labels": {
     "System": "Sistem",

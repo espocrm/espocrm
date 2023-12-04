@@ -1,7 +1,6 @@
 {
     "controller":"controllers/email",
     "acl":"acl/email",
-    "model":"models/email",
     "views":{
         "list":"views/email/list",
         "detail":"views/email/detail"
@@ -167,8 +166,5 @@
     "layoutDetailDisabled": true,
     "layoutDetailSmallDisabled": true,
     "layoutSidePanelsDetailSmallDisabled": true,
-    "layoutSidePanelsEditSmallDisabled": true,
-    "layoutMassUpdateDisabled": true
-
-
+    "layoutSidePanelsEditSmallDisabled": true
 }

@@ -48,7 +48,7 @@ class CreateTest extends \tests\integration\Core\BaseTestCase
         $entity = $service->create((object) [
             'name' => 'Test Account',
             'emailAddress' => 'test@tester.com',
-            'phoneNumber' => '123-456-789',
+            'phoneNumber' => '+14333633333',
         ], CreateParams::create());
 
         $this->assertInstanceOf('Espo\\ORM\\Entity', $entity);

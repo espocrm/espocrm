@@ -14,8 +14,7 @@
     "acceptanceStatus": "Status akceptacji",
     "dateStartDate": "Data rozpoczęcia (cały dzień)",
     "dateEndDate": "Data zakończenia (cały dzień)",
-    "isAllDay": "Cały dzień",
-    "Acceptance": "Akceptacja"
+    "isAllDay": "Cały dzień"
   },
   "options": {
     "status": {

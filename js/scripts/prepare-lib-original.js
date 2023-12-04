@@ -30,6 +30,7 @@ const fs = require('fs');
 const buildUtils = require('../build-utils');
 
 const libs = require('./../../frontend/libs.json');
+const bundleConfig = require('../../frontend/bundle-config.json');
 
 const libDir = './client/lib';
 const originalLibDir = './client/lib/original';
@@ -38,38 +39,97 @@ const originalLibCrmDir = './client/modules/crm/lib/original';
 
 [libDir, originalLibDir, libCrmDir, originalLibCrmDir]
     .filter(path => !fs.existsSync(path))
-    .forEach(path => fs.mkdirSync(path))
+    .forEach(path => fs.mkdirSync(path));
+
+const bundleFiles = Object.keys(bundleConfig.chunks)
+    .map(name => {
+        const namePart = 'espo-' + name;
+
+        return namePart + '.js';
+    });
 
 fs.readdirSync(originalLibDir)
-    .filter(file => file !== 'espo.js')
+    .filter(file => !bundleFiles.includes(file))
     .forEach(file => fs.unlinkSync(originalLibDir + '/' + file));
 
 fs.readdirSync(originalLibCrmDir)
     .forEach(file => fs.unlinkSync(originalLibCrmDir + '/' + file));
 
-/** @var {string[]} */
-const libSrcList = buildUtils.getBundleLibList(libs);
-
-let stripSourceMappingUrl = path => {
+const stripSourceMappingUrl = path => {
     /** @var {string} */
-    let originalContents = fs.readFileSync(path, {encoding: 'utf-8'});
+    const originalContents = fs.readFileSync(path, {encoding: 'utf-8'});
 
-    let re = /\/\/# sourceMappingURL.*/g;
+    const re = /^\/\/# sourceMappingURL.*/gm;
 
     if (!originalContents.match(re)) {
         return;
     }
 
-    let contents = originalContents.replaceAll(re, '');
+    const contents = originalContents.replaceAll(re, '');
 
     fs.writeFileSync(path, contents, {encoding: 'utf-8'});
 }
 
-libSrcList.forEach(src => {
-    let dest = originalLibDir + '/' + src.split('/').slice(-1);
+const addLoadingSubject = (path, subject) => {
+    /** @var {string} */
+    let contents = fs.readFileSync(path, {encoding: 'utf-8'});
+
+    contents =
+        `Espo.loader.setContextId('${subject}');\n` +
+        contents + '\n' +
+        `Espo.loader.setContextId(null);\n`;
+
+    fs.writeFileSync(path, contents, {encoding: 'utf-8'});
+}
+
+const addSuppressAmd = path => {
+    /** @var {string} */
+    let contents = fs.readFileSync(path, {encoding: 'utf-8'});
+
+    contents =
+        `var _previousDefineAmd = define.amd; define.amd = false;\n` +
+        contents + '\n' +
+        `define.amd = _previousDefineAmd;\n`;
+
+    fs.writeFileSync(path, contents, {encoding: 'utf-8'});
+}
+
+const bundleLibDataList = buildUtils.getBundleLibList(libs);
+
+const amdIdMap = {};
+const suppressAmdMap = {};
+
+libs.forEach(item => {
+    if (!item.amdId || !item.bundle || item.files) {
+        return;
+    }
+
+    if (item.suppressAmd) {
+        suppressAmdMap[item.src] = true;
+
+        return;
+    }
+
+    amdIdMap[item.src] = 'lib!' + item.amdId;
+});
+
+bundleLibDataList.forEach(item => {
+    const src = item.src;
+
+    const dest = originalLibDir + '/' + item.file;
 
     fs.copyFileSync(src, dest);
     stripSourceMappingUrl(dest);
+
+    if (suppressAmdMap[src]) {
+        addSuppressAmd(dest);
+    }
+
+    const key = amdIdMap[src];
+
+    if (key) {
+        addLoadingSubject(dest, key);
+    }
 });
 
 buildUtils.getCopyLibDataList(libs)
@@ -77,4 +137,14 @@ buildUtils.getCopyLibDataList(libs)
     .forEach(item => {
         fs.copyFileSync(item.src, item.originalDest);
         stripSourceMappingUrl(item.originalDest);
+
+        if (suppressAmdMap[item.src]) {
+            addSuppressAmd(item.originalDest);
+        }
+
+        const key = amdIdMap[item.src];
+
+        if (key) {
+            addLoadingSubject(item.originalDest, key);
+        }
     });

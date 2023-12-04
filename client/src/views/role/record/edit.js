@@ -101,9 +101,9 @@ define('views/role/record/edit', ['views/record/edit'], function (Dep) {
 
             this.createView('extra', this.tableView, {
                 mode: 'edit',
-                el: this.options.el + ' .extra',
+                selector: '.extra',
                 model: this.model,
-            }, (view) => {
+            }, view => {
                 this.listenTo(view, 'change', () => {
                     var data = this.fetch();
                     this.model.set(data);

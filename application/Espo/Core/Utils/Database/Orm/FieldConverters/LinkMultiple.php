@@ -56,6 +56,13 @@ class LinkMultiple implements FieldConverter
                 'fieldType' => 'linkMultiple',
             ]);
 
+        /** @var array<string, mixed> $defaults */
+        $defaults = $fieldDefs->getParam('defaultAttributes') ?? [];
+
+        if (array_key_exists($idsName, $defaults)) {
+            $idsDefs = $idsDefs->withDefault($defaults[$idsName]);
+        }
+
         $namesDefs = AttributeDefs::create($namesName)
             ->withType(AttributeType::JSON_OBJECT)
             ->withNotStorable()

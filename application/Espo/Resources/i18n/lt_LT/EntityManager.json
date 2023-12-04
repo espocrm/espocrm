@@ -38,7 +38,14 @@
     "parentEntityTypeList": "Patronuojančių subjektų tipai",
     "foreignLinkEntityTypeList": "Išorinės nuorodos",
     "entity": "Subjektas",
-    "optimisticConcurrencyControl": "Optimistinis lygiagretumo valdymas"
+    "optimisticConcurrencyControl": "Optimistinis lygiagretumo valdymas",
+    "beforeSaveApiScript": "API prieš išsaugant scenarijų",
+    "updateDuplicateCheck": "Dublikatų tikrinimas atnaujinimo metu",
+    "duplicateCheckFieldList": "Dubliuojantys kontroliniai laukai",
+    "layout": "Maketavimas",
+    "author": "Autorius",
+    "module": "Modulis",
+    "version": "Versija"
   },
   "options": {
     "type": {
@@ -68,7 +75,12 @@
     "entityCreated": "Įrašas buvo sukurtas",
     "linkAlreadyExists": "Sąsajos pavadinimo konfliktas.",
     "linkConflict": "Vardas konfliktas: nuoroda ar laukas su tuo pačiu pavadinimu jau egzistuoja.",
-    "confirmRemove": "Ar tikrai norite ištrinti subjekto tipą iš sistemos?"
+    "confirmRemove": "Ar tikrai norite ištrinti subjekto tipą iš sistemos?",
+    "beforeSaveCustomScript": "Skriptas, iškviečiamas kiekvieną kartą prieš išsaugant esybę. Naudojamas apskaičiuotiems laukams nustatyti.",
+    "beforeSaveApiScript": "Skriptas, iškviečiamas kuriant ir atnaujinant API užklausas prieš išsaugant esybę. Naudokite pasirinktiniam patvirtinimui ir dublikatų tikrinimui.",
+    "nameIsAlreadyUsed": "Vardas \"{name}\" jau naudojamas.",
+    "nameIsNotAllowed": "Vardas '{name}' yra neleistinas.",
+    "nameIsTooLong": "Vardas yra per ilgas."
   },
   "tooltips": {
     "statusField": "Šio lauko atnaujinimai įrašomi sraute.",
@@ -80,6 +92,8 @@
     "entityType": "Bazė plius - rodo \"Veiklos\", \"Istorija\" ir \"Užduotys\" skiltis.\nĮvykis - pasiekiamas skiltyje \"Kalendorius\" ir \"Veiklos\".",
     "fullTextSearch": "Reikia atlikti rekonstrukciją.",
     "countDisabled": "Bendras skaičius nebus rodomas sąrašo rodinyje. Gali sutrumpėti krovimo laikas, kai DB lentelė yra didelė.",
-    "optimisticConcurrencyControl": "Užkerta kelią rašymo konfliktams."
+    "optimisticConcurrencyControl": "Užkerta kelią rašymo konfliktams.",
+    "duplicateCheckFieldList": "Kuriuos laukus tikrinti tikrinant, ar nėra dublikatų.",
+    "updateDuplicateCheck": "Atlikite dublikatų tikrinimą, kai atnaujinate įrašą."
   }
 }

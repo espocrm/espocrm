@@ -32,40 +32,22 @@ namespace Espo\Core\ORM;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\InjectableFactory;
-use Espo\Core\Repositories\Database as DatabaseRepository;
-use Espo\Core\Utils\ClassFinder;
-use Espo\ORM\Entity as OrmEntity;
+use Espo\ORM\Entity as Entity;
 use Espo\ORM\EntityFactory as EntityFactoryInterface;
 use Espo\ORM\Repository\Repository;
 use Espo\ORM\Repository\RepositoryFactory as RepositoryFactoryInterface;
 
 class RepositoryFactory implements RepositoryFactoryInterface
 {
-    /** @var class-string<Repository<OrmEntity>> */
-    protected $defaultClassName = DatabaseRepository::class;
-
     public function __construct(
-        protected EntityFactoryInterface $entityFactory,
-        protected InjectableFactory $injectableFactory,
-        protected ClassFinder $classFinder
+        private EntityFactoryInterface $entityFactory,
+        private InjectableFactory $injectableFactory,
+        private ClassNameProvider $classNameProvider
     ) {}
-
-    /**
-     * @return ?class-string<Repository<OrmEntity>>
-     */
-    protected function getClassName(string $entityType): ?string
-    {
-        /** @var ?class-string<Repository<OrmEntity>> */
-        return $this->classFinder->find('Repositories', $entityType);
-    }
 
     public function create(string $entityType): Repository
     {
         $className = $this->getClassName($entityType);
-
-        if (!$className || !class_exists($className)) {
-            $className = $this->defaultClassName;
-        }
 
         return $this->injectableFactory->createWithBinding(
             $className,
@@ -80,5 +62,14 @@ class RepositoryFactory implements RepositoryFactoryInterface
                 )
                 ->build()
         );
+    }
+
+    /**
+     * @return class-string<Repository<Entity>>
+     */
+    private function getClassName(string $entityType): string
+    {
+        /** @var class-string<Repository<Entity>> */
+        return $this->classNameProvider->getRepositoryClassName($entityType);
     }
 }

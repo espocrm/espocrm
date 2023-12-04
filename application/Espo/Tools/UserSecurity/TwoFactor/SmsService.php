@@ -33,32 +33,19 @@ use Espo\Core\Authentication\TwoFactor\Sms\SmsLogin;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-
 use Espo\Core\Utils\Config;
 use Espo\Core\Authentication\TwoFactor\Sms\Util;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 
 class SmsService
 {
-    private Util $util;
-    private User $user;
-    private EntityManager $entityManager;
-    private Config $config;
-
     public function __construct(
-        Util $util,
-        User $user,
-        EntityManager $entityManager,
-        Config $config
-    ) {
-        $this->util = $util;
-        $this->user = $user;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-    }
+        private Util $util,
+        private User $user,
+        private EntityManager $entityManager,
+        private Config $config
+    ) {}
 
     /**
      * @throws Forbidden

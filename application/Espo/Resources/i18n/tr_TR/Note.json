@@ -7,6 +7,8 @@
     "users": "Kullanıcılar",
     "portals": "Portallar",
     "type": "Tip",
+    "related": "İlgili",
+    "createdByGender": "Cinsiyete Göre Oluşturuldu",
     "data": "Veri",
     "number": "Numara"
   },
@@ -26,5 +28,8 @@
       "all": "Tüm dahili kullanıcılara",
       "portals": "Portal kullanıcılarına"
     }
+  },
+  "links": {
+    "related": "İlgili"
   }
 }

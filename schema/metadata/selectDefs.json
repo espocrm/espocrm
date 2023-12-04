@@ -1,0 +1,85 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/selectDefs.json",
+    "title": "selectDefs",
+    "description": "Select framework definitions for a scope.",
+    "type": "object",
+    "properties": {
+        "accessControlFilterClassNameMap": {
+            "description": "Access control filters. Classes should implement Espo\\Core\\Select\\AccessControl\\Filter interface.",
+            "type": "object",
+            "properties": {
+                "mandatory": {"type": "string"},
+                "all": {"type": "string"},
+                "onlyTeam": {"type": "string"},
+                "onlyOwn": {"type": "string"},
+                "portalAll": {"type": "string"},
+                "portalOnlyAccount": {"type": "string"},
+                "portalOnlyContact": {"type": "string"},
+                "portalOnlyOwn": {"type": "string"}
+            },
+            "additionalProperties": {
+                "type": "string",
+                "description": "A filter."
+            }
+        },
+        "primaryFilterClassNameMap": {
+            "description": "Primary filters. Classes should implement Espo\\Core\\Select\\Primary\\Filter interface.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string",
+                "description": "A filter."
+            }
+        },
+        "boolFilterClassNameMap": {
+            "description": "Bool filters. Classes should implement Espo\\Core\\Select\\Bool\\Filter interface.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string",
+                "description": "A filter."
+            }
+        },
+        "selectAttributesDependencyMap": {
+            "description": "When a specific attribute is requested in the select parameter, attributes defined by the map will be selected.",
+            "additionalProperties": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "description": "An attribute."
+                }
+            }
+        },
+        "whereItemConverterClassNameMap": {
+            "description": "Implementations for custom where items. Classes should implement Espo\\Core\\Select\\Where\\ItemConverter interface. The key format: '{fieldName}_{conditionItemType}'.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string",
+                "description": "A key in `{fieldName}_{conditionItemType}` format."
+            }
+        },
+        "accessControlFilterResolverClassName": {
+            "description": "A resolver is responsible for choosing an access filter. Should implement Espo\\Core\\Select\\AccessControl\\FilterResolver interface.",
+            "type": "string"
+        },
+        "textFilterClassName": {
+            "description": "A class that processes the text filter search. Should implement Espo\\Core\\Select\\Text\\Filter interface.",
+            "type": "string"
+        },
+        "orderItemConverterClassNameMap": {
+            "description": "An order converter converts order parameters passed from the frontend to an order data acceptable for ORM. One can implement a custom converter for a specific field. Classes should implement Espo\\Core\\Select\\Order\\ItemConverter interface.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string",
+                "description": "A field."
+            }
+        },
+        "ordererClassNameMap": {
+            "description": "Provides the ability to apply custom order for a specific field. Classes should implement Espo\\Core\\Select\\Order\\Orderer interface.",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string",
+                "description": "A field."
+            }
+        }
+    }
+}

@@ -231,7 +231,7 @@ class Manager
 
         if (is_array($path)) {
             // For backward compatibility.
-            // @todo Remove support of arrays in v7.3.
+            // @todo Remove support of arrays in v9.0.
             trigger_error(
                 'Array parameter is deprecated for FileManager::getContents.',
                 E_USER_DEPRECATED
@@ -552,12 +552,21 @@ class Manager
             $permission = (int) base_convert((string) $defaultPermissions['dir'], 8, 10);
         }
 
+        if (is_dir($path)) {
+            return true;
+        }
+
         $umask = umask(0);
 
         $result = mkdir($path, $permission);
 
         if ($umask) {
             umask($umask);
+        }
+
+        if (!$result && is_dir($path)) {
+            // Dir can be created by a concurrent process.
+            return true;
         }
 
         if (!empty($defaultPermissions['user'])) {
@@ -568,7 +577,7 @@ class Manager
             $this->getPermissionUtils()->chgrp($path);
         }
 
-        return (bool) $result;
+        return $result;
     }
 
     /**

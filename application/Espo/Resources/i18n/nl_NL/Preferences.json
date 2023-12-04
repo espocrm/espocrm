@@ -31,7 +31,9 @@
     "scopeColorsDisabled": "Schakel bereikkleuren uit",
     "tabColorsDisabled": "Tabbladkleuren uitschakelen",
     "assignmentNotificationsIgnoreEntityTypeList": "Kennisgevingen van toewijzing in de applicatie",
-    "assignmentEmailNotificationsIgnoreEntityTypeList": "Kennisgevingen van e-mailtoewijzingen"
+    "assignmentEmailNotificationsIgnoreEntityTypeList": "Kennisgevingen van e-mailtoewijzingen",
+    "dashboardLocked": "Dashboard vergrendelen",
+    "textSearchStoringDisabled": "Tekstfilter opslaan uitschakelen"
   },
   "options": {
     "weekStart": {

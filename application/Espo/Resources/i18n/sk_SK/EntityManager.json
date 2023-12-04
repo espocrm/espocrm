@@ -32,7 +32,11 @@
     "kanbanViewMode": "Pohľad Kanban",
     "kanbanStatusIgnoreList": "Ignorované skupiny v pohľade Kanban",
     "iconClass": "Ikona",
-    "fullTextSearch": "Full-Textové vyhľadávanie"
+    "fullTextSearch": "Full-Textové vyhľadávanie",
+    "layout": "Rozloženie",
+    "author": "Autor",
+    "module": "modul",
+    "version": "Verzia"
   },
   "options": {
     "type": {
@@ -52,7 +56,10 @@
   "messages": {
     "entityCreated": "Entita bola vytvorená",
     "linkAlreadyExists": "Konflikt v názve linky.",
-    "linkConflict": "Konflikt v názve: linka alebo pole s rovnakým názvom už existuje."
+    "linkConflict": "Konflikt v názve: linka alebo pole s rovnakým názvom už existuje.",
+    "nameIsAlreadyUsed": "Názov '{name}' sa už používa.",
+    "nameIsNotAllowed": "Názov '{name}' nie je povolený.",
+    "nameIsTooLong": "Názov je príliš dlhý."
   },
   "tooltips": {
     "statusField": "Zmeny tohoto poľa sú zapisované do streamu",
@@ -62,6 +69,8 @@
     "linkAudited": "Vytvorenie súvisiaceho záznamu a zlinkovanie s existujúcim záznamom bude zaznamenané v streame.",
     "linkMultipleField": "Pole \"Link Multiple\" poskytuje šikovný spôsob ako editovať relácie. Nepoužívajte ho ak chcete mať veľké množstvo súvisiacich záznamov (relácií).",
     "entityType": "Base Plus - má panely a aktivitami, históroiu a s úlohami.\n\nUdalosť - dostupná v kalendári a v paneli aktivít.",
-    "fullTextSearch": "Spustenie prestavby je vyžadované"
+    "fullTextSearch": "Spustenie prestavby je vyžadované",
+    "duplicateCheckFieldList": "Ktoré polia skontrolovať pri kontrole duplikátov.",
+    "updateDuplicateCheck": "Pri aktualizácii záznamu vykonajte kontrolu duplikátov."
   }
 }

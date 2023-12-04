@@ -9,10 +9,11 @@
             {{#each buttonList}}
             <button
               type="button"
-              class="btn btn-{{#if ../style}}{{../style}}{{else}}default{{/if}} btn-sm action{{#if hidden}} hidden{{/if}}"
+              class="btn btn-{{#if ../style}}{{../style}}{{else}}default{{/if}} dashlet-action btn-sm action{{#if hidden}} hidden{{/if}}"
               data-action="{{name}}"
+              data-name="{{name}}"
               title="{{#if title}}{{translate title}}{{/if}}"
-            >{{#if html}}{{{html}}}{{else}}{{translate label}}{{/if}}</button>
+            >{{#if html}}{{{html}}}{{else}}{{#if text}}{{text}}{{else}}{{translate label}}{{/if}}{{/if}}</button>
             {{/each}}
             <button
               class="dropdown-toggle btn btn-{{#if ../style}}{{../style}}{{else}}default{{/if}} btn-sm menu-button"
@@ -23,7 +24,8 @@
                 <li>
                     <a
                       data-action="{{name}}"
-                      class="action"
+                      data-name="{{name}}"
+                      class="action dashlet-action"
                       {{#if url}}href="{{url}}"{{else}}role="button"{{/if}}
                       tabindex="0"
                       {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}

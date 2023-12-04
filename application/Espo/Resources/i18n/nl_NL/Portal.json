@@ -16,13 +16,15 @@
     "defaultCurrency": "Standaard valuta",
     "customUrl": "Eigen URL",
     "customId": "Aangepaste ID",
-    "layoutSet": "Lay-out set"
+    "layoutSet": "Lay-out set",
+    "authenticationProvider": "Authenticatie aanbieder"
   },
   "links": {
     "users": "Gebruikers",
     "portalRoles": "Functies",
     "notes": "Notities",
-    "layoutSet": "Lay-out set"
+    "layoutSet": "Lay-out set",
+    "authenticationProvider": "Authenticatie aanbieder"
   },
   "tooltips": {
     "portalRoles": "Gespecificeerde portaal functies worden toegepast op alle gebruikers van dit portaal.",

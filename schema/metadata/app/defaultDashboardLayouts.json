@@ -1,0 +1,53 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/defaultDashboardLayouts.json",
+    "title": "app/defaultDashboardLayouts",
+    "description": "Default dashboard layouts.",
+    "type": "object",
+    "additionalProperties": {
+        "type": "array",
+        "items": {
+            "type": "object",
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "A tab name."
+                },
+                "layout": {
+                    "type": "array",
+                    "description": "A layout.",
+                    "items": {
+                        "$ref": "#/definitions/dashlet"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "dashlet": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "description": "An id."
+                },
+                "name": {
+                    "type": "string",
+                    "description": "A dashlet name."
+                },
+                "x": {
+                    "type": "integer"
+                },
+                "y": {
+                    "type": "integer"
+                },
+                "width": {
+                    "type": "integer"
+                },
+                "height": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}

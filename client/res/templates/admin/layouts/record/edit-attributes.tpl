@@ -7,7 +7,7 @@
         <label
             class="control-label"
             data-name="{{name}}"
-        >{{translate name category='fields' scope='LayoutManager'}}</label>
+        >{{label}}</label>
         <div
             class="field"
             data-name="{{name}}"

@@ -59,7 +59,7 @@ class Formatter
         $this->language = $language;
     }
 
-    public function formatAttributeValue(Entity $entity, string $attribute): ?string
+    public function formatAttributeValue(Entity $entity, string $attribute, bool $isPlainText = false): ?string
     {
         $value = $entity->get($attribute);
 
@@ -119,6 +119,14 @@ class Formatter
         if ($attributeType === 'text') {
             if (!is_string($value)) {
                 return '';
+            }
+
+            if ($fieldType === 'wysiwyg') {
+                return $value;
+            }
+
+            if ($isPlainText) {
+                return $value;
             }
 
             return nl2br($value);

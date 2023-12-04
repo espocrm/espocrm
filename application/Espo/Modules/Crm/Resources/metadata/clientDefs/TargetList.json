@@ -29,6 +29,7 @@
             ],
             "rowActionsView":"crm:views/target-list/record/row-actions/default",
             "view":"crm:views/target-list/record/panels/relationship",
+            "removeDisabled": true,
             "massSelect": true
         },
         "leads":{
@@ -44,6 +45,7 @@
             ],
             "rowActionsView":"crm:views/target-list/record/row-actions/default",
             "view":"crm:views/target-list/record/panels/relationship",
+            "removeDisabled": true,
             "massSelect": true
         },
         "accounts":{
@@ -59,6 +61,7 @@
             ],
             "rowActionsView":"crm:views/target-list/record/row-actions/default",
             "view":"crm:views/target-list/record/panels/relationship",
+            "removeDisabled": true,
             "massSelect": true
         },
         "users":{
@@ -75,6 +78,7 @@
             ],
             "rowActionsView":"crm:views/target-list/record/row-actions/default",
             "view":"crm:views/target-list/record/panels/relationship",
+            "removeDisabled": true,
             "massSelect": true
         }
     },

@@ -17,7 +17,7 @@
         "userRole": {
             "type": "varchar",
             "notStorable": true,
-            "disabled": true
+            "utility": true
         },
         "layoutSet": {
             "type": "link",

@@ -92,4 +92,12 @@ class FieldDefs
     {
         return $this->data[$name] ?? null;
     }
+
+    /**
+     * Has a parameter value.
+     */
+    public function hasParam(string $name): bool
+    {
+        return array_key_exists($name, $this->data);
+    }
 }

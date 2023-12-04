@@ -1,0 +1,22 @@
+{
+    "Base": {
+        "entityClassName": "Espo\\Core\\Templates\\Entities\\Base",
+        "repositoryClassName": "Espo\\Core\\Templates\\Repositories\\Base"
+    },
+    "BasePlus": {
+        "entityClassName": "Espo\\Core\\Templates\\Entities\\BasePlus",
+        "repositoryClassName": "Espo\\Core\\Templates\\Repositories\\BasePlus"
+    },
+    "Event": {
+        "entityClassName": "Espo\\Core\\Templates\\Entities\\Event",
+        "repositoryClassName": "Espo\\Core\\Templates\\Repositories\\Event"
+    },
+    "Company": {
+        "entityClassName": "Espo\\Core\\Templates\\Entities\\Company",
+        "repositoryClassName": "Espo\\Core\\Templates\\Repositories\\Company"
+    },
+    "Person": {
+        "entityClassName": "Espo\\Core\\Templates\\Entities\\Person",
+        "repositoryClassName": "Espo\\Core\\Templates\\Repositories\\Person"
+    }
+}

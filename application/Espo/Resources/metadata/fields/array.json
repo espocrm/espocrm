@@ -18,6 +18,11 @@
             "tooltip": true
         },
         {
+            "name": "default",
+            "type": "multiEnum",
+            "view": "views/admin/field-manager/fields/options/default-multi"
+        },
+        {
             "name": "translation",
             "type": "varchar",
             "hidden": true
@@ -58,6 +63,10 @@
             "type": "bool"
         },
         {
+            "name": "readOnlyAfterCreate",
+            "type": "bool"
+        },
+        {
             "name": "optionsPath",
             "type": "varchar",
             "hidden": true
@@ -93,5 +102,6 @@
         "update",
         "add",
         "remove"
-    ]
+    ],
+    "default": []
 }

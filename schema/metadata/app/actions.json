@@ -1,0 +1,16 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "https://www.espocrm.com/schema/metadata/app/actions.json",
+    "title": "app/actions",
+    "description": "Record-Action framework definitions.",
+    "type": "object",
+    "additionalProperties": {
+        "description": "An action name.",
+        "properties": {
+            "implementationClassName": {
+                "type": "string",
+                "description": "An action class. Should implement Espo\\Core\\Action\\Action interface. Can be overridden for a specific entity type at: recordDefs > {EntityType} > actions > {action} > implementationClassName."
+            }
+        }
+    }
+}

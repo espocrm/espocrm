@@ -3,7 +3,7 @@
     "title": "Посада",
     "dateFrom": "Дата від",
     "dateTo": "Дата до",
-    "autorefreshInterval": "Інтервал авто-оновлення",
+    "autorefreshInterval": "Інтервал автооновлення",
     "displayRecords": "Відобразити записи",
     "isDoubleHeight": "Висота 2x",
     "mode": "Режим",
@@ -25,11 +25,11 @@
       "month": "Місяць",
       "basicDay": "День",
       "agendaDay": "День (порядок денний)",
-      "timeline": "Графік"
+      "timeline": "Часова шкала"
     }
   },
   "messages": {
-    "selectEntityType": "Виберіть тип сутності в опціях дашлету"
+    "selectEntityType": "Виберіть тип сутності в опціях дашлету."
   },
   "tooltips": {
     "skipOwn": "Дії, виконані вашим обліковим записом користувача, відображатися не будуть."

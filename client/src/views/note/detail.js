@@ -31,7 +31,7 @@ define('views/note/detail', ['views/main'], (Dep) => {
     /**
      * @class
      * @name Class
-     * @extends module:views/main.Class
+     * @extends module:views/main
      * @memberOf module:views/note/detail
      */
     return Dep.extend(/** @lends module:views/note/detail.Class# */{

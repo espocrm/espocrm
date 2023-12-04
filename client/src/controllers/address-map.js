@@ -26,34 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/address-map', ['controller'], function (Dep) {
+import Controller from 'controller';
 
-    return Dep.extend({
+class AddressMapController extends Controller {
 
-        defaultAction: 'index',
+    defaultAction = 'index'
 
-        actionIndex: function () {
-            this.error404();
-        },
+    // noinspection JSUnusedGlobalSymbols
+    actionIndex() {
+        this.error404();
+    }
 
-        actionView: function (o) {
-            this.modelFactory.create(o.entityType)
-            .then(
-                function (model) {
-                    model.id = o.id;
-                    model.fetch().then(
-                        function () {
-                            var viewName = this.getMetadata().get(['AddressMap', 'view']) ||
-                                'views/address-map/view';
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {Object} o
+     */
+    actionView(o) {
+        this.modelFactory
+            .create(o.entityType)
+            .then(model => {
+                model.id = o.id;
 
-                            this.main(viewName, {
-                                model: model,
-                                field: o.field,
-                            });
-                        }.bind(this)
-                    );
-                }.bind(this)
-            );
-        },
-    });
-});
+                model.fetch()
+                    .then(() => {
+                        let viewName = this.getMetadata().get(['AddressMap', 'view']) ||
+                            'views/address-map/view';
+
+                        this.main(viewName, {
+                            model: model,
+                            field: o.field,
+                        });
+                    });
+            });
+    }
+}
+
+export default AddressMapController;

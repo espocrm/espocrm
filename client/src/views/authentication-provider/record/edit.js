@@ -35,7 +35,7 @@ function (Dep, Helper) {
 
         /**
          * @private
-         * @type {module:helpers/misc/authentication-provider.Class}
+         * @type {module:helpers/misc/authentication-provider}
          */
         helper: null,
 

@@ -37,13 +37,18 @@ use Espo\Core\Exceptions\Error\Body as ErrorBody;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Defs;
+use Espo\ORM\Defs\EntityDefs;
+use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Type\RelationType;
 
 /**
  * Check access for record linking.
@@ -53,10 +58,25 @@ class LinkCheck
     /** @var array<string, LinkChecker<Entity, Entity>>> */
     private $linkCheckerCache = [];
 
+    /** @var string[] */
+    private array $oneFieldTypeList = [
+        FieldType::LINK,
+        FieldType::LINK_ONE,
+        FieldType::FILE,
+        FieldType::IMAGE,
+    ];
+
+    /** @var string[] */
+    private array $manyFieldTypeList = [
+        FieldType::LINK_MULTIPLE,
+        FieldType::ATTACHMENT_MULTIPLE,
+    ];
+
     /**
      * @param string[] $noEditAccessRequiredLinkList
      */
     public function __construct(
+        private Defs $ormDefs,
         private EntityManager $entityManager,
         private Acl $acl,
         private Metadata $metadata,
@@ -67,19 +87,20 @@ class LinkCheck
     ) {}
 
     /**
-     * Checks relation fields set in an entity.
+     * Checks relation fields set in an entity (link-multiple, link and others).
      *
      * @throws Forbidden
      */
-    public function process(Entity $entity): void
+    public function processFields(Entity $entity): void
     {
-        $this->processLinkMultiple($entity);
+        $this->processLinkMultipleFields($entity);
+        $this->processLinkFields($entity);
     }
 
     /**
      * @throws Forbidden
      */
-    private function processLinkMultiple(Entity $entity): void
+    private function processLinkMultipleFields(Entity $entity): void
     {
         $entityType = $entity->getEntityType();
 
@@ -121,24 +142,7 @@ class LinkCheck
                 continue;
             }
 
-            $hasLinkMultiple =
-                $entityDefs->hasField($name) &&
-                (
-                    $entityDefs->getField($name)->getType() === 'linkMultiple' ||
-                    $entityDefs->getField($name)->getType() === 'attachmentMultiple'
-                );
-
-            if (
-                !$hasLinkMultiple &&
-                in_array($name, $this->acl->getScopeForbiddenLinkList($entityType, AclTable::ACTION_EDIT))
-            ) {
-                throw ForbiddenSilent::createWithBody(
-                    "No access to link {$name}.",
-                    ErrorBody::create()
-                        ->withMessageTranslation('cannotRelateForbiddenLink', null, ['link' => $name])
-                        ->encode()
-                );
-            }
+            $this->processCheckLinkWithoutField($entityDefs, $name, $this->manyFieldTypeList);
 
             if ($ids === []) {
                 continue;
@@ -151,28 +155,67 @@ class LinkCheck
     }
 
     /**
+     * @param string[] $fieldTypes
      * @throws Forbidden
      */
-    private function processLinkedRecordsCheckItem(Entity $entity, RelationDefs $defs, string $id): void
+    private function processCheckLinkWithoutField(EntityDefs $entityDefs, string $name, array $fieldTypes): void
     {
+        $hasField =
+            $entityDefs->hasField($name) &&
+            in_array($entityDefs->getField($name)->getType(), $fieldTypes);
+
+        if ($hasField) {
+            return;
+        }
+
+        $forbiddenLinkList = $this->acl->getScopeForbiddenLinkList($entityDefs->getName(), AclTable::ACTION_EDIT);
+
+        if (!in_array($name, $forbiddenLinkList)) {
+            return;
+        }
+
+        throw ForbiddenSilent::createWithBody(
+            "No access to link $name.",
+            ErrorBody::create()
+                ->withMessageTranslation('cannotRelateForbiddenLink', null, ['link' => $name])
+                ->encode()
+        );
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function processLinkedRecordsCheckItem(
+        Entity $entity,
+        RelationDefs $defs,
+        string $id,
+        bool $isOne = false
+    ): void {
+
         $entityType = $entity->getEntityType();
         $link = $defs->getName();
 
-        if (!$defs->hasForeignEntityType()) {
+        if ($this->getParam($entityType, $link, 'linkCheckDisabled')) {
             return;
         }
 
-        if ($this->metadata->get(['recordDefs', $entityType, 'relationships', $link, 'linkCheckDisabled'])) {
+        $foreignEntityType = null;
+
+        if ($defs->getType() === RelationType::BELONGS_TO_PARENT) {
+            $foreignEntityType = $entity->get($link . 'Type');
+        }
+
+        if (!$foreignEntityType && !$defs->hasForeignEntityType()) {
             return;
         }
 
-        $foreignEntityType = $defs->getForeignEntityType();
+        $foreignEntityType ??= $defs->getForeignEntityType();
 
         $foreignEntity = $this->entityManager->getEntityById($foreignEntityType, $id);
 
         if (!$foreignEntity) {
             throw ForbiddenSilent::createWithBody(
-                "Can't relate with non-existing record.",
+                "Can't relate with non-existing record. entity type: $entityType, link: $link.",
                 ErrorBody::create()
                     ->withMessageTranslation(
                         'cannotRelateNonExisting', null, ['foreignEntityType' => $foreignEntityType])
@@ -180,8 +223,19 @@ class LinkCheck
             );
         }
 
+        if ($isOne) {
+            $this->linkForeignAccessCheckOne($entityType, $link, $foreignEntity);
+
+            return;
+        }
+
         $this->linkForeignAccessCheck($entityType, $link, $foreignEntity, true);
         $this->linkEntityAccessCheck($entity, $foreignEntity, $link);
+    }
+
+    private function getParam(string $entityType, string $link, string $param): mixed
+    {
+        return $this->metadata->get(['recordDefs', $entityType, 'relationships', $link, $param]);
     }
 
     /**
@@ -194,9 +248,7 @@ class LinkCheck
         $entityType = $entity->getEntityType();
 
         /** @var AclTable::ACTION_*|null $action */
-        $action = $this->metadata
-            ->get(['recordDefs', $entityType, 'relationships', $link, 'linkRequiredAccess']) ??
-            null;
+        $action = $this->getParam($entityType, $link, 'linkRequiredAccess');
 
         if (!$action) {
             $action = $this->noEditAccessRequiredForLink ?
@@ -206,7 +258,7 @@ class LinkCheck
 
         if (!$this->acl->check($entity, $action)) {
             throw ForbiddenSilent::createWithBody(
-                "No record access for link operation ({$entityType}:{$link}).",
+                "No record access for link operation ($entityType:$link).",
                 ErrorBody::create()
                     ->withMessageTranslation('noAccessToRecord', null, ['action' => $action])
                     ->encode()
@@ -215,13 +267,35 @@ class LinkCheck
     }
 
     /**
+     * Check unlink access to a specific link.
+     *
+     * @throws Forbidden
+     */
+    public function processUnlink(Entity $entity, string $link): void
+    {
+        $this->processLink($entity, $link);
+    }
+
+    /**
      * Check link access for a specific foreign entity.
+     *
      * @throws Forbidden
      */
     public function processLinkForeign(Entity $entity, string $link, Entity $foreignEntity): void
     {
         $this->linkForeignAccessCheck($entity->getEntityType(), $link, $foreignEntity);
         $this->linkEntityAccessCheck($entity, $foreignEntity, $link);
+    }
+
+    /**
+     * Check unlink access for a specific foreign entity.
+     *
+     * @throws Forbidden
+     */
+    public function processUnlinkForeign(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        $this->processLinkForeign($entity, $link, $foreignEntity);
+        $this->processUnlinkForeignRequired($entity, $link, $foreignEntity);
     }
 
     /**
@@ -235,19 +309,15 @@ class LinkCheck
     ): void {
 
         $action = in_array($link, $this->noEditAccessRequiredLinkList) ?
-            AclTable::ACTION_READ : null;
+            AclTable::ACTION_READ :
+            null;
 
         if (!$action) {
             /** @var AclTable::ACTION_* $action */
-            $action = $this->metadata
-                ->get(['recordDefs', $entityType, 'relationships', $link, 'linkRequiredForeignAccess']) ??
-                AclTable::ACTION_EDIT;
+            $action = $this->getParam($entityType, $link, 'linkRequiredForeignAccess') ?? AclTable::ACTION_EDIT;
         }
 
-        if (
-            $this->metadata
-                ->get(['recordDefs', $entityType, 'relationships', $link, 'linkForeignAccessCheckDisabled'])
-        ) {
+        if ($this->getParam($entityType, $link, 'linkForeignAccessCheckDisabled')) {
             return;
         }
 
@@ -261,17 +331,11 @@ class LinkCheck
         if (
             $fromUpdate &&
             $fieldDefs &&
-            in_array($fieldDefs->getType(), ['linkMultiple', 'attachmentMultiple'])
+            in_array($fieldDefs->getType(), $this->manyFieldTypeList)
         ) {
             $action = AclTable::ACTION_READ;
 
-            // Allow defaults.
-            $defaultAttributes = (object) ($fieldDefs->getParam('defaultAttributes') ?? []);
-            $attribute = $link . 'Ids';
-            /** @var string[] $defaultIds */
-            $defaultIds = $defaultAttributes->$attribute ?? [];
-
-            if (in_array($foreignEntity->getId(), $defaultIds)) {
+            if ($this->checkInDefaults($fieldDefs, $link, $foreignEntity)) {
                 return;
             }
         }
@@ -280,20 +344,11 @@ class LinkCheck
             return;
         }
 
-        if ($this->user->isPortal() && $action === AclTable::ACTION_READ) {
-            if (
-                $foreignEntity->getEntityType() === Account::ENTITY_TYPE &&
-                $this->user->getAccounts()->hasId($foreignEntity->getId())
-            ) {
-                return;
-            }
-
-            if (
-                $foreignEntity->getEntityType() === Contact::ENTITY_TYPE &&
-                $this->user->getContactId() === $foreignEntity->getId()
-            ) {
-                return;
-            }
+        if (
+            $action === AclTable::ACTION_READ &&
+            $this->checkIsAllowedForPortal($foreignEntity)
+        ) {
+            return;
         }
 
         $body = ErrorBody::create();
@@ -306,9 +361,32 @@ class LinkCheck
             $body->withMessageTranslation('noAccessToForeignRecord', null, ['action' => $action]);
 
         throw ForbiddenSilent::createWithBody(
-            "No foreign record access for link operation ({$entityType}:{$link}).",
+            "No foreign record access for link operation ($entityType:$link).",
             $body->encode()
         );
+    }
+
+    public function checkIsAllowedForPortal(Entity $foreignEntity): bool
+    {
+        if (!$this->user->isPortal()) {
+            return false;
+        }
+
+        if (
+            $foreignEntity->getEntityType() === Account::ENTITY_TYPE &&
+            $this->user->getAccounts()->hasId($foreignEntity->getId())
+        ) {
+            return true;
+        }
+
+        if (
+            $foreignEntity->getEntityType() === Contact::ENTITY_TYPE &&
+            $this->user->getContactId() === $foreignEntity->getId()
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -329,7 +407,7 @@ class LinkCheck
         }
 
         throw ForbiddenSilent::createWithBody(
-            "No access for link operation ({$entityType}:{$link}).",
+            "No access for link operation ($entityType:$link).",
             ErrorBody::create()
                 ->withMessageTranslation('noLinkAccess')
                 ->encode()
@@ -358,5 +436,165 @@ class LinkCheck
         $this->linkCheckerCache[$link] = $checker;
 
         return $checker;
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function processUnlinkForeignRequired(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        $relationDefs = $this->ormDefs
+            ->getEntity($entity->getEntityType())
+            ->tryGetRelation($link);
+
+        if (!$relationDefs) {
+            return;
+        }
+
+        if (
+            !$relationDefs->hasForeignEntityType() ||
+            !$relationDefs->hasForeignRelationName()
+        ) {
+            return;
+        }
+
+        $foreignLink = $relationDefs->getForeignRelationName();
+
+        $foreignRelationDefs = $this->ormDefs
+            ->getEntity($foreignEntity->getEntityType())
+            ->tryGetRelation($foreignLink);
+
+        if (!$foreignRelationDefs) {
+            return;
+        }
+
+        if (
+            !in_array($foreignRelationDefs->getType(), [
+                RelationType::BELONGS_TO,
+                RelationType::HAS_ONE,
+                RelationType::BELONGS_TO_PARENT,
+            ])
+        ) {
+            return;
+        }
+
+        $foreignFieldDefs = $this->ormDefs
+            ->getEntity($foreignEntity->getEntityType())
+            ->tryGetField($foreignLink);
+
+        if (!$foreignFieldDefs) {
+            return;
+        }
+
+        if (!$foreignFieldDefs->getParam('required')) {
+            return;
+        }
+
+        throw ForbiddenSilent::createWithBody(
+            "Can't unlink required field ({$foreignEntity->getEntityType()}:$foreignLink}).",
+            ErrorBody::create()
+                ->withMessageTranslation('cannotUnrelateRequiredLink')
+                ->encode()
+        );
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function processLinkFields(Entity $entity): void
+    {
+        $entityType = $entity->getEntityType();
+
+        $entityDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType);
+
+        $typeList = [
+            Entity::BELONGS_TO,
+            Entity::BELONGS_TO_PARENT,
+            Entity::HAS_ONE,
+        ];
+
+        foreach ($entityDefs->getRelationList() as $relationDefs) {
+            $name = $relationDefs->getName();
+            $attribute = $name . 'Id';
+
+            if (
+                !in_array($relationDefs->getType(), $typeList) ||
+                !$entityDefs->hasAttribute($attribute) ||
+                !$entity->isAttributeChanged($attribute) ||
+                $entity->get($attribute) === null
+            ) {
+                continue;
+            }
+
+            $this->processCheckLinkWithoutField($entityDefs, $name, $this->oneFieldTypeList);
+
+            $id = $entity->get($attribute);
+
+            $this->processLinkedRecordsCheckItem($entity, $relationDefs, $id, true);
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function linkForeignAccessCheckOne(string $entityType, string $link, Entity $foreignEntity): void
+    {
+        if ($this->getParam($entityType, $link, 'linkForeignAccessCheckDisabled')) {
+            return;
+        }
+
+        $fieldDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType)
+            ->tryGetField($link);
+
+        if (
+            $fieldDefs &&
+            in_array($fieldDefs->getType(), $this->oneFieldTypeList)
+        ) {
+            if ($this->checkIsDefault($fieldDefs, $link, $foreignEntity)) {
+                return;
+            }
+        }
+
+        if ($this->acl->check($foreignEntity, AclTable::ACTION_READ)) {
+            return;
+        }
+
+        if ($this->checkIsAllowedForPortal($foreignEntity)) {
+            return;
+        }
+
+        throw ForbiddenSilent::createWithBody(
+            "No foreign record access for link operation ($entityType:$link).",
+            ErrorBody::create()
+                ->withMessageTranslation('cannotRelateForbidden', null, [
+                    'foreignEntityType' => $foreignEntity->getEntityType(),
+                    'action' => AclTable::ACTION_READ,
+                ])
+                ->encode()
+        );
+    }
+
+    private function checkInDefaults(FieldDefs $fieldDefs, string $link, Entity $foreignEntity): bool
+    {
+        /** @var string[] $defaults */
+        $defaults = $this->getDefault($fieldDefs,  $link . 'Ids') ?? [];
+
+        return in_array($foreignEntity->getId(), $defaults);
+    }
+
+    private function checkIsDefault(FieldDefs $fieldDefs, string $link, Entity $foreignEntity): bool
+    {
+        return $foreignEntity->getId() === $this->getDefault($fieldDefs, $link . 'Id');
+    }
+
+    private function getDefault(FieldDefs $fieldDefs, string $attribute): mixed
+    {
+        $defaultAttributes = (object) ($fieldDefs->getParam('defaultAttributes') ?? []);
+
+        return $defaultAttributes->$attribute ?? null;
     }
 }

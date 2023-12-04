@@ -4,5 +4,5 @@
         {{#if displayEntityType}}{{translate typeValue category='scopeNames'}}
         {{else}}<span class="none-value">{{translate 'None'}}</span>
         {{/if}}
-    {{else}}<span class="loading-value">...</span>{{/if}}
+    {{else}}<span class="loading-value"></span>{{/if}}
 {{/if}}

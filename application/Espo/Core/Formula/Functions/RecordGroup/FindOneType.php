@@ -29,11 +29,12 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
-
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\Error as FormulaError;
+use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\Core\Di;
 
 class FindOneType extends BaseFunction implements
@@ -87,7 +88,12 @@ class FindOneType extends BaseFunction implements
             }
         }
 
-        $queryBuilder = $builder->buildQueryBuilder();
+        try {
+            $queryBuilder = $builder->buildQueryBuilder();
+        }
+        catch (BadRequest|Error|Forbidden $e) {
+            throw new FormulaError($e->getMessage(), $e->getCode(), $e);
+        }
 
         if (!empty($whereClause)) {
             $queryBuilder->where($whereClause);

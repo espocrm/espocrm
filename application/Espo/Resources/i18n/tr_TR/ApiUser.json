@@ -1,1 +1,5 @@
-{}
+{
+  "labels": {
+    "Create ApiUser": "API Kullanıcısı Oluştur"
+  }
+}

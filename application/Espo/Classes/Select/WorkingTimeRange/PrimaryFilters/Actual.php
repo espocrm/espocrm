@@ -41,7 +41,7 @@ class Actual implements Filter
         $queryBuilder->where(
             Expression::greaterOrEqual(
                 Expression::column('dateEnd'),
-                Date::createToday()->getString()
+                Date::createToday()->toString()
             )
         );
     }

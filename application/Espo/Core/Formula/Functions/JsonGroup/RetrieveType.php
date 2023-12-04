@@ -29,26 +29,31 @@
 
 namespace Espo\Core\Formula\Functions\JsonGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\ExecutionException;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 class RetrieveType extends BaseFunction
 {
     /**
      * @return mixed
-     * @throws \Espo\Core\Formula\Exceptions\TooFewArguments
-     * @throws \Espo\Core\Formula\Exceptions\Error
+     * @throws TooFewArguments
+     * @throws Error
+     * @throws ExecutionException
      */
     public function process(ArgumentList $args)
     {
-        if (count($args) < 2) {
+        if (count($args) < 1) {
             $this->throwTooFewArguments();
         }
 
         $jsonString = $this->evaluate($args[0]);
-        $path = $this->evaluate($args[1]);
+
+        $path = count($args) > 1 ?
+            $this->evaluate($args[1]) :
+            '';
 
         if (!is_string($jsonString)) {
             $this->throwBadArgumentType(1, 'string');
@@ -56,10 +61,6 @@ class RetrieveType extends BaseFunction
 
         if (!is_string($path)) {
             $this->throwBadArgumentType(2, 'string');
-        }
-
-        if ($path === '') {
-            $this->throwBadArgumentValue(2);
         }
 
         $item = json_decode($jsonString);
@@ -75,6 +76,10 @@ class RetrieveType extends BaseFunction
      */
     private function splitPath(string $path): array
     {
+        if ($path === '') {
+            return [];
+        }
+
         /** @var string[] $pathArray */
         $pathArray = preg_split('/(?<!\\\)\./', $path);
 

@@ -22,7 +22,7 @@
   },
   "options": {
     "status": {
-      "Pending": "In attesa",
+      "Pending": "In Attesa",
       "Success": "Successo",
       "Running": "In esecuzione",
       "Failed": "Fallito"

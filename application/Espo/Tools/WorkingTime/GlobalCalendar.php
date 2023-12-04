@@ -139,7 +139,7 @@ class GlobalCalendar implements Calendar
      */
     private function getDates(Date $from, Date $to): array
     {
-        $cacheKey = $from->getString() . '-' . $to->getString();
+        $cacheKey = $from->toString() . '-' . $to->toString();
 
         if ($this->cacheKey === $cacheKey) {
             assert($this->cache !== null);
@@ -207,11 +207,11 @@ class GlobalCalendar implements Calendar
                 OrGroup::create(
                     Condition::greaterOrEqual(
                         Expression::column('dateEnd'),
-                        $from->getString()
+                        $from->toString()
                     ),
                     Condition::lessOrEqual(
                         Expression::column('dateStart'),
-                        $to->getString()
+                        $to->toString()
                     ),
                 )
             )

@@ -26,89 +26,82 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/list-nested-categories', ['view'], function (Dep) {
+/** @module views/record/list-nested-categories */
 
-    return Dep.extend({
+import View from 'view';
 
-        template: 'record/list-nested-categories',
+class ListNestedCategoriesRecordView extends View {
 
-        events: {
-            'click .action': function (e) {
-                var $el = $(e.currentTarget);
-                var action = $el.data('action');
-                var method = 'action' + Espo.Utils.upperCaseFirst(action);
+    template = 'record/list-nested-categories'
 
-                if (typeof this[method] === 'function') {
-                    var data = $el.data();
+    isLoading = false
 
-                    this[method](data, e);
-
-                    e.preventDefault();
-                }
-            },
+    events = {
+        'click .action': function (e) {
+            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
         },
+    }
 
-        data: function () {
-            var data = {};
+    data() {
+        let data = {};
 
-            if (!this.isLoading) {
-                data.list = this.getDataList();
-            }
+        if (!this.isLoading) {
+            data.list = this.getDataList();
+        }
 
-            data.scope = this.collection.name;
-            data.isLoading = this.isLoading;
-            data.currentId = this.collection.currentCategoryId;
+        data.scope = this.collection.entityType;
+        data.isLoading = this.isLoading;
+        data.currentId = this.collection.currentCategoryId;
+        data.currentName = this.collection.currentCategoryName;
+        data.categoryData = this.collection.categoryData;
 
-            data.currentName = this.collection.currentCategoryName;
+        data.hasExpandedToggler = this.options.hasExpandedToggler;
+        data.showEditLink = this.options.showEditLink;
+        data.hasNavigationPanel = this.options.hasNavigationPanel;
 
-            data.categoryData = this.collection.categoryData;
+        let categoryData = this.collection.categoryData || {};
 
-            data.hasExpandedToggler = this.options.hasExpandedToggler;
-            data.showEditLink = this.options.showEditLink;
-            data.hasNavigationPanel = this.options.hasNavigationPanel;
+        data.upperLink = categoryData.upperId ?
+            '#' + this.subjectEntityType + '/list/categoryId=' + categoryData.upperId:
+            '#' + this.subjectEntityType;
 
-            let categoryData = this.collection.categoryData || {};
+        return data;
+    }
 
-            data.upperLink = categoryData.upperId ?
-                '#' + this.subjectEntityType + '/list/categoryId=' + categoryData.upperId:
-                '#' + this.subjectEntityType;
+    getDataList() {
+        var list = [];
 
-            return data;
-        },
+        this.collection.forEach(model => {
+            let o = {
+                id: model.id,
+                name: model.get('name'),
+                recordCount: model.get('recordCount'),
+                isEmpty: model.get('isEmpty'),
+                link: '#' + this.subjectEntityType + '/list/categoryId=' + model.id,
+            };
 
-        getDataList: function () {
-            var list = [];
+            list.push(o);
+        });
 
-            this.collection.forEach(model => {
-                let o = {
-                    id: model.id,
-                    name: model.get('name'),
-                    recordCount: model.get('recordCount'),
-                    isEmpty: model.get('isEmpty'),
-                    link: '#' + this.subjectEntityType + '/list/categoryId=' + model.id,
-                };
+        return list;
+    }
 
-                list.push(o);
-            });
+    setup() {
+        this.listenTo(this.collection, 'sync', () => {
+            this.reRender();
+        });
 
-            return list;
-        },
+        this.subjectEntityType = this.options.subjectEntityType;
+    }
 
-        setup: function () {
-            this.listenTo(this.collection, 'sync', () => {
-                this.reRender();
-            });
+    actionShowMore() {
+        this.$el.find('.category-item.show-more').addClass('hidden');
 
-            this.subjectEntityType = this.options.subjectEntityType;
-        },
+        this.collection.fetch({
+            remove: false,
+            more: true,
+        });
+    }
+}
 
-        actionShowMore: function () {
-            this.$el.find('.category-item.show-more').addClass('hidden');
-
-            this.collection.fetch({
-                remove: false,
-                more: true,
-            });
-        },
-    });
-});
+export default ListNestedCategoriesRecordView;

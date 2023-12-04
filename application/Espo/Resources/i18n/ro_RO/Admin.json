@@ -49,6 +49,7 @@
     "Create Link": "Crează Link",
     "Edit Link": "Editează Link",
     "Notifications": "Notificări",
+    "Jobs": "Joburi",
     "Reset to Default": "Resetează la Implicit",
     "Email Filters": "Filtre Email",
     "Portal Users": "Utilizatorii portalului",
@@ -146,8 +147,7 @@
     "installExtension": "Extenisa {name} {version} este gata pentru instalare.",
     "upgradeBackup": "Vă rugăm să faceți o copie de rezervă a EspoCRM înainte de a face actualizarea.",
     "thousandSeparatorEqualsDecimalMark": "Separatorul de mii nu poate fi același cu separatorul de zecimale.",
-    "userHasNoEmailAddress": "Utilizatorul nu are adresă de email.",
-    "newVersionIsAvailable": " O nouă vesiune de EspoCRM {latestVersion} este disponibilă. "
+    "userHasNoEmailAddress": "Utilizatorul nu are adresă de email."
   },
   "descriptions": {
     "settings": "Setările de sistem ale aplicației.",

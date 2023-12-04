@@ -29,18 +29,16 @@
 
 namespace Espo\Tools\UserSecurity;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Authentication\TwoFactor\Exceptions\NotConfigured;
+use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\BadRequest;
-
+use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 use Espo\Entities\UserData;
-
 use Espo\Repositories\UserData as UserDataRepository;
-
 use Espo\Core\Api\RequestNull;
 use Espo\Core\Authentication\Login\Data as LoginData;
 use Espo\Core\Authentication\LoginFactory;
@@ -56,7 +54,8 @@ class Service
         private User $user,
         private Config $config,
         private LoginFactory $authLoginFactory,
-        private TwoFactorUserSetupFactory $twoFactorUserSetupFactory
+        private TwoFactorUserSetupFactory $twoFactorUserSetupFactory,
+        private Log $log
     ) {}
 
     /**
@@ -99,7 +98,6 @@ class Service
 
     /**
      * @throws BadRequest
-     * @throws Error
      * @throws Forbidden
      * @throws NotFound
      */
@@ -153,9 +151,19 @@ class Service
             throw new BadRequest();
         }
 
-        $clientData = $this->twoFactorUserSetupFactory
-            ->create($auth2FAMethod)
-            ->getData($user);
+        try {
+            $clientData = $this->twoFactorUserSetupFactory
+                ->create($auth2FAMethod)
+                ->getData($user);
+        }
+        catch (NotConfigured $e) {
+            $this->log->error($e->getMessage());
+
+            throw Forbidden::createWithBody(
+                "2FA method '$auth2FAMethod' is not fully configured.",
+                Body::create()->withMessageTranslation('2faMethodNotConfigured', 'User')
+            );
+        }
 
         if ($isReset) {
             $userData = $this->getUserDataRepository()->getByUserId($id);
@@ -165,6 +173,7 @@ class Service
             }
 
             $userData->set('auth2FA', false);
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
             $userData->set('auth2FAMethod', null);
 
             $this->entityManager->saveEntity($userData);
@@ -174,9 +183,9 @@ class Service
     }
 
     /**
-     * @throws Error
      * @throws Forbidden
      * @throws NotFound
+     * @throws BadRequest
      */
     public function update(string $id, stdClass $data): stdClass
     {
@@ -225,6 +234,7 @@ class Service
         }
 
         if (!$userData->get('auth2FA')) {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
             $userData->set('auth2FAMethod', null);
         }
 

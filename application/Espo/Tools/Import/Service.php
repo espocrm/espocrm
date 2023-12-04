@@ -29,12 +29,12 @@
 
 namespace Espo\Tools\Import;
 
-use Espo\Entities\ActionHistoryRecord;
+use GuzzleHttp\Psr7\Utils as Psr7Utils;
+
+use Espo\Core\Record\ActionHistory\Action;
 use Espo\ORM\Entity;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Type\RelationType;
-use GuzzleHttp\Psr7\Utils as Psr7Utils;
-
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Entities\ImportEntity as ImportEntityEntity;
 use Espo\Core\Exceptions\Error;
@@ -98,12 +98,12 @@ class Service
         $id = $result->getId();
 
         if ($id) {
-            $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $id);
+            $import = $this->entityManager->getEntityById(ImportEntity::ENTITY_TYPE, $id);
 
             if ($import) {
                 $this->recordServiceContainer
                     ->get(ImportEntity::ENTITY_TYPE)
-                    ->processActionHistoryRecord(ActionHistoryRecord::ACTION_CREATE, $import);
+                    ->processActionHistoryRecord(Action::CREATE, $import);
             }
         }
 
@@ -283,7 +283,7 @@ class Service
 
         $this->recordServiceContainer
             ->get(ImportEntity::ENTITY_TYPE)
-            ->processActionHistoryRecord(ActionHistoryRecord::ACTION_DELETE, $import);
+            ->processActionHistoryRecord(Action::DELETE, $import);
     }
 
     private function deleteRelations(Entity $entity): void

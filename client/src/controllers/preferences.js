@@ -26,36 +26,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('controllers/preferences', ['controllers/record', 'models/preferences'], function (Dep, Preferences) {
+import RecordController from 'controllers/record';
+import Preferences from 'models/preferences';
 
-    return Dep.extend({
+class PreferencesController extends RecordController {
 
-        defaultAction: 'own',
+    defaultAction = 'own'
 
-        getModel: function (callback) {
-            var model = new Preferences();
+    getModel(callback, context) {
+        let model = new Preferences();
 
-            model.settings = this.getConfig();
-            model.defs = this.getMetadata().get('entityDefs.Preferences');
+        model.settings = this.getConfig();
+        model.defs = this.getMetadata().get('entityDefs.Preferences');
 
-            if (callback) {
-                callback.call(this, model);
-            }
-            return new Promise(function (resolve) {
-                resolve(model);
-            });
-        },
+        if (callback) {
+            callback.call(this, model);
+        }
 
-        checkAccess: function (action) {
-            return true;
-        },
+        return new Promise(resolve => {
+            resolve(model);
+        });
+    }
 
-        actionOwn: function () {
-            this.actionEdit({
-                id: this.getUser().id
-            });
-        },
+    checkAccess(action) {
+        return true;
+    }
 
-        actionList: function () {},
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionOwn() {
+        this.actionEdit({id: this.getUser().id});
+    }
+
+    actionList() {}
+}
+
+export default PreferencesController;

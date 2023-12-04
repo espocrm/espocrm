@@ -40,7 +40,9 @@
     "Send Invitations": "Einladungen versenden",
     "on time": "Genaue Uhrzeit",
     "before": "vorher",
-    "All-Day": "Ganztägig"
+    "All-Day": "Ganztägig",
+    "Send Cancellation": "Sende Annullierung",
+    "Acceptance": "Annahme"
   },
   "presetFilters": {
     "planned": "Geplant",
@@ -49,6 +51,8 @@
   },
   "messages": {
     "nothingHasBeenSent": "Es wurde nicht gesendet",
-    "selectAcceptanceStatus": "Setzen Sie Ihren Annahmestatus."
+    "selectAcceptanceStatus": "Setzen Sie Ihren Annahmestatus.",
+    "sendInvitationsToSelectedAttendees": "Die ausgewählten Teilnehmer erhalten eine Einladungs-E-Mail.",
+    "sendCancellationsToSelectedAttendees": "Die ausgewählten Teilnehmer erhalten eine Stornierungs-E-Mail."
   }
 }

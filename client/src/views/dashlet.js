@@ -26,227 +26,219 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlet', ['view'], function (Dep) {
+/** @module views/dashlet */
+
+import View from 'view'
+
+/**
+ * A dashlet container view.
+ */
+class DashletView extends View {
+
+    /** @inheritDoc */
+    template = 'dashlet'
 
     /**
-     * A base dashlet view.
+     * A dashlet name.
      *
-     * @class
-     * @name Class
-     * @memberOf module:views/dashlet
-     * @extends module:view.Class
+     * @type {string}
      */
-    return Dep.extend(/** @lends module:views/dashlet.Class# */{
+    name
 
-        /**
-         * A dashlet name.
-         *
-         * @type {string}
-         */
-        name: null,
+    /**
+     * A dashlet ID.
+     *
+     * @type {string}
+     */
+    id
 
-        /**
-         * A dashlet ID.
-         *
-         * @type {string}
-         */
-        id: null,
+    /**
+     * An options view name.
+     *
+     * @protected
+     * @type {string|null}
+     */
+    optionsView = null
 
-        /**
-         * @inheritDoc
-         */
-        template: 'dashlet',
+    /** @inheritDoc */
+    data() {
+        return {
+            name: this.name,
+            id: this.id,
+            title: this.getTitle(),
+            actionList: (this.getBodyView() || {}).actionList || [],
+            buttonList: (this.getBodyView() || {}).buttonList || [],
+            noPadding: (this.getBodyView() || {}).noPadding,
+        };
+    }
 
-        /**
-         * An options view name.
-         *
-         * @protected
-         * @type {string|null}
-         */
-        optionsView: null,
+    /** @inheritDoc */
+    events = {
+        /** @this DashletView */
+        'click .action': function (e) {
+            const isHandled = Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
 
-        /**
-         * @inheritDoc
-         */
-        data: function () {
-            return {
-                name: this.name,
-                id: this.id,
-                title: this.getTitle(),
-                actionList: (this.getView('body') || {}).actionList || [],
-                buttonList: (this.getView('body') || {}).buttonList || [],
-                noPadding: (this.getView('body') || {}).noPadding,
-            };
-        },
-
-        /**
-         * @inheritDoc
-         */
-        events: {
-            'click .action': function (e) {
-                var $target = $(e.currentTarget);
-                var action = $target.data('action');
-                var data = $target.data();
-
-                if (action) {
-                    var method = 'action' + Espo.Utils.upperCaseFirst(action);
-
-                    delete data['action'];
-
-                    if (typeof this[method] == 'function') {
-                        e.preventDefault();
-                        this[method].call(this, data);
-                    } else {
-                        var bodyView = this.getView('body');
-
-                        if (typeof bodyView[method] == 'function') {
-                            e.preventDefault();
-                            bodyView[method].call(bodyView, data);
-                        }
-                    }
-                }
-            },
-            'mousedown .panel-heading .dropdown-menu': function (e) {
-                // Prevent dragging.
-                e.stopPropagation();
-            },
-            'shown.bs.dropdown .panel-heading .btn-group': function (e) {
-                this.controlDropdownShown($(e.currentTarget).parent());
-            },
-            'hide.bs.dropdown .panel-heading .btn-group': function () {
-                this.controlDropdownHide();
-            },
-        },
-
-        controlDropdownShown: function ($dropdownContainer) {
-            let $panel = this.$el.children().first();
-
-            let dropdownBottom = $dropdownContainer.find('.dropdown-menu')
-                .get(0).getBoundingClientRect().bottom;
-
-            let panelBottom = $panel.get(0).getBoundingClientRect().bottom;
-
-            if (dropdownBottom < panelBottom) {
+            if (isHandled) {
                 return;
             }
 
-            $panel.addClass('has-dropdown-opened');
+            this.getBodyView().handleAction(e.originalEvent, e.currentTarget);
         },
-
-        controlDropdownHide: function () {
-            this.$el.children().first().removeClass('has-dropdown-opened');
+        /** @this DashletView */
+        'mousedown .panel-heading .dropdown-menu': function (e) {
+            // Prevent dragging.
+            e.stopPropagation();
         },
-
-        /**
-         * @inheritDoc
-         */
-        setup: function () {
-            this.name = this.options.name;
-            this.id = this.options.id;
-
-            this.on('resize', () => {
-                let bodyView = this.getView('body');
-
-                if (!bodyView) {
-                    return;
-                }
-
-                bodyView.trigger('resize');
-            });
-
-            var viewName = this.getMetadata().get(['dashlets', this.name, 'view']) ||
-                'views/dashlets/' + Espo.Utils.camelCaseToHyphen(this.name);
-
-            this.createView('body', viewName, {
-                el: this.options.el + ' .dashlet-body',
-                id: this.id,
-                name: this.name,
-                readOnly: this.options.readOnly,
-                locked: this.options.locked,
-            });
+        /** @this DashletView */
+        'shown.bs.dropdown .panel-heading .btn-group': function (e) {
+            this.controlDropdownShown($(e.currentTarget).parent());
         },
-
-        /**
-         * Refresh.
-         */
-        refresh: function () {
-            this.getView('body').actionRefresh();
+        /** @this DashletView */
+        'hide.bs.dropdown .panel-heading .btn-group': function () {
+            this.controlDropdownHide();
         },
+    }
 
-        actionRefresh: function () {
-            this.refresh();
-        },
+    controlDropdownShown($dropdownContainer) {
+        let $panel = this.$el.children().first();
 
-        actionOptions: function () {
-            let optionsView =
-                this.getMetadata().get(['dashlets', this.name, 'options', 'view']) ||
-                this.optionsView ||
-                'views/dashlets/options/base';
+        let dropdownBottom = $dropdownContainer.find('.dropdown-menu')
+            .get(0).getBoundingClientRect().bottom;
 
-            this.createView('options', optionsView, {
-                name: this.name,
-                optionsData: this.getOptionsData(),
-                fields: this.getView('body').optionsFields,
-            }, view => {
-                view.render();
+        let panelBottom = $panel.get(0).getBoundingClientRect().bottom;
 
-                this.listenToOnce(view, 'save', (attributes) => {
-                    let id = this.id;
+        if (dropdownBottom < panelBottom) {
+            return;
+        }
 
-                    Espo.Ui.notify(this.translate('saving', 'messages'));
+        $panel.addClass('has-dropdown-opened');
+    }
 
-                    this.getPreferences().once('sync', () => {
-                        this.getPreferences().trigger('update');
+    controlDropdownHide() {
+        this.$el.children().first().removeClass('has-dropdown-opened');
+    }
 
-                        Espo.Ui.notify(false);
+    /** @inheritDoc */
+    setup() {
+        this.name = this.options.name;
+        this.id = this.options.id;
 
-                        view.close();
-                        this.trigger('change');
-                    });
+        this.on('resize', () => {
+            let bodyView = this.getView('body');
 
-                    let o = this.getPreferences().get('dashletsOptions') || {};
+            if (!bodyView) {
+                return;
+            }
 
-                    o[id] = attributes;
+            bodyView.trigger('resize');
+        });
 
-                    this.getPreferences().save({dashletsOptions: o}, {patch: true});
+        let viewName = this.getMetadata().get(['dashlets', this.name, 'view']) ||
+            'views/dashlets/' + Espo.Utils.camelCaseToHyphen(this.name);
+
+        this.createView('body', viewName, {
+            selector: '.dashlet-body',
+            id: this.id,
+            name: this.name,
+            readOnly: this.options.readOnly,
+            locked: this.options.locked,
+        });
+    }
+
+    /**
+     * Refresh.
+     */
+    refresh() {
+        this.getBodyView().actionRefresh();
+    }
+
+    actionRefresh() {
+        this.refresh();
+    }
+
+    actionOptions() {
+        let optionsView =
+            this.getMetadata().get(['dashlets', this.name, 'options', 'view']) ||
+            this.optionsView ||
+            'views/dashlets/options/base';
+
+        Espo.Ui.notify(' ... ');
+
+        this.createView('options', optionsView, {
+            name: this.name,
+            optionsData: this.getOptionsData(),
+            fields: this.getBodyView().optionsFields,
+        }, view => {
+            view.render();
+
+            Espo.Ui.notify(false);
+
+            this.listenToOnce(view, 'save', (attributes) => {
+                let id = this.id;
+
+                Espo.Ui.notify(this.translate('saving', 'messages'));
+
+                this.getPreferences().once('sync', () => {
+                    this.getPreferences().trigger('update');
+
+                    Espo.Ui.notify(false);
+
+                    view.close();
+                    this.trigger('change');
                 });
+
+                let o = this.getPreferences().get('dashletsOptions') || {};
+
+                o[id] = attributes;
+
+                this.getPreferences().save({dashletsOptions: o}, {patch: true});
             });
-        },
+        });
+    }
 
-        /**
-         * Get options data.
-         *
-         * @returns {Object}
-         */
-        getOptionsData: function () {
-            return this.getView('body').optionsData;
-        },
+    /**
+     * Get options data.
+     *
+     * @returns {Object}
+     */
+    getOptionsData() {
+        return this.getBodyView().optionsData;
+    }
 
-        /**
-         * Get an option value.
-         *
-         * @param {string} key A option name.
-         * @returns {*}
-         */
-        getOption: function (key) {
-            return this.getView('body').getOption(key);
-        },
+    /**
+     * Get an option value.
+     *
+     * @param {string} key A option name.
+     * @returns {*}
+     */
+    getOption(key) {
+        return this.getBodyView().getOption(key);
+    }
 
-        /**
-         * Get a dashlet title.
-         *
-         * @returns {string}
-         */
-        getTitle: function () {
-            return this.getView('body').getTitle();
-        },
+    /**
+     * Get a dashlet title.
+     *
+     * @returns {string}
+     */
+    getTitle() {
+        return this.getBodyView().getTitle();
+    }
 
-        actionRemove: function () {
-            this.confirm(this.translate('confirmation', 'messages'), () => {
-                this.trigger('remove-dashlet');
-                this.$el.remove();
-                this.remove();
-            });
-        },
-    });
-});
+    /**
+     * @return {module:views/dashlets/abstract/base}
+     */
+    getBodyView() {
+        return this.getView('body');
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionRemove() {
+        this.confirm(this.translate('confirmation', 'messages'), () => {
+            this.trigger('remove-dashlet');
+            this.$el.remove();
+            this.remove();
+        });
+    }
+}
+
+export default DashletView;

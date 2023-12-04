@@ -525,8 +525,8 @@ class MapperTest extends \PHPUnit\Framework\TestCase
         $query = SelectBuilder::create()
             ->from('Note', 'note')
             ->where([
-                'parentId' => '1',
-                'parentType' => 'Post'
+                ['parentId' => '1'],
+                ['parentType' => 'Post'],
             ])
             ->build();
 
@@ -560,7 +560,7 @@ class MapperTest extends \PHPUnit\Framework\TestCase
             "post.created_by_id AS `createdById`, post.deleted AS `deleted` ".
             "FROM `post` AS `post` ".
             "LEFT JOIN `user` AS `createdBy` ON post.created_by_id = createdBy.id " .
-            "WHERE post.id = '1' AND post.deleted = 0 ".
+            "WHERE (post.id = '1') AND post.deleted = 0 ".
             "LIMIT 0, 1";
         $return = [
             [

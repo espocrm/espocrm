@@ -12,7 +12,7 @@
     "Errors page title": "Помилки",
     "Finish page title": "Установку завершено",
     "Congratulation! Welcome to EspoCRM": "Вітання! EspoCRM було успішно встановлено.",
-    "More Information": "Для більшої інформації, будь ласка, відвідайте наш {BLOG}, підпишіться на нас у {TWITTER}.<br><br>Якщо Ви маєте будь-які думки або питання, будь ласка, викладайте на {FORUM}.",
+    "More Information": "Щоб дізнатися більше, будь ласка, відвідайте наш {BLOG}, слідкуйте за нами в {TWITTER}.<br><br>Якщо у Вас є будь-які думки або питання, будь ласка, викладайте на {FORUM}.",
     "share": "Якщо вам подобається EspoCRM, поділіться нею зі своїми друзями. Нехай вони знають про цей прекрасний продукт.",
     "blog": "блог",
     "twitter": "Твіттер",
@@ -24,11 +24,11 @@
     "Start": "Старт",
     "Back": "Назад",
     "Next": "Далі",
-    "Go to EspoCRM": "Іти до EspoCRM",
+    "Go to EspoCRM": "Перейти до EspoCRM",
     "Re-check": "Перевірити повторно",
     "Version": "Версія",
     "Test settings": "Перевірка з'єднання",
-    "Database Settings Description": "Введіть інформацію для з'єднання із вашою базою даних MySQL (ім'я хоста, ім'я користувача та пароль). Ви можете вказати порт сервера для імені хоста як localhost:3306.",
+    "Database Settings Description": "Введіть інформацію для з'єднання із вашою базою даних MySQL (ім'я хоста, ім'я користувача та пароль). Ви можете вказати порт сервера для імені хоста, н-д: localhost:3306.",
     "Install": "Установити",
     "Configuration Instructions": "Інструкції конфіґурування",
     "phpVersion": "Версія PHP",
@@ -41,7 +41,7 @@
     "PHP Configuration": "Конфігурація PHP",
     "MySQL Configuration": "Конфігурація бази даних",
     "Permission Requirements": "Дозволи",
-    "Success": "Успіх",
+    "Success": "Успішно",
     "Fail": "Невдача",
     "is recommended": "рекомендується",
     "extension is missing": "розширення відсутнє",
@@ -58,18 +58,18 @@
     "Database User Name": "Ім'я користувача бази даних",
     "Database User Password": "Пароль користувача бази даних",
     "Database driver": "Драйвер бази даних",
-    "User Name": "Ім'я Користувача",
+    "User Name": "Ім'я користувача",
     "Password": "Пароль",
     "smtpPassword": "Пароль",
     "Confirm Password": "Підтвердіть Ваш пароль",
     "From Address": "З адреси",
     "From Name": "Від імені",
-    "Is Shared": "Розшарене",
+    "Is Shared": "Спільний доступ",
     "Date Format": "Формат дати",
     "Time Format": "Формат часу",
     "Time Zone": "Часовий пояс",
     "First Day of Week": "Перший день тижня",
-    "Thousand Separator": "Розділювач ґруп розрядів",
+    "Thousand Separator": "Роздільник тисяч",
     "Decimal Mark": "Розділювач десяткових",
     "Default Currency": "Валюта за замовчуванням",
     "Currency List": "Список валют",
@@ -78,13 +78,13 @@
     "smtpAuth": "Авторизація",
     "smtpSecurity": "Безпека",
     "smtpUsername": "Ім'я користувача",
-    "emailAddress": "Емейл"
+    "emailAddress": "Електронна пошта"
   },
   "messages": {
     "1045": "Доступ заборонений для користувача",
     "1049": "Невідома база даних",
     "2005": "Невідомий хост сервера MySQL",
-    "Some errors occurred!": "Деякі помилки!",
+    "Some errors occurred!": "Виникли деякі помилки!",
     "phpVersion": "Ваша версія PHP не підтримується EspoCRM, будь ласка, оновіть принаймні до PHP {minVersion}",
     "requiredMysqlVersion": "Ваша версія MySQL не підтримує EspoCRM, будь ласка, оновіть принаймні до MySQL {minVersion}",
     "The PHP extension was not found...": "Помилка PHP: розширення <b>{extName}</b> не знайдено.",
@@ -102,12 +102,12 @@
     "Cannot create user": "Не вдається створити користувача",
     "Permission denied": "Доступ заблоковано",
     "Permission denied to": "Доступ заблоковано",
-    "Can not save settings": "Не можу зберегти налаштування",
-    "Cannot save preferences": "Не можу зберегти налаштування",
-    "Thousand Separator and Decimal Mark equal": "Роздільник ґруп розрядів і десяткової позначки не можуть бути однаковими",
+    "Can not save settings": "Не вдається зберегти налаштування",
+    "Cannot save preferences": "Не вдається зберегти налаштування",
+    "Thousand Separator and Decimal Mark equal": "Роздільник тисяч і розділювач десяткових не можуть бути однаковими",
     "extension": "{0} розширення відсутнє",
     "option": "Рекомендоване значення {0}",
-    "mysqlSettingError": "EspoCRM потребує, щоби MySQL \"{NAME}\" було встановлено на {VALUE}",
+    "mysqlSettingError": "EspoCRM потребує, щоб параметр MySQL \"{NAME}\" мав значення {VALUE}",
     "requiredMariadbVersion": "Ваша версія MariaDB не підтримується EspoCRM, оновіть принаймні до MariaDB {minVersion}",
     "Ajax failed": "Неочікувана помилка",
     "Bad init Permission": "Дозвіл відхилено для каталогу \"{*}\". Будь ласка, встановіть значення 775 для \"{*}\" або просто виконайте цю команду в терміналі <pre><b>{C}</b></pre> Операція заборонена? Спробуйте це: {CSU}",
@@ -123,5 +123,22 @@
     "writable": "Запис",
     "readable": "Читання",
     "requiredMariadbVersion": "Версія MariaDB"
+  },
+  "options": {
+    "modRewriteTitle": {
+      "apache": "<h3>Помилка API: API EspoCRM недоступний.</h3><br>Виконуйте лише необхідні дії. Після кожного кроку перевіряйте, чи проблему вирішено.",
+      "nginx": "<h3>Помилка API: API EspoCRM недоступний.</h3>",
+      "microsoft-iis": "<h3>Помилка API: API EspoCRM недоступний.</h3><br> Можлива проблема: вимкнено \"URL Rewrite\". Перевірте та ввімкніть модуль \"URL Rewrite\" на сервері IIS",
+      "default": "<h3>Помилка API: API EspoCRM недоступний.</h3><br> Можливі проблеми: вимкнено модуль Rewrite. Перевірте та ввімкніть модуль Rewrite на вашому сервері (наприклад, mod_rewrite в Apache) і підтримку .htaccess."
+    },
+    "modRewriteInstruction": {
+      "apache": {
+        "linux": "<br><br><h4>1. Увімкнути \"mod_rewrite\".</h4>Щоб увімкнути <i>mod_rewrite</i>, виконайте ці команди в терміналі:<br><br><pre>{APACHE1}</pre><hr><h4>2 . Якщо попередній крок не допоміг, спробуйте ввімкнути підтримку .htaccess.</h4> Додайте/відредагуйте налаштування конфігурації сервера <code>{APACHE2_PATH1}</code> або <code>{APACHE2_PATH2}</code> (або < код>{APACHE2_PATH3}</code>):<br><br><pre>{APACHE2}</pre>\n  Після цього запустіть цю команду в терміналі:<br><br><pre>{APACHE3}</pre><hr><h4>3. Якщо попередній крок не допоміг, спробуйте додати шлях RewriteBase.</h4>Відкрийте файл <code>{API_PATH}.htaccess</code> і замініть такий рядок:<br><br><pre>{ APACHE4}</pre>До<br><br><pre>{APACHE5}</pre><hr>Щоб дізнатися більше, відвідайте інструкцію <a href=\"{APACHE_LINK}\" target=\"_blank\">сервер Apache конфігурація для EspoCRM</a>.<br><br>",
+        "windows": "<br><br> <h4>1. Знайдіть файл httpd.conf.</h4>Зазвичай його можна знайти в папці під назвою \"conf\", \"config\" або щось подібне.<br><br><h4>2. Відредагуйте файл httpd.conf.</h4> У файлі httpd.conf розкоментуйте рядок <code>{WINDOWS_APACHE1}</code> (видаліть знак «#» перед рядком).<br>< br><h4>3. Перевірте інші параметри.</h4>Також перевірте, чи не закоментовано рядок <code>ClearModuleList</code> і переконайтеся, що рядок <code>AddModule mod_rewrite.c</code> не закоментовано."
+      },
+      "nginx": {
+        "linux": "<br> Додайте цей код до файлу конфігурації вашого сервера Nginx <code>{NGINX_PATH}</code> у розділі \"сервер\":<br><br><pre>{NGINX}</pre> <br> Для отримання додаткової інформації перегляньте інструкцію <a href=\"{NGINX_LINK}\" target=\"_blank\">Налаштування сервера Nginx для EspoCRM</a>.<br><br>"
+      }
+    }
   }
 }

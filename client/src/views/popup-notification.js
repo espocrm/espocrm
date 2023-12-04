@@ -26,108 +26,148 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/popup-notification', ['view'], function (Dep) {
+import View from 'view';
+import $ from 'jquery';
 
-    return Dep.extend({
+/**
+ * To be extended with an own template.
+ *
+ * @abstract
+ */
+class PopupNotificationView extends View {
 
-        type: 'default',
+    type = 'default'
+    style = 'default'
+    closeButton = true
+    soundPath = 'client/sounds/pop_cork'
 
-        style: 'default',
+    init() {
+        super.init();
 
-        closeButton: true,
+        let id = this.options.id;
+        let containerSelector = this.containerSelector = '#' + id;
 
-        soundPath: 'client/sounds/pop_cork',
+        this.setSelector(containerSelector);
 
-        init: function () {
-            Dep.prototype.init.call(this);
+        this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled');
 
-            var id = this.options.id;
-            var containerSelector = this.containerSelector = '#' + id;
+        this.soundPath = this.getBasePath() +
+            (this.getConfig().get('popupNotificationSound') || this.soundPath);
 
-            this.setSelector(containerSelector);
+        this.on('render', () => {
+            $(containerSelector).remove();
 
-            this.notificationSoundsDisabled = this.getConfig().get('notificationSoundsDisabled');
+            let className = 'popup-notification-' + Espo.Utils.toDom(this.type);
 
-            this.soundPath = this.getBasePath() +
-                (this.getConfig().get('popupNotificationSound') || this.soundPath);
+            $('<div>')
+                .attr('id', id)
+                .addClass('popup-notification')
+                .addClass(className)
+                .addClass('popup-notification-' + this.style)
+                .appendTo('#popup-notifications-container');
 
-            this.on('render', () => {
-                $(containerSelector).remove();
+            this.setElement(containerSelector);
+        });
 
-                var className = 'popup-notification-' + Espo.Utils.toDom(this.type);
-
-                $('<div>').attr('id', id)
-                          .addClass('popup-notification')
-                          .addClass(className)
-                          .addClass('popup-notification-' + this.style)
-                          .appendTo('#popup-notifications-container');
-                this.setElement(containerSelector);
+        this.on('after:render', () => {
+            this.$el.find('[data-action="close"]').on('click', () =>{
+                this.resolveCancel();
             });
+        });
 
-            this.on('after:render', () => {
-                this.$el.find('[data-action="close"]').on('click', () =>{
-                    this.cancel();
-                });
-            });
+        this.once('after:render', () => {
+            this.onShow();
+        });
 
-            this.once('after:render', () => {
-                this.onShow();
-            });
+        this.once('remove', function () {
+            $(containerSelector).remove();
+        });
 
-            this.once('remove', function () {
-                $(containerSelector).remove();
-            });
+        this.notificationData = this.options.notificationData;
+        this.notificationId = this.options.notificationId;
+        this.id = this.options.id;
+    }
 
-            this.notificationData = this.options.notificationData;
-            this.notificationId = this.options.notificationId;
-            this.id = this.options.id;
-        },
+    data() {
+        return {
+            closeButton: this.closeButton,
+            notificationData: this.notificationData,
+            notificationId: this.notificationId,
+        };
+    }
 
-        data: function () {
-            return {
-                closeButton: this.closeButton,
-                notificationData: this.notificationData,
-                notificationId: this.notificationId,
-            };
-        },
+    playSound() {
+        if (this.notificationSoundsDisabled) {
+            return;
+        }
 
-        playSound: function () {
-            if (this.notificationSoundsDisabled) {
-                return;
-            }
+        let html =
+            '<audio autoplay="autoplay">' +
+                '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />' +
+                '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />' +
+                '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath +'.mp3" />' +
+            '</audio>';
 
-            var html = '' +
-                '<audio autoplay="autoplay">'+
-                    '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />'+
-                    '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />'+
-                    '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath +'.mp3" />'+
-                '</audio>';
-            $(html).get(0).volume = 0.3;
-            $(html).get(0).play();
-        },
+        let $audio = $(html);
 
-        onShow: function () {
-            if (!this.options.isFirstCheck) {
-                this.playSound();
-            }
-        },
+        $audio.get(0).volume = 0.3;
+        // noinspection JSUnresolvedReference
+        $audio.get(0).play();
+    }
 
-        onConfirm: function () {
-        },
+    /**
+     * @protected
+     */
+    onShow() {
+        if (!this.options.isFirstCheck) {
+            this.playSound();
+        }
+    }
 
-        onCancel: function () {
-        },
+    /**
+     * An on-confirm action. To be extended.
+     *
+     * @protected
+     */
+    onConfirm() {}
 
-        confirm: function () {
-            this.onConfirm();
-            this.trigger('confirm');
-            this.remove();
-        },
+    /**
+     * An on-cancel action. To be extended.
+     *
+     * @protected
+     */
+    onCancel() {}
 
-        cancel: function () {
-            this.onCancel();
-            this.trigger('cancel');
-            this.remove();
-        },
-    });
-});
+    resolveConfirm() {
+        this.onConfirm();
+        this.trigger('confirm');
+        this.remove();
+    }
+
+    resolveCancel() {
+        this.onCancel();
+        this.trigger('cancel');
+        this.remove();
+    }
+
+    // noinspection JSCheckFunctionSignatures
+    /**
+     * @deprecated Use `resolveConfirm`.
+     */
+    confirm() {
+        console.warn(`Method 'confirm' in views/popup-notification is deprecated. Use 'resolveConfirm' instead.`);
+
+        this.resolveConfirm();
+    }
+
+    /**
+     * @deprecated Use `resolveCancel`.
+     */
+    cancel() {
+        console.warn(`Method 'cancel' in views/popup-notification is deprecated. Use 'resolveCancel' instead.`);
+
+        this.resolveCancel();
+    }
+}
+
+export default PopupNotificationView;

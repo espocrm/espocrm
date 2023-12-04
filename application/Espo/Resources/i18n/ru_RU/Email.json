@@ -50,11 +50,12 @@
     "replyToName": "Имя для обратного адреса",
     "replyToAddress": "Обратный адрес",
     "icsContents": "Содержание ICS",
-    "icsEventData": "Данные о событиях СВК",
+    "icsEventData": "Данные о событиях ICS",
     "icsEventUid": "Идентификатор события СВК",
     "createdEvent": "Созданное событие",
     "event": "Событие",
-    "icsEventDateStart": "ICS Дата начала мероприятия"
+    "icsEventDateStart": "Дата начала мероприятия ICS",
+    "groupFolder": "Групповая папка"
   },
   "links": {
     "replied": "Ответили",
@@ -68,7 +69,8 @@
     "toEmailAddresses": "Адрес эл. почты получателя",
     "ccEmailAddresses": "CC Адреса эл. почты получателей",
     "bccEmailAddresses": "BCC Адреса эл. почты получателей",
-    "replyToEmailAddresses": "Обратные адреса эл. почты"
+    "replyToEmailAddresses": "Обратные адреса эл. почты",
+    "groupFolder": "Групповая папка"
   },
   "options": {
     "status": {
@@ -110,7 +112,9 @@
     "View Users": "Просмотреть пользователей",
     "No Subject": "Без темы",
     "Insert Field": "Вставить поле",
-    "Event": "Событие"
+    "Event": "Событие",
+    "Moving to folder": "Перемещение в папку",
+    "Group Folders": "Групповые папки"
   },
   "messages": {
     "testEmailSent": "Тестовое эл. письмо было отправлено",

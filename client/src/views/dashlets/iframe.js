@@ -26,34 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/iframe', ['views/dashlets/abstract/base'], function (Dep) {
+import BaseDashletView from 'views/dashlets/abstract/base';
 
-    return Dep.extend({
+class IframeDashletView extends BaseDashletView {
 
-        name: 'Iframe',
+    name = 'Iframe'
 
-        templateContent: '<iframe frameborder="0" style="margin: 0;"></iframe>',
+    templateContent = '<iframe style="margin: 0; border: 0;"></iframe>'
 
-        afterRender: function () {
-            var $iframe = this.$el.find('iframe');
+    afterRender() {
+        const $iframe = this.$el.find('iframe');
 
-            var url = this.getOption('url');
+        const url = this.getOption('url');
 
-            if (url) {
-                $iframe.attr('src', url);
-            }
+        if (url) {
+            $iframe.attr('src', url);
+        }
 
-            this.$el.addClass('no-padding');
-            this.$el.css('overflow', 'hidden');
+        this.$el.addClass('no-padding');
+        this.$el.css('overflow', 'hidden');
 
-            var height = this.$el.height();
+        const height = this.$el.height();
 
-            $iframe.css('height', height);
-            $iframe.css('width', '100%');
-        },
+        $iframe.css('height', height);
+        $iframe.css('width', '100%');
+    }
 
-        afterAdding: function () {
-            this.getParentView().actionOptions();
-        },
-    });
-});
+    afterAdding() {
+        this.getContainerView().actionOptions();
+    }
+}
+
+export default IframeDashletView;

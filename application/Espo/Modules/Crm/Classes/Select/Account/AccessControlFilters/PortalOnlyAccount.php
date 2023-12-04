@@ -44,15 +44,11 @@ class PortalOnlyAccount implements Filter
         $accountIdList = $this->user->getLinkMultipleIdList(User::LINK_ACCOUNTS);
 
         if (!count($accountIdList)) {
-            $queryBuilder->where([
-                'id' => null
-            ]);
+            $queryBuilder->where(['id' => null]);
 
             return;
         }
 
-        $queryBuilder->where([
-            'id' => $accountIdList
-        ]);
+        $queryBuilder->where(['id' => $accountIdList]);
     }
 }

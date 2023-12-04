@@ -46,11 +46,11 @@
         },
         "dateStartDate": {
             "type": "date",
-            "disabled": true
+            "utility": true
         },
         "dateEndDate": {
             "type": "date",
-            "disabled": true
+            "utility": true
         },
         "dateCompleted": {
             "type": "datetime",
@@ -61,7 +61,7 @@
             "readOnly": true,
             "notStorable": true,
             "view": "crm:views/task/fields/is-overdue",
-            "disabled": true
+            "utility": true
         },
         "reminders": {
             "type": "jsonArray",

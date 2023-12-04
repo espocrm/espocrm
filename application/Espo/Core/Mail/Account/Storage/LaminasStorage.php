@@ -79,7 +79,7 @@ class LaminasStorage implements Storage
     public function getIdsSinceDate(DateTime $since): array
     {
         return $this->imap->getIdsSinceDate(
-            $since->getDateTime()->format('d-M-Y')
+            $since->toDateTime()->format('d-M-Y')
         );
     }
 

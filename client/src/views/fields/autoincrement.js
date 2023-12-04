@@ -26,37 +26,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/fields/autoincrement', ['views/fields/int'], function (Dep) {
+import IntFieldView from 'views/fields/int';
 
-    return Dep.extend({
+class AutoincrementFieldView extends IntFieldView {
 
-        type: 'autoincrement',
+    type = 'autoincrement'
 
-        validations: [],
+    validations = []
 
-        inlineEditDisabled: true,
+    inlineEditDisabled = true
+    readOnly = true
+    disableFormatting = true
 
-        readOnly: true,
+    parse(value) {
+        value = (value !== '') ? value : null;
 
-        disableFormatting: true,
+        if (value !== null) {
+            value = value.indexOf('.') !== -1 || value.indexOf(',') !== -1 ?
+                NaN :
+                parseInt(value);
+        }
 
-        parse: function (value) {
-            value = (value !== '') ? value : null;
+        return value;
+    }
 
-            if (value !== null) {
-                 if (value.indexOf('.') !== -1 || value.indexOf(',') !== -1) {
-                     value = NaN;
-                 } else {
-                     value = parseInt(value);
-                 }
-            }
+    fetch() {
+        return {};
+    }
+}
 
-            return value;
-        },
-
-        fetch: function () {
-            return {};
-        },
-    });
-});
-
+export default AutoincrementFieldView;

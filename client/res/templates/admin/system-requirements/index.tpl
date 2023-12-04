@@ -7,8 +7,8 @@
         <thead>
             <tr>
                 <th><h5>{{translate 'PHP Settings' scope='Admin'}}</h5></th>
-                <th width="24%"></th>
-                <th width="24%"></th>
+                <th style="width: 24%"></th>
+                <th style="width: 24%"></th>
             </tr>
         </thead>
         <tbody>
@@ -33,12 +33,12 @@
 </div>
 
 <div class="panel panel-default">
-    <table class="table table-striped table-no-overflow table-fixed table-panel">
+    <table class="table table-striped table-no-overflow table-fixed">
         <thead>
             <tr>
                 <th><h5>{{translate 'Database Settings' scope='Admin'}}</h5></th>
-                <th width="24%"></th>
-                <th width="24%"></th>
+                <th style="width: 24%"></th>
+                <th style="width: 24%"></th>
             </tr>
         </thead>
         <tbody>
@@ -47,8 +47,8 @@
                     <td class="cell">
                         {{translate @key scope='Admin' category='systemRequirements'}}
                     </td>
-                    <td class="cell" width="24%">{{actual}}</td>
-                    <td class="cell" width="24%">
+                    <td class="cell" style="width: 24%">{{actual}}</td>
+                    <td class="cell" style="width: 24%">
                         {{#if acceptable}}
                         <span class="text-success">{{translate 'Success' scope='Admin'}}</span>
                         {{else}}
@@ -64,12 +64,12 @@
 </div>
 
 <div class="panel panel-default">
-    <table class="table table-striped table-no-overflow table-fixed table-panel">
+    <table class="table table-striped table-no-overflow table-fixed">
         <thead>
             <tr>
                 <th><h5>{{translate 'Permissions' scope='Admin'}}</h5></th>
-                <th width="24%"></th>
-                <th width="24%"></th>
+                <th style="width: 24%"></th>
+                <th style="width: 24%"></th>
             </tr>
         </thead>
         <tbody>
@@ -78,8 +78,8 @@
                     <td class="cell">
                         {{translate @key scope='Admin' category='systemRequirements'}}
                     </td>
-                    <td class="cell" width="24%">{{translate type scope='Admin' category='systemRequirements'}}</td>
-                    <td class="cell" width="24%">
+                    <td class="cell" style="width: 24%">{{translate type scope='Admin' category='systemRequirements'}}</td>
+                    <td class="cell" style="width: 24%">
                         {{#if acceptable}}
                         <span class="text-success">{{translate 'Success' scope='Admin'}}</span>
                         {{else}}

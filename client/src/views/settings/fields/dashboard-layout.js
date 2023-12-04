@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!gridstack'], function (Dep, Gridstack) {
+define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!gridstack'], function (Dep, GridStack) {
 
     return Dep.extend({
 
@@ -150,7 +150,7 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
             this.grid.addWidget(
                 $item.get(0),
                 {
-                    x: 0 * this.WIDTH_MULTIPLIER,
+                    x: 0,
                     y: 0,
                     w: 2 * this.WIDTH_MULTIPLIER,
                     h: 2,
@@ -302,7 +302,8 @@ define('views/settings/fields/dashboard-layout', ['views/fields/base', 'lib!grid
                 name: name,
                 optionsData: options,
                 fields: this.getMetadata().get(['dashlets', name, 'options', 'fields']) || {},
-            }, (view) => {
+                userId: this.model.entityType === 'Preferences' ? this.model.id : null,
+            }, view => {
                 view.render();
 
                 this.listenToOnce(view, 'save', (attributes) => {
