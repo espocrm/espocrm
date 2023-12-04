@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fe0139ee70fdfa0ac2a50f3217e76cb8",
+    "content-hash": "bd55ed530e17c7b49b57b59a44e2f356",
     "packages": [
         {
             "name": "async-aws/core",
@@ -1463,34 +1463,34 @@
         },
         {
             "name": "laminas/laminas-ldap",
-            "version": "2.16.0",
+            "version": "2.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-ldap.git",
-                "reference": "4c1fefb3dad9b112e18a7d35245854dc77a04a1e"
+                "reference": "3806d16c0930209ccadb68c0a9c939de8c33e72f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-ldap/zipball/4c1fefb3dad9b112e18a7d35245854dc77a04a1e",
-                "reference": "4c1fefb3dad9b112e18a7d35245854dc77a04a1e",
+                "url": "https://api.github.com/repos/laminas/laminas-ldap/zipball/3806d16c0930209ccadb68c0a9c939de8c33e72f",
+                "reference": "3806d16c0930209ccadb68c0a9c939de8c33e72f",
                 "shasum": ""
             },
             "require": {
                 "ext-ldap": "*",
-                "php": "~8.0.0 || ~8.1.0 || ~8.2.0"
+                "php": "~8.1.0 || ~8.2.0 || ~8.3.0"
             },
             "conflict": {
                 "zendframework/zend-ldap": "*"
             },
             "require-dev": {
-                "laminas/laminas-coding-standard": "~2.4.0",
+                "laminas/laminas-coding-standard": "~2.5.0",
                 "laminas/laminas-config": "^3.8.0",
                 "laminas/laminas-eventmanager": "^3.6.0",
                 "laminas/laminas-stdlib": "^3.15.0",
                 "php-mock/php-mock-phpunit": "^2.6.1",
-                "phpunit/phpunit": "^9.5.25",
-                "psalm/plugin-phpunit": "^0.17.0",
-                "vimeo/psalm": "^4.29.0"
+                "phpunit/phpunit": "^9.5.26",
+                "psalm/plugin-phpunit": "^0.18.4",
+                "vimeo/psalm": "^5.16"
             },
             "suggest": {
                 "laminas/laminas-eventmanager": "Laminas\\EventManager component"
@@ -1525,7 +1525,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2022-10-22T13:51:43+00:00"
+            "time": "2023-12-02T03:26:04+00:00"
         },
         {
             "name": "laminas/laminas-loader",
