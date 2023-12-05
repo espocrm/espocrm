@@ -608,6 +608,12 @@ class LinkFieldView extends BaseFieldView {
                         if (this.$elementName.hasClass('input-sm')) {
                             $c.addClass('small');
                         }
+
+                        // Prevent an issue that suggestions are shown and not hidden
+                        // when clicking outside the window and then focusing back on the document.
+                        if (this.$elementName.get(0) !== document.activeElement) {
+                            setTimeout(() => this.$elementName.autocomplete('hide'), 30);
+                        }
                     },
                     lookup: (q, callback) => {
                         if (!this.autocompleteOnEmpty && q.length === 0) {

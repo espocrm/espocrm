@@ -219,6 +219,13 @@ function (Dep, From, EmailAddress) {
                     autoSelectFirst: true,
                     noCache: true,
                     triggerSelectOnValidInput: false,
+                    beforeRender: () => {
+                        // Prevent an issue that suggestions are shown and not hidden
+                        // when clicking outside the window and then focusing back on the document.
+                        if (this.$input.get(0) !== document.activeElement) {
+                            setTimeout(() => this.$input.autocomplete('hide'), 30);
+                        }
+                    },
                     formatResult: (suggestion) => {
                         return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
                             this.getHelper().escapeString(suggestion.id) + '&#62;';

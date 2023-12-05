@@ -529,6 +529,12 @@ class LinkMultipleFieldView extends BaseFieldView {
                         if (this.$element.hasClass('input-sm')) {
                             $c.addClass('small');
                         }
+
+                        // Prevent an issue that suggestions are shown and not hidden
+                        // when clicking outside the window and then focusing back on the document.
+                        if (this.$element.get(0) !== document.activeElement) {
+                            setTimeout(() => this.$element.autocomplete('hide'), 30);
+                        }
                     },
                     formatResult: suggestion => {
                         // noinspection JSUnresolvedReference
