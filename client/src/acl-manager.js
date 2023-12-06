@@ -163,11 +163,16 @@ class AclManager {
             return null;
         }
 
-        if (typeof this.data.table[scope] !== 'object' || !(action in this.data.table[scope])) {
+        const scopeItem = this.data.table[scope];
+
+        if (
+            typeof scopeItem !== 'object' ||
+            !(action in scopeItem)
+        ) {
             return null;
         }
 
-        return this.data.table[scope][action];
+        return scopeItem[action];
     }
 
     /**
