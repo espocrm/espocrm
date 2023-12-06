@@ -40,7 +40,7 @@ class MergeRecordView extends View {
         'change input[type="radio"][name="check-all"]': function (e) {
             e.stopPropagation();
 
-            let id = e.currentTarget.value;
+            const id = e.currentTarget.value;
 
             $('input[data-id="' + id + '"]').prop('checked', true);
         },
@@ -50,7 +50,7 @@ class MergeRecordView extends View {
         },
         /** @this MergeRecordView */
         'click button[data-action="merge"]': function () {
-            let id = $('input[type="radio"][name="check-all"]:checked').val();
+            const id = $('input[type="radio"][name="check-all"]:checked').val();
 
             let model;
 
@@ -60,18 +60,18 @@ class MergeRecordView extends View {
                 }
             });
 
-            let attributes = {};
+            const attributes = {};
 
             $('input.field-radio:checked').each((i, el) => {
-                let field = el.name;
-                let id = $(el).attr('data-id');
+                const field = el.name;
+                const id = $(el).attr('data-id');
 
                 if (model.id === id) {
                     return;
                 }
 
-                let fieldType = model.getFieldParam(field, 'type');
-                let fields = this.getFieldManager().getActualAttributeList(fieldType, field);
+                const fieldType = model.getFieldParam(field, 'type');
+                const fields = this.getFieldManager().getActualAttributeList(fieldType, field);
 
                 let modelFrom;
 
@@ -88,7 +88,7 @@ class MergeRecordView extends View {
 
             Espo.Ui.notify(' ... ');
 
-            let sourceIdList = this.models
+            const sourceIdList = this.models
                 .filter(m => m.id !== model.id)
                 .map(m => m.id);
 
@@ -115,10 +115,10 @@ class MergeRecordView extends View {
     }
 
     data() {
-        let rows = [];
+        const rows = [];
 
         this.fields.forEach(field => {
-            let o = {
+            const o = {
                 name: field,
                 scope: this.scope,
             };
@@ -154,15 +154,15 @@ class MergeRecordView extends View {
         this.scope = this.options.models[0].name;
         this.models = this.options.models;
 
-        let fieldManager = this.getFieldManager();
+        const fieldManager = this.getFieldManager();
 
         let differentFieldList = [];
-        let fieldsDefs = this.models[0].defs.fields;
+        const fieldsDefs = this.models[0].defs.fields;
 
         this.readOnlyFields = {};
 
-        for (let field in fieldsDefs) {
-            let type = fieldsDefs[field].type;
+        for (const field in fieldsDefs) {
+            const type = fieldsDefs[field].type;
 
             if (type === 'linkMultiple') {
                 continue;
@@ -184,18 +184,18 @@ class MergeRecordView extends View {
             }
 
             if (fieldManager.isMergeable(type)) {
-                let actualAttributeList = fieldManager.getActualAttributeList(type, field);
+                const actualAttributeList = fieldManager.getActualAttributeList(type, field);
 
                 let differs = false;
 
                 actualAttributeList.forEach(field => {
-                    let values = [];
+                    const values = [];
 
                     this.models.forEach(model => {
                         values.push(model.get(field));
                     });
 
-                    let firstValue = values[0];
+                    const firstValue = values[0];
 
                     values.forEach(value => {
                         if (!_.isEqual(firstValue, value)) {
@@ -230,10 +230,11 @@ class MergeRecordView extends View {
         this.fields = differentFieldList;
 
         this.fields.forEach(field => {
-            let type = this.models[0].getFieldParam(field, 'type');
+            const type = this.models[0].getFieldParam(field, 'type');
 
-            this.models.forEach((model) => {
-                let viewName = model.getFieldParam(field, 'view') ||
+            this.models.forEach(model => {
+                const viewName =
+                    model.getFieldParam(field, 'view') ||
                     this.getFieldManager().getViewName(type);
 
                 this.createView(model.id + '-' + field, viewName, {
@@ -266,10 +267,10 @@ class MergeRecordView extends View {
     }
 
     getDataList() {
-        let dataList = [];
+        const dataList = [];
 
         this.models.forEach(model => {
-            var o = {};
+            const o = {};
 
             o.id = model.id;
             o.name = model.get('name');

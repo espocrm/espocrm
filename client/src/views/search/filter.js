@@ -43,11 +43,12 @@ class FilterView extends View {
     }
 
     setup() {
-        let name = this.name = this.options.name;
-        let type = this.model.getFieldType(name);
+        const name = this.name = this.options.name;
+        const type = this.model.getFieldType(name);
 
         if (type) {
-            let viewName = this.model.getFieldParam(name, 'view') ||
+            const viewName =
+                this.model.getFieldParam(name, 'view') ||
                 this.getFieldManager().getViewName(type);
 
             this.createView('field', viewName, {
@@ -78,7 +79,7 @@ class FilterView extends View {
     }
 
     populateDefaults() {
-        let view = this.getView('field');
+        const view = this.getView('field');
 
         if (!view) {
             return;
