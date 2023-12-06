@@ -51,6 +51,20 @@ class TokenTest extends TestCase
         $this->assertEquals('John Doe', $token->getPayload()->get('name'));
     }
 
+    public function testToken2(): void
+    {
+        $raw = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0Ij" .
+            "oxNTE2MjM5MDIyLCJleHAiOjE1MTYyMzgwMjIsIm5iZiI6MTUxNjIzODAyMywiYXV0aF90aW1lIjoiMTUxNjIzODAyNCJ9." .
+            "7Z45aUyLR9o8lUaIvxkO7SzOhTaXgfXf_rEFYnvTPL8";
+
+        $token = Token::create($raw);
+
+        $this->assertEquals(1516238022, $token->getPayload()->getExp());
+        $this->assertEquals(1516239022, $token->getPayload()->getIat());
+        $this->assertEquals(1516238023, $token->getPayload()->getNbf());
+        $this->assertEquals(1516238024, $token->getPayload()->getAuthTime());
+    }
+
     public function testVerifySignatureHS256(): void
     {
         $raw = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9." .

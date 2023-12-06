@@ -179,28 +179,44 @@ class Payload
             throw new RuntimeException("Bad `aud`.");
         }
 
-        if ($exp !== null && !is_int($exp)) {
-            throw new RuntimeException("No or bad `exp`.");
+        if ($exp !== null && !is_numeric($exp)) {
+            throw new RuntimeException("Bad `exp`.");
         }
 
-        if ($iat !== null && !is_int($iat)) {
-            throw new RuntimeException("No or bad `iat`.");
+        if ($iat !== null && !is_numeric($iat)) {
+            throw new RuntimeException("Bad `iat`.");
         }
 
-        if ($nbf !== null && !is_int($nbf)) {
-            throw new RuntimeException("No or bad `nbf`.");
+        if ($nbf !== null && !is_numeric($nbf)) {
+            throw new RuntimeException("Bad `nbf`.");
         }
 
         if ($nonce !== null && !is_string($nonce)) {
             throw new RuntimeException("Bad `nonce`.");
         }
 
-        if ($authTime !== null && !is_int($authTime)) {
+        if ($authTime !== null && !is_numeric($authTime)) {
             throw new RuntimeException("Bad `auth_time`.");
         }
 
         if ($sid !== null && !is_string($sid)) {
             throw new RuntimeException("Bad `sid`.");
+        }
+
+        if ($exp !== null) {
+            $exp = (int) $exp;
+        }
+
+        if ($iat !== null) {
+            $iat = (int) $iat;
+        }
+
+        if ($nbf !== null) {
+            $nbf = (int) $nbf;
+        }
+
+        if ($authTime !== null) {
+            $authTime = (int) $authTime;
         }
 
         return new self(
