@@ -292,10 +292,9 @@ class ComposeEmailModalView extends EditModalView {
 
     beforeCollapse() {
         if (this.wasModified) {
-            this.actionSaveDraft({skipNotModifiedWarning: true});
+            this.actionSaveDraft({skipNotModifiedWarning: true})
+                .then(() => this.getRecordView().setConfirmLeaveOut(false));
         }
-
-        this.getRecordView().setConfirmLeaveOut(false);
 
         return super.beforeCollapse();
     }
