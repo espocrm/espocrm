@@ -78,13 +78,13 @@ define('views/settings/fields/oidc-redirect-uri', ['views/fields/varchar'], func
                         const file = 'oauth-callback.php'
                         const url = (model.get('url') || '').replace(/\/+$/, '') + `/${file}`;
 
-                        const part = `/portal/${model.id}/oauth-callback.php`;
+                        const checkPart = `/portal/${model.id}/${file}`;
 
-                        if (!url.endsWith(part)) {
+                        if (!url.endsWith(checkPart)) {
                             return url;
                         }
 
-                        return url.slice(0, - part.length) + `/portal/${file}`;
+                        return url.slice(0, - checkPart.length) + `/portal/${file}`;
                     })
                     .join('\n');
             }
