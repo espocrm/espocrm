@@ -47,7 +47,7 @@ define('views/settings/fields/oidc-redirect-uri', ['views/fields/varchar'], func
         portalCollection: null,
 
         data: function () {
-            let isNotEmpty = this.model.entityType !== 'AuthenticationProvider' ||
+            const isNotEmpty = this.model.entityType !== 'AuthenticationProvider' ||
                 this.portalCollection;
 
             return {
@@ -60,7 +60,7 @@ define('views/settings/fields/oidc-redirect-uri', ['views/fields/varchar'], func
          * @protected
          */
         copyToClipboard: function () {
-            let value = this.getValueForDisplay();
+            const value = this.getValueForDisplay();
 
             navigator.clipboard.writeText(value).then(() => {
                 Espo.Ui.success(this.translate('Copied to clipboard'));
@@ -75,14 +75,21 @@ define('views/settings/fields/oidc-redirect-uri', ['views/fields/varchar'], func
 
                 return this.portalCollection.models
                     .map(model => {
-                        let url = (model.get('url') || '').replace(/\/+$/, '');
+                        const file = 'oauth-callback.php'
+                        const url = (model.get('url') || '').replace(/\/+$/, '') + `/${file}`;
 
-                        return url + '/oauth-callback.php';
+                        const part = `/portal/${model.id}/oauth-callback.php`;
+
+                        if (!url.endsWith(part)) {
+                            return url;
+                        }
+
+                        return url.slice(0, - part.length) + `/portal/${file}`;
                     })
                     .join('\n');
             }
 
-            let siteUrl = (this.getConfig().get('siteUrl') || '').replace(/\/+$/, '');
+            const siteUrl = (this.getConfig().get('siteUrl') || '').replace(/\/+$/, '');
 
             return siteUrl + '/oauth-callback.php';
         },
