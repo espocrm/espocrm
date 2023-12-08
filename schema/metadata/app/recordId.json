@@ -17,7 +17,7 @@
             "description": "ID column length. By default, set to 17."
         },
         "dbType": {
-            "description": "An ID column data type. By default, set to string (equivalent to varchar in MySQL). Changing this parameter will change types of all ID columns once you run rebuild."
+            "description": "An ID column data type. By default, set to string (equivalent to varchar in MySQL). Changing this parameter will change types of all ID columns once you run rebuild.",
             "anyOf": [
                 {"type": "string"},
                 {

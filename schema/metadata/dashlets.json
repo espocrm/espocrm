@@ -11,7 +11,7 @@
         },
         "aclScope": {
             "type": "string",
-            "description": "A scope access to which is required to have access to the dashlet.",
+            "description": "A scope access to which is required to have access to the dashlet."
         },
         "accessDataList": {
             "$ref": "./clientDefs.json#/definitions/accessDataList"
