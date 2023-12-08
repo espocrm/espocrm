@@ -9,6 +9,9 @@
     "rebuild": {
         "listed": true
     },
+    "updateAppTimestamp": {
+        "listed": true
+    },
     "appInfo": {
         "listed": true
     },
