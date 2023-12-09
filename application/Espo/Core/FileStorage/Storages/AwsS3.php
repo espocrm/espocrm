@@ -29,24 +29,25 @@
 
 namespace Espo\Core\FileStorage\Storages;
 
+use Psr\Http\Message\StreamInterface;
+use AsyncAws\S3\S3Client;
+use League\Flysystem\FilesystemException;
+use League\Flysystem\AsyncAwsS3\AsyncAwsS3Adapter;
+use League\Flysystem\Filesystem;
+use GuzzleHttp\Psr7\Stream;
+
 use Espo\Core\FileStorage\Attachment;
 use Espo\Core\FileStorage\Storage;
 use Espo\Core\Utils\Config;
 
-use Psr\Http\Message\StreamInterface;
-
-use AsyncAws\S3\S3Client;
-
-use League\Flysystem\AsyncAwsS3\AsyncAwsS3Adapter;
-use League\Flysystem\Filesystem;
-
-use GuzzleHttp\Psr7\Stream;
-
 use RuntimeException;
 
+/**
+ * @noinspection PhpUnused
+ */
 class AwsS3 implements Storage
 {
-    protected Filesystem $filesystem;
+    private Filesystem $filesystem;
 
     public function __construct(Config $config)
     {
@@ -86,22 +87,42 @@ class AwsS3 implements Storage
 
     public function unlink(Attachment $attachment): void
     {
-        $this->filesystem->delete($attachment->getSourceId());
+        try {
+            $this->filesystem->delete($attachment->getSourceId());
+        }
+        catch (FilesystemException $e) {
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
     }
 
     public function exists(Attachment $attachment): bool
     {
-        return $this->filesystem->fileExists($attachment->getSourceId());
+        try {
+            return $this->filesystem->fileExists($attachment->getSourceId());
+        }
+        catch (FilesystemException $e) {
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
     }
 
     public function getSize(Attachment $attachment): int
     {
-        return $this->filesystem->fileSize($attachment->getSourceId());
+        try {
+            return $this->filesystem->fileSize($attachment->getSourceId());
+        }
+        catch (FilesystemException $e) {
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
     }
 
     public function getStream(Attachment $attachment): StreamInterface
     {
-        $resource = $this->filesystem->readStream($attachment->getSourceId());
+        try {
+            $resource = $this->filesystem->readStream($attachment->getSourceId());
+        }
+        catch (FilesystemException $e) {
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
 
         return new Stream($resource);
     }
@@ -122,7 +143,12 @@ class AwsS3 implements Storage
         fwrite($resource, $stream->getContents());
         rewind($resource);
 
-        $this->filesystem->writeStream($attachment->getSourceId(), $resource);
+        try {
+            $this->filesystem->writeStream($attachment->getSourceId(), $resource);
+        }
+        catch (FilesystemException $e) {
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
 
         fclose($resource);
     }
