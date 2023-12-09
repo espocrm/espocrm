@@ -52,9 +52,10 @@ class AwsS3 implements Storage
     {
         $bucketName = $config->get('awsS3Storage.bucketName') ?? null;
         $path = $config->get('awsS3Storage.path') ?? null;
-
         $region = $config->get('awsS3Storage.region') ?? null;
         $credentials = $config->get('awsS3Storage.credentials') ?? null;
+        $endpoint = $config->get('awsS3Storage.endpoint') ?? null;
+        $pathStyleEndpoint = $config->get('awsS3Storage.pathStyleEndpoint') ?? false;
 
         if (!$bucketName) {
             throw new RuntimeException("AWS S3 bucket name is not specified in config.");
@@ -64,13 +65,20 @@ class AwsS3 implements Storage
             'region' => $region,
         ];
 
-        if ($credentials) {
+        if ($endpoint) {
+            $clientOptions['endpoint'] = $endpoint;
+        }
+
+        if ($pathStyleEndpoint) {
+            $clientOptions['pathStyleEndpoint'] = (bool) $pathStyleEndpoint;
+        }
+
+        if ($credentials && is_array($credentials)) {
             $clientOptions['accessKeyId'] = $credentials['key'] ?? null;
             $clientOptions['accessKeySecret'] = $credentials['secret'] ?? null;
         }
 
         $client = new S3Client($clientOptions);
-
         $adapter = new AsyncAwsS3Adapter($client, $bucketName, $path);
 
         $this->filesystem = new Filesystem($adapter);
