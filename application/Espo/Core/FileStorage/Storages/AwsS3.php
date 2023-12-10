@@ -57,6 +57,7 @@ class AwsS3 implements Storage
         $credentials = $config->get('awsS3Storage.credentials') ?? null;
         $endpoint = $config->get('awsS3Storage.endpoint') ?? null;
         $pathStyleEndpoint = $config->get('awsS3Storage.pathStyleEndpoint') ?? false;
+        $sendChunkedBody = $config->get('awsS3Storage.sendChunkedBody') ?? null;
 
         if (!$bucketName) {
             throw new RuntimeException("AWS S3 bucket name is not specified in config.");
@@ -72,6 +73,10 @@ class AwsS3 implements Storage
 
         if ($pathStyleEndpoint) {
             $clientOptions['pathStyleEndpoint'] = (bool) $pathStyleEndpoint;
+        }
+
+        if ($sendChunkedBody !== null) {
+            $clientOptions['sendChunkedBody'] = (bool) $sendChunkedBody;
         }
 
         if ($credentials && is_array($credentials)) {
