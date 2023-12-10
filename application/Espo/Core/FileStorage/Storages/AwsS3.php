@@ -75,6 +75,7 @@ class AwsS3 implements Storage
             $clientOptions['pathStyleEndpoint'] = (bool) $pathStyleEndpoint;
         }
 
+        // Defaulted to true in the library, but the docs is not clear enough.
         if ($sendChunkedBody !== null) {
             $clientOptions['sendChunkedBody'] = (bool) $sendChunkedBody;
         }
