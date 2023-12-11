@@ -469,6 +469,8 @@ class LinkManagerEditModalView extends ModalView {
                 this.getLanguage().translate(item, 'layouts', 'Admin');
         });
 
+        map[''] = this.translate('Default');
+
         return map;
     }
 
