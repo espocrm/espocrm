@@ -73,12 +73,12 @@ class LinkManagerEditModalView extends ModalView {
             }
         ];
 
-        let scope = this.scope = this.options.scope;
-        let link = this.link = this.options.link || false;
+        const scope = this.scope = this.options.scope;
+        const link = this.link = this.options.link || false;
 
-        let entity = scope;
+        const entity = scope;
 
-        let isNew = this.isNew = (false === link);
+        const isNew = this.isNew = (false === link);
 
         let header = 'Create Link';
 
@@ -88,18 +88,18 @@ class LinkManagerEditModalView extends ModalView {
 
         this.headerText = this.translate(header, 'labels', 'Admin');
 
-        let model = this.model = new Model();
+        const model = this.model = new Model();
         model.name = 'EntityManager';
 
         this.model.set('entity', scope);
 
-        let allEntityList = this.getMetadata().getScopeEntityList()
+        const allEntityList = this.getMetadata().getScopeEntityList()
             .filter(item => {
                 return this.getMetadata().get(['scopes', item, 'customizable']);
             })
             .sort((v1, v2) => {
-                var t1 = this.translate(v1, 'scopeNames');
-                var t2 = this.translate(v2, 'scopeNames');
+                const t1 = this.translate(v1, 'scopeNames');
+                const t2 = this.translate(v2, 'scopeNames');
 
                 return t1.localeCompare(t2);
             });
@@ -108,14 +108,15 @@ class LinkManagerEditModalView extends ModalView {
 
         let linkType;
 
-        if (!isNew) {
-            let entityForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.entity');
-            let linkForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.foreign');
-            let label = this.getLanguage().translate(link, 'links', scope);
+        if (isNew) {
+        } else {
+            const entityForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.entity');
+            const linkForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.foreign');
+            const label = this.getLanguage().translate(link, 'links', scope);
             let labelForeign = this.getLanguage().translate(linkForeign, 'links', entityForeign);
 
-            let type = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.type');
-            let foreignType = this.getMetadata()
+            const type = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.type');
+            const foreignType = this.getMetadata()
                 .get('entityDefs.' + entityForeign + '.links.' + linkForeign + '.type');
 
             if (type === 'belongsToParent') {
@@ -134,11 +135,10 @@ class LinkManagerEditModalView extends ModalView {
 
                 this.model.set('parentEntityTypeList', entityTypeList);
 
-                let foreignLinkEntityTypeList = this.getForeignLinkEntityTypeList(entity, link, entityTypeList);
+                const foreignLinkEntityTypeList = this.getForeignLinkEntityTypeList(entity, link, entityTypeList);
 
                 this.model.set('foreignLinkEntityTypeList', foreignLinkEntityTypeList);
-            }
-            else {
+            } else {
                 linkType = Index.prototype.computeRelationshipType.call(this, type, foreignType);
             }
 
@@ -149,11 +149,11 @@ class LinkManagerEditModalView extends ModalView {
             this.model.set('label', label);
             this.model.set('labelForeign', labelForeign);
 
-            let linkMultipleField =
+            const linkMultipleField =
                 this.getMetadata().get(['entityDefs', scope, 'fields', link, 'type']) === 'linkMultiple' &&
                 !this.getMetadata().get(['entityDefs', scope, 'fields', link, 'noLoad']);
 
-            let linkMultipleFieldForeign =
+            const linkMultipleFieldForeign =
                 this.getMetadata()
                     .get(['entityDefs', entityForeign, 'fields', linkForeign, 'type']) === 'linkMultiple' &&
                 !this.getMetadata().get(['entityDefs', entityForeign, 'fields', linkForeign, 'noLoad']);
@@ -162,22 +162,22 @@ class LinkManagerEditModalView extends ModalView {
             this.model.set('linkMultipleFieldForeign', linkMultipleFieldForeign);
 
             if (linkType === 'manyToMany') {
-                let relationName = this.getMetadata()
+                const relationName = this.getMetadata()
                     .get('entityDefs.' + entity + '.links.' + link + '.relationName');
 
                 this.model.set('relationName', relationName);
             }
 
-            let audited = this.getMetadata().get(['entityDefs', scope, 'links', link, 'audited']) || false;
-            let auditedForeign = this.getMetadata()
+            const audited = this.getMetadata().get(['entityDefs', scope, 'links', link, 'audited']) || false;
+            const auditedForeign = this.getMetadata()
                 .get(['entityDefs', entityForeign, 'links', linkForeign, 'audited']) || false;
 
             this.model.set('audited', audited);
             this.model.set('auditedForeign', auditedForeign);
 
-            let layout = this.getMetadata()
+            const layout = this.getMetadata()
                 .get(['clientDefs', scope, 'relationshipPanels', link, 'layout']);
-            let layoutForeign = this.getMetadata()
+            const layoutForeign = this.getMetadata()
                 .get(['clientDefs', entityForeign, 'relationshipPanels', linkForeign, 'layout']);
 
             this.model.set('layout', layout);
@@ -186,17 +186,17 @@ class LinkManagerEditModalView extends ModalView {
             isCustom = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.isCustom');
         }
 
-        let scopes = this.getMetadata().get('scopes') || null;
+        const scopes = this.getMetadata().get('scopes') || null;
 
-        let entityList = (Object.keys(scopes) || [])
+        const entityList = (Object.keys(scopes) || [])
             .filter(item => {
-                let d = scopes[item];
+                const d = scopes[item];
 
                 return d.customizable && d.entity;
             })
             .sort((v1, v2) => {
-                let t1 = this.translate(v1, 'scopeNames');
-                let t2 = this.translate(v2, 'scopeNames');
+                const t1 = this.translate(v1, 'scopeNames');
+                const t2 = this.translate(v2, 'scopeNames');
 
                 return t1.localeCompare(t2);
             });
@@ -362,8 +362,8 @@ class LinkManagerEditModalView extends ModalView {
             tooltipText: this.translate('linkAudited', 'tooltips', 'EntityManager'),
         });
 
-        let layouts = ['', ...this.getEntityTypeLayouts(this.scope)];
-        let layoutTranslatedOptions = this.getEntityTypeLayoutsTranslations(this.scope);
+        const layouts = ['', ...this.getEntityTypeLayouts(this.scope)];
+        const layoutTranslatedOptions = this.getEntityTypeLayoutsTranslations(this.scope);
 
         this.layoutFieldView = new EnumFieldView({
             model: model,
@@ -426,7 +426,7 @@ class LinkManagerEditModalView extends ModalView {
                 return;
             }
 
-            let view = this.getView('foreignLinkEntityTypeList');
+            const view = this.getView('foreignLinkEntityTypeList');
 
             if (view) {
                 if (!this.noParentEntityTypeList) {
@@ -434,7 +434,7 @@ class LinkManagerEditModalView extends ModalView {
                 }
             }
 
-            let checkedList = Espo.Utils.clone(this.model.get('foreignLinkEntityTypeList') || []);
+            const checkedList = Espo.Utils.clone(this.model.get('foreignLinkEntityTypeList') || []);
 
             this.getForeignLinkEntityTypeList(
                 this.model.get('entity'),
@@ -454,14 +454,14 @@ class LinkManagerEditModalView extends ModalView {
     }
 
     getEntityTypeLayouts(entityType) {
-        let defs = this.getMetadata().get(['clientDefs', entityType, 'additionalLayouts'], {});
+        const defs = this.getMetadata().get(['clientDefs', entityType, 'additionalLayouts'], {});
 
         return Object.keys(defs)
             .filter(item => ['list', 'listSmall'].includes(defs[item].type));
     }
 
     getEntityTypeLayoutsTranslations(entityType) {
-        let map = {};
+        const map = {};
 
         this.getEntityTypeLayouts(entityType).forEach(item => {
             map[item] = this.getLanguage().has(item, 'layouts', entityType) ?
@@ -475,9 +475,9 @@ class LinkManagerEditModalView extends ModalView {
     }
 
     controlLayoutField() {
-        let foreignEntityType = this.model.get('entityForeign');
+        const foreignEntityType = this.model.get('entityForeign');
 
-        let layouts = foreignEntityType ?
+        const layouts = foreignEntityType ?
             ['', ...this.getEntityTypeLayouts(foreignEntityType)] :
             [''];
 
@@ -501,8 +501,8 @@ class LinkManagerEditModalView extends ModalView {
     }
 
     populateFields() {
-        let entityForeign = this.model.get('entityForeign');
-        let linkType = this.model.get('linkType');
+        const entityForeign = this.model.get('entityForeign');
+        const linkType = this.model.get('linkType');
 
         let link;
         let linkForeign;
@@ -629,8 +629,8 @@ class LinkManagerEditModalView extends ModalView {
         this.model.set('link', link);
         this.model.set('linkForeign', linkForeign);
 
-        let label = Espo.Utils.upperCaseFirst(link.replace(/([a-z])([A-Z])/g, '$1 $2'));
-        let labelForeign = Espo.Utils.upperCaseFirst(linkForeign.replace(/([a-z])([A-Z])/g, '$1 $2'));
+        const label = Espo.Utils.upperCaseFirst(link.replace(/([a-z])([A-Z])/g, '$1 $2'));
+        const labelForeign = Espo.Utils.upperCaseFirst(linkForeign.replace(/([a-z])([A-Z])/g, '$1 $2'));
 
         this.model.set('label', label);
         this.model.set('labelForeign', labelForeign);
@@ -656,7 +656,7 @@ class LinkManagerEditModalView extends ModalView {
     }
 
     hideField(name) {
-        let view = this.getView(name);
+        const view = this.getView(name);
 
         if (view) {
             view.disabled = true;
@@ -666,7 +666,7 @@ class LinkManagerEditModalView extends ModalView {
     }
 
     showField(name) {
-        let view = this.getView(name);
+        const view = this.getView(name);
 
         if (view) {
             view.disabled = false;
@@ -676,7 +676,7 @@ class LinkManagerEditModalView extends ModalView {
     }
 
     handleLinkTypeChange() {
-        var linkType = this.model.get('linkType');
+        const linkType = this.model.get('linkType');
 
         this.showField('entityForeign');
         this.showField('labelForeign');
@@ -802,7 +802,7 @@ class LinkManagerEditModalView extends ModalView {
     save(options) {
         options = options || {};
 
-        let arr = [
+        const arr = [
             'link',
             'linkForeign',
             'label',
@@ -839,7 +839,7 @@ class LinkManagerEditModalView extends ModalView {
                 return;
             }
 
-            let view = this.getView(item);
+            const view = this.getView(item);
 
             if (view.mode !== 'edit') {
                 return;
@@ -862,26 +862,26 @@ class LinkManagerEditModalView extends ModalView {
             url = 'EntityManager/action/updateLink';
         }
 
-        let entity = this.scope;
-        let entityForeign = this.model.get('entityForeign');
-        let link = this.model.get('link');
-        let linkForeign = this.model.get('linkForeign');
-        let label = this.model.get('label');
-        let labelForeign = this.model.get('labelForeign');
-        let relationName = this.model.get('relationName');
+        const entity = this.scope;
+        const entityForeign = this.model.get('entityForeign');
+        const link = this.model.get('link');
+        const linkForeign = this.model.get('linkForeign');
+        const label = this.model.get('label');
+        const labelForeign = this.model.get('labelForeign');
+        const relationName = this.model.get('relationName');
 
-        let linkMultipleField = this.model.get('linkMultipleField');
-        let linkMultipleFieldForeign = this.model.get('linkMultipleFieldForeign');
+        const linkMultipleField = this.model.get('linkMultipleField');
+        const linkMultipleFieldForeign = this.model.get('linkMultipleFieldForeign');
 
-        let audited = this.model.get('audited');
-        let auditedForeign = this.model.get('auditedForeign');
+        const audited = this.model.get('audited');
+        const auditedForeign = this.model.get('auditedForeign');
 
-        let layout = this.model.get('layout');
-        let layoutForeign = this.model.get('layoutForeign');
+        const layout = this.model.get('layout');
+        const layoutForeign = this.model.get('layoutForeign');
 
-        let linkType = this.model.get('linkType');
+        const linkType = this.model.get('linkType');
 
-        let attributes = {
+        const attributes = {
             entity: entity,
             entityForeign: entityForeign,
             link: link,
@@ -952,8 +952,8 @@ class LinkManagerEditModalView extends ModalView {
             })
             .catch(xhr => {
                 if (xhr.status === 409) {
-                    var msg = this.translate('linkConflict', 'messages', 'EntityManager');
-                    var statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
+                    const msg = this.translate('linkConflict', 'messages', 'EntityManager');
+                    const statusReasonHeader = xhr.getResponseHeader('X-Status-Reason');
 
                     if (statusReasonHeader) {
                         console.error(statusReasonHeader);
@@ -969,14 +969,14 @@ class LinkManagerEditModalView extends ModalView {
     }
 
     getForeignLinkEntityTypeList(entityType, link, entityTypeList, onlyNotCustom) {
-        let list = [];
+        const list = [];
 
         entityTypeList.forEach(item => {
-            let linkDefs = this.getMetadata().get(['entityDefs', item, 'links']) || {};
+            const linkDefs = this.getMetadata().get(['entityDefs', item, 'links']) || {};
 
             let isFound = false;
 
-            for (let i in linkDefs) {
+            for (const i in linkDefs) {
                 if (
                     linkDefs[i].foreign === link &&
                     linkDefs[i].entity === entityType &&
