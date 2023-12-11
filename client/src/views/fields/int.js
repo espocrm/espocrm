@@ -59,10 +59,10 @@ class IntFieldView extends BaseFieldView {
     ]
 
     /**
-     * @type {Object.<string, *>|null}
+     * @type {Object.<string, *>}
      * @protected
      */
-    autoNumericOptions = null
+    autoNumericOptions
 
     /**
      * @type {?AutoNumeric}
@@ -97,7 +97,7 @@ class IntFieldView extends BaseFieldView {
      * @protected
      */
     setupAutoNumericOptions() {
-        let separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
+        const separator = (!this.disableFormatting ? this.thousandSeparator : null) || '';
         let decimalCharacter = '.';
 
         if (separator === '.') {
@@ -124,7 +124,7 @@ class IntFieldView extends BaseFieldView {
         }
 
         if (this.mode === this.MODE_SEARCH) {
-            let $searchType = this.$el.find('select.search-type');
+            const $searchType = this.$el.find('select.search-type');
 
             this.handleSearchType($searchType.val());
 
@@ -136,7 +136,7 @@ class IntFieldView extends BaseFieldView {
                 this.trigger('change');
             });
 
-            let $inputAdditional = this.$el.find('input.additional');
+            const $inputAdditional = this.$el.find('input.additional');
 
             $inputAdditional.on('input', () => {
                 this.trigger('change');
@@ -150,7 +150,7 @@ class IntFieldView extends BaseFieldView {
     }
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         if (this.model.get(this.name) !== null && typeof this.model.get(this.name) !== 'undefined') {
             data.isNotEmpty = true;
@@ -175,7 +175,7 @@ class IntFieldView extends BaseFieldView {
     }
 
     getValueForDisplay() {
-        let value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
+        const value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
 
         return this.formatNumber(value);
     }
@@ -202,14 +202,15 @@ class IntFieldView extends BaseFieldView {
 
     setupSearch() {
         this.events['change select.search-type'] = e => {
+            // noinspection JSUnresolvedReference
             this.handleSearchType($(e.currentTarget).val());
         };
     }
 
     handleSearchType(type) {
-        var $additionalInput = this.$el.find('input.additional');
+        const $additionalInput = this.$el.find('input.additional');
 
-        var $input = this.$el.find('input[data-name="'+this.name+'"]');
+        const $input = this.$el.find('input[data-name="' + this.name + '"]');
 
         if (type === 'between') {
             $additionalInput.removeClass('hidden');
@@ -226,7 +227,7 @@ class IntFieldView extends BaseFieldView {
     }
 
     getMaxValue() {
-        var maxValue = this.model.getFieldParam(this.name, 'max') || null;
+        let maxValue = this.model.getFieldParam(this.name, 'max') || null;
 
         if (!maxValue && maxValue !== 0) {
             maxValue = null;
@@ -240,7 +241,7 @@ class IntFieldView extends BaseFieldView {
     }
 
     getMinValue() {
-        var minValue = this.model.getFieldParam(this.name, 'min');
+        let minValue = this.model.getFieldParam(this.name, 'min');
 
         if (!minValue && minValue !== 0) {
             minValue = null;
@@ -254,7 +255,7 @@ class IntFieldView extends BaseFieldView {
     }
 
     setupMaxLength() {
-        var maxValue = this.getMaxValue();
+        let maxValue = this.getMaxValue();
 
         if (typeof max !== 'undefined' && max !== null) {
             maxValue = this.formatNumber(maxValue);
@@ -263,11 +264,12 @@ class IntFieldView extends BaseFieldView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateInt() {
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (isNaN(value)) {
-            let msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
+            const msg = this.translate('fieldShouldBeInt', 'messages').replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);
 
@@ -275,19 +277,20 @@ class IntFieldView extends BaseFieldView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateRange() {
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (value === null) {
             return false;
         }
 
-        let minValue = this.getMinValue();
-        let maxValue = this.getMaxValue();
+        const minValue = this.getMinValue();
+        const maxValue = this.getMaxValue();
 
         if (minValue !== null && maxValue !== null) {
             if (value < minValue || value > maxValue ) {
-                let msg = this.translate('fieldShouldBeBetween', 'messages')
+                const msg = this.translate('fieldShouldBeBetween', 'messages')
                     .replace('{field}', this.getLabelText())
                     .replace('{min}', minValue)
                     .replace('{max}', maxValue);
@@ -300,7 +303,7 @@ class IntFieldView extends BaseFieldView {
         else {
             if (minValue !== null) {
                 if (value < minValue) {
-                    let msg = this.translate('fieldShouldBeGreater', 'messages')
+                    const msg = this.translate('fieldShouldBeGreater', 'messages')
                         .replace('{field}', this.getLabelText())
                         .replace('{value}', minValue);
 
@@ -311,7 +314,7 @@ class IntFieldView extends BaseFieldView {
             }
             else if (maxValue !== null) {
                 if (value > maxValue) {
-                    let msg = this.translate('fieldShouldBeLess', 'messages')
+                    const msg = this.translate('fieldShouldBeLess', 'messages')
                         .replace('{field}', this.getLabelText())
                         .replace('{value}', maxValue);
                     this.showValidationMessage(msg);
@@ -324,10 +327,10 @@ class IntFieldView extends BaseFieldView {
 
     validateRequired() {
         if (this.isRequired()) {
-            let value = this.model.get(this.name);
+            const value = this.model.get(this.name);
 
             if (value === null || value === false) {
-                let msg = this.translate('fieldIsRequired', 'messages')
+                const msg = this.translate('fieldIsRequired', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg);
@@ -359,7 +362,7 @@ class IntFieldView extends BaseFieldView {
         let value = this.$element.val();
         value = this.parse(value);
 
-        let data = {};
+        const data = {};
 
         data[this.name] = value;
 
@@ -367,9 +370,8 @@ class IntFieldView extends BaseFieldView {
     }
 
     fetchSearch() {
-        let value = this.parse(this.$element.val());
-
-        let type = this.fetchSearchType();
+        const value = this.parse(this.$element.val());
+        const type = this.fetchSearchType();
 
         let data;
 
@@ -378,7 +380,7 @@ class IntFieldView extends BaseFieldView {
         }
 
         if (type === 'between') {
-            let valueTo = this.parse(this.$el.find('input.additional').val());
+            const valueTo = this.parse(this.$el.find('input.additional').val());
 
             if (isNaN(valueTo)) {
                 return false;

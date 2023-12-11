@@ -79,7 +79,7 @@ class FloatFieldView extends IntFieldView {
     }
 
     getValueForDisplay() {
-        let value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
+        const value = isNaN(this.model.get(this.name)) ? null : this.model.get(this.name);
 
         return this.formatNumber(value);
     }
@@ -97,7 +97,7 @@ class FloatFieldView extends IntFieldView {
             return '';
         }
 
-        let decimalPlaces = this.params.decimalPlaces;
+        const decimalPlaces = this.params.decimalPlaces;
 
         if (decimalPlaces === 0) {
             value = Math.round(value);
@@ -108,7 +108,7 @@ class FloatFieldView extends IntFieldView {
             );
         }
 
-        let parts = value.toString().split(".");
+        const parts = value.toString().split(".");
 
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
 
@@ -116,7 +116,7 @@ class FloatFieldView extends IntFieldView {
             return parts[0];
         }
         else if (decimalPlaces) {
-            var decimalPartLength = 0;
+            let decimalPartLength = 0;
 
             if (parts.length > 1) {
                 decimalPartLength = parts[1].length;
@@ -125,9 +125,9 @@ class FloatFieldView extends IntFieldView {
             }
 
             if (decimalPlaces && decimalPartLength < decimalPlaces) {
-                var limit = decimalPlaces - decimalPartLength;
+                const limit = decimalPlaces - decimalPartLength;
 
-                for (var i = 0; i < limit; i++) {
+                for (let i = 0; i < limit; i++) {
                     parts[1] += '0';
                 }
             }
@@ -139,10 +139,10 @@ class FloatFieldView extends IntFieldView {
     setupMaxLength() {}
 
     validateFloat() {
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (isNaN(value)) {
-            let msg = this.translate('fieldShouldBeFloat', 'messages')
+            const msg = this.translate('fieldShouldBeFloat', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);
@@ -171,7 +171,7 @@ class FloatFieldView extends IntFieldView {
         let value = this.$element.val();
         value = this.parse(value);
 
-        let data = {};
+        const data = {};
         data[this.name] = value;
 
         return data;
