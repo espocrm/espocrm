@@ -65,6 +65,7 @@ class FloatFieldView extends IntFieldView {
 
     /** @inheritDoc */
     setupAutoNumericOptions() {
+        // noinspection JSValidateTypes
         this.autoNumericOptions = {
             digitGroupSeparator: this.thousandSeparator || '',
             decimalCharacter: this.decimalMark,

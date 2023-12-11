@@ -59,7 +59,7 @@ class IntFieldView extends BaseFieldView {
     ]
 
     /**
-     * @type {Object.<string, *>}
+     * @type {import('autonumeric').Options}
      * @protected
      */
     autoNumericOptions
@@ -104,6 +104,7 @@ class IntFieldView extends BaseFieldView {
             decimalCharacter = ',';
         }
 
+        // noinspection JSValidateTypes
         this.autoNumericOptions = {
             digitGroupSeparator: separator,
             decimalCharacter: decimalCharacter,
@@ -119,7 +120,10 @@ class IntFieldView extends BaseFieldView {
 
         if (this.mode === this.MODE_EDIT) {
             if (this.autoNumericOptions) {
-                this.autoNumericInstance = new AutoNumeric(this.$element.get(0), this.autoNumericOptions);
+                /** @type {HTMLInputElement} */
+                const element = this.$element.get(0);
+
+                this.autoNumericInstance = new AutoNumeric(element, this.autoNumericOptions);
             }
         }
 
@@ -143,12 +147,18 @@ class IntFieldView extends BaseFieldView {
             });
 
             if (this.autoNumericOptions) {
-                new AutoNumeric(this.$element.get(0), this.autoNumericOptions);
-                new AutoNumeric($inputAdditional.get(0), this.autoNumericOptions);
+                /** @type {HTMLInputElement} */
+                const element1 = this.$element.get(0);
+                /** @type {HTMLInputElement} */
+                const element2 = $inputAdditional.get(0);
+
+                new AutoNumeric(element1, this.autoNumericOptions);
+                new AutoNumeric(element2, this.autoNumericOptions);
             }
         }
     }
 
+    // noinspection JSCheckFunctionSignatures
     data() {
         const data = super.data();
 
@@ -171,6 +181,7 @@ class IntFieldView extends BaseFieldView {
             data.value = this.model.get(this.name);
         }
 
+        // noinspection JSValidateTypes
         return data;
     }
 
