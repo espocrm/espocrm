@@ -108,8 +108,7 @@ class LinkManagerEditModalView extends ModalView {
 
         let linkType;
 
-        if (isNew) {
-        } else {
+        if (!isNew) {
             const entityForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.entity');
             const linkForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.foreign');
             const label = this.getLanguage().translate(link, 'links', scope);
