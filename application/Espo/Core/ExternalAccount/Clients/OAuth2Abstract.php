@@ -40,24 +40,14 @@ use DateTime;
 
 abstract class OAuth2Abstract implements IClient
 {
-    /**
-     * @var Client
-     */
+    /** @var Client */
     protected $client = null;
-
-    /**
-     * @var ?ClientManager
-     */
+    /** @var ?ClientManager */
     protected $manager = null;
-
-    /**
-     * @var Log
-     */
+    /** @var Log */
     protected $log;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $paramList = [
         'endpoint',
         'tokenEndpoint',
@@ -70,40 +60,36 @@ abstract class OAuth2Abstract implements IClient
         'expiresAt',
     ];
 
+    /** @var ?string */
+    protected $endpoint = null;
     /**
+     * @noinspection PhpUnused
      * @var ?string
      */
-    protected $clientId = null;
-
+    protected $tokenEndpoint = null;
     /**
-     * @var ?string
-     */
-    protected $clientSecret = null;
-
-    /**
-     * @var ?string
-     */
-    protected $accessToken = null;
-
-    /**
-     * @var ?string
-     */
-    protected $refreshToken = null;
-
-    /**
+     * @noinspection PhpUnused
      * @var ?string
      */
     protected $redirectUri = null;
-
+    /** @var ?string */
+    protected $clientId = null;
+    /** @var ?string */
+    protected $clientSecret = null;
     /**
+     * @noinspection PhpUnused
      * @var ?string
      */
+    protected $tokenType = null;
+    /** @var ?string */
+    protected $accessToken = null;
+    /** @var ?string */
+    protected $refreshToken = null;
+    /** @var ?string */
     protected $expiresAt = null;
 
     const ACCESS_TOKEN_EXPIRATION_MARGIN = '20 seconds';
-
     const LOCK_TIMEOUT = 5;
-
     const LOCK_CHECK_STEP = 0.5;
 
     /**
@@ -495,9 +481,7 @@ abstract class OAuth2Abstract implements IClient
             $r = $this->client->getAccessToken(
                 $this->getParam('tokenEndpoint'),
                 Client::GRANT_TYPE_REFRESH_TOKEN,
-                [
-                    'refresh_token' => $this->refreshToken,
-                ]
+                ['refresh_token' => $this->refreshToken]
             );
         }
         catch (Exception $e) {
@@ -537,8 +521,6 @@ abstract class OAuth2Abstract implements IClient
     protected function handleErrorResponse($r)
     {
         if ($r['code'] == 401 && !empty($r['result'])) {
-            $result = $r['result'];
-
             if (strpos($r['header'], 'error=invalid_token') !== false) {
                 return [
                     'action' => 'refreshToken'
