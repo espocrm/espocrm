@@ -1,5 +1,6 @@
 {
     "googleMapsImage": "Espo\\Classes\\TemplateHelpers\\GoogleMaps",
+    "markdownText": "Espo\\Classes\\TemplateHelpers\\MarkdownText",
     "tableTag": "Espo\\Classes\\TemplateHelpers\\TableTag",
     "trTag": "Espo\\Classes\\TemplateHelpers\\TrTag",
     "tdTag": "Espo\\Classes\\TemplateHelpers\\TdTag"
