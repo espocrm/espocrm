@@ -2542,7 +2542,15 @@ class DetailRecordView extends BaseRecordView {
         this.enableActionItems();
     }
 
-    errorHandlerDuplicate(duplicates, o, resolve) {
+    /**
+     * @protected
+     * @param duplicates
+     * @param {Object} options
+     * @param {function} resolve
+     * @param {function} reject
+     * @return {boolean}
+     */
+    errorHandlerDuplicate(duplicates, options, resolve, reject) {
         Espo.Ui.notify(false);
 
         this.createView('duplicate', 'views/modals/duplicate', {
@@ -2560,6 +2568,10 @@ class DetailRecordView extends BaseRecordView {
                         }
                     }
                 }).then(() => resolve());
+            });
+
+            this.listenToOnce(view, 'cancel', () => {
+                reject();
             });
         });
 

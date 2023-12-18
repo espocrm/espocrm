@@ -1103,7 +1103,7 @@ class BaseRecordView extends View {
         model.trigger('before:save');
 
         const onError = (xhr, reject, resolve) => {
-            this.handleSaveError(xhr, options, resolve)
+            this.handleSaveError(xhr, options, resolve, reject)
                 .then(skipReject => {
                     if (skipReject) {
                         return;
@@ -1155,10 +1155,11 @@ class BaseRecordView extends View {
      *
      * @param {module:ajax.Xhr} xhr XHR.
      * @param {module:views/record/base~saveOptions} [options] Options.
-     * @param {function} saveResolve Resolve save promise.
+     * @param {function} saveResolve Resolve the save promise.
+     * @param {function} saveReject Reject the same promise.
      * @return {Promise<boolean>}
      */
-    handleSaveError(xhr, options, saveResolve) {
+    handleSaveError(xhr, options, saveResolve, saveReject) {
         let handlerData = null;
 
         if (~[409, 500].indexOf(xhr.status)) {
@@ -1227,7 +1228,7 @@ class BaseRecordView extends View {
             if (methodName in this) {
                 xhr.errorIsHandled = true;
 
-                const skipReject = this[methodName](handlerData.data, options, saveResolve);
+                const skipReject = this[methodName](handlerData.data, options, saveResolve, saveReject);
 
                 resolve(skipReject || false);
 
