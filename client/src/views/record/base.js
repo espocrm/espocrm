@@ -234,7 +234,8 @@ class BaseRecordView extends View {
         const view = this.getFieldView(name);
 
         if (view) {
-            view.setReadOnly(locked);
+            view.setReadOnly(locked)
+                .catch(() => {});
         }
 
         if (!previousValue) {
