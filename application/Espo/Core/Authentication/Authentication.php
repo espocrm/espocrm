@@ -405,7 +405,7 @@ class Authentication
             if (!$isPortalRelatedToUser) {
                 $this->log->info(
                     "AUTH: Trying to login to portal as user '" . $user->getUserName() . "' ".
-                    "which is portal user but does not belongs to portal.");
+                    "which is portal user but does not belong to portal.");
 
                 $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_USER_IS_NOT_IN_PORTAL);
 
