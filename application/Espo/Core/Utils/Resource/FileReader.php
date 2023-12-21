@@ -46,7 +46,7 @@ class FileReader
     ) {}
 
     /**
-     * Read a resource file. Returns NULL if the file does not exists.
+     * Read a resource file. Returns NULL if the file does not exist.
      *
      * @throws RuntimeException If the resource does not exist.
      */
@@ -55,7 +55,7 @@ class FileReader
         $exactPath = $this->findExactPath($path, $params);
 
         if (!$exactPath) {
-            throw new RuntimeException("Resource file '{$path}' does not exist.");
+            throw new RuntimeException("Resource file '$path' does not exist.");
         }
 
         return $this->fileManager->getContents($exactPath);
