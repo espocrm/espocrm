@@ -18,9 +18,9 @@
         "actionClassName": "Espo\\Tools\\App\\Api\\PostDestroyAuthToken"
     },
     {
-        "route": "/App/aboutText",
+        "route": "/App/about",
         "method": "get",
-        "actionClassName": "Espo\\Tools\\App\\Api\\GetAboutText"
+        "actionClassName": "Espo\\Tools\\App\\Api\\GetAbout"
     },
     {
         "route": "/Metadata",
