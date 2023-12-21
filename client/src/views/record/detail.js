@@ -3036,15 +3036,15 @@ class DetailRecordView extends BaseRecordView {
                 panel.label = item.customLabel;
 
                 if (panel.label) {
-                    panel.label = this.getLanguage()
-                        .translate(panel.label, 'panelCustomLabels', this.entityType);
+                    panel.label = this.translate(panel.label, 'panelCustomLabels', this.entityType);
                 }
             } else {
                 panel.label = item.label || null;
 
                 if (panel.label) {
-                    panel.label = this.getLanguage()
-                        .translate(panel.label, 'labels', this.entityType);
+                    panel.label = panel.label[0] === '$' ?
+                        this.translate(panel.label.substring(1), 'panels', this.entityType) :
+                        this.translate(panel.label, 'labels', this.entityType);
                 }
             }
 
