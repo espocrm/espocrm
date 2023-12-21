@@ -282,7 +282,7 @@ class Controller {
      * @param {string} key
      */
     clearStoredMainView(key) {
-        let view = this.getStoredMainView(key);
+        const view = this.getStoredMainView(key);
 
         if (view) {
             view.remove(true);
@@ -317,12 +317,12 @@ class Controller {
      * Clear all stored main views.
      */
     clearAllStoredMainViews() {
-        for (let k in this.params) {
+        for (const k in this.params) {
             if (k.indexOf('storedMainView-') !== 0) {
                 continue;
             }
 
-            let key = k.slice(15);
+            const key = k.slice(15);
 
             this.clearStoredMainView(key);
         }
@@ -384,14 +384,14 @@ class Controller {
 
         action = action || this.defaultAction;
 
-        let method = 'action' + Espo.Utils.upperCaseFirst(action);
+        const method = 'action' + Espo.Utils.upperCaseFirst(action);
 
         if (!(method in this)) {
             throw new Exceptions.NotFound("Action '" + this.name + "#" + action + "' is not found");
         }
 
-        let preMethod = 'before' + Espo.Utils.upperCaseFirst(action);
-        let postMethod = 'after' + Espo.Utils.upperCaseFirst(action);
+        const preMethod = 'before' + Espo.Utils.upperCaseFirst(action);
+        const postMethod = 'after' + Espo.Utils.upperCaseFirst(action);
 
         if (preMethod in this) {
             this[preMethod].call(this, options || {});
@@ -427,7 +427,7 @@ class Controller {
             return;
         }
 
-        let masterView = this.masterView || 'views/site/master';
+        const masterView = this.masterView || 'views/site/master';
 
         this.viewFactory.create(masterView, {fullSelector: 'body'}, /** module:view */master => {
             this.set('master', master);
@@ -452,6 +452,7 @@ class Controller {
      * @private
      */
     _unchainMainView(masterView) {
+        // noinspection JSUnresolvedReference
         if (
             !masterView.currentViewKey ||
             !this.hasStoredMainView(masterView.currentViewKey)
@@ -525,7 +526,7 @@ class Controller {
                     isActual = mainView.isActualForReuse();
                 }
 
-                let lastUrl = (mainView && 'lastUrl' in mainView) ? mainView.lastUrl : null;
+                const lastUrl = (mainView && 'lastUrl' in mainView) ? mainView.lastUrl : null;
 
                 if (
                     isActual &&
@@ -639,7 +640,7 @@ class Controller {
      * Show a loading notify-message.
      */
     showLoadingNotification() {
-        let master = this.get('master');
+        const master = this.get('master');
 
         if (!master) {
             return;
@@ -652,7 +653,7 @@ class Controller {
      * Hide a loading notify-message.
      */
     hideLoadingNotification() {
-        let master = this.get('master');
+        const master = this.get('master');
 
         if (!master) {
             return;

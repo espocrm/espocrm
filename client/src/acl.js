@@ -80,8 +80,8 @@ class Acl {
     checkScope(data, action, precise, entityAccessData) {
         entityAccessData = entityAccessData || {};
 
-        let inTeam = entityAccessData.inTeam;
-        let isOwner = entityAccessData.isOwner;
+        const inTeam = entityAccessData.inTeam;
+        const isOwner = entityAccessData.isOwner;
 
         if (this.getUser().isAdmin()) {
             if (data === false) {
@@ -116,7 +116,7 @@ class Acl {
             return false;
         }
 
-        var value = data[action];
+        const value = data[action];
 
         if (value === 'all') {
             return true;
@@ -185,7 +185,7 @@ class Acl {
             return true;
         }
 
-        let entityAccessData = {
+        const entityAccessData = {
             isOwner: this.checkIsOwner(model),
             inTeam: this.checkInTeam(model),
         };
@@ -204,7 +204,7 @@ class Acl {
      * @returns {boolean} True if access allowed.
      */
     checkModelDelete(model, data, precise) {
-        let result = this.checkModel(model, data, 'delete', precise);
+        const result = this.checkModel(model, data, 'delete', precise);
 
         if (result) {
             return true;
@@ -214,7 +214,7 @@ class Acl {
             return false;
         }
 
-        let d = data || {};
+        const d = data || {};
 
         if (d.read === 'no') {
             return false;
@@ -292,7 +292,7 @@ class Acl {
      * @returns {boolean|null} True if in a team. Null if not enough data to determine.
      */
     checkInTeam(model) {
-        var userTeamIdList = this.getUser().getTeamIdList();
+        const userTeamIdList = this.getUser().getTeamIdList();
 
         if (!model.has('teamsIds')) {
             if (this.teamsFieldIsForbidden) {
@@ -302,7 +302,7 @@ class Acl {
             return null;
         }
 
-        let teamIdList = model.getTeamIdList();
+        const teamIdList = model.getTeamIdList();
 
         let inTeam = false;
 

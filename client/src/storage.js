@@ -83,7 +83,7 @@ class Storage {
     has(type, name) {
         this.checkType(type);
 
-        let key = this.composeKey(type, name);
+        const key = this.composeKey(type, name);
 
         return this.storageObject.getItem(key) !== null;
     }
@@ -98,10 +98,12 @@ class Storage {
     get(type, name) {
         this.checkType(type);
 
-        let key = this.composeKey(type, name);
+        const key = this.composeKey(type, name);
+
+        let stored;
 
         try {
-            var stored = this.storageObject.getItem(key);
+            stored = this.storageObject.getItem(key);
         }
         catch (error) {
             console.error(error);
@@ -113,7 +115,7 @@ class Storage {
             let result = stored;
 
             if (stored.length > 9 && stored.substring(0, 9) === '__JSON__:') {
-                let jsonString = stored.slice(9);
+                const jsonString = stored.slice(9);
 
                 try {
                     result = JSON.parse(jsonString);
@@ -153,7 +155,7 @@ class Storage {
             return;
         }
 
-        let key = this.composeKey(type, name);
+        const key = this.composeKey(type, name);
 
         if (
             value instanceof Object ||
@@ -196,9 +198,9 @@ class Storage {
             reText = '^' + this.prefix + '-';
         }
 
-        let re = new RegExp(reText);
+        const re = new RegExp(reText);
 
-        for (let i in this.storageObject) {
+        for (const i in this.storageObject) {
             if (re.test(i)) {
                 delete this.storageObject[i];
             }

@@ -308,7 +308,7 @@ class View extends BullView {
      * Update a page title. Supposed to be overridden if needed.
      */
     updatePageTitle() {
-        var title = this.getConfig().get('applicationName') || 'EspoCRM';
+        const title = this.getConfig().get('applicationName') || 'EspoCRM';
 
         this.setPageTitle(title);
     }

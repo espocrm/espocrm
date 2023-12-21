@@ -133,7 +133,7 @@ class Dialog {
 
         this.activeElement = document.activeElement;
 
-        let params = [
+        const params = [
             'className',
             'backdrop',
             'keyboard',
@@ -179,14 +179,14 @@ class Dialog {
             this.backdrop = 'static';
         }
 
-        let $header = this.getHeader();
-        let $footer = this.getFooter();
+        const $header = this.getHeader();
+        const $footer = this.getFooter();
 
-        let $body = $('<div>')
+        const $body = $('<div>')
             .addClass('modal-body body')
             .html(this.body);
 
-        let $content = $('<div>').addClass('modal-content');
+        const $content = $('<div>').addClass('modal-content');
 
         if ($header) {
             $content.append($header);
@@ -202,11 +202,11 @@ class Dialog {
             $content.append($footer);
         }
 
-        let $dialog = $('<div>')
+        const $dialog = $('<div>')
             .addClass('modal-dialog')
             .append($content);
 
-        let $container = $(this.container);
+        const $container = $(this.container);
 
         $('<div>')
             .attr('id', this.id)
@@ -244,7 +244,7 @@ class Dialog {
             });
         }
 
-        let modalContentEl = this.$el.find('.modal-content');
+        const modalContentEl = this.$el.find('.modal-content');
 
         if (this.width) {
             modalContentEl.css('width', this.width);
@@ -267,13 +267,13 @@ class Dialog {
             });
         }
 
-        let $window = $(window);
+        const $window = $(window);
 
         this.$el.on('shown.bs.modal', () => {
             $('.modal-backdrop').not('.stacked').addClass('stacked');
 
-            let headerHeight = this.$el.find('.modal-header').outerHeight() || 0;
-            let footerHeight = this.$el.find('.modal-footer').outerHeight() || 0;
+            const headerHeight = this.$el.find('.modal-header').outerHeight() || 0;
+            const footerHeight = this.$el.find('.modal-footer').outerHeight() || 0;
 
             let diffHeight = headerHeight + footerHeight;
 
@@ -282,9 +282,9 @@ class Dialog {
             }
 
             if (this.fitHeight || options.fullHeight) {
-                let processResize = () => {
-                    let windowHeight = window.innerHeight;
-                    let windowWidth = $window.width();
+                const processResize = () => {
+                    const windowHeight = window.innerHeight;
+                    const windowWidth = $window.width();
 
                     if (!options.fullHeight && windowHeight < 512) {
                         this.$el.find('div.modal-body').css({
@@ -296,7 +296,7 @@ class Dialog {
                         return;
                     }
 
-                    let cssParams = {
+                    const cssParams = {
                         overflow: 'auto',
                     };
 
@@ -323,7 +323,7 @@ class Dialog {
             }
         });
 
-        let $documentBody = $(document.body);
+        const $documentBody = $(document.body);
 
         this.$el.on('hidden.bs.modal', () => {
             if ($('.modal:visible').length > 0) {
@@ -370,7 +370,7 @@ class Dialog {
     initButtonEvents() {
         this.buttonList.forEach(o => {
             if (typeof o.onClick === 'function') {
-                let $button = $('#' + this.id + ' .modal-footer button[data-name="' + o.name + '"]');
+                const $button = $('#' + this.id + ' .modal-footer button[data-name="' + o.name + '"]');
 
                 $button.on('click', e => o.onClick(this, e));
             }
@@ -378,7 +378,7 @@ class Dialog {
 
         this.dropdownItemList.forEach(o => {
             if (typeof o.onClick === 'function') {
-                let $button = $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]');
+                const $button = $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]');
 
                 $button.on('click', e => o.onClick(this, e));
             }
@@ -394,7 +394,7 @@ class Dialog {
             return null;
         }
 
-        let $header = $('<header />')
+        const $header = $('<header />')
             .addClass('modal-header')
             .addClass(this.options.fixedHeaderHeight ? 'fixed-height' : '')
             .append(
@@ -450,26 +450,26 @@ class Dialog {
             return null;
         }
 
-        let $footer = $('<footer>').addClass('modal-footer');
+        const $footer = $('<footer>').addClass('modal-footer');
 
-        let $main = $('<div>')
+        const $main = $('<div>')
             .addClass('btn-group')
             .addClass('main-btn-group');
 
-        let $additional = $('<div>')
+        const $additional = $('<div>')
             .addClass('btn-group')
             .addClass('additional-btn-group');
 
         this.buttonList.forEach(/** module:ui.Dialog~Button */o => {
-            let style = o.style || 'default';
+            const style = o.style || 'default';
 
-            let $button =
+            const $button =
                 $('<button>')
                     .attr('type', 'button')
                     .attr('data-name', o.name)
                     .addClass('btn')
                     .addClass('btn-' + style)
-                    .addClass(o.className || 'btn-xs-wide')
+                    .addClass(o.className || 'btn-xs-wide');
 
             if (o.disabled) {
                 $button.attr('disabled', 'disabled');
@@ -501,9 +501,9 @@ class Dialog {
             $main.append($button);
         });
 
-        let allDdItemsHidden = this.dropdownItemList.filter(o => !o.hidden).length === 0;
+        const allDdItemsHidden = this.dropdownItemList.filter(o => !o.hidden).length === 0;
 
-        let $dropdown = $('<div>')
+        const $dropdown = $('<div>')
             .addClass('btn-group')
             .addClass(allDdItemsHidden ? 'hidden' : '')
             .append(
@@ -517,12 +517,12 @@ class Dialog {
                     )
             );
 
-        let $ul = $('<ul>').addClass('dropdown-menu pull-right');
+        const $ul = $('<ul>').addClass('dropdown-menu pull-right');
 
         $dropdown.append($ul);
 
         this.dropdownItemList.forEach(/** module:ui.Dialog~Button */o => {
-            let $a = $('<a>')
+            const $a = $('<a>')
                 .attr('role', 'button')
                 .attr('tabindex', '0')
                 .attr('data-name', o.name);
@@ -539,9 +539,9 @@ class Dialog {
                 $a.html(o.html);
             }
 
-            let $li = $('<li>')
+            const $li = $('<li>')
                 .addClass(o.hidden ? ' hidden' : '')
-                .append($a)
+                .append($a);
 
             $ul.append($li);
         });
@@ -571,7 +571,7 @@ class Dialog {
 
         this.$el.find('.modal-content').removeClass('hidden');
 
-        let $modalBackdrop = $('.modal-backdrop');
+        const $modalBackdrop = $('.modal-backdrop');
 
         $modalBackdrop.each((i, el) => {
             if (i < $modalBackdrop.length - 1) {
@@ -579,7 +579,7 @@ class Dialog {
             }
         });
 
-        let $modalContainer = $('.modal-container');
+        const $modalContainer = $('.modal-container');
 
         $modalContainer.each((i, el) => {
             if (i < $modalContainer.length - 1) {
@@ -634,12 +634,12 @@ class Dialog {
      * Hide with a backdrop.
      */
     hideWithBackdrop() {
-        let $modalBackdrop = $('.modal-backdrop');
+        const $modalBackdrop = $('.modal-backdrop');
 
         $modalBackdrop.last().addClass('hidden');
         $($modalBackdrop.get($modalBackdrop.length - 2)).removeClass('hidden');
 
-        let $modalContainer = $('.modal-container');
+        const $modalContainer = $('.modal-container');
 
         $($modalContainer.get($modalContainer.length - 2)).removeClass('overlaid');
 
@@ -658,11 +658,11 @@ class Dialog {
      * @private
      */
     _close() {
-        let $modalBackdrop = $('.modal-backdrop');
+        const $modalBackdrop = $('.modal-backdrop');
 
         $modalBackdrop.last().removeClass('hidden');
 
-        let $modalContainer = $('.modal-container');
+        const $modalContainer = $('.modal-container');
 
         $($modalContainer.get($modalContainer.length - 2)).removeClass('overlaid');
     }
@@ -674,7 +674,7 @@ class Dialog {
      */
     _findClosestFocusableElement(element) {
         // noinspection JSUnresolvedReference
-        let isVisible = !!(
+        const isVisible = !!(
             element.offsetWidth ||
             element.offsetHeight ||
             element.getClientRects().length
@@ -687,11 +687,10 @@ class Dialog {
             return element;
         }
 
-        let $element = $(element);
+        const $element = $(element);
 
         if ($element.closest('.dropdown-menu').length) {
-            let $button = $element.closest('.btn-group').find(`[data-toggle="dropdown"]`);
-
+            const $button = $element.closest('.btn-group').find(`[data-toggle="dropdown"]`);
 
             if ($button.length) {
                 // noinspection JSUnresolvedReference
@@ -714,7 +713,7 @@ class Dialog {
 
             if (this.activeElement) {
                 setTimeout(() => {
-                    let element = this._findClosestFocusableElement(this.activeElement);
+                    const element = this._findClosestFocusableElement(this.activeElement);
 
                     if (element) {
                         // noinspection JSUnresolvedReference
@@ -778,9 +777,9 @@ Espo.Ui = {
     confirm: function (message, o, callback, context) {
         o = o || {};
 
-        let confirmText = o.confirmText;
-        let cancelText = o.cancelText;
-        let confirmStyle = o.confirmStyle || 'danger';
+        const confirmText = o.confirmText;
+        const cancelText = o.cancelText;
+        const confirmStyle = o.confirmStyle || 'danger';
         let backdrop = o.backdrop;
 
         if (typeof backdrop === 'undefined') {
@@ -789,7 +788,7 @@ Espo.Ui = {
 
         let isResolved = false;
 
-        let processCancel = () => {
+        const processCancel = () => {
             if (!o.cancelCallback) {
                 return;
             }
@@ -808,7 +807,7 @@ Espo.Ui = {
         }
 
         return new Promise(resolve => {
-            let dialog = new Dialog({
+            const dialog = new Dialog({
                 backdrop: backdrop,
                 header: null,
                 className: 'dialog-confirm',
@@ -1067,13 +1066,13 @@ Espo.Ui = {
             setTimeout(() => notifySuppressed = false, timeout)
         }
 
-        let parsedMessage = message.indexOf('\n') !== -1 ?
+        const parsedMessage = message.indexOf('\n') !== -1 ?
             marked.parse(message) :
             marked.parseInline(message);
 
         let sanitizedMessage = DOMPurify.sanitize(parsedMessage, {}).toString();
 
-        let closeButton = options.closeButton || false;
+        const closeButton = options.closeButton || false;
 
         if (type === 'error') {
             // For bc.
@@ -1084,9 +1083,9 @@ Espo.Ui = {
             sanitizedMessage = ' <span class="fas fa-spinner fa-spin"> ';
         }
 
-        let additionalClassName = closeButton ? ' alert-closable' : '';
+        const additionalClassName = closeButton ? ' alert-closable' : '';
 
-        let $el = $('<div>')
+        const $el = $('<div>')
             .addClass('alert alert-' + type + additionalClassName + ' fade in')
             .attr('id', 'notification')
             .css({
@@ -1103,7 +1102,7 @@ Espo.Ui = {
             );
 
         if (closeButton) {
-            let $close = $('<button>')
+            const $close = $('<button>')
                 .attr('type', 'button')
                 .attr('data-dismiss', 'modal')
                 .attr('aria-hidden', 'true')
@@ -1157,7 +1156,7 @@ Espo.Ui = {
             {closeButton: options} :
             {...options};
 
-        let timeout = options.closeButton ? 0 : 4000;
+        const timeout = options.closeButton ? 0 : 4000;
 
         Espo.Ui.notify(message, 'danger', timeout, options);
     },

@@ -133,7 +133,7 @@ class LayoutManager {
             cache = true;
         }
 
-        let key = this.getKey(scope, type);
+        const key = this.getKey(scope, type);
 
         if (cache) {
             if (key in this.data) {
@@ -146,7 +146,7 @@ class LayoutManager {
         }
 
         if (this.cache && cache) {
-            let cached = this.cache.get('app-layout', key);
+            const cached = this.cache.get('app-layout', key);
 
             if (cached) {
                 if (typeof callback === 'function') {
@@ -217,7 +217,7 @@ class LayoutManager {
             .putRequest(this.getUrl(scope, type, setId), layout)
             .then(
                 () => {
-                    let key = this.getKey(scope, type);
+                    const key = this.getKey(scope, type);
 
                     if (this.cache && key) {
                         this.cache.clear('app-layout', key);
@@ -251,7 +251,7 @@ class LayoutManager {
             })
             .then(
                 () => {
-                    let key = this.getKey(scope, type);
+                    const key = this.getKey(scope, type);
 
                     if (this.cache) {
                         this.cache.clear('app-layout', key);

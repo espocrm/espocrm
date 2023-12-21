@@ -57,7 +57,7 @@ class Cache {
      * @param {Number} cacheTimestamp A cache timestamp.
      */
     handleActuality(cacheTimestamp) {
-        let storedTimestamp = this.getCacheTimestamp();
+        const storedTimestamp = this.getCacheTimestamp();
 
         if (storedTimestamp) {
             if (storedTimestamp !== cacheTimestamp) {
@@ -87,7 +87,7 @@ class Cache {
      * @todo Revise whether is needed.
      */
     storeTimestamp() {
-        let frontendCacheTimestamp = Date.now();
+        const frontendCacheTimestamp = Date.now();
 
         this.set('app', 'timestamp', frontendCacheTimestamp);
     }
@@ -131,7 +131,7 @@ class Cache {
     get(type, name) {
         this.checkType(type);
 
-        let key = this.composeKey(type, name);
+        const key = this.composeKey(type, name);
 
         let stored;
 
@@ -148,7 +148,7 @@ class Cache {
             let result = stored;
 
             if (stored.length > 9 && stored.substring(0, 9) === '__JSON__:') {
-                let jsonString = stored.slice(9);
+                const jsonString = stored.slice(9);
 
                 try {
                     result = JSON.parse(jsonString);
@@ -174,7 +174,7 @@ class Cache {
     set(type, name, value) {
         this.checkType(type);
 
-        let key = this.composeKey(type, name);
+        const key = this.composeKey(type, name);
 
         if (value instanceof Object || Array.isArray(value)) {
             value = '__JSON__:' + JSON.stringify(value);
@@ -209,9 +209,9 @@ class Cache {
             reText = '^' + this.basePrefix + '-';
         }
 
-        let re = new RegExp(reText);
+        const re = new RegExp(reText);
 
-        for (let i in localStorage) {
+        for (const i in localStorage) {
             if (re.test(i)) {
                 delete localStorage[i];
             }

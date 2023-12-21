@@ -982,7 +982,7 @@ class Model {
     }
 
     /**
-     * Whether has a link.
+     * Has a link.
      *
      * @param {string} link A link.
      * @returns {boolean}

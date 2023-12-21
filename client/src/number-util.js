@@ -128,7 +128,7 @@ class NumberUtil {
             );
         }
 
-        let parts = value.toString().split('.');
+        const parts = value.toString().split('.');
 
         parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.getThousandSeparator());
 
@@ -147,7 +147,7 @@ class NumberUtil {
             }
 
             if (decimalPlaces && decimalPartLength < decimalPlaces) {
-                let limit = decimalPlaces - decimalPartLength;
+                const limit = decimalPlaces - decimalPartLength;
 
                 for (let i = 0; i < limit; i++) {
                     parts[1] += '0';

@@ -131,8 +131,8 @@ class Metadata {
         let pointer = this.data;
         let result = defaultValue;
 
-        for (var i = 0; i < arr.length; i++) {
-            let key = arr[i];
+        for (let i = 0; i < arr.length; i++) {
+            const key = arr[i];
 
             if (!(key in pointer)) {
                 result = defaultValue;
@@ -156,7 +156,7 @@ class Metadata {
      */
     loadFromCache() {
         if (this.cache) {
-            let cached = this.cache.get('app', 'metadata');
+            const cached = this.cache.get('app', 'metadata');
 
             if (cached) {
                 this.data = cached;
@@ -192,11 +192,11 @@ class Metadata {
      * @returns {string[]}
      */
     getScopeList () {
-        let scopes = this.get('scopes') || {};
-        let scopeList = [];
+        const scopes = this.get('scopes') || {};
+        const scopeList = [];
 
-        for (let scope in scopes) {
-            let d = scopes[scope];
+        for (const scope in scopes) {
+            const d = scopes[scope];
 
             if (d.disabled) {
                 continue;
@@ -214,11 +214,11 @@ class Metadata {
      * @returns {string[]}
      */
     getScopeObjectList () {
-        let scopes = this.get('scopes') || {};
-        let scopeList = [];
+        const scopes = this.get('scopes') || {};
+        const scopeList = [];
 
-        for (let scope in scopes) {
-            let d = scopes[scope];
+        for (const scope in scopes) {
+            const d = scopes[scope];
 
             if (d.disabled) {
                 continue;
@@ -240,11 +240,11 @@ class Metadata {
      * @returns {string[]}
      */
     getScopeEntityList () {
-        let scopes = this.get('scopes') || {};
-        let scopeList = [];
+        const scopes = this.get('scopes') || {};
+        const scopeList = [];
 
-        for (let scope in scopes) {
-            let d = scopes[scope];
+        for (const scope in scopes) {
+            const d = scopes[scope];
 
             if (d.disabled) {
                 continue;

@@ -60,7 +60,7 @@ class ModelFactory {
             context = context || this;
 
             this.getSeed(entityType, Seed => {
-                let model = new Seed({}, {
+                const model = new Seed({}, {
                     entityType: entityType,
                     defs: this.metadata.get(['entityDefs', entityType]) || {},
                     dateTime: this.dateTime,
@@ -83,7 +83,7 @@ class ModelFactory {
      * @public
      */
     getSeed(entityType, callback) {
-        let className = this.metadata.get(['clientDefs', entityType, 'model']) || 'model';
+        const className = this.metadata.get(['clientDefs', entityType, 'model']) || 'model';
 
         Espo.loader.require(className, modelClass => callback(modelClass));
     }

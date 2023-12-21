@@ -55,7 +55,7 @@ class MultiCollection extends Collection {
         const list = response.list;
 
         return list.map(attributes => {
-            let entityType = attributes._scope;
+            const entityType = attributes._scope;
 
             if (!entityType) {
                 throw new Error("No '_scope' attribute.");
@@ -64,7 +64,7 @@ class MultiCollection extends Collection {
             attributes = _.clone(attributes);
             delete attributes['_scope'];
 
-            let model = this.seeds[entityType].clone();
+            const model = this.seeds[entityType].clone();
 
             model.set(attributes);
 
@@ -74,8 +74,7 @@ class MultiCollection extends Collection {
 
     /** @inheritDoc */
     clone() {
-        let collection = super.clone();
-
+        const collection = super.clone();
         collection.seeds = this.seeds;
 
         return collection;

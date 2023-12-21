@@ -93,9 +93,9 @@ class AclManager {
                 implementationClass = this.implementationClassMap[scope];
             }
 
-            let forbiddenFieldList = this.getScopeForbiddenFieldList(scope);
+            const forbiddenFieldList = this.getScopeForbiddenFieldList(scope);
 
-            let params = {
+            const params = {
                 aclAllowDeleteCreated: this.aclAllowDeleteCreated,
                 teamsFieldIsForbidden: !!~forbiddenFieldList.indexOf('teams'),
                 forbiddenFieldList: forbiddenFieldList,
@@ -191,7 +191,7 @@ class AclManager {
      * @returns {boolean}
      */
     checkScopeHasAcl(scope) {
-        var data = (this.data.table || {})[scope];
+        const data = (this.data.table || {})[scope];
 
         if (typeof data === 'undefined') {
             return false;
@@ -228,7 +228,7 @@ class AclManager {
      * @returns {boolean|null} True if access allowed, null if not enough data to determine.
      */
     checkModel(model, action, precise) {
-        let scope = model.entityType;
+        const scope = model.entityType;
 
         // todo move this to custom acl
         if (action === 'edit') {
@@ -249,10 +249,10 @@ class AclManager {
             data = null;
         }
 
-        let impl = this.getImplementation(scope);
+        const impl = this.getImplementation(scope);
 
         if (action) {
-            let methodName = 'checkModel' + Utils.upperCaseFirst(action);
+            const methodName = 'checkModel' + Utils.upperCaseFirst(action);
 
             if (methodName in impl) {
                 return impl[methodName](model, data, precise);
@@ -300,6 +300,7 @@ class AclManager {
         return this.getImplementation(model.entityType).checkInTeam(model);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Check an assignment permission to a user.
      *
@@ -332,7 +333,7 @@ class AclManager {
             return true;
         }
 
-        let level = this.getPermissionLevel(permission);
+        const level = this.getPermissionLevel(permission);
 
         if (level === 'no') {
             if (user.id === this.getUser().id) {
@@ -349,7 +350,7 @@ class AclManager {
 
             let result = false;
 
-            let teamsIds = user.get('teamsIds') || [];
+            const teamsIds = user.get('teamsIds') || [];
 
             teamsIds.forEach(id => {
                 if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
@@ -383,23 +384,23 @@ class AclManager {
         action = action || 'read';
         thresholdLevel = thresholdLevel || 'no';
 
-        let key = scope + '_' + action + '_' + thresholdLevel;
+        const key = scope + '_' + action + '_' + thresholdLevel;
 
         if (key in this.forbiddenFieldsCache) {
             return Utils.clone(this.forbiddenFieldsCache[key]);
         }
 
-        let levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
+        const levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
 
-        let fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
-        let scopeData = fieldTableQuickAccess[scope] || {};
-        let fieldsData = scopeData.fields || {};
-        let actionData = fieldsData[action] || {};
+        const fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
+        const scopeData = fieldTableQuickAccess[scope] || {};
+        const fieldsData = scopeData.fields || {};
+        const actionData = fieldsData[action] || {};
 
-        let fieldList = [];
+        const fieldList = [];
 
         levelList.forEach(level => {
-            let list = actionData[level] || [];
+            const list = actionData[level] || [];
 
             list.forEach(field => {
                 if (~fieldList.indexOf(field)) {
@@ -427,24 +428,24 @@ class AclManager {
         action = action || 'read';
         thresholdLevel = thresholdLevel || 'no';
 
-        let key = scope + '_' + action + '_' + thresholdLevel;
+        const key = scope + '_' + action + '_' + thresholdLevel;
 
         if (key in this.forbiddenAttributesCache) {
             return Utils.clone(this.forbiddenAttributesCache[key]);
         }
 
-        let levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
+        const levelList = this.fieldLevelList.slice(this.fieldLevelList.indexOf(thresholdLevel));
 
-        let fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
-        let scopeData = fieldTableQuickAccess[scope] || {};
+        const fieldTableQuickAccess = this.data.fieldTableQuickAccess || {};
+        const scopeData = fieldTableQuickAccess[scope] || {};
 
-        let attributesData = scopeData.attributes || {};
-        let actionData = attributesData[action] || {};
+        const attributesData = scopeData.attributes || {};
+        const actionData = attributesData[action] || {};
 
-        let attributeList = [];
+        const attributeList = [];
 
         levelList.forEach(level => {
-            let list = actionData[level] || [];
+            const list = actionData[level] || [];
 
             list.forEach(attribute => {
                 if (~attributeList.indexOf(attribute)) {

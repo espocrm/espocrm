@@ -178,7 +178,7 @@ class DateTime {
      * @returns {string|-1} A system date value.
      */
     fromDisplayDate(string) {
-        let m = moment(string, this.dateFormat);
+        const m = moment(string, this.dateFormat);
 
         if (!m.isValid()) {
             return -1;
@@ -207,7 +207,7 @@ class DateTime {
             return '';
         }
 
-        let m = moment(string, this.internalDateFormat);
+        const m = moment(string, this.internalDateFormat);
 
         if (!m.isValid()) {
             return '';
@@ -300,7 +300,7 @@ class DateTime {
             return '';
         }
 
-        let m = moment(string).utc();
+        const m = moment(string).utc();
 
         return m.format(this.internalDateTimeFormat);
     }

@@ -59,19 +59,19 @@ class CollectionFactory {
             context = context || this;
 
             this.modelFactory.getSeed(entityType, Model => {
-                let orderBy = this.modelFactory.metadata
+                const orderBy = this.modelFactory.metadata
                     .get(['entityDefs', entityType, 'collection', 'orderBy']);
 
-                let order = this.modelFactory.metadata
+                const order = this.modelFactory.metadata
                     .get(['entityDefs', entityType, 'collection', 'order']);
 
-                let className = this.modelFactory.metadata
+                const className = this.modelFactory.metadata
                     .get(['clientDefs', entityType, 'collection']) || 'collection';
 
-                let defs = this.metadata.get(['entityDefs', entityType]) || {};
+                const defs = this.metadata.get(['entityDefs', entityType]) || {};
 
                 Espo.loader.require(className, Collection => {
-                    let collection = new Collection(null, {
+                    const collection = new Collection(null, {
                         entityType: entityType,
                         orderBy: orderBy,
                         order: order,

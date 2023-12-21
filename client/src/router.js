@@ -158,10 +158,10 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
         this.routeParams = {};
 
         if (this.options.routes) {
-            let routeList = [];
+            const routeList = [];
 
             Object.keys(this.options.routes).forEach(route => {
-                let item = this.options.routes[route];
+                const item = this.options.routes[route];
 
                 routeList.push({
                     route: route,
@@ -239,7 +239,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
         let hashHistory = [window.location.hash];
 
         window.addEventListener('hashchange', () => {
-            let hash = window.location.hash
+            const hash = window.location.hash;
 
             if (
                 hashHistory.length > 1 &&
@@ -342,7 +342,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
      * @private
      */
     route: function (route, name/*, callback*/) {
-        let routeOriginal = route;
+        const routeOriginal = route;
 
         if (!_.isRegExp(route)) {
             route = this._routeToRegExp(route);
@@ -361,15 +361,15 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
         }*/
         callback = this['_' + name];
 
-        let router = this;
+        const router = this;
 
         Backbone.history.route(route, function (fragment) {
-            let args = router._extractParameters(route, fragment);
+            const args = router._extractParameters(route, fragment);
 
-            let options = {};
+            const options = {};
 
             if (name === 'defaultRoute') {
-                let keyList = [];
+                const keyList = [];
 
                 routeOriginal.split('/').forEach(key => {
                     if (key && key.indexOf(':') === 0) {
@@ -451,11 +451,11 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
             return string;
         }
 
-        let options = {};
+        const options = {};
 
         if (typeof string !== 'undefined') {
             string.split('&').forEach(item => {
-                let p = item.split('=');
+                const p = item.split('=');
 
                 options[p[0]] = true;
 
@@ -472,8 +472,8 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
      * @private
      */
     _defaultRoute: function (params, options) {
-        let controller = params.controller || options.controller;
-        let action = params.action || options.action;
+        const controller = params.controller || options.controller;
+        const action = params.action || options.action;
 
         this.dispatch(controller, action, options);
     },
@@ -568,7 +568,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
      * @fires module:router#routed
      */
     dispatch: function (controller, action, options) {
-        let o = {
+        const o = {
             controller: controller,
             action: action,
             options: options,
@@ -592,7 +592,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
 export default Router;
 
 function isIOS9UIWebView() {
-    let userAgent = window.navigator.userAgent;
+    const userAgent = window.navigator.userAgent;
 
     return /(iPhone|iPad|iPod).* OS 9_\d/.test(userAgent) && !/Version\/9\./.test(userAgent);
 }
@@ -600,7 +600,7 @@ function isIOS9UIWebView() {
 // Fixes issue that navigate with {trigger: false} fired
 // route change if there's a whitespace character.
 Backbone.history.getHash = function (window) {
-    let match = (window || this).location.href.match(/#(.*)$/);
+    const match = (window || this).location.href.match(/#(.*)$/);
 
     return match ? this.decodeFragment(match[1]) : '';
 };
@@ -634,7 +634,7 @@ if (isIOS9UIWebView()) {
     };
 
     Backbone.history.navigate = function (fragment, options) {
-        let pathStripper = /#.*$/;
+        const pathStripper = /#.*$/;
 
         if (!Backbone.History.started) {
             return false;
@@ -660,7 +660,7 @@ if (isIOS9UIWebView()) {
             url = url.slice(0, -1);
         }
 
-        let oldHash = location.hash;
+        const oldHash = location.hash;
 
         if (this._hasPushState) {
             this.history[options.replace ? 'replaceState' : 'pushState']({}, document.title, url);

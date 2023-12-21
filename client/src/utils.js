@@ -289,8 +289,8 @@ Espo.Utils = {
             return true;
         }
 
-        for (var i in dataList) {
-            var item = dataList[i];
+        for (const i in dataList) {
+            const item = dataList[i];
 
             if (item.scope) {
                 if (item.action) {
@@ -312,7 +312,7 @@ Espo.Utils = {
 
             if (item.teamIdList) {
                 if (user && !(allowAllForAdmin && user.isAdmin())) {
-                    var inTeam = false;
+                    let inTeam = false;
 
                     user.getLinkMultipleIdList('teams').forEach(teamId => {
                         if (~item.teamIdList.indexOf(teamId)) {
@@ -328,7 +328,7 @@ Espo.Utils = {
 
             if (item.portalIdList) {
                 if (user && !(allowAllForAdmin && user.isAdmin())) {
-                    var inPortal = false;
+                    let inPortal = false;
 
                     user.getLinkMultipleIdList('portals').forEach(portalId => {
                         if (~item.portalIdList.indexOf(portalId)) {
@@ -380,7 +380,7 @@ Espo.Utils = {
             return string;
         }
 
-        var result = string;
+        let result = string;
 
         switch (p) {
             case 'c-h':
@@ -441,7 +441,7 @@ Espo.Utils = {
         data = Espo.Utils.clone(data);
 
         if (Espo.Utils.isObject(data) || _.isArray(data)) {
-            for (var i in data) {
+            for (const i in data) {
                 data[i] = this.cloneDeep(data[i]);
             }
         }
@@ -484,9 +484,9 @@ Espo.Utils = {
         }
 
         if (name.indexOf(':') !== -1) {
-            var arr = name.split(':');
-            var modPart = arr[0];
-            var namePart = arr[1];
+            const arr = name.split(':');
+            let modPart = arr[0];
+            let namePart = arr[1];
 
             modPart = this.camelCaseToHyphen(modPart);
             namePart = this.camelCaseToHyphen(namePart).split('.').join('/');

@@ -159,7 +159,7 @@ class Language {
         }
 
         if (this.cache) {
-            let cached = this.cache.get('app', 'language-' + name);
+            const cached = this.cache.get('app', 'language-' + name);
 
             if (cached) {
                 this.data = cached;

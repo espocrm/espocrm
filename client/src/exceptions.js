@@ -31,7 +31,7 @@
 Espo.Exceptions = Espo.Exceptions || {};
 
 /**
- * An access denied exception.
+ * An access-denied exception.
  *
  * @param {string} [message] A message.
  * @class
@@ -46,7 +46,7 @@ Espo.Exceptions.AccessDenied.prototype = new Error();
 Espo.Exceptions.AccessDenied.prototype.name = 'AccessDenied';
 
 /**
- * A not found exception.
+ * A not-found exception.
  *
  * @param {string} [message] A message.
  * @class

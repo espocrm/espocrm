@@ -135,7 +135,7 @@ class SearchManager {
         if (defaultData) {
             this.defaultData = defaultData;
 
-            for (let p in this.emptyData) {
+            for (const p in this.emptyData) {
                 if (!(p in defaultData)) {
                     defaultData[p] = Espo.Utils.clone(this.emptyData[p]);
                 }
@@ -170,7 +170,7 @@ class SearchManager {
      * @returns {module:search-manager~whereItem[]}
      */
     getWhere() {
-        let where = [];
+        const where = [];
 
         if (this.data.textFilter && this.data.textFilter !== '') {
             where.push({
@@ -180,12 +180,12 @@ class SearchManager {
         }
 
         if (this.data.bool) {
-            let o = {
+            const o = {
                 type: 'bool',
                 value: [],
             };
 
-            for (let name in this.data.bool) {
+            for (const name in this.data.bool) {
                 if (this.data.bool[name]) {
                     o.value.push(name);
                 }
@@ -197,7 +197,7 @@ class SearchManager {
         }
 
         if (this.data.primary) {
-            let o = {
+            const o = {
                 type: 'primary',
                 value: this.data.primary,
             };
@@ -208,14 +208,14 @@ class SearchManager {
         }
 
         if (this.data.advanced) {
-            for (let name in this.data.advanced) {
-                let defs = this.data.advanced[name];
+            for (const name in this.data.advanced) {
+                const defs = this.data.advanced[name];
 
                 if (!defs) {
                     continue;
                 }
 
-                let part = this.getWherePart(name, defs);
+                const part = this.getWherePart(name, defs);
 
                 where.push(part);
             }
@@ -240,15 +240,15 @@ class SearchManager {
             return defs.where;
         }
 
-        let type = defs.type;
+        const type = defs.type;
         let value;
 
         if (type === 'or' || type === 'and') {
-            let a = [];
+            const a = [];
 
             value = defs.value || {};
 
-            for (let n in value) {
+            for (const n in value) {
                 a.push(this.getWherePart(n, value[n]));
             }
 

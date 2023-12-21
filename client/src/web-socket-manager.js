@@ -74,7 +74,7 @@ class WebSocketManager {
          */
         this.protocolPart = '';
 
-        let url = this.config.get('webSocketUrl');
+        const url = this.config.get('webSocketUrl');
 
         if (url) {
             if (url.indexOf('wss://') === 0) {
@@ -87,7 +87,7 @@ class WebSocketManager {
             }
         }
         else {
-            let siteUrl = this.config.get('siteUrl') || '';
+            const siteUrl = this.config.get('siteUrl') || '';
 
             if (siteUrl.indexOf('https://') === 0) {
                 this.url = siteUrl.substring(8);
@@ -102,9 +102,9 @@ class WebSocketManager {
                 this.url = this.url.replace(/\/$/, '');
             }
 
-            let port = this.protocolPart === 'wss://' ? 443 : 8080;
+            const port = this.protocolPart === 'wss://' ? 443 : 8080;
 
-            let si = this.url.indexOf('/');
+            const si = this.url.indexOf('/');
 
             if (~si) {
                 this.url = this.url.substring(0, si) + ':' + port;
@@ -126,9 +126,9 @@ class WebSocketManager {
      * @param {string} userId A user ID.
      */
     connect(auth, userId) {
-        let authArray = Base64.decode(auth).split(':');
+        const authArray = Base64.decode(auth).split(':');
 
-        let authToken = authArray[1];
+        const authToken = authArray[1];
 
         let url = this.protocolPart + this.url;
 

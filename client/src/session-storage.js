@@ -43,8 +43,10 @@ class SessionStorage {
      * @returns {*} Null if not set.
      */
     get(name) {
+        let stored;
+
         try {
-            var stored = this.storageObject.getItem(name);
+            stored = this.storageObject.getItem(name);
         }
         catch (error) {
             console.error(error);
@@ -56,7 +58,7 @@ class SessionStorage {
             let result = stored;
 
             if (stored.length > 9 && stored.substring(0, 9) === '__JSON__:') {
-                let jsonString = stored.slice(9);
+                const jsonString = stored.slice(9);
 
                 try {
                     result = JSON.parse(jsonString);
@@ -119,7 +121,7 @@ class SessionStorage {
      * @param {string} name A name.
      */
     clear(name) {
-        for (let i in this.storageObject) {
+        for (const i in this.storageObject) {
             if (i === name) {
                 delete this.storageObject[i];
             }

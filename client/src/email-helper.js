@@ -83,12 +83,12 @@ class EmailHelper {
      * @returns {Object.<string, *>}
      */
     getReplyAttributes(model, data, cc) {
-        let attributes = {
+        const attributes = {
             status: 'Draft',
             isHtml: model.get('isHtml'),
         };
 
-        let subject = model.get('name') || '';
+        const subject = model.get('name') || '';
 
         attributes['name'] = subject.toUpperCase().indexOf('RE:') !== 0 ?
             'Re: ' + subject :
@@ -96,27 +96,27 @@ class EmailHelper {
 
         let to = '';
         let isReplyOnSent = false;
-        let nameHash = model.get('nameHash') || {};
-        let replyToAddressString = model.get('replyTo') || null;
-        let replyToString = model.get('replyToString') || null;
-        let userEmailAddressList = this.getUser().get('emailAddressList') || [];
+        const nameHash = model.get('nameHash') || {};
+        const replyToAddressString = model.get('replyTo') || null;
+        const replyToString = model.get('replyToString') || null;
+        const userEmailAddressList = this.getUser().get('emailAddressList') || [];
 
         if (replyToAddressString) {
-            let replyToAddressList = replyToAddressString.split(';');
+            const replyToAddressList = replyToAddressString.split(';');
 
             to = replyToAddressList.join(';');
         }
         else if (replyToString) {
-            let a = [];
+            const a = [];
 
             replyToString.split(';').forEach(item => {
-                let part = item.trim();
-                let address = this.parseAddressFromStringAddress(item);
+                const part = item.trim();
+                const address = this.parseAddressFromStringAddress(item);
 
                 if (address) {
                     a.push(address);
 
-                    let name = this.parseNameFromStringAddress(part);
+                    const name = this.parseNameFromStringAddress(part);
 
                     if (name && name !== address) {
                         nameHash[address] = name;
@@ -135,10 +135,10 @@ class EmailHelper {
                 to = model.get('from');
 
                 if (!nameHash[to]) {
-                    let fromString = model.get('fromString') || model.get('fromName');
+                    const fromString = model.get('fromString') || model.get('fromName');
 
                     if (fromString) {
-                        let name = this.parseNameFromStringAddress(fromString);
+                        const name = this.parseNameFromStringAddress(fromString);
 
                         if (name !== to) {
                             nameHash[to] = name;
@@ -218,7 +218,7 @@ class EmailHelper {
             attributes.teamsIds = Espo.Utils.clone(model.get('teamsIds'));
             attributes.teamsNames = Espo.Utils.clone(model.get('teamsNames') || {});
 
-            let defaultTeamId = this.user.get('defaultTeamId');
+            const defaultTeamId = this.user.get('defaultTeamId');
 
             if (defaultTeamId && !~attributes.teamsIds.indexOf(defaultTeamId)) {
                 attributes.teamsIds.push(this.user.get('defaultTeamId'));
@@ -235,10 +235,10 @@ class EmailHelper {
         attributes.inReplyTo = model.get('messageId');
 
 
-        let toAddressList = (model.get('to') || '').split(';');
-        let userPersonalEmailAddressList = this.getUser().get('userEmailAddressList') || [];
+        const toAddressList = (model.get('to') || '').split(';');
+        const userPersonalEmailAddressList = this.getUser().get('userEmailAddressList') || [];
 
-        for (let address of userPersonalEmailAddressList) {
+        for (const address of userPersonalEmailAddressList) {
             if (toAddressList.includes(address)) {
                 attributes.from = address;
 
@@ -258,12 +258,12 @@ class EmailHelper {
      * @returns {Object}
      */
     getForwardAttributes(model) {
-        let attributes = {
+        const attributes = {
             status: 'Draft',
             isHtml: model.get('isHtml'),
         };
 
-        let subject = model.get('name');
+        const subject = model.get('name');
 
         if (~!subject.toUpperCase().indexOf('FWD:') && ~!subject.toUpperCase().indexOf('FW:')) {
             attributes['name'] = 'Fwd: ' + subject;
@@ -301,13 +301,13 @@ class EmailHelper {
                 this.getLanguage().translate('Forwarded message', 'labels', 'Email') + '------';
         }
 
-        let list = [];
+        const list = [];
 
         if (model.get('from')) {
-            let from = model.get('from');
+            const from = model.get('from');
             let line = this.getLanguage().translate('from', 'fields', 'Email') + ': ';
 
-            let nameHash = model.get('nameHash') || {};
+            const nameHash = model.get('nameHash') || {};
 
             if (from in nameHash) {
                 line += nameHash[from] + ' ';
@@ -341,10 +341,10 @@ class EmailHelper {
         if (model.get('to')) {
             let line = this.getLanguage().translate('to', 'fields', 'Email') + ': ';
 
-            let partList = [];
+            const partList = [];
 
             model.get('to').split(';').forEach(to => {
-                let nameHash = model.get('nameHash') || {};
+                const nameHash = model.get('nameHash') || {};
                 let line = '';
 
                 if (to in nameHash) {
@@ -376,12 +376,12 @@ class EmailHelper {
         });
 
         if (model.get('isHtml')) {
-            let body = model.get('body');
+            const body = model.get('body');
 
             attributes['body'] = prepending + '<br><br>' + body;
         }
         else {
-            let bodyPlain = model.get('body') || model.get('bodyPlain') || '';
+            const bodyPlain = model.get('body') || model.get('bodyPlain') || '';
 
             attributes['bodyPlain'] = attributes['body'] = prepending + '\n\n' + bodyPlain;
         }
@@ -414,7 +414,7 @@ class EmailHelper {
      * @returns {string|null}
      */
     parseAddressFromStringAddress(value) {
-        let r = value.match(/<(.*)>/);
+        const r = value.match(/<(.*)>/);
         let address;
 
         if (r && r.length > 1) {
@@ -434,14 +434,14 @@ class EmailHelper {
      * @param {Object.<string, *>} attributes
      */
     addReplyBodyAttributes(model, attributes) {
-        let format = this.getDateTime().getReadableShortDateTimeFormat();
+        const format = this.getDateTime().getReadableShortDateTimeFormat();
 
-        let dateSent = model.get('dateSent');
+        const dateSent = model.get('dateSent');
 
         let dateSentSting = null;
 
         if (dateSent) {
-            let dateSentMoment = this.getDateTime().toMoment(dateSent);
+            const dateSentMoment = this.getDateTime().toMoment(dateSent);
 
             dateSentSting = dateSentMoment.format(format);
         }
@@ -498,7 +498,7 @@ class EmailHelper {
 
         link += (attributes.to || '').split(';').join(',');
 
-        let o = {};
+        const o = {};
 
         if (attributes.cc) {
             o.cc = attributes.cc.split(';').join(',');
@@ -536,7 +536,7 @@ class EmailHelper {
 
         let part = '';
 
-        for (let key in o) {
+        for (const key in o) {
             if (part !== '') {
                 part += '&';
             }
@@ -565,7 +565,7 @@ class EmailHelper {
 
         value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
 
-        let $div = $('<div>').html(value);
+        const $div = $('<div>').html(value);
 
         $div.find('style').remove();
         $div.find('link[ref="stylesheet"]').remove();
