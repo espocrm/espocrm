@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,25 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import View from 'view';
+namespace Espo\Tools\App\Api;
 
-class AboutView extends View {
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Utils\Resource\FileReader;
 
-    template = 'about'
+/**
+ * @noinspection PhpUnused
+ */
+class GetAboutText implements Action
+{
+    public function __construct(
+        private FileReader $fileReader
+    ) {}
 
-    data() {
-        return {
-            version: this.getConfig().get('version'),
-            text: this.getHelper().transformMarkdownText(this.text)
-        };
-    }
+    public function process(Request $request): Response
+    {
+        $text = $this->fileReader->read('texts/about.md', FileReader\Params::create());
 
-    setup() {
-        this.wait(
-            Espo.Ajax.getRequest('App/aboutText')
-                .then(text => this.text = text)
-        );
+        return ResponseComposer::json($text);
     }
 }
-
-export default AboutView;
