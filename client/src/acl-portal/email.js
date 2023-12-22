@@ -32,7 +32,7 @@ class EmailAclPortal extends AclPortal {
 
     // noinspection JSUnusedGlobalSymbols
     checkModelRead(model, data, precise) {
-        let result = this.checkModel(model, data, 'read', precise);
+        const result = this.checkModel(model, data, 'read', precise);
 
         if (result) {
             return true;
@@ -42,7 +42,7 @@ class EmailAclPortal extends AclPortal {
             return false;
         }
 
-        let d = data || {};
+        const d = data || {};
 
         if (d.read === 'no') {
             return false;

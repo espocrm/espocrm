@@ -34,7 +34,7 @@ class PreferencesController extends RecordController {
     defaultAction = 'own'
 
     getModel(callback, context) {
-        let model = new Preferences();
+        const model = new Preferences();
 
         model.settings = this.getConfig();
         model.defs = this.getMetadata().get('entityDefs.Preferences');

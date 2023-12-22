@@ -34,8 +34,8 @@ class EmailController extends RecordController {
         super.prepareModelView(model, options);
 
         this.listenToOnce(model, 'after:send', () => {
-            let key = this.name + 'List';
-            let stored = this.getStoredMainView(key);
+            const key = this.name + 'List';
+            const stored = this.getStoredMainView(key);
 
             if (stored) {
                 this.clearStoredMainView(key);

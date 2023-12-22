@@ -129,7 +129,7 @@ class LoginView extends View {
     setup() {
         this.anotherUser = this.options.anotherUser || null;
 
-        let loginData = this.getConfig().get('loginData') || {};
+        const loginData = this.getConfig().get('loginData') || {};
 
         this.fallback = !!loginData.fallback;
         this.method = loginData.method;
@@ -162,7 +162,7 @@ class LoginView extends View {
      * @return {string}
      */
     getLogoSrc() {
-        let companyLogoId = this.getConfig().get('companyLogoId');
+        const companyLogoId = this.getConfig().get('companyLogoId');
 
         if (!companyLogoId) {
             return this.getBasePath() +
@@ -208,9 +208,9 @@ class LoginView extends View {
     login() {
         let authString;
         let userName = this.$username.val();
-        let password = this.$password.val();
+        const password = this.$password.val();
 
-        let trimmedUserName = userName.trim();
+        const trimmedUserName = userName.trim();
 
         if (trimmedUserName !== userName) {
             this.$username.val(trimmedUserName);
@@ -237,7 +237,7 @@ class LoginView extends View {
             throw e;
         }
 
-        let headers = {
+        const headers = {
             'Authorization': 'Basic ' + authString,
             'Espo-Authorization': authString,
         };
@@ -254,7 +254,7 @@ class LoginView extends View {
     proceed(headers, userName, password) {
         headers = Espo.Utils.clone(headers);
 
-        let initialHeaders = Espo.Utils.clone(headers);
+        const initialHeaders = Espo.Utils.clone(headers);
 
         headers['Espo-Authorization-By-Token'] = 'false';
         headers['Espo-Authorization-Create-Token-Secret'] = 'true';
@@ -323,9 +323,9 @@ class LoginView extends View {
     processEmptyUsername() {
         this.isPopoverDestroyed = false;
 
-        let $el = this.$username;
+        const $el = this.$username;
 
-        let message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
+        const message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
 
         $el
             .popover({
@@ -336,7 +336,7 @@ class LoginView extends View {
             })
             .popover('show');
 
-        let $cell = $el.closest('.form-group');
+        const $cell = $el.closest('.form-group');
 
         $cell.addClass('has-error');
 
@@ -373,7 +373,7 @@ class LoginView extends View {
      * @param {Object.<string, *>} data
      */
     onSecondStepRequired(headers, userName, password, data) {
-        let view = data.view || 'views/login-second-step';
+        const view = data.view || 'views/login-second-step';
 
         this.trigger('redirect', view, headers, userName, password, data);
     }

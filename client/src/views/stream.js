@@ -45,7 +45,7 @@ class StreamView extends View {
         },
         /** @this StreamView */
         'click button[data-action="selectFilter"]': function (e) {
-            let data = $(e.currentTarget).data();
+            const data = $(e.currentTarget).data();
 
             this.actionSelectFilter(data);
         },
@@ -115,8 +115,8 @@ class StreamView extends View {
     }
 
     actionSelectFilter(data) {
-        let name = data.name;
-        let filter = name;
+        const name = data.name;
+        const filter = name;
 
         let internalFilter = name;
 
@@ -128,7 +128,7 @@ class StreamView extends View {
         this.setFilter(this.filter);
 
         this.filterList.forEach((item) => {
-            var $el = this.$el.find('.page-header button[data-action="selectFilter"][data-name="'+item+'"]');
+            const $el = this.$el.find('.page-header button[data-action="selectFilter"][data-name="' + item + '"]');
 
             if (item === filter) {
                 $el.addClass('active');

@@ -58,7 +58,7 @@ class ListWithCategories extends ListView {
     nestedCategoriesCollection
 
     data() {
-        let data = {};
+        const data = {};
 
         data.hasTree = (this.isExpanded || this.hasNavigationPanel) && !this.categoriesDisabled;
         data.hasNestedCategories = !this.isExpanded;
@@ -78,14 +78,14 @@ class ListWithCategories extends ListView {
             this.getAcl().check(this.categoryScope, 'edit') ||
             this.getAcl().check(this.categoryScope, 'create');
 
-        let isExpandedByDefault = this.getMetadata()
+        const isExpandedByDefault = this.getMetadata()
             .get(['clientDefs', this.categoryScope, 'isExpandedByDefault']) || false;
 
         if (isExpandedByDefault) {
             this.isExpanded = true;
         }
 
-        let isCollapsedByDefault = this.getMetadata()
+        const isCollapsedByDefault = this.getMetadata()
             .get(['clientDefs', this.categoryScope, 'isCollapsedByDefault']) || false;
 
         if (isCollapsedByDefault) {
@@ -119,7 +119,7 @@ class ListWithCategories extends ListView {
             this.hasNavigationPanel = this.getNavigationPanelStoredValue();
         }
 
-        let params = this.options.params || {};
+        const params = this.options.params || {};
 
         if ('categoryId' in params) {
             this.currentCategoryId = params.categoryId;
@@ -183,7 +183,7 @@ class ListWithCategories extends ListView {
     }
 
     getNavigationPanelStoredValue() {
-        let value = this.getStorage().get('state', 'categories-navigation-panel-' + this.scope);
+        const value = this.getStorage().get('state', 'categories-navigation-panel-' + this.scope);
 
         return value === 'true' || value === true;
     }
@@ -197,7 +197,7 @@ class ListWithCategories extends ListView {
     }
 
     getIsExpandedStoredValue() {
-        let value = this.getStorage().get('state', 'categories-expanded-' + this.scope);
+        const value = this.getStorage().get('state', 'categories-expanded-' + this.scope);
 
         return value === 'true' || value === true ;
     }
@@ -303,7 +303,7 @@ class ListWithCategories extends ListView {
     }
 
     selectCurrentCategory() {
-        let categoriesView = this.getCategoriesView();
+        const categoriesView = this.getCategoriesView();
 
         if (categoriesView) {
             categoriesView.setSelected(this.currentCategoryId);
@@ -538,7 +538,7 @@ class ListWithCategories extends ListView {
     applyCategoryToCollection() {
         this.collection.whereFunction = () => {
             let filter;
-            let isExpanded = this.isExpanded;
+            const isExpanded = this.isExpanded;
 
             if (!isExpanded && !this.hasTextFilter()) {
                 if (this.isCategoryMultiple()) {
@@ -598,14 +598,14 @@ class ListWithCategories extends ListView {
 
         if (this.isCategoryMultiple()) {
             if (this.currentCategoryId) {
-                let names = {};
+                const names = {};
 
                 names[this.currentCategoryId] = this.getCurrentCategoryName();
 
                 data = {};
 
-                let idsAttribute = this.categoryField + 'Ids';
-                let namesAttribute = this.categoryField + 'Names';
+                const idsAttribute = this.categoryField + 'Ids';
+                const namesAttribute = this.categoryField + 'Names';
 
                 data[idsAttribute] = [this.currentCategoryId];
                 data[namesAttribute] = names;
@@ -616,8 +616,8 @@ class ListWithCategories extends ListView {
             return null;
         }
 
-        let idAttribute = this.categoryField + 'Id';
-        let nameAttribute = this.categoryField + 'Name';
+        const idAttribute = this.categoryField + 'Id';
+        const nameAttribute = this.categoryField + 'Name';
 
         data = {};
 
@@ -656,35 +656,35 @@ class ListWithCategories extends ListView {
             return super.getHeader();
         }
 
-        let path = this.nestedCategoriesCollection.path;
+        const path = this.nestedCategoriesCollection.path;
 
         if (!path || path.length === 0) {
             return super.getHeader();
         }
 
-        let rootUrl = '#' + this.scope;
+        const rootUrl = '#' + this.scope;
 
-        let $root = $('<a>')
+        const $root = $('<a>')
             .attr('href', rootUrl)
             .addClass('action')
             .text(this.translate(this.scope, 'scopeNamesPlural'))
             .addClass('action')
             .attr('data-action', 'openCategory');
 
-        let list = [$root];
+        const list = [$root];
 
-        let currentName = this.nestedCategoriesCollection.categoryData.name;
-        let upperId = this.nestedCategoriesCollection.categoryData.upperId;
-        let upperName = this.nestedCategoriesCollection.categoryData.upperName;
+        const currentName = this.nestedCategoriesCollection.categoryData.name;
+        const upperId = this.nestedCategoriesCollection.categoryData.upperId;
+        const upperName = this.nestedCategoriesCollection.categoryData.upperName;
 
         if (path.length > 2) {
             list.push('...');
         }
 
         if (upperId) {
-            let url = rootUrl + '/' + 'list/categoryId=' + this.escapeString(upperId);
+            const url = rootUrl + '/' + 'list/categoryId=' + this.escapeString(upperId);
 
-            let $folder = $('<a>')
+            const $folder = $('<a>')
                 .attr('href', url)
                 .text(upperName)
                 .addClass('action')
@@ -695,7 +695,7 @@ class ListWithCategories extends ListView {
             list.push($folder);
         }
 
-        let $last = $('<span>').text(currentName);
+        const $last = $('<span>').text(currentName);
 
         list.push($last);
 
@@ -716,7 +716,7 @@ class ListWithCategories extends ListView {
 
     // noinspection JSUnusedGlobalSymbols
     actionToggleNavigationPanel() {
-        let value = !this.hasNavigationPanel;
+        const value = !this.hasNavigationPanel;
 
         this.hasNavigationPanel = value;
 

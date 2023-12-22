@@ -33,7 +33,7 @@ import Collection from 'collection';
 class TreeCollection extends Collection {
 
     createSeed() {
-        let seed = new this.constructor();
+        const seed = new this.constructor();
 
         seed.url = this.url;
         seed.model = this.model;
@@ -45,9 +45,9 @@ class TreeCollection extends Collection {
     }
 
     prepareAttributes(response, options) {
-        let list = super.prepareAttributes(response, options);
+        const list = super.prepareAttributes(response, options);
 
-        let seed = this.clone();
+        const seed = this.clone();
 
         seed.reset();
 
@@ -61,11 +61,11 @@ class TreeCollection extends Collection {
          */
         this.categoryData = response.data || null;
 
-        let f = (l, depth) => {
+        const f = (l, depth) => {
             l.forEach(d => {
                 d.depth = depth;
 
-                let c = this.createSeed();
+                const c = this.createSeed();
 
                 if (d.childList) {
                     if (d.childList.length) {

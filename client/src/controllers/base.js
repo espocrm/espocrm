@@ -45,12 +45,12 @@ class BaseController extends Controller {
      * }} [options]
      */
     login(options) {
-        let viewName = this.getConfig().get('loginView') || 'views/login';
+        const viewName = this.getConfig().get('loginView') || 'views/login';
 
-        let anotherUser = (options || {}).anotherUser;
-        let prefilledUsername = (options || {}).username;
+        const anotherUser = (options || {}).anotherUser;
+        const prefilledUsername = (options || {}).username;
 
-        let viewOptions = {
+        const viewOptions = {
             anotherUser: anotherUser,
             prefilledUsername: prefilledUsername,
         };
@@ -109,7 +109,7 @@ class BaseController extends Controller {
      * Log out.
      */
     logout() {
-        let title = this.getConfig().get('applicationName') || 'EspoCRM';
+        const title = this.getConfig().get('applicationName') || 'EspoCRM';
 
         $('head title').text(title);
 

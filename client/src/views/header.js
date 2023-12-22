@@ -35,7 +35,7 @@ class HeaderView extends View {
     template = 'header'
 
     data() {
-        let data = {};
+        const data = {};
 
         if ('getHeader' in this.getParentMainView()) {
             data.header = this.getParentMainView().getHeader();
@@ -44,7 +44,7 @@ class HeaderView extends View {
         data.scope = this.scope || this.getParentMainView().scope;
         data.items = this.getItems();
 
-        let dropdown = (data.items || {}).dropdown || [];
+        const dropdown = (data.items || {}).dropdown || [];
 
         data.hasVisibleDropdownItems = false;
 
@@ -99,8 +99,8 @@ class HeaderView extends View {
             this.fontSizePercentage = 100;
         }
 
-        let $container = this.$el.find('.header-breadcrumbs');
-        let containerWidth = $container.width();
+        const $container = this.$el.find('.header-breadcrumbs');
+        const containerWidth = $container.width();
         let childrenWidth = 0;
 
         $container.children().each((i, el) => {
@@ -112,8 +112,8 @@ class HeaderView extends View {
                 $container.addClass('overlapped');
 
                 this.$el.find('.title').each((i, el) => {
-                    let $el = $(el);
-                    let text = $(el).text();
+                    const $el = $(el);
+                    const text = $(el).text();
 
                     $el.attr('title', text);
 
@@ -139,7 +139,7 @@ class HeaderView extends View {
 
             this.fontSizePercentage -= 4;
 
-            let $flexible = this.$el.find('.font-size-flexible');
+            const $flexible = this.$el.find('.font-size-flexible');
 
             $flexible.css('font-size', this.fontSizePercentage + '%');
             $flexible.css('position', 'relative');

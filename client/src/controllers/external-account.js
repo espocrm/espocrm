@@ -44,11 +44,12 @@ class ExternalAccountController extends Controller {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @param {{id: string}} options
      */
     actionEdit(options) {
-        let id = options.id;
+        const id = options.id;
 
         this.collectionFactory.create('ExternalAccount', collection => {
             collection.once('sync', () => {

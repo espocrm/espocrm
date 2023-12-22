@@ -105,7 +105,7 @@ class EditView extends MainView {
      * Set up a record.
      */
     setupRecord() {
-        let o = {
+        const o = {
             model: this.model,
             fullSelector: '#main > .record',
             scope: this.scope,
@@ -116,7 +116,7 @@ class EditView extends MainView {
             o[option] = this.options[option];
         });
 
-        let params = this.options.params || {};
+        const params = this.options.params || {};
 
         if (params.rootUrl) {
             o.rootUrl = params.rootUrl;
@@ -140,9 +140,9 @@ class EditView extends MainView {
 
     /** @inheritDoc */
     getHeader() {
-        let headerIconHtml = this.getHeaderIconHtml();
-        let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
-        let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+        const headerIconHtml = this.getHeaderIconHtml();
+        const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+        const scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
         let $root = $('<span>').text(scopeLabel);
 
@@ -163,17 +163,17 @@ class EditView extends MainView {
         }
 
         if (this.model.isNew()) {
-            let $create = $('<span>').text(this.getLanguage().translate('create'));
+            const $create = $('<span>').text(this.getLanguage().translate('create'));
 
             return this.buildHeaderHtml([$root, $create]);
         }
 
-        let name = this.model.get('name') || this.model.id;
+        const name = this.model.get('name') || this.model.id;
 
         let $name = $('<span>').text(name);
 
         if (!this.options.noHeaderLinks) {
-            let url = '#' + this.scope + '/view/' + this.model.id;
+            const url = '#' + this.scope + '/view/' + this.model.id;
 
             $name =
                 $('<a>')
@@ -188,7 +188,7 @@ class EditView extends MainView {
     /** @inheritDoc */
     updatePageTitle() {
         if (this.model.isNew()) {
-            let title = this.getLanguage().translate('Create') + ' ' +
+            const title = this.getLanguage().translate('Create') + ' ' +
                 this.getLanguage().translate(this.scope, 'scopeNames');
 
             this.setPageTitle(title);
@@ -196,9 +196,9 @@ class EditView extends MainView {
             return;
         }
 
-        let name = this.model.get('name');
+        const name = this.model.get('name');
 
-        let title = name ? name : this.getLanguage().translate(this.scope, 'scopeNames');
+        const title = name ? name : this.getLanguage().translate(this.scope, 'scopeNames');
 
         this.setPageTitle(title);
     }

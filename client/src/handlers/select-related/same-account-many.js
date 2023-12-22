@@ -35,7 +35,7 @@ class SameAccountManySelectRelatedHandler extends SelectRelatedHandler {
      * @return {Promise<module:handlers/select-related~filters>}
      */
     getFilters(model) {
-        let advanced = {};
+        const advanced = {};
 
         let accountId = null;
         let accountName = null;
@@ -51,7 +51,7 @@ class SameAccountManySelectRelatedHandler extends SelectRelatedHandler {
         }
 
         if (accountId) {
-            let nameHash = {};
+            const nameHash = {};
             nameHash[accountId] = accountName;
 
             advanced.accounts = {

@@ -34,9 +34,9 @@ class NoteCollection extends Collection {
 
     /** @inheritDoc */
     prepareAttributes(response, params) {
-        let total = this.total;
+        const total = this.total;
 
-        let list = super.prepareAttributes(response, params);
+        const list = super.prepareAttributes(response, params);
 
         if (params.data && params.data.after) {
             if (total >= 0 && response.total >= 0) {

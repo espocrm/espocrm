@@ -44,8 +44,8 @@ class PopupNotificationView extends View {
     init() {
         super.init();
 
-        let id = this.options.id;
-        let containerSelector = this.containerSelector = '#' + id;
+        const id = this.options.id;
+        const containerSelector = this.containerSelector = '#' + id;
 
         this.setSelector(containerSelector);
 
@@ -57,7 +57,7 @@ class PopupNotificationView extends View {
         this.on('render', () => {
             $(containerSelector).remove();
 
-            let className = 'popup-notification-' + Espo.Utils.toDom(this.type);
+            const className = 'popup-notification-' + Espo.Utils.toDom(this.type);
 
             $('<div>')
                 .attr('id', id)
@@ -101,14 +101,14 @@ class PopupNotificationView extends View {
             return;
         }
 
-        let html =
+        const html =
             '<audio autoplay="autoplay">' +
-                '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />' +
-                '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />' +
-                '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath +'.mp3" />' +
+            '<source src="' + this.soundPath + '.mp3" type="audio/mpeg" />' +
+            '<source src="' + this.soundPath + '.ogg" type="audio/ogg" />' +
+            '<embed hidden="true" autostart="true" loop="false" src="' + this.soundPath + '.mp3" />' +
             '</audio>';
 
-        let $audio = $(html);
+        const $audio = $(html);
 
         $audio.get(0).volume = 0.3;
         // noinspection JSUnresolvedReference

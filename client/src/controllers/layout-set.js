@@ -35,7 +35,7 @@ class LayoutSetController extends RecordController {
      * @param {Record} options
      */
     actionEditLayouts(options) {
-        let id = options.id;
+        const id = options.id;
 
         if (!id) {
             throw new Error("ID not passed.");

@@ -42,12 +42,12 @@ class OidcLoginHandler extends LoginHandler {
 
                     this.processWithData(data)
                         .then(info => {
-                            let code = info.code;
-                            let nonce = info.nonce;
+                            const code = info.code;
+                            const nonce = info.nonce;
 
-                            let authString = Base64.encode('**oidc:' + code);
+                            const authString = Base64.encode('**oidc:' + code);
 
-                            let headers = {
+                            const headers = {
                                 'Espo-Authorization': authString,
                                 'Authorization': 'Basic ' + authString,
                                 'X-Oidc-Authorization-Nonce': nonce,
@@ -81,10 +81,10 @@ class OidcLoginHandler extends LoginHandler {
      * @return {Promise<{code: string, nonce: string}>}
      */
     processWithData(data) {
-        let state = (Math.random() + 1).toString(36).substring(7);
-        let nonce = (Math.random() + 1).toString(36).substring(7);
+        const state = (Math.random() + 1).toString(36).substring(7);
+        const nonce = (Math.random() + 1).toString(36).substring(7);
 
-        let params = {
+        const params = {
             client_id: data.clientId,
             redirect_uri: data.redirectUri,
             response_type: 'code',
@@ -102,12 +102,12 @@ class OidcLoginHandler extends LoginHandler {
             params.claims = data.claims;
         }
 
-        let partList = Object.entries(params)
+        const partList = Object.entries(params)
             .map(([key, value]) => {
                 return key + '=' + encodeURIComponent(value);
             });
 
-        let url = data.endpoint + '?' + partList.join('&');
+        const url = data.endpoint + '?' + partList.join('&');
 
         return this.processWindow(url, state, nonce);
     }
@@ -120,10 +120,10 @@ class OidcLoginHandler extends LoginHandler {
      * @return {Promise<{code: string, nonce: string}>}
      */
     processWindow(url, state, nonce) {
-        let proxy = window.open(url, 'ConnectWithOAuth', 'location=0,status=0,width=800,height=800');
+        const proxy = window.open(url, 'ConnectWithOAuth', 'location=0,status=0,width=800,height=800');
 
         return new Promise((resolve, reject) => {
-            let fail = () => {
+            const fail = () => {
                 window.clearInterval(interval);
 
                 if (!proxy.closed) {
@@ -133,7 +133,7 @@ class OidcLoginHandler extends LoginHandler {
                 reject();
             };
 
-            let interval = window.setInterval(() => {
+            const interval = window.setInterval(() => {
                 if (proxy.closed) {
                     fail();
 
@@ -153,7 +153,7 @@ class OidcLoginHandler extends LoginHandler {
                     return;
                 }
 
-                let parsedData = this.parseWindowUrl(url);
+                const parsedData = this.parseWindowUrl(url);
 
                 if (!parsedData) {
                     fail();
@@ -200,7 +200,7 @@ class OidcLoginHandler extends LoginHandler {
      */
     parseWindowUrl(url) {
         try {
-            let params = new URL(url).searchParams;
+            const params = new URL(url).searchParams;
 
             return {
                 code: params.get('code'),
@@ -209,7 +209,7 @@ class OidcLoginHandler extends LoginHandler {
                 errorDescription: params.get('errorDescription'),
             };
         }
-        catch(e) {
+        catch (e) {
             return null;
         }
     }

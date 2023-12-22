@@ -32,7 +32,7 @@ class LeadCaptureOptInConfirmationController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionOptInConfirmationSuccess(data) {
-        let viewName = this.getMetadata().get(['clientDefs', 'LeadCapture', 'optInConfirmationSuccessView']) ||
+        const viewName = this.getMetadata().get(['clientDefs', 'LeadCapture', 'optInConfirmationSuccessView']) ||
             'views/lead-capture/opt-in-confirmation-success';
 
         this.entire(viewName, {
@@ -44,7 +44,7 @@ class LeadCaptureOptInConfirmationController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionOptInConfirmationExpired(data) {
-        let viewName = this.getMetadata().get(['clientDefs', 'LeadCapture', 'optInConfirmationExpiredView']) ||
+        const viewName = this.getMetadata().get(['clientDefs', 'LeadCapture', 'optInConfirmationExpiredView']) ||
             'views/lead-capture/opt-in-confirmation-expired';
 
         this.entire(viewName, {

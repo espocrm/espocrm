@@ -35,7 +35,7 @@ class SameAccountSelectRelatedHandler extends SelectRelatedHandler {
      * @return {Promise<module:handlers/select-related~filters>}
      */
     getFilters(model) {
-        let advanced = {};
+        const advanced = {};
 
         let accountId = null;
         let accountName = null;
@@ -68,4 +68,5 @@ class SameAccountSelectRelatedHandler extends SelectRelatedHandler {
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default SameAccountSelectRelatedHandler;

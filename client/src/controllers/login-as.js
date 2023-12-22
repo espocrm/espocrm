@@ -35,8 +35,8 @@ class LoginAsController extends Controller {
      * @param {Record} options
      */
     actionLogin(options) {
-        let anotherUser = options.anotherUser;
-        let username = options.username;
+        const anotherUser = options.anotherUser;
+        const username = options.username;
 
         if (!anotherUser) {
             throw new Error("No anotherUser.");
@@ -49,7 +49,7 @@ class LoginAsController extends Controller {
 
         this.listenToOnce(this.baseController, 'login', () => {
             this.baseController.once('router-set', () => {
-                let url = window.location.href.split('?')[0];
+                const url = window.location.href.split('?')[0];
 
                 window.location.replace(url);
             })

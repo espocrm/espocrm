@@ -49,7 +49,7 @@ class AddressMapController extends Controller {
 
                 model.fetch()
                     .then(() => {
-                        let viewName = this.getMetadata().get(['AddressMap', 'view']) ||
+                        const viewName = this.getMetadata().get(['AddressMap', 'view']) ||
                             'views/address-map/view';
 
                         this.main(viewName, {

@@ -61,7 +61,7 @@ class CollapsedModalBar extends View {
     }
 
     getDataList() {
-        let list = [];
+        const list = [];
 
         let numberList = Espo.Utils.clone(this.numberList);
 
@@ -86,7 +86,7 @@ class CollapsedModalBar extends View {
         let duplicateNumber = 0;
 
         this.numberList.forEach(number => {
-            let view = this.getModalViewByNumber(number);
+            const view = this.getModalViewByNumber(number);
 
             if (!view) {
                 return;
@@ -105,17 +105,17 @@ class CollapsedModalBar extends View {
     }
 
     getModalViewByNumber(number) {
-        let key = 'key-' + number;
+        const key = 'key-' + number;
 
         return this.getView(key);
     }
 
     addModalView(modalView, options) {
-        let number = this.lastNumber;
+        const number = this.lastNumber;
 
         this.numberList.push(this.lastNumber);
 
-        let key = 'key-' + number;
+        const key = 'key-' + number;
 
         this.createView(key, 'views/collapsed-modal', {
             title: options.title,
@@ -132,7 +132,7 @@ class CollapsedModalBar extends View {
 
                 // Use timeout to prevent DOM being updated after modal is re-rendered.
                 setTimeout(() => {
-                    let key = 'dialog-' + number;
+                    const key = 'dialog-' + number;
 
                     this.setView(key, modalView);
 
@@ -149,9 +149,9 @@ class CollapsedModalBar extends View {
     }
 
     removeModalView(number, noReRender) {
-        let key = 'key-' + number;
+        const key = 'key-' + number;
 
-        let index = this.numberList.indexOf(number);
+        const index = this.numberList.indexOf(number);
 
         if (~index) {
             this.numberList.splice(index, 1);

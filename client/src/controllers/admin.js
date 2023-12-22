@@ -43,7 +43,7 @@ class AdminController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionPage(options) {
-        let page = options.page;
+        const page = options.page;
 
         if (options.options) {
             options = {
@@ -58,7 +58,7 @@ class AdminController extends Controller {
             throw new Error();
         }
 
-        let methodName = 'action' + Espo.Utils.upperCaseFirst(page);
+        const methodName = 'action' + Espo.Utils.upperCaseFirst(page);
 
         if (this[methodName]) {
             this[methodName](options);
@@ -66,7 +66,7 @@ class AdminController extends Controller {
             return;
         }
 
-        let defs = this.getPageDefs(page);
+        const defs = this.getPageDefs(page);
 
         if (!defs) {
             throw new Espo.Exceptions.NotFound();
@@ -82,7 +82,7 @@ class AdminController extends Controller {
             throw new Espo.Exceptions.NotFound();
         }
 
-        let model = this.getSettingsModel();
+        const model = this.getSettingsModel();
 
         model.fetch().then(() => {
             model.id = '1';
@@ -106,7 +106,7 @@ class AdminController extends Controller {
     // noinspection JSUnusedGlobalSymbols
     actionIndex(options) {
         let isReturn = options.isReturn;
-        let key = this.name + 'Index';
+        const key = this.name + 'Index';
 
         if (this.getRouter().backProcessed) {
             isReturn = true;
@@ -251,39 +251,42 @@ class AdminController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionLayouts(options) {
-        var scope = options.scope || null;
-        var type = options.type || null;
-        var em = options.em || false;
+        const scope = options.scope || null;
+        const type = options.type || null;
+        const em = options.em || false;
 
         this.main('views/admin/layouts/index', {scope: scope, type: type, em: em});
     }
 
     // noinspection JSUnusedGlobalSymbols
     actionLabelManager(options) {
-        var scope = options.scope || null;
-        var language = options.language || null;
+        const scope = options.scope || null;
+        const language = options.language || null;
 
         this.main('views/admin/label-manager/index', {scope: scope, language: language});
     }
 
     // noinspection JSUnusedGlobalSymbols
     actionTemplateManager(options) {
-        var name = options.name || null;
+        const name = options.name || null;
 
         this.main('views/admin/template-manager/index', {name: name});
     }
 
     // noinspection JSUnusedGlobalSymbols
     actionFieldManager(options) {
-        var scope = options.scope || null;
-        var field = options.field || null;
+        const scope = options.scope || null;
+        const field = options.field || null;
 
         this.main('views/admin/field-manager/index', {scope: scope, field: field});
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {Record} options
+     */
     actionEntityManager(options) {
-        var scope = options.scope || null;
+        const scope = options.scope || null;
 
         if (scope && options.edit) {
             this.main('views/admin/entity-manager/edit', {scope: scope});
@@ -314,7 +317,7 @@ class AdminController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionLinkManager(options) {
-        var scope = options.scope || null;
+        const scope = options.scope || null;
 
         this.main('views/admin/link-manager/index', {scope: scope});
     }
@@ -328,7 +331,7 @@ class AdminController extends Controller {
      * @returns {module:models/settings}
      */
     getSettingsModel() {
-        let model = this.getConfig().clone();
+        const model = this.getConfig().clone();
         model.defs = this.getConfig().defs;
 
         this.listenTo(model, 'after:save', () => {
@@ -337,6 +340,7 @@ class AdminController extends Controller {
             this._broadcastChannel.postMessage('update:config');
         });
 
+        // noinspection JSValidateTypes
         return model;
     }
 
@@ -410,7 +414,7 @@ class AdminController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionIntegrations(options) {
-        var integration = options.name || null;
+        const integration = options.name || null;
 
         this.main('views/admin/integrations/index', {integration: integration});
     }
@@ -427,14 +431,14 @@ class AdminController extends Controller {
 
         this.rebuildRunning = true;
 
-        let master = this.get('master');
+        const master = this.get('master');
 
         Espo.Ui.notify(master.translate('pleaseWait', 'messages'));
 
         Espo.Ajax
             .postRequest('Admin/rebuild')
             .then(() => {
-                let msg = master.translate('Rebuild has been done', 'labels', 'Admin');
+                const msg = master.translate('Rebuild has been done', 'labels', 'Admin');
 
                 Espo.Ui.success(msg);
 
@@ -458,7 +462,7 @@ class AdminController extends Controller {
 
         Espo.Ajax.postRequest('Admin/clearCache')
             .then(() => {
-                let msg = master.translate('Cache has been cleared', 'labels', 'Admin');
+                const msg = master.translate('Cache has been cleared', 'labels', 'Admin');
 
                 Espo.Ui.success(msg);
 
@@ -473,14 +477,14 @@ class AdminController extends Controller {
      * @returns {Object|null}
      */
     getPageDefs(page) {
-        let panelsDefs = this.getMetadata().get(['app', 'adminPanel']) || {};
+        const panelsDefs = this.getMetadata().get(['app', 'adminPanel']) || {};
 
         let resultDefs = null;
 
-        for (let panelKey in panelsDefs) {
-            let itemList = panelsDefs[panelKey].itemList || [];
+        for (const panelKey in panelsDefs) {
+            const itemList = panelsDefs[panelKey].itemList || [];
 
-            for (let defs of itemList) {
+            for (const defs of itemList) {
                 if (defs.url === '#Admin/' + page) {
                     resultDefs = defs;
 

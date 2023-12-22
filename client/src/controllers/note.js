@@ -35,13 +35,13 @@ class NoteController extends Controller {
      * @param {Record} options
      */
     actionView(options) {
-        let id = options.id;
+        const id = options.id;
 
         if (!id) {
             throw new Espo.Exceptions.NotFound;
         }
 
-        let viewName = this.getMetadata().get(['clientDefs', this.name, 'views', 'detail']) ||
+        const viewName = this.getMetadata().get(['clientDefs', this.name, 'views', 'detail']) ||
             'views/note/detail';
 
         let model;

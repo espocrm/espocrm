@@ -36,7 +36,7 @@ class ImportHandler extends ActionHandler {
             .postRequest(`Import/${this.view.model.id}/exportErrors`)
             .then(data => {
                 if (!data.attachmentId) {
-                    let message = this.view.translate('noErrors', 'messages', 'Import');
+                    const message = this.view.translate('noErrors', 'messages', 'Import');
 
                     Espo.Ui.warning(message);
 

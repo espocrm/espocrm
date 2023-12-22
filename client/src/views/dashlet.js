@@ -100,12 +100,12 @@ class DashletView extends View {
     }
 
     controlDropdownShown($dropdownContainer) {
-        let $panel = this.$el.children().first();
+        const $panel = this.$el.children().first();
 
-        let dropdownBottom = $dropdownContainer.find('.dropdown-menu')
+        const dropdownBottom = $dropdownContainer.find('.dropdown-menu')
             .get(0).getBoundingClientRect().bottom;
 
-        let panelBottom = $panel.get(0).getBoundingClientRect().bottom;
+        const panelBottom = $panel.get(0).getBoundingClientRect().bottom;
 
         if (dropdownBottom < panelBottom) {
             return;
@@ -124,7 +124,7 @@ class DashletView extends View {
         this.id = this.options.id;
 
         this.on('resize', () => {
-            let bodyView = this.getView('body');
+            const bodyView = this.getView('body');
 
             if (!bodyView) {
                 return;
@@ -133,7 +133,7 @@ class DashletView extends View {
             bodyView.trigger('resize');
         });
 
-        let viewName = this.getMetadata().get(['dashlets', this.name, 'view']) ||
+        const viewName = this.getMetadata().get(['dashlets', this.name, 'view']) ||
             'views/dashlets/' + Espo.Utils.camelCaseToHyphen(this.name);
 
         this.createView('body', viewName, {
@@ -157,7 +157,7 @@ class DashletView extends View {
     }
 
     actionOptions() {
-        let optionsView =
+        const optionsView =
             this.getMetadata().get(['dashlets', this.name, 'options', 'view']) ||
             this.optionsView ||
             'views/dashlets/options/base';
@@ -174,7 +174,7 @@ class DashletView extends View {
             Espo.Ui.notify(false);
 
             this.listenToOnce(view, 'save', (attributes) => {
-                let id = this.id;
+                const id = this.id;
 
                 Espo.Ui.notify(this.translate('saving', 'messages'));
 
@@ -187,7 +187,7 @@ class DashletView extends View {
                     this.trigger('change');
                 });
 
-                let o = this.getPreferences().get('dashletsOptions') || {};
+                const o = this.getPreferences().get('dashletsOptions') || {};
 
                 o[id] = attributes;
 

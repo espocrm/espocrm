@@ -266,7 +266,7 @@ class ListRelatedView extends MainView {
 
         this.viewMode = this.viewMode || this.defaultViewMode;
 
-        let viewModeList = this.options.viewModeList ||
+        const viewModeList = this.options.viewModeList ||
             this.viewModeList ||
             this.getMetadata().get(['clientDefs', this.foreignScope, 'listRelatedViewModeList']);
 
@@ -275,10 +275,10 @@ class ListRelatedView extends MainView {
         if (this.viewModeList.length > 1) {
             let viewMode = null;
 
-            let modeKey = 'listRelatedViewMode' + this.scope + this.link;
+            const modeKey = 'listRelatedViewMode' + this.scope + this.link;
 
             if (this.getStorage().has('state', modeKey)) {
-                let storedViewMode = this.getStorage().get('state', modeKey);
+                const storedViewMode = this.getStorage().get('state', modeKey);
 
                 if (storedViewMode && this.viewModeList.includes(storedViewMode)) {
                     viewMode = storedViewMode;
@@ -342,14 +342,14 @@ class ListRelatedView extends MainView {
         if (this.panelDefs.filterList) {
             this.panelDefs.filterList.forEach(item1 => {
                 let isFound = false;
-                let name1 = item1.name || item1;
+                const name1 = item1.name || item1;
 
                 if (!name1 || name1 === 'all') {
                     return;
                 }
 
                 filterList.forEach(item2 => {
-                    let name2 = item2.name || item2;
+                    const name2 = item2.name || item2;
 
                     if (name1 === name2) {
                         isFound = true;
@@ -408,7 +408,7 @@ class ListRelatedView extends MainView {
         this.collection.maxSize = this.collectionMaxSize;
 
         if (toStore) {
-            var modeKey = 'listViewMode' + this.scope + this.link;
+            const modeKey = 'listViewMode' + this.scope + this.link;
 
             this.getStorage().set('state', modeKey, mode);
         }
@@ -417,7 +417,7 @@ class ListRelatedView extends MainView {
             this.getSearchView().setViewMode(mode);
         }
 
-        let methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
+        const methodName = 'setViewMode' + Espo.Utils.upperCaseFirst(this.viewMode);
 
         if (this[methodName]) {
             this[methodName]();
@@ -428,9 +428,9 @@ class ListRelatedView extends MainView {
      * Set up a search manager.
      */
     setupSearchManager() {
-        let collection = this.collection;
+        const collection = this.collection;
 
-        let searchManager = new SearchManager(
+        const searchManager = new SearchManager(
             collection,
             'list',
             null,
@@ -478,7 +478,7 @@ class ListRelatedView extends MainView {
                     this.recordView;
         }
 
-        let propertyName = 'record' + Espo.Utils.upperCaseFirst(this.viewMode) + 'View';
+        const propertyName = 'record' + Espo.Utils.upperCaseFirst(this.viewMode) + 'View';
 
         return this.getMetadata().get(['clientDefs', this.foreignScope, 'recordViews', this.viewMode]) ||
             this[propertyName];
@@ -554,7 +554,7 @@ class ListRelatedView extends MainView {
             o.pagination = true;
         }
 
-        let massUnlinkDisabled = this.panelDefs.massUnlinkDisabled ||
+        const massUnlinkDisabled = this.panelDefs.massUnlinkDisabled ||
             this.panelDefs.unlinkDisabled || this.unlinkDisabled;
 
         o = {
@@ -578,7 +578,7 @@ class ListRelatedView extends MainView {
 
         this.prepareRecordViewOptions(o);
 
-        let listViewName = this.getRecordViewName();
+        const listViewName = this.getRecordViewName();
 
         this.createView('list', listViewName, o, view =>{
             if (!this.hasParentView()) {
@@ -618,14 +618,14 @@ class ListRelatedView extends MainView {
      * @protected
      */
     actionQuickCreate() {
-        let link = this.link;
-        let foreignScope = this.foreignScope;
-        let foreignLink = this.model.getLinkParam(link, 'foreign');
+        const link = this.link;
+        const foreignScope = this.foreignScope;
+        const foreignLink = this.model.getLinkParam(link, 'foreign');
 
         let attributes = {};
 
-        let attributeMap = this.getMetadata()
-                .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createAttributeMap']) || {};
+        const attributeMap = this.getMetadata()
+            .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createAttributeMap']) || {};
 
         Object.keys(attributeMap)
             .forEach(attr => {
@@ -634,7 +634,7 @@ class ListRelatedView extends MainView {
 
         Espo.Ui.notify(' ... ');
 
-        let handler = this.getMetadata()
+        const handler = this.getMetadata()
             .get(['clientDefs', this.scope, 'relationshipPanels', link, 'createHandler']);
 
         (new Promise(resolve => {
@@ -654,7 +654,7 @@ class ListRelatedView extends MainView {
             .then(additionalAttributes => {
                 attributes = {...attributes, ...additionalAttributes};
 
-                let viewName = this.getMetadata()
+                const viewName = this.getMetadata()
                     .get(['clientDefs', foreignScope, 'modalViews', 'edit']) || 'views/modals/edit';
 
                 this.createView('quickCreate', viewName, {
@@ -685,7 +685,7 @@ class ListRelatedView extends MainView {
      * @protected
      */
     actionUnlinkRelated(data) {
-        let id = data.id;
+        const id = data.id;
 
         this.confirm({
             message: this.translate('unlinkRecordConfirmation', 'messages'),
@@ -710,11 +710,11 @@ class ListRelatedView extends MainView {
      * @inheritDoc
      */
     getHeader() {
-        let name = this.model.get('name') || this.model.id;
+        const name = this.model.get('name') || this.model.id;
 
-        let recordUrl = '#' + this.scope  + '/view/' + this.model.id;
+        const recordUrl = '#' + this.scope + '/view/' + this.model.id;
 
-        let $name =
+        const $name =
             $('<a>')
                 .attr('href', recordUrl)
                 .addClass('font-size-flexible title')
@@ -724,8 +724,8 @@ class ListRelatedView extends MainView {
             $name.css('text-decoration', 'line-through');
         }
 
-        let headerIconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
-        let scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
+        const headerIconHtml = this.getHelper().getScopeColorIconHtml(this.foreignScope);
+        const scopeLabel = this.getLanguage().translate(this.scope, 'scopeNamesPlural');
 
         let $root = $('<span>').text(scopeLabel);
 
@@ -744,7 +744,7 @@ class ListRelatedView extends MainView {
             $root.prepend(headerIconHtml);
         }
 
-        let $link = $('<span>').text(this.translate(this.link, 'links', this.scope));
+        const $link = $('<span>').text(this.translate(this.link, 'links', this.scope));
 
         return this.buildHeaderHtml([
             $root,
@@ -796,7 +796,7 @@ class ListRelatedView extends MainView {
             return;
         }
 
-        let $search = this.$el.find('input.text-filter').first();
+        const $search = this.$el.find('input.text-filter').first();
 
         if (!$search.length) {
             return;

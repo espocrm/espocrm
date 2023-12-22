@@ -43,7 +43,7 @@ class DashboardView extends View {
     events = {
         /** @this DashboardView */
         'click button[data-action="selectTab"]': function (e) {
-            let tab = parseInt($(e.currentTarget).data('tab'));
+            const tab = parseInt($(e.currentTarget).data('tab'));
 
             this.selectTab(tab);
         },
@@ -80,7 +80,7 @@ class DashboardView extends View {
 
     setupCurrentTabLayout() {
         if (!this.dashboardLayout) {
-            let defaultLayout = [
+            const defaultLayout = [
                 {
                     "name": "My Espo",
                     "layout": [],
@@ -105,7 +105,7 @@ class DashboardView extends View {
             }
         }
 
-        let dashboardLayout = this.dashboardLayout || [];
+        const dashboardLayout = this.dashboardLayout || [];
 
         if (dashboardLayout.length <= this.currentTab) {
             this.currentTab = 0;
@@ -153,7 +153,7 @@ class DashboardView extends View {
             this.dashletsReadOnly = true;
         }
         else {
-            let forbiddenPreferencesFieldList = this.getAcl()
+            const forbiddenPreferencesFieldList = this.getAcl()
                 .getScopeForbiddenFieldList('Preferences', 'edit');
 
             if (~forbiddenPreferencesFieldList.indexOf('dashboardLayout')) {
@@ -210,14 +210,14 @@ class DashboardView extends View {
         this.preservedDashletElements = {};
 
         this.currentTabLayout.forEach(o => {
-            let key = 'dashlet-' + o.id;
-            let view = this.getView(key);
+            const key = 'dashlet-' + o.id;
+            const view = this.getView(key);
 
             this.unchainView(key);
 
             this.preservedDashletViews[o.id] = view;
 
-            let $el = view.$el.children(0);
+            const $el = view.$el.children(0);
 
             this.preservedDashletElements[o.id] = $el;
 
@@ -226,8 +226,8 @@ class DashboardView extends View {
     }
 
     addPreservedDashlet(id) {
-        let view = this.preservedDashletViews[id];
-        let $el = this.preservedDashletElements[id];
+        const view = this.preservedDashletViews[id];
+        const $el = this.preservedDashletElements[id];
 
         this.$el.find('.dashlet-container[data-id="'+id+'"]').append($el);
 
@@ -253,12 +253,12 @@ class DashboardView extends View {
 
         this.$dashboard.empty();
 
-        let $dashboard = this.$dashboard;
+        const $dashboard = this.$dashboard;
 
         $dashboard.addClass('fallback');
 
         this.currentTabLayout.forEach(o => {
-            let $item = this.prepareFallbackItem(o);
+            const $item = this.prepareFallbackItem(o);
 
             $dashboard.append($item);
         });
@@ -296,20 +296,20 @@ class DashboardView extends View {
 
     fallbackControlHeights() {
         this.currentTabLayout.forEach(o => {
-            let $container = this.$dashboard.find('.dashlet-container[data-id="'+o.id+'"]');
+            const $container = this.$dashboard.find('.dashlet-container[data-id="' + o.id + '"]');
 
-            let headerHeight = $container.find('.panel-heading').outerHeight();
+            const headerHeight = $container.find('.panel-heading').outerHeight();
 
-            let $body = $container.find('.dashlet-body');
+            const $body = $container.find('.dashlet-body');
 
-            let bodyEl = $body.get(0);
+            const bodyEl = $body.get(0);
 
             if (!bodyEl) {
                 return;
             }
 
             if (bodyEl.scrollHeight > bodyEl.offsetHeight) {
-                let height = bodyEl.scrollHeight + headerHeight;
+                const height = bodyEl.scrollHeight + headerHeight;
 
                 $container.css('height', height + 'px');
             }
@@ -327,7 +327,7 @@ class DashboardView extends View {
 
         this.$dashboard.empty();
 
-        let $gridstack = this.$gridstack = this.$dashboard;
+        const $gridstack = this.$gridstack = this.$dashboard;
 
         $gridstack.removeClass('fallback');
 
@@ -343,7 +343,7 @@ class DashboardView extends View {
             disableResize = true;
         }
 
-        let grid = this.grid = GridStack.init(
+        const grid = this.grid = GridStack.init(
             {
                 cellHeight: this.getThemeManager().getParam('dashboardCellHeight') * 1.14,
                 margin: this.getThemeManager().getParam('dashboardCellMargin') / 2,
@@ -368,7 +368,7 @@ class DashboardView extends View {
         grid.removeAll();
 
         this.currentTabLayout.forEach(o => {
-            let $item = this.prepareGridstackItem(o.id, o.name);
+            const $item = this.prepareGridstackItem(o.id, o.name);
 
             if (!this.getMetadata().get(['dashlets', o.name])) {
                 return;
@@ -416,8 +416,8 @@ class DashboardView extends View {
 
         // noinspection SpellCheckingInspection
         this.grid.on('resizestop', e => {
-            let id = $(e.target).data('id');
-            let view = this.getView('dashlet-' + id);
+            const id = $(e.target).data('id');
+            const view = this.getView('dashlet-' + id);
 
             if (!view) {
                 return;
@@ -429,12 +429,12 @@ class DashboardView extends View {
     fetchLayout() {
         this.dashboardLayout[this.currentTab].layout =
             _.map(this.$gridstack.find('.grid-stack-item'), el => {
-                let $el = $(el);
+                const $el = $(el);
 
-                let x = $el.attr('gs-x');
-                let y = $el.attr('gs-y');
-                let h = $el.attr('gs-h');
-                let w = $el.attr('gs-w');
+                const x = $el.attr('gs-x');
+                const y = $el.attr('gs-y');
+                const h = $el.attr('gs-h');
+                const w = $el.attr('gs-w');
 
                 return {
                     id: $el.data('id'),
@@ -448,8 +448,8 @@ class DashboardView extends View {
     }
 
     prepareGridstackItem(id, name) {
-        let $item = $('<div>').addClass('grid-stack-item');
-        let $container = $('<div class="grid-stack-item-content dashlet-container"></div>');
+        const $item = $('<div>').addClass('grid-stack-item');
+        const $container = $('<div class="grid-stack-item-content dashlet-container"></div>');
 
         $container.attr('data-id', id);
         $container.attr('data-name', name);
@@ -463,8 +463,8 @@ class DashboardView extends View {
     }
 
     prepareFallbackItem(o) {
-        let $item = $('<div>');
-        let $container = $('<div class="dashlet-container">');
+        const $item = $('<div>');
+        const $container = $('<div class="dashlet-container">');
 
         $container.attr('data-id', o.id);
         $container.attr('data-name', o.name);
@@ -507,12 +507,12 @@ class DashboardView extends View {
             revertToFallback = true;
         }
 
-        let $item = this.$gridstack.find('.grid-stack-item[data-id="'+id+'"]');
+        const $item = this.$gridstack.find('.grid-stack-item[data-id="' + id + '"]');
 
         // noinspection JSUnresolvedReference
         this.grid.removeWidget($item.get(0), true);
 
-        let layout = this.dashboardLayout[this.currentTab].layout;
+        const layout = this.dashboardLayout[this.currentTab].layout;
 
         layout.forEach((o, i) => {
             if (o.id === id) {
@@ -520,7 +520,7 @@ class DashboardView extends View {
             }
         });
 
-        let o = {};
+        const o = {};
 
         o.dashletsOptions = this.getPreferences().get('dashletsOptions') || {};
 
@@ -535,7 +535,7 @@ class DashboardView extends View {
         this.getPreferences().save(o, {patch: true});
         this.getPreferences().trigger('update');
 
-        let index = this.dashletIdList.indexOf(id);
+        const index = this.dashletIdList.indexOf(id);
 
         if (~index) {
             this.dashletIdList.splice(index, index);
@@ -559,9 +559,9 @@ class DashboardView extends View {
             revertToFallback = true;
         }
 
-        let id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
+        const id = 'd' + (Math.floor(Math.random() * 1000001)).toString();
 
-        let $item = this.prepareGridstackItem(id, name);
+        const $item = this.prepareGridstackItem(id, name);
 
         this.grid.addWidget(
             $item.get(0),
@@ -590,7 +590,7 @@ class DashboardView extends View {
     }
 
     createDashletView(id, name, label, callback) {
-        let o = {
+        const o = {
             id: id,
             name: name,
         };
@@ -628,7 +628,7 @@ class DashboardView extends View {
     }
 
     editTabs() {
-        let dashboardLocked = this.getPreferences().get('dashboardLocked');
+        const dashboardLocked = this.getPreferences().get('dashboardLocked');
 
         this.createView('editTabs', 'views/modals/edit-dashboard', {
             dashboardLayout: this.dashboardLayout,
@@ -640,7 +640,7 @@ class DashboardView extends View {
             this.listenToOnce(view, 'after:save', data => {
                 view.close();
 
-                let dashboardLayout = [];
+                const dashboardLayout = [];
 
                 data.dashboardTabList.forEach(name => {
                     let layout = [];
@@ -657,7 +657,7 @@ class DashboardView extends View {
                         name = data.renameMap[name];
                     }
 
-                    let o = {
+                    const o = {
                         name: name,
                         layout: layout,
                     };

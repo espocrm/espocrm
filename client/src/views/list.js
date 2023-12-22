@@ -129,7 +129,7 @@ class ListView extends MainView {
     keepCurrentRootUrl = false
 
     /**
-     * A view mode. 'list', 'kanban`.
+     * A view mode. 'list', 'kanban'.
      *
      * @type {string}
      */
@@ -677,8 +677,9 @@ class ListView extends MainView {
     getHeader() {
         const $root = $('<span>')
             .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
+
         if (this.options.params && this.options.params.fromAdmin) {
-            let $root = $('<a>')
+            const $root = $('<a>')
                 .attr('href', '#Admin')
                 .text(this.translate('Administration', 'labels', 'Admin'));
 
@@ -687,7 +688,6 @@ class ListView extends MainView {
 
             return this.buildHeaderHtml([$root, $scope]);
         }
-
 
         const headerIconHtml = this.getHeaderIconHtml();
 

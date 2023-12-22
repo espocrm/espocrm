@@ -33,7 +33,7 @@ class HomeView extends View {
     template = 'home'
 
     setup() {
-        let viewName = this.getMetadata().get(['clientDefs', 'Home', 'view']) ||
+        const viewName = this.getMetadata().get(['clientDefs', 'Home', 'view']) ||
             'views/dashboard';
 
         this.createView('content', viewName, {selector: '> .home-content'});
