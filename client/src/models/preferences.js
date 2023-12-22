@@ -46,7 +46,7 @@ class Preferences extends Model {
      * @returns {Object|null}
      */
     getDashletOptions(id) {
-        let value = this.get('dashletsOptions') || {};
+        const value = this.get('dashletsOptions') || {};
 
         return value[id] || null;
     }

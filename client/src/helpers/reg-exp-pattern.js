@@ -64,8 +64,8 @@ class RegExpPatternHelper {
         let messageKey = 'fieldNotMatchingPattern';
 
         if (pattern[0] === '$') {
-            let patternName = pattern.slice(1);
-            let foundPattern = this.metadata.get(['app', 'regExpPatterns', patternName, 'pattern']);
+            const patternName = pattern.slice(1);
+            const foundPattern = this.metadata.get(['app', 'regExpPatterns', patternName, 'pattern']);
 
             if (foundPattern) {
                 messageKey += '$' + patternName;
@@ -73,7 +73,7 @@ class RegExpPatternHelper {
             }
         }
 
-        let regExp = new RegExp('^' + pattern + '$');
+        const regExp = new RegExp('^' + pattern + '$');
 
         if (regExp.test(value)) {
             return null;

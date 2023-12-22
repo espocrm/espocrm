@@ -40,18 +40,18 @@ export default class {
          */
         this.view = view;
 
-        let metadata = view.getMetadata();
-        let model = view.model;
-        let field = view.params.field;
-        let link = view.params.link;
+        const metadata = view.getMetadata();
+        const model = view.model;
+        const field = view.params.field;
+        const link = view.params.link;
 
-        let entityType = metadata.get(['entityDefs', model.entityType, 'links', link, 'entity']) ||
+        const entityType = metadata.get(['entityDefs', model.entityType, 'links', link, 'entity']) ||
             model.entityType;
 
-        let fieldDefs = metadata.get(['entityDefs', entityType, 'fields', field]) || {};
-        let type = fieldDefs.type;
+        const fieldDefs = metadata.get(['entityDefs', entityType, 'fields', field]) || {};
+        const type = fieldDefs.type;
 
-        let ignoreList = [
+        const ignoreList = [
             'default',
             'audited',
             'readOnly',
@@ -62,7 +62,7 @@ export default class {
         this.foreignParams = {};
 
         view.getFieldManager().getParamList(type).forEach(defs => {
-            let name = defs.name;
+            const name = defs.name;
 
             if (ignoreList.includes(name)) {
                 return;

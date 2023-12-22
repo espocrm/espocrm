@@ -106,6 +106,7 @@ const Select = {
             $relativeParent = $modalBody;
         }
 
+        // noinspection JSUnusedGlobalSymbols
         const selectizeOptions = {
             sortField: [{field: options.sortBy, direction: options.sortDirection}],
             load: options.load,
@@ -145,6 +146,7 @@ const Select = {
                     this.removeItem(values.pop(), true);
                 }
 
+                // noinspection JSUnresolvedReference
                 this.showInput();
                 this.positionDropdown();
                 this.refreshOptions(true);
@@ -154,6 +156,7 @@ const Select = {
         if (!options.matchAnyWord) {
             /** @this Selectize */
             selectizeOptions.score = function (search) {
+                // noinspection JSUnresolvedReference
                 const score = this.getScoreFunction(search);
 
                 search = search.toLowerCase();
@@ -171,6 +174,7 @@ const Select = {
         if (options.matchAnyWord) {
             /** @this Selectize */
             selectizeOptions.score = function (search) {
+                // noinspection JSUnresolvedReference
                 const score = this.getScoreFunction(search);
 
                 search = search.toLowerCase();

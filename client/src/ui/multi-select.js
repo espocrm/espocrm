@@ -53,11 +53,11 @@ const MultiSelect = {
      * @param {module:ui/multi-select~Options} options Options.
      */
     init: function (element, options) {
-        let $el = $(element);
+        const $el = $(element);
 
         options = MultiSelect.applyDefaultOptions(options);
 
-        let plugins = [];
+        const plugins = [];
 
         if (options.removeButton) {
             plugins.push('remove_button');
@@ -75,7 +75,7 @@ const MultiSelect = {
         MultiSelect.loadBypassCtrlEnterPlugin();
         plugins.push('bypass_ctrl_enter');
 
-        let selectizeOptions = {
+        const selectizeOptions = {
             options: options.items,
             plugins: plugins,
             delimiter: options.delimiter,
@@ -91,7 +91,7 @@ const MultiSelect = {
             /** @this Selectize */
             selectizeOptions.score = function (search) {
                 // noinspection JSUnresolvedReference
-                let score = this.getScoreFunction(search);
+                const score = this.getScoreFunction(search);
 
                 search = search.toLowerCase();
 
@@ -109,12 +109,12 @@ const MultiSelect = {
             /** @this Selectize */
             selectizeOptions.score = function (search) {
                 // noinspection JSUnresolvedReference
-                let score = this.getScoreFunction(search);
+                const score = this.getScoreFunction(search);
 
                 search = search.toLowerCase();
 
                 return function (item) {
-                    let text = item.text.toLowerCase();
+                    const text = item.text.toLowerCase();
 
                     if (
                         !text.split(' ').find(item => item.startsWith(search)) &&
@@ -156,7 +156,7 @@ const MultiSelect = {
      * @param {Element|JQuery} element An element.
      */
     focus: function (element) {
-        let $el = $(element);
+        const $el = $(element);
 
         if (
             !$el[0] ||
@@ -165,7 +165,7 @@ const MultiSelect = {
             return;
         }
 
-        let selectize = $el[0].selectize;
+        const selectize = $el[0].selectize;
 
         selectize.focus();
     },
@@ -178,7 +178,7 @@ const MultiSelect = {
     applyDefaultOptions: function (options) {
         options = Espo.Utils.clone(options);
 
-        let defaults = {
+        const defaults = {
             removeButton: true,
             draggable: false,
             selectOnTab: false,
@@ -187,7 +187,7 @@ const MultiSelect = {
             allowCustomOptions: false,
         };
 
-        for (let key in defaults) {
+        for (const key in defaults) {
             if (key in options) {
                 continue;
             }
@@ -209,10 +209,10 @@ const MultiSelect = {
         const IS_MAC = /Mac/.test(navigator.userAgent);
 
         Selectize.define('bypass_ctrl_enter', function () {
-            let self = this;
+            const self = this;
 
             this.onKeyDown = (function() {
-                let original = self.onKeyDown;
+                const original = self.onKeyDown;
 
                 return function (e) {
                     if (e.code === 'Enter' && (IS_MAC ? e.metaKey : e.ctrlKey)) {
@@ -238,10 +238,10 @@ const MultiSelect = {
                 return option[this.settings.labelField];
             };
 
-            let self = this;
+            const self = this;
 
             this.onKeyDown = (function() {
-                let original = self.onKeyDown;
+                const original = self.onKeyDown;
 
                 return function (e) {
                     let index, option;

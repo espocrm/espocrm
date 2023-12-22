@@ -48,7 +48,7 @@ export default class {
         this.model = view.model;
 
         /** @var {Object.<string, Object.<string, *>>} defs */
-        let defs = view.getMetadata().get(['authenticationMethods']) || {};
+        const defs = view.getMetadata().get(['authenticationMethods']) || {};
 
         /**
          * @private
@@ -56,7 +56,7 @@ export default class {
          */
         this.methodList = Object.keys(defs).filter(item => {
             /** @var {Object.<string, *>} */
-            let data = defs[item].provider || {};
+            const data = defs[item].provider || {};
 
             return data.isAvailable;
         });
@@ -113,14 +113,14 @@ export default class {
 
         this.authFields[method] = fieldList;
 
-        let mDynamicLogicFieldsDefs = (this.getFromMetadata(method, 'dynamicLogic') || {}).fields || {};
+        const mDynamicLogicFieldsDefs = (this.getFromMetadata(method, 'dynamicLogic') || {}).fields || {};
 
-        for (let f in mDynamicLogicFieldsDefs) {
+        for (const f in mDynamicLogicFieldsDefs) {
             if (!fieldList.includes(f)) {
                 continue;
             }
 
-            let defs = this.modifyDynamicLogic(mDynamicLogicFieldsDefs[f]);
+            const defs = this.modifyDynamicLogic(mDynamicLogicFieldsDefs[f]);
 
             this.dynamicLogicDefs.fields[f] = Espo.Utils.cloneDeep(defs);
         }
@@ -137,9 +137,9 @@ export default class {
         }
 
         if (typeof defs === 'object') {
-            let o = {};
+            const o = {};
 
-            for (let property in defs) {
+            for (const property in defs) {
                 let value = defs[property];
 
                 if (property === 'attribute' && value === 'authenticationMethod') {
@@ -181,7 +181,7 @@ export default class {
                         return;
                     }
 
-                    let labelText = this.view.translate(item.name, 'fields', 'Settings');
+                    const labelText = this.view.translate(item.name, 'fields', 'Settings');
 
                     item.options = item.options || {};
 
@@ -215,10 +215,10 @@ export default class {
      * @param {function(): void} callback
      */
     handlePanelsVisibility(callback) {
-        let authenticationMethod = this.model.get('method');
+        const authenticationMethod = this.model.get('method');
 
         this.methodList.forEach(method => {
-            let fieldList = (this.authFields[method] || []);
+            const fieldList = (this.authFields[method] || []);
 
             if (method !== authenticationMethod) {
                 this.view.hidePanel(method);

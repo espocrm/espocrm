@@ -65,7 +65,7 @@ class Settings extends Model {
         let p;
 
         for (let i = 0; i < path.length; i++) {
-            var item = path[i];
+            const item = path[i];
 
             if (i === 0) {
                 p = this.get(item);

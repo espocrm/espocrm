@@ -62,7 +62,7 @@ class FieldLanguage {
         let label = this.language.translate(name, 'fields', scope);
 
         if (name.indexOf('Id') === name.length - 2) {
-            let baseField = name.slice(0, name.length - 2);
+            const baseField = name.slice(0, name.length - 2);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
@@ -70,7 +70,7 @@ class FieldLanguage {
             }
         }
         else if (name.indexOf('Name') === name.length - 4) {
-            let baseField = name.slice(0, name.length - 4);
+            const baseField = name.slice(0, name.length - 4);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
@@ -78,7 +78,7 @@ class FieldLanguage {
             }
         }
         else if (name.indexOf('Type') === name.length - 4) {
-            let baseField = name.slice(0, name.length - 4);
+            const baseField = name.slice(0, name.length - 4);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
@@ -87,7 +87,7 @@ class FieldLanguage {
         }
 
         if (name.indexOf('Ids') === name.length - 3) {
-            let baseField = name.slice(0, name.length - 3);
+            const baseField = name.slice(0, name.length - 3);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
@@ -95,7 +95,7 @@ class FieldLanguage {
             }
         }
         else if (name.indexOf('Names') === name.length - 5) {
-            let baseField = name.slice(0, name.length - 5);
+            const baseField = name.slice(0, name.length - 5);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +
@@ -103,7 +103,7 @@ class FieldLanguage {
             }
         }
         else if (name.indexOf('Types') === name.length - 5) {
-            let baseField = name.slice(0, name.length - 5);
+            const baseField = name.slice(0, name.length - 5);
 
             if (this.metadata.get(['entityDefs', scope, 'fields', baseField])) {
                 label = this.language.translate(baseField, 'fields', scope) +

@@ -53,10 +53,10 @@ export default class {
     match(text, limit) {
         text = text.toLowerCase().trim();
 
-        let list = this.get();
-        let matchedList = [];
+        const list = this.get();
+        const matchedList = [];
 
-        for (let item of list) {
+        for (const item of list) {
             if (item.toLowerCase().startsWith(text)) {
                 matchedList.push(item);
             }
@@ -102,7 +102,7 @@ export default class {
 
         let list = this.getFromStorage();
 
-        let index = list.indexOf(text);
+        const index = list.indexOf(text);
 
         if (index !== -1) {
             list.splice(index, 1);
@@ -126,9 +126,9 @@ export default class {
     remove(text) {
         text = text.trim();
 
-        let list = this.getFromStorage();
+        const list = this.getFromStorage();
 
-        let index = list.indexOf(text);
+        const index = list.indexOf(text);
 
         if (index === -1) {
             return;

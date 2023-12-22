@@ -51,9 +51,9 @@ class RecordModalHelper {
      * @return {Promise}
      */
     showDetail(view, params) {
-        let id = params.id;
-        let scope = params.scope;
-        let model = params.model;
+        const id = params.id;
+        const scope = params.scope;
+        const model = params.model;
 
         if (!id || !scope) {
             console.error("Bad data.");
@@ -65,12 +65,12 @@ class RecordModalHelper {
             return Promise.reject();
         }
 
-        let viewName = this.metadata.get(['clientDefs', scope, 'modalViews', 'detail']) ||
+        const viewName = this.metadata.get(['clientDefs', scope, 'modalViews', 'detail']) ||
             'views/modals/detail';
 
         Espo.Ui.notify(' ... ');
 
-        let options = {
+        const options = {
             scope: scope,
             model: model,
             id: id,

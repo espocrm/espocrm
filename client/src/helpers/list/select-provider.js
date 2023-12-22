@@ -49,7 +49,7 @@ class SelectProvider {
     get(entityType, layoutName) {
         return new Promise(resolve => {
             this.layoutManager.get(entityType, layoutName || 'list', layout => {
-                let list = this.getFromLayout(entityType, layout);
+                const list = this.getFromLayout(entityType, layout);
 
                 resolve(list);
             });
@@ -71,8 +71,8 @@ class SelectProvider {
                 return;
             }
 
-            let field = item.name;
-            let fieldType = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
+            const field = item.name;
+            const fieldType = this.metadata.get(['entityDefs', entityType, 'fields', field, 'type']);
 
             if (!fieldType) {
                 return;

@@ -76,7 +76,7 @@ class FileUploadExport {
         }
 
         return new Promise((resolve, reject) => {
-            let fileReader = new FileReader();
+            const fileReader = new FileReader();
 
             fileReader.onload = (e) => {
                 attachment.set('file', e.target.result);
@@ -132,9 +132,9 @@ class FileUploadExport {
             return;
         }
 
-        let blob = file.slice(start, end);
+        const blob = file.slice(start, end);
 
-        let fileReader = new FileReader();
+        const fileReader = new FileReader();
 
         fileReader.onloadend = (e) => {
             if (e.target.readyState !== FileReader.DONE) {
@@ -175,7 +175,7 @@ class FileUploadExport {
      * @private
      */
     _useChunks(file) {
-        let chunkSize = this._getChunkSize();
+        const chunkSize = this._getChunkSize();
 
         if (!chunkSize) {
             return false;
