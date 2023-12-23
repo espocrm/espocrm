@@ -43,7 +43,7 @@ class ListNestedCategoriesRecordView extends View {
     }
 
     data() {
-        let data = {};
+        const data = {};
 
         if (!this.isLoading) {
             data.list = this.getDataList();
@@ -59,7 +59,7 @@ class ListNestedCategoriesRecordView extends View {
         data.showEditLink = this.options.showEditLink;
         data.hasNavigationPanel = this.options.hasNavigationPanel;
 
-        let categoryData = this.collection.categoryData || {};
+        const categoryData = this.collection.categoryData || {};
 
         data.upperLink = categoryData.upperId ?
             '#' + this.subjectEntityType + '/list/categoryId=' + categoryData.upperId:
@@ -69,10 +69,10 @@ class ListNestedCategoriesRecordView extends View {
     }
 
     getDataList() {
-        var list = [];
+        const list = [];
 
         this.collection.forEach(model => {
-            let o = {
+            const o = {
                 id: model.id,
                 name: model.get('name'),
                 recordCount: model.get('recordCount'),
@@ -94,6 +94,7 @@ class ListNestedCategoriesRecordView extends View {
         this.subjectEntityType = this.options.subjectEntityType;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionShowMore() {
         this.$el.find('.category-item.show-more').addClass('hidden');
 
@@ -104,4 +105,5 @@ class ListNestedCategoriesRecordView extends View {
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default ListNestedCategoriesRecordView;

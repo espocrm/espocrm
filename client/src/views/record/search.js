@@ -32,6 +32,14 @@ import View from 'view';
 import StoredTextSearch from 'helpers/misc/stored-text-search';
 
 /**
+ * @typedef {Object} module:views/record/search~boolFilterDefs
+ * @property {boolean} [inPortalDisabled]
+ * @property {boolean} [isPortalOnly]
+ * @property {boolean} [aux]
+ * @property {module:utils~AccessDefs[]} [accessDataList]
+ */
+
+/**
  * A search panel view.
  */
 class SearchView extends View {
@@ -41,15 +49,19 @@ class SearchView extends View {
     scope = ''
     entityType = ''
     /** @type {module:search-manager} */
-    searchManager = null
+    searchManager
     fieldFilterList = null
     /** @type {Object.<string, string>|null}*/
     fieldFilterTranslations = null
 
     textFilter = ''
+    /**
+     * @type {string|null}
+     */
     primary = null
     presetFilterList = null
-    advanced = null
+    /** @type {{string: module:search-manager~advancedFilter}} */
+    advanced
     bool = null
 
     disableSavePreset = false
@@ -118,7 +130,7 @@ class SearchView extends View {
 
         this.boolFilterList = Espo.Utils
             .clone(this.getMetadata().get(['clientDefs', this.scope, 'boolFilterList']) || [])
-            .filter(item => {
+            .filter(/** module:views/record/search~boolFilterDefs|string */item => {
                 if (typeof item === 'string') {
                     return true;
                 }
@@ -157,7 +169,7 @@ class SearchView extends View {
 
         this.fieldFilterTranslations = {};
 
-        let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
+        const forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.entityType) || [];
 
         this.wait(
             new Promise(resolve => {
@@ -178,10 +190,10 @@ class SearchView extends View {
             })
         );
 
-        let filterList = this.options.filterList ||
+        const filterList = this.options.filterList ||
             this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
 
-        this.presetFilterList = Espo.Utils.clone(filterList).filter((item) => {
+        this.presetFilterList = Espo.Utils.clone(filterList).filter(item => {
             if (typeof item === 'string') {
                 return true;
             }
@@ -227,10 +239,10 @@ class SearchView extends View {
         if (this.presetName) {
             let hasPresetListed = false;
 
-            for (let i in this.presetFilterList) {
-                let item = this.presetFilterList[i] || {};
+            for (const i in this.presetFilterList) {
+                const item = this.presetFilterList[i] || {};
 
-                let name = (typeof item === 'string') ? item : item.name;
+                const name = (typeof item === 'string') ? item : item.name;
 
                 if (name === this.presetName) {
                     hasPresetListed = true;
@@ -265,10 +277,10 @@ class SearchView extends View {
             return [];
         }
 
-        let list = [];
+        const list = [];
 
         this.viewModeList.forEach(item => {
-            let o = {
+            const o = {
                 name: item,
                 title: this.translate(item, 'listViewModes'),
                 iconClass: this.viewModeIconClassMap[item]
@@ -317,7 +329,7 @@ class SearchView extends View {
 
     createFilters(callback) {
         let i = 0;
-        let count = Object.keys(this.advanced || {}).length;
+        const count = Object.keys(this.advanced || {}).length;
 
         if (count === 0) {
             if (typeof callback === 'function') {
@@ -325,7 +337,7 @@ class SearchView extends View {
             }
         }
 
-        for (let field in this.advanced) {
+        for (const field in this.advanced) {
             this.createFilter(field, this.advanced[field], () => {
                 i++;
 
@@ -341,7 +353,7 @@ class SearchView extends View {
     events = {
         /** @this SearchView */
         'keydown input[data-name="textFilter"]': function (e) {
-            let key = Espo.Utils.getKeyFromKeyEvent(e);
+            const key = Espo.Utils.getKeyFromKeyEvent(e);
 
             if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
                 this.search();
@@ -367,8 +379,8 @@ class SearchView extends View {
         },
         /** @this SearchView */
         'click a[data-action="addFilter"]': function (e) {
-            let $target = $(e.currentTarget);
-            let name = $target.data('name');
+            const $target = $(e.currentTarget);
+            const name = $target.data('name');
 
             $target.closest('li').addClass('hidden');
 
@@ -376,9 +388,9 @@ class SearchView extends View {
         },
         /** @this SearchView */
         'click .advanced-filters a.remove-filter': function (e) {
-            let $target = $(e.currentTarget);
+            const $target = $(e.currentTarget);
 
-            let name = $target.data('name');
+            const name = $target.data('name');
 
             this.removeFilter(name);
         },
@@ -392,9 +404,9 @@ class SearchView extends View {
         },
         /** @this SearchView */
         'click a[data-action="selectPreset"]': function (e) {
-            let $target = $(e.currentTarget);
+            const $target = $(e.currentTarget);
 
-            let presetName = $target.data('name') || null;
+            const presetName = $target.data('name') || null;
 
             this.selectPreset(presetName);
         },
@@ -418,7 +430,7 @@ class SearchView extends View {
         },
         /** @this SearchView */
         'click .dropdown-menu a[data-action="removePreset"]': function () {
-            let id = this.presetName;
+            const id = this.presetName;
 
             this.confirm(this.translate('confirmation', 'messages'), () => {
                 this.removePreset(id);
@@ -433,7 +445,7 @@ class SearchView extends View {
         },
         /** @this SearchView */
         'click [data-action="switchViewMode"]': function (e) {
-            let mode = $(e.currentTarget).data('name');
+            const mode = $(e.currentTarget).data('name');
 
             if (mode === this.viewMode) {
                 return;
@@ -462,7 +474,7 @@ class SearchView extends View {
     removeFilter(name) {
         this.$el.find('ul.filter-list li[data-name="' + name + '"]').removeClass('hidden');
 
-        let container = this.getView('filter-' + name).$el.closest('div.filter');
+        const container = this.getView('filter-' + name).$el.closest('div.filter');
 
         this.clearView('filter-' + name);
 
@@ -529,15 +541,15 @@ class SearchView extends View {
     }
 
     selectPreset(presetName, forceClearAdvancedFilters) {
-        let wasPreset = !(this.primary === this.presetName);
+        const wasPreset = !(this.primary === this.presetName);
 
         this.presetName = presetName;
 
-        let advanced = this.getPresetData();
+        const advanced = this.getPresetData();
 
         this.primary = this.getPrimaryFilterName();
 
-        let isPreset = !(this.primary === this.presetName);
+        const isPreset = !(this.primary === this.presetName);
 
         if (forceClearAdvancedFilters || wasPreset || isPreset || Object.keys(advanced).length) {
             this.removeFilters();
@@ -550,8 +562,10 @@ class SearchView extends View {
         this.createFilters(() => {
             this.reRender()
                 .then(() => {
+                    // noinspection JSUnresolvedReference
                     this.$el.find('.filters-button')
-                        .get(0).focus({preventScroll: true});
+                        .get(0)
+                        .focus({preventScroll: true});
                 })
         });
 
@@ -561,7 +575,7 @@ class SearchView extends View {
     removeFilters() {
         this.$advancedFiltersPanel.empty();
 
-        for (let name in this.advanced) {
+        for (const name in this.advanced) {
             this.clearView('filter-' + name);
         }
     }
@@ -574,25 +588,23 @@ class SearchView extends View {
         this.textFilter = '';
 
         this.selectPreset(this.presetName, true);
-
         this.hideApplyFiltersButton();
-
         this.trigger('update-ui');
     }
 
     savePreset(name) {
-        let id = 'f' + (Math.floor(Math.random() * 1000001)).toString();
+        const id = 'f' + (Math.floor(Math.random() * 1000001)).toString();
 
         this.fetch();
         this.updateSearch();
 
-        let presetFilters = this.getPreferences().get('presetFilters') || {};
+        const presetFilters = this.getPreferences().get('presetFilters') || {};
 
         if (!(this.scope in presetFilters)) {
             presetFilters[this.scope] = [];
         }
 
-        let data = {
+        const data = {
             id: id,
             name: id,
             label: name,
@@ -615,7 +627,7 @@ class SearchView extends View {
     }
 
     removePreset(id) {
-        let presetFilters = this.getPreferences().get('presetFilters') || {};
+        const presetFilters = this.getPreferences().get('presetFilters') || {};
 
         if (!(this.scope in presetFilters)) {
             presetFilters[this.scope] = [];
@@ -654,7 +666,7 @@ class SearchView extends View {
     }
 
     updateAddFilterButton() {
-        let $ul = this.$el.find('ul.filter-list');
+        const $ul = this.$el.find('ul.filter-list');
 
         if (
             $ul.children()
@@ -704,7 +716,9 @@ class SearchView extends View {
 
         let preventCloseOnBlur = false;
 
-        let options = {
+
+        // noinspection JSUnusedGlobalSymbols
+        const options = {
             minChars: 0,
             noCache: true,
             triggerSelectOnValidInput: false,
@@ -725,7 +739,7 @@ class SearchView extends View {
                     e.stopPropagation();
                     e.preventDefault();
 
-                    let text = e.currentTarget.getAttribute('data-value');
+                    const text = e.currentTarget.getAttribute('data-value');
 
                     this.storedTextSearchHelper.remove(text);
 
@@ -748,7 +762,7 @@ class SearchView extends View {
                     .get(0).innerHTML;
             },
             lookup: (text, done) => {
-                let suggestions = this.storedTextSearchHelper.match(text, this.autocompleteLimit)
+                const suggestions = this.storedTextSearchHelper.match(text, this.autocompleteLimit)
                     .map(item => {
                         return {value: item};
                     });
@@ -786,7 +800,7 @@ class SearchView extends View {
             setTimeout(() => {
                 this.$fieldQuickSearch.focus();
 
-                let width = this.$fieldQuickSearch.outerWidth();
+                const width = this.$fieldQuickSearch.outerWidth();
 
                 this.$fieldQuickSearch.css('minWidth', width);
             }, 1);
@@ -819,8 +833,8 @@ class SearchView extends View {
             return true;
         }
 
-        let presetName = this.presetName || null;
-        let primary = this.primary;
+        const presetName = this.presetName || null;
+        const primary = this.primary;
 
         if (!presetName || presetName === primary) {
             if (Object.keys(this.advanced).length) {
@@ -850,7 +864,7 @@ class SearchView extends View {
 
     managePresetFilters() {
         let presetName = this.presetName || null;
-        let primary = this.primary;
+        const primary = this.primary;
 
         this.$el.find('ul.filter-menu a.preset span').remove();
 
@@ -898,8 +912,8 @@ class SearchView extends View {
             }
 
             if (primary) {
-                let label = this.translate(primary, 'presetFilters', this.entityType);
-                let style = this.getPrimaryFilterStyle();
+                const label = this.translate(primary, 'presetFilters', this.entityType);
+                const style = this.getPrimaryFilterStyle();
 
                 filterLabel = label;
                 filterStyle = style;
@@ -927,7 +941,7 @@ class SearchView extends View {
     manageBoolFilters() {
         (this.boolFilterList || []).forEach((item) => {
             if (this.bool[item]) {
-                let label = this.translate(item, 'boolFilters', this.entityType);
+                const label = this.translate(item, 'boolFilters', this.entityType);
 
                 this.currentFilterLabelList.push(label);
             }
@@ -949,9 +963,9 @@ class SearchView extends View {
     }
 
     getFilterDataList() {
-        let list = [];
+        const list = [];
 
-        for (let field in this.advanced) {
+        for (const field in this.advanced) {
             list.push({
                 key: 'filter-' + field,
                 name: field,
@@ -975,7 +989,7 @@ class SearchView extends View {
     }
 
     getPresetFilterList() {
-        let arr = [];
+        const arr = [];
 
         this.presetFilterList.forEach((item) => {
             if (typeof item == 'string') {
@@ -1030,7 +1044,7 @@ class SearchView extends View {
     }
 
     loadSearchData() {
-        let searchData = this.searchManager.get();
+        const searchData = this.searchManager.get();
 
         this.textFilter = searchData.textFilter;
 
@@ -1108,7 +1122,7 @@ class SearchView extends View {
                 let toShowApply = this.isSearchedWithAdvancedFilter;
 
                 if (!toShowApply) {
-                    let data = view.getView('field').fetchSearch();
+                    const data = view.getView('field').fetchSearch();
 
                     if (data) {
                         toShowApply = true;
@@ -1140,8 +1154,9 @@ class SearchView extends View {
                 .prop('checked');
         });
 
-        for (let field in this.advanced) {
-            let view = this.getView('filter-' + field).getView('field');
+        for (const field in this.advanced) {
+            const view = /** @type {module:views/fields/base} */
+                this.getView('filter-' + field).getView('field');
 
             this.advanced[field] = view.fetchSearch();
 
@@ -1160,12 +1175,12 @@ class SearchView extends View {
     }
 
     getFilterFieldDataList() {
-        let defs = [];
+        const defs = [];
 
-        for (let i in this.fieldFilterList) {
-            let field = this.fieldFilterList[i];
+        for (const i in this.fieldFilterList) {
+            const field = this.fieldFilterList[i];
 
-            let o = {
+            const o = {
                 name: field,
                 checked: (field in this.advanced),
                 label: this.fieldFilterTranslations[field] || field,
@@ -1205,7 +1220,7 @@ class SearchView extends View {
     }
 
     selectPreviousPreset() {
-        let list = Espo.Utils.clone(this.getPresetFilterList());
+        const list = Espo.Utils.clone(this.getPresetFilterList());
 
         list.unshift({name: null});
 
@@ -1213,19 +1228,19 @@ class SearchView extends View {
             return;
         }
 
-        let index = list.findIndex(item => item.name === this.presetName) - 1;
+        const index = list.findIndex(item => item.name === this.presetName) - 1;
 
         if (index < 0) {
             return;
         }
 
-        let preset = list[index];
+        const preset = list[index];
 
         this.selectPreset(preset.name);
     }
 
     selectNextPreset() {
-        let list = Espo.Utils.clone(this.getPresetFilterList());
+        const list = Espo.Utils.clone(this.getPresetFilterList());
 
         list.unshift({name: null});
 
@@ -1233,13 +1248,13 @@ class SearchView extends View {
             return;
         }
 
-        let index = list.findIndex(item => item.name === this.presetName) + 1;
+        const index = list.findIndex(item => item.name === this.presetName) + 1;
 
         if (index >= list.length) {
             return;
         }
 
-        let preset = list[index];
+        const preset = list[index];
 
         this.selectPreset(preset.name);
     }
@@ -1253,7 +1268,7 @@ class SearchView extends View {
         text = text.toLowerCase();
 
         /** @type {JQuery} */
-        let $li = this.$filterList.find('li.filter-item');
+        const $li = this.$filterList.find('li.filter-item');
 
         if (text === '') {
             $li.removeClass('search-hidden');
@@ -1267,7 +1282,7 @@ class SearchView extends View {
             let label = this.fieldFilterTranslations[field] || field;
             label = label.toLowerCase();
 
-            let wordList = label.split(' ');
+            const wordList = label.split(' ');
 
             let matched = label.indexOf(text) === 0;
 
@@ -1289,13 +1304,13 @@ class SearchView extends View {
     }
 
     addFirstFieldFilter() {
-        let $first = this.$filterList.find('li.filter-item:not(.hidden):not(.search-hidden)').first();
+        const $first = this.$filterList.find('li.filter-item:not(.hidden):not(.search-hidden)').first();
 
         if (!$first.length) {
             return;
         }
 
-        let name = $first.attr('data-name');
+        const name = $first.attr('data-name');
 
         $first.addClass('hidden');
 
@@ -1305,6 +1320,7 @@ class SearchView extends View {
     }
 
     closeAddFieldDropdown() {
+        // noinspection JSUnresolvedReference
         this.$addFilterButton.parent()
             .find('[data-toggle="dropdown"]')
             .dropdown('toggle');

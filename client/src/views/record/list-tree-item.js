@@ -75,8 +75,8 @@ class ListTreeRecordItemView extends View {
         this.isSelected = true;
         this.selectedData.id = this.model.id;
 
-        let path = this.selectedData.path;
-        let names = this.selectedData.names;
+        const path = this.selectedData.path;
+        const names = this.selectedData.names;
 
         path.length = 0;
 
@@ -122,7 +122,7 @@ class ListTreeRecordItemView extends View {
 
         this.isUnfolded = false;
 
-        var childCollection = this.model.get('childCollection');
+        const childCollection = this.model.get('childCollection');
 
         if ((childCollection && childCollection.length === 0) || this.model.isEnd) {
             if (this.createDisabled) {
@@ -154,7 +154,7 @@ class ListTreeRecordItemView extends View {
     }
 
     createChildren() {
-        let childCollection = this.model.get('childCollection');
+        const childCollection = this.model.get('childCollection');
 
         let callback = null;
 
@@ -185,16 +185,16 @@ class ListTreeRecordItemView extends View {
         Espo.Ajax
             .getRequest(this.collection.entityType + '/action/lastChildrenIdList', {parentId: this.model.id})
             .then(idList =>{
-                let childrenView = this.getChildrenView();
+                const childrenView = this.getChildrenView();
 
                 idList.forEach(id => {
-                    var model = this.model.get('childCollection').get(id);
+                    const model = this.model.get('childCollection').get(id);
 
                     if (model) {
                         model.isEnd = true;
                     }
 
-                    var itemView = childrenView.getView(id);
+                    const itemView = childrenView.getView(id);
 
                     if (!itemView) {
                         return;
@@ -218,7 +218,7 @@ class ListTreeRecordItemView extends View {
             });
         }
 
-        let childCollection = this.model.get('childCollection');
+        const childCollection = this.model.get('childCollection');
 
         if (childCollection !== null) {
             this.createChildren();
@@ -281,7 +281,7 @@ class ListTreeRecordItemView extends View {
         }
 
         if (!this.readOnly) {
-            let $remove = this.$el.find('> .cell [data-action="remove"]');
+            const $remove = this.$el.find('> .cell [data-action="remove"]');
 
             this.$el.find('> .cell').on('mouseenter', function () {
                 $remove.removeClass('hidden');
@@ -314,7 +314,7 @@ class ListTreeRecordItemView extends View {
 
     getCurrentPath() {
         let pointer = this;
-        let path = [];
+        const path = [];
 
         while (true) {
             path.unshift(pointer.model.id);

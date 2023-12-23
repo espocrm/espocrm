@@ -48,7 +48,7 @@ class DetailBottomRecordView extends PanelsContainerRecordView {
 
     /** @inheritDoc */
     setupPanels() {
-        let scope = this.scope;
+        const scope = this.scope;
 
         this.panelList = Espo.Utils.clone(
             this.getMetadata()
@@ -142,7 +142,7 @@ class DetailBottomRecordView extends PanelsContainerRecordView {
                 );
             })
         ]).then(() => {
-            let panelNameList = [];
+            const panelNameList = [];
 
             this.panelList = this.panelList.filter(p => {
                 panelNameList.push(p.name);
@@ -163,15 +163,15 @@ class DetailBottomRecordView extends PanelsContainerRecordView {
             });
 
             if (this.relationshipPanels) {
-                let linkDefs = (this.model.defs || {}).links || {};
+                const linkDefs = (this.model.defs || {}).links || {};
 
                 if (this.layoutData) {
-                    for (let name in this.layoutData) {
+                    for (const name in this.layoutData) {
                         if (!linkDefs[name]) {
                             continue;
                         }
 
-                        let p = this.layoutData[name];
+                        const p = this.layoutData[name];
 
                         if (!~panelNameList.indexOf(name) && !p.disabled) {
                             this.addRelationshipPanel(name, p);
@@ -181,7 +181,7 @@ class DetailBottomRecordView extends PanelsContainerRecordView {
             }
 
             this.panelList = this.panelList.map((p) => {
-                let item = Espo.Utils.clone(p);
+                const item = Espo.Utils.clone(p);
 
                 if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                     item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');
@@ -214,8 +214,8 @@ class DetailBottomRecordView extends PanelsContainerRecordView {
 
     /** @private */
     addRelationshipPanel(name, item) {
-        let scope = this.scope;
-        let scopesDefs = this.getMetadata().get('scopes') || {};
+        const scope = this.scope;
+        const scopesDefs = this.getMetadata().get('scopes') || {};
 
         let p;
 
@@ -227,6 +227,7 @@ class DetailBottomRecordView extends PanelsContainerRecordView {
         }
 
         p.name = p.name || name;
+
         if (!p.name) {
             return;
         }
@@ -235,13 +236,13 @@ class DetailBottomRecordView extends PanelsContainerRecordView {
 
         name = p.name;
 
-        let links = (this.model.defs || {}).links || {};
+        const links = (this.model.defs || {}).links || {};
 
         if (!(name in links)) {
             return;
         }
 
-        let foreignScope = links[name].entity;
+        const foreignScope = links[name].entity;
 
         if ((scopesDefs[foreignScope] || {}).disabled) {
             return;
@@ -252,9 +253,10 @@ class DetailBottomRecordView extends PanelsContainerRecordView {
         }
 
         let defs = this.getMetadata().get(['clientDefs', scope, 'relationshipPanels', name]) || {};
+
         defs = Espo.Utils.clone(defs);
 
-        for (let i in defs) {
+        for (const i in defs) {
             if (i in p) {
                 continue;
             }

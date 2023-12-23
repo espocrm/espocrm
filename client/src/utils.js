@@ -277,7 +277,7 @@ Espo.Utils = {
     /**
      * Check access to an action.
      *
-     * @param {Espo.Utils~AccessDefs[]} dataList List of definitions.
+     * @param {module:utils~AccessDefs[]} dataList List of definitions.
      * @param {module:acl-manager} acl An ACL manager.
      * @param {module:models/user} user A user.
      * @param {module:model|null} [entity] A model.

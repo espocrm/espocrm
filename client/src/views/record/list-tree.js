@@ -50,8 +50,9 @@ class ListTreeRecordView extends ListRecordView {
     level = 0
     itemViewName = 'views/record/list-tree-item'
 
+    // noinspection JSCheckFunctionSignatures
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.createDisabled = this.createDisabled;
 
@@ -163,7 +164,7 @@ class ListTreeRecordView extends ListRecordView {
         }
 
         this.rowList.forEach(key => {
-            let view = /** @type module:views/record/list-tree-item */this.getView(key);
+            const view = /** @type module:views/record/list-tree-item */this.getView(key);
 
             if (view.model.id === id) {
                 view.setIsSelected();
@@ -185,12 +186,12 @@ class ListTreeRecordView extends ListRecordView {
         if (this.collection.length > 0) {
             this.wait(true);
 
-            let modelList = this.collection.models;
-            let count = modelList.length;
+            const modelList = this.collection.models;
+            const count = modelList.length;
             let built = 0;
 
             modelList.forEach(model => {
-                let key = model.id;
+                const key = model.id;
 
                 this.rowList.push(key);
 
@@ -244,7 +245,7 @@ class ListTreeRecordView extends ListRecordView {
     actionCreate(data, e) {
         e.stopPropagation();
 
-        let attributes = this.getCreateAttributes();
+        const attributes = this.getCreateAttributes();
 
         let maxOrder = 0;
 
@@ -264,9 +265,9 @@ class ListTreeRecordView extends ListRecordView {
             attributes.parentName = this.model.get('name');
         }
 
-        let scope = this.collection.entityType;
+        const scope = this.collection.entityType;
 
-        let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+        const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
             'views/modals/edit';
 
         this.createView('quickCreate', viewName, {
@@ -278,7 +279,7 @@ class ListTreeRecordView extends ListRecordView {
             this.listenToOnce(view, 'after:save', model => {
                 view.close();
 
-                let collection = /** @type module:collections/tree */ this.collection;
+                const collection = /** @type module:collections/tree */ this.collection;
 
                 model.set('childCollection', collection.createSeed());
 

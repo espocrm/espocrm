@@ -103,7 +103,7 @@ class DetailSideRecordView extends PanelsContainerRecordView {
         this.setupPanels();
 
         if (!this.additionalPanelsDisabled) {
-            let additionalPanels = this.getMetadata()
+            const additionalPanels = this.getMetadata()
                 .get(['clientDefs', this.scope, 'sidePanels', this.type]) || [];
 
             additionalPanels.forEach((panel) => {
@@ -128,7 +128,7 @@ class DetailSideRecordView extends PanelsContainerRecordView {
         });
 
         this.panelList = this.panelList.map((p) => {
-            let item = Espo.Utils.clone(p);
+            const item = Espo.Utils.clone(p);
 
             if (this.recordHelper.getPanelStateParam(p.name, 'hidden') !== null) {
                 item.hidden = this.recordHelper.getPanelStateParam(p.name, 'hidden');

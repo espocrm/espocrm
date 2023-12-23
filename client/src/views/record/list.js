@@ -2311,7 +2311,6 @@ class ListRecordView extends View {
     /**
      * @protected
      * @param {function(module:views/record/list~columnDefs[]): void} callback A callback.
-     * @private
      */
     _loadListLayout(callback) {
         this.layoutLoadCallbackList.push(callback);

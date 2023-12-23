@@ -49,10 +49,10 @@ class KanbanRecordItem extends View {
         this.layoutDataList = [];
 
         this.itemLayout.forEach((item, i) => {
-            let name = item.name;
-            let key = name + 'Field';
+            const name = item.name;
+            const key = name + 'Field';
 
-            let o = {
+            const o = {
                 name: name,
                 isAlignRight: item.align === 'right',
                 isLarge: item.isLarge,
@@ -62,9 +62,11 @@ class KanbanRecordItem extends View {
 
             this.layoutDataList.push(o);
 
-            var viewName = item.view || this.model.getFieldParam(name, 'view');
+            let viewName = item.view || this.model.getFieldParam(name, 'view');
+
             if (!viewName) {
-                var type = this.model.getFieldType(name) || 'base';
+                const type = this.model.getFieldType(name) || 'base';
+
                 viewName = this.getFieldManager().getViewName(type);
             }
 
@@ -84,7 +86,7 @@ class KanbanRecordItem extends View {
         });
 
         if (!this.rowActionsDisabled) {
-            let acl =  {
+            const acl = {
                 edit: this.getAcl().checkModel(this.model, 'edit'),
                 delete: this.getAcl().checkModel(this.model, 'delete'),
             };

@@ -33,6 +33,8 @@
  *
  * @typedef {Object} module:search-manager~data
  *
+ * @property {string} [presetName] A preset.
+ * @property {string} [textFilter] A text filter.
  * @property {string} [primary] A primary filter.
  * @property {Object.<string, boolean>} [bool] Bool filters.
  * @property {{string: module:search-manager~advancedFilter}} [advanced] Advanced filters (field filters).

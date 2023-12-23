@@ -26,37 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/deleted-detail', ['views/record/detail'], function (Dep) {
+import DetailRecordView from 'views/record/detail';
 
-    return Dep.extend({
+class DeletedDetailRecordView extends DetailRecordView {
 
-        bottomView: null,
+    bottomView = null
 
-        sideView: 'views/record/deleted-detail-side',
+    sideView = 'views/record/deleted-detail-side'
 
-        setupBeforeFinal: function () {
-            Dep.prototype.setupBeforeFinal.call(this);
+    setupBeforeFinal() {
+        super.setupBeforeFinal();
 
-            this.buttonList = [];
-            this.dropdownItemList = [];
+        this.buttonList = [];
+        this.dropdownItemList = [];
 
-            this.addDropdownItem({
-                name: 'restoreDeleted',
-                label: 'Restore'
-            });
-        },
+        this.addDropdownItem({
+            name: 'restoreDeleted',
+            label: 'Restore'
+        });
+    }
 
-        actionRestoreDeleted: function () {
-            Espo.Ui.notify(' ... ');
+    // noinspection JSUnusedGlobalSymbols
+    actionRestoreDeleted() {
+        Espo.Ui.notify(' ... ');
 
-            Espo.Ajax.postRequest(this.model.entityType + '/action/restoreDeleted', {
-                id: this.model.id
-            }).then(() => {
+        Espo.Ajax
+            .postRequest(this.model.entityType + '/action/restoreDeleted', {id: this.model.id})
+            .then(() => {
                 Espo.Ui.notify(false);
 
                 this.model.set('deleted', false);
                 this.model.trigger('after:restore-deleted');
             });
-        },
-    });
-});
+    }
+}
+
+export default DeletedDetailRecordView;

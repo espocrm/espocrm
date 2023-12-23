@@ -90,7 +90,7 @@ class EditRecordView extends DetailRecordView {
     actionSave(data) {
         data = data || {};
 
-        let isNew = this.isNew;
+        const isNew = this.isNew;
 
         return this.save(data.options)
             .then(() => {
@@ -183,7 +183,7 @@ class EditRecordView extends DetailRecordView {
     actionSaveAndNew(data) {
         data = data || {};
 
-        let proceedCallback = () => {
+        const proceedCallback = () => {
             Espo.Ui.success(this.translate('Created'));
 
             this.getRouter().dispatch(this.scope, 'create', {
@@ -219,7 +219,7 @@ class EditRecordView extends DetailRecordView {
         e.preventDefault();
         e.stopPropagation();
 
-        let focusedFieldView = this.getFocusedFieldView();
+        const focusedFieldView = this.getFocusedFieldView();
 
         if (focusedFieldView) {
             this.model.set(focusedFieldView.fetch());

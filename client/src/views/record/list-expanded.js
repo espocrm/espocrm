@@ -49,7 +49,7 @@ class ListExpandedRecordView extends ListRecordView {
         super.setup();
 
         this.on('after:save', model => {
-            let view = this.getView(model.id);
+            const view = this.getView(model.id);
 
             if (!view) {
                 return;
@@ -63,7 +63,7 @@ class ListExpandedRecordView extends ListRecordView {
     }
 
     _loadListLayout(callback) {
-        let type = this.type + 'Expanded';
+        const type = this.type + 'Expanded';
 
         this.layoutLoadCallbackList.push(callback);
 
@@ -86,20 +86,20 @@ class ListExpandedRecordView extends ListRecordView {
     _convertLayout(listLayout, model) {
         model = model || this.collection.prepareModel();
 
-        let layout = {
+        const layout = {
             rows: [],
             right: false,
         };
 
-        for (let i in listLayout.rows) {
-            let row = listLayout.rows[i];
-            let layoutRow = [];
+        for (const i in listLayout.rows) {
+            const row = listLayout.rows[i];
+            const layoutRow = [];
 
-            for (let j in row) {
-                let rowItem = row[j];
-                let type = rowItem.type || model.getFieldType(rowItem.name) || 'base';
+            for (const j in row) {
+                const rowItem = row[j];
+                const type = rowItem.type || model.getFieldType(rowItem.name) || 'base';
 
-                let item = {
+                const item = {
                     name: rowItem.name + 'Field',
                     field: rowItem.name,
                     view: rowItem.view ||
@@ -115,7 +115,7 @@ class ListExpandedRecordView extends ListRecordView {
                 };
 
                 if (rowItem.options) {
-                    for (let optionName in rowItem.options) {
+                    for (const optionName in rowItem.options) {
                         if (typeof item.options[optionName] !== 'undefined') {
                             continue;
                         }
@@ -136,7 +136,7 @@ class ListExpandedRecordView extends ListRecordView {
 
         if ('right' in listLayout) {
             if (listLayout.right) {
-                let name = listLayout.right.name || 'right';
+                const name = listLayout.right.name || 'right';
 
                 layout.right = {
                     field: name,
@@ -166,7 +166,7 @@ class ListExpandedRecordView extends ListRecordView {
     }
 
     getItemEl(model, item) {
-        let name = item.field || item.columnName;
+        const name = item.field || item.columnName;
 
         return this.getSelector() + ' li[data-id="' + model.id + '"] .cell[data-name="' + name+ '"]';
     }
@@ -179,7 +179,7 @@ class ListExpandedRecordView extends ListRecordView {
     }
 
     prepareInternalLayout(internalLayout, model) {
-        let rows = internalLayout.rows || [];
+        const rows = internalLayout.rows || [];
 
         rows.forEach((row) => {
             row.forEach((col) => {
@@ -193,7 +193,7 @@ class ListExpandedRecordView extends ListRecordView {
     }
 
     fetchAttributeListFromLayout() {
-        var list = [];
+        const list = [];
 
         if (this.listLayout.rows) {
             this.listLayout.rows.forEach((row) => {
@@ -202,9 +202,9 @@ class ListExpandedRecordView extends ListRecordView {
                         return;
                     }
 
-                    var field = item.name;
+                    const field = item.name;
 
-                    var fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
+                    const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', field, 'type']);
 
                     if (!fieldType) {
                         return;

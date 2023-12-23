@@ -26,11 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/deleted-detail-side', ['views/record/detail-side'], function (Dep) {
+import DetailSideRecordView from 'views/record/detail-side';
 
-    return Dep.extend({
+class DeletedDetailSideRecordView extends DetailSideRecordView {
 
-        additionalPanelsDisabled: true,
+    additionalPanelsDisabled = true
+}
 
-    });
-});
+// noinspection JSUnusedGlobalSymbols
+export default DeletedDetailSideRecordView;

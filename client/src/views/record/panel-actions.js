@@ -49,7 +49,7 @@ class PanelActionsView extends View {
     }
 
     getButtonList() {
-        let list = [];
+        const list = [];
 
         this.buttonList.forEach(item => {
             if (item.hidden) {

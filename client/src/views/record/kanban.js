@@ -79,12 +79,12 @@ class KanbanRecordView extends ListRecordView {
 
             e.preventDefault();
 
-            let id = $(e.currentTarget).data('id');
-            let model = this.collection.get(id);
+            const id = $(e.currentTarget).data('id');
+            const model = this.collection.get(id);
 
-            let scope = this.getModelScope(id);
+            const scope = this.getModelScope(id);
 
-            let options = {
+            const options = {
                 id: id,
                 model: model,
             };
@@ -98,9 +98,9 @@ class KanbanRecordView extends ListRecordView {
         },
         /** @this KanbanRecordView */
         'click [data-action="groupShowMore"]': function (e) {
-            let $target = $(e.currentTarget);
+            const $target = $(e.currentTarget);
 
-            let group = $target.data('name');
+            const group = $target.data('name');
 
             this.groupShowMore(group);
         },
@@ -113,19 +113,19 @@ class KanbanRecordView extends ListRecordView {
         },
         /** @this KanbanRecordView */
         'mouseenter th.group-header': function (e) {
-            let group = $(e.currentTarget).attr('data-name');
+            const group = $(e.currentTarget).attr('data-name');
 
             this.showPlus(group);
         },
         /** @this KanbanRecordView */
         'mouseleave th.group-header': function (e) {
-            let group = $(e.currentTarget).attr('data-name');
+            const group = $(e.currentTarget).attr('data-name');
 
             this.hidePlus(group);
         },
         /** @this KanbanRecordView */
         'click [data-action="createInGroup"]': function (e) {
-            let group = $(e.currentTarget).attr('data-group');
+            const group = $(e.currentTarget).attr('data-group');
 
             this.actionCreateInGroup(group);
         },
@@ -139,15 +139,15 @@ class KanbanRecordView extends ListRecordView {
         },
         /** @this KanbanRecordView */
         'auxclick a.link': function (e) {
-            let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
 
             if (!isCombination) {
                 return;
             }
 
-            let $target = $(e.currentTarget);
+            const $target = $(e.currentTarget);
 
-            let id = $target.attr('data-id');
+            const id = $target.attr('data-id');
 
             if (!id) {
                 return;
@@ -157,7 +157,7 @@ class KanbanRecordView extends ListRecordView {
                 return;
             }
 
-            let $quickView = $target.parent().closest(`[data-id="${id}"]`)
+            const $quickView = $target.parent().closest(`[data-id="${id}"]`)
                 .find(`ul.list-row-dropdown-menu[data-id="${id}"] a[data-action="quickView"]`);
 
             if (!$quickView.length) {
@@ -171,7 +171,9 @@ class KanbanRecordView extends ListRecordView {
         },
     }
 
+    // noinspection JSCheckFunctionSignatures
     data() {
+        // noinspection JSValidateTypes
         return {
             scope: this.scope,
             header: this.header,
@@ -265,7 +267,7 @@ class KanbanRecordView extends ListRecordView {
             ['entityDefs', this.scope, 'fields', this.statusField, 'options'])
         );
 
-        let statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
+        const statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
 
         this.statusList = this.statusList.filter((item) => {
             if (~statusIgnoreList.indexOf(item)) {
@@ -324,7 +326,7 @@ class KanbanRecordView extends ListRecordView {
     }
 
     afterRender() {
-        let $window = $(window);
+        const $window = $(window);
 
         this.$listKanban = this.$el.find('.list-kanban');
         this.$content = $('#content');
@@ -351,7 +353,7 @@ class KanbanRecordView extends ListRecordView {
         this.plusElementMap = {};
 
         this.statusList.forEach(status => {
-            let value = status.replace(/"/g, '\\"');
+            const value = status.replace(/"/g, '\\"');
 
             this.plusElementMap[status] = this.$el
                 .find('.kanban-head .create-button[data-group="' + value + '"]');
@@ -359,15 +361,15 @@ class KanbanRecordView extends ListRecordView {
     }
 
     initStickableHeader() {
-        let $container = this.$headContainer = this.$el.find('.kanban-head-container');
-        let topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
+        const $container = this.$headContainer = this.$el.find('.kanban-head-container');
+        const topBarHeight = this.getThemeManager().getParam('navbarHeight') || 30;
 
-        let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+        const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
 
-        let $middle = this.$el.find('.kanban-columns-container');
-        let $window = $(window);
+        const $middle = this.$el.find('.kanban-columns-container');
+        const $window = $(window);
 
-        let $block = $('<div>')
+        const $block = $('<div>')
             .addClass('kanban-head-placeholder')
             .html('&nbsp;')
             .hide()
@@ -381,8 +383,8 @@ class KanbanRecordView extends ListRecordView {
         $window.off('resize.kanban-' + this.cid);
         $window.on('resize.kanban-' + this.cid, () => controlSticking());
 
-        let controlSticking = () => {
-            let width = $middle.width();
+        const controlSticking = () => {
+            const width = $middle.width();
 
             if ($(window.document).width() < screenWidthXs) {
                 $container.removeClass('sticked');
@@ -396,14 +398,14 @@ class KanbanRecordView extends ListRecordView {
                 return;
             }
 
-            let stickTop = this.$listKanban.offset().top - topBarHeight;
+            const stickTop = this.$listKanban.offset().top - topBarHeight;
 
-            let edge = $middle.offset().top + $middle.outerHeight(true);
-            let scrollTop = $window.scrollTop();
+            const edge = $middle.offset().top + $middle.outerHeight(true);
+            const scrollTop = $window.scrollTop();
 
             if (scrollTop < edge) {
                 if (scrollTop > stickTop) {
-                    let containerWidth = this.$container.width() - 3;
+                    const containerWidth = this.$container.width() - 3;
 
                     $container.children().css('width', width);
 
@@ -440,15 +442,15 @@ class KanbanRecordView extends ListRecordView {
     }
 
     initSortable() {
-        let $list = this.$groupColumnList;
+        const $list = this.$groupColumnList;
 
         $list.find('> .item').on('touchstart', (e) => {
             e.originalEvent.stopPropagation();
         });
 
-        let orderDisabled = this.orderDisabled;
+        const orderDisabled = this.orderDisabled;
 
-        let $groupColumnList = this.$el.find('.group-column-list');
+        const $groupColumnList = this.$el.find('.group-column-list');
 
         $list.sortable({
             distance: 10,
@@ -490,21 +492,21 @@ class KanbanRecordView extends ListRecordView {
                 this.sortIsStarted = false;
                 this.$draggable = null;
 
-                let $item = $(ui.item);
+                const $item = $(ui.item);
 
                 this.$el.find('.group-column-list').removeClass('drop-active');
 
-                let group = $item.closest('.group-column-list').data('name');
-                let id = $item.data('id');
+                const group = $item.closest('.group-column-list').data('name');
+                const id = $item.data('id');
 
-                let draggedGroupFrom = this.draggedGroupFrom;
+                const draggedGroupFrom = this.draggedGroupFrom;
 
                 this.draggedGroupFrom = null;
 
                 this.$showMore.removeClass('hidden');
 
                 if (group !== draggedGroupFrom) {
-                    let model = this.collection.get(id);
+                    const model = this.collection.get(id);
 
                     if (!model) {
                         $list.sortable('cancel');
@@ -512,7 +514,7 @@ class KanbanRecordView extends ListRecordView {
                         return;
                     }
 
-                    let attributes = {};
+                    const attributes = {};
 
                     attributes[this.statusField] = group;
 
@@ -569,7 +571,7 @@ class KanbanRecordView extends ListRecordView {
      * @return {Promise}
      */
     storeGroupOrder(group, id) {
-        let ids = this.getGroupOrderFromDom(group);
+        const ids = this.getGroupOrderFromDom(group);
 
         if (id) {
             ids.unshift(id);
@@ -587,9 +589,9 @@ class KanbanRecordView extends ListRecordView {
      * @return {string[]}
      */
     getGroupOrderFromDom(group) {
-        let ids = [];
+        const ids = [];
 
-        let $group = this.$el.find('.group-column-list[data-name="'+group+'"]');
+        const $group = this.$el.find('.group-column-list[data-name="' + group + '"]');
 
         $group.children().each((i, el) => {
             ids.push($(el).data('id'));
@@ -602,10 +604,10 @@ class KanbanRecordView extends ListRecordView {
      * @param {string} group
      */
     reOrderGroup(group) {
-        let groupCollection = this.getGroupCollection(group);
-        let ids = this.getGroupOrderFromDom(group);
+        const groupCollection = this.getGroupCollection(group);
+        const ids = this.getGroupOrderFromDom(group);
 
-        let modelMap = {};
+        const modelMap = {};
 
         groupCollection.models.forEach((m) => {
             modelMap[m.id] = m;
@@ -616,7 +618,7 @@ class KanbanRecordView extends ListRecordView {
         }
 
         ids.forEach(id => {
-            let model = modelMap[id];
+            const model = modelMap[id];
 
             if (!model) {
                 return;
@@ -630,7 +632,7 @@ class KanbanRecordView extends ListRecordView {
         this.groupDataList.forEach(item => {
             item.dataList = [];
 
-            for (let model of item.collection.models) {
+            for (const model of item.collection.models) {
                 item.dataList.push({
                     key: model.id,
                     id: model.id,
@@ -670,7 +672,7 @@ class KanbanRecordView extends ListRecordView {
         let height = this.getHelper()
             .calculateContentContainerHeight(this.$el.find('.kanban-columns-container'));
 
-        let containerEl = this.$container.get(0);
+        const containerEl = this.$container.get(0);
 
         if (containerEl.scrollWidth > containerEl.clientWidth) {
             height -= 18;
@@ -711,7 +713,8 @@ class KanbanRecordView extends ListRecordView {
     }
 
     buildRows(callback) {
-        let groupList = (this.collection.dataAdditional || {}).groupList || [];
+        // noinspection JSUnresolvedReference
+        const groupList = (this.collection.dataAdditional || {}).groupList || [];
 
         this.collection.reset();
 
@@ -728,7 +731,7 @@ class KanbanRecordView extends ListRecordView {
             this.listLayout = listLayout;
 
             groupList.forEach((item, i) => {
-                let collection = this.seedCollection.clone();
+                const collection = this.seedCollection.clone();
 
                 this.listenTo(collection, 'destroy', (model, attributes, o) => {
                     if (o.fromList) {
@@ -763,7 +766,7 @@ class KanbanRecordView extends ListRecordView {
 
                 this.collection.add(collection.models);
 
-                let itemDataList = [];
+                const itemDataList = [];
 
                 collection.models.forEach(model => {
                     count ++;
@@ -782,16 +785,15 @@ class KanbanRecordView extends ListRecordView {
                             'style', groupList[i + 1].name]);
                 }
 
-                let o = {
+                const o = {
                     name: item.name,
                     label: this.getLanguage().translateOption(item.name, this.statusField, this.scope),
                     dataList: itemDataList,
                     collection: collection,
                     isLast: i === groupList.length - 1,
                     hasShowMore: collection.total > collection.length || collection.total === -1,
-                    style: this.getMetadata().get(
-                        ['entityDefs', this.scope, 'fields', this.statusField, 'style', item.name]
-                    ),
+                    style: this.getMetadata()
+                        .get(['entityDefs', this.scope, 'fields', this.statusField, 'style', item.name]),
                     nextStyle: nextStyle,
                 };
 
@@ -810,7 +812,7 @@ class KanbanRecordView extends ListRecordView {
 
             this.groupDataList.forEach(groupItem => {
                 groupItem.dataList.forEach((item, j) => {
-                    let model = groupItem.collection.get(item.id);
+                    const model = groupItem.collection.get(item.id);
 
                     this.buildRow(j, model, () => {
                         loadedCount++;
@@ -829,7 +831,7 @@ class KanbanRecordView extends ListRecordView {
     }
 
     buildRow(i, model, callback) {
-        let key = model.id;
+        const key = model.id;
 
         this.createView(key, this.itemViewName, {
             model: model,
@@ -866,9 +868,9 @@ class KanbanRecordView extends ListRecordView {
             }
         });
 
-        for (let groupItem of this.groupDataList) {
+        for (const groupItem of this.groupDataList) {
             for (let j = 0; j < groupItem.dataList.length; j++) {
-                let item = groupItem.dataList[j];
+                const item = groupItem.dataList[j];
 
                 if (item.id !== id) {
                     continue;
@@ -889,8 +891,8 @@ class KanbanRecordView extends ListRecordView {
     }
 
     onChangeGroup(model, value, o) {
-        let id = model.id;
-        let group = model.get(this.statusField);
+        const id = model.id;
+        const group = model.get(this.statusField);
 
         this.collection.subCollectionList.forEach((collection) => {
             if (collection.get(id)) {
@@ -904,9 +906,9 @@ class KanbanRecordView extends ListRecordView {
 
         let dataItem;
 
-        for (let groupItem of this.groupDataList) {
+        for (const groupItem of this.groupDataList) {
             for (let j = 0; j < groupItem.dataList.length; j++) {
-                let item = groupItem.dataList[j];
+                const item = groupItem.dataList[j];
 
                 if (item.id === id) {
                     dataItem = item;
@@ -925,7 +927,7 @@ class KanbanRecordView extends ListRecordView {
             return;
         }
 
-        for (let groupItem of this.groupDataList) {
+        for (const groupItem of this.groupDataList) {
             if (groupItem.name !== group) {
                 continue;
             }
@@ -941,8 +943,8 @@ class KanbanRecordView extends ListRecordView {
             }
         }
 
-        let $item = this.$el.find('.item[data-id="' + id + '"]');
-        let $column = this.$el.find('.group-column[data-name="' + group + '"] .group-column-list');
+        const $item = this.$el.find('.item[data-id="' + id + '"]');
+        const $column = this.$el.find('.group-column[data-name="' + group + '"] .group-column-list');
 
         if ($column.length) {
             $column.prepend($item);
@@ -958,7 +960,7 @@ class KanbanRecordView extends ListRecordView {
     groupShowMore(group) {
         let groupItem;
 
-        for (let i in this.groupDataList) {
+        for (const i in this.groupDataList) {
             groupItem = this.groupDataList[i];
 
             if (groupItem.name === group) {
@@ -972,10 +974,10 @@ class KanbanRecordView extends ListRecordView {
             return;
         }
 
-        let collection = groupItem.collection;
+        const collection = groupItem.collection;
 
-        let $list = this.$el.find('.group-column-list[data-name="'+group+'"]');
-        let $showMore = this.$el.find('.group-column[data-name="'+group+'"] .show-more');
+        const $list = this.$el.find('.group-column-list[data-name="' + group + '"]');
+        const $showMore = this.$el.find('.group-column[data-name="' + group + '"] .show-more');
 
         collection.data.select = this.collection.data.select;
 
@@ -1010,7 +1012,7 @@ class KanbanRecordView extends ListRecordView {
 
     // noinspection JSUnusedGlobalSymbols
     actionMoveOver(data) {
-        let model = this.collection.get(data.id);
+        const model = this.collection.get(data.id);
 
         this.createView('moveOverDialog', 'views/modals/kanban-move-over', {
             model: model,
@@ -1041,7 +1043,7 @@ class KanbanRecordView extends ListRecordView {
      * @param {string} group
      */
     showPlus(group) {
-        let $el = this.plusElementMap[group];
+        const $el = this.plusElementMap[group];
 
         if (!$el) {
             return;
@@ -1054,7 +1056,7 @@ class KanbanRecordView extends ListRecordView {
      * @param {string} group
      */
     hidePlus(group) {
-        let $el = this.plusElementMap[group];
+        const $el = this.plusElementMap[group];
 
         if (!$el) {
             return;
@@ -1067,14 +1069,14 @@ class KanbanRecordView extends ListRecordView {
      * @param {string} group
      */
     actionCreateInGroup(group) {
-        let attributes = {};
+        const attributes = {};
 
         attributes[this.statusField] = group;
 
-        let viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
             'views/modals/edit';
 
-        let options = {
+        const options = {
             attributes: attributes,
             scope: this.scope,
         };
@@ -1100,18 +1102,19 @@ class KanbanRecordView extends ListRecordView {
     initBackDrag(e) {
         this.backDragStarted = true;
 
-        let containerEl = this.$container.get(0);
+        const containerEl = this.$container.get(0);
 
         containerEl.style.cursor = 'grabbing';
         containerEl.style.userSelect = 'none';
 
-        let $document = $(document);
+        const $document = $(document);
 
-        let startLeft = containerEl.scrollLeft;
-        let startX = e.clientX;
+        const startLeft = containerEl.scrollLeft;
+        const startX = e.clientX;
 
         $document.on('mousemove.' + this.cid, (e) => {
-            let dx = e.originalEvent.clientX - startX;
+            // noinspection JSUnresolvedReference
+            const dx = e.originalEvent.clientX - startX;
 
             containerEl.scrollLeft = startLeft - dx;
 
@@ -1147,37 +1150,37 @@ class KanbanRecordView extends ListRecordView {
             return;
         }
 
-        let draggableRect = this.$draggable.get(0).getBoundingClientRect();
+        const draggableRect = this.$draggable.get(0).getBoundingClientRect();
 
-        let itemLeft = draggableRect.left;
-        let itemRight = draggableRect.right;
+        const itemLeft = draggableRect.left;
+        const itemRight = draggableRect.right;
 
-        let containerEl = this.$container.get(0);
+        const containerEl = this.$container.get(0);
 
-        let rect = containerEl.getBoundingClientRect();
+        const rect = containerEl.getBoundingClientRect();
 
-        let marginSens = 70;
+        const marginSens = 70;
         let step = 2;
-        let interval = 5;
-        let marginSensStepRatio = 4;
-        let stepRatio = 3;
+        const interval = 5;
+        const marginSensStepRatio = 4;
+        const stepRatio = 3;
 
-        let isRight = rect.right - marginSens < itemRight &&
+        const isRight = rect.right - marginSens < itemRight &&
             containerEl.scrollLeft + containerEl.offsetWidth < containerEl.scrollWidth;
 
-        let isLeft = rect.left + marginSens > itemLeft &&
+        const isLeft = rect.left + marginSens > itemLeft &&
             containerEl.scrollLeft > 0;
 
         this.$groupColumnList.sortable('refreshPositions');
 
         if (isRight && this.sortWasCentered) {
-            let margin = rect.right - itemRight;
+            const margin = rect.right - itemRight;
 
             if (margin < marginSens / marginSensStepRatio) {
                 step *= stepRatio;
             }
 
-            let stepActual = Math.min(step, containerEl.offsetWidth - containerEl.scrollLeft);
+            const stepActual = Math.min(step, containerEl.offsetWidth - containerEl.scrollLeft);
 
             containerEl.scrollLeft = containerEl.scrollLeft + stepActual;
 
@@ -1197,13 +1200,13 @@ class KanbanRecordView extends ListRecordView {
         }
 
         if (isLeft && this.sortWasCentered) {
-            let margin = - (rect.left - itemLeft);
+            const margin = -(rect.left - itemLeft);
 
             if (margin < marginSens / marginSensStepRatio) {
                 step *= stepRatio;
             }
 
-            let stepActual = Math.min(step, containerEl.scrollLeft);
+            const stepActual = Math.min(step, containerEl.scrollLeft);
 
             containerEl.scrollLeft = containerEl.scrollLeft - stepActual;
 

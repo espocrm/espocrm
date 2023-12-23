@@ -70,7 +70,7 @@ class DetailMiddleRecordView extends View {
             this.$el.find('.panel[data-name="'+name+'"]').removeClass('hidden');
         }
 
-        let wasShown = !this.recordHelper.getPanelStateParam(name, 'hidden');
+        const wasShown = !this.recordHelper.getPanelStateParam(name, 'hidden');
 
         if (
             !wasShown &&
@@ -78,7 +78,7 @@ class DetailMiddleRecordView extends View {
             this.options.panelFieldListMap[name]
         ) {
             this.options.panelFieldListMap[name].forEach(field => {
-                var view = this.getFieldView(field);
+                const view = this.getFieldView(field);
 
                 if (!view) {
                     return;
@@ -118,13 +118,13 @@ class DetailMiddleRecordView extends View {
     hideField(name) {
         this.recordHelper.setFieldStateParam(name, 'hidden', true);
 
-        var processHtml = () => {
-            var fieldView = this.getFieldView(name);
+        const processHtml = () => {
+            const fieldView = this.getFieldView(name);
 
             if (fieldView) {
-                var $field = fieldView.$el;
-                var $cell = $field.closest('.cell[data-name="' + name + '"]');
-                var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+                const $field = fieldView.$el;
+                const $cell = $field.closest('.cell[data-name="' + name + '"]');
+                const $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
                 $field.addClass('hidden');
                 $label.addClass('hidden');
@@ -146,7 +146,7 @@ class DetailMiddleRecordView extends View {
             });
         }
 
-        var view = this.getFieldView(name);
+        const view = this.getFieldView(name);
 
         if (view) {
             view.setDisabled();
@@ -165,13 +165,13 @@ class DetailMiddleRecordView extends View {
 
         this.recordHelper.setFieldStateParam(name, 'hidden', false);
 
-        var processHtml = () => {
-            var fieldView = this.getFieldView(name);
+        const processHtml = () => {
+            const fieldView = this.getFieldView(name);
 
             if (fieldView) {
-                var $field = fieldView.$el;
-                var $cell = $field.closest('.cell[data-name="' + name + '"]');
-                var $label = $cell.find('label.control-label[data-name="' + name + '"]');
+                const $field = fieldView.$el;
+                const $cell = $field.closest('.cell[data-name="' + name + '"]');
+                const $label = $cell.find('label.control-label[data-name="' + name + '"]');
 
                 $field.removeClass('hidden');
                 $label.removeClass('hidden');
@@ -193,7 +193,7 @@ class DetailMiddleRecordView extends View {
             });
         }
 
-        var view = this.getFieldView(name);
+        const view = this.getFieldView(name);
 
         if (view) {
             if (!view.disabledLocked) {
@@ -215,10 +215,11 @@ class DetailMiddleRecordView extends View {
      * @return {Object.<string, module:views/fields/base>}
      */
     getFieldViews() {
-        let fieldViews = {};
+        const fieldViews = {};
 
-        for (let viewKey in this.nestedViews) {
-            let name = this.nestedViews[viewKey].name;
+        for (const viewKey in this.nestedViews) {
+            // noinspection JSUnresolvedReference
+            const name = this.nestedViews[viewKey].name;
 
             fieldViews[name] = this.nestedViews[viewKey];
         }
