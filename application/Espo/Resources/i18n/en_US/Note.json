@@ -35,6 +35,8 @@
         "writeMessage": "Write your message here"
     },
     "links": {
+        "portals": "Portals",
+        "attachments": "Attachments",
         "superParent": "Super Parent",
         "related": "Related"
     }
