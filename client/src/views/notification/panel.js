@@ -74,7 +74,7 @@ class NotificationPanelView extends View {
             .then(() => this.createRecordView())
             .then(view => view.render());
 
-        let $window = $(window);
+        const $window = $(window);
 
         $window.off('resize.notifications-height');
         $window.on('resize.notifications-height', this.processSizing.bind(this));
@@ -94,11 +94,10 @@ class NotificationPanelView extends View {
      * @return {Promise<module:views/record/list-expanded>}
      */
     createRecordView() {
-        let viewName = this.getMetadata()
-                .get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
+        const viewName = this.getMetadata().get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
             'views/notification/record/list';
 
-        return this.createView('list', viewName, {
+        return /** @type {Promise<module:views/record/list-expanded>} */this.createView('list', viewName, {
             selector: '.list-container',
             collection: this.collection,
             showCount: false,
@@ -129,13 +128,13 @@ class NotificationPanelView extends View {
     }
 
     processSizing() {
-        let $window = $(window);
-        let windowHeight = $window.height();
-        let windowWidth = $window.width();
+        const $window = $(window);
+        const windowHeight = $window.height();
+        const windowWidth = $window.width();
 
-        let diffHeight = this.$el.find('.panel-heading').outerHeight();
+        const diffHeight = this.$el.find('.panel-heading').outerHeight();
 
-        let cssParams = {};
+        const cssParams = {};
 
         if (windowWidth <= this.getThemeManager().getParam('screenWidthXs')) {
             cssParams.height = (windowHeight - diffHeight) + 'px';
@@ -159,7 +158,7 @@ class NotificationPanelView extends View {
         }
 
         if (windowHeight - this.navbarPanelBodyMaxHeight < this.navbarPanelHeightSpace) {
-            let maxHeight = windowHeight - this.navbarPanelHeightSpace;
+            const maxHeight = windowHeight - this.navbarPanelHeightSpace;
 
             cssParams.maxHeight = maxHeight + 'px';
         }

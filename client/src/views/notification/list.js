@@ -47,11 +47,11 @@ class NotificationListView extends View {
     }
 
     afterRender() {
-        let viewName = this.getMetadata()
-            .get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
+        const viewName = this.getMetadata()
+                .get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
             'views/notification/record/list';
 
-        let options = {
+        const options = {
             selector: '.list-container',
             collection: this.collection,
             showCount: false,

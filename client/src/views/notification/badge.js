@@ -64,7 +64,7 @@ class NotificationBadgeView extends View {
         this.notificationSoundsDisabled = true;
         this.useWebSocket = !!this.getHelper().webSocketManager;
 
-        let clearTimeouts = () => {
+        const clearTimeouts = () => {
             if (this.timeout) {
                 clearTimeout(this.timeout);
             }
@@ -73,7 +73,7 @@ class NotificationBadgeView extends View {
                 clearTimeout(this.groupedTimeout);
             }
 
-            for (let name in this.popupTimeouts) {
+            for (const name in this.popupTimeouts) {
                 clearTimeout(this.popupTimeouts[name]);
             }
         }
@@ -98,10 +98,10 @@ class NotificationBadgeView extends View {
 
         window.addEventListener('storage', e => {
             if (e.key === 'messageClosePopupNotificationId') {
-                let id = localStorage.getItem('messageClosePopupNotificationId');
+                const id = localStorage.getItem('messageClosePopupNotificationId');
 
                 if (id) {
-                    let key = 'popup-' + id;
+                    const key = 'popup-' + id;
 
                     if (this.hasView(key)) {
                         this.markPopupRemoved(id);
@@ -136,10 +136,10 @@ class NotificationBadgeView extends View {
                 .appendTo('body');
         }
 
-        let popupNotificationsData = this.popupNotificationsData =
+        const popupNotificationsData = this.popupNotificationsData =
             this.getMetadata().get('app.popupNotifications') || {};
 
-        for (let name in popupNotificationsData) {
+        for (const name in popupNotificationsData) {
             this.checkPopupNotifications(name);
         }
 
@@ -195,9 +195,9 @@ class NotificationBadgeView extends View {
     }
 
     checkBypass() {
-        let last = this.getRouter().getLast() || {};
+        const last = this.getRouter().getLast() || {};
 
-        let pageAction = (last.options || {}).page || null;
+        const pageAction = (last.options || {}).page || null;
 
         if (
             last.controller === 'Admin' &&
@@ -219,7 +219,7 @@ class NotificationBadgeView extends View {
             .getRequest('Notification/action/notReadCount')
             .then(count => {
                 if (!isFirstCheck && count > this.unreadCount) {
-                    let messageBlockPlayNotificationSound =
+                    const messageBlockPlayNotificationSound =
                         localStorage.getItem('messageBlockPlayNotificationSound');
 
                     if (!messageBlockPlayNotificationSound) {
@@ -267,8 +267,8 @@ class NotificationBadgeView extends View {
      * @return {boolean}
      */
     hasGroupedPopupNotifications() {
-        for (let name in this.popupNotificationsData) {
-            let data = this.popupNotificationsData[name] || {};
+        for (const name in this.popupNotificationsData) {
+            const data = this.popupNotificationsData[name] || {};
 
             if (!data.grouped) {
                 continue;
@@ -291,8 +291,8 @@ class NotificationBadgeView extends View {
         if (!this.checkBypass()) {
             Espo.Ajax.getRequest('PopupNotification/action/grouped')
                 .then(result => {
-                    for (let type in result) {
-                        let list = result[type];
+                    for (const type in result) {
+                        const list = result[type];
 
                         list.forEach(item => this.showPopupNotification(type, item));
                     }
@@ -310,11 +310,11 @@ class NotificationBadgeView extends View {
     }
 
     checkPopupNotifications(name, isNotFirstCheck) {
-        let data = this.popupNotificationsData[name] || {};
+        const data = this.popupNotificationsData[name] || {};
 
-        let url = data.url;
-        let interval = data.interval;
-        let disabled = data.disabled || false;
+        const url = data.url;
+        const interval = data.interval;
+        const disabled = data.disabled || false;
 
         if (disabled) {
             return;
@@ -324,10 +324,10 @@ class NotificationBadgeView extends View {
             return;
         }
 
-        let useWebSocket = this.useWebSocket && data.useWebSocket;
+        const useWebSocket = this.useWebSocket && data.useWebSocket;
 
         if (useWebSocket) {
-            let category = 'popupNotifications.' + (data.webSocketCategory || name);
+            const category = 'popupNotifications.' + (data.webSocketCategory || name);
 
             this.getHelper().webSocketManager.subscribe(category, (c, response) => {
                 if (!response.list) {
@@ -383,7 +383,7 @@ class NotificationBadgeView extends View {
     }
 
     showPopupNotification(name, data, isNotFirstCheck) {
-        let view = this.popupNotificationsData[name].view;
+        const view = this.popupNotificationsData[name].view;
 
         if (!view) {
             return;
@@ -395,7 +395,7 @@ class NotificationBadgeView extends View {
             id = name + '_' + id;
 
             if (~this.shownNotificationIds.indexOf(id)) {
-                let notificationView = this.getView('popup-' + id);
+                const notificationView = this.getView('popup-' + id);
 
                 if (notificationView) {
                     notificationView.trigger('update-data', data.data);
@@ -433,7 +433,7 @@ class NotificationBadgeView extends View {
     }
 
     markPopupRemoved(id) {
-        let index = this.shownNotificationIds.indexOf(id);
+        const index = this.shownNotificationIds.indexOf(id);
 
         if (index > -1) {
             this.shownNotificationIds.splice(index, 1);
@@ -464,7 +464,7 @@ class NotificationBadgeView extends View {
     showNotifications() {
         this.closeNotifications();
 
-        let $container = $('<div>').attr('id', 'notifications-panel');
+        const $container = $('<div>').attr('id', 'notifications-panel');
 
         $container.appendTo(this.$el.find('.notifications-panel-container'));
 
@@ -491,7 +491,7 @@ class NotificationBadgeView extends View {
             });
         });
 
-        let $document = $(document);
+        const $document = $(document);
 
         $document.on('mouseup.notification', e => {
             if (!$container.is(e.target) && $container.has(e.target).length === 0) {
@@ -509,11 +509,11 @@ class NotificationBadgeView extends View {
     }
 
     closeNotifications() {
-        let $container = $('#notifications-panel');
+        const $container = $('#notifications-panel');
 
         $container.remove();
 
-        let $document = $(document);
+        const $document = $(document);
 
         if (this.hasView('panel')) {
             this.getView('panel').remove();
