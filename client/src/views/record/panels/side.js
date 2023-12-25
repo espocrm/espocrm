@@ -48,6 +48,7 @@ class SidePanelView extends View {
      * @property {boolean} [isAdditional]
      * @property {boolean} [readOnly]
      * @property {Object.<string,*>} [options] Options.
+     * @property {string} [viewKey] Not to be set. For internal purposes.
      */
 
     /**
@@ -70,13 +71,13 @@ class SidePanelView extends View {
      * @protected
      * @type {module:views/record/panels-container~action[]}
      */
-    actionList = null
+    actionList
 
     /**
      * @protected
      * @type {Array<module:views/record/panels-container~action|false>}
      */
-    buttonList = null
+    buttonList
 
     /**
      * Read-only.
@@ -160,7 +161,7 @@ class SidePanelView extends View {
             if (this.recordHelper.getFieldStateParam(item.name, 'hidden') !== null) {
                 item.hidden = this.recordHelper.getFieldStateParam(item.name, 'hidden');
             } else {
-                this.recordHelper.setFieldStateParam(item.name, item.hidden || false);
+                this.recordHelper.setFieldStateParam(item.name, 'hidden', item.hidden || false);
             }
 
             return item;
@@ -206,13 +207,13 @@ class SidePanelView extends View {
      * @param {Object<string,*>} [options] View options.
      */
     createField(field, viewName, params, mode, readOnly, options) {
-        let type = this.model.getFieldType(field) || 'base';
+        const type = this.model.getFieldType(field) || 'base';
 
         viewName = viewName ||
             this.model.getFieldParam(field, 'view') ||
             this.getFieldManager().getViewName(type);
 
-        let o = {
+        const o = {
             model: this.model,
             selector: '.field[data-name="' + field + '"]',
             defs: {
@@ -224,7 +225,7 @@ class SidePanelView extends View {
         };
 
         if (options) {
-            for (let param in options) {
+            for (const param in options) {
                 o[param] = options[param];
             }
         }
@@ -282,7 +283,7 @@ class SidePanelView extends View {
 
         o.recordHelper = this.recordHelper;
 
-        let viewKey = field + 'Field';
+        const viewKey = field + 'Field';
 
         this.createView(viewKey, viewName, o);
     }
@@ -308,11 +309,11 @@ class SidePanelView extends View {
                field = item;
             }
 
-            if (!item.isAdditional) {
-                if (!(field in this.model.defs.fields)) {
-                    return;
-                }
+            if (!item.isAdditional && !(field in this.model.defs.fields)) {
+                return;
             }
+
+            readOnly = readOnly || false;
 
             this.createField(field, view, null, null, readOnly, item.options);
         });
@@ -333,7 +334,7 @@ class SidePanelView extends View {
      * @return {Object.<string, module:views/fields/base>}
      */
     getFieldViews() {
-        let fields = {};
+        const fields = {};
 
         this.getFieldList().forEach(item => {
             if (this.hasView(item.viewKey)) {
@@ -393,12 +394,13 @@ class SidePanelView extends View {
             return false;
         }
 
-        let parentView = this.getParentView();
+        const parentView = this.getParentView();
 
         if (!parentView) {
             return this.defs.tabNumber > 0;
         }
 
+        // noinspection JSUnresolvedReference
         if (parentView && parentView.hasTabs) {
             return parentView.currentTab !== defs.tabNumber;
         }

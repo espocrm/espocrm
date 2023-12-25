@@ -43,19 +43,19 @@ class BottomPanelView extends View {
      * @protected
      * @type {module:views/record/panels/side~field[]}
      */
-    fieldList = null
+    fieldList
 
     /**
      * @protected
      * @type {Array<module:views/record/panels-container~action|false>}
      */
-    actionList = null
+    actionList
 
     /**
      * @protected
      * @type {module:views/record/panels-container~button[]}
      */
-    buttonList = null
+    buttonList
 
     defs = null
 
@@ -138,7 +138,7 @@ class BottomPanelView extends View {
                 item.hidden = this.recordHelper.getFieldStateParam(item.name, 'hidden');
             }
             else {
-                this.recordHelper.setFieldStateParam(item.name, item.hidden || false);
+                this.recordHelper.setFieldStateParam(item.name, 'hidden', item.hidden || false);
             }
 
             return item;
@@ -186,9 +186,9 @@ class BottomPanelView extends View {
      * @return {Object.<string,module:views/fields/base>}
      */
     getFieldViews() {
-        let fields = {};
+        const fields = {};
 
-        this.getFieldList().forEach((item) => {
+        this.getFieldList().forEach(item => {
             if (this.hasView(item.viewKey)) {
                 fields[item.name] = this.getView(item.viewKey);
             }
@@ -199,6 +199,7 @@ class BottomPanelView extends View {
 
     /**
      * @deprecated Use `getFieldViews`.
+     * @todo Remove in v10.0.
      */
     getFields() {
         return this.getFieldViews();
@@ -280,7 +281,7 @@ class BottomPanelView extends View {
         };
 
         if (options) {
-            for (let param in options) {
+            for (const param in options) {
                 o[param] = options[param];
             }
         }
@@ -351,12 +352,13 @@ class BottomPanelView extends View {
             return false;
         }
 
-        let parentView = this.getParentView();
+        const parentView = this.getParentView();
 
         if (!parentView) {
             return this.defs.tabNumber > 0;
         }
 
+        // noinspection JSUnresolvedReference
         if (parentView && parentView.hasTabs) {
             return parentView.currentTab !== defs.tabNumber;
         }
