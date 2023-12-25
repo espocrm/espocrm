@@ -66,6 +66,10 @@ class NotificationPanelView extends View {
 
                 this.overflowWasHidden = false;
             }
+
+            if (this.collection) {
+                this.collection.abortLastFetch();
+            }
         });
     }
 
