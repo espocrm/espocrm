@@ -55,7 +55,7 @@ class UserDetailRecordView extends DetailRecordView {
             });
         }
 
-        let isPortalUser = this.model.isPortal() ||
+        const isPortalUser = this.model.isPortal() ||
             this.model.id === this.getUser().id && this.getUser().isPortal();
 
         if (
@@ -180,7 +180,7 @@ class UserDetailRecordView extends DetailRecordView {
                 return true;
             }
 
-            let aclDefs = /** @type Object.<string, *>|null */
+            const aclDefs = /** @type {Object.<string, *>|null} */
                 this.getMetadata().get(['entityAcl', 'User', 'fields', item]);
 
             if (!aclDefs) {
@@ -323,9 +323,9 @@ class UserDetailRecordView extends DetailRecordView {
         this.getHelper().layoutManager
             .get(this.model.entityType, this.options.layoutName || this.layoutName, (simpleLayout) => {
 
-            let layout = Espo.Utils.cloneDeep(simpleLayout);
+                const layout = Espo.Utils.cloneDeep(simpleLayout);
 
-            if (!this.getUser().isPortal()) {
+                if (!this.getUser().isPortal()) {
                 layout.push({
                     "label": "Teams and Access Control",
                     "name": "accessControl",
@@ -378,12 +378,12 @@ class UserDetailRecordView extends DetailRecordView {
                 });
             }
 
-            let gridLayout = {
-                type: 'record',
-                layout: this.convertDetailLayout(layout),
-            };
+                const gridLayout = {
+                    type: 'record',
+                    layout: this.convertDetailLayout(layout),
+                };
 
-            callback(gridLayout);
+                callback(gridLayout);
         });
     }
 
@@ -441,8 +441,8 @@ class UserDetailRecordView extends DetailRecordView {
 
     // noinspection JSUnusedGlobalSymbols
     actionLogin() {
-        let anotherUser = this.model.get('userName');
-        let username = this.getUser().get('userName');
+        const anotherUser = this.model.get('userName');
+        const username = this.getUser().get('userName');
 
         this.createView('dialog', 'views/user/modals/login-as', {
                 model: this.model,
