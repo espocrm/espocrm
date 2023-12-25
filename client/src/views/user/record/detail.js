@@ -201,6 +201,8 @@ class UserDetailRecordView extends DetailRecordView {
         if (!this.getAcl().checkScope('Team')) {
             this.setFieldReadOnly('defaultTeam', true);
         }
+
+        this.hideField('layoutSet', true);
     }
 
     setupFieldAppearance() {
