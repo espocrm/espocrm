@@ -31,6 +31,14 @@
 import View from 'view';
 
 /**
+ * @typedef {Object} module:views/record/panels/side~defs
+ * @property [buttonList]
+ * @property [actionList]
+ * @property [fieldList]
+ * @property [tabNumber] For internal purposes.
+ */
+
+/**
  * A side panel.
  */
 class SidePanelView extends View {
@@ -99,6 +107,12 @@ class SidePanelView extends View {
      * @protected
      */
     disabled = false
+
+    /**
+     * @protected
+     * @type {module:views/record/panels/side~defs}
+     */
+    defs
 
     events = {
         /** @this SidePanelView */

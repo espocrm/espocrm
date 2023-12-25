@@ -34,7 +34,7 @@ import SidePanelView from 'views/record/panels/side';
 class DefaultSidePanelView extends SidePanelView {
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         if (
             this.complexCreatedDisabled &&

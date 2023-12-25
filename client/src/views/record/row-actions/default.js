@@ -78,6 +78,7 @@ class DefaultRowActionsView extends View {
      * @return {module:views/record/list~rowAction[]}
      */
     getActionList() {
+        /** @type {module:views/record/list~rowAction[]} */
         const list = [{
             action: 'quickView',
             label: 'View',
@@ -106,7 +107,7 @@ class DefaultRowActionsView extends View {
                 label: 'Remove',
                 data: {
                     id: this.model.id,
-                }
+                },
             });
         }
 

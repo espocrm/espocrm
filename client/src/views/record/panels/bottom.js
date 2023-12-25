@@ -31,6 +31,13 @@
 import View from 'view';
 
 /**
+ * @typedef {Object} module:views/record/panels/bottom~defs
+ * @property [buttonList]
+ * @property [actionList]
+ * @property [tabNumber] For internal purposes.
+ */
+
+/**
  * A bottom panel.
  */
 class BottomPanelView extends View {
@@ -57,7 +64,11 @@ class BottomPanelView extends View {
      */
     buttonList
 
-    defs = null
+    /**
+     * @protected
+     * @type {module:views/record/panels/bottom~defs}
+     */
+    defs
 
     /**
      * A mode.
