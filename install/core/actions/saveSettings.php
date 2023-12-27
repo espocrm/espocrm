@@ -36,7 +36,6 @@ $result = [
 
 // save settings
 $database = [
-    'driver' => 'pdo_mysql',
     'dbname' => $_SESSION['install']['db-name'],
     'user' => $_SESSION['install']['db-user-name'],
     'password' => $_SESSION['install']['db-user-password'],
