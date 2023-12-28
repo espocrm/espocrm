@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Formula\Functions\RecordServiceGroup;
 
+use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Formula\ArgumentList;
@@ -50,13 +51,13 @@ class ThrowForbiddenType extends BaseFunction
             $this->throwError("Can be called only from API script.");
         }
 
-        $statusText = isset($args[0]) ? $this->evaluate($args[0]) : '';
+        $message = isset($args[0]) ? $this->evaluate($args[0]) : '';
         $body = isset($args[1]) ? $this->evaluate($args[1]) : null;
 
         if ($body !== null) {
-            throw ForbiddenSilent::createWithBody($statusText, Json::encode($body));
+            throw ForbiddenSilent::createWithBody($message, Json::encode($body));
         }
 
-        throw new ForbiddenSilent($statusText);
+        throw ForbiddenSilent::createWithBody($message, Body::create()->withMessage($message));
     }
 }

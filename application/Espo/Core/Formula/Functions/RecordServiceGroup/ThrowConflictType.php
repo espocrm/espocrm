@@ -31,6 +31,7 @@ namespace Espo\Core\Formula\Functions\RecordServiceGroup;
 
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\ConflictSilent;
+use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Formula\ArgumentList;
 use Espo\Core\Formula\Exceptions\Error;
 use Espo\Core\Formula\Exceptions\ExecutionException;
@@ -50,13 +51,13 @@ class ThrowConflictType extends BaseFunction
             $this->throwError("Can be called only from API script.");
         }
 
-        $statusText = isset($args[0]) ? $this->evaluate($args[0]) : '';
+        $message = isset($args[0]) ? $this->evaluate($args[0]) : '';
         $body = isset($args[1]) ? $this->evaluate($args[1]) : null;
 
         if ($body !== null) {
-            throw ConflictSilent::createWithBody($statusText, Json::encode($body));
+            throw ConflictSilent::createWithBody($message, Json::encode($body));
         }
 
-        throw new ConflictSilent($statusText);
+        throw ConflictSilent::createWithBody($message, Body::create()->withMessage($message));
     }
 }
