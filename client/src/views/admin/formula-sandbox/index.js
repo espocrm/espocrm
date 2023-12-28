@@ -188,8 +188,6 @@ define('views/admin/formula-sandbox/index', ['view', 'model'], function (Dep, Mo
                 .then(response => {
                     this.model.set('output', response.output || null);
 
-                    console.log(this.model.get('script'));
-
                     let errorMessage = null;
 
                     if (!response.isSuccess) {
