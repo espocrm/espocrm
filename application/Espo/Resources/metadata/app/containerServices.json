@@ -59,12 +59,6 @@
     "fieldUtil": {
         "className": "Espo\\Core\\Utils\\FieldUtil"
     },
-    "fieldManager": {
-        "className": "Espo\\Core\\Utils\\FieldManager"
-    },
-    "fieldManagerUtil": {
-        "className": "Espo\\Core\\Utils\\FieldManagerUtil"
-    },
     "emailSender": {
         "className": "Espo\\Core\\Mail\\EmailSender"
     },
