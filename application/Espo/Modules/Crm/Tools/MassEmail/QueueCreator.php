@@ -46,14 +46,11 @@ class QueueCreator
 
     /** @var string[] */
     protected array $targetLinkList;
-    protected EntityManager $entityManager;
-    private Metadata $metadata;
 
-    public function __construct(EntityManager $entityManager, Metadata $metadata)
-    {
-        $this->entityManager = $entityManager;
-        $this->metadata = $metadata;
-
+    public function __construct(
+        protected EntityManager $entityManager,
+        private Metadata $metadata
+    ) {
         $this->targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
     }
 

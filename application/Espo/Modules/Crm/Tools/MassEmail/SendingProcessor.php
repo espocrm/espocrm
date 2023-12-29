@@ -70,37 +70,17 @@ class SendingProcessor
     private const MAX_ATTEMPT_COUNT = 3;
     private const MAX_PER_HOUR_COUNT = 10000;
 
-    private Config $config;
-    private EntityManager $entityManager;
-    private Language $defaultLanguage;
-    private EmailSender $emailSender;
-    private Log $log;
-    private AccountFactory $accountFactory;
-    private CampaignService $campaignService;
-    private MessageHeadersPreparator $headersPreparator;
-    private TemplateProcessor $templateProcessor;
-
     public function __construct(
-        Config $config,
-        EntityManager $entityManager,
-        Language $defaultLanguage,
-        EmailSender $emailSender,
-        Log $log,
-        AccountFactory $accountFactory,
-        CampaignService $campaignService,
-        MessageHeadersPreparator $headersPreparator,
-        TemplateProcessor $templateProcessor
-    ) {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-        $this->defaultLanguage = $defaultLanguage;
-        $this->emailSender = $emailSender;
-        $this->log = $log;
-        $this->accountFactory = $accountFactory;
-        $this->campaignService = $campaignService;
-        $this->headersPreparator = $headersPreparator;
-        $this->templateProcessor = $templateProcessor;
-    }
+        private Config $config,
+        private EntityManager $entityManager,
+        private Language $defaultLanguage,
+        private EmailSender $emailSender,
+        private Log $log,
+        private AccountFactory $accountFactory,
+        private CampaignService $campaignService,
+        private MessageHeadersPreparator $headersPreparator,
+        private TemplateProcessor $templateProcessor
+    ) {}
 
     /**
      * @throws Error
@@ -193,7 +173,7 @@ class SendingProcessor
                 !$account->getEntity()->smtpIsForMassEmail() ||
                 !$smtpParams
             ) {
-                throw new Error("Mass Email: Group email account {$inboundEmailId} can't be used for mass email.");
+                throw new Error("Mass Email: Group email account $inboundEmailId can't be used for mass email.");
             }
 
             if ($account->getEntity()->getReplyToAddress()) {
@@ -411,7 +391,7 @@ class SendingProcessor
 
         $target = $this->entityManager->getEntityById($queueItem->getTargetType(), $queueItem->getTargetId());
 
-        $emailAddress = $target ? $target->get('emailAddress') : null;
+        $emailAddress = $target?->get('emailAddress');
 
         if (
             !$target ||

@@ -31,27 +31,18 @@ namespace Espo\Modules\Crm\Tools\MassEmail;
 
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Defs;
-
-use Espo\Core\Exceptions\Error;
-
 use Espo\Modules\Crm\Entities\TargetList;
+use RuntimeException;
 
 class Util
 {
-    private Defs $ormDefs;
-
-    private Metadata $metadata;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private array $targetLinkList;
 
-    public function __construct(Defs $ormDefs, Metadata $metadata)
-    {
-        $this->ormDefs = $ormDefs;
-        $this->metadata = $metadata;
-
+    public function __construct(
+        private Defs $ormDefs,
+        private Metadata $metadata
+    ) {
         $this->targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
     }
 
@@ -68,6 +59,6 @@ class Util
             }
         }
 
-        throw new Error();
+        throw new RuntimeException("No link for $entityType.");
     }
 }

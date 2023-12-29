@@ -36,12 +36,8 @@ use Laminas\Mail\Headers;
 
 class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
 {
-    private Config $config;
-
-    public function __construct(Config $config)
-    {
-        $this->config = $config;
-    }
+    public function __construct(private Config $config)
+    {}
 
     public function prepare(Headers $headers, Data $data): void
     {
