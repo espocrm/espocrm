@@ -290,6 +290,24 @@ class RelationshipPanelView extends BottomPanelView {
 
             this.listenTo(this.model, 'update-all', () => collection.fetch());
 
+            if (this.defs.syncWithModel) {
+                this.listenTo(this.model, 'sync', (m, a, o) => {
+                    if (!o.patch && !o.highlight) {
+                        // Skip if not save and not web-socket update.
+                        return;
+                    }
+
+                    if (
+                        this.collection.lastSyncPromise &&
+                        this.collection.lastSyncPromise.getReadyState() < 4
+                    ) {
+                        return;
+                    }
+
+                    this.collection.fetch();
+                });
+            }
+
             const viewName =
                 this.defs.recordListView ||
                 this.getMetadata().get(['clientDefs', this.entityType, 'recordViews', 'listRelated']) ||

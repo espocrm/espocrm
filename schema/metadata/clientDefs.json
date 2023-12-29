@@ -467,6 +467,10 @@
                     "selectLayout": {
                         "type": "string",
                         "description": "A list layout name for the select dialog."
+                    },
+                    "syncWithModel": {
+                        "type": "boolean",
+                        "description": "Re-fetch records when the parent model is saved."
                     }
                 }
             }
