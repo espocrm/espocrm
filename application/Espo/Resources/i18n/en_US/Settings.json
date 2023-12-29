@@ -81,6 +81,7 @@
         "attachmentUploadChunkSize": "Upload Chunk Size (Mb)",
         "emailMessageMaxSize": "Email Max Size (Mb)",
         "massEmailMaxPerHourCount": "Max number of emails sent per hour",
+        "massEmailMaxPerBatchCount": "Max number of emails sent per batch",
         "personalEmailMaxPortionSize": "Max email portion size for personal account fetching",
         "inboundEmailMaxPortionSize": "Max email portion size for group account fetching",
         "maxEmailAccountCount": "Max number of personal email accounts per user",

@@ -565,6 +565,10 @@
             "type": "int",
             "min": 1
         },
+        "massEmailMaxPerBatchCount": {
+            "type": "int",
+            "min": 1
+        },
         "massEmailVerp": {
             "type": "bool",
             "tooltip": true

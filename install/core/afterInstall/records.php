@@ -72,7 +72,7 @@ return [
             'name' => 'Send Mass Emails',
             'job' => 'ProcessMassEmail',
             'status' => 'Active',
-            'scheduling' => '15 * * * *',
+            'scheduling' => '10,30,50 * * * *',
         ],
         [
             'name' => 'Auth Token Control',

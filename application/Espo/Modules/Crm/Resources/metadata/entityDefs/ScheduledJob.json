@@ -1,6 +1,6 @@
 {
     "jobSchedulingMap": {
-        "ProcessMassEmail": "15 * * * *",
+        "ProcessMassEmail": "10,30,50 * * * *",
         "ControlKnowledgeBaseArticleStatus": "10 1 * * *"
     },
     "jobs": {

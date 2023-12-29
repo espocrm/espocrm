@@ -187,6 +187,7 @@ return [
     'theme' => 'Violet',
     'themeParams' => (object) ['navbar' => 'side'],
     'massEmailMaxPerHourCount' => 100,
+    'massEmailMaxPerBatchCount' => null,
     'massEmailVerp' => false,
     'personalEmailMaxPortionSize' => 50,
     'inboundEmailMaxPortionSize' => 50,

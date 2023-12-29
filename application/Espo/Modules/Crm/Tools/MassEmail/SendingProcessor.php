@@ -108,7 +108,8 @@ class SendingProcessor
      */
     public function process(MassEmail $massEmail, bool $isTest = false): void
     {
-        $maxBatchSize = $this->config->get('massEmailMaxPerHourCount', self::MAX_PER_HOUR_COUNT);
+        $hourMaxSize = $this->config->get('massEmailMaxPerHourCount', self::MAX_PER_HOUR_COUNT);
+        $batchMaxSize = $this->config->get('massEmailMaxPerBatchCount');
 
         if (!$isTest) {
             $threshold = new DateTime();
@@ -122,11 +123,17 @@ class SendingProcessor
                 ])
                 ->count();
 
-            if ($sentLastHourCount >= $maxBatchSize) {
+            if ($sentLastHourCount >= $hourMaxSize) {
                 return;
             }
 
-            $maxBatchSize = $maxBatchSize - $sentLastHourCount;
+            $hourMaxSize = $hourMaxSize - $sentLastHourCount;
+        }
+
+        $maxSize = $hourMaxSize;
+
+        if ($batchMaxSize) {
+            $maxSize = min($batchMaxSize, $maxSize);
         }
 
         $queueItemList = $this->entityManager
@@ -136,7 +143,7 @@ class SendingProcessor
                 'massEmailId' => $massEmail->getId(),
                 'isTest' => $isTest,
             ])
-            ->limit(0, $maxBatchSize)
+            ->limit(0, $maxSize)
             ->find();
 
         $templateId = $massEmail->getEmailTemplateId();
