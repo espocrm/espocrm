@@ -66,7 +66,7 @@ class BottomPanelView extends View {
 
     /**
      * @protected
-     * @type {module:views/record/panels/bottom~defs}
+     * @type {module:views/record/panels/bottom~defs|Object.<string, *>}
      */
     defs
 

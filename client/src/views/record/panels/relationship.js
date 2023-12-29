@@ -34,6 +34,8 @@ import RecordModal from 'helpers/record-modal';
 
 /**
  * A relationship panel.
+ *
+ * @property {Object} defs
  */
 class RelationshipPanelView extends BottomPanelView {
 
