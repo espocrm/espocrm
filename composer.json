@@ -3,7 +3,7 @@
     "description": "EspoCRM. Open source CRM application.",
     "type": "project",
     "homepage": "https://github.com/espocrm/espocrm.git",
-    "license": "GPL-3.0-only",
+    "license": "AGPL-3.0-or-later",
     "require": {
         "php": ">=8.1.0 <8.4.0",
         "ext-openssl": "*",
