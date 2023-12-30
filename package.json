@@ -15,7 +15,7 @@
     "build-frontend": "grunt internal"
   },
   "author": "Yurii Kuznietsov, Taras Machyshyn, Oleksii Avramenko",
-  "license": "GPL-3.0",
+  "license": "AGPL-3.0-or-later",
   "devDependencies": {
     "archiver": "^5.3.0",
     "espo-frontend-build-tools": "github:espocrm/frontend-build-tools#0.0.6",

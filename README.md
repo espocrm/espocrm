@@ -65,7 +65,7 @@ If you have a question regarding some features, need help or customizations, wan
 
 ### License
 
-EspoCRM is published under the GNU GPLv3 [license](https://raw.githubusercontent.com/espocrm/espocrm/master/LICENSE.txt).
+EspoCRM is published under the GNU AGPLv3 [license](https://raw.githubusercontent.com/espocrm/espocrm/master/LICENSE.txt).
 
 ### Language
 
