@@ -29,6 +29,8 @@
 
 namespace Espo\Modules\Crm\Tools\MassEmail;
 
+use Laminas\Mail\Message;
+
 use Espo\Core\Mail\Account\GroupAccount\AccountFactory;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\SenderParams;
@@ -36,12 +38,9 @@ use Espo\Core\Mail\SmtpParams;
 use Espo\Entities\Attachment;
 use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Data;
 use Espo\ORM\Collection;
-use Laminas\Mail\Message;
-
 use Espo\Entities\EmailTemplate;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use Espo\Entities\EmailAddress;
-
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\EmailSender;
 use Espo\Core\Mail\Sender;
@@ -50,7 +49,6 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
-
 use Espo\Entities\Email;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\CampaignTrackingUrl;
@@ -118,6 +116,7 @@ class SendingProcessor
 
         $queueItemList = $this->entityManager
             ->getRDBRepositoryByClass(EmailQueueItem::class)
+            ->sth()
             ->where([
                 'status' => EmailQueueItem::STATUS_PENDING,
                 'massEmailId' => $massEmail->getId(),
