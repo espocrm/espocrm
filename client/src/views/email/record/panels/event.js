@@ -64,7 +64,7 @@ define('views/email/record/panels/event', ['views/record/panels/side'], function
                 return;
             }
 
-            let eventData = this.model.get('icsEventData');
+            const eventData = this.model.get('icsEventData');
 
             if (eventData.createdEvent) {
                 this.recordViewObject.hideField('createEvent');

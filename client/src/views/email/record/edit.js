@@ -110,7 +110,7 @@ class EmailEditRecordView extends EditRecordView {
     }
 
     controlSendButton()  {
-        let status = this.model.get('status');
+        const status = this.model.get('status');
 
         if (status === 'Draft') {
             this.showActionItem('send');
