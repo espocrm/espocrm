@@ -80,7 +80,7 @@ class EmailListView extends ListView {
                         return;
                     }
 
-                    let $target = $(e.target);
+                    const $target = $(e.target);
 
                     $target.removeClass('success');
                     $target.addClass('active');
@@ -91,7 +91,7 @@ class EmailListView extends ListView {
                         return;
                     }
 
-                    let $target = $(e.target);
+                    const $target = $(e.target);
 
                     $target.removeClass('active');
                     $target.find('a').css('pointer-events', '');
@@ -101,12 +101,12 @@ class EmailListView extends ListView {
                         return;
                     }
 
-                    let $target = $(e.target);
-                    let $helper = $(ui.helper);
+                    const $target = $(e.target);
+                    const $helper = $(ui.helper);
 
                     $target.find('a').css('pointer-events', '');
 
-                    let folderId = $target.attr('data-id');
+                    const folderId = $target.attr('data-id');
 
                     let id = $helper.attr('data-id');
                     id = id === '' ? true : id;
@@ -130,18 +130,18 @@ class EmailListView extends ListView {
     initDraggable(fromIndex) {
         fromIndex = fromIndex || 0;
 
-        let isTouchDevice =  ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+        const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
 
         if (isTouchDevice) {
             return;
         }
 
-        let $container = this.$el.find('.list-container > .list');
+        const $container = this.$el.find('.list-container > .list');
 
         const recordView = this.getEmailRecordView();
 
         this.collection.models.slice(fromIndex).forEach(m => {
-            let $row = $container.find(`.list-row[data-id="${m.id}"]`).first();
+            const $row = $container.find(`.list-row[data-id="${m.id}"]`).first();
 
             // noinspection JSUnresolvedReference
             $row.draggable({
@@ -181,7 +181,7 @@ class EmailListView extends ListView {
                     left: 0,
                 },
                 start: (e) => {
-                    let $target = $(e.target);
+                    const $target = $(e.target);
 
                     $target.closest('tr').addClass('active');
                 },
@@ -195,8 +195,8 @@ class EmailListView extends ListView {
     }
 
     isDroppable(e) {
-        let $target = $(e.target);
-        let folderId = $target.attr('data-id');
+        const $target = $(e.target);
+        const folderId = $target.attr('data-id');
 
         if (this.selectedFolderId === this.FOLDER_DRAFTS) {
             return false;
@@ -263,7 +263,7 @@ class EmailListView extends ListView {
             this.getMetadata().get(['scopes', this.folderScope, 'disabled']) ||
             !this.getAcl().checkScope(this.folderScope);
 
-        let params = this.options.params || {};
+        const params = this.options.params || {};
 
         this.selectedFolderId = params.folder || this.defaultFolderId;
 
@@ -282,7 +282,7 @@ class EmailListView extends ListView {
     }
 
     data() {
-        let data = {};
+        const data = {};
         data.foldersDisabled = this.foldersDisabled;
 
         return data;
@@ -291,7 +291,7 @@ class EmailListView extends ListView {
     /** @inheritDoc */
     createSearchView() {
         /** @type {Promise<module:view>} */
-        let promise = super.createSearchView();
+        const promise = super.createSearchView();
 
         promise.then(view => {
             this.listenTo(view, 'update-ui', () => {
@@ -345,7 +345,7 @@ class EmailListView extends ListView {
     }
 
     hasSelectedRecords() {
-        let recordView = this.getEmailRecordView();
+        const recordView = this.getEmailRecordView();
 
         return recordView.checkedList &&
             recordView.checkedList.length &&
@@ -367,10 +367,10 @@ class EmailListView extends ListView {
 
         Espo.Ui.notify(' ... ');
 
-        let viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+        const viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
             'views/modals/compose-email';
 
-        let options = {
+        const options = {
             attributes: {
                 status: 'Draft',
             },
@@ -409,9 +409,9 @@ class EmailListView extends ListView {
     }
 
     loadFolders() {
-        var xhr = null;
+        let xhr = null;
 
-        let auxFolderList = [
+        const auxFolderList = [
             this.FOLDER_TRASH,
             this.FOLDER_DRAFTS,
             this.FOLDER_ALL,
@@ -509,7 +509,7 @@ class EmailListView extends ListView {
         }
 
         if (!params.isReturnThroughLink && id !== this.selectedFolderId) {
-            var foldersView = this.getFoldersView();
+            const foldersView = this.getFoldersView();
 
             if (foldersView) {
                 foldersView.actionSelectFolder(id);
@@ -520,7 +520,7 @@ class EmailListView extends ListView {
     }
 
     onDrop(folderId, id) {
-        let recordView = this.getEmailRecordView();
+        const recordView = this.getEmailRecordView();
 
         if (folderId === this.FOLDER_IMPORTANT) {
             setTimeout(() => {
@@ -573,19 +573,20 @@ class EmailListView extends ListView {
      * @private
      */
     initStickableFolders() {
-        let $window = $(window);
-        let $list = this.$el.find('.list-container');
-        let $container = this.$el.find('.folders-container');
-        let $left = this.$el.find('.left-container').first();
+        const $window = $(window);
+        const $list = this.$el.find('.list-container');
+        const $container = this.$el.find('.folders-container');
+        const $left = this.$el.find('.left-container').first();
 
-        let screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-        let isSmallScreen = $(window.document).width() < screenWidthXs;
-        let offset = this.getThemeManager().getParam('navbarHeight') +
+        const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
+        const isSmallScreen = $(window.document).width() < screenWidthXs;
+
+        const offset = this.getThemeManager().getParam('navbarHeight') +
             (this.getThemeManager().getParam('buttonsContainerHeight') || 47);
 
-        let bottomSpaceHeight = parseInt(window.getComputedStyle($('#content').get(0)).paddingBottom, 10);
+        const bottomSpaceHeight = parseInt(window.getComputedStyle($('#content').get(0)).paddingBottom, 10);
 
-        let getOffsetTop = (/** JQuery */$element) => {
+        const getOffsetTop = (/** JQuery */$element) => {
             let element = /** @type {HTMLElement} */$element.get(0);
 
             let value = 0;
@@ -605,14 +606,14 @@ class EmailListView extends ListView {
 
         this.stickableTop = getOffsetTop($list);
 
-        let control = () => {
+        const control = () => {
             let start = this.stickableTop;
 
             if (start === null) {
                 start = this.stickableTop = getOffsetTop($list);
             }
 
-            let scrollTop = $window.scrollTop();
+            const scrollTop = $window.scrollTop();
 
             if (scrollTop <= start || isSmallScreen) {
                 $container
@@ -628,16 +629,16 @@ class EmailListView extends ListView {
             }
 
             if (scrollTop > start) {
-                let scroll = $window.scrollTop() - start;
+                const scroll = $window.scrollTop() - start;
 
                 $container
                     .addClass('sticked')
                     .width($left.outerWidth(true))
                     .scrollTop(scroll);
 
-                let topStickPosition = parseInt(window.getComputedStyle($container.get(0)).top);
+                const topStickPosition = parseInt(window.getComputedStyle($container.get(0)).top);
 
-                let maxHeight = $window.height() - topStickPosition - bottomSpaceHeight;
+                const maxHeight = $window.height() - topStickPosition - bottomSpaceHeight;
 
                 $container.css({maxHeight: maxHeight});
             }

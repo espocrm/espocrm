@@ -34,7 +34,7 @@ class EmailDetailView extends DetailView {
     setup() {
         super.setup();
 
-        let status = this.model.get('status');
+        const status = this.model.get('status');
 
         if (status === 'Draft') {
             this.menu = {
@@ -121,7 +121,7 @@ class EmailDetailView extends DetailView {
                 return;
             }
 
-            let headerView = this.getHeaderView();
+            const headerView = this.getHeaderView();
 
             if (headerView) {
                 headerView.reRender();
@@ -133,7 +133,7 @@ class EmailDetailView extends DetailView {
                 return;
             }
 
-            let recordView = /** @type {module:views/email/record/detail} */ this.getRecordView();
+            const recordView = /** @type {module:views/email/record/detail} */ this.getRecordView();
 
             if (!this.model.get('isUsers') || this.model.get('inTrash')) {
                 return;
@@ -150,7 +150,7 @@ class EmailDetailView extends DetailView {
                 return;
             }
 
-            let recordView = /** @type {module:views/email/record/detail} */ this.getRecordView();
+            const recordView = /** @type {module:views/email/record/detail} */ this.getRecordView();
 
             if (!this.model.get('isUsers')) {
                 return;
@@ -169,7 +169,7 @@ class EmailDetailView extends DetailView {
                 return;
             }
 
-            let recordView = /** @type {module:views/email/record/detail} */ this.getRecordView();
+            const recordView = /** @type {module:views/email/record/detail} */ this.getRecordView();
 
             if (!this.model.get('isUsers')) {
                 return;
@@ -184,23 +184,23 @@ class EmailDetailView extends DetailView {
 
     // noinspection JSUnusedGlobalSymbols
     actionCreateLead() {
-        let attributes = {};
+        const attributes = {};
 
-        let emailHelper = new EmailHelper(
+        const emailHelper = new EmailHelper(
             this.getLanguage(),
             this.getUser(),
             this.getDateTime(),
             this.getAcl()
         );
 
-        let fromString = this.model.get('fromString') || this.model.get('fromName');
+        const fromString = this.model.get('fromString') || this.model.get('fromName');
 
         if (fromString) {
-            let fromName = emailHelper.parseNameFromStringAddress(fromString);
+            const fromName = emailHelper.parseNameFromStringAddress(fromString);
 
             if (fromName) {
-                let firstName = fromName.split(' ').slice(0, -1).join(' ');
-                let lastName = fromName.split(' ').slice(-1).join(' ');
+                const firstName = fromName.split(' ').slice(0, -1).join(' ');
+                const lastName = fromName.split(' ').slice(-1).join(' ');
 
                 attributes.firstName = firstName;
                 attributes.lastName = lastName;
@@ -208,16 +208,16 @@ class EmailDetailView extends DetailView {
         }
 
         if (this.model.get('replyToString')) {
-            let str = this.model.get('replyToString');
-            let p = (str.split(';'))[0];
+            const str = this.model.get('replyToString');
+            const p = (str.split(';'))[0];
 
             attributes.emailAddress = emailHelper.parseAddressFromStringAddress(p);
 
-            let fromName = emailHelper.parseNameFromStringAddress(p);
+            const fromName = emailHelper.parseNameFromStringAddress(p);
 
             if (fromName) {
-                let firstName = fromName.split(' ').slice(0, -1).join(' ');
-                let lastName = fromName.split(' ').slice(-1).join(' ');
+                const firstName = fromName.split(' ').slice(0, -1).join(' ');
+                const lastName = fromName.split(' ').slice(-1).join(' ');
 
                 attributes.firstName = firstName;
                 attributes.lastName = lastName;
@@ -230,7 +230,7 @@ class EmailDetailView extends DetailView {
 
         attributes.emailId = this.model.id;
 
-        let viewName = this.getMetadata().get('clientDefs.Lead.modalViews.edit') || 'views/modals/edit';
+        const viewName = this.getMetadata().get('clientDefs.Lead.modalViews.edit') || 'views/modals/edit';
 
         Espo.Ui.notify(' ... ');
 
@@ -257,14 +257,14 @@ class EmailDetailView extends DetailView {
 
     // noinspection JSUnusedGlobalSymbols
     actionCreateCase() {
-        let attributes = {};
+        const attributes = {};
 
-        let parentId = this.model.get('parentId');
-        let parentType = this.model.get('parentType');
-        let parentName = this.model.get('parentName');
+        const parentId = this.model.get('parentId');
+        const parentType = this.model.get('parentType');
+        const parentName = this.model.get('parentName');
 
-        let accountId = this.model.get('accountId');
-        let accountName = this.model.get('accountName');
+        const accountId = this.model.get('accountId');
+        const accountName = this.model.get('accountName');
 
         if (parentId) {
             if (parentType === 'Account') {
@@ -295,7 +295,7 @@ class EmailDetailView extends DetailView {
         attributes.name = this.model.get('name');
         attributes.description = this.model.get('bodyPlain') || '';
 
-        let viewName = this.getMetadata().get('clientDefs.Case.modalViews.edit') || 'views/modals/edit';
+        const viewName = this.getMetadata().get('clientDefs.Case.modalViews.edit') || 'views/modals/edit';
 
         Espo.Ui.notify(' ... ');
 
@@ -340,19 +340,19 @@ class EmailDetailView extends DetailView {
 
     // noinspection JSUnusedGlobalSymbols
     actionCreateTask() {
-        let attributes = {};
+        const attributes = {};
 
         attributes.parentId = this.model.get('parentId');
         attributes.parentName = this.model.get('parentName');
         attributes.parentType = this.model.get('parentType');
         attributes.emailId = this.model.id;
 
-        let subject = this.model.get('name');
+        const subject = this.model.get('name');
 
         attributes.description = '[' + this.translate('Email', 'scopeNames') + ': ' + subject +']' +
             '(#Email/view/' + this.model.id + ')\n';
 
-        let viewName = this.getMetadata().get('clientDefs.Task.modalViews.edit') || 'views/modals/edit';
+        const viewName = this.getMetadata().get('clientDefs.Task.modalViews.edit') || 'views/modals/edit';
 
         Espo.Ui.notify(' ... ');
 
@@ -360,9 +360,9 @@ class EmailDetailView extends DetailView {
             scope: 'Task',
             attributes: attributes,
         }, view => {
-            let recordView = view.getRecordView();
+            const recordView = view.getRecordView();
 
-            let nameFieldView = recordView.getFieldView('name');
+            const nameFieldView = recordView.getFieldView('name');
 
             let nameOptionList = [];
 
@@ -388,23 +388,23 @@ class EmailDetailView extends DetailView {
 
     // noinspection JSUnusedGlobalSymbols
     actionCreateContact() {
-        let attributes = {};
+        const attributes = {};
 
-        let emailHelper = new EmailHelper(
+        const emailHelper = new EmailHelper(
             this.getLanguage(),
             this.getUser(),
             this.getDateTime(),
             this.getAcl()
         );
 
-        let fromString = this.model.get('fromString') || this.model.get('fromName');
+        const fromString = this.model.get('fromString') || this.model.get('fromName');
 
         if (fromString) {
-            let fromName = emailHelper.parseNameFromStringAddress(fromString);
+            const fromName = emailHelper.parseNameFromStringAddress(fromString);
 
             if (fromName) {
-                let firstName = fromName.split(' ').slice(0, -1).join(' ');
-                let lastName = fromName.split(' ').slice(-1).join(' ');
+                const firstName = fromName.split(' ').slice(0, -1).join(' ');
+                const lastName = fromName.split(' ').slice(-1).join(' ');
 
                 attributes.firstName = firstName;
                 attributes.lastName = lastName;
@@ -412,16 +412,16 @@ class EmailDetailView extends DetailView {
         }
 
         if (this.model.get('replyToString')) {
-            let str = this.model.get('replyToString');
-            let p = (str.split(';'))[0];
+            const str = this.model.get('replyToString');
+            const p = (str.split(';'))[0];
 
             attributes.emailAddress = emailHelper.parseAddressFromStringAddress(p);
 
-            let fromName = emailHelper.parseNameFromStringAddress(p);
+            const fromName = emailHelper.parseNameFromStringAddress(p);
 
             if (fromName) {
-                let firstName = fromName.split(' ').slice(0, -1).join(' ');
-                let lastName = fromName.split(' ').slice(-1).join(' ');
+                const firstName = fromName.split(' ').slice(0, -1).join(' ');
+                const lastName = fromName.split(' ').slice(-1).join(' ');
 
                 attributes.firstName = firstName;
                 attributes.lastName = lastName;
@@ -434,7 +434,7 @@ class EmailDetailView extends DetailView {
 
         attributes.emailId = this.model.id;
 
-        let viewName = this.getMetadata().get('clientDefs.Contact.modalViews.edit') || 'views/modals/edit';
+        const viewName = this.getMetadata().get('clientDefs.Contact.modalViews.edit') || 'views/modals/edit';
 
         Espo.Ui.notify(' ... ');
 
@@ -461,18 +461,18 @@ class EmailDetailView extends DetailView {
     }
 
     actionReply(data, e, cc) {
-        let emailHelper = new EmailHelper(
+        const emailHelper = new EmailHelper(
             this.getLanguage(),
             this.getUser(),
             this.getDateTime(),
             this.getAcl()
         );
 
-        let attributes = emailHelper.getReplyAttributes(this.model, data, cc);
+        const attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 
         Espo.Ui.notify(' ... ');
 
-        let viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+        const viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
             'views/modals/compose-email';
 
         this.createView('quickCreate', viewName, {
@@ -496,7 +496,7 @@ class EmailDetailView extends DetailView {
 
     // noinspection JSUnusedGlobalSymbols
     actionForward() {
-        let emailHelper = new EmailHelper(
+        const emailHelper = new EmailHelper(
             this.getLanguage(),
             this.getUser(),
             this.getDateTime(),
@@ -510,18 +510,18 @@ class EmailDetailView extends DetailView {
                 id: this.model.id,
             })
             .then(duplicateAttributes => {
-                let model = this.model.clone();
+                const model = this.model.clone();
 
                 model.set('body', duplicateAttributes.body);
 
-                let attributes = emailHelper.getForwardAttributes(model);
+                const attributes = emailHelper.getForwardAttributes(model);
 
                 attributes.attachmentsIds = duplicateAttributes.attachmentsIds;
                 attributes.attachmentsNames = duplicateAttributes.attachmentsNames;
 
                 Espo.Ui.notify(' ... ');
 
-                let viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+                const viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
                     'views/modals/compose-email';
 
                 this.createView('quickCreate', viewName, {
@@ -535,14 +535,14 @@ class EmailDetailView extends DetailView {
     }
 
     getHeader() {
-        let name = this.model.get('name');
+        const name = this.model.get('name');
 
-        let isImportant = this.model.get('isImportant');
-        let inTrash = this.model.get('inTrash');
+        const isImportant = this.model.get('isImportant');
+        const inTrash = this.model.get('inTrash');
 
-        let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+        const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
-        let headerIconHtml = this.getHeaderIconHtml();
+        const headerIconHtml = this.getHeaderIconHtml();
 
         let $root = $('<a>')
             .attr('href', rootUrl)
@@ -572,9 +572,9 @@ class EmailDetailView extends DetailView {
         event.stopPropagation();
 
         this.getRouter().checkConfirmLeaveOut(() => {
-            let rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
+            const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
-            let options = {
+            const options = {
                 isReturn: true,
                 isReturnThroughLink: true,
             };
@@ -586,17 +586,17 @@ class EmailDetailView extends DetailView {
 
     // noinspection JSUnusedGlobalSymbols
     actionCreateDocument() {
-        let attachmentIdList = this.model.getLinkMultipleIdList('attachments');
+        const attachmentIdList = this.model.getLinkMultipleIdList('attachments');
 
         if (!attachmentIdList.length) {
             return;
         }
 
-        let names = this.model.get('attachmentsNames') || {};
-        let types = this.model.get('attachmentsTypes') || {};
+        const names = this.model.get('attachmentsNames') || {};
+        const types = this.model.get('attachmentsTypes') || {};
 
-        let proceed = (id) => {
-            let attributes = {};
+        const proceed = (id) => {
+            const attributes = {};
 
             if (this.model.get('accountId')) {
                 attributes.accountsIds = [this.model.get('accountId')];
@@ -614,7 +614,7 @@ class EmailDetailView extends DetailView {
                 attributes.fileName = attachment.name;
                 attributes.name = attachment.name;
 
-                let viewName = this.getMetadata().get('clientDefs.Document.modalViews.edit') ||
+                const viewName = this.getMetadata().get('clientDefs.Document.modalViews.edit') ||
                     'views/modals/edit';
 
                 this.createView('quickCreate', viewName, {
@@ -638,7 +638,7 @@ class EmailDetailView extends DetailView {
             return;
         }
 
-        let dataList = [];
+        const dataList = [];
 
         attachmentIdList.forEach((id) => {
             dataList.push({

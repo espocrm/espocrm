@@ -43,7 +43,7 @@ class EmailComposeRecordView extends EditRecordView {
         this.initialIsHtml = null;
 
         if (!this.model.get('isHtml') && this.getPreferences().get('emailReplyForceHtml')) {
-            let body = (this.model.get('body') || '').replace(/\n/g, '<br>');
+            const body = (this.model.get('body') || '').replace(/\n/g, '<br>');
 
             this.model.set('body', body, {silent: true});
             this.model.set('isHtml', true, {silent: true});
@@ -61,7 +61,7 @@ class EmailComposeRecordView extends EditRecordView {
                 addSignatureMethod = 'appendSignature';
             }
 
-            let body = this[addSignatureMethod](this.model.get('body') || '', this.model.get('isHtml'));
+            const body = this[addSignatureMethod](this.model.get('body') || '', this.model.get('isHtml'));
 
             this.model.set('body', body, {silent: true});
         }
@@ -90,7 +90,7 @@ class EmailComposeRecordView extends EditRecordView {
 
     initInsertTemplate() {
         this.listenTo(this.model, 'insert-template', data => {
-            let body = this.model.get('body') || '';
+            const body = this.model.get('body') || '';
 
             let bodyPlain = body.replace(/<br\s*\/?>/mg, '');
 
@@ -98,7 +98,7 @@ class EmailComposeRecordView extends EditRecordView {
             bodyPlain = bodyPlain.replace(/ /g, '');
             bodyPlain = bodyPlain.replace(/\n/g, '');
 
-            let $div = $('<div>').html(bodyPlain);
+            const $div = $('<div>').html(bodyPlain);
 
             bodyPlain = $div.text();
 
@@ -188,12 +188,12 @@ class EmailComposeRecordView extends EditRecordView {
 
     appendSignature(body, isHtml) {
         if (isHtml) {
-            let signature = this.getSignature();
+            const signature = this.getSignature();
 
             return  body + '' + signature;
         }
 
-        let signature = this.getPlainTextSignature();
+        const signature = this.getPlainTextSignature();
 
         return body + '\n\n' + signature;
     }
@@ -227,11 +227,11 @@ class EmailComposeRecordView extends EditRecordView {
     }
 
     saveDraft(options) {
-        let model = this.model;
+        const model = this.model;
 
         model.set('status', 'Draft');
 
-        let subjectView = this.getFieldView('subject');
+        const subjectView = this.getFieldView('subject');
 
         if (subjectView) {
             subjectView.fetchToModel();
@@ -251,7 +251,7 @@ class EmailComposeRecordView extends EditRecordView {
 
         value = value.replace(/<\/p\s*\/?>/mg, '\n\n');
 
-        let $div = $('<div>').html(value);
+        const $div = $('<div>').html(value);
 
         $div.find('style').remove();
         $div.find('link[ref="stylesheet"]').remove();
@@ -290,7 +290,7 @@ class EmailComposeRecordView extends EditRecordView {
         }
 
         if (this.model.get('isHtml')) {
-            let $div = this.$el.find('.field[data-name="body"] .note-editable');
+            const $div = this.$el.find('.field[data-name="body"] .note-editable');
 
             if (!$div.length) {
                 return;
