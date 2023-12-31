@@ -45,7 +45,7 @@ class EditDashboardModalView extends ModalView {
     events = {
         /** @this EditDashboardModalView */
         'click button.add': function (e) {
-            let name = $(e.currentTarget).data('name');
+            const name = $(e.currentTarget).data('name');
 
             this.getParentDashboardView().addDashlet(name);
             this.close();
@@ -78,9 +78,9 @@ class EditDashboardModalView extends ModalView {
             }
         ];
 
-        let dashboardLayout = this.options.dashboardLayout || [];
+        const dashboardLayout = this.options.dashboardLayout || [];
 
-        let dashboardTabList = [];
+        const dashboardTabList = [];
 
         dashboardLayout.forEach(item => {
             if (item.name) {
@@ -88,7 +88,7 @@ class EditDashboardModalView extends ModalView {
             }
         });
 
-        let model = this.model = new Model({}, {entityType: 'Preferences'});
+        const model = this.model = new Model({}, {entityType: 'Preferences'});
 
         model.set('dashboardTabList', dashboardTabList);
 
@@ -150,7 +150,7 @@ class EditDashboardModalView extends ModalView {
             return;
         }
 
-        let attributes = {};
+        const attributes = {};
 
         attributes.dashboardTabList = this.model.get('dashboardTabList');
 
@@ -158,11 +158,11 @@ class EditDashboardModalView extends ModalView {
             attributes.dashboardLocked = this.model.get('dashboardLocked');
         }
 
-        let names = this.model.get('translatedOptions');
+        const names = this.model.get('translatedOptions');
 
-        let renameMap = {};
+        const renameMap = {};
 
-        for (let name in names) {
+        for (const name in names) {
             if (name !== names[name]) {
                 renameMap[name] = names[name];
             }

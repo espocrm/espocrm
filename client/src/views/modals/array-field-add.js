@@ -45,18 +45,18 @@ class ArrayFieldAddModalView extends ModalView {
     events = {
         /** @this ArrayFieldAddModalView */
         'click .add': function (e) {
-            let value = $(e.currentTarget).attr('data-value');
+            const value = $(e.currentTarget).attr('data-value');
 
             this.trigger('add', value);
         },
         /** @this ArrayFieldAddModalView */
         'click input[type="checkbox"]': function (e) {
-            let value = $(e.currentTarget).attr('data-value');
+            const value = $(e.currentTarget).attr('data-value');
 
             if (e.target.checked) {
                 this.checkedList.push(value);
             } else {
-                let index = this.checkedList.indexOf(value);
+                const index = this.checkedList.indexOf(value);
 
                 if (index !== -1) {
                     this.checkedList.splice(index, 1);
@@ -115,7 +115,7 @@ class ArrayFieldAddModalView extends ModalView {
     processQuickSearch(text) {
         text = text.trim();
 
-        let $noData = this.$noData;
+        const $noData = this.$noData;
 
         $noData.addClass('hidden');
 
@@ -125,15 +125,15 @@ class ArrayFieldAddModalView extends ModalView {
             return;
         }
 
-        let matchedList = [];
+        const matchedList = [];
 
-        let lowerCaseText = text.toLowerCase();
+        const lowerCaseText = text.toLowerCase();
 
         this.optionList.forEach(item => {
-            let label = this.translations[item].toLowerCase();
+            const label = this.translations[item].toLowerCase();
 
-            for (let word of label.split(' ')) {
-                let matched = word.indexOf(lowerCaseText) === 0;
+            for (const word of label.split(' ')) {
+                const matched = word.indexOf(lowerCaseText) === 0;
 
                 if (matched) {
                     matchedList.push(item);
@@ -152,7 +152,7 @@ class ArrayFieldAddModalView extends ModalView {
         }
 
         this.optionList.forEach(item => {
-            let $row = this.$el.find(`ul .list-group-item[data-name="${item}"]`);
+            const $row = this.$el.find(`ul .list-group-item[data-name="${item}"]`);
 
             if (!~matchedList.indexOf(item)) {
                 $row.addClass('hidden');

@@ -38,7 +38,8 @@ class AddDashletModalView extends ModalView {
     events = {
         /** @this AddDashletModalView */
         'click .add': function (e) {
-            var name = $(e.currentTarget).data('name');
+            const name = $(e.currentTarget).data('name');
+
             this.trigger('add', name);
             this.close();
         },
@@ -57,7 +58,7 @@ class AddDashletModalView extends ModalView {
     setup() {
         this.headerText = this.translate('Add Dashlet');
 
-        let dashletList = Object.keys(this.getMetadata().get('dashlets') || {})
+        const dashletList = Object.keys(this.getMetadata().get('dashlets') || {})
             .sort((v1, v2) => {
                 return this.translate(v1, 'dashlets').localeCompare(this.translate(v2, 'dashlets'));
             });
@@ -65,8 +66,8 @@ class AddDashletModalView extends ModalView {
         this.translations = {};
 
         this.dashletList = dashletList.filter(item => {
-            let aclScope = this.getMetadata().get(['dashlets', item, 'aclScope']) || null;
-            let accessDataList = this.getMetadata().get(['dashlets', item, 'accessDataList']) || null;
+            const aclScope = this.getMetadata().get(['dashlets', item, 'aclScope']) || null;
+            const accessDataList = this.getMetadata().get(['dashlets', item, 'accessDataList']) || null;
 
             if (this.options.parentType === 'Settings') {
                 return true;
@@ -109,7 +110,7 @@ class AddDashletModalView extends ModalView {
     processQuickSearch(text) {
         text = text.trim();
 
-        let $noData = this.$noData;
+        const $noData = this.$noData;
 
         $noData.addClass('hidden');
 
@@ -119,15 +120,15 @@ class AddDashletModalView extends ModalView {
             return;
         }
 
-        let matchedList = [];
+        const matchedList = [];
 
-        let lowerCaseText = text.toLowerCase();
+        const lowerCaseText = text.toLowerCase();
 
         this.dashletList.forEach(item => {
-            let label = this.translations[item].toLowerCase();
+            const label = this.translations[item].toLowerCase();
 
-            for (let word of label.split(' ')) {
-                let matched = word.indexOf(lowerCaseText) === 0;
+            for (const word of label.split(' ')) {
+                const matched = word.indexOf(lowerCaseText) === 0;
 
                 if (matched) {
                     matchedList.push(item);
@@ -146,7 +147,7 @@ class AddDashletModalView extends ModalView {
         }
 
         this.dashletList.forEach(item => {
-            let $row = this.$el.find(`ul .list-group-item[data-name="${item}"]`);
+            const $row = this.$el.find(`ul .list-group-item[data-name="${item}"]`);
 
             if (!~matchedList.indexOf(item)) {
                 $row.addClass('hidden');

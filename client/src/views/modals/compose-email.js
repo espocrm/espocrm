@@ -65,7 +65,7 @@ class ComposeEmailModalView extends EditModalView {
             e.stopPropagation();
             e.preventDefault();
 
-            let focusedFieldView = this.getRecordView().getFocusedFieldView();
+            const focusedFieldView = this.getRecordView().getFocusedFieldView();
 
             if (focusedFieldView) {
                 this.model.set(focusedFieldView.fetch());
@@ -111,12 +111,12 @@ class ComposeEmailModalView extends EditModalView {
             this.getPreferences().get('emailUseExternalClient') ||
             !this.getAcl().checkScope('Email', 'create')
         ) {
-            var attributes = this.options.attributes || {};
+            const attributes = this.options.attributes || {};
 
             Espo.loader.require('email-helper', EmailHelper => {
                 this.getRouter().confirmLeaveOut = false;
 
-                let emailHelper = new EmailHelper();
+                const emailHelper = new EmailHelper();
 
                 document.location.href = emailHelper
                     .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
@@ -141,10 +141,10 @@ class ComposeEmailModalView extends EditModalView {
     }
 
     createRecordView(model, callback) {
-        let viewName = this.getMetadata().get('clientDefs.' + model.entityType + '.recordViews.compose') ||
+        const viewName = this.getMetadata().get('clientDefs.' + model.entityType + '.recordViews.compose') ||
             'views/email/record/compose';
 
-        let options = {
+        const options = {
             model: model,
             fullSelector: this.containerSelector + ' .edit-container',
             type: 'editSmall',
@@ -162,14 +162,14 @@ class ComposeEmailModalView extends EditModalView {
     }
 
     actionSend() {
-        let dialog = this.dialog;
+        const dialog = this.dialog;
 
-        /** @type {module:views/email/record/edit} editView */
-        let editView = this.getRecordView();
 
-        let model = editView.model;
+        const editView = /** @type {module:views/email/record/compose} */this.getRecordView();
 
-        let afterSend = () => {
+        const model = editView.model;
+
+        const afterSend = () => {
             this.dialogIsHidden = false;
 
             this.trigger('after:save', model);
@@ -183,7 +183,7 @@ class ComposeEmailModalView extends EditModalView {
             this.remove();
         };
 
-        let beforeSave = () => {
+        const beforeSave = () => {
             this.dialogIsHidden = true;
 
             dialog.hideWithBackdrop();
@@ -195,7 +195,7 @@ class ComposeEmailModalView extends EditModalView {
             }
         };
 
-        let errorSave = () => {
+        const errorSave = () => {
             this.dialogIsHidden = false;
 
             if (this.isRendered()) {
@@ -225,15 +225,14 @@ class ComposeEmailModalView extends EditModalView {
     }
 
     actionSaveDraft(options) {
-        /** @type {module:views/email/record/edit} editView */
-        let editView = this.getRecordView();
+        const editView = /** @type {module:views/email/record/compose} */this.getRecordView();
 
-        let model = editView.model;
+        const model = editView.model;
 
         this.disableButton('send');
         this.disableButton('saveDraft');
 
-        let afterSave = () => {
+        const afterSave = () => {
             this.enableButton('send');
             this.enableButton('saveDraft');
 
@@ -259,7 +258,7 @@ class ComposeEmailModalView extends EditModalView {
     initiateForceRemove() {
         this.forceRemoveIsInitiated = true;
 
-        let parentView = this.getParentView();
+        const parentView = this.getParentView();
 
         if (!parentView) {
             return true;

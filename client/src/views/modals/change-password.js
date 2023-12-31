@@ -107,7 +107,7 @@ class ChangePasswordModalView extends ModalView {
         this.getFieldView('password').fetchToModel();
         this.getFieldView('passwordConfirm').fetchToModel();
 
-        let notValid =
+        const notValid =
             this.getFieldView('currentPassword').validate() ||
             this.getFieldView('password').validate() ||
             this.getFieldView('passwordConfirm').validate();

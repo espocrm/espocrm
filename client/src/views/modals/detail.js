@@ -362,7 +362,7 @@ class DetailModalView extends ModalView {
         }
 
         if (!this.removeDisabled) {
-            var removeAccess = this.getAcl().check(model, 'delete', true);
+            const removeAccess = this.getAcl().check(model, 'delete', true);
 
             if (removeAccess) {
                 this.showButton('remove');

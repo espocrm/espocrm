@@ -75,7 +75,7 @@ class ActionHistoryModalView extends ModalView {
     }
 
     setupSearch() {
-        let searchManager = this.searchManager =
+        const searchManager = this.searchManager =
             new SearchManager(this.collection, 'listSelect', null, this.getDateTime());
 
         this.collection.data.boolFilterList = ['onlyMy'];
@@ -91,8 +91,8 @@ class ActionHistoryModalView extends ModalView {
     }
 
     setupList() {
-        let viewName = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.list`) ||
-           'views/record/list';
+        const viewName = this.getMetadata().get(`clientDefs.${this.scope}.recordViews.list`) ||
+            'views/record/list';
 
         this.listenToOnce(this.collection, 'sync', () => {
             this.createView('list', viewName, {
