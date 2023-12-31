@@ -274,7 +274,7 @@ class Service implements Crud,
     public function getEntity(string $id): ?Entity
     {
         try {
-            $query = $this->selectBuilderFactory
+            $builder = $this->selectBuilderFactory
                 ->create()
                 ->from($this->entityType)
                 ->withSearchParams(
@@ -284,8 +284,11 @@ class Service implements Crud,
                 )
                 ->withAdditionalApplierClassNameList(
                     $this->createSelectApplierClassNameListProvider()->get($this->entityType)
-                )
-                ->build();
+                );
+
+            // @todo Apply access control filter. If a parameter enabled? Check compatibility.
+
+            $query = $builder->build();
         }
         catch (BadRequest|Error $e) {
             throw new RuntimeException($e->getMessage());
