@@ -24,7 +24,8 @@
         },
         "sentAt": {
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "index": true
         },
         "emailAddress": {
             "type": "varchar",
