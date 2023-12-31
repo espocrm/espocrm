@@ -178,7 +178,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {string} [labelTranslation] A label translation path.
      * @property {string} [html] An HTML.
      * @property {string} [text] A text.
-     * @property {'default'|'danger'|'success'|'warning'} [style] A style.
+     * @property {'default'|'danger'|'success'|'warning'|'primary'} [style] A style.
      * @property {boolean} [hidden] Hidden.
      * @property {string} [title] A title (not translatable).
      * @property {boolean} [disabled] Disabled.
