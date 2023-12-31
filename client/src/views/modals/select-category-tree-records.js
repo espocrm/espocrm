@@ -55,7 +55,7 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
                 style: 'danger',
                 label: 'Select',
                 onClick: dialog => {
-                    let listView = this.getRecordView();
+                    const listView = this.getRecordView();
 
                     if (listView.allResultIsChecked) {
                         this.trigger('select', {
@@ -65,7 +65,8 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
                         });
                     }
                     else {
-                        var list = listView.getSelected();
+                        const list = listView.getSelected();
+
                         if (list.length) {
                             this.trigger('select', list);
                         }
@@ -99,7 +100,7 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
 
                 this.collection = collection;
 
-                var searchManager = new SearchManager(collection, 'listSelect', null, this.getDateTime());
+                const searchManager = new SearchManager(collection, 'listSelect', null, this.getDateTime());
 
                 searchManager.emptyOnReset = true;
 
@@ -118,8 +119,8 @@ class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
                 collection.where = searchManager.getWhere();
                 collection.url = collection.entityType + '/action/listTree';
 
-                var viewName = this.getMetadata()
-                    .get('clientDefs.' + this.scope + '.recordViews.listSelectCategoryTree') ||
+                const viewName =
+                    this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listSelectCategoryTree') ||
                     'views/record/list-tree';
 
                 this.listenToOnce(collection, 'sync', () => {

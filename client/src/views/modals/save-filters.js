@@ -56,7 +56,7 @@ class SaveFiltersModalView extends ModalView {
 
         this.headerText = this.translate('Save Filter');
 
-        let model = new Model();
+        const model = new Model();
 
         this.createView('name', 'views/fields/varchar', {
             selector: '.field[data-name="name"]',
@@ -80,7 +80,7 @@ class SaveFiltersModalView extends ModalView {
     }
 
     actionSave() {
-        let nameView = this.getFieldView('name');
+        const nameView = this.getFieldView('name');
 
         nameView.fetchToModel();
 

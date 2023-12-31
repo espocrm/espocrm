@@ -73,18 +73,18 @@ class PasswordChangeRequestModalView extends ModalView {
 
     // noinspection JSUnusedGlobalSymbols
     actionSubmit() {
-        let $userName = this.$userName;
-        let $emailAddress = this.$emailAddress;
+        const $userName = this.$userName;
+        const $emailAddress = this.$emailAddress;
 
-        let userName = $userName.val();
-        let emailAddress = $emailAddress.val();
+        const userName = $userName.val();
+        const emailAddress = $emailAddress.val();
 
         let isValid = true;
 
         if (userName === '') {
             isValid = false;
 
-            var message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
+            const message = this.getLanguage().translate('userCantBeEmpty', 'messages', 'User');
 
             this.isPopoverUserNameDestroyed = false;
 
@@ -95,7 +95,7 @@ class PasswordChangeRequestModalView extends ModalView {
                 trigger: 'manual',
             }).popover('show');
 
-            let $cellUserName = $userName.closest('.form-group');
+            const $cellUserName = $userName.closest('.form-group');
 
             $cellUserName.addClass('has-error');
 
@@ -114,7 +114,7 @@ class PasswordChangeRequestModalView extends ModalView {
         if (emailAddress === '') {
             isValid = false;
 
-            let message = this.getLanguage().translate('emailAddressCantBeEmpty', 'messages', 'User');
+            const message = this.getLanguage().translate('emailAddressCantBeEmpty', 'messages', 'User');
 
             this.isPopoverEmailAddressDestroyed = false;
 
@@ -125,7 +125,7 @@ class PasswordChangeRequestModalView extends ModalView {
                 trigger: 'manual',
             }).popover('show');
 
-            let $cellEmailAddress = $emailAddress.closest('.form-group');
+            const $cellEmailAddress = $emailAddress.closest('.form-group');
 
             $cellEmailAddress.addClass('has-error');
 
@@ -146,7 +146,7 @@ class PasswordChangeRequestModalView extends ModalView {
             return;
         }
 
-        let $submit = this.$el.find('button[data-name="submit"]');
+        const $submit = this.$el.find('button[data-name="submit"]');
 
         $submit.addClass('disabled');
 

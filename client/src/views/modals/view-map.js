@@ -35,10 +35,10 @@ class ViewMapModalView extends ModalView {
     backdrop = true
 
     setup() {
-        let field = this.options.field;
+        const field = this.options.field;
 
-        let url = '#AddressMap/view/' + this.model.entityType + '/' + this.model.id + '/' + field;
-        let fieldLabel = this.translate(field, 'fields', this.model.entityType);
+        const url = '#AddressMap/view/' + this.model.entityType + '/' + this.model.id + '/' + field;
+        const fieldLabel = this.translate(field, 'fields', this.model.entityType);
 
         this.headerElement =
             $('<a>')
@@ -46,7 +46,7 @@ class ViewMapModalView extends ModalView {
                 .text(fieldLabel)
                 .get(0);
 
-        let viewName = this.model.getFieldParam(field + 'Map', 'view') ||
+        const viewName = this.model.getFieldParam(field + 'Map', 'view') ||
             this.getFieldManager().getViewName('map');
 
         this.createView('map', viewName, {

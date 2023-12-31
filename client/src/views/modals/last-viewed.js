@@ -68,8 +68,7 @@ class LastViewedModalView extends ModalView {
     }
 
     loadList() {
-        let viewName =
-            this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listLastViewed') ||
+        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.recordViews.listLastViewed') ||
             'views/record/list';
 
         this.listenToOnce(this.collection, 'sync', () => {

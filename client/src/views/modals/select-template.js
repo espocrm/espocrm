@@ -52,7 +52,7 @@ class SelectTemplateModalView extends SelectRecordsModalView {
     afterRender() {
         super.afterRender();
 
-        let firstLinkElement = this.$el.find('a.link').first().get(0);
+        const firstLinkElement = this.$el.find('a.link').first().get(0);
 
         if (firstLinkElement) {
             // noinspection JSUnresolvedReference

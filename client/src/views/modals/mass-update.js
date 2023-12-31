@@ -100,7 +100,7 @@ class MassUpdateModalView extends ModalView {
                 $('<span>').text(this.translate('Mass Update'))
             )
 
-        var forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
+        const forbiddenList = this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit') || [];
 
         this.wait(true);
 

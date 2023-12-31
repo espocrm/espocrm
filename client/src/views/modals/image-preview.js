@@ -118,18 +118,18 @@ class ImagePreviewModalView extends ModalView {
     onImageLoad() {}
 
     afterRender() {
-        let $container = this.$el.find('.image-container');
-        let $img = this.$img = this.$el.find('.image-container img');
+        const $container = this.$el.find('.image-container');
+        const $img = this.$img = this.$el.find('.image-container img');
 
         $img.on('load', () => {
-            let imgEl = $img.get(0);
+            const imgEl = $img.get(0);
 
             Exif.getData(imgEl, () => {
                 if ($img.css('image-orientation') === 'from-image') {
                     return;
                 }
 
-                let orientation = Exif.getTag(this, 'Orientation');
+                const orientation = Exif.getTag(this, 'Orientation');
 
                 switch (orientation) {
                     case 2:
@@ -173,7 +173,7 @@ class ImagePreviewModalView extends ModalView {
         }
 
         const manageSize = () => {
-            let width = $container.width();
+            const width = $container.width();
 
             $img.css('maxWidth', width);
         };

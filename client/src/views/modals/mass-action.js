@@ -105,7 +105,7 @@ class MassActionModalView extends ModalView {
         });
 
         this.on('close', () => {
-            let status = this.model.get('status');
+            const status = this.model.get('status');
 
             if (
                 status !== 'Pending' &&
@@ -124,7 +124,7 @@ class MassActionModalView extends ModalView {
         Espo.Ajax
             .getRequest(`MassAction/${this.id}/status`)
             .then(response => {
-                let status = response.status;
+                const status = response.status;
 
                 this.model.set('status', status);
 

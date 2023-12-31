@@ -44,7 +44,7 @@ class KanbanMoveOverModalView extends ModalView {
     events = {
         /** @this KanbanMoveOverModalView */
         'click [data-action="move"]': function (e) {
-            let value = $(e.currentTarget).data('value');
+            const value = $(e.currentTarget).data('value');
 
             this.moveTo(value);
         },
@@ -53,7 +53,7 @@ class KanbanMoveOverModalView extends ModalView {
     setup() {
         this.scope = this.model.entityType;
 
-        let iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
+        const iconHtml = this.getHelper().getScopeColorIconHtml(this.scope);
 
         this.statusField = this.options.statusField;
 
@@ -94,7 +94,7 @@ class KanbanMoveOverModalView extends ModalView {
     }
 
     moveTo(status) {
-        var attributes = {};
+        const attributes = {};
 
         attributes[this.statusField] = status;
 

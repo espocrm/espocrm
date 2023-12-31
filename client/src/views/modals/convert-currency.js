@@ -42,8 +42,8 @@ class ConvertCurrencyModalView extends MassConvertCurrencyModalView {
         this.getFieldView('currency').fetchToModel();
         this.getFieldView('currencyRates').fetchToModel();
 
-        let currency = this.model.get('currency');
-        let currencyRates = this.model.get('currencyRates');
+        const currency = this.model.get('currency');
+        const currencyRates = this.model.get('currencyRates');
 
         Espo.Ajax
             .postRequest('Action', {

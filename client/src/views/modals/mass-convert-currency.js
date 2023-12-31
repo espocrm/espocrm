@@ -61,7 +61,7 @@ class MassConvertCurrencyModalView extends ModalView {
             style: 'danger'
         }, true);
 
-        let model = this.model = new Model();
+        const model = this.model = new Model();
 
         model.set('currency', this.getConfig().get('defaultCurrency'));
         model.set('baseCurrency', this.getConfig().get('baseCurrency'));
@@ -115,14 +115,14 @@ class MassConvertCurrencyModalView extends ModalView {
         this.getFieldView('currency').fetchToModel();
         this.getFieldView('currencyRates').fetchToModel();
 
-        let currency = this.model.get('currency');
-        let currencyRates = this.model.get('currencyRates');
+        const currency = this.model.get('currency');
+        const currencyRates = this.model.get('currencyRates');
 
-        let hasWhere = !this.options.ids || this.options.ids.length === 0;
+        const hasWhere = !this.options.ids || this.options.ids.length === 0;
 
-        let helper = new Helper(this);
+        const helper = new Helper(this);
 
-        let idle = hasWhere && helper.checkIsIdle(this.options.totalCount);
+        const idle = hasWhere && helper.checkIsIdle(this.options.totalCount);
 
         Espo.Ajax.postRequest('MassAction', {
                 entityType: this.options.entityType,
