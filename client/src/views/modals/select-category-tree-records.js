@@ -31,7 +31,9 @@ import SelectRecordsModalView from 'views/modals/select-records';
 class SelectCategoryTreeRecordsModalView extends SelectRecordsModalView {
 
     setup() {
+        /** @type {Object.<string, module:search-manager~advancedFilter>} */
         this.filters = this.options.filters || {};
+        /** @type {Object.<string, boolean>} */
         this.boolFilterList = this.options.boolFilterList || {};
         this.primaryFilterName = this.options.primaryFilterName || null;
 

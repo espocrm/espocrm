@@ -90,6 +90,7 @@ class SelectRecordsModalView extends ModalView {
     }
 
     setup() {
+        /** @type {Object.<string, module:search-manager~advancedFilter>} */
         this.filters = this.options.filters || {};
         this.boolFilterList = this.options.boolFilterList;
         this.primaryFilterName = this.options.primaryFilterName || null;
