@@ -70,7 +70,9 @@ export default Dep.extend({
                 Espo.Ajax
                     .postRequest('Extension/action/uninstall', {id: id}, {timeout: 0, bypassAppReload: true})
                     .then(() => {
-                        window.location.reload();
+                        Espo.Ui.success(this.translate('Done'));
+
+                        setTimeout(() => window.location.reload(), 500);
                     })
                     .catch(xhr => {
                         const msg = xhr.getResponseHeader('X-Status-Reason');
