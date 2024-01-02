@@ -43,7 +43,7 @@ export default Dep.extend({
 
             this.$el.find('.message-container').html('');
 
-            let files = e.currentTarget.files;
+            const files = e.currentTarget.files;
 
             if (files.length) {
                 this.selectFile(files[0]);
@@ -53,16 +53,16 @@ export default Dep.extend({
             this.upload();
         },
         'click [data-action="install"]': function (e) {
-            let id = $(e.currentTarget).data('id');
+            const id = $(e.currentTarget).data('id');
 
-            let name = this.collection.get(id).get('name');
-            let version = this.collection.get(id).get('version');
+            const name = this.collection.get(id).get('name');
+            const version = this.collection.get(id).get('version');
 
             this.run(id, name, version);
 
         },
         'click [data-action="uninstall"]': function (e) {
-            let id = $(e.currentTarget).data('id');
+            const id = $(e.currentTarget).data('id');
 
             this.confirm(this.translate('uninstallConfirmation', 'messages', 'Admin'), () => {
                 Espo.Ui.notify(this.translate('Uninstalling...', 'labels', 'Admin'));
@@ -73,7 +73,7 @@ export default Dep.extend({
                         window.location.reload();
                     })
                     .catch(xhr => {
-                        let msg = xhr.getResponseHeader('X-Status-Reason');
+                        const msg = xhr.getResponseHeader('X-Status-Reason');
 
                         this.showErrorNotification(this.translate('Error') + ': ' + msg);
                     });
@@ -116,7 +116,7 @@ export default Dep.extend({
     },
 
     selectFile: function (file) {
-        var fileReader = new FileReader();
+        const fileReader = new FileReader();
 
         fileReader.onload = (e) => {
             this.packageContents = e.target.result;
@@ -201,7 +201,7 @@ export default Dep.extend({
         Espo.Ajax
             .postRequest('Extension/action/install', {id: id}, {timeout: 0, bypassAppReload: true})
             .then(() => {
-                let cache = this.getCache();
+                const cache = this.getCache();
 
                 if (cache) {
                     cache.clear();
@@ -226,7 +226,7 @@ export default Dep.extend({
             .catch(xhr => {
                 this.$el.find('.panel.upload').removeClass('hidden');
 
-                let msg = xhr.getResponseHeader('X-Status-Reason');
+                const msg = xhr.getResponseHeader('X-Status-Reason');
 
                 this.showErrorNotification(this.translate('Error') + ': ' + msg);
             });
