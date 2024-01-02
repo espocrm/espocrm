@@ -804,6 +804,7 @@ class Manager
 
         $result = true;
 
+        // @todo Remove the if statement.
         if (is_array($fileList)) {
             foreach ($fileList as $file) {
                 $fullPath = Util::concatPath($path, $file);
@@ -812,6 +813,8 @@ class Manager
                     $result &= $this->removeInDir($fullPath, true);
                 }
                 else if (file_exists($fullPath)) {
+                    $this->opcacheInvalidate($fullPath, true);
+
                     $result &= unlink($fullPath);
                 }
             }
