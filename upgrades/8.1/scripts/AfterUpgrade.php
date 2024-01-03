@@ -47,14 +47,6 @@ class AfterUpgrade
 
         if ($config->get('pdfEngine') === 'Tcpdf') {
             $configWriter->set('pdfEngine', 'Dompdf');
-
-            if (php_sapi_name() === 'cli') {
-                echo "Important. The 'Tcpdf' PDF engine has been removed from EspoCRM. " .
-                    "Now PDF printing is handled by the 'Dompdf' engine. " .
-                    "If you would like to continue using the 'Tcpdf', download and install the free extension: " .
-                    "https://github.com/yurikuzn/ext-tcpdf/releases. " .
-                    "After that, select 'Tcpdf' PDF Engine at Administration > Settings.";
-            }
         }
 
         $configWriter->save();
