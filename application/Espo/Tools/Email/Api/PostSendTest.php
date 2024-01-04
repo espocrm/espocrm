@@ -35,7 +35,10 @@ use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Entities\Email;
 use Espo\Tools\Email\SendService;
@@ -51,6 +54,13 @@ class PostSendTest implements Action
         private Acl $acl
     ) {}
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws Error
+     * @throws NoSmtp
+     * @throws NotFound
+     */
     public function process(Request $request): Response
     {
         if (!$this->acl->checkScope(Email::ENTITY_TYPE)) {
