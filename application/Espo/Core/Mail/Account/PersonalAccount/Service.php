@@ -29,16 +29,14 @@
 
 namespace Espo\Core\Mail\Account\PersonalAccount;
 
-use Espo\Core\Mail\Account\Account as Account;
 use Laminas\Mail\Message;
 
+use Espo\Core\Mail\Account\Account as Account;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
-
 use Espo\Core\Mail\Account\Fetcher;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory;
-
 use Espo\Entities\User;
 
 class Service
@@ -141,11 +139,7 @@ class Service
 
         $imapParams = $account->getImapParams();
 
-        if (!$imapParams) {
-            return null;
-        }
-
-        return $imapParams->getPassword();
+        return $imapParams?->getPassword();
     }
 
     /**
@@ -159,7 +153,7 @@ class Service
         $folder = $account->getSentFolder();
 
         if (!$folder) {
-            throw new Error("No sent folder for Email Account {$id}.");
+            throw new Error("No sent folder for Email Account $id.");
         }
 
         $storage = $this->storageFactory->create($account);

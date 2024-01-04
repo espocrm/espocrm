@@ -103,11 +103,7 @@ class Service
 
         $imapParams = $account->getImapParams();
 
-        if (!$imapParams) {
-            return null;
-        }
-
-        return $imapParams->getPassword();
+        return $imapParams?->getPassword();
     }
 
     /**
@@ -121,7 +117,7 @@ class Service
         $folder = $account->getSentFolder();
 
         if (!$folder) {
-            throw new Error("No sent folder for Group Email Account {$id}.");
+            throw new Error("No sent folder for Group Email Account $id.");
         }
 
         $storage = $this->storageFactory->create($account);
