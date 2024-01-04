@@ -31,43 +31,31 @@ namespace Espo\Tools\Kanban;
 
 use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\User;
 
 class KanbanService
 {
-    private User $user;
-    private AclManager $aclManager;
-    private InjectableFactory $injectableFactory;
-    private Config $config;
-    private Metadata $metadata;
-    private Orderer $orderer;
-
     public function __construct(
-        User $user,
-        AclManager $aclManager,
-        InjectableFactory $injectableFactory,
-        Config $config,
-        Metadata $metadata,
-        Orderer $orderer
-    ) {
-        $this->user = $user;
-        $this->aclManager = $aclManager;
-        $this->injectableFactory = $injectableFactory;
-        $this->config = $config;
-        $this->metadata = $metadata;
-        $this->orderer = $orderer;
-    }
+        private User $user,
+        private AclManager $aclManager,
+        private InjectableFactory $injectableFactory,
+        private Config $config,
+        private Metadata $metadata,
+        private Orderer $orderer
+    ) {}
 
     /**
      * @throws Error
-     * @throws ForbiddenSilent
+     * @throws Forbidden
+     * @throws BadRequest
      */
     public function getData(string $entityType, SearchParams $searchParams): Result
     {
@@ -93,7 +81,7 @@ class KanbanService
 
     /**
      * @param string[] $ids
-     * @throws ForbiddenSilent
+     * @throws Forbidden
      */
     public function order(string $entityType, string $group, array $ids): void
     {
@@ -128,7 +116,7 @@ class KanbanService
         }
 
         if ($this->metadata->get(['recordDefs', $entityType, 'kanbanDisabled'])) {
-            throw new ForbiddenSilent("Kanban is disabled for '{$entityType}'.");
+            throw new ForbiddenSilent("Kanban is disabled for '$entityType'.");
         }
 
         if (!$this->aclManager->check($this->user, $entityType, Table::ACTION_READ)) {

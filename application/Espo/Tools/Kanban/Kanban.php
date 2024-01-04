@@ -29,7 +29,9 @@
 
 namespace Espo\Tools\Kanban;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\FieldProcessing\ListLoadProcessor;
 use Espo\Core\FieldProcessing\Loader\Params as FieldLoaderParams;
 use Espo\Core\Record\Collection;
@@ -111,6 +113,8 @@ class Kanban
      * Get kanban record data.
      *
      * @throws Error
+     * @throws Forbidden
+     * @throws BadRequest
      */
     public function getResult(): Result
     {
@@ -182,7 +186,7 @@ class Kanban
             $newOrder = $itemQuery->getOrder();
 
             array_unshift($newOrder, [
-                'COALESCE:(kanbanOrder.order, ' . strval($this->maxOrderNumber + 1) . ')',
+                'COALESCE:(kanbanOrder.order, ' . ($this->maxOrderNumber + 1) . ')',
                 'ASC',
             ]);
 
@@ -260,7 +264,7 @@ class Kanban
         $statusField = $this->metadata->get(['scopes', $this->entityType, 'statusField']);
 
         if (!$statusField) {
-            throw new Error("No status field for entity type '{$this->entityType}'.");
+            throw new Error("No status field for entity type '$this->entityType'.");
         }
 
         return $statusField;
@@ -279,7 +283,7 @@ class Kanban
         $statusList = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $statusField, 'options']);
 
         if (empty($statusList)) {
-            throw new Error("No options for status field for entity type '{$this->entityType}'.");
+            throw new Error("No options for status field for entity type '$this->entityType'.");
         }
 
         return $statusList;
