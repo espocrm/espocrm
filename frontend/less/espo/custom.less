@@ -2395,6 +2395,12 @@ table.table td.cell .html-container {
         margin-top: 0;
     }
 
+    ul,
+    ol {
+        padding-left: 30px;
+        margin-bottom: (@line-height-computed / 2);
+    }
+
     > p:last-child,
     > ul:last-child,
     > ol:last-child,
@@ -2408,16 +2414,12 @@ table.table td.cell .html-container {
         list-style-type: disc;
     }
 
-    ul, ol {
-        padding-left: 30px;
-    }
-
     p,
     ul,
     ol,
     pre,
     blockquote {
-        margin-top: @line-height-computed / 2;
+        margin-top: (@line-height-computed / 2);
     }
 }
 
@@ -2978,23 +2980,32 @@ table.table-admin-panel {
     }
 }
 
-.note-editor .note-toolbar.sticked {
-    z-index: 1;
-    position: fixed;
-    background-color: @panel-bg;
-}
-
-.note-editor.panel > .panel-heading {
-    .btn {
-        //border-bottom-width: 1px;
-        padding-top: 4px;
-        padding-bottom: 4px;
+.note-editor {
+    .note-toolbar.sticked {
+        z-index: 1;
+        position: fixed;
+        background-color: @panel-bg;
     }
 
-    .dropdown-menu .btn-group > .btn {
-        > i {
-            top: 1px;
-            position: relative;
+    &.panel > .panel-heading {
+        .btn {
+            //border-bottom-width: 1px;
+            padding-top: 4px;
+            padding-bottom: 4px;
+        }
+
+        .dropdown-menu .btn-group > .btn {
+            > i {
+                top: 1px;
+                position: relative;
+            }
+        }
+    }
+
+    .note-editing-area {
+        ul,
+        ol {
+            margin-bottom: (@line-height-computed / 2);
         }
     }
 }
