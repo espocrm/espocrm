@@ -3005,7 +3005,16 @@ table.table-admin-panel {
     .note-editing-area {
         ul,
         ol {
+            margin-top: (@line-height-computed / 2);
             margin-bottom: (@line-height-computed / 2);
+
+            &:first-child {
+                margin-top: 0;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
         }
     }
 }
