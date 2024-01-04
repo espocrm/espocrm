@@ -187,7 +187,7 @@ class TextFieldView extends BaseFieldView {
         /** @type {HTMLTextAreaElement} */
         const element = this.$element.get(0);
 
-        if (!element) {
+        if (!element || element.value === undefined) {
             return;
         }
 
