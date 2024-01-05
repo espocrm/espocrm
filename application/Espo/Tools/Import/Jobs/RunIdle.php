@@ -29,31 +29,24 @@
 
 namespace Espo\Tools\Import\Jobs;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Job\Job;
 use Espo\Core\Job\Job\Data;
 use Espo\Core\Exceptions\Error;
-
 use Espo\Tools\Import\ImportFactory;
 use Espo\Tools\Import\Params as ImportParams;
-
 use Espo\ORM\EntityManager;
-
 use Espo\Entities\User;
 
 class RunIdle implements Job
 {
-    private $factory;
-
-    private $entityManager;
-
-    public function __construct(ImportFactory $factory, EntityManager $entityManager)
-    {
-        $this->factory = $factory;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private ImportFactory $factory,
+        private EntityManager $entityManager
+    ) {}
 
     /**
-     * @throws \Espo\Core\Exceptions\Forbidden
+     * @throws Forbidden
      * @throws Error
      */
     public function run(Data $data): void

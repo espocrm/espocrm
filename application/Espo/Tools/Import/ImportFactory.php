@@ -33,12 +33,8 @@ use Espo\Core\InjectableFactory;
 
 class ImportFactory
 {
-    private $injectableFactory;
-
-    public function __construct(InjectableFactory $injectableFactory)
-    {
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private InjectableFactory $injectableFactory)
+    {}
 
     public function create(): Import
     {

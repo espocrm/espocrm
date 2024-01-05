@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Import;
 
+use Exception;
 use GuzzleHttp\Psr7\Utils as Psr7Utils;
 
 use Espo\Core\Record\ActionHistory\Action;
@@ -84,7 +85,7 @@ class Service
         }
 
         if (!$this->acl->check($entityType, Table::ACTION_CREATE)) {
-            throw new Forbidden("No create access for '{$entityType}'.");
+            throw new Forbidden("No create access for '$entityType'.");
         }
 
         $result = $this->factory
@@ -124,7 +125,7 @@ class Service
         $source = $this->entityManager->getEntityById(ImportEntity::ENTITY_TYPE, $importParamsId);
 
         if (!$source) {
-            throw new Error("Import '{$importParamsId}' not found.");
+            throw new Error("Import '$importParamsId' not found.");
         }
 
         $entityType = $source->getTargetEntityType();
@@ -154,18 +155,18 @@ class Service
         $import = $this->entityManager->getEntity(ImportEntity::ENTITY_TYPE, $id);
 
         if (!$import) {
-            throw new NotFound("Import '{$id}' not found.");
+            throw new NotFound("Import '$id' not found.");
         }
 
         $status = $import->getStatus();
 
         if ($status !== ImportEntity::STATUS_STANDBY) {
             if (!in_array($status, [ImportEntity::STATUS_IN_PROCESS, ImportEntity::STATUS_FAILED])) {
-                throw new Forbidden("Can't run import with '{$status}' status.");
+                throw new Forbidden("Can't run import with '$status' status.");
             }
 
             if (!$forceResume) {
-                throw new Forbidden("Import has '{$status}' status. Use -r flag to force resume.");
+                throw new Forbidden("Import has '$status' status. Use -r flag to force resume.");
             }
         }
 
@@ -230,7 +231,13 @@ class Service
 
         if ($createdAt) {
             $dtNow = new DateTime();
-            $createdAtDt = new DateTime($createdAt);
+
+            try {
+                $createdAtDt = new DateTime($createdAt);
+            }
+            catch (Exception $e) {
+                throw new RuntimeException($e->getMessage());
+            }
 
             $dayDiff = ($dtNow->getTimestamp() - $createdAtDt->getTimestamp()) / 60 / 60 / 24;
 
@@ -354,7 +361,7 @@ class Service
         $import = $this->entityManager->getEntityById(ImportEntity::ENTITY_TYPE, $id);
 
         if (!$import) {
-            throw new NotFound("Import '{$id}' not found.");
+            throw new NotFound("Import '$id' not found.");
         }
 
         if (!$this->acl->checkEntityDelete($import)) {
