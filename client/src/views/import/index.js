@@ -76,7 +76,7 @@ class IndexImportView extends View {
             view.render();
         });
 
-        var url = '#Import';
+        let url = '#Import';
 
         if (this.options.fromAdmin) {
             url = '#Admin/import';
