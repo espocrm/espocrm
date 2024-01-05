@@ -216,11 +216,32 @@ class Step2ImportView extends View {
         $container.empty();
         $container.append($table);
 
+        this.getDefaultFieldList().forEach(name => {
+            this.addField(name);
+        });
+    }
+
+    /**
+     * @return {string[]}
+     */
+    getDefaultFieldList() {
         if (this.formData.defaultFieldList) {
-            this.formData.defaultFieldList.forEach((name) => {
-                this.addField(name);
-            });
+            return this.formData.defaultFieldList;
         }
+
+        if (!this.formData.defaultValues) {
+            return [];
+        }
+
+        const defaultAttributes = Object.keys(this.formData.defaultValues);
+
+        return this.getFieldManager().getEntityTypeFieldList(this.scope)
+            .filter(field => {
+                const attributeList = this.getFieldManager()
+                    .getEntityTypeFieldActualAttributeList(this.scope, field);
+
+                return attributeList.findIndex(attribute => defaultAttributes.includes(attribute)) !== -1;
+            })
     }
 
     getFieldList() {

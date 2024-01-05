@@ -32,6 +32,8 @@ class ImportController extends RecordController {
 
     defaultAction = 'index'
 
+    storedData
+
     checkAccessGlobal() {
         if (this.getAcl().checkScope('Import')) {
             return true;
@@ -68,6 +70,10 @@ class ImportController extends RecordController {
         let formData = null;
         let fileContents = null;
 
+        if (o.formData) {
+            this.storedData = undefined;
+        }
+
         if (this.storedData) {
             formData = this.storedData.formData;
             fileContents = this.storedData.fileContents;
@@ -93,7 +99,7 @@ class ImportController extends RecordController {
             });
 
             this.listenTo(view, 'done', () => {
-                delete this.storedData;
+                this.storedData = undefined;
             });
 
             view.render();
