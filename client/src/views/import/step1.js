@@ -56,6 +56,7 @@ class Step1ImportView extends View {
 
     getEntityList() {
         const list = [];
+        /** @type {Object.<string, Record>} */
         const scopes = this.getMetadata().get('scopes');
 
         for (const scopeName in scopes) {
