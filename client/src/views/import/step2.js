@@ -194,6 +194,7 @@ class Step2ImportView extends View {
             if (~['update', 'createAndUpdate'].indexOf(this.formData.action)) {
                 const $checkbox = $('<input>')
                     .attr('type', 'checkbox')
+                    .addClass('form-checkbox')
                     .attr('id', 'update-by-' + i.toString());
 
                 /** @type {HTMLInputElement} */
