@@ -3,7 +3,6 @@
 /data/upload/*
 /data/preferences/*
 /data/.backup/*
-/data/config.php
 /data/config-internal.php
 /data/tmp/*
 /build
