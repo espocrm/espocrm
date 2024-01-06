@@ -1,0 +1,22 @@
+.schedule-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.schedule-main {
+    display: flex;
+    flex-direction: column;
+}
+
+.schedule-main-elem {
+    text-align: center;
+    padding: 5px 10px;
+}
+
+.border-bottom {
+    border: none;
+    border-bottom: 1px solid lightgray;
+    background-color: white;
+}
