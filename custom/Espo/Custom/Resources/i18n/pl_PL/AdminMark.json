@@ -1,0 +1,38 @@
+{
+  "fields": {
+    "parent": "Rodzic",
+    "dateStart": "Data rozpoczęcia",
+    "dateEnd": "Data zakończenia",
+    "duration": "Czas trwania",
+    "reminders": "Przypomnienia",
+    "dateStartDate": "Data rozpoczęcia (cały dzień)",
+    "dateEndDate": "Data zakończenia (cały dzień)",
+    "isAllDay": "Cały dzień"
+  },
+  "links": {
+    "parent": "Rodzic"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planowane",
+      "Held": "Odbyło się",
+      "Not Held": "Nie odbyło się"
+    }
+  },
+  "labels": {
+    "Create AdminMark": "Utwórz Адмін вихід",
+    "Schedule AdminMark": "Zaplanuj Адмін вихід",
+    "Log AdminMark": "Dziennik Адмін вихід",
+    "Set Held": "Ustaw jako Odbyte",
+    "Set Not Held": "Ustaw jako Nieodbyte"
+  },
+  "massActions": {
+    "setHeld": "Ustaw jako Odbyte",
+    "setNotHeld": "Ustaw jako nieodbyty"
+  },
+  "presetFilters": {
+    "planned": "Planowane",
+    "held": "Trzymany",
+    "todays": "Dzisiejsze"
+  }
+}

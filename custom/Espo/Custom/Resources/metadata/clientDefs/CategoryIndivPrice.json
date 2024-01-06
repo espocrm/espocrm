@@ -1,0 +1,12 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-sort-numeric-up",
+    "relationshipPanels": {
+        "trainerCategory": {
+            "layout": null
+        }
+    }
+}

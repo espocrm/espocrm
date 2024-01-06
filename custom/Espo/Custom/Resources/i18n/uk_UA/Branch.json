@@ -1,0 +1,14 @@
+{
+    "labels": {
+        "Create Branch": "Створити Берег"
+    },
+    "fields": {
+        "address": "Адресса",
+        "halls": "Зали",
+        "groups": "Групи"
+    },
+    "links": {
+        "halls": "Зали",
+        "groups": "Групи"
+    }
+}

@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "parent": "Henviser til",
+    "dateStart": "Startdato",
+    "dateEnd": "Slutdato",
+    "duration": "Varighed",
+    "reminders": "Underretninger",
+    "dateStartDate": "Start dato (hele dagen)",
+    "dateEndDate": "Slut dato (hele dagen)",
+    "isAllDay": "Hele dagen"
+  },
+  "links": {
+    "parent": "Henviser til"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planlagt",
+      "Held": "Gennemført",
+      "Not Held": "Ikke Gennemført"
+    }
+  },
+  "labels": {
+    "Create Event": "Opret Івент",
+    "Schedule Event": "Planlæg Івент",
+    "Set Held": "Marker som Gennemført",
+    "Set Not Held": "Marker som Ikke Gennemført"
+  },
+  "massActions": {
+    "setHeld": "Marker som Gennemført",
+    "setNotHeld": "Marker som Ikke Gennemført"
+  },
+  "presetFilters": {
+    "planned": "Planlagt",
+    "held": "Gennemført",
+    "todays": "Dagens"
+  }
+}

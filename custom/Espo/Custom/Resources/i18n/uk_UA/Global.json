@@ -1,0 +1,38 @@
+{
+    "labels": {
+        "Schedule Training": "Schedule Заняття",
+        "Log Training": "Log Заняття",
+        "Schedule Indiv": "Schedule Індив",
+        "Log Indiv": "Log Індив",
+        "Schedule Rent": "Schedule Аренда",
+        "Log Rent": "Log Аренда",
+        "Schedule Event": "Schedule Івент",
+        "Log Event": "Log Івент",
+        "Schedule AdminMark": "Schedule Адмін вихід",
+        "Log AdminMark": "Log Адмін вихід"
+    },
+    "scopeNames": {
+        "WeekTemplate": "Назва шаблону",
+        "TrainingTemplate": "Шаблон заняття",
+        "User": "Юзер",
+        "Contact": "Клієнт",
+        "CalculationSalary": "Зарплата",
+        "CustomSettings": "Користувацькі",
+        "AdminMark": "Робочий вихід",
+        "CalculationExpenses": "Витрати",
+        "Discount": "Знижка",
+        "Rent": "Оренда"
+    },
+    "scopeNamesPlural": {
+        "WeekTemplate": "Назви шаблонів",
+        "TrainingTemplate": "Конструктор",
+        "User": "Команда",
+        "Contact": "Клієнти",
+        "CalculationSalary": "Зарплата",
+        "CustomSettings": "Користувацькі",
+        "AdminMark": "Робочі виходи",
+        "CalculationExpenses": "Витрати",
+        "Discount": "Знижки",
+        "Rent": "Оренда"
+    }
+}

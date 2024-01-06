@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "parent": "Behorende bij",
+    "dateStart": "Start datum",
+    "dateEnd": "Eind datum",
+    "duration": "Duur",
+    "reminders": "Herinneringen",
+    "dateStartDate": "Startdatum (de hele dag)",
+    "dateEndDate": "Datum einde (hele dag)",
+    "isAllDay": "Is de hele dag"
+  },
+  "links": {
+    "parent": "Behorende bij"
+  },
+  "options": {
+    "status": {
+      "Planned": "Gepland",
+      "Held": "Gedaan",
+      "Not Held": "Niet gedaan"
+    }
+  },
+  "labels": {
+    "Create AdminMark": "Creëer Адмін вихід",
+    "Schedule AdminMark": "Schema Адмін вихід",
+    "Set Held": "Gedaan",
+    "Set Not Held": "Niet gedaan"
+  },
+  "massActions": {
+    "setHeld": "Gedaan",
+    "setNotHeld": "Niet gedaan"
+  },
+  "presetFilters": {
+    "planned": "Gepland",
+    "held": "Gedaan",
+    "todays": "Vandaag"
+  }
+}

@@ -1,0 +1,32 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-user-friends",
+    "relationshipPanels": {
+        "user": {
+            "layout": null
+        },
+        "direction": {
+            "layout": null
+        },
+        "abonements": {
+            "layout": null
+        },
+        "abonementsMeny": {
+            "layout": null
+        },
+        "trainings": {
+            "layout": null
+        },
+        "trainingTemplates": {
+            "layout": null
+        },
+        "branch": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false,
+    "color": "#2bb7d6"
+}

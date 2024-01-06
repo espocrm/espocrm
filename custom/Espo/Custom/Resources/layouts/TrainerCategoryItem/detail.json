@@ -1,0 +1,32 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "trainerCategory"
+                }
+            ],
+            [
+                false,
+                false,
+                {
+                    "name": "to"
+                },
+                {
+                    "name": "from"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "amount"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]

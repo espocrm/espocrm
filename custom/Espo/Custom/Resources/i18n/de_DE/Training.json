@@ -1,0 +1,37 @@
+{
+  "fields": {
+    "parent": "Bezieht sich auf",
+    "dateStart": "Startdatum",
+    "dateEnd": "Enddatum",
+    "duration": "Dauer",
+    "reminders": "Erinnerungen",
+    "dateStartDate": "Startdatum (ganztägig)",
+    "dateEndDate": "Enddatum (ganztägig)",
+    "isAllDay": "Ist ganztägig"
+  },
+  "links": {
+    "parent": "Bezieht sich auf"
+  },
+  "options": {
+    "status": {
+      "Planned": "Geplant",
+      "Held": "Durchgeführt",
+      "Not Held": "Nicht durchgeführt"
+    }
+  },
+  "labels": {
+    "Create Training": "Заняття erstellen",
+    "Schedule Training": "Заняття planen",
+    "Set Held": "Auf durchgeführt setzen",
+    "Set Not Held": "Auf nicht durchgeführt setzen"
+  },
+  "massActions": {
+    "setHeld": "Auf durchgeführt setzen",
+    "setNotHeld": "Auf nicht durchgeführt setzen"
+  },
+  "presetFilters": {
+    "planned": "Geplant",
+    "held": "Durchgeführt",
+    "todays": "Heutige"
+  }
+}

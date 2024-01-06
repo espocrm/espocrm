@@ -1,0 +1,7 @@
+{
+    "cssList": [
+        "__APPEND__",
+        "client/custom/css/schedule-builder.css",
+        "client/custom/css/attendance-sheet.css"
+    ]
+}

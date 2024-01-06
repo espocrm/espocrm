@@ -1,0 +1,3 @@
+{
+    "beforeSaveCustomScript": "name = string\\concatenate(direction.name, ' /', age); \n\n//forwarding\ncolor = direction.color;"
+}

@@ -1,0 +1,33 @@
+[
+    {
+        "name": "number",
+        "widthPx": 75,
+        "align": "left",
+        "label": "Номер"
+    },
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "contact",
+        "label": "Клієнт"
+    },
+    {
+        "name": "groups",
+        "notSortable": true
+    },
+    {
+        "name": "classesLeft",
+        "label": "Залишилось занять"
+    },
+    {
+        "name": "endDate",
+        "label": "Дата закінчення"
+    },
+    {
+        "name": "price",
+        "label": "Ціна"
+    }
+]

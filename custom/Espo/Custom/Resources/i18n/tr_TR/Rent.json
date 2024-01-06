@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "parent": "Üst",
+    "dateStart": "Başlangıç ​​Tarihi",
+    "dateEnd": "Son Tarih",
+    "duration": "Süre ",
+    "status": "Durum ",
+    "reminders": "Hatırlatıcılar"
+  },
+  "links": {
+    "parent": "Üst"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planlandı",
+      "Held": "Düzenlenen",
+      "Not Held": "Düzenlenmedi"
+    }
+  },
+  "labels": {
+    "Create Rent": "Аренда oluştur",
+    "Schedule Rent": "Zamanlama Аренда",
+    "Log Rent": "Аренда günlüğünü kaydet",
+    "Set Held": "Düzenlendi",
+    "Set Not Held": "Düzenlenmedi olarak ayarla"
+  },
+  "massActions": {
+    "setHeld": "Düzenlendi",
+    "setNotHeld": "Düzenlenmedi olarak ayarla"
+  },
+  "presetFilters": {
+    "planned": "Planlandı",
+    "held": "Düzenlenen",
+    "todays": "Bugünün"
+  }
+}

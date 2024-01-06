@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "Батько",
+    "dateStart": "Дата початку",
+    "dateEnd": "Дата завершення",
+    "duration": "Тривалість",
+    "status": "Статус",
+    "reminders": "Нагадування",
+    "dateStartDate": "Дата початку (цілий день)",
+    "dateEndDate": "Дата завершення (цілий день)",
+    "isAllDay": "Є цілий день"
+  },
+  "links": {
+    "parent": "Батько"
+  },
+  "options": {
+    "status": {
+      "Planned": "Заплановано",
+      "Held": "Проведено",
+      "Not Held": "Не проведено"
+    }
+  },
+  "labels": {
+    "Create Event": "Створити Івент",
+    "Schedule Event": "Розклад Івент",
+    "Log Event": "Журнал Івент",
+    "Set Held": "Позначити проведеним",
+    "Set Not Held": "Позначити непроведеним"
+  },
+  "massActions": {
+    "setHeld": "Позначити проведеним",
+    "setNotHeld": "Позначити непроведеним"
+  },
+  "presetFilters": {
+    "planned": "Заплановано",
+    "held": "Проведені",
+    "todays": "Сьогоднішні"
+  }
+}

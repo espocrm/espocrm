@@ -1,0 +1,196 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "freezeDate"
+                },
+                {
+                    "name": "freezeDaysLeft"
+                },
+                false,
+                false
+            ]
+        ],
+        "dynamicLogicVisible": {
+            "conditionGroup": [
+                {
+                    "type": "isTrue",
+                    "attribute": "isFreezed"
+                }
+            ]
+        },
+        "style": "danger",
+        "dynamicLogicStyled": null,
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Призупинено"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "isActive"
+                },
+                {
+                    "name": "activationDateTime"
+                },
+                false,
+                false
+            ]
+        ],
+        "dynamicLogicVisible": {
+            "conditionGroup": [
+                {
+                    "type": "isTrue",
+                    "attribute": "isActive"
+                }
+            ]
+        },
+        "style": "success",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isTrue",
+                    "attribute": "isActive"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Статус"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "number"
+                }
+            ],
+            [
+                {
+                    "name": "contact"
+                },
+                {
+                    "name": "groups"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "abonplan"
+                },
+                {
+                    "name": "discount"
+                }
+            ],
+            [
+                false,
+                false,
+                {
+                    "name": "price"
+                },
+                {
+                    "name": "isPaid"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "success",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isTrue",
+                    "attribute": "isPaid"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Розрахунок"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "startDate"
+                },
+                {
+                    "name": "endDate"
+                },
+                {
+                    "name": "classCount"
+                },
+                {
+                    "name": "classesLeft"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isTrue",
+                    "attribute": "isActive"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Активність"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "note"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "warning",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isNotEmpty",
+                    "attribute": "note"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Журнал"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "warning",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isNotEmpty",
+                    "attribute": "description"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "tabLabel": null,
+        "hidden": false,
+        "customLabel": "Додатково"
+    }
+]

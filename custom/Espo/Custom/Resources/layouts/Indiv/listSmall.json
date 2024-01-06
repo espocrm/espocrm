@@ -1,0 +1,19 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "contacts",
+        "notSortable": true
+    },
+    {
+        "name": "hall",
+        "label": "Зал"
+    },
+    {
+        "name": "dateStart",
+        "label": "Дата початку"
+    }
+]

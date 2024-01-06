@@ -1,0 +1,49 @@
+[
+    {
+        "label": "",
+        "rows": [
+            [
+                {
+                    "name": "name",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "status",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "dateStart",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "duration",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "dateEnd",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "parent",
+                    "fullWidth": true
+                }
+            ],
+            [
+                {
+                    "name": "description",
+                    "fullWidth": true
+                }
+            ]
+        ]
+    }
+]

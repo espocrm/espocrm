@@ -1,0 +1,41 @@
+{
+    "labels": {
+        "Create TrainingTemplate": "Створити Шаблон заняття"
+    },
+    "fields": {
+        "group": "Група",
+        "hall": "Зал",
+        "startTime": "Час початку",
+        "endTime": "Час закінчення",
+        "dayTemplate": "День",
+        "trainerId": "trainerId",
+        "weekDay": "День тижня",
+        "weekTemplate": "Шаблон тижня",
+        "assignedTeams": "Assigned Teams"
+    },
+    "links": {
+        "group": "Група",
+        "hall": "Зал",
+        "dayTemplate": "День",
+        "weekTemplate": "Шаблон тижня"
+    },
+    "tooltips": {
+        "startTime": "Час початку заняття",
+        "endTime": "Час закінчення заняття",
+        "trainerId": "проброс для встановлення тренера з групи",
+        "assignedUser": "Педагог з групи встановлюється автоматично",
+        "assignedTeams": "Scope: generate-shedule.js button\nCopy of teams ids to assign them to training and do not invoke as related"
+    },
+    "options": {
+        "weekDay": {
+            "monday": "Понеділок",
+            "tuesday": "Вівторок",
+            "wednesday": "Середа",
+            "thursday": "Четверг",
+            "friday": "П'ятниця",
+            "saturday": "Cубота",
+            "sunday": "Неділя"
+        },
+        "assignedTeams": []
+    }
+}

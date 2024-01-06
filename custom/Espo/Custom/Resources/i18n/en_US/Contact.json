@@ -1,0 +1,21 @@
+{
+    "fields": {
+        "abonements": "Абонементи",
+        "indivs": "Індиви",
+        "rents": "Аренда",
+        "parentNames": "Ім'я батьків",
+        "indivsMany": "Індиви",
+        "rentPlans": "Планові оренди",
+        "birthday": "Дата народження"
+    },
+    "links": {
+        "abonements": "Абонементи",
+        "indivs": "Індиви",
+        "rents": "Аренда",
+        "indivsMany": "Індиви",
+        "rentPlans": "Планові оренди"
+    },
+    "options": {
+        "parentNames": []
+    }
+}

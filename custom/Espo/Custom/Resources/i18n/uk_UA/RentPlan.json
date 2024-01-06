@@ -1,0 +1,27 @@
+{
+    "labels": {
+        "Create RentPlan": "Створити Планова оренда"
+    },
+    "fields": {
+        "contact": "Клієнт",
+        "price": "Ціна",
+        "priceCurrency": "Ціна (Валюта)",
+        "priceConverted": "Ціна (Конвертована)",
+        "isPaid": "Сплачено",
+        "duration": "Тривалість (днів)",
+        "startDate": "Дата початку",
+        "classCount": "Кількість аренд",
+        "assignedUser": "Відповідальний (адмін)",
+        "discount": "Знижка",
+        "rents": "Оренди"
+    },
+    "links": {
+        "contact": "Клієнт",
+        "discount": "Знижка",
+        "rents": "Оренди"
+    },
+    "tooltips": {
+        "startDate": "Дата початку дії контракту",
+        "classCount": "Планована кількість аренд за період контракту"
+    }
+}

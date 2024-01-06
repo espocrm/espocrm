@@ -1,0 +1,17 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#239651",
+    "iconClass": "fas fa-user-check",
+    "relationshipPanels": {
+        "abonement": {
+            "layout": null
+        },
+        "training": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false
+}

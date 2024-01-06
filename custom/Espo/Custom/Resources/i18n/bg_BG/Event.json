@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "Родител",
+    "dateStart": "Начална дата",
+    "dateEnd": "Крайна дата",
+    "duration": "Продължителност",
+    "status": "Статус",
+    "reminders": "Напомняния",
+    "dateStartDate": "Начална дата (цял ден)",
+    "dateEndDate": "Крайна дата (цял ден)",
+    "isAllDay": "Цял ден"
+  },
+  "links": {
+    "parent": "Родител"
+  },
+  "options": {
+    "status": {
+      "Planned": "Планирано",
+      "Held": "Състояло се",
+      "Not Held": "Несъстояло се"
+    }
+  },
+  "labels": {
+    "Create Event": "Създаване на Івент",
+    "Schedule Event": "Насрочи Івент",
+    "Log Event": "Регистрирай Івент",
+    "Set Held": "Задай като състояло се",
+    "Set Not Held": "Задай като несъстояло се"
+  },
+  "massActions": {
+    "setHeld": "Задай като състояло се",
+    "setNotHeld": "Задай като несъстояло се"
+  },
+  "presetFilters": {
+    "planned": "Планирано",
+    "held": "Състояли се",
+    "todays": "Днешните"
+  }
+}

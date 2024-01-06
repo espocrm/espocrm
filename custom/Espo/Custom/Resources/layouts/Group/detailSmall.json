@@ -1,0 +1,30 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "user"
+                }
+            ],
+            [
+                {
+                    "name": "direction"
+                },
+                {
+                    "name": "age"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "studentsAmount"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": ""
+    }
+]

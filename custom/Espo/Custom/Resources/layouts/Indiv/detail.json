@@ -1,0 +1,106 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "contacts"
+                }
+            ],
+            [
+                {
+                    "name": "status"
+                },
+                {
+                    "name": "hall"
+                }
+            ],
+            [
+                {
+                    "name": "dateStart"
+                },
+                {
+                    "name": "duration"
+                }
+            ],
+            [
+                {
+                    "name": "isCustomPrice"
+                },
+                false
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    },
+    {
+        "rows": [
+            [
+                false,
+                false,
+                {
+                    "name": "defaultPercent"
+                },
+                {
+                    "name": "defaultPrice"
+                }
+            ],
+            [
+                false,
+                false,
+                {
+                    "name": "customPercent"
+                },
+                {
+                    "name": "customPrice"
+                }
+            ],
+            [
+                false,
+                false,
+                false,
+                {
+                    "name": "isPaid"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "success",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isTrue",
+                    "attribute": "isPaid"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Розрахунок"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "warning",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isNotEmpty",
+                    "attribute": "description"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "tabLabel": null,
+        "hidden": false,
+        "customLabel": "Додатково"
+    }
+]

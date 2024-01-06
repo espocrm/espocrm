@@ -1,0 +1,14 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#22b331",
+    "iconClass": "fas fa-calendar-alt",
+    "kanbanViewMode": false,
+    "relationshipPanels": {
+        "trainingTemplates": {
+            "layout": null
+        }
+    }
+}

@@ -1,0 +1,16 @@
+{
+    "fields": {
+        "from": "Від",
+        "to": "До",
+        "amount": "Нарахування",
+        "amountCurrency": "Нарахування (Валюта)",
+        "amountConverted": "Нарахування (Конвертована)",
+        "trainerCategory": "Категорія"
+    },
+    "links": {
+        "trainerCategory": "Категорія"
+    },
+    "labels": {
+        "Create TrainerCategoryItem": "Create Запис категорії"
+    }
+}

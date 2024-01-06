@@ -1,0 +1,19 @@
+{
+    "relationshipPanels": {
+        "groups": {
+            "layout": null
+        },
+        "trainings": {
+            "layout": null
+        },
+        "fines": {
+            "layout": null
+        },
+        "trainerCategory": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false,
+    "color": null,
+    "iconClass": "fas fa-user-circle"
+}

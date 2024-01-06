@@ -1,0 +1,3 @@
+{
+    "beforeSaveCustomScript": "name = assignedUserName;\nstartDateOnly =  array\\at(string\\split(dateStart, ' '), 0);"
+}

@@ -1,0 +1,20 @@
+{
+    "labels": {
+        "Create Hall": "Створити Зал"
+    },
+    "fields": {
+        "branch": "Берег",
+        "number": "Номер",
+        "trainings": "Заняття",
+        "trainingTemplates": "Заняття шаблони",
+        "indivs": "Інидиви",
+        "rents": "Аренда"
+    },
+    "links": {
+        "branch": "Берег",
+        "trainings": "Заняття",
+        "trainingTemplates": "Заняття шаблони",
+        "indivs": "Інидиви",
+        "rents": "Аренда"
+    }
+}

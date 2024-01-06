@@ -1,0 +1,29 @@
+{
+    "view": "custom:views/dashlets/schedule-builder",
+    "aclScope": "Account",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            }
+        },
+        "defaults": {
+            "title": "Конструктор розкладу"
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"},
+                        {"name": "autorefreshInterval"}
+                    ]
+                ]
+            }
+        ]
+    }
+}

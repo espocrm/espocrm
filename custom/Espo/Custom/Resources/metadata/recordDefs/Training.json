@@ -1,0 +1,11 @@
+{
+    "readLoaderClassNameList": [
+        "Espo\\Core\\FieldProcessing\\Reminder\\Loader"
+    ],
+    "saverClassNameList": [
+        "Espo\\Core\\FieldProcessing\\Reminder\\Saver"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Event\\BeforeUpdatePreserveDuration"
+    ]
+}

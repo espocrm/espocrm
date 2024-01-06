@@ -1,0 +1,14 @@
+[
+    {
+        "name": "name",
+        "link": true
+    },
+    {
+        "name": "assignedUser",
+        "align": "left"
+    },
+    {
+        "name": "startTime",
+        "align": "right"
+    }
+]

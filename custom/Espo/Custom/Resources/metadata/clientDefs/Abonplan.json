@@ -1,0 +1,20 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-money-check-alt",
+    "relationshipPanels": {
+        "abonservice": {
+            "layout": null
+        },
+        "pricebook": {
+            "layout": null
+        },
+        "abonements": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false,
+    "color": "#338232"
+}

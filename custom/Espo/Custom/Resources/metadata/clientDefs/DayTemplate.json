@@ -1,0 +1,14 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#ed871d",
+    "iconClass": "fas fa-calendar-day",
+    "kanbanViewMode": false,
+    "relationshipPanels": {
+        "weekTemplate": {
+            "layout": null
+        }
+    }
+}

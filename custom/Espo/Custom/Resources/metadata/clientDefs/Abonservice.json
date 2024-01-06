@@ -1,0 +1,12 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-hand-holding-usd",
+    "relationshipPanels": {
+        "abonplans": {
+            "layout": null
+        }
+    }
+}

@@ -1,0 +1,16 @@
+[
+    {
+        "name": "name",
+        "width": 35,
+        "link": "true",
+        "label": "Ім'я (name)"
+    },
+    {
+        "name": "phoneNumber"
+    },
+    {
+        "name": "emailAddress",
+        "notSortable": true,
+        "label": "Електронна пошта"
+    }
+]

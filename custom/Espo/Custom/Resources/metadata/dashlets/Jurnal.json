@@ -1,0 +1,35 @@
+{
+    "view": "custom:views/dashlets/jurnal",
+    "aclScope": "Account",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar",
+                "required": true
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "branch": {
+                "type": "enum",
+                "options": ["Правий", "Лівий"] 
+            }
+        },
+        "defaults": {
+            "title": "Журнал",
+            "branch": "Правий"
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"},
+                        {"name": "branch"},
+                        {"name": "autorefreshInterval"}
+                    ]
+                ]
+            }
+        ]
+    }
+}

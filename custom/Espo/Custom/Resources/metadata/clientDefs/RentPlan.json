@@ -1,0 +1,20 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#c48122",
+    "iconClass": "fas fa-clipboard-list",
+    "kanbanViewMode": false,
+    "relationshipPanels": {
+        "contact": {
+            "layout": null
+        },
+        "discount": {
+            "layout": null
+        },
+        "rents": {
+            "layout": null
+        }
+    }
+}

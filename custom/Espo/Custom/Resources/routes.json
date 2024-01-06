@@ -1,0 +1,10 @@
+[
+    {
+        "route": "/Hello/test",
+        "method": "get",
+        "params": {
+            "controller": "MyController",
+            "action": "test"
+        }
+    }
+]

@@ -1,0 +1,21 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я (name)"
+    },
+    {
+        "name": "parentNames",
+        "notSortable": true,
+        "label": "Ім'я батьків"
+    },
+    {
+        "name": "phoneNumber",
+        "notSortable": true,
+        "align": "left",
+        "label": "Телефон"
+    },
+    {
+        "name": "birthday"
+    }
+]

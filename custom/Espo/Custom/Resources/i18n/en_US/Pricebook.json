@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "isActive": "Активний",
+        "abonplans": "Абонплани"
+    },
+    "links": {
+        "abonplans": "Абонплани"
+    },
+    "labels": {
+        "Create Pricebook": "Create Цінник"
+    },
+    "tooltips": {
+        "isActive": "Якщо цінник не є активним, ви не зможете додати його до ціноутворення"
+    }
+}

@@ -1,0 +1,20 @@
+{
+    "labels": {
+        "Create CategoryItemIndiv": "Створити Індив категорії"
+    },
+    "fields": {
+        "trainerCategory": "Категорія",
+        "clientCount": "Кількість клієнтів",
+        "price": "Ціна",
+        "priceCurrency": "Ціна (Валюта)",
+        "priceConverted": "Ціна (Конвертована)",
+        "percent": "Процент"
+    },
+    "links": {
+        "trainerCategory": "Категорія"
+    },
+    "tooltips": {
+        "clientCount": "Кількість людей на індиві",
+        "percent": "Процент від ціни, який нараховується тренеру"
+    }
+}

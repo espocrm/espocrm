@@ -1,0 +1,126 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-id-card",
+    "relationshipPanels": {
+        "abonplan": {
+            "layout": null
+        },
+        "contact": {
+            "layout": null
+        },
+        "group": {
+            "layout": null
+        },
+        "groups": {
+            "layout": null
+        },
+        "marks": {
+            "layout": null
+        },
+        "discount": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false,
+    "color": "#e6cb6c",
+    "menu": {
+        "detail": {
+            "buttons": [
+                "__APPEND__",
+                {
+                    "label": "Активувати",
+                    "name": "activate",
+                    "action": "Activate",
+                    "style": "warning",
+                    "acl": "edit",
+                    "aclScope": "Abonement",
+                    "data": {
+                        "handler": "custom:abonement-activate"
+                    },
+                    "initFunction": "initActivation"
+                },
+                {
+                    "label": "Призупинити",
+                    "name": "freeze",
+                    "action": "Freeze",
+                    "style": "default",
+                    "acl": "edit",
+                    "aclScope": "Abonement",
+                    "data": {
+                        "handler": "custom:abonement-freeze"
+                    },
+                    "initFunction": "initFreezing"
+                },
+                {
+                    "label": "Продовжити",
+                    "name": "unfreeze",
+                    "action": "Unfreeze",
+                    "style": "danger",
+                    "acl": "edit",
+                    "aclScope": "Abonement",
+                    "data": {
+                        "handler": "custom:abonement-unfreeze"
+                    },
+                    "initFunction": "initUnfreezing"
+                }
+            ]
+        }
+    },
+    "dynamicLogic": {
+        "fields": {
+            "activationDateTime": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isActivated"
+                        }
+                    ]
+                }
+            },
+            "startDate": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isActivated"
+                        }
+                    ]
+                }
+            },
+            "abonplan": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isInitialized"
+                        }
+                    ]
+                }
+            },
+            "discount": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isInitialized"
+                        }
+                    ]
+                }
+            },
+            "contact": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isInitialized"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

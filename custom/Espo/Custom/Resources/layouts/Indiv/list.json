@@ -1,0 +1,24 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "assignedUser",
+        "label": "Відповідальний (Педагог)"
+    },
+    {
+        "name": "contacts",
+        "notSortable": true,
+        "label": "Клієнти"
+    },
+    {
+        "name": "hall",
+        "label": "Зал"
+    },
+    {
+        "name": "dateStart",
+        "label": "Дата початку"
+    }
+]

@@ -1,0 +1,15 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-map-marker-alt",
+    "relationshipPanels": {
+        "halls": {
+            "layout": null
+        },
+        "groups": {
+            "layout": null
+        }
+    }
+}

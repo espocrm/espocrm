@@ -1,0 +1,35 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "trainerCategory"
+                }
+            ],
+            [
+                {
+                    "name": "clientCount"
+                },
+                {
+                    "name": "price"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "percent"
+                }
+            ],
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]

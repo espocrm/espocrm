@@ -1,0 +1,3 @@
+{
+    "beforeSaveCustomScript": "name = user.lastName;"
+}

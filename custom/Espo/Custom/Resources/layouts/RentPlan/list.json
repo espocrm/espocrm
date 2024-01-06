@@ -1,0 +1,19 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "contact"
+    },
+    {
+        "name": "startDate"
+    },
+    {
+        "name": "duration"
+    },
+    {
+        "name": "price"
+    }
+]

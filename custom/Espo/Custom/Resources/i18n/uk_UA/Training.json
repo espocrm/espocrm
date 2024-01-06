@@ -1,0 +1,59 @@
+{
+    "fields": {
+        "parent": "Батько",
+        "dateStart": "Дата початку",
+        "dateEnd": "Дата завершення",
+        "duration": "Тривалість",
+        "status": "Статус",
+        "reminders": "Нагадування",
+        "dateStartDate": "Дата початку (цілий день)",
+        "dateEndDate": "Дата завершення (цілий день)",
+        "isAllDay": "Є цілий день",
+        "group": "Група",
+        "hall": "Зал",
+        "color": "Колір",
+        "marks": "Відмітки",
+        "startDateOnly": "StartDateOnly",
+        "branchName": "BranchName",
+        "user": "Заміна",
+        "replacement": "Заміна",
+        "replacedWho": "ReplacedWho",
+        "assignedUser": "Відповідальний (педагог)"
+    },
+    "links": {
+        "parent": "Батько",
+        "group": "Група",
+        "hall": "Зал",
+        "marks": "Відмітки",
+        "user": "Заміна",
+        "replacement": "Заміна"
+    },
+    "options": {
+        "status": {
+            "Planned": "Заплановано",
+            "Held": "Проведено",
+            "Not Held": "Не проведено"
+        }
+    },
+    "labels": {
+        "Create Training": "Створити Заняття",
+        "Schedule Training": "Розклад Заняття",
+        "Log Training": "Журнал Заняття",
+        "Set Held": "Позначити проведеним",
+        "Set Not Held": "Позначити непроведеним"
+    },
+    "massActions": {
+        "setHeld": "Позначити проведеним",
+        "setNotHeld": "Позначити непроведеним"
+    },
+    "presetFilters": {
+        "planned": "Заплановано",
+        "held": "Проведені",
+        "todays": "Сьогоднішні"
+    },
+    "tooltips": {
+        "startDateOnly": "For searching by date",
+        "branchName": "for jurnal to reduce complexity of hall filter",
+        "assignedUser": "Встановлюється автоматично з групи або поля заміна"
+    }
+}

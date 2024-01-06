@@ -1,0 +1,32 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "trainerCategory"
+                }
+            ],
+            [
+                false,
+                false,
+                {
+                    "name": "from"
+                },
+                {
+                    "name": "to"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "amount"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": ""
+    }
+]

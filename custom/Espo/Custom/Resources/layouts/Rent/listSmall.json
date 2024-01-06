@@ -1,0 +1,15 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "hall",
+        "label": "Зал"
+    },
+    {
+        "name": "dateStart",
+        "label": "Дата початку"
+    }
+]

@@ -1,0 +1,41 @@
+{
+    "entity": true,
+    "layouts": true,
+    "tab": true,
+    "acl": true,
+    "aclPortal": true,
+    "aclPortalLevelList": [
+        "all",
+        "account",
+        "contact",
+        "own",
+        "no"
+    ],
+    "customizable": true,
+    "importable": true,
+    "calendar": true,
+    "activity": true,
+    "notifications": true,
+    "activityStatusList": [
+        "Planned"
+    ],
+    "historyStatusList": [
+        "Held",
+        "Not Held"
+    ],
+    "completedStatusList": [
+        "Held"
+    ],
+    "canceledStatusList": [
+        "Not Held"
+    ],
+    "statusField": "status",
+    "statusFieldLocked": true,
+    "stream": true,
+    "disabled": false,
+    "type": "Event",
+    "module": "Custom",
+    "object": true,
+    "isCustom": true,
+    "kanbanStatusIgnoreList": null
+}

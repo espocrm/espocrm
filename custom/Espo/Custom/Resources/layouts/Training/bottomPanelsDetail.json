@@ -1,0 +1,12 @@
+{
+    "_delimiter_": {
+        "disabled": true
+    },
+    "scheduler": {
+        "index": 0
+    },
+    "stream": {
+        "sticked": true,
+        "index": 1
+    }
+}

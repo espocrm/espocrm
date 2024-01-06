@@ -1,0 +1,97 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "recordViews": {
+        "detail": "views/templates/event/record/detail"
+    },
+    "activityDefs": {
+        "activitiesCreate": true,
+        "historyCreate": true
+    },
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "scheduler",
+                "label": "Scheduler",
+                "view": "crm:views/meeting/record/panels/scheduler",
+                "disabled": true,
+                "order": 3
+            }
+        ],
+        "edit": [
+            {
+                "name": "scheduler",
+                "label": "Scheduler",
+                "view": "crm:views/meeting/record/panels/scheduler",
+                "disabled": true,
+                "order": 1
+            }
+        ]
+    },
+    "filterList": [
+        {
+            "name": "planned"
+        },
+        {
+            "name": "held",
+            "style": "success"
+        },
+        {
+            "name": "todays"
+        }
+    ],
+    "forcePatchAttributeDependencyMap": {
+        "dateEnd": [
+            "dateStart"
+        ],
+        "dateEndDate": [
+            "dateStartDate"
+        ]
+    },
+    "dynamicLogic": {
+        "fields": {
+            "duration": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isAllDay"
+                        }
+                    ]
+                }
+            },
+            "reminders": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "assignedUserId",
+                            "data": {
+                                "field": "assignedUser"
+                            }
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "color": "#9c1cb0",
+    "iconClass": "fas fa-users",
+    "relationshipPanels": {
+        "group": {
+            "layout": null
+        },
+        "hall": {
+            "layout": null
+        },
+        "marks": {
+            "layout": null
+        },
+        "replacement": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false
+}

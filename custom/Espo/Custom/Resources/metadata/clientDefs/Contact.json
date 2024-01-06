@@ -1,0 +1,22 @@
+{
+    "relationshipPanels": {
+        "abonements": {
+            "layout": null
+        },
+        "indivs": {
+            "layout": null
+        },
+        "rents": {
+            "layout": null
+        },
+        "indivsMany": {
+            "layout": null
+        },
+        "rentPlans": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false,
+    "color": "#a4c5e0",
+    "iconClass": "fas fa-id-badge"
+}

@@ -1,0 +1,82 @@
+{
+    "fields": {
+        "groups": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": true,
+            "isCustom": true
+        },
+        "trainings": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": true,
+            "isCustom": true
+        },
+        "fines": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": true,
+            "isCustom": true
+        },
+        "trainerCategory": {
+            "type": "link"
+        }
+    },
+    "links": {
+        "groups": {
+            "type": "hasMany",
+            "foreign": "user",
+            "entity": "Group",
+            "audited": false,
+            "isCustom": true
+        },
+        "trainings": {
+            "type": "hasMany",
+            "foreign": "replacement",
+            "entity": "Training",
+            "audited": false,
+            "isCustom": true
+        },
+        "fines": {
+            "type": "hasMany",
+            "foreign": "user",
+            "entity": "Fine",
+            "audited": false,
+            "isCustom": true
+        },
+        "trainerCategory": {
+            "type": "belongsTo",
+            "foreign": "users",
+            "entity": "TrainerCategory",
+            "audited": false,
+            "isCustom": true
+        }
+    },
+    "collection": {
+        "orderBy": "userName",
+        "order": "asc",
+        "textFilterFields": [
+            "name",
+            "userName",
+            "emailAddress"
+        ],
+        "fullTextSearch": false,
+        "countDisabled": false
+    },
+    "optimisticConcurrencyControl": false
+}

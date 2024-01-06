@@ -1,0 +1,39 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#46a323",
+    "iconClass": "fas fa-calendar-day",
+    "kanbanViewMode": true,
+    "relationshipPanels": {
+        "group": {
+            "layout": null
+        },
+        "hall": {
+            "layout": null
+        },
+        "weekTemplate": {
+            "layout": null
+        }
+    },
+    "menu": {
+        "list": {
+            "buttons": [
+                "__APPEND__",
+                {
+                    "label": "Створити заняття",
+                    "name": "generate",
+                    "action": "Generate",
+                    "style": "success",
+                    "acl": "edit",
+                    "aclScope": "TrainingTemplate",
+                    "data": {
+                        "handler": "custom:generate-schedule"
+                    },
+                    "initFunction": "initGenerate"
+                }
+            ]
+        }
+    }
+}

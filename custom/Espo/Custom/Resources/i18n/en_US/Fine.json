@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "user": "Педагог",
+        "amount": "Сума",
+        "amountCurrency": "Сума (Валюта)",
+        "amountConverted": "Сума (Конвертована)",
+        "date": "Дата"
+    },
+    "links": {
+        "user": "Педагог"
+    },
+    "labels": {
+        "Create Fine": "Create Штраф"
+    }
+}

@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "parent": "Padre",
+    "dateStart": "Fecha de incio",
+    "dateEnd": "Fecha final",
+    "duration": "Duracion",
+    "status": "Estátus",
+    "reminders": "Recordatorios"
+  },
+  "links": {
+    "parent": "Padre"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planeado",
+      "Held": "Retenidas",
+      "Not Held": "Pendientes"
+    }
+  },
+  "labels": {
+    "Create Training": "Crear Заняття",
+    "Schedule Training": "Agendar Заняття",
+    "Log Training": "Registrar Заняття",
+    "Set Held": "Marcar como Retenida",
+    "Set Not Held": "Marcar como Pendiente"
+  },
+  "massActions": {
+    "setHeld": "Marcar como Retenida",
+    "setNotHeld": "Marcar como Pendiente"
+  },
+  "presetFilters": {
+    "planned": "Planeado",
+    "held": "Retenida",
+    "todays": "Hoy"
+  }
+}

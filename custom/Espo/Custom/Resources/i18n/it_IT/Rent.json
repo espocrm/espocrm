@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "Genitore",
+    "dateStart": "Data Inizio",
+    "dateEnd": "Data Fine",
+    "duration": "Durata",
+    "status": "Stato",
+    "reminders": "Promemoria",
+    "dateStartDate": "Data Inizio (tutto il giorno)",
+    "dateEndDate": "Data Fine (tutto il giorno)",
+    "isAllDay": "È tutto il giorno"
+  },
+  "links": {
+    "parent": "Genitore"
+  },
+  "options": {
+    "status": {
+      "Planned": "Pianificato",
+      "Held": "Effettuata",
+      "Not Held": "Non Effettuata"
+    }
+  },
+  "labels": {
+    "Create Rent": "Crea Аренда",
+    "Schedule Rent": "Pianifica Аренда",
+    "Log Rent": "Registra Аренда",
+    "Set Held": "Effettuata",
+    "Set Not Held": "Non Effettuata"
+  },
+  "massActions": {
+    "setHeld": "Effettuata",
+    "setNotHeld": "Non Effettuata"
+  },
+  "presetFilters": {
+    "planned": "Pianificato",
+    "held": "Effettuata",
+    "todays": "Di Oggi"
+  }
+}

@@ -1,0 +1,19 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#302cc7",
+    "iconClass": "fas fa-sort-amount-up",
+    "relationshipPanels": {
+        "trainerCategoryItems": {
+            "layout": null
+        },
+        "users": {
+            "layout": null
+        },
+        "categoryIndivPrices": {
+            "layout": null
+        }
+    }
+}

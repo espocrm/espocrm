@@ -1,0 +1,33 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "isInUAH"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "percent"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "amount"
+                }
+            ],
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]

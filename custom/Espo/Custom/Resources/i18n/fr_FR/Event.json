@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "dateStart": "Date de début",
+    "dateStartDate": "Date de début (toute la journée)",
+    "dateEndDate": "Date de fin (toute la journée)",
+    "isAllDay": "Est toute la journée"
+  },
+  "labels": {
+    "Create Event": "Créer un Івент",
+    "Schedule Event": "Programmer un Івент",
+    "Log Event": "Log de Івент"
+  }
+}

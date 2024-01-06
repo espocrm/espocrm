@@ -1,0 +1,27 @@
+[
+    {
+        "name": "name",
+        "width": 30,
+        "link": true,
+        "align": "left",
+        "label": "Ім'я"
+    },
+    {
+        "name": "isOneTime",
+        "width": 10,
+        "align": "left",
+        "label": "Разова"
+    },
+    {
+        "name": "rentPlan",
+        "label": "Планова оренда"
+    },
+    {
+        "name": "hall",
+        "label": "Зал"
+    },
+    {
+        "name": "dateStart",
+        "label": "Дата початку"
+    }
+]

@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "Pagrindinis",
+    "dateStart": "Pradžios data",
+    "dateEnd": "Pabaigos data",
+    "duration": "Trukmė",
+    "status": "Statusas",
+    "reminders": "Priminimai",
+    "dateStartDate": "Data Pradžia (visą dieną)",
+    "dateEndDate": "Data Pabaiga (visą dieną)",
+    "isAllDay": "Ar visą dieną"
+  },
+  "links": {
+    "parent": "Pagrindinis"
+  },
+  "options": {
+    "status": {
+      "Planned": "Suplanuota",
+      "Held": "Įvykdyta",
+      "Not Held": "Neįvykdyta"
+    }
+  },
+  "labels": {
+    "Create AdminMark": "Sukurti Адмін вихід ",
+    "Schedule AdminMark": "Suplanuoti Адмін вихід",
+    "Log AdminMark": "Žurnalas Адмін вихід",
+    "Set Held": "Pažymėti kaip įvykdytą",
+    "Set Not Held": "Pažymėti kaip neįvykdytą"
+  },
+  "massActions": {
+    "setHeld": "Pažymėti kaip įvykdytą",
+    "setNotHeld": "Pažymėti kaip neįvykdytą"
+  },
+  "presetFilters": {
+    "planned": "Suplanuota",
+    "held": "Įvykdyta",
+    "todays": "Šiandienos"
+  }
+}

@@ -1,0 +1,28 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                false
+            ],
+            [
+                {
+                    "name": "clientCount"
+                },
+                {
+                    "name": "price"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "percent"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]

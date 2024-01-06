@@ -1,0 +1,44 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                }
+            ],
+            [
+                {
+                    "name": "weekDay"
+                },
+                {
+                    "name": "weekTemplate"
+                }
+            ],
+            [
+                {
+                    "name": "hall"
+                },
+                {
+                    "name": "group"
+                }
+            ],
+            [
+                false,
+                false,
+                {
+                    "name": "startTime"
+                },
+                {
+                    "name": "endTime"
+                }
+            ],
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]

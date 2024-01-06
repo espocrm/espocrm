@@ -1,0 +1,39 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "pricebook"
+                }
+            ],
+            [
+                {
+                    "name": "abonservice"
+                },
+                {
+                    "name": "price"
+                }
+            ],
+            [
+                false,
+                false,
+                {
+                    "name": "durationInDays"
+                },
+                {
+                    "name": "classCount"
+                }
+            ],
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]

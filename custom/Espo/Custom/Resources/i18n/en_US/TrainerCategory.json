@@ -1,0 +1,15 @@
+{
+    "fields": {
+        "trainerCategoryItems": "Записи категорії",
+        "users": "Педагоги",
+        "categoryIndivPrices": "Ціни індиву"
+    },
+    "links": {
+        "trainerCategoryItems": "Записи категорії",
+        "users": "Педагоги",
+        "categoryIndivPrices": "Ціни індиву"
+    },
+    "labels": {
+        "Create TrainerCategory": "Create Категорія"
+    }
+}

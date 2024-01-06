@@ -1,0 +1,25 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я (name)"
+    },
+    {
+        "name": "title",
+        "width": 18,
+        "label": "Посада"
+    },
+    {
+        "name": "trainerCategory"
+    },
+    {
+        "name": "emailAddress",
+        "width": 20,
+        "label": "Електронна пошта"
+    },
+    {
+        "name": "isActive",
+        "width": 10,
+        "label": "Активний"
+    }
+]

@@ -1,0 +1,36 @@
+{
+  "fields": {
+    "parent": "Forelder",
+    "dateStart": "Startdato",
+    "dateEnd": "Sluttdato",
+    "duration": "Varighet",
+    "reminders": "Påminnelser",
+    "dateEndDate": "Sluttdato (hele dagen)"
+  },
+  "links": {
+    "parent": "Forelder"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planlagt",
+      "Held": "Gjennomført",
+      "Not Held": "Ikke gjennomført"
+    }
+  },
+  "labels": {
+    "Create AdminMark": "Opprett Адмін вихід",
+    "Schedule AdminMark": "Planlegg Адмін вихід",
+    "Log AdminMark": "Logg Адмін вихід",
+    "Set Held": "Merk som gjennomført",
+    "Set Not Held": "Merk som ikke gjennomført"
+  },
+  "massActions": {
+    "setHeld": "Merk som gjennomført",
+    "setNotHeld": "Merk som ikke gjennomført"
+  },
+  "presetFilters": {
+    "planned": "Planlagt",
+    "held": "Gjennomført",
+    "todays": "Dagens"
+  }
+}

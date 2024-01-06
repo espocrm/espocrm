@@ -1,0 +1,57 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#bd6e35",
+    "iconClass": "fas fa-file-download",
+    "kanbanViewMode": false,
+    "dynamicLogic": {
+        "fields": {
+            "percent": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isInUAH"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isInUAH"
+                        }
+                    ]
+                }
+            },
+            "amount": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isInUAH"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isInUAH"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "relationshipPanels": {
+        "abonements": {
+            "layout": null
+        },
+        "rentPlans": {
+            "layout": null
+        }
+    }
+}

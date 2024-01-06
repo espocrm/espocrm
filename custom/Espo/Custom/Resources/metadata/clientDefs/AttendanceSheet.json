@@ -1,0 +1,12 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#4fab95",
+    "iconClass": "fas fa-book-open",
+    "kanbanViewMode": false,
+    "views": {
+        "list": "custom:views/attendance-sheet"
+    }
+}

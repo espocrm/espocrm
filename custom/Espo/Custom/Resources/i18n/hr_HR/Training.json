@@ -1,0 +1,35 @@
+{
+  "fields": {
+    "parent": "Nadređen",
+    "dateStart": "Početni datum",
+    "dateEnd": "Završni datum",
+    "duration": "Trajanje",
+    "reminders": "Podsjetnici"
+  },
+  "links": {
+    "parent": "Nadređen"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planiran",
+      "Held": "Održan",
+      "Not Held": "Nije održan"
+    }
+  },
+  "labels": {
+    "Create Training": "Kreiraj Заняття",
+    "Schedule Training": "Zakaži Заняття",
+    "Log Training": "Zabilježi {entitiTipeTranslated}",
+    "Set Held": "Postavi kao održano",
+    "Set Not Held": "Postavi kao nije održano"
+  },
+  "massActions": {
+    "setHeld": "Postavi kao održano",
+    "setNotHeld": "Postavi kao nije održano"
+  },
+  "presetFilters": {
+    "planned": "Planiran",
+    "held": "Održan",
+    "todays": "Današnji"
+  }
+}

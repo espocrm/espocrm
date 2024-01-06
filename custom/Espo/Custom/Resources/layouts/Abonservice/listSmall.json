@@ -1,0 +1,18 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "daysCount",
+        "label": "Кількість днів"
+    },
+    {
+        "name": "classCount",
+        "label": "Кількість занять"
+    },
+    {
+        "name": "isActive"
+    }
+]

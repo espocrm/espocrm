@@ -1,0 +1,20 @@
+{
+    "labels": {
+        "Create CategoryIndivPrice": "Створити Ціна індиву"
+    },
+    "fields": {
+        "clientCount": "Кількість клієнтів",
+        "percent": "Відсоток",
+        "price": "Ціна",
+        "priceCurrency": "Ціна (Валюта)",
+        "priceConverted": "Ціна (Конвертована)",
+        "trainerCategory": "Категорія"
+    },
+    "tooltips": {
+        "clientCount": "Кількість людей на індиві",
+        "percent": "Процент від ціни, який нараховується тренеру"
+    },
+    "links": {
+        "trainerCategory": "Категорія"
+    }
+}

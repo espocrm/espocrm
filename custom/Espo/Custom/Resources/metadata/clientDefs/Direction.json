@@ -1,0 +1,14 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-share-alt",
+    "relationshipPanels": {
+        "groups": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false,
+    "color": "#942822"
+}

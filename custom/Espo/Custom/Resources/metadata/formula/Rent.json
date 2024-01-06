@@ -1,0 +1,3 @@
+{
+    "beforeSaveCustomScript": "if ( !isOneTime ) {\n    name = string\\concatenate(hall.number, '/ ', rentPlan.name);\n}"
+}

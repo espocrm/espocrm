@@ -1,0 +1,11 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "user",
+        "label": "Педагог"
+    }
+]

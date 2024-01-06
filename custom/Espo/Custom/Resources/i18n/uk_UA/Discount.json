@@ -1,0 +1,21 @@
+{
+    "labels": {
+        "Create Discount": "Створити Знижка"
+    },
+    "fields": {
+        "percent": "Відсоток(%)",
+        "amount": "Сумма(грн)",
+        "isInUAH": "В гривнях",
+        "abonements": "Абонементи",
+        "rentPlans": "Планова оренда"
+    },
+    "tooltips": {
+        "percent": "Знижка у відсотках",
+        "amount": "Знижка у гривнях",
+        "isInUAH": "Задати знижку в гривнях"
+    },
+    "links": {
+        "abonements": "Абонементи",
+        "rentPlans": "Планова оренда"
+    }
+}

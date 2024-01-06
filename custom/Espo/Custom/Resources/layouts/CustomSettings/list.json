@@ -1,0 +1,19 @@
+[
+    {
+        "name": "name",
+        "width": 25,
+        "link": true,
+        "align": "left",
+        "label": "Ім'я"
+    },
+    {
+        "name": "value",
+        "width": 25,
+        "align": "left",
+        "label": "Значення"
+    },
+    {
+        "name": "description",
+        "label": "Опис"
+    }
+]

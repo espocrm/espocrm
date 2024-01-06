@@ -1,0 +1,8 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#cb682e",
+    "iconClass": "fas fa-file-invoice-dollar"
+}

@@ -1,0 +1,31 @@
+{
+    "labels": {
+        "Create Group": "Створити Група"
+    },
+    "fields": {
+        "age": "Вік",
+        "color": "Колір",
+        "studentsAmount": "Кількість учнів",
+        "user": "Педагог",
+        "direction": "Напрямок",
+        "abonements": "Абонементи",
+        "abonementsMeny": "Абонементи",
+        "trainings": "Заняття",
+        "trainingTemplates": "Заняття шаблони",
+        "branch": "Берег"
+    },
+    "tooltips": {
+        "age": "Вік учнів, наприклад 8-14, 14+",
+        "color": "Колір групи в календарі в форматі HEX, приклад: #fa4b07",
+        "studentsAmount": "Максимальна кількість учнів в групі"
+    },
+    "links": {
+        "user": "Педагог",
+        "direction": "Напрямок",
+        "abonements": "Абонементи",
+        "abonementsMeny": "Абонементи",
+        "trainings": "Заняття",
+        "trainingTemplates": "Заняття шаблони",
+        "branch": "Берег"
+    }
+}

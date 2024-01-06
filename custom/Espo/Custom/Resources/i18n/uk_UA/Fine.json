@@ -1,0 +1,15 @@
+{
+    "labels": {
+        "Create Fine": "Створити Штраф"
+    },
+    "fields": {
+        "user": "Педагог",
+        "amount": "Сума",
+        "amountCurrency": "Сума (Валюта)",
+        "amountConverted": "Сума (Конвертована)",
+        "date": "Дата"
+    },
+    "links": {
+        "user": "Педагог"
+    }
+}

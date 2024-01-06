@@ -1,0 +1,39 @@
+{
+    "fields": {
+        "parent": "Parent",
+        "dateStart": "Date Start",
+        "dateEnd": "Date End",
+        "duration": "Duration",
+        "status": "Status",
+        "reminders": "Reminders",
+        "dateStartDate": "Date Start (all day)",
+        "dateEndDate": "Date End (all day)",
+        "isAllDay": "Is All-Day"
+    },
+    "links": {
+        "parent": "Parent"
+    },
+    "options": {
+        "status": {
+            "Planned": "Planned",
+            "Held": "Held",
+            "Not Held": "Not Held"
+        }
+    },
+    "labels": {
+        "Create Event": "Create Івент",
+        "Schedule Event": "Schedule Івент",
+        "Log Event": "Log Івент",
+        "Set Held": "Set Held",
+        "Set Not Held": "Set Not Held"
+    },
+    "massActions": {
+        "setHeld": "Set Held",
+        "setNotHeld": "Set Not Held"
+    },
+    "presetFilters": {
+        "planned": "Planned",
+        "held": "Held",
+        "todays": "Today's"
+    }
+}

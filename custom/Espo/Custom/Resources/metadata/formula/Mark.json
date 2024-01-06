@@ -1,0 +1,3 @@
+{
+    "beforeSaveCustomScript": "name = datetime\\format(datetime\\now(), 'Europe/Kiev', 'DD.MM.YYYY HH:mm');\n\n//add default team\n$defaultTeamId = env\\userAttribute('defaultTeamId');\n$defaultTeamIdList = list($defaultTeamId);\nentity\\addLinkMultipleId('teams', $defaultTeamIdList);"
+}

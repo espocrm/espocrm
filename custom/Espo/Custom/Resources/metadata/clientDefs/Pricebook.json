@@ -1,0 +1,12 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-dollar-sign",
+    "relationshipPanels": {
+        "abonplans": {
+            "layout": null
+        }
+    }
+}

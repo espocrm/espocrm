@@ -1,0 +1,55 @@
+{
+    "fields": {
+        "classCount": "Кількість занять",
+        "classesLeft": "Залишилось занять",
+        "endDate": "Дата закінчення",
+        "isActive": "Активний",
+        "isPaid": "Сплачено",
+        "price": "Ціна",
+        "priceCurrency": "Ціна (Валюта)",
+        "priceConverted": "Ціна (Конвертована)",
+        "startDate": "Дата початку",
+        "abonservice": "Абонсервіс",
+        "abonplan": "Абонплан",
+        "contact": "Клієнт",
+        "group": "Група",
+        "groups": "Групи",
+        "marks": "Відмітки",
+        "isInitialized": "IsInitialized",
+        "note": "Нагадування",
+        "number": "Номер",
+        "discount": "Знижка",
+        "isActivated": "Активовано",
+        "activationDateTime": "Дата активації",
+        "isFreezed": "Призупинено",
+        "freezeDate": "Дата призупинення",
+        "freezeDaysLeft": "Залишилося днів",
+        "lastMark": "LastMark",
+        "lastUpdate": "LastUpdate"
+    },
+    "links": {
+        "abonservice": "Абонсервіс",
+        "abonplan": "Абонплан",
+        "contact": "Клієнт",
+        "group": "Група",
+        "groups": "Групи",
+        "marks": "Відмітки",
+        "discount": "Знижка"
+    },
+    "labels": {
+        "Create Abonement": "Create Абонемент"
+    },
+    "tooltips": {
+        "classCount": "Кількість занять в абонементі",
+        "endDate": "Дата закінчення дій абонементу",
+        "isActive": "Активной якщо: сплачений, активований, є заняття, срок дії не вийшов та не призупинений",
+        "startDate": "Дата початку дії абонементу",
+        "isInitialized": "set as true after initialization to skip recalculation after every next updates",
+        "isActivated": "become true after Activate button pressed",
+        "activationDateTime": "Дата активації встановлюється після натискання кнопки активувати",
+        "isFreezed": "Абонімент заморожено",
+        "freezeDaysLeft": "Залишилося днів, після замороження абоніменту",
+        "lastMark": "Using in attendance sheet to trigger formula-script to recalculate classLeft fied",
+        "lastUpdate": "Using to trigger formula-script"
+    }
+}

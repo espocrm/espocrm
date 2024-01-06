@@ -1,0 +1,17 @@
+{
+    "fields": {
+        "groups": "Групи",
+        "trainings": "Заняття",
+        "fines": "Штрафи",
+        "trainerCategory": "Категорія"
+    },
+    "links": {
+        "groups": "Групи",
+        "trainings": "Заняття",
+        "fines": "Штрафи",
+        "trainerCategory": "Категорія"
+    },
+    "labels": {
+        "Create User": "Створити Юзер"
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "fields": {
+        "parent": "Parent",
+        "dateStart": "Date Start",
+        "dateEnd": "Date End",
+        "duration": "Duration",
+        "status": "Status",
+        "reminders": "Reminders",
+        "dateStartDate": "Date Start (all day)",
+        "dateEndDate": "Date End (all day)",
+        "isAllDay": "Is All-Day",
+        "hall": "Зал",
+        "contact": "Клієнт",
+        "branchName": "BranchName",
+        "contacts": "Клієнти",
+        "defaultPrice": "Ціна",
+        "defaultPriceCurrency": "Ціна (Валюта)",
+        "defaultPriceConverted": "Ціна (Конвертована)",
+        "isCustomPrice": "Клієнтська ціна",
+        "customPrice": "Ціна",
+        "customPriceCurrency": "Ціна (Валюта)",
+        "customPriceConverted": "Ціна (Конвертована)",
+        "defaultPercent": "Відсоток",
+        "customPercent": "Відсоток",
+        "isPaid": "Сплачено"
+    },
+    "links": {
+        "parent": "Parent",
+        "hall": "Зал",
+        "contact": "Клієнт",
+        "contacts": "Клієнти"
+    },
+    "options": {
+        "status": {
+            "Planned": "Planned",
+            "Held": "Held",
+            "Not Held": "Not Held"
+        }
+    },
+    "labels": {
+        "Create Indiv": "Create Індив",
+        "Schedule Indiv": "Schedule Індив",
+        "Log Indiv": "Log Індив",
+        "Set Held": "Set Held",
+        "Set Not Held": "Set Not Held"
+    },
+    "massActions": {
+        "setHeld": "Set Held",
+        "setNotHeld": "Set Not Held"
+    },
+    "presetFilters": {
+        "planned": "Planned",
+        "held": "Held",
+        "todays": "Today's"
+    },
+    "tooltips": {
+        "branchName": "forwarding for branch name from",
+        "isCustomPrice": "Задати ціну вручну для цього індиву",
+        "defaultPercent": "Відсоток який надходить студії",
+        "customPercent": "Відсоток від ціни, який надходить студії"
+    }
+}

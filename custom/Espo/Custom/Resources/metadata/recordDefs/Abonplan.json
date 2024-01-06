@@ -1,0 +1,4 @@
+{
+    "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General",
+    "updateDuplicateCheck": false
+}

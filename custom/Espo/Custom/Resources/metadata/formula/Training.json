@@ -1,0 +1,3 @@
+{
+    "beforeSaveCustomScript": "name = string\\concatenate(hall.number,  '/ ', group.name);\nstartDateOnly =  array\\at(string\\split(dateStart, ' '), 0);\n\n//forwarding\nbranchName = hall.branchName;\n\nif (replacementId == null) {\n    assignedUserId = group.userId;\n    assignedUserName = group.userName;\n    replacedWho = null;\n    color = group.color;\n} else {\n    assignedUserId = replacementId;\n    assignedUserName = replacementName;\n    //forwading\n    replacedWho = group.userId;\n    color = '#a60306';\n}"
+}

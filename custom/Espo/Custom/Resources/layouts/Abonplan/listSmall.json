@@ -1,0 +1,19 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "abonservice",
+        "label": "Абонсервіс"
+    },
+    {
+        "name": "pricebook",
+        "label": "Цінник"
+    },
+    {
+        "name": "price",
+        "label": "Ціна"
+    }
+]

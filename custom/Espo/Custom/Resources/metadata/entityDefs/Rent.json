@@ -1,0 +1,248 @@
+{
+    "fields": {
+        "name": {
+            "type": "varchar",
+            "required": false,
+            "pattern": "$noBadCharacters",
+            "options": []
+        },
+        "status": {
+            "type": "enum",
+            "options": [
+                "Planned",
+                "Held",
+                "Not Held"
+            ],
+            "default": "Planned",
+            "style": {
+                "Held": "success"
+            },
+            "audited": true
+        },
+        "dateStart": {
+            "type": "datetimeOptional",
+            "view": "crm:views/meeting/fields/date-start",
+            "required": true,
+            "default": "javascript: return this.dateTime.getNow(15);",
+            "audited": true
+        },
+        "dateEnd": {
+            "type": "datetimeOptional",
+            "view": "crm:views/meeting/fields/date-end",
+            "required": true,
+            "after": "dateStart",
+            "suppressValidationList": [
+                "required"
+            ]
+        },
+        "isAllDay": {
+            "type": "bool",
+            "layoutListDisabled": true,
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true
+        },
+        "duration": {
+            "type": "duration",
+            "start": "dateStart",
+            "end": "dateEnd",
+            "options": [
+                300,
+                600,
+                900,
+                1800,
+                2700,
+                3600,
+                7200,
+                10800
+            ],
+            "default": 3600,
+            "notStorable": true,
+            "select": {
+                "select": "TIMESTAMPDIFF_SECOND:(dateStart, dateEnd)"
+            },
+            "order": {
+                "order": [
+                    [
+                        "TIMESTAMPDIFF_SECOND:(dateStart, dateEnd)",
+                        "{direction}"
+                    ]
+                ]
+            }
+        },
+        "parent": {
+            "type": "linkParent",
+            "entityList": [
+                "Account",
+                "Lead",
+                "Contact"
+            ]
+        },
+        "description": {
+            "type": "text"
+        },
+        "reminders": {
+            "type": "jsonArray",
+            "notStorable": true,
+            "view": "crm:views/meeting/fields/reminders",
+            "layoutListDisabled": true,
+            "validatorClassNameList": [
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
+            ]
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "modifiedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "createdBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "modifiedBy": {
+            "type": "link",
+            "readOnly": true,
+            "view": "views/fields/user"
+        },
+        "assignedUser": {
+            "type": "link",
+            "required": true,
+            "view": "views/fields/assigned-user"
+        },
+        "teams": {
+            "type": "linkMultiple",
+            "view": "views/fields/teams"
+        },
+        "hall": {
+            "type": "link",
+            "required": true
+        },
+        "contact": {
+            "type": "link",
+            "required": false
+        },
+        "isOneTime": {
+            "notNull": true,
+            "type": "bool",
+            "default": false,
+            "tooltip": true,
+            "isCustom": true
+        },
+        "customPrice": {
+            "type": "currency",
+            "isCustom": true
+        },
+        "isPaid": {
+            "notNull": true,
+            "type": "bool",
+            "isCustom": true
+        },
+        "rentPlan": {
+            "type": "link",
+            "tooltip": true
+        }
+    },
+    "links": {
+        "parent": {
+            "type": "belongsToParent",
+            "foreign": "rentChildren"
+        },
+        "createdBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "modifiedBy": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "assignedUser": {
+            "type": "belongsTo",
+            "entity": "User"
+        },
+        "teams": {
+            "type": "hasMany",
+            "entity": "Team",
+            "relationName": "entityTeam",
+            "layoutRelationshipsDisabled": true
+        },
+        "hall": {
+            "type": "belongsTo",
+            "foreign": "rents",
+            "entity": "Hall",
+            "audited": false,
+            "isCustom": true
+        },
+        "contact": {
+            "type": "belongsTo",
+            "foreign": "rents",
+            "entity": "Contact",
+            "audited": false,
+            "isCustom": true
+        },
+        "rentPlan": {
+            "type": "belongsTo",
+            "foreign": "rents",
+            "entity": "RentPlan",
+            "audited": false,
+            "isCustom": true
+        }
+    },
+    "collection": {
+        "orderBy": "dateStart",
+        "order": "desc",
+        "textFilterFields": [
+            "name"
+        ],
+        "fullTextSearch": false,
+        "countDisabled": false
+    },
+    "indexes": {
+        "dateStartStatus": {
+            "columns": [
+                "dateStart",
+                "status"
+            ]
+        },
+        "dateStart": {
+            "columns": [
+                "dateStart",
+                "deleted"
+            ]
+        },
+        "status": {
+            "columns": [
+                "status",
+                "deleted"
+            ]
+        },
+        "assignedUser": {
+            "columns": [
+                "assignedUserId",
+                "deleted"
+            ]
+        },
+        "assignedUserStatus": {
+            "columns": [
+                "assignedUserId",
+                "status"
+            ]
+        },
+        "createdAt": {
+            "columns": [
+                "createdAt"
+            ]
+        },
+        "createdAtId": {
+            "unique": true,
+            "columns": [
+                "createdAt",
+                "id"
+            ]
+        }
+    },
+    "optimisticConcurrencyControl": false
+}

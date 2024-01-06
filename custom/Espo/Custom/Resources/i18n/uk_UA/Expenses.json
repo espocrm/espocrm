@@ -1,0 +1,11 @@
+{
+    "labels": {
+        "Create Expenses": "Створити Витрати"
+    },
+    "fields": {
+        "cost": "Сума",
+        "costCurrency": "Сума (Валюта)",
+        "costConverted": "Сума (Конвертована)",
+        "date": "Дата"
+    }
+}

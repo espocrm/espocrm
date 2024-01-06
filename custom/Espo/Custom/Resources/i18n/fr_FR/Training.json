@@ -1,0 +1,13 @@
+{
+  "fields": {
+    "dateStart": "Date de début",
+    "dateStartDate": "Date de début (toute la journée)",
+    "dateEndDate": "Date de fin (toute la journée)",
+    "isAllDay": "Est toute la journée"
+  },
+  "labels": {
+    "Create Training": "Créer un Заняття",
+    "Schedule Training": "Programmer un Заняття",
+    "Log Training": "Log de Заняття"
+  }
+}

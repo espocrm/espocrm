@@ -1,0 +1,11 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#2724a8",
+    "iconClass": "fas fa-calculator",
+    "views": {
+        "list": "custom:views/calculations/salaryAdmin"
+    }
+}

@@ -1,0 +1,44 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "trainerCategory"
+                }
+            ],
+            [
+                {
+                    "name": "userName"
+                }
+            ],
+            [
+                {
+                    "name": "emailAddress"
+                }
+            ],
+            [
+                {
+                    "name": "phoneNumber"
+                }
+            ],
+            [
+                {
+                    "name": "teams"
+                }
+            ],
+            [
+                {
+                    "name": "type"
+                },
+                {
+                    "name": "isActive"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": ""
+    }
+]

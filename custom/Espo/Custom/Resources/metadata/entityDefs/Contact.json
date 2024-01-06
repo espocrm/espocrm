@@ -1,0 +1,139 @@
+{
+    "fields": {
+        "abonements": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": true,
+            "isCustom": true
+        },
+        "indivs": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": true,
+            "isCustom": true
+        },
+        "rents": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": true,
+            "isCustom": true
+        },
+        "phoneNumber": {
+            "typeList": [
+                "Parent",
+                "Child",
+                "Mobile",
+                "Other"
+            ],
+            "defaultType": "Parent"
+        },
+        "parentNames": {
+            "type": "array",
+            "storeArrayValues": true,
+            "noEmptyString": true,
+            "displayAsList": true,
+            "isCustom": true
+        },
+        "firstName": {
+            "required": true,
+            "options": []
+        },
+        "indivsMany": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": false,
+            "isCustom": true
+        },
+        "rentPlans": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": true,
+            "isCustom": true
+        },
+        "birthday": {
+            "notNull": false,
+            "type": "date",
+            "isPersonalData": true,
+            "useNumericFormat": true,
+            "isCustom": true
+        },
+        "assignedUser": {
+            "required": true
+        }
+    },
+    "links": {
+        "abonements": {
+            "type": "hasMany",
+            "foreign": "contact",
+            "entity": "Abonement",
+            "audited": false,
+            "isCustom": true
+        },
+        "indivs": {
+            "type": "hasMany",
+            "foreign": "contact",
+            "entity": "Indiv",
+            "audited": false,
+            "isCustom": true
+        },
+        "rents": {
+            "type": "hasMany",
+            "foreign": "contact",
+            "entity": "Rent",
+            "audited": false,
+            "isCustom": true
+        },
+        "indivsMany": {
+            "type": "hasMany",
+            "relationName": "indivContact",
+            "foreign": "contacts",
+            "entity": "Indiv",
+            "audited": false,
+            "isCustom": true
+        },
+        "rentPlans": {
+            "type": "hasMany",
+            "foreign": "contact",
+            "entity": "RentPlan",
+            "audited": false,
+            "isCustom": true
+        }
+    },
+    "collection": {
+        "orderBy": "createdAt",
+        "order": "desc",
+        "textFilterFields": [
+            "name",
+            "emailAddress",
+            "phoneNumber"
+        ],
+        "fullTextSearch": false,
+        "countDisabled": false
+    },
+    "optimisticConcurrencyControl": false
+}

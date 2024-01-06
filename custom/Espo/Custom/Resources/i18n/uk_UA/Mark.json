@@ -1,0 +1,20 @@
+{
+    "labels": {
+        "Create Mark": "Створити Відмітка"
+    },
+    "fields": {
+        "abonement": "Абонемент",
+        "training": "Заняття",
+        "methodOfCreation": "Спосіб створення"
+    },
+    "links": {
+        "abonement": "Абонемент",
+        "training": "Заняття"
+    },
+    "options": {
+        "methodOfCreation": {
+            "Jurnal": "Журнал",
+            "Scanner": "Сканер"
+        }
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-door-open",
+    "relationshipPanels": {
+        "branch": {
+            "layout": null
+        },
+        "trainings": {
+            "layout": null
+        },
+        "trainingTemplates": {
+            "layout": null
+        },
+        "indivs": {
+            "layout": null
+        },
+        "rents": {
+            "layout": null
+        }
+    }
+}

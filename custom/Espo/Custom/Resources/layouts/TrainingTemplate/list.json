@@ -1,0 +1,26 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "group",
+        "label": "Група"
+    },
+    {
+        "name": "hall",
+        "label": "Зал"
+    },
+    {
+        "name": "weekDay"
+    },
+    {
+        "name": "startTime",
+        "label": "Час початку"
+    },
+    {
+        "name": "endTime",
+        "label": "Час закінчення"
+    }
+]

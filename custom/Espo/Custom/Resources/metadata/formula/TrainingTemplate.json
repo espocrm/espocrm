@@ -1,0 +1,3 @@
+{
+    "beforeSaveCustomScript": "name = string\\concatenate(hall.number,  '/ ', group.name);\n\n//forwarding\nbranchName = hall.branchName;\nassignedUserId = group.userId;\nassignedUserName = group.userName;\n\n//scope: generate-shedule.js \n//forwarding to do not build complex select or select as related\nassignedTeams = teamsIds;"
+}

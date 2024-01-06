@@ -1,0 +1,3 @@
+{
+    "beforeSaveCustomScript": "//forwarding\nclassCount = abonservice.classCount;\ndurationInDays = abonservice.daysCount;"
+}

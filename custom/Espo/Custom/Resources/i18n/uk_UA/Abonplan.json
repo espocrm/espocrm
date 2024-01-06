@@ -1,0 +1,22 @@
+{
+    "labels": {
+        "Create Abonplan": "Створити Абонплан"
+    },
+    "fields": {
+        "classCount": "Кількість занять",
+        "durationInDays": "Тривалість (днів)",
+        "price": "Ціна",
+        "priceCurrency": "Ціна (Валюта)",
+        "priceConverted": "Ціна (Конвертована)",
+        "abonservice": "Абонсервіс",
+        "pricebook": "Цінник",
+        "abonements": "Абонементи",
+        "rents": "Аренда"
+    },
+    "links": {
+        "abonservice": "Абосервіс",
+        "pricebook": "Цінник",
+        "abonements": "Абонементи",
+        "rents": "Аренда"
+    }
+}

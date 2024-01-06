@@ -1,0 +1,31 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "abonservice",
+        "width": 20,
+        "align": "left",
+        "label": "Абонсервіс"
+    },
+    {
+        "name": "pricebook",
+        "label": "Цінник"
+    },
+    {
+        "name": "price",
+        "label": "Ціна"
+    },
+    {
+        "name": "classCount",
+        "align": "left",
+        "label": "Кількість занять"
+    },
+    {
+        "name": "durationInDays",
+        "align": "left",
+        "label": "Тривалість (днів)"
+    }
+]

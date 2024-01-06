@@ -1,0 +1,57 @@
+{
+    "fields": {
+        "parent": "Батько",
+        "dateStart": "Дата початку",
+        "dateEnd": "Дата завершення",
+        "duration": "Тривалість",
+        "status": "Статус",
+        "reminders": "Нагадування",
+        "dateStartDate": "Дата початку (цілий день)",
+        "dateEndDate": "Дата завершення (цілий день)",
+        "isAllDay": "Є цілий день",
+        "hall": "Зал",
+        "abonplan": "Абонплан",
+        "contact": "Клієнт",
+        "assignedUser": "Відповідальний (Адмін)",
+        "isOneTime": "Разова",
+        "customPrice": "Ціна",
+        "customPriceCurrency": "Ціна (Валюта)",
+        "customPriceConverted": "Ціна (Конвертована)",
+        "isPaid": "Сплачено",
+        "rentPlan": "Планова оренда"
+    },
+    "links": {
+        "parent": "Батько",
+        "hall": "Зал",
+        "abonplan": "Абонплан",
+        "contact": "Клієнт",
+        "rentPlan": "Планова оренда"
+    },
+    "options": {
+        "status": {
+            "Planned": "Заплановано",
+            "Held": "Проведено",
+            "Not Held": "Не проведено"
+        }
+    },
+    "labels": {
+        "Create Rent": "Створити Оренда",
+        "Schedule Rent": "Розклад Аренда",
+        "Log Rent": "Журнал Аренда",
+        "Set Held": "Позначити проведеним",
+        "Set Not Held": "Позначити непроведеним"
+    },
+    "massActions": {
+        "setHeld": "Позначити проведеним",
+        "setNotHeld": "Позначити непроведеним"
+    },
+    "presetFilters": {
+        "planned": "Заплановано",
+        "held": "Проведені",
+        "todays": "Сьогоднішні"
+    },
+    "tooltips": {
+        "isOneTime": "Разова аренда має поле ціна",
+        "rentPlan": "Планова оренда, до якої належить ця оренда"
+    }
+}

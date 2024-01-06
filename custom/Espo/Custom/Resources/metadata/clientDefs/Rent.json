@@ -1,0 +1,186 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "recordViews": {
+        "detail": "views/templates/event/record/detail"
+    },
+    "activityDefs": {
+        "activitiesCreate": true,
+        "historyCreate": true
+    },
+    "bottomPanels": {
+        "detail": [
+            {
+                "name": "scheduler",
+                "label": "Scheduler",
+                "view": "crm:views/meeting/record/panels/scheduler",
+                "disabled": true,
+                "order": 3
+            }
+        ],
+        "edit": [
+            {
+                "name": "scheduler",
+                "label": "Scheduler",
+                "view": "crm:views/meeting/record/panels/scheduler",
+                "disabled": true,
+                "order": 1
+            }
+        ]
+    },
+    "filterList": [
+        {
+            "name": "planned"
+        },
+        {
+            "name": "held",
+            "style": "success"
+        },
+        {
+            "name": "todays"
+        }
+    ],
+    "forcePatchAttributeDependencyMap": {
+        "dateEnd": [
+            "dateStart"
+        ],
+        "dateEndDate": [
+            "dateStartDate"
+        ]
+    },
+    "dynamicLogic": {
+        "fields": {
+            "duration": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isAllDay"
+                        }
+                    ]
+                }
+            },
+            "reminders": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isNotEmpty",
+                            "attribute": "assignedUserId",
+                            "data": {
+                                "field": "assignedUser"
+                            }
+                        }
+                    ]
+                }
+            },
+            "customPrice": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                }
+            },
+            "contact": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                }
+            },
+            "abonplan": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                }
+            },
+            "isPaid": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                }
+            },
+            "rentPlan": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                }
+            },
+            "name": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                }
+            }
+        }
+    },
+    "color": "#757575",
+    "iconClass": "fas fa-door-closed",
+    "relationshipPanels": {
+        "hall": {
+            "layout": null
+        },
+        "contact": {
+            "layout": null
+        },
+        "rentPlan": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false
+}

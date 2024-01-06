@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "Padre",
+    "dateStart": "Fecha de inicio",
+    "dateEnd": "Fecha de finalización",
+    "duration": "Duración",
+    "status": "Estado",
+    "reminders": "Recordatorios",
+    "dateStartDate": "Fecha de inicio (todo el día)",
+    "dateEndDate": "Fecha de finalización (todo el día)",
+    "isAllDay": "Es todo el día"
+  },
+  "links": {
+    "parent": "Padre"
+  },
+  "options": {
+    "status": {
+      "Planned": "Planeado",
+      "Held": "Agarrado",
+      "Not Held": "Sin celebrar"
+    }
+  },
+  "labels": {
+    "Create Rent": "Crear Аренда",
+    "Schedule Rent": "Programar Аренда",
+    "Log Rent": "Registros de Аренда",
+    "Set Held": "Marcar como celebrada",
+    "Set Not Held": "Marcar como No celebrada"
+  },
+  "massActions": {
+    "setHeld": "Marcar como celebrada",
+    "setNotHeld": "Marcar como No celebrada"
+  },
+  "presetFilters": {
+    "planned": "Planeadas",
+    "held": "Celebradas",
+    "todays": "De hoy"
+  }
+}

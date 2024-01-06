@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "dayTemplates": "Дні",
+        "trainingTemplates": "Шаблони заняття"
+    },
+    "links": {
+        "dayTemplates": "Дні",
+        "trainingTemplates": "Шаблони заняття"
+    },
+    "labels": {
+        "Create WeekTemplate": "Створити Назва шаблону"
+    }
+}

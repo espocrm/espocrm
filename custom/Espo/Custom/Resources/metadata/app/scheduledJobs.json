@@ -1,0 +1,5 @@
+{
+    "MakeExpiredAbonementsInactive": {
+        "jobClassName": "Espo\\Custom\\Jobs\\MakeExpiredAbonementsInactive"
+    }
+}

@@ -1,0 +1,14 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "dateStart",
+        "label": "Дата початку"
+    },
+    {
+        "name": "dateEnd"
+    }
+]

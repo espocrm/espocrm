@@ -1,0 +1,12 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "iconClass": "fas fa-calculator",
+    "kanbanViewMode": false,
+    "color": null,
+    "views": {
+        "list": "custom:views/calculations/expenses"
+    }
+}

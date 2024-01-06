@@ -1,0 +1,42 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "group"
+                }
+            ],
+            [
+                {
+                    "name": "status"
+                },
+                {
+                    "name": "hall"
+                }
+            ],
+            [
+                {
+                    "name": "dateStart"
+                }
+            ],
+            [
+                {
+                    "name": "dateEnd"
+                }
+            ],
+            [
+                {
+                    "name": "duration"
+                },
+                {
+                    "name": "replacement"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": ""
+    }
+]

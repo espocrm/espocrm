@@ -1,0 +1,39 @@
+{
+  "fields": {
+    "parent": "Источник",
+    "dateStart": "Дата начала",
+    "dateEnd": "Дата окончания",
+    "duration": "Длительность",
+    "status": "Статус",
+    "reminders": "Напоминания",
+    "dateStartDate": "Дата начала (весь день)",
+    "dateEndDate": "Дата окончания (весь день)",
+    "isAllDay": "Весь день"
+  },
+  "links": {
+    "parent": "Источник"
+  },
+  "options": {
+    "status": {
+      "Planned": "Запланировано",
+      "Held": "Состоялось",
+      "Not Held": "Не состоялся"
+    }
+  },
+  "labels": {
+    "Create Event": "Создать Івент",
+    "Schedule Event": "Запланировать Івент",
+    "Log Event": "Журнал Івент",
+    "Set Held": "Состоялось",
+    "Set Not Held": "Не состоялось"
+  },
+  "massActions": {
+    "setHeld": "Состоялось",
+    "setNotHeld": "Не состоялось"
+  },
+  "presetFilters": {
+    "planned": "Запланировано",
+    "held": "Состоялся",
+    "todays": "Сегодняшние"
+  }
+}

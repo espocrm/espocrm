@@ -1,0 +1,22 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "trainerCategory"
+    },
+    {
+        "name": "from",
+        "label": "Від"
+    },
+    {
+        "name": "to",
+        "label": "До"
+    },
+    {
+        "name": "amount",
+        "label": "Нарахування"
+    }
+]

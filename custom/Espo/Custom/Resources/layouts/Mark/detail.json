@@ -1,0 +1,24 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "training"
+                }
+            ],
+            [
+                {
+                    "name": "methodOfCreation"
+                },
+                {
+                    "name": "abonement"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]

@@ -1,0 +1,16 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "address"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]
