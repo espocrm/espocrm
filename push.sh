@@ -14,9 +14,9 @@ BACKEND_SRC=$PROJECT$BACKEND"/Custom";
 DATA_SRC=$PROJECT"/data";
 
 
-cp -r $PROJECT"/client/" $BUILD"/client/custom";
-cp -r $PROJECT"/custom/Espo/" $BUILD"/custom/Espo/Custom";
-cp $PROJECT"/data" $BUILD"/data/config.php";
+cp -r $PROJECT"/client/custom" $BUILD"/client";
+cp -r $PROJECT"/custom/Espo/Custom" $BUILD"/custom/Espo";
+cp $PROJECT"/data/config.php" $BUILD"/data";
 
 
 echo "Done!";
