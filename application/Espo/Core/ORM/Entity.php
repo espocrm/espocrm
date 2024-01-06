@@ -194,7 +194,7 @@ class Entity extends BaseEntity
             $select[] = 'type';
         }
 
-        if (!empty($columns)) {
+        if ($columns) {
             foreach ($columns as $item) {
                 $select[] = $item;
             }
