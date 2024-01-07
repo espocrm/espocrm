@@ -26,16 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import Dep from 'view';
+import View from 'view';
 import SelectProvider from 'helpers/list/select-provider';
 
-export default Dep.extend({
+class IndexExtensionsView extends View {
 
-    template: 'admin/extensions/index',
+    template = 'admin/extensions/index'
 
-    packageContents: null,
+    packageContents = null
 
-    events: {
+    events = {
+        /** @this IndexExtensionsView */
         'change input[name="package"]': function (e) {
             this.$el.find('button[data-action="upload"]')
                 .addClass('disabled')
@@ -49,9 +50,11 @@ export default Dep.extend({
                 this.selectFile(files[0]);
             }
         },
+        /** @this IndexExtensionsView */
         'click button[data-action="upload"]': function () {
             this.upload();
         },
+        /** @this IndexExtensionsView */
         'click [data-action="install"]': function (e) {
             const id = $(e.currentTarget).data('id');
 
@@ -61,6 +64,7 @@ export default Dep.extend({
             this.run(id, name, version);
 
         },
+        /** @this IndexExtensionsView */
         'click [data-action="uninstall"]': function (e) {
             const id = $(e.currentTarget).data('id');
 
@@ -81,9 +85,9 @@ export default Dep.extend({
                     });
             });
         }
-    },
+    }
 
-    setup: function () {
+    setup() {
         const selectProvider = new SelectProvider(
             this.getHelper().layoutManager,
             this.getHelper().metadata,
@@ -115,9 +119,9 @@ export default Dep.extend({
                     }
                 })
         );
-    },
+    }
 
-    selectFile: function (file) {
+    selectFile(file) {
         const fileReader = new FileReader();
 
         fileReader.onload = (e) => {
@@ -129,15 +133,15 @@ export default Dep.extend({
         };
 
         fileReader.readAsDataURL(file);
-    },
+    }
 
-    showError: function (msg) {
+    showError(msg) {
         msg = this.translate(msg, 'errors', 'Admin');
 
         this.$el.find('.message-container').html(msg);
-    },
+    }
 
-    showErrorNotification: function (msg) {
+    showErrorNotification(msg) {
         if (!msg) {
             this.$el.find('.notify-text').addClass('hidden');
 
@@ -148,12 +152,12 @@ export default Dep.extend({
 
         this.$el.find('.notify-text').html(msg);
         this.$el.find('.notify-text').removeClass('hidden');
-    },
+    }
 
-    upload: function () {
+    upload() {
         this.$el.find('button[data-action="upload"]').addClass('disabled').attr('disabled', 'disabled');
 
-        this.notify('Uploading...');
+        Espo.Ui.notify(this.translate('Uploading...'));
 
         Espo.Ajax
             .postRequest('Extension/action/upload', this.packageContents, {
@@ -192,9 +196,9 @@ export default Dep.extend({
 
                 Espo.Ui.notify(false);
             });
-    },
+    }
 
-    run: function (id, version, name) {
+    run(id, version, name) {
         Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
         this.showError(false);
@@ -232,5 +236,7 @@ export default Dep.extend({
 
                 this.showErrorNotification(this.translate('Error') + ': ' + msg);
             });
-    },
-});
+    }
+}
+
+export default IndexExtensionsView;
