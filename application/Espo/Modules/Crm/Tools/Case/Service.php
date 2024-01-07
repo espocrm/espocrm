@@ -65,12 +65,10 @@ class Service
             ->get(CaseObj::ENTITY_TYPE)
             ->getEntity($id);
 
-        $forbiddenFieldList = $this->acl->getScopeForbiddenFieldList(CaseObj::ENTITY_TYPE);
-
         $list = [];
 
         if (
-            !in_array('contacts', $forbiddenFieldList) &&
+            $this->acl->checkField(CaseObj::ENTITY_TYPE, 'contacts') &&
             $this->acl->checkScope(Contact::ENTITY_TYPE)
         ) {
             foreach ($this->getContactEmailAddressList($entity) as $item) {
@@ -80,7 +78,7 @@ class Service
 
         if (
             $list === [] &&
-            !in_array('account', $forbiddenFieldList) &&
+            $this->acl->checkField(CaseObj::ENTITY_TYPE, 'account') &&
             $this->acl->checkScope(Account::ENTITY_TYPE)
         ) {
             $item = $this->getAccountEmailAddress($entity, $list);
@@ -92,7 +90,7 @@ class Service
 
         if (
             $list === [] &&
-            !in_array('lead', $forbiddenFieldList) &&
+            $this->acl->checkField(CaseObj::ENTITY_TYPE, 'lead') &&
             $this->acl->checkScope(Lead::ENTITY_TYPE)
         ) {
             $item = $this->getLeadEmailAddress($entity, $list);
