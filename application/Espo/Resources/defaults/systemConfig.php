@@ -126,6 +126,7 @@ return [
         'jobRunInParallel',
         'jobPoolConcurrencyNumber',
         'jobPeriodForActiveProcess',
+        'jobForceUtc',
         'cronMinInterval',
         'daemonInterval',
         'daemonProcessTimeout',

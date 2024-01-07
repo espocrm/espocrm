@@ -748,6 +748,10 @@
             "tooltip": true,
             "min": 1
         },
+        "jobForceUtc": {
+            "type": "bool",
+            "tooltip": true
+        },
         "daemonInterval": {
             "type": "int",
             "tooltip": true

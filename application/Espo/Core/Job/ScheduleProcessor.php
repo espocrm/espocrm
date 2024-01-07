@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Job;
 
+use DateTimeZone;
 use Espo\Core\Job\Preparator\Data as PreparatorData;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
@@ -64,7 +65,8 @@ class ScheduleProcessor
         private QueueUtil $queueUtil,
         private ScheduleUtil $scheduleUtil,
         private PreparatorFactory $preparatorFactory,
-        private MetadataProvider $metadataProvider
+        private MetadataProvider $metadataProvider,
+        private ConfigDataProvider $configDataProvider
     ) {}
 
     public function process(): void
@@ -172,13 +174,18 @@ class ScheduleProcessor
             return null;
         }
 
+        $timeZone = $this->configDataProvider->getTimeZone();
+
         try {
-            return $cronExpression->getNextRunDate()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+            $next = $cronExpression->getNextRunDate(timeZone: $timeZone)
+                ->setTimezone(new DateTimeZone('UTC'));
         }
         catch (Exception) {
             $this->log->error("Scheduled Job '$id': Unsupported scheduling expression '$scheduling'.");
 
             return null;
         }
+
+        return $next->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
     }
 }

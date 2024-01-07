@@ -48,6 +48,7 @@ return [
     /** Interval between process runs in seconds. */
     'daemonInterval' => 10,
     'daemonProcessTimeout' => 36000,
+    'jobForceUtc' => false,
     'recordsPerPage' => 20,
     'recordsPerPageSmall' => 5,
     'recordsPerPageSelect' => 10,

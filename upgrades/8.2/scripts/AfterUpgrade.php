@@ -27,40 +27,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Job;
+use Espo\Core\Container;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config\ConfigWriter;
 
-use Espo\Core\Utils\Config;
-
-class ConfigDataProvider
+/** @noinspection PhpMultipleClassDeclarationsInspection */
+class AfterUpgrade
 {
-    public function __construct(private Config $config) {}
-
-    public function runInParallel(): bool
+    public function run(Container $container): void
     {
-        return (bool) $this->config->get('jobRunInParallel');
-    }
+        $configWriter = $container->getByClass(InjectableFactory::class)
+            ->create(ConfigWriter::class);
 
-    public function getMaxPortion(): int
-    {
-        return (int) $this->config->get('jobMaxPortion', 0);
-    }
+        $configWriter->setMultiple([
+            'jobForceUtc' => true,
+        ]);
 
-    public function getCronMinInterval(): int
-    {
-        return (int) $this->config->get('cronMinInterval', 0);
-    }
-
-    public function noTableLocking(): bool
-    {
-        return (bool) $this->config->get('jobNoTableLocking');
-    }
-
-    public function getTimeZone(): string
-    {
-        if ($this->config->get('jobForceUtc')) {
-            return 'UTC';
-        }
-
-        return $this->config->get('timeZone') ?? 'UTC';
+        $configWriter->save();
     }
 }
