@@ -32,21 +32,17 @@ namespace Espo\Services;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ForbiddenSilent;
-
 use Espo\Repositories\User as UserRepository;
-
 use Espo\Core\Acl\Table as AclTable;
-
 use Espo\Entities\Preferences;
 use Espo\Entities\Note as NoteEntity;
 use Espo\Entities\User as UserEntity;
-
 use Espo\ORM\Entity;
 
 use stdClass;
 
 /**
- * @extends Record<\Espo\Entities\Note>
+ * @extends Record<NoteEntity>
  */
 class Note extends Record
 {
@@ -216,7 +212,7 @@ class Note extends Record
         $siteUrl = $this->config->getSiteUrl();
 
         $regexp = '/' . preg_quote($siteUrl, '/') .
-            '(\/portal|\/portal\/[a-zA-Z0-9]*)?\/#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9-]*)/';
+            '(/portal|/portal/[a-zA-Z0-9]*)?/#([A-Z][a-zA-Z0-9]*)/view/([a-zA-Z0-9-]*)/';
 
         $post = preg_replace($regexp, '[\2/\3](#\2/view/\3)', $post);
 
