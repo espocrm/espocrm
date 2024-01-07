@@ -38,6 +38,9 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 
+/**
+ * @noinspection PhpUnused
+ */
 class FieldManager
 {
     /**
@@ -163,12 +166,12 @@ class FieldManager
             throw new BadRequest();
         }
 
-        $result = $this->fieldManagerTool->delete($scope, $name);
+        $this->fieldManagerTool->delete($scope, $name);
 
         $this->dataManager->clearCache();
         $this->dataManager->rebuildMetadata();
 
-        return $result;
+        return true;
     }
 
     /**

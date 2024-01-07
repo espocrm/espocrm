@@ -90,7 +90,7 @@ class FieldManager
         $fieldDefs = $this->getFieldDefs($scope, $name);
 
         if ($fieldDefs === null) {
-            throw new Error("Can't read field defs {$scope}.{$name}.");
+            throw new Error("Can't read field defs $scope.$name.");
         }
 
         $fieldDefs['label'] = $this->language->translate($name, 'fields', $scope);
@@ -104,12 +104,11 @@ class FieldManager
 
     /**
      * @param array<string, mixed> $fieldDefs
-     * @return bool
      * @throws BadRequest
      * @throws Conflict
      * @throws Error
      */
-    public function create(string $scope, string $name, array $fieldDefs)
+    public function create(string $scope, string $name, array $fieldDefs): void
     {
         if (strlen($name) === 0) {
             throw new BadRequest("Empty field name.");
@@ -122,13 +121,13 @@ class FieldManager
                     ->withMessageTranslation('nameIsTooLong', 'EntityManager')
                     ->encode()
             );
-        };
+        }
 
         $existingField = $this->getFieldDefs($scope, $name);
 
         if (isset($existingField)) {
             throw Conflict::createWithBody(
-                "Field '{$name}' already exists in '{$scope}'.",
+                "Field '$name' already exists in '$scope'.",
                 Error\Body::create()
                     ->withMessageTranslation('fieldAlreadyExists', 'FieldManager', [
                         'field' => $name,
@@ -140,7 +139,7 @@ class FieldManager
 
         if ($this->metadata->get(['entityDefs', $scope, 'links', $name])) {
             throw Conflict::createWithBody(
-                "Link with name '{$name}' already exists in '{$scope}'.",
+                "Link with name '$name' already exists in '$scope'.",
                 Error\Body::create()
                     ->withMessageTranslation('linkWithSameNameAlreadyExists', 'FieldManager', [
                         'field' => $name,
@@ -155,7 +154,7 @@ class FieldManager
             in_array(strtolower($name), $this->forbiddenAnyCaseFieldNameList)
         ) {
             throw Conflict::createWithBody(
-                "Field '{$name}' is not allowed.",
+                "Field '$name' is not allowed.",
                 Error\Body::create()
                     ->withMessageTranslation('fieldNameIsNotAllowed', 'FieldManager', [
                         'field' => $name,
@@ -178,14 +177,13 @@ class FieldManager
             throw new Error("Field name should contain only letters and numbers.");
         }
 
-        return $this->update($scope, $name, $fieldDefs, true);
+        $this->update($scope, $name, $fieldDefs, true);
     }
 
     /**
      * @param array<string, mixed> $fieldDefs
-     * @return bool
      */
-    public function update(string $scope, string $name, array $fieldDefs, bool $isNew = false)
+    public function update(string $scope, string $name, array $fieldDefs, bool $isNew = false): void
     {
         $name = trim($name);
 
@@ -201,8 +199,6 @@ class FieldManager
             $isCustom = true;
         }
 
-        $result = true;
-
         $isLabelChanged = false;
 
         if (isset($fieldDefs['label'])) {
@@ -212,7 +208,7 @@ class FieldManager
         }
 
         if (isset($fieldDefs['tooltipText'])) {
-            $this->setTooltipText($scope, $name, $fieldDefs['tooltipText'], $isNew, $isCustom);
+            $this->setTooltipText($scope, $name, $fieldDefs['tooltipText']);
 
             $isLabelChanged = true;
         }
@@ -384,13 +380,13 @@ class FieldManager
         $entityDefs = $this->normalizeDefs($scope, $name, $fieldDefs);
 
         if (!empty((array) $entityDefs)) {
-            $result &= $this->saveCustomEntityDefs($scope, $entityDefs);
+            $this->saveCustomEntityDefs($scope, $entityDefs);
 
             $this->isChanged = true;
         }
 
         if ($metadataToBeSaved) {
-            $result &= $this->metadata->save();
+            $this->metadata->save();
 
             $this->isChanged = true;
         }
@@ -398,15 +394,13 @@ class FieldManager
         if ($this->isChanged) {
             $this->processHook('afterSave', $type, $scope, $name, $fieldDefs, ['isNew' => $isNew]);
         }
-
-        return (bool) $result;
     }
 
     /**
      * @param array<string, mixed> $clientDefs
      * @param string $name
      */
-    protected function prepareClientDefsFieldsDynamicLogic(&$clientDefs, $name): void
+    private function prepareClientDefsFieldsDynamicLogic(&$clientDefs, $name): void
     {
         if (!array_key_exists('dynamicLogic', $clientDefs)) {
             $clientDefs['dynamicLogic'] = [];
@@ -425,7 +419,7 @@ class FieldManager
      * @param array<string, mixed> $clientDefs
      * @param string $name
      */
-    protected function prepareClientDefsOptionsDynamicLogic(&$clientDefs, $name): void
+    private function prepareClientDefsOptionsDynamicLogic(&$clientDefs, $name): void
     {
         if (!array_key_exists('dynamicLogic', $clientDefs)) {
             $clientDefs['dynamicLogic'] = array();
@@ -441,13 +435,12 @@ class FieldManager
     }
 
     /**
-     * @return bool
      * @throws Error
      */
-    public function delete(string $scope, string $name)
+    public function delete(string $scope, string $name): void
     {
         if ($this->isCore($scope, $name)) {
-            throw new Error("Cannot delete core field '{$name}' in '{$scope}'.");
+            throw new Error("Cannot delete core field '$name' in '$scope'.");
         }
 
         $type = $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'type']);
@@ -466,7 +459,7 @@ class FieldManager
             'dynamicLogic.options.' . $name,
         ]);
 
-        $res = $this->metadata->save();
+        $this->metadata->save();
 
         $this->deleteLabel($scope, $name);
 
@@ -491,8 +484,6 @@ class FieldManager
         }
 
         $this->processHook('afterRemove', $type, $scope, $name);
-
-        return (bool) $res;
     }
 
     /**
@@ -501,11 +492,11 @@ class FieldManager
     public function resetToDefault(string $scope, string $name): void
     {
         if (!$this->isCore($scope, $name)) {
-            throw new Error("Cannot reset to default custom field '{$name}' in '{$scope}'.");
+            throw new Error("Cannot reset to default custom field '$name' in '$scope'.");
         }
 
         if (!$this->metadata->get(['entityDefs', $scope, 'fields', $name])) {
-            throw new Error("Not found field  field '{$name}' in '{$scope}'.");
+            throw new Error("Not found field  field '$name' in '$scope'.");
         }
 
         $this->metadata->delete('entityDefs', $scope, ['fields.' . $name]);
@@ -527,7 +518,7 @@ class FieldManager
     /**
      * @param array<string, string> $value
      */
-    protected function setTranslatedOptions(
+    private function setTranslatedOptions(
         string $scope,
         string $name,
         $value,
@@ -542,7 +533,7 @@ class FieldManager
         $this->language->set($scope, 'options', $name, $value);
     }
 
-    protected function setLabel(
+    private function setLabel(
         string $scope,
         string $name,
         string $value,
@@ -557,14 +548,8 @@ class FieldManager
         $this->language->set($scope, 'fields', $name, $value);
     }
 
-    protected function setTooltipText(
-        string $scope,
-        string $name,
-        string $value,
-        bool $isNew,
-        bool $isCustom
-    ): void {
-
+    private function setTooltipText(string $scope, string $name, string $value): void
+    {
         if ($value && $value !== '') {
             $this->language->set($scope, 'tooltips', $name, $value);
             $this->baseLanguage->set($scope, 'tooltips', $name, $value);
@@ -575,7 +560,7 @@ class FieldManager
         }
     }
 
-    protected function deleteLabel(string $scope, string $name): void
+    private function deleteLabel(string $scope, string $name): void
     {
         $this->language->delete($scope, 'fields', $name);
         $this->language->delete($scope, 'tooltips', $name);
@@ -590,7 +575,7 @@ class FieldManager
      * @param ?stdClass $default
      * @return ?array<string, mixed>
      */
-    protected function getFieldDefs(string $scope, string $name, $default = null)
+    private function getFieldDefs(string $scope, string $name, $default = null)
     {
         $defs = $this->metadata->getObjects(['entityDefs', $scope, 'fields', $name], $default);
 
@@ -605,7 +590,7 @@ class FieldManager
      * @param ?array<string, mixed> $default
      * @return ?array<string, mixed>
      */
-    protected function getCustomFieldDefs(string $scope, string $name, $default = null)
+    private function getCustomFieldDefs(string $scope, string $name, $default = null)
     {
         $customDefs = $this->metadata->getCustom('entityDefs', $scope, (object) []);
 
@@ -619,7 +604,7 @@ class FieldManager
     /**
      * @param stdClass $newDefs
      */
-    protected function saveCustomEntityDefs(string $scope, $newDefs): bool
+    private function saveCustomEntityDefs(string $scope, $newDefs): void
     {
         $customDefs = $this->metadata->getCustom('entityDefs', $scope, (object) []);
 
@@ -644,23 +629,13 @@ class FieldManager
         }
 
         $this->metadata->saveCustom('entityDefs', $scope, $customDefs);
-
-        return true;
-    }
-
-    /**
-     * @return array<string, mixed>
-     */
-    protected function getLinkDefs(string $scope, string $name)
-    {
-        return $this->metadata->get('entityDefs' . '.' . $scope . '.links.' . $name);
     }
 
     /**
      * @param array<string, mixed> $fieldDefs
      * @return array<string, mixed>
      */
-    protected function prepareFieldDefs(string $scope, string $name, $fieldDefs)
+    private function prepareFieldDefs(string $scope, string $name, $fieldDefs)
     {
         $additionalParamList = [
             'type' => [
@@ -775,7 +750,7 @@ class FieldManager
     /**
      * @param array<string, mixed> $fieldDefs
      */
-    protected function normalizeDefs(string $scope, string $fieldName, array $fieldDefs): stdClass
+    private function normalizeDefs(string $scope, string $fieldName, array $fieldDefs): stdClass
     {
         $defs = new stdClass();
 
@@ -788,12 +763,12 @@ class FieldManager
         }
 
         /** Save links for a field. */
-        $linkDefs = isset($fieldDefs['linkDefs']) ? $fieldDefs['linkDefs'] : null;
+        $linkDefs = $fieldDefs['linkDefs'] ?? null;
         $metaLinkDefs = $this->metadataHelper->getLinkDefsInFieldMeta($scope, $fieldDefs);
 
         if (isset($linkDefs) || isset($metaLinkDefs)) {
-            $metaLinkDefs = isset($metaLinkDefs) ? $metaLinkDefs : array();
-            $linkDefs = isset($linkDefs) ? $linkDefs : array();
+            $metaLinkDefs = $metaLinkDefs ?? array();
+            $linkDefs = $linkDefs ?? array();
 
             $normalizedLinkedDefs = Util::merge($metaLinkDefs, $linkDefs);
             if (!empty($normalizedLinkedDefs)) {
@@ -811,7 +786,7 @@ class FieldManager
         return $this->isChanged;
     }
 
-    protected function isCore(string $scope, string $name): bool
+    private function isCore(string $scope, string $name): bool
     {
         $existingField = $this->getFieldDefs($scope, $name);
 
@@ -827,7 +802,7 @@ class FieldManager
      * @param array<string, mixed> $defs
      * @param array<string, mixed> $options
      */
-    protected function processHook(
+    private function processHook(
         string $methodName,
         ?string $type,
         string $scope,
@@ -853,7 +828,7 @@ class FieldManager
         $hook->$methodName($scope, $name, $defs, $options);
     }
 
-    protected function getHook(string $type): ?object
+    private function getHook(string $type): ?object
     {
         /** @var ?class-string $className */
         $className = $this->metadata->get(['fields', $type, 'hookClassName']);
