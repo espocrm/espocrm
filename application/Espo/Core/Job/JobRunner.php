@@ -91,11 +91,11 @@ class JobRunner
         $jobEntity = $this->entityManager->getEntityById(JobEntity::ENTITY_TYPE, $id);
 
         if (!$jobEntity) {
-            throw new RuntimeException("Job '{$id}' not found.");
+            throw new RuntimeException("Job '$id' not found.");
         }
 
         if ($jobEntity->getStatus() !== Status::READY) {
-            throw new RuntimeException("Can't run job '{$id}' with not Ready status.");
+            throw new RuntimeException("Can't run job '$id' with not Ready status.");
         }
 
         $this->setJobRunning($jobEntity);
@@ -131,7 +131,7 @@ class JobRunner
             else {
                 $id = $jobEntity->getId();
 
-                throw new Error("Not runnable job '{$id}'.");
+                throw new Error("Not runnable job '$id'.");
             }
         }
         catch (Throwable $e) {
@@ -139,7 +139,7 @@ class JobRunner
 
             $jobId = $jobEntity->hasId() ? $jobEntity->getId() : null;
 
-            $msg = "JobManager: Failed job running, job '{$jobId}'. " .
+            $msg = "JobManager: Failed job running, job '$jobId'. " .
                 $e->getMessage() . "; at " . $e->getFile() . ":" . $e->getLine() . ".";
 
             if ($this->config->get('logger.printTrace')) {
@@ -266,7 +266,7 @@ class JobRunner
         }
 
         if (!method_exists($service, $methodName)) {
-            throw new Error("No method '{$methodName}' in service '{$serviceName}'.");
+            throw new Error("No method '$methodName' in service '$serviceName'.");
         }
 
         $service->$methodName(

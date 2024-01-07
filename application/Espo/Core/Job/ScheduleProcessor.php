@@ -81,7 +81,7 @@ class ScheduleProcessor
             catch (Throwable $e) {
                 $id = $scheduledJob->getId();
 
-                $this->log->error("Scheduled Job '{$id}': " . $e->getMessage());
+                $this->log->error("Scheduled Job '$id': " . $e->getMessage());
             }
         }
     }
@@ -166,7 +166,7 @@ class ScheduleProcessor
         }
         catch (Exception $e) {
             $this->log->error(
-                "Scheduled Job '{$id}': Scheduling expression error: " .
+                "Scheduled Job '$id': Scheduling expression error: " .
                 $e->getMessage() . '.');
 
             return null;
@@ -176,7 +176,7 @@ class ScheduleProcessor
             return $cronExpression->getNextRunDate()->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
         catch (Exception) {
-            $this->log->error("Scheduled Job '{$id}': Unsupported scheduling expression '{$scheduling}'.");
+            $this->log->error("Scheduled Job '$id': Unsupported scheduling expression '$scheduling'.");
 
             return null;
         }

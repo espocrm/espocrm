@@ -49,7 +49,7 @@ class PreparatorFactory
         $className = $this->metadataProvider->getPreparatorClassName($name);
 
         if (!$className) {
-            throw new RuntimeException("Preparator for job '{$name}' not found.");
+            throw new RuntimeException("Preparator for job '$name' not found.");
         }
 
         return $this->injectableFactory->create($className);

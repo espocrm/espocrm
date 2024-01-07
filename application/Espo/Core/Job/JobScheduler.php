@@ -65,7 +65,7 @@ class JobScheduler
     public function setClassName(string $className): self
     {
         if (!class_exists($className)) {
-            throw new RuntimeException("Class '{$className}' does not exist.");
+            throw new RuntimeException("Class '$className' does not exist.");
         }
 
         $class = new ReflectionClass($className);
@@ -74,7 +74,7 @@ class JobScheduler
             !$class->implementsInterface(Job::class) &&
             !$class->implementsInterface(JobDataLess::class)
         ) {
-            throw new RuntimeException("Class '{$className}' does not implement 'Job' or 'JobDataLess' interface.");
+            throw new RuntimeException("Class '$className' does not implement 'Job' or 'JobDataLess' interface.");
         }
 
         $this->className = $className;
@@ -115,6 +115,7 @@ class JobScheduler
         $timeCopy = $time;
 
         if (!is_null($time) && !$time instanceof DateTimeImmutable) {
+            /** @noinspection PhpParamsInspection */
             $timeCopy = DateTimeImmutable::createFromMutable($time);
         }
 

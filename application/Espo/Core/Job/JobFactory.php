@@ -52,7 +52,7 @@ class JobFactory
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new Error("Job '{$name}' not found.");
+            throw new Error("Job '$name' not found.");
         }
 
         return $this->createByClassName($className);
@@ -66,9 +66,7 @@ class JobFactory
      */
     public function createByClassName(string $className): object
     {
-        $job = $this->injectableFactory->create($className);
-
-        return $job;
+        return $this->injectableFactory->create($className);
     }
 
     /**

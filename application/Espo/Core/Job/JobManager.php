@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Job\QueueProcessor\Params;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Log;
