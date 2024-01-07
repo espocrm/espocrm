@@ -130,6 +130,24 @@ class IndexExtensionsView extends View {
             this.$el.find('button[data-action="upload"]')
                 .removeClass('disabled')
                 .removeAttr('disabled');
+
+            const maxSize = this.getHelper().getAppParam('maxUploadSize') || 0;
+
+            if (file.size > maxSize * 1024 * 1024) {
+                const body = this.translate('fileExceedsMaxUploadSize', 'messages', 'Extension')
+                    .replace('{maxSize}', maxSize + 'MB');
+
+                Espo.Ui.dialog({
+                    body: this.getHelper().transformMarkdownText(body).toString(),
+                    buttonList: [
+                        {
+                            name: 'close',
+                            text: this.translate('Close'),
+                            onClick: dialog => dialog.close(),
+                        },
+                    ],
+                }).show();
+            }
         };
 
         fileReader.readAsDataURL(file);

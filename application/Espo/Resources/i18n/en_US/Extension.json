@@ -11,6 +11,7 @@
         "Install": "Install"
     },
     "messages": {
-        "uninstalled": "Extension {name} has been uninstalled"
+        "uninstalled": "Extension {name} has been uninstalled",
+        "fileExceedsMaxUploadSize": "The file size exceeds the max upload size {maxSize}. Consider increasing `post_max_size` or install the extension via CLI."
     }
 }
