@@ -46,9 +46,9 @@ import $ from 'jquery';
  * @property {number|null} [width] A width.
  * @property {boolean} [removeOnClose=true] To remove on close.
  * @property {boolean} [draggable=false] Is draggable.
- * @property {function (): void} [onRemove] An on-remove callback.
- * @property {function (): void} [onClose] An on-close callback.
- * @property {function (): void} [onBackdropClick] An on-backdrop-click callback.
+ * @property {function(): void} [onRemove] An on-remove callback.
+ * @property {function(): void} [onClose] An on-close callback.
+ * @property {function(): void} [onBackdropClick] An on-backdrop-click callback.
  * @property {string} [container='body'] A container selector.
  * @property {boolean} [keyboard=true] Enable a keyboard control. The `Esc` key closes a dialog.
  * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
