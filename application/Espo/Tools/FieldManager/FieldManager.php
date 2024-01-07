@@ -448,9 +448,17 @@ class FieldManager
         $this->processHook('beforeRemove', $type, $scope, $name);
 
         $unsets = [
-            'fields.'.$name,
-            'links.'.$name,
+            'fields.' . $name,
+            'links.' . $name,
         ];
+
+        if (
+            !$this->isScopeCustom($scope) &&
+            $this->metadata->get("entityDefs.$scope.collection.orderBy") === $name
+        ) {
+            $unsets[] = "entityDefs.$scope.collection.orderBy";
+            $unsets[] = "entityDefs.$scope.collection.order";
+        }
 
         $this->metadata->delete('entityDefs', $scope, $unsets);
 
@@ -795,6 +803,11 @@ class FieldManager
         }
 
         return false;
+    }
+
+    private function isScopeCustom(string $scope): bool
+    {
+        return (bool) $this->metadata->get("scopes.$scope.isCustom");
     }
 
     /**
