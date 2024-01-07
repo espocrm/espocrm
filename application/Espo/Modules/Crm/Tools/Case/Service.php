@@ -30,7 +30,9 @@
 namespace Espo\Modules\Crm\Tools\Case;
 
 use Espo\Core\Acl;
-use Espo\Core\Exceptions\ForbiddenSilent;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\EmailAddress;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -41,28 +43,19 @@ use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Email\EmailAddressEntityPair;
+use RuntimeException;
 
 class Service
 {
-    private ServiceContainer $serviceContainer;
-    private Acl $acl;
-    private EntityManager $entityManager;
-    private SelectBuilderFactory $selectBuilderFactory;
-
     public function __construct(
-        ServiceContainer $serviceContainer,
-        Acl $acl,
-        EntityManager $entityManager,
-        SelectBuilderFactory $selectBuilderFactory
-    ) {
-        $this->serviceContainer = $serviceContainer;
-        $this->acl = $acl;
-        $this->entityManager = $entityManager;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-    }
+        private ServiceContainer $serviceContainer,
+        private Acl $acl,
+        private EntityManager $entityManager,
+        private SelectBuilderFactory $selectBuilderFactory
+    ) {}
 
     /**
-     * @throws ForbiddenSilent
+     * @throws Forbidden
      * @return EmailAddressEntityPair[]
      */
     public function getEmailAddressList(string $id): array
@@ -209,20 +202,25 @@ class Service
 
         $emailAddressList = [];
 
-        $query = $this->selectBuilderFactory
-            ->create()
-            ->from(Contact::ENTITY_TYPE)
-            ->withStrictAccessControl()
-            ->buildQueryBuilder()
-            ->select([
-                'id',
-                'emailAddress',
-                'name',
-            ])
-            ->where([
-                'id' => $contactIdList,
-            ])
-            ->build();
+        try {
+            $query = $this->selectBuilderFactory
+                ->create()
+                ->from(Contact::ENTITY_TYPE)
+                ->withStrictAccessControl()
+                ->buildQueryBuilder()
+                ->select([
+                    'id',
+                    'emailAddress',
+                    'name',
+                ])
+                ->where([
+                    'id' => $contactIdList,
+                ])
+                ->build();
+        }
+        catch (BadRequest|Forbidden|Error $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         /** @var Collection<Contact> $contactCollection */
         $contactCollection = $this->entityManager
