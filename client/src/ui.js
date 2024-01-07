@@ -97,7 +97,7 @@ class Dialog {
         options = options || {};
 
         /** @private */
-        this.className = 'dialog';
+        this.className = 'dialog-confirm';
         /** @private */
         this.backdrop = 'static';
         /** @private */
