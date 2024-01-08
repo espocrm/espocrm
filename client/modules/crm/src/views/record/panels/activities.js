@@ -39,6 +39,9 @@ class ActivitiesPanelView extends RelationshipPanelView {
     relatedListFiltersDisabled = true
     buttonMaxCount = null
 
+    /**
+     * @type {Array<module:views/record/panels-container~action|false>}
+     */
     actionList = [
         {
             action: 'composeEmail',
@@ -196,9 +199,9 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 return;
             }
 
-            let label = (this.name === 'history' ? 'Log' : 'Schedule') + ' ' + scope;
+            const label = (this.name === 'history' ? 'Log' : 'Schedule') + ' ' + scope;
 
-            let o = {
+            const o = {
                 action: 'createActivity',
                 text: this.translate(label, 'labels', scope),
                 data: {},
@@ -206,7 +209,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 aclScope: scope,
             };
 
-            let link = this.getMetadata().get(['clientDefs', scope, 'activityDefs', 'link'])
+            const link = this.getMetadata().get(['clientDefs', scope, 'activityDefs', 'link']);
 
             if (link) {
                 o.data.link = link;
@@ -232,7 +235,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
             o.data = o.data || {};
 
             if (!o.data.status) {
-                let statusList = this.getMetadata().get(['scopes', scope, this.name + 'StatusList']);
+                const statusList = this.getMetadata().get(['scopes', scope, this.name + 'StatusList']);
 
                 if (statusList && statusList.length) {
                     o.data.status = statusList[0];
@@ -246,9 +249,9 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 this.name === 'activities' &&
                 this.buttonList.length < this.buttonMaxCount
             ) {
-                let ob = Espo.Utils.cloneDeep(o);
+                const ob = Espo.Utils.cloneDeep(o);
 
-                let iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
+                const iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
 
                 if (iconClass) {
                     ob.title = label;
@@ -270,7 +273,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 return;
             }
 
-            let o = {
+            const o = {
                 action: 'viewRelatedList',
                 html: $('<span>')
                     .append(
@@ -301,7 +304,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
     }
 
     afterRender() {
-        let afterFetch = () => {
+        const afterFetch = () => {
             this.createView('list', 'views/record/list-expanded', {
                 selector: '> .list-container',
                 pagination: false,
@@ -335,29 +338,25 @@ class ActivitiesPanelView extends RelationshipPanelView {
     }
 
     fetchHistory() {
-        let parentView = this.getParentView();
+        const parentView = this.getParentView();
 
-        if (parentView) {
-            if (parentView.hasView('history')) {
-                let collection = parentView.getView('history').collection;
+        if (parentView && parentView.hasView('history')) {
+            const collection = parentView.getView('history').collection;
 
-                if (collection) {
-                    collection.fetch();
-                }
+            if (collection) {
+                collection.fetch();
             }
         }
     }
 
     fetchActivities() {
-        let parentView = this.getParentView();
+        const parentView = this.getParentView();
 
-        if (parentView) {
-            if (parentView.hasView('activities')) {
-                let collection = parentView.getView('activities').collection;
+        if (parentView && parentView.hasView('activities')) {
+            const collection = parentView.getView('activities').collection;
 
-                if (collection) {
-                    collection.fetch();
-                }
+            if (collection) {
+                collection.fetch();
             }
         }
     }
@@ -365,17 +364,17 @@ class ActivitiesPanelView extends RelationshipPanelView {
     getCreateActivityAttributes(scope, data, callback) {
         data = data || {};
 
-        let attributes = {
+        const attributes = {
             status: data.status,
         };
 
         if (this.model.entityType === 'User') {
-            let model = /** @type {module:models/user} */this.model;
+            const model = /** @type {module:models/user} */this.model;
 
             if (model.isPortal()) {
                 attributes.usersIds = [model.id];
 
-                let usersIdsNames = {};
+                const usersIdsNames = {};
                 usersIdsNames[model.id] = model.get('name')
 
                 attributes.usersIdsNames = usersIdsNames;
@@ -435,9 +434,9 @@ class ActivitiesPanelView extends RelationshipPanelView {
     }
 
     checkParentTypeAvailability(scope, parentType) {
-        return ~(
+        return (
             this.getMetadata().get(['entityDefs', scope, 'fields', 'parent', 'entityList']) || []
-        ).indexOf(parentType);
+        ).includes(parentType);
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -452,7 +451,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
     }
 
     actionCreateActivity(data) {
-        let link = data.link;
+        const link = data.link;
         let foreignLink;
         let scope;
 
@@ -464,7 +463,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
             scope = data.scope;
         }
 
-        let o = {
+        const o = {
             scope: scope
         };
 
@@ -477,7 +476,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
 
         Espo.Ui.notify(' ... ');
 
-        let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+        const viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
             'views/modals/edit';
 
         this.getCreateActivityAttributes(scope, data, attributes => {
@@ -497,7 +496,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
     }
 
     getComposeEmailAttributes(scope, data, callback) {
-        let attributes = {
+        const attributes = {
             status: 'Draft',
             to: this.model.get('emailAddress')
         };
@@ -544,7 +543,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
             }
         }
 
-        let emailKeepParentTeamsEntityList = this.getConfig().get('emailKeepParentTeamsEntityList') || [];
+        const emailKeepParentTeamsEntityList = this.getConfig().get('emailKeepParentTeamsEntityList') || [];
 
         if (
             attributes.parentType &&
@@ -556,7 +555,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
             attributes.teamsIds = Espo.Utils.clone(this.model.get('teamsIds'));
             attributes.teamsNames = Espo.Utils.clone(this.model.get('teamsNames') || {});
 
-            let defaultTeamId = this.getUser().get('defaultTeamId');
+            const defaultTeamId = this.getUser().get('defaultTeamId');
 
             if (defaultTeamId && !~attributes.teamsIds.indexOf(defaultTeamId)) {
                 attributes.teamsIds.push(defaultTeamId);
@@ -574,7 +573,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
 
     // noinspection JSUnusedGlobalSymbols
     actionComposeEmail(data) {
-        let scope = 'Email';
+        const scope = 'Email';
 
         let relate = null;
 
@@ -609,13 +608,13 @@ class ActivitiesPanelView extends RelationshipPanelView {
     }
 
     actionSetHeld(data) {
-        let id = data.id;
+        const id = data.id;
 
         if (!id) {
             return;
         }
 
-        let model = this.collection.get(id);
+        const model = this.collection.get(id);
 
         model.save({status: 'Held'}, {patch: true})
             .then(() => {
@@ -625,13 +624,13 @@ class ActivitiesPanelView extends RelationshipPanelView {
     }
 
     actionSetNotHeld(data) {
-        let id = data.id;
+        const id = data.id;
 
         if (!id) {
             return;
         }
 
-        let model = this.collection.get(id);
+        const model = this.collection.get(id);
 
         model.save({status: 'Not Held'}, {patch: true})
             .then(() => {
