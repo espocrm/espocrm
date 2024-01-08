@@ -47,7 +47,7 @@
                             <td class="nowrap">
                                 <span title="Переглянути відмітки" data-id={{this.id}} class="cp highlight text-muted far fa-calendar"></span>
                                 <span title="Відмітити на інше заняття" class="btn-add cp highlight text-muted fas fa-user-check" data-id={{this.id}} data-action="addFloatingMark"></span>
-                                <span title="Оновити" class="btn-add cp highlight text-muted fas fa-sync-alt" data-id={{this.id}} data-action="addFloatingMark"></span>
+                                <span title="Оновити" class="btn-add cp highlight text-muted fas fa-sync-alt" data-id={{this.id}} data-action="recalculate"></span>
                                 {{#if this.isFreezed}}
                                     <span title="Заморожено" class="cp text-muted fas fa-snowflake"></span>
                                 {{/if}}
