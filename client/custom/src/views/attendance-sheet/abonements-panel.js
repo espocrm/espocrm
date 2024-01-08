@@ -161,35 +161,10 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         addFloatingMark: async function(e) {
             const abon = this.abonements.list.find(abon => abon.id === e.target.dataset.id);
 
-            this.showModalLoading(true);
-            try {
-                const markModel = await this.getModelFactory().create('Mark');
-                markModel.defs.fields.methodOfCreation.readOnly = true;
-                markModel.defs.fields.abonement.readOnly = true;
-                markModel.defs.fields.abonement.defaultAttributes = {
-                    abonementId: abon.id,
-                    abonementName: abon.name
-                }
-
-                let options = { scope: 'Mark', model: markModel };
-                this.createView('quickCreate', 'views/modals/edit', options, view => {
-                    view.render();
-                    markModel.defs.fields.methodOfCreation.readOnly = false;
-                    markModel.defs.fields.abonement.readOnly = false;
-                    markModel.defs.fields.abonement.defaultAttributes = null;
-                    this.showModalLoading(false);
-
-                    this.listenToOnce(view, 'after:save', model => {
-                        this.recalculateAbonement(abon.id)
-                            .then(() => {
-                                this.fetchAbonements(this.trainingId, this.groupId, this.groupName);
-                            })
-                            .catch(error => console.log(error));
-                    });
+            this.recalculateAbonement(abon.id)
+                .then(() => {
+                    Espo.Ui.notify('Перераховано', 'success', 1000);
                 });
-            } catch (error) {
-                this.handleError(error);
-            }
         },
 
         /* public */
