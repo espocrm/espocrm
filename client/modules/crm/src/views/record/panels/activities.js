@@ -507,12 +507,10 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 attributes.parentName = this.model.get('name');
                 attributes.parentId = this.model.id;
             }
-            else {
-                if (this.model.get('accountId')) {
-                    attributes.parentType = 'Account';
-                    attributes.parentId = this.model.get('accountId');
-                    attributes.parentName = this.model.get('accountName');
-                }
+            else if (this.model.get('accountId')) {
+                attributes.parentType = 'Account';
+                attributes.parentId = this.model.get('accountId');
+                attributes.parentName = this.model.get('accountName');
             }
         }
         else if (this.model.entityType === 'Lead') {
@@ -521,7 +519,10 @@ class ActivitiesPanelView extends RelationshipPanelView {
             attributes.parentName = this.model.get('name');
         }
 
-        if (~['Contact', 'Lead', 'Account'].indexOf(this.model.entityType) && this.model.get('emailAddress')) {
+        if (
+            ['Contact', 'Lead', 'Account'].includes(this.model.entityType) &&
+            this.model.get('emailAddress')
+        ) {
             attributes.nameHash = {};
             attributes.nameHash[this.model.get('emailAddress')] = this.model.get('name');
         }
@@ -534,12 +535,10 @@ class ActivitiesPanelView extends RelationshipPanelView {
                     attributes.parentName = this.model.get('name');
                 }
             }
-            else {
-                if (attributes.parentType && !this.checkParentTypeAvailability(scope, attributes.parentType)) {
-                    attributes.parentType = null;
-                    attributes.parentId = null;
-                    attributes.parentName = null;
-                }
+            else if (attributes.parentType && !this.checkParentTypeAvailability(scope, attributes.parentType)) {
+                attributes.parentType = null;
+                attributes.parentId = null;
+                attributes.parentName = null;
             }
         }
 

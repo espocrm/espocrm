@@ -41,7 +41,7 @@ define('crm:views/opportunity/record/panels/activities', ['crm:views/record/pane
                     attributes.cc = '';
                     attributes.nameHash = {};
 
-                    list.forEach((item, i) => {
+                    list.forEach(item => {
                         attributes.to += item.emailAddress + ';';
                         attributes.nameHash[item.emailAddress] = item.name;
                     });
