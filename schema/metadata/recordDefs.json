@@ -120,7 +120,7 @@
                         "type": "boolean"
                     },
                     "linkCheckDisabled": {
-                        "description": "Disable a link-check functionality when linking through link-multiple field.",
+                        "description": "Disable a link-check functionality when linking through link or link-multiple field.",
                         "type": "boolean"
                     }
                 }
