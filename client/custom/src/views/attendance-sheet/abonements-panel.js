@@ -159,6 +159,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         },
 
         addFloatingMark: async function(e) {
+            Espo.Ui.notify('Функція в процесі розробки', 'warning', 1000);
             const abon = this.abonements.list.find(abon => abon.id === e.target.dataset.id);
 
             this.showModalLoading(true);
@@ -215,13 +216,12 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                         "type": "linkedWith",
                         "attribute": "groups",
                         "value": [ groupId ],
-                    }, {
+                    }, {  
+                        /* all abons which have endDate, so isActivated = true */
                         "type": "greaterThanOrEquals",
                         "attribute": "endDate",
                         "value": this.today
                     }];
-                    //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! START DATE (Pending) Don't forget!!!!
-                    // isActive
                     return collection.fetch();
                 })
                 .then((abonements) => {
@@ -240,6 +240,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 .then(marks => {
                     this.marksTotal = marks.total;
                     this.abonements = this.attachMarksToAbonements(this.abonements, marks.list);
+                    this.setAbonsStatus(this.abonements.list);
                     this.reRender();
                     this.showNote()
                 })
@@ -370,6 +371,11 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 this.$el.find(`input[data-abonement-id=${abonementId}]`)[0].checked = false;
                 return;
             }
+            if (abon.isPending) {
+                Espo.Ui.warning('Абонемент очікує дати початку: ' + abon.startDate);
+                this.$el.find(`input[data-abonement-id=${abonementId}]`)[0].checked = false;
+                return;
+            }
             this.isLoading(true);
             fetch('/api/v1/Mark', {
                 method: 'POST',
@@ -388,6 +394,8 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                     abon.mark = mark;
                     return this.recalculateAbonement(abon.id);
                 })
+                .then(response => response.json())
+                .then(abon => console.log(abon))
                 .then(() => {
                     abon.classesLeft = abon.classesLeft - 1;
                     this.marksTotal++;
@@ -468,6 +476,26 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             const timeHMS = dateTime.split(" ")[1];
             const timeHM = timeHMS.split(":")[0] + ":" + timeHMS.split(":")[1];
             return timeHM;
+        },
+
+        setAbonsStatus: function(abons) {
+            abons.forEach(abon => this.setAbonStatus(abon));
+        },
+
+        setAbonStatus: function(abon) {
+            if (abon.classesLeft <= 0) {
+                abon.isEmpty = true;
+            }
+            if (this.isPending(abon)) {
+                abon.isPending = true;
+            }
+        },
+
+        isPending: function(abon) {
+            const startDate = new Date(abon.startDate);
+            const today = new Date(this.today);
+
+            return today < startDate;
         },
 
         sortByTimeDuration: function(activities) {

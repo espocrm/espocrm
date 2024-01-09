@@ -26,6 +26,7 @@
                         <th>Ім'я</th>
                         <th>Присутній</th>
                         <th>Залишилось</th>
+                        <th>Статус</th>
                         <th>Дії</th>
                     </tr>
                     {{#each abonements}}
@@ -44,13 +45,26 @@
                                 {{/if}}
                             </td>
                             <td>{{this.classesLeft}}</td>
-                            <td class="nowrap">
-                                <span title="Переглянути відмітки" data-id={{this.id}} class="cp highlight text-muted far fa-calendar"></span>
-                                <span title="Відмітити на інше заняття" class="btn-add cp highlight text-muted fas fa-user-check" data-id={{this.id}} data-action="addFloatingMark"></span>
-                                <span title="Оновити" class="btn-add cp highlight text-muted fas fa-sync-alt" data-id={{this.id}} data-action="recalculate"></span>
+                            <td>
+                                {{#if this.isPending}}
+                                    <span title="Очікує" class="cp text-muted far fa-clock"></span>
+                                {{/if}}
+                                {{#if this.isActive}}
+                                    <span title="Активний" class="cp text-muted fas fa-play-circle"></span>
+                                {{/if}}
+                                {{#if this.isEmpty}}
+                                    <span title="Вичерпано" class="cp text-muted far fa-stop-circle"></span>
+                                {{/if}}
                                 {{#if this.isFreezed}}
                                     <span title="Заморожено" class="cp text-muted fas fa-snowflake"></span>
                                 {{/if}}
+                            </td>
+                            <td class="nowrap">
+                                <span title="Переглянути відмітки" data-id={{this.id}} class="cp highlight text-muted far fa-calendar"></span>
+                                <!--
+                                <span title="Відмітити на інше заняття" class="btn-add cp highlight text-muted fas fa-user-check" data-id={{this.id}} data-action="addFloatingMark"></span>
+                                -->
+                                <span title="Оновити" class="btn-add cp highlight text-muted fas fa-sync-alt" data-id={{this.id}} data-action="recalculate"></span>
                                 {{#if this.note}}
                                     <span title="Переглянути замітку" data-id={{this.id}} class="cp text-muted fas fa-exclamation-circle"></span>
                                 {{/if}}
