@@ -51,7 +51,7 @@ use Espo\ORM\EntityManager;
 use Espo\ORM\Type\RelationType;
 
 /**
- * Check access for record linking.
+ * Check access for record linking. When linking directly through relationships or via link fields.
  */
 class LinkCheck
 {
@@ -223,14 +223,30 @@ class LinkCheck
             );
         }
 
-        if ($isOne) {
-            $this->linkForeignAccessCheckOne($entityType, $link, $foreignEntity);
+        $toSkip = $this->linkForeignAccessCheck($isOne, $entityType, $link, $foreignEntity);
 
+        if ($toSkip) {
             return;
         }
 
-        $this->linkForeignAccessCheck($entityType, $link, $foreignEntity, true);
         $this->linkEntityAccessCheck($entity, $foreignEntity, $link);
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function linkForeignAccessCheck(
+        bool $isOne,
+        string $entityType,
+        string $link,
+        Entity $foreignEntity
+    ): bool {
+
+        if ($isOne) {
+            return $this->linkForeignAccessCheckOne($entityType, $link, $foreignEntity);
+        }
+
+        return $this->linkForeignAccessCheckMany($entityType, $link, $foreignEntity, true);
     }
 
     private function getParam(string $entityType, string $link, string $param): mixed
@@ -283,7 +299,12 @@ class LinkCheck
      */
     public function processLinkForeign(Entity $entity, string $link, Entity $foreignEntity): void
     {
-        $this->linkForeignAccessCheck($entity->getEntityType(), $link, $foreignEntity);
+        $toSkip = $this->linkForeignAccessCheckMany($entity->getEntityType(), $link, $foreignEntity);
+
+        if ($toSkip) {
+            return;
+        }
+
         $this->linkEntityAccessCheck($entity, $foreignEntity, $link);
     }
 
@@ -299,14 +320,17 @@ class LinkCheck
     }
 
     /**
+     * Check access to foreign record for has-many and many-many links.
+     *
+     * @return bool True indicates that the link checker should be bypassed.
      * @throws Forbidden
      */
-    private function linkForeignAccessCheck(
+    private function linkForeignAccessCheckMany(
         string $entityType,
         string $link,
         Entity $foreignEntity,
         bool $fromUpdate = false
-    ): void {
+    ): bool {
 
         $action = in_array($link, $this->noEditAccessRequiredLinkList) ?
             AclTable::ACTION_READ :
@@ -318,7 +342,7 @@ class LinkCheck
         }
 
         if ($this->getParam($entityType, $link, 'linkForeignAccessCheckDisabled')) {
-            return;
+            return true;
         }
 
         $fieldDefs = $fromUpdate ?
@@ -336,19 +360,23 @@ class LinkCheck
             $action = AclTable::ACTION_READ;
 
             if ($this->checkInDefaults($fieldDefs, $link, $foreignEntity)) {
-                return;
+                return true;
             }
-        }
-
-        if ($this->acl->check($foreignEntity, $action)) {
-            return;
         }
 
         if (
             $action === AclTable::ACTION_READ &&
             $this->checkIsAllowedForPortal($foreignEntity)
         ) {
-            return;
+            return true;
+        }
+
+        if ($this->acl->check($foreignEntity, $action)) {
+            return false;
+        }
+
+        if ($this->getLinkChecker($entityType, $link)) {
+            return false;
         }
 
         $body = ErrorBody::create();
@@ -409,8 +437,10 @@ class LinkCheck
         throw ForbiddenSilent::createWithBody(
             "No access for link operation ($entityType:$link).",
             ErrorBody::create()
-                ->withMessageTranslation('noLinkAccess')
-                ->encode()
+                ->withMessageTranslation('noLinkAccess', null, [
+                    'foreignEntityType' => $foreignEntity->getEntityType(),
+                    'link' => $link,
+                ])
         );
     }
 
@@ -537,12 +567,15 @@ class LinkCheck
     }
 
     /**
+     * Check access to foreign record for belongs-to, has-one and belongs-to-parent links.
+     *
+     * @return bool True indicates that the link checker should be bypassed.
      * @throws Forbidden
      */
-    private function linkForeignAccessCheckOne(string $entityType, string $link, Entity $foreignEntity): void
+    private function linkForeignAccessCheckOne(string $entityType, string $link, Entity $foreignEntity): bool
     {
         if ($this->getParam($entityType, $link, 'linkForeignAccessCheckDisabled')) {
-            return;
+            return true;
         }
 
         $fieldDefs = $this->entityManager
@@ -555,16 +588,20 @@ class LinkCheck
             in_array($fieldDefs->getType(), $this->oneFieldTypeList)
         ) {
             if ($this->checkIsDefault($fieldDefs, $link, $foreignEntity)) {
-                return;
+                return true;
             }
         }
 
-        if ($this->acl->check($foreignEntity, AclTable::ACTION_READ)) {
-            return;
+        if ($this->checkIsAllowedForPortal($foreignEntity)) {
+            return true;
         }
 
-        if ($this->checkIsAllowedForPortal($foreignEntity)) {
-            return;
+        if ($this->acl->check($foreignEntity, AclTable::ACTION_READ)) {
+            return false;
+        }
+
+        if ($this->getLinkChecker($entityType, $link)) {
+            return false;
         }
 
         throw ForbiddenSilent::createWithBody(
@@ -590,7 +627,6 @@ class LinkCheck
     {
         return $foreignEntity->getId() === $this->getDefault($fieldDefs, $link . 'Id');
     }
-
     private function getDefault(FieldDefs $fieldDefs, string $attribute): mixed
     {
         $defaultAttributes = (object) ($fieldDefs->getParam('defaultAttributes') ?? []);
