@@ -69,6 +69,9 @@ class SanitizeTest extends BaseTestCase
 
         $numbers = $account->getPhoneNumberGroup()->getNumberList();
         $this->assertCount(2, $numbers);
+
+        sort($numbers);
+
         $this->assertEquals('+380904443322', $numbers[0]);
         $this->assertEquals('+380904443333', $numbers[1]);
     }

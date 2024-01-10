@@ -376,7 +376,7 @@
         "loggedOutLeaveOut": "Logged out. The session is inactive. You may lose unsaved form data after page refresh. You may need to make a copy.",
         "noAccessToRecord": "Operation requires `{action}` access to record.",
         "noAccessToForeignRecord": "Operation requires `{action}` access to foreign record.",
-        "noLinkAccess": "No access to link operation for a specific record.",
+        "noLinkAccess": "Can't relate with {foreignEntityType} record through the link '{link}'. No access.",
         "cannotUnrelateRequiredLink": "Can't unrelate required link.",
         "cannotRelateNonExisting": "Can't relate with non-existing {foreignEntityType} record.",
         "cannotRelateForbidden": "Can't relate with forbidden {foreignEntityType} record. `{action}` access required.",

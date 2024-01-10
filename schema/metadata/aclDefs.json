@@ -30,7 +30,7 @@
             "type": "string"
         },
         "linkCheckerClassNameMap": {
-            "description": "Link checker classes for specific links.",
+            "description": "Link checker classes for specific links. Should implement `Espo\\Core\\Acl\\LinkChecker`.",
             "type": "object",
             "additionalProperties": {
                 "type": "string"

@@ -1,0 +1,8 @@
+{
+    "linkCheckerClassNameMap": {
+        "lead": "Espo\\Modules\\Crm\\Classes\\Acl\\Case\\LinkCheckers\\LeadLinkChecker",
+        "account": "Espo\\Modules\\Crm\\Classes\\Acl\\Case\\LinkCheckers\\AccountLinkChecker",
+        "contact": "Espo\\Modules\\Crm\\Classes\\Acl\\Case\\LinkCheckers\\ContactLinkChecker",
+        "contacts": "Espo\\Modules\\Crm\\Classes\\Acl\\Case\\LinkCheckers\\ContactLinkChecker"
+    }
+}

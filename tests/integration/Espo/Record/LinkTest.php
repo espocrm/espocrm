@@ -35,8 +35,11 @@ use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\Email;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\CaseObj;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Modules\Crm\Entities\Task;
 use Espo\ORM\EntityManager;
@@ -230,6 +233,171 @@ class LinkTest extends BaseTestCase
             'amountCurrency' => 'USD',
             'probability' => 10,
             'closeDate' => Date::createToday()->toString(),
+        ], CreateParams::create());
+    }
+
+    public function testLinkCheckEmailToCase(): void
+    {
+        $user = $this->createUser('test', [
+            'data' => [
+                'Account' => [
+                    'create' => 'no',
+                    'read' => 'own',
+                    'edit' => 'no',
+                    'delete' => 'no',
+                ],
+                'Case' => [
+                    'create' => 'yes',
+                    'read' => 'own',
+                    'edit' => 'own',
+                    'delete' => 'no',
+                ],
+                'Contact' => [
+                    'create' => 'yes',
+                    'read' => 'own',
+                    'edit' => 'own',
+                    'delete' => 'no',
+                ],
+                'Lead' => [
+                    'create' => 'yes',
+                    'read' => 'own',
+                    'edit' => 'own',
+                    'delete' => 'no',
+                ],
+                'Email' => [
+                    'create' => 'yes',
+                    'read' => 'own',
+                    'edit' => 'own',
+                    'delete' => 'no',
+                ],
+            ],
+        ]);
+
+        $em = $this->getEntityManager();
+
+        $account = $em->createEntity(Account::ENTITY_TYPE, ['assignedUserId' => $user->getId()]);
+        $lead = $em->createEntity(Lead::ENTITY_TYPE);
+        $contact = $em->createEntity(Contact::ENTITY_TYPE);
+        $email = $em->createEntity(Email::ENTITY_TYPE, [
+            'assignedUserId' => $user->getId(),
+            'parentId' => $lead->getId(),
+            'parentType' => Lead::ENTITY_TYPE,
+        ]);
+
+        $this->auth('test');
+        $this->reCreateApplication();
+
+        $caseService = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(CaseObj::class);
+
+        // Should not create if no access to the Lead.
+
+        $isThrown = false;
+
+        try {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $caseService->create((object) [
+                'name' => '1',
+                'assignedUserId' => $user->getId(),
+                'leadId' => $lead->getId(),
+                'accountId' => $account->getId(),
+            ], CreateParams::create());
+        }
+        catch (Forbidden) {
+            $isThrown = true;
+        }
+
+        $this->assertTrue($isThrown);
+
+        // Should create if an email with a Lead parent is passed.
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $caseService->create((object) [
+            'name' => '1',
+            'assignedUserId' => $user->getId(),
+            'leadId' => $lead->getId(),
+            'accountId' => $account->getId(),
+            'emailsIds' => [$email->getId()]
+        ], CreateParams::create());
+
+        //
+
+        $account = $em->createEntity(Account::ENTITY_TYPE);
+        $email = $em->createEntity(Email::ENTITY_TYPE, [
+            'assignedUserId' => $user->getId(),
+            'parentId' => $account->getId(),
+            'parentType' => Account::ENTITY_TYPE,
+        ]);
+
+        // Should not create if no access to the Account.
+
+        $isThrown = false;
+
+        try {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $caseService->create((object) [
+                'name' => '1',
+                'assignedUserId' => $user->getId(),
+                'accountId' => $account->getId(),
+            ], CreateParams::create());
+        }
+        catch (Forbidden) {
+            $isThrown = true;
+        }
+
+        $this->assertTrue($isThrown);
+
+        // Should create if an email with an Account parent is passed.
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $caseService->create((object) [
+            'name' => '1',
+            'assignedUserId' => $user->getId(),
+            'accountId' => $account->getId(),
+            'emailsIds' => [$email->getId()]
+        ], CreateParams::create());
+
+        //
+
+        $account = $em->createEntity(Account::ENTITY_TYPE, ['assignedUserId' => $user->getId()]);
+
+        $email = $em->createEntity(Email::ENTITY_TYPE, [
+            'assignedUserId' => $user->getId(),
+            'parentId' => $contact->getId(),
+            'parentType' => Contact::ENTITY_TYPE,
+        ]);
+
+        // Should not create if no access to the Contact.
+
+        $isThrown = false;
+
+        try {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $caseService->create((object) [
+                'name' => '1',
+                'assignedUserId' => $user->getId(),
+                'accountId' => $account->getId(),
+                'contactId' => $contact->getId(),
+                'contactsIds' => [$contact->getId()],
+            ], CreateParams::create());
+        }
+        catch (Forbidden) {
+            $isThrown = true;
+        }
+
+        $this->assertTrue($isThrown);
+
+        // Should create if an email with a Contact parent is passed.
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $caseService->create((object) [
+            'name' => '1',
+            'assignedUserId' => $user->getId(),
+            'accountId' => $account->getId(),
+            'contactId' => $contact->getId(),
+            'contactsIds' => [$contact->getId()],
+            'emailsIds' => [$email->getId()]
         ], CreateParams::create());
     }
 }
