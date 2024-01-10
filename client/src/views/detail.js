@@ -642,6 +642,8 @@ class DetailView extends MainView {
                 boolFilterList: boolFilterList,
                 mandatorySelectAttributeList: panelDefs.selectMandatoryAttributeList,
                 layoutName: panelDefs.selectLayout,
+                orderBy: panelDefs.selectOrderBy,
+                orderDirection: panelDefs.selectOrderDirection,
             }, dialog => {
                 dialog.render();
 

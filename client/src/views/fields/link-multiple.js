@@ -467,6 +467,15 @@ class LinkMultipleFieldView extends BaseFieldView {
                         url += '&' + $.param({where: advanced});
                     }
 
+                    if (this.panelDefs.selectOrderBy) {
+                        const direction = this.panelDefs.selectOrderDirection || 'asc';
+
+                        url += '&' + $.param({
+                            orderBy: this.panelDefs.selectOrderBy,
+                            order: direction,
+                        });
+                    }
+
                     resolve(url);
                 });
             });
@@ -489,6 +498,15 @@ class LinkMultipleFieldView extends BaseFieldView {
 
         if (Object.keys(notSelectedFilter).length) {
             url += '&' + $.param({'where': notSelectedFilter});
+        }
+
+        if (this.panelDefs.selectOrderBy) {
+            const direction = this.panelDefs.selectOrderDirection || 'asc';
+
+            url += '&' + $.param({
+                orderBy: this.panelDefs.selectOrderBy,
+                order: direction,
+            });
         }
 
         return url;
@@ -988,6 +1006,8 @@ class LinkMultipleFieldView extends BaseFieldView {
                 forceSelectAllAttributes: this.forceSelectAllAttributes,
                 createAttributesProvider: createAttributesProvider,
                 layoutName: this.panelDefs.selectLayout,
+                orderBy: this.panelDefs.selectOrderBy,
+                orderDirection: this.panelDefs.selectOrderDirection,
             }, dialog => {
                 dialog.render();
 

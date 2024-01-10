@@ -421,6 +421,14 @@
                             "type": "string"
                         }
                     },
+                    "selectOrderBy": {
+                        "type": "string",
+                        "description": "A field to order by when selecting records. As of v8.2."
+                    },
+                    "selectOrderDirection": {
+                        "type": "string",
+                        "description": "An direction to order by when selecting records. As of v8.2."
+                    },
                     "primaryFilter": {
                         "description": "A default primary filter. As of v8.1.",
                         "type": "string"
