@@ -387,17 +387,14 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                     methodOfCreation: "Jurnal"
                 })
             })
-                .then(response => {
-                    return response.json();
-                })
+                .then(response => response.json())
                 .then(mark => {
                     abon.mark = mark;
                     return this.recalculateAbonement(abon.id);
                 })
-                .then(response => response.json())
-                .then(abon => console.log(abon))
                 .then(() => {
                     abon.classesLeft = abon.classesLeft - 1;
+                    this.setAbonStatus(abon);
                     this.marksTotal++;
                 })
                 .finally(() => {
@@ -423,7 +420,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                     abon.classesLeft = abon.classesLeft + 1;
                     abon.mark = {};
                     this.marksTotal--;
-                    this.reRender();
+                    this.setAbonStatus(abon);
                 })
                 .finally(() => {
                     this.isLoading(false);
@@ -485,9 +482,17 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         setAbonStatus: function(abon) {
             if (abon.classesLeft <= 0) {
                 abon.isEmpty = true;
+                abon.isActive = false;
+            } else {
+                abon.isEmpty = false;
+                abon.isActive = true;
             }
             if (this.isPending(abon)) {
                 abon.isPending = true;
+                abon.isActive = false;
+            }
+            if (abon.isFreezed) {
+                abon.isActive = false;
             }
         },
 
