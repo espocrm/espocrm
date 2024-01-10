@@ -427,6 +427,7 @@
                     },
                     "selectOrderDirection": {
                         "type": "string",
+                        "enum": ["asc", "desc"],
                         "description": "An direction to order by when selecting records. As of v8.2."
                     },
                     "primaryFilter": {
