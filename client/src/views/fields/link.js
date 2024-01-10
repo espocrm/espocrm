@@ -543,6 +543,15 @@ class LinkFieldView extends BaseFieldView {
                         url += '&' + $.param({'where': filters.advanced});
                     }
 
+                    if (this.panelDefs.selectOrderBy) {
+                        const direction = this.panelDefs.selectOrderDirection || 'asc';
+
+                        url += '&' + $.param({
+                            orderBy: this.panelDefs.selectOrderBy,
+                            order: direction,
+                        });
+                    }
+
                     resolve(url);
                 });
             });
@@ -561,6 +570,15 @@ class LinkFieldView extends BaseFieldView {
 
         if (primary) {
             url += '&' + $.param({'primaryFilter': primary});
+        }
+
+        if (this.panelDefs.selectOrderBy) {
+            const direction = this.panelDefs.selectOrderDirection || 'asc';
+
+            url += '&' + $.param({
+                orderBy: this.panelDefs.selectOrderBy,
+                order: direction,
+            });
         }
 
         return url;
@@ -1111,6 +1129,8 @@ class LinkFieldView extends BaseFieldView {
                 filterList: this.getSelectFilterList(),
                 createAttributesProvider: createAttributesProvider,
                 layoutName: this.panelDefs.selectLayout,
+                orderBy: this.panelDefs.selectOrderBy,
+                orderDirection: this.panelDefs.selectOrderDirection,
             }, view => {
                 view.render();
 

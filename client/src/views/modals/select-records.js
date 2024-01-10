@@ -126,12 +126,15 @@ class SelectRecordsModalView extends ModalView {
 
         this.scope = this.entityType = this.options.scope || this.scope;
 
-        const customDefaultOrderBy = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'orderBy']);
-        const customDefaultOrder = this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'order']);
+        const orderBy = this.options.orderBy ||
+            this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'orderBy']);
 
-        if (customDefaultOrderBy) {
-            this.defaultOrderBy = customDefaultOrderBy;
-            this.defaultOrder = customDefaultOrder || false;
+        const order = this.options.orderDirection ||
+            this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'order']);
+
+        if (orderBy) {
+            this.defaultOrderBy = orderBy;
+            this.defaultOrder = order || false;
         }
 
         if (this.noCreateScopeList.indexOf(this.scope) !== -1) {
