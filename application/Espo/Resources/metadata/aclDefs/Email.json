@@ -4,5 +4,8 @@
     "portalAccessCheckerClassName": "Espo\\Classes\\AclPortal\\Email\\AccessChecker",
     "portalOwnershipCheckerClassName": "Espo\\Classes\\AclPortal\\Email\\OwnershipChecker",
     "assignmentCheckerClassName": "Espo\\Classes\\Acl\\Email\\AssignmentChecker",
-    "readOwnerUserField": "users"
+    "readOwnerUserField": "users",
+    "linkCheckerClassNameMap": {
+        "parent": "Espo\\Classes\\Acl\\Email\\LinkCheckers\\ParentLinkChecker"
+    }
 }
