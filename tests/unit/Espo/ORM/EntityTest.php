@@ -29,21 +29,21 @@
 
 namespace tests\unit\Espo\ORM;
 
-use Espo\ORM\{
-    Metadata,
-    MetadataDataProvider,
-    Defs,
-    Defs\DefsData,
-    BaseEntity,
-};
+use Espo\ORM\BaseEntity;
+use Espo\ORM\Defs;
+use Espo\ORM\Defs\DefsData;
+use Espo\ORM\Metadata;
+use Espo\ORM\MetadataDataProvider;
 
+use PHPUnit\Framework\TestCase;
+use RuntimeException;
 use tests\unit\testData\DB\Job;
 
 use Espo\Core\ORM\EntityManager;
 
 require_once 'tests/unit/testData/DB/Entities.php';
 
-class EntityTest extends \PHPUnit\Framework\TestCase
+class EntityTest extends TestCase
 {
     protected function setUp() : void
     {
@@ -75,7 +75,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return \Espo\ORM\BaseEntity
+     * @return BaseEntity
      */
     protected function createEntity(string $entityType, ?string $className = null)
     {
@@ -83,9 +83,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
 
         $classNameToUse = $className ?? BaseEntity::class;
 
-        $entity = new $classNameToUse($entityType, $defs, $this->entityManager);
-
-        return $entity;
+        return new $classNameToUse($entityType, $defs, $this->entityManager);
     }
 
     public function testIsAttributeChanged()
@@ -104,6 +102,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($job->isAttributeChanged('string'));
 
         $job = $this->createEntity('Job', Job::class);
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
         $job->set('string', null);
         $this->assertTrue($job->isAttributeChanged('string'));
 
@@ -169,6 +168,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($job->isAttributeChanged('array'));
 
         $job = $this->createEntity('Job', Job::class);
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
         $job->set('array', null);
         $this->assertTrue($job->isAttributeChanged('array'));
 
@@ -193,6 +193,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
 
         $job = $this->createEntity('Job', Job::class);
         $job->setFetched('arrayUnordered', ['1', '2']);
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
         $job->set('arrayUnordered', null);
         $this->assertTrue($job->isAttributeChanged('arrayUnordered'));
 
@@ -259,6 +260,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
             ]
         ];
 
+        /** @var Job $job */
         $job = $this->createEntity('Job', Job::class);
 
         $job->set('object', $original);
@@ -300,6 +302,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
             ]
         ];
 
+        /** @var Job $job */
         $job = $this->createEntity('Job', Job::class);
 
         $job->set('array', $original);
@@ -376,7 +379,7 @@ class EntityTest extends \PHPUnit\Framework\TestCase
     {
         $entity = $this->createEntity('Test');
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(RuntimeException::class);
 
         $entity->getId();
     }
@@ -392,12 +395,12 @@ class EntityTest extends \PHPUnit\Framework\TestCase
 
         $entity->setAsFetched();
 
-        $this->assertEquals(false, $entity->isAttributeWritten('int'));
+        $this->assertFalse($entity->isAttributeWritten('int'));
 
         $entity->set('int', '1');
 
-        $this->assertEquals(true, $entity->isAttributeWritten('int'));
-        $this->assertEquals(false, $entity->isAttributeWritten('object'));
+        $this->assertTrue($entity->isAttributeWritten('int'));
+        $this->assertFalse($entity->isAttributeWritten('object'));
     }
 
     public function testSetMultiple(): void
