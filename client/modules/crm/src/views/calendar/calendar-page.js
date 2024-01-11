@@ -222,6 +222,8 @@ class CalendarPage extends View {
                 this.date = date;
                 this.mode = mode;
 
+                Espo.Ui.notify(' ... ');
+
                 if (!initial) {
                     this.updateUrl();
                 }
