@@ -135,12 +135,12 @@ class CalendarPage extends View {
         this.mode = this.mode || this.options.mode || null;
         this.date = this.date || this.options.date || null;
 
-          if (!this.mode) {
+        if (!this.mode) {
             this.mode = this.getStorage().get('state', 'calendarMode') || null;
 
             if (this.mode && this.mode.indexOf('view-') === 0) {
-                let viewId = this.mode.slice(5);
-                let calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
+                const viewId = this.mode.slice(5);
+                const calendarViewDataList = this.getPreferences().get('calendarViewDataList') || [];
                 let isFound = false;
 
                 calendarViewDataList.forEach(item => {
@@ -160,7 +160,7 @@ class CalendarPage extends View {
         }
 
         this.events['keydown.main'] = e => {
-            let key = Espo.Utils.getKeyFromKeyEvent(e);
+            const key = Espo.Utils.getKeyFromKeyEvent(e);
 
             if (typeof this.shortcutKeys[key] === 'function') {
                 this.shortcutKeys[key].call(this, e.originalEvent);
@@ -170,10 +170,8 @@ class CalendarPage extends View {
         if (!this.mode || ~this.fullCalendarModeList.indexOf(this.mode) || this.mode.indexOf('view-') === 0) {
             this.setupCalendar();
         }
-        else {
-            if (this.mode === 'timeline') {
-                this.setupTimeline();
-            }
+        else if (this.mode === 'timeline') {
+            this.setupTimeline();
         }
     }
 
@@ -208,7 +206,7 @@ class CalendarPage extends View {
     }
 
     setupCalendar() {
-        let viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
+        const viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
             'crm:views/calendar/calendar';
 
         this.createView('calendar', viewName, {
@@ -254,7 +252,7 @@ class CalendarPage extends View {
     }
 
     setupTimeline() {
-        var viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) ||
+        const viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) ||
             'crm:views/calendar/timeline';
 
         this.createView('calendar', viewName, {
@@ -276,7 +274,7 @@ class CalendarPage extends View {
                 initial = false;
             });
 
-            this.listenTo(view, 'change:mode', (mode) => {
+            this.listenTo(view, 'change:mode', mode => {
                 this.mode = mode;
 
                 if (!this.options.userId) {
@@ -293,10 +291,10 @@ class CalendarPage extends View {
     }
 
     createCustomView() {
-        this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {}, (view) => {
+        this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {}, view => {
             view.render();
 
-            this.listenToOnce(view, 'after:save', (data) => {
+            this.listenToOnce(view, 'after:save', data => {
                 view.close();
                 this.mode = 'view-' + data.id;
                 this.date = null;
@@ -307,21 +305,19 @@ class CalendarPage extends View {
     }
 
     editCustomView() {
-        let viewId = this.getCalendarView().viewId;
+        const viewId = this.getCalendarView().viewId;
 
         if (!viewId) {
             return;
         }
 
-        this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {
-            id: viewId
-        }, (view) => {
+        this.createView('createCustomView', 'crm:views/calendar/modals/edit-view', {id: viewId}, view => {
             view.render();
 
             this.listenToOnce(view, 'after:save', () => {
                 view.close();
 
-                let calendarView = this.getCalendarView();
+                const calendarView = this.getCalendarView();
 
                 calendarView.setupMode();
                 calendarView.reRender();
@@ -410,14 +406,14 @@ class CalendarPage extends View {
      * @param {Number} digit
      */
     handleShortcutKeyDigit(e, digit) {
-        let modeList = this.getCalendarView().hasView('modeButtons') ?
+        const modeList = this.getCalendarView().hasView('modeButtons') ?
             this.getCalendarView()
                 .getModeButtonsView()
                 .getModeDataList(true)
                 .map(item => item.mode) :
             this.getCalendarView().modeList;
 
-        let mode = modeList[digit - 1];
+        const mode = modeList[digit - 1];
 
         if (!mode) {
             return;
