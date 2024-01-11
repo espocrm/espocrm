@@ -178,7 +178,6 @@ class BaseEntity implements Entity
 
         if (is_string($p1)) {
             $name = $p1;
-            $value = $p2;
 
             if ($name == 'id') {
                 $this->id = $value;
