@@ -88,30 +88,30 @@ class Saver implements SaverInterface
 
     private function storeData(Entity $entity): void
     {
+        if (!$entity->has('phoneNumberData')) {
+            return;
+        }
+
         $phoneNumberValue = $entity->get('phoneNumber');
 
         if (is_string($phoneNumberValue)) {
             $phoneNumberValue = trim($phoneNumberValue);
         }
 
-        $phoneNumberData = null;
-
-        if ($entity->has('phoneNumberData')) {
-            $phoneNumberData = $entity->get('phoneNumberData');
-        }
-
-        if (is_null($phoneNumberData)) {
-            return;
-        }
+        $phoneNumberData = $entity->get('phoneNumberData');
 
         if (!is_array($phoneNumberData)) {
             return;
         }
 
+        $noPrimary = array_filter($phoneNumberData, fn ($item) => !empty($item->primary)) === [];
+
+        if ($noPrimary && $phoneNumberData !== []) {
+            $phoneNumberData[0]->primary = true;
+        }
+
         $keyList = [];
-
         $keyPreviousList = [];
-
         $previousPhoneNumberData = [];
 
         if (!$entity->isNew()) {

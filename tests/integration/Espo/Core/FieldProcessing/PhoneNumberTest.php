@@ -30,13 +30,12 @@
 namespace tests\integration\Espo\Core\FieldProcessing;
 
 use Espo\Core\ORM\EntityManager;
+use Espo\Core\Field\PhoneNumber;
+use Espo\Core\Field\PhoneNumberGroup;
+use Espo\Modules\Crm\Entities\Lead;
+use tests\integration\Core\BaseTestCase;
 
-use Espo\Core\{
-    Field\PhoneNumberGroup,
-    Field\PhoneNumber,
-};
-
-class PhoneNumberTest extends \tests\integration\Core\BaseTestCase
+class PhoneNumberTest extends BaseTestCase
 {
     public function testPhoneNumber1(): void
     {
@@ -75,11 +74,8 @@ class PhoneNumberTest extends \tests\integration\Core\BaseTestCase
         $group3 = $contact->getPhoneNumberGroup();
 
         $this->assertEquals(2, $group3->getCount());
-
         $this->assertEquals('+2', $group3->getPrimary()->getNumber());
-
         $this->assertTrue($group3->getPrimary()->isInvalid());
-
         $this->assertTrue($group3->getList()[1]->isOptedOut());
 
         $group4 = PhoneNumberGroup
@@ -98,5 +94,25 @@ class PhoneNumberTest extends \tests\integration\Core\BaseTestCase
         $group5 = $contact->getPhoneNumberGroup();
 
         $this->assertEquals(1, $group5->getCount());
+    }
+
+    public function testPrimaryFirst(): void
+    {
+        $em = $this->getEntityManager();
+
+        $lead = $em->getRDBRepositoryByClass(Lead::class)
+            ->getNew();
+
+        $lead->set('phoneNumberData', [
+            (object) ['phoneNumber' => '+0000000001'],
+            (object) ['phoneNumber' => '+0000000002'],
+            (object) ['phoneNumber' => '+0000000003'],
+            (object) ['phoneNumber' => '+0000000004'],
+        ]);
+
+        $em->saveEntity($lead);
+        $em->refreshEntity($lead);
+
+        $this->assertEquals('+0000000001', $lead->getPhoneNumber());
     }
 }

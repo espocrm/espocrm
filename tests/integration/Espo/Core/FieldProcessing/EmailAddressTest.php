@@ -31,12 +31,12 @@ namespace tests\integration\Espo\Core\FieldProcessing;
 
 use Espo\Core\ORM\EntityManager;
 
-use Espo\Core\{
-    Field\EmailAddressGroup,
-    Field\EmailAddress,
-};
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\Core\Field\EmailAddress;
+use Espo\Core\Field\EmailAddressGroup;
+use tests\integration\Core\BaseTestCase;
 
-class EmailAddressTest extends \tests\integration\Core\BaseTestCase
+class EmailAddressTest extends BaseTestCase
 {
     public function testEmailAddress1(): void
     {
@@ -74,11 +74,8 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
         $group3 = $contact->getEmailAddressGroup();
 
         $this->assertEquals(2, $group3->getCount());
-
         $this->assertEquals('test-a@test.com', $group3->getPrimary()->getAddress());
-
         $this->assertTrue($group3->getPrimary()->isInvalid());
-
         $this->assertTrue($group3->getList()[1]->isOptedOut());
 
         $group4 = EmailAddressGroup::create()
@@ -119,5 +116,25 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(1, $group->getCount());
 
         $this->assertEquals('test@test.com', $group->getPrimary()->getAddress());
+    }
+
+    public function testPrimaryFirst(): void
+    {
+        $em = $this->getEntityManager();
+
+        $lead = $em->getRDBRepositoryByClass(Lead::class)
+            ->getNew();
+
+        $lead->set('emailAddressData', [
+            (object) ['emailAddress' => 'test-1@test.com'],
+            (object) ['emailAddress' => 'test-2@test.com'],
+            (object) ['emailAddress' => 'test-3@test.com'],
+            (object) ['emailAddress' => 'test-4@test.com'],
+        ]);
+
+        $em->saveEntity($lead);
+        $em->refreshEntity($lead);
+
+        $this->assertEquals('test-1@test.com', $lead->getEmailAddress());
     }
 }

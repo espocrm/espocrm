@@ -83,29 +83,30 @@ class Saver implements SaverInterface
 
     private function storeData(Entity $entity): void
     {
+        if (!$entity->has('emailAddressData')) {
+            return;
+        }
+
         $emailAddressValue = $entity->get('emailAddress');
 
         if (is_string($emailAddressValue)) {
             $emailAddressValue = trim($emailAddressValue);
         }
 
-        $emailAddressData = null;
-
-        if ($entity->has('emailAddressData')) {
-            $emailAddressData = $entity->get('emailAddressData');
-        }
-
-        if (is_null($emailAddressData)) {
-            return;
-        }
+        $emailAddressData = $entity->get('emailAddressData');
 
         if (!is_array($emailAddressData)) {
             return;
         }
 
+        $noPrimary = array_filter($emailAddressData, fn ($item) => !empty($item->primary)) === [];
+
+        if ($noPrimary && $emailAddressData !== []) {
+            $emailAddressData[0]->primary = true;
+        }
+
         $keyList = [];
         $keyPreviousList = [];
-
         $previousEmailAddressData = [];
 
         if (!$entity->isNew()) {
