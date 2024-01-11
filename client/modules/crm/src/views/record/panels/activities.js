@@ -567,6 +567,33 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 });
         }
 
+        if (!attributes.to && this.isBasePlus()) {
+            Espo.Ui.notify(' ... ');
+
+            Espo.Ajax.getRequest(`Activities/${this.model.entityType}/${this.model.id}/composeEmailAddressList`)
+                .then(/** Record[] */list => {
+                    if (!list.length) {
+                        callback.call(this, attributes);
+
+                        return;
+                    }
+
+                    attributes.to = '';
+                    attributes.nameHash = {};
+
+                    list.forEach(item => {
+                        attributes.to += item.emailAddress + ';';
+                        attributes.nameHash[item.emailAddress] = item.name;
+                    });
+
+                    Espo.Ui.notify(false);
+
+                    callback.call(this, attributes);
+                });
+
+            return;
+        }
+
         callback.call(this, attributes);
     }
 
@@ -651,6 +678,16 @@ class ActivitiesPanelView extends RelationshipPanelView {
             this.model.id + '/' + data.scope;
 
         super.actionViewRelatedList(data);
+    }
+
+    /**
+     * @protected
+     * @return {boolean}
+     */
+    isBasePlus() {
+        const type = this.getMetadata().get(`scopes.${this.model.entityType}.type`);
+
+        return type === 'BasePlus';
     }
 }
 
