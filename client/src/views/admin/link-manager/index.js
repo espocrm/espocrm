@@ -47,7 +47,7 @@ class LinkManagerIndexView extends View {
     events = {
         /** @this LinkManagerIndexView */
         'click a[data-action="editLink"]': function (e) {
-            var link = $(e.currentTarget).data('link');
+            const link = $(e.currentTarget).data('link');
 
             this.editLink(link);
         },
@@ -57,10 +57,11 @@ class LinkManagerIndexView extends View {
         },
         /** @this LinkManagerIndexView */
         'click [data-action="removeLink"]': function (e) {
-            var link = $(e.currentTarget).data('link');
-            this.confirm(this.translate('confirmation', 'messages'), function () {
+            const link = $(e.currentTarget).data('link');
+
+            this.confirm(this.translate('confirmation', 'messages'), () => {
                 this.removeLink(link);
-            }, this);
+            });
         },
         /** @this LinkManagerIndexView */
         'keyup input[data-name="quick-search"]': function (e) {
@@ -121,17 +122,19 @@ class LinkManagerIndexView extends View {
             !!this.getMetadata().get(`scopes.${this.scope}.customizable`) &&
             this.getMetadata().get(`scopes.${this.scope}.entityManager.relationships`) !== false;
 
-        const links = this.getMetadata().get('entityDefs.' + this.scope + '.links');
+        const links = /** @type {Object.<string, Record>}*/
+            this.getMetadata().get('entityDefs.' + this.scope + '.links');
 
         const linkList = Object.keys(links).sort((v1, v2) => {
             return v1.localeCompare(v2);
         });
 
         linkList.forEach(link => {
-            var d = links[link];
+            const d = links[link];
+
             let type;
 
-            var linkForeign = d.foreign;
+            const linkForeign = d.foreign;
 
             if (d.type === 'belongsToParent') {
                 type = 'childrenToParent';
@@ -145,7 +148,7 @@ class LinkManagerIndexView extends View {
                     return;
                 }
 
-                var foreignType = this.getMetadata()
+                const foreignType = this.getMetadata()
                     .get('entityDefs.' + d.entity + '.links.' + d.foreign + '.type');
 
                 type = this.computeRelationshipType(d.type, foreignType);
@@ -247,13 +250,17 @@ class LinkManagerIndexView extends View {
     }
 
     renderHeader() {
+        const $header = $('#scope-header');
+
         if (!this.scope) {
-            $('#scope-header').html('');
+            $header.html('');
 
             return;
         }
 
-        $('#scope-header').show().html(this.getLanguage().translate(this.scope, 'scopeNames'));
+        $header
+            .show()
+            .html(this.getLanguage().translate(this.scope, 'scopeNames'));
     }
 
     updatePageTitle() {
@@ -263,7 +270,7 @@ class LinkManagerIndexView extends View {
     processQuickSearch(text) {
         text = text.trim();
 
-        let $noData = this.$noData;
+        const $noData = this.$noData;
 
         $noData.addClass('hidden');
 
@@ -273,17 +280,17 @@ class LinkManagerIndexView extends View {
             return;
         }
 
-        let matchedList = [];
+        const matchedList = [];
 
-        let lowerCaseText = text.toLowerCase();
+        const lowerCaseText = text.toLowerCase();
 
         this.linkDataList.forEach(item => {
             let matched = false;
 
-            let label = item.label || '';
-            let link = item.link || '';
-            let entityForeign = item.entityForeign || '';
-            let labelEntityForeign = item.labelEntityForeign || '';
+            const label = item.label || '';
+            const link = item.link || '';
+            const entityForeign = item.entityForeign || '';
+            const labelEntityForeign = item.labelEntityForeign || '';
 
             if (
                 label.toLowerCase().indexOf(lowerCaseText) === 0 ||
@@ -295,7 +302,7 @@ class LinkManagerIndexView extends View {
             }
 
             if (!matched) {
-                let wordList = link.split(' ')
+                const wordList = link.split(' ')
                     .concat(
                         label.split(' ')
                     )
