@@ -847,6 +847,9 @@ class LinkManager
 
             $this->metadata->save();
 
+            $this->deleteFromLanguage($entity, 'links', $link);
+            $this->saveLanguage();
+
             return;
         }
 
@@ -861,6 +864,11 @@ class LinkManager
             if ($linkForeign) {
                 $this->updateParentForeignLinks($entity, $link, $linkForeign, []);
             }
+
+            $this->deleteFromLanguage($entity, 'fields', $link);
+            $this->deleteFromLanguage($entity, 'links', $link);
+
+            $this->saveLanguage();
 
             return;
         }
@@ -907,12 +915,12 @@ class LinkManager
 
         $this->metadata->delete('entityDefs', $entity, [
             'fields.' . $link,
-            'links.' . $link
+            'links.' . $link,
         ]);
 
         $this->metadata->delete('entityDefs', $entityForeign, [
             'fields.' . $linkForeign,
-            'links.' . $linkForeign
+            'links.' . $linkForeign,
         ]);
 
         $this->metadata->delete('clientDefs', $entity, ['relationshipPanels.' . $link]);
@@ -923,6 +931,14 @@ class LinkManager
         if ($linkParams) {
             $this->linkHookProcessor->processDelete($linkParams);
         }
+
+        $this->deleteFromLanguage($entity, 'fields', $link);
+        $this->deleteFromLanguage($entity, 'links', $link);
+
+        $this->deleteFromLanguage($entityForeign, 'fields', $linkForeign);
+        $this->deleteFromLanguage($entityForeign, 'links', $linkForeign);
+
+        $this->saveLanguage();
 
         $this->dataManager->clearCache();
     }
@@ -1013,13 +1029,7 @@ class LinkManager
                             'links.' . $linkForeign,
                         ]);
 
-                        $this->language->delete($itemEntityType, 'links', $linkForeign);
-
-                        if (
-                            $this->isLanguageNotBase()
-                        ) {
-                            $this->baseLanguage->delete($itemEntityType, 'links', $linkForeign);
-                        }
+                        $this->deleteFromLanguage($itemEntityType, 'links', $linkForeign);
                     }
 
                     break;
@@ -1049,11 +1059,15 @@ class LinkManager
         }
 
         $this->metadata->save();
+        $this->saveLanguage();
+    }
 
-        $this->language->save();
+    private function deleteFromLanguage(string $scope, string $category, string $item): void
+    {
+        $this->language->delete($scope, $category, $item);
 
         if ($this->isLanguageNotBase()) {
-            $this->baseLanguage->save();
+            $this->baseLanguage->delete($scope, $category, $item);
         }
     }
 
@@ -1065,5 +1079,14 @@ class LinkManager
     private function isNameTooLong(string $name): bool
     {
         return strlen(Util::camelCaseToUnderscore($name)) > self::MAX_LINK_NAME_LENGTH;
+    }
+
+    private function saveLanguage(): void
+    {
+        $this->language->save();
+
+        if ($this->isLanguageNotBase()) {
+            $this->baseLanguage->save();
+        }
     }
 }
