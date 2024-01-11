@@ -498,7 +498,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
     getComposeEmailAttributes(scope, data, callback) {
         const attributes = {
             status: 'Draft',
-            to: this.model.get('emailAddress')
+            to: this.model.get('emailAddress'),
         };
 
         if (this.model.entityType === 'Contact') {
@@ -547,7 +547,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
         if (
             attributes.parentType &&
             attributes.parentType === this.model.entityType &&
-            ~emailKeepParentTeamsEntityList.indexOf(attributes.parentType) &&
+            emailKeepParentTeamsEntityList.includes(attributes.parentType) &&
             this.model.get('teamsIds') &&
             this.model.get('teamsIds').length
         ) {
@@ -556,7 +556,7 @@ class ActivitiesPanelView extends RelationshipPanelView {
 
             const defaultTeamId = this.getUser().get('defaultTeamId');
 
-            if (defaultTeamId && !~attributes.teamsIds.indexOf(defaultTeamId)) {
+            if (defaultTeamId && !attributes.teamsIds.includes(defaultTeamId)) {
                 attributes.teamsIds.push(defaultTeamId);
                 attributes.teamsNames[defaultTeamId] = this.getUser().get('defaultTeamName');
             }
