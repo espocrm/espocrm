@@ -59,7 +59,7 @@ class LinkManagerIndexView extends View {
         'click [data-action="removeLink"]': function (e) {
             const link = $(e.currentTarget).data('link');
 
-            this.confirm(this.translate('confirmation', 'messages'), () => {
+            this.confirm(this.translate('confirmRemoveLink', 'messages', 'EntityManager'), () => {
                 this.removeLink(link);
             });
         },
