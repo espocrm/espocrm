@@ -30,6 +30,7 @@
 namespace Espo\Core\FieldProcessing\PhoneNumber;
 
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\PhoneNumber;
 use Espo\Repositories\PhoneNumber as PhoneNumberRepository;
 
@@ -64,7 +65,7 @@ class Saver implements SaverInterface
             return;
         }
 
-        if ($defs->getField('phoneNumber')->getType() !== 'phone') {
+        if ($defs->getField('phoneNumber')->getType() !== FieldType::PHONE) {
             return;
         }
 
@@ -82,8 +83,6 @@ class Saver implements SaverInterface
 
         if ($entity->has('phoneNumber')) {
             $this->storePrimary($entity);
-
-            return;
         }
     }
 
@@ -132,19 +131,15 @@ class Saver implements SaverInterface
                 continue;
             }
 
-            if (isset($row->type)) {
-                $type = $row->type;
-            }
-            else {
-                $type = $this->metadata
+            $type = $row->type ??
+                $this->metadata
                     ->get(['entityDefs', $entity->getEntityType(), 'fields', 'phoneNumber', 'defaultType']);
-            }
 
             $hash->$key = [
-                'primary' => !empty($row->primary) ? true : false,
+                'primary' => !empty($row->primary),
                 'type' => $type,
-                'optOut' => !empty($row->optOut) ? true : false,
-                'invalid' => !empty($row->invalid) ? true : false,
+                'optOut' => !empty($row->optOut),
+                'invalid' => !empty($row->invalid),
             ];
 
             $keyList[] = $key;
@@ -192,10 +187,10 @@ class Saver implements SaverInterface
             }
 
             $hashPrevious->$key = [
-                'primary' => $row->primary ? true : false,
+                'primary' => (bool) $row->primary,
                 'type' => $row->type,
-                'optOut' => $row->optOut ? true : false,
-                'invalid' => $row->invalid ? true : false,
+                'optOut' => (bool) $row->optOut,
+                'invalid' => (bool) $row->invalid,
             ];
 
             $keyPreviousList[] = $key;
@@ -210,8 +205,6 @@ class Saver implements SaverInterface
         $revertData = [];
 
         foreach ($keyList as $key) {
-            $data = $hash->$key;
-
             $new = true;
             $changed = false;
 
@@ -227,16 +220,18 @@ class Saver implements SaverInterface
                     $hash->{$key}['optOut'] != $hashPrevious->{$key}['optOut'] ||
                     $hash->{$key}['invalid'] != $hashPrevious->{$key}['invalid'];
 
-                if ($hash->{$key}['primary']) {
-                    if ($hash->{$key}['primary'] == $hashPrevious->{$key}['primary']) {
-                        $primary = false;
-                    }
+                if (
+                    $hash->{$key}['primary'] &&
+                    $hash->{$key}['primary'] === $hashPrevious->{$key}['primary']
+                ) {
+                    $primary = false;
                 }
             }
 
             if ($new) {
                 $toCreateList[] = $key;
             }
+
             if ($changed) {
                 $toUpdateList[] = $key;
             }
@@ -417,75 +412,9 @@ class Saver implements SaverInterface
 
         if (!empty($phoneNumberValue)) {
             if ($phoneNumberValue !== $entity->getFetched('phoneNumber')) {
-
-                $phoneNumberNew = $this->entityManager
-                    ->getRDBRepository(PhoneNumber::ENTITY_TYPE)
-                    ->where([
-                        'name' => $phoneNumberValue,
-                    ])
-                    ->findOne();
-
-                if (!$phoneNumberNew) {
-                    $phoneNumberNew = $this->entityManager->getNewEntity(PhoneNumber::ENTITY_TYPE);
-
-                    $phoneNumberNew->set('name', $phoneNumberValue);
-
-                    if ($entity->has('phoneNumberIsOptedOut')) {
-                        $phoneNumberNew->set('optOut', (bool) $entity->get('phoneNumberIsOptedOut'));
-                    }
-
-                    if ($entity->has('phoneNumberIsInvalid')) {
-                        $phoneNumberNew->set('invalid', (bool) $entity->get('phoneNumberIsInvalid'));
-                    }
-
-                    $defaultType = $this->metadata
-                        ->get('entityDefs.' .  $entity->getEntityType() . '.fields.phoneNumber.defaultType');
-
-                    $phoneNumberNew->set('type', $defaultType);
-
-                    $this->entityManager->saveEntity($phoneNumberNew);
-                }
-
-                $phoneNumberValueOld = $entity->getFetched('phoneNumber');
-
-                if (!empty($phoneNumberValueOld)) {
-                    $phoneNumberOld = $this->getByNumber($phoneNumberValueOld);
-
-                    if ($phoneNumberOld) {
-                        $entityRepository
-                            ->getRelation($entity, 'phoneNumbers')
-                            ->unrelate($phoneNumberOld, [SaveOption::SKIP_HOOKS => true]);
-                    }
-                }
-
-                $entityRepository
-                    ->getRelation($entity, 'phoneNumbers')
-                    ->relate($phoneNumberNew, null, [SaveOption::SKIP_HOOKS => true]);
-
-                if ($entity->has('phoneNumberIsOptedOut')) {
-                    $this->markNumberOptedOut($phoneNumberValue, (bool) $entity->get('phoneNumberIsOptedOut'));
-                }
-
-                if ($entity->has('phoneNumberIsInvalid')) {
-                    $this->markNumberInvalid($phoneNumberValue, (bool) $entity->get('phoneNumberIsInvalid'));
-                }
-
-                $update = $this->entityManager
-                    ->getQueryBuilder()
-                    ->update()
-                    ->in('EntityPhoneNumber')
-                    ->set(['primary' => true])
-                    ->where([
-                        'entityId' => $entity->getId(),
-                        'entityType' => $entity->getEntityType(),
-                        'phoneNumberId' => $phoneNumberNew->getId(),
-                    ])
-                    ->build();
-
-                $this->entityManager->getQueryExecutor()->execute($update);
+                $this->storePrimaryNotEmpty($phoneNumberValue, $entity);
 
                 return;
-
             }
 
             if (
@@ -565,5 +494,76 @@ class Saver implements SaverInterface
         // @todo Check if not modified by system.
 
         return !$this->accessChecker->checkEdit($user, $phoneNumber, $entity);
+    }
+
+    private function storePrimaryNotEmpty(string $phoneNumberValue, Entity $entity): void
+    {
+        $entityRepository = $this->entityManager->getRDBRepository($entity->getEntityType());
+
+        $phoneNumberNew = $this->entityManager
+            ->getRDBRepository(PhoneNumber::ENTITY_TYPE)
+            ->where([
+                'name' => $phoneNumberValue,
+            ])
+            ->findOne();
+
+        if (!$phoneNumberNew) {
+            $phoneNumberNew = $this->entityManager->getNewEntity(PhoneNumber::ENTITY_TYPE);
+
+            $phoneNumberNew->set('name', $phoneNumberValue);
+
+            if ($entity->has('phoneNumberIsOptedOut')) {
+                $phoneNumberNew->set('optOut', (bool)$entity->get('phoneNumberIsOptedOut'));
+            }
+
+            if ($entity->has('phoneNumberIsInvalid')) {
+                $phoneNumberNew->set('invalid', (bool)$entity->get('phoneNumberIsInvalid'));
+            }
+
+            $defaultType = $this->metadata
+                ->get('entityDefs.' . $entity->getEntityType() . '.fields.phoneNumber.defaultType');
+
+            $phoneNumberNew->set('type', $defaultType);
+
+            $this->entityManager->saveEntity($phoneNumberNew);
+        }
+
+        $phoneNumberValueOld = $entity->getFetched('phoneNumber');
+
+        if (!empty($phoneNumberValueOld)) {
+            $phoneNumberOld = $this->getByNumber($phoneNumberValueOld);
+
+            if ($phoneNumberOld) {
+                $entityRepository
+                    ->getRelation($entity, 'phoneNumbers')
+                    ->unrelate($phoneNumberOld, [SaveOption::SKIP_HOOKS => true]);
+            }
+        }
+
+        $entityRepository
+            ->getRelation($entity, 'phoneNumbers')
+            ->relate($phoneNumberNew, null, [SaveOption::SKIP_HOOKS => true]);
+
+        if ($entity->has('phoneNumberIsOptedOut')) {
+            $this->markNumberOptedOut($phoneNumberValue, (bool)$entity->get('phoneNumberIsOptedOut'));
+        }
+
+        if ($entity->has('phoneNumberIsInvalid')) {
+            $this->markNumberInvalid($phoneNumberValue, (bool)$entity->get('phoneNumberIsInvalid'));
+        }
+
+        $update = $this->entityManager
+            ->getQueryBuilder()
+            ->update()
+            ->in('EntityPhoneNumber')
+            ->set(['primary' => true])
+            ->where([
+                'entityId' => $entity->getId(),
+                'entityType' => $entity->getEntityType(),
+                'phoneNumberId' => $phoneNumberNew->getId(),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($update);
     }
 }
