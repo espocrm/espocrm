@@ -56,7 +56,6 @@ define('crm:views/case/record/panels/activities', ['crm:views/record/panels/acti
                     Espo.Ui.notify(false);
 
                     callback.call(this, attributes);
-
                 });
             })
         },
