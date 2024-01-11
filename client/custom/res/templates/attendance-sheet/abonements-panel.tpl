@@ -77,7 +77,7 @@
                                 {{this.number}}
                             </td>
                             <td>
-                                <span data-id={{this.id}} class="abon-name cp highlight">{{this.name}}</span>
+                                <span data-id={{this.id}} class="other-group cp highlight">{{this.name}}</span>
                                 <span class="label label-default">Інша група</span>
                             </td>
                             <td>
@@ -134,7 +134,7 @@
                     </button>
                 </div>
                 <div class="margin-bottom">
-                    <button class="btn btn-sm btn-default btn-add" data-action="createFloatingMark">
+                    <button class="btn btn-sm btn-default btn-floating-mark">
                         <span class="fas fa-user-check"></span>
                         Інша група
                     </button>

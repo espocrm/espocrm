@@ -20,7 +20,9 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             this.addHandler('click', ".mark", 'handleMark');
             this.addHandler('click', ".fa-exclamation-circle", 'handleShowNote');
             this.addHandler('click', ".abon-name", 'handleEditAbon');
+            this.addHandler('click', ".other-group", 'handleEditAbonOtherGroups');
             this.addHandler('click', ".btn-add", "handleAddButton");
+            this.addHandler('click', ".btn-floating-mark", "createFloatingMark");
             this.addHandler('click', ".fa-calendar", "handleViewMarks");
             this.addHandler('click', ".floating-mark", "deleteFloatingMark");
         },
@@ -183,8 +185,11 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                     markModel.defs.fields.training.defaultAttributes = null;
                     this.showModalLoading(false);
 
-                    this.listenToOnce(view, 'after:save', () => {
-                        this.fetchAbonements(this.trainingId, this.groupId, this.groupName);
+                    this.listenToOnce(view, 'after:save', (mark) => {
+                        this.recalculateAbonement(mark.attributes.abonementId)
+                            .then(() => {
+                                this.fetchAbonements(this.trainingId, this.groupId, this.groupName);
+                            });
                     });
                 });
             } catch (error) {
@@ -199,7 +204,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 .then(responce => responce.json())
                 .then(abonUpdated => {
                     abon.classesLeft = abonUpdated.classesLeft;
-                    Espo.Ui.notify('Перераховано', 'success', 1000);
+                    Espo.Ui.notify('Заняття перераховані', 'success', 1000);
                     this.reRender();
                 });
         },
@@ -211,7 +216,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 .then(responce => responce.json())
                 .then(abonUpdated => {
                     abon.classesLeft = abonUpdated.classesLeft;
-                    Espo.Ui.notify('Перераховано', 'success', 1000);
+                    Espo.Ui.notify('Заняття перераховані', 'success', 1000);
                     this.reRender();
                 });
         },
@@ -334,14 +339,18 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         },
 
         handleEditAbon: function(e) {
-            this.showModalLoading(true);
             const abon = this.abonements.list.find(abon => abon.id === e.target.dataset.id);
-            
-            let options = {
-                attributes: {},
-                scope: 'Abonement',
-                id: abon.id
-            };
+            this.createEditAbonModal(abon);
+        },
+
+        handleEditAbonOtherGroups: function(e) {
+            const abon = this.otherGroupsAbons.list.find(abon => abon.id === e.target.dataset.id);
+            this.createEditAbonModal(abon);
+        },
+
+        createEditAbonModal: function(abon) {
+            this.showModalLoading(true);
+            let options = { scope: 'Abonement', id: abon.id };
             this.createView('abonEdit', 'views/modals/edit', options, view => {
                 view.render();
                 this.showModalLoading(false);
