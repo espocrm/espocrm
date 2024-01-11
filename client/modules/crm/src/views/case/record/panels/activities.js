@@ -38,7 +38,7 @@ define('crm:views/case/record/panels/activities', ['crm:views/record/panels/acti
             Dep.prototype.getComposeEmailAttributes.call(this, scope, data, attributes => {
                 attributes.name = '[#' + this.model.get('number') + '] ' + this.model.get('name');
 
-                Espo.Ajax.getRequest('Case/action/emailAddressList?id=' + this.model.id).then(list =>{
+                Espo.Ajax.getRequest('Case/action/emailAddressList?id=' + this.model.id).then(list => {
                     attributes.to = '';
                     attributes.cc = '';
                     attributes.nameHash = {};
