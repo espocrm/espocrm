@@ -56,6 +56,13 @@
             },
             "default": "Jurnal",
             "isCustom": true
+        },
+        "isOtherGroup": {
+            "notNull": true,
+            "type": "bool",
+            "tooltip": true,
+            "isCustom": true,
+            "default": false
         }
     },
     "links": {

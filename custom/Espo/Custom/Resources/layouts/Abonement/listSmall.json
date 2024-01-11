@@ -2,12 +2,17 @@
     {
         "name": "number",
         "widthPx": 75,
-        "align": "left"
+        "align": "left",
+        "label": "Номер"
     },
     {
         "name": "name",
         "link": true,
         "label": "Ім'я"
+    },
+    {
+        "name": "groups",
+        "notSortable": true
     },
     {
         "name": "classesLeft",

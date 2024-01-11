@@ -2,7 +2,8 @@
     "fields": {
         "abonement": "Абонемент",
         "training": "Заняття",
-        "methodOfCreation": "Спосіб створення"
+        "methodOfCreation": "Спосіб створення",
+        "isOtherGroup": "З іншої групи"
     },
     "links": {
         "abonement": "Абонемент",
@@ -16,5 +17,8 @@
             "Jurnal": "Журнал",
             "Scanner": "Сканер"
         }
+    },
+    "tooltips": {
+        "isOtherGroup": "Відмітка зроблена за допомогою кнопки на журналі \"З іншої групи\""
     }
 }

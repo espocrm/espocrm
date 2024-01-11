@@ -6,20 +6,23 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         setup: function() {
             this.today = new Date().toLocaleDateString().split('.').reverse().join('-');
             this.abonements = { list: [], total: 0 };
+            this.otherGroupsAbons = { list: [], total: 0 };
             this.trainingId = null;
             this.groupId = null;
             this.groupName = null;
             this.marksTotal = 0;
+            this.marks = { list: [], total: 0 };
             
             this.initHandlers();
         },
 
         initHandlers: function() {
-            this.addHandler('click', '.form-checkbox', 'handleMark');
+            this.addHandler('click', ".mark", 'handleMark');
             this.addHandler('click', ".fa-exclamation-circle", 'handleShowNote');
             this.addHandler('click', ".abon-name", 'handleEditAbon');
-            this.addHandler('click', ".btn-add", "handleAddTraining");
+            this.addHandler('click', ".btn-add", "handleAddButton");
             this.addHandler('click', ".fa-calendar", "handleViewMarks");
+            this.addHandler('click', ".floating-mark", "deleteFloatingMark");
         },
 
         afterRender: function () {
@@ -33,7 +36,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             }
         },
 
-        handleAddTraining: function(e) {
+        handleAddButton: function(e) {
             this[e.target.dataset.action](e);
         },
 
@@ -158,34 +161,30 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             delete abonModel.defs.fields.classesLeft.default;
         },
 
-        addFloatingMark: async function(e) {
-            Espo.Ui.notify('Функція в процесі розробки', 'warning', 1000);
-            const abon = this.abonements.list.find(abon => abon.id === e.target.dataset.id);
-
+        createFloatingMark: async function(e) {
             this.showModalLoading(true);
             try {
                 const markModel = await this.getModelFactory().create('Mark');
+                markModel.defs.fields.isOtherGroup.default = true;
                 markModel.defs.fields.methodOfCreation.readOnly = true;
-                markModel.defs.fields.abonement.readOnly = true;
-                markModel.defs.fields.abonement.defaultAttributes = {
-                    abonementId: abon.id,
-                    abonementName: abon.name
+                markModel.defs.fields.training.readOnly = true;
+                markModel.defs.fields.training.readOnly = true;
+                markModel.defs.fields.training.defaultAttributes = {
+                    trainingId: this.trainingId,
+                    trainingName: this.groupName
                 }
-
+                
                 let options = { scope: 'Mark', model: markModel };
                 this.createView('quickCreate', 'views/modals/edit', options, view => {
                     view.render();
+                    markModel.defs.fields.isOtherGroup.default = false;
                     markModel.defs.fields.methodOfCreation.readOnly = false;
-                    markModel.defs.fields.abonement.readOnly = false;
-                    markModel.defs.fields.abonement.defaultAttributes = null;
+                    markModel.defs.fields.training.readOnly = false;
+                    markModel.defs.fields.training.defaultAttributes = null;
                     this.showModalLoading(false);
 
-                    this.listenToOnce(view, 'after:save', model => {
-                        this.recalculateAbonement(abon.id)
-                            .then(() => {
-                                this.fetchAbonements(this.trainingId, this.groupId, this.groupName);
-                            })
-                            .catch(error => console.log(error));
+                    this.listenToOnce(view, 'after:save', () => {
+                        this.fetchAbonements(this.trainingId, this.groupId, this.groupName);
                     });
                 });
             } catch (error) {
@@ -197,8 +196,23 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             const abon = this.abonements.list.find(abon => abon.id === e.target.dataset.id);
 
             this.recalculateAbonement(abon.id)
-                .then(() => {
+                .then(responce => responce.json())
+                .then(abonUpdated => {
+                    abon.classesLeft = abonUpdated.classesLeft;
                     Espo.Ui.notify('Перераховано', 'success', 1000);
+                    this.reRender();
+                });
+        },
+
+        recalculateOther: async function(e) {
+            const abon = this.otherGroupsAbons.list.find(abon => abon.id === e.target.dataset.id);
+            
+            this.recalculateAbonement(abon.id)
+                .then(responce => responce.json())
+                .then(abonUpdated => {
+                    abon.classesLeft = abonUpdated.classesLeft;
+                    Espo.Ui.notify('Перераховано', 'success', 1000);
+                    this.reRender();
                 });
         },
 
@@ -239,10 +253,17 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 })
                 .then(marks => {
                     this.marksTotal = marks.total;
+                    this.marks = marks;
                     this.abonements = this.attachMarksToAbonements(this.abonements, marks.list);
+                    
+                    return this.fetchOtherAbons(this.abonements.list, marks.list);
+                })
+                .then(otherAbons => {
+                    this.otherGroupsAbons = this.attachMarksToAbonements(otherAbons, this.marks.list);
                     this.setAbonsStatus(this.abonements.list);
+                    this.setAbonsStatus(this.otherGroupsAbons.list);
                     this.reRender();
-                    this.showNote()
+                    this.showNote();
                 })
                 .finally(() => this.isLoading(false))
                 .catch((error) => {
@@ -259,6 +280,44 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             });
 
             return abonsWithMarks;
+        },
+
+        fetchOtherAbons: function(abonements, marks) {
+            const floatingMarkIds = this.getMarksFromOtherGroups(abonements, marks);
+            if (floatingMarkIds.length) {
+                return this.fetchAbonementsFromOtherGroups(floatingMarkIds);
+            }
+
+            return { list: [], total: 0 };
+        },
+
+        getMarksFromOtherGroups: function(abonements, marks) {
+            const floatingMarkIds = [];
+
+            marks.forEach(mark => {
+                const abonFromOtherGroup = abonements.find(abon => abon.id === mark.abonementId)
+                if (!abonFromOtherGroup) {
+                    floatingMarkIds.push(mark.abonementId);
+                }
+            });
+
+            return floatingMarkIds;
+        },
+
+        fetchAbonementsFromOtherGroups: async function(abonIds) {
+            try {
+                const collection = await this.getCollectionFactory().create('Abonement')
+                collection.maxSize = 10000;
+                collection.where = [{
+                    "type": "in",
+                    "attribute": "id",
+                    "value": abonIds,
+                }];
+                const otherAbons = await collection.fetch();
+                return otherAbons;
+            } catch(error) {
+                this.handleError(error);
+            }
         },
 
         showNote: function() {
@@ -288,7 +347,6 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 this.showModalLoading(false);
                 
                 this.listenToOnce(view, 'after:save', () => {
-                    console.log(this);
                     this.fetchAbonements(this.trainingId, this.groupId, this.groupName);
                 });
             });
@@ -431,6 +489,31 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 });
         },
 
+        deleteFloatingMark: function(e) {
+            const markId = e.target.dataset.markId;
+            const abon = this.otherGroupsAbons.list.find(abon => abon.mark.id == markId);
+            this.isLoading(true);
+            fetch(`/api/v1/Mark/${markId}`, {
+                method: 'DELETE',
+            })  
+                .then(response => response.json())
+                .then(mark => {
+                    this.marksTotal--;
+                    return this.recalculateAbonement(abon.id);
+                })
+                .then(() => {
+                    const abonIndex = this.otherGroupsAbons.list.findIndex(a => a.id == abon.id);
+                    this.otherGroupsAbons.list.splice(abonIndex, 1);
+                })
+                .finally(() => {
+                    this.isLoading(false);
+                    this.reRender();
+                })
+                .catch(error => {
+                    this.handleError(error);
+                });
+        },
+
         //trigger formula-script
         recalculateAbonement: function(abonementId) {
             return fetch('/api/v1/Abonement/' + abonementId, {
@@ -538,6 +621,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             return {
                 trainingId: this.trainingId,
                 abonements: this.abonements.list,
+                otherAbonements: this.otherGroupsAbons.list,
                 abonementsTotal: this.abonements.total,
                 marksTotal: this.marksTotal
             }

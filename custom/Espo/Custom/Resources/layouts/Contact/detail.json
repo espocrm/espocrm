@@ -29,14 +29,6 @@
                 {
                     "name": "description"
                 }
-            ],
-            [
-                {
-                    "name": "birthdayString"
-                },
-                {
-                    "name": "birthdayWithoutYear"
-                }
             ]
         ],
         "style": "default",

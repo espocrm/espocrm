@@ -16,6 +16,12 @@
                 {
                     "name": "abonement"
                 }
+            ],
+            [
+                {
+                    "name": "isOtherGroup"
+                },
+                false
             ]
         ],
         "style": "default",
