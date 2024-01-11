@@ -347,7 +347,7 @@ class Entity extends BaseEntity
             throw new LogicException("Non-object value in `$namesAttribute`.");
         }
 
-        return $object?->$id ?? null;
+        return $object->$id ?? null;
     }
 
     /**
@@ -397,7 +397,7 @@ class Entity extends BaseEntity
             throw new LogicException("Non-object value in `$columnsAttribute`.");
         }
 
-        return $object?->$id?->$column ?? null;
+        return $object->$id?->$column ?? null;
     }
 
     /**
