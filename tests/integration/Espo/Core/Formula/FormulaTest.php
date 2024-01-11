@@ -387,29 +387,33 @@ class FormulaTest extends BaseTestCase
 
     public function testRecordFindRelatedMany()
     {
-        $fm = $this->getContainer()->get('formulaManager');
-        $em = $this->getContainer()->get('entityManager');
+        $fm = $this->getContainer()->getByClass(Manager::class);
+        $em = $this->getContainer()->getByClass(EntityManager::class);
 
         $a = $em->createEntity('Account', []);
+        $c1 = $em->createEntity('Contact', []);
+        $c2 = $em->createEntity('Contact', []);
 
         $o1 = $em->createEntity('Opportunity', [
             'accountId' => $a->getId(),
             'stage' => 'Prospecting',
             'name' => '1',
+            'contactsIds' => [$c1->getId()],
         ]);
         $o2 = $em->createEntity('Opportunity', [
             'accountId' => $a->getId(),
             'stage' => 'Closed Won',
             'name' => '2',
+            'contactsIds' => [$c1->getId()],
         ]);
         $o3 = $em->createEntity('Opportunity', [
             'accountId' => $a->getId(),
             'stage' => 'Prospecting',
             'name' => '3',
+            'contactsIds' => [$c2->getId()],
         ]);
 
-        $ow1 = $em->createEntity('Opportunity', []);
-
+        $em->createEntity('Opportunity', []);
 
         $script = "record\\findRelatedMany('Account', '".$a->getId()."', 'opportunities', 2, null, null, 'open')";
         $result = $fm->run($script);
@@ -436,6 +440,11 @@ class FormulaTest extends BaseTestCase
         $result = $fm->run($script);
         $this->assertIsArray($result);
         $this->assertEquals([$o1->getId(), $o3->getId()], $result);
+
+        $script = "record\\findRelatedMany('Contact', '{$c1->getId()}', 'opportunities', 10, 'name')";
+        $result = $fm->run($script);
+        $this->assertIsArray($result);
+        $this->assertEquals([$o1->getId(), $o2->getId()], $result);
     }
 
     public function testRecordAttribute()
