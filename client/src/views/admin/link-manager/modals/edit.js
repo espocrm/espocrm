@@ -36,6 +36,8 @@ class LinkManagerEditModalView extends ModalView {
     template = 'admin/link-manager/modals/edit'
     cssName = 'edit'
     className = 'dialog dialog-record'
+    /** @type {import('model').default & {fetchedAttributes?: Record}} */
+    model
 
     shortcutKeys = {
         /** @this LinkManagerEditModalView */
@@ -365,6 +367,7 @@ class LinkManagerEditModalView extends ModalView {
         const layoutTranslatedOptions = this.getEntityTypeLayoutsTranslations(this.scope);
 
         this.layoutFieldView = new EnumFieldView({
+            name: 'layout',
             model: model,
             mode: 'edit',
             defs: {
@@ -376,12 +379,12 @@ class LinkManagerEditModalView extends ModalView {
         });
 
         this.layoutForeignFieldView = new EnumFieldView({
+            name: 'layoutForeign',
             model: model,
             mode: 'edit',
             defs: {
                 name: 'layoutForeign',
             },
-
             params: {
                 options: layouts,
             },
@@ -425,12 +428,11 @@ class LinkManagerEditModalView extends ModalView {
                 return;
             }
 
-            const view = this.getView('foreignLinkEntityTypeList');
+            const view = /** @type {import('views/fields/enum').default} */
+                this.getView('foreignLinkEntityTypeList');
 
-            if (view) {
-                if (!this.noParentEntityTypeList) {
-                    view.setOptionList(this.model.get('parentEntityTypeList') || []);
-                }
+            if (view && !this.noParentEntityTypeList) {
+                view.setOptionList(this.model.get('parentEntityTypeList') || []);
             }
 
             const checkedList = Espo.Utils.clone(this.model.get('foreignLinkEntityTypeList') || []);
@@ -826,11 +828,14 @@ class LinkManagerEditModalView extends ModalView {
                 return;
             }
 
-            if (this.getView(item).mode !== 'edit') {
+            const view = /** @type {import('views/fields/base').default} */
+                this.getView(item);
+
+            if (view.mode !== 'edit') {
                 return;
             }
 
-            this.getView(item).fetchToModel();
+            view.fetchToModel();
         });
 
         arr.forEach(item => {
@@ -838,7 +843,8 @@ class LinkManagerEditModalView extends ModalView {
                 return;
             }
 
-            const view = this.getView(item);
+            const view = /** @type {import('views/fields/base').default} */
+                this.getView(item);
 
             if (view.mode !== 'edit') {
                 return;
@@ -971,7 +977,8 @@ class LinkManagerEditModalView extends ModalView {
         const list = [];
 
         entityTypeList.forEach(item => {
-            const linkDefs = this.getMetadata().get(['entityDefs', item, 'links']) || {};
+            const linkDefs = /** @type {Object.<string, Record>} */
+                this.getMetadata().get(['entityDefs', item, 'links']) || {};
 
             let isFound = false;
 
