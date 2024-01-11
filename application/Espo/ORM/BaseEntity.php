@@ -1007,6 +1007,12 @@ class BaseEntity implements Entity
             }
 
             if (is_array($item)) {
+                if (!array_is_list($item)) {
+                    $copy[$i] = $this->cloneObject((object) $item);
+
+                    continue;
+                }
+
                 $copy[$i] = $this->cloneArray($item);
 
                 continue;

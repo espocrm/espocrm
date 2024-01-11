@@ -340,6 +340,37 @@ class EntityTest extends TestCase
         $this->assertEquals(json_decode($value), $entity->get('object'));
     }
 
+    public function testGetJsonArray(): void
+    {
+        $entity = $this->createEntity('Job');
+
+        $entity->set('array', [0, 1]);
+        $this->assertEquals([0, 1], $entity->get('array'));
+
+        $entity->set('array', [[0], [1]]);
+        $this->assertEquals([[0], [1]], $entity->get('array'));
+
+        $entity->set('array', [
+            (object) ['test' => 0],
+            (object) ['test' => 1],
+        ]);
+
+        $this->assertEquals([
+            (object) ['test' => 0],
+            (object) ['test' => 1],
+        ], $entity->get('array'));
+
+        $entity->set('array', [
+            ['test' => 0],
+            ['test' => 1],
+        ]);
+
+        $this->assertEquals([
+            (object) ['test' => 0],
+            (object) ['test' => 1],
+        ], $entity->get('array'));
+    }
+
     public function testSetWrongType()
     {
         $entity = $this->createEntity('Test');
