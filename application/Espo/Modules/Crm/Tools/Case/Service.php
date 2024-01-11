@@ -36,12 +36,16 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\EmailAddress;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\SelectBuilderFactory;
+use Espo\Core\Templates\Entities\Company;
+use Espo\Core\Templates\Entities\Person;
+use Espo\Core\Utils\Metadata;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Type\RelationType;
 use Espo\Tools\Email\EmailAddressEntityPair;
 use RuntimeException;
 
@@ -51,7 +55,8 @@ class Service
         private ServiceContainer $serviceContainer,
         private Acl $acl,
         private EntityManager $entityManager,
-        private SelectBuilderFactory $selectBuilderFactory
+        private SelectBuilderFactory $selectBuilderFactory,
+        private Metadata $metadata
     ) {}
 
     /**
@@ -100,6 +105,14 @@ class Service
             }
         }
 
+        if ($list === []) {
+            $item = $this->findPersonEmailAddress($entity);
+
+            if ($item) {
+                $list[] = $item;
+            }
+        }
+
         return $list;
     }
 
@@ -128,6 +141,10 @@ class Service
         }
 
         if (!$this->acl->checkEntity($account)) {
+            return null;
+        }
+
+        if (!$this->acl->checkField(Account::ENTITY_TYPE, 'emailAddress')) {
             return null;
         }
 
@@ -165,6 +182,10 @@ class Service
         }
 
         if (!$this->acl->checkEntity($lead)) {
+            return null;
+        }
+
+        if (!$this->acl->checkField(Lead::ENTITY_TYPE, 'emailAddress')) {
             return null;
         }
 
@@ -267,5 +288,70 @@ class Service
         );
 
         return $dataList;
+    }
+
+    private function findPersonEmailAddress(CaseObj $entity): ?EmailAddressEntityPair
+    {
+        $relations = $this->entityManager
+            ->getDefs()
+            ->getEntity(CaseObj::ENTITY_TYPE)
+            ->getRelationList();
+
+        foreach ($relations as $relation) {
+            if (
+                $relation->getType() !== RelationType::BELONGS_TO &&
+                $relation->getType() !== RelationType::HAS_ONE
+            ) {
+                continue;
+            }
+
+            $foreignEntityType = $relation->getForeignEntityType();
+
+            if (
+                $this->metadata->get("scopes.$foreignEntityType.type") !== Person::TEMPLATE_TYPE &&
+                $this->metadata->get("scopes.$foreignEntityType.type") !== Company::TEMPLATE_TYPE
+            ) {
+                continue;
+            }
+
+            $address = $this->getPersonEmailAddress($entity, $relation->getName());
+
+            if ($address) {
+                return $address;
+            }
+        }
+
+        return null;
+    }
+
+    private function getPersonEmailAddress(CaseObj $entity, string $link): ?EmailAddressEntityPair
+    {
+        $foreignEntity = $this->entityManager
+            ->getRDBRepositoryByClass(CaseObj::class)
+            ->getRelation($entity, $link)
+            ->findOne();
+
+        if (!$foreignEntity) {
+            return null;
+        }
+
+        if (!$this->acl->checkEntityRead($foreignEntity)) {
+            return null;
+        }
+
+        if (!$this->acl->checkField($foreignEntity->getEntityType(), 'emailAddress')) {
+            return null;
+        }
+
+        /** @var ?string $address */
+        $address = $foreignEntity->get('emailAddress');
+
+        if (!$address) {
+            return null;
+        }
+
+        $emailAddress = EmailAddress::create($address);
+
+        return new EmailAddressEntityPair($emailAddress, $foreignEntity);
     }
 }
