@@ -73,7 +73,7 @@
         }
     },
     "messages": {
-        "confirmRemoveLink": "Are you sure you want to remove the relationship?",
+        "confirmRemoveLink": "Are you sure you want to remove the *{link}* relationship?",
         "nameIsAlreadyUsed": "Name '{name}' is already used.",
         "nameIsNotAllowed": "Name '{name}' is not allowed.",
         "nameIsTooLong": "Name is too long.",
