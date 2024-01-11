@@ -88,11 +88,24 @@
                 </a>
             {{/if}}
         </td>
-        <td style="width: 10%; ; text-align: right">
+        <td style="width: 10%; ; text-align: right" class="">
             {{#if isRemovable}}
-            <a role="button" tabindex="0" data-action="removeLink" data-link="{{link}}">
-                {{translate 'Remove'}}
-            </a>
+                <div class="btn-group row-dropdown-group">
+                    <button
+                        class="btn btn-link btn-sm dropdown-toggle"
+                        data-toggle="dropdown"
+                    ><span class="caret"></span></button>
+                    <ul class="dropdown-menu pull-right">
+                        <li>
+                            <a
+                                role="button"
+                                tabindex="0"
+                                data-action="removeLink"
+                                data-link="{{link}}"
+                            >{{translate 'Remove'}}</a>
+                        </li>
+                    </ul>
+                </div>
             {{/if}}
         </td>
     </tr>

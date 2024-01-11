@@ -136,3 +136,17 @@ table th.cell-nowrap {
     text-overflow: ellipsis;
     overflow: hidden;
 }
+
+table td {
+    > .btn-group.row-dropdown-group {
+        > .btn.dropdown-toggle {
+            margin-top: -6px;
+            margin-bottom: -6px;
+
+            > .caret {
+                top: -1px;
+                position: relative;
+            }
+        }
+    }
+}
