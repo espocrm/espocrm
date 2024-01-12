@@ -29,22 +29,19 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Select\Bool\Applier as BoolFilterListApplier,
-    Select\Bool\FilterFactory as BoolFilterFactory,
-    Select\Bool\Filter as BoolFilter,
-    Select\SelectManager,
-};
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Select\Bool\Applier as BoolFilterListApplier;
+use Espo\Core\Select\Bool\Filter as BoolFilter;
+use Espo\Core\Select\Bool\FilterFactory as BoolFilterFactory;
+use Espo\Core\Select\SelectManager;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\WhereClause,
-    ORM\Query\Part\Where\OrGroupBuilder,
-    Entities\User,
-};
+use Espo\Entities\User;
+use Espo\ORM\Query\Part\Where\OrGroupBuilder;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use PHPUnit\Framework\TestCase;
 
-class BoolFilterListApplierTest extends \PHPUnit\Framework\TestCase
+class BoolFilterListApplierTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -107,7 +104,7 @@ class BoolFilterListApplierTest extends \PHPUnit\Framework\TestCase
             ->with('test1')
             ->willReturn(false);
 
-        $this->expectException(Error::class);
+        $this->expectException(BadRequest::class);
 
         $this->applier->apply($this->queryBuilder, $boolFilterList);
     }

@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Config;
 use Espo\Core\Select\Where\Item\Type;
@@ -38,6 +38,8 @@ use Espo\Entities\User;
 use DateTime;
 use DateTimeZone;
 use DateInterval;
+use Exception;
+use RuntimeException;
 
 /**
  * Transforms date-time where item. Applies timezone.
@@ -48,7 +50,7 @@ class DateTimeItemTransformer
     {}
 
     /**
-     * @throws Error
+     * @throws BadRequest
      */
     public function transform(Item $item): Item
     {
@@ -61,17 +63,17 @@ class DateTimeItemTransformer
         $data = $item->getData();
 
         if (!$data instanceof Item\Data\DateTime) {
-            throw new Error("Bad where item.");
+            throw new BadRequest("Bad where item.");
         }
 
         $timeZone = $data->getTimeZone() ?? 'UTC';
 
         if (!$attribute) {
-            throw new Error("Bad datetime where item. Empty 'attribute'.");
+            throw new BadRequest("Bad datetime where item. Empty 'attribute'.");
         }
 
         if (!$type) {
-            throw new Error("Bad datetime where item. Empty 'type'.");
+            throw new BadRequest("Bad datetime where item. Empty 'type'.");
         }
 
         if (
@@ -85,20 +87,25 @@ class DateTimeItemTransformer
                 ]
             )
         ) {
-            throw new Error("Bad where item. Empty value.");
+            throw new BadRequest("Bad where item. Empty value.");
         }
 
         $where = [
             'attribute' => $attribute,
         ];
 
-        $dt = new DateTime('now', new DateTimeZone($timeZone));
+        try {
+            $dt = new DateTime('now', new DateTimeZone($timeZone));
+        }
+        catch (Exception) {
+            throw new BadRequest("Bad timezone");
+        }
 
         switch ($type) {
             case Type::TODAY:
                 $where['type'] = Type::BETWEEN;
 
-                $dt->setTime(0, 0, 0);
+                $dt->setTime(0, 0);
 
                 $dtTo = clone $dt;
                 $dtTo->modify('+1 day -1 second');
@@ -139,7 +146,7 @@ class DateTimeItemTransformer
                 $to = $dt->format($format);
 
                 $dtFrom->modify('-7 day');
-                $dtFrom->setTime(0, 0, 0);
+                $dtFrom->setTime(0, 0);
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
 
                 $from = $dtFrom->format($format);
@@ -160,7 +167,7 @@ class DateTimeItemTransformer
                 $number = strval(intval($value));
 
                 $dtFrom->modify('-'.$number.' day');
-                $dtFrom->setTime(0, 0, 0);
+                $dtFrom->setTime(0, 0);
                 $dtFrom->setTimezone(new DateTimeZone('UTC'));
 
                 $from = $dtFrom->format($format);
@@ -196,7 +203,7 @@ class DateTimeItemTransformer
                 $number = strval(intval($value));
 
                 $dt->modify('-'.$number.' day');
-                $dt->setTime(0, 0, 0);
+                $dt->setTime(0, 0);
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
                 $where['value'] = $dt->format($format);
@@ -209,7 +216,7 @@ class DateTimeItemTransformer
                 $number = strval(intval($value));
 
                 $dt->modify('+'.$number.' day');
-                $dt->setTime(0, 0, 0);
+                $dt->setTime(0, 0);
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
                 $where['value'] = $dt->format($format);
@@ -219,7 +226,13 @@ class DateTimeItemTransformer
             case Type::ON:
                 $where['type'] = Type::BETWEEN;
 
-                $dt = new DateTime($value, new DateTimeZone($timeZone));
+                try {
+                    $dt = new DateTime($value, new DateTimeZone($timeZone));
+                }
+                catch (Exception) {
+                    throw new BadRequest("Bad date value or timezone.");
+                }
+
                 $dtTo = clone $dt;
 
                 if (strlen($value) <= 10) {
@@ -239,7 +252,13 @@ class DateTimeItemTransformer
             case Type::BEFORE:
                 $where['type'] = Type::BEFORE;
 
-                $dt = new DateTime($value, new DateTimeZone($timeZone));
+                try {
+                    $dt = new DateTime($value, new DateTimeZone($timeZone));
+                }
+                catch (Exception) {
+                    throw new BadRequest("Bad date value or timezone.");
+                }
+
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
                 $where['value'] = $dt->format($format);
@@ -249,7 +268,12 @@ class DateTimeItemTransformer
             case Type::AFTER:
                 $where['type'] = Type::AFTER;
 
-                $dt = new DateTime($value, new DateTimeZone($timeZone));
+                try {
+                    $dt = new DateTime($value, new DateTimeZone($timeZone));
+                }
+                catch (Exception) {
+                    throw new BadRequest("Bad date value or timezone.");
+                }
 
                 if (strlen($value) <= 10) {
                     $dt->modify('+1 day -1 second');
@@ -265,15 +289,27 @@ class DateTimeItemTransformer
                 $where['type'] = Type::BETWEEN;
 
                 if (!is_array($value) || count($value) < 2) {
-                    throw new Error("Bad where item. Bad value.");
+                    throw new BadRequest("Bad where item. Bad value.");
                 }
 
-                $dt = new DateTime($value[0], new DateTimeZone($timeZone));
+                try {
+                    $dt = new DateTime($value[0], new DateTimeZone($timeZone));
+                }
+                catch (Exception) {
+                    throw new BadRequest("Bad date value or timezone.");
+                }
+
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
                 $from = $dt->format($format);
 
-                $dt = new DateTime($value[1], new DateTimeZone($timeZone));
+                try {
+                    $dt = new DateTime($value[1], new DateTimeZone($timeZone));
+                }
+                catch (Exception) {
+                    throw new BadRequest("Bad date value or timezone.");
+                }
+
                 $dt->setTimezone(new DateTimeZone('UTC'));
 
                 if (strlen($value[1]) <= 10) {
@@ -291,7 +327,7 @@ class DateTimeItemTransformer
             case Type::NEXT_MONTH:
                 $where['type'] = Type::BETWEEN;
 
-                $dtFrom = $dt->modify('first day of this month')->setTime(0, 0, 0);
+                $dtFrom = $dt->modify('first day of this month')->setTime(0, 0);
 
                 if ($type == Type::LAST_MONTH) {
                     $dtFrom->modify('-1 month');
@@ -314,11 +350,17 @@ class DateTimeItemTransformer
             case Type::LAST_QUARTER:
                 $where['type'] = Type::BETWEEN;
 
-                $dt = new DateTime('now', new DateTimeZone($timeZone));
+                try {
+                    $dt = new DateTime('now', new DateTimeZone($timeZone));
+                }
+                catch (Exception) {
+                    throw new BadRequest("Bad timezone.");
+                }
+
                 $quarter = ceil($dt->format('m') / 3);
 
                 $dtFrom = clone $dt;
-                $dtFrom->modify('first day of January this year')->setTime(0, 0, 0);
+                $dtFrom->modify('first day of January this year')->setTime(0, 0);
 
                 if ($type === Type::LAST_QUARTER) {
                     $quarter--;
@@ -329,16 +371,22 @@ class DateTimeItemTransformer
                     }
                 }
 
-                $dtFrom->add(new DateInterval('P'.(($quarter - 1) * 3).'M'));
-                $dtTo = clone $dtFrom;
-                $dtTo->add(new DateInterval('P3M'));
-                $dtFrom->setTimezone(new DateTimeZone('UTC'));
-                $dtTo->setTimezone(new DateTimeZone('UTC'));
+                try {
+                    $dtFrom->add(new DateInterval('P' . (($quarter - 1) * 3) . 'M'));
+                }
+                catch (Exception) {
+                    throw new RuntimeException();
+                }
 
-                $where['value'] = [
-                    $dtFrom->format($format),
-                    $dtTo->format($format),
-                ];
+                $dtTo = clone $dtFrom;
+                    $dtTo->add(new DateInterval('P3M'));
+                    $dtFrom->setTimezone(new DateTimeZone('UTC'));
+                    $dtTo->setTimezone(new DateTimeZone('UTC'));
+
+                    $where['value'] = [
+                        $dtFrom->format($format),
+                        $dtTo->format($format),
+                    ];
 
                 break;
 
@@ -346,8 +394,14 @@ class DateTimeItemTransformer
             case Type::LAST_YEAR:
                 $where['type'] = Type::BETWEEN;
 
-                $dtFrom = new DateTime('now', new DateTimeZone($timeZone));
-                $dtFrom->modify('first day of January this year')->setTime(0, 0, 0);
+                try {
+                    $dtFrom = new DateTime('now', new DateTimeZone($timeZone));
+                }
+                catch (Exception) {
+                    throw new BadRequest("Bad timezone.");
+                }
+
+                $dtFrom->modify('first day of January this year')->setTime(0, 0);
 
                 if ($type == Type::LAST_YEAR) {
                     $dtFrom->modify('-1 year');
@@ -369,14 +423,20 @@ class DateTimeItemTransformer
             case Type::LAST_FISCAL_YEAR:
                 $where['type'] = Type::BETWEEN;
 
-                $dtToday = new DateTime('now', new DateTimeZone($timeZone));
+                try {
+                    $dtToday = new DateTime('now', new DateTimeZone($timeZone));
+                }
+                catch (Exception) {
+                    throw new BadRequest("Bad timezone.");
+                }
+
                 $dt = clone $dtToday;
                 $fiscalYearShift = $this->config->get('fiscalYearShift', 0);
 
                 $dt
                     ->modify('first day of January this year')
                     ->modify('+' . $fiscalYearShift . ' months')
-                    ->setTime(0, 0, 0);
+                    ->setTime(0, 0);
 
                 if (intval($dtToday->format('m')) < $fiscalYearShift + 1) {
                     $dt->modify('-1 year');
@@ -404,7 +464,12 @@ class DateTimeItemTransformer
             case Type::LAST_FISCAL_QUARTER:
                 $where['type'] = Type::BETWEEN;
 
-                $dtToday = new DateTime('now', new DateTimeZone($timeZone));
+                try {
+                    $dtToday = new DateTime('now', new DateTimeZone($timeZone));
+                }
+                catch (Exception) {
+                    throw new BadRequest("Bad timezone.");
+                }
 
                 $dt = clone $dtToday;
 
@@ -413,7 +478,7 @@ class DateTimeItemTransformer
                 $dt
                     ->modify('first day of January this year')
                     ->modify('+' . $fiscalYearShift . ' months')
-                    ->setTime(0, 0, 0);
+                    ->setTime(0, 0);
 
                 $month = intval($dtToday->format('m'));
 
@@ -421,10 +486,21 @@ class DateTimeItemTransformer
 
                 if ($quarterShift) {
                     if ($quarterShift >= 0) {
-                        $dt->add(new DateInterval('P' . ($quarterShift * 3) . 'M'));
+                        try {
+                            $dt->add(new DateInterval('P' . ($quarterShift * 3) . 'M'));
+                        }
+                        catch (Exception) {
+                            throw new RuntimeException();
+                        }
                     } else {
                         $quarterShift *= -1;
-                        $dt->sub(new DateInterval('P' . ($quarterShift * 3) . 'M'));
+
+                        try {
+                            $dt->sub(new DateInterval('P' . ($quarterShift * 3) . 'M'));
+                        }
+                        catch (Exception) {
+                            throw new RuntimeException();
+                        }
                     }
                 }
 

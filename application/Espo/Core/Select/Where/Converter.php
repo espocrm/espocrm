@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Select\Where;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\Entities\Team;
 use Espo\Entities\User;
@@ -56,7 +56,7 @@ class Converter
     ) {}
 
     /**
-     * @throws Error
+     * @throws BadRequest
      */
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereItem
     {
@@ -81,7 +81,7 @@ class Converter
 
     /**
      * @return array<int|string, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function itemToList(Item $item): array
     {
@@ -94,7 +94,7 @@ class Converter
         $list = $item->getValue();
 
         if (!is_array($list)) {
-            throw new Error("Bad where item value.");
+            throw new BadRequest("Bad where item value.");
         }
 
         return $list;
@@ -102,7 +102,7 @@ class Converter
 
     /**
      * @return ?array<int|string, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function processItem(QueryBuilder $queryBuilder, Item $item): ?array
     {
@@ -117,7 +117,7 @@ class Converter
             // Processing special filters. Only at the top level of the tree.
 
             if (!$attribute) {
-                throw new Error("Bad where definition. Missing attribute.");
+                throw new BadRequest("Bad where definition. Missing attribute.");
             }
 
             if (!$value) {
@@ -131,13 +131,15 @@ class Converter
             return $this->applyIsUserFromTeams($queryBuilder, $attribute, $value);
         }
 
-        return $this->itemConverter->convert($queryBuilder, $item)->getRaw();
+        return $this->itemConverter
+            ->convert($queryBuilder, $item)
+            ->getRaw();
     }
 
     /**
      * @param mixed $value
      * @return array<int|string, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function applyInCategory(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
@@ -146,7 +148,7 @@ class Converter
         $entityDefs = $this->ormDefs->getEntity($this->entityType);
 
         if (!$entityDefs->hasRelation($link)) {
-            throw new Error("Not existing '{$link}' in where item.");
+            throw new BadRequest("Not existing '$link' in where item.");
         }
 
         $defs = $entityDefs->getRelation($link);
@@ -172,7 +174,7 @@ class Converter
                 ucfirst($pathName),
                 $pathName,
                 [
-                    "{$pathName}.descendorId:" => "{$middleName}.{$key}",
+                    "$pathName.descendorId:" => "$middleName.$key",
                 ]
             );
 
@@ -188,7 +190,7 @@ class Converter
                 ucfirst($pathName),
                 $pathName,
                 [
-                    "{$pathName}.descendorId:" => "{$key}",
+                    "$pathName.descendorId:" => "$key",
                 ]
             );
 
@@ -197,13 +199,13 @@ class Converter
             ];
         }
 
-        throw new Error("Not supported link '{$link}' in where item.");
+        throw new BadRequest("Not supported link '$link' in where item.");
     }
 
     /**
      * @param mixed $value
      * @return array<int|string, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function applyIsUserFromTeams(QueryBuilder $queryBuilder, string $attribute, $value): array
     {
@@ -216,7 +218,7 @@ class Converter
         $entityDefs = $this->ormDefs->getEntity($this->entityType);
 
         if (!$entityDefs->hasRelation($link)) {
-            throw new Error("Not existing '{$link}' in where item.");
+            throw new BadRequest("Not existing '$link' in where item.");
         }
 
         $defs = $entityDefs->getRelation($link);
@@ -225,7 +227,7 @@ class Converter
         $entityType = $defs->getForeignEntityType();
 
         if ($entityType !== User::ENTITY_TYPE) {
-            throw new Error("Not supported link '{$link}' in where item.");
+            throw new BadRequest("Not supported link '$link' in where item.");
         }
 
         if ($relationType === Entity::BELONGS_TO) {
@@ -249,6 +251,6 @@ class Converter
             ];
         }
 
-        throw new Error("Not supported link '{$link}' in where item.");
+        throw new BadRequest("Not supported link '$link' in where item.");
     }
 }

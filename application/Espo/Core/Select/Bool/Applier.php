@@ -29,11 +29,10 @@
 
 namespace Espo\Core\Select\Bool;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\OrmSelectBuilder;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Select\SelectManager;
 use Espo\Core\Select\Bool\FilterFactory as BoolFilterFactory;
-
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
@@ -52,7 +51,7 @@ class Applier
 
     /**
      * @param string[] $boolFilterNameList
-     * @throws Error
+     * @throws BadRequest
      */
     public function apply(QueryBuilder $queryBuilder, array $boolFilterNameList): void
     {
@@ -78,7 +77,7 @@ class Applier
     }
 
     /**
-     * @throws Error
+     * @throws BadRequest
      */
     private function applyBoolFilter(
         QueryBuilder $queryBuilder,
@@ -108,7 +107,7 @@ class Applier
             return;
         }
 
-        throw new Error("No bool filter '{$filterName}' for '{$this->entityType}'.");
+        throw new BadRequest("No bool filter '$filterName' for '$this->entityType'.");
     }
 
     private function handleMultiple(Select $queryBefore, QueryBuilder $queryBuilder): void

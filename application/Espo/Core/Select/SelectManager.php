@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Select;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 
 use Espo\Core\Acl;
@@ -229,7 +229,7 @@ class SelectManager
             } else {
                 if (strpos($sortBy, '.') === false && strpos($sortBy, ':') === false) {
                     if (!$this->getSeed()->hasAttribute($sortBy)) {
-                        throw new Error("Order by non-existing field '{$sortBy}'.");
+                        throw new BadRequest("Order by non-existing field '{$sortBy}'.");
                     }
                 }
             }
@@ -242,10 +242,8 @@ class SelectManager
             }
 
             if (
-                $sortBy != 'id'
-                &&
-                (!$orderByAttribute || !$this->getSeed()->getAttributeParam($orderByAttribute, 'unique'))
-                &&
+                $sortBy != 'id' &&
+                (!$orderByAttribute || !$this->getSeed()->getAttributeParam($orderByAttribute, 'unique')) &&
                 $this->getSeed()->hasAttribute('id')
             ) {
                 $result['orderBy'][] = ['id', $desc];
@@ -263,10 +261,11 @@ class SelectManager
 
     protected function getTextFilterFieldList() : array
     {
-        return $this->getMetadata()->get(['entityDefs', $this->entityType, 'collection', 'textFilterFields'], ['name']);
+        return $this->getMetadata()
+            ->get(['entityDefs', $this->entityType, 'collection', 'textFilterFields'], ['name']);
     }
 
-    protected function getSeed() : Entity
+    protected function getSeed(): Entity
     {
         if (empty($this->seed)) {
             $this->seed = $this->entityManager->getEntity($this->entityType);
@@ -445,7 +444,7 @@ class SelectManager
                 $aliasName . 'Middle.teamId' => $idsValue
             ];
         } else {
-            throw new Error("Can't apply isUserFromTeams for link {$link}.");
+            throw new BadRequest("Can't apply isUserFromTeams for link {$link}.");
         }
 
         $this->setDistinct(true, $result);
@@ -456,7 +455,7 @@ class SelectManager
         $relDefs = $this->entityManager->getMetadata()->get($this->entityType, ['relations']);
 
         if (empty($relDefs[$link])) {
-            throw new Error("Can't apply inCategory for link {$link}.");
+            throw new BadRequest("Can't apply inCategory for link {$link}.");
         }
 
         $defs = $relDefs[$link];
@@ -464,14 +463,14 @@ class SelectManager
         $foreignEntity = $defs['entity'] ?? null;
 
         if (empty($foreignEntity)) {
-            throw new Error("Can't apply inCategory for link {$link}.");
+            throw new BadRequest("Can't apply inCategory for link {$link}.");
         }
 
         $pathName = lcfirst($foreignEntity) . 'Path';
 
         if ($defs['type'] == 'manyMany') {
             if (empty($defs['midKeys'])) {
-                throw new Error("Can't apply inCategory for link {$link}.");
+                throw new BadRequest("Can't apply inCategory for link {$link}.");
             }
 
             $this->setDistinct(true, $result);
@@ -495,7 +494,7 @@ class SelectManager
 
         if ($defs['type'] == 'belongsTo') {
             if (empty($defs['key'])) {
-                throw new Error("Can't apply inCategory for link {$link}.");
+                throw new BadRequest("Can't apply inCategory for link {$link}.");
             }
 
             $key = $defs['key'];
@@ -513,7 +512,7 @@ class SelectManager
             return;
         }
 
-        throw new Error("Can't apply inCategory for link {$link}.");
+        throw new BadRequest("Can't apply inCategory for link {$link}.");
     }
 
     protected function q(array $params, array &$result)
@@ -1031,11 +1030,11 @@ class SelectManager
         }
 
         if (!$attribute) {
-            throw new Error("Bad datetime where item, empty 'attribute'.");
+            throw new BadRequest("Bad datetime where item, empty 'attribute'.");
         }
 
         if (!$type) {
-            throw new Error("Bad datetime where item, empty 'type'.");
+            throw new BadRequest("Bad datetime where item, empty 'type'.");
         }
 
         if (empty($value) && in_array($type, ['on', 'before', 'after'])) {
@@ -1343,7 +1342,7 @@ class SelectManager
         }
 
         if ($attribute && !is_string($attribute)) {
-            throw new Error("Bad 'attribute' in where item.");
+            throw new BadRequest("Bad 'attribute' in where item.");
         }
 
         if (!empty($item['dateTime'])) {
@@ -1351,7 +1350,7 @@ class SelectManager
         }
 
         if (!$type) {
-            throw new Error("No 'type' in where item.");
+            throw new BadRequest("No 'type' in where item.");
         }
 
         if ($attribute && $type) {
@@ -2014,7 +2013,7 @@ class SelectManager
         $method = 'boolFilter' . ucfirst($filter);
 
         if (!method_exists($this, $method)) {
-            throw new Error("Bool filter '{$filter}' does not exist.");
+            throw new BadRequest("Bool filter '{$filter}' does not exist.");
         }
 
         $rawWhereClause = $this->$method($result) ?? [];

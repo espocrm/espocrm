@@ -29,10 +29,9 @@
 
 namespace Espo\Core\Select\Primary;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\SelectManager;
 use Espo\Core\Select\OrmSelectBuilder;
-
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\Entities\User;
 
@@ -46,7 +45,7 @@ class Applier
     ) {}
 
     /**
-     * @throws Error
+     * @throws BadRequest
      */
     public function apply(QueryBuilder $queryBuilder, string $filterName): void
     {
@@ -68,6 +67,6 @@ class Applier
             return;
         }
 
-        throw new Error("No primary filter '{$filterName}' for '{$this->entityType}'.");
+        throw new BadRequest("No primary filter '$filterName' for '$this->entityType'.");
     }
 }

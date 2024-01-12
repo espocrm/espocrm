@@ -29,27 +29,22 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Query\Part\OrderList;
 use Espo\ORM\Query\Part\Order;
+use Espo\Core\Select\Order\Applier as OrderApplier;
+use Espo\Core\Select\Order\Item;
+use Espo\Core\Select\Order\ItemConverter;
+use Espo\Core\Select\Order\ItemConverterFactory;
+use Espo\Core\Select\Order\MetadataProvider;
+use Espo\Core\Select\Order\Orderer;
+use Espo\Core\Select\Order\OrdererFactory;
+use Espo\Core\Select\Order\Params as OrderParams;
+use Espo\Core\Select\SearchParams;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use PHPUnit\Framework\TestCase;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Select\Order\Applier as OrderApplier,
-    Select\SearchParams,
-    Select\Order\Params as OrderParams,
-    Select\Order\Item,
-    Select\Order\ItemConverterFactory,
-    Select\Order\ItemConverter,
-    Select\Order\MetadataProvider,
-    Select\Order\OrdererFactory,
-    Select\Order\Orderer,
-};
-
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-};
-
-class OrderApplierTest extends \PHPUnit\Framework\TestCase
+class OrderApplierTest extends TestCase
 {
     private ?OrdererFactory $ordererFactory = null;
 
@@ -287,7 +282,7 @@ class OrderApplierTest extends \PHPUnit\Framework\TestCase
         }
         else {
             if ($notExisting) {
-                $this->expectException(Error::class);
+                $this->expectException(BadRequest::class);
 
                 return;
             }

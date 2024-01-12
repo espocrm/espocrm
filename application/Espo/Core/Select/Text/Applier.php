@@ -63,6 +63,7 @@ class Applier
         private FilterFactory $filterFactory
     ) {}
 
+    /** @noinspection PhpUnusedParameterInspection */
     public function apply(QueryBuilder $queryBuilder, string $filter, FilterParams $params): void
     {
         $forceFullTextSearch = false;

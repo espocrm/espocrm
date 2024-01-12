@@ -29,15 +29,15 @@
 
 namespace Espo\Core\Select\Order;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Query\Part\OrderList;
-
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Select\Order\Item as OrderItem;
 use Espo\Core\Select\Order\Params as OrderParams;
 use Espo\Core\Select\SearchParams;
-
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+
+use RuntimeException;
 
 class Applier
 {
@@ -50,7 +50,7 @@ class Applier
 
     /**
      * @throws Forbidden
-     * @throws Error
+     * @throws BadRequest
      */
     public function apply(QueryBuilder $queryBuilder, OrderParams $params): void
     {
@@ -85,7 +85,7 @@ class Applier
 
     /**
      * @param SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null $order
-     * @throws Error
+     * @throws BadRequest
      */
     private function applyDefaultOrder(QueryBuilder $queryBuilder, ?string $order): void
     {
@@ -107,7 +107,7 @@ class Applier
                 $order = SearchParams::ORDER_ASC;
             }
             else if ($order !== null) {
-                throw new Error("Bad default order.");
+                throw new RuntimeException("Bad default order.");
             }
         }
 
@@ -118,12 +118,12 @@ class Applier
 
     /**
      * @param SearchParams::ORDER_ASC|SearchParams::ORDER_DESC|null $order
-     * @throws Error
+     * @throws BadRequest
      */
     private function applyOrder(QueryBuilder $queryBuilder, string $orderBy, ?string $order): void
     {
         if (!$orderBy) {
-            throw new Error("Could not apply empty order.");
+            throw new RuntimeException("Could not apply empty order.");
         }
 
         if ($order === null) {
@@ -173,7 +173,7 @@ class Applier
             !str_contains($orderBy, ':') &&*/
             !$this->metadataProvider->hasAttribute($this->entityType, $orderBy)
         ) {
-            throw new Error("Order by non-existing field '{$orderBy}'.");
+            throw new BadRequest("Order by non-existing field '$orderBy'.");
         }
 
         $orderByAttribute = null;

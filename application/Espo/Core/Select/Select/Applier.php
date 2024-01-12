@@ -91,7 +91,7 @@ class Applier
                 !$this->metadataProvider->isAttributeNotStorable($this->entityType, $item)
             ) {
                 $resultList[] = [
-                    "LEFT:({$item}, {$limit})",
+                    "LEFT:($item, $limit)",
                     $item
                 ];
 

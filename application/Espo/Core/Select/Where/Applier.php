@@ -30,11 +30,9 @@
 namespace Espo\Core\Select\Where;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
-
 use Espo\Entities\User;
 
 class Applier
@@ -49,7 +47,6 @@ class Applier
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws Error
      */
     public function apply(QueryBuilder $queryBuilder, WhereItem $whereItem, Params $params): void
     {

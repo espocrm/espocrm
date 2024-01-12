@@ -30,9 +30,9 @@
 namespace Espo\Core\Select\Where;
 
 use DateTimeZone;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Select\Where\Item\Type;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
@@ -69,7 +69,7 @@ class ItemGeneralConverter implements ItemConverter
     ) {}
 
     /**
-     * @throws Error
+     * @throws BadRequest
      */
     public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
     {
@@ -86,7 +86,7 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         if (!$type) {
-            throw new Error("Bad where item. No 'type'.");
+            throw new BadRequest("Bad where item. No 'type'.");
         }
 
         if (
@@ -116,7 +116,7 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         if (!$attribute) {
-            throw new Error("Bad where item. No 'attribute'.");
+            throw new BadRequest("Bad where item. No 'attribute'.");
         }
 
         switch ($type) {
@@ -342,7 +342,7 @@ class ItemGeneralConverter implements ItemConverter
         }
 
         if (!$this->itemConverterFactory->hasForType($type)) {
-            throw new Error("Unknown where item type '$type'.");
+            throw new BadRequest("Unknown where item type '$type'.");
         }
 
         $converter = $this->itemConverterFactory->createForType($type, $this->entityType, $this->user);
@@ -353,12 +353,12 @@ class ItemGeneralConverter implements ItemConverter
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function groupProcessAndOr(QueryBuilder $queryBuilder, string $type, $value): array
     {
         if (!is_array($value)) {
-            throw new Error("Bad where item.");
+            throw new BadRequest("Bad where item.");
         }
 
         $whereClause = [];
@@ -383,12 +383,12 @@ class ItemGeneralConverter implements ItemConverter
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function groupProcessSubQuery(string $type, $value): array
     {
         if (!is_array($value)) {
-            throw new Error("Bad where item.");
+            throw new BadRequest("Bad where item.");
         }
 
         $sqQueryBuilder = QueryBuilder::create()
@@ -421,7 +421,7 @@ class ItemGeneralConverter implements ItemConverter
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function groupProcessColumn(
         QueryBuilder $queryBuilder,
@@ -434,7 +434,7 @@ class ItemGeneralConverter implements ItemConverter
         $column = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $attribute, 'column']);
 
         if (!$column || !$link) {
-            throw new Error("Bad where item 'column'.");
+            throw new BadRequest("Bad where item 'column'.");
         }
 
         $alias =  $link . 'ColumnFilter' . $this->randomStringGenerator->generate();
@@ -486,13 +486,13 @@ class ItemGeneralConverter implements ItemConverter
             ];
         }
 
-        throw new Error("Bad where item 'column'.");
+        throw new BadRequest("Bad where item 'column'.");
     }
 
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function groupProcessArray(
         QueryBuilder $queryBuilder,
@@ -526,7 +526,7 @@ class ItemGeneralConverter implements ItemConverter
             }
 
             if (!$arrayAttributeLink || !$arrayAttribute) {
-                throw new Error("Bad where item.");
+                throw new BadRequest("Bad where item.");
             }
 
             $arrayEntityType = $entityDefs->getRelation($arrayAttributeLink)->getForeignEntityType();
@@ -547,7 +547,7 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($type === Type::ARRAY_ANY_OF) {
             if (!$value && !is_array($value)) {
-                throw new Error("Bad where item. No value.");
+                throw new BadRequest("Bad where item. No value.");
             }
 
             $subQuery = QueryBuilder::create()
@@ -565,7 +565,7 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($type === Type::ARRAY_NONE_OF) {
             if (!$value && !is_array($value)) {
-                throw new Error("Bad where item 'array'. No value.");
+                throw new BadRequest("Bad where item 'array'. No value.");
             }
 
             return Cond::not(
@@ -615,7 +615,7 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($type === Type::ARRAY_ALL_OF) {
             if (!$value && !is_array($value)) {
-                throw new Error("Bad where item 'array'. No value.");
+                throw new BadRequest("Bad where item 'array'. No value.");
             }
 
             if (!is_array($value)) {
@@ -642,7 +642,7 @@ class ItemGeneralConverter implements ItemConverter
             return $whereList;
         }
 
-        throw new Error("Bad where item 'array'.");
+        throw new BadRequest("Bad where item 'array'.");
     }
 
     /**
@@ -834,12 +834,12 @@ class ItemGeneralConverter implements ItemConverter
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function processIn(string $attribute, $value): array
     {
         if (!is_array($value)) {
-            throw new Error("Bad where item 'in'.");
+            throw new BadRequest("Bad where item 'in'.");
         }
 
         return [
@@ -850,12 +850,12 @@ class ItemGeneralConverter implements ItemConverter
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function processNotIn(string $attribute, $value): array
     {
         if (!is_array($value)) {
-            throw new Error("Bad where item 'notIn'.");
+            throw new BadRequest("Bad where item 'notIn'.");
         }
 
         return [
@@ -866,12 +866,12 @@ class ItemGeneralConverter implements ItemConverter
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function processBetween(string $attribute, $value): array
     {
         if (!is_array($value) || count($value) < 2) {
-            throw new Error("Bad where item 'between'.");
+            throw new BadRequest("Bad where item 'between'.");
         }
 
         return [
@@ -1452,14 +1452,14 @@ class ItemGeneralConverter implements ItemConverter
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function processLinkedWith(string $attribute, $value): array
     {
         $link = $attribute;
 
         if (!$this->ormDefs->getEntity($this->entityType)->hasRelation($link)) {
-            throw new Error("Not existing link '$link' in where item.");
+            throw new BadRequest("Not existing link '$link' in where item.");
         }
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
@@ -1467,7 +1467,7 @@ class ItemGeneralConverter implements ItemConverter
         $alias =  $link . 'LinkedWithFilter' . $this->randomStringGenerator->generate();
 
         if (!$value && !is_array($value)) {
-            throw new Error("Bad where item. Empty value.");
+            throw new BadRequest("Bad where item. Empty value.");
         }
 
         // @todo Add check for foreign record existence.
@@ -1522,20 +1522,20 @@ class ItemGeneralConverter implements ItemConverter
             return [$key => $value];
         }
 
-        throw new Error("Bad where item. Not supported relation type.");
+        throw new BadRequest("Bad where item. Not supported relation type.");
     }
 
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function processNotLinkedWith(string $attribute, $value): array
     {
         $link = $attribute;
 
         if (!$this->ormDefs->getEntity($this->entityType)->hasRelation($link)) {
-            throw new Error("Not existing link '$link' in where item.");
+            throw new BadRequest("Not existing link '$link' in where item.");
         }
 
         $defs = $this->ormDefs->getEntity($this->entityType)->getRelation($link);
@@ -1543,7 +1543,7 @@ class ItemGeneralConverter implements ItemConverter
         $alias =  $link . 'NotLinkedWithFilter' . $this->randomStringGenerator->generate();
 
         if (is_null($value)) {
-            throw new Error("Bad where item. Empty value.");
+            throw new BadRequest("Bad where item. Empty value.");
         }
 
         $relationType = $defs->getType();
@@ -1595,24 +1595,24 @@ class ItemGeneralConverter implements ItemConverter
             return [$key . '!=' => $value];
         }
 
-        throw new Error("Bad where item. Not supported relation type.");
+        throw new BadRequest("Bad where item. Not supported relation type.");
     }
 
     /**
      * @param mixed $value
      * @return array<string|int, mixed>
-     * @throws Error
+     * @throws BadRequest
      */
     private function processLinkedWithAll(string $attribute, $value): array
     {
         $link = $attribute;
 
         if (!$this->ormDefs->getEntity($this->entityType)->hasRelation($link)) {
-            throw new Error("Not existing link '$link' in where item.");
+            throw new BadRequest("Not existing link '$link' in where item.");
         }
 
         if (!$value && !is_array($value)) {
-            throw new Error("Bad where item. Empty value.");
+            throw new BadRequest("Bad where item. Empty value.");
         }
 
         if (!is_array($value)) {
@@ -1662,7 +1662,7 @@ class ItemGeneralConverter implements ItemConverter
             return $whereList;
         }
 
-        throw new Error("Bad where item. Not supported relation type.");
+        throw new BadRequest("Bad where item. Not supported relation type.");
     }
 
     private function getSystemTimeZone(): DateTimeZone

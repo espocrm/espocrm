@@ -29,20 +29,17 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
-use Espo\Core\{
-    Exceptions\Error,
-    Select\Primary\Applier as PrimaryFilterApplier,
-    Select\Primary\FilterFactory as PrimaryFilterFactory,
-    Select\Primary\Filter as PrimaryFilter,
-    Select\SelectManager,
-};
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Select\Primary\Applier as PrimaryFilterApplier;
+use Espo\Core\Select\Primary\Filter as PrimaryFilter;
+use Espo\Core\Select\Primary\FilterFactory as PrimaryFilterFactory;
+use Espo\Core\Select\SelectManager;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    Entities\User,
-};
+use Espo\Entities\User;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use PHPUnit\Framework\TestCase;
 
-class PrimaryFilterApplierTest extends \PHPUnit\Framework\TestCase
+class PrimaryFilterApplierTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -109,7 +106,7 @@ class PrimaryFilterApplierTest extends \PHPUnit\Framework\TestCase
             ->with($filterName)
             ->willReturn(false);
 
-        $this->expectException(Error::class);
+        $this->expectException(BadRequest::class);
 
         $this->applier->apply($this->queryBuilder, $filterName);
     }
