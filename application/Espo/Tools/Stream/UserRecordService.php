@@ -538,14 +538,12 @@ class UserRecordService
             ],
         ];
 
-        if (!$noParentFilter) {
-            $orWhere[] = [
+        $orWhere[] = !$noParentFilter ?
+            [
                 'relatedId=' => null,
                 'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-            ];
-        } else {
-            $orWhere[] = ['relatedId=' => null];
-        }
+            ] :
+            ['relatedId=' => null];
 
         $allBuilder->where(['OR' => $orWhere]);
 
