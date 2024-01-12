@@ -46,6 +46,7 @@ use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
+use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as SelectQueryBuilder;
 
 class RecordService
@@ -122,136 +123,17 @@ class RecordService
             ->order('number', 'DESC')
             ->limit(0, $sqLimit);
 
-        $subscriptionBuilder = clone $baseBuilder;
-
         $subscriptionIgnoreWhereClause = $this->getUserStreamSubscriptionIgnoreWhereClause($user);
 
-        $subscriptionBuilder
-            ->leftJoin('createdBy')
-            ->join(
-                Subscription::ENTITY_TYPE,
-                'subscription',
-                [
-                    'entityType:' => 'parentType',
-                    'entityId:' => 'parentId',
-                    'subscription.userId' => $user->getId(),
-                ]
-            )
-            ->where($subscriptionIgnoreWhereClause);
-
-        if ($user->isPortal()) {
-            $subscriptionBuilder->where([
-                'isInternal' => false,
-            ]);
-
-            $notAllEntityTypeList = $this->getNotAllEntityTypeList($user);
-
-            $orGroup = [
-                [
-                    'relatedId' => null,
-                ],
-                [
-                    'relatedId!=' => null,
-                    'relatedType!=' => $notAllEntityTypeList,
-                ],
-            ];
-
-            $aclManager = $this->getUserAclManager($user);
-
-            if ($aclManager && $aclManager->check($user, Email::ENTITY_TYPE, Table::ACTION_READ)) {
-                $orGroup[] = [
-                    'relatedId!=' => null,
-                    'relatedType' => Email::ENTITY_TYPE,
-                    'noteUser.userId' => $user->getId(),
-                ];
-
-                $subscriptionBuilder->leftJoin(
-                    'noteUser',
-                    'noteUser', [
-                        'noteUser.noteId=:' => 'id',
-                        'noteUser.deleted' => false,
-                        'note.relatedType' => Email::ENTITY_TYPE,
-                    ]
-                );
-            }
-
-            $subscriptionBuilder->where([
-                'OR' => $orGroup,
-            ]);
-
-            $queryList[] = $subscriptionBuilder->build();
-        }
-
-        if (!$user->isPortal()) {
-            $subscriptionRestBuilder = clone $subscriptionBuilder;
-
-            $subscriptionRestBuilder->where([
-                'OR' => [
-                    [
-                        'relatedId!=' => null,
-                        'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-                    ],
-                    [
-                        'relatedId=' => null,
-                    ],
-                ],
-            ]);
-
-            $queryList[] = $subscriptionRestBuilder->build();
-
-            if (count($onlyTeamEntityTypeList)) {
-                $subscriptionTeamBuilder = clone $subscriptionBuilder;
-
-                $subscriptionTeamBuilder
-                    ->where([
-                        'relatedId!=' => null,
-                        'relatedType=' => $onlyTeamEntityTypeList,
-                        'id=s' => SelectQueryBuilder::create()
-                            ->select('id')
-                            ->from(Note::ENTITY_TYPE)
-                            ->leftJoin('NoteTeam', 'noteTeam', [
-                                'noteTeam.noteId=:' => 'id',
-                                'noteTeam.deleted' => false,
-                            ])
-                            ->leftJoin('NoteUser', 'noteUser', [
-                                'noteUser.noteId=:' => 'id',
-                                'noteUser.deleted' => false,
-                            ])
-                            ->where([
-                                'OR' => [
-                                    'noteTeam.teamId' => $teamIdList,
-                                    'noteUser.userId' => $user->getId(),
-                                ]
-                            ])
-                            ->build()
-                            ->getRaw(),
-                    ]);
-
-                $queryList[] = $subscriptionTeamBuilder->build();
-            }
-
-            if (count($onlyOwnEntityTypeList)) {
-                $subscriptionOwnBuilder = clone $subscriptionBuilder;
-
-                $subscriptionOwnBuilder
-                    ->where([
-                        'relatedId!=' => null,
-                        'relatedType=' => $onlyOwnEntityTypeList,
-                        'id=s' => SelectQueryBuilder::create()
-                            ->select('id')
-                            ->from(Note::ENTITY_TYPE)
-                            ->leftJoin('NoteUser', 'noteUser', [
-                                'noteUser.noteId=:' => 'id',
-                                'noteUser.deleted' => false,
-                            ])
-                            ->where(['noteUser.userId' => $user->getId()])
-                            ->build()
-                            ->getRaw(),
-                    ]);
-
-                $queryList[] = $subscriptionOwnBuilder->build();
-            }
-        }
+        $this->buildSubscriptionQueries(
+            $baseBuilder,
+            $user,
+            $subscriptionIgnoreWhereClause,
+            $queryList,
+            $onlyTeamEntityTypeList,
+            $onlyOwnEntityTypeList,
+            $teamIdList
+        );
 
         $subscriptionSuperBuilder = clone $baseBuilder;
 
@@ -531,10 +413,7 @@ class RecordService
 
         $entity = $this->entityManager->getEntityById($scope, $id);
 
-        $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($this->user);
-        $onlyOwnEntityTypeList = $this->getOnlyOwnEntityTypeList($this->user);
-
-        if (empty($entity)) {
+        if (!$entity) {
             throw new NotFound();
         }
 
@@ -544,158 +423,28 @@ class RecordService
 
         $builder = $this->buildBaseQueryBuilder($searchParams);
 
-        $where = [
-            'OR' => [
-                [
-                    'parentType' => $scope,
-                    'parentId' => $id,
-                ],
-                [
-                    'superParentType' => $scope,
-                    'superParentId' => $id,
-                ],
-            ]
-        ];
-
-        if ($this->user->isPortal()) {
-            $where = [
+        $where = $this->user->isPortal() ?
+            [
                 'parentType' => $scope,
                 'parentId' => $id,
                 'isInternal' => false,
-            ];
-
-            $notAllEntityTypeList = $this->getNotAllEntityTypeList($this->user);
-
-            $orGroup = [
-                [
-                    'relatedId' => null,
-                ],
-                [
-                    'relatedId!=' => null,
-                    'relatedType!=' => $notAllEntityTypeList,
-                ],
-            ];
-
-            if ($this->acl->check(Email::ENTITY_TYPE, Table::ACTION_READ)) {
-                $builder->leftJoin(
-                    'noteUser',
-                    'noteUser',
-                    [
-                        'noteUser.noteId=:' => 'id',
-                        'noteUser.deleted' => false,
-                        'note.relatedType' => Email::ENTITY_TYPE,
-                    ]
-                );
-
-                $orGroup[] = [
-                    'relatedId!=' => null,
-                    'relatedType' => Email::ENTITY_TYPE,
-                    'noteUser.userId' => $this->user->getId(),
-                ];
-            }
-
-            $where[] = [
-                'OR' => $orGroup,
-            ];
-        }
-
-        if (
-            !$this->user->isPortal() &&
-            (count($onlyTeamEntityTypeList) || count($onlyOwnEntityTypeList))
-        ) {
-            $builder
-                ->distinct()
-                ->leftJoin('teams')
-                ->leftJoin('users');
-
-            $where[] = [
+            ] :
+            [
                 'OR' => [
-                    'OR' => [
-                        [
-                            'relatedId!=' => null,
-                            'relatedType!=' => array_merge(
-                                $onlyTeamEntityTypeList,
-                                $onlyOwnEntityTypeList
-                            ),
-                        ],
-                        [
-                            'relatedId=' => null,
-                            'superParentId' => $id,
-                            'superParentType' => $scope,
-                            'parentId!=' => null,
-                            'parentType!=' => array_merge(
-                                $onlyTeamEntityTypeList,
-                                $onlyOwnEntityTypeList
-                            ),
-                        ],
-                        [
-                            'relatedId=' => null,
-                            'parentType=' => $scope,
-                            'parentId=' => $id,
-                        ]
+                    [
+                        'parentType' => $scope,
+                        'parentId' => $id,
                     ],
                     [
-                        'OR' => [
-                            [
-                                'relatedId!=' => null,
-                                'relatedType=' => $onlyTeamEntityTypeList,
-                            ],
-                            [
-                                'relatedId=' => null,
-                                'parentType=' => $onlyTeamEntityTypeList,
-                            ]
-                        ],
-                        [
-                            'OR' => [
-                                'teamsMiddle.teamId' => $this->user->getTeamIdList(),
-                                'usersMiddle.userId' => $this->user->getId(),
-                            ]
-                        ]
+                        'superParentType' => $scope,
+                        'superParentId' => $id,
                     ],
-                    [
-                        'OR' => [
-                            [
-                                'relatedId!=' => null,
-                                'relatedType=' => $onlyOwnEntityTypeList,
-                            ],
-                            [
-                                'relatedId=' => null,
-                                'parentType=' => $onlyOwnEntityTypeList,
-                            ]
-                        ],
-                        'usersMiddle.userId' => $this->user->getId(),
-                    ]
-                ]
-            ];
-        }
-
-        $ignoreScopeList = $this->getIgnoreScopeList($this->user, true);
-        $ignoreRelatedScopeList = $this->getIgnoreScopeList($this->user);
-
-        if ($ignoreRelatedScopeList !== []) {
-            $where[] = [
-                'OR' => [
-                    'relatedType' => null,
-                    'relatedType!=' => $ignoreRelatedScopeList,
                 ]
             ];
 
-            $where[] = [
-                'OR' => [
-                    'parentType' => null,
-                    'parentType!=' => $ignoreScopeList,
-                ]
-            ];
-
-            if (in_array(Email::ENTITY_TYPE, $ignoreRelatedScopeList)) {
-                $where[] = [
-                    'type!=' => [
-                        Note::TYPE_EMAIL_RECEIVED,
-                        Note::TYPE_EMAIL_SENT,
-                    ]
-                ];
-            }
-        }
+        $this->applyPortalAccess($builder, $where);
+        $this->applyAccess($builder, $id, $scope, $where);
+        $this->applyIgnore($where);
 
         $builder->where($where);
 
@@ -943,5 +692,372 @@ class RecordService
         }
 
         $this->noteAccessControl->apply($note, $user);
+    }
+
+    /**
+     * @param array<string|int, mixed> $where
+     */
+    private function applyAccess(
+        SelectQueryBuilder $builder,
+        string $id,
+        string $scope,
+        array &$where
+    ): void {
+
+        if ($this->user->isPortal()) {
+            return;
+        }
+
+        $onlyTeamEntityTypeList = $this->getOnlyTeamEntityTypeList($this->user);
+        $onlyOwnEntityTypeList = $this->getOnlyOwnEntityTypeList($this->user);
+
+        if (
+            !count($onlyTeamEntityTypeList) &&
+            !count($onlyOwnEntityTypeList)
+        ) {
+            return;
+        }
+
+        $builder
+            ->distinct()
+            ->leftJoin('teams')
+            ->leftJoin('users');
+
+        $where[] = [
+            'OR' => [
+                'OR' => [
+                    [
+                        'relatedId!=' => null,
+                        'relatedType!=' => array_merge(
+                            $onlyTeamEntityTypeList,
+                            $onlyOwnEntityTypeList,
+                        ),
+                    ],
+                    [
+                        'relatedId=' => null,
+                        'superParentId' => $id,
+                        'superParentType' => $scope,
+                        'parentId!=' => null,
+                        'parentType!=' => array_merge(
+                            $onlyTeamEntityTypeList,
+                            $onlyOwnEntityTypeList,
+                        ),
+                    ],
+                    [
+                        'relatedId=' => null,
+                        'parentType=' => $scope,
+                        'parentId=' => $id,
+                    ]
+                ],
+                [
+                    'OR' => [
+                        [
+                            'relatedId!=' => null,
+                            'relatedType=' => $onlyTeamEntityTypeList,
+                        ],
+                        [
+                            'relatedId=' => null,
+                            'parentType=' => $onlyTeamEntityTypeList,
+                        ]
+                    ],
+                    [
+                        'OR' => [
+                            'teamsMiddle.teamId' => $this->user->getTeamIdList(),
+                            'usersMiddle.userId' => $this->user->getId(),
+                        ]
+                    ]
+                ],
+                [
+                    'OR' => [
+                        [
+                            'relatedId!=' => null,
+                            'relatedType=' => $onlyOwnEntityTypeList,
+                        ],
+                        [
+                            'relatedId=' => null,
+                            'parentType=' => $onlyOwnEntityTypeList,
+                        ]
+                    ],
+                    'usersMiddle.userId' => $this->user->getId(),
+                ]
+            ]
+        ];
+    }
+
+    /**
+     * @param array<string|int, mixed> $where
+     */
+    private function applyIgnore(array &$where): void
+    {
+        $ignoreScopeList = $this->getIgnoreScopeList($this->user, true);
+        $ignoreRelatedScopeList = $this->getIgnoreScopeList($this->user);
+
+        if ($ignoreRelatedScopeList === []) {
+            return;
+        }
+
+        $where[] = [
+            'OR' => [
+                'relatedType' => null,
+                'relatedType!=' => $ignoreRelatedScopeList,
+            ]
+        ];
+
+        $where[] = [
+            'OR' => [
+                'parentType' => null,
+                'parentType!=' => $ignoreScopeList,
+            ]
+        ];
+
+        if (!in_array(Email::ENTITY_TYPE, $ignoreRelatedScopeList)) {
+            return;
+        }
+
+        $where[] = [
+            'type!=' => [
+                Note::TYPE_EMAIL_RECEIVED,
+                Note::TYPE_EMAIL_SENT,
+            ]
+        ];
+    }
+
+    /**
+     * @param array<string|int, mixed> $where
+     */
+    private function applyPortalAccess(SelectQueryBuilder $builder, array &$where): void
+    {
+        if (!$this->user->isPortal()) {
+            return;
+        }
+
+        $notAllEntityTypeList = $this->getNotAllEntityTypeList($this->user);
+
+        $orGroup = [
+            [
+                'relatedId' => null,
+            ],
+            [
+                'relatedId!=' => null,
+                'relatedType!=' => $notAllEntityTypeList,
+            ],
+        ];
+
+        if ($this->acl->check(Email::ENTITY_TYPE, Table::ACTION_READ)) {
+            $builder->leftJoin(
+                'noteUser',
+                'noteUser',
+                [
+                    'noteUser.noteId=:' => 'id',
+                    'noteUser.deleted' => false,
+                    'note.relatedType' => Email::ENTITY_TYPE,
+                ]
+            );
+
+            $orGroup[] = [
+                'relatedId!=' => null,
+                'relatedType' => Email::ENTITY_TYPE,
+                'noteUser.userId' => $this->user->getId(),
+            ];
+        }
+
+        $where[] = [
+            'OR' => $orGroup,
+        ];
+    }
+
+    /**
+     * @param string[] $onlyTeamEntityTypeList
+     * @param string[] $onlyOwnEntityTypeList
+     * @param Select[] $queryList
+     * @param string[] $teamIdList
+     */
+    private function buildSubscriptionQueriesInternal(
+        User $user,
+        SelectQueryBuilder $subscriptionBuilder,
+        array $onlyTeamEntityTypeList,
+        array $onlyOwnEntityTypeList,
+        array &$queryList,
+        array $teamIdList
+    ): void {
+
+        if ($user->isPortal()) {
+            return;
+        }
+
+        $subscriptionRestBuilder = clone $subscriptionBuilder;
+
+        $subscriptionRestBuilder->where([
+            'OR' => [
+                [
+                    'relatedId!=' => null,
+                    'relatedType!=' => array_merge(
+                        $onlyTeamEntityTypeList,
+                        $onlyOwnEntityTypeList,
+                    ),
+                ],
+                [
+                    'relatedId=' => null,
+                ],
+            ],
+        ]);
+
+        $queryList[] = $subscriptionRestBuilder->build();
+
+        if (count($onlyTeamEntityTypeList)) {
+            $subscriptionTeamBuilder = clone $subscriptionBuilder;
+
+            $subscriptionTeamBuilder
+                ->where([
+                    'relatedId!=' => null,
+                    'relatedType=' => $onlyTeamEntityTypeList,
+                    'id=s' => SelectQueryBuilder::create()
+                        ->select('id')
+                        ->from(Note::ENTITY_TYPE)
+                        ->leftJoin('NoteTeam', 'noteTeam', [
+                            'noteTeam.noteId=:' => 'id',
+                            'noteTeam.deleted' => false,
+                        ])
+                        ->leftJoin('NoteUser', 'noteUser', [
+                            'noteUser.noteId=:' => 'id',
+                            'noteUser.deleted' => false,
+                        ])
+                        ->where([
+                            'OR' => [
+                                'noteTeam.teamId' => $teamIdList,
+                                'noteUser.userId' => $user->getId(),
+                            ]
+                        ])
+                        ->build()
+                        ->getRaw(),
+                ]);
+
+            $queryList[] = $subscriptionTeamBuilder->build();
+        }
+
+        if (count($onlyOwnEntityTypeList)) {
+            $subscriptionOwnBuilder = clone $subscriptionBuilder;
+
+            $subscriptionOwnBuilder
+                ->where([
+                    'relatedId!=' => null,
+                    'relatedType=' => $onlyOwnEntityTypeList,
+                    'id=s' => SelectQueryBuilder::create()
+                        ->select('id')
+                        ->from(Note::ENTITY_TYPE)
+                        ->leftJoin('NoteUser', 'noteUser', [
+                            'noteUser.noteId=:' => 'id',
+                            'noteUser.deleted' => false,
+                        ])
+                        ->where(['noteUser.userId' => $user->getId()])
+                        ->build()
+                        ->getRaw(),
+                ]);
+
+            $queryList[] = $subscriptionOwnBuilder->build();
+        }
+    }
+
+    /**
+     * @param Select[] $queryList
+     */
+    private function buildSubscriptionQueriesPortal(
+        User $user,
+        SelectQueryBuilder $subscriptionBuilder,
+        array &$queryList
+    ): void {
+
+        if (!$user->isPortal()) {
+            return;
+        }
+
+        $subscriptionBuilder->where([
+            'isInternal' => false,
+        ]);
+
+        $notAllEntityTypeList = $this->getNotAllEntityTypeList($user);
+
+        $orGroup = [
+            [
+                'relatedId' => null,
+            ],
+            [
+                'relatedId!=' => null,
+                'relatedType!=' => $notAllEntityTypeList,
+            ],
+        ];
+
+        $aclManager = $this->getUserAclManager($user);
+
+        if ($aclManager && $aclManager->check($user, Email::ENTITY_TYPE, Table::ACTION_READ)) {
+            $orGroup[] = [
+                'relatedId!=' => null,
+                'relatedType' => Email::ENTITY_TYPE,
+                'noteUser.userId' => $user->getId(),
+            ];
+
+            $subscriptionBuilder->leftJoin(
+                'noteUser',
+                'noteUser', [
+                    'noteUser.noteId=:' => 'id',
+                    'noteUser.deleted' => false,
+                    'note.relatedType' => Email::ENTITY_TYPE,
+                ]
+            );
+        }
+
+        $subscriptionBuilder->where([
+            'OR' => $orGroup,
+        ]);
+
+        $queryList[] = $subscriptionBuilder->build();
+    }
+
+    /**
+     * @param array<string|int, mixed> $ignoreWhereClause
+     * @param string[] $onlyTeamEntityTypeList
+     * @param string[] $onlyOwnEntityTypeList
+     * @param Select[] $queryList
+     * @param string[] $teamIdList
+     */
+    private function buildSubscriptionQueries(
+        SelectQueryBuilder $baseBuilder,
+        User $user,
+        array $ignoreWhereClause,
+        array &$queryList,
+        array $onlyTeamEntityTypeList,
+        array $onlyOwnEntityTypeList,
+        array $teamIdList
+    ): void {
+
+        $subscriptionBuilder = clone $baseBuilder;
+
+        $subscriptionBuilder
+            ->leftJoin('createdBy')
+            ->join(
+                Subscription::ENTITY_TYPE,
+                'subscription',
+                [
+                    'entityType:' => 'parentType',
+                    'entityId:' => 'parentId',
+                    'subscription.userId' => $user->getId(),
+                ]
+            )
+            ->where($ignoreWhereClause);
+
+        if ($user->isPortal()) {
+            $this->buildSubscriptionQueriesPortal($user, $subscriptionBuilder, $queryList);
+
+            return;
+        }
+
+        $this->buildSubscriptionQueriesInternal(
+            $user,
+            $subscriptionBuilder,
+            $onlyTeamEntityTypeList,
+            $onlyOwnEntityTypeList,
+            $queryList,
+            $teamIdList
+        );
     }
 }
