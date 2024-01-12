@@ -103,7 +103,7 @@
                                 {{/if}}
                             </td>
                             <td class="nowrap">
-                                <span title="Переглянути відмітки" data-id={{this.id}} class="cp highlight text-muted far fa-calendar"></span>
+                                <span title="Переглянути відмітки" data-id={{this.id}} class="floating-view cp highlight text-muted far fa-calendar"></span>
                                 <span title="Оновити" class="btn-add cp highlight text-muted fas fa-sync-alt" data-id={{this.id}} data-action="recalculateOther"></span>
                             </td>
                         </tr>

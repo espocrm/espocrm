@@ -24,6 +24,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             this.addHandler('click', ".btn-add", "handleAddButton");
             this.addHandler('click', ".btn-floating-mark", "createFloatingMark");
             this.addHandler('click', ".fa-calendar", "handleViewMarks");
+            this.addHandler('click', ".floating-view", "handleViewFloatingMarks");
             this.addHandler('click', ".floating-mark", "deleteFloatingMark");
         },
 
@@ -363,7 +364,17 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
 
         handleViewMarks: function(e) {
             const abon = this.abonements.list.find(abon => abon.id === e.target.dataset.id);
+            this.viewMarks(abon);
+        },
 
+        handleViewFloatingMarks: function(e) {
+            console.log(e.target.dataset.id);
+            const abon = this.otherGroupsAbons.list.find(abon => abon.id === e.target.dataset.id);
+            console.log(abon);
+            this.viewMarks(abon);
+        },
+
+        viewMarks: function(abon) {
             this.getCollectionFactory().create('Mark')
                 .then(collection => {
                     collection.maxSize = 10000;
@@ -641,7 +652,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 trainingId: this.trainingId,
                 abonements: this.abonements.list,
                 otherAbonements: this.otherGroupsAbons.list,
-                abonementsTotal: this.abonements.total,
+                abonementsTotal: this.abonements.total + this.otherGroupsAbons.total,
                 marksTotal: this.marksTotal
             }
         },
