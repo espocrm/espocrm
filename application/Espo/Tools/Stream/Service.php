@@ -29,7 +29,10 @@
 
 namespace Espo\Tools\Stream;
 
+use DateTimeInterface;
 use Espo\Core\Acl\Exceptions\NotAvailable;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
 use Espo\Core\Utils\SystemUser;
@@ -248,7 +251,7 @@ class Service
                 try {
                     $hasAccess = $this->aclManager->checkEntityStream($user, $entity);
                 }
-                catch (AclNotImplemented $e) {
+                catch (AclNotImplemented) {
                     $hasAccess = false;
                 }
 
@@ -614,7 +617,7 @@ class Service
             $note->set('superParentId', $entity->get('accountId'));
             $note->set('superParentType', Account::ENTITY_TYPE);
 
-            // only if has super parent
+            // only if it has super parent
             $this->processNoteTeamsUsers($note, $entity);
         }
 
@@ -666,8 +669,8 @@ class Service
 
         $statusStyles = $this->getStatusStyles();
 
-        if (isset($statusStyles[$entityType]) && isset($statusStyles[$entityType][$value])) {
-            return (string) $statusStyles[$entityType][$value];
+        if (isset($statusStyles[$entityType][$value])) {
+            return $statusStyles[$entityType][$value];
         }
 
         if (in_array($value, $this->successDefaultStyleList)) {
@@ -826,7 +829,7 @@ class Service
             $note->set('superParentId', $entity->get('accountId'));
             $note->set('superParentType', Account::ENTITY_TYPE);
 
-            // only if has super parent
+            // only if it has super parent
             $this->processNoteTeamsUsers($note, $entity);
         }
 
@@ -1094,6 +1097,8 @@ class Service
 
     /**
      * @return RecordCollection<User>
+     * @throws Forbidden
+     * @throws BadRequest
      */
     public function findEntityFollowers(Entity $entity, SearchParams $searchParams): RecordCollection
     {
@@ -1124,7 +1129,7 @@ class Service
 
         $query = $builder->build();
 
-        /** @var \Espo\ORM\Collection<User> $collection */
+        /** @var Collection<User> $collection */
         $collection = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
             ->clone($query)
@@ -1212,7 +1217,7 @@ class Service
     {
         if (!$this->metadata->get(['scopes', $parentType, 'stream'])) {
             /** @var Collection<User> */
-            return $this->entityManager->getCollectionFactory()->create(User::ENTITY_TYPE, []);
+            return $this->entityManager->getCollectionFactory()->create(User::ENTITY_TYPE);
         }
 
         $builder = $this->entityManager
@@ -1280,7 +1285,6 @@ class Service
 
         $ownerUserField = $this->aclManager->getReadOwnerUserField($entityType);
 
-        /* @var \Espo\ORM\Defs\EntityDefs $defs */
         $defs = $this->entityManager->getDefs()->getEntity($entity->getEntityType());
 
         $userIdList = [];
@@ -1392,8 +1396,8 @@ class Service
      *   forceProcessNoteNotifications: bool,
      *   teamIdList: string[],
      *   userIdList: string[],
-     *   notificationThreshold: \DateTimeInterface,
-     *   aclThreshold: \DateTimeInterface,
+     *   notificationThreshold: DateTimeInterface,
+     *   aclThreshold: DateTimeInterface,
      * } $params
      * @return void
      */
