@@ -41,22 +41,18 @@ use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Entities\User as UserEntity;
 use Espo\Tools\Stream\RecordService;
 
+use Espo\Tools\Stream\UserRecordService;
 use stdClass;
 
 class Stream
 {
     public static string $defaultAction = 'list';
 
-    private RecordService $service;
-    private SearchParamsFetcher $searchParamsFetcher;
-
     public function __construct(
-        RecordService $service,
-        SearchParamsFetcher $searchParamsFetcher
-    ) {
-        $this->service = $service;
-        $this->searchParamsFetcher = $searchParamsFetcher;
-    }
+        private RecordService $service,
+        private UserRecordService $userRecordService,
+        private SearchParamsFetcher $searchParamsFetcher
+    ) {}
 
     /**
      * @throws BadRequest
@@ -79,7 +75,7 @@ class Stream
         $searchParams = $this->fetchSearchParams($request);
 
         $result = $scope === UserEntity::ENTITY_TYPE ?
-            $this->service->findUser($id, $searchParams) :
+            $this->userRecordService->find($id, $searchParams) :
             $this->service->find($scope, $id ?? '', $searchParams);
 
         return (object) [
@@ -110,7 +106,7 @@ class Stream
             ->withPrimaryFilter('posts');
 
         $result = $scope === UserEntity::ENTITY_TYPE ?
-            $this->service->findUser($id, $searchParams) :
+            $this->userRecordService->find($id, $searchParams) :
             $this->service->find($scope, $id ?? '', $searchParams);
 
         return (object) [
