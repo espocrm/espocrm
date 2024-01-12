@@ -44,7 +44,10 @@ use Espo\Core\AclManager;
 use Espo\Core\Acl\Table;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
+use Espo\ORM\Query\Part\Condition as Cond;
+use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as SelectQueryBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
@@ -282,7 +285,7 @@ class UserRecordService
 
         $queryList[] = $resetBuilder->build();
 
-        if (count($onlyTeamEntityTypeList)) {
+        if ($onlyTeamEntityTypeList !== []) {
             $teamBuilder = clone $builder;
 
             $teamBuilder
@@ -498,27 +501,10 @@ class UserRecordService
 
         $queryList[] = $resetBuilder->build();
 
-        if (count($onlyTeamEntityTypeList)) {
+        if ($onlyTeamEntityTypeList !== []) {
             $teamBuilder = clone $builder;
 
             $teamBuilder
-                ->distinct()
-                ->leftJoin(
-                    'noteTeam',
-                    'noteTeam',
-                    [
-                        'noteTeam.noteId=:' => 'id',
-                        'noteTeam.deleted' => false,
-                    ]
-                )
-                ->leftJoin(
-                    'noteUser',
-                    'noteUser',
-                    [
-                        'noteUser.noteId=:' => 'id',
-                        'noteUser.deleted' => false,
-                    ]
-                )
                 ->where([
                     'OR' => [
                         [
@@ -530,37 +516,52 @@ class UserRecordService
                             'parentType=' => $onlyTeamEntityTypeList,
                         ],
                     ],
-                    [
-                        'OR' => [
-                            'noteTeam.teamId' => $user->getTeamIdList(),
-                            'noteUser.userId' => $user->getId(),
-                        ],
-                    ]
-                ]);
+                ])
+                ->where(
+                    // Separate sub-queries perform faster that a single with two LEFT JOINs inside.
+                    OrGroup::create(
+                        Cond::in(
+                            Expr::column('id'),
+                            SelectQueryBuilder::create()
+                                ->from('NoteTeam')
+                                ->select('noteId')
+                                ->where(['teamId' => $user->getTeamIdList()])
+                                ->build()
+                        ),
+                        Cond::in(
+                            Expr::column('id'),
+                            SelectQueryBuilder::create()
+                                ->from('NoteUser')
+                                ->select('noteId')
+                                ->where(['userId' => $user->getId()])
+                                ->build()
+                        ),
+                    )
+                );
 
             $queryList[] = $teamBuilder->build();
         }
 
-        if (count($onlyOwnEntityTypeList)) {
+        if ($onlyOwnEntityTypeList !== []) {
             $ownBuilder = clone $builder;
 
             $ownBuilder
-                ->distinct()
-                ->leftJoin(
-                    'noteUser',
-                    'noteUser',
-                    [
-                        'noteUser.noteId=:' => 'id',
-                        'noteUser.deleted' => false,
-                    ]
-                )
                 ->where([
                     [
                         'relatedId!=' => null,
                         'relatedType=' => $onlyOwnEntityTypeList,
                     ],
-                    'noteUser.userId' => $user->getId(),
-                ]);
+                ])
+                ->where(
+                    Cond::in(
+                        Expr::column('id'),
+                        SelectQueryBuilder::create()
+                            ->from('NoteUser')
+                            ->select('noteId')
+                            ->where(['userId' => $user->getId()])
+                            ->build()
+                    )
+                );
 
             $queryList[] = $ownBuilder->build();
         }
