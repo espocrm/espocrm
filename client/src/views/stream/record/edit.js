@@ -106,7 +106,7 @@ class EditStreamView extends BaseRecordView {
     }
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.interactiveMode = this.options.interactiveMode;
 
@@ -123,7 +123,7 @@ class EditStreamView extends BaseRecordView {
                 this.enablePostingMode();
             };
 
-            this.events['keydown textarea[data-name="post"]'] = (e) => {
+            this.addHandler('keydown', 'textarea[data-name="post"]', /** KeyboardEvent */e => {
                 if (Espo.Utils.getKeyFromKeyEvent(e) === 'Control+Enter') {
                     e.stopPropagation();
                     e.preventDefault();
@@ -139,20 +139,20 @@ class EditStreamView extends BaseRecordView {
                         this.disablePostingMode();
                     }
                 }*/
-            };
+            });
 
             this.events['click button.post'] = () => {
                 this.post();
             };
         }
 
-        let optionList = ['self'];
+        const optionList = ['self'];
 
         this.model.set('type', 'Post');
         this.model.set('targetType', 'self');
 
-        let messagePermission = this.getAcl().getPermissionLevel('message');
-        let portalPermission = this.getAcl().getPermissionLevel('portal');
+        const messagePermission = this.getAcl().getPermissionLevel('message');
+        const portalPermission = this.getAcl().getPermissionLevel('portal');
 
         if (messagePermission === 'team' || messagePermission === 'all') {
             optionList.push('users');
@@ -209,7 +209,7 @@ class EditStreamView extends BaseRecordView {
         this.$el.find('.post-control').removeClass('hidden');
 
         if (!this.postingMode) {
-            let $body = $('body');
+            const $body = $('body');
 
             $body.off('click.stream-create-post');
 
@@ -234,7 +234,7 @@ class EditStreamView extends BaseRecordView {
     afterRender() {
         this.$postButton = this.$el.find('button.post');
 
-        let postView = this.getFieldView('post');
+        const postView = this.getFieldView('post');
 
         if (postView) {
             this.stopListening(postView, 'add-files');
@@ -242,7 +242,7 @@ class EditStreamView extends BaseRecordView {
             this.listenTo(postView, 'add-files', (files) => {
                 this.enablePostingMode();
 
-                let attachmentsView = /** @type module:views/fields/attachment-multiple */
+                const attachmentsView = /** @type module:views/fields/attachment-multiple */
                     this.getFieldView('attachments');
 
                 if (!attachmentsView) {
@@ -257,7 +257,7 @@ class EditStreamView extends BaseRecordView {
     validate() {
         let notValid = super.validate();
 
-        let message = this.model.get('post') || '';
+        const message = this.model.get('post') || '';
 
         if (message.trim() === '' && !(this.model.get('attachmentsIds') || []).length) {
             notValid = true;
