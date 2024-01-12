@@ -198,16 +198,24 @@
             "type": "index",
             "columns": ["createdAt"]
         },
-        "parent": {
-            "type": "index",
-            "columns": ["parentId", "parentType"]
-        },
-        "parentAndSuperParent": {
-            "type": "index",
-            "columns": ["parentId", "parentType", "superParentId", "superParentType"]
-        },
         "createdByNumber": {
             "columns": ["createdById", "number"]
+        },
+        "parentId": {
+            "type": "index",
+            "columns": ["parentId"]
+        },
+        "parentType": {
+            "type": "index",
+            "columns": ["parentType"]
+        },
+        "relatedId": {
+            "type": "index",
+            "columns": ["relatedId"]
+        },
+        "relatedType": {
+            "type": "index",
+            "columns": ["relatedType"]
         }
     }
 }
