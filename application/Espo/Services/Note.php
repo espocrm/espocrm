@@ -211,8 +211,10 @@ class Note extends Record
 
         $siteUrl = $this->config->getSiteUrl();
 
+        // PhpStorm inspection highlights RegExpRedundantEscape by a mistake.
+        /** @noinspection RegExpRedundantEscape */
         $regexp = '/' . preg_quote($siteUrl, '/') .
-            '(/portal|/portal/[a-zA-Z0-9]*)?/#([A-Z][a-zA-Z0-9]*)/view/([a-zA-Z0-9-]*)/';
+            '(\/portal|\/portal\/[a-zA-Z0-9]*)?\/#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9-]*)/';
 
         $post = preg_replace($regexp, '[\2/\3](#\2/view/\3)', $post);
 
