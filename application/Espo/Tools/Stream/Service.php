@@ -416,12 +416,10 @@ class Service
         $note->set('teamsIds', []);
         $note->set('usersIds', []);
 
-        if ($entity->hasLinkMultipleField('teams') && $entity->has('teamsIds')) {
-            $teamIdList = $entity->get('teamsIds');
+        if ($entity->hasLinkMultipleField('teams')) {
+            $teamIdList = $entity->getLinkMultipleIdList('teams');
 
-            if (!empty($teamIdList)) {
-                $note->set('teamsIds', $teamIdList);
-            }
+            $note->set('teamsIds', $teamIdList);
         }
 
         $ownerUserField = $this->aclManager->getReadOwnerUserField($entity->getEntityType());

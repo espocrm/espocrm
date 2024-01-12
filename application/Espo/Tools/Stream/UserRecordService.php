@@ -514,10 +514,12 @@ class UserRecordService
 
     /**
      * Split into tree queries for all, team and own.
+     * Note that only notes with 'related' and 'superParent' are subject
+     * to access control. Notes with only 'parent' don't have teams and
+     * users set.
      *
      * @param Select[] $queryList
-     * @param bool $noParentFilter Don't apply filtering for the 'parent'. Assumed that access is controlled
-     *   by subscription.
+     * @param bool $noParentFilter False is for 'superParent'.
      */
     private function buildAccessQueries(
         User $user,
@@ -538,12 +540,12 @@ class UserRecordService
             ],
         ];
 
-        $orWhere[] = !$noParentFilter ?
+        $orWhere[] = $noParentFilter ?
+            ['relatedId=' => null] :
             [
                 'relatedId=' => null,
                 'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-            ] :
-            ['relatedId=' => null];
+            ];
 
         $allBuilder->where(['OR' => $orWhere]);
 
