@@ -292,26 +292,27 @@ class UserRecordService
                 ->where([
                     'relatedId!=' => null,
                     'relatedType=' => $onlyTeamEntityTypeList,
-                    'id=s' => SelectBuilder::create()
-                        ->select('id')
-                        ->from(Note::ENTITY_TYPE)
-                        ->leftJoin('NoteTeam', 'noteTeam', [
-                            'noteTeam.noteId=:' => 'id',
-                            'noteTeam.deleted' => false,
-                        ])
-                        ->leftJoin('NoteUser', 'noteUser', [
-                            'noteUser.noteId=:' => 'id',
-                            'noteUser.deleted' => false,
-                        ])
-                        ->where([
-                            'OR' => [
-                                'noteTeam.teamId' => $user->getTeamIdList(),
-                                'noteUser.userId' => $user->getId(),
-                            ]
-                        ])
-                        ->build()
-                        ->getRaw(),
-                ]);
+                ])
+                ->where(
+                    OrGroup::create(
+                        Cond::in(
+                            Expr::column('id'),
+                            SelectBuilder::create()
+                                ->from('NoteTeam')
+                                ->select('noteId')
+                                ->where(['teamId' => $user->getTeamIdList()])
+                                ->build()
+                        ),
+                        Cond::in(
+                            Expr::column('id'),
+                            SelectBuilder::create()
+                                ->from('NoteUser')
+                                ->select('noteId')
+                                ->where(['userId' => $user->getId()])
+                                ->build()
+                        ),
+                    )
+                );
 
             $queryList[] = $teamBuilder->build();
         }
@@ -323,17 +324,17 @@ class UserRecordService
                 ->where([
                     'relatedId!=' => null,
                     'relatedType=' => $onlyOwnEntityTypeList,
-                    'id=s' => SelectBuilder::create()
-                        ->select('id')
-                        ->from(Note::ENTITY_TYPE)
-                        ->leftJoin('NoteUser', 'noteUser', [
-                            'noteUser.noteId=:' => 'id',
-                            'noteUser.deleted' => false,
-                        ])
-                        ->where(['noteUser.userId' => $user->getId()])
-                        ->build()
-                        ->getRaw(),
-                ]);
+                ])
+                ->where(
+                    Cond::in(
+                        Expr::column('id'),
+                        SelectBuilder::create()
+                            ->from('NoteUser')
+                            ->select('noteId')
+                            ->where(['userId' => $user->getId()])
+                            ->build()
+                    )
+                );
 
             $queryList[] = $ownBuilder->build();
         }
