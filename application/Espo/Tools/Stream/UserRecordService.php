@@ -272,10 +272,7 @@ class UserRecordService
             'OR' => [
                 [
                     'relatedId!=' => null,
-                    'relatedType!=' => array_merge(
-                        $onlyTeamEntityTypeList,
-                        $onlyOwnEntityTypeList,
-                    ),
+                    'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
                 ],
                 [
                     'relatedId=' => null,
@@ -290,7 +287,6 @@ class UserRecordService
 
             $teamBuilder
                 ->where([
-                    'relatedId!=' => null,
                     'relatedType=' => $onlyTeamEntityTypeList,
                 ])
                 ->where(
@@ -317,12 +313,11 @@ class UserRecordService
             $queryList[] = $teamBuilder->build();
         }
 
-        if (count($onlyOwnEntityTypeList)) {
+        if ($onlyOwnEntityTypeList !== []) {
             $ownBuilder = clone $builder;
 
             $ownBuilder
                 ->where([
-                    'relatedId!=' => null,
                     'relatedType=' => $onlyOwnEntityTypeList,
                 ])
                 ->where(
@@ -510,7 +505,6 @@ class UserRecordService
                 ->where([
                     'OR' => [
                         [
-                            'relatedId!=' => null,
                             'relatedType=' => $onlyTeamEntityTypeList,
                         ],
                         [
@@ -549,9 +543,14 @@ class UserRecordService
 
             $ownBuilder
                 ->where([
-                    [
-                        'relatedId!=' => null,
-                        'relatedType=' => $onlyOwnEntityTypeList,
+                    'OR' => [
+                        [
+                            'relatedType=' => $onlyOwnEntityTypeList,
+                        ],
+                        [
+                            'relatedId=' => null,
+                            'parentType=' => $onlyOwnEntityTypeList,
+                        ],
                     ],
                 ])
                 ->where(
