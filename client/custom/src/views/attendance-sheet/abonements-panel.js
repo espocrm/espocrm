@@ -377,7 +377,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 .then(marks => {
                     this.createView('dialog', 'views/modal', {
                         templateContent: this.getMarksLayout(marks),
-                        headerText: `Відмітки (ця функція в процесі розробки)`,
+                        headerText: `Відмітки абонементу: ${ abon.name }`,
                         backdrop: true,
                         message: '',
                         buttonList: [
@@ -396,15 +396,25 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         },
 
         getMarksLayout: function(marks) {
-            let layout = '';
+            let layout = `
+                <table class="table table-hover" style="border-radius: 8px;">
+                    <tr class="text-soft">
+                        <th>Дата створення</th>
+                        <th>Час створення</th>
+                        <th>Заняття</th>
+                        <th>Відповідальний</th>
+                    </tr>`;
             marks.list.forEach(mark => {
-                layout += `<div>
-                    <span class="label label-md label-warning">${mark.name}</span>
-                    <span class="label label-md label-default">${mark.trainingName}</span>
-                    <span class="label label-md label-default">${mark.assignedUserName}</span>
-                </div>`
+                const dateTime = mark.name.split(' ');
+                layout += `
+                    <tr>
+                        <td>${ dateTime[0] }</td>
+                        <td>${ dateTime[1] }</td>
+                        <td>${ mark.trainingName }</td>
+                        <td>${ mark.assignedUserName }</td>
+                    </tr>`;
             });
-            return layout ? layout : 'Ще немає';
+            return marks.list.length ? layout : 'Немає данних';
         },
 
         handleShowNote: function(e) {
