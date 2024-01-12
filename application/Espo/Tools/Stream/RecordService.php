@@ -40,7 +40,7 @@ use Espo\Entities\Email;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 use Espo\Core\Record\Collection as RecordCollection;
-use Espo\ORM\Query\SelectBuilder as SelectQueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
 
 class RecordService
@@ -152,7 +152,7 @@ class RecordService
      * @param array<string|int, mixed> $where
      */
     private function applyAccess(
-        SelectQueryBuilder $builder,
+        SelectBuilder $builder,
         string $id,
         string $scope,
         array &$where
@@ -279,7 +279,7 @@ class RecordService
     /**
      * @param array<string|int, mixed> $where
      */
-    private function applyPortalAccess(SelectQueryBuilder $builder, array &$where): void
+    private function applyPortalAccess(SelectBuilder $builder, array &$where): void
     {
         if (!$this->user->isPortal()) {
             return;

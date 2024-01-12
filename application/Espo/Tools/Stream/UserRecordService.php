@@ -49,7 +49,7 @@ use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Select;
-use Espo\ORM\Query\SelectBuilder as SelectQueryBuilder;
+use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
 
 class UserRecordService
@@ -130,7 +130,7 @@ class UserRecordService
             ->getQueryBuilder()
             ->union()
             ->all()
-            ->order('number', 'DESC')
+            ->order('number', Order::DESC)
             ->limit($offset, $maxSize + 1);
 
         foreach ($queryList as $query) {
@@ -256,7 +256,7 @@ class UserRecordService
      */
     private function buildSubscriptionQueriesInternal(
         User $user,
-        SelectQueryBuilder $builder,
+        SelectBuilder $builder,
         array &$queryList,
         array $onlyTeamEntityTypeList,
         array $onlyOwnEntityTypeList
@@ -292,7 +292,7 @@ class UserRecordService
                 ->where([
                     'relatedId!=' => null,
                     'relatedType=' => $onlyTeamEntityTypeList,
-                    'id=s' => SelectQueryBuilder::create()
+                    'id=s' => SelectBuilder::create()
                         ->select('id')
                         ->from(Note::ENTITY_TYPE)
                         ->leftJoin('NoteTeam', 'noteTeam', [
@@ -323,7 +323,7 @@ class UserRecordService
                 ->where([
                     'relatedId!=' => null,
                     'relatedType=' => $onlyOwnEntityTypeList,
-                    'id=s' => SelectQueryBuilder::create()
+                    'id=s' => SelectBuilder::create()
                         ->select('id')
                         ->from(Note::ENTITY_TYPE)
                         ->leftJoin('NoteUser', 'noteUser', [
@@ -344,7 +344,7 @@ class UserRecordService
      */
     private function buildSubscriptionQueriesPortal(
         User $user,
-        SelectQueryBuilder $builder,
+        SelectBuilder $builder,
         array &$queryList
     ): void {
 
@@ -399,7 +399,7 @@ class UserRecordService
      */
     private function buildSubscriptionQueries(
         User $user,
-        SelectQueryBuilder $baseBuilder,
+        SelectBuilder $baseBuilder,
         array &$queryList
     ): void {
 
@@ -442,7 +442,7 @@ class UserRecordService
      */
     private function buildSubscriptionSuperQuery(
         User $user,
-        SelectQueryBuilder $baseBuilder,
+        SelectBuilder $baseBuilder,
         array &$queryList
     ): void {
 
@@ -522,7 +522,7 @@ class UserRecordService
                     OrGroup::create(
                         Cond::in(
                             Expr::column('id'),
-                            SelectQueryBuilder::create()
+                            SelectBuilder::create()
                                 ->from('NoteTeam')
                                 ->select('noteId')
                                 ->where(['teamId' => $user->getTeamIdList()])
@@ -530,7 +530,7 @@ class UserRecordService
                         ),
                         Cond::in(
                             Expr::column('id'),
-                            SelectQueryBuilder::create()
+                            SelectBuilder::create()
                                 ->from('NoteUser')
                                 ->select('noteId')
                                 ->where(['userId' => $user->getId()])
@@ -555,7 +555,7 @@ class UserRecordService
                 ->where(
                     Cond::in(
                         Expr::column('id'),
-                        SelectQueryBuilder::create()
+                        SelectBuilder::create()
                             ->from('NoteUser')
                             ->select('noteId')
                             ->where(['userId' => $user->getId()])
@@ -572,7 +572,7 @@ class UserRecordService
      */
     private function buildPostedToUserQuery(
         User $user,
-        SelectQueryBuilder $baseBuilder,
+        SelectBuilder $baseBuilder,
         array &$queryList
     ): void {
 
@@ -594,7 +594,7 @@ class UserRecordService
      */
     private function buildPostedToPortalQuery(
         User $user,
-        SelectQueryBuilder $baseBuilder,
+        SelectBuilder $baseBuilder,
         array &$queryList
     ): void {
 
@@ -625,7 +625,7 @@ class UserRecordService
      */
     private function buildPostedToTeamsQuery(
         User $user,
-        SelectQueryBuilder $baseBuilder,
+        SelectBuilder $baseBuilder,
         array &$queryList
     ): void {
 
@@ -650,7 +650,7 @@ class UserRecordService
      */
     private function buildPostedByUserQuery(
         User $user,
-        SelectQueryBuilder $baseBuilder,
+        SelectBuilder $baseBuilder,
         array &$queryList
     ): void {
 
@@ -670,7 +670,7 @@ class UserRecordService
      */
     private function buildPostedToGlobalQuery(
         User $user,
-        SelectQueryBuilder $baseBuilder,
+        SelectBuilder $baseBuilder,
         array &$queryList
     ): void {
 
