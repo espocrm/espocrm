@@ -31,7 +31,6 @@ namespace Espo\Modules\Crm\Tools\Case;
 
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\EmailAddress;
 use Espo\Core\Record\ServiceContainer;
@@ -237,7 +236,7 @@ class Service
                 ])
                 ->build();
         }
-        catch (BadRequest|Forbidden|Error $e) {
+        catch (BadRequest|Forbidden $e) {
             throw new RuntimeException($e->getMessage());
         }
 

@@ -29,12 +29,11 @@
 
 namespace Espo\Core\Formula\Functions\EntityGroup;
 
-use Espo\Core\Exceptions\Error;
-
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Formula\Exceptions\Error;
 use Espo\ORM\EntityManager;
-
 use Espo\Core\Di;
-
 use stdClass;
 
 class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
@@ -51,7 +50,6 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
 
     /**
      * @return int
-     * @throws \Espo\Core\Formula\Exceptions\Error
      * @throws Error
      */
     public function process(stdClass $item)
@@ -90,9 +88,16 @@ class CountRelatedType extends \Espo\Core\Formula\Functions\Base implements
               $builder->withPrimaryFilter($filter);
         }
 
+        try {
+            $query = $builder->build();
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new Error($e->getMessage());
+        }
+
         return $entityManager->getRDBRepository($entity->getEntityType())
             ->getRelation($entity, $link)
-            ->clone($builder->build())
+            ->clone($query)
             ->count();
     }
 }

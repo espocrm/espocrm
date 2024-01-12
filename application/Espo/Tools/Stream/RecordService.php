@@ -29,9 +29,9 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Select\SearchParams;
 use Espo\ORM\EntityManager;
 use Espo\Entities\Subscription;
@@ -64,9 +64,10 @@ class RecordService
     /**
      * Find user stream records.
      *
-     * @throws NotFound
-     * @throws Forbidden
      * @return RecordCollection<Note>
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
      */
     public function findUser(?string $userId, SearchParams $searchParams): RecordCollection
     {
@@ -85,6 +86,7 @@ class RecordService
             throw new NotFound("User not found.");
         }
 
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
         if (!$this->acl->checkUserPermission($user, 'user')) {
             throw new Forbidden("No user permission access.");
         }
@@ -516,9 +518,10 @@ class RecordService
     /**
      * Find a record stream records.
      *
-     * @throws NotFound
-     * @throws Forbidden
      * @return RecordCollection<Note>
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
      */
     public function find(string $scope, string $id, SearchParams $searchParams): RecordCollection
     {
@@ -740,6 +743,10 @@ class RecordService
         return RecordCollection::create($collection, $count);
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     */
     private function buildBaseQueryBuilder(SearchParams $searchParams): SelectQueryBuilder
     {
         $builder = $this->entityManager

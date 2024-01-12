@@ -290,7 +290,7 @@ class Service implements Crud,
 
             $query = $builder->build();
         }
-        catch (BadRequest|Error $e) {
+        catch (BadRequest $e) {
             throw new RuntimeException($e->getMessage());
         }
 
