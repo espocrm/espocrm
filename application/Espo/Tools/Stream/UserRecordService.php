@@ -250,92 +250,6 @@ class UserRecordService
     }
 
     /**
-     * @param string[] $onlyTeamEntityTypeList
-     * @param string[] $onlyOwnEntityTypeList
-     * @param Select[] $queryList
-     */
-    private function buildSubscriptionQueriesInternal(
-        User $user,
-        SelectBuilder $builder,
-        array &$queryList,
-        array $onlyTeamEntityTypeList,
-        array $onlyOwnEntityTypeList
-    ): void {
-
-        if ($user->isPortal()) {
-            return;
-        }
-
-        $resetBuilder = clone $builder;
-
-        $resetBuilder->where([
-            'OR' => [
-                [
-                    'relatedId!=' => null,
-                    'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-                ],
-                [
-                    'relatedId=' => null,
-                ],
-            ],
-        ]);
-
-        $queryList[] = $resetBuilder->build();
-
-        if ($onlyTeamEntityTypeList !== []) {
-            $teamBuilder = clone $builder;
-
-            $teamBuilder
-                ->where([
-                    'relatedType=' => $onlyTeamEntityTypeList,
-                ])
-                ->where(
-                    OrGroup::create(
-                        Cond::in(
-                            Expr::column('id'),
-                            SelectBuilder::create()
-                                ->from('NoteTeam')
-                                ->select('noteId')
-                                ->where(['teamId' => $user->getTeamIdList()])
-                                ->build()
-                        ),
-                        Cond::in(
-                            Expr::column('id'),
-                            SelectBuilder::create()
-                                ->from('NoteUser')
-                                ->select('noteId')
-                                ->where(['userId' => $user->getId()])
-                                ->build()
-                        ),
-                    )
-                );
-
-            $queryList[] = $teamBuilder->build();
-        }
-
-        if ($onlyOwnEntityTypeList !== []) {
-            $ownBuilder = clone $builder;
-
-            $ownBuilder
-                ->where([
-                    'relatedType=' => $onlyOwnEntityTypeList,
-                ])
-                ->where(
-                    Cond::in(
-                        Expr::column('id'),
-                        SelectBuilder::create()
-                            ->from('NoteUser')
-                            ->select('noteId')
-                            ->where(['userId' => $user->getId()])
-                            ->build()
-                    )
-                );
-
-            $queryList[] = $ownBuilder->build();
-        }
-    }
-
-    /**
      * @param Select[] $queryList
      */
     private function buildSubscriptionQueriesPortal(
@@ -399,8 +313,6 @@ class UserRecordService
         array &$queryList
     ): void {
 
-        $onlyTeamEntityTypeList = $this->helper->getOnlyTeamEntityTypeList($user);
-        $onlyOwnEntityTypeList = $this->helper->getOnlyOwnEntityTypeList($user);
         $ignoreWhereClause = $this->getSubscriptionIgnoreWhereClause($user);
 
         $builder = clone $baseBuilder;
@@ -424,13 +336,7 @@ class UserRecordService
             return;
         }
 
-        $this->buildSubscriptionQueriesInternal(
-            $user,
-            $builder,
-            $queryList,
-            $onlyTeamEntityTypeList,
-            $onlyOwnEntityTypeList
-        );
+        $this->buildAccessQueries($user, $builder, $queryList, true);
     }
 
     /**
@@ -446,8 +352,6 @@ class UserRecordService
             return;
         }
 
-        $onlyTeamEntityTypeList = $this->helper->getOnlyTeamEntityTypeList($user);
-        $onlyOwnEntityTypeList = $this->helper->getOnlyOwnEntityTypeList($user);
         $ignoreWhereClause = $this->getSubscriptionIgnoreWhereClause($user);
 
         $builder = clone $baseBuilder;
@@ -481,91 +385,7 @@ class UserRecordService
             ])
             ->where($ignoreWhereClause);
 
-        $resetBuilder = clone $builder;
-
-        $resetBuilder->where([
-            'OR' => [
-                [
-                    'relatedId!=' => null,
-                    'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-                ],
-                [
-                    'relatedId=' => null,
-                    'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
-                ],
-            ],
-        ]);
-
-        $queryList[] = $resetBuilder->build();
-
-        if ($onlyTeamEntityTypeList !== []) {
-            $teamBuilder = clone $builder;
-
-            $teamBuilder
-                ->where([
-                    'OR' => [
-                        [
-                            'relatedType=' => $onlyTeamEntityTypeList,
-                        ],
-                        [
-                            'relatedId=' => null,
-                            'parentType=' => $onlyTeamEntityTypeList,
-                        ],
-                    ],
-                ])
-                ->where(
-                    // Separate sub-queries perform faster that a single with two LEFT JOINs inside.
-                    OrGroup::create(
-                        Cond::in(
-                            Expr::column('id'),
-                            SelectBuilder::create()
-                                ->from('NoteTeam')
-                                ->select('noteId')
-                                ->where(['teamId' => $user->getTeamIdList()])
-                                ->build()
-                        ),
-                        Cond::in(
-                            Expr::column('id'),
-                            SelectBuilder::create()
-                                ->from('NoteUser')
-                                ->select('noteId')
-                                ->where(['userId' => $user->getId()])
-                                ->build()
-                        ),
-                    )
-                );
-
-            $queryList[] = $teamBuilder->build();
-        }
-
-        if ($onlyOwnEntityTypeList !== []) {
-            $ownBuilder = clone $builder;
-
-            $ownBuilder
-                ->where([
-                    'OR' => [
-                        [
-                            'relatedType=' => $onlyOwnEntityTypeList,
-                        ],
-                        [
-                            'relatedId=' => null,
-                            'parentType=' => $onlyOwnEntityTypeList,
-                        ],
-                    ],
-                ])
-                ->where(
-                    Cond::in(
-                        Expr::column('id'),
-                        SelectBuilder::create()
-                            ->from('NoteUser')
-                            ->select('noteId')
-                            ->where(['userId' => $user->getId()])
-                            ->build()
-                    )
-                );
-
-            $queryList[] = $ownBuilder->build();
-        }
+        $this->buildAccessQueries($user, $builder, $queryList);
     }
 
     /**
@@ -690,5 +510,116 @@ class UserRecordService
                 'isGlobal' => true,
             ])
             ->build();
+    }
+
+    /**
+     * Split into tree queries for all, team and own.
+     *
+     * @param Select[] $queryList
+     * @param bool $noParentFilter Don't apply filtering for the 'parent'. Assumed that access is controlled
+     *   by subscription.
+     */
+    private function buildAccessQueries(
+        User $user,
+        SelectBuilder $baseBuilder,
+        array &$queryList,
+        bool $noParentFilter = false
+    ): void {
+
+        $onlyTeamEntityTypeList = $this->helper->getOnlyTeamEntityTypeList($user);
+        $onlyOwnEntityTypeList = $this->helper->getOnlyOwnEntityTypeList($user);
+
+        $allBuilder = clone $baseBuilder;
+
+        $orWhere = [
+            [
+                'relatedId!=' => null,
+                'relatedType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
+            ],
+        ];
+
+        if (!$noParentFilter) {
+            $orWhere[] = [
+                'relatedId=' => null,
+                'parentType!=' => array_merge($onlyTeamEntityTypeList, $onlyOwnEntityTypeList),
+            ];
+        } else {
+            $orWhere[] = ['relatedId=' => null];
+        }
+
+        $allBuilder->where(['OR' => $orWhere]);
+
+        $queryList[] = $allBuilder->build();
+
+        if ($onlyTeamEntityTypeList !== []) {
+            $teamBuilder = clone $baseBuilder;
+
+            $orWhere = [
+                ['relatedType=' => $onlyTeamEntityTypeList],
+            ];
+
+            if (!$noParentFilter) {
+                $orWhere[] = [
+                    'relatedId=' => null,
+                    'parentType=' => $onlyTeamEntityTypeList,
+                ];
+            }
+
+            $teamBuilder
+                ->where(['OR' => $orWhere])
+                ->where(
+                    // Separate sub-queries perform faster that a single with two LEFT JOINs inside.
+                    OrGroup::create(
+                        Cond::in(
+                            Expr::column('id'),
+                            SelectBuilder::create()
+                                ->from('NoteTeam')
+                                ->select('noteId')
+                                ->where(['teamId' => $user->getTeamIdList()])
+                                ->build()
+                        ),
+                        Cond::in(
+                            Expr::column('id'),
+                            SelectBuilder::create()
+                                ->from('NoteUser')
+                                ->select('noteId')
+                                ->where(['userId' => $user->getId()])
+                                ->build()
+                        ),
+                    )
+                );
+
+            $queryList[] = $teamBuilder->build();
+        }
+
+        if ($onlyOwnEntityTypeList !== []) {
+            $ownBuilder = clone $baseBuilder;
+
+            $orWhere = [
+                ['relatedType=' => $onlyOwnEntityTypeList],
+            ];
+
+            if (!$noParentFilter) {
+                $orWhere[] = [
+                    'relatedId=' => null,
+                    'parentType=' => $onlyOwnEntityTypeList,
+                ];
+            }
+
+            $ownBuilder
+                ->where(['OR' => $orWhere])
+                ->where(
+                    Cond::in(
+                        Expr::column('id'),
+                        SelectBuilder::create()
+                            ->from('NoteUser')
+                            ->select('noteId')
+                            ->where(['userId' => $user->getId()])
+                            ->build()
+                    )
+                );
+
+            $queryList[] = $ownBuilder->build();
+        }
     }
 }
