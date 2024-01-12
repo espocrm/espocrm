@@ -61,10 +61,9 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                         [this.groupId]: this.groupName
                     }
                 };
-                abonModel.defs.fields.isActivated.default = true;
+                abonModel.defs.fields.fromAttendanceSheet.default = true;
                 abonModel.defs.fields.isPaid.default = true;
                 abonModel.defs.fields.isPaid.readOnly = true;
-                abonModel.defs.fields.startDate.readOnly = false;
 
                 let options = { scope: 'Abonement', model: abonModel };
                 this.createView('quickCreate', 'views/modals/edit', options, view => {
@@ -135,7 +134,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                     [groupId]: groupName
                 }
             };
-            abonModel.defs.fields.isActivated.default = true;
+            abonModel.defs.fields.fromAttendanceSheet.default = true;
             abonModel.defs.fields.isPaid.default = true;
             abonModel.defs.fields.isPaid.readOnly = true;
 
@@ -143,8 +142,8 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             
             abonModel.defs.fields.endDate.default = abonModel.defs.fields.startDate.default;
             
-            abonModel.defs.fields.classCount.default = 1;
-            abonModel.defs.fields.classesLeft.default = 1;
+            abonModel.defs.fields.classCount.default = abonplan.classCount;
+            abonModel.defs.fields.classesLeft.default = abonplan.classCount;
         },
 
         resetMetadata: function(abonModel) {
@@ -152,7 +151,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             abonModel.defs.fields.abonplan.defaultAttributes = null;
             abonModel.defs.fields.groups.defaultAttributes = null;
             
-            delete abonModel.defs.fields.isActivated.default;
+            delete abonModel.defs.fields.fromAttendanceSheet.default;
             abonModel.defs.fields.isPaid.default = false;
             delete abonModel.defs.fields.isPaid.readOnly;
 
@@ -368,9 +367,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         },
 
         handleViewFloatingMarks: function(e) {
-            console.log(e.target.dataset.id);
             const abon = this.otherGroupsAbons.list.find(abon => abon.id === e.target.dataset.id);
-            console.log(abon);
             this.viewMarks(abon);
         },
 

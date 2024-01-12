@@ -28,7 +28,8 @@
         "freezeDate": "Дата призупинення",
         "freezeDaysLeft": "Залишилося днів",
         "lastMark": "LastMark",
-        "lastUpdate": "LastUpdate"
+        "lastUpdate": "LastUpdate",
+        "fromAttendanceSheet": "FromAttendanceSheet"
     },
     "tooltips": {
         "classCount": "Кількість занять в абонементі",
@@ -41,7 +42,8 @@
         "isFreezed": "Абонімент заморожено",
         "freezeDaysLeft": "Залишилося днів, після замороження абоніменту",
         "lastMark": "Using in attendance sheet to trigger formula-script to recalculate classLeft fied",
-        "lastUpdate": "Using to trigger formula-script"
+        "lastUpdate": "Using to trigger formula-script",
+        "fromAttendanceSheet": "If created from attendace sheet"
     },
     "links": {
         "abonservice": "Абонсервіс",

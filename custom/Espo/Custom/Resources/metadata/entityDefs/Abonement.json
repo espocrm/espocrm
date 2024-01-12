@@ -195,6 +195,12 @@
             "options": [],
             "tooltip": true,
             "isCustom": true
+        },
+        "fromAttendanceSheet": {
+            "notNull": true,
+            "type": "bool",
+            "tooltip": true,
+            "isCustom": true
         }
     },
     "links": {
