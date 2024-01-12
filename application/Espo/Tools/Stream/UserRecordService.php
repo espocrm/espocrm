@@ -467,6 +467,7 @@ class UserRecordService
                     'subscription.userId' => $user->getId(),
                 ]
             )
+            // NOT EXISTS sub-query would perform very slow.
             ->leftJoin(
                 Subscription::ENTITY_TYPE,
                 'subscriptionExclude',
