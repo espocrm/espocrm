@@ -31,7 +31,6 @@ namespace Espo\Hooks\Common;
 
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\ORM\Entity;
-
 use Espo\Tools\Stream\Service as Service;
 
 /**
@@ -40,21 +39,18 @@ use Espo\Tools\Stream\Service as Service;
  *
  * When users or teams of `related` or `parent` record are changed
  * the note record will be changed too.
+ *
+ * @noinspection PhpUnused
  */
 class StreamNotesAcl
 {
     public static int $order = 10;
 
-    private Service $service;
-
-    public function __construct(Service $service)
-    {
-        $this->service = $service;
-    }
+    public function __construct(private Service $service)
+    {}
 
     /**
      * @param array<string, mixed> $options
-     * @throws \Espo\Core\Exceptions\Error
      */
     public function afterSave(Entity $entity, array $options): void
     {
