@@ -169,6 +169,14 @@ class StreamView extends View {
             return;
         }
 
+        const iconEl = this.element.querySelector('button[data-action="refresh"] .icon');
+
+        if (iconEl) {
+            iconEl.classList.add('animation-spin-fast');
+
+            setTimeout(() => iconEl.classList.remove('animation-spin-fast'), 500);
+        }
+
         Espo.Ui.notify(' ... ');
 
         this.getRecordView().showNewRecords()

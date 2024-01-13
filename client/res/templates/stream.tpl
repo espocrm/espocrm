@@ -29,10 +29,10 @@
                 {{/each}}
             </div>
             <button
-                class="btn btn-text btn-icon btn-icon-wide pull-right"
+                class="btn btn-text btn-icon pull-right"
                 data-action="refresh"
                 title="{{translate 'checkForNewNotes' category='messages'}}"
-            ><span class="fas fa-sync-alt fa-sm"></span></button>
+            ><span class="fas fa-sync-alt fa-sm icon"></span></button>
         </div>
         <div class="list-container list-container-panel">{{{list}}}</div>
     </div>
