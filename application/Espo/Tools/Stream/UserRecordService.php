@@ -54,6 +54,8 @@ use Espo\Tools\Stream\RecordService\Helper;
 
 class UserRecordService
 {
+    private const FILTER_POSTS = 'posts';
+
     public function __construct(
         private EntityManager $entityManager,
         private User $user,
@@ -118,8 +120,8 @@ class UserRecordService
             ->order('number', Order::DESC)
             ->limit(0, $sqLimit);
 
-        $this->buildSubscriptionQueries($user, $baseBuilder, $queryList);
-        $this->buildSubscriptionSuperQuery($user, $baseBuilder, $queryList);
+        $this->buildSubscriptionQueries($user, $baseBuilder, $queryList, $searchParams);
+        $this->buildSubscriptionSuperQuery($user, $baseBuilder, $queryList, $searchParams);
         $this->buildPostedToUserQuery($user, $baseBuilder, $queryList);
         $this->buildPostedToPortalQuery($user, $baseBuilder, $queryList);
         $this->buildPostedToTeamsQuery($user, $baseBuilder, $queryList);
@@ -305,12 +307,14 @@ class UserRecordService
     }
 
     /**
+     * @param SearchParams $searchParams
      * @param Select[] $queryList
      */
     private function buildSubscriptionQueries(
         User $user,
         SelectBuilder $baseBuilder,
-        array &$queryList
+        array &$queryList,
+        SearchParams $searchParams
     ): void {
 
         $ignoreWhereClause = $this->getSubscriptionIgnoreWhereClause($user);
@@ -336,19 +340,35 @@ class UserRecordService
             return;
         }
 
+        if ($searchParams->getPrimaryFilter() === self::FILTER_POSTS) {
+            // No need access control as posts do not have a 'related' link.
+            $queryList[] = $builder->build();
+
+            return;
+        }
+
         $this->buildAccessQueries($user, $builder, $queryList, true);
     }
 
     /**
+     * @param SearchParams $searchParams
      * @param Select[] $queryList
      */
     private function buildSubscriptionSuperQuery(
         User $user,
         SelectBuilder $baseBuilder,
-        array &$queryList
+        array &$queryList,
+        SearchParams $searchParams
     ): void {
 
         if ($user->isPortal()) {
+            return;
+        }
+
+        if ($searchParams->getPrimaryFilter() === self::FILTER_POSTS) {
+            // Posts do not have a 'super-parent'.
+            // They are not visible to super parent subscribers.
+            // Bypassing for a performance reason.
             return;
         }
 
