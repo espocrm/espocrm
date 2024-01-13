@@ -10,7 +10,7 @@ define('custom:views/attendance-sheet', ['view'],  function (Dep) {
             }, view => {
                 this.listenTo(view, "activity:changed", payload => {
                     const abonementPanel = this.getView("AbonementsPanel");
-                    abonementPanel.fetchAbonements(payload.trainingId, payload.groupId, payload.groupName);
+                    abonementPanel.fetchAbonements(payload.training, payload.groupId, payload.groupName);
                 })
             });
 

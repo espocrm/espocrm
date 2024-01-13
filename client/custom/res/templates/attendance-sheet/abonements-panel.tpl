@@ -52,6 +52,9 @@
                                 {{#if this.isPending}}
                                     <span title="Очікує" class="cp text-muted far fa-clock"></span>
                                 {{/if}}
+                                {{#if this.isOutdate}}
+                                    <span title="Термін дії минув" class="cp text-muted fas fa-calendar-times"></span>
+                                {{/if}}
                                 {{#if this.isEmpty}}
                                     <span title="Вичерпано" class="cp text-muted far fa-stop-circle"></span>
                                 {{/if}}
@@ -91,6 +94,9 @@
                                 {{/if}}
                                 {{#if this.isPending}}
                                     <span title="Очікує" class="cp text-muted far fa-clock"></span>
+                                {{/if}}
+                                {{#if this.isOutdate}}
+                                    <span title="Термін дії минув" class="cp text-muted fas fa-calendar-times"></span>
                                 {{/if}}
                                 {{#if this.isEmpty}}
                                     <span title="Вичерпано" class="cp text-muted far fa-stop-circle"></span>

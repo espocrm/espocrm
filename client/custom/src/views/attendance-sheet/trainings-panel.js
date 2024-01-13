@@ -88,7 +88,8 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
                             groupName: trainingModel.get('groupName'),
                             name: trainingModel.get('name'),
                             assignedUserName: trainingModel.get('assignedUserName'),
-                            timeDuration: this.formateTimeDuration(trainingModel.get('dateStart'))
+                            timeDuration: this.formateTimeDuration(trainingModel.get('dateStart')),
+                            startDateOnly: trainingModel.get('startDateOnly') 
                         };
                         this.activities.list.push(newTraining);
                         this.activities.total++;
@@ -177,7 +178,7 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
             const groupId = training.groupId;
             const groupName = training.groupName;
             
-            this.trigger('activity:changed', { trainingId, groupId, groupName });
+            this.trigger('activity:changed', { training, groupId, groupName });
             this.reRender();
         },
 
