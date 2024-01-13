@@ -203,11 +203,6 @@ class BaseFieldView extends View {
     searchParams = null
 
     /**
-     * @private
-     */
-    _timeout = null
-
-    /**
      * Inline edit disabled.
      *
      * @type {boolean}
@@ -1494,9 +1489,9 @@ class BaseFieldView extends View {
             return;
         }
 
-        if (this._popoverMap[element]) {
+        if (this._popoverMap.has(element)) {
             try {
-                this._popoverMap[element].detach();
+                this._popoverMap.get(element).detach();
             }
             catch (e) {}
         }
@@ -1512,17 +1507,23 @@ class BaseFieldView extends View {
 
         popover.show();
 
-        this._popoverMap[element] = popover;
+        this._popoverMap.set(element, popover);
 
         $el.closest('.field').one('mousedown click', () => popover.destroy());
 
         this.once('render remove', () => popover.destroy());
 
-        if (this._timeout) {
-            clearTimeout(this._timeout);
+        this._timeoutMap = this._timeoutMap || new WeakMap();
+
+        if (this._timeoutMap.has(element)) {
+            clearTimeout(this._timeoutMap.get(element));
         }
 
-        this._timeout = setTimeout(() => popover.destroy(), this.VALIDATION_POPOVER_TIMEOUT);
+        const timeout = setTimeout(() => {
+            popover.destroy();
+        }, this.VALIDATION_POPOVER_TIMEOUT);
+
+        this._timeoutMap.set(element, timeout);
     }
 
     /**
