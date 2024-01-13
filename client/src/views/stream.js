@@ -30,18 +30,14 @@ import View from 'view';
 
 class StreamView extends View {
 
-    template ='stream'
+    template = 'stream'
     filterList = ['all', 'posts', 'updates']
     filter = false
 
     events = {
         /** @this StreamView */
         'click button[data-action="refresh"]': function () {
-            if (!this.getRecordView()) {
-                return;
-            }
-
-            this.getRecordView().showNewRecords();
+            this.actionRefresh();
         },
         /** @this StreamView */
         'click button[data-action="selectFilter"]': function (e) {
@@ -68,17 +64,7 @@ class StreamView extends View {
     setup() {
         this.filter = this.options.filter || this.filter;
 
-        this.wait(
-            this.getModelFactory().create('Note', model => {
-                this.createView('createPost', 'views/stream/record/edit', {
-                    selector: '.create-post-container',
-                    model: model,
-                    interactiveMode: true,
-                }, view => {
-                    this.listenTo(view, 'after:save', () => this.getRecordView().showNewRecords());
-                });
-            })
-        );
+        this.addActionHandler('createPost', () => this.actionCreatePost());
     }
 
     afterRender() {
@@ -127,8 +113,8 @@ class StreamView extends View {
         this.filter = internalFilter;
         this.setFilter(this.filter);
 
-        this.filterList.forEach((item) => {
-            const $el = this.$el.find('.page-header button[data-action="selectFilter"][data-name="' + item + '"]');
+        this.filterList.forEach(item => {
+            const $el = this.$el.find('.button-container button[data-action="selectFilter"][data-name="' + item + '"]');
 
             if (item === filter) {
                 $el.addClass('active');
@@ -164,6 +150,29 @@ class StreamView extends View {
 
         this.collection.offset = 0;
         this.collection.maxSize = this.getConfig().get('recordsPerPage') || this.collection.maxSize;
+    }
+
+    actionCreatePost() {
+        this.createView('dialog', 'views/stream/modals/create-post', {}, view => {
+            view.render();
+
+            this.listenToOnce(view, 'after:save', () => {
+                view.close();
+
+                this.getRecordView().showNewRecords();
+            });
+        });
+    }
+
+    actionRefresh() {
+        if (!this.getRecordView()) {
+            return;
+        }
+
+        Espo.Ui.notify(' ... ');
+
+        this.getRecordView().showNewRecords()
+            .then(() => Espo.Ui.notify(false));
     }
 }
 

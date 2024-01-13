@@ -186,8 +186,13 @@ class ListStreamRecordView extends ListExpandedRecordView {
         }
     }
 
+    /**
+     * Load new records.
+     *
+     * @return {Promise}
+     */
     showNewRecords() {
-        this.collection.fetchNew();
+        return this.collection.fetchNew();
     }
 }
 
