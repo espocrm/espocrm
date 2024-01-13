@@ -201,6 +201,10 @@
         "createdByNumber": {
             "columns": ["createdById", "number"]
         },
+        "type": {
+            "type": "index",
+            "columns": ["type"]
+        },
         "parentId": {
             "type": "index",
             "columns": ["parentId"]
