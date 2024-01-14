@@ -42,15 +42,15 @@ class AssignNoteStreamView extends NoteStreamView {
     }
 
     setup() {
-        let data = this.model.get('data');
+        const data = this.model.get('data');
 
         this.assignedUserId = data.assignedUserId || null;
-        this.assignedUserName = data.assignedUserName || null;
+        this.assignedUserName = data.assignedUserName || data.assignedUserId || null;
 
         this.messageData['assignee'] =
             $('<a>')
                 .attr('href', '#User/view/' + data.assignedUserId)
-                .text(data.assignedUserName);
+                .text(this.assignedUserName);
 
         if (this.isUserStream) {
             if (this.assignedUserId) {
