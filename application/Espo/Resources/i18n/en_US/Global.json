@@ -59,7 +59,8 @@
         "Mass Action": "Mass Action",
         "WorkingTimeCalendar": "Working Time Calendar",
         "WorkingTimeRange": "Working Time Range",
-        "AuthenticationProvider": "Authentication Provider"
+        "AuthenticationProvider": "Authentication Provider",
+        "GlobalStream": "Global Stream"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -109,7 +110,8 @@
         "Webhook": "Webhooks",
         "WorkingTimeCalendar": "Working Time Calendars",
         "WorkingTimeRange": "Working Time Ranges",
-        "AuthenticationProvider": "Authentication Providers"
+        "AuthenticationProvider": "Authentication Providers",
+        "GlobalStream": "Global Stream"
     },
     "labels": {
         "Sort": "Sort",

@@ -11,6 +11,23 @@
                     class="btn btn-default btn-xs-wide"
                     data-action="createPost"
                 ><span class="fas fa-plus fa-sm"></span> {{translate 'Create Post'}}</button>
+                {{#if hasMenu}}
+                    <button
+                        class="btn btn-default dropdown-toggle"
+                        data-toggle="dropdown"
+                    ><span class="fas fa-ellipsis-h"></span></button>
+                    <ul class="dropdown-menu pull-right">
+                        {{#if hasGlobalStreamAccess}}
+                        <li>
+                            <a
+                                role="button"
+                                tabindex="0"
+                                href="#GlobalStream"
+                            >{{translate 'GlobalStream' category='scopeNames'}}</a>
+                        </li>
+                        {{/if}}
+                    </ul>
+                {{/if}}
             </div>
         </div>
     </div>

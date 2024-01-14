@@ -1,0 +1,13 @@
+[
+    "type",
+    "createdBy",
+    "createdAt",
+    "parent",
+    "related",
+    "post",
+    "attachments",
+    "isInternal",
+    "targetType",
+    "modifiedBy",
+    "modifiedAt"
+]

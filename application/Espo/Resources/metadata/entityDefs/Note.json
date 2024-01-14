@@ -22,7 +22,7 @@
         "type": {
             "type": "enum",
             "readOnly": true,
-            "view": "views/fields/enum",
+            "view": "views/note/fields/type",
             "options": [
                 "Post",
                 "Create",
@@ -51,12 +51,14 @@
         },
         "parent": {
             "type": "linkParent",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "view": "views/note/fields/parent"
         },
         "related": {
             "type": "linkParent",
             "readOnly": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "view": "views/note/fields/related"
         },
         "attachments": {
             "type": "attachmentMultiple",
@@ -174,7 +176,9 @@
     "collection": {
         "orderBy": "number",
         "order": "desc",
-        "textFilterFields": ["post"]
+        "textFilterFields": ["post"],
+        "fullTextSearch": true,
+        "fullTextSearchOrderType": "original"
     },
     "statusStyles": {
         "Lead": {

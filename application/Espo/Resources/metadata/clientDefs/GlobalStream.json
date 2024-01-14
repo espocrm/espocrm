@@ -1,0 +1,4 @@
+{
+   "controller": "controllers/global-stream",
+   "iconClass": "fas fa-rss-square"
+}

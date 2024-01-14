@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Acl\Note;
 
+use Espo\Core\Acl\Table;
 use Espo\Entities\Note;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
@@ -139,6 +140,10 @@ class AccessChecker implements AccessEntityCREDChecker
 
         if ($entity->getTargetType() === Note::TARGET_USERS) {
             return in_array($user->getId(), $entity->getLinkMultipleIdList('users'));
+        }
+
+        if ($entity->getTargetType() === Note::TARGET_PORTALS) {
+            return $this->aclManager->getPermissionLevel($user, 'portal') === Table::LEVEL_YES;
         }
 
         return false;

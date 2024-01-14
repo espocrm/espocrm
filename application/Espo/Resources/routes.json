@@ -69,6 +69,11 @@
         }
     },
     {
+        "route": "/GlobalStream",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\GetGlobal"
+    },
+    {
         "route": "/GlobalSearch",
         "method": "get",
         "actionClassName": "Espo\\Tools\\GlobalSearch\\Api\\Get"

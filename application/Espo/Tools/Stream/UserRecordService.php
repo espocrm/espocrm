@@ -99,24 +99,7 @@ class UserRecordService
         $queryList = [];
 
         $baseBuilder = $this->helper->buildBaseQueryBuilder($searchParams)
-            ->select([
-                'id',
-                'number',
-                'type',
-                'post',
-                'data',
-                'parentType',
-                'parentId',
-                'relatedType',
-                'relatedId',
-                'targetType',
-                'createdAt',
-                'createdById',
-                'createdByName',
-                'isGlobal',
-                'isInternal',
-                'createdByGender',
-            ])
+            ->select($this->helper->getUserQuerySelect())
             ->order('number', Order::DESC)
             ->limit(0, $sqLimit);
 

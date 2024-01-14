@@ -54,10 +54,14 @@ class StreamView extends View {
             filter = 'all';
         }
 
+        const hasGlobalStreamAccess = this.getAcl().checkScope('GlobalStream');
+
         return {
             displayTitle: this.options.displayTitle,
             filterList: this.filterList,
             filter: filter,
+            hasMenu: hasGlobalStreamAccess,
+            hasGlobalStreamAccess: hasGlobalStreamAccess,
         };
     }
 

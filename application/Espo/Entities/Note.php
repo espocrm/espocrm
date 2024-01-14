@@ -124,6 +124,11 @@ class Note extends Entity
         return $this->get('post');
     }
 
+    public function getNumber(): int
+    {
+        return $this->get('number');
+    }
+
     public function getCreatedAt(): ?DateTime
     {
         /** @var ?DateTime */

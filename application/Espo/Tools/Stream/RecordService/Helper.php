@@ -54,6 +54,30 @@ class Helper
         private UserAclManagerProvider $userAclManagerProvider
     ) {}
 
+    /**
+     * @return string[]
+     */
+    public function getUserQuerySelect(): array
+    {
+        return [
+            'id',
+            'number',
+            'type',
+            'post',
+            'data',
+            'parentType',
+            'parentId',
+            'relatedType',
+            'relatedId',
+            'targetType',
+            'createdAt',
+            'createdById',
+            'createdByName',
+            'isGlobal',
+            'isInternal',
+            'createdByGender',
+        ];
+    }
 
     /**
      * @throws BadRequest

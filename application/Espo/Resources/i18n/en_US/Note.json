@@ -28,7 +28,16 @@
             "portals": "to portal users"
         },
         "type": {
-            "Post": "Post"
+            "Post": "Post",
+            "Create": "Create",
+            "CreateRelated": "Create Related",
+            "Update": "Update",
+            "Status": "Status",
+            "Assign": "Assign",
+            "Relate": "Relate",
+            "Unrelate": "Unrelate",
+            "EmailReceived": "Email Received",
+            "EmailSent": "Email Sent"
         }
     },
     "messages": {
