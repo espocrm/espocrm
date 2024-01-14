@@ -1160,7 +1160,7 @@ class SearchView extends View {
 
             this.advanced[field] = view.fetchSearch();
 
-            view.searchParams = this.advanced[field];
+            view.searchParams = Espo.Utils.clone(this.advanced[field] || {});
         }
     }
 
