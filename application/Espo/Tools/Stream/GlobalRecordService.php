@@ -45,6 +45,7 @@ use Espo\Tools\Stream\RecordService\Helper;
 class GlobalRecordService
 {
     public const SCOPE_NAME = 'GlobalStream';
+    private const ITERATION_LIMIT = 50;
 
     public function __construct(
         private Acl $acl,
@@ -68,6 +69,7 @@ class GlobalRecordService
 
         $baseBuilder = $this->helper->buildBaseQueryBuilder($searchParams)
             ->select($this->helper->getUserQuerySelect())
+            ->order('number', Order::DESC)
             ->where([
                 'OR' => [
                     ['parentType' => $this->getEntityTypeList()],
@@ -77,18 +79,36 @@ class GlobalRecordService
                     ],
                 ]
             ])
-            ->order('number', Order::DESC)
             ->limit(0, $maxSize + 1);
 
         $builder = (clone $baseBuilder);
 
+        /** @var array{string, string}[] $ignoreList */
+        $ignoreList = [];
+        /** @var array{string, string}[] $allowList */
+        $allowList = [];
+
         $list = [];
+        $i = 0;
 
         while (true) {
+            $ignoreWhere = [];
+
+            foreach ($ignoreList as $it) {
+                $ignoreWhere[] = [
+                    'OR' => [
+                        'parentId' => null,
+                        'parentType!=' => $it[0],
+                        'parentId!=' => $it[1]
+                    ]
+                ];
+            }
+
             $collection = $this->entityManager
                 ->getRDBRepositoryByClass(Note::class)
                 ->clone($builder->build())
                 ->sth()
+                ->where($ignoreWhere)
                 ->find();
 
             /** @var Note[] $subList */
@@ -100,9 +120,16 @@ class GlobalRecordService
 
             $lastNumber = end($subList)->getNumber();
 
-            $list = array_merge($list, $this->filter($subList));
+            $list = array_merge($list, $this->filter($subList, $ignoreList, $allowList));
 
             if (count($list) >= $maxSize + 1) {
+                break;
+            }
+
+            $i ++;
+
+            // @todo Introduce a config parameter 'globalStreamIterationLimits'.
+            if ($i === self::ITERATION_LIMIT) {
                 break;
             }
 
@@ -124,22 +151,66 @@ class GlobalRecordService
 
     /**
      * @param Note[] $noteList
+     * @param array{string, string}[] $ignoreList
+     * @param array{string, string}[] $allowList
      * @return Note[]
      */
-    private function filter(array $noteList): array
+    private function filter(array $noteList, array &$ignoreList, array &$allowList): array
     {
         /** @var Note[] $outputList */
         $outputList = [];
 
         foreach ($noteList as $note) {
-            if (!$this->checkAccess($note)) {
+            if ($this->checkAgainstList($note, $ignoreList)) {
                 continue;
+            }
+
+            if (
+                !$this->checkAgainstList($note, $allowList) &&
+                !$this->checkAccess($note)
+            ) {
+                $this->addToList($note, $ignoreList);
+
+                continue;
+            }
+
+            if ($note->getParentType() && $note->getParentId()) {
+                $this->addToList($note, $allowList);
             }
 
             $outputList[] = $note;
         }
 
         return $outputList;
+    }
+
+    /**
+     * @param array{string, string}[] $list
+     */
+    private function addToList(Note $note, array &$list): void
+    {
+        if (!$note->getParentType() || !$note->getParentId()) {
+            return;
+        }
+
+        $list[] = [$note->getParentType(), $note->getParentId()];
+    }
+
+    /**
+     * @param array{string, string}[] $list
+     */
+    private function checkAgainstList(Note $note, array $list): bool
+    {
+        if (!$note->getParentType() || !$note->getParentId()) {
+            return false;
+        }
+
+        return
+            array_filter($list, function ($it) use ($note) {
+                return
+                    $it[0] === $note->getParentType() &&
+                    $it[1] === $note->getParentId();
+            }) !== [];
     }
 
     private function checkAccess(Note $note): bool
