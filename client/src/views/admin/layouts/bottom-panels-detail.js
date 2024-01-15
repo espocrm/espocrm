@@ -67,7 +67,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
 
             if (
                 this.hasStream &&
-                this.getMetadata().get(['scopes', this.scope, 'stream'])
+                (this.getMetadata().get(['scopes', this.scope, 'stream']) || this.scope === 'User')
             ) {
                 panelListAll.push('stream');
 
