@@ -52,13 +52,15 @@ class DefaultSidePanelView extends SidePanelView {
     setup() {
         this.fieldList = Espo.Utils.cloneDeep(this.fieldList);
 
+        const allFieldList = this.getFieldManager().getEntityTypeFieldList(this.model.entityType);
+
         this.hasComplexCreated =
-            !!this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'createdAt']) &&
-            !!this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'createdBy']);
+            allFieldList.includes('createdAt') &&
+            allFieldList.includes('createdBy');
 
         this.hasComplexModified =
-            !!this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'modifiedAt']) &&
-            !!this.getMetadata().get(['entityDefs', this.model.entityType, 'fields', 'modifiedBy']);
+            allFieldList.includes('modifiedAt') &&
+            allFieldList.includes('modifiedBy');
 
         super.setup();
     }
@@ -76,7 +78,7 @@ class DefaultSidePanelView extends SidePanelView {
                     readOnly: true,
                 });
 
-                if (!this.model.get('createdById')) {
+                if (!this.model.get('createdById') && !this.model.get('createdAt')) {
                     this.recordViewObject.hideField('complexCreated');
                 }
             }
@@ -97,7 +99,7 @@ class DefaultSidePanelView extends SidePanelView {
                     },
                 });
             }
-            if (!this.model.get('modifiedById')) {
+            if (!this.model.get('modifiedById') && !this.model.get('modifiedAt')) {
                 this.recordViewObject.hideField('complexModified');
             }
         } else {
@@ -105,8 +107,12 @@ class DefaultSidePanelView extends SidePanelView {
         }
 
         if (!this.complexCreatedDisabled && this.hasComplexCreated) {
-            this.listenTo(this.model, 'change:createdById', () => {
-                if (!this.model.get('createdById')) {
+            this.listenTo(this.model, 'change', () => {
+                if (!this.model.hasChanged('createdById') && !this.model.hasChanged('createdAt')) {
+                    return;
+                }
+
+                if (!this.model.get('createdById') && !this.model.get('createdAt')) {
                     return;
                 }
 
@@ -115,8 +121,12 @@ class DefaultSidePanelView extends SidePanelView {
         }
 
         if (!this.complexModifiedDisabled && this.hasComplexModified) {
-            this.listenTo(this.model, 'change:modifiedById', () => {
-                if (!this.model.get('modifiedById')) {
+            this.listenTo(this.model, 'change', () => {
+                if (!this.model.hasChanged('modifiedById') && !this.model.hasChanged('modifiedAt')) {
+                    return;
+                }
+
+                if (!this.model.get('modifiedById') && !this.model.get('modifiedAt')) {
                     return;
                 }
 
@@ -124,7 +134,10 @@ class DefaultSidePanelView extends SidePanelView {
             });
         }
 
-        if (this.getMetadata().get(['scopes', this.model.entityType ,'stream']) && !this.getUser().isPortal()) {
+        if (
+            this.getMetadata().get(['scopes', this.model.entityType ,'stream']) &&
+            !this.getUser().isPortal()
+        ) {
             this.fieldList.push({
                 name: 'followers',
                 labelText: this.translate('Followers'),
@@ -142,9 +155,11 @@ class DefaultSidePanelView extends SidePanelView {
     controlFollowersField() {
         if (this.model.get('followersIds') && this.model.get('followersIds').length) {
             this.recordViewObject.showField('followers');
-        } else {
-            this.recordViewObject.hideField('followers');
+
+            return;
         }
+
+        this.recordViewObject.hideField('followers');
     }
 }
 
