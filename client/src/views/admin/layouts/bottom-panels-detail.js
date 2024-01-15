@@ -31,7 +31,6 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
     return Dep.extend({
 
         hasStream: true,
-
         hasRelationships: true,
 
         TAB_BREAK_KEY: '_tabBreak_{n}',
@@ -40,10 +39,8 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
             Dep.prototype.setup.call(this);
 
             this.on('update-item', (name, attributes) => {
-
-
                 if (this.isTabName(name)) {
-                    let $li = $("#layout ul > li[data-name='" + name + "']");
+                    const $li = $("#layout ul > li[data-name='" + name + "']");
 
                     $li.find('.left > span')
                         .text(this.composeTabBreakLabel(attributes));
@@ -63,8 +60,8 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
 
         readDataFromLayout: function (layout) {
             let panelListAll = [];
-            let labels = {};
-            let params = {};
+            const labels = {};
+            const params = {};
 
             layout = Espo.Utils.cloneDeep(layout);
 
@@ -103,8 +100,8 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                 }
             });
 
-            for (let name in layout) {
-                let item = layout[name];
+            for (const name in layout) {
+                const item = layout[name];
 
                 if (item.tabBreak) {
                     panelListAll.push(name);
@@ -123,7 +120,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
             this.links = {};
 
             if (this.hasRelationships) {
-                var linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
+                const linkDefs = this.getMetadata().get(['entityDefs', this.scope, 'links']) || {};
 
                 Object.keys(linkDefs).forEach(link => {
                     if (
@@ -142,7 +139,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
 
                     labels[link] = this.translate(link, 'links', this.scope);
 
-                    var item = {
+                    const item = {
                         name: link,
                         index: 5,
                     };
@@ -152,7 +149,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                             return;
                         }
 
-                        var value = this.getMetadata()
+                        const value = this.getMetadata()
                             .get(['clientDefs', this.scope, 'relationshipPanels', item.name, attribute]);
 
                         if (value === null) {
@@ -191,8 +188,8 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
             panelListAll.push(this.TAB_BREAK_KEY);
 
             panelListAll.forEach((item, index) => {
-                var disabled = false;
-                var itemData = layout[item] || {};
+                let disabled = false;
+                const itemData = layout[item] || {};
 
                 if (itemData.disabled) {
                     disabled = true;
@@ -214,7 +211,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                     disabled = true;
                 }
 
-                var labelText;
+                let labelText;
 
                 if (labels[item]) {
                     labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);
@@ -223,7 +220,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                 }
 
                 if (disabled) {
-                    let o = {
+                    const o = {
                         name: item,
                         label: labelText,
                     };
@@ -240,7 +237,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                     return;
                 }
 
-                var o = {
+                const o = {
                     name: item,
                     label: labelText,
                 };
@@ -258,7 +255,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                             return;
                         }
 
-                        var itemParams = params[o.name] || {};
+                        const itemParams = params[o.name] || {};
 
                         if (attribute in itemParams) {
                             o[attribute] = itemParams[attribute];
@@ -266,7 +263,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                     });
                 }
 
-                for (var i in itemData) {
+                for (const i in itemData) {
                     o[i] = itemData[i];
                 }
 
@@ -288,12 +285,12 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
             let $tabBreak = null;
 
             this.$el.find('ul.enabled').children().each((i, li) => {
-                let $li = $(li);
-                let name = $li.attr('data-name');
+                const $li = $(li);
+                const name = $li.attr('data-name');
 
                 if (this.isTabName(name)) {
                     if (name !== this.TAB_BREAK_KEY) {
-                        let itemIndex = parseInt(name.split('_')[2]);
+                        const itemIndex = parseInt(name.split('_')[2]);
 
                         if (itemIndex > tabBreakIndex) {
                             tabBreakIndex = itemIndex;
@@ -305,13 +302,13 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
             tabBreakIndex++;
 
             this.$el.find('ul.enabled').children().each((i, li) => {
-                let $li = $(li);
-                let name = $li.attr('data-name');
+                const $li = $(li);
+                const name = $li.attr('data-name');
 
                 if (this.isTabName(name) && name === this.TAB_BREAK_KEY) {
                     $tabBreak = $li.clone();
 
-                    let realName = this.TAB_BREAK_KEY.slice(0, -3) + tabBreakIndex;
+                    const realName = this.TAB_BREAK_KEY.slice(0, -3) + tabBreakIndex;
 
                     $li.attr('data-name', realName);
 
@@ -321,9 +318,9 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
 
             if (!$tabBreak) {
                 this.$el.find('ul.disabled').children().each((i, li) => {
-                    let $li = $(li);
+                    const $li = $(li);
 
-                    let name = $li.attr('data-name');
+                    const name = $li.attr('data-name');
 
                     if (this.isTabName(name) && name !== this.TAB_BREAK_KEY) {
                         $li.remove();
@@ -341,7 +338,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
         },
 
         getEditAttributesModalViewOptions: function (attributes) {
-            let options = Dep.prototype.getEditAttributesModalViewOptions.call(this, attributes);
+            const options = Dep.prototype.getEditAttributesModalViewOptions.call(this, attributes);
 
             if (this.isTabName(attributes.name)) {
                 options.attributeList = [
@@ -359,12 +356,11 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
         },
 
         fetch: function () {
-            let layout = Dep.prototype.fetch.call(this);
+            const layout = Dep.prototype.fetch.call(this);
 
-            let newLayout = {};
+            const newLayout = {};
 
-
-            for (let name in layout) {
+            for (const name in layout) {
                 if (layout[name].disabled && this.links[name]) {
                     continue;
                 }
@@ -372,7 +368,7 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                 newLayout[name] = layout[name];
 
                 if (this.isTabName(name) && name !== this.TAB_BREAK_KEY /*&& this.itemsData[name]*/) {
-                    let data = this.itemsData[name] || {};
+                    const data = this.itemsData[name] || {};
 
                     newLayout[name].tabBreak = true;
                     newLayout[name].tabLabel = data.tabLabel;
