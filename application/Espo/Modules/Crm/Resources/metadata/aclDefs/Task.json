@@ -1,0 +1,6 @@
+{
+    "linkCheckerClassNameMap": {
+        "parent": "Espo\\Modules\\Crm\\Classes\\Acl\\Task\\LinkCheckers\\ParentLinkChecker",
+        "account": "Espo\\Modules\\Crm\\Classes\\Acl\\Task\\LinkCheckers\\AccountLinkChecker"
+    }
+}
