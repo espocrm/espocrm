@@ -645,9 +645,17 @@ class PanelStreamView extends RelationshipPanelView {
 
         this.actionList.push({
             action: 'viewPostList',
-            text: this.translate('View List') + ' · ' + this.translate('posts', 'filters', 'Note'),
+            text: this.translate('View Posts', 'labels', 'Note'),
             onClick: () => this.actionViewPostList(),
         });
+
+        if (this.model.entityType === 'User') {
+            this.actionList.push({
+                action: 'viewUserActivity',
+                text: this.translate('View Activity', 'labels', 'Note'),
+                onClick: () => this.actionViewUserActivity(),
+            });
+        }
 
         this.actionList.push(false);
 
@@ -677,7 +685,6 @@ class PanelStreamView extends RelationshipPanelView {
         });
     }
 
-    // noinspection JSUnusedGlobalSymbols
     actionViewPostList() {
         const url = this.model.entityType + '/' + this.model.id + '/posts';
 
@@ -688,6 +695,22 @@ class PanelStreamView extends RelationshipPanelView {
                 title: this.translate('Stream') +
                     ' @right ' + this.translate('posts', 'filters', 'Note'),
                 forceSelectAllAttributes: true,
+            },
+        };
+
+        this.actionViewRelatedList(data);
+    }
+
+    actionViewUserActivity() {
+        const url = `User/${this.model.id}/stream/own`;
+
+        const data = {
+            scope: 'Note',
+            viewOptions: {
+                url: url,
+                title: this.translate('Stream') + ' @right ' + this.translate('activity', 'filters', 'Note'),
+                forceSelectAllAttributes: true,
+                filtersLayoutName: 'filtersGlobal',
             },
         };
 

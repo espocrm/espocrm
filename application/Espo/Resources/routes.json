@@ -390,6 +390,11 @@
         "actionClassName": "Espo\\Tools\\EmailAddress\\Api\\GetSearch"
     },
     {
+        "route": "/User/:id/stream/own",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\GetOwn"
+    },
+    {
         "route": "/User/:id/acl",
         "method": "get",
         "actionClassName": "Espo\\Tools\\UserSecurity\\Api\\GetUserAcl"

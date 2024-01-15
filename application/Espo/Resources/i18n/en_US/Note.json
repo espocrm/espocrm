@@ -17,7 +17,8 @@
     "filters": {
         "all": "All",
         "posts": "Posts",
-        "updates": "Updates"
+        "updates": "Updates",
+        "activity": "Activity"
     },
     "options": {
         "targetType": {
@@ -39,6 +40,10 @@
             "EmailReceived": "Email Received",
             "EmailSent": "Email Sent"
         }
+    },
+    "labels": {
+        "View Posts": "View Posts",
+        "View Activity": "View Activity"
     },
     "messages": {
         "writeMessage": "Write your message here"

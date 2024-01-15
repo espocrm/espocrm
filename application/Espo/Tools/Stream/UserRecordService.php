@@ -80,9 +80,6 @@ class UserRecordService
     {
         $userId ??= $this->user->getId();
 
-        $offset = $searchParams->getOffset() ?? 0;
-        $maxSize = $searchParams->getMaxSize();
-
         $user = $userId === $this->user->getId() ?
             $this->user :
             $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
@@ -96,13 +93,16 @@ class UserRecordService
             throw new Forbidden("No user permission access.");
         }
 
-        $queryList = [];
+        $offset = $searchParams->getOffset() ?? 0;
+        $maxSize = $searchParams->getMaxSize();
 
         $baseBuilder = $this->queryHelper->buildBaseQueryBuilder($searchParams)
             ->select($this->queryHelper->getUserQuerySelect())
             ->leftJoin('createdBy')
             ->order('number', Order::DESC)
             ->limit(0, $offset + $maxSize + 1);
+
+        $queryList = [];
 
         $this->buildSubscriptionQueries($user, $baseBuilder, $queryList, $searchParams);
         $this->buildSubscriptionSuperQuery($user, $baseBuilder, $queryList, $searchParams);
@@ -112,37 +112,44 @@ class UserRecordService
         $this->buildPostedByUserQuery($user, $baseBuilder, $queryList);
         $this->buildPostedToGlobalQuery($user, $baseBuilder, $queryList);
 
-        $builder = $this->entityManager
-            ->getQueryBuilder()
-            ->union()
-            ->all()
+        return $this->processQueryList($user, $queryList, $offset, $maxSize);
+    }
+
+    /**
+     * Find notes created by a user.
+     *
+     * @return RecordCollection<Note>
+     * @throws NotFound
+     * @throws Forbidden
+     * @throws BadRequest
+     */
+    public function findOwn(string $userId, SearchParams $searchParams): RecordCollection
+    {
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
+
+        if (!$user) {
+            throw new NotFound("User not found.");
+        }
+
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
+        if (!$this->acl->checkUserPermission($user, 'user')) {
+            throw new Forbidden("No user permission access.");
+        }
+
+        $offset = $searchParams->getOffset() ?? 0;
+        $maxSize = $searchParams->getMaxSize();
+
+        $baseBuilder = $this->queryHelper->buildBaseQueryBuilder($searchParams)
+            ->select($this->queryHelper->getUserQuerySelect())
+            ->leftJoin('createdBy')
             ->order('number', Order::DESC)
-            ->limit($offset, $maxSize + 1);
+            ->limit(0, $offset + $maxSize + 1);
 
-        foreach ($queryList as $query) {
-            $builder->query($query);
-        }
+        $queryList[] = (clone $baseBuilder)
+            ->where(['createdById' => $user->getId()])
+            ->build();
 
-        $unionQuery = $builder->build();
-
-        $sql = $this->entityManager
-            ->getQueryComposer()
-            ->compose($unionQuery);
-
-        $sthCollection = $this->entityManager
-            ->getRDBRepositoryByClass(Note::class)
-            ->findBySql($sql);
-
-        $collection = $this->entityManager
-            ->getCollectionFactory()
-            ->createFromSthCollection($sthCollection);
-
-        foreach ($collection as $e) {
-            $this->loadNoteAdditionalFields($e);
-            $this->noteAccessControl->apply($e, $user);
-        }
-
-        return RecordCollection::createNoCount($collection, $maxSize);
+        return $this->processQueryList($user, $queryList, $offset, $maxSize);
     }
 
     /**
@@ -558,5 +565,49 @@ class UserRecordService
 
             $queryList[] = $ownBuilder->build();
         }
+    }
+
+    /**
+     * @param Select[] $queryList
+     * @return RecordCollection<Note>
+     */
+    private function processQueryList(
+        User $user,
+        array $queryList,
+        int $offset,
+        ?int $maxSize
+    ): RecordCollection {
+
+        $builder = $this->entityManager
+            ->getQueryBuilder()
+            ->union()
+            ->all()
+            ->order('number', Order::DESC)
+            ->limit($offset, $maxSize + 1);
+
+        foreach ($queryList as $query) {
+            $builder->query($query);
+        }
+
+        $unionQuery = $builder->build();
+
+        $sql = $this->entityManager
+            ->getQueryComposer()
+            ->compose($unionQuery);
+
+        $sthCollection = $this->entityManager
+            ->getRDBRepositoryByClass(Note::class)
+            ->findBySql($sql);
+
+        $collection = $this->entityManager
+            ->getCollectionFactory()
+            ->createFromSthCollection($sthCollection);
+
+        foreach ($collection as $e) {
+            $this->loadNoteAdditionalFields($e);
+            $this->noteAccessControl->apply($e, $user);
+        }
+
+        return RecordCollection::createNoCount($collection, $maxSize);
     }
 }
