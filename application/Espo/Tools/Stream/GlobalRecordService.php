@@ -40,7 +40,7 @@ use Espo\Entities\User;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Order;
-use Espo\Tools\Stream\RecordService\Helper;
+use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class GlobalRecordService
 {
@@ -52,7 +52,7 @@ class GlobalRecordService
         private User $user,
         private Metadata $metadata,
         private EntityManager $entityManager,
-        private Helper $helper,
+        private QueryHelper $queryHelper,
         private NoteAccessControl $noteAccessControl
     ) {}
 
@@ -67,8 +67,8 @@ class GlobalRecordService
 
         $maxSize = $searchParams->getMaxSize() ?? 0;
 
-        $baseBuilder = $this->helper->buildBaseQueryBuilder($searchParams)
-            ->select($this->helper->getUserQuerySelect())
+        $baseBuilder = $this->queryHelper->buildBaseQueryBuilder($searchParams)
+            ->select($this->queryHelper->getUserQuerySelect())
             ->order('number', Order::DESC)
             ->where([
                 'OR' => [

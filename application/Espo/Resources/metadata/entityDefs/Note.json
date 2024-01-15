@@ -35,6 +35,7 @@
                 "EmailReceived",
                 "EmailSent"
             ],
+            "maxLength": 24,
             "customizationDisabled": true,
             "default": "Post"
         },
@@ -47,6 +48,7 @@
                 "users",
                 "portals"
             ],
+            "maxLength": 7,
             "customizationDisabled": true
         },
         "parent": {
@@ -208,6 +210,10 @@
         "type": {
             "type": "index",
             "columns": ["type"]
+        },
+        "targetType": {
+            "type": "index",
+            "columns": ["targetType"]
         },
         "parentId": {
             "type": "index",

@@ -51,6 +51,7 @@ use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
+use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class UserRecordService
 {
@@ -63,7 +64,8 @@ class UserRecordService
         private Acl $acl,
         private UserAclManagerProvider $userAclManagerProvider,
         private NoteAccessControl $noteAccessControl,
-        private Helper $helper
+        private Helper $helper,
+        private QueryHelper $queryHelper
     ) {}
 
     /**
@@ -81,8 +83,6 @@ class UserRecordService
         $offset = $searchParams->getOffset() ?? 0;
         $maxSize = $searchParams->getMaxSize();
 
-        $sqLimit = $offset + $maxSize + 1;
-
         $user = $userId === $this->user->getId() ?
             $this->user :
             $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
@@ -98,10 +98,11 @@ class UserRecordService
 
         $queryList = [];
 
-        $baseBuilder = $this->helper->buildBaseQueryBuilder($searchParams)
-            ->select($this->helper->getUserQuerySelect())
+        $baseBuilder = $this->queryHelper->buildBaseQueryBuilder($searchParams)
+            ->select($this->queryHelper->getUserQuerySelect())
+            ->leftJoin('createdBy')
             ->order('number', Order::DESC)
-            ->limit(0, $sqLimit);
+            ->limit(0, $offset + $maxSize + 1);
 
         $this->buildSubscriptionQueries($user, $baseBuilder, $queryList, $searchParams);
         $this->buildSubscriptionSuperQuery($user, $baseBuilder, $queryList, $searchParams);
@@ -305,7 +306,6 @@ class UserRecordService
         $builder = clone $baseBuilder;
 
         $builder
-            ->leftJoin('createdBy')
             ->join(
                 Subscription::ENTITY_TYPE,
                 'subscription',
@@ -394,125 +394,59 @@ class UserRecordService
     /**
      * @param Select[] $queryList
      */
-    private function buildPostedToUserQuery(
-        User $user,
-        SelectBuilder $baseBuilder,
-        array &$queryList
-    ): void {
-
-        $queryList[] = (clone $baseBuilder)
-            ->leftJoin('users')
-            ->leftJoin('createdBy')
-            ->where([
-                'createdById!=' => $user->getId(),
-                'usersMiddle.userId' => $user->getId(),
-                'parentId' => null,
-                'type' => Note::TYPE_POST,
-                'isGlobal' => false,
-            ])
-            ->build();
+    private function buildPostedToUserQuery(User $user, SelectBuilder $baseBuilder, array &$queryList): void
+    {
+        $queryList[] = $this->queryHelper->buildPostedToUserQuery($user, $baseBuilder);
     }
 
     /**
      * @param Select[] $queryList
      */
-    private function buildPostedToPortalQuery(
-        User $user,
-        SelectBuilder $baseBuilder,
-        array &$queryList
-    ): void {
+    private function buildPostedToPortalQuery(User $user, SelectBuilder $baseBuilder, array &$queryList): void
+    {
+        $query = $this->queryHelper->buildPostedToPortalQuery($user, $baseBuilder);
 
-        if (!$user->isPortal()) {
+        if (!$query) {
             return;
         }
 
-        $portalIdList = $user->getLinkMultipleIdList('portals');
-
-        if ($portalIdList === []) {
-            return;
-        }
-
-        $queryList[] = (clone $baseBuilder)
-            ->leftJoin('portals')
-            ->leftJoin('createdBy')
-            ->where([
-                'parentId' => null,
-                'portalsMiddle.portalId' => $portalIdList,
-                'type' => Note::TYPE_POST,
-                'isGlobal' => false,
-            ])
-            ->build();
+        $queryList[] = $query;
     }
 
     /**
      * @param Select[] $queryList
      */
-    private function buildPostedToTeamsQuery(
-        User $user,
-        SelectBuilder $baseBuilder,
-        array &$queryList
-    ): void {
+    private function buildPostedToTeamsQuery(User $user, SelectBuilder $baseBuilder, array &$queryList): void
+    {
+        $query = $this->queryHelper->buildPostedToTeamsQuery($user, $baseBuilder);
 
-        if ($user->getTeamIdList() === []) {
+        if (!$query) {
             return;
         }
 
-        $queryList[] = (clone $baseBuilder)
-            ->leftJoin('teams')
-            ->leftJoin('createdBy')
-            ->where([
-                'parentId' => null,
-                'teamsMiddle.teamId' => $user->getTeamIdList(),
-                'type' => Note::TYPE_POST,
-                'isGlobal' => false,
-            ])
-            ->build();
+        $queryList[] = $query;
     }
 
     /**
      * @param Select[] $queryList
      */
-    private function buildPostedByUserQuery(
-        User $user,
-        SelectBuilder $baseBuilder,
-        array &$queryList
-    ): void {
-
-        $queryList[] = (clone $baseBuilder)
-            ->leftJoin('createdBy')
-            ->where([
-                'createdById' => $user->getId(),
-                'parentId' => null,
-                'type' => Note::TYPE_POST,
-                'isGlobal' => false,
-            ])
-            ->build();
+    private function buildPostedByUserQuery(User $user, SelectBuilder $baseBuilder, array &$queryList): void
+    {
+        $queryList[] = $this->queryHelper->buildPostedByUserQuery($user, $baseBuilder);
     }
 
     /**
      * @param Select[] $queryList
      */
-    private function buildPostedToGlobalQuery(
-        User $user,
-        SelectBuilder $baseBuilder,
-        array &$queryList
-    ): void {
+    private function buildPostedToGlobalQuery(User $user, SelectBuilder $baseBuilder, array &$queryList): void
+    {
+        $query = $this->queryHelper->buildPostedToGlobalQuery($user, $baseBuilder);
 
-        if (
-            $user->isPortal() &&
-            !$user->isAdmin() || $user->isApi()
-        ) {
+        if (!$query) {
             return;
         }
 
-        $queryList[] = (clone $baseBuilder)
-            ->leftJoin('createdBy')
-            ->where([
-                'parentId' => null,
-                'type' => Note::TYPE_POST,
-                'isGlobal' => true,
-            ])
-            ->build();
+        $queryList[] = $query;
     }
 
     /**

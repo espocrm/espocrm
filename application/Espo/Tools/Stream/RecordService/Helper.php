@@ -33,85 +33,17 @@ use Espo\Core\Acl\Exceptions\NotAvailable;
 use Espo\Core\Acl\Exceptions\NotImplemented as AclNotImplemented;
 use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Select\SearchParams;
-use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Acl\UserAclManagerProvider;
 use Espo\Core\Utils\Metadata;
-use Espo\Entities\Note;
 use Espo\Entities\User;
-use Espo\ORM\EntityManager;
-use Espo\ORM\Query\SelectBuilder as SelectQueryBuilder;
 
 class Helper
 {
     public function __construct(
-        private EntityManager $entityManager,
-        private SelectBuilderFactory $selectBuilderFactory,
         private Metadata $metadata,
         private AclManager $aclManager,
         private UserAclManagerProvider $userAclManagerProvider
     ) {}
-
-    /**
-     * @return string[]
-     */
-    public function getUserQuerySelect(): array
-    {
-        return [
-            'id',
-            'number',
-            'type',
-            'post',
-            'data',
-            'parentType',
-            'parentId',
-            'relatedType',
-            'relatedId',
-            'targetType',
-            'createdAt',
-            'createdById',
-            'createdByName',
-            'isGlobal',
-            'isInternal',
-            'createdByGender',
-        ];
-    }
-
-    /**
-     * @throws BadRequest
-     * @throws Forbidden
-     */
-    public function buildBaseQueryBuilder(SearchParams $searchParams): SelectQueryBuilder
-    {
-        $builder = $this->entityManager
-            ->getQueryBuilder()
-            ->select()
-            ->from(Note::ENTITY_TYPE);
-
-        if (
-            $searchParams->getWhere() ||
-            $searchParams->getTextFilter() ||
-            $searchParams->getPrimaryFilter() ||
-            $searchParams->getBoolFilterList() !== []
-        ) {
-            $builder = $this->selectBuilderFactory
-                ->create()
-                ->from(Note::ENTITY_TYPE)
-                ->withComplexExpressionsForbidden()
-                ->withWherePermissionCheck()
-                ->withSearchParams(
-                    $searchParams
-                        ->withOffset(null)
-                        ->withMaxSize(null)
-                )
-                ->buildQueryBuilder()
-                ->order([]);
-        }
-
-        return $builder;
-    }
 
     /**
      * @return string[]

@@ -42,6 +42,7 @@ use Espo\Core\Acl\Table;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
+use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class RecordService
 {
@@ -50,7 +51,8 @@ class RecordService
         private User $user,
         private Acl $acl,
         private NoteAccessControl $noteAccessControl,
-        private Helper $helper
+        private Helper $helper,
+        private QueryHelper $queryHelper
     ) {}
 
     /**
@@ -77,7 +79,7 @@ class RecordService
             throw new Forbidden();
         }
 
-        $builder = $this->helper->buildBaseQueryBuilder($searchParams);
+        $builder = $this->queryHelper->buildBaseQueryBuilder($searchParams);
 
         $where = $this->user->isPortal() ?
             [
