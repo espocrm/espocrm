@@ -16,11 +16,7 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
                     this.getCollectionFactory().create('Training')
                         .then(collection => {
                             collection.maxSize = 10000;
-                            collection.where = [{
-                                "type": "equals",
-                                "attribute": "startDateOnly",
-                                "value": this.activityDate 
-                            }];
+                            collection.where = this.getTrainingsWhere();
                             return collection.fetch();
                         })
                         .then(trainings => this.setActivities(trainings))
@@ -63,6 +59,25 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
                     activityTableRow.classList.add('text-warning');
                 }
             }
+        },
+
+        getTrainingsWhere: function() {
+            const trainingsWhereClauses = [];
+            trainingsWhereClauses.push({
+                "type": "equals",
+                "attribute": "startDateOnly",
+                "value": this.activityDate 
+            });
+            //if superadmin, reduce by teamIds
+            if (this.getUser().attributes.type === 'admin') {
+                console.log(this.getUser().attributes.teamsIds);
+                trainingsWhereClauses.push({
+                    "type": "linkedWith",
+                    "attribute": "teams",
+                    "value": this.getUser().attributes.teamsIds
+                });
+            }
+            return trainingsWhereClauses;
         },
 
         handleAction: function(e) {
