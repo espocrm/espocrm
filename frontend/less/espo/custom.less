@@ -1086,6 +1086,24 @@ section {
     }
 }
 
+.list > {
+    table:first-child > tbody:first-child {
+        > tr:first-child {
+            > td {
+                border-top: 0;
+            }
+        }
+    }
+}
+
+.list-container > .list {
+    > .list-group {
+        > li.list-group-item:first-child {
+            border-top-color: transparent;
+        }
+    }
+}
+
 .modal-body > .list-container > .list {
     border-left-width: 0;
     border-right-width: 0;
