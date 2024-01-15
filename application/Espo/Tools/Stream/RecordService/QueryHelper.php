@@ -227,7 +227,7 @@ class QueryHelper
                 'type' => Note::TYPE_POST,
                 'targetType' => Note::TARGET_ALL,
                 'parentId' => null,
-                'createdBy!=' => $user->getId(),
+                'createdById!=' => $user->getId(),
                 'isGlobal' => true,
             ])
             ->build();

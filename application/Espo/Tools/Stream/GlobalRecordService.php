@@ -40,6 +40,9 @@ use Espo\Entities\User;
 use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Query\Select;
+use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\SthCollection;
 use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class GlobalRecordService
@@ -66,22 +69,12 @@ class GlobalRecordService
         $this->preCheck($searchParams);
 
         $maxSize = $searchParams->getMaxSize() ?? 0;
+        $entityTypeList = $this->getEntityTypeList();
 
         $baseBuilder = $this->queryHelper->buildBaseQueryBuilder($searchParams)
             ->select($this->queryHelper->getUserQuerySelect())
             ->order('number', Order::DESC)
-            ->where([
-                'OR' => [
-                    ['parentType' => $this->getEntityTypeList()],
-                    [
-                        'parentType' => null,
-                        'type' => Note::TYPE_POST,
-                    ],
-                ]
-            ])
             ->limit(0, $maxSize + 1);
-
-        $builder = (clone $baseBuilder);
 
         /** @var array{string, string}[] $ignoreList */
         $ignoreList = [];
@@ -90,26 +83,19 @@ class GlobalRecordService
 
         $list = [];
         $i = 0;
+        $iterationBuilder = (clone $baseBuilder);
 
         while (true) {
-            $ignoreWhere = [];
+            $queryList = [];
 
-            foreach ($ignoreList as $it) {
-                $ignoreWhere[] = [
-                    'OR' => [
-                        'parentId' => null,
-                        'parentType!=' => $it[0],
-                        'parentId!=' => $it[1]
-                    ]
-                ];
-            }
+            $this->buildBelongToParentQuery($iterationBuilder, $queryList, $entityTypeList, $ignoreList);
+            $this->buildPostedToUserQuery($iterationBuilder, $queryList);
+            $this->buildPostedToPortalQuery($iterationBuilder, $queryList);
+            $this->buildPostedToTeamsQuery($iterationBuilder, $queryList);
+            $this->buildPostedByUserQuery($iterationBuilder, $queryList);
+            $this->buildPostedToGlobalQuery($iterationBuilder, $queryList);
 
-            $collection = $this->entityManager
-                ->getRDBRepositoryByClass(Note::class)
-                ->clone($builder->build())
-                ->sth()
-                ->where($ignoreWhere)
-                ->find();
+            $collection = $this->fetchCollection($queryList, $maxSize);
 
             /** @var Note[] $subList */
             $subList = iterator_to_array($collection);
@@ -118,9 +104,13 @@ class GlobalRecordService
                 break;
             }
 
+            // Should be obtained before filtering.
             $lastNumber = end($subList)->getNumber();
 
-            $list = array_merge($list, $this->filter($subList, $ignoreList, $allowList));
+            $list = array_merge(
+                $list,
+                $this->filter($subList, $ignoreList, $allowList),
+            );
 
             if (count($list) >= $maxSize + 1) {
                 break;
@@ -133,7 +123,7 @@ class GlobalRecordService
                 break;
             }
 
-            $builder = (clone $baseBuilder)->where(['number<' => $lastNumber]);
+            $iterationBuilder = (clone $baseBuilder)->where(['number<' => $lastNumber]);
         }
 
         $list = array_slice($list, 0, $maxSize + 1);
@@ -219,7 +209,8 @@ class GlobalRecordService
         $parentId = $note->getParentId();
 
         if (!$note->getParentType()) {
-            return $this->acl->checkEntityRead($note);
+            // Only proper records are fetched.
+            return true;
         }
 
         if (!$parentType || !$parentId) {
@@ -283,5 +274,122 @@ class GlobalRecordService
         if ($searchParams->getOffset()) {
             throw new BadRequest("Offset is not supported.");
         }
+    }
+
+    /**
+     * @param Select[] $queryList
+     * @param int $maxSize
+     * @return SthCollection<Note>
+     */
+    private function fetchCollection(array $queryList, int $maxSize): SthCollection
+    {
+        $unionBuilder = $this->entityManager
+            ->getQueryBuilder()
+            ->union()
+            ->all()
+            ->order('number', Order::DESC)
+            ->limit(0, $maxSize + 1);
+
+        foreach ($queryList as $query) {
+            $unionBuilder->query($query);
+        }
+
+        $unionQuery = $unionBuilder->build();
+
+        $sql = $this->entityManager
+            ->getQueryComposer()
+            ->compose($unionQuery);
+
+        /** @var SthCollection<Note> */
+        return $this->entityManager
+            ->getRDBRepositoryByClass(Note::class)
+            ->findBySql($sql);
+    }
+
+    /**
+     * @param Select[] $queryList
+     */
+    private function buildPostedToUserQuery(SelectBuilder $baseBuilder, array &$queryList): void
+    {
+        $queryList[] = $this->queryHelper->buildPostedToUserQuery($this->user, $baseBuilder);
+    }
+
+    /**
+     * @param Select[] $queryList
+     */
+    private function buildPostedToPortalQuery(SelectBuilder $baseBuilder, array &$queryList): void
+    {
+        $query = $this->queryHelper->buildPostedToPortalQuery($this->user, $baseBuilder);
+
+        if (!$query) {
+            return;
+        }
+
+        $queryList[] = $query;
+    }
+
+    /**
+     * @param Select[] $queryList
+     */
+    private function buildPostedToTeamsQuery(SelectBuilder $baseBuilder, array &$queryList): void
+    {
+        $query = $this->queryHelper->buildPostedToTeamsQuery($this->user, $baseBuilder);
+
+        if (!$query) {
+            return;
+        }
+
+        $queryList[] = $query;
+    }
+
+    /**
+     * @param Select[] $queryList
+     */
+    private function buildPostedByUserQuery(SelectBuilder $baseBuilder, array &$queryList): void
+    {
+        $queryList[] = $this->queryHelper->buildPostedByUserQuery($this->user, $baseBuilder);
+    }
+
+    /**
+     * @param Select[] $queryList
+     */
+    private function buildPostedToGlobalQuery(SelectBuilder $baseBuilder, array &$queryList): void
+    {
+        $query = $this->queryHelper->buildPostedToGlobalQuery($this->user, $baseBuilder);
+
+        if (!$query) {
+            return;
+        }
+
+        $queryList[] = $query;
+    }
+
+    /**
+     * @param Select[] $queryList
+     * @param string[] $entityTypeList
+     * @param array{string, string}[] $ignoreList
+     */
+    private function buildBelongToParentQuery(
+        SelectBuilder $builder,
+        array &$queryList,
+        array $entityTypeList,
+        array $ignoreList
+    ): void {
+
+        $ignoreWhere = [];
+
+        foreach ($ignoreList as $it) {
+            $ignoreWhere[] = [
+                'OR' => [
+                    'parentType!=' => $it[0],
+                    'parentId!=' => $it[1]
+                ]
+            ];
+        }
+
+        $queryList[] = (clone $builder)
+            ->where(['parentType' => $entityTypeList])
+            ->where($ignoreWhere)
+            ->build();
     }
 }
