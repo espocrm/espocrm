@@ -171,7 +171,7 @@ class TextFieldView extends BaseFieldView {
     }
 
     /**
-     * @private
+     * @public
      * @param {Number} [lastHeight]
      */
     controlTextareaHeight(lastHeight) {
