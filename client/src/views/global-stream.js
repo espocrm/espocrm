@@ -88,7 +88,7 @@ class GlobalStreamView extends View {
             collection: this.collection,
             searchManager: this.searchManager,
             isWide: true,
-            layoutName: 'filtersGlobal',
+            filtersLayoutName: 'filtersGlobal',
         });
 
         return this.assignView('search', this.searchView, '.search-container');

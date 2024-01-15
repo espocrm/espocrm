@@ -63,7 +63,7 @@ class SearchView extends View {
     /** @type {{string: module:search-manager~advancedFilter}} */
     advanced
     bool = null
-    layoutName = 'filters'
+    filtersLayoutName = 'filters'
 
     disableSavePreset = false
     textFilterDisabled = false
@@ -106,7 +106,7 @@ class SearchView extends View {
     setup() {
         this.entityType = this.collection.entityType;
         this.scope = this.options.scope || this.entityType;
-        this.layoutName = this.options.layoutName || this.layoutName;
+        this.filtersLayoutName = this.options.filtersLayoutName || this.filtersLayoutName;
 
         /** @type {module:search-manager} */
         this.searchManager = this.options.searchManager;
@@ -175,7 +175,7 @@ class SearchView extends View {
 
         this.wait(
             new Promise(resolve => {
-                this.getHelper().layoutManager.get(this.entityType, this.layoutName, list => {
+                this.getHelper().layoutManager.get(this.entityType, this.filtersLayoutName, list => {
                     this.fieldFilterList = [];
 
                     (list || []).forEach(field => {
