@@ -8,6 +8,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             this.abonements = { list: [], total: 0 };
             this.otherGroupsAbons = { list: [], total: 0 };
             this.trainingId = null;
+            this.training = null;
             this.groupId = null;
             this.groupName = null;
             this.marksTotal = 0;
@@ -51,6 +52,29 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             this.createQuickActionModal('trialAbonplanName');
         },
 
+        createQuickActionModal: async function(abonplanNameFromCS) {
+            this.showModalLoading(true);
+            try {
+                const abonplans = await this.fetchAbonplansByCSName(abonplanNameFromCS);
+                const abonModel = await this.getModelFactory().create('Abonement');
+                if (abonplans.total === 1) {
+                    this.prepareMetadata(abonModel, abonplans.list[0], this.groupId, this.groupName);
+                }
+                let options = { scope: 'Abonement', model: abonModel };
+                this.createView('quickCreate', 'views/modals/edit', options, view => {
+                    view.render();
+                    this.resetMetadata(abonModel);
+                    this.showModalLoading(false);
+
+                    this.listenToOnce(view, 'after:save', () => {
+                        this.fetchAbonements(this.training, this.groupId, this.groupName);
+                    });
+                });
+            } catch (error) {
+                this.handleError(error);
+            }
+        },
+
         addAbonement: async function(e) {
             this.showModalLoading(true);
             try {
@@ -72,30 +96,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                     this.showModalLoading(false);
 
                     this.listenToOnce(view, 'after:save', () => {
-                        this.fetchAbonements(this.trainingId, this.groupId, this.groupName);
-                    });
-                });
-            } catch (error) {
-                this.handleError(error);
-            }
-        },
-
-        createQuickActionModal: async function(abonplanNameFromCS) {
-            this.showModalLoading(true);
-            try {
-                const abonplans = await this.fetchAbonplansByCSName(abonplanNameFromCS);
-                const abonModel = await this.getModelFactory().create('Abonement');
-                if (abonplans.total === 1) {
-                    this.prepareMetadata(abonModel, abonplans.list[0], this.groupId, this.groupName);
-                }
-                let options = { scope: 'Abonement', model: abonModel };
-                this.createView('quickCreate', 'views/modals/edit', options, view => {
-                    view.render();
-                    this.resetMetadata(abonModel);
-                    this.showModalLoading(false);
-
-                    this.listenToOnce(view, 'after:save', () => {
-                        this.fetchAbonements(this.trainingId, this.groupId, this.groupName);
+                        this.fetchAbonements(this.training, this.groupId, this.groupName);
                     });
                 });
             } catch (error) {
@@ -139,8 +140,6 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             abonModel.defs.fields.isPaid.readOnly = true;
 
             abonModel.defs.fields.price.default = abonplan.price;
-            
-            abonModel.defs.fields.endDate.default = abonModel.defs.fields.startDate.default;
             
             abonModel.defs.fields.classCount.default = abonplan.classCount;
             abonModel.defs.fields.classesLeft.default = abonplan.classCount;
@@ -188,7 +187,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                     this.listenToOnce(view, 'after:save', (mark) => {
                         this.recalculateAbonement(mark.attributes.abonementId)
                             .then(() => {
-                                this.fetchAbonements(this.trainingId, this.groupId, this.groupName);
+                                this.fetchAbonements(this.training, this.groupId, this.groupName);
                             });
                     });
                 });
@@ -222,11 +221,11 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         },
 
         /* public */
-        fetchAbonements: function(trainingId, groupId, groupName) {
-            this.trainingId = trainingId;
-            this.groupId = groupId;
-            this.groupName = groupName;
-
+        fetchAbonements: function(training, groupId, groupName) {
+            this.trainingId = training.id;
+            this.training = training;
+            this.groupId = groupId;//from training
+            this.groupName = groupName;//from training
             this.isLoading(true);
             this.getCollectionFactory().create('Abonement')
                 .then(collection => {
@@ -235,11 +234,24 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                         "type": "linkedWith",
                         "attribute": "groups",
                         "value": [ groupId ],
-                    }, {  
-                        /* all abons which have endDate, so isActivated = true */
-                        "type": "greaterThanOrEquals",
-                        "attribute": "endDate",
-                        "value": this.today
+                    }, {
+                        "type": "lessThanOrEquals",
+                        "attribute": "startDate",
+                        "value": training.startDateOnly
+                    }, {
+                        "type": "or",
+                        "value": [
+                            {
+                                /* all abons which have endDate, so isActivated = true */
+                                "type": "greaterThanOrEquals",
+                                "attribute": "endDate",
+                                "value": training.startDateOnly
+                            },
+                            {
+                                "type": "isTrue",
+                                "attribute": "isFreezed"
+                            }
+                        ]
                     }];
                     return collection.fetch();
                 })
@@ -252,7 +264,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                     collection.where = [{
                         "type": "equals",
                         "attribute": "trainingId",
-                        "value": trainingId,
+                        "value": this.trainingId,
                     }];
                     return collection.fetch();
                 })
@@ -356,7 +368,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 this.showModalLoading(false);
                 
                 this.listenToOnce(view, 'after:save', () => {
-                    this.fetchAbonements(this.trainingId, this.groupId, this.groupName);
+                    this.fetchAbonements(this.training, this.groupId, this.groupName);
                 });
             });
         },
@@ -426,7 +438,10 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         },
 
         handleShowNote: function(e) {
-            const abon = this.abonements.list.find(abon => abon.id === e.target.dataset.id);
+            let abon = this.abonements.list.find(abon => abon.id === e.target.dataset.id);
+            if (!abon) {
+                abon = this.otherGroupsAbons.list.find(abon => abon.id === e.target.dataset.id);
+            }
             if (!abon?.note) {
                 Espo.Ui.notify('Помилка: нагадування не знайдено', 'error', 2000);
                 return;
@@ -446,18 +461,18 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
 
         createMark: function(abonementId) {
             const abon = this.abonements.list.find(abon => abon.id === abonementId)
-            if (abon.classesLeft <= 0) {
-                Espo.Ui.error('В абонементі більше немає занять');
-                this.$el.find(`input[data-abonement-id=${abonementId}]`)[0].checked = false;
-                return;
-            }
             if (abon.isFreezed) {
                 Espo.Ui.error('Абонемент заморожено');
                 this.$el.find(`input[data-abonement-id=${abonementId}]`)[0].checked = false;
                 return;
             }
-            if (abon.isPending) {
-                Espo.Ui.warning('Абонемент очікує дати початку: ' + abon.startDate);
+            if (this.isOutdate(abon)) {
+                Espo.Ui.error('Абонемент більше не діє: ' + abon.endDate);
+                this.$el.find(`input[data-abonement-id=${abon.id}]`)[0].checked = false;
+                return;
+            }
+            if (abon.classesLeft <= 0) {
+                Espo.Ui.error('В абонементі більше немає занять');
                 this.$el.find(`input[data-abonement-id=${abonementId}]`)[0].checked = false;
                 return;
             }
@@ -493,6 +508,16 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
 
         deleteMark: function(markId) {
             const abon = this.abonements.list.find(abon => abon.mark.id == markId);
+            if (abon.isFreezed) {
+                Espo.Ui.error('Абонемент заморожено');
+                this.$el.find(`input[data-mark-id=${ markId }]`)[0].checked = true;
+                return;
+            }
+            if (this.isOutdate(abon)) {
+                Espo.Ui.error('Абонемент більше не діє: ' + abon.endDate);
+                this.$el.find(`input[data-mark-id=${ markId }]`)[0].checked = true;
+                return;
+            }
             this.isLoading(true);
             fetch(`/api/v1/Mark/${markId}`, {
                 method: 'DELETE',
@@ -519,6 +544,11 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         deleteFloatingMark: function(e) {
             const markId = e.target.dataset.markId;
             const abon = this.otherGroupsAbons.list.find(abon => abon.mark.id == markId);
+            if (this.isOutdate(abon)) {
+                Espo.Ui.error('Абонемент більше не діє: ' + abon.endDate);
+                this.$el.find(`input[data-mark-id=${ markId }]`)[0].checked = true;
+                return;
+            }
             this.isLoading(true);
             fetch(`/api/v1/Mark/${markId}`, {
                 method: 'DELETE',
@@ -597,11 +627,20 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 abon.isEmpty = false;
                 abon.isActive = true;
             }
+            
+            if (this.isOutdate(abon)) {
+                abon.isOutdate = true;
+                abon.isActive = false;
+                abon.isEmpty = false;
+            }
+            /*
             if (this.isPending(abon)) {
                 abon.isPending = true;
                 abon.isActive = false;
             }
+            */
             if (abon.isFreezed) {
+                abon.isOutdate = false;
                 abon.isActive = false;
             }
         },
@@ -611,6 +650,13 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             const today = new Date(this.today);
 
             return today < startDate;
+        },
+
+        isOutdate: function(abon) {
+            const endDate = new Date(abon.endDate);
+            const today = new Date(this.today);
+
+            return today > endDate;
         },
 
         sortByTimeDuration: function(activities) {
