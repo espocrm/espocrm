@@ -645,20 +645,13 @@ class PanelStreamView extends RelationshipPanelView {
 
         this.actionList.push({
             action: 'viewPostList',
-            html:
-                $('<span>')
-                    .append(
-                        $('<span>').text(this.translate('View List')),
-                        ' &middot; ',
-                        $('<span>').text(this.translate('posts', 'filters', 'Note')),
-                    )
-                    .get(0).innerHTML,
+            text: this.translate('View List') + ' · ' + this.translate('posts', 'filters', 'Note'),
             onClick: () => this.actionViewPostList(),
         });
 
         this.actionList.push(false);
 
-        this.filterList.forEach((item) => {
+        this.filterList.forEach(item => {
             let selected ;
 
             selected = item === 'all' ?
