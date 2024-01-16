@@ -438,7 +438,8 @@ class LinkFieldView extends BaseFieldView {
         return new Promise(resolve => {
             Espo.loader.requirePromise(this.panelDefs.selectFieldHandler)
                 .then(Handler => {
-                    const handler = new Handler(this.getHelper());
+                    // Model is passed as of v8.2.
+                    const handler = new Handler(this.getHelper(), this.model);
 
                     resolve(handler);
                 });
