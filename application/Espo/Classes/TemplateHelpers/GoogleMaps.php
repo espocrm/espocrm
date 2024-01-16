@@ -215,7 +215,6 @@ class GoogleMaps implements Helper
         curl_setopt($c, \CURLOPT_TIMEOUT, 10);
         curl_setopt($c, \CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($c, \CURLOPT_FOLLOWLOCATION, 1);
-        curl_setopt($c, \CURLOPT_BINARYTRANSFER, 1);
 
         $raw = curl_exec($c);
 
