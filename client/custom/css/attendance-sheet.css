@@ -6,6 +6,10 @@
     padding: 10px 22px 0 !important;
 }
 
+.date-nav {
+    padding: 4px 5px;
+}
+
 .cp {
     cursor: pointer;
 }

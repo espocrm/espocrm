@@ -13,10 +13,12 @@
                     {{/each}}
                 </select>
             </span>
+            <span title="Попередній день" class="cp text-muted fas fa-angle-left date-nav highlight" data-action="prevDay"></span>
             <span>
                 <input class="cp" type="date" id="date" name="date" value={{activityDate}} 
                     min="2023-01-01" max="2030-12-31" style="border: none; border-bottom: 1px solid #E4E7F2; background-color: transparent" />
             </span>
+            <span title="Наступний день" class="cp text-muted fas fa-angle-right date-nav highlight" data-action="nextDay"></span>
         </div>
     </div>
     <div class="panel-body">

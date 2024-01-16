@@ -46,6 +46,7 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
             this.addHandler('change', '#hall', 'handleHall');
             this.addHandler('click', `[data-action="addTraining"]`, 'handleAction');
             this.addHandler('click', `[data-action="editTraining"]`, 'handleAction');
+            this.addHandler('click', `.date-nav`, 'handleAction');
         },
 
         afterRender: function () {
@@ -143,6 +144,23 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
         handleDate: function(e) {
             this.activityDate = e.target.value;
             this.filterActivities();
+        },
+
+        prevDay: function() {
+            this.activityDate = this.addDays(this.activityDate, -1);
+            this.filterActivities();
+        },
+
+        nextDay: function() {
+            this.activityDate = this.addDays(this.activityDate, 1);
+            this.filterActivities();
+        },
+
+        addDays: function(trainingDate, days) {
+            const date = new Date(trainingDate);
+            const nextDate = date.setDate(date.getDate() + days);
+            const inKievTimezone = new Date(nextDate).toLocaleString('uk-Ua', { timeZone: 'Europe/Kiev' });
+            return inKievTimezone.split(',')[0].split('.').reverse().join('-');  
         },
 
         filterActivities: function() {
