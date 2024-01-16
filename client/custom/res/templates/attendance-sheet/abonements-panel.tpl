@@ -20,7 +20,7 @@
     {{else}}
         <div class="panel-body">
             {{#if abonementsTotal}}
-                <table class="table table-hover">
+                <table class="table table-hover bb">
                     <tr class="text-soft">
                         <th class="col-sm-1">Номер</th>
                         <th>Ім'я</th>

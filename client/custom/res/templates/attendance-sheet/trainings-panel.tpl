@@ -23,7 +23,7 @@
     </div>
     <div class="panel-body">
         {{#if activitiesTotal}}
-            <table class="table table-hover">
+            <table class="table table-hover bb">
                 <tr class="text-soft">
                     <td>Група</td>
                     <td>Педагог</td>

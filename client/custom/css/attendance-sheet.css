@@ -10,6 +10,10 @@
     cursor: pointer;
 }
 
+.bb {
+    border-bottom: 1px solid var(--default-border-color);
+}
+
 .highlight:hover {
     color: #9e7328;
 }
@@ -25,7 +29,6 @@
 .abon-panel-buttons {
     display: flex;
     justify-content: space-between;
-    border-top: 1px solid var(--default-border-color);
     padding: 10px 10px 0;
     text-wrap: nowrap;
 }
