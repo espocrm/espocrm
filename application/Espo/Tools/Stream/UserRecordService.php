@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SearchParams;
+use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\EntityManager;
 use Espo\Entities\Subscription;
 use Espo\Entities\User;
@@ -371,7 +372,9 @@ class UserRecordService
                 Subscription::ENTITY_TYPE,
                 'subscription',
                 [
-                    'entityType:' => 'superParentType',
+                    // Improves performance significantly.
+                    'entityType' => Account::ENTITY_TYPE,
+                    //'entityType:' => 'superParentType',
                     'entityId:' => 'superParentId',
                     'subscription.userId' => $user->getId(),
                 ]
@@ -393,6 +396,7 @@ class UserRecordService
                 ],
                 'subscriptionExclude.id' => null,
             ])
+            ->where(['superParentType' => Account::ENTITY_TYPE])
             ->where($ignoreWhereClause);
 
         $this->buildAccessQueries($user, $builder, $queryList);

@@ -230,6 +230,14 @@
         "relatedType": {
             "type": "index",
             "columns": ["relatedType"]
+        },
+        "superParentType": {
+            "type": "index",
+            "columns": ["superParentType"]
+        },
+        "superParentId": {
+            "type": "index",
+            "columns": ["superParentId"]
         }
     }
 }
