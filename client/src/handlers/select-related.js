@@ -35,6 +35,8 @@
  *  Advanced filters map. A field name as a key.
  * @property {string[]} [bool] Bool filters.
  * @property {string} [primary] A primary filter.
+ * @property {string} [orderBy] A field to order by.
+ * @property {'asc'|'desc'} [order] An order direction.
  */
 
 /**
