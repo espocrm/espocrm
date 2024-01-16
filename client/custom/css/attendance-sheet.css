@@ -10,6 +10,27 @@
     cursor: pointer;
 }
 
+.bb {
+    border-bottom: 1px solid var(--default-border-color);
+}
+
+#hall {
+    border: none;
+    background-color: transparent;
+    border-bottom: 1px solid lightgrey; 
+    margin-right: 10px;
+    padding: 1px;
+}
+
+#date::-webkit-calendar-picker-indicator {
+    padding-top: 4px;
+    filter: invert(50%);
+}
+
+#date::-webkit-calendar-picker-indicator:hover {
+    cursor: pointer;
+} 
+
 .highlight:hover {
     color: #9e7328;
 }
@@ -25,7 +46,6 @@
 .abon-panel-buttons {
     display: flex;
     justify-content: space-between;
-    border-top: 1px solid var(--default-border-color);
     padding: 10px 10px 0;
     text-wrap: nowrap;
 }

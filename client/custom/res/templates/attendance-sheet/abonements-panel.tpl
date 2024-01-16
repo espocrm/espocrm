@@ -6,10 +6,11 @@
     <div class="panel-heading panel-header">
         <h4 class="panel-title" style='font-size: 1.2em'>
             <span class="fas fa-id-card" style="padding: 4px 5px 0 0;"></span>
-            Абонементи
+            <span>Абонементи</span>
         </h4>
         <div>
-            <span>
+            <span class="label label-default">{{groupName}}</span>
+            <span class="nowrap" style='padding-left: 5px'>
                 <label>Всього: {{abonementsTotal}}</label>
                 <label style='padding-left: 5px'>Присутні: {{marksTotal}}</label>
             </span>
@@ -20,7 +21,7 @@
     {{else}}
         <div class="panel-body">
             {{#if abonementsTotal}}
-                <table class="table table-hover">
+                <table class="table table-hover bb">
                     <tr class="text-soft">
                         <th class="col-sm-1">Номер</th>
                         <th>Ім'я</th>
@@ -119,7 +120,7 @@
                 <div class="text-soft center-align">Немає данних</div>
             {{/if}}
             <div class="abon-panel-buttons">
-                <div class="margin-bottom" style="margin-right: 4px">
+                <div style="margin-right: 4px">
                     <button class="btn btn-sm btn-default btn-add" data-action="addOneTime">
                         <span class="fas fa-plus"></span>
                         Разовий
@@ -133,7 +134,7 @@
                         Абонемент
                     </button>
                 </div>
-                <div class="margin-bottom">
+                <div>
                     <button class="btn btn-sm btn-default btn-floating-mark">
                         <span class="fas fa-user-check"></span>
                         Інша група

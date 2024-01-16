@@ -119,6 +119,14 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                     "attribute": "name",
                     "value": customSettings.list[0].value,
                 }];
+                //if superadmin, reduce by teamIds
+                if (this.getUser().attributes.type === 'admin') {
+                    abonplansCollection.where.push({
+                        "type": "linkedWith",
+                        "attribute": "teams",
+                        "value": this.getUser().attributes.teamsIds
+                    });
+                }
                 const abonplans = await abonplansCollection.fetch();
                 return abonplans;
         },
@@ -696,7 +704,8 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 abonements: this.abonements.list,
                 otherAbonements: this.otherGroupsAbons.list,
                 abonementsTotal: this.abonements.total + this.otherGroupsAbons.total,
-                marksTotal: this.marksTotal
+                marksTotal: this.marksTotal,
+                groupName: this.groupName
             }
         },
     })
