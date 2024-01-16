@@ -467,12 +467,13 @@ class LinkMultipleFieldView extends BaseFieldView {
                         url += '&' + $.param({where: advanced});
                     }
 
-                    if (this.panelDefs.selectOrderBy) {
-                        const direction = this.panelDefs.selectOrderDirection || 'asc';
+                    const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
+                    const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
 
+                    if (orderBy) {
                         url += '&' + $.param({
-                            orderBy: this.panelDefs.selectOrderBy,
-                            order: direction,
+                            orderBy: orderBy,
+                            order: orderDirection || 'asc',
                         });
                     }
 
@@ -994,6 +995,9 @@ class LinkMultipleFieldView extends BaseFieldView {
             null;
 
         this._getSelectFilters().then(filters => {
+            const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
+            const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
+
             this.createView('dialog', viewName, {
                 scope: this.foreignScope,
                 createButton: createButton,
@@ -1006,8 +1010,8 @@ class LinkMultipleFieldView extends BaseFieldView {
                 forceSelectAllAttributes: this.forceSelectAllAttributes,
                 createAttributesProvider: createAttributesProvider,
                 layoutName: this.panelDefs.selectLayout,
-                orderBy: this.panelDefs.selectOrderBy,
-                orderDirection: this.panelDefs.selectOrderDirection,
+                orderBy: orderBy,
+                orderDirection: orderDirection,
             }, dialog => {
                 dialog.render();
 

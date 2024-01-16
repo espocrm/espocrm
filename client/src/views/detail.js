@@ -631,6 +631,9 @@ class DetailView extends MainView {
                 primaryFilterName = filters.primary;
             }
 
+            const orderBy = filters.orderBy || panelDefs.selectOrderBy;
+            const orderDirection = filters.orderBy ? filters.order : panelDefs.selectOrderDirection;
+
             this.createView('dialogSelectRelated', viewName, {
                 scope: scope,
                 multiple: true,
@@ -642,8 +645,8 @@ class DetailView extends MainView {
                 boolFilterList: boolFilterList,
                 mandatorySelectAttributeList: panelDefs.selectMandatoryAttributeList,
                 layoutName: panelDefs.selectLayout,
-                orderBy: panelDefs.selectOrderBy,
-                orderDirection: panelDefs.selectOrderDirection,
+                orderBy: orderBy,
+                orderDirection: orderDirection,
             }, dialog => {
                 dialog.render();
 
