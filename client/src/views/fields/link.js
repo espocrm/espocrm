@@ -543,12 +543,13 @@ class LinkFieldView extends BaseFieldView {
                         url += '&' + $.param({'where': filters.advanced});
                     }
 
-                    if (this.panelDefs.selectOrderBy) {
-                        const direction = this.panelDefs.selectOrderDirection || 'asc';
+                    const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
+                    const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
 
+                    if (orderBy) {
                         url += '&' + $.param({
-                            orderBy: this.panelDefs.selectOrderBy,
-                            order: direction,
+                            orderBy: orderBy,
+                            order: orderDirection || 'asc',
                         });
                     }
 
@@ -1118,6 +1119,9 @@ class LinkFieldView extends BaseFieldView {
             null;
 
         this._getSelectFilters().then(filters => {
+            const orderBy = filters.orderBy || this.panelDefs.selectOrderBy;
+            const orderDirection = filters.orderBy ? filters.order : this.panelDefs.selectOrderDirection;
+
             this.createView('dialog', viewName, {
                 scope: this.foreignScope,
                 createButton: createButton,
@@ -1129,8 +1133,8 @@ class LinkFieldView extends BaseFieldView {
                 filterList: this.getSelectFilterList(),
                 createAttributesProvider: createAttributesProvider,
                 layoutName: this.panelDefs.selectLayout,
-                orderBy: this.panelDefs.selectOrderBy,
-                orderDirection: this.panelDefs.selectOrderDirection,
+                orderBy: orderBy,
+                orderDirection: orderDirection,
             }, view => {
                 view.render();
 
@@ -1236,10 +1240,15 @@ class LinkFieldView extends BaseFieldView {
 
                     this._applyAdditionalFilter(advanced);
 
+                    const orderBy = filters.orderBy;
+                    const order = orderBy ? filters.order : undefined;
+
                     resolve({
                         bool: boolFilterList,
                         primary: primaryFilter,
                         advanced: advanced,
+                        orderBy: orderBy,
+                        order: order,
                     });
                 });
         });
