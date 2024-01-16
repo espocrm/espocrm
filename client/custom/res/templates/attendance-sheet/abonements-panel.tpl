@@ -10,7 +10,7 @@
         </h4>
         <div>
             <span class="label label-default">{{groupName}}</span>
-            <span style='padding-left: 5px'>
+            <span class="nowrap" style='padding-left: 5px'>
                 <label>Всього: {{abonementsTotal}}</label>
                 <label style='padding-left: 5px'>Присутні: {{marksTotal}}</label>
             </span>
