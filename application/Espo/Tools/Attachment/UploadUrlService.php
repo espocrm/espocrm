@@ -132,7 +132,6 @@ class UploadUrlService
         $opts[\CURLOPT_CONNECTTIMEOUT] = 10;
         $opts[\CURLOPT_TIMEOUT] = 10;
         $opts[\CURLOPT_HEADER] = true;
-        $opts[\CURLOPT_BINARYTRANSFER] = true;
         $opts[\CURLOPT_VERBOSE] = true;
         $opts[\CURLOPT_SSL_VERIFYPEER] = true;
         $opts[\CURLOPT_SSL_VERIFYHOST] = 2;
