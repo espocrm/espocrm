@@ -70,7 +70,6 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
             });
             //if superadmin, reduce by teamIds
             if (this.getUser().attributes.type === 'admin') {
-                console.log(this.getUser().attributes.teamsIds);
                 trainingsWhereClauses.push({
                     "type": "linkedWith",
                     "attribute": "teams",
