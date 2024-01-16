@@ -6,8 +6,7 @@
         </h4>
         <div style='display: flex'>
             <span>
-                <label for="hall">Зал:</label>
-                <select name="hall" id="hall" value={{activityHall}} style='border: none; border-bottom: 1px solid lightgrey; margin-right: 10px; background-color: transparent;'>
+                <select class="cp" name="hall" id="hall" value={{activityHall}} style="border-bottom: 1px solid #E4E7F2;">
                     <option value='all'>Всі зали</option>
                     {{#each halls}}
                         <option value={{this.id}}>{{this.name}}</option>
@@ -15,9 +14,8 @@
                 </select>
             </span>
             <span>
-                <label for="date">Дата:</label>
-                <input type="date" id="date" name="date" value={{activityDate}} 
-                    min="2023-01-01" max="2030-12-31" style="border: none; border-bottom: 1px solid lightgrey; background-color: transparent" />
+                <input class="cp" type="date" id="date" name="date" value={{activityDate}} 
+                    min="2023-01-01" max="2030-12-31" style="border: none; border-bottom: 1px solid #E4E7F2; background-color: transparent" />
             </span>
         </div>
     </div>

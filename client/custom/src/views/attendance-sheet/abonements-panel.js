@@ -704,7 +704,8 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 abonements: this.abonements.list,
                 otherAbonements: this.otherGroupsAbons.list,
                 abonementsTotal: this.abonements.total + this.otherGroupsAbons.total,
-                marksTotal: this.marksTotal
+                marksTotal: this.marksTotal,
+                groupName: this.groupName
             }
         },
     })
