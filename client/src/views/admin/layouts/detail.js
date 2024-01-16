@@ -298,7 +298,13 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                 !layoutList.includes(this.type) &&
                 !layoutList.includes(realType)
             ) {
-                return;
+                return false;
+            }
+
+            const layoutIgnoreList = model.getFieldParam(name, 'layoutIgnoreList') || [];
+
+            if (layoutIgnoreList.includes(realType)) {
+                return false;
             }
 
             return !model.getFieldParam(name, 'disabled') &&

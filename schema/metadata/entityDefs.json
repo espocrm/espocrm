@@ -598,9 +598,38 @@
                 "layoutAvailabilityList": {
                     "type": "array",
                     "items": {
-                        "type": "string"
+                        "anyOf": [
+                            {"type": "string"},
+                            {
+                                "enum": [
+                                    "detail",
+                                    "list",
+                                    "filters",
+                                    "massUpdate",
+                                    "defaultSidePanel"
+                                ]
+                            }
+                        ]
                     },
                     "description": "A list of layout types there the field should be available. Specify an empty array to disable in all layouts."
+                },
+                "layoutIgnoreList": {
+                    "type": "array",
+                    "items": {
+                        "anyOf": [
+                            {"type": "string"},
+                            {
+                                "enum": [
+                                    "detail",
+                                    "list",
+                                    "filters",
+                                    "massUpdate",
+                                    "defaultSidePanel"
+                                ]
+                            }
+                        ]
+                    },
+                    "description": "A list of layout types the field won't be available in. As of v8.2."
                 },
                 "textFilterDisabled": {
                     "type": "boolean",

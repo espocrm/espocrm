@@ -134,10 +134,16 @@ define('views/admin/layouts/mass-update', ['views/admin/layouts/rows'], function
                 return false;
             }
 
-            var layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+            const layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
 
-            if (layoutList && !~layoutList.indexOf(this.type)) {
+            if (layoutList && !layoutList.includes(this.type)) {
                 return;
+            }
+
+            const layoutIgnoreList = model.getFieldParam(name, 'layoutIgnoreList') || [];
+
+            if (layoutIgnoreList.includes(this.type)) {
+                return false;
             }
 
             return !model.getFieldParam(name, 'disabled') &&
