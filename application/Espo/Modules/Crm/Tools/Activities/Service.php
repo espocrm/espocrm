@@ -30,6 +30,7 @@
 namespace Espo\Modules\Crm\Tools\Activities;
 
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
@@ -72,6 +73,7 @@ use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use LogicException;
 use PDO;
 use DateTime;
+use RuntimeException;
 
 class Service
 {
@@ -85,40 +87,18 @@ class Service
         ],
     ];
 
-    private WhereConverterFactory $whereConverterFactory;
-    private ListLoadProcessor $listLoadProcessor;
-    private RecordServiceContainer $recordServiceContainer;
-    private SelectBuilderFactory $selectBuilderFactory;
-    private Config $config;
-    private Metadata $metadata;
-    private Acl $acl;
-    private ServiceFactory $serviceFactory;
-    private EntityManager $entityManager;
-    private User $user;
-
     public function __construct(
-        WhereConverterFactory $whereConverterFactory,
-        ListLoadProcessor $listLoadProcessor,
-        RecordServiceContainer $recordServiceContainer,
-        SelectBuilderFactory $selectBuilderFactory,
-        Config $config,
-        Metadata $metadata,
-        Acl $acl,
-        ServiceFactory $serviceFactory,
-        EntityManager $entityManager,
-        User $user
-    ) {
-        $this->whereConverterFactory = $whereConverterFactory;
-        $this->listLoadProcessor = $listLoadProcessor;
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->config = $config;
-        $this->metadata = $metadata;
-        $this->acl = $acl;
-        $this->serviceFactory = $serviceFactory;
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-    }
+        private WhereConverterFactory $whereConverterFactory,
+        private ListLoadProcessor $listLoadProcessor,
+        private RecordServiceContainer $recordServiceContainer,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private Config $config,
+        private Metadata $metadata,
+        private Acl $acl,
+        private ServiceFactory $serviceFactory,
+        private EntityManager $entityManager,
+        private User $user
+    ) {}
 
     protected function isPerson(string $scope): bool
     {
@@ -142,34 +122,39 @@ class Service
      */
     protected function getActivitiesUserMeetingQuery(User $entity, array $statusList = []): Select
     {
-        $builder = $this->selectBuilderFactory
-            ->create()
-            ->from(Meeting::ENTITY_TYPE)
-            ->withStrictAccessControl()
-            ->buildQueryBuilder()
-            ->select([
-                'id',
-                'name',
-                ['dateStart', 'dateStart'],
-                ['dateEnd', 'dateEnd'],
-                ['dateStartDate', 'dateStartDate'],
-                ['dateEndDate', 'dateEndDate'],
-                ['"Meeting"', '_scope'],
-                'assignedUserId',
-                'assignedUserName',
-                'parentType',
-                'parentId',
-                'status',
-                'createdAt',
-                ['null', 'hasAttachment'],
-            ])
-            ->leftJoin(
-                'MeetingUser',
-                'usersLeftMiddle',
-                [
-                    'usersLeftMiddle.meetingId:' => 'meeting.id',
-                ]
-            );
+        try {
+            $builder = $this->selectBuilderFactory
+                ->create()
+                ->from(Meeting::ENTITY_TYPE)
+                ->withStrictAccessControl()
+                ->buildQueryBuilder()
+                ->select([
+                    'id',
+                    'name',
+                    ['dateStart', 'dateStart'],
+                    ['dateEnd', 'dateEnd'],
+                    ['dateStartDate', 'dateStartDate'],
+                    ['dateEndDate', 'dateEndDate'],
+                    ['"Meeting"', '_scope'],
+                    'assignedUserId',
+                    'assignedUserName',
+                    'parentType',
+                    'parentId',
+                    'status',
+                    'createdAt',
+                    ['null', 'hasAttachment'],
+                ])
+                ->leftJoin(
+                    'MeetingUser',
+                    'usersLeftMiddle',
+                    [
+                        'usersLeftMiddle.meetingId:' => 'meeting.id',
+                    ]
+                );
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $where = [
             'usersLeftMiddle.userId' => $entity->getId(),
@@ -205,40 +190,45 @@ class Service
     {
         $seed = $this->entityManager->getNewEntity(Call::ENTITY_TYPE);
 
-        $builder = $this->selectBuilderFactory
-            ->create()
-            ->from(Call::ENTITY_TYPE)
-            ->withStrictAccessControl()
-            ->buildQueryBuilder()
-            ->select([
-                'id',
-                'name',
-                ['dateStart', 'dateStart'],
-                ['dateEnd', 'dateEnd'],
-                (
+        try {
+            $builder = $this->selectBuilderFactory
+                ->create()
+                ->from(Call::ENTITY_TYPE)
+                ->withStrictAccessControl()
+                ->buildQueryBuilder()
+                ->select([
+                    'id',
+                    'name',
+                    ['dateStart', 'dateStart'],
+                    ['dateEnd', 'dateEnd'],
+                    (
                     $seed->hasAttribute('dateStartDate') ?
                         ['dateStartDate', 'dateStartDate'] : ['null', 'dateStartDate']
-                ),
-                (
+                    ),
+                    (
                     $seed->hasAttribute('dateEndDate') ?
                         ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']
-                ),
-                ['"Call"', '_scope'],
-                'assignedUserId',
-                'assignedUserName',
-                'parentType',
-                'parentId',
-                'status',
-                'createdAt',
-                ['null', 'hasAttachment'],
-            ])
-            ->leftJoin(
-                'CallUser',
-                'usersLeftMiddle',
-                [
-                    'usersLeftMiddle.callId:' => 'call.id',
-                ]
-            );
+                    ),
+                    ['"Call"', '_scope'],
+                    'assignedUserId',
+                    'assignedUserName',
+                    'parentType',
+                    'parentId',
+                    'status',
+                    'createdAt',
+                    ['null', 'hasAttachment'],
+                ])
+                ->leftJoin(
+                    'CallUser',
+                    'usersLeftMiddle',
+                    [
+                        'usersLeftMiddle.callId:' => 'call.id',
+                    ]
+                );
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $where = [
             'usersLeftMiddle.userId' => $entity->getId(),
@@ -281,37 +271,42 @@ class Service
             }
         }
 
-        $builder = $this->selectBuilderFactory
-            ->create()
-            ->from(Email::ENTITY_TYPE)
-            ->withStrictAccessControl()
-            ->buildQueryBuilder()
-            ->select([
-                'id',
-                'name',
-                ['dateSent', 'dateStart'],
-                ['null', 'dateEnd'],
-                ['null', 'dateStartDate'],
-                ['null', 'dateEndDate'],
-                ['"Email"', '_scope'],
-                'assignedUserId',
-                'assignedUserName',
-                'parentType',
-                'parentId',
-                'status',
-                'createdAt',
-                'hasAttachment',
-            ])
-            ->leftJoin(
-                'EmailUser',
-                'usersLeftMiddle',
-                [
-                    'usersLeftMiddle.emailId:' => 'email.id',
-                ]
-            )
-            ->where([
-                'usersLeftMiddle.userId' => $entity->getId(),
-            ]);
+        try {
+            $builder = $this->selectBuilderFactory
+                ->create()
+                ->from(Email::ENTITY_TYPE)
+                ->withStrictAccessControl()
+                ->buildQueryBuilder()
+                ->select([
+                    'id',
+                    'name',
+                    ['dateSent', 'dateStart'],
+                    ['null', 'dateEnd'],
+                    ['null', 'dateStartDate'],
+                    ['null', 'dateEndDate'],
+                    ['"Email"', '_scope'],
+                    'assignedUserId',
+                    'assignedUserName',
+                    'parentType',
+                    'parentId',
+                    'status',
+                    'createdAt',
+                    'hasAttachment',
+                ])
+                ->leftJoin(
+                    'EmailUser',
+                    'usersLeftMiddle',
+                    [
+                        'usersLeftMiddle.emailId:' => 'email.id',
+                    ]
+                )
+                ->where([
+                    'usersLeftMiddle.userId' => $entity->getId(),
+                ]);
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         if (!empty($statusList)) {
             $builder->where([
@@ -344,33 +339,38 @@ class Service
 
         $seed = $this->entityManager->getNewEntity($targetEntityType);
 
-        $baseBuilder = $this->selectBuilderFactory
-            ->create()
-            ->from($targetEntityType)
-            ->withStrictAccessControl()
-            ->buildQueryBuilder()
-            ->select([
-                'id',
-                'name',
-                ['dateStart', 'dateStart'],
-                ['dateEnd', 'dateEnd'],
-                (
+        try {
+            $baseBuilder = $this->selectBuilderFactory
+                ->create()
+                ->from($targetEntityType)
+                ->withStrictAccessControl()
+                ->buildQueryBuilder()
+                ->select([
+                    'id',
+                    'name',
+                    ['dateStart', 'dateStart'],
+                    ['dateEnd', 'dateEnd'],
+                    (
                     $seed->hasAttribute('dateStartDate') ?
                         ['dateStartDate', 'dateStartDate'] : ['null', 'dateStartDate']
-                ),
-                (
+                    ),
+                    (
                     $seed->hasAttribute('dateEndDate') ?
                         ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']
-                ),
-                ['"' . $targetEntityType . '"', '_scope'],
-                'assignedUserId',
-                'assignedUserName',
-                'parentType',
-                'parentId',
-                'status',
-                'createdAt',
-                ['false', 'hasAttachment'],
-            ]);
+                    ),
+                    ['"' . $targetEntityType . '"', '_scope'],
+                    'assignedUserId',
+                    'assignedUserName',
+                    'parentType',
+                    'parentId',
+                    'status',
+                    'createdAt',
+                    ['false', 'hasAttachment'],
+                ]);
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         if (!empty($statusList)) {
             $baseBuilder->where([
@@ -492,27 +492,32 @@ class Service
         $entityType = $entity->getEntityType();
         $id = $entity->getId();
 
-        $baseBuilder = $this->selectBuilderFactory
-            ->create()
-            ->from('Email')
-            ->withStrictAccessControl()
-            ->buildQueryBuilder()
-            ->select([
-                'id',
-                'name',
-                ['dateSent', 'dateStart'],
-                ['null', 'dateEnd'],
-                ['null', 'dateStartDate'],
-                ['null', 'dateEndDate'],
-                ['"Email"', '_scope'],
-                'assignedUserId',
-                'assignedUserName',
-                'parentType',
-                'parentId',
-                'status',
-                'createdAt',
-                'hasAttachment',
-            ]);
+        try {
+            $baseBuilder = $this->selectBuilderFactory
+                ->create()
+                ->from('Email')
+                ->withStrictAccessControl()
+                ->buildQueryBuilder()
+                ->select([
+                    'id',
+                    'name',
+                    ['dateSent', 'dateStart'],
+                    ['null', 'dateEnd'],
+                    ['null', 'dateStartDate'],
+                    ['null', 'dateEndDate'],
+                    ['"Email"', '_scope'],
+                    'assignedUserId',
+                    'assignedUserName',
+                    'parentType',
+                    'parentId',
+                    'status',
+                    'createdAt',
+                    'hasAttachment',
+                ]);
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         if (!empty($statusList)) {
             $baseBuilder->where([
@@ -771,7 +776,7 @@ class Service
     protected function accessCheck(Entity $entity): void
     {
         if ($entity instanceof User) {
-            if (!$this->acl->checkUserPermission($entity, 'user')) {
+            if (!$this->acl->checkUserPermission($entity)) {
                 throw new Forbidden();
             }
 
@@ -788,6 +793,7 @@ class Service
      * @throws Forbidden
      * @throws NotFound
      * @throws Error
+     * @throws BadRequest
      */
     public function findActivitiesEntityType(
         string $scope,
@@ -810,7 +816,7 @@ class Service
         $this->accessCheck($entity);
 
         if (!$this->metadata->get(['scopes', $entityType, 'activity'])) {
-            throw new Error("Entity '{$entityType}' is not an activity.");
+            throw new Error("Entity '$entityType' is not an activity.");
         }
 
         if (!$isHistory) {
@@ -856,6 +862,7 @@ class Service
                 $order = $itemBuilder->build()->getOrder();
             }
 
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
             $itemBuilder
                 ->limit(null, null)
                 ->order([]);
@@ -1083,31 +1090,36 @@ class Service
     {
         $seed = $this->entityManager->getNewEntity($scope);
 
-        $builder = $this->selectBuilderFactory
-            ->create()
-            ->from($scope)
-            ->withStrictAccessControl()
-            ->buildQueryBuilder()
-            ->select([
-                'id',
-                'name',
-                ($seed->hasAttribute('dateStart') ? ['dateStart', 'dateStart'] : ['null', 'dateStart']),
-                ($seed->hasAttribute('dateEnd') ? ['dateEnd', 'dateEnd'] : ['null', 'dateEnd']),
-                ($seed->hasAttribute('dateStartDate') ?
-                    ['dateStartDate', 'dateStartDate'] : ['null', 'dateStartDate']),
-                ($seed->hasAttribute('dateEndDate') ?
-                    ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']),
-                ['"' . $scope . '"', '_scope'],
-                ($seed->hasAttribute('assignedUserId') ?
-                    ['assignedUserId', 'assignedUserId'] : ['null', 'assignedUserId']),
-                ($seed->hasAttribute('assignedUserName') ? ['assignedUserName', 'assignedUserName'] :
-                    ['null', 'assignedUserName']),
-                ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['null', 'parentType']),
-                ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['null', 'parentId']),
-                'status',
-                'createdAt',
-                ['false', 'hasAttachment'],
-            ]);
+        try {
+            $builder = $this->selectBuilderFactory
+                ->create()
+                ->from($scope)
+                ->withStrictAccessControl()
+                ->buildQueryBuilder()
+                ->select([
+                    'id',
+                    'name',
+                    ($seed->hasAttribute('dateStart') ? ['dateStart', 'dateStart'] : ['null', 'dateStart']),
+                    ($seed->hasAttribute('dateEnd') ? ['dateEnd', 'dateEnd'] : ['null', 'dateEnd']),
+                    ($seed->hasAttribute('dateStartDate') ?
+                        ['dateStartDate', 'dateStartDate'] : ['null', 'dateStartDate']),
+                    ($seed->hasAttribute('dateEndDate') ?
+                        ['dateEndDate', 'dateEndDate'] : ['null', 'dateEndDate']),
+                    ['"' . $scope . '"', '_scope'],
+                    ($seed->hasAttribute('assignedUserId') ?
+                        ['assignedUserId', 'assignedUserId'] : ['null', 'assignedUserId']),
+                    ($seed->hasAttribute('assignedUserName') ? ['assignedUserName', 'assignedUserName'] :
+                        ['null', 'assignedUserName']),
+                    ($seed->hasAttribute('parentType') ? ['parentType', 'parentType'] : ['null', 'parentType']),
+                    ($seed->hasAttribute('parentId') ? ['parentId', 'parentId'] : ['null', 'parentId']),
+                    'status',
+                    'createdAt',
+                    ['false', 'hasAttachment'],
+                ]);
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         if ($entity->getEntityType() === User::ENTITY_TYPE) {
             $builder->where([
@@ -1158,6 +1170,7 @@ class Service
      * @return RecordCollection<Entity>
      * @throws Forbidden
      * @throws NotFound
+     * @throws BadRequest
      */
     public function getUpcomingActivities(
         string $userId,
@@ -1268,7 +1281,7 @@ class Service
                 $entity->set('id', $itemId);
             }
 
-            $collection->append($entity);;
+            $collection->append($entity);
         }
 
         /** @var RecordCollection<Entity> */
@@ -1277,6 +1290,8 @@ class Service
 
     /**
      * @param array<string, mixed> $params
+     * @throws Forbidden
+     * @throws BadRequest
      */
     protected function getUpcomingActivitiesEntityTypeQuery(
         string $entityType,
