@@ -35,17 +35,19 @@ use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Entities\User;
-use Espo\Modules\Crm\Tools\Activities\Service as Service;
+use Espo\Modules\Crm\Tools\Activities\UpcomingService;
 
 /**
  * Upcoming activities.
+ *
+ * @noinspection PhpUnused
  */
 class GetUpcoming implements Action
 {
     public function __construct(
         private User $user,
         private SearchParamsFetcher $searchParamsFetcher,
-        private Service $service
+        private UpcomingService $service
     ) {}
 
     public function process(Request $request): Response
