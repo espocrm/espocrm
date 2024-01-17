@@ -39,6 +39,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Task;
+use Espo\Modules\Crm\Tools\Activities\Upcoming\Params;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Entity;
@@ -65,24 +66,17 @@ class UpcomingService
         private Acl $acl,
         private EntityManager $entityManager
     ) {}
+
     /**
-     * @param array{
-     *   offset?: ?int,
-     *   maxSize?: ?int,
-     * } $params
-     * @param ?string[] $entityTypeList
+     * Get upcoming activities.
+     *
      * @return RecordCollection<Entity>
      * @throws Forbidden
      * @throws NotFound
      * @throws BadRequest
      */
-    public function getUpcomingActivities(
-        string $userId,
-        array $params = [],
-        ?array $entityTypeList = null,
-        ?int $futureDays = null
-    ): RecordCollection {
-
+    public function get(string $userId, Params $params): RecordCollection
+    {
         /** @var ?User $user */
         $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
@@ -92,8 +86,10 @@ class UpcomingService
 
         $this->accessCheck($user);
 
-        $entityTypeList ??= $this->config->get('activitiesEntityList', []);
-        $futureDays ??= $this->config->get('activitiesUpcomingFutureDays', self::UPCOMING_ACTIVITIES_FUTURE_DAYS);
+        $entityTypeList = $params->entityTypeList ?? $this->config->get('activitiesEntityList', []);
+
+        $futureDays = $params->futureDays ??
+            $this->config->get('activitiesUpcomingFutureDays', self::UPCOMING_ACTIVITIES_FUTURE_DAYS);
 
         $queryList = [];
 
@@ -113,7 +109,7 @@ class UpcomingService
                 continue;
             }
 
-            $queryList[] = $this->getUpcomingActivitiesEntityTypeQuery($entityType, $params, $user, $futureDays);
+            $queryList[] = $this->getEntityTypeQuery($entityType, $user, $futureDays);
         }
 
         if ($queryList === []) {
@@ -142,8 +138,8 @@ class UpcomingService
 
         $totalCount = $row['count'];
 
-        $offset = intval($params['offset'] ?? 0);
-        $maxSize = intval($params['maxSize'] ?? 0);
+        $offset = $params->offset ?? 0;
+        $maxSize = $params->maxSize ?? 0;
 
         $unionQuery = $builder
             ->order('dateStart')
@@ -181,17 +177,11 @@ class UpcomingService
     }
 
     /**
-     * @param array<string, mixed> $params
      * @throws Forbidden
      * @throws BadRequest
      */
-    private function getUpcomingActivitiesEntityTypeQuery(
-        string $entityType,
-        array $params,
-        User $user,
-        int $futureDays
-    ): Select {
-
+    private function getEntityTypeQuery(string $entityType, User $user, int $futureDays): Select
+    {
         $beforeString = (new DateTime())
             ->modify('+' . $futureDays . ' days')
             ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
@@ -210,10 +200,6 @@ class UpcomingService
         }
 
         $builder->withPrimaryFilter($primaryFilter);
-
-        if (!empty($params['textFilter'])) {
-            $builder->withTextFilter($params['textFilter']);
-        }
 
         $queryBuilder = $builder->buildQueryBuilder();
 
