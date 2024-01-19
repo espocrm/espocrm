@@ -6,7 +6,11 @@
         "parentNames": "Ім'я батьків",
         "indivsMany": "Індиви",
         "rentPlans": "Планові оренди",
-        "birthday": "Дата народження"
+        "birthday": "Дата народження",
+        "oldId": "OldId",
+        "oldParentPhone": "OldParentPhone",
+        "oldRemoved": "OldRemoved",
+        "oldCreatedAt": "OldCreatedAt"
     },
     "links": {
         "abonements": "Абонементи",

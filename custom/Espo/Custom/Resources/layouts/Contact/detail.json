@@ -33,5 +33,35 @@
         ],
         "style": "default",
         "label": ""
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "oldId"
+                },
+                {
+                    "name": "oldParentPhone"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "oldRemoved"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": {
+            "conditionGroup": [
+                {
+                    "type": "isNotEmpty",
+                    "attribute": "oldId"
+                }
+            ]
+        },
+        "style": "default",
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Dance studio"
     }
 ]

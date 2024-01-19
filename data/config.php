@@ -354,8 +354,8 @@ return [
     1 => 'email',
     2 => 'phone'
   ],
-  'cacheTimestamp' => 1702589240,
-  'microtime' => 1702589240.408174,
+  'cacheTimestamp' => 1705620652,
+  'microtime' => 1705620652.042475,
   'siteUrl' => 'https://dsfreedom.art',
   'fullTextSearchMinLength' => 4,
   'appTimestamp' => 1695834342,
@@ -374,12 +374,20 @@ return [
   'addressStateList' => [],
   'workingTimeCalendarName' => NULL,
   'workingTimeCalendarId' => NULL,
-  'companyLogoId' => NULL,
-  'companyLogoName' => NULL,
+  'companyLogoId' => '65a19bab94082c0b3',
+  'companyLogoName' => 'logo-svg (7).png',
   'latestVersion' => '8.0.2',
   'outboundEmailBccAddress' => NULL,
   'massEmailDisableMandatoryOptOutLink' => false,
   'massEmailOpenTracking' => false,
   'streamEmailNotifications' => false,
-  'mentionEmailNotifications' => false
+  'mentionEmailNotifications' => false,
+  'massEmailMaxPerBatchCount' => NULL,
+  'mapProvider' => 'Google',
+  'listViewSettingsDisabled' => false,
+  'phoneNumberNumericSearch' => true,
+  'phoneNumberInternational' => true,
+  'phoneNumberPreferredCountryList' => [
+    0 => 'ua'
+  ]
 ];
