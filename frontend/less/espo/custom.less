@@ -1675,20 +1675,12 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     }
 }
 
-body .note-editor .panel-heading {
-    > .btn-group {
-        right: 0;
-        top: 0;
-
-        > .btn {
-            > i,
-            > span {
-                position: relative;
-                top: 1px;
-            }
-        }
-
+body .note-editor {
+    .panel-heading {
         > .btn-group {
+            right: 0;
+            top: 0;
+
             > .btn {
                 > i,
                 > span {
@@ -1696,9 +1688,27 @@ body .note-editor .panel-heading {
                     top: 1px;
                 }
             }
+
+            > .btn-group {
+                > .btn {
+                    > i,
+                    > span {
+                        position: relative;
+                        top: 1px;
+                    }
+                }
+            }
+        }
+    }
+
+    &.codeview {
+        textarea.note-codable {
+            min-height: 400px;
         }
     }
 }
+
+
 
 .list > table thead > th {
     border-top-width: 1px !important;
@@ -3688,6 +3698,8 @@ body > .autocomplete-suggestions.text-search-suggestions {
         border-bottom-right-radius: 0;
     }
 }
+
+
 
 @import "misc/kanban.less";
 
