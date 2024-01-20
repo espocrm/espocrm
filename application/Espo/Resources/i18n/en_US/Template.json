@@ -19,7 +19,8 @@
         "pageWidth": "Page Width (mm)",
         "pageHeight": "Page Height (mm)",
         "fontFace": "Font",
-        "title": "Title"
+        "title": "Title",
+        "style": "Style"
     },
     "links": {
     },

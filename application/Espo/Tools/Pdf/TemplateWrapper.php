@@ -129,4 +129,9 @@ class TemplateWrapper implements Template
     {
         return $this->template->get('title') ?? '';
     }
+
+    public function getStyle(): ?string
+    {
+        return $this->template->get('style') ?? null;
+    }
 }

@@ -71,6 +71,8 @@ class HtmlComposer
             $titleHtml = "<title>" . htmlspecialchars($title) . "</title>";
         }
 
+        $templateStyle = $template->getStyle() ?? '';
+
         /** @noinspection HtmlRequiredTitleElement */
         return "
             <head>
@@ -110,6 +112,8 @@ class HtmlComposer
             > footer .page-number:after {
                 content: counter(page);
             }
+
+            $templateStyle
             </style>
         ";
     }

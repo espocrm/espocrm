@@ -37,7 +37,8 @@
             [{"name":"printHeader"}, {"name":"headerPosition"}],
             [{"name":"header","fullWidth":true}],
             [{"name":"printFooter"}, {"name":"footerPosition"}],
-            [{"name":"footer","fullWidth":true}]
+            [{"name":"footer","fullWidth":true}],
+            [{"name": "style"}]
         ]
     }
 ]
