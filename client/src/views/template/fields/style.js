@@ -93,6 +93,7 @@ class TemplateStyleFieldView extends TextFieldView {
 
                 const list = [
                     Espo.loader.requirePromise('lib!ace-ext-language_tools'),
+                    Espo.loader.requirePromise('lib!ace-mode-css'),
                 ];
 
                 if (this.getThemeManager().getParam('isDark')) {
@@ -136,6 +137,7 @@ class TemplateStyleFieldView extends TextFieldView {
 
             editor.setOptions({
                 maxLines: this.mode === this.MODE_EDIT ? this.maxLineEditCount : this.maxLineDetailCount,
+                enableLiveAutocompletion: true,
             });
 
             if (this.getThemeManager().getParam('isDark')) {
@@ -163,6 +165,9 @@ class TemplateStyleFieldView extends TextFieldView {
             editor.commands.removeCommand('find');
             editor.setHighlightActiveLine(false);
 
+            const JavaScriptMode = ace.require('ace/mode/css').Mode;
+
+            editor.session.setMode(new JavaScriptMode());
         }
     }
 

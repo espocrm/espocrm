@@ -133,6 +133,11 @@
         "exportsTo": "window",
         "exportsAs": "ace"
     },
+    "ace-mode-css": {
+        "path": "client/lib/ace-mode-css.js",
+        "exportsTo": "ace.require.define.modules",
+        "exportsAs": "ace/mode/css"
+    },
     "ace-mode-javascript": {
         "path": "client/lib/ace-mode-javascript.js",
         "exportsTo": "ace.require.define.modules",
