@@ -44,16 +44,15 @@ class ViewHelper {
         this.mdBeforeList = [
             {
                 regex: /&#x60;&#x60;&#x60;\n?([\s\S]*?)&#x60;&#x60;&#x60;/g,
-                value: function (s, string) {
-                    return '<pre><code>' +string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') +
-                        '</code></pre>';
-                }
+                value: (s, string) => {
+                    return '```' + string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') + '```';
+                },
             },
             {
                 regex: /&#x60;([\s\S]*?)&#x60;/g,
-                value: function (s, string) {
-                    return '<code>' + string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') + '</code>';
-                }
+                value: (s, string) => {
+                    return '`' + string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') + '`';
+                },
             }
         ];
 
