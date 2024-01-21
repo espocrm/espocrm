@@ -30,6 +30,10 @@
 namespace Espo\Core\Htmlizer;
 
 use Closure;
+use DOMDocument;
+use DOMElement;
+use DOMException;
+use DOMXPath;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Entities\Attachment;
 use Espo\Repositories\Attachment as AttachmentRepository;
@@ -51,6 +55,7 @@ use Espo\ORM\EntityManager;
 use LightnCandy\Flags;
 use LightnCandy\LightnCandy as LightnCandy;
 
+use LogicException;
 use RuntimeException;
 use stdClass;
 
@@ -95,7 +100,7 @@ class Htmlizer
         bool $skipInlineAttachmentHandling = false
     ): string {
 
-        $template = str_replace('<tcpdf ', '', $template);
+        $template = $this->prepare($template);
 
         $code = LightnCandy::compile($template, [
             'flags' => Flags::FLAG_HANDLEBARSJS | Flags::FLAG_ERROR_EXCEPTION,
@@ -832,5 +837,95 @@ class Htmlizer
         }
 
         return [[$orderBy, $order]];
+    }
+
+    private function handleIteration(string $template): string
+    {
+        if (!extension_loaded('dom')) {
+            $this->log?->warning("Extension 'dom' is not enabled. HTML templating functionality is restricted.");
+
+            return $template;
+        }
+
+        $xml = new DOMDocument();
+
+        $loadResult = $xml->loadHTML($template);
+
+        if ($loadResult === false) {
+            $this->log?->warning("HTML template parsing error.");
+
+            return $template;
+        }
+
+        $xpath = new DOMXPath($xml);
+
+        $found = false;
+
+        $elements = $xpath->query("//*[@iterate]");
+
+        if (!$elements) {
+            return $template;
+        }
+
+        foreach ($elements as $element) {
+            if (!$element instanceof DOMElement) {
+                continue;
+            }
+
+            try {
+                $wrapperElement = $xml->createElement('iteration-wrapper');
+
+                if (!$wrapperElement) {
+                    throw new LogicException();
+                }
+
+                $wrapperElement->setAttribute('v', $element->getAttribute('iterate'));
+            }
+            catch (DOMException $e) {
+                throw new LogicException($e->getMessage());
+            }
+
+            $parentNode = $element->parentNode;
+
+            if (!$parentNode) {
+                throw new LogicException();
+            }
+
+            $newElement = $xml->importNode($element->cloneNode(true));
+
+            if (!$newElement instanceof DOMElement) {
+                throw new LogicException();
+            }
+
+            $newElement->removeAttribute('iterate');
+
+            $wrapperElement->appendChild($newElement);
+            $parentNode->replaceChild($wrapperElement, $element);
+
+            $found = true;
+        }
+
+        if (!$found) {
+            return $template;
+        }
+
+        $newTemplate = $xml->saveXML();
+
+        if ($newTemplate === false || !is_string($newTemplate)) {
+            $this->log?->warning("DOM save error.");
+
+            return $template;
+        }
+
+        $newTemplate = str_replace('</iteration-wrapper>', '{{/each}}', $newTemplate);
+
+        return preg_replace('/<iteration-wrapper v="{{(.*)}}">/', '{{#each $1}}', $newTemplate) ?? '';
+    }
+
+    private function prepare(string $template): string
+    {
+        $template = str_replace('<tcpdf ', '', $template);
+
+        return $this->handleIteration($template);
     }
 }

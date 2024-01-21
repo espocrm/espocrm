@@ -12,6 +12,7 @@
         "ext-gd": "*",
         "ext-mbstring": "*",
         "ext-xml": "*",
+        "ext-dom": "*",
         "ext-curl": "*",
         "ext-exif": "*",
         "ext-pdo": "*",
