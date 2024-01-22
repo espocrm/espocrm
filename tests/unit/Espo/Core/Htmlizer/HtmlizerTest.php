@@ -30,55 +30,54 @@
 namespace tests\unit\Espo\Core\Htmlizer;
 
 use Espo\Core\Htmlizer\Htmlizer;
+use Espo\Core\Utils\File\Manager;
 use Espo\Core\Utils\NumberUtil;
 use Espo\Core\Utils\DateTime;
 
 use Espo\Core\ORM\Entity;
 
-use StdClass;
+use Espo\ORM\EntityManager;
+use PHPUnit\Framework\TestCase;
+use stdClass;
 
-class HtmlizerTest extends \PHPUnit\Framework\TestCase
+class HtmlizerTest extends TestCase
 {
-    protected $htmlizer;
-
-    protected $fileManager;
-
-    protected $config;
-
-    protected $dateTime;
-
-    protected $number;
+    private ?Htmlizer $htmlizer;
+    private ?Manager $fileManager;
+    private ?DateTime $dateTime;
+    private ?NumberUtil $number;
+    private ?EntityManager $entityManager;
 
     private $entityAttributes = [
-        'id' => array(
+        'id' => [
             'type' => Entity::ID,
-        ),
-        'name' => array(
+        ],
+        'name' => [
             'type' => Entity::VARCHAR,
             'len' => 255,
-        ),
-        'date' => array(
+        ],
+        'date' => [
             'type' => Entity::DATE
-        ),
-        'dateTime' => array(
+        ],
+        'dateTime' => [
             'type' => Entity::DATETIME
-        ),
-        'int' => array(
+        ],
+        'int' => [
             'type' => Entity::INT
-        ),
-        'float' => array(
+        ],
+        'float' => [
             'type' => Entity::FLOAT
-        ),
-        'list' => array(
+        ],
+        'list' => [
             'type' => Entity::JSON_ARRAY
-        ),
-        'object' => array(
+        ],
+        'object' => [
             'type' => Entity::JSON_OBJECT
-        ),
-        'deleted' => array(
+        ],
+        'deleted' => [
             'type' => Entity::BOOL,
             'default' => 0,
-        )
+        ]
     ];
 
     protected function setUp(): void
@@ -86,13 +85,13 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
         date_default_timezone_set('UTC');
 
         $this->entityManager =
-            $this->getMockBuilder('Espo\\Core\\ORM\\EntityManager')
+            $this->getMockBuilder(EntityManager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $obj = new \StdClass();
+        $obj = new stdClass();
 
-        $this->fileManager = $this->getMockBuilder('Espo\\Core\\Utils\\File\\Manager')
+        $this->fileManager = $this->getMockBuilder(Manager::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -107,13 +106,11 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
             ->expects($this->any())
             ->method('getPhpContents')
             ->will(
-                $this->returnCallback(function($fileName) use ($obj) {
+                $this->returnCallback(function () use ($obj) {
                     $obj->contents = str_replace('<?php ', '', $obj->contents);
                     $obj->contents = str_replace('?>', '', $obj->contents);
 
-                    $data = eval($obj->contents . ';');
-
-                    return $data;
+                    return eval($obj->contents . ';');
                 })
             );
 
@@ -123,9 +120,7 @@ class HtmlizerTest extends \PHPUnit\Framework\TestCase
                     ->method('unlink');
 
         $this->dateTime = new DateTime('MM/DD/YYYY', 'hh:mm A', 'Europe/Kiev');
-
         $this->number = new NumberUtil('.', ',');
-
         $this->htmlizer = new Htmlizer($this->fileManager, $this->dateTime, $this->number);
     }
 
