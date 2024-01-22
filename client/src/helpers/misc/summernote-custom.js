@@ -289,7 +289,7 @@ function init(langSets) {
                             list.push(
                                 options.handlebars ?
                                     Espo.loader.requirePromise('lib!ace-mode-handlebars') :
-                                    Espo.loader.requirePromise('lib!ace-mode-handlebars')
+                                    Espo.loader.requirePromise('lib!ace-mode-html')
                             );
 
                             if (options.isDark) {
