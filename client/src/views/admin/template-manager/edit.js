@@ -103,7 +103,7 @@ define('views/admin/template-manager/edit', ['view', 'model'], function (Dep, Mo
                     this.setConfirmLeaveOut(true);
                 }, this);
 
-                this.createView('bodyField', 'views/fields/wysiwyg', {
+                this.createView('bodyField', 'views/admin/template-manager/fields/body', {
                     name: 'body',
                     model: model,
                     selector: '.body-field',

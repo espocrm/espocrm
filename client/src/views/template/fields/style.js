@@ -165,9 +165,9 @@ class TemplateStyleFieldView extends TextFieldView {
             editor.commands.removeCommand('find');
             editor.setHighlightActiveLine(false);
 
-            const JavaScriptMode = ace.require('ace/mode/css').Mode;
+            const Mode = ace.require('ace/mode/css').Mode;
 
-            editor.session.setMode(new JavaScriptMode());
+            editor.session.setMode(new Mode());
         }
     }
 
