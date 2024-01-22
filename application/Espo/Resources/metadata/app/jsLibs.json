@@ -128,6 +128,12 @@
         "exportsTo": "window",
         "exportsAs": "QRCode"
     },
+    "js-beautify": {
+        "path": "client/lib/js-beautify.js",
+        "devPath": "client/lib/original/js-beautify.js",
+        "aliases": ["beautifier"],
+        "sourceMap": true
+    },
     "ace": {
         "path": "client/lib/ace.js",
         "exportsTo": "window",
@@ -137,6 +143,16 @@
         "path": "client/lib/ace-mode-css.js",
         "exportsTo": "ace.require.define.modules",
         "exportsAs": "ace/mode/css"
+    },
+    "ace-mode-html": {
+        "path": "client/lib/ace-mode-html.js",
+        "exportsTo": "ace.require.define.modules",
+        "exportsAs": "ace/mode/html"
+    },
+    "ace-mode-handlebars": {
+        "path": "client/lib/ace-mode-handlebars.js",
+        "exportsTo": "ace.require.define.modules",
+        "exportsAs": "ace/mode/handlebars"
     },
     "ace-mode-javascript": {
         "path": "client/lib/ace-mode-javascript.js",

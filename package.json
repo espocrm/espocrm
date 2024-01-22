@@ -64,6 +64,7 @@
     "jquery-ui-espo": "github:yurikuzn/jquery-ui-espo#0.2.2",
     "jquery-ui-touch-punch": "^0.2.3",
     "js-base64": "^3.7.2",
+    "js-beautify": "^1.14.11",
     "jsbarcode": "^3.11.4",
     "marked": "^4.0.10",
     "moment": "^2.29.4",

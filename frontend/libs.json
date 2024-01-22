@@ -173,6 +173,13 @@
         "amdId": "qrcodejs"
     },
     {
+        "src": "node_modules/js-beautify/js/lib/beautifier.js",
+        "dest": "client/lib/js-beautify.js",
+        "originalDest": "client/lib/original/js-beautify.js",
+        "amdId": "js-beautify",
+        "minify": true
+    },
+    {
         "name": "ace-builds",
         "files": [
             {
@@ -186,6 +193,14 @@
             {
                 "src": "node_modules/ace-builds/src-noconflict/mode-css.js",
                 "dest": "client/lib/ace-mode-css.js"
+            },
+            {
+                "src": "node_modules/ace-builds/src-noconflict/mode-html.js",
+                "dest": "client/lib/ace-mode-html.js"
+            },
+            {
+                "src": "node_modules/ace-builds/src-noconflict/mode-handlebars.js",
+                "dest": "client/lib/ace-mode-handlebars.js"
             },
             {
                 "src": "node_modules/ace-builds/src-noconflict/ext-language_tools.js",

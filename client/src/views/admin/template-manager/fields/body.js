@@ -28,16 +28,7 @@
 
 import WysiwygFieldView from 'views/fields/wysiwyg';
 
-class BodyTemplateFieldView extends WysiwygFieldView {
+export default class extends WysiwygFieldView {
 
-    htmlPurificationForEditDisabled = true
-    noStylesheet = true
-    useIframe = true
-    tableClassName = ''
-    tableBorderWidth = 1
-    tableCellPadding = 2
     handlebars = true
 }
-
-export default BodyTemplateFieldView;
-

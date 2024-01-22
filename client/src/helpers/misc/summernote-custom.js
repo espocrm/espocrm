@@ -28,6 +28,16 @@
 
 import $ from 'jquery';
 
+/**
+ * @type {{
+ *     edit: import('ace-builds').edit,
+ *     require: import('ace-builds').require,
+ * }}
+ */
+let ace;
+
+let beautifier;
+
 function init(langSets) {
     $.extend($.summernote.options, {
         espoImage: {
@@ -45,6 +55,253 @@ function init(langSets) {
     });
 
     $.extend($.summernote.plugins, {
+        'aceCodeview': function (/** Record */context) {
+            const ui = $.summernote.ui;
+            const options = context.options;
+
+            const lang = options.langInfo;
+            /** @type {JQuery} */
+            const $editor = context.layoutInfo.editor;
+            /** @type {JQuery} */
+            const $editable = context.layoutInfo.editable;
+
+            const view = /** @type {module:view} */options.espoView;
+
+            if (!view) {
+                return;
+            }
+
+            // noinspection SpellCheckingInspection
+            let $codable;
+            /** @type {import('ace-builds').Ace.Editor} */
+            let aceEditor;
+            let isActivated = false;
+            let isReplaced = false;
+            let isBeingActivated = false;
+            const EMPTY = '<p>&nbsp;</p>';
+
+            context.destroyAceCodeview = function () {
+                if (isActivated) {
+                    deactivate();
+                }
+            };
+
+            context.code = function (html) {
+                if (html === undefined) {
+                    let value;
+
+                    if (isActivated) {
+                        value = prepareValue(aceEditor.getValue(), options.prettifyHtml) || EMPTY
+
+                        $editable.html(value);
+                    }
+
+                    return isActivated ? value : $editable.html();
+                }
+
+                if (isActivated) {
+                    aceEditor.setValue(html);
+                }
+
+                $editable.html(html);
+
+                this.$note.val(html);
+                context.triggerEvent('change', html, $editable);
+            };
+
+            const id = 'editor-' + Math.random().toString(36).substring(2, 17);
+
+            const prepareValue = (input, stripLinebreaks) => {
+                if (stripLinebreaks) {
+                    return input.replace(/[\n\r]/g, '');
+                }
+
+                return input;
+            };
+
+            const domHtml = (/** JQuery */$node, isNewlineOnBlock) => {
+                let markup = prepareValue($node.html());
+
+                if (isNewlineOnBlock) {
+                    return beautifier.html(markup, {
+                        indent_size: 2,
+                    });
+                }
+
+                if (isNewlineOnBlock) {
+                    const regexTag = /<(\/?)(\b(?!!)[^>\s]*)(.*?)(\s*\/?>)/g;
+
+                    markup = markup.replace(regexTag, (match, endSlash, name) => {
+                        name = name.toUpperCase();
+                        const isEndOfInlineContainer = /^DIV|^TD|^TH|^P|^LI|^H[1-7]/.test(name) && !!endSlash;
+                        const isBlockNode = /^BLOCKQUOTE|^TABLE|^TBODY|^TR|^HR|^UL|^OL/.test(name);
+
+                        return match + (isEndOfInlineContainer || isBlockNode ? '\n' : '');
+                    });
+
+                    markup = markup.trim();
+                }
+
+                return markup;
+            };
+
+            const toggle = () => {
+                isActivated ?
+                    deactivate() :
+                    activate();
+
+                context.triggerEvent('codeview.toggled');
+            };
+
+            const deactivate = () => {
+                if (!isActivated) {
+                    return;
+                }
+
+                $codable.addClass('hidden');
+
+                let value = prepareValue(aceEditor.getValue(), options.prettifyHtml) || EMPTY;
+                value = context.invoke('codeview.purify', value);
+
+                const isChange = $editable.html() !== value;
+
+                $editable.html(value);
+
+                $editor.removeClass('codeview');
+
+                if (isChange) {
+                    context.triggerEvent('change', $editable.html(), $editable);
+                }
+
+                $editable.focus();
+                context.invoke('toolbar.updateCodeview', false);
+                context.invoke('airPopover.updateCodeview', false);
+
+                if (aceEditor) {
+                    aceEditor.destroy();
+                    aceEditor = null;
+                }
+
+                context.aceEditor = undefined;
+
+                isActivated = false;
+            };
+
+            const activate = () => {
+                if (isBeingActivated) {
+                    return;
+                }
+
+                isBeingActivated = true;
+
+                context.invoke('toolbar.updateCodeview', true);
+                context.invoke('airPopover.updateCodeview', true);
+                $editor.addClass('codeview');
+
+                if (!isReplaced) {
+                    $codable = $('<div>')
+                        .attr('id', id)
+                        .css('minHeight', 40 + 'px');
+                    $(context.layoutInfo.codable).replaceWith($codable);
+
+                    context.$aceCodable = $codable;
+
+                    isReplaced = true;
+                }
+
+                $codable.removeClass('hidden');
+
+                requireAce().then(() => domHtml($editable, options.prettifyHtml)).then(/** string */html => {
+                    aceEditor = ace.edit(id);
+
+                    aceEditor.setValue(html);
+
+                    aceEditor.setOptions({
+                        maxLines: !$editor.hasClass('fullscreen') ? 34: null,
+                        enableLiveAutocompletion: true,
+                        tabSize: 2,
+                        useSoftTabs: true,
+                    });
+
+                    if (options.isDark) {
+                        aceEditor.setOptions({theme: 'ace/theme/tomorrow_night'});
+                    }
+
+                    aceEditor.getSession().setUseWrapMode(true);
+                    aceEditor.setShowPrintMargin(false);
+                    aceEditor.getSession().setUseWorker(false);
+                    aceEditor.commands.removeCommand('find');
+                    aceEditor.setHighlightActiveLine(false);
+
+                    aceEditor.focus();
+                    aceEditor.gotoLine(0, 0, false);
+
+                    aceEditor.on('blur', e => {
+                        context.triggerEvent('blur.codeview', aceEditor.getValue(), e);
+                    });
+                    aceEditor.on('change', () => {
+                        context.triggerEvent('change.codeview', aceEditor.getValue());
+                    });
+
+                    // noinspection JSValidateTypes
+                    context.aceEditor = aceEditor;
+
+                    const modeToRequired = options.handlebars ?
+                        'ace/mode/handlebars' :
+                        'ace/mode/html';
+
+                    const Mode = ace.require(modeToRequired).Mode;
+                    aceEditor.session.setMode(new Mode());
+
+                    isActivated = true;
+                    isBeingActivated = false;
+                });
+            };
+
+            context.memo('button.aceCodeview', () => {
+                return ui.button({
+                    className: 'btn-codeview note-codeview-keep',
+                    contents: '<i class="note-icon-code"/>',
+                    tooltip: lang.options.codeview,
+                    click: () => toggle(),
+                }).render();
+            });
+
+            /**
+             * @return Promise
+             */
+            const requireAce = function () {
+                return Promise.all([
+                    Espo.loader.requirePromise('lib!js-beautify')
+                        .then(lib => {
+                            beautifier = lib;
+
+                            return lib;
+                        }),
+                    Espo.loader.requirePromise('lib!ace')
+                        .then(lib => {
+                            ace = /** window.ace */lib;
+
+                            const list = [
+                                Espo.loader.requirePromise('lib!ace-ext-language_tools'),
+                            ];
+
+                            list.push(
+                                options.handlebars ?
+                                    Espo.loader.requirePromise('lib!ace-mode-handlebars') :
+                                    Espo.loader.requirePromise('lib!ace-mode-handlebars')
+                            );
+
+                            if (options.isDark) {
+                                list.push(Espo.loader.requirePromise('lib!ace-theme-tomorrow_night'));
+                            }
+
+                            return Promise.all(list);
+                        })
+                ]);
+            }
+        },
+
         'espoTable': function (context) {
             const ui = $.summernote.ui;
             const options = context.options;
@@ -359,8 +616,6 @@ function init(langSets) {
         'fullscreen': function (context) {
             const options = context.options;
             const self = options.espoView;
-            //let lang = options.langInfo;
-            //let ui = $.summernote.ui;
 
             if (!self) {
                 return;
@@ -373,21 +628,16 @@ function init(langSets) {
                 this.$editor = context.layoutInfo.editor;
                 this.$toolbar = context.layoutInfo.toolbar;
                 this.$editable = context.layoutInfo.editable;
-                this.$codable = context.layoutInfo.codable;
 
                 this.$modal = self.$el.closest('.modal');
                 this.isInModal = this.$modal.length > 0;
             };
 
-
             this.resizeTo = function (size) {
                 this.$editable.css('height', size.h);
-                this.$codable.css('height', size.h);
 
-                // noinspection SpellCheckingInspection
-                if (this.$codable.data('cmeditor')) {
-                    // noinspection SpellCheckingInspection,JSUnresolvedReference
-                    this.$codable.data('cmeditor').setsize(null, size.h);
+                if (context.$aceCodable) {
+                    context.$aceCodable.css('height', size.h);
                 }
             };
 
@@ -412,8 +662,12 @@ function init(langSets) {
                 }
             };
 
+            let maxLines;
+
             this.toggle = function () {
                 this.$editor.toggleClass('fullscreen');
+
+                const aceEditor = /** @type {import('ace-builds').Ace.Editor} */context.aceEditor;
 
                 if (this.isFullscreen()) {
                     this.$editable.data('orgHeight', this.$editable.css('height'));
@@ -433,10 +687,22 @@ function init(langSets) {
 
                     // noinspection JSUnusedGlobalSymbols
                     this._isFullscreen = true;
+
+                    if (aceEditor) {
+                        maxLines = aceEditor.getOption('maxLines');
+
+                        aceEditor.setOptions({maxLines: null});
+                        aceEditor.resize();
+                    }
                 }
                 else {
                     this.$window.off('resize.summernote'  + self.cid);
-                    this.resizeTo({ h: this.$editable.data('orgHeight') });
+                    this.resizeTo({h: this.$editable.data('orgHeight')});
+
+                    if (context.$aceCodable) {
+                        context.$aceCodable.css('height', '');
+                    }
+
                     this.$editable.css('maxHeight', this.$editable.css('orgMaxHeight'));
 
                     if (this.isInModal) {
@@ -447,6 +713,11 @@ function init(langSets) {
 
                     // noinspection JSUnusedGlobalSymbols
                     this._isFullscreen = false;
+
+                    if (aceEditor) {
+                        aceEditor.setOptions({maxLines: maxLines});
+                        aceEditor.resize();
+                    }
                 }
 
                 context.invoke('toolbar.updateFullscreen', this.isFullscreen());
