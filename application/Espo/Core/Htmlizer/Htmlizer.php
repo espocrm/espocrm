@@ -919,6 +919,11 @@ class Htmlizer
 
         $newTemplate = str_replace('</iteration-wrapper>', '{{/each}}', $newTemplate);
 
+        $from = strpos($newTemplate,'<body>') + 6;
+        $to = strrpos($newTemplate, '</body>') - strlen($newTemplate);
+
+        $newTemplate = substr($newTemplate, $from, $to);
+
         return preg_replace('/<iteration-wrapper v="{{(.*)}}">/', '{{#each $1}}', $newTemplate) ?? '';
     }
 

@@ -223,4 +223,22 @@ class HtmlizerTest extends TestCase
         $html = $this->htmlizer->render($entity, $template);
         $this->assertEquals('test', $html);
     }
+
+    public function testIterate(): void
+    {
+        /** @noinspection HtmlUnknownAttribute */
+        $template = "<ul><li iterate=\"{{items}}\">{{name}}</li></ul>";
+
+        $html = $this->htmlizer->render(null, $template, null, [
+            'items' => [
+                ['name' => '1'],
+                ['name' => '2'],
+            ],
+        ]);
+
+        /** @noinspection HtmlUnknownAttribute */
+        $expected = "<ul><li>1</li><li>2</li></ul>";
+
+        $this->assertEquals($expected, $html);
+    }
 }
