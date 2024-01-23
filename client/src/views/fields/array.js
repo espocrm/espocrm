@@ -185,7 +185,7 @@ class ArrayFieldView extends BaseFieldView {
             return;
         }
 
-        const $input = this.$el.find('input');
+        const $input = this.$el.find('input.main-element');
 
         if ($input[0]) {
             // noinspection JSUnresolvedReference
