@@ -1,3 +1,5 @@
 [
-    "entityType"
+    "entityType",
+    "createdAt",
+    "createdBy"
 ]
