@@ -560,7 +560,7 @@ class WysiwygFieldView extends TextFieldView {
         // noinspection JSUnusedGlobalSymbols
         const options = {
             handlebars: this.handlebars,
-            prettifyHtml: true,
+            prettifyHtml: false, // should not be true
             disableResizeEditor: true,
             isDark: this.getThemeManager().getParam('isDark'),
             espoView: this,
