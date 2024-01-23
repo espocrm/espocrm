@@ -50,10 +50,10 @@ class WysiwygFieldView extends TextFieldView {
     fetchEmptyValueAsNull = false
     validationElementSelector = '.note-editor'
     htmlPurificationDisabled = false
+    htmlPurificationForEditDisabled = false
     tableClassName = 'table table-bordered'
-    tableBorderWidth
-    tableCellPadding
     noStylesheet = false
+    useIframe = false
     handlebars = false
 
     events = {
@@ -322,11 +322,11 @@ class WysiwygFieldView extends TextFieldView {
 
         const documentElement = iframeElement.contentWindow.document;
 
-        let body = this.sanitizeHtml(this.model.get(this.name) || '');
+        let bodyHtml = this.sanitizeHtml(this.model.get(this.name) || '');
 
-        const useFallbackStylesheet = this.getThemeManager().getParam('isDark') && this.htmlHasColors(body);
+        const useFallbackStylesheet = this.getThemeManager().getParam('isDark') && this.htmlHasColors(bodyHtml);
         const addFallbackClass = this.getThemeManager().getParam('isDark') &&
-            (this.htmlHasColors(body) || this.noStylesheet);
+            (this.htmlHasColors(bodyHtml) || this.noStylesheet);
 
         const $iframeContainer = $iframe.parent();
 
@@ -345,10 +345,23 @@ class WysiwygFieldView extends TextFieldView {
                     this.getThemeManager().getIframeStylesheet()
             );
 
-            body = linkElement.outerHTML + body;
+            bodyHtml = linkElement.outerHTML + bodyHtml;
         }
 
-        documentElement.write(body);
+        let headHtml = '';
+
+        if (this.noStylesheet) {
+            const styleElement = documentElement.createElement('style');
+
+            styleElement.textContent = `\ntable.bordered, table.bordered td, table.bordered th {border: 1px solid;}\n`;
+
+            headHtml = styleElement.outerHTML;
+        }
+
+        // noinspection HtmlRequiredTitleElement
+        const documentHtml = `<head>${headHtml}</head><body>${bodyHtml}</body>`
+
+        documentElement.write(documentHtml);
         documentElement.close();
 
         const $body = $iframe.contents().find('html body');
@@ -604,8 +617,6 @@ class WysiwygFieldView extends TextFieldView {
             dialogsInBody: this.$el,
             codeviewFilter: true,
             tableClassName: this.tableClassName,
-            tableBorderWidth: this.tableBorderWidth,
-            tableCellPadding: this.tableCellPadding,
         };
 
         if (this.height) {

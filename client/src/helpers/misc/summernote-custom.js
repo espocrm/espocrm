@@ -315,7 +315,7 @@ function init(langSets) {
                                 tds.push('<td>&nbsp;</td>');
                             }
 
-                            tdHTML = tds.join('');
+                            tdHTML = tds.join('\n');
                             const trs = [];
                             let trHTML;
 
@@ -323,22 +323,21 @@ function init(langSets) {
                                 trs.push('<tr>' + tdHTML + '</tr>');
                             }
 
-                            trHTML = trs.join('');
-                            const $table = $('<table>' + trHTML + '</table>');
+                            trHTML = trs.join('\n');
+                            const $table = $('<table>\n' + trHTML + '</table>');
 
-                            if (options.tableBorderWidth !== undefined) {
+                            /*if (options.tableBorderWidth !== undefined) {
                                 $table.attr('border', options.tableBorderWidth);
-                                //$table.css({border: options.tableBorderWidth + 'pt'});
                             }
 
                             if (options.tableCellPadding !== undefined) {
                                 $table.attr('cellpadding', options.tableCellPadding);
-                            }
+                            }*/
 
                             $table.css({
                                 width: '100%',
                                 borderCollapse: 'collapse',
-                                borderSpacing: 0,
+                                //borderSpacing: 0,
                             });
 
                             if (options && options.tableClassName) {

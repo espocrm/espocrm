@@ -30,5 +30,6 @@ import WysiwygFieldView from 'views/fields/wysiwyg';
 
 export default class extends WysiwygFieldView {
 
+    htmlPurificationForEditDisabled = true
     handlebars = true
 }

@@ -87,6 +87,10 @@ class HtmlComposer
                 font-size: {$fontSize}pt;
             }
 
+            table.bordered, table.bordered td, table.bordered th {
+                border: 1px solid;
+            }
+
             > header {
                 position: fixed;
                 margin-top: -{$topMargin}mm;

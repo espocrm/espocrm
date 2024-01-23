@@ -1615,104 +1615,7 @@ table.less-padding td.cell[data-name="buttons"] > .btn-group {
     right: -11px;
 }
 
-.panel.note-editor {
-    margin-bottom: 0;
 
-    .note-toolbar {
-        border-bottom: 0 !important;
-        background-color: transparent;
-
-        > .btn-group {
-            margin-bottom: 5px;
-            .btn {
-                margin-bottom: 0;
-            }
-        }
-    }
-
-    &.panel-default {
-        > .panel-heading .btn-default {
-            background-color: @btn-default-bg !important;
-            border-color: @btn-default-border !important;
-        }
-    }
-
-    .panel-heading {
-        padding: 5px 5px 0 5px;
-        min-height: calc(30px + 10px);
-    }
-
-    .note-editable {
-        min-height: 39px;
-    }
-
-    &.note-frame {
-        .note-editing-area {
-            .note-editable {
-                background-color: var(--input-bg);
-                color: var(--input-color);
-
-                &[contenteditable="false"] {
-                    background-color: var(--text-color);
-                }
-            }
-        }
-
-        .note-statusbar {
-            background-color: var(--input-bg);
-            border-bottom-left-radius: var(--border-radius);
-            border-bottom-right-radius: var(--border-radius);
-            height: 8px;
-        }
-
-        output.note-status-output {
-            padding-top: 0;
-        }
-    }
-
-    .tooltip > .tooltip-inner {
-        border-radius: var(--dropdown-border-radius);
-    }
-}
-
-body .note-editor {
-    .panel-heading {
-        > .btn-group {
-            right: 0;
-            top: 0;
-
-            > .btn {
-                > i,
-                > span {
-                    position: relative;
-                    top: 1px;
-                }
-            }
-
-            > .btn-group {
-                > .btn {
-                    > i,
-                    > span {
-                        position: relative;
-                        top: 1px;
-                    }
-                }
-            }
-        }
-    }
-
-    &.codeview {
-        textarea.note-codable {
-            min-height: 400px;
-        }
-    }
-
-    .note-statusbar.locked {
-        .note-resizebar {
-            display: none;
-        }
-    }
-}
 
 .list > table thead > th {
     border-top-width: 1px !important;
@@ -2176,10 +2079,6 @@ div[data-scope="User"] .field[data-name="avatar"] {
 .link-container .list-group-item {
     padding: @padding-base-vertical @padding-base-horizontal;
     line-height: @line-height-computed;
-}
-
-.note-editable blockquote {
-    font-size: @font-size-base;
 }
 
 .legend-container > table {
@@ -3012,45 +2911,6 @@ table.table-admin-panel {
     }
 }
 
-.note-editor {
-    .note-toolbar.sticked {
-        z-index: 1;
-        position: fixed;
-        background-color: @panel-bg;
-    }
-
-    &.panel > .panel-heading {
-        .btn {
-            //border-bottom-width: 1px;
-            padding-top: 4px;
-            padding-bottom: 4px;
-        }
-
-        .dropdown-menu .btn-group > .btn {
-            > i {
-                top: 1px;
-                position: relative;
-            }
-        }
-    }
-
-    .note-editing-area {
-        ul,
-        ol {
-            margin-top: (@line-height-computed / 2);
-            margin-bottom: (@line-height-computed / 2);
-
-            &:first-child {
-                margin-top: 0;
-            }
-
-            &:last-child {
-                margin-bottom: 0;
-            }
-        }
-    }
-}
-
 .array-add-list-group > li {
     input[type="checkbox"] {
         margin-right: 12px;
@@ -3425,12 +3285,6 @@ a.close:hover {
     scrollbar-width: thin;
 }
 
-.wysiwyg-iframe-container.fallback {
-    border-radius: var(--border-radius);
-    overflow: hidden;
-    background-color: var(--white-color);
-}
-
 * {
     scrollbar-width: auto;
     scrollbar-color: var(--scroll-thumb-bg) var(--scroll-bg);
@@ -3703,9 +3557,8 @@ body > .autocomplete-suggestions.text-search-suggestions {
     }
 }
 
-
-
 @import "misc/kanban.less";
+@import "misc/wysiwyg.less";
 
 @import "elements/placement.less";
 @import "elements/site.less";
