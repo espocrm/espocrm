@@ -89,7 +89,7 @@ function init(langSets) {
                     let value;
 
                     if (isActivated) {
-                        value = prepareValue(aceEditor.getValue(), options.prettifyHtml) || EMPTY
+                        value = prepareValue(aceEditor.getValue()) || EMPTY
 
                         $editable.html(value);
                     }
@@ -109,16 +109,12 @@ function init(langSets) {
 
             const id = 'editor-' + Math.random().toString(36).substring(2, 17);
 
-            const prepareValue = (input, stripLinebreaks) => {
-                if (stripLinebreaks) {
-                    return input.replace(/[\n\r]/g, '');
-                }
-
+            const prepareValue = (input) => {
                 return input;
             };
 
-            const domHtml = (/** JQuery */$node) => {
-                return prepareValue($node.html());
+            const prepareHtml = (/** string */input) => {
+                return prepareValue(input);
             };
 
             const toggle = () => {
@@ -136,7 +132,7 @@ function init(langSets) {
 
                 $codable.addClass('hidden');
 
-                let value = prepareValue(aceEditor.getValue(), options.prettifyHtml) || EMPTY;
+                let value = prepareValue(aceEditor.getValue()) || EMPTY;
                 value = context.invoke('codeview.purify', value);
 
                 const isChange = $editable.html() !== value;
@@ -187,7 +183,9 @@ function init(langSets) {
 
                 $codable.removeClass('hidden');
 
-                requireAce().then(() => domHtml($editable)).then(/** string */html => {
+                requireAce().then(() => {
+                    const html = prepareHtml($editable.html());
+
                     aceEditor = ace.edit(id);
 
                     aceEditor.setValue(html);
