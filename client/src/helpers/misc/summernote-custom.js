@@ -117,28 +117,8 @@ function init(langSets) {
                 return input;
             };
 
-            const domHtml = (/** JQuery */$node, isNewlineOnBlock) => {
-                let markup = prepareValue($node.html());
-
-                if (isNewlineOnBlock) {
-                    return markup;
-                }
-
-                if (isNewlineOnBlock) {
-                    const regexTag = /<(\/?)(\b(?!!)[^>\s]*)(.*?)(\s*\/?>)/g;
-
-                    markup = markup.replace(regexTag, (match, endSlash, name) => {
-                        name = name.toUpperCase();
-                        const isEndOfInlineContainer = /^DIV|^TD|^TH|^P|^LI|^H[1-7]/.test(name) && !!endSlash;
-                        const isBlockNode = /^BLOCKQUOTE|^TABLE|^TBODY|^TR|^HR|^UL|^OL/.test(name);
-
-                        return match + (isEndOfInlineContainer || isBlockNode ? '\n' : '');
-                    });
-
-                    markup = markup.trim();
-                }
-
-                return markup;
+            const domHtml = (/** JQuery */$node) => {
+                return prepareValue($node.html());
             };
 
             const toggle = () => {
@@ -207,7 +187,7 @@ function init(langSets) {
 
                 $codable.removeClass('hidden');
 
-                requireAce().then(() => domHtml($editable, options.prettifyHtml)).then(/** string */html => {
+                requireAce().then(() => domHtml($editable)).then(/** string */html => {
                     aceEditor = ace.edit(id);
 
                     aceEditor.setValue(html);
