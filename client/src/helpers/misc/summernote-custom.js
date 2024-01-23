@@ -232,9 +232,12 @@ function init(langSets) {
                     aceEditor.getSession().setUseWorker(false);
                     aceEditor.commands.removeCommand('find');
                     aceEditor.setHighlightActiveLine(false);
-
                     aceEditor.focus();
-                    aceEditor.gotoLine(0, 0, false);
+
+                    try {
+                        aceEditor.gotoLine(0, 0, false);
+                    }
+                    catch (e) {}
 
                     aceEditor.on('blur', e => {
                         context.triggerEvent('blur.codeview', aceEditor.getValue(), e);
