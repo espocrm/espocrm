@@ -175,6 +175,9 @@ class WysiwygFieldView extends TextFieldView {
     setupToolbar() {
         this.buttons = {};
 
+        const codeviewName = this.getConfig().get('wysiwygCodeEditorDisabled') ?
+            'codeview' : 'aceCodeview';
+
         this.toolbar = this.params.toolbar || this.toolbar || [
             ['style', ['style']],
             ['style', ['bold', 'italic', 'underline', 'clear']],
@@ -183,7 +186,7 @@ class WysiwygFieldView extends TextFieldView {
             ['para', ['ul', 'ol', 'paragraph']],
             ['height', ['height']],
             ['table', ['espoTable', 'espoLink', 'espoImage', 'hr']],
-            ['misc', [/*'codeview', */'aceCodeview', 'fullscreen']],
+            ['misc', [codeviewName, 'fullscreen']],
         ];
 
         if (this.params.toolbar) {

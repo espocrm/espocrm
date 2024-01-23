@@ -286,5 +286,6 @@ return [
     'phoneNumberInternational' => true,
     'phoneNumberPreferredCountryList' => ['us', 'de'],
     'adminUpgradeDisabled' => false,
+    'wysiwygCodeEditorDisabled' => false,
     'isInstalled' => false,
 ];
