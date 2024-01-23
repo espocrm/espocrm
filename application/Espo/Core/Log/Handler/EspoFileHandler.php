@@ -97,7 +97,7 @@ class EspoFileHandler extends MonologStreamHandler
 
         $message = substr($record->message, 0, $this->maxErrorMessageLength) . '...';
 
-        $record = $record->with('message', $message);
+        $record = $record->with(message: $message);
 
         return $this->getFormatter()->format($record);
     }
