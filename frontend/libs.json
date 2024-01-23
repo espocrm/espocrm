@@ -173,13 +173,6 @@
         "amdId": "qrcodejs"
     },
     {
-        "src": "node_modules/js-beautify/js/lib/beautifier.js",
-        "dest": "client/lib/js-beautify.js",
-        "originalDest": "client/lib/original/js-beautify.js",
-        "amdId": "js-beautify",
-        "minify": true
-    },
-    {
         "name": "ace-builds",
         "files": [
             {

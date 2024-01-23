@@ -128,12 +128,6 @@
         "exportsTo": "window",
         "exportsAs": "QRCode"
     },
-    "js-beautify": {
-        "path": "client/lib/js-beautify.js",
-        "devPath": "client/lib/original/js-beautify.js",
-        "aliases": ["beautifier"],
-        "sourceMap": true
-    },
     "ace": {
         "path": "client/lib/ace.js",
         "exportsTo": "window",
