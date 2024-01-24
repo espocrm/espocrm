@@ -47,7 +47,7 @@
             <div class="text-soft center-align">Немає данних</div>
         {{/if}}
         <div class="abon-panel-buttons">
-            <button class="btn btn-sm btn-default btn-add" data-action="addTraining">
+            <button class="btn btn-sm btn-primary btn-add" data-action="addTraining">
                 <span class="fas fa-plus"></span>
                 Заняття
             </button>
