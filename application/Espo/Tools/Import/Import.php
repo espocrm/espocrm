@@ -655,20 +655,11 @@ class Import
             return;
         }
 
-        $foreignEntityType = $entity->getRelationParam($relation, 'entity');
-
-        $isPerson = false;
-
-        if ($foreignEntityType) {
-            $isPerson = $this->metadata
-                ->get(['entityDefs', $foreignEntityType, 'fields', 'name', 'type']) === 'personName';
-        }
-
-        if ($attribute !== $relation . 'Name') {
+        if ($entity->has($relation . 'Id') && $entity->isNew()) {
             return;
         }
 
-        if ($entity->has($relation . 'Id') && $entity->isNew()) {
+        if ($attribute !== $relation . 'Name') {
             return;
         }
 
@@ -690,13 +681,15 @@ class Import
             return;
         }
 
+        $foreignEntityType = $entity->getRelationParam($relation, 'entity');
+
+        $isPerson = $foreignEntityType &&
+            $this->getFieldType($foreignEntityType, 'name') === FieldType::PERSON_NAME;
+
+        $where = ['name' => $nameValue];
+
         if ($isPerson) {
             $where = $this->parsePersonName($nameValue, $this->params->getPersonNameFormat() ?? '');
-        }
-        else {
-            $where = [
-                'name' => $nameValue,
-            ];
         }
 
         $found = $this->entityManager
@@ -745,9 +738,9 @@ class Import
             $attributeType = $entity->getAttributeType($attribute);
 
             if ($value !== '') {
-                $type = $this->metadata->get(['entityDefs', $this->entityType, 'fields', $attribute, 'type']);
+                $type = $this->getFieldType($this->entityType, $attribute);
 
-                if ($attribute === 'emailAddress' && $type === 'email') {
+                if ($attribute === 'emailAddress' && $type === FieldType::EMAIL) {
                     $emailAddressData = $entity->get('emailAddressData');
                     $emailAddressData = $emailAddressData ?? [];
 
@@ -763,7 +756,7 @@ class Import
                     return;
                 }
 
-                if ($attribute === 'phoneNumber' && $type === 'phone') {
+                if ($attribute === 'phoneNumber' && $type === FieldType::PHONE) {
                     $phoneNumberData = $entity->get('phoneNumberData');
                     $phoneNumberData = $phoneNumberData ?? [];
 
@@ -839,7 +832,7 @@ class Import
 
         if (
             $entity->hasAttribute('phoneNumber') &&
-            $entity->getAttributeParam('phoneNumber', 'fieldType') === 'phone'
+            $entity->getAttributeParam('phoneNumber', 'fieldType') === FieldType::PHONE
         ) {
             $typeList = $this->metadata
                 ->get(['entityDefs', $this->entityType, 'fields', 'phoneNumber', 'typeList']) ?? [];
@@ -1317,5 +1310,14 @@ class Import
         }
 
         return $left;
+    }
+
+    private function getFieldType(string $entityType, string $field): ?string
+    {
+        return $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType)
+            ->tryGetField($field)
+            ?->getType();
     }
 }
