@@ -1,0 +1,35 @@
+{
+    "view": "custom:views/dashlets/income-board",
+    "aclScope": "Account",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar"
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "filters": {
+                "type": "text"
+            }
+        },
+        "defaults": {
+            "title": "Прибуток",
+            "filters": "{\"filters\": []}"
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"},
+                        {"name": "autorefreshInterval"}
+                    ],
+                    [
+                        {"name": "filters", "label": "Фільтри (JSON)"}
+                    ]
+                ]
+            }
+        ]
+    }
+}

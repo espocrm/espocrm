@@ -1,0 +1,48 @@
+{
+    "view": "custom:views/dashlets/budget-board",
+    "aclScope": "Account",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar"
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "object": {
+                "type": "varchar"
+            },
+            "priceFieldName": {
+                "type": "varchar"
+            },
+            "filters": {
+                "type": "text"
+            }
+        },
+        "defaults": {
+            "title": "Абонементи",
+            "branch": "Правий",
+            "object": "Abonement",
+            "priceFieldName": "price",
+            "filters": "{\"filters\": []}"
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"},
+                        {"name": "autorefreshInterval"}
+                    ],
+                    [
+                        {"name": "object", "label": "Сутність"},
+                        {"name": "priceFieldName", "label": "Назва поля для суми"}
+                    ],
+                    [
+                        {"name": "filters", "label": "Фільтри (JSON)"}
+                    ]
+                ]
+            }
+        ]
+    }
+}

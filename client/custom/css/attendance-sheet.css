@@ -63,6 +63,26 @@
     opacity: 0.2;
 }
 
+
+.income-container {
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+   height: 100%;
+}
+
+.income-result {
+    display: flex;
+    justify-content: center;
+}
+
+.income-result-details {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+}
+
+
 .lds-default {
     display: inline-block;
     position: absolute;
