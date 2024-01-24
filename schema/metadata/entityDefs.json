@@ -372,6 +372,10 @@
                             "field": {
                                 "type": "string",
                                 "description": "A field if the foreign entity type."
+                            },
+                            "relateOnImport": {
+                                "type": "boolean",
+                                "description": "When importing the field, a matching foreign record will be related with an imported record."
                             }
                         }
                     }

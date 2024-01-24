@@ -106,7 +106,8 @@
         "maxCount": "Maximum number of items allowed to be selected.",
         "displayAsList": "Each item in a new line.",
         "optionsVarchar": "A list of autocomplete values.",
-        "linkReadOnly": "Field value can't be specified by user. But can be calculated by formula.\n\nIt will also disable the ability to create a related record from relationship panels."
+        "linkReadOnly": "Field value can't be specified by user. But can be calculated by formula.\n\nIt will also disable the ability to create a related record from relationship panels.",
+        "relateOnImport": "When importing with this field, a matching foreign record will be automatically linked. Use this functionality when the foreign field is considered as unique."
     },
     "fieldParts": {
         "address": {

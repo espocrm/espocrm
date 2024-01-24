@@ -225,7 +225,8 @@
         "globalRestrictions": "Global Restrictions",
         "copyToClipboard": "Copy to clipboard button",
         "createButton": "Create Button",
-        "autocompleteOnEmpty": "Autocomplete on empty input"
+        "autocompleteOnEmpty": "Autocomplete on empty input",
+        "relateOnImport": "Relate on Import"
     },
     "strings" : {
         "rebuildRequired": "Rebuild is required"

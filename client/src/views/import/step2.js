@@ -289,59 +289,56 @@ class Step2ImportView extends View {
                 continue;
             }
 
-            const d = /** @type {Object.<string, *>} */fields[field];
+            const defs = /** @type {Object.<string, *>} */fields[field];
 
             if (
-                !~this.allowedFieldList.indexOf(field) &&
-                (d.disabled && !d.importNotDisabled || d.importDisabled)
+                !this.allowedFieldList.includes(field) &&
+                (defs.disabled && !defs.importNotDisabled || defs.importDisabled)
             ) {
                 continue;
             }
 
-            if (d.type === 'phone') {
-                attributeList
-                    .push(field);
+            if (defs.type === 'phone') {
+                attributeList.push(field);
 
-                (this.getMetadata().get('entityDefs.' + this.scope + '.fields.' + field + '.typeList') || [])
-                    .map((item) => {
-                        return item.replace(/\s/g, '_');
-                    })
-                    .forEach((item) => {
+                (this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}.typeList`) || [])
+                    .map(item => item.replace(/\s/g, '_'))
+                    .forEach(item => {
                         attributeList.push(field + Espo.Utils.upperCaseFirst(item));
                     });
 
                 continue;
             }
 
-            if (d.type === 'email') {
+            if (defs.type === 'email') {
                 attributeList.push(field + '2');
                 attributeList.push(field + '3');
                 attributeList.push(field + '4');
             }
 
-            if (d.type === 'link') {
+            if (defs.type === 'link') {
                 attributeList.push(field + 'Name');
                 attributeList.push(field + 'Id');
             }
 
-            if (~['foreign'].indexOf(d.type)) {
+            if (defs.type === 'foreign' && !defs.relateOnImport) {
                 continue;
             }
 
-            if (d.type === 'personName') {
+            if (defs.type === 'personName') {
                 attributeList.push(field);
             }
 
-            const type = d.type;
+            const type = defs.type;
             let actualAttributeList = this.getFieldManager().getActualAttributeList(type, field);
 
             if (!actualAttributeList.length) {
                 actualAttributeList = [field];
             }
 
-            actualAttributeList.forEach((f) => {
-                if (attributeList.indexOf(f) === -1) {
-                    attributeList.push(f);
+            actualAttributeList.forEach(it => {
+                if (attributeList.indexOf(it) === -1) {
+                    attributeList.push(it);
                 }
             });
         }

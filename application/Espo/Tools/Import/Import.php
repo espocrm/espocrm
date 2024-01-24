@@ -537,6 +537,7 @@ class Import
         }
 
         $this->processForeignNames($attributeList, $entity);
+        $this->processForeignFields($attributeList, $entity);
 
         try {
             $failureList = array_merge(
@@ -616,32 +617,39 @@ class Import
         return $result;
     }
 
-    private function processForeignName(CoreEntity $entity, string $attribute): void
+    private function processForeignAttribute(CoreEntity $entity, string $attribute): void
     {
-        $nameValue = $entity->get($attribute);
+        $value = $entity->get($attribute);
 
-        if ($nameValue === null) {
+        if ($value === null) {
             return;
         }
 
+        $foreignAttribute = $entity->getAttributeParam($attribute, 'foreign');
         $relation = $entity->getAttributeParam($attribute, 'relation');
 
         if (!$relation) {
             return;
         }
 
-        if ($entity->has($relation . 'Id') && $entity->isNew()) {
+        $idAttribute = $relation . 'Id';
+
+        if ($entity->isNew() && $entity->has($idAttribute)) {
             return;
         }
 
-        if ($attribute !== $relation . 'Name') {
+        if ($foreignAttribute === 'name' && $attribute !== $relation . 'Name') {
+            return;
+        }
+
+        if (!$entity->isNew() && $entity->isAttributeChanged($idAttribute)) {
             return;
         }
 
         if (
-            $entity->has($relation . 'Id') &&
             !$entity->isNew() &&
-            !$entity->isAttributeChanged($relation . 'Name')
+            $entity->has($idAttribute) &&
+            !$entity->isAttributeChanged($attribute)
         ) {
             return;
         }
@@ -658,24 +666,28 @@ class Import
 
         $foreignEntityType = $entity->getRelationParam($relation, 'entity');
 
-        $isPerson = $foreignEntityType &&
-            $this->getFieldType($foreignEntityType, 'name') === FieldType::PERSON_NAME;
+        if (!$foreignEntityType) {
+            return;
+        }
 
-        $where = ['name' => $nameValue];
+        $where = [$foreignAttribute => $value];
 
-        if ($isPerson) {
-            $where = $this->parsePersonName($nameValue, $this->params->getPersonNameFormat() ?? '');
+        if (
+            $foreignAttribute === 'name' &&
+            $this->getFieldType($foreignEntityType, $foreignAttribute) === FieldType::PERSON_NAME
+        ) {
+            $where = $this->parsePersonName($value, $this->params->getPersonNameFormat() ?? '');
         }
 
         $found = $this->entityManager
             ->getRDBRepository($foreignEntityType)
-            ->select(['id', 'name'])
+            ->select(['id', $foreignAttribute])
             ->where($where)
             ->findOne();
 
         if ($found) {
-            $entity->set($relation . 'Id', $found->getId());
-            $entity->set($relation . 'Name', $found->get('name'));
+            $entity->set($idAttribute, $found->getId());
+            //$entity->set($relation . 'Name', $found->get($foreignAttribute));
 
             //return;
         }
@@ -1296,6 +1308,16 @@ class Import
             ?->getType();
     }
 
+    /** @noinspection PhpSameParameterValueInspection */
+    private function getFieldParam(string $entityType, string $field, string $param): mixed
+    {
+        return $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType)
+            ->tryGetField($field)
+            ?->getParam($param);
+    }
+
     /**
      * @param string[] $attributeList
      * @param string[] $row
@@ -1334,7 +1356,30 @@ class Import
                 $entity->getAttributeType($attribute) === Entity::FOREIGN &&
                 $entity->getAttributeParam($attribute, 'foreign') === 'name'
             ) {
-                $this->processForeignName($entity, $attribute);
+                $this->processForeignAttribute($entity, $attribute);
+            }
+        }
+    }
+
+    /**
+     * @param string[] $attributeList
+     * @param CoreEntity $entity
+     */
+    private function processForeignFields(array $attributeList, CoreEntity $entity): void
+    {
+        foreach ($attributeList as $attribute) {
+            if (!$entity->hasAttribute($attribute)) {
+                continue;
+            }
+
+            assert($this->entityType !== null);
+
+            if (
+                $entity->getAttributeType($attribute) === Entity::FOREIGN &&
+                $entity->getAttributeParam($attribute, 'foreign') !== 'name' &&
+                $this->getFieldParam($this->entityType, $attribute, 'relateOnImport')
+            ) {
+                $this->processForeignAttribute($entity, $attribute);
             }
         }
     }

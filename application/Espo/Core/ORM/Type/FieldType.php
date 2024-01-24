@@ -56,4 +56,5 @@ class FieldType
     public const IMAGE = 'image';
     public const LINK_MULTIPLE = 'linkMultiple';
     public const ATTACHMENT_MULTIPLE = 'attachmentMultiple';
+    public const FOREIGN = 'foreign';
 }
