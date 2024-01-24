@@ -84,6 +84,29 @@
         },
         "assignedUser": {
             "required": true
+        },
+        "oldId": {
+            "type": "varchar",
+            "maxLength": 100,
+            "options": [],
+            "isCustom": true
+        },
+        "oldParentPhone": {
+            "type": "varchar",
+            "maxLength": 20,
+            "options": [],
+            "isCustom": true
+        },
+        "oldRemoved": {
+            "notNull": true,
+            "type": "bool",
+            "isCustom": true
+        },
+        "oldCreatedAt": {
+            "notNull": false,
+            "type": "datetime",
+            "minuteStep": 30,
+            "isCustom": true
         }
     },
     "links": {

@@ -26,6 +26,11 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
                     this.getCollectionFactory().create('Hall')
                         .then(collection => {
                             collection.maxSize = 10000;
+                            collection.where = [{
+                                "type": "linkedWith",
+                                "attribute": "teams",
+                                "value": this.getUser().attributes.teamsIds
+                            }];
                             return collection.fetch();
                         })
                         .then(halls => {
@@ -60,24 +65,6 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
                     activityTableRow.classList.add('text-warning');
                 }
             }
-        },
-
-        getTrainingsWhere: function() {
-            const trainingsWhereClauses = [];
-            trainingsWhereClauses.push({
-                "type": "equals",
-                "attribute": "startDateOnly",
-                "value": this.activityDate 
-            });
-            //if superadmin, reduce by teamIds
-            if (this.getUser().attributes.type === 'admin') {
-                trainingsWhereClauses.push({
-                    "type": "linkedWith",
-                    "attribute": "teams",
-                    "value": this.getUser().attributes.teamsIds
-                });
-            }
-            return trainingsWhereClauses;
         },
 
         handleAction: function(e) {
@@ -166,22 +153,8 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
         filterActivities: function() {
             this.getCollectionFactory().create('Training')
                 .then(collection => {
-                    const conditionDate = {
-                        "type": "equals",
-                        "attribute": "startDateOnly",
-                        "value": this.activityDate
-                    };
-                    const conditionHall = {
-                        "type": "equals",
-                        "attribute": "hallId",
-                        "value": this.activityHall,
-                    };
-                    const conditions = [ conditionDate ];
-                    if (this.activityHall !== 'all') {
-                        conditions.push(conditionHall);
-                    }
                     collection.maxSize = 10000;
-                    collection.where = conditions;
+                    collection.where = this.getTrainingsWhere();
                     return collection.fetch();
                 })
                 .then(trainings => {
@@ -191,6 +164,31 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
                 .catch((error) => {
                     console.error(error);
                 });
+        },
+
+        getTrainingsWhere: function() {
+            const trainingsWhereClauses = [];
+            trainingsWhereClauses.push({
+                "type": "equals",
+                "attribute": "startDateOnly",
+                "value": this.activityDate 
+            });
+            if (this.activityHall !== 'all') {
+                trainingsWhereClauses.push({
+                    "type": "equals",
+                    "attribute": "hallId",
+                    "value": this.activityHall,
+                });
+            }
+            //if superadmin, reduce by teamIds
+            if (this.getUser().attributes.type === 'admin') {
+                trainingsWhereClauses.push({
+                    "type": "linkedWith",
+                    "attribute": "teams",
+                    "value": this.getUser().attributes.teamsIds
+                });
+            }
+            return trainingsWhereClauses;
         },
 
         setActivities: function(records) {

@@ -36,7 +36,7 @@
                         <td>{{this.assignedUserName}}</td>
                         <td>{{this.timeDuration}}</td>
                         <td class="text-muted">
-                            <span title="Редагувати" class="training-edit fas fa-pen-square" 
+                            <span title="Редагувати" class="fas fa-pen-square highlight" 
                                 data-training-id={{this.id}} data-action="editTraining">
                             </span>
                         </td>
@@ -47,7 +47,7 @@
             <div class="text-soft center-align">Немає данних</div>
         {{/if}}
         <div class="abon-panel-buttons">
-            <button class="btn btn-sm btn-default btn-add" data-action="addTraining">
+            <button class="btn btn-sm btn-primary btn-add" data-action="addTraining">
                 <span class="fas fa-plus"></span>
                 Заняття
             </button>

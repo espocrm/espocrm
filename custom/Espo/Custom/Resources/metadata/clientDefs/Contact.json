@@ -18,5 +18,15 @@
     },
     "kanbanViewMode": false,
     "color": "#a4c5e0",
-    "iconClass": "fas fa-id-badge"
+    "iconClass": "fas fa-id-badge",
+    "dynamicLogic": {
+        "options": {
+            "oldId": [
+                {
+                    "optionList": [],
+                    "conditionGroup": null
+                }
+            ]
+        }
+    }
 }
