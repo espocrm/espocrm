@@ -41,9 +41,11 @@ use const E_USER_DEPRECATED;
  */
 class Config
 {
+    private string $systemConfigPath = 'application/Espo/Resources/defaults/systemConfig.php';
     private string $configPath = 'data/config.php';
     private string $internalConfigPath = 'data/config-internal.php';
-    private string $systemConfigPath = 'application/Espo/Resources/defaults/systemConfig.php';
+    private string $overrideConfigPath = 'data/config-override.php';
+    private string $internalOverrideConfigPath = 'data/config-internal-override.php';
     private string $cacheTimestamp = 'cacheTimestamp';
     /** @var string[] */
     protected $associativeArrayAttributeList = [
@@ -52,6 +54,7 @@ class Config
         'logger',
         'defaultPermissions',
     ];
+
     /** @var ?array<string, mixed> */
     private $data = null;
     /** @var array<string, mixed> */
@@ -227,6 +230,7 @@ class Config
         $values = $this->changedData;
 
         if (!isset($values[$this->cacheTimestamp])) {
+            /** @noinspection PhpDeprecationInspection */
             $values = array_merge($this->updateCacheTimestamp(true) ?? [], $values);
         }
 
@@ -235,7 +239,7 @@ class Config
         $configPath = $this->getConfigPath();
 
         if (!$this->fileManager->isFile($configPath)) {
-            throw new RuntimeException("Config file '{$configPath}' is not found.");
+            throw new RuntimeException("Config file '$configPath' is not found.");
         }
 
         $data = include($configPath);
@@ -274,7 +278,7 @@ class Config
 
     private function isLoaded(): bool
     {
-        return isset($this->data) && !empty($this->data);
+        return !empty($this->data);
     }
 
     /**
@@ -294,24 +298,63 @@ class Config
     private function load(): void
     {
         $systemData = $this->fileManager->getPhpContents($this->systemConfigPath);
+        $data = $this->readFile($this->configPath);
+        $internalData = $this->readFile($this->internalConfigPath);
+        $overrideData = $this->readFile($this->overrideConfigPath);
+        $internalOverrideData = $this->readFile($this->internalOverrideConfigPath);
 
-        $data = $this->fileManager->isFile($this->configPath) ?
-            $this->fileManager->getPhpContents($this->configPath) : [];
-
-        $internalData = $this->fileManager->isFile($this->internalConfigPath) ?
-            $this->fileManager->getPhpContents($this->internalConfigPath) : [];
-
-        /** @var array<string, mixed> $mergedData */
-        $mergedData = Util::merge(
-            Util::merge($systemData, $data),
-            $internalData
+        $this->data = $this->mergeData(
+            $systemData,
+            $data,
+            $internalData,
+            $overrideData,
+            $internalOverrideData
         );
 
-        $this->data = $mergedData;
-
-        $this->internalParamList = array_keys($internalData);
+        $this->internalParamList = array_values(array_merge(
+            array_keys($internalData),
+            array_keys($internalOverrideData)
+        ));
 
         $this->fileManager->setConfig($this);
+    }
+
+    /**
+     * @param array<string, mixed> $systemData
+     * @param array<string, mixed> $data
+     * @param array<string, mixed> $internalData
+     * @param array<string, mixed> $overrideData
+     * @param array<string, mixed> $internalOverrideData
+     * @return array<string, mixed>
+     */
+    private function mergeData(
+        array $systemData,
+        array $data,
+        array $internalData,
+        array $overrideData,
+        array $internalOverrideData
+    ): array {
+
+        /** @var array<string, mixed> $mergedData */
+        $mergedData = Util::merge($systemData, $data);
+
+        /** @var array<string, mixed> $mergedData */
+        $mergedData = Util::merge($mergedData, $internalData);
+
+        /** @var array<string, mixed> $mergedData */
+        $mergedData = Util::merge($mergedData, $overrideData);
+
+        /** @var array<string, mixed> */
+        return Util::merge($mergedData, $internalOverrideData);
+    }
+
+    /**
+     * @return array<string, mixed>
+     */
+    private function readFile(string $path): array
+    {
+        return $this->fileManager->isFile($path) ?
+            $this->fileManager->getPhpContents($path) : [];
     }
 
     /**
@@ -348,9 +391,11 @@ class Config
     public function setData($data)
     {
         if (is_object($data)) {
+            /** @noinspection PhpParamsInspection */
             $data = get_object_vars($data);
         }
 
+        /** @noinspection PhpDeprecationInspection */
         $this->set($data);
     }
 
@@ -368,6 +413,7 @@ class Config
             return $timestamp;
         }
 
+        /** @noinspection PhpDeprecationInspection */
         $this->set($timestamp);
 
         return null;

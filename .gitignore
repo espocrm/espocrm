@@ -5,6 +5,8 @@
 /data/.backup/*
 /data/config.php
 /data/config-internal.php
+/data/config-override.php
+/data/config-internal-override.php
 /data/tmp/*
 /build
 /node_modules

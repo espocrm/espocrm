@@ -29,21 +29,19 @@
 
 namespace tests\unit\Espo\Core\Utils;
 
+use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
 
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigFileManager;
 
-class ConfigTest extends \PHPUnit\Framework\TestCase
+class ConfigTest extends TestCase
 {
     private ?Config $config = null;
 
     private $defaultTestConfig = 'tests/unit/testData/Utils/Config/config.php';
-
     private $configPath = 'tests/unit/testData/cache/config.php';
-
     private $systemConfigPath = 'tests/unit/testData/Utils/Config/systemConfig.php';
-
     private $internalConfigPath = 'tests/unit/testData/cache/config-internal.php';
 
     protected function setUp(): void
@@ -64,7 +62,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->reflection->setProperty('internalConfigPath', $this->internalConfigPath);
     }
 
-    protected function tearDown() : void
+    protected function tearDown(): void
     {
         $this->config = NULL;
     }
@@ -116,7 +114,15 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
         $fileManager
             ->method('isFile')
-            ->willReturn(true);
+            ->will(
+                $this->returnValueMap([
+                    ['data/config.php', true],
+                    ['data/config-internal.php', true],
+                    ['application/Espo/Resources/defaults/systemConfig.php', true],
+                    ['data/config-override.php', false],
+                    ['data/config-internal-override.php', false],
+                ])
+            );
 
         $data = [
             'test1' => '1',
@@ -147,9 +153,9 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('2', $config->get('test2'));
         $this->assertEquals('3', $config->get('test3'));
 
-        $this->assertEquals(false, $config->isInternal('test1'));
-        $this->assertEquals(true, $config->isInternal('test2'));
-        $this->assertEquals(false, $config->isInternal('test3'));
+        $this->assertFalse($config->isInternal('test1'));
+        $this->assertTrue($config->isInternal('test2'));
+        $this->assertFalse($config->isInternal('test3'));
 
         $this->assertEquals(
             (object) [
@@ -166,7 +172,15 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
         $fileManager
             ->method('isFile')
-            ->willReturn(true);
+            ->will(
+                $this->returnValueMap([
+                    ['data/config.php', true],
+                    ['data/config-internal.php', true],
+                    ['application/Espo/Resources/defaults/systemConfig.php', true],
+                    ['data/config-override.php', false],
+                    ['data/config-internal-override.php', false],
+                ])
+            );
 
         $data = [
             'a' => [
@@ -195,7 +209,6 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
                 ])
             );
 
-
         $config = new Config($fileManager);
 
         $this->assertEquals(['1' => 'a1'], $config->get('a'));
@@ -209,5 +222,76 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($config->has('a'));
         $this->assertFalse($config->has('0'));
+    }
+
+    public function testGetWithOverride(): void
+    {
+        $fileManager = $this->createMock(ConfigFileManager::class);
+
+        $fileManager
+            ->method('isFile')
+            ->will(
+                $this->returnValueMap([
+                    ['application/Espo/Resources/defaults/systemConfig.php', true],
+                    ['data/config.php', true],
+                    ['data/config-internal.php', true],
+                    ['data/config-override.php', true],
+                    ['data/config-internal-override.php', true],
+                ])
+            );
+
+        $dataSystem = [];
+
+        $data = [
+            'a' => 'a',
+            'c' => 'c',
+            'b' => 'b0',
+        ];
+
+        $dataInternal = [
+            'b' => 'b0',
+            'e' => 'e0',
+        ];
+
+        $dataOverride = [
+            'c' => 'c1',
+        ];
+
+        $dataInternalOverride = [
+            'e' => 'e1',
+            'h' => 'h1',
+        ];
+
+        $fileManager
+            ->method('getPhpContents')
+            ->will(
+                $this->returnValueMap([
+                    ['application/Espo/Resources/defaults/systemConfig.php', $dataSystem],
+                    ['data/config.php', $data],
+                    ['data/config-internal.php', $dataInternal],
+                    ['data/config-override.php', $dataOverride],
+                    ['data/config-internal-override.php', $dataInternalOverride],
+                ])
+            );
+
+        $config = new Config($fileManager);
+
+        $this->assertEquals('a', $config->get('a'));
+
+        $this->assertEquals('c1', $config->get('c'));
+        $this->assertEquals('e1', $config->get('e'));
+        $this->assertEquals('h1', $config->get('h'));
+
+        $this->assertFalse($config->isInternal('c'));
+        $this->assertTrue($config->isInternal('e'));
+        $this->assertTrue($config->isInternal('h'));
+        $this->assertTrue($config->isInternal('b'));
+
+        $nonInternalData = $config->getAllNonInternalData();
+
+        $this->assertTrue(isset($nonInternalData->a));
+        $this->assertTrue(isset($nonInternalData->c));
+        $this->assertFalse(isset($nonInternalData->e));
+        $this->assertFalse(isset($nonInternalData->h));
     }
 }
