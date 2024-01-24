@@ -62,7 +62,7 @@ define('custom:views/attendance-sheet/trainings-panel', ['view'],  function (Dep
             if (this.selectedActivityId) {
                 const activityTableRow = this.$el.find(`tr[data-training-id=${this.selectedActivityId}]`)[0];
                 if (activityTableRow) {
-                    activityTableRow.classList.add('text-warning');
+                    activityTableRow.classList.add('training-selected');
                 }
             }
         },
