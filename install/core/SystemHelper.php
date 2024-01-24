@@ -27,20 +27,18 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-class SystemHelper extends \Espo\Core\Utils\System
+use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\File\Permission;
+use Espo\Core\Utils\System;
+
+class SystemHelper extends System
 {
     protected $config;
-
     protected $mainConfig;
-
     protected $apiPath;
-
     protected $modRewriteUrl = '/';
-
     protected $writableDir = 'data';
-
     protected $combineOperator = '&&';
-
     protected $writableMap;
 
     public function __construct()
@@ -53,17 +51,8 @@ class SystemHelper extends \Espo\Core\Utils\System
 
         $this->apiPath = $this->config['apiPath'];
 
-        $permission = new \Espo\Core\Utils\File\Permission(new \Espo\Core\Utils\File\Manager());
+        $permission = new Permission(new Manager());
         $this->writableMap = $permission->getWritableMap();
-    }
-
-    protected function getMainConfig($optionName, $returns = null)
-    {
-        if (isset($this->mainConfig[$optionName])) {
-            return $this->mainConfig[$optionName];
-        }
-
-        return $returns;
     }
 
     public function initWritable()
@@ -102,9 +91,7 @@ class SystemHelper extends \Espo\Core\Utils\System
             $pageUrl .= $_SERVER["SERVER_NAME"].":".$_SERVER["SERVER_PORT"].$_SERVER["REQUEST_URI"];
         }
 
-        $baseUrl = str_ireplace('/install/index.php', '', $pageUrl);
-
-        return $baseUrl;
+        return str_ireplace('/install/index.php', '', $pageUrl);
     }
 
     public function getApiPath()
@@ -209,12 +196,19 @@ class SystemHelper extends \Espo\Core\Utils\System
      * @param  bool  $isFile
      * @return string
      */
-    public function getPermissionCommands($path, $permissions = ['644', '755'], $isSudo = false, $isFile = null, $changeOwner = true, $isCd = true)
-    {
+    public function getPermissionCommands(
+        $path,
+        $permissions = ['644', '755'],
+        $isSudo = false,
+        $isFile = null,
+        $changeOwner = true,
+        $isCd = true
+    ) {
         if (is_string($path)) {
             $path = array_fill(0, 2, $path);
         }
-        list($chmodPath, $chownPath) = $path;
+
+        [$chmodPath, $chownPath] = $path;
 
         $commands = array();
 
@@ -226,11 +220,13 @@ class SystemHelper extends \Espo\Core\Utils\System
 
         $pathList = [];
         $recursivePathList = [];
+
         foreach ($chmodPath as $pathItem) {
             if (isset($this->writableMap[$pathItem]) && !$this->writableMap[$pathItem]['recursive']) {
                 $pathList[] = $pathItem;
                 continue;
             }
+
             $recursivePathList[] = $pathItem;
         }
 
@@ -248,6 +244,7 @@ class SystemHelper extends \Espo\Core\Utils\System
                 $commands[] = $chown;
             }
         }
+
         return implode(' ' . $this->combineOperator . ' ', $commands).';';
     }
 
