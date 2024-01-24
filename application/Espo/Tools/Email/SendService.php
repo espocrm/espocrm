@@ -469,15 +469,21 @@ class SendService
             $params = $this->applyUserHandler($user, $params, $fromAddress);
         }
 
-        $emailSender = $this->emailSender;
-
         try {
-            $emailSender
+            $this->emailSender
                 ->withSmtpParams($params)
                 ->send($email);
         }
         catch (Exception $e) {
             $this->log->warning("Email sending:" . $e->getMessage() . "; " . $e->getCode());
+
+            if ($e instanceof SendingError) {
+                throw ErrorSilent::createWithBody(
+                    'sendingFail',
+                    Error\Body::create()
+                        ->withMessageTranslation($e->getMessage(), Email::ENTITY_TYPE)
+                );
+            }
 
             $errorData = ['message' => $e->getMessage()];
 

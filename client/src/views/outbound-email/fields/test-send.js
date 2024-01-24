@@ -98,14 +98,14 @@ define('views/outbound-email/fields/test-send', ['views/fields/base'], function 
 
                             Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
                         })
-                        .catch((xhr) => {
-                            var reason = xhr.getResponseHeader('X-Status-Reason') || '';
+                        .catch(xhr => {
+                            let reason = xhr.getResponseHeader('X-Status-Reason') || '';
 
                             reason = reason
                                 .replace(/ $/, '')
                                 .replace(/,$/, '');
 
-                            var msg = this.translate('Error');
+                            let msg = this.translate('Error');
 
                             if (xhr.status !== 200) {
                                 msg += ' ' + xhr.status;
@@ -113,7 +113,11 @@ define('views/outbound-email/fields/test-send', ['views/fields/base'], function 
 
                             if (xhr.responseText) {
                                 try {
-                                    var data = JSON.parse(xhr.responseText);
+                                    const data = /** @type {Record} */JSON.parse(xhr.responseText);
+
+                                    if (data.messageTranslation) {
+                                        return;
+                                    }
 
                                     reason = data.message || reason;
                                 }
@@ -129,7 +133,6 @@ define('views/outbound-email/fields/test-send', ['views/fields/base'], function 
                             }
 
                             Espo.Ui.error(msg, true);
-
                             console.error(msg);
 
                             xhr.errorIsHandled = true;
@@ -137,7 +140,6 @@ define('views/outbound-email/fields/test-send', ['views/fields/base'], function 
                             this.$el.find('button').removeClass('disabled');
                         }
                     );
-
                 });
             });
         },
