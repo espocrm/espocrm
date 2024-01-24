@@ -500,29 +500,15 @@ class Import
 
         $entity->set($params->getDefaultValues());
 
-        $valueMap = (object) [];
-
-        foreach ($attributeList as $i => $attribute) {
-            if (empty($attribute)) {
-                continue;
-            }
-
-            if (!array_key_exists($i, $row)) {
-                continue;
-            }
-
-            $value = $row[$i];
-            $valueMap->$attribute = $value;
-        }
+        $valueMap = $this->prepareRowValueMap($attributeList, $row);
 
         $failureList = [];
 
         foreach ($attributeList as $i => $attribute) {
-            if (empty($attribute)) {
-                continue;
-            }
-
-            if (!array_key_exists($i, $row)) {
+            if (
+                empty($attribute) ||
+                !array_key_exists($i, $row)
+            ) {
                 continue;
             }
 
@@ -550,18 +536,7 @@ class Import
             }
         }
 
-        foreach ($attributeList as $attribute) {
-            if (!$entity->hasAttribute($attribute)) {
-                continue;
-            }
-
-            if (
-                $entity->getAttributeType($attribute) === Entity::FOREIGN &&
-                $entity->getAttributeParam($attribute, 'foreign') === 'name'
-            ) {
-                $this->processForeignName($entity, $attribute);
-            }
-        }
+        $this->processForeignNames($attributeList, $entity);
 
         try {
             $failureList = array_merge(
@@ -1319,5 +1294,48 @@ class Import
             ->getEntity($entityType)
             ->tryGetField($field)
             ?->getType();
+    }
+
+    /**
+     * @param string[] $attributeList
+     * @param string[] $row
+     */
+    private function prepareRowValueMap(array $attributeList, array $row): stdClass
+    {
+        $valueMap = (object) [];
+
+        foreach ($attributeList as $i => $attribute) {
+            if (empty($attribute)) {
+                continue;
+            }
+
+            if (!array_key_exists($i, $row)) {
+                continue;
+            }
+
+            $valueMap->$attribute = $row[$i];
+        }
+
+        return $valueMap;
+    }
+
+    /**
+     * @param string[] $attributeList
+     * @param CoreEntity $entity
+     */
+    private function processForeignNames(array $attributeList, CoreEntity $entity): void
+    {
+        foreach ($attributeList as $attribute) {
+            if (!$entity->hasAttribute($attribute)) {
+                continue;
+            }
+
+            if (
+                $entity->getAttributeType($attribute) === Entity::FOREIGN &&
+                $entity->getAttributeParam($attribute, 'foreign') === 'name'
+            ) {
+                $this->processForeignName($entity, $attribute);
+            }
+        }
     }
 }
