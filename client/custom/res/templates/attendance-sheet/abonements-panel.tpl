@@ -62,13 +62,13 @@
                                 {{#if this.isFreezed}}
                                     <span class="label label-info">Заморожений</span>
                                 {{/if}}
-                                {{#if this.note}}
-                                    <span title="Переглянути замітку" data-id={{this.id}} class="cp text-muted fas fa-exclamation-circle"></span>
-                                {{/if}}
                             </td>
                             <td class="nowrap">
                                 <span title="Переглянути відмітки" data-id={{this.id}} class="cp highlight text-muted far fa-calendar"></span>
                                 <span title="Оновити" class="btn-add cp highlight text-muted fas fa-sync-alt" data-id={{this.id}} data-action="recalculate"></span>
+                                {{#if this.note}}
+                                    <span title="Переглянути замітку" data-id={{this.id}} class="cp highlight text-muted far fa-sticky-note"></span>
+                                {{/if}}
                             </td>
                         </tr>
                     {{/each}}
@@ -105,16 +105,13 @@
                                 {{#if this.isFreezed}}
                                     <span class="label label-info">Заморожений</span>
                                 {{/if}}
-                                {{#if this.note}}
-                                    <span title="Переглянути замітку" data-id={{this.id}} class="cp text-muted fas fa-exclamation-circle"></span>
-                                {{/if}}
-                                {{#if this.note}}
-                                    <span title="Переглянути замітку" data-id={{this.id}} class="cp text-muted fas fa-exclamation-circle"></span>
-                                {{/if}}
                             </td>
                             <td class="nowrap">
                                 <span title="Переглянути відмітки" data-id={{this.id}} class="floating-view cp highlight text-muted far fa-calendar"></span>
                                 <span title="Оновити" class="btn-add cp highlight text-muted fas fa-sync-alt" data-id={{this.id}} data-action="recalculateOther"></span>
+                                 {{#if this.note}}
+                                    <span title="Переглянути замітку" data-id={{this.id}} class="cp highlight text-muted far fa-sticky-note"></span>
+                                {{/if}}
                             </td>
                         </tr>
                     {{/each}}

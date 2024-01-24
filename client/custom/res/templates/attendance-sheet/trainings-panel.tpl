@@ -36,7 +36,7 @@
                         <td>{{this.assignedUserName}}</td>
                         <td>{{this.timeDuration}}</td>
                         <td class="text-muted">
-                            <span title="Редагувати" class="training-edit fas fa-pen-square" 
+                            <span title="Редагувати" class="fas fa-pen-square highlight" 
                                 data-training-id={{this.id}} data-action="editTraining">
                             </span>
                         </td>

@@ -19,7 +19,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
 
         initHandlers: function() {
             this.addHandler('click', ".mark", 'handleMark');
-            this.addHandler('click', ".fa-exclamation-circle", 'handleShowNote');
+            this.addHandler('click', ".fa-sticky-note", 'handleShowNote');
             this.addHandler('click', ".abon-name", 'handleEditAbon');
             this.addHandler('click', ".other-group", 'handleEditAbonOtherGroups');
             this.addHandler('click', ".btn-add", "handleAddButton");
@@ -474,11 +474,13 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 this.$el.find(`input[data-abonement-id=${abonementId}]`)[0].checked = false;
                 return;
             }
+            /*
             if (this.isOutdate(abon)) {
                 Espo.Ui.error('Абонемент більше не діє: ' + abon.endDate);
                 this.$el.find(`input[data-abonement-id=${abon.id}]`)[0].checked = false;
                 return;
             }
+            */
             if (abon.classesLeft <= 0) {
                 Espo.Ui.error('В абонементі більше немає занять');
                 this.$el.find(`input[data-abonement-id=${abonementId}]`)[0].checked = false;
@@ -521,11 +523,13 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 this.$el.find(`input[data-mark-id=${ markId }]`)[0].checked = true;
                 return;
             }
+            /*
             if (this.isOutdate(abon)) {
                 Espo.Ui.error('Абонемент більше не діє: ' + abon.endDate);
                 this.$el.find(`input[data-mark-id=${ markId }]`)[0].checked = true;
                 return;
             }
+            */
             this.isLoading(true);
             fetch(`/api/v1/Mark/${markId}`, {
                 method: 'DELETE',
@@ -552,11 +556,13 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         deleteFloatingMark: function(e) {
             const markId = e.target.dataset.markId;
             const abon = this.otherGroupsAbons.list.find(abon => abon.mark.id == markId);
+            /*
             if (this.isOutdate(abon)) {
                 Espo.Ui.error('Абонемент більше не діє: ' + abon.endDate);
                 this.$el.find(`input[data-mark-id=${ markId }]`)[0].checked = true;
                 return;
             }
+            */
             this.isLoading(true);
             fetch(`/api/v1/Mark/${markId}`, {
                 method: 'DELETE',
