@@ -33,6 +33,12 @@ class OidcLoginHandler extends LoginHandler {
 
     /** @inheritDoc */
     process() {
+        const proxy = window.open(
+            'about:blank',
+            'ConnectWithOAuth',
+            'location=0,status=0,width=800,height=800'
+        );
+
         Espo.Ui.notify(' ... ');
 
         return new Promise((resolve, reject) => {
@@ -40,7 +46,7 @@ class OidcLoginHandler extends LoginHandler {
                 .then(data => {
                     Espo.Ui.notify(false);
 
-                    this.processWithData(data)
+                    this.processWithData(data, proxy)
                         .then(info => {
                             const code = info.code;
                             const nonce = info.nonce;
@@ -56,12 +62,14 @@ class OidcLoginHandler extends LoginHandler {
                             resolve(headers);
                         })
                         .catch(() => {
+                            proxy.close();
                             reject();
                         });
                 })
                 .catch(() => {
                     Espo.Ui.notify(false)
 
+                    proxy.close();
                     reject();
                 });
         });
@@ -78,9 +86,10 @@ class OidcLoginHandler extends LoginHandler {
      *  prompt: 'login'|'consent'|'select_account',
      *  maxAge: ?Number,
      * }} data
+     * @param {WindowProxy} proxy
      * @return {Promise<{code: string, nonce: string}>}
      */
-    processWithData(data) {
+    processWithData(data, proxy) {
         const state = (Math.random() + 1).toString(36).substring(7);
         const nonce = (Math.random() + 1).toString(36).substring(7);
 
@@ -109,7 +118,7 @@ class OidcLoginHandler extends LoginHandler {
 
         const url = data.endpoint + '?' + partList.join('&');
 
-        return this.processWindow(url, state, nonce);
+        return this.processWindow(url, state, nonce, proxy);
     }
 
     /**
@@ -117,10 +126,11 @@ class OidcLoginHandler extends LoginHandler {
      * @param {string} url
      * @param {string} state
      * @param {string} nonce
+     * @param {WindowProxy} proxy
      * @return {Promise<{code: string, nonce: string}>}
      */
-    processWindow(url, state, nonce) {
-        const proxy = window.open(url, 'ConnectWithOAuth', 'location=0,status=0,width=800,height=800');
+    processWindow(url, state, nonce, proxy) {
+        proxy.location.href = url;
 
         return new Promise((resolve, reject) => {
             const fail = () => {
