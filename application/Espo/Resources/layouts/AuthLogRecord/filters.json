@@ -1,9 +1,12 @@
 [
     "username",
+    "user",
     "ipAddress",
     "authenticationMethod",
     "createdAt",
     "portal",
     "requestUrl",
-    "denialReason"
+    "denialReason",
+    "isDenied",
+    "authTokenIsActive"
 ]

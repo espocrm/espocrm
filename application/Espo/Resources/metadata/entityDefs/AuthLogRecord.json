@@ -72,8 +72,7 @@
     "links": {
         "user": {
             "type": "belongsTo",
-            "entity": "User",
-            "noJoin": true
+            "entity": "User"
         },
         "portal": {
             "type": "belongsTo",
