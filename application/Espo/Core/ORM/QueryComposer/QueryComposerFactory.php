@@ -31,6 +31,7 @@ namespace Espo\Core\ORM\QueryComposer;
 
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
+use Espo\ORM\EventDispatcher;
 use Espo\ORM\QueryComposer\Part\FunctionConverterFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\PDO\PDOProvider;
@@ -49,7 +50,8 @@ class QueryComposerFactory implements \Espo\ORM\QueryComposer\QueryComposerFacto
         private PDOProvider $pdoProvider,
         private OrmMetadata $ormMetadata,
         private EntityFactory $entityFactory,
-        private FunctionConverterFactory $functionConverterFactory
+        private FunctionConverterFactory $functionConverterFactory,
+        private EventDispatcher $eventDispatcher
     ) {}
 
     public function create(string $platform): QueryComposer
@@ -73,6 +75,7 @@ class QueryComposerFactory implements \Espo\ORM\QueryComposer\QueryComposerFacto
             ->bindInstance(OrmMetadata::class, $this->ormMetadata)
             ->bindInstance(EntityFactory::class, $this->entityFactory)
             ->bindInstance(FunctionConverterFactory::class, $this->functionConverterFactory)
+            ->bindInstance(EventDispatcher::class, $this->eventDispatcher)
             ->build();
 
         return $this->injectableFactory->createWithBinding($className, $bindingContainer);

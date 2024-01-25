@@ -115,6 +115,7 @@ class EntityManagerFactory
             BindingContainerBuilder::create()
                 ->bindInstance(PDOProvider::class, $pdoProvider)
                 ->bindInstance(Metadata::class, $metadata)
+                ->bindInstance(EventDispatcher::class, $this->eventDispatcher)
                 ->bindInstance(EntityFactoryInterface::class, $entityFactory)
                 ->bindInstance(FunctionConverterFactoryInterface::class, $functionConverterFactory)
                 ->build()

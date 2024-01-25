@@ -32,6 +32,7 @@ namespace Espo\ORM\QueryComposer;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\BaseEntity;
+use Espo\ORM\EventDispatcher;
 use Espo\ORM\Metadata;
 use Espo\ORM\Mapper\Helper;
 use Espo\ORM\Query\Part\Expression;
@@ -198,7 +199,8 @@ abstract class BaseQueryComposer implements QueryComposer
         PDO $pdo,
         EntityFactory $entityFactory,
         Metadata $metadata,
-        ?FunctionConverterFactory $functionConverterFactory = null
+        ?FunctionConverterFactory $functionConverterFactory = null,
+        ?EventDispatcher $eventDispatcher = null
     ) {
         $this->entityFactory = $entityFactory;
         $this->pdo = $pdo;
@@ -206,6 +208,8 @@ abstract class BaseQueryComposer implements QueryComposer
         $this->functionConverterFactory = $functionConverterFactory;
 
         $this->helper = new Helper($metadata);
+
+        $eventDispatcher?->subscribeToMetadataUpdate(fn () => $this->seedCache = []);
     }
 
     protected function quoteIdentifier(string $string): string
