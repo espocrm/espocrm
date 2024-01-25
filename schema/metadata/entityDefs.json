@@ -191,6 +191,51 @@
                                 "anyOf": [
                                     {"const": "varchar"},
                                     {"const": "enum"},
+                                    {"const": "multiEnum"},
+                                    {"const": "array"},
+                                    {"const": "checklist"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "optionsPath": {
+                                "type": "string",
+                                "description": "An options path. E.g. `entityDefs.SomeEntityType.fields.someField.options`."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "enum"},
+                                    {"const": "multiEnum"},
+                                    {"const": "array"},
+                                    {"const": "checklist"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "translation": {
+                                "type": "string",
+                                "description": "A translation path. E.g. `Global.scopeNames`."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "varchar"},
+                                    {"const": "enum"},
                                     {"const": "url"}
                                 ]
                             }
