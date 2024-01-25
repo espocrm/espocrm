@@ -5,6 +5,7 @@
 @import "elements/dropdown.less";
 @import "elements/form.less";
 @import "elements/table.less";
+@import "elements/alert.less";
 
 html {
     height: 100%;
@@ -123,49 +124,6 @@ input[type=radio]:focus-visible{
 
 .inline-edit-link + .control-label {
     max-width: calc(100% - 15px);
-}
-
-body .alert {
-    padding: 5px 18px;
-    min-height: 30px;
-    max-width: 400px;
-    height: auto;
-    border-bottom-left-radius: var(--border-radius);
-    border-bottom-right-radius: var(--border-radius);
-    box-shadow: var(--dropdown-box-shadow);
-
-    &.alert-closable {
-        .message {
-            width: ~"calc(100% - 16px)";
-            float: left;
-        }
-    }
-
-    .message {
-        word-break: break-word;
-    }
-
-    .close-container {
-        width: 16px;
-        float: right;
-
-        height: 16px;
-
-        .close {
-            right: -10px;
-            position: relative;
-            color: inherit;
-            text-shadow: none;
-            -webkit-opacity: none;
-            opacity: 1;
-
-            float: none;
-
-            &:hover {
-                opacity: 0.7;
-            }
-        }
-    }
 }
 
 .chevron-right {

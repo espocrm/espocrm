@@ -1,0 +1,46 @@
+body .alert {
+    padding: 10px 15px;
+    border-radius: var(--border-radius);
+
+    .message {
+        word-break: break-word;
+    }
+}
+
+body > .alert {
+    padding: 5px 18px;
+    min-height: 30px;
+    max-width: 400px;
+    height: auto;
+    border-radius: 0 0 var(--border-radius) var(--border-radius);
+    box-shadow: var(--dropdown-box-shadow);
+
+    &.alert-closable {
+        .message {
+            width: ~"calc(100% - 16px)";
+            float: left;
+        }
+    }
+
+    .close-container {
+        width: 16px;
+        float: right;
+
+        height: 16px;
+
+        .close {
+            right: -10px;
+            position: relative;
+            color: inherit;
+            text-shadow: none;
+            -webkit-opacity: none;
+            opacity: 1;
+
+            float: none;
+
+            &:hover {
+                opacity: 0.7;
+            }
+        }
+    }
+}
