@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils;
 
+use Espo\Core\Api\Action;
 use Espo\Core\Api\Route as RouteItem;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Resource\PathProvider;
@@ -40,7 +41,7 @@ use Espo\Core\Utils\Resource\PathProvider;
  *     method: string,
  *     noAuth?: bool,
  *     params?: array<string, mixed>,
- *     actionClassName: ?class-string<\Espo\Core\Api\Action>
+ *     actionClassName: ?class-string<Action>
  *   }
  */
 class Route
@@ -184,7 +185,7 @@ class Route
     {
         // to fast route format
         /** @var string $pathFormatted */
-        $pathFormatted = preg_replace('/\:([a-zA-Z0-9]+)/', '{${1}}', trim($path));
+        $pathFormatted = preg_replace('/:([a-zA-Z0-9]+)/', '{${1}}', trim($path));
 
         if (!str_starts_with($pathFormatted, '/')) {
             return '/' . $pathFormatted;
@@ -209,6 +210,7 @@ class Route
         $scriptDir = dirname($scriptNameModified);
 
         /** @var string $uri */
+        /** @noinspection HttpUrlsUsage */
         $uri = parse_url('http://any.com' . $serverRequestUri, PHP_URL_PATH);
 
         if (stripos($uri, $scriptName) === 0) {
@@ -220,27 +222,6 @@ class Route
         }
 
         return '';
-    }
-
-    public static function detectEntryPointRoute(): string
-    {
-        $basePath = self::detectBasePath();
-
-        /** @var string $serverRequestUri */
-        $serverRequestUri = $_SERVER['REQUEST_URI'];
-
-        /** @var string $uri */
-        $uri = parse_url('http://any.com' . $serverRequestUri, PHP_URL_PATH);
-
-        if ($uri === $basePath) {
-            return '/';
-        }
-
-        if (stripos($uri, $basePath) === 0) {
-            return substr($uri, strlen($basePath));
-        }
-
-        return '/';
     }
 
     /**

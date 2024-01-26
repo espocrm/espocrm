@@ -29,31 +29,27 @@
 
 namespace tests\unit\Espo\Core\Utils;
 
-use Espo\Core\{
-    Utils\Route,
-    Utils\Config,
-    Utils\File\Manager as FileManager,
-    Utils\Metadata,
-    Utils\DataCache,
-    Utils\Resource\PathProvider,
-    Api\Route as RouteItem,
-};
+use Espo\Core\Api\Route as RouteItem;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\DataCache;
+use Espo\Core\Utils\File\Manager as FileManager;
+use Espo\Core\Utils\Metadata;
+use Espo\Core\Utils\Resource\PathProvider;
+use Espo\Core\Utils\Route;
+use PHPUnit\Framework\TestCase;
 
-class RouteTest extends \PHPUnit\Framework\TestCase
+class RouteTest extends TestCase
 {
     private $route;
-
     private $filesPath = 'tests/unit/testData/Routes';
 
     protected function setUp(): void
     {
-        $this->config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
+        $this->config = $this->createMock(Config::class);
         $this->fileManager = new FileManager();
 
-        $this->metadata = $this->getMockBuilder(Metadata::class)->disableOriginalConstructor()->getMock();
-
-        $this->dataCache = $this->getMockBuilder(DataCache::class)->disableOriginalConstructor()->getMock();
-
+        $this->metadata = $this->createMock(Metadata::class);
+        $this->dataCache = $this->createMock(DataCache::class);
         $this->pathProvider = $this->createMock(PathProvider::class);
 
         $this->route = new Route(
@@ -102,81 +98,80 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             );
 
         $expected = [
-          [
-            'adjustedRoute' => '/Custom/{scope}/{id}/{name}',
-            'route' => '/Custom/:scope/:id/:name',
-            'method' => 'get',
-            'params' =>
-            [
-              'controller' => 'Custom',
-              'action' => 'list',
-              'scope' => ':scope',
-              'id' => ':id',
-              'name' => ':name',
+            ['adjustedRoute' => '/Custom/{scope}/{id}/{name}',
+                'route' => '/Custom/:scope/:id/:name',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Custom',
+                        'action' => 'list',
+                        'scope' => ':scope',
+                        'id' => ':id',
+                        'name' => ':name',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/Activities/{scope}/{id}/{name}',
-            'route' => '/Activities/:scope/:id/:name',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Activities',
-              'action' => 'list',
-              'scope' => ':scope',
-              'id' => ':id',
-              'name' => ':name',
+                'adjustedRoute' => '/Activities/{scope}/{id}/{name}',
+                'route' => '/Activities/:scope/:id/:name',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Activities',
+                        'action' => 'list',
+                        'scope' => ':scope',
+                        'id' => ':id',
+                        'name' => ':name',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/Activities',
-              'route' => '/Activities',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Activities',
-              'action' => 'listCalendarEvents',
+                'adjustedRoute' => '/Activities',
+                'route' => '/Activities',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Activities',
+                        'action' => 'listCalendarEvents',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/App/user',
-              'route' => '/App/user',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'App',
-              'action' => 'user',
+                'adjustedRoute' => '/App/user',
+                'route' => '/App/user',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'App',
+                        'action' => 'user',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/Metadata',
-              'route' => '/Metadata',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Metadata',
+                'adjustedRoute' => '/Metadata',
+                'route' => '/Metadata',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Metadata',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/{controller}/action/{action}',
-              'route' => '/:controller/action/:action',
-            'method' => 'post',
-            'params' =>
             [
-              'controller' => ':controller',
-              'action' => ':action',
+                'adjustedRoute' => '/{controller}/action/{action}',
+                'route' => '/:controller/action/:action',
+                'method' => 'post',
+                'params' =>
+                    [
+                        'controller' => ':controller',
+                        'action' => ':action',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/{controller}/action/{action}',
-            'route' => '/:controller/action/:action',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => ':controller',
-              'action' => ':action',
+                'adjustedRoute' => '/{controller}/action/{action}',
+                'route' => '/:controller/action/:action',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => ':controller',
+                        'action' => ':action',
+                    ],
             ],
-          ],
         ];
 
         $expectedItemList = array_map(
@@ -208,78 +203,78 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             );
 
         $expected = [
-          [
-            'adjustedRoute' => '/Activities/{scope}/{id}/{name}',
-              'route' => '/Activities/:scope/:id/:name',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Activities',
-              'action' => 'list',
-              'scope' => ':scope',
-              'id' => ':id',
-              'name' => ':name',
+                'adjustedRoute' => '/Activities/{scope}/{id}/{name}',
+                'route' => '/Activities/:scope/:id/:name',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Activities',
+                        'action' => 'list',
+                        'scope' => ':scope',
+                        'id' => ':id',
+                        'name' => ':name',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/Activities',
-              'route' => '/Activities',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Activities',
-              'action' => 'listCalendarEvents',
+                'adjustedRoute' => '/Activities',
+                'route' => '/Activities',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Activities',
+                        'action' => 'listCalendarEvents',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/Test',
-              'route' => '/Test',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Test',
-              'action' => 'listCalendarEvents',
+                'adjustedRoute' => '/Test',
+                'route' => '/Test',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Test',
+                        'action' => 'listCalendarEvents',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/App/user',
-              'route' => '/App/user',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'App',
-              'action' => 'user',
+                'adjustedRoute' => '/App/user',
+                'route' => '/App/user',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'App',
+                        'action' => 'user',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/Metadata',
-              'route' => '/Metadata',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Metadata',
+                'adjustedRoute' => '/Metadata',
+                'route' => '/Metadata',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Metadata',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/{controller}/action/{action}',
-              'route' => '/:controller/action/:action',
-            'method' => 'post',
-            'params' =>
             [
-              'controller' => ':controller',
-              'action' => ':action',
+                'adjustedRoute' => '/{controller}/action/{action}',
+                'route' => '/:controller/action/:action',
+                'method' => 'post',
+                'params' =>
+                    [
+                        'controller' => ':controller',
+                        'action' => ':action',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/{controller}/action/{action}',
-              'route' => '/:controller/action/:action',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => ':controller',
-              'action' => ':action',
+                'adjustedRoute' => '/{controller}/action/{action}',
+                'route' => '/:controller/action/:action',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => ':controller',
+                        'action' => ':action',
+                    ],
             ],
-          ],
         ];
 
         $expectedItemList = array_map(
@@ -311,78 +306,78 @@ class RouteTest extends \PHPUnit\Framework\TestCase
             );
 
         $expected = [
-          [
-            'adjustedRoute' => '/Activities/{scope}/{id}/{name}',
-              'route' => '/Activities/:scope/:id/:name',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Test',
-              'action' => 'list',
-              'scope' => ':scope',
-              'id' => ':id',
-              'name' => ':name',
+                'adjustedRoute' => '/Activities/{scope}/{id}/{name}',
+                'route' => '/Activities/:scope/:id/:name',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Test',
+                        'action' => 'list',
+                        'scope' => ':scope',
+                        'id' => ':id',
+                        'name' => ':name',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/Activities',
-              'route' => '/Activities',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Activities',
-              'action' => 'listCalendarEvents',
+                'adjustedRoute' => '/Activities',
+                'route' => '/Activities',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Activities',
+                        'action' => 'listCalendarEvents',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/Test',
-              'route' => '/Test',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Test',
-              'action' => 'listCalendarEvents',
+                'adjustedRoute' => '/Test',
+                'route' => '/Test',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Test',
+                        'action' => 'listCalendarEvents',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/App/user',
-              'route' => '/App/user',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'App',
-              'action' => 'user',
+                'adjustedRoute' => '/App/user',
+                'route' => '/App/user',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'App',
+                        'action' => 'user',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/Metadata',
-              'route' => '/Metadata',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => 'Metadata',
+                'adjustedRoute' => '/Metadata',
+                'route' => '/Metadata',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Metadata',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/{controller}/action/{action}',
-              'route' => '/:controller/action/:action',
-            'method' => 'post',
-            'params' =>
             [
-              'controller' => ':controller',
-              'action' => ':action',
+                'adjustedRoute' => '/{controller}/action/{action}',
+                'route' => '/:controller/action/:action',
+                'method' => 'post',
+                'params' =>
+                    [
+                        'controller' => ':controller',
+                        'action' => ':action',
+                    ],
             ],
-          ],
-          [
-            'adjustedRoute' => '/{controller}/action/{action}',
-              'route' => '/:controller/action/:action',
-            'method' => 'get',
-            'params' =>
             [
-              'controller' => ':controller',
-              'action' => ':action',
+                'adjustedRoute' => '/{controller}/action/{action}',
+                'route' => '/:controller/action/:action',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => ':controller',
+                        'action' => ':action',
+                    ],
             ],
-          ],
         ];
 
         $expectedItemList = array_map(
