@@ -159,6 +159,14 @@ class LinkParentFieldView extends BaseFieldView {
     /** @inheritDoc */
     initialSearchIsNotIdle = true
 
+    /**
+     * Trigger autocomplete on empty input.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    autocompleteOnEmpty
+
     /** @inheritDoc */
     events = {
         /** @this LinkParentFieldView */
@@ -287,6 +295,8 @@ class LinkParentFieldView extends BaseFieldView {
         this.listenTo(this.model, 'change:' + this.typeName, () => {
             this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
         });
+
+        this.autocompleteOnEmpty = this.params.autocompleteOnEmpty || this.autocompleteOnEmpty;
 
         if ('createDisabled' in this.options) {
             this.createDisabled = this.options.createDisabled;
@@ -499,11 +509,11 @@ class LinkParentFieldView extends BaseFieldView {
                     serviceUrl: (q) => {
                         return this.getAutocompleteUrl(q);
                     },
-                    minChars: 1,
+                    minChars: this.autocompleteOnEmpty ? 0 : 1,
                     paramName: 'q',
-                    noCache: true,
                     triggerSelectOnValidInput: false,
                     autoSelectFirst: true,
+                    noCache: true,
                     beforeRender: ($c) => {
                         if (this.$elementName.hasClass('input-sm')) {
                             $c.addClass('small');
@@ -539,7 +549,16 @@ class LinkParentFieldView extends BaseFieldView {
                 });
 
                 this.$elementName.off('focus.autocomplete');
-                this.$elementName.on('focus', () => this.$elementName.get(0).select());
+
+                this.$elementName.on('focus', () => {
+                    if (this.$elementName.val()) {
+                        this.$elementName.get(0).select();
+
+                        return;
+                    }
+
+                    this.$elementName.autocomplete('onFocus');
+                });
 
                 this.$elementName.attr('autocomplete', 'espo-' + this.name);
 
