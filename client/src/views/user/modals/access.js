@@ -31,11 +31,8 @@ define('views/user/modals/access', ['views/modal'], function (Dep) {
     return Dep.extend({
 
         cssName: 'user-access',
-
         multiple: false,
-
         template: 'user/modals/access',
-
         backdrop: true,
 
         data: function () {
@@ -46,14 +43,17 @@ define('views/user/modals/access', ['views/modal'], function (Dep) {
         },
 
         getValuePermissionList: function () {
-            var list = this.getMetadata().get(['app', 'acl', 'valuePermissionList'], []);
-            var dataList = [];
-            list.forEach(function (item) {
-                var o = {};
+            const list = this.getMetadata().get(['app', 'acl', 'valuePermissionList'], []);
+            const dataList = [];
+
+            list.forEach(item => {
+                const o = {};
                 o.name = item;
                 o.value = this.options.aclData[item];
+
                 dataList.push(o);
-            }, this);
+            });
+
             return dataList;
         },
 
@@ -65,12 +65,12 @@ define('views/user/modals/access', ['views/modal'], function (Dep) {
                 }
             ];
 
-            var fieldTable = Espo.Utils.cloneDeep(this.options.aclData.fieldTable || {});
+            const fieldTable = Espo.Utils.cloneDeep(this.options.aclData.fieldTable || {});
 
-            for (var scope in fieldTable) {
-                var scopeData = fieldTable[scope] || {};
+            for (const scope in fieldTable) {
+                const scopeData = fieldTable[scope] || {};
 
-                for (var field in scopeData) {
+                for (const field in scopeData) {
                     if (
                         this.getMetadata()
                             .get(['app', 'acl', 'mandatory', 'scopeFieldLevel', scope, field]) !== null
@@ -94,7 +94,7 @@ define('views/user/modals/access', ['views/modal'], function (Dep) {
                     data: this.options.aclData.table,
                     fieldData: fieldTable,
                 },
-                final: true
+                final: true,
             });
 
             this.headerText = this.translate('Access');
