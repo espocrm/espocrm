@@ -32,12 +32,23 @@ namespace tests\integration\Espo\Record;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Modules\Crm\Entities\Account;
+use Espo\Tools\FieldManager\FieldManager;
 use tests\integration\Core\BaseTestCase;
 
 class SanitizeTest extends BaseTestCase
 {
     public function testSanitize(): void
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->getInjectableFactory()
+            ->create(FieldManager::class)
+            ->create(Account::ENTITY_TYPE, 'array', ['type' => 'array']);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->getDataManager()->rebuild();
+
+        $this->reCreateApplication();
+
         $service = $this->getContainer()
             ->getByClass(ServiceContainer::class)
             ->getByClass(Account::class);
@@ -45,13 +56,24 @@ class SanitizeTest extends BaseTestCase
         /** @noinspection PhpUnhandledExceptionInspection */
         /** @var Account $account */
         $account = $service->create((object) [
-            'name' => 'Test 1',
+            'name' => '  Test 1 ',
+            'sicCode' => ' ',
             'phoneNumber' => '+380 9044 433 11',
+            'description' => '',
+            'array' => [
+                ' test ',
+                'hello',
+            ],
         ], CreateParams::create());
 
         $numbers = $account->getPhoneNumberGroup()->getNumberList();
         $this->assertCount(1, $numbers);
         $this->assertEquals('+380904443311', $numbers[0]);
+
+        $this->assertEquals('Test 1', $account->getName());
+        $this->assertEquals(null, $account->get('sicCode'));
+        $this->assertEquals(null, $account->get('description'));
+        $this->assertEquals(['test', 'hello'], $account->get('array'));
 
         /** @noinspection PhpUnhandledExceptionInspection */
         /** @var Account $account */
@@ -65,7 +87,12 @@ class SanitizeTest extends BaseTestCase
                     'phoneNumber' => '+38 09 044 433 33',
                 ],
             ],
+            'description' => 'Test',
+            'array' => null,
         ], CreateParams::create());
+
+        $this->assertEquals('Test', $account->get('description'));
+        $this->assertEquals([], $account->get('array'));
 
         $numbers = $account->getPhoneNumberGroup()->getNumberList();
         $this->assertCount(2, $numbers);

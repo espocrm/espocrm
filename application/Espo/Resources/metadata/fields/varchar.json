@@ -66,6 +66,9 @@
     "mandatoryValidationList": [
         "maxLength"
     ],
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\StringTrim"
+    ],
     "filter": true,
     "personalData": true,
     "textFilter": true,

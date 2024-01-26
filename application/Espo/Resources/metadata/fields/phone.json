@@ -78,5 +78,8 @@
     "valueFactoryClassName": "Espo\\Core\\Field\\PhoneNumber\\PhoneNumberGroupFactory",
     "attributeExtractorClassName": "Espo\\Core\\Field\\PhoneNumber\\PhoneNumberGroupAttributeExtractor",
     "sanitizerClassName": "Espo\\Classes\\FieldSanitizers\\Phone",
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\StringTrim"
+    ],
     "default": null
 }
