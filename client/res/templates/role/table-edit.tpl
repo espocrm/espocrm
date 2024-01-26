@@ -99,11 +99,11 @@
                         </td>
                         <td><button
                             type="button"
-                            class="btn btn-link btn-sm action"
+                            class="btn btn-link action"
                             data-action="addField"
                             data-scope="{{name}}"
                             title="{{translate 'Add Field'}}"
-                            ><span class="fas fa-plus"></span></button></td>
+                            ><span class="fas fa-plus fa-sm"></span></button></td>
                         <td colspan="3"></td>
                     </tr>
                     {{#each list}}
