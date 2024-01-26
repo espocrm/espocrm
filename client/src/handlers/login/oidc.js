@@ -90,8 +90,8 @@ class OidcLoginHandler extends LoginHandler {
      * @return {Promise<{code: string, nonce: string}>}
      */
     processWithData(data, proxy) {
-        const state = (Math.random() + 1).toString(36).substring(7);
-        const nonce = (Math.random() + 1).toString(36).substring(7);
+        const state = (Math.random() + 1).toString(36).substring(4);
+        const nonce = (Math.random() + 1).toString(36).substring(4);
 
         const params = {
             client_id: data.clientId,
