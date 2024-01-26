@@ -95,6 +95,7 @@ define('views/user/modals/access', ['views/modal'], function (Dep) {
                     fieldData: fieldTable,
                 },
                 final: true,
+                selector: '.user-access-table',
             });
 
             this.headerText = this.translate('Access');

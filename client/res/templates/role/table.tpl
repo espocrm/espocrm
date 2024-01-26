@@ -1,4 +1,15 @@
 
+<div class="button-container negate-no-side-margin">
+    <input
+        type="text"
+        maxlength="64"
+        placeholder="{{translate 'Search'}}"
+        data-name="quick-search"
+        class="form-control"
+        spellcheck="false"
+    >
+</div>
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">{{translate 'Scope Level' scope='Role'}}</h4>
@@ -14,7 +25,7 @@
                     {{/each}}
                 </tr>
                 {{#each tableDataList}}
-                <tr>
+                <tr data-name="{{name}}" class="item-row">
                     <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
 
                     <td>
@@ -71,14 +82,14 @@
                 </tr>
                 {{#each fieldTableDataList}}
                     {{#if list.length}}
-                    <tr>
+                    <tr data-name="{{name}}" class="item-row">
                         <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
                         <td></td>
                         <td colspan="3"></td>
                     </tr>
                     {{/if}}
                     {{#each list}}
-                    <tr>
+                    <tr data-name="{{../name}}" class="item-row">
                         <td></td>
                         <td><b>{{translate name category='fields' scope=../name}}</b></td>
                         {{#each list}}

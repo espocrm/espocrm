@@ -1,4 +1,15 @@
 
+<div class="button-container">
+    <input
+        type="text"
+        maxlength="64"
+        placeholder="{{translate 'Search'}}"
+        data-name="quick-search"
+        class="form-control"
+        spellcheck="false"
+    >
+</div>
+
 <div class="panel panel-default">
     <div class="panel-heading">
         <h4 class="panel-title">{{translate 'Scope Level' scope='Role'}}</h4>
@@ -14,9 +25,12 @@
                     {{/each}}
                 </tr>
                 {{#each tableDataList}}
-                <tr>
-                    <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
-
+                <tr data-name="{{name}}" class="item-row">
+                    <td>
+                        <div class="detail-field-container">
+                            <b>{{translate name category='scopeNamesPlural'}}</b>
+                        </div>
+                    </td>
                     <td>
                         <select
                             name="{{name}}"
@@ -77,8 +91,12 @@
                     <th style="width: 33%"></th>
                 </tr>
                 {{#each fieldTableDataList}}
-                    <tr>
-                        <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
+                    <tr data-name="{{name}}" class="item-row">
+                        <td>
+                            <div class="detail-field-container">
+                                <b>{{translate name category='scopeNamesPlural'}}</b>
+                            </div>
+                        </td>
                         <td><button
                             type="button"
                             class="btn btn-link btn-sm action"
@@ -89,9 +107,13 @@
                         <td colspan="3"></td>
                     </tr>
                     {{#each list}}
-                    <tr>
+                    <tr data-name="{{../name}}" class="item-row">
                         <td></td>
-                        <td><b>{{translate name category='fields' scope=../name}}</b></td>
+                        <td>
+                            <div class="detail-field-container">
+                                <b>{{translate name category='fields' scope=../name}}</b>
+                            </div>
+                        </td>
                         {{#each list}}
                         <td>
                             <select

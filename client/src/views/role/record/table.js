@@ -97,6 +97,10 @@ class RoleRecordTableView extends View {
     }
 
     events = {
+        /** @this FieldManagerListView */
+        'keyup input[data-name="quick-search"]': function (e) {
+            this.processQuickSearch(e.currentTarget.value);
+        },
         /** @this RoleRecordTableView */
         'click .action[data-action="addField"]': function (e) {
             const scope = $(e.currentTarget).data().scope;
@@ -282,7 +286,7 @@ class RoleRecordTableView extends View {
             this.setupData();
 
             if (this.isRendered()) {
-                this.reRender();
+                this.reRenderPreserveSearch();
             }
         });
 
@@ -478,6 +482,8 @@ class RoleRecordTableView extends View {
     }
 
     afterRender() {
+        this.$quickSearch = this.$el.find('input[data-name="quick-search"]');
+
         if (this.mode === 'edit') {
             this.scopeList.forEach(scope => {
                 const $read = this.$el.find('select[name="' + scope + '-read"]');
@@ -666,7 +672,9 @@ class RoleRecordTableView extends View {
                     });
                 });
 
-                this.reRender();
+                const searchText = this.$quickSearch.val();
+
+                this.reRenderPreserveSearch();
             });
         });
     }
@@ -690,9 +698,19 @@ class RoleRecordTableView extends View {
             if (~index) {
                 scopeData.list.splice(index, 1);
 
-                this.reRender();
+                this.reRenderPreserveSearch();
             }
         });
+    }
+
+    reRenderPreserveSearch() {
+        const searchText = this.$quickSearch.val();
+
+        this.reRender()
+            .then(() => {
+                this.$quickSearch.val(searchText);
+                this.processQuickSearch(searchText);
+            });
     }
 
     initStickyHeader(type) {
@@ -799,6 +817,72 @@ class RoleRecordTableView extends View {
             }
 
             $o.css('color', color);
+        });
+    }
+
+    processQuickSearch(text) {
+        text = text.trim();
+
+        //const $noData = this.$noData;
+
+        //$noData.addClass('hidden');
+
+        if (!text) {
+            this.$el.find('table tr.item-row').removeClass('hidden');
+
+            return;
+        }
+
+        const matchedList = [];
+
+        const lowerCaseText = text.toLowerCase();
+
+        this.scopeList.forEach(/** string */item => {
+            let matched = false;
+
+            const translation = this.getLanguage().translate(item, 'scopeNamesPlural');
+
+            if (
+                translation.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                item.toLowerCase().indexOf(lowerCaseText) === 0
+            ) {
+                matched = true;
+            }
+
+            if (!matched) {
+                const wordList = translation.split(' ')
+                    .concat(translation.split(' '));
+
+                wordList.forEach((word) => {
+                    if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
+                        matched = true;
+                    }
+                });
+            }
+
+            if (matched) {
+                matchedList.push(item);
+            }
+        });
+
+        if (matchedList.length === 0) {
+            this.$el.find('table tr.item-row').addClass('hidden');
+
+            //$noData.removeClass('hidden');
+
+            return;
+        }
+
+        this.scopeList.forEach(/** string */item => {
+            const $row = this.$el.find(`table tr.item-row[data-name="${item}"]`);
+
+            if (!~matchedList.indexOf(item)) {
+                $row.addClass('hidden');
+
+                return;
+            }
+
+            $row.removeClass('hidden');
         });
     }
 }
