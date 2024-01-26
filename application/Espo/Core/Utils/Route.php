@@ -226,12 +226,15 @@ class Route
 
     /**
      * @param RouteArrayShape $newRoute
-     * @param array<int, RouteArrayShape> $routeList
+     * @param RouteArrayShape[] $routeList
      */
     static private function isRouteInList(array $newRoute, array $routeList): bool
     {
         foreach ($routeList as $route) {
-            if (Util::areEqual($route, $newRoute)) {
+            if (
+                $route['route'] === $newRoute['route'] &&
+                $route['method'] === $newRoute['method']
+            ) {
                 return true;
             }
         }

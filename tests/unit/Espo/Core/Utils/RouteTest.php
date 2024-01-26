@@ -98,7 +98,8 @@ class RouteTest extends TestCase
             );
 
         $expected = [
-            ['adjustedRoute' => '/Custom/{scope}/{id}/{name}',
+            [
+                'adjustedRoute' => '/Custom/{scope}/{id}/{name}',
                 'route' => '/Custom/:scope/:id/:name',
                 'method' => 'get',
                 'params' =>
@@ -108,6 +109,15 @@ class RouteTest extends TestCase
                         'scope' => ':scope',
                         'id' => ':id',
                         'name' => ':name',
+                    ],
+            ],
+            [
+                'adjustedRoute' => '/Test',
+                'route' => '/Test',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'TestOverridden',
                     ],
             ],
             [

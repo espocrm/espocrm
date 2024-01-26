@@ -1,13 +1,22 @@
 [
-  {
-    "route":"/Custom/:scope/:id/:name",
-    "method":"get",
-    "params":{
-        "controller":"Custom",
-        "action":"list",
-        "scope":":scope",
-        "id":":id",
-        "name":":name"
+    {
+        "route": "/Custom/:scope/:id/:name",
+        "method": "get",
+        "params": {
+            "controller": "Custom",
+            "action": "list",
+            "scope": ":scope",
+            "id": ":id",
+            "name": ":name"
+        },
+        "noAuth": false,
+        "actionClassName": ""
+    },
+    {
+        "route": "/Test",
+        "method": "get",
+        "params": {
+            "controller": "TestOverridden"
+        }
     }
-  }
 ]
