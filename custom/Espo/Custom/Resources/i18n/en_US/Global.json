@@ -26,7 +26,10 @@
         "Discount": "Знижка",
         "CategoryIndivPrice": "Ціна індиву",
         "RentPlan": "Планова оренда",
-        "AttendanceSheet": "Журнал"
+        "AttendanceSheet": "Журнал",
+        "ProductItem": "Продукт",
+        "Goods": "Товар",
+        "CalculationBudget": "Бютжет"
     },
     "scopeNamesPlural": {
         "Training": "Заняття",
@@ -55,7 +58,10 @@
         "Discount": "Знижки",
         "CategoryIndivPrice": "Ціни індиву",
         "RentPlan": "Планова оренда",
-        "AttendanceSheet": "Журнал"
+        "AttendanceSheet": "Журнал",
+        "ProductItem": "Продукти",
+        "Goods": "Товари",
+        "CalculationBudget": "Бютжет"
     },
     "labels": {
         "Schedule Training": "Schedule Заняття",

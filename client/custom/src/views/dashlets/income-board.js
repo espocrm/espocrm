@@ -24,7 +24,6 @@ define('custom:views/dashlets/income-board', ['views/dashlets/abstract/base'],  
                 this.fetchRecords('Expenses', this.expenses, 'cost'),
             ])
             .then(summaries => {
-                console.log(summaries);
                 this.profit = summaries[0] + summaries[1] + summaries[2] + summaries[3];
                 this.spending = summaries[4];
                 this.reRender();
@@ -70,6 +69,7 @@ define('custom:views/dashlets/income-board', ['views/dashlets/abstract/base'],  
                 where.push(...optionalFilters);
             }
             
+            console.log(where);
             return where;
         },
 

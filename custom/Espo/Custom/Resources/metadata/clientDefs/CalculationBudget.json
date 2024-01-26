@@ -1,0 +1,12 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#2073d4",
+    "iconClass": "fas fa-poll",
+    "kanbanViewMode": false,
+    "views": {
+        "list": "custom:views/calculations/budget"
+    }
+}

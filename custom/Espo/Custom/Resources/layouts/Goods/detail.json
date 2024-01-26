@@ -1,0 +1,71 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "isCustom"
+                }
+            ],
+            [
+                {
+                    "name": "productItem"
+                },
+                {
+                    "name": "quantity"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    },
+    {
+        "rows": [
+            [
+                false,
+                {
+                    "name": "price"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "success",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isNotEmpty",
+                    "attribute": "price"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "tabLabel": null,
+        "hidden": false,
+        "customLabel": "Розрахунок"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "info",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isNotEmpty",
+                    "attribute": "description"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "tabLabel": null,
+        "hidden": false,
+        "customLabel": "Додатково"
+    }
+]

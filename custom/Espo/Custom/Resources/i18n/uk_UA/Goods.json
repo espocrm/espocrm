@@ -1,0 +1,19 @@
+{
+    "labels": {
+        "Create Goods": "Створити Товар"
+    },
+    "fields": {
+        "productItem": "Продукт",
+        "quantity": "Кількість",
+        "isCustom": "Без продукту",
+        "price": "Сумма",
+        "priceCurrency": "Сумма (Валюта)",
+        "priceConverted": "Сумма (Конвертована)"
+    },
+    "links": {
+        "productItem": "Продукт"
+    },
+    "tooltips": {
+        "isCustom": "Ввести ціну вручну"
+    }
+}

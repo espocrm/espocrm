@@ -1,0 +1,90 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#38619e",
+    "iconClass": "fas fa-tshirt",
+    "relationshipPanels": {
+        "productItem": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false,
+    "dynamicLogic": {
+        "fields": {
+            "name": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isCustom"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isCustom"
+                        }
+                    ]
+                }
+            },
+            "productItem": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isCustom"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isCustom"
+                        }
+                    ]
+                }
+            },
+            "quantity": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isCustom"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isCustom"
+                        }
+                    ]
+                }
+            },
+            "price": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isCustom"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isCustom"
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,10 +1,12 @@
 {
     "fields": {
         "isActive": "Активний",
-        "abonplans": "Абонплани"
+        "abonplans": "Абонплани",
+        "productItems": "Продукти"
     },
     "links": {
-        "abonplans": "Абонплани"
+        "abonplans": "Абонплани",
+        "productItems": "Продукти"
     },
     "labels": {
         "Create Pricebook": "Create Цінник"
