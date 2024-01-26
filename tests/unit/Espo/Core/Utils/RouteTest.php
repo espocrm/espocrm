@@ -214,6 +214,16 @@ class RouteTest extends TestCase
 
         $expected = [
             [
+                'adjustedRoute' => '/Test',
+                'route' => '/Test',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Test',
+                        'action' => 'listCalendarEvents',
+                    ],
+            ],
+            [
                 'adjustedRoute' => '/Activities/{scope}/{id}/{name}',
                 'route' => '/Activities/:scope/:id/:name',
                 'method' => 'get',
@@ -233,16 +243,6 @@ class RouteTest extends TestCase
                 'params' =>
                     [
                         'controller' => 'Activities',
-                        'action' => 'listCalendarEvents',
-                    ],
-            ],
-            [
-                'adjustedRoute' => '/Test',
-                'route' => '/Test',
-                'method' => 'get',
-                'params' =>
-                    [
-                        'controller' => 'Test',
                         'action' => 'listCalendarEvents',
                     ],
             ],
@@ -330,22 +330,22 @@ class RouteTest extends TestCase
                     ],
             ],
             [
-                'adjustedRoute' => '/Activities',
-                'route' => '/Activities',
-                'method' => 'get',
-                'params' =>
-                    [
-                        'controller' => 'Activities',
-                        'action' => 'listCalendarEvents',
-                    ],
-            ],
-            [
                 'adjustedRoute' => '/Test',
                 'route' => '/Test',
                 'method' => 'get',
                 'params' =>
                     [
                         'controller' => 'Test',
+                        'action' => 'listCalendarEvents',
+                    ],
+            ],
+            [
+                'adjustedRoute' => '/Activities',
+                'route' => '/Activities',
+                'method' => 'get',
+                'params' =>
+                    [
+                        'controller' => 'Activities',
                         'action' => 'listCalendarEvents',
                     ],
             ],

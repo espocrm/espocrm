@@ -112,26 +112,18 @@ class Route
      */
     private function unify(): array
     {
-        $customData = $this->addDataFromFile([], $this->pathProvider->getCustom() . $this->routesFileName);
+        $customFilePath = $this->pathProvider->getCustom() . $this->routesFileName;
+        $coreFilePath = $this->pathProvider->getCore() . $this->routesFileName;
 
-        $moduleData = [];
+        $data = $this->addDataFromFile([], $customFilePath);
 
-        foreach ($this->metadata->getModuleList() as $moduleName) {
-            $moduleFilePath = $this->pathProvider->getModule($moduleName) . $this->routesFileName;
+        foreach (array_reverse($this->metadata->getModuleList()) as $module) {
+            $moduleFilePath = $this->pathProvider->getModule($module) . $this->routesFileName;
 
-            foreach ($this->addDataFromFile([], $moduleFilePath) as $item) {
-                $key = $item['method'] . $item['route'];
-
-                $moduleData[$key] = $item;
-            }
+            $data = $this->addDataFromFile($data, $moduleFilePath);
         }
 
-        $data = array_merge($customData, array_values($moduleData));
-
-        return $this->addDataFromFile(
-            $data,
-            $this->pathProvider->getCore() . $this->routesFileName
-        );
+        return $this->addDataFromFile($data, $coreFilePath);
     }
 
     /**
