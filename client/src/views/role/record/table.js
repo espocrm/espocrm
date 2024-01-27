@@ -388,27 +388,37 @@ class RoleRecordTableView extends View {
         for (const i in scopeList) {
             const scope = scopeList[i];
 
-            if (this.$el.find('select[name="' + scope + '"]').val() === 'not-set') {
+            const value = this.$el.find(`select[name="${scope}"]`).val();
+
+            if (value === 'not-set') {
                 continue;
             }
 
-            if (this.$el.find('select[name="' + scope + '"]').val() === 'disabled') {
+            if (value === 'disabled') {
                 data[scope] = false;
-            } else {
-                let o = true;
 
-                if (aclTypeMap[scope] !== 'boolean') {
-                    o = {};
-
-                    for (const j in actionList) {
-                        const action = actionList[j];
-
-                        o[action] = this.$el.find('select[name="' + scope + '-' + action + '"]').val();
-                    }
-                }
-
-                data[scope] = o;
+                continue;
             }
+
+            let o = true;
+
+            if (aclTypeMap[scope] !== 'boolean') {
+                o = {};
+
+                for (const j in actionList) {
+                    const action = actionList[j];
+
+                    const value = this.$el.find(`select[name="${scope}-${action}"]`).val();
+
+                    if (value === undefined) {
+                        continue;
+                    }
+
+                    o[action] = value;
+                }
+            }
+
+            data[scope] = o;
         }
 
         return data;
