@@ -29,7 +29,7 @@
                     <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
 
                     <td>
-                        <span style="color: {{prop ../colors access}};">{{translateOption access scope='Role' field='accessList'}}</span>
+                        <span class="text-{{prop ../styleMap access}}">{{translateOption access scope='Role' field='accessList'}}</span>
                     </td>
 
                     {{#ifNotEqual type 'boolean'}}
@@ -37,7 +37,7 @@
                             <td>
                                 {{#ifNotEqual access 'not-set'}}
                                     <span
-                                        style="color: {{prop ../../colors level}};"
+                                        class="text-{{prop ../../styleMap level}}"
                                         title="{{translate action scope='Role' category='actions'}}"
                                     >{{translateOption level field='levelList' scope='Role'}}</span>
                                 {{/ifNotEqual}}
@@ -82,7 +82,7 @@
                 </tr>
                 {{#each fieldTableDataList}}
                     {{#if list.length}}
-                    <tr data-name="{{name}}" class="item-row">
+                    <tr data-name="{{name}}" class="item-row accented">
                         <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
                         <td></td>
                         <td colspan="3"></td>
@@ -91,12 +91,13 @@
                     {{#each list}}
                     <tr data-name="{{../name}}" class="item-row">
                         <td></td>
-                        <td><b>{{translate name category='fields' scope=../name}}</b></td>
+                        <td>{{translate name category='fields' scope=../name}}</td>
                         {{#each list}}
                         <td>
                             <span
                                 title="{{translate name scope='Role' category='actions'}}"
-                                style="color: {{prop ../../../colors value}};">{{translateOption value scope='Role' field='accessList'}}</span>
+                                class="text-{{prop ../../../styleMap value}}"
+                            >{{translateOption value scope='Role' field='accessList'}}</span>
                         </td>
                         {{/each}}
                         <td colspan="3"></td>

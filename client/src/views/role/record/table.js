@@ -27,13 +27,16 @@
  ************************************************************************/
 
 import View from 'view';
+import Select from 'ui/select';
 
 class RoleRecordTableView extends View {
 
     template = 'role/table'
 
-    scopeList = null
+    /** @type {string[]} */
+    scopeList
     type = 'acl'
+    /** @type {'detail'|'string'} */
     mode = 'detail'
     lowestLevelByDefault = false
 
@@ -57,28 +60,28 @@ class RoleRecordTableView extends View {
         delete: 'no',
     }
 
-    colors = {
-        yes: '#6BC924',
-        all: '#6BC924',
-        account: '#999900',
-        contact: '#999900',
-        team: '#999900',
-        own: '#CC9900',
-        no: '#F23333',
-        enabled: '#6BC924',
-        disabled: '#F23333',
-        'not-set': '#A8A8A8',
+    styleMap = {
+        yes: 'success',
+        all: 'success',
+        account: 'info',
+        contact: 'info',
+        team: 'info',
+        own: 'warning',
+        no: 'danger',
+        enabled: 'success',
+        disabled: 'danger',
+        'not-set': 'muted',
     }
 
     data() {
         const data = {};
 
+        data.styleMap = this.styleMap;
         data.editMode = this.mode === 'edit';
         data.actionList = this.actionList;
         data.accessList = this.accessList;
         data.fieldActionList = this.fieldActionList;
         data.fieldLevelList = this.fieldLevelList;
-        data.colors = this.colors;
 
         data.tableDataList = this.getTableDataList();
         data.fieldTableDataList = this.fieldTableDataList;
@@ -116,59 +119,12 @@ class RoleRecordTableView extends View {
         },
         /** @this RoleRecordTableView */
         'change select[data-type="access"]': function (e) {
-            const scope = $(e.currentTarget).attr('name');
-            const $dropdowns = this.$el.find('select[data-scope="' + scope + '"]');
+            const $current = $(e.currentTarget);
 
-            if ($(e.currentTarget).val() === 'enabled') {
-                $dropdowns.removeAttr('disabled');
-                $dropdowns.removeClass('hidden');
+            const scope = $current.attr('name');
+            const value = $current.val();
 
-                $dropdowns.each((i, select) => {
-                    const $select = $(select);
-
-                    if (this.lowestLevelByDefault) {
-                        $select.find('option').last().prop('selected', true);
-                    } else {
-                        let setFirst = true;
-                        const action = $select.data('role-action');
-                        let defaultLevel = null;
-
-                        if (action) {
-                            defaultLevel = this.defaultLevels[action];
-                        }
-
-                        if (defaultLevel) {
-                            const $option = $select.find('option[value="' + defaultLevel + '"]');
-
-                            if ($option.length) {
-                                $option.prop('selected', true);
-                                setFirst = false;
-                            }
-                        }
-
-                        if (setFirst) {
-                            $select.find('option').first().prop('selected', true);
-                        }
-                    }
-
-                    $select.trigger('change');
-
-                    this.controlSelectColor($select);
-                });
-            } else {
-                $dropdowns.attr('disabled', 'disabled');
-                $dropdowns.addClass('hidden');
-            }
-
-            this.controlSelectColor($(e.currentTarget));
-        },
-        /** @this RoleRecordTableView */
-        'change select.scope-action': function (e) {
-            this.controlSelectColor($(e.currentTarget));
-        },
-        /** @this RoleRecordTableView */
-        'change select.field-action': function (e) {
-            this.controlSelectColor($(e.currentTarget));
+            this.onSelectAccess(scope, value);
         },
     }
 
@@ -184,11 +140,7 @@ class RoleRecordTableView extends View {
             }
 
             if (scope in aclData) {
-                if (aclData[scope] === false) {
-                    access = 'disabled';
-                } else {
-                    access = 'enabled';
-                }
+                access = aclData[scope] === false ? 'disabled' : 'enabled';
             }
 
             const list = [];
@@ -196,10 +148,11 @@ class RoleRecordTableView extends View {
 
             if (this.aclTypeMap[scope] !== 'boolean') {
                 this.actionList.forEach(action => {
-                    const allowedActionList = this.getMetadata().get(['scopes', scope, this.type + 'ActionList']);
+                    const allowedActionList = /** @type {string[]} */
+                        this.getMetadata().get(['scopes', scope, this.type + 'ActionList']);
 
                     if (allowedActionList) {
-                        if (!~allowedActionList.indexOf(action)) {
+                        if (!allowedActionList.includes(action)) {
                             list.push({
                                 action: action,
                                 levelList: false,
@@ -240,21 +193,11 @@ class RoleRecordTableView extends View {
                         }
                     }
 
-                    let levelList =
-                        this.getMetadata().get(['scopes', scope, this.type + 'ActionLevelListMap', action]) ||
-                        this.getMetadata().get(['scopes', scope, this.type + 'LevelList']) ||
-                        this.levelListMap[type] ||
-                        [];
-
-                    if (~this.booleanActionList.indexOf(action)) {
-                        levelList = this.booleanLevelList;
-                    }
-
                     list.push({
                         level: level,
                         name: scope + '-' + action,
                         action: action,
-                        levelList: levelList,
+                        levelList: this.getLevelList(scope, action),
                     });
                 });
             }
@@ -268,6 +211,19 @@ class RoleRecordTableView extends View {
         });
 
         return aclDataList;
+    }
+
+    getLevelList(scope, action) {
+        if (this.booleanActionList.includes(action)) {
+            return this.booleanLevelList;
+        }
+
+        const type = this.aclTypeMap[scope];
+
+        return this.getMetadata().get(['scopes', scope, this.type + 'ActionLevelListMap', action]) ||
+            this.getMetadata().get(['scopes', scope, this.type + 'LevelList']) ||
+            this.levelListMap[type] ||
+            [];
     }
 
     setup() {
@@ -485,28 +441,34 @@ class RoleRecordTableView extends View {
         this.$quickSearch = this.$el.find('input[data-name="quick-search"]');
 
         if (this.mode === 'edit') {
+            this.$el.find('select').each((i, el) => {
+                Select.init(el);
+            });
+
             this.scopeList.forEach(scope => {
-                const $read = this.$el.find('select[name="' + scope + '-read"]');
+                const $read = this.$el.find(`select[name="${scope}-read"]`);
 
                 $read.on('change', () => {
                     const value = $read.val();
 
-                    this.controlEditSelect(scope, value);
-                    this.controlDeleteSelect(scope, value);
-                    this.controlStreamSelect(scope, value);
+                    this.controlSelect(scope, 'edit', value);
+                    this.controlSelect(scope, 'delete', value);
+                    this.controlSelect(scope, 'stream', value);
                 });
 
-                const $edit = this.$el.find('select[name="' + scope + '-edit"]');
+                const $edit = this.$el.find(`select[name="${scope}-edit"]`);
 
                 $edit.on('change', () => {
                     const value = $edit.val();
 
-                    this.controlDeleteSelect(scope, value);
+                    this.controlSelect(scope, 'delete', value);
                 });
 
-                this.controlEditSelect(scope, $read.val(), true);
-                this.controlStreamSelect(scope, $read.val(), true);
-                this.controlDeleteSelect(scope, $edit.val(), true);
+                setTimeout(() => {
+                    this.controlSelect(scope, 'edit', $read.val(), true);
+                    this.controlSelect(scope, 'stream', $read.val(), true);
+                    this.controlSelect(scope, 'delete', $edit.val(), true);
+                }, 10);
             });
 
             this.fieldTableDataList.forEach(o => {
@@ -527,8 +489,6 @@ class RoleRecordTableView extends View {
                     this.controlFieldEditSelect(scope, field, $read.val(), true);
                 });
             });
-
-            this.setSelectColors();
         }
 
         if (this.mode === 'edit' || this.mode === 'detail') {
@@ -537,16 +497,44 @@ class RoleRecordTableView extends View {
         }
     }
 
-    controlFieldEditSelect(scope, field, value, dontChange) {
-        const $edit = this.$el.find(`select[data-scope="${scope}"][data-field="${field}"][data-action="edit"]`);
+    controlFieldEditSelect(scope, field, limitValue, dontChange) {
+        const $select = this.$el.find(`select[data-scope="${scope}"][data-field="${field}"][data-action="edit"]`);
 
-        if (!dontChange) {
-            if (this.fieldLevelList.indexOf($edit.val()) < this.fieldLevelList.indexOf(value)) {
-                $edit.val(value);
-            }
+        if (!$select.length) {
+            return;
         }
 
-        $edit.find('option').each((i, o) => {
+        let value = $select.val();
+
+        if (
+            !dontChange &&
+            this.levelList.indexOf(value) < this.levelList.indexOf(limitValue)
+        ) {
+            value = limitValue;
+        }
+
+        const options = this.fieldLevelList
+            .filter(item => {
+                return this.levelList.indexOf(item) >= this.levelList.indexOf(limitValue);
+            })
+            .map(item => {
+                return {
+                    value: item,
+                    text: this.translate(item, 'levelList', 'Role'),
+                };
+            });
+
+        if (!dontChange) {
+            // Prevents issues.
+            Select.destroy($select);
+            Select.init($select);
+        }
+
+        Select.setValue($select, '');
+        Select.setOptions($select, options);
+        Select.setValue($select, value);
+
+        /*$select.find('option').each((i, o) => {
             const $o = $(o);
 
             if (this.fieldLevelList.indexOf($o.val()) < this.fieldLevelList.indexOf(value)) {
@@ -554,75 +542,47 @@ class RoleRecordTableView extends View {
             } else {
                 $o.removeAttr('disabled');
             }
-        });
+        });*/
 
-        this.controlSelectColor($edit);
+        //this.controlSelectColor($edit);
     }
 
-    controlEditSelect(scope, value, dontChange) {
-        const $edit = this.$el.find('select[name="' + scope + '-edit"]');
+    controlSelect(scope, action, limitValue, dontChange) {
+        const $select = this.$el.find(`select[name="${scope}-${action}"]`);
 
-        if (!dontChange) {
-            if (this.levelList.indexOf($edit.val()) < this.levelList.indexOf(value)) {
-                $edit.val(value);
-            }
+        if (!$select.length) {
+            return;
         }
 
-        $edit.find('option').each((i, o) => {
-            const $o = $(o);
+        let value = $select.val();
 
-            if (this.levelList.indexOf($o.val()) < this.levelList.indexOf(value)) {
-                $o.attr('disabled', 'disabled');
-            } else {
-                $o.removeAttr('disabled');
-            }
-        });
-
-        this.controlSelectColor($edit);
-    }
-
-    controlStreamSelect(scope, value, dontChange) {
-        const $stream = this.$el.find('select[name="' + scope + '-stream"]');
-
-        if (!dontChange) {
-            if (this.levelList.indexOf($stream.val()) < this.levelList.indexOf(value)) {
-                $stream.val(value);
-            }
+        if (
+            !dontChange &&
+            this.levelList.indexOf(value) < this.levelList.indexOf(limitValue)
+        ) {
+            value = limitValue;
         }
 
-        $stream.find('option').each((i, o) => {
-            const $o = $(o);
-
-            if (this.levelList.indexOf($o.val()) < this.levelList.indexOf(value)) {
-                $o.attr('disabled', 'disabled');
-            } else {
-                $o.removeAttr('disabled');
-            }
-        });
-
-        this.controlSelectColor($stream);
-    }
-
-    controlDeleteSelect(scope, value, dontChange) {
-        const $delete = this.$el.find('select[name="' + scope + '-delete"]');
+        const options = this.getLevelList(scope, action)
+            .filter(item => {
+                return this.levelList.indexOf(item) >= this.levelList.indexOf(limitValue);
+            }).
+            map(item => {
+                return {
+                    value: item,
+                    text: this.translate(item, 'levelList', 'Role'),
+                };
+            });
 
         if (!dontChange) {
-            if (this.levelList.indexOf($delete.val()) < this.levelList.indexOf(value)) {
-                $delete.val(value);
-            }
+            // Prevents issues.
+            Select.destroy($select);
+            Select.init($select);
         }
 
-        $delete.find('option').each((i, o) => {
-            const $o = $(o);
-
-            if (this.levelList.indexOf($o.val()) < this.levelList.indexOf(value)) {
-                $o.attr('disabled', 'disabled');
-            } else {
-                $o.removeAttr('disabled');
-            }
-        });
-
-        this.controlSelectColor($delete);
+        Select.setValue($select, '');
+        Select.setOptions($select, options);
+        Select.setValue($select, value);
     }
 
     showAddFieldModal(scope) {
@@ -671,8 +631,6 @@ class RoleRecordTableView extends View {
                         ]
                     });
                 });
-
-                const searchText = this.$quickSearch.val();
 
                 this.reRenderPreserveSearch();
             });
@@ -772,60 +730,49 @@ class RoleRecordTableView extends View {
         $window.on('resize.' + type + '-' + this.cid, handle);
     }
 
-    setSelectColors() {
-        this.$el.find('select[data-type="access"]').each((i, el) => {
-            const $select = $(el);
+    /**
+     * @param {string} scope
+     * @param {string} value
+     */
+    onSelectAccess(scope, value) {
+        const $dropdowns = this.$el.find(`select[data-scope="${scope}"]`);
 
-            this.controlSelectColor($select);
-        });
+        if (value !== 'enabled') {
+            $dropdowns.attr('disabled', 'disabled');
+            $dropdowns.addClass('hidden');
+            $dropdowns.parent().find('.selectize-control').addClass('hidden');
 
-        this.$el.find('select.scope-action').each((i, el) => {
-            const $select = $(el);
-
-            this.controlSelectColor($select);
-        });
-
-        this.$el.find('select.field-action').each((i, el) => {
-            const $select = $(el);
-
-            this.controlSelectColor($select);
-        });
-    }
-
-    controlSelectColor($select) {
-        const level = $select.val();
-        let color = this.colors[level] || '';
-
-        if (level === 'not-set') {
-            color = '';
+            return;
         }
 
-        $select.css('color', color);
+        $dropdowns.removeAttr('disabled');
+        $dropdowns.removeClass('hidden');
+        $dropdowns.parent().find('.selectize-control').removeClass('hidden');
 
-        $select.children().each((j, el) => {
-            const $o = $(el);
-            const level = $o.val();
+        this.actionList.forEach(action => {
+            const $select = this.$el.find(`select[name="${scope}-${action}"]`);
 
-            let color = this.colors[level] || '';
-
-            if (level === 'not-set') {
-                color = '';
+            if (!$select.length) {
+                return;
             }
 
-            if ($o.attr('disabled')) {
-                color = '';
+            let level = this.defaultLevels[action];
+
+            if (!level) {
+                level = this.getLevelList(scope, action)[0];
             }
 
-            $o.css('color', color);
+            if (this.lowestLevelByDefault) {
+                level = [...this.getLevelList(scope, action)].pop();
+            }
+
+            Select.setValue($select, level);
+            $select.trigger('change');
         });
     }
 
     processQuickSearch(text) {
         text = text.trim();
-
-        //const $noData = this.$noData;
-
-        //$noData.addClass('hidden');
 
         if (!text) {
             this.$el.find('table tr.item-row').removeClass('hidden');

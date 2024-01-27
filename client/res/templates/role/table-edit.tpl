@@ -36,7 +36,7 @@
                             name="{{name}}"
                             class="form-control"
                             data-type="access"
-                        >{{options ../accessList access scope='Role' field='accessList'}}</select>
+                        >{{options ../accessList access scope='Role' field='accessList' styleMap=../styleMap}}</select>
                     </td>
 
                     {{#ifNotEqual type 'boolean'}}
@@ -46,10 +46,10 @@
                                 <select name="{{name}}"
                                     class="form-control scope-action{{#ifNotEqual ../access 'enabled'}} hidden{{/ifNotEqual}}"
                                     data-scope="{{../name}}"
-                                    {{#ifNotEqual ../access 'enabled'}} disabled{{/ifNotEqual}}
+
                                     title="{{translate action scope='Role' category='actions'}}"
                                     data-role-action="{{action}}">
-                                {{options levelList level field='levelList' scope='Role'}}
+                                {{options levelList level field='levelList' scope='Role' styleMap=../../styleMap}}
                                 </select>
                                 {{/if}}
                             </td>
@@ -91,7 +91,7 @@
                     <th style="width: 33%"></th>
                 </tr>
                 {{#each fieldTableDataList}}
-                    <tr data-name="{{name}}" class="item-row">
+                    <tr data-name="{{name}}" class="item-row accented">
                         <td>
                             <div class="detail-field-container">
                                 <b>{{translate name category='scopeNamesPlural'}}</b>
@@ -111,7 +111,7 @@
                         <td></td>
                         <td>
                             <div class="detail-field-container">
-                                <b>{{translate name category='fields' scope=../name}}</b>
+                                <span>{{translate name category='fields' scope=../name}}</span>
                             </div>
                         </td>
                         {{#each list}}
@@ -123,7 +123,7 @@
                                 data-scope="{{../../name}}"
                                 data-action="{{name}}"
                                 title="{{translate name scope='Role' category='actions'}}"
-                            >{{options ../../../fieldLevelList value scope='Role' field='accessList'}}</select>
+                            >{{options ../../../fieldLevelList value scope='Role' field='accessList' styleMap=../../../styleMap}}</select>
                         </td>
                         {{/each}}
                         <td colspan="2">

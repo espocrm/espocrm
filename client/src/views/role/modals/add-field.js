@@ -26,64 +26,69 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/role/modals/add-field', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+class RoleAddFieldModalView extends ModalView {
 
-        template: 'role/modals/add-field',
+    template = 'role/modals/add-field'
 
-        events: {
-            'click a[data-action="addField"]': function (e) {
-                this.trigger('add-field', $(e.currentTarget).data().name);
+    backdrop = true
+
+    events = {
+        /** @this RoleAddFieldModalView */
+        'click a[data-action="addField"]': function (e) {
+            this.trigger('add-field', $(e.currentTarget).data().name);
+        }
+    }
+
+    data() {
+        const dataList = [];
+
+        this.fieldList.forEach((field, i) => {
+            if (i % 4 === 0) {
+                dataList.push([]);
             }
-        },
 
-        data: function () {
-            var dataList = [];
+            dataList[dataList.length -1].push(field);
+        });
 
-            this.fieldList.forEach((field, i) => {
-                if (i % 4 === 0) {
-                    dataList.push([]);
-                }
+        return {
+            dataList: dataList,
+            scope: this.scope,
+        };
+    }
 
-                dataList[dataList.length -1].push(field);
-            });
+    setup() {
+        const scope = this.scope = this.options.scope;
 
-            return {
-                dataList: dataList,
-                scope: this.scope
-            };
-        },
+        this.headerText = this.translate(scope, 'scopeNamesPlural') + ' · ' + this.translate('Add Field');
 
-        setup: function () {
-            this.headerText = this.translate('Add Field');
+        const fields = this.getMetadata().get(`entityDefs.${scope}.fields`) || {};
+        const fieldList = [];
 
-            var scope = this.scope = this.options.scope;
-            var fields = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
-            var fieldList = [];
+        Object.keys(fields).forEach(field => {
+            const defs = /** @type {Record} */fields[field];
 
-            Object.keys(fields).forEach(field => {
-                var d = fields[field];
+            if (field in this.options.ignoreFieldList) {
+                return;
+            }
 
-                if (field in this.options.ignoreFieldList) {
-                    return;
-                }
+            if (defs.disabled) {
+                return;
+            }
 
-                if (d.disabled) {
-                    return;
-                }
+            const mandatoryLevel = this.getMetadata()
+                .get(['app', this.options.type, 'mandatory', 'scopeFieldLevel', this.scope, field]);
 
-                if (
-                    this.getMetadata()
-                        .get(['app', this.options.type, 'mandatory', 'scopeFieldLevel', this.scope, field]) !== null
-                ) {
-                    return;
-                }
+            if (mandatoryLevel != null) {
+                return;
+            }
 
-                fieldList.push(field);
-            });
+            fieldList.push(field);
+        });
 
-            this.fieldList = this.getLanguage().sortFieldList(scope, fieldList);
-        },
-    });
-});
+        this.fieldList = this.getLanguage().sortFieldList(scope, fieldList);
+    }
+}
+
+export default RoleAddFieldModalView;
