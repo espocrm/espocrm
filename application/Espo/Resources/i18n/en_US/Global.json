@@ -425,6 +425,7 @@
         "emailAddressIsInvalid": "Email Address is Invalid",
         "assignedUserName": "Assigned User Name",
         "teams": "Teams",
+        "users": "Users",
         "createdAt": "Created At",
         "modifiedAt": "Modified At",
         "createdBy": "Created By",
@@ -448,7 +449,8 @@
         "type": "Type",
         "names": "Names",
         "types": "Types",
-        "targetListIsOptedOut": "Is Opted Out (Target List)"
+        "targetListIsOptedOut": "Is Opted Out (Target List)",
+        "childList": "Child List"
     },
     "links": {
         "assignedUser": "Assigned User",
