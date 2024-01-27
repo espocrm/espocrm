@@ -187,7 +187,7 @@ class BeforeSaveValidate implements SaveHook
 
         foreach ($data as $field => $fieldItem) {
             if (!$fieldItem instanceof stdClass) {
-                throw new BadRequest("Data for field *$field*, scope *$scope*  should be object.");
+                throw new BadRequest("Data for field *$field*, scope *$scope* should be object.");
             }
 
             $this->validateFieldDataItemItem($scope, $field, $fieldItem);
@@ -199,6 +199,10 @@ class BeforeSaveValidate implements SaveHook
      */
     private function validateFieldDataItemItem(string $scope, string $field, stdClass $item): void
     {
+        if (!$this->metadata->get("entityDefs.$scope.fields.$field")) {
+            throw new BadRequest("Field *$field* does not exist in *$scope*.");
+        }
+
         $actions = [
             Table::ACTION_READ,
             Table::ACTION_EDIT,
