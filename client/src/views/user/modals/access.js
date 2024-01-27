@@ -35,10 +35,24 @@ define('views/user/modals/access', ['views/modal'], function (Dep) {
         template: 'user/modals/access',
         backdrop: true,
 
+        styleMap: {
+            yes: 'success',
+            all: 'success',
+            account: 'info',
+            contact: 'info',
+            team: 'info',
+            own: 'warning',
+            no: 'danger',
+            enabled: 'success',
+            disabled: 'danger',
+            'not-set': 'default',
+        },
+
         data: function () {
             return {
                 valuePermissionDataList: this.getValuePermissionList(),
-                levelListTranslation: this.getLanguage().get('Role', 'options', 'levelList') || {}
+                levelListTranslation: this.getLanguage().get('Role', 'options', 'levelList') || {},
+                styleMap: this.styleMap,
             };
         },
 

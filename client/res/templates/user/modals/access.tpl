@@ -5,7 +5,9 @@
                 <div class="cell col-sm-3 form-group" data-name="{{name}}">
                     <label class="control-label" data-name="{{name}}">{{translate name category="fields" scope="Role"}}</label>
                     <div class="field" data-name="{{name}}">
-                        {{translateOption value scope="Role" field="assignmentPermission" translatedOptions=levelListTranslation}}
+                        <span class="text-{{lookup ../styleMap value}}">
+                            {{translateOption value scope="Role" field="assignmentPermission" translatedOptions=levelListTranslation}}
+                        </span>
                     </div>
                 </div>
             {{/each}}
