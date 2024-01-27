@@ -8,14 +8,18 @@ define('custom:views/calculations/budget', ['view'], function (View) {
             this.dateValue2 = this.dateValue1;
             this.expenses = [];
             this.sum = 0;
+            this.income = { 
+                list: [],
+                total: { 
+                    expenses: 0, 
+                    profit: 0,
+                    income: 0
+                }
+            }
+
+            this.fetchIncome(this.dateValue1, this.dateValue1);
 
             this.initHandlers();
-
-            this.wait(
-                this.fetchExpensesByDate(this.dateValue1)
-                    .then(expenses => this.setExpenses(expenses))
-                    .catch(error => console.error(error))
-            );
         },
 
         initHandlers: function() {
@@ -31,8 +35,7 @@ define('custom:views/calculations/budget', ['view'], function (View) {
         handleFilterToday: function(e) {
             this.filterValue = e.target.value;
             this.dateValue1 = new Date().toLocaleDateString().split('.').reverse().join('-');
-            this.fetchExpenses(this.filterValue, this.dateValue1);
-            this.reRender();
+            this.fetchIncome(this.dateValue1, this.dateValue1);
         },
 
         handleFilterDate: function(e) {
@@ -43,7 +46,22 @@ define('custom:views/calculations/budget', ['view'], function (View) {
 
         handleChangeDate: function(e) {
             this.dateValue1 = e.target.value;
-            this.fetchExpenses(this.filterValue, this.dateValue1);
+            console.log(this.dateValue1);
+            this.fetchIncome(this.dateValue1);
+            //this.fetchExpenses(this.filterValue, this.dateValue1);
+        },
+
+        fetchIncome: async function(dateFrom, dateTo) {
+            try {
+                let income = await fetch(`api/v1/Budget/income/${dateFrom}/${dateTo}`);
+                income = await income.json();
+
+                console.log(income);
+                this.income = income;
+                this.reRender();
+            } catch (error) {
+                console.error(error);
+            }
         },
 
         handleDateBetween1: function(e) {
@@ -55,7 +73,7 @@ define('custom:views/calculations/budget', ['view'], function (View) {
         },
 
         handleFindBetween: function(e) {
-            this.fetchExpenses(this.filterValue, this.dateValue1, this.dateValue2);
+            this.fetchIncome(this.dateValue1, this.dateValue2);
         },
 
         fetchExpenses: function(filterValue, date1, date2) {
@@ -129,7 +147,13 @@ define('custom:views/calculations/budget', ['view'], function (View) {
                 dateValue2: this.dateValue2,
                 sum: this.sum.toLocaleString('en'),
                 expenses: this.expenses.list,
-                expensesTotal: this.expenses.total
+                expensesTotal: this.expenses.total,
+
+                profitTotalSum: this.income.total.profit,
+                expensesTotalSum: this.income.total.expenses,
+                incomeTotalSum: this.income.total.income,
+
+                incomeList: this.income.list
             };
         },
     });

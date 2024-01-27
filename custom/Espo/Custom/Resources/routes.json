@@ -6,5 +6,15 @@
             "controller": "MyController",
             "action": "test"
         }
+    },
+    {
+        "route": "/Budget/income/:dateFrom/:dateTo",
+        "method": "get",
+        "params": {
+            "controller": "BudgetController",
+            "action": "income",
+            "dateFrom": ":dateFrom",
+            "dateTo": ":dateTo"
+        }
     }
 ]

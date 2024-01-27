@@ -16,10 +16,10 @@
         </div>
         <div id="filterButtons">
             <button id="filterToday" class="btn btn-default" value="today">Сьогодні</button>
-            <button id="filterToday" class="btn btn-default" value="today">Тиждень</button>
-            <button id="filterToday" class="btn btn-default" value="today">Місяць</button>
             <button id="filterDate" class="btn btn-default" value="date">Дата</button>
             <button id="filterBetween" class="btn btn-default" value="between">Проміжок</button>
+            <button id="filterToday1" class="btn btn-default" value="today">Тиждень</button>
+            <button id="filterToday2" class="btn btn-default" value="today">Місяць</button>
         </div>
         <div>
             <label class="control-label small" data-name="date">Дата</label>
@@ -66,15 +66,46 @@
                 Загалом
             </td> 
             <td class="cell" style="">
-               <span style="padding: 5px">17,400</span>
+                <span style="padding: 5px">
+                    {{ profitTotalSum }}
+                </span>
             </td>
             <td class="cell">
-                <span style="padding: 5px">3,300</span>
+                <span style="padding: 5px">
+                    {{ expensesTotalSum }}
+                </span>
             </td>
             <td class="cell">
-                14,100
+                <span style="padding: 5px">
+                    {{ incomeTotalSum }}
+                </span>
             </td>
         </tr>
+        {{#each incomeList}}
+            <tr class="list-row">  
+                <td class="cell">
+                    <span class="text-soft far fa-caret-square-down"></span>
+                    {{this.date}}
+                </td> 
+                <td class="cell" style="">
+                    <span style="padding: 5px">
+                        {{ this.profit }}
+                    </span>
+                </td>
+                <td class="cell" style="">
+                    <span style="padding: 5px">
+                        {{ this.expenses }}
+                    </span>
+                </td>
+                <td class="cell text-bold">
+                    <span style="padding: 5px">
+                        {{ this.income }}
+                    </span> 
+                </td>
+            </tr>
+        {{/each}}
+
+        <!--
         <tr class="list-row">  
             <td class="cell">
                 <span class="text-soft far fa-caret-square-up"></span>
@@ -130,7 +161,16 @@
                 7,050
             </td>
         </tr>
-        <tr class="list-row">  
+        fetchIncome: async function(date) {
+            try {
+                let income = await fetch(`api/v1/Budget/expenses/${date}`);
+                income = await income.json();
+
+                console.log(income);
+            } catch (error) {
+                console.error(error);
+            }
+        },<tr class="list-row">  
             <td class="cell">
                 <span class="text-soft far fa-caret-square-up"></span>
                 02.01.2024
@@ -140,7 +180,16 @@
                <table class="table" style="border-radius: 5px ;background-color: #c9def4">
                 <tr>
                     <td style="border-top: none">3000</td>
-                    <td style="border-top: none">Абони</td>
+        fetchIncome: async function(date) {
+            try {
+                let income = await fetch(`api/v1/Budget/expenses/${date}`);
+                income = await income.json();
+
+                console.log(income);
+            } catch (error) {
+                console.error(error);
+            }
+        },            <td style="border-top: none">Абони</td>
                 </tr>
                 <tr>
                     <td>1000</td>
@@ -217,6 +266,8 @@
                 <span style="padding: 5px">7,050</span> 
             </td>
         </tr>
+        
+        -->
 
         <!--
 
