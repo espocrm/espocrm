@@ -290,7 +290,7 @@ class RoleRecordTableView extends View {
             });
 
         scopeListAll.forEach(scope => {
-            if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
+            if (this.getMetadata().get(`scopes.${scope}.disabled`)) {
                 return;
             }
 
@@ -311,9 +311,13 @@ class RoleRecordTableView extends View {
         this.fieldTableDataList = [];
 
         this.scopeList.forEach(scope => {
-            const d = this.getMetadata().get(`scopes.${scope}`) || {};
+            const defs = /** @type {Record} */this.getMetadata().get(`scopes.${scope}`) || {};
 
-            if (!d.entity) {
+            if (!defs.entity || defs.aclFieldLevelDisabled) {
+                return;
+            }
+
+            if (this.isAclFieldLevelDisabledForScope(scope)) {
                 return;
             }
 
@@ -368,6 +372,10 @@ class RoleRecordTableView extends View {
                 list: fieldDataList,
             });
         });
+    }
+
+    isAclFieldLevelDisabledForScope(scope) {
+        return !!this.getMetadata().get(`scopes.${scope}.aclFieldLevelDisabled`);
     }
 
     fetchScopeData() {

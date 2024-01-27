@@ -6,5 +6,6 @@
 	"aclActionList": ["read", "edit"],
 	"aclLevelList": ["yes", "no"],
 	"aclHighestLevel": "yes",
+    "aclFieldLevelDisabled": true,
 	"customizable": false
 }

@@ -1,4 +1,5 @@
 {
     "entity": true,
-    "acl": "boolean"
+    "acl": "boolean",
+    "aclFieldLevelDisabled": true
 }

@@ -67,13 +67,11 @@ class RoleAddFieldModalView extends ModalView {
         const fieldList = [];
 
         Object.keys(fields).forEach(field => {
-            const defs = /** @type {Record} */fields[field];
-
             if (field in this.options.ignoreFieldList) {
                 return;
             }
 
-            if (defs.disabled) {
+            if (!this.getFieldManager().isEntityTypeFieldAvailable(scope, field)) {
                 return;
             }
 

@@ -84,5 +84,9 @@ define('views/portal-role/record/table', ['views/role/record/table'], function (
                 }
             });
         },
+
+        isAclFieldLevelDisabledForScope: function (scope) {
+            return !!this.getMetadata().get(`scopes.${scope}.aclPortalFieldLevelDisabled`);
+        },
     });
 });
