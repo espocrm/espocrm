@@ -49,6 +49,14 @@ See the [developer documentation](https://docs.espocrm.com/development/).
 
 We highly recommend using IDE for development. The backend codebase follows SOLID principles, utilizes interfaces, static typing and generics. We recommend to start learning EspoCRM from the Dependency Injection article in the documentation.
 
+### Community & Support
+
+If you have a question regarding some features, need help or customizations, want to get in touch with other EspoCRM users, or add a feature request, please use our [community forum](https://forum.espocrm.com/). We believe that using the forum to ask for help and share experience allows everyone in the community to contribute and use this knowledge later.
+
+### License
+
+EspoCRM is published under the GNU AGPLv3 [license](https://raw.githubusercontent.com/espocrm/espocrm/master/LICENSE.txt).
+
 ### Contributing
 
 Before we can merge your pull request, you need to accept our CLA [here](https://github.com/espocrm/cla). See [contributing guidelines](https://github.com/espocrm/espocrm/blob/master/.github/CONTRIBUTING.md).
@@ -58,14 +66,6 @@ Branches:
 * *fix* – upcoming maintenance release; minor fixes should be pushed to this branch;
 * *master* – develop branch; new features should be pushed to this branch;
 * *stable* – last stable release.
-
-### Community & Support
-
-If you have a question regarding some features, need help or customizations, want to get in touch with other EspoCRM users, or add a feature request, please use our [community forum](https://forum.espocrm.com/). We believe that using the forum to ask for help and share experience allows everyone in the community to contribute and use this knowledge later.
-
-### License
-
-EspoCRM is published under the GNU AGPLv3 [license](https://raw.githubusercontent.com/espocrm/espocrm/master/LICENSE.txt).
 
 ### Language
 
