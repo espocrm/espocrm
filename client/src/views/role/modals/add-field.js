@@ -49,8 +49,13 @@ class RoleAddFieldModalView extends ModalView {
                 dataList.push([]);
             }
 
-            dataList[dataList.length -1].push(field);
+            dataList[dataList.length -1].push({
+                name: field,
+                label: this.translate(field, 'fields', this.scope),
+            });
         });
+
+        console.log(dataList);
 
         return {
             dataList: dataList,

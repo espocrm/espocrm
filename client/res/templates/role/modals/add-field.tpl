@@ -1,15 +1,15 @@
 <div class="no-side-margin">
     <table class="table table-bordered">
-    {{#each dataList}}
+    {{#each dataList as |dataItem|}}
         <tr>
-        {{#each this}}
+        {{#each dataItem}}
             <td>
                 <a
                     role="button"
                     tabindex="0"
                     data-action="addField"
-                    data-name="{{this}}"
-                >{{translate this scope=../../scope category='fields'}}</a>
+                    data-name="{{name}}"
+                >{{label}}</a>
             </td>
         {{/each}}
         </tr>
