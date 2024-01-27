@@ -385,10 +385,14 @@ class RoleRecordTableView extends View {
         const actionList = this.actionList;
         const aclTypeMap = this.aclTypeMap;
 
+        const $table = this.$el.find(`table.scope-level`);
+
         for (const i in scopeList) {
             const scope = scopeList[i];
 
-            const value = this.$el.find(`select[name="${scope}"]`).val();
+            const $rows = this.$el.find(`table.scope-level tr[data-name="${scope}"]`);
+
+            const value = $rows.find(`select[name="${scope}"]`).val();
 
             if (value === 'not-set') {
                 continue;
@@ -408,7 +412,7 @@ class RoleRecordTableView extends View {
                 for (const j in actionList) {
                     const action = actionList[j];
 
-                    const value = this.$el.find(`select[name="${scope}-${action}"]`).val();
+                    const value = $rows.find(`select[name="${scope}-${action}"]`).val();
 
                     if (value === undefined) {
                         continue;
@@ -431,12 +435,14 @@ class RoleRecordTableView extends View {
             const scopeObj = {};
             const scope = scopeData.name;
 
+            const $rows = this.$el.find(`table.field-level tr[data-name="${scope}"]`);
+
             scopeData.list.forEach(fieldData => {
                 const field = fieldData.name;
                 const fieldObj = {};
 
                 this.fieldActionList.forEach(action =>{
-                    const $select = this.$el
+                    const $select = $rows
                         .find(`select[data-scope="${scope}"][data-field="${field}"][data-action="${action}"]`);
 
                     if (!$select.length) {
