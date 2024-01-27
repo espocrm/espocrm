@@ -9,8 +9,7 @@ For this, please use our [forum](https://forum.espocrm.com).
 
 ## Pull Requests
 
-If you would like to contribute something that is not a small fix, please create an issue first
-(a bug report or feature request).
+We are open for contributions that are bug fixes and small improvements. If you would like to contribute something that is not a small fix, please reach out to maintainers before submitting your PR (by creating a GitHub issue).
 
 Before we can merge your pull request, you need to accept our CLA [here](https://github.com/espocrm/cla).
 
