@@ -51,7 +51,7 @@ We highly recommend using IDE for development. The backend codebase follows SOLI
 
 ### Contributing
 
-Before we can merge your pull request, you need to accept our CLA [here](https://github.com/espocrm/cla). It's very simple to do.
+Before we can merge your pull request, you need to accept our CLA [here](https://github.com/espocrm/cla). See [contributing guidelines](https://github.com/espocrm/espocrm/blob/master/.github/CONTRIBUTING.md).
 
 Branches:
 
