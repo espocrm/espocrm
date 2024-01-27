@@ -3,5 +3,11 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Role\\BeforeSaveValidate"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Role\\BeforeSaveValidate"
+    ]
 }
