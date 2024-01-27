@@ -390,7 +390,7 @@ class RoleRecordTableView extends View {
         for (const i in scopeList) {
             const scope = scopeList[i];
 
-            const $rows = this.$el.find(`table.scope-level tr[data-name="${scope}"]`);
+            const $rows = $table.find(`tr[data-name="${scope}"]`);
 
             const value = $rows.find(`select[name="${scope}"]`).val();
 
@@ -557,18 +557,6 @@ class RoleRecordTableView extends View {
         Select.setValue($select, '');
         Select.setOptions($select, options);
         Select.setValue($select, value);
-
-        /*$select.find('option').each((i, o) => {
-            const $o = $(o);
-
-            if (this.fieldLevelList.indexOf($o.val()) < this.fieldLevelList.indexOf(value)) {
-                $o.attr('disabled', 'disabled');
-            } else {
-                $o.removeAttr('disabled');
-            }
-        });*/
-
-        //this.controlSelectColor($edit);
     }
 
     controlSelect(scope, action, limitValue, dontChange) {
@@ -838,8 +826,6 @@ class RoleRecordTableView extends View {
 
         if (matchedList.length === 0) {
             this.$el.find('table tr.item-row').addClass('hidden');
-
-            //$noData.removeClass('hidden');
 
             return;
         }
