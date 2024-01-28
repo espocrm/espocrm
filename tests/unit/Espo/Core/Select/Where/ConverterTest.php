@@ -31,7 +31,7 @@ namespace tests\unit\Espo\Core\Select\Where;
 
 use Espo\Core\Select\Helpers\RandomStringGenerator;
 use Espo\Core\Select\Where\Converter;
-use Espo\Core\Select\Where\DateTimeItemTransformer;
+use Espo\Core\Select\Where\DefaultDateTimeItemTransformer;
 use Espo\Core\Select\Where\Item;
 use Espo\Core\Select\Where\ItemConverter;
 use Espo\Core\Select\Where\ItemConverterFactory;
@@ -90,10 +90,7 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             ->method('generate')
             ->willReturn('Random');
 
-        $this->dateTimeItemTransformer = new DateTimeItemTransformer(
-            $this->user,
-            $this->config
-        );
+        $this->dateTimeItemTransformer = new DefaultDateTimeItemTransformer($this->config);
 
         $this->itemConverter = new ItemGeneralConverter(
             $this->entityType,
@@ -102,7 +99,6 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
             $this->scanner,
             $this->itemConverterFactory,
             $this->randomStringGenerator,
-            //$this->entityManager,
             $this->ormDefs,
             $this->config,
             $this->metadata

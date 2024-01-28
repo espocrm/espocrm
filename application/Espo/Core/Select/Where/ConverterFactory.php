@@ -34,13 +34,14 @@ use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingData;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\User;
 
 class ConverterFactory
 {
-    public function __construct(private InjectableFactory $injectableFactory, private Metadata $metadata)
-    {}
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata
+    ) {}
 
     public function create(string $entityType, User $user): Converter
     {
@@ -72,16 +73,12 @@ class ConverterFactory
         $bindingData = new BindingData();
 
         $binder = new Binder($bindingData);
-
-        $binder
-            ->bindInstance(User::class, $user);
-
+        $binder->bindInstance(User::class, $user);
         $binder
             ->for($className)
             ->bindValue('$entityType', $entityType);
-
         $binder
-            ->for(DateTimeItemTransformer::class)
+            ->for(DefaultDateTimeItemTransformer::class)
             ->bindValue('$entityType', $entityType);
 
         $bindingContainer = new BindingContainer($bindingData);
@@ -156,6 +153,6 @@ class ConverterFactory
             return $className;
         }
 
-        return DateTimeItemTransformer::class;
+        return DefaultDateTimeItemTransformer::class;
     }
 }
