@@ -41,7 +41,7 @@ class UserPreferencesProvider
         private EntityManager $entityManager,
     ) {}
 
-    public function get(string $key = Null): mixed
+    public function get(string $key): mixed
     {
         if (!isset($key))
           throw new Error("A key must be provided");

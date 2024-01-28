@@ -33,9 +33,9 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Config;
 use Espo\Core\Select\Where\Item\Type;
+use Espo\Core\Select\Helpers\UserPreferencesProvider;
 use Espo\Entities\User;
 use Espo\Entities\Preferences;
-use Espo\ORM\EntityManager;
 
 use DateTime;
 use DateTimeZone;
@@ -51,7 +51,7 @@ class DateTimeItemTransformer
     public function __construct(
       protected User $user,
       private Config $config,
-      private EntityManager $entityManager,
+      private UserPreferencesProvider $userPreferencesProvider,
     ) {}
 
     /**
@@ -332,11 +332,13 @@ class DateTimeItemTransformer
             case Type::LAST_X_WEEKS:
             case Type::NEXT_WEEK:
             case Type::NEXT_X_WEEKS:
-                $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $this->user->getId());
-                $weekStart = $preferences->get("weekStart") === -1 ? $this->config->get("weekStart") : $preferences->get("weekStart");
+                $weekStart = $this->userPreferencesProvider->get("weekStart");
+                if ($weekStart === -1 || $weekStart == "")
+                    $weekStart = $this->config->get("weekStart");
 
                 $dtFrom = $dt->setTime(0,0);
-                $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
+                $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
+                    ->setTimezone(new DateTimeZone('UTC'));
                 $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
 
                 if ($type == Type::LAST_WEEK) {
