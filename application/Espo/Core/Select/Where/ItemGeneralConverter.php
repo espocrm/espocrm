@@ -1107,6 +1107,9 @@ class ItemGeneralConverter implements ItemConverter
         ];
     }
 
+    /**
+     * @return array<string|int, mixed>
+     */
     private function processCurrentWeek(string $attribute): array
     {
         $weekStart = $this->userPreferencesProvider->get("weekStart");
@@ -1115,7 +1118,8 @@ class ItemGeneralConverter implements ItemConverter
         $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
 
         $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0);
-        $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
+        $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
+            ->setTimezone(new DateTimeZone('UTC'));
         $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
 
         return [
@@ -1126,6 +1130,9 @@ class ItemGeneralConverter implements ItemConverter
         ];
     }
 
+    /**
+     * @return array<string|int, mixed>
+     */
     private function processLastWeek(string $attribute): array
     {
         $weekStart = $this->userPreferencesProvider->get("weekStart");
@@ -1134,7 +1141,8 @@ class ItemGeneralConverter implements ItemConverter
         $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
 
         $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0)->modify("-1 week");
-        $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
+        $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
+            ->setTimezone(new DateTimeZone('UTC'));
         $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
 
         return [
@@ -1145,6 +1153,10 @@ class ItemGeneralConverter implements ItemConverter
         ];
     }
 
+    /**
+     * @param mixed $value
+     * @return array<string|int, mixed>
+     */
     private function processLastXWeeks(string $attribute, $value): array
     {
         $weekStart = $this->userPreferencesProvider->get("weekStart");
@@ -1154,8 +1166,8 @@ class ItemGeneralConverter implements ItemConverter
 
         $number = strval(intval($value));
         $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0);
-        $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
-
+        $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
+            ->setTimezone(new DateTimeZone('UTC'));
         $dtTo = (clone $dtFrom)->modify("-1 second");
         $dtFrom->modify("-{$number} week");
 
@@ -1167,6 +1179,9 @@ class ItemGeneralConverter implements ItemConverter
         ];
     }
 
+    /**
+     * @return array<string|int, mixed>
+     */
     private function processNextWeek(string $attribute): array
     {
         $weekStart = $this->userPreferencesProvider->get("weekStart");
@@ -1175,7 +1190,8 @@ class ItemGeneralConverter implements ItemConverter
         $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
 
         $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0)->modify("+1 week");
-        $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
+        $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
+            ->setTimezone(new DateTimeZone('UTC'));
         $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
 
         return [
@@ -1186,6 +1202,10 @@ class ItemGeneralConverter implements ItemConverter
         ];
     }
 
+    /**
+     * @param mixed $value
+     * @return array<string|int, mixed>
+     */
     private function processNextXWeeks(string $attribute, $value): array
     {
         $weekStart = $this->userPreferencesProvider->get("weekStart");
@@ -1195,7 +1215,8 @@ class ItemGeneralConverter implements ItemConverter
 
         $number = strval(intval($value));
         $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0)->modify("+1 week");
-        $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
+        $dtFrom->setISODate(intval($dtFrom->format("Y")), intval($dtFrom->format("W")), $weekStart)
+            ->setTimezone(new DateTimeZone('UTC'));
         $dtTo = (clone $dtFrom)->modify("+{$number} weeks -1 second");
 
         return [
