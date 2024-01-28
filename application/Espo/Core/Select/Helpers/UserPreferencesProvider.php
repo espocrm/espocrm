@@ -33,14 +33,12 @@ use Espo\Core\Exceptions\Error;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Entities\Preferences;
-use Espo\Core\Utils\Config;
 
 class UserPreferencesProvider
 {
     public function __construct(
         private User $user,
         private EntityManager $entityManager,
-        private Config $config
     ) {}
 
     public function get(string $key = Null): mixed
