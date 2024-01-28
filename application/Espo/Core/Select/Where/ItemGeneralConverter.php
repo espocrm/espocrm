@@ -1113,7 +1113,8 @@ class ItemGeneralConverter implements ItemConverter
     private function processCurrentWeek(string $attribute): array
     {
         $weekStart = $this->userPreferencesProvider->get("weekStart");
-        $weekStart = $weekStart === -1 ? $this->config->get("weekStart") : $weekStart;
+        if ($weekStart === -1 || $weekStart == "")
+            $weekStart = $this->config->get("weekStart");
 
         $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
 
@@ -1136,7 +1137,8 @@ class ItemGeneralConverter implements ItemConverter
     private function processLastWeek(string $attribute): array
     {
         $weekStart = $this->userPreferencesProvider->get("weekStart");
-        $weekStart = $weekStart === -1 ? $this->config->get("weekStart") : $weekStart;
+        if ($weekStart === -1 || $weekStart == "")
+            $weekStart = $this->config->get("weekStart");
 
         $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
 
@@ -1160,7 +1162,8 @@ class ItemGeneralConverter implements ItemConverter
     private function processLastXWeeks(string $attribute, $value): array
     {
         $weekStart = $this->userPreferencesProvider->get("weekStart");
-        $weekStart = $weekStart === -1 ? $this->config->get("weekStart") : $weekStart;
+        if ($weekStart === -1 || $weekStart == "")
+            $weekStart = $this->config->get("weekStart");
 
         $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
 
@@ -1185,7 +1188,8 @@ class ItemGeneralConverter implements ItemConverter
     private function processNextWeek(string $attribute): array
     {
         $weekStart = $this->userPreferencesProvider->get("weekStart");
-        $weekStart = $weekStart === -1 ? $this->config->get("weekStart") : $weekStart;
+        if ($weekStart === -1 || $weekStart == "")
+            $weekStart = $this->config->get("weekStart");
 
         $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
 
@@ -1209,7 +1213,8 @@ class ItemGeneralConverter implements ItemConverter
     private function processNextXWeeks(string $attribute, $value): array
     {
         $weekStart = $this->userPreferencesProvider->get("weekStart");
-        $weekStart = $weekStart === -1 ? $this->config->get("weekStart") : $weekStart;
+        if ($weekStart === -1 || $weekStart == "")
+            $weekStart = $this->config->get("weekStart");
 
         $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
 

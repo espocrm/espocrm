@@ -43,7 +43,7 @@ class UserPreferencesProvider
 
     public function get(string $key): mixed
     {
-        if (!isset($key))
+        if (is_null($key))
           throw new Error("A key must be provided");
 
         $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $this->user->getId());
