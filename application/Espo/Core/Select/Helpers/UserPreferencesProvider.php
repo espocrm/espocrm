@@ -44,6 +44,8 @@ class UserPreferencesProvider
     public function get(string $key): mixed
     {
         $preferences = $this->entityManager->getEntity(Preferences::ENTITY_TYPE, $this->user->getId());
+        if (!$preferences)
+            throw new Error("Could not load user's preferences");
 
         if (!$preferences->has($key))
             throw new Error("The key does not exist in the user's preferences");
