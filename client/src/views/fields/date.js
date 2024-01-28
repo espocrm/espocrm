@@ -47,9 +47,32 @@ class DateFieldView extends BaseFieldView {
     validations = ['required', 'date', 'after', 'before']
 
     searchTypeList = [
-        'lastSevenDays', 'ever', 'isEmpty', 'currentMonth', 'lastMonth', 'nextMonth', 'currentQuarter',
-        'lastQuarter', 'currentYear', 'lastYear', 'today', 'past', 'future', 'lastXDays', 'nextXDays',
-        'olderThanXDays', 'afterXDays', 'on', 'after', 'before', 'between',
+        'lastSevenDays',
+        'ever',
+        'isEmpty',
+        'currentWeek',
+        'lastWeek',
+        'lastXWeeks',
+        'nextWeek',
+        'nextXWeeks',
+        'currentMonth',
+        'lastMonth',
+        'nextMonth',
+        'currentQuarter',
+        'lastQuarter',
+        'currentYear',
+        'lastYear',
+        'today',
+        'past',
+        'future',
+        'lastXDays',
+        'nextXDays',
+        'olderThanXDays',
+        'afterXDays',
+        'on',
+        'after',
+        'before',
+        'between',
     ]
 
     initialSearchIsNotIdle = true
@@ -89,7 +112,7 @@ class DateFieldView extends BaseFieldView {
             data.dateValue = this.getDateTime().toDisplayDate(value);
             data.dateValueTo = this.getDateTime().toDisplayDate(valueTo);
 
-            if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays']
+            if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays', 'lastXWeeks', 'nextXWeeks']
                     .indexOf(this.getSearchType())
             ) {
                 data.number = this.searchParams.value;
@@ -300,7 +323,7 @@ class DateFieldView extends BaseFieldView {
         if (~['on', 'notOn', 'after', 'before'].indexOf(type)) {
             this.$el.find('div.primary').removeClass('hidden');
         }
-        else if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].indexOf(type)) {
+        else if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays', 'lastXWeeks', 'nextXWeeks'].indexOf(type)) {
             this.$el.find('div.additional-number').removeClass('hidden');
         }
         else if (type === 'between') {
@@ -360,7 +383,7 @@ class DateFieldView extends BaseFieldView {
                     valueTo: valueTo
                 },
             };
-        } else if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].indexOf(type)) {
+        } else if (~['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays', 'lastXWeeks', 'nextXWeeks'].indexOf(type)) {
             let number = this.$el.find('input.number').val();
 
             data = {

@@ -34,6 +34,8 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Select\Where\Item\Type;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
+use Espo\Core\Select\Helpers\UserTimeZoneProvider;
+use Espo\Core\Select\Helpers\UserPreferencesProvider;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Metadata;
@@ -65,7 +67,9 @@ class ItemGeneralConverter implements ItemConverter
         private RandomStringGenerator $randomStringGenerator,
         private ORMDefs $ormDefs,
         private Config $config,
-        private Metadata $metadata
+        private Metadata $metadata,
+        private UserTimeZoneProvider $userTimeZoneProvider,
+        private UserPreferencesProvider $userPreferencesProvider,
     ) {}
 
     /**
@@ -219,6 +223,26 @@ class ItemGeneralConverter implements ItemConverter
 
         if ($type === Type::AFTER_X_DAYS) {
             return WhereClause::fromRaw($this->processAfterXDays($attribute, $value));
+        }
+
+        if ($type === Type::CURRENT_WEEK) {
+            return WhereClause::fromRaw($this->processCurrentWeek($attribute));
+        }
+
+        if ($type === Type::LAST_WEEK) {
+            return WhereClause::fromRaw($this->processLastWeek($attribute));
+        }
+
+        if ($type === Type::LAST_X_WEEKS) {
+            return WhereClause::fromRaw($this->processLastXWeeks($attribute, $value));
+        }
+
+        if ($type === Type::NEXT_WEEK) {
+            return WhereClause::fromRaw($this->processNextWeek($attribute));
+        }
+
+        if ($type === Type::NEXT_X_WEEKS) {
+            return WhereClause::fromRaw($this->processNextXWeeks($attribute, $value));
         }
 
         if ($type === Type::CURRENT_MONTH) {
@@ -1080,6 +1104,105 @@ class ItemGeneralConverter implements ItemConverter
 
         return [
             $attribute . '>' => $date->toDateTime()->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+        ];
+    }
+
+    private function processCurrentWeek(string $attribute): array
+    {
+        $weekStart = $this->userPreferencesProvider->get("weekStart");
+        $weekStart = $weekStart === -1 ? $this->config->get("weekStart") : $weekStart;
+
+        $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
+
+        $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0);
+        $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
+        $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
+
+        return [
+            'AND' => [
+                $attribute . '>=' => $dtFrom->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $dtTo->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            ]
+        ];
+    }
+
+    private function processLastWeek(string $attribute): array
+    {
+        $weekStart = $this->userPreferencesProvider->get("weekStart");
+        $weekStart = $weekStart === -1 ? $this->config->get("weekStart") : $weekStart;
+
+        $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
+
+        $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0)->modify("-1 week");
+        $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
+        $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
+
+        return [
+            'AND' => [
+                $attribute . '>=' => $dtFrom->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $dtTo->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            ]
+        ];
+    }
+
+    private function processLastXWeeks(string $attribute, $value): array
+    {
+        $weekStart = $this->userPreferencesProvider->get("weekStart");
+        $weekStart = $weekStart === -1 ? $this->config->get("weekStart") : $weekStart;
+
+        $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
+
+        $number = strval(intval($value));
+        $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0);
+        $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
+
+        $dtTo = (clone $dtFrom)->modify("-1 second");
+        $dtFrom->modify("-{$number} week");
+
+        return [
+            'AND' => [
+                $attribute . '>=' => $dtFrom->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $dtTo->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            ]
+        ];
+    }
+
+    private function processNextWeek(string $attribute): array
+    {
+        $weekStart = $this->userPreferencesProvider->get("weekStart");
+        $weekStart = $weekStart === -1 ? $this->config->get("weekStart") : $weekStart;
+
+        $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
+
+        $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0)->modify("+1 week");
+        $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
+        $dtTo = (clone $dtFrom)->modify("+1 week -1 second");
+
+        return [
+            'AND' => [
+                $attribute . '>=' => $dtFrom->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $dtTo->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            ]
+        ];
+    }
+
+    private function processNextXWeeks(string $attribute, $value): array
+    {
+        $weekStart = $this->userPreferencesProvider->get("weekStart");
+        $weekStart = $weekStart === -1 ? $this->config->get("weekStart") : $weekStart;
+
+        $timeZone = new DateTimeZone($this->userTimeZoneProvider->get());
+
+        $number = strval(intval($value));
+        $dtFrom = (new \DateTime("now", $timeZone))->setTime(0,0)->modify("+1 week");
+        $dtFrom->setISODate($dtFrom->format("Y"), $dtFrom->format("W"), $weekStart)->setTimezone(new DateTimeZone('UTC'));
+        $dtTo = (clone $dtFrom)->modify("+{$number} weeks -1 second");
+
+        return [
+            'AND' => [
+                $attribute . '>=' => $dtFrom->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+                $attribute . '<' => $dtTo->format(DateTimeUtil::SYSTEM_DATE_FORMAT),
+            ]
         ];
     }
 

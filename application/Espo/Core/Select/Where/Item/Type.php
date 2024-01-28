@@ -71,6 +71,11 @@ class Type
     public const NEXT_X_DAYS = 'nextXDays';
     public const OLDER_THAN_X_DAYS = 'olderThanXDays';
     public const AFTER_X_DAYS = 'afterXDays';
+    public const CURRENT_WEEK = 'currentWeek';
+    public const LAST_WEEK = 'lastWeek';
+    public const LAST_X_WEEKS = 'lastXWeeks';
+    public const NEXT_WEEK = 'nextWeek';
+    public const NEXT_X_WEEKS = 'nextXWeeks';
     public const CURRENT_MONTH = 'currentMonth';
     public const NEXT_MONTH = 'nextMonth';
     public const LAST_MONTH = 'lastMonth';
