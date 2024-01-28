@@ -79,7 +79,7 @@ class BeforeSaveValidate implements SaveHook
      */
     private function validateData(Role|PortalRole $entity): void
     {
-        if (!$entity->has('data')) {
+        if ($entity->get('data') === null) {
             return;
         }
 
@@ -154,6 +154,10 @@ class BeforeSaveValidate implements SaveHook
      */
     private function validateFieldData(Role|PortalRole $entity): void
     {
+        if ($entity->get('fieldData') === null) {
+            return;
+        }
+
         /** @var array<string, mixed> $data */
         $data = get_object_vars($entity->get('fieldData'));
 
