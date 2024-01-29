@@ -59,7 +59,7 @@ class Params
 
         foreach ($params as $key => $value) {
             if (!property_exists($object, $key)) {
-                throw new InvalidArgumentException("Unknown parameter '{$key}'.");
+                throw new InvalidArgumentException("Unknown parameter '$key'.");
             }
         }
 

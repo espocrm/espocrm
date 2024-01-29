@@ -96,7 +96,7 @@ class Item
 
         foreach (array_keys($params) as $key) {
             if (!property_exists($obj, $key)) {
-                throw new InvalidArgumentException("Unknown parameter '{$key}'.");
+                throw new InvalidArgumentException("Unknown parameter '$key'.");
             }
         }
 
@@ -204,7 +204,7 @@ class Item
     public function getItemList(): array
     {
         if (!in_array($this->type, $this->withNestedItemsTypeList)) {
-            throw new RuntimeException("Nested items not supported for '{$this->type}' type.");
+            throw new RuntimeException("Nested items not supported for '$this->type' type.");
         }
 
         $list = [];
