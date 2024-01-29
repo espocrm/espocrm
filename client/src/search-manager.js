@@ -274,7 +274,7 @@ class SearchManager {
                 attribute: attribute,
                 value: defs.value,
                 dateTime: true,
-                timeZone: this.dateTime.timeZone || 'UTC',
+                timeZone: this.dateTime.getTimeZone(),
             };
         }
 
