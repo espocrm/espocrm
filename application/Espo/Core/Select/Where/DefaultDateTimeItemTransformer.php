@@ -55,14 +55,13 @@ class DefaultDateTimeItemTransformer implements DateTimeItemTransformer
         $type = $item->getType();
         $value = $item->getValue();
         $attribute = $item->getAttribute();
-
         $data = $item->getData();
 
         if (!$data instanceof Item\Data\DateTime) {
             throw new BadRequest("Bad where item.");
         }
 
-        $timeZone = $data->getTimeZone() ?? 'UTC';
+        $timeZone = $data->getTimeZone() ?? $this->config->get('timeZone') ?? 'UTC';
 
         if (!$attribute) {
             throw new BadRequest("Bad datetime where item. Empty 'attribute'.");
