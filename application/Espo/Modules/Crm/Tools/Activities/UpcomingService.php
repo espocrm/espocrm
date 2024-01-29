@@ -229,7 +229,6 @@ class UpcomingService
                                     'type' => 'before',
                                     'attribute' => 'dateEnd',
                                     'value' => $taskBeforeString,
-                                    'timeZone' => $timeZone,
                                 ])
                             )->getRaw()
                         ]
@@ -242,6 +241,7 @@ class UpcomingService
                                 WhereItem::fromRaw([
                                     'type' => 'past',
                                     'attribute' => 'dateStart',
+                                    'dateTime' => true,
                                     'timeZone' => $timeZone,
                                 ])
                             )->getRaw(),
@@ -250,6 +250,7 @@ class UpcomingService
                                 WhereItem::fromRaw([
                                     'type' => 'today',
                                     'attribute' => 'dateStart',
+                                    'dateTime' => true,
                                     'timeZone' => $timeZone,
                                 ])
                             )->getRaw(),
@@ -259,7 +260,6 @@ class UpcomingService
                                     'type' => 'before',
                                     'attribute' => 'dateStart',
                                     'value' => $beforeString,
-                                    'timeZone' => $timeZone,
                                 ])
                             )->getRaw(),
                         ]
@@ -275,6 +275,7 @@ class UpcomingService
                         WhereItem::fromRaw([
                             'type' => 'today',
                             'attribute' => 'dateStart',
+                            'dateTime' => true,
                             'timeZone' => $timeZone,
                         ])
                     )->getRaw(),
@@ -284,6 +285,7 @@ class UpcomingService
                             WhereItem::fromRaw([
                                 'type' => 'future',
                                 'attribute' => 'dateEnd',
+                                'dateTime' => true,
                                 'timeZone' => $timeZone,
                             ])
                         )->getRaw(),
@@ -293,7 +295,6 @@ class UpcomingService
                                 'type' => 'before',
                                 'attribute' => 'dateStart',
                                 'value' => $beforeString,
-                                'timeZone' => $timeZone,
                             ])
                         )->getRaw(),
                     ],

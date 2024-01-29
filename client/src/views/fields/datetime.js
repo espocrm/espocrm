@@ -310,6 +310,7 @@ class DatetimeFieldView extends DateFieldView {
 
         if (data) {
             data.dateTime = true;
+            delete data.date;
         }
 
         return data;

@@ -397,6 +397,7 @@ class DateFieldView extends BaseFieldView {
             data = {
                 type: type,
                 value: number,
+                date: true,
             };
         }
         else if (['on', 'notOn', 'after', 'before'].includes(type)) {
@@ -423,6 +424,7 @@ class DateFieldView extends BaseFieldView {
         else {
             data = {
                 type: type,
+                date: true,
             };
         }
 

@@ -84,6 +84,12 @@ class DateTimeItemTransformer implements DateTimeItemTransformerInterface
             'value' => $value,
         ];
 
+        $data = $item->getData();
+
+        if ($data instanceof Item\Data\DateTime) {
+            $datePartRaw['timeZone'] = $data->getTimeZone();
+        }
+
         $raw = [
             'type' => Item::TYPE_OR,
             'value' => [

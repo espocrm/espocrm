@@ -50,7 +50,7 @@
  * @property {string} [attribute] An attribute (field).
  * @property {module:search-manager~whereItem[]|string|number|boolean|null} [value] A value.
  * @property {boolean} [dateTime] Is a date-time item.
- * @property {string} [timeZone] A time-zone (for date-time items).
+ * @property {string} [timeZone] A time-zone.
  */
 
 /**
@@ -68,6 +68,12 @@
  * A search manager.
  */
 class SearchManager {
+
+    /**
+     * @type {string|null}
+     * @private
+     */
+    timeZone
 
     /**
      * @param {module:collection} collection A collection.
@@ -268,14 +274,26 @@ class SearchManager {
             attribute = defs.attribute;
         }
 
-        if (defs.dateTime) {
-            return {
+        if (defs.dateTime || defs.date) {
+            const timeZone = this.timeZone !== undefined ?
+                this.timeZone :
+                this.dateTime.getTimeZone();
+
+            const data = {
                 type: type,
                 attribute: attribute,
                 value: defs.value,
-                dateTime: true,
-                timeZone: this.dateTime.getTimeZone(),
             };
+
+            if (defs.dateTime) {
+                data.dateTime = true;
+            }
+
+            if (timeZone) {
+                data.timeZone = timeZone;
+            }
+
+            return data;
         }
 
         value = defs.value;
@@ -388,6 +406,17 @@ class SearchManager {
         if (this.storage) {
             this.storage.clear(this.type + 'Search', this.scope);
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * Set a time zone. Null will not add a time zone.
+     *
+     * @type {string|null}
+     * @internal Is used. Do not remove.
+     */
+    setTimeZone(timeZone) {
+        this.timeZone = timeZone;
     }
 }
 
