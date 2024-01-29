@@ -289,6 +289,10 @@ class SearchManager {
                 data.dateTime = true;
             }
 
+            if (defs.date) {
+                data.date = true;
+            }
+
             if (timeZone) {
                 data.timeZone = timeZone;
             }

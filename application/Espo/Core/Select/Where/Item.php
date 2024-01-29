@@ -88,7 +88,7 @@ class Item
                 ::create()
                 ->withTimeZone($params['timeZone'] ?? null);
         }
-        else if ($params['timeZone'] ?? null) {
+        else if ($params['date'] ?? null) {
             $obj->data = Data\Date
                 ::create()
                 ->withTimeZone($params['timeZone'] ?? null);
@@ -96,6 +96,7 @@ class Item
 
         unset($params['field']);
         unset($params['dateTime']);
+        unset($params['date']);
         unset($params['timeZone']);
 
         foreach (array_keys($params) as $key) {
