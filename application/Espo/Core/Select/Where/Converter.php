@@ -31,6 +31,7 @@ namespace Espo\Core\Select\Where;
 
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Select\Helpers\RandomStringGenerator;
+use Espo\Core\Select\Where\Item\Type;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\ORM\Defs as ORMDefs;
@@ -38,6 +39,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Part\WhereItem;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use InvalidArgumentException;
 
 /**
  * Converts a search where (passed from front-end) to a where clause (for ORM).
@@ -64,8 +66,15 @@ class Converter
 
         $itemList = $this->itemToList($item);
 
-        foreach ($itemList as $subItem) {
-            $part = $this->processItem($queryBuilder, Item::fromRaw($subItem));
+        foreach ($itemList as $subItemRaw) {
+            try {
+                $subItem = Item::fromRaw($subItemRaw);
+            }
+            catch (InvalidArgumentException $e) {
+                throw new BadRequest($e->getMessage());
+            }
+
+            $part = $this->processItem($queryBuilder, $subItem);
 
             if (empty($part)) {
                 continue;
@@ -85,7 +94,7 @@ class Converter
      */
     private function itemToList(Item $item): array
     {
-        if ($item->getType() !== 'and') {
+        if ($item->getType() !== Type::AND) {
             return [
                 $item->getRaw(),
             ];

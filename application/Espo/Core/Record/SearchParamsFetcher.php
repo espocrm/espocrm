@@ -37,6 +37,7 @@ use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
 use Espo\Core\Utils\Json;
 
+use InvalidArgumentException;
 use JsonException;
 
 class SearchParamsFetcher
@@ -56,9 +57,12 @@ class SearchParamsFetcher
      */
     public function fetch(Request $request): SearchParams
     {
-        return SearchParams::fromRaw(
-            $this->fetchRaw($request)
-        );
+        try {
+            return SearchParams::fromRaw($this->fetchRaw($request));
+        }
+        catch (InvalidArgumentException $e) {
+            throw new BadRequest($e->getMessage());
+        }
     }
 
     /**
@@ -225,7 +229,7 @@ class SearchParamsFetcher
         }
 
         if ($value > $limit) {
-            throw new Forbidden("Max size should not exceed {$limit}. Use offset and limit.");
+            throw new Forbidden("Max size should not exceed $limit. Use offset and limit.");
         }
     }
 }
