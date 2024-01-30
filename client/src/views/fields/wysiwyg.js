@@ -284,6 +284,10 @@ class WysiwygFieldView extends TextFieldView {
             else {
                 this.$element.removeClass('hidden');
             }
+
+            if (this.params.attachmentField && this.isInlineEditMode()) {
+                this.$el.find('.note-attachment').addClass('hidden');
+            }
         }
 
         if (this.isReadMode()) {
