@@ -238,9 +238,9 @@ class Image implements EntryPoint
             throw new Error();
         }
 
-        list($originalWidth, $originalHeight) = getimagesize($filePath);
+        [$originalWidth, $originalHeight] = getimagesize($filePath);
 
-        list($width, $height) = $this->getSizes()[$size];
+        [$width, $height] = $this->getSizes()[$size];
 
         if ($originalWidth <= $width && $originalHeight <= $height) {
             $targetWidth = $originalWidth;
@@ -249,19 +249,19 @@ class Image implements EntryPoint
         else {
             if ($originalWidth > $originalHeight) {
                 $targetWidth = $width;
-                $targetHeight = $originalHeight / ($originalWidth / $width);
+                $targetHeight = (int) ($originalHeight / ($originalWidth / $width));
 
                 if ($targetHeight > $height) {
                     $targetHeight = $height;
-                    $targetWidth = $originalWidth / ($originalHeight / $height);
+                    $targetWidth = (int) ($originalWidth / ($originalHeight / $height));
                 }
             } else {
                 $targetHeight = $height;
-                $targetWidth = $originalWidth / ($originalHeight / $height);
+                $targetWidth = (int) ($originalWidth / ($originalHeight / $height));
 
                 if ($targetWidth > $width) {
                     $targetWidth = $width;
-                    $targetHeight = $originalHeight / ($originalWidth / $width);
+                    $targetHeight = (int) ($originalHeight / ($originalWidth / $width));
                 }
             }
         }

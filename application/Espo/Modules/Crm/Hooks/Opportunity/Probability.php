@@ -66,10 +66,6 @@ class Probability implements BeforeSave
         $probability = $this->metadata
             ->get('entityDefs.Opportunity.fields.stage.probabilityMap.' . $stage) ?? 0;
 
-        if ($probability === null) {
-            return;
-        }
-
         $entity->setProbability($probability);
     }
 }

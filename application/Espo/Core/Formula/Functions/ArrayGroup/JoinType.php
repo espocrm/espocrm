@@ -50,10 +50,6 @@ class JoinType extends BaseFunction
             $this->throwBadArgumentValue(2, 'string');
         }
 
-        if (is_null($list)) {
-            return '';
-        }
-
         return implode($separator, $list);
     }
 }

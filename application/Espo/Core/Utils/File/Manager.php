@@ -904,6 +904,8 @@ class Manager
 
     /**
      * Check whether a path is a directory.
+     *
+     * @phpstan-impure
      */
     public function isDir(string $dirPath): bool
     {
@@ -912,6 +914,8 @@ class Manager
 
     /**
      * Check whether a file.
+     *
+     * @phpstan-impure
      */
     public function isFile(string $path): bool
     {
