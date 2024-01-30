@@ -53,6 +53,8 @@ use Espo\Tools\Stream\Jobs\ControlFollowers as ControlFollowersJob;
  */
 class HookProcessor
 {
+    private const OPTION_NO_STREAM = 'noStream';
+
     /** @var array<string, bool> */
     private $hasStreamCache = [];
     /** @var array<string, bool> */
@@ -80,7 +82,7 @@ class HookProcessor
 
         if (
             $entity->isNew() &&
-            empty($options['noStream']) &&
+            empty($options[self::OPTION_NO_STREAM]) &&
             empty($options[SaveOption::SILENT]) &&
             $this->metadata->get(['scopes', $entity->getEntityType(), 'object'])
         ) {
@@ -373,7 +375,7 @@ class HookProcessor
             $this->service->followEntityMass($entity, $userIdList);
         }
 
-        if (empty($options['noStream']) && empty($options[SaveOption::SILENT])) {
+        if (empty($options[self::OPTION_NO_STREAM]) && empty($options[SaveOption::SILENT])) {
             $this->service->noteCreate($entity, $options);
         }
 
@@ -411,7 +413,7 @@ class HookProcessor
      */
     private function afterSaveStreamNotNew1(CoreEntity $entity, array $options): void
     {
-        if (!empty($options['noStream']) || !empty($options[SaveOption::SILENT])) {
+        if (!empty($options[self::OPTION_NO_STREAM]) || !empty($options[SaveOption::SILENT])) {
             return;
         }
 
@@ -549,7 +551,7 @@ class HookProcessor
         $foreignLink = $entity->getRelationParam($link, 'foreign');
 
         if (
-            !empty($options['noStream']) ||
+            !empty($options[self::OPTION_NO_STREAM]) ||
             !empty($options[SaveOption::SILENT]) ||
             !$this->metadata->get(['scopes', $entityType, 'object'])
         ) {
@@ -582,7 +584,7 @@ class HookProcessor
         $foreignLink = $entity->getRelationParam($link, 'foreign');
 
         if (
-            !empty($options['noStream']) ||
+            !empty($options[self::OPTION_NO_STREAM]) ||
             !empty($options[SaveOption::SILENT]) ||
             !$this->metadata->get(['scopes', $entityType, 'object'])
         ) {

@@ -30,6 +30,7 @@
 namespace Espo\Tools\Stream;
 
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\Subscription;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
@@ -416,10 +417,10 @@ class Service
 
         $fieldDefs = $defs->getField($ownerUserField);
 
-        if ($fieldDefs->getType() === 'linkMultiple') {
+        if ($fieldDefs->getType() === FieldType::LINK_MULTIPLE) {
             $ownerUserIdAttribute = $ownerUserField . 'Ids';
         }
-        else if ($fieldDefs->getType() === 'link') {
+        else if ($fieldDefs->getType() === FieldType::LINK) {
             $ownerUserIdAttribute = $ownerUserField . 'Id';
         }
         else {
@@ -430,7 +431,7 @@ class Service
             return;
         }
 
-        if ($fieldDefs->getType() === 'linkMultiple') {
+        if ($fieldDefs->getType() === FieldType::LINK_MULTIPLE) {
             $userIdList = $entity->getLinkMultipleIdList($ownerUserField);
         }
         else {
@@ -977,7 +978,7 @@ class Service
 
             if (
                 $fieldDefs &&
-                in_array($fieldDefs->getType(), ['text', 'wysiwyg'])
+                in_array($fieldDefs->getType(), [FieldType::TEXT, FieldType::WYSIWYG])
             ) {
                 continue;
             }
@@ -992,7 +993,7 @@ class Service
                 $became[$attribute] = $entity->get($attribute);
             }
 
-            if ($item['fieldType'] === 'linkParent') {
+            if ($item['fieldType'] === FieldType::LINK_PARENT) {
                 $wasParentType = $was[$field . 'Type'];
                 $wasParentId = $was[$field . 'Id'];
 

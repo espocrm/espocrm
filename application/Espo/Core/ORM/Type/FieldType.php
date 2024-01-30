@@ -52,9 +52,11 @@ class FieldType
     public const NUMBER = 'number';
     public const LINK = 'link';
     public const LINK_ONE = 'linkOne';
+    public const LINK_PARENT = 'linkParent';
     public const FILE = 'file';
     public const IMAGE = 'image';
     public const LINK_MULTIPLE = 'linkMultiple';
     public const ATTACHMENT_MULTIPLE = 'attachmentMultiple';
     public const FOREIGN = 'foreign';
+    public const WYSIWYG = 'wysiwyg';
 }
