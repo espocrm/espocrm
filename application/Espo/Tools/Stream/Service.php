@@ -29,19 +29,13 @@
 
 namespace Espo\Tools\Stream;
 
-use DateTimeInterface;
-use Espo\Core\Acl\Exceptions\NotAvailable;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 
-use Espo\Core\Utils\SystemUser;
 use Espo\Entities\Subscription;
 use Espo\Modules\Crm\Entities\Account;
-use Espo\ORM\Query\Part\Expression as Expr;
-use Espo\ORM\Query\Part\Order;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\Collection;
@@ -52,6 +46,11 @@ use Espo\Entities\Note;
 use Espo\Entities\Email;
 use Espo\Entities\EmailAddress;
 
+use Espo\Core\Acl\Exceptions\NotAvailable;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
+use Espo\Core\Utils\SystemUser;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
@@ -66,6 +65,7 @@ use Espo\Core\Utils\Acl\UserAclManagerProvider;
 
 use stdClass;
 use DateTime;
+use DateTimeInterface;
 use LogicException;
 
 class Service
@@ -116,38 +116,18 @@ class Service
      */
     private const NOTE_NOTIFICATION_PERIOD = '1 hour';
 
-    private EntityManager $entityManager;
-    private Config $config;
-    private User $user;
-    private Metadata $metadata;
-    private AclManager $aclManager;
-    private FieldUtil $fieldUtil;
-    private SelectBuilderFactory $selectBuilderFactory;
-    private UserAclManagerProvider $userAclManagerProvider;
-    private RecordServiceContainer $recordServiceContainer;
-
     public function __construct(
-        EntityManager $entityManager,
-        Config $config,
-        User $user,
-        Metadata $metadata,
-        AclManager $aclManager,
-        FieldUtil $fieldUtil,
-        SelectBuilderFactory $selectBuilderFactory,
-        UserAclManagerProvider $userAclManagerProvider,
-        RecordServiceContainer $recordServiceContainer,
+        private EntityManager $entityManager,
+        private Config $config,
+        private User $user,
+        private Metadata $metadata,
+        private AclManager $aclManager,
+        private FieldUtil $fieldUtil,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private UserAclManagerProvider $userAclManagerProvider,
+        private RecordServiceContainer $recordServiceContainer,
         private SystemUser $systemUser
-    ) {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->user = $user;
-        $this->metadata = $metadata;
-        $this->aclManager = $aclManager;
-        $this->fieldUtil = $fieldUtil;
-        $this->selectBuilderFactory = $selectBuilderFactory;
-        $this->userAclManagerProvider = $userAclManagerProvider;
-        $this->recordServiceContainer = $recordServiceContainer;
-    }
+    ) {}
 
     /**
      * @return array<string, string>

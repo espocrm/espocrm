@@ -88,6 +88,7 @@ class HookProcessor
         }
     }
 
+    /** @noinspection PhpUnusedParameterInspection */
     public function afterRemove(Entity $entity, RemoveOptions $options): void
     {
         if ($this->checkHasStream($entity->getEntityType())) {
@@ -110,8 +111,8 @@ class HookProcessor
 
         if (!array_key_exists($key, $this->isLinkObservableInStreamCache)) {
             $this->isLinkObservableInStreamCache[$key] =
-                (bool) $this->metadata->get(['scopes', $entityType, 'stream']) &&
-                (bool) $this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited']);
+                $this->metadata->get(['scopes', $entityType, 'stream']) &&
+                $this->metadata->get(['entityDefs', $entityType, 'links', $link, 'audited']);
         }
 
         return $this->isLinkObservableInStreamCache[$key];
@@ -147,6 +148,7 @@ class HookProcessor
             if ($type === Entity::HAS_MANY) {
                 $this->handleCreateRelatedHasMany($entity, $relation, $notifiedEntityTypeList, $options);
 
+                /** @noinspection PhpUnnecessaryStopStatementInspection */
                 continue;
             }
         }
@@ -436,7 +438,6 @@ class HookProcessor
             return;
         }
 
-        /** @var string[] $assignedUserIdList */
         $assignedUserIdList = $entity->getLinkMultipleIdList($multipleField);
         $fetchedAssignedUserIdList = $entity->getFetched($multipleField . 'Ids') ?? [];
 
