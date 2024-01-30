@@ -123,13 +123,9 @@ class DateFieldView extends BaseFieldView {
     }
 
     setupSearch() {
-        this.events = _.extend({
-            'change select.search-type': (e) => {
-                const type = $(e.currentTarget).val();
-
-                this.handleSearchType(type);
-            },
-        }, this.events || {});
+        this.addHandler('change', 'select.search-type', (e, /** HTMLSelectElement */target) => {
+            this.handleSearchType(target.value);
+        });
     }
 
     stringifyDateValue(value) {
