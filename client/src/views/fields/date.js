@@ -272,38 +272,14 @@ class DateFieldView extends BaseFieldView {
             this.$element.datepicker(options);
 
             if (this.mode === this.MODE_SEARCH) {
-                const $elAdd = this.$el.find('input.additional');
+                this.$el.find('select.search-type').on('change', () => this.trigger('change'));
+                this.$el.find('input.number').on('change', () => this.trigger('change'));
 
                 // noinspection JSUnresolvedReference
-                $elAdd.datepicker(options);
+                this.$el.find('.input-group.additional').datepicker(options);
 
-                $elAdd.parent().find('button.date-picker-btn').on('click', () => {
-                    // noinspection JSUnresolvedReference
-                    $elAdd.datepicker('show');
-                });
-
-                this.$el.find('select.search-type').on('change', () => {
-                    this.trigger('change');
-                });
-
-                this.$el.find('input.number').on('change', () => {
-                    this.trigger('change');
-                });
-
-                $elAdd.on('change', /** Record */e => {
-                    this.trigger('change');
-
-                    if (e.isTrigger) {
-                        if (document.activeElement !== $elAdd.get(0)) {
-                            $elAdd.focus();
-                        }
-                    }
-                });
-
-                $elAdd.on('click', () => {
-                    // noinspection JSUnresolvedReference
-                    $elAdd.datepicker('show');
-                });
+                this.initDatePickerEventHandlers('input.filter-from', options);
+                this.initDatePickerEventHandlers('input.filter-to', options);
             }
 
             this.$element.parent().find('button.date-picker-btn').on('click', () => {
@@ -319,6 +295,38 @@ class DateFieldView extends BaseFieldView {
         }
     }
 
+    /**
+     * @private
+     * @param {string} selector
+     * @param {Record} options
+     */
+    initDatePickerEventHandlers(selector, options) {
+        const $input = this.$el.find(selector);
+
+        // noinspection JSUnresolvedReference
+        //$input.datepicker(options);
+
+        //$input.parent().find('button.date-picker-btn').on('click', () => {
+            // noinspection JSUnresolvedReference
+        //    $input.datepicker('show');
+        //});
+
+        $input.on('change', /** Record */e => {
+            this.trigger('change');
+
+            if (e.isTrigger) {
+                if (document.activeElement !== $input.get(0)) {
+                    $input.focus();
+                }
+            }
+        });
+
+        $input.on('click', () => {
+            // noinspection JSUnresolvedReference
+            $input.datepicker('show');
+        });
+    }
+
     handleSearchType(type) {
         this.$el.find('div.primary').addClass('hidden');
         this.$el.find('div.additional').addClass('hidden');
@@ -331,7 +339,7 @@ class DateFieldView extends BaseFieldView {
             this.$el.find('div.additional-number').removeClass('hidden');
         }
         else if (type === 'between') {
-            this.$el.find('div.primary').removeClass('hidden');
+            this.$el.find('div.primary').addClass('hidden');
             this.$el.find('div.additional').removeClass('hidden');
         }
     }
@@ -363,31 +371,30 @@ class DateFieldView extends BaseFieldView {
 
     /** @inheritDoc */
     fetchSearch() {
-        const value = this.parseDate(this.$element.val());
-
         const type = this.fetchSearchType();
-        let data;
 
         if (type === 'between') {
-            if (!value) {
+            const valueFrom = this.parseDate(this.$el.find('input.filter-from').val());
+            const valueTo = this.parseDate(this.$el.find('input.filter-to').val());
+
+            if (!valueFrom || !valueTo) {
                 return null;
             }
 
-            const valueTo = this.parseDate(this.$el.find('input.additional').val());
-
-            if (!valueTo) {
-                return null;
-            }
-
-            data = {
+            return {
                 type: type,
-                value: [value, valueTo],
+                value: [valueFrom, valueTo],
                 data: {
-                    value: value,
-                    valueTo: valueTo
+                    value: valueFrom,
+                    valueTo: valueTo,
                 },
             };
-        } else if (['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].includes(type)) {
+        }
+
+        let data;
+        const value = this.parseDate(this.$element.val());
+
+        if (['lastXDays', 'nextXDays', 'olderThanXDays', 'afterXDays'].includes(type)) {
             const number = this.$el.find('input.number').val();
 
             data = {
