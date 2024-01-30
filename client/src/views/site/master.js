@@ -69,23 +69,23 @@ class MasterSiteView extends View {
     }
 
     afterRender() {
-        let params = this.getThemeManager().getParam('params');
+        const params = this.getThemeManager().getParam('params');
 
-        let $body = $('body');
+        const $body = $('body');
 
-        for (let param in params) {
-            let value = this.getThemeManager().getParam(param);
+        for (const param in params) {
+            const value = this.getThemeManager().getParam(param);
 
             $body.attr('data-' + Espo.Utils.camelCaseToHyphen(param), value);
         }
 
-        let footerView = this.getView('footer');
+        const footerView = this.getView('footer');
 
         if (footerView) {
-            let html = footerView.$el.html() || '';
+            const html = footerView.$el.html() || '';
 
             if ((html.match(/espocrm/gi) || []).length < 2) {
-                let text = 'PHAgY2xhc3M9ImNyZWRpdCBzbWFsbCI+JmNvcHk7IDxhIGhyZWY9Imh0dHA6Ly93d3cuZXNwb2Nyb' +
+                const text = 'PHAgY2xhc3M9ImNyZWRpdCBzbWFsbCI+JmNvcHk7IDxhIGhyZWY9Imh0dHA6Ly93d3cuZXNwb2Nyb' +
                     'S5jb20iPkVzcG9DUk08L2E+PC9wPg==';
 
                 let decText;
@@ -106,7 +106,7 @@ class MasterSiteView extends View {
 
         this.adjustContent();
 
-        let extensions = this.getHelper().getAppParam('extensions') || [];
+        const extensions = this.getHelper().getAppParam('extensions') || [];
 
         if (this.getConfig().get('maintenanceMode')) {
             this.createView('dialog', 'views/modal', {
@@ -144,13 +144,13 @@ class MasterSiteView extends View {
 
             let height = window.innerHeight - this.$content.get(0).getBoundingClientRect().top;
 
-            let $navbarCollapse = $('#navbar .navbar-body');
+            const $navbarCollapse = $('#navbar .navbar-body');
 
             if ($navbarCollapse.hasClass('in') || $navbarCollapse.hasClass('collapsing')) {
                 height += $navbarCollapse.height();
             }
 
-            let footerHeight = $('#footer').height() || 26;
+            const footerHeight = $('#footer').height() || 26;
 
             height -= footerHeight;
 
@@ -181,14 +181,14 @@ class MasterSiteView extends View {
      * }[]} list
      */
     processExtensions(list) {
-        let messageList = [];
+        const messageList = [];
 
         list.forEach(item => {
             if (!item.notify) {
                 return;
             }
 
-            let message = item.licenseStatusMessage ??
+            const message = item.licenseStatusMessage ??
                 'extensionLicense' +
                 Espo.Utils.upperCaseFirst(
                     Espo.Utils.hyphenToCamelCase(item.licenseStatus.toLowerCase())
@@ -208,7 +208,7 @@ class MasterSiteView extends View {
 
         message = this.getHelper().transformMarkdownText(message);
 
-        let dialog = new Espo.Ui.Dialog({
+        const dialog = new Espo.Ui.Dialog({
             backdrop: 'static',
             buttonList: [
                 {
