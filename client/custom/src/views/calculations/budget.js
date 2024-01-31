@@ -3,10 +3,12 @@ define('custom:views/calculations/budget', ['view'], function (View) {
         template: 'custom:calculations/budget',
 
         setup: function () {
+            this.isSuperadmin = this.getUser().get('type') === 'admin' ? true : false;
             this.filterValue = 'today';
-            this.dateValue1 = new Date().toLocaleDateString().split('.').reverse().join('-');
-            this.dateValue2 = this.dateValue1;
-            this.expenses = [];
+            this.dateFrom = new Date().toLocaleDateString().split('.').reverse().join('-');
+            this.dateTo = this.dateFrom;
+            this.teams = { total: 0, list: [] };
+            this.choosedTeams = this.getUser().get('teamsIds');
             this.sum = 0;
             this.income = { 
                 list: [],
@@ -16,145 +18,219 @@ define('custom:views/calculations/budget', ['view'], function (View) {
                     income: 0
                 }
             }
-
-            this.fetchIncome(this.dateValue1, this.dateValue1);
-
+            
+            this.wait(
+                Promise.all([
+                    this.fetchTeams(),
+                    this.fetchButget(this.dateFrom, this.dateFrom, this.choosedTeams)
+                ])
+            );
             this.initHandlers();
         },
 
         initHandlers: function() {
-            this.addHandler('click', '#filterToday', 'handleFilterToday');
-            this.addHandler('click', '#filterDate', 'handleFilterDate');
-            this.addHandler('click', '#filterBetween', 'handleFilterDate');
-            this.addHandler('change', '#dateDate', 'handleChangeDate');
-            this.addHandler('change', '#dateBetween1', 'handleDateBetween1');
-            this.addHandler('change', '#dateBetween2', 'handleDateBetween2');
-            this.addHandler('click', '#findBetween', 'handleFindBetween');
+            this.addHandler('click', '.btn-date', 'handleDate');
+            this.addHandler('click', '.btn-team', 'handleTeam');
+
+            this.addHandler('change', '#dateBetween1', 'handleChangeDateFrom');
+            this.addHandler('change', '#dateBetween2', 'handleChangeDateTo');
+            
+            this.addHandler('click', '#findBetweenDates', 'findBetweenDates');
+            this.addHandler('click', '.expander', 'handleAction');
         },
 
-        handleFilterToday: function(e) {
+        handleDate: function(e) {
+            const action = e.target.dataset.action;
+            const date = e.target.dataset.date;
+            
+            this[action](e);
+        },
+
+        filterToday: function(e) {
             this.filterValue = e.target.value;
-            this.dateValue1 = new Date().toLocaleDateString().split('.').reverse().join('-');
-            this.fetchIncome(this.dateValue1, this.dateValue1);
+            this.dateFrom = new Date().toLocaleDateString().split('.').reverse().join('-');
+            this.fetchButget(this.dateFrom, this.dateFrom, this.choosedTeams)
+                .then(() => this.reRender());
         },
 
-        handleFilterDate: function(e) {
+        filterWeek: function(e) {
+            this.filterValue = e.target.value;
+            this.setWeekRange();
+            this.fetchButget(this.dateFrom, this.dateTo, this.choosedTeams)
+                .then(() => this.reRender());
+        },
+
+        setWeekRange: function() {
+            const today = new Date();
+            const firstDateOfMonth = new Date(
+                today.setDate(today.getDate() - today.getDay() + 1)//+1 from monday
+            );
+            const lastDateOfMonth = new Date(
+                today.setDate(firstDateOfMonth.getDate() + 6)
+            );
+            
+            this.dateFrom = firstDateOfMonth.toLocaleDateString().split('.').reverse().join('-');
+            this.dateTo = lastDateOfMonth.toLocaleDateString().split('.').reverse().join('-');
+        },
+
+        filterMonth: function(e) {
+            this.filterValue = e.target.value;
+            this.setMonthRange();
+            this.fetchButget(this.dateFrom, this.dateTo, this.choosedTeams)
+                .then(() => this.reRender());
+        },
+
+        setMonthRange:function() {
+            const date = new Date();
+            const firstDateOfMonth = new Date(date.getFullYear(), date.getMonth(), 1);
+            const lastDateOfMonth = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+            this.dateFrom = firstDateOfMonth.toLocaleDateString().split('.').reverse().join('-');
+            this.dateTo = lastDateOfMonth.toLocaleDateString().split('.').reverse().join('-');
+        },
+
+        filterBetweenDates: function(e) {
             this.filterValue = e.target.value;
             this.reRender();
         },
-        
 
-        handleChangeDate: function(e) {
-            this.dateValue1 = e.target.value;
-            console.log(this.dateValue1);
-            this.fetchIncome(this.dateValue1);
-            //this.fetchExpenses(this.filterValue, this.dateValue1);
+        handleChangeDateFrom: function(e) {
+            this.dateFrom = e.target.value;
         },
 
-        fetchIncome: async function(dateFrom, dateTo) {
-            try {
-                let income = await fetch(`api/v1/Budget/income/${dateFrom}/${dateTo}`);
-                income = await income.json();
+        handleChangeDateTo: function(e) {
+            this.dateTo = e.target.value;
+        },
 
-                console.log(income);
-                this.income = income;
-                this.reRender();
+        findBetweenDates: function(e) {
+            this.fetchButget(this.dateFrom, this.dateTo, this.choosedTeams)
+                .then(() => this.reRender());
+        },
+
+        handleAction: function(e) {
+            const action = e.target.dataset.action;
+            const date = e.target.dataset.date;
+
+            this[action](date);
+        },
+
+        handleTeam: function(e) {
+            const teamId = e.target.value;
+            
+            const choosedTeamIndex = this.choosedTeams.findIndex(team => team == teamId);
+            if (choosedTeamIndex === -1) {
+                this.choosedTeams.push(teamId);
+            } else {
+                this.choosedTeams.splice(choosedTeamIndex, 1);
+            }
+            this.reRender();
+        },
+
+        showDetails: function(date) {
+            this.fetchDetails(date, this.choosedTeams)
+                .then(() => this.reRender());
+        },
+
+        hideDetails: function(date) {
+            const income = this.income.list.find(income => income.date == date);
+            income.isExpanded = false;
+            this.reRender();
+        },
+
+        fetchTeams: async function() {
+            try {
+                let teamsCollection = await this.getCollectionFactory().create('Team');
+                this.teams = await teamsCollection.fetch();
+
+                return this.teams;
             } catch (error) {
                 console.error(error);
             }
         },
 
-        handleDateBetween1: function(e) {
-            this.dateValue1 = e.target.value;
-        },
-
-        handleDateBetween2: function(e) {
-            this.dateValue2 = e.target.value;
-        },
-
-        handleFindBetween: function(e) {
-            this.fetchIncome(this.dateValue1, this.dateValue2);
-        },
-
-        fetchExpenses: function(filterValue, date1, date2) {
-            //switch instead object, bc with object to complicated spaghetti 
-            switch (filterValue) {
-                case 'today':
-                    this.fetchExpensesByDate(date1)
-                        .then(expenses => this.setExpenses(expenses))
-                        .catch(error => console.error(error));
-                    break;
-                case 'date':
-                    this.fetchExpensesByDate(date1)
-                    .then(expenses => this.setExpenses(expenses))
-                    .catch(error => console.error(error));
-                    break;
-                case 'between':
-                    this.fetchExpensesBetweenDate(date1, date2)
-                    .then(expenses => this.setExpenses(expenses))
-                    .catch(error => console.error(error));
-                    break;
+        fetchButget: async function(dateFrom, dateTo, teamsIds) {
+            try {
+                const teamsParam = 'teams=' + teamsIds.join('&');
+                let income = await fetch(`api/v1/Budget/income/${dateFrom}/${dateTo}/${teamsParam}`);
+                income = await income.json();
+                this.income = income;
+                
+                return income;
+            } catch (error) {
+                console.error(error);
             }
         },
+
+        fetchDetails: async function(date, teamsIds) {
+            try {
+                const teamsParam = 'teams=' + teamsIds.join('&');
+                let details = await fetch(`api/v1/Budget/detail/${date}/${teamsParam}`);
+                details = await details.json();
+                this.details = details;
+
+                const income = this.income.list.find(income => income.date == date);
+                income.profitDetailsTable = this.createDetailsTable(details.profitDetails);
+                income.expensesDetailsTable = this.createDetailsTable(details.expensesDetails);
+                income.isExpanded = true;
+
+                return details;
+            } catch (error) {
+                console.error(error);
+            }
+        },
+
+        createDetailsTable: function(detailsList) {
+            let detailsTable = `<table class="table table-details" style="border-radius: 5px;">`;
+            detailsList.forEach(details => {
+                detailsTable += 
+                `<tr class="list-row">
+                    <td class="cell">${ details.value.toLocaleString('en') }</td>
+                    <td class="cell">${ details.name }</td>
+                </tr>`
+            });
+            detailsTable += `</table>`;
+
+            return detailsTable;
+        },
         
-        fetchExpensesByDate: function(date) {
-            return this.getCollectionFactory().create('Expenses')
-                .then(collection => {
-                    collection.maxSize = 10000;
-                    collection.where = [{
-                        "type": "equals",
-                        "attribute": "date",
-                        "value": date,
-                    }];
-                    return collection.fetch();
-                })
-        },
-
-        fetchExpensesBetweenDate: function(date1, date2) {
-            return this.getCollectionFactory().create('Expenses')
-                .then(collection => {
-                    collection.maxSize = 10000;
-                    collection.where = [{
-                        "type": "between",
-                        "attribute": "date",
-                        "value": [date1, date2],
-                    }];
-                    return collection.fetch();
-                })
-        },
-
         afterRender: function () {
-           //hightlight button with blue
-           this.$el.find(`button[value=${this.filterValue}`)[0].classList.add('btn-primary');
-        },
+            //hightlight button with blue
+            this.$el.find(`button[value=${this.filterValue}`)[0].classList.add('btn-primary');
 
-        setExpenses: function(expenses) {
-            this.expenses = expenses;
-            this.sum = this.calculateExpansesSum(expenses.list);
-            this.reRender();
-        },
-
-        calculateExpansesSum: function(expenses) {
-            let sum = 0;
-            expenses.forEach(exp => sum += exp.cost);
-            return sum;
+            this.choosedTeams.forEach(teamId => {
+                this.$el.find(`button[value="${teamId}"`)[0].classList.add('btn-primary');
+            });
         },
 
         data: function () {
             return {
+                isSuperadmin: this.isSuperadmin,
+                teams: this.teams.list,
                 filterValue: this.filterValue,
-                dateValue1: this.dateValue1,
-                dateValue2: this.dateValue2,
-                sum: this.sum.toLocaleString('en'),
-                expenses: this.expenses.list,
-                expensesTotal: this.expenses.total,
+                dateFrom: this.dateFrom,
+                dateTo: this.dateTo,
 
-                profitTotalSum: this.income.total.profit,
-                expensesTotalSum: this.income.total.expenses,
-                incomeTotalSum: this.income.total.income,
+                profitTotalSum: this.income.total.profit.toLocaleString('en'),
+                expensesTotalSum: this.income.total.expenses.toLocaleString('en'),
+                incomeTotalSum: this.income.total.income.toLocaleString('en'),
 
-                incomeList: this.income.list
+                incomeList: this.formatePriceFields(this.income.list)
             };
         },
+
+        formatePriceFields: function(budgetList) {
+            return budgetList.map(budget => {
+                return {
+                    date: budget.date,
+                    isExpanded: budget.isExpanded,
+                    profitDetailsTable: budget.profitDetailsTable,
+                    expensesDetailsTable: budget.expensesDetailsTable,
+                    isIncome: (budget.profit - budget.expenses) >= 0 ? true : false,
+                    profit: budget.profit.toLocaleString('en'),
+                    expenses: budget.expenses.toLocaleString('en'),
+                    income: budget.income.toLocaleString('en')
+                }   
+            });
+        }
     });
 });

@@ -63,6 +63,16 @@
     opacity: 0.2;
 }
 
+/* budget */
+
+#date::-webkit-calendar-picker-indicator {
+    padding-top: 4px;
+    filter: invert(50%);
+}
+
+#date::-webkit-calendar-picker-indicator:hover {
+    cursor: pointer;
+} 
 
 .income-container {
    display: flex;
@@ -81,6 +91,17 @@
     flex-flow: column;
     justify-content: center;
 }
+
+.income-details {
+    background-color: var(--brand-primary);
+    color: var(--label-color);
+}
+
+.table-details {
+    background-color: var(--table-bg) !important;
+}
+
+/* end budget */
 
 
 .lds-default {
