@@ -185,11 +185,7 @@ class RoleRecordTableView extends View {
                         }
                     }
 
-                    let level = 'no';
-
-                    if (~this.booleanActionList.indexOf(action)) {
-                        level = 'no';
-                    }
+                    let level = null;
 
                     if (scope in aclData) {
                         if (access === 'enabled') {
