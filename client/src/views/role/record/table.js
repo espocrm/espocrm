@@ -132,7 +132,17 @@ class RoleRecordTableView extends View {
         const aclData = this.acl.data;
         const aclDataList = [];
 
+        let currentModule = null
+
         this.scopeList.forEach(scope => {
+            const module = this.getMetadata().get(`scopes.${scope}.module`);
+
+            if (currentModule !== module) {
+                currentModule = module;
+
+                aclDataList.push(false);
+            }
+
             let access = 'not-set';
 
             if (this.final) {
@@ -283,8 +293,34 @@ class RoleRecordTableView extends View {
         this.aclTypeMap = {};
         this.scopeList = [];
 
-        const scopeListAll = Object.keys(this.getMetadata().get('scopes'))
+        const moduleList = [null, 'Crm'];
+
+        const scopes = /** @type {Object.<{module: string}>} */this.getMetadata().get('scopes');
+
+        Object.keys(scopes).forEach(scope => {
+            const module = scopes[scope].module;
+
+            if (!module || module === 'Custom' || moduleList.includes(module)) {
+                return;
+            }
+
+            moduleList.push(module);
+        });
+
+        moduleList.push('Custom');
+
+        const scopeListAll = Object.keys(scopes)
             .sort((v1, v2) => {
+                const module1 = scopes[v1].module || null;
+                const module2 = scopes[v2].module || null;
+
+                if (module1 !== module2) {
+                    const index1 = moduleList.findIndex(m => m === module1);
+                    const index2 = moduleList.findIndex(m => m === module2);
+
+                    return index1 - index2;
+                }
+
                 return this.translate(v1, 'scopeNamesPlural')
                     .localeCompare(this.translate(v2, 'scopeNamesPlural'));
             });
@@ -830,10 +866,12 @@ class RoleRecordTableView extends View {
             return;
         }
 
+        this.$el.find('table tr.item-row[data-name="_"]').addClass('hidden');
+
         this.scopeList.forEach(/** string */item => {
             const $row = this.$el.find(`table tr.item-row[data-name="${item}"]`);
 
-            if (!~matchedList.indexOf(item)) {
+            if (!matchedList.includes(item)) {
                 $row.addClass('hidden');
 
                 return;

@@ -25,26 +25,33 @@
                     {{/each}}
                 </tr>
                 {{#each tableDataList}}
-                <tr data-name="{{name}}" class="item-row">
-                    <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
+                    {{#unless this}}
+                        <tr data-name="_" class="item-row">
+                            <td>&#8203;</td><td></td>
+                        </tr>
+                    {{else}}
+                        <tr data-name="{{name}}" class="item-row">
+                            <td><b>{{translate name category='scopeNamesPlural'}}</b></td>
 
-                    <td>
-                        <span class="text-{{prop ../styleMap access}}">{{translateOption access scope='Role' field='accessList'}}</span>
-                    </td>
-
-                    {{#ifNotEqual type 'boolean'}}
-                        {{#each list}}
                             <td>
-                                {{#ifNotEqual access 'not-set'}}
-                                    <span
-                                        class="text-{{prop ../../styleMap level}}"
-                                        title="{{translate action scope='Role' category='actions'}}"
-                                    >{{translateOption level field='levelList' scope='Role'}}</span>
-                                {{/ifNotEqual}}
+                                <span class="text-{{prop ../styleMap access}}"
+                                >{{translateOption access scope='Role' field='accessList'}}</span>
                             </td>
-                        {{/each}}
-                    {{/ifNotEqual}}
-                </tr>
+
+                            {{#ifNotEqual type 'boolean'}}
+                                {{#each list}}
+                                    <td>
+                                        {{#ifNotEqual access 'not-set'}}
+                                            <span
+                                                class="text-{{prop ../../styleMap level}}"
+                                                title="{{translate action scope='Role' category='actions'}}"
+                                            >{{translateOption level field='levelList' scope='Role'}}</span>
+                                        {{/ifNotEqual}}
+                                    </td>
+                                {{/each}}
+                            {{/ifNotEqual}}
+                        </tr>
+                    {{/unless}}
                 {{/each}}
             </table>
 

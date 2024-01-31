@@ -25,37 +25,43 @@
                     {{/each}}
                 </tr>
                 {{#each tableDataList}}
-                <tr data-name="{{name}}" class="item-row">
-                    <td>
-                        <div class="detail-field-container">
-                            <b>{{translate name category='scopeNamesPlural'}}</b>
-                        </div>
-                    </td>
-                    <td>
-                        <select
-                            name="{{name}}"
-                            class="form-control"
-                            data-type="access"
-                        >{{options ../accessList access scope='Role' field='accessList' styleMap=../styleMap}}</select>
-                    </td>
-
-                    {{#ifNotEqual type 'boolean'}}
-                        {{#each list}}
+                    {{#unless this}}
+                        <tr data-name="_" class="item-row">
+                            <td><div class="detail-field-container">&#8203;</div></td><td></td>
+                        </tr>
+                    {{else}}
+                        <tr data-name="{{name}}" class="item-row">
                             <td>
-                                {{#if levelList}}
-                                <select name="{{name}}"
-                                    class="form-control scope-action{{#ifNotEqual ../access 'enabled'}} hidden{{/ifNotEqual}}"
-                                    data-scope="{{../name}}"
-
-                                    title="{{translate action scope='Role' category='actions'}}"
-                                    data-role-action="{{action}}">
-                                {{options levelList level field='levelList' scope='Role' styleMap=../../styleMap}}
-                                </select>
-                                {{/if}}
+                                <div class="detail-field-container">
+                                    <b>{{translate name category='scopeNamesPlural'}}</b>
+                                </div>
                             </td>
-                        {{/each}}
-                    {{/ifNotEqual}}
-                </tr>
+                            <td>
+                                <select
+                                    name="{{name}}"
+                                    class="form-control"
+                                    data-type="access"
+                                >{{options ../accessList access scope='Role' field='accessList' styleMap=../styleMap}}</select>
+                            </td>
+
+                            {{#ifNotEqual type 'boolean'}}
+                                {{#each list}}
+                                    <td>
+                                        {{#if levelList}}
+                                            <select name="{{name}}"
+                                                    class="form-control scope-action{{#ifNotEqual ../access 'enabled'}} hidden{{/ifNotEqual}}"
+                                                    data-scope="{{../name}}"
+
+                                                    title="{{translate action scope='Role' category='actions'}}"
+                                                    data-role-action="{{action}}">
+                                                {{options levelList level field='levelList' scope='Role' styleMap=../../styleMap}}
+                                            </select>
+                                        {{/if}}
+                                    </td>
+                                {{/each}}
+                            {{/ifNotEqual}}
+                        </tr>
+                    {{/unless}}
                 {{/each}}
             </table>
 
