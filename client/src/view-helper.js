@@ -45,15 +45,15 @@ class ViewHelper {
             {
                 regex: /&#x60;&#x60;&#x60;\n?([\s\S]*?)&#x60;&#x60;&#x60;/g,
                 value: (s, string) => {
-                    return '```' + string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') + '```';
+                    return '```\n' + string + '```';
                 },
             },
             {
                 regex: /&#x60;([\s\S]*?)&#x60;/g,
                 value: (s, string) => {
-                    return '`' + string.replace(/\*/g, '&#42;').replace(/~/g, '&#126;') + '`';
+                    return '`' + string + '`';
                 },
-            }
+            },
         ];
 
         marked.setOptions({
