@@ -1,0 +1,54 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "isCustom"
+                }
+            ],
+            [
+                {
+                    "name": "productItem"
+                },
+                {
+                    "name": "quantity"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": ""
+    },
+    {
+        "rows": [
+            [
+                false,
+                {
+                    "name": "price"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "success",
+        "dynamicLogicStyled": null,
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Розрахунок"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "description"
+                }
+            ]
+        ],
+        "style": "default",
+        "tabBreak": null,
+        "tabLabel": null,
+        "hidden": null,
+        "label": ""
+    }
+]

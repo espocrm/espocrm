@@ -4,12 +4,14 @@
     },
     "fields": {
         "isActive": "Активний",
-        "abonplans": "Абонплани"
+        "abonplans": "Абонплани",
+        "productItems": "Продукти"
     },
     "tooltips": {
         "isActive": "Якщо цінник не є активним, ви не зможете додати його до ціноутворення"
     },
     "links": {
-        "abonplans": "Абонплани"
+        "abonplans": "Абонплани",
+        "productItems": "Продукти"
     }
 }

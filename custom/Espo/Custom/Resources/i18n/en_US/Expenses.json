@@ -1,9 +1,12 @@
 {
     "fields": {
-        "cost": "Сума",
+        "cost": "Cost",
         "costCurrency": "Сума (Валюта)",
         "costConverted": "Сума (Конвертована)",
-        "date": "Дата"
+        "date": "Дата",
+        "price": "Сума",
+        "priceCurrency": "Сума (Валюта)",
+        "priceConverted": "Сума (Конвертована)"
     },
     "links": [],
     "labels": {

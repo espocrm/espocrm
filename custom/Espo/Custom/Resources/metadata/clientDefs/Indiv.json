@@ -75,11 +75,14 @@
                     ]
                 }
             },
-            "customPrice": {
-                "visible": {
+            "isPaid": {
+                "visible": null
+            },
+            "price": {
+                "readOnly": {
                     "conditionGroup": [
                         {
-                            "type": "isTrue",
+                            "type": "isFalse",
                             "attribute": "isCustomPrice"
                         }
                     ]
@@ -93,28 +96,16 @@
                     ]
                 }
             },
-            "defaultPrice": {
-                "visible": {
+            "percent": {
+                "readOnly": {
                     "conditionGroup": [
                         {
                             "type": "isFalse",
                             "attribute": "isCustomPrice"
                         }
                     ]
-                }
-            },
-            "defaultPercent": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isFalse",
-                            "attribute": "isCustomPrice"
-                        }
-                    ]
-                }
-            },
-            "customPercent": {
-                "visible": {
+                },
+                "required": {
                     "conditionGroup": [
                         {
                             "type": "isTrue",
@@ -122,9 +113,6 @@
                         }
                     ]
                 }
-            },
-            "isPaid": {
-                "visible": null
             }
         }
     },

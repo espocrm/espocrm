@@ -1,0 +1,17 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#9c9429",
+    "iconClass": "fas fa-dolly",
+    "relationshipPanels": {
+        "pricebook": {
+            "layout": null
+        },
+        "goodses": {
+            "layout": null
+        }
+    },
+    "kanbanViewMode": false
+}

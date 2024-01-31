@@ -18,7 +18,10 @@
         "customPriceCurrency": "Ціна (Валюта)",
         "customPriceConverted": "Ціна (Конвертована)",
         "isPaid": "Сплачено",
-        "rentPlan": "Планова оренда"
+        "rentPlan": "Планова оренда",
+        "price": "Ціна",
+        "priceCurrency": "Ціна (Валюта)",
+        "priceConverted": "Ціна (Конвертована)"
     },
     "links": {
         "parent": "Батько",

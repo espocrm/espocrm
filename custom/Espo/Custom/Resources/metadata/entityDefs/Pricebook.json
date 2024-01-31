@@ -52,6 +52,17 @@
             "exportDisabled": true,
             "customizationDisabled": true,
             "isCustom": true
+        },
+        "productItems": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": true,
+            "isCustom": true
         }
     },
     "links": {
@@ -77,6 +88,13 @@
             "type": "hasMany",
             "foreign": "pricebook",
             "entity": "Abonplan",
+            "audited": false,
+            "isCustom": true
+        },
+        "productItems": {
+            "type": "hasMany",
+            "foreign": "pricebook",
+            "entity": "ProductItem",
             "audited": false,
             "isCustom": true
         }

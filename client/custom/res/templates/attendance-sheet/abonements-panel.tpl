@@ -9,7 +9,7 @@
             <span>Абонементи</span>
         </h4>
         <div>
-            <span class="label label-default">{{groupName}}</span>
+            <span class="label label-primary">{{groupName}}</span>
             <span class="nowrap" style='padding-left: 5px'>
                 <label>Всього: {{abonementsTotal}}</label>
                 <label style='padding-left: 5px'>Присутні: {{marksTotal}}</label>
@@ -48,27 +48,27 @@
                             <td>{{this.classesLeft}}</td>
                             <td>
                                 {{#if this.isActive}}
-                                    <span title="Активний" class="cp text-muted fas fa-play-circle"></span>
+                                    <span class="label label-success">Активний</span>
                                 {{/if}}
                                 {{#if this.isPending}}
                                     <span title="Очікує" class="cp text-muted far fa-clock"></span>
                                 {{/if}}
                                 {{#if this.isOutdate}}
-                                    <span title="Термін дії минув" class="cp text-muted fas fa-calendar-times"></span>
+                                    <span class="label label-danger">Не активний</span>
                                 {{/if}}
                                 {{#if this.isEmpty}}
-                                    <span title="Вичерпано" class="cp text-muted far fa-stop-circle"></span>
+                                    <span class="label label-default">Вичерпаний</span>
                                 {{/if}}
                                 {{#if this.isFreezed}}
-                                    <span title="Заморожено" class="cp text-muted fas fa-snowflake"></span>
-                                {{/if}}
-                                {{#if this.note}}
-                                    <span title="Переглянути замітку" data-id={{this.id}} class="cp text-muted fas fa-exclamation-circle"></span>
+                                    <span class="label label-info">Заморожений</span>
                                 {{/if}}
                             </td>
                             <td class="nowrap">
                                 <span title="Переглянути відмітки" data-id={{this.id}} class="cp highlight text-muted far fa-calendar"></span>
                                 <span title="Оновити" class="btn-add cp highlight text-muted fas fa-sync-alt" data-id={{this.id}} data-action="recalculate"></span>
+                                {{#if this.note}}
+                                    <span title="Переглянути замітку" data-id={{this.id}} class="cp highlight text-muted far fa-sticky-note"></span>
+                                {{/if}}
                             </td>
                         </tr>
                     {{/each}}
@@ -91,27 +91,27 @@
                             <td>{{this.classesLeft}}</td>
                             <td>
                                 {{#if this.isActive}}
-                                    <span title="Активний" class="cp text-muted fas fa-play-circle"></span>
+                                    <span class="label label-success">Активний</span>
                                 {{/if}}
                                 {{#if this.isPending}}
                                     <span title="Очікує" class="cp text-muted far fa-clock"></span>
                                 {{/if}}
                                 {{#if this.isOutdate}}
-                                    <span title="Термін дії минув" class="cp text-muted fas fa-calendar-times"></span>
+                                    <span class="label label-danger">Не активний</span>
                                 {{/if}}
                                 {{#if this.isEmpty}}
-                                    <span title="Вичерпано" class="cp text-muted far fa-stop-circle"></span>
+                                    <span class="label label-default">Вичерпаний</span>
                                 {{/if}}
                                 {{#if this.isFreezed}}
-                                    <span title="Заморожено" class="cp text-muted fas fa-snowflake"></span>
-                                {{/if}}
-                                {{#if this.note}}
-                                    <span title="Переглянути замітку" data-id={{this.id}} class="cp text-muted fas fa-exclamation-circle"></span>
+                                    <span class="label label-info">Заморожений</span>
                                 {{/if}}
                             </td>
                             <td class="nowrap">
                                 <span title="Переглянути відмітки" data-id={{this.id}} class="floating-view cp highlight text-muted far fa-calendar"></span>
                                 <span title="Оновити" class="btn-add cp highlight text-muted fas fa-sync-alt" data-id={{this.id}} data-action="recalculateOther"></span>
+                                 {{#if this.note}}
+                                    <span title="Переглянути замітку" data-id={{this.id}} class="cp highlight text-muted far fa-sticky-note"></span>
+                                {{/if}}
                             </td>
                         </tr>
                     {{/each}}
@@ -121,21 +121,21 @@
             {{/if}}
             <div class="abon-panel-buttons">
                 <div style="margin-right: 4px">
-                    <button class="btn btn-sm btn-default btn-add" data-action="addOneTime">
+                    <button class="btn btn-sm btn-primary btn-add" data-action="addOneTime">
                         <span class="fas fa-plus"></span>
                         Разовий
                     </button>
-                    <button class="btn btn-sm btn-default btn-add" data-action="addTrial">
+                    <button class="btn btn-sm btn-primary btn-add" data-action="addTrial">
                         <span class="fas fa-plus"></span>
                         Пробний
                     </button>
-                    <button class="btn btn-sm btn-default btn-add" data-action="addAbonement">
+                    <button class="btn btn-sm btn-primary btn-add" data-action="addAbonement">
                         <span class="fas fa-plus"></span>
                         Абонемент
                     </button>
                 </div>
                 <div>
-                    <button class="btn btn-sm btn-default btn-floating-mark">
+                    <button class="btn btn-sm btn-primary btn-floating-mark">
                         <span class="fas fa-user-check"></span>
                         Інша група
                     </button>

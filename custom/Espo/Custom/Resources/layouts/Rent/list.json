@@ -13,6 +13,9 @@
         "label": "Разова"
     },
     {
+        "name": "price"
+    },
+    {
         "name": "rentPlan",
         "label": "Планова оренда"
     },

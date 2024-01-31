@@ -1,0 +1,13 @@
+[
+    "name",
+    "contact",
+    "assignedUser",
+    "dateStart",
+    "hall",
+    "customPrice",
+    "teams",
+    "rentPlan",
+    "isOneTime",
+    "createdAt",
+    "createdBy"
+]

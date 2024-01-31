@@ -1,0 +1,3 @@
+{
+    "beforeSaveCustomScript": "if (!isCustom) {\n    if (quantity > 1) {\n        name = string\\concatenate(productItem.name, \" (\", quantity, \")\");\n    } else {\n        name = productItem.name;\n    }\n\n    price = productItem.price * quantity;\n}"
+}

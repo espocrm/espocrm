@@ -5,6 +5,10 @@
         "label": "Ім'я"
     },
     {
-        "name": "isActive"
+        "name": "isActive",
+        "label": "Активний"
+    },
+    {
+        "name": "description"
     }
 ]

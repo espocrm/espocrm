@@ -1,0 +1,16 @@
+{
+    "fields": {
+        "pricebook": "Цінник",
+        "price": "Ціна",
+        "priceCurrency": "Ціна (Валюта)",
+        "priceConverted": "Ціна (Конвертована)",
+        "goodses": "Товари"
+    },
+    "links": {
+        "pricebook": "Цінник",
+        "goodses": "Товари"
+    },
+    "labels": {
+        "Create ProductItem": "Create Продукт"
+    }
+}
