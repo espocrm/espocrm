@@ -24,7 +24,9 @@
     {
         "rows": [
             [
-                false,
+                {
+                    "name": "salesDate"
+                },
                 {
                     "name": "price"
                 }
