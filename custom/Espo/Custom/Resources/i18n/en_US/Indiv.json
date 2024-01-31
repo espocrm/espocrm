@@ -18,7 +18,8 @@
         "price": "Ціна",
         "priceCurrency": "Ціна (Валюта)",
         "priceConverted": "Ціна (Конвертована)",
-        "percent": "Відсоток"
+        "percent": "Відсоток",
+        "salesDate": "Дата розрахунку"
     },
     "links": {
         "parent": "Parent",
