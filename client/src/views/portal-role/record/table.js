@@ -51,28 +51,23 @@ define('views/portal-role/record/table', ['views/role/record/table'], function (
         ],
 
         type: 'aclPortal',
-
         lowestLevelByDefault: true,
 
         setupScopeList: function () {
             this.aclTypeMap = {};
             this.scopeList = [];
 
-            var scopeListAll = Object.keys(this.getMetadata().get('scopes'))
-                .sort((v1, v2) => {
-                     return this.translate(v1, 'scopeNamesPlural')
-                         .localeCompare(this.translate(v2, 'scopeNamesPlural'));
-                });
+            const scopeListAll = this.getSortedScopeList();
 
             scopeListAll.forEach(scope => {
                 if (
-                    this.getMetadata().get('scopes.' + scope + '.disabled') ||
-                    this.getMetadata().get('scopes.' + scope + '.disabledPortal')
+                    this.getMetadata().get(`scopes.${scope}.disabled`) ||
+                    this.getMetadata().get(`scopes.${scope}.disabledPortal`)
                 ) {
                     return;
                 }
 
-                var acl = this.getMetadata().get('scopes.' + scope + '.aclPortal');
+                const acl = this.getMetadata().get(`scopes.${scope}.aclPortal`);
 
                 if (acl) {
                     this.scopeList.push(scope);

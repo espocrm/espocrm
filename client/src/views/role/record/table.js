@@ -289,10 +289,10 @@ class RoleRecordTableView extends View {
         this.setupFieldTableDataList();
     }
 
-    setupScopeList() {
-        this.aclTypeMap = {};
-        this.scopeList = [];
-
+    /**
+     * @return {string[]} scopeList
+     */
+    getSortedScopeList() {
         const moduleList = [null, 'Crm'];
 
         const scopes = /** @type {Object.<{module: string}>} */this.getMetadata().get('scopes');
@@ -309,7 +309,7 @@ class RoleRecordTableView extends View {
 
         moduleList.push('Custom');
 
-        const scopeListAll = Object.keys(scopes)
+        return Object.keys(scopes)
             .sort((v1, v2) => {
                 const module1 = scopes[v1].module || null;
                 const module2 = scopes[v2].module || null;
@@ -324,8 +324,13 @@ class RoleRecordTableView extends View {
                 return this.translate(v1, 'scopeNamesPlural')
                     .localeCompare(this.translate(v2, 'scopeNamesPlural'));
             });
+    }
 
-        scopeListAll.forEach(scope => {
+    setupScopeList() {
+        this.aclTypeMap = {};
+        this.scopeList = [];
+
+        this.getSortedScopeList().forEach(scope => {
             if (this.getMetadata().get(`scopes.${scope}.disabled`)) {
                 return;
             }
