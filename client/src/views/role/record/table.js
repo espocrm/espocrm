@@ -73,6 +73,12 @@ class RoleRecordTableView extends View {
         'not-set': 'muted',
     }
 
+    /**
+     * @private
+     * @type {Object.<Record>}
+     */
+    scopeLevelMemory
+
     data() {
         const data = {};
 
@@ -235,6 +241,8 @@ class RoleRecordTableView extends View {
     setup() {
         this.mode = this.options.mode || 'detail';
         this.final = this.options.final || false;
+
+        this.scopeLevelMemory = {};
 
         this.setupData();
 
@@ -415,7 +423,12 @@ class RoleRecordTableView extends View {
         return !!this.getMetadata().get(`scopes.${scope}.aclFieldLevelDisabled`);
     }
 
-    fetchScopeData() {
+    /**
+     *
+     * @param {string} [onlyScope]
+     * @return {Object.<Record>}
+     */
+    fetchScopeData(onlyScope) {
         const data = {};
 
         const scopeList = this.scopeList;
@@ -427,15 +440,19 @@ class RoleRecordTableView extends View {
         for (const i in scopeList) {
             const scope = scopeList[i];
 
+            if (onlyScope && scope !== onlyScope) {
+                continue;
+            }
+
             const $rows = $table.find(`tr[data-name="${scope}"]`);
 
             const value = $rows.find(`select[name="${scope}"]`).val();
 
-            if (value === 'not-set') {
+            if (!onlyScope && value === 'not-set') {
                 continue;
             }
 
-            if (value === 'disabled') {
+            if (!onlyScope && value === 'disabled') {
                 data[scope] = false;
 
                 continue;
@@ -787,9 +804,17 @@ class RoleRecordTableView extends View {
         const $dropdowns = this.$el.find(`.scope-level select[data-scope="${scope}"]`);
 
         if (value !== 'enabled') {
+            const fetchedData = this.fetchScopeData(scope);
+
             $dropdowns.attr('disabled', 'disabled');
             $dropdowns.addClass('hidden');
             $dropdowns.parent().find('.selectize-control').addClass('hidden');
+
+            delete this.scopeLevelMemory[scope];
+
+            if (scope in fetchedData) {
+                this.scopeLevelMemory[scope] = fetchedData[scope] || {};
+            }
 
             return;
         }
@@ -805,13 +830,16 @@ class RoleRecordTableView extends View {
                 return;
             }
 
-            let level = this.defaultLevels[action];
+            const memoryData = this.scopeLevelMemory[scope] || {};
+            const levelInMemory = memoryData[action];
+
+            let level = levelInMemory || this.defaultLevels[action];
 
             if (!level) {
                 level = this.getLevelList(scope, action)[0];
             }
 
-            if (this.lowestLevelByDefault) {
+            if (!levelInMemory && this.lowestLevelByDefault) {
                 level = [...this.getLevelList(scope, action)].pop();
             }
 
