@@ -11,8 +11,10 @@
             "type": "text"
         },
         "createdAt": {
+            "notNull": false,
             "type": "datetime",
-            "readOnly": true
+            "readOnly": true,
+            "minuteStep": 30
         },
         "modifiedAt": {
             "type": "datetime",
@@ -137,7 +139,7 @@
             "len": 36,
             "notNull": false,
             "unique": false,
-            "nextNumber": 1,
+            "nextNumber": 1000,
             "padLength": 4,
             "copyToClipboard": true,
             "isCustom": true

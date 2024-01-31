@@ -26,10 +26,10 @@
                 }
             ],
             [
+                false,
                 {
                     "name": "isCustomPrice"
-                },
-                false
+                }
             ]
         ],
         "style": "default",
@@ -41,20 +41,10 @@
                 false,
                 false,
                 {
-                    "name": "defaultPercent"
+                    "name": "percent"
                 },
                 {
-                    "name": "defaultPrice"
-                }
-            ],
-            [
-                false,
-                false,
-                {
-                    "name": "customPercent"
-                },
-                {
-                    "name": "customPrice"
+                    "name": "price"
                 }
             ],
             [

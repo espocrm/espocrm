@@ -37,13 +37,19 @@
         },
         "cost": {
             "type": "currency",
-            "required": true,
+            "required": false,
             "isCustom": true
         },
         "date": {
             "notNull": false,
             "type": "date",
             "default": "javascript: return this.dateTime.getToday();",
+            "isCustom": true
+        },
+        "price": {
+            "type": "currency",
+            "required": true,
+            "min": 0,
             "isCustom": true
         }
     },

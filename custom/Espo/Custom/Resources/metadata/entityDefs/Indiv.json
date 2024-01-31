@@ -142,39 +142,26 @@
             "isCustom": true,
             "required": true
         },
-        "defaultPrice": {
-            "type": "currency",
-            "readOnly": true,
-            "isCustom": true
-        },
         "isCustomPrice": {
             "notNull": true,
             "type": "bool",
             "tooltip": true,
             "isCustom": true
         },
-        "customPrice": {
-            "type": "currency",
-            "isCustom": true
-        },
-        "defaultPercent": {
-            "type": "int",
-            "readOnly": true,
-            "min": 0,
-            "max": 100,
-            "tooltip": true,
-            "isCustom": true
-        },
-        "customPercent": {
-            "type": "int",
-            "min": 0,
-            "max": 100,
-            "tooltip": true,
-            "isCustom": true
-        },
         "isPaid": {
             "notNull": true,
             "type": "bool",
+            "isCustom": true
+        },
+        "price": {
+            "type": "currency",
+            "isCustom": true
+        },
+        "percent": {
+            "type": "int",
+            "min": 0,
+            "max": 100,
+            "tooltip": true,
             "isCustom": true
         }
     },

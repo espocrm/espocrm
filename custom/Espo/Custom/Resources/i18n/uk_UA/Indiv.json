@@ -13,17 +13,13 @@
         "contact": "Клієнт",
         "branchName": "BranchName",
         "contacts": "Клієнти",
-        "defaultPrice": "Ціна",
-        "defaultPriceCurrency": "Ціна (Валюта)",
-        "defaultPriceConverted": "Ціна (Конвертована)",
         "isCustomPrice": "Клієнтська ціна",
-        "customPrice": "Ціна",
-        "customPriceCurrency": "Ціна (Валюта)",
-        "customPriceConverted": "Ціна (Конвертована)",
         "assignedUser": "Відповідальний (Педагог)",
-        "defaultPercent": "Відсоток",
-        "customPercent": "Відсоток",
-        "isPaid": "Сплачено"
+        "isPaid": "Сплачено",
+        "price": "Ціна",
+        "priceCurrency": "Ціна (Валюта)",
+        "priceConverted": "Ціна (Конвертована)",
+        "percent": "Відсоток"
     },
     "links": {
         "parent": "Батько",
@@ -57,7 +53,6 @@
     "tooltips": {
         "branchName": "forwarding for branch name from",
         "isCustomPrice": "Задати ціну вручну для цього індиву",
-        "defaultPercent": "Відсоток який надходить студії",
-        "customPercent": "Відсоток від ціни, який надходить студії"
+        "percent": "ВІдсоток який надходить студії"
     }
 }

@@ -6,11 +6,13 @@
                     "name": "name"
                 },
                 {
-                    "name": "productItem"
+                    "name": "isCustom"
                 }
             ],
             [
-                false,
+                {
+                    "name": "productItem"
+                },
                 {
                     "name": "quantity"
                 }
@@ -24,7 +26,7 @@
             [
                 false,
                 {
-                    "name": "totalPrice"
+                    "name": "price"
                 }
             ]
         ],

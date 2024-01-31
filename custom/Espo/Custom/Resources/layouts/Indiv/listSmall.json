@@ -6,7 +6,11 @@
     },
     {
         "name": "contacts",
-        "notSortable": true
+        "notSortable": true,
+        "label": "Клієнти"
+    },
+    {
+        "name": "price"
     },
     {
         "name": "hall",

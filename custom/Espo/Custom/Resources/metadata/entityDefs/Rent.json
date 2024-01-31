@@ -144,6 +144,10 @@
         "rentPlan": {
             "type": "link",
             "tooltip": true
+        },
+        "price": {
+            "type": "currency",
+            "isCustom": true
         }
     },
     "links": {

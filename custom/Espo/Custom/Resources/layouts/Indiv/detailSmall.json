@@ -39,18 +39,10 @@
         "rows": [
             [
                 {
-                    "name": "defaultPercent"
+                    "name": "percent"
                 },
                 {
-                    "name": "defaultPrice"
-                }
-            ],
-            [
-                {
-                    "name": "customPercent"
-                },
-                {
-                    "name": "customPrice"
+                    "name": "price"
                 }
             ]
         ],

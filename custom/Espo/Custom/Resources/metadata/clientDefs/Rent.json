@@ -166,6 +166,24 @@
                         }
                     ]
                 }
+            },
+            "price": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                }
             }
         }
     },

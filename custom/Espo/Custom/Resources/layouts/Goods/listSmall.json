@@ -5,12 +5,14 @@
         "label": "Ім'я"
     },
     {
-        "name": "productItem"
+        "name": "productItem",
+        "label": "Продукт"
     },
     {
-        "name": "quantity"
+        "name": "price"
     },
     {
-        "name": "totalPrice"
+        "name": "quantity",
+        "label": "Кількість"
     }
 ]

@@ -11,5 +11,8 @@
     {
         "name": "dateStart",
         "label": "Дата початку"
+    },
+    {
+        "name": "isOneTime"
     }
 ]

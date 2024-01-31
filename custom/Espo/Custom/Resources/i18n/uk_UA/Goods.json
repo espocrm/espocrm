@@ -6,7 +6,7 @@
         "productItem": "Продукт",
         "quantity": "Кількість",
         "isCustom": "Без продукту",
-        "price": "Сумма",
+        "price": "Ціна",
         "priceCurrency": "Сумма (Валюта)",
         "priceConverted": "Сумма (Конвертована)"
     },
