@@ -80,8 +80,8 @@
         <h4 class="panel-title">{{translate 'Field Level' scope='Role'}}</h4>
     </div>
     <div class="panel-body">
-        <div class="no-margin">
-            <table class="table table-bordered-inside no-margin field-level">
+        <div class="no-margin" style="margin-bottom: 0;">
+            <table class="table table-bordered-inside table-bottom-bordered no-margin field-level">
                 <tr>
                     <th></th>
                     <th style="width: 20%"></th>
