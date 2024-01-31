@@ -784,7 +784,7 @@ class RoleRecordTableView extends View {
      * @param {string} value
      */
     onSelectAccess(scope, value) {
-        const $dropdowns = this.$el.find(`select[data-scope="${scope}"]`);
+        const $dropdowns = this.$el.find(`.scope-level select[data-scope="${scope}"]`);
 
         if (value !== 'enabled') {
             $dropdowns.attr('disabled', 'disabled');
