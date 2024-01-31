@@ -70,6 +70,9 @@
         "sortDirection": {
             "asc": "Ascending",
             "desc": "Descending"
+        },
+        "module": {
+            "Custom": "Custom"
         }
     },
     "messages": {

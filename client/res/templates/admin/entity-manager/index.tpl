@@ -25,7 +25,7 @@
 </div>
 
 <div class="row">
-<div class="col-md-9">
+<div class="col-md-11">
 
 <div class="margin-bottom-2x margin-top">
     <input
@@ -41,8 +41,9 @@
     <thead>
         <tr>
             <th>{{translate 'name' scope='EntityManager' category='fields'}}</th>
-            <th>{{translate 'label' scope='EntityManager' category='fields'}}</th>
-            <th>{{translate 'type' scope='EntityManager' category='fields'}}</th>
+            <th style="width: 33%">{{translate 'label' scope='EntityManager' category='fields'}}</th>
+            <th style="width: 20%">{{translate 'type' scope='EntityManager' category='fields'}}</th>
+            <th style="width: 20%">{{translate 'module' scope='EntityManager' category='fields'}}</th>
         </tr>
     </thead>
     <tbody>
@@ -55,12 +56,17 @@
                 {{name}}
                 {{/if}}
             </td>
-            <td style="width: 33%">
+            <td>
                 {{label}}
             </td>
-            <td style="width: 30%">
+            <td>
                 {{#if type}}
                 {{translateOption type field='type' scope='EntityManager'}}
+                {{/if}}
+            </td>
+            <td>
+                {{#if module}}
+                    {{translateOption module field='module' scope='EntityManager'}}
                 {{/if}}
             </td>
         </tr>
