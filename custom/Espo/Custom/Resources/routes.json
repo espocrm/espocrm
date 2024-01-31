@@ -8,13 +8,24 @@
         }
     },
     {
-        "route": "/Budget/income/:dateFrom/:dateTo",
+        "route": "/Budget/income/:dateFrom/:dateTo/:teams",
         "method": "get",
         "params": {
             "controller": "BudgetController",
             "action": "income",
             "dateFrom": ":dateFrom",
-            "dateTo": ":dateTo"
+            "dateTo": ":dateTo",
+            "teams": ":teams"
+        }
+    },
+    {
+        "route": "/Budget/detail/:dateFrom/:teams",
+        "method": "get",
+        "params": {
+            "controller": "BudgetController",
+            "action": "detail",
+            "dateFrom": ":dateFrom",
+            "teams": ":teams"
         }
     }
 ]
