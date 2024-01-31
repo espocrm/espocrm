@@ -24,12 +24,6 @@
                 {
                     "name": "duration"
                 }
-            ],
-            [
-                {
-                    "name": "isOneTime"
-                },
-                false
             ]
         ],
         "dynamicLogicVisible": null,
@@ -43,6 +37,21 @@
         "rows": [
             [
                 {
+                    "name": "isOneTime"
+                },
+                false
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Тип"
+    },
+    {
+        "rows": [
+            [
+                {
                     "name": "contact"
                 },
                 {
@@ -50,7 +59,9 @@
                 }
             ],
             [
-                false,
+                {
+                    "name": "salesDate"
+                },
                 {
                     "name": "isPaid"
                 }

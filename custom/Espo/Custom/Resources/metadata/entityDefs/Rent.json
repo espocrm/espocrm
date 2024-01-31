@@ -148,6 +148,14 @@
         "price": {
             "type": "currency",
             "isCustom": true
+        },
+        "salesDate": {
+            "notNull": false,
+            "type": "date",
+            "required": false,
+            "default": "javascript: return this.dateTime.getToday();",
+            "isCustom": true,
+            "useNumericFormat": true
         }
     },
     "links": {
