@@ -380,8 +380,7 @@
         },
         {
             "name": "object\\set",
-            "insertText": "object\\set(OBJECT, KEY, VALUE)",
-            "returnType": "object"
+            "insertText": "object\\set(OBJECT, KEY, VALUE)"
         },
         {
             "name": "object\\clear",
