@@ -13,7 +13,8 @@
         "classCount": "Кількість аренд",
         "assignedUser": "Відповідальний (адмін)",
         "discount": "Знижка",
-        "rents": "Оренди"
+        "rents": "Оренди",
+        "salesDate": "Дата розрахунку"
     },
     "links": {
         "contact": "Клієнт",

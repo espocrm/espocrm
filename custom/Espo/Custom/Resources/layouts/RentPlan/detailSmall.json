@@ -25,7 +25,7 @@
             ]
         ],
         "style": "default",
-        "label": "Overview"
+        "label": ""
     },
     {
         "rows": [
@@ -47,17 +47,8 @@
             ]
         ],
         "dynamicLogicVisible": null,
-        "style": "success",
-        "dynamicLogicStyled": {
-            "conditionGroup": [
-                {
-                    "type": "isTrue",
-                    "attribute": "isPaid"
-                }
-            ]
-        },
+        "style": "default",
         "tabBreak": false,
-        "tabLabel": null,
         "hidden": false,
         "customLabel": "Розрахунок"
     },
@@ -70,16 +61,9 @@
             ]
         ],
         "dynamicLogicVisible": null,
-        "style": "warning",
-        "dynamicLogicStyled": {
-            "conditionGroup": [
-                {
-                    "type": "isNotEmpty",
-                    "attribute": "description"
-                }
-            ]
-        },
+        "style": "default",
         "tabBreak": false,
+        "tabLabel": null,
         "hidden": false,
         "customLabel": "Додатково"
     }

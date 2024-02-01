@@ -9,7 +9,8 @@
         "startDate": "Дата початку",
         "classCount": "Кількість аренд",
         "discount": "Знижка",
-        "rents": "Оренди"
+        "rents": "Оренди",
+        "salesDate": "Дата розрахунку"
     },
     "links": {
         "contact": "Клієнт",
