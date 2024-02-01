@@ -203,6 +203,14 @@
             "type": "bool",
             "tooltip": true,
             "isCustom": true
+        },
+        "salesDate": {
+            "notNull": false,
+            "type": "date",
+            "required": true,
+            "default": "javascript: return this.dateTime.getToday();",
+            "useNumericFormat": true,
+            "isCustom": true
         }
     },
     "links": {

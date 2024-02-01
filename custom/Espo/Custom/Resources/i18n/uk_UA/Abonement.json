@@ -29,7 +29,8 @@
         "freezeDaysLeft": "Залишилося днів",
         "lastMark": "LastMark",
         "lastUpdate": "LastUpdate",
-        "fromAttendanceSheet": "FromAttendanceSheet"
+        "fromAttendanceSheet": "FromAttendanceSheet",
+        "salesDate": "Дата розрахунку"
     },
     "tooltips": {
         "classCount": "Кількість занять в абонементі",

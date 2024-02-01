@@ -26,7 +26,8 @@
         "freezeDaysLeft": "Залишилося днів",
         "lastMark": "LastMark",
         "lastUpdate": "LastUpdate",
-        "fromAttendanceSheet": "FromAttendanceSheet"
+        "fromAttendanceSheet": "FromAttendanceSheet",
+        "salesDate": "Дата розрахунку"
     },
     "links": {
         "abonservice": "Абонсервіс",
