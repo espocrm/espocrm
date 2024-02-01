@@ -5,14 +5,10 @@
         "label": "Ім'я"
     },
     {
-        "name": "price"
+        "name": "salesDate"
     },
     {
-        "name": "date",
-        "label": "Дата"
-    },
-    {
-        "name": "description",
-        "label": "Опис"
+        "name": "price",
+        "label": "Сума"
     }
 ]
