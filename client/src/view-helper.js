@@ -42,16 +42,18 @@ class ViewHelper {
 
         /** @private */
         this.mdBeforeList = [
-            {
-                regex: /&#x60;&#x60;&#x60;\n?([\s\S]*?)&#x60;&#x60;&#x60;/g,
+            /*{
+                regex: /```\n?([\s\S]*?)```/g,
                 value: (s, string) => {
-                    return '```\n' + string + '```';
+                    return '```\n' + string.replace(/\\\>/g, '>') + '```';
                 },
-            },
+            },*/
             {
-                regex: /&#x60;([\s\S]*?)&#x60;/g,
+                // Also covers triple-backtick blocks.
+                regex: /`([\s\S]*?)`/g,
                 value: (s, string) => {
-                    return '`' + string + '`';
+                    // noinspection RegExpRedundantEscape
+                    return '`' + string.replace(/\\\>/g, '>') + '`';
                 },
             },
         ];
@@ -689,7 +691,8 @@ class ViewHelper {
     transformMarkdownText(text, options) {
         text = text || '';
 
-        text = Handlebars.Utils.escapeExpression(text).replace(/&gt;+/g, '>');
+        // noinspection RegExpRedundantEscape
+        text = text.replace(/\>/g, '\\>');
 
         this.mdBeforeList.forEach(item => {
             text = text.replace(item.regex, item.value);
@@ -697,12 +700,9 @@ class ViewHelper {
 
         options = options || {};
 
-        if (options.inline) {
-            text = marked.parseInline(text);
-        }
-        else {
-            text = marked.parse(text);
-        }
+        text = options.inline ?
+            marked.parseInline(text) :
+            marked.parse(text);
 
         text = DOMPurify.sanitize(text, {}).toString();
 
