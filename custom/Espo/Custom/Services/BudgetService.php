@@ -116,8 +116,8 @@ class BudgetService {
     private function getProfitByDate($entityName, $dateFrom, $dateTo, $teamsIds)
     {
         $selectParams = [
-            'createdAt>=' => "${dateFrom} 00:00:00",
-            'createdAt<=' => "${dateTo} 23:59:59",
+            'salesDate>=' => $dateFrom,
+            'salesDate<=' => $dateTo,
             'teams.id' => $teamsIds
         ];
 
@@ -132,8 +132,8 @@ class BudgetService {
     private function getExpensesByDate($dateFrom, $dateTo, $teamsIds)
     {
         $selectParams = [
-            'date>=' => $dateFrom,
-            'date<=' => $dateTo,
+            'salesDate>=' => $dateFrom,
+            'salesDate<=' => $dateTo,
             'teams.id' => $teamsIds
         ];
 
