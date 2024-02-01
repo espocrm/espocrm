@@ -34,23 +34,23 @@ class BudgetService {
         $profitDetailList = [
             [
                 'name' => 'Абонементи', 
-                'value' => $this->getTotalSumByDate($date, $abons, 'price', 'createdAt')
+                'value' => $this->getTotalSumByDate($date, $abons, 'price', 'salesDate')
             ],
             [
                 'name' => 'Індиви', 
-                'value' => $this->getTotalSumByDate($date, $indivs, 'price', 'createdAt')
+                'value' => $this->getTotalSumByDate($date, $indivs, 'price', 'salesDate')
             ],
             [
                 'name' => 'Оренда разова', 
-                'value' => $this->getTotalSumByDate($date, $rents, 'price', 'createdAt')
+                'value' => $this->getTotalSumByDate($date, $rents, 'price', 'salesDate')
             ],
             [
                 'name' => 'Оренда планова', 
-                'value' => $this->getTotalSumByDate($date, $rentplans, 'price', 'createdAt')
+                'value' => $this->getTotalSumByDate($date, $rentplans, 'price', 'salesDate')
             ],
             [
                 'name' => 'Товари', 
-                'value' => $this->getTotalSumByDate($date, $goods, 'price', 'createdAt')
+                'value' => $this->getTotalSumByDate($date, $goods, 'price', 'salesDate')
             ],
         ];
 
@@ -149,11 +149,11 @@ class BudgetService {
     {
         $allProfitTotalSum = 0;
         
-        $allProfitTotalSum += $this->getTotalSumByDate($date, $abons, 'price', 'createdAt');
-        $allProfitTotalSum += $this->getTotalSumByDate($date, $indivs, 'price', 'createdAt');
-        $allProfitTotalSum += $this->getTotalSumByDate($date, $rents, 'price', 'createdAt');
-        $allProfitTotalSum += $this->getTotalSumByDate($date, $rentplans, 'price', 'createdAt');
-        $allProfitTotalSum += $this->getTotalSumByDate($date, $goods, 'price', 'createdAt');
+        $allProfitTotalSum += $this->getTotalSumByDate($date, $abons, 'price', 'salesDate');
+        $allProfitTotalSum += $this->getTotalSumByDate($date, $indivs, 'price', 'salesDate');
+        $allProfitTotalSum += $this->getTotalSumByDate($date, $rents, 'price', 'salesDate');
+        $allProfitTotalSum += $this->getTotalSumByDate($date, $rentplans, 'price', 'salesDate');
+        $allProfitTotalSum += $this->getTotalSumByDate($date, $goods, 'price', 'salesDate');
         
         return $allProfitTotalSum;
     }
