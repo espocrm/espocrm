@@ -8,7 +8,7 @@
             ],
             [
                 {
-                    "name": "date"
+                    "name": "salesDate"
                 },
                 {
                     "name": "price"

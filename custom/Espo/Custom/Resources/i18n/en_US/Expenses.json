@@ -6,7 +6,8 @@
         "date": "Дата",
         "price": "Сума",
         "priceCurrency": "Сума (Валюта)",
-        "priceConverted": "Сума (Конвертована)"
+        "priceConverted": "Сума (Конвертована)",
+        "salesDate": "Дата розрахунку"
     },
     "links": [],
     "labels": {
