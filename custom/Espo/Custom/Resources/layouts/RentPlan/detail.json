@@ -31,14 +31,16 @@
         "rows": [
             [
                 {
-                    "name": "discount"
+                    "name": "salesDate"
                 },
                 {
                     "name": "price"
                 }
             ],
             [
-                false,
+                {
+                    "name": "discount"
+                },
                 {
                     "name": "isPaid"
                 }

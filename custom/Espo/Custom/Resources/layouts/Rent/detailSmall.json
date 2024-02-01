@@ -24,7 +24,13 @@
                 {
                     "name": "duration"
                 }
-            ],
+            ]
+        ],
+        "style": "default",
+        "label": ""
+    },
+    {
+        "rows": [
             [
                 {
                     "name": "isOneTime"
@@ -32,8 +38,11 @@
                 false
             ]
         ],
+        "dynamicLogicVisible": null,
         "style": "default",
-        "label": ""
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Тип"
     },
     {
         "rows": [
@@ -46,7 +55,9 @@
                 }
             ],
             [
-                false,
+                {
+                    "name": "salesDate"
+                },
                 {
                     "name": "isPaid"
                 }

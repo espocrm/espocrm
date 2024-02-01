@@ -6,20 +6,26 @@
                     "name": "name"
                 },
                 {
-                    "name": "isCustom"
+                    "name": "contact"
                 }
             ],
             [
                 {
-                    "name": "productItem"
+                    "name": "startDate"
                 },
                 {
-                    "name": "quantity"
+                    "name": "duration"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "classCount"
                 }
             ]
         ],
         "style": "default",
-        "label": "Overview"
+        "label": ""
     },
     {
         "rows": [
@@ -30,20 +36,19 @@
                 {
                     "name": "price"
                 }
+            ],
+            [
+                {
+                    "name": "discount"
+                },
+                {
+                    "name": "isPaid"
+                }
             ]
         ],
         "dynamicLogicVisible": null,
-        "style": "success",
-        "dynamicLogicStyled": {
-            "conditionGroup": [
-                {
-                    "type": "isNotEmpty",
-                    "attribute": "price"
-                }
-            ]
-        },
+        "style": "default",
         "tabBreak": false,
-        "tabLabel": null,
         "hidden": false,
         "customLabel": "Розрахунок"
     },
@@ -56,15 +61,7 @@
             ]
         ],
         "dynamicLogicVisible": null,
-        "style": "info",
-        "dynamicLogicStyled": {
-            "conditionGroup": [
-                {
-                    "type": "isNotEmpty",
-                    "attribute": "description"
-                }
-            ]
-        },
+        "style": "default",
         "tabBreak": false,
         "tabLabel": null,
         "hidden": false,

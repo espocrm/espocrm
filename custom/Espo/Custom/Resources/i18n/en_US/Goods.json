@@ -5,7 +5,8 @@
         "isCustom": "Без продукту",
         "price": "Ціна",
         "priceCurrency": "Сумма (Валюта)",
-        "priceConverted": "Сумма (Конвертована)"
+        "priceConverted": "Сумма (Конвертована)",
+        "salesDate": "Дата розрахунку"
     },
     "links": {
         "productItem": "Продукт"

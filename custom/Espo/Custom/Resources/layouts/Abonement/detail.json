@@ -93,11 +93,15 @@
                 }
             ],
             [
-                false,
-                false,
+                {
+                    "name": "salesDate"
+                },
                 {
                     "name": "price"
-                },
+                }
+            ],
+            [
+                false,
                 {
                     "name": "isPaid"
                 }
@@ -135,15 +139,8 @@
             ]
         ],
         "dynamicLogicVisible": null,
-        "style": "default",
-        "dynamicLogicStyled": {
-            "conditionGroup": [
-                {
-                    "type": "isTrue",
-                    "attribute": "isActive"
-                }
-            ]
-        },
+        "style": "info",
+        "dynamicLogicStyled": null,
         "tabBreak": false,
         "hidden": false,
         "customLabel": "Активність"

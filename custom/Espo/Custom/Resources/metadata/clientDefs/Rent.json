@@ -161,13 +161,31 @@
                 "required": {
                     "conditionGroup": [
                         {
-                            "type": "isFalse",
+                            "type": "isTrue",
                             "attribute": "isOneTime"
                         }
                     ]
                 }
             },
             "price": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isOneTime"
+                        }
+                    ]
+                }
+            },
+            "salesDate": {
                 "visible": {
                     "conditionGroup": [
                         {

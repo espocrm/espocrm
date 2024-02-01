@@ -21,7 +21,8 @@
         "rentPlan": "Планова оренда",
         "price": "Ціна",
         "priceCurrency": "Ціна (Валюта)",
-        "priceConverted": "Ціна (Конвертована)"
+        "priceConverted": "Ціна (Конвертована)",
+        "salesDate": "Дата розрахунку"
     },
     "links": {
         "parent": "Батько",

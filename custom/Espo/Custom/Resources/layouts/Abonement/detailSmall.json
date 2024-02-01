@@ -94,8 +94,14 @@
             ],
             [
                 {
-                    "name": "price"
+                    "name": "salesDate"
                 },
+                {
+                    "name": "price"
+                }
+            ],
+            [
+                false,
                 {
                     "name": "isPaid"
                 }
@@ -136,7 +142,8 @@
             ]
         ],
         "dynamicLogicVisible": null,
-        "style": "default",
+        "style": "info",
+        "dynamicLogicStyled": null,
         "tabBreak": false,
         "tabLabel": null,
         "hidden": false,

@@ -26,10 +26,10 @@
                 }
             ],
             [
+                false,
                 {
                     "name": "isCustomPrice"
-                },
-                false
+                }
             ]
         ],
         "style": "default",
@@ -43,6 +43,14 @@
                 },
                 {
                     "name": "price"
+                }
+            ],
+            [
+                {
+                    "name": "salesDate"
+                },
+                {
+                    "name": "isPaid"
                 }
             ]
         ],
