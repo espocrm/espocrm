@@ -5,7 +5,13 @@
                 {
                     "name": "name"
                 }
-            ],
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    },
+    {
+        "rows": [
             [
                 {
                     "name": "salesDate"
@@ -13,14 +19,43 @@
                 {
                     "name": "price"
                 }
-            ],
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "success",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isNotEmpty",
+                    "attribute": "price"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Розрахунок"
+    },
+    {
+        "rows": [
             [
                 {
                     "name": "description"
                 }
             ]
         ],
-        "style": "default",
-        "label": "Overview"
+        "dynamicLogicVisible": null,
+        "style": "info",
+        "dynamicLogicStyled": {
+            "conditionGroup": [
+                {
+                    "type": "isNotEmpty",
+                    "attribute": "description"
+                }
+            ]
+        },
+        "tabBreak": false,
+        "tabLabel": null,
+        "hidden": false,
+        "customLabel": "Додатково"
     }
 ]
