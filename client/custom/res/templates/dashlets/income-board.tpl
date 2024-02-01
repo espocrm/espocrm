@@ -1,5 +1,6 @@
 <div class="income-container">
     <div class="income-result">
+        <div></div>
         <div class="" style="padding-right: 5px">
             {{#if isProfit}}
                 <span class="text-success" style="font-size: 1.5em">₴</span>
