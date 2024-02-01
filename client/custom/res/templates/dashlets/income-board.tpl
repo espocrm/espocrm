@@ -11,7 +11,7 @@
         </div>
         <div class="income-result-details" >
             <div class="text-success" style="margin-bottom: -5px;">{{ profit }}</div>
-            <div class="text-danger">{{ spending }}</div>
+            <div class="text-danger">{{ expenses }}</div>
         </div>
     </div>
 </div>

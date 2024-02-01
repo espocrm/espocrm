@@ -10,13 +10,12 @@
                 "type": "enumFloat",
                 "options": [0, 0.5, 1, 2, 5, 10]
             },
-            "filters": {
-                "type": "text"
+            "teams": {
+                "type": "array"
             }
         },
         "defaults": {
-            "title": "Прибуток",
-            "filters": "{\"filters\": []}"
+            "title": "Прибуток"
         },
         "layout": [
             {
@@ -26,7 +25,7 @@
                         {"name": "autorefreshInterval"}
                     ],
                     [
-                        {"name": "filters", "label": "Фільтри (JSON)"}
+                        {"name": "teams", "label": "Команди"}
                     ]
                 ]
             }
