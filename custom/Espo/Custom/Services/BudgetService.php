@@ -34,23 +34,28 @@ class BudgetService {
         $profitDetailList = [
             [
                 'name' => 'Абонементи', 
-                'value' => $this->getTotalSumByDate($date, $abons, 'price', 'salesDate')
+                'value' => $this->getTotalSumByDate($date, $abons, 'price', 'salesDate'),
+                'count' => count($abons)
             ],
             [
                 'name' => 'Індиви', 
-                'value' => $this->getTotalSumByDate($date, $indivs, 'price', 'salesDate')
+                'value' => $this->getTotalSumByDate($date, $indivs, 'price', 'salesDate'),
+                'count' => count($indivs)
             ],
             [
                 'name' => 'Оренда разова', 
-                'value' => $this->getTotalSumByDate($date, $rents, 'price', 'salesDate')
+                'value' => $this->getTotalSumByDate($date, $rents, 'price', 'salesDate'),
+                'count' => count($rents)
             ],
             [
                 'name' => 'Оренда планова', 
-                'value' => $this->getTotalSumByDate($date, $rentplans, 'price', 'salesDate')
+                'value' => $this->getTotalSumByDate($date, $rentplans, 'price', 'salesDate'),
+                'count' => count($rentplans)
             ],
             [
                 'name' => 'Товари', 
-                'value' => $this->getTotalSumByDate($date, $goods, 'price', 'salesDate')
+                'value' => $this->getTotalSumByDate($date, $goods, 'price', 'salesDate'),
+                'count' => count($goods)
             ],
         ];
 
