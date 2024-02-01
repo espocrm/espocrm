@@ -10,22 +10,17 @@
                 "type": "enumFloat",
                 "options": [0, 0.5, 1, 2, 5, 10]
             },
-            "object": {
-                "type": "varchar"
+            "entityName": {
+                "type": "enum",
+                "options": ["Абонементи", "Індиви", "Оренда разова", "Оренда планова", "Товари"]
             },
-            "priceFieldName": {
-                "type": "varchar"
-            },
-            "filters": {
-                "type": "text"
+            "teams": {
+                "type": "array"
             }
         },
         "defaults": {
             "title": "Абонементи",
-            "branch": "Правий",
-            "object": "Abonement",
-            "priceFieldName": "price",
-            "filters": "{\"filters\": []}"
+            "entityName": "Абонементи"
         },
         "layout": [
             {
@@ -35,11 +30,8 @@
                         {"name": "autorefreshInterval"}
                     ],
                     [
-                        {"name": "object", "label": "Сутність"},
-                        {"name": "priceFieldName", "label": "Назва поля для суми"}
-                    ],
-                    [
-                        {"name": "filters", "label": "Фільтри (JSON)"}
+                        {"name": "entityName", "label": "Назва сутності"},
+                        {"name": "teams", "label": "Команди"}
                     ]
                 ]
             }
