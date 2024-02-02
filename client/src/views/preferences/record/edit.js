@@ -26,237 +26,238 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/record/edit', ['views/record/edit'], function (Dep) {
+import EditRecordView from 'views/record/edit';
 
-    return Dep.extend({
+class PreferencesEditRecordView extends EditRecordView {
 
-        sideView: null,
+    sideView = null
 
-        saveAndContinueEditingAction: false,
+    saveAndContinueEditingAction = false
 
-        buttonList: [
-            {
-                name: 'save',
-                label: 'Save',
-                style: 'primary',
-            },
-            {
-                name: 'cancel',
-                label: 'Cancel',
-            }
-        ],
+    buttonList = [
+        {
+            name: 'save',
+            label: 'Save',
+            style: 'primary',
+        },
+        {
+            name: 'cancel',
+            label: 'Cancel',
+        }
+    ]
 
-        dynamicLogicDefs: {
-            fields: {
-                'tabList': {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'isTrue',
-                                attribute: 'useCustomTabList',
-                            }
-                        ]
-                    }
-                },
+    dynamicLogicDefs = {
+        fields: {
+            'tabList': {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isTrue',
+                            attribute: 'useCustomTabList',
+                        }
+                    ]
+                }
             },
         },
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
+        const model = /** @type {import('models/preferences').default} */this.model;
+
+        this.addDropdownItem({
+            name: 'reset',
+            text: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
+            style: 'danger'
+        });
+
+        const forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
+
+        if (!~forbiddenEditFieldList.indexOf('dashboardLayout') && !model.isPortal()) {
             this.addDropdownItem({
-                name: 'reset',
-                text: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
-                style: 'danger'
+                name: 'resetDashboard',
+                text: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')
             });
+        }
 
-            var forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
+        if (model.isPortal()) {
+            this.layoutName = 'detailPortal';
+        }
 
-            if (!~forbiddenEditFieldList.indexOf('dashboardLayout') && !this.model.isPortal()) {
-                this.addDropdownItem({
-                    name: 'resetDashboard',
-                    text: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')
+        if (this.model.id === this.getUser().id) {
+            this.on('after:save', () => {
+                const data = this.model.getClonedAttributes();
+
+                delete data['smtpPassword'];
+
+                this.getPreferences().set(data);
+                this.getPreferences().trigger('update');
+            });
+        }
+
+        if (!this.getUser().isAdmin() || model.isPortal()) {
+            this.hideField('dashboardLayout');
+        }
+
+        this.controlFollowCreatedEntityListVisibility();
+        this.listenTo(this.model, 'change:followCreatedEntities', this.controlFollowCreatedEntityListVisibility);
+
+        this.controlColorsField();
+        this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
+
+        let hideNotificationPanel = true;
+
+        if (!this.getConfig().get('assignmentEmailNotifications') || model.isPortal()) {
+            this.hideField('receiveAssignmentEmailNotifications');
+            this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
+        } else {
+            hideNotificationPanel = false;
+
+            this.controlAssignmentEmailNotificationsVisibility();
+
+            this.listenTo(this.model, 'change:receiveAssignmentEmailNotifications', () => {
+                this.controlAssignmentEmailNotificationsVisibility();
+            });
+        }
+
+        if ((this.getConfig().get('assignmentEmailNotificationsEntityList') || []).length === 0) {
+            this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
+        }
+
+        if (
+            (this.getConfig().get('assignmentNotificationsEntityList') || []).length === 0 ||
+            model.isPortal()
+        ) {
+            this.hideField('assignmentNotificationsIgnoreEntityTypeList');
+        } else {
+            hideNotificationPanel = false;
+        }
+
+        if (this.getConfig().get('emailForceUseExternalClient')) {
+            this.hideField('emailUseExternalClient');
+        }
+
+        if (!this.getConfig().get('mentionEmailNotifications') || model.isPortal()) {
+            this.hideField('receiveMentionEmailNotifications');
+        } else {
+            hideNotificationPanel = false;
+        }
+
+        if (!this.getConfig().get('streamEmailNotifications') && !model.isPortal()) {
+            this.hideField('receiveStreamEmailNotifications');
+        } else if (!this.getConfig().get('portalStreamEmailNotifications') && model.isPortal()) {
+            this.hideField('receiveStreamEmailNotifications');
+        } else {
+            hideNotificationPanel = false;
+        }
+
+        if (this.getConfig().get('scopeColorsDisabled')) {
+            this.hideField('scopeColorsDisabled');
+            this.hideField('tabColorsDisabled');
+        }
+
+        if (this.getConfig().get('tabColorsDisabled')) {
+            this.hideField('tabColorsDisabled');
+        }
+
+        if (hideNotificationPanel) {
+            this.hidePanel('notifications');
+        }
+
+        if (this.getConfig().get('userThemesDisabled')) {
+            this.hideField('theme');
+        }
+
+        this.on('save', initialAttributes => {
+            if (
+                this.model.get('language') !== initialAttributes.language ||
+                this.model.get('theme') !== initialAttributes.theme ||
+                (this.model.get('themeParams') || {}).navbar !== (initialAttributes.themeParams || {}).navbar
+            ) {
+                this.setConfirmLeaveOut(false);
+
+                window.location.reload();
+            }
+        });
+    }
+
+    controlFollowCreatedEntityListVisibility() {
+        if (!this.model.get('followCreatedEntities')) {
+            this.showField('followCreatedEntityTypeList');
+        } else {
+            this.hideField('followCreatedEntityTypeList');
+        }
+    }
+
+    controlColorsField() {
+        if (this.model.get('scopeColorsDisabled')) {
+            this.hideField('tabColorsDisabled');
+        } else {
+            this.showField('tabColorsDisabled');
+        }
+    }
+
+    controlAssignmentEmailNotificationsVisibility() {
+        if (this.model.get('receiveAssignmentEmailNotifications')) {
+            this.showField('assignmentEmailNotificationsIgnoreEntityTypeList');
+        } else {
+            this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
+        }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    actionReset() {
+        this.confirm(this.translate('resetPreferencesConfirmation', 'messages'), () => {
+            Espo.Ajax
+                .deleteRequest('Preferences/' + this.model.id)
+                .then(() => {
+                    Espo.Ui.success(this.translate('resetPreferencesDone', 'messages'));
+
+                    this.model.set(data);
+
+                    for (const attribute in data) {
+                        this.setInitialAttributeValue(attribute, data[attribute]);
+                    }
+
+                    this.getPreferences().set(this.model.getClonedAttributes());
+                    this.getPreferences().trigger('update');
+
+                    this.setIsNotChanged();
                 });
-            }
+        });
+    }
 
-            if (this.model.isPortal()) {
-                this.layoutName = 'detailPortal';
-            }
+    // noinspection JSUnusedGlobalSymbols
+    actionResetDashboard() {
+        this.confirm(this.translate('confirmation', 'messages'), () => {
+            Espo.Ajax.postRequest('Preferences/action/resetDashboard', {id: this.model.id})
+                .then(data =>  {
+                    Espo.Ui.success(this.translate('Done'));
 
-            if (this.model.id === this.getUser().id) {
-                this.on('after:save', () => {
-                    let data = this.model.getClonedAttributes();
+                    this.model.set(data);
 
-                    delete data['smtpPassword'];
+                    for (const attribute in data) {
+                        this.setInitialAttributeValue(attribute, data[attribute]);
+                    }
 
-                    this.getPreferences().set(data);
+                    this.getPreferences().set(this.model.getClonedAttributes());
                     this.getPreferences().trigger('update');
                 });
+        });
+    }
+
+    exit(after) {
+        if (after === 'cancel') {
+            let url = '#User/view/' + this.model.id;
+
+            if (!this.getAcl().checkModel(this.getUser())) {
+                url = '#';
             }
 
-            if (!this.getUser().isAdmin() || this.model.isPortal()) {
-                this.hideField('dashboardLayout');
-            }
+            this.getRouter().navigate(url, {trigger: true});
+        }
+    }
+}
 
-            this.controlFollowCreatedEntityListVisibility();
-            this.listenTo(this.model, 'change:followCreatedEntities', this.controlFollowCreatedEntityListVisibility);
-
-            this.controlColorsField();
-            this.listenTo(this.model, 'change:scopeColorsDisabled', this.controlColorsField, this);
-
-            var hideNotificationPanel = true;
-
-            if (!this.getConfig().get('assignmentEmailNotifications') || this.model.isPortal()) {
-                this.hideField('receiveAssignmentEmailNotifications');
-                this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
-            } else {
-                hideNotificationPanel = false;
-
-                this.controlAssignmentEmailNotificationsVisibility();
-
-                this.listenTo(this.model, 'change:receiveAssignmentEmailNotifications', () => {
-                    this.controlAssignmentEmailNotificationsVisibility();
-                });
-            }
-
-            if ((this.getConfig().get('assignmentEmailNotificationsEntityList') || []).length === 0) {
-                this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
-            }
-
-            if (
-                (this.getConfig().get('assignmentNotificationsEntityList') || []).length === 0 ||
-                this.model.isPortal()
-            ) {
-                this.hideField('assignmentNotificationsIgnoreEntityTypeList');
-            } else {
-                hideNotificationPanel = false;
-            }
-
-            if (this.getConfig().get('emailForceUseExternalClient')) {
-                this.hideField('emailUseExternalClient');
-            }
-
-            if (!this.getConfig().get('mentionEmailNotifications') || this.model.isPortal()) {
-                this.hideField('receiveMentionEmailNotifications');
-            } else {
-                hideNotificationPanel = false;
-            }
-
-            if (!this.getConfig().get('streamEmailNotifications') && !this.model.isPortal()) {
-                this.hideField('receiveStreamEmailNotifications');
-            } else if (!this.getConfig().get('portalStreamEmailNotifications') && this.model.isPortal()) {
-                this.hideField('receiveStreamEmailNotifications');
-            } else {
-                hideNotificationPanel = false;
-            }
-
-            if (this.getConfig().get('scopeColorsDisabled')) {
-                this.hideField('scopeColorsDisabled');
-                this.hideField('tabColorsDisabled');
-            }
-
-            if (this.getConfig().get('tabColorsDisabled')) {
-                this.hideField('tabColorsDisabled');
-            }
-
-            if (hideNotificationPanel) {
-                this.hidePanel('notifications');
-            }
-
-            if (this.getConfig().get('userThemesDisabled')) {
-                this.hideField('theme');
-            }
-
-            this.on('save', initialAttributes => {
-                if (
-                    this.model.get('language') !== initialAttributes.language ||
-                    this.model.get('theme') !== initialAttributes.theme ||
-                    (this.model.get('themeParams') || {}).navbar !== (initialAttributes.themeParams || {}).navbar
-                ) {
-                    this.setConfirmLeaveOut(false);
-
-                    window.location.reload();
-                }
-            });
-        },
-
-        controlFollowCreatedEntityListVisibility: function () {
-            if (!this.model.get('followCreatedEntities')) {
-                this.showField('followCreatedEntityTypeList');
-            } else {
-                this.hideField('followCreatedEntityTypeList');
-            }
-        },
-
-        controlColorsField: function () {
-            if (this.model.get('scopeColorsDisabled')) {
-                this.hideField('tabColorsDisabled');
-            } else {
-                this.showField('tabColorsDisabled');
-            }
-        },
-
-        controlAssignmentEmailNotificationsVisibility: function () {
-            if (this.model.get('receiveAssignmentEmailNotifications')) {
-                this.showField('assignmentEmailNotificationsIgnoreEntityTypeList');
-            } else {
-                this.hideField('assignmentEmailNotificationsIgnoreEntityTypeList');
-            }
-        },
-
-        actionReset: function () {
-            this.confirm(this.translate('resetPreferencesConfirmation', 'messages'), () => {
-                Espo.Ajax
-                    .deleteRequest('Preferences/' + this.model.id)
-                    .then(() => {
-                        Espo.Ui.success(this.translate('resetPreferencesDone', 'messages'));
-
-                        this.model.set(data);
-
-                        for (let attribute in data) {
-                            this.setInitialAttributeValue(attribute, data[attribute]);
-                        }
-
-                        this.getPreferences().set(this.model.getClonedAttributes());
-                        this.getPreferences().trigger('update');
-
-                        this.setIsNotChanged();
-                    });
-            });
-        },
-
-        actionResetDashboard: function () {
-            this.confirm(this.translate('confirmation', 'messages'), () => {
-                Espo.Ajax.postRequest('Preferences/action/resetDashboard', {id: this.model.id})
-                    .then(data =>  {
-                        Espo.Ui.success(this.translate('Done'));
-
-                        this.model.set(data);
-
-                        for (var attribute in data) {
-                            this.setInitialAttributeValue(attribute, data[attribute]);
-                        }
-
-                        this.getPreferences().set(this.model.getClonedAttributes());
-                        this.getPreferences().trigger('update');
-                    });
-            });
-        },
-
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-        },
-
-        exit: function (after) {
-            if (after === 'cancel') {
-                var url = '#User/view/' + this.model.id;
-
-                if (!this.getAcl().checkModel(this.getUser())) {
-                    url = '#';
-                }
-
-                this.getRouter().navigate(url, {trigger: true});
-            }
-        },
-    });
-});
+export default PreferencesEditRecordView;
