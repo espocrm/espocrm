@@ -475,10 +475,6 @@ class CalendarView extends View {
 
         if (end && start) {
             event.duration = end.unix() - start.unix();
-
-            if (event.duration < this.slotDuration * 60) {
-                end = start.clone().add(30, 'm');
-            }
         }
 
         if (start) {
