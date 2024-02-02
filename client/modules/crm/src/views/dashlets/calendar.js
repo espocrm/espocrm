@@ -26,152 +26,159 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/dashlets/calendar', ['views/dashlets/abstract/base'], function (Dep) {
+import BaseDashletView from 'views/dashlets/abstract/base';
 
-    return Dep.extend({
+class CalendarDashletView extends BaseDashletView {
 
-        name: 'Calendar',
+    name = 'Calendar'
+    noPadding = true
 
-        noPadding: true,
+    templateContent =`<div class="calendar-container">{{{calendar}}}</div>`
 
-        templateContent: '<div class="calendar-container">{{{calendar}}} </div>',
+    afterRender() {
+        const mode = this.getOption('mode');
 
-        init: function () {
-            Dep.prototype.init.call(this);
-        },
+        if (mode === 'timeline') {
+            const userList = [];
+            const userIdList = this.getOption('usersIds') || [];
+            const userNames = this.getOption('usersNames') || {};
 
-        afterRender: function () {
-            var mode = this.getOption('mode');
-
-            if (mode === 'timeline') {
-                var userList = [];
-                var userIdList = this.getOption('usersIds') || [];
-                var userNames = this.getOption('usersNames') || {};
-
-                userIdList.forEach(id => {
-                    userList.push({
-                        id: id,
-                        name: userNames[id] || id,
-                    });
+            userIdList.forEach(id => {
+                userList.push({
+                    id: id,
+                    name: userNames[id] || id,
                 });
+            });
 
-                let viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) ||
-                    'crm:views/calendar/timeline';
-
-                this.createView('calendar', viewName, {
-                    selector: '> .calendar-container',
-                    header: false,
-                    calendarType: 'shared',
-                    userList: userList,
-                    enabledScopeList: this.getOption('enabledScopeList'),
-                    noFetchLoadingMessage: true,
-                }, (view) => {
-                    view.render();
-                });
-
-                return;
-            }
-
-            var teamIdList = null;
-
-            if (~['basicWeek', 'month', 'basicDay'].indexOf(mode)) {
-                teamIdList = this.getOption('teamsIds');
-            }
-
-            let viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
-                'crm:views/calendar/calendar';
+            const viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'timelineView']) ||
+                'crm:views/calendar/timeline';
 
             this.createView('calendar', viewName, {
-                mode: mode,
                 selector: '> .calendar-container',
                 header: false,
+                calendarType: 'shared',
+                userList: userList,
                 enabledScopeList: this.getOption('enabledScopeList'),
-                containerSelector: this.getSelector(),
-                teamIdList: teamIdList,
+                noFetchLoadingMessage: true,
             }, view => {
-                this.listenTo(view, 'view', () => {
-                    if (this.getOption('mode') === 'month') {
-                        let title = this.getOption('title');
-
-                        let $container = $('<span>')
-                            .append(
-                                $('<span>').text(title),
-                                ' <span class="chevron-right"></span> ',
-                                $('<span>').text(view.getTitle())
-                            );
-
-                        let $headerSpan = this.$el.closest('.panel').find('.panel-heading > .panel-title > span');
-
-                        $headerSpan.html($container.get(0).innerHTML);
-                    }
-                });
-
                 view.render();
-
-                this.on('resize', () => {
-                    setTimeout(() => view.adjustSize(), 50);
-                });
             });
-        },
 
-        setupActionList: function () {
-            this.actionList.unshift({
-                name: 'viewCalendar',
-                text: this.translate('View Calendar', 'labels', 'Calendar'),
-                url: '#Calendar',
-                iconHtml: '<span class="far fa-calendar-alt"></span>',
-                onClick: () => this.actionViewCalendar(),
+            return;
+        }
+
+        let teamIdList = null;
+
+        if (['basicWeek', 'month', 'basicDay'].includes(mode)) {
+            teamIdList = this.getOption('teamsIds');
+        }
+
+        const viewName = this.getMetadata().get(['clientDefs', 'Calendar', 'calendarView']) ||
+            'crm:views/calendar/calendar';
+
+        this.createView('calendar', viewName, {
+            mode: mode,
+            selector: '> .calendar-container',
+            header: false,
+            enabledScopeList: this.getOption('enabledScopeList'),
+            containerSelector: this.getSelector(),
+            teamIdList: teamIdList,
+            scrollToNowSlots: 3,
+        }, view => {
+            this.listenTo(view, 'view', () => {
+                if (this.getOption('mode') === 'month') {
+                    const title = this.getOption('title');
+
+                    const $container = $('<span>')
+                        .append(
+                            $('<span>').text(title),
+                            ' <span class="chevron-right"></span> ',
+                            $('<span>').text(view.getTitle())
+                        );
+
+                    const $headerSpan = this.$el.closest('.panel').find('.panel-heading > .panel-title > span');
+
+                    $headerSpan.html($container.get(0).innerHTML);
+                }
             });
-        },
 
-        setupButtonList: function () {
-            if (this.getOption('mode') !== 'timeline') {
-                this.buttonList.push({
-                    name: 'previous',
-                    html: '<span class="fas fa-chevron-left"></span>',
-                    onClick: () => this.actionPrevious(),
-                });
+            view.render();
 
-                this.buttonList.push({
-                    name: 'next',
-                    html: '<span class="fas fa-chevron-right"></span>',
-                    onClick: () => this.actionNext(),
-                });
-            }
-        },
+            this.on('resize', () => {
+                setTimeout(() => view.adjustSize(), 50);
+            });
+        });
+    }
 
-        actionRefresh: function () {
-            var view = this.getView('calendar');
+    setupActionList() {
+        this.actionList.unshift({
+            name: 'viewCalendar',
+            text: this.translate('View Calendar', 'labels', 'Calendar'),
+            url: '#Calendar',
+            iconHtml: '<span class="far fa-calendar-alt"></span>',
+            onClick: () => this.actionViewCalendar(),
+        });
+    }
 
-            if (!view) {
-                return;
-            }
+    setupButtonList() {
+        if (this.getOption('mode') !== 'timeline') {
+            this.buttonList.push({
+                name: 'previous',
+                html: '<span class="fas fa-chevron-left"></span>',
+                onClick: () => this.actionPrevious(),
+            });
 
-            view.actionRefresh();
-        },
+            this.buttonList.push({
+                name: 'next',
+                html: '<span class="fas fa-chevron-right"></span>',
+                onClick: () => this.actionNext(),
+            });
+        }
+    }
 
-        actionNext: function () {
-            var view = this.getView('calendar');
+    /**
+     * @return {
+     *     import('modules/crm/views/calendar/calendar').default |
+     *     import('modules/crm/views/calendar/timeline').default
+     * }
+     */
+    getCalendarView() {
+        return this.getView('calendar');
+    }
 
-            if (!view) {
-                return;
-            }
+    actionRefresh() {
+        const view = this.getCalendarView();
 
-            view.actionNext();
-        },
+        if (!view) {
+            return;
+        }
 
-        actionPrevious: function () {
-            var view = this.getView('calendar');
+        view.actionRefresh();
+    }
 
-            if (!view) {
-                return;
-            }
+    actionNext() {
+        const view = this.getCalendarView();
 
-            view.actionPrevious();
-        },
+        if (!view) {
+            return;
+        }
 
-        actionViewCalendar: function () {
-            this.getRouter().navigate('#Calendar', {trigger: true});
-        },
-    });
-});
+        view.actionNext();
+    }
+
+    actionPrevious() {
+        const view = this.getCalendarView();
+
+        if (!view) {
+            return;
+        }
+
+        view.actionPrevious();
+    }
+
+    actionViewCalendar() {
+        this.getRouter().navigate('#Calendar', {trigger: true});
+    }
+}
+
+export default CalendarDashletView;

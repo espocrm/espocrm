@@ -165,8 +165,13 @@ class CalendarView extends View {
 
         this.date = this.options.date || null;
         this.mode = this.options.mode || this.defaultMode;
-        this.scrollHour = this.options.scrollHour !== undefined ? this.options.scrollHour : this.scrollHour;
         this.header = ('header' in this.options) ? this.options.header : this.header;
+
+        this.scrollHour = this.options.scrollHour !== undefined ?
+            this.options.scrollHour : this.scrollHour;
+
+        this.scrollToNowSlots = this.options.scrollToNowSlots !== undefined ?
+            this.options.scrollToNowSlots : this.scrollToNowSlots;
 
         this.setupMode();
 
