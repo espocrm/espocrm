@@ -58,11 +58,19 @@
         "rows": [
             [
                 {"name": "exportDelimiter"},
-                {"name": "textSearchStoringDisabled"}
+                false
             ],
             [
-                {"name": "defaultReminders"},
+                {"name": "textSearchStoringDisabled"},
                 {"name": "doNotFillAssignedUserIfNotRequired"}
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "defaultReminders"},
+                {"name": "calendarSlotDuration"}
             ]
         ]
     },

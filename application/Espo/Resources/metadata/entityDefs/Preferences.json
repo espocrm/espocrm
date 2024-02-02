@@ -190,6 +190,12 @@
         "textSearchStoringDisabled": {
             "type": "bool",
             "default": false
+        },
+        "calendarSlotDuration": {
+            "type": "enumInt",
+            "options": ["", 15, 30],
+            "default": null,
+            "view": "views/preferences/fields/calendar-slot-duration"
         }
     },
     "noDeletedAttribute": true,

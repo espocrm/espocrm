@@ -182,6 +182,7 @@ class CalendarView extends View {
             .get('clientDefs.Calendar.allDayScopeList') || this.allDayScopeList;
 
         this.slotDuration = this.options.slotDuration ||
+            this.getPreferences().get('calendarSlotDuration') ||
             this.getMetadata().get('clientDefs.Calendar.slotDuration') ||
             this.slotDuration;
 
@@ -475,7 +476,7 @@ class CalendarView extends View {
         if (end && start) {
             event.duration = end.unix() - start.unix();
 
-            if (event.duration < 1800) {
+            if (event.duration < this.slotDuration * 60) {
                 end = start.clone().add(30, 'm');
             }
         }
