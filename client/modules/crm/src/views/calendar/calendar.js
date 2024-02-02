@@ -64,6 +64,8 @@ class CalendarView extends View {
     ]
     defaultMode = 'agendaWeek'
     slotDuration = 30
+    scrollToNowSlots = 6;
+    scrollHour = 6
     titleFormat = {
         month: 'MMMM YYYY',
         week: 'MMMM YYYY',
@@ -163,6 +165,7 @@ class CalendarView extends View {
 
         this.date = this.options.date || null;
         this.mode = this.options.mode || this.defaultMode;
+        this.scrollHour = this.options.scrollHour !== undefined ? this.options.scrollHour : this.scrollHour;
         this.header = ('header' in this.options) ? this.options.header : this.header;
 
         this.setupMode();
@@ -366,7 +369,7 @@ class CalendarView extends View {
 
         const todayUnix = moment().unix();
         const startUnix = moment(view.activeStart).unix();
-        const endUnix = moment(view.activeStart).unix();
+        const endUnix = moment(view.activeEnd).unix();
 
         return startUnix <= todayUnix && todayUnix < endUnix;
     }
@@ -744,6 +747,7 @@ class CalendarView extends View {
 
         /** @type {CalendarOptions & Object.<string, *>} */
         const options = {
+            scrollTime: this.scrollHour + ':00',
             headerToolbar: false,
             slotLabelFormat: slotLabelFormat,
             eventTimeFormat: timeFormat,
@@ -1043,12 +1047,32 @@ class CalendarView extends View {
 
             this.calendar.render();
 
+            this.handleScrollToNow();
             this.updateDate();
 
             if (this.$container && this.$container.length) {
                 this.adjustSize();
             }
         }, 150);
+    }
+
+    handleScrollToNow() {
+        if (!(this.mode === 'agendaWeek' || this.mode === 'agendaDay')) {
+            return;
+        }
+
+        if (!this.isToday()) {
+            return;
+        }
+
+        const scrollHour = this.getDateTime().getNowMoment().hours() -
+            Math.floor(this.slotDuration * this.scrollToNowSlots / 60);
+
+        if (scrollHour < 0) {
+            return;
+        }
+
+        this.calendar.scrollToTime(scrollHour + ':00');
     }
 
     /**
@@ -1236,12 +1260,14 @@ class CalendarView extends View {
     actionPrevious() {
         this.calendar.prev();
 
+        this.handleScrollToNow();
         this.updateDate();
     }
 
     actionNext() {
         this.calendar.next();
 
+        this.handleScrollToNow();
         this.updateDate();
     }
 
@@ -1288,6 +1314,7 @@ class CalendarView extends View {
 
         this.calendar.today();
 
+        this.handleScrollToNow();
         this.updateDate();
     }
 }
