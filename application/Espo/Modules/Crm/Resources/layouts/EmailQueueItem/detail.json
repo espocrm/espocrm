@@ -1,0 +1,9 @@
+[
+    {
+        "rows": [
+            [{"name": "massEmail"}, {"name": "status"}],
+            [{"name": "target"}, {"name": "sentAt"}],
+            [{"name": "emailAddress"}, false]
+        ]
+    }
+]
