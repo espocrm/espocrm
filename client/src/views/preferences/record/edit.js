@@ -258,6 +258,10 @@ class PreferencesEditRecordView extends EditRecordView {
             this.getRouter().navigate(url, {trigger: true});
         }
     }
+
+    handleShortcutKeyCtrlS(e) {
+        this.handleShortcutKeyCtrlEnter(e);
+    }
 }
 
 export default PreferencesEditRecordView;
