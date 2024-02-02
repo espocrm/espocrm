@@ -53,7 +53,7 @@ class ViewHelper {
                 regex: /`([\s\S]*?)`/g,
                 value: (s, string) => {
                     // noinspection RegExpRedundantEscape
-                    return '`' + string.replace(/\\\>/g, '>') + '`';
+                    return '`' + string.replace(/\\\</g, '<') + '`';
                 },
             },
         ];
@@ -692,7 +692,7 @@ class ViewHelper {
         text = text || '';
 
         // noinspection RegExpRedundantEscape
-        text = text.replace(/\>/g, '\\>');
+        text = text.replace(/\</g, '\\<');
 
         this.mdBeforeList.forEach(item => {
             text = text.replace(item.regex, item.value);
