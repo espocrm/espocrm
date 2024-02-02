@@ -33,9 +33,15 @@ class EnumFloatFieldView extends EnumIntFieldView {
     type = 'enumFloat'
 
     fetch() {
-        let value = parseFloat(this.$element.val());
-        let data = {};
+        const raw = this.$element.val();
 
+        if (raw === '') {
+            return {[this.name]: null};
+        }
+
+        const value = parseFloat(raw);
+
+        const data = {};
         data[this.name] = value;
 
         return data;
