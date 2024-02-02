@@ -365,7 +365,7 @@ class CalendarView extends View {
 
         const todayUnix = moment().unix();
         const startUnix = moment(view.activeStart).unix();
-        const endUnix = moment(view.activeStart).unix();
+        const endUnix = moment(view.activeEnd).unix();
 
         return startUnix <= todayUnix && todayUnix < endUnix;
     }
