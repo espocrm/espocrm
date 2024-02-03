@@ -1,6 +1,8 @@
 [
+    "teams",
     "user",
     "branch",
+    "name",
     "direction",
     "modifiedAt",
     "modifiedBy",

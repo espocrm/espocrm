@@ -1,4 +1,7 @@
 [
+    "teams",
+    "group",
+    "weekDay",
     "weekTemplate",
     "hall",
     "assignedUser",
