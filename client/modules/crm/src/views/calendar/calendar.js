@@ -1162,6 +1162,8 @@ class CalendarView extends View {
 
         url += '&agenda=' + encodeURIComponent(agenda);
 
+        Espo.Ui.notify(' ... ');
+
         Espo.Ajax.getRequest(url).then(data => {
             const events = this.convertToFcEvents(data);
 
