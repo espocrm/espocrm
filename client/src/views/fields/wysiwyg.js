@@ -621,6 +621,8 @@ class WysiwygFieldView extends TextFieldView {
             dialogsInBody: this.$el,
             codeviewFilter: true,
             tableClassName: this.tableClassName,
+            // Dnd has issues.
+            disableDragAndDrop: true,
         };
 
         if (this.height) {
