@@ -38,15 +38,15 @@ use Espo\Core\Templates\Entities\Company;
 use Espo\Core\Templates\Entities\Person;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\Entities\EmailAddress as EmailAddressEntity;
-use Espo\Entities\InboundEmail as InboundEmailEntity;
+use Espo\Entities\EmailAddress;
+use Espo\Entities\InboundEmail;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\EntityManager;
-use Espo\ORM\Query\SelectBuilder as QueryBuilder;
-use Espo\Repositories\EmailAddress as Repository;
+use Espo\ORM\Query\SelectBuilder;
+use Espo\Repositories\EmailAddress as EmailAddressRepository;
 use RuntimeException;
 
 class AddressService
@@ -324,7 +324,7 @@ class AddressService
         }
 
         $list = $this->entityManager
-            ->getRDBRepository(InboundEmailEntity::ENTITY_TYPE)
+            ->getRDBRepository(InboundEmail::ENTITY_TYPE)
             ->select([
                 'id',
                 'name',
@@ -340,7 +340,7 @@ class AddressService
             $result[] = [
                 'emailAddress' => $item->getEmailAddress(),
                 'entityName' => $item->getName(),
-                'entityType' => InboundEmailEntity::ENTITY_TYPE,
+                'entityType' => InboundEmail::ENTITY_TYPE,
                 'entityId' => $item->getId(),
             ];
         }
@@ -351,7 +351,7 @@ class AddressService
         return $this->textMetadataProvider->hasFullTextSearch($entityType);
     }
 
-    private function handleQueryBuilderUser(QueryBuilder $queryBuilder): void
+    private function handleQueryBuilderUser(SelectBuilder $queryBuilder): void
     {
         /*if ($this->acl->getPermissionLevel('portalPermission') === Table::LEVEL_NO) {
             $queryBuilder->where([
@@ -369,9 +369,9 @@ class AddressService
         ]);
     }
 
-    private function getEmailAddressRepository(): Repository
+    private function getEmailAddressRepository(): EmailAddressRepository
     {
-        /** @var Repository */
-        return $this->entityManager->getRepository(EmailAddressEntity::ENTITY_TYPE);
+        /** @var EmailAddressRepository */
+        return $this->entityManager->getRepository(EmailAddress::ENTITY_TYPE);
     }
 }
