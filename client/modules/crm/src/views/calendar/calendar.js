@@ -767,6 +767,7 @@ class CalendarView extends View {
             firstDay: this.getDateTime().weekStart,
             slotEventOverlap: true,
             slotDuration: slotDuration,
+            slotLabelInterval: '01:00',
             snapDuration: this.slotDuration * 60 * 1000,
             timeZone: this.getDateTime().timeZone || undefined,
             longPressDelay: 300,
