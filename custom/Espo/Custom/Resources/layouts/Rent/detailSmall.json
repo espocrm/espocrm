@@ -6,7 +6,15 @@
                     "name": "name"
                 },
                 {
+                    "name": "hall"
+                }
+            ],
+            [
+                {
                     "name": "status"
+                },
+                {
+                    "name": "duration"
                 }
             ],
             [
@@ -14,15 +22,7 @@
                     "name": "dateStart"
                 },
                 {
-                    "name": "hall"
-                }
-            ],
-            [
-                {
                     "name": "dateEnd"
-                },
-                {
-                    "name": "duration"
                 }
             ]
         ],

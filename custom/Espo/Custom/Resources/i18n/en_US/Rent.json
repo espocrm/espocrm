@@ -13,7 +13,7 @@
         "abonplan": "Абонплан",
         "contact": "Клієнт",
         "isOneTime": "Разова",
-        "customPrice": "Ціна",
+        "customPrice": "customPrice",
         "customPriceCurrency": "Ціна (Валюта)",
         "customPriceConverted": "Ціна (Конвертована)",
         "isPaid": "Сплачено",

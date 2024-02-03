@@ -39,7 +39,7 @@
         "rows": [
             [
                 {
-                    "name": "percent"
+                    "name": "salesDate"
                 },
                 {
                     "name": "price"
@@ -47,7 +47,7 @@
             ],
             [
                 {
-                    "name": "salesDate"
+                    "name": "percent"
                 },
                 {
                     "name": "isPaid"

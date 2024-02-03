@@ -139,7 +139,8 @@
         "isPaid": {
             "notNull": true,
             "type": "bool",
-            "isCustom": true
+            "isCustom": true,
+            "default": true
         },
         "rentPlan": {
             "type": "link",

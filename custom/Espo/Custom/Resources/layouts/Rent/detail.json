@@ -6,7 +6,15 @@
                     "name": "name"
                 },
                 {
+                    "name": "hall"
+                }
+            ],
+            [
+                {
                     "name": "status"
+                },
+                {
+                    "name": "duration"
                 }
             ],
             [
@@ -14,15 +22,7 @@
                     "name": "dateStart"
                 },
                 {
-                    "name": "hall"
-                }
-            ],
-            [
-                {
                     "name": "dateEnd"
-                },
-                {
-                    "name": "duration"
                 }
             ]
         ],
@@ -39,7 +39,9 @@
                 {
                     "name": "isOneTime"
                 },
-                false
+                {
+                    "name": "contact"
+                }
             ]
         ],
         "dynamicLogicVisible": null,
@@ -52,25 +54,23 @@
         "rows": [
             [
                 {
-                    "name": "contact"
+                    "name": "rentPlan"
                 },
-                {
-                    "name": "price"
-                }
+                false
             ],
             [
                 {
                     "name": "salesDate"
                 },
                 {
-                    "name": "isPaid"
+                    "name": "price"
                 }
             ],
             [
+                false,
                 {
-                    "name": "rentPlan"
-                },
-                false
+                    "name": "isPaid"
+                }
             ]
         ],
         "dynamicLogicVisible": null,

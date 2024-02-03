@@ -14,7 +14,7 @@
         "contact": "Клієнт",
         "assignedUser": "Відповідальний (Адмін)",
         "isOneTime": "Разова",
-        "customPrice": "Ціна",
+        "customPrice": "customPrice",
         "customPriceCurrency": "Ціна (Валюта)",
         "customPriceConverted": "Ціна (Конвертована)",
         "isPaid": "Сплачено",
