@@ -167,9 +167,6 @@ class CalendarView extends View {
         this.mode = this.options.mode || this.defaultMode;
         this.header = ('header' in this.options) ? this.options.header : this.header;
 
-        this.scrollHour = this.options.scrollHour !== undefined ?
-            this.options.scrollHour : this.scrollHour;
-
         this.scrollToNowSlots = this.options.scrollToNowSlots !== undefined ?
             this.options.scrollToNowSlots : this.scrollToNowSlots;
 
@@ -193,6 +190,13 @@ class CalendarView extends View {
             this.getPreferences().get('calendarSlotDuration') ||
             this.getMetadata().get('clientDefs.Calendar.slotDuration') ||
             this.slotDuration;
+
+        this.scrollHour = this.options.scrollHour !== undefined ?
+            this.options.scrollHour : this.scrollHour;
+
+        if (this.options.scrollHour === undefined && this.slotDuration < 30) {
+            this.scrollHour = 8;
+        }
 
         this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
 
