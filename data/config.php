@@ -95,9 +95,7 @@ return [
       'color' => NULL,
       'id' => '845134',
       'itemList' => [
-        0 => 'CalculationBudget',
-        1 => 'CalculationExpenses',
-        2 => 'CalculationSalary'
+        0 => 'CalculationBudget'
       ]
     ],
     10 => (object) [
@@ -213,7 +211,7 @@ return [
   'maxEmailAccountCount' => 2,
   'followCreatedEntities' => true,
   'b2cMode' => false,
-  'theme' => 'Dark',
+  'theme' => 'Violet',
   'themeParams' => (object) [
     'navbar' => 'side'
   ],
@@ -357,8 +355,8 @@ return [
     1 => 'email',
     2 => 'phone'
   ],
-  'cacheTimestamp' => 1706232396,
-  'microtime' => 1706232396.239071,
+  'cacheTimestamp' => 1707000191,
+  'microtime' => 1707000191.850032,
   'siteUrl' => 'https://dsfreedom.art',
   'fullTextSearchMinLength' => 4,
   'appTimestamp' => 1695834342,
