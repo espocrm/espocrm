@@ -61,12 +61,14 @@ define('custom:views/calculations/budget', ['view'], function (View) {
         },
 
         setWeekRange: function() {
+            const shiftedWeek = [6, 0, 1, 2, 3, 4, 5];//from monday
             const today = new Date();
+
             const firstDateOfMonth = new Date(
-                today.setDate(today.getDate() - today.getDay() + 1)//+1 from monday
+                today.setDate(today.getDate() - shiftedWeek[today.getDay()])
             );
             const lastDateOfMonth = new Date(
-                today.setDate(firstDateOfMonth.getDate() + 6)
+                today.setDate(firstDateOfMonth.getDate() + 7)
             );
             
             this.dateFrom = firstDateOfMonth.toLocaleDateString().split('.').reverse().join('-');

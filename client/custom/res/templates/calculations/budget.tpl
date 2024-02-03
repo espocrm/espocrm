@@ -94,7 +94,7 @@
                 </span>
             </td>
             <td class="cell">
-                <span class="label label-md label-success">
+                <span class="label label-md label-info">
                     {{ incomeTotalSum }}
                 </span>
             </td>
