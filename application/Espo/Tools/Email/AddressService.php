@@ -30,7 +30,6 @@
 namespace Espo\Tools\Email;
 
 use Espo\Core\Acl;
-use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -42,7 +41,6 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\EmailAddress as EmailAddressEntity;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Entities\User;
-use Espo\Entities\User as UserEntity;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Contact;
 use Espo\Modules\Crm\Entities\Lead;
@@ -355,17 +353,18 @@ class AddressService
 
     private function handleQueryBuilderUser(QueryBuilder $queryBuilder): void
     {
-        if ($this->acl->getPermissionLevel('portalPermission') === Table::LEVEL_NO) {
+        /*if ($this->acl->getPermissionLevel('portalPermission') === Table::LEVEL_NO) {
             $queryBuilder->where([
-                'type!=' => UserEntity::TYPE_PORTAL,
+                'type!=' => User::TYPE_PORTAL,
             ]);
-        }
+        }*/
 
         $queryBuilder->where([
             'type!=' => [
-                UserEntity::TYPE_API,
-                UserEntity::TYPE_SYSTEM,
-                UserEntity::TYPE_SUPER_ADMIN,
+                User::TYPE_PORTAL,
+                User::TYPE_API,
+                User::TYPE_SYSTEM,
+                User::TYPE_SUPER_ADMIN,
             ],
         ]);
     }
