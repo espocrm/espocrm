@@ -31,21 +31,15 @@ namespace Espo\Core\Authentication\Hook;
 
 use Espo\Core\Utils\Metadata;
 use Espo\Core\InjectableFactory;
-
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Api\Request;
 use Espo\Core\Authentication\Result;
 
 class Manager
 {
-    private Metadata $metadata;
-    private InjectableFactory $injectableFactory;
 
-    public function __construct(Metadata $metadata, InjectableFactory $injectableFactory)
-    {
-        $this->metadata = $metadata;
-        $this->injectableFactory = $injectableFactory;
-    }
+    public function __construct(private Metadata $metadata, private InjectableFactory $injectableFactory)
+    {}
 
     public function processBeforeLogin(AuthenticationData $data, Request $request): void
     {

@@ -36,16 +36,13 @@ use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
 use Espo\Core\ORM\EntityManager;
 
+/**
+ * @noinspection PhpUnused
+ */
 class AuthTokenCheck implements Command
 {
-    private EntityManager $entityManager;
-    private AuthTokenManager $authTokenManager;
-
-    public function __construct(EntityManager $entityManager, AuthTokenManager $authTokenManager)
-    {
-        $this->entityManager = $entityManager;
-        $this->authTokenManager = $authTokenManager;
-    }
+    public function __construct(private EntityManager $entityManager, private AuthTokenManager $authTokenManager)
+    {}
 
     public function run(Params $params, IO $io): void
     {

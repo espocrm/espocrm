@@ -46,7 +46,7 @@ class UsernameValidator
             ->getLength();
 
         if ($maxLength && $maxLength < strlen($username)) {
-            throw new RuntimeException("Value in username claim exceeds max length of `{$maxLength}`. " .
+            throw new RuntimeException("Value in username claim exceeds max length of `$maxLength`. " .
                 "Increase maxLength parameter for User.userName field (up to 255).");
         }
     }

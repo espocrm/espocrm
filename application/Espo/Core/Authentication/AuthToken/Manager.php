@@ -35,7 +35,7 @@ namespace Espo\Core\Authentication\AuthToken;
 interface Manager
 {
     /**
-     * Get an auth token. If does not exist then returns NULL.
+     * Get an auth token. If it does not exist, then returns NULL.
      */
     public function get(string $token): ?AuthToken;
 

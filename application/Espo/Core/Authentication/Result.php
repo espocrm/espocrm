@@ -45,13 +45,13 @@ class Result
     public const STATUS_SECOND_STEP_REQUIRED = 'secondStepRequired';
     public const STATUS_FAIL = 'fail';
 
-    private ?User $user = null;
+    private ?User $user;
     private string $status;
     private ?string $message = null;
     private ?string $token = null;
     private ?string $view = null;
     private ?string $failReason = null;
-    private ?Data $data = null;
+    private ?Data $data;
 
     private function __construct(string $status, ?User $user = null, ?Data $data = null)
     {
@@ -173,7 +173,7 @@ class Result
      */
     public function getData(): ?stdClass
     {
-        return $this->data ? $this->data->getData() : null;
+        return $this->data?->getData();
     }
 
     /**

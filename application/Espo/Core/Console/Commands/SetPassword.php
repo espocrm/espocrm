@@ -36,6 +36,9 @@ use Espo\Core\Console\IO;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\PasswordHash;
 
+/**
+ * @noinspection PhpUnused
+ */
 class SetPassword implements Command
 {
     public function __construct(private EntityManager $entityManager, private PasswordHash $passwordHash)
@@ -59,7 +62,7 @@ class SetPassword implements Command
             ->findOne();
 
         if (!$user) {
-            $io->writeLine("User '{$userName}' not found.");
+            $io->writeLine("User '$userName' not found.");
             $io->setExitStatus(1);
 
             return;
@@ -75,7 +78,7 @@ class SetPassword implements Command
         ];
 
         if (!in_array($userType, $allowedTypes)) {
-            $io->writeLine("Can't set password for a user of the type '{$userType}'.");
+            $io->writeLine("Can't set password for a user of the type '$userType'.");
             $io->setExitStatus(1);
 
             return;
@@ -96,6 +99,6 @@ class SetPassword implements Command
 
         $em->saveEntity($user);
 
-        $io->writeLine("Password for user '{$userName}' has been changed.");
+        $io->writeLine("Password for user '$userName' has been changed.");
     }
 }

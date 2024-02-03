@@ -36,6 +36,9 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Util;
 
+/**
+ * @noinspection PhpUnused
+ */
 class AppInfo implements Command
 {
     public function __construct(private InjectableFactory $injectableFactory, private FileManager $fileManager)

@@ -52,7 +52,12 @@ use Espo\Core\Utils\Log;
 use Espo\Core\Utils\PasswordHash;
 use Espo\Entities\User;
 use Exception;
+use Laminas\Ldap\Exception\LdapException;
+use Laminas\Ldap\Ldap;
 
+/**
+ * @noinspection PhpUnused
+ */
 class LdapLogin implements Login
 {
     private LDAPUtils $utils;
@@ -81,6 +86,7 @@ class LdapLogin implements Login
 
     /**
      * @var array<string, string>
+     * @noinspection PhpUnusedPrivateFieldInspection
      */
     private $ldapFieldMap = [
         'userName' => 'userNameAttribute',
@@ -93,6 +99,7 @@ class LdapLogin implements Login
 
     /**
      * @var array<string, string>
+     * @noinspection PhpUnusedPrivateFieldInspection
      */
     private $userFieldMap = [
         'teamsIds' => 'userTeamsIds',
@@ -101,12 +108,16 @@ class LdapLogin implements Login
 
     /**
      * @var array<string, string>
+     * @noinspection PhpUnusedPrivateFieldInspection
      */
     private $portalUserFieldMap = [
         'portalsIds' => 'portalUserPortalsIds',
         'portalRolesIds' => 'portalUserRolesIds',
     ];
 
+    /**
+     * @throws LdapException
+     */
     public function login(Data $data, Request $request): Result
     {
         $username = $data->getUsername();
@@ -219,7 +230,7 @@ class LdapLogin implements Login
         if (!isset($user)) {
             if (!$this->utils->getOption('createEspoUser')) {
                 $this->log->warning(
-                    "LDAP: Authentication success for user {$username}, but user is not created in EspoCRM."
+                    "LDAP: Authentication success for user $username, but user is not created in EspoCRM."
                 );
 
                 return Result::fail(FailReason::USER_NOT_FOUND);
@@ -369,13 +380,14 @@ class LdapLogin implements Login
         $user->setAsNotNew();
         $user->updateFetchedValues();
 
+        /** @var ?User */
         return $this->entityManager->getEntityById(User::ENTITY_TYPE, $user->getId());
     }
 
     /**
      * Find LDAP user DN by his username.
      *
-     * @throws \Laminas\Ldap\Exception\LdapException
+     * @throws LdapException
      */
     private function findLdapUserDnByUsername(string $username): ?string
     {
@@ -395,7 +407,8 @@ class LdapLogin implements Login
             $loginFilterString . ')';
 
         /** @var array<int, array{dn: string}> $result */
-        $result = $ldapClient->search($searchString, null, Client::SEARCH_SCOPE_SUB);
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
+        $result = $ldapClient->search($searchString, null, Ldap::SEARCH_SCOPE_SUB);
 
         $this->log->debug('LDAP: user search string: "' . $searchString . '"');
 
@@ -413,11 +426,11 @@ class LdapLogin implements Login
     {
         $filter = trim($filter);
 
-        if (substr($filter, 0, 1) != '(') {
+        if (!str_starts_with($filter, '(')) {
             $filter = '(' . $filter;
         }
 
-        if (substr($filter, -1) != ')') {
+        if (!str_ends_with($filter, ')')) {
             $filter = $filter . ')';
         }
 

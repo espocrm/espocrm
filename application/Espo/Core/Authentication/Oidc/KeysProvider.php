@@ -67,7 +67,7 @@ class KeysProvider
             try {
                 $list[] = $this->factory->create($raw);
             }
-            catch (UnsupportedKey $e) {
+            catch (UnsupportedKey) {
                 $this->log->debug("OIDC: Unsupported key " . print_r($raw, true));
             }
         }
@@ -127,7 +127,7 @@ class KeysProvider
         }
 
         if ($error) {
-            throw new RuntimeException("OIDC: JWKS request error. Status: {$status}.");
+            throw new RuntimeException("OIDC: JWKS request error. Status: $status.");
         }
 
         $parsedResponse = null;

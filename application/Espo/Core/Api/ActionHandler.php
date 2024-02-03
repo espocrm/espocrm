@@ -30,6 +30,7 @@
 namespace Espo\Core\Api;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -59,6 +60,7 @@ class ActionHandler implements RequestHandlerInterface
      * @throws Forbidden
      * @throws Error
      * @throws NotFound
+     * @throws Conflict
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -93,6 +95,7 @@ class ActionHandler implements RequestHandlerInterface
 
         $response->setHeader('X-App-Timestamp', (string) ($this->config->get('appTimestamp') ?? '0'));
 
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
         return $response instanceof ResponseWrapper ?
             $response->toPsr7() :
             self::responseToPsr7($response);

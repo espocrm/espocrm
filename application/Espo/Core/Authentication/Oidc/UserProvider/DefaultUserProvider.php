@@ -71,7 +71,7 @@ class DefaultUserProvider implements UserProvider
         $username = $payload->get($usernameClaim);
 
         if (!$username) {
-            throw new RuntimeException("No username claim `{$usernameClaim}` in token.");
+            throw new RuntimeException("No username claim `$usernameClaim` in token.");
         }
 
         $username = $this->sync->normalizeUsername($username);
@@ -91,13 +91,13 @@ class DefaultUserProvider implements UserProvider
         $isPortal = $this->applicationState->isPortal();
 
         if (!$isPortal && !$user->isRegular() && !$user->isAdmin()) {
-            $this->log->info("Oidc: User {$userId} found but it's neither regular user not admin.");
+            $this->log->info("Oidc: User $userId found but it's neither regular user not admin.");
 
             return null;
         }
 
         if ($isPortal && !$user->isPortal()) {
-            $this->log->info("Oidc: User {$userId} found but it's not portal user.");
+            $this->log->info("Oidc: User $userId found but it's not portal user.");
 
             return null;
         }
@@ -106,20 +106,20 @@ class DefaultUserProvider implements UserProvider
             $portalId = $this->applicationState->getPortalId();
 
             if (!$user->getPortals()->hasId($portalId)) {
-                $this->log->info("Oidc: User {$userId} found but it's not related to current portal.");
+                $this->log->info("Oidc: User $userId found but it's not related to current portal.");
 
                 return null;
             }
         }
 
         if ($user->isSuperAdmin()) {
-            $this->log->info("Oidc: User {$userId} found but it's super-admin, not allowed.");
+            $this->log->info("Oidc: User $userId found but it's super-admin, not allowed.");
 
             return null;
         }
 
         if ($user->isAdmin() && !$this->configDataProvider->allowAdminUser()) {
-            $this->log->info("Oidc: User {$userId} found but it's admin, not allowed.");
+            $this->log->info("Oidc: User $userId found but it's admin, not allowed.");
 
             return null;
         }

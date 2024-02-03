@@ -32,29 +32,29 @@ namespace Espo\Core\Console\Commands;
 use Espo\Core\Console\Command;
 use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
-
+use Espo\Core\Exceptions\Error;
 use Espo\Entities\Extension as ExtensionEntity;
 use Espo\ORM\EntityManager;
-
 use Espo\Core\Upgrades\ExtensionManager;
 use Espo\Core\Container;
 use Espo\Core\Utils\File\Manager as FileManager;
 
 use Throwable;
 
+/**
+ * @noinspection PhpUnused
+ */
 class Extension implements Command
 {
-    private Container $container;
-    private EntityManager $entityManager;
-    private FileManager $fileManager;
+    public function __construct(
+        private Container $container,
+        private EntityManager $entityManager,
+        private FileManager $fileManager
+    ) {}
 
-    public function __construct(Container $container, EntityManager $entityManager, FileManager $fileManager)
-    {
-        $this->container = $container;
-        $this->entityManager = $entityManager;
-        $this->fileManager = $fileManager;
-    }
-
+    /**
+     * @throws Error
+     */
     public function run(Params $params, IO $io): void
     {
         if ($params->hasFlag('l') || $params->hasFlag('list')) {
@@ -104,6 +104,9 @@ class Extension implements Command
         $this->runInstall($file, $io);
     }
 
+    /**
+     * @throws Error
+     */
     private function runInstall(string $file, IO $io): void
     {
         $manager = $this->createExtensionManager();
@@ -155,7 +158,7 @@ class Extension implements Command
         }
 
         $io->writeLine("");
-        $io->writeLine("Extension '{$name}' v{$version} is installed.\nExtension ID: '{$id}'.");
+        $io->writeLine("Extension '$name' v$version is installed.\nExtension ID: '$id'.");
     }
 
     protected function runUninstall(Params $params, IO $io): void
@@ -174,7 +177,7 @@ class Extension implements Command
                 ->findOne();
 
             if (!$record) {
-                $io->writeLine("Extension with ID '{$id}' is not installed.");
+                $io->writeLine("Extension with ID '$id' is not installed.");
                 $io->setExitStatus(1);
 
                 return;
@@ -199,7 +202,7 @@ class Extension implements Command
                 ->findOne();
 
             if (!$record) {
-                $io->writeLine("Extension '{$name}' is not installed.");
+                $io->writeLine("Extension '$name' is not installed.");
                 $io->setExitStatus(1);
 
                 return;
@@ -226,7 +229,7 @@ class Extension implements Command
         $io->writeLine("");
 
         if ($toKeep) {
-            $io->writeLine("Extension '{$name}' is uninstalled.");
+            $io->writeLine("Extension '$name' is uninstalled.");
             $io->setExitStatus(1);
 
             return;
@@ -237,14 +240,12 @@ class Extension implements Command
         }
         catch (Throwable $e) {
             $io->writeLine($e->getMessage());
-            $io->writeLine("Extension '{$name}' is uninstalled but could not be deleted.");
+            $io->writeLine("Extension '$name' is uninstalled but could not be deleted.");
 
             return;
         }
 
-        $io->writeLine("Extension '{$name}' is uninstalled and deleted.");
-
-        return;
+        $io->writeLine("Extension '$name' is uninstalled and deleted.");
     }
 
     private function printList(IO $io): void
@@ -253,8 +254,10 @@ class Extension implements Command
             ->getRDBRepository(ExtensionEntity::ENTITY_TYPE)
             ->find();
 
+        /** @noinspection PhpParamsInspection */
         $count = is_countable($collection) ? count($collection) : iterator_count($collection);
 
+        /** @noinspection PhpIfWithCommonPartsInspection */
         if ($count === 0) {
             $io->writeLine("");
             $io->writeLine("No extensions.");

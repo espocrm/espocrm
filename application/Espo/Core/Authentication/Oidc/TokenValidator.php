@@ -53,7 +53,7 @@ class TokenValidator
         $allowedAlgorithmList = $this->configDataProvider->getJwtSignatureAlgorithmList();
 
         if (!in_array($algorithm, $allowedAlgorithmList)) {
-            throw new Invalid("JWT signing algorithm `{$algorithm}` not allowed.");
+            throw new Invalid("JWT signing algorithm `$algorithm` not allowed.");
         }
 
         $verifier = $this->signatureVerifierFactory->create($algorithm);

@@ -55,7 +55,7 @@ class RunnerRunner
     public function run(string $className, ?Params $params = null): void
     {
         if (!class_exists($className)) {
-            $this->log->error("Application runner '{$className}' does not exist.");
+            $this->log->error("Application runner '$className' does not exist.");
 
             throw new RunnerException();
         }

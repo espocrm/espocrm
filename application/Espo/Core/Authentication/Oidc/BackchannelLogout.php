@@ -81,7 +81,7 @@ class BackchannelLogout
         $username = $token->getPayload()->get($usernameClaim);
 
         if (!$username) {
-            throw new Invalid("No username claim `{$usernameClaim}` in token.");
+            throw new Invalid("No username claim `$usernameClaim` in token.");
         }
 
         $user = $this->userRepository->findByUsername($username);

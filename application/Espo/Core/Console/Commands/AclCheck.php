@@ -40,6 +40,8 @@ use Espo\Core\Portal\Application as PortalApplication;
 
 /**
  * Checks access for websocket topic subscription. Prints `true` if access allowed.
+ *
+ * @noinspection PhpUnused
  */
 class AclCheck implements Command
 {
@@ -62,6 +64,7 @@ class AclCheck implements Command
         $container = $this->container;
         $entityManager = $this->container->getByClass(EntityManager::class);
 
+        /** @var ?User $user */
         $user = $entityManager->getEntityById(User::ENTITY_TYPE, $userId);
 
         if (!$user) {
@@ -69,7 +72,6 @@ class AclCheck implements Command
         }
 
         if ($user->isPortal()) {
-            /** @var string[] $portalIdList */
             $portalIdList = $user->getLinkMultipleIdList('portals');
 
             foreach ($portalIdList as $portalId) {
@@ -86,7 +88,7 @@ class AclCheck implements Command
                 $result = $this->check($user, $scope, $id, $action, $containerPortal);
 
                 if ($result) {
-                    $io->write('true');;
+                    $io->write('true');
 
                     return;
                 }

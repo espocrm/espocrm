@@ -282,10 +282,10 @@ class Login implements LoginInterface
     private static function composeLogMessage(string $text, ?int $status = null, ?string $response = null): string
     {
         if ($status === null) {
-            return "OIDC: {$text}";
+            return "OIDC: $text";
         }
 
-        return "OIDC: {$text}; Status: {$status}; Response: {$response}";
+        return "OIDC: $text; Status: $status; Response: $response";
     }
 
     /**

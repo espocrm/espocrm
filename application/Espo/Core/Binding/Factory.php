@@ -36,6 +36,7 @@ interface Factory
 {
     /**
      * @return T
+     * @noinspection PhpDocSignatureInspection
      */
     public function create(): object;
 }

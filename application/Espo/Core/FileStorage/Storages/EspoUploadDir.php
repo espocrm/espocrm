@@ -36,19 +36,15 @@ use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\File\Exceptions\FileError;
 
 use Psr\Http\Message\StreamInterface;
-
 use GuzzleHttp\Psr7\Stream;
 
 class EspoUploadDir implements Storage, Local
 {
-    protected FileManager $fileManager;
 
     public const NAME = 'EspoUploadDir';
 
-    public function __construct(FileManager $fileManager)
-    {
-        $this->fileManager = $fileManager;
-    }
+    public function __construct(protected FileManager $fileManager)
+    {}
 
     public function unlink(Attachment $attachment): void
     {
@@ -69,7 +65,7 @@ class EspoUploadDir implements Storage, Local
         $filePath = $this->getFilePath($attachment);
 
         if (!$this->exists($attachment)) {
-            throw new FileError("Could not get size for non-existing file '{$filePath}'.");
+            throw new FileError("Could not get size for non-existing file '$filePath'.");
         }
 
         return $this->fileManager->getSize($filePath);
@@ -80,13 +76,13 @@ class EspoUploadDir implements Storage, Local
         $filePath = $this->getFilePath($attachment);
 
         if (!$this->exists($attachment)) {
-            throw new FileError("Could not get stream for non-existing '{$filePath}'.");
+            throw new FileError("Could not get stream for non-existing '$filePath'.");
         }
 
         $resource = fopen($filePath, 'r');
 
         if ($resource === false) {
-            throw new FileError("Could not open '{$filePath}'.");
+            throw new FileError("Could not open '$filePath'.");
         }
 
         return new Stream($resource);
@@ -104,7 +100,7 @@ class EspoUploadDir implements Storage, Local
         $result = $this->fileManager->putContents($filePath, $contents);
 
         if (!$result) {
-            throw new FileError("Could not store a file '{$filePath}'.");
+            throw new FileError("Could not store a file '$filePath'.");
         }
     }
 

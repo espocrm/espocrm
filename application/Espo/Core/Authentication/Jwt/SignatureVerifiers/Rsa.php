@@ -70,7 +70,7 @@ class Rsa implements SignatureVerifier
         $this->keys = $keys;
 
         if (!in_array($algorithm, self::SUPPORTED_ALGORITHM_LIST)) {
-            throw new RuntimeException("Unsupported algorithm {$algorithm}.");
+            throw new RuntimeException("Unsupported algorithm $algorithm.");
         }
     }
 

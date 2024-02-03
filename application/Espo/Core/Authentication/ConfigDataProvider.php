@@ -34,21 +34,13 @@ use Espo\Core\Authentication\Logins\Espo;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 
-use RuntimeException;
-
 class ConfigDataProvider
 {
     private const FAILED_ATTEMPTS_PERIOD =  '60 seconds';
     private const MAX_FAILED_ATTEMPT_NUMBER = 10;
 
-    private Config $config;
-    private Metadata $metadata;
-
-    public function __construct(Config $config, Metadata $metadata)
-    {
-        $this->config = $config;
-        $this->metadata = $metadata;
-    }
+    public function __construct(private Config $config, private Metadata $metadata)
+    {}
 
     /**
      * A period for max failed attempts checking.
@@ -154,17 +146,5 @@ class ConfigDataProvider
         }
 
         return $list;
-    }
-
-    public function getMethodLoginMetadataParams(string $method): MetadataParams
-    {
-        /** @var ?array<string, mixed> $data */
-        $data = $this->metadata->get(['authenticationMethods', $method]);
-
-        if ($data === null) {
-            throw new RuntimeException();
-        }
-
-        return MetadataParams::fromRaw($method, $data);
     }
 }

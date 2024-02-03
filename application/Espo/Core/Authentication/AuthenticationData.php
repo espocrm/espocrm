@@ -34,20 +34,13 @@ namespace Espo\Core\Authentication;
  */
 class AuthenticationData
 {
-    private ?string $username;
-    private ?string $password;
-    private ?string $method;
     private bool $byTokenOnly = false;
 
     public function __construct(
-        ?string $username = null,
-        ?string $password = null,
-        ?string $method = null
-    ) {
-        $this->username = $username;
-        $this->password = $password;
-        $this->method = $method;
-    }
+        private ?string $username = null,
+        private ?string $password = null,
+        private ?string $method = null
+    ) {}
 
     public static function create(): self
     {
