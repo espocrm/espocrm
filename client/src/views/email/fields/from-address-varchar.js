@@ -26,335 +26,449 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define(
-    'views/email/fields/from-address-varchar',
-    ['views/fields/base', 'views/email/fields/email-address', 'helpers/record-modal'],
-    function (Dep, EmailAddress, RecordModal) {
+import BaseFieldView from 'views/fields/base';
+import EmailEmailAddressFieldView from 'views/email/fields/email-address';
+import RecordModal from 'helpers/record-modal';
+import EmailHelper from 'email-helper';
 
-    return Dep.extend({
+class EmailFromAddressVarchar extends BaseFieldView {
 
-        detailTemplate: 'email/fields/email-address-varchar/detail',
+    detailTemplate = 'email/fields/email-address-varchar/detail'
 
-        validations: ['required', 'email'],
+    validations = ['required', 'email']
+    skipCurrentInAutocomplete = true
 
-        skipCurrentInAutocomplete: true,
+    emailAddressRegExp = new RegExp(
+        /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*/.source +
+        /@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/.source
+    )
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.erasedPlaceholder = 'ERASED:';
+        this.erasedPlaceholder = 'ERASED:';
 
-            this.on('render', () => {
-                if (this.mode === this.MODE_SEARCH) {
-                    return;
-                }
+        this.on('render', () => {
+            if (this.mode === this.MODE_SEARCH) {
+                return;
+            }
 
-                this.initAddressList();
+            this.initAddressList();
+        });
+    }
+
+    events = {
+        /** @this EmailFromAddressVarchar */
+        'click [data-action="createContact"]': function (e) {
+            const address = $(e.currentTarget).data('address');
+
+            this.createPerson('Contact', address);
+        },
+        /** @this EmailFromAddressVarchar */
+        'click [data-action="createLead"]': function (e) {
+            const address = $(e.currentTarget).data('address');
+
+            this.createPerson('Lead', address);
+        },
+        /** @this EmailFromAddressVarchar */
+        'click [data-action="addToContact"]': function (e) {
+            const address = $(e.currentTarget).data('address');
+
+            this.addToPerson('Contact', address);
+        },
+        /** @this EmailFromAddressVarchar */
+        'click [data-action="addToLead"]': function (e) {
+            const address = $(e.currentTarget).data('address');
+
+            this.addToPerson('Lead', address);
+        },
+        /** @this EmailFromAddressVarchar */
+        'auxclick a[href][data-scope][data-id]': function (e) {
+            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+
+            if (!isCombination) {
+                return;
+            }
+
+            const $target = $(e.currentTarget);
+
+            const id = $target.attr('data-id');
+            const scope = $target.attr('data-scope');
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.quickView({
+                id: id,
+                scope: scope,
             });
         },
+    }
 
-        events: {
-            'click [data-action="createContact"]': function (e) {
-                var address = $(e.currentTarget).data('address');
-                this.createPerson('Contact', address);
-            },
-            'click [data-action="createLead"]': function (e) {
-                var address = $(e.currentTarget).data('address');
-                this.createPerson('Lead', address);
-            },
-            'click [data-action="addToContact"]': function (e) {
-                var address = $(e.currentTarget).data('address');
-                this.addToPerson('Contact', address);
-            },
-            'click [data-action="addToLead"]': function (e) {
-                var address = $(e.currentTarget).data('address');
-                this.addToPerson('Lead', address);
-            },
-            'auxclick a[href][data-scope][data-id]': function (e) {
-                let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+    // noinspection JSCheckFunctionSignatures
+    data() {
+        const data = super.data();
 
-                if (!isCombination) {
-                    return;
-                }
+        const address = this.model.get(this.name);
 
-                let $target = $(e.currentTarget);
-
-                let id = $target.attr('data-id');
-                let scope = $target.attr('data-scope');
-
-                e.preventDefault();
-                e.stopPropagation();
-
-                this.quickView({
-                    id: id,
-                    scope: scope,
-                });
-            },
-        },
-
-        data: function () {
-            var data = Dep.prototype.data.call(this);
-
-            var address = this.model.get(this.name);
-            if (address && !(address in this.idHash) && this.model.get('parentId')) {
-                if (this.getAcl().check('Contact', 'edit')) {
-                    data.showCreate = true;
-                }
+        if (address && !(address in this.idHash) && this.model.get('parentId')) {
+            if (this.getAcl().check('Contact', 'edit')) {
+                data.showCreate = true;
             }
+        }
 
-            data.valueIsSet = this.model.has(this.name);
+        data.valueIsSet = this.model.has(this.name);
 
-            return data;
-        },
+        return data;
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
-            if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
-                EmailAddress.prototype.initSearchAutocomplete.call(this);
-            }
+        if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
+            EmailEmailAddressFieldView.prototype.initSearchAutocomplete.call(this);
+        }
 
-            if (this.mode === this.MODE_EDIT && this.getAcl().check('Email', 'create')) {
-                EmailAddress.prototype.initSearchAutocomplete.call(this);
-            }
+        if (this.mode === this.MODE_EDIT && this.getAcl().check('Email', 'create')) {
+            EmailEmailAddressFieldView.prototype.initSearchAutocomplete.call(this);
+        }
 
-            if (this.mode === this.MODE_SEARCH) {
-                this.$input.on('input', () => {
-                    this.trigger('change');
-                });
-            }
-        },
+        if (this.mode === this.MODE_SEARCH) {
+            this.$input.on('input', () => {
+                this.trigger('change');
+            });
+        }
+    }
 
-        getAutocompleteMaxCount: function () {
-            return EmailAddress.prototype.getAutocompleteMaxCount.call(this);
-        },
+    // noinspection JSUnusedGlobalSymbols
+    getAutocompleteMaxCount() {
+        return EmailEmailAddressFieldView.prototype.getAutocompleteMaxCount.call(this);
+    }
 
-        initAddressList: function () {
-            this.nameHash = {};
-            this.typeHash = this.model.get('typeHash') || {};
-            this.idHash = this.model.get('idHash') || {};
+    initAddressList() {
+        this.nameHash = {};
+        this.typeHash = this.model.get('typeHash') || {};
+        this.idHash = this.model.get('idHash') || {};
 
-            _.extend(this.nameHash, this.model.get('nameHash') || {});
-        },
+        _.extend(this.nameHash, this.model.get('nameHash') || {});
+    }
 
-        getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
+    getAttributeList() {
+        const list = super.getAttributeList();
 
-            list.push('nameHash');
-            list.push('idHash');
-            list.push('accountId');
+        list.push('nameHash');
+        list.push('idHash');
+        list.push('accountId');
 
-            return list;
-        },
+        return list;
+    }
 
-        getValueForDisplay: function () {
-            if (this.mode === this.MODE_DETAIL) {
-                var address = this.model.get(this.name);
+    getValueForDisplay() {
+        if (this.mode === this.MODE_DETAIL) {
+            const address = this.model.get(this.name);
 
-                return this.getDetailAddressHtml(address);
-            }
+            return this.getDetailAddressHtml(address);
+        }
 
-            return Dep.prototype.getValueForDisplay.call(this);
-        },
+        return super.getValueForDisplay();
+    }
 
-        getDetailAddressHtml: function (address) {
-            if (!address) {
-                return '';
-            }
+    getDetailAddressHtml(address) {
+        if (!address) {
+            return '';
+        }
 
-            let fromString = this.model.get('fromString') || this.model.get('fromName');
+        const fromString = this.model.get('fromString') || this.model.get('fromName');
 
-            let name = this.nameHash[address] || this.parseNameFromStringAddress(fromString) || null;
+        const name = this.nameHash[address] || this.parseNameFromStringAddress(fromString) || null;
 
-            let entityType = this.typeHash[address] || null;
-            let id = this.idHash[address] || null;
+        const entityType = this.typeHash[address] || null;
+        const id = this.idHash[address] || null;
 
-            if (id) {
-                return $('<div>')
+        if (id) {
+            return $('<div>')
+                .append(
+                    $('<a>')
+                        .attr('href', `#${entityType}/view/${id}`)
+                        .attr('data-scope', entityType)
+                        .attr('data-id', id)
+                        .text(name),
+                    ' ',
+                    $('<span>').addClass('text-muted chevron-right'),
+                    ' ',
+                    $('<span>').text(address)
+                )
+                .get(0).outerHTML;
+        }
+
+        const $div = $('<div>');
+
+        if (this.getAcl().check('Contact', 'create') || this.getAcl().check('Lead', 'create')) {
+            $div.append(
+                this.getCreateHtml(address)
+            );
+        }
+
+        if (name) {
+            $div.append(
+                $('<span>')
+                    .addClass('email-address-line')
+                    .text(name)
                     .append(
-                        $('<a>')
-                            .attr('href', `#${entityType}/view/${id}`)
-                            .attr('data-scope', entityType)
-                            .attr('data-id', id)
-                            .text(name),
                         ' ',
                         $('<span>').addClass('text-muted chevron-right'),
                         ' ',
                         $('<span>').text(address)
                     )
-                    .get(0).outerHTML;
-            }
-
-            let $div = $('<div>');
-
-            if (this.getAcl().check('Contact', 'create') || this.getAcl().check('Lead', 'create')) {
-                $div.append(
-                    this.getCreateHtml(address)
-                );
-            }
-
-            if (name) {
-                $div.append(
-                    $('<span>')
-                        .addClass('email-address-line')
-                        .text(name)
-                        .append(
-                            ' ',
-                            $('<span>').addClass('text-muted chevron-right'),
-                            ' ',
-                            $('<span>').text(address)
-                        )
-                );
-
-                return $div.get(0).outerHTML;
-            }
-
-            $div.append(
-                $('<span>')
-                    .addClass('email-address-line')
-                    .text(address)
-            )
-
+            );
 
             return $div.get(0).outerHTML;
-        },
+        }
 
-        getCreateHtml: function (address) {
-            let $ul = $('<ul>')
-                .addClass('dropdown-menu')
-                .attr('role', 'menu');
+        $div.append(
+            $('<span>')
+                .addClass('email-address-line')
+                .text(address)
+        )
 
-            let $container = $('<span>')
-                .addClass('dropdown email-address-create-dropdown pull-right')
-                .append(
-                    $('<button>')
-                        .addClass('dropdown-toggle btn btn-link btn-sm')
-                        .attr('data-toggle', 'dropdown')
-                        .append(
-                            $('<span>').addClass('caret text-muted')
-                        ),
-                    $ul
-                );
+        return $div.get(0).outerHTML;
+    }
 
-            if (this.getAcl().check('Contact', 'create')) {
-                $ul.append(
-                    $('<li>')
-                        .append(
-                            $('<a>')
-                                .attr('role', 'button')
-                                .attr('tabindex', '0')
-                                .attr('data-action', 'createContact')
-                                .attr('data-address', address)
-                                .text(this.translate('Create Contact', 'labels', 'Email'))
-                        )
-                );
-            }
+    getCreateHtml(address) {
+        const $ul = $('<ul>')
+            .addClass('dropdown-menu')
+            .attr('role', 'menu');
 
-            if (this.getAcl().check('Lead', 'create')) {
-                $ul.append(
-                    $('<li>')
-                        .append(
-                            $('<a>')
-                                .attr('role', 'button')
-                                .attr('tabindex', '0')
-                                .attr('data-action', 'createLead')
-                                .attr('data-address', address)
-                                .text(this.translate('Create Lead', 'labels', 'Email'))
-                        )
-                );
-            }
+        const $container = $('<span>')
+            .addClass('dropdown email-address-create-dropdown pull-right')
+            .append(
+                $('<button>')
+                    .addClass('dropdown-toggle btn btn-link btn-sm')
+                    .attr('data-toggle', 'dropdown')
+                    .append(
+                        $('<span>').addClass('caret text-muted')
+                    ),
+                $ul
+            );
 
-            if (this.getAcl().check('Contact', 'edit')) {
-                $ul.append(
-                    $('<li>')
-                        .append(
-                            $('<a>')
-                                .attr('role', 'button')
-                                .attr('tabindex', '0')
-                                .attr('data-action', 'addToContact')
-                                .attr('data-address', address)
-                                .text(this.translate('Add to Contact', 'labels', 'Email'))
-                        )
-                );
-            }
+        if (this.getAcl().check('Contact', 'create')) {
+            $ul.append(
+                $('<li>')
+                    .append(
+                        $('<a>')
+                            .attr('role', 'button')
+                            .attr('tabindex', '0')
+                            .attr('data-action', 'createContact')
+                            .attr('data-address', address)
+                            .text(this.translate('Create Contact', 'labels', 'Email'))
+                    )
+            );
+        }
 
-            if (this.getAcl().check('Lead', 'edit')) {
-                $ul.append(
-                    $('<li>')
-                        .append(
-                            $('<a>')
-                                .attr('role', 'button')
-                                .attr('tabindex', '0')
-                                .attr('data-action', 'addToLead')
-                                .attr('data-address', address)
-                                .text(this.translate('Add to Lead', 'labels', 'Email'))
-                        )
-                );
-            }
+        if (this.getAcl().check('Lead', 'create')) {
+            $ul.append(
+                $('<li>')
+                    .append(
+                        $('<a>')
+                            .attr('role', 'button')
+                            .attr('tabindex', '0')
+                            .attr('data-action', 'createLead')
+                            .attr('data-address', address)
+                            .text(this.translate('Create Lead', 'labels', 'Email'))
+                    )
+            );
+        }
 
-            return $container.get(0).outerHTML;
-        },
+        if (this.getAcl().check('Contact', 'edit')) {
+            $ul.append(
+                $('<li>')
+                    .append(
+                        $('<a>')
+                            .attr('role', 'button')
+                            .attr('tabindex', '0')
+                            .attr('data-action', 'addToContact')
+                            .attr('data-address', address)
+                            .text(this.translate('Add to Contact', 'labels', 'Email'))
+                    )
+            );
+        }
 
-        parseNameFromStringAddress: function (value) {
-            value = value || '';
+        if (this.getAcl().check('Lead', 'edit')) {
+            $ul.append(
+                $('<li>')
+                    .append(
+                        $('<a>')
+                            .attr('role', 'button')
+                            .attr('tabindex', '0')
+                            .attr('data-action', 'addToLead')
+                            .attr('data-address', address)
+                            .text(this.translate('Add to Lead', 'labels', 'Email'))
+                    )
+            );
+        }
 
-            if (~value.indexOf('<')) {
-                var name = value.replace(/<(.*)>/, '').trim();
+        return $container.get(0).outerHTML;
+    }
 
-                if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
-                    name = name.substr(1, name.length - 2);
-                }
+    /**
+     * @param {string} value
+     * @return {string|null}
+     */
+    parseNameFromStringAddress(value) {
+        value = value || '';
 
-                return name;
-            }
+        const emailHelper = new EmailHelper(
+            this.getLanguage(),
+            this.getUser(),
+            this.getDateTime(),
+            this.getAcl()
+        );
 
-            return null;
-        },
+        return emailHelper.parseNameFromStringAddress(value);
+    }
 
-        createPerson: function (scope, address) {
-            var fromString = this.model.get('fromString') || this.model.get('fromName');
-            var name = this.nameHash[address] || null;
+    /**
+     * @internal Called with a different context from another view.
+     * @param {string} scope
+     * @param {string} address
+     */
+    createPerson(scope, address) {
+        const fromString = this.model.get('fromString') || this.model.get('fromName');
+        let name = this.nameHash[address] || null;
 
-            if (!name) {
-                if (this.name === 'from') {
-                    name = this.parseNameFromStringAddress(fromString) || null;
-                }
-            }
+        if (!name && this.name === 'from' && fromString) {
+            const emailHelper = new EmailHelper(
+                this.getLanguage(),
+                this.getUser(),
+                this.getDateTime(),
+                this.getAcl()
+            );
 
-            if (name) {
-                name = this.getHelper().escapeString(name);
-            }
+            name = emailHelper.parseNameFromStringAddress(fromString);
+        }
 
-            var attributes = {
-                emailAddress: address
+        if (name) {
+            name = this.getHelper().escapeString(name);
+        }
+
+        const attributes = {
+            emailAddress: address,
+        };
+
+        if (this.model.get('accountId') && scope === 'Contact') {
+            attributes.accountId = this.model.get('accountId');
+            attributes.accountName = this.model.get('accountName');
+        }
+
+        if (name) {
+            const firstName = name.split(' ').slice(0, -1).join(' ');
+            const lastName = name.split(' ').slice(-1).join(' ');
+
+            attributes.firstName = firstName;
+            attributes.lastName = lastName;
+        }
+
+        const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) ||
+            'views/modals/edit';
+
+        this.createView('create', viewName, {
+            scope: scope,
+            attributes: attributes
+        }, view => {
+            view.render();
+
+            this.listenTo(view, 'after:save', (model) => {
+                const nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
+                const typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
+                const idHash = Espo.Utils.clone(this.model.get('idHash') || {});
+
+                idHash[address] = model.id;
+                nameHash[address] = model.get('name');
+                typeHash[address] = scope;
+
+                this.idHash = idHash;
+                this.nameHash = nameHash;
+                this.typeHash = typeHash;
+
+                const attributes = {
+                    nameHash: nameHash,
+                    idHash: idHash,
+                    typeHash: typeHash
+                };
+
+                setTimeout(() => {
+                    this.model.set(attributes);
+
+                    if (this.model.get('icsContents')) {
+                        this.model.fetch();
+                    }
+                }, 50);
+            });
+        });
+    }
+
+    /**
+     * @internal Called with a different context from another view.
+     * @param {string} scope
+     * @param {string} address
+     */
+    addToPerson(scope, address) {
+        const fromString = this.model.get('fromString') || this.model.get('fromName');
+        let name = this.nameHash[address] || null;
+
+        if (!name && this.name === 'from' && fromString) {
+            const emailHelper = new EmailHelper(
+                this.getLanguage(),
+                this.getUser(),
+                this.getDateTime(),
+                this.getAcl()
+            );
+
+            name = emailHelper.parseNameFromStringAddress(fromString);
+        }
+
+        if (name) {
+            name = this.getHelper().escapeString(name);
+        }
+
+        const attributes = {
+            emailAddress: address,
+        };
+
+        if (this.model.get('accountId') && scope === 'Contact') {
+            attributes.accountId = this.model.get('accountId');
+            attributes.accountName = this.model.get('accountName');
+        }
+
+        const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.select`) ||
+            'views/modals/select-records';
+
+        Espo.Ui.notify(' ... ');
+
+        const filters = {};
+
+        if (name) {
+            filters['name'] = {
+                type: 'equals',
+                field: 'name',
+                value: name,
             };
+        }
 
-            if (this.model.get('accountId') && scope === 'Contact') {
-                attributes.accountId = this.model.get('accountId');
-                attributes.accountName = this.model.get('accountName');
-            }
+        this.createView('dialog', viewName, {
+            scope: scope,
+            createButton: false,
+            filters: filters,
+        }, (view) => {
+            view.render();
 
-            if (name) {
-                var firstName = name.split(' ').slice(0, -1).join(' ');
-                var lastName = name.split(' ').slice(-1).join(' ');
+            Espo.Ui.notify(false);
 
-                attributes.firstName = firstName;
-                attributes.lastName = lastName;
-            }
-
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
-                'views/modals/edit';
-
-            this.createView('create', viewName, {
-                scope: scope,
-                attributes: attributes
-            }, (view) => {
-                view.render();
-
-                this.listenTo(view, 'after:save', (model) => {
-                    var nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
-                    var typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
-                    var idHash = Espo.Utils.clone(this.model.get('idHash') || {});
+            this.listenToOnce(view, 'select', (model) => {
+                const afterSave = () => {
+                    const nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
+                    const typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
+                    const idHash = Espo.Utils.clone(this.model.get('idHash') || {});
 
                     idHash[address] = model.id;
                     nameHash[address] = model.get('name');
@@ -364,7 +478,7 @@ define(
                     this.nameHash = nameHash;
                     this.typeHash = typeHash;
 
-                    var attributes = {
+                    const attributes = {
                         nameHash: nameHash,
                         idHash: idHash,
                         typeHash: typeHash
@@ -377,152 +491,74 @@ define(
                             this.model.fetch();
                         }
                     }, 50);
-                });
-            });
-        },
-
-        addToPerson: function (scope, address) {
-            var fromString = this.model.get('fromString') || this.model.get('fromName');
-            var name = this.nameHash[address] || null;
-
-            if (!name) {
-                if (this.name === 'from') {
-                    name = this.parseNameFromStringAddress(fromString) || null;
-                }
-            }
-
-            if (name) {
-                name = this.getHelper().escapeString(name);
-            }
-
-            var attributes = {
-                emailAddress: address,
-            };
-
-            if (this.model.get('accountId') && scope === 'Contact') {
-                attributes.accountId = this.model.get('accountId');
-                attributes.accountName = this.model.get('accountName');
-            }
-
-            var viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.select') ||
-                'views/modals/select-records';
-
-            Espo.Ui.notify(' ... ');
-
-            var filters = {};
-
-            if (name) {
-                filters['name'] = {
-                    type: 'equals',
-                    field: 'name',
-                    value: name,
                 };
-            }
 
-            this.createView('dialog', viewName, {
-                scope: scope,
-                createButton: false,
-                filters: filters,
-            }, (view) => {
-                view.render();
+                if (!model.get('emailAddress')) {
+                    model.save({
+                        'emailAddress': address
+                    }, {patch: true}).then(afterSave);
+                }
+                else {
+                    model.fetch().then(() => {
+                        const emailAddressData = model.get('emailAddressData') || [];
 
-                Espo.Ui.notify(false);
-
-                this.listenToOnce(view, 'select', (model) => {
-                    var afterSave = () => {
-                        var nameHash = Espo.Utils.clone(this.model.get('nameHash') || {});
-                        var typeHash = Espo.Utils.clone(this.model.get('typeHash') || {});
-                        var idHash = Espo.Utils.clone(this.model.get('idHash') || {});
-
-                        idHash[address] = model.id;
-                        nameHash[address] = model.get('name');
-                        typeHash[address] = scope;
-
-                        this.idHash = idHash;
-                        this.nameHash = nameHash;
-                        this.typeHash = typeHash;
-
-                        var attributes = {
-                            nameHash: nameHash,
-                            idHash: idHash,
-                            typeHash: typeHash
+                        const item = {
+                            emailAddress: address,
+                            primary: emailAddressData.length === 0
                         };
 
-                        setTimeout(() => {
-                            this.model.set(attributes);
+                        emailAddressData.push(item);
 
-                            if (this.model.get('icsContents')) {
-                                this.model.fetch();
-                            }
-                        }, 50);
-                    };
-
-                    if (!model.get('emailAddress')) {
                         model.save({
-                            'emailAddress': address
+                            'emailAddressData': emailAddressData
                         }, {patch: true}).then(afterSave);
-                    }
-                    else {
-                        model.fetch().then(() => {
-                            var emailAddressData = model.get('emailAddressData') || [];
-
-                            var item = {
-                                emailAddress: address,
-                                primary: emailAddressData.length === 0
-                            };
-
-                            emailAddressData.push(item);
-
-                            model.save({
-                                'emailAddressData': emailAddressData
-                            }, {patch: true}).then(afterSave);
-                        });
-                    }
-                });
-            });
-        },
-
-        fetchSearch: function () {
-            var value = this.$element.val().trim();
-
-            if (value) {
-                return {
-                    type: 'equals',
-                    value: value,
+                    });
                 }
-            }
-
-            return null;
-        },
-
-        validateEmail: function () {
-            var address = this.model.get(this.name);
-
-            if (!address) {
-                return;
-            }
-
-            var addressLowerCase = String(address).toLowerCase();
-
-            var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-
-            if (!re.test(addressLowerCase) && address.indexOf(this.erasedPlaceholder) !== 0) {
-                var msg = this.translate('fieldShouldBeEmail', 'messages')
-                    .replace('{field}', this.getLabelText());
-
-                this.showValidationMessage(msg);
-
-                return true;
-            }
-        },
-
-        quickView: function (data) {
-            let helper = new RecordModal(this.getMetadata(), this.getAcl());
-
-            helper.showDetail(this, {
-                id: data.id,
-                scope: data.scope,
             });
-        },
-    });
-});
+        });
+    }
+
+    fetchSearch() {
+        const value = this.$element.val().trim();
+
+        if (value) {
+            return {
+                type: 'equals',
+                value: value,
+            }
+        }
+
+        return null;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateEmail() {
+        const address = this.model.get(this.name);
+
+        if (!address) {
+            return;
+        }
+
+        const addressLowerCase = String(address).toLowerCase();
+
+        if (!this.emailAddressRegExp.test(addressLowerCase) && address.indexOf(this.erasedPlaceholder) !== 0) {
+            const msg = this.translate('fieldShouldBeEmail', 'messages')
+                .replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg);
+
+            return true;
+        }
+    }
+
+    quickView(data) {
+        const helper = new RecordModal(this.getMetadata(), this.getAcl());
+
+        helper.showDetail(this, {
+            id: data.id,
+            scope: data.scope,
+        });
+    }
+}
+
+export default EmailFromAddressVarchar;

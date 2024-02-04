@@ -394,17 +394,17 @@ class EmailHelper {
      * @returns {string|null}
      */
     parseNameFromStringAddress(value) {
-        if (~value.indexOf('<')) {
-            let name = value.replace(/<(.*)>/, '').trim();
-
-            if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
-                name = name.slice(1, name.length - 2);
-            }
-
-            return name;
+        if (!value.includes('<')) {
+            return null;
         }
 
-        return null;
+        let name = value.replace(/<(.*)>/, '').trim();
+
+        if (name.charAt(0) === '"' && name.charAt(name.length - 1) === '"') {
+            name = name.slice(1, name.length - 2);
+        }
+
+        return name;
     }
 
     /**

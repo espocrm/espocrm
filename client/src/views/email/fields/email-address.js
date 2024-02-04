@@ -26,105 +26,106 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/email-address', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+class EmailEmailAddressFieldView extends BaseFieldView {
 
-        getAutocompleteMaxCount: function () {
-            if (this.autocompleteMaxCount) {
-                return this.autocompleteMaxCount;
-            }
+    getAutocompleteMaxCount() {
+        if (this.autocompleteMaxCount) {
+            return this.autocompleteMaxCount;
+        }
 
-            return this.getConfig().get('recordsPerPage');
-        },
+        return this.getConfig().get('recordsPerPage');
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
-            this.$input = this.$el.find('input');
+        this.$input = this.$el.find('input');
 
-            if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
-                this.initSearchAutocomplete();
-            }
+        if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
+            this.initSearchAutocomplete();
+        }
 
-            if (this.mode === this.MODE_SEARCH) {
-                this.$input.on('input', () => {
-                    this.trigger('change');
-                });
-            }
-        },
+        if (this.mode === this.MODE_SEARCH) {
+            this.$input.on('input', () => {
+                this.trigger('change');
+            });
+        }
+    }
 
-        initSearchAutocomplete: function () {
-            this.$input = this.$input || this.$el.find('input');
+    initSearchAutocomplete() {
+        this.$input = this.$input || this.$el.find('input');
 
-            this.$input.autocomplete({
-                serviceUrl: () => {
-                    return `EmailAddress/search` +
-                        `?maxSize=${this.getAutocompleteMaxCount()}`
-                },
-                paramName: 'q',
-                minChars: 1,
-                autoSelectFirst: true,
-                triggerSelectOnValidInput: false,
-                noCache: true,
-                formatResult: suggestion => {
-                    return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
-                        this.getHelper().escapeString(suggestion.id) + '&#62;';
-                },
-                transformResult: response => {
-                    response = JSON.parse(response);
+        this.$input.autocomplete({
+            serviceUrl: () => {
+                return `EmailAddress/search` +
+                    `?maxSize=${this.getAutocompleteMaxCount()}`
+            },
+            paramName: 'q',
+            minChars: 1,
+            autoSelectFirst: true,
+            triggerSelectOnValidInput: false,
+            noCache: true,
+            formatResult: /** Record */suggestion => {
+                return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
+                    this.getHelper().escapeString(suggestion.id) + '&#62;';
+            },
+            transformResult: response => {
+                response = JSON.parse(response);
 
-                    let list = response.map(item => {
-                        return {
-                            id: item.emailAddress,
-                            name: item.entityName,
-                            emailAddress: item.emailAddress,
-                            entityId: item.entityId,
-                            entityName: item.entityName,
-                            entityType: item.entityType,
-                            data: item.emailAddress,
-                            value: item.emailAddress,
-                        }
-                    });
-
-                    if (this.skipCurrentInAutocomplete) {
-                        let current = this.$input.val();
-
-                        list = list.filter(item => item.emailAddress !== current)
+                let list = response.map(item => {
+                    return {
+                        id: item.emailAddress,
+                        name: item.entityName,
+                        emailAddress: item.emailAddress,
+                        entityId: item.entityId,
+                        entityName: item.entityName,
+                        entityType: item.entityType,
+                        data: item.emailAddress,
+                        value: item.emailAddress,
                     }
+                });
 
-                    return {suggestions: list};
-                },
-                onSelect: (s) => {
-                    this.$input.val(s.emailAddress);
-                    this.$input.focus();
-                },
-            });
+                if (this.skipCurrentInAutocomplete) {
+                    const current = this.$input.val();
 
-            this.once('render', () => {
-                this.$input.autocomplete('dispose');
-            });
+                    list = list.filter(item => item.emailAddress !== current)
+                }
 
-            this.once('remove', () => {
-                this.$input.autocomplete('dispose');
-            });
-        },
+                return {suggestions: list};
+            },
+            onSelect: /** Record */item => {
+                this.$input.val(item.emailAddress);
+                this.$input.focus();
+            },
+        });
 
-        fetchSearch: function () {
-            let value = this.$element.val();
+        this.once('render', () => {
+            this.$input.autocomplete('dispose');
+        });
 
-            if (typeof value.trim === 'function') {
-                value = value.trim();
-            }
+        this.once('remove', () => {
+            this.$input.autocomplete('dispose');
+        });
+    }
 
-            if (value) {
-                return {
-                    type: 'equals',
-                    value: value,
-                };
-            }
+    fetchSearch() {
+        let value = this.$element.val();
 
-            return null;
-        },
-    });
-});
+        if (typeof value.trim === 'function') {
+            value = value.trim();
+        }
+
+        if (value) {
+            return {
+                type: 'equals',
+                value: value,
+            };
+        }
+
+        return null;
+    }
+}
+
+export default EmailEmailAddressFieldView;
