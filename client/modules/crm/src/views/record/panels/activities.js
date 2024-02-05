@@ -567,6 +567,15 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 });
         }
 
+        if (
+            this.model.attributes.accountId &&
+            this.model.getFieldType('account') === 'link' &&
+            this.model.getLinkParam('account', 'entity') === 'Account'
+        ) {
+            attributes.accountId = this.model.attributes.accountId;
+            attributes.accountName = this.model.attributes.accountName;
+        }
+
         if (!attributes.to && this.isBasePlus()) {
             Espo.Ui.notify(' ... ');
 

@@ -214,16 +214,21 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
 
         if (
             entityType === 'Contact' &&
-            this.model.attributes.parentId && this.model.attributes.parentType === 'Account'
+            (
+                this.model.attributes.parentId && this.model.attributes.parentType === 'Account' ||
+                this.model.attributes.accountId
+            )
         ) {
+            const accountId = this.model.attributes.accountId || this.model.attributes.parentId;
+            const accountName = this.model.attributes.accountId ?
+                this.model.attributes.accountName : this.model.attributes.parentName;
+
             filters.accounts = {
                 field: 'accounts',
                 type: 'linkedWith',
-                value: [this.model.attributes.parentId],
+                value: [accountId],
                 data: {
-                    nameHash: {
-                        [this.model.attributes.parentId]: this.model.attributes.parentName,
-                    },
+                    nameHash: {[accountId]: accountName},
                 },
             };
         }
