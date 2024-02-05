@@ -46,6 +46,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
 
         data.valueIsSet = this.model.has(this.name);
         data.maxLength = 254;
+        data.hasSelectAddress = this.hasSelectAddress;
 
         // noinspection JSValidateTypes
         return data;
@@ -172,9 +173,107 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
     }
 
     setup() {
-        super.setup();
+        this.setupSelectAddress();
 
         this.on('render', () => this.initAddressList());
+    }
+
+    /**
+     * @private
+     */
+    setupSelectAddress() {
+        const list = /** @type {string[]} */this.getConfig().get('emailAddressSelectEntityTypeList') || [];
+
+        this.selectAddressEntityTypeList = list.filter(it => this.getAcl().checkScope(it));
+        this.hasSelectAddress = this.selectAddressEntityTypeList.length !== 0;
+
+        this.addActionHandler('selectAddress', () => {
+            const entityType = this.selectAddressEntityTypeList[0];
+
+            this.processSelectEntityType(entityType);
+        });
+    }
+
+    /**
+     * @param {string} entityType
+     */
+    processSelectEntityType(entityType) {
+        const viewName = this.getMetadata().get(['clientDefs', entityType, 'modalViews', 'select']) ||
+            'views/modals/select-records';
+
+        const headerText = this.translate('Select') + ' · ' + this.translate(this.name, 'fields', 'Email');
+
+        const filters = {
+            emailAddress: {
+                type: 'isNotNull',
+                data: {
+                    type: 'isNotEmpty',
+                },
+            },
+        };
+
+        if (
+            entityType === 'Contact' &&
+            this.model.attributes.parentId && this.model.attributes.parentType === 'Account'
+        ) {
+            filters.accounts = {
+                field: 'accounts',
+                type: 'linkedWith',
+                value: [this.model.attributes.parentId],
+                data: {
+                    nameHash: {
+                        [this.model.attributes.parentId]: this.model.attributes.parentName,
+                    },
+                },
+            };
+        }
+
+        this.createView('dialog', viewName, {
+            scope: entityType,
+            multiple: true,
+            createButton: false,
+            mandatorySelectAttributeList: ['emailAddress'],
+            headerText: headerText,
+            filters: filters,
+        }).then(/** import('views/modals/select-records').default */view => {
+            this.selectAddressEntityTypeList.forEach(itemEntityType => {
+                view.addButton({
+                    name: 'selectEntityType' + itemEntityType,
+                    style: 'text',
+                    position: 'right',
+                    label: this.translate(itemEntityType, 'scopeNamesPlural'),
+                    className: itemEntityType === entityType ? 'active btn-xs-wide' : 'btn-xs-wide',
+                    disabled: itemEntityType === entityType,
+                    onClick: () => {
+                        this.clearView('dialog');
+                        this.processSelectEntityType(itemEntityType);
+                    },
+                }, false, true);
+            });
+
+            view.render();
+
+            this.listenToOnce(view, 'select', /** module:model[] */models => {
+                models
+                    .filter(model => model.attributes.emailAddress)
+                    .forEach(model => {
+                        const address = model.attributes.emailAddress;
+
+                        if (this.addressList.includes(address)) {
+                            return;
+                        }
+
+                        this.addressList.push(address);
+                        this.nameHash[address] = model.attributes.name;
+                        this.idHash[address] = model.id;
+                        this.typeHash[address] = model.entityType;
+
+                        this.addAddressHtml(address, model.attributes.name);
+                    });
+
+                this.trigger('change');
+            });
+        });
     }
 
     initAddressList() {

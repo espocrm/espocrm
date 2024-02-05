@@ -210,6 +210,11 @@
             "tooltip": true,
             "view": "views/settings/fields/email-address-lookup-entity-type-list"
         },
+        "emailAddressSelectEntityTypeList": {
+            "type": "multiEnum",
+            "tooltip": true,
+            "view": "views/settings/fields/email-address-lookup-entity-type-list"
+        },
         "smtpServer": {
             "type": "varchar",
             "tooltip": true
