@@ -72,7 +72,7 @@ class ModalView extends View {
      */
 
     /**
-     * @param {module:views/modal~Options | Option.<string, *>} [options] Options.
+     * @param {module:views/modal~Options | Record} [options] Options.
      */
     constructor(options) {
         super(options);
