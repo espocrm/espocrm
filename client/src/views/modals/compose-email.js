@@ -274,8 +274,10 @@ class ComposeEmailModalView extends EditModalView {
     }
 
     actionFullFormDraft() {
-        this.actionSaveDraft()
+        this.actionSaveDraft({skipNotModifiedWarning: true})
             .then(() => {
+                this.getRecordView().setConfirmLeaveOut(false);
+
                 this.getRouter().navigate('#Email/edit/' + this.model.id, {trigger: true});
 
                 this.close();
