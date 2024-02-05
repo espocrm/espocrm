@@ -45,9 +45,9 @@ class EmailFieldView extends VarcharFieldView {
         },
         /** @this EmailFieldView */
         'click [data-action="switchEmailProperty"]': function (e) {
-            let $target = $(e.currentTarget);
-            let $block = $(e.currentTarget).closest('div.email-address-block');
-            let property = $target.data('property-type');
+            const $target = $(e.currentTarget);
+            const $block = $(e.currentTarget).closest('div.email-address-block');
+            const property = $target.data('property-type');
 
             if (property === 'primary') {
                 if (!$target.hasClass('active')) {
@@ -70,20 +70,21 @@ class EmailFieldView extends VarcharFieldView {
         },
         /** @this EmailFieldView */
         'click [data-action="removeEmailAddress"]': function (e) {
-            let $block = $(e.currentTarget).closest('div.email-address-block');
+            const $block = $(e.currentTarget).closest('div.email-address-block');
 
             this.removeEmailAddress($block);
 
-            let $last = this.$el.find('.email-address').last();
+            const $last = this.$el.find('.email-address').last();
 
             if ($last.length) {
+                // noinspection JSUnresolvedReference
                 $last[0].focus({preventScroll: true});
             }
         },
         /** @this EmailFieldView */
         'change input.email-address': function (e) {
-            let $input = $(e.currentTarget);
-            let $block = $input.closest('div.email-address-block');
+            const $input = $(e.currentTarget);
+            const $block = $input.closest('div.email-address-block');
 
             if (this._itemJustRemoved) {
                 return;
@@ -114,9 +115,9 @@ class EmailFieldView extends VarcharFieldView {
         },
         /** @this EmailFieldView */
         'keydown input.email-address': function (e) {
-            let key = Espo.Utils.getKeyFromKeyEvent(e);
+            const key = Espo.Utils.getKeyFromKeyEvent(e);
 
-            let $target = $(e.currentTarget);
+            const $target = $(e.currentTarget);
 
             if (key === 'Enter') {
                 if (!this.$el.find('[data-action="addEmailAddress"]').hasClass('disabled')) {
@@ -129,7 +130,7 @@ class EmailFieldView extends VarcharFieldView {
             }
 
             if (key === 'Backspace' && $target.val() === '') {
-                let $block = $target.closest('div.email-address-block');
+                const $block = $target.closest('div.email-address-block');
 
                 this._itemJustRemoved = true;
                 setTimeout(() => this._itemJustRemoved = false, 100);
@@ -143,16 +144,17 @@ class EmailFieldView extends VarcharFieldView {
         },
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateEmailData() {
-        let data = this.model.get(this.dataFieldName);
+        const data = this.model.get(this.dataFieldName);
 
         if (!data || !data.length) {
             return;
         }
 
-        let addressList = [];
+        const addressList = [];
 
-        let regExp = new RegExp(
+        const regExp = new RegExp(
             /^[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+(?:\.[-!#$%&'*+/=?^_`{|}~A-Za-z0-9]+)*/.source +
             /@([A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z0-9][A-Za-z0-9-]*[A-Za-z0-9]/.source
         );
@@ -160,11 +162,11 @@ class EmailFieldView extends VarcharFieldView {
         let notValid = false;
 
         data.forEach((row, i) => {
-            let address = row.emailAddress || '';
-            let addressLowerCase = String(address).toLowerCase();
+            const address = row.emailAddress || '';
+            const addressLowerCase = String(address).toLowerCase();
 
             if (!regExp.test(addressLowerCase) && address.indexOf(this.erasedPlaceholder) !== 0) {
-                let msg = this.translate('fieldShouldBeEmail', 'messages')
+                const msg = this.translate('fieldShouldBeEmail', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.reRender();
@@ -177,8 +179,8 @@ class EmailFieldView extends VarcharFieldView {
                 return;
             }
 
-            if (~addressList.indexOf(addressLowerCase)) {
-                let msg = this.translate('fieldValueDuplicate', 'messages')
+            if (addressList.includes(addressLowerCase)) {
+                const msg = this.translate('fieldValueDuplicate', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, 'div.email-address-block:nth-child(' + (i + 1)
@@ -200,7 +202,7 @@ class EmailFieldView extends VarcharFieldView {
     validateRequired() {
         if (this.isRequired()) {
             if (!this.model.get(this.name)) {
-                let msg = this.translate('fieldIsRequired', 'messages')
+                const msg = this.translate('fieldIsRequired', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, 'div.email-address-block:nth-child(1) input');
@@ -251,14 +253,14 @@ class EmailFieldView extends VarcharFieldView {
             emailAddressData = Espo.Utils.cloneDeep(emailAddressData);
 
             emailAddressData.forEach(item => {
-                let address = item.emailAddress || '';
+                const address = item.emailAddress || '';
 
                 item.erased = address.indexOf(this.erasedPlaceholder) === 0;
                 item.lineThrough = item.optOut || item.invalid;
             });
         }
 
-        let data = {
+        const data = {
             ...super.data(),
             emailAddressData: emailAddressData,
         };
@@ -287,10 +289,8 @@ class EmailFieldView extends VarcharFieldView {
         return this.getConfig().get('recordsPerPage');
     }
 
-
-
     focusOnLast(cursorAtEnd) {
-        let $item = this.$el.find('input.form-control').last();
+        const $item = this.$el.find('input.form-control').last();
 
         $item.focus();
 
@@ -311,9 +311,9 @@ class EmailFieldView extends VarcharFieldView {
     }
 
     addEmailAddress() {
-        let data = Espo.Utils.cloneDeep(this.fetchEmailAddressData());
+        const data = Espo.Utils.cloneDeep(this.fetchEmailAddressData());
 
-        let o = {
+        const o = {
             emailAddress: '',
             primary: !data.length,
             optOut: this.emailAddressOptedOutByDefault,
@@ -363,13 +363,13 @@ class EmailFieldView extends VarcharFieldView {
                 minChars: 1,
                 autoSelectFirst: true,
                 triggerSelectOnValidInput: false,
-                formatResult: (suggestion) => {
+                formatResult: /** Record */suggestion => {
                     return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
                         this.getHelper().escapeString(suggestion.id) + '&#62;';
                 },
-                transformResult: (response) => {
+                transformResult: /** Record */response => {
                     response = JSON.parse(response);
-                    let list = [];
+                    const list = [];
 
                     response.forEach(item => {
                         list.push({
@@ -386,8 +386,8 @@ class EmailFieldView extends VarcharFieldView {
 
                     return {suggestions: list};
                 },
-                onSelect: (s) => {
-                    this.$element.val(s.emailAddress);
+                onSelect: /** Record */item => {
+                    this.$element.val(item.emailAddress);
                     this.$element.focus();
                 },
             });
@@ -395,10 +395,10 @@ class EmailFieldView extends VarcharFieldView {
     }
 
     manageAddButton() {
-        let $input = this.$el.find('input.email-address');
+        const $input = this.$el.find('input.email-address');
         let c = 0;
 
-        $input.each((i, input) => {
+        $input.each((i, /** HTMLInputElement */input) => {
             if (input.value !== '') {
                 c++;
             }
@@ -418,8 +418,8 @@ class EmailFieldView extends VarcharFieldView {
     }
 
     manageButtonsVisibility() {
-        let $primary = this.$el.find('button[data-property-type="primary"]');
-        let $remove = this.$el.find('button[data-action="removeEmailAddress"]');
+        const $primary = this.$el.find('button[data-property-type="primary"]');
+        const $remove = this.$el.find('button[data-action="removeEmailAddress"]');
 
         if ($primary.length > 1) {
             $primary.removeClass('hidden');
@@ -431,12 +431,12 @@ class EmailFieldView extends VarcharFieldView {
     }
 
     mailTo(emailAddress) {
-        let attributes = {
+        const attributes = {
             status: 'Draft',
             to: emailAddress
         };
 
-        let scope = this.model.entityType;
+        const scope = this.model.entityType;
 
         switch (scope) {
             case 'Account':
@@ -444,7 +444,9 @@ class EmailFieldView extends VarcharFieldView {
                 attributes.parentType = scope;
                 attributes.parentName = this.model.get('name');
                 attributes.parentId = this.model.id;
+
                 break;
+
             case 'Contact':
                 if (this.getConfig().get('b2cMode')) {
                     attributes.parentType = 'Contact';
@@ -457,10 +459,15 @@ class EmailFieldView extends VarcharFieldView {
                         attributes.parentId = this.model.get('accountId');
                     }
                 }
+
                 break;
         }
 
-        if (this.model.collection && this.model.collection.parentModel) {
+        if (
+            this.model.collection &&
+            ('patentModel' in this.model.collection) &&
+            this.model.collection.parentModel
+        ) {
             if (this.checkParentTypeAvailability(this.model.collection.parentModel.entityType)) {
                 attributes.parentType = this.model.collection.parentModel.entityType;
                 attributes.parentId = this.model.collection.parentModel.id;
@@ -494,7 +501,7 @@ class EmailFieldView extends VarcharFieldView {
             !this.getAcl().checkScope('Email', 'create')
         ) {
             Espo.loader.require('email-helper', EmailHelper => {
-                let emailHelper = new EmailHelper();
+                const emailHelper = new EmailHelper();
 
                 document.location.href = emailHelper
                     .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
@@ -503,7 +510,7 @@ class EmailFieldView extends VarcharFieldView {
             return;
         }
 
-        let viewName = this.getMetadata()
+        const viewName = this.getMetadata()
             .get('clientDefs.' + this.scope + '.modalViews.compose') || 'views/modals/compose-email';
 
         Espo.Ui.notify(' ... ');
@@ -535,14 +542,14 @@ class EmailFieldView extends VarcharFieldView {
     }
 
     fetchEmailAddressData() {
-        let data = [];
+        const data = [];
 
-        let $list = this.$el.find('div.email-address-block');
+        const $list = this.$el.find('div.email-address-block');
 
         if ($list.length) {
             $list.each((i, d) => {
-                let row = {};
-                let $d = $(d);
+                const row = {};
+                const $d = $(d);
 
                 row.emailAddress = $d.find('input.email-address').val().trim();
 
@@ -564,9 +571,9 @@ class EmailFieldView extends VarcharFieldView {
 
 
     fetch() {
-        let data = {};
+        const data = {};
 
-        let addressData = this.fetchEmailAddressData() || [];
+        const addressData = this.fetchEmailAddressData() || [];
 
         data[this.dataFieldName] = addressData;
         data[this.name] = null;
@@ -590,7 +597,7 @@ class EmailFieldView extends VarcharFieldView {
         });
 
         if (addressData.length && primaryIndex > 0) {
-            let t = addressData[0];
+            const t = addressData[0];
 
             addressData[0] = addressData[primaryIndex];
             addressData[primaryIndex] = t;
