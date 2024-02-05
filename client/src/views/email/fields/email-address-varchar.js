@@ -47,6 +47,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
         data.valueIsSet = this.model.has(this.name);
         data.maxLength = 254;
 
+        // noinspection JSValidateTypes
         return data;
     }
 
