@@ -57,28 +57,14 @@ class Image implements EntryPoint
     /** @var ?string[] */
     protected $allowedFieldList = null;
 
-    private FileStorageManager $fileStorageManager;
-    private FileManager $fileManager;
-    protected Acl $acl;
-    protected EntityManager $entityManager;
-    protected Config $config;
-    protected Metadata $metadata;
-
     public function __construct(
-        FileStorageManager $fileStorageManager,
-        FileManager $fileManager,
-        Acl $acl,
-        EntityManager $entityManager,
-        Config $config,
-        Metadata $metadata
-    ) {
-        $this->fileStorageManager = $fileStorageManager;
-        $this->fileManager = $fileManager;
-        $this->acl = $acl;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-        $this->metadata = $metadata;
-    }
+        private FileStorageManager $fileStorageManager,
+        private FileManager $fileManager,
+        protected Acl $acl,
+        protected EntityManager $entityManager,
+        protected Config $config,
+        protected Metadata $metadata
+    ) {}
 
     public function run(Request $request, Response $response): void
     {
