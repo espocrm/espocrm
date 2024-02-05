@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import VarcharFieldView from 'views/fields/varchar';
+import MailtoHelper from 'helpers/misc/mailto';
 
 class EmailFieldView extends VarcharFieldView {
 
@@ -490,22 +491,15 @@ class EmailFieldView extends VarcharFieldView {
         }
 
 
-        if (~['Contact', 'Lead', 'Account'].indexOf(this.model.entityType)) {
+        if (['Contact', 'Lead', 'Account'].includes(this.model.entityType)) {
             attributes.nameHash = {};
             attributes.nameHash[emailAddress] = this.model.get('name');
         }
 
-        if (
-            this.getConfig().get('emailForceUseExternalClient') ||
-            this.getPreferences().get('emailUseExternalClient') ||
-            !this.getAcl().checkScope('Email', 'create')
-        ) {
-            Espo.loader.require('email-helper', EmailHelper => {
-                const emailHelper = new EmailHelper();
+        const helper = new MailtoHelper(this.getConfig(), this.getPreferences(), this.getAcl());
 
-                document.location.href = emailHelper
-                    .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
-            });
+        if (helper.toUse()) {
+            document.location.href = helper.composeLink(attributes);
 
             return;
         }

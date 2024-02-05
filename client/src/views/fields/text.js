@@ -29,6 +29,7 @@
 /** @module views/fields/text */
 
 import BaseFieldView from 'views/fields/base';
+import MailtoHelper from 'helpers/misc/mailto';
 
 /**
  * A text field.
@@ -419,17 +420,10 @@ class TextFieldView extends BaseFieldView {
             to: emailAddress,
         };
 
-        if (
-            this.getConfig().get('emailForceUseExternalClient') ||
-            this.getPreferences().get('emailUseExternalClient') ||
-            !this.getAcl().checkScope('Email', 'create')
-        ) {
-            Espo.loader.require('email-helper', EmailHelper => {
-                const emailHelper = new EmailHelper();
+        const helper = new MailtoHelper(this.getConfig(), this.getPreferences(), this.getAcl());
 
-                document.location.href = emailHelper
-                    .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
-            });
+        if (helper.toUse()) {
+            document.location.href = helper.composeLink(attributes);
 
             return;
         }

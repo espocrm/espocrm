@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import EditModalView from 'views/modals/edit';
+import MailtoHelper from 'helpers/misc/mailto';
 
 class ComposeEmailModalView extends EditModalView {
 
@@ -106,25 +107,15 @@ class ComposeEmailModalView extends EditModalView {
 
         this.events['click a[data-action="fullFormDraft"]'] = () => this.actionFullFormDraft();
 
-        if (
-            this.getConfig().get('emailForceUseExternalClient') ||
-            this.getPreferences().get('emailUseExternalClient') ||
-            !this.getAcl().checkScope('Email', 'create')
-        ) {
+        const helper = new MailtoHelper(this.getConfig(), this.getPreferences(), this.getAcl());
+
+        if (helper.toUse()) {
+            this.once('after:render', () => this.actionClose());
+            this.getRouter().confirmLeaveOut = false;
+
             const attributes = this.options.attributes || {};
 
-            Espo.loader.require('email-helper', EmailHelper => {
-                this.getRouter().confirmLeaveOut = false;
-
-                const emailHelper = new EmailHelper();
-
-                document.location.href = emailHelper
-                    .composeMailToLink(attributes, this.getConfig().get('outboundEmailBccAddress'));
-            });
-
-            this.once('after:render', () => {
-                this.actionClose();
-            });
+            document.location.href = helper.composeLink(attributes);
 
             return;
         }
