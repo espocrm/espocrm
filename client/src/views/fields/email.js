@@ -605,6 +605,20 @@ class EmailFieldView extends VarcharFieldView {
 
         return data;
     }
+
+    fetchSearch() {
+        if (['isEmpty', 'isNotEmpty'].includes(type)) {
+            return {
+                type: type === 'isEmpty' ? 'isNull' : 'isNotNull',
+                attribute: this.name,
+                data: {
+                    type: type,
+                },
+            };
+        }
+
+        return super.fetchSearch();
+    }
 }
 
 export default EmailFieldView;
