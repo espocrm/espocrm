@@ -159,22 +159,25 @@ class EmailHelper {
             (model.get('to') || '').split(';').forEach(item => {
                 item = item.trim();
 
-                if (item !== this.getUser().get('emailAddress')) {
-                    if (isReplyOnSent) {
-                        if (attributes.to) {
-                            attributes.to += ';';
-                        }
-
-                        attributes.to += item;
-                    }
-                    else {
-                        if (attributes.cc) {
-                            attributes.cc += ';';
-                        }
-
-                        attributes.cc += item;
-                    }
+                if (item === this.getUser().get('emailAddress')) {
+                    return;
                 }
+
+                if (isReplyOnSent) {
+                    if (attributes.to) {
+                        attributes.to += ';';
+                    }
+
+                    attributes.to += item;
+
+                    return;
+                }
+
+                if (attributes.cc) {
+                    attributes.cc += ';';
+                }
+
+                attributes.cc += item;
             });
 
             attributes.cc = attributes.cc.replace(/^(; )/,"");
