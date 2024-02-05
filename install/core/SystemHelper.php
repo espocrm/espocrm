@@ -170,13 +170,15 @@ class SystemHelper extends System
         return $isFile ? $commands[0] : $commands[1];
     }
 
-    public function getFullPath($path)
+    private function getFullPath($path)
     {
         if (is_array($path)) {
-            $pathList = array();
+            $pathList = [];
+
             foreach ($path as $pathItem) {
                 $pathList[] = $this->getFullPath($pathItem);
             }
+
             return $pathList;
         }
 
@@ -190,10 +192,10 @@ class SystemHelper extends System
     /**
      * Get permission commands
      *
-     * @param  string | array  $path
-     * @param  string | array  $permissions
-     * @param  boolean $isSudo
-     * @param  bool  $isFile
+     * @param string|array $path
+     * @param string|array $permissions
+     * @param boolean $isSudo
+     * @param bool $isFile
      * @return string
      */
     public function getPermissionCommands(
