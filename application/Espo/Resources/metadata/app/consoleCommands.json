@@ -45,5 +45,9 @@
     "populateNumbers": {
         "className": "Espo\\Classes\\ConsoleCommands\\PopulateNumbers",
         "listed": false
+    },
+    "checkFilePermissions": {
+        "className": "Espo\\Classes\\ConsoleCommands\\CheckFilePermissions",
+        "listed": true
     }
 }
