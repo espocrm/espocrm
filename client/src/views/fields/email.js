@@ -614,6 +614,8 @@ class EmailFieldView extends VarcharFieldView {
     }
 
     fetchSearch() {
+        const type = this.fetchSearchType();
+
         if (['isEmpty', 'isNotEmpty'].includes(type)) {
             return {
                 type: type === 'isEmpty' ? 'isNull' : 'isNotNull',
