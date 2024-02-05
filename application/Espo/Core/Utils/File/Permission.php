@@ -161,7 +161,7 @@ class Permission
                 return array_merge($permission, $this->writablePermissions);
             }
 
-            if ($writableOptions['recursive'] && substr($path, 0, strlen($writablePath)) == $writablePath) {
+            if ($writableOptions['recursive'] && str_starts_with($path, $writablePath)) {
                 /** @phpstan-ignore-next-line */
                 return array_merge($permission, $this->writablePermissions);
             }
@@ -358,6 +358,7 @@ class Permission
      * Change group permission.
      *
      * @param int|string $group
+     * @noinspection SpellCheckingInspection
      */
     public function chgrp(string $path, $group = null, bool $recurse = false): bool
     {
@@ -385,6 +386,7 @@ class Permission
      * Change group permission recursive.
      *
      * @param int|string $group
+     * @noinspection SpellCheckingInspection
      */
     protected function chgrpRecurse(string $path, $group): bool
     {
@@ -447,9 +449,10 @@ class Permission
     }
 
     /**
+     * @param int|string $group
+     * @noinspection SpellCheckingInspection
      * @todo Revise the need of exception handling.
      *
-     * @param int|string $group
      */
     protected function chgrpReal(string $path, $group): bool
     {
@@ -518,7 +521,7 @@ class Permission
             try {
                 $this->chmod($path, $this->writablePermissions, $options['recursive']);
             }
-            catch (Throwable $e) {}
+            catch (Throwable) {}
 
             /** check is writable */
             $res = is_writable($path);
@@ -531,7 +534,7 @@ class Permission
 
                     $res &= $this->fileManager->removeFile($name, $path);
                 }
-                catch (Throwable $e) {
+                catch (Throwable) {
                     $res = false;
                 }
             }
@@ -544,7 +547,7 @@ class Permission
             }
         }
 
-        return (bool) $result;
+        return $result;
     }
 
     /**
