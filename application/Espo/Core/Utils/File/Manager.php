@@ -1101,7 +1101,7 @@ class Manager
     }
 
     /**
-     * Check if $paths are writable. Permission denied list can be ontained
+     * Check if $paths are writable. Permission denied list can be obtained
      * with getLastPermissionDeniedList().
      *
      * @param string[] $paths
