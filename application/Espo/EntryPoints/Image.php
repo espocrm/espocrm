@@ -190,22 +190,22 @@ class Image implements EntryPoint
 
         switch ($fileType) {
             case 'image/jpeg':
-                imagejpeg($targetImage); /** @phpstan-ignore-line */
+                imagejpeg($targetImage);
 
                 break;
 
             case 'image/png':
-                imagepng($targetImage); /** @phpstan-ignore-line */
+                imagepng($targetImage);
 
                 break;
 
             case 'image/gif':
-                imagegif($targetImage); /** @phpstan-ignore-line */
+                imagegif($targetImage);
 
                 break;
 
             case 'image/webp':
-                imagewebp($targetImage); /** @phpstan-ignore-line */
+                imagewebp($targetImage);
 
                 break;
         }
@@ -214,7 +214,7 @@ class Image implements EntryPoint
 
         ob_end_clean();
 
-        imagedestroy($targetImage); /** @phpstan-ignore-line */
+        imagedestroy($targetImage);
 
         if ($useCache) {
             $this->fileManager->putContents($cacheFilePath, $contents);
@@ -376,22 +376,16 @@ class Image implements EntryPoint
         return $data['Orientation'] ?? null;
     }
 
-    /**
-     * @param GdImage $targetImage
-     * @return GdImage
-     * @phpstan-ignore-next-line
-     */
-    private function fixOrientation($targetImage, string $filePath)
+    private function fixOrientation(GdImage $targetImage, string $filePath): GdImage
     {
         $orientation = $this->getOrientation($filePath);
 
         if ($orientation) {
             $angle = array_values([0, 0, 0, 180, 0, 0, -90, 0, 90])[$orientation];
 
-            $targetImage = imagerotate($targetImage, $angle, 0) ?: $targetImage; /** @phpstan-ignore-line */
+            $targetImage = imagerotate($targetImage, $angle, 0) ?: $targetImage;
         }
 
-        /** @phpstan-ignore-next-line */
         return $targetImage;
     }
 
