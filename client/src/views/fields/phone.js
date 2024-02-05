@@ -642,7 +642,7 @@ class PhoneFieldView extends VarcharFieldView {
             this.name + 'Numeric' :
             this.name;
 
-        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+        if (['isEmpty', 'isNotEmpty'].includes(type)) {
             if (type === 'isEmpty') {
                 return {
                     type: 'isNull',
