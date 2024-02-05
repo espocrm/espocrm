@@ -230,11 +230,16 @@ class Email implements FieldConverter
                     'distinct' => true,
                 ],
                 'IS NOT NULL' => [
-                    'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        'emailAddressesMultiple.lower!=' => null,
+                        'id=s' => [
+                            'from' => 'EntityEmailAddress',
+                            'select' => ['entityId'],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                            ],
+                        ],
                     ],
-                    'distinct' => true,
                 ],
             ],
             'order' => [

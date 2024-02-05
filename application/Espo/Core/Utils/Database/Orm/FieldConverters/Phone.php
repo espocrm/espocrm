@@ -242,11 +242,16 @@ class Phone implements FieldConverter
                     'distinct' => true,
                 ],
                 'IS NOT NULL' => [
-                    'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
-                        'phoneNumbersMultiple.name!=' => null,
+                        'id=s' => [
+                            'from' => 'EntityPhoneNumber',
+                            'select' => ['entityId'],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                            ],
+                        ],
                     ],
-                    'distinct' => true,
                 ],
             ],
             'order' => [
@@ -469,11 +474,16 @@ class Phone implements FieldConverter
                     'distinct' => true
                 ],
                 'IS NOT NULL' => [
-                    'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
-                        'phoneNumbersMultiple.numeric!=' => null,
+                        'id=s' => [
+                            'from' => 'EntityPhoneNumber',
+                            'select' => ['entityId'],
+                            'whereClause' => [
+                                'deleted' => false,
+                                'entityType' => $entityType,
+                            ],
+                        ],
                     ],
-                    'distinct' => true
                 ],
             ],
         ];
