@@ -32,12 +32,19 @@ define('views/preferences/fields/signature', ['views/fields/wysiwyg'], function 
 
         fetchEmptyValueAsNull: true,
 
-        toolbar: [
-            ["style", ["bold", "italic", "underline", "clear"]],
-            ["color", ["color"]],
-            ["height", ["height"]],
-            ['table', ['espoLink']],
-            ["misc",["codeview", "fullscreen"]],
-        ],
+        setupToolbar: function () {
+            Dep.prototype.setupToolbar.call(this);
+
+            const codeviewName = this.getConfig().get('wysiwygCodeEditorDisabled') ?
+                'codeview' : 'aceCodeview';
+
+            this.toolbar =[
+                ["style", ["bold", "italic", "underline", "clear"]],
+                ["color", ["color"]],
+                ["height", ["height"]],
+                ['table', ['espoLink']],
+                ["misc",[codeviewName, "fullscreen"]],
+            ];
+        },
     });
 });
