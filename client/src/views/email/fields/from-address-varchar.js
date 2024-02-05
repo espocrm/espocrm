@@ -194,7 +194,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
                         .attr('data-id', id)
                         .text(name),
                     ' ',
-                    $('<span>').addClass('text-muted chevron-right'),
+                    $('<span>').addClass('text-muted middle-dot'),
                     ' ',
                     $('<span>').text(address)
                 )
@@ -216,7 +216,7 @@ class EmailFromAddressVarchar extends BaseFieldView {
                     .text(name)
                     .append(
                         ' ',
-                        $('<span>').addClass('text-muted chevron-right'),
+                        $('<span>').addClass('text-muted middle-dot'),
                         ' ',
                         $('<span>').text(address)
                     )

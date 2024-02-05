@@ -446,7 +446,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
             $text.append(
                 $('<span>').text(name),
                 ' ',
-                $('<span>').addClass('text-muted chevron-right'),
+                $('<span>').addClass('text-muted middle-dot'),
                 ' '
             );
         }
@@ -542,7 +542,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                         .attr('data-scope', entityType)
                         .attr('data-id', id)
                         .text(name),
-                    ' <span class="text-muted chevron-right"></span> ',
+                    ' <span class="text-muted middle-dot"></span> ',
                     $('<span>').text(address)
                 )
                 .get(0).outerHTML;
@@ -555,7 +555,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                 $('<span>')
                     .addClass('email-address-line')
                     .text(name)
-                    .append(' <span class="text-muted chevron-right"></span> ')
+                    .append(' <span class="text-muted middle-dot"></span> ')
                     .append(
                         $('<span>').text(address)
                     )

@@ -113,7 +113,7 @@ define('views/user/fields/teams', ['views/fields/link-multiple-with-role'], func
 
                 $el.append(
                     $('<span>').text(' '),
-                    $('<span>').addClass('text-muted chevron-right'),
+                    $('<span>').addClass('text-muted middle-dot'),
                     $('<span>').text(' '),
                     $('<span>').addClass('text-muted').text(role)
                 )
