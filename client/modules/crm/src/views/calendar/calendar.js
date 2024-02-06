@@ -191,12 +191,7 @@ class CalendarView extends View {
             this.getMetadata().get('clientDefs.Calendar.slotDuration') ||
             this.slotDuration;
 
-        this.scrollHour = this.options.scrollHour !== undefined ?
-            this.options.scrollHour : this.scrollHour;
-
-        if (this.options.scrollHour === undefined && this.slotDuration < 30) {
-            this.scrollHour = 8;
-        }
+        this.setupScrollHour();
 
         this.colors = {...this.colors, ...this.getHelper().themeManager.getParam('calendarColors')};
 
@@ -242,6 +237,29 @@ class CalendarView extends View {
                 scopeList: this.scopeList,
                 mode: this.mode,
             });
+        }
+    }
+
+    /**
+     * @private
+     */
+    setupScrollHour() {
+        if (this.options.scrollHour !== undefined) {
+            this.scrollHour = this.options.scrollHour;
+
+            return;
+        }
+
+        const scrollHour = this.getPreferences().get('calendarScrollHour');
+
+        if (scrollHour !== null) {
+            this.scrollHour = scrollHour;
+
+            return;
+        }
+
+        if (this.slotDuration < 30) {
+            this.scrollHour = 8;
         }
     }
 

@@ -196,6 +196,12 @@
             "options": ["", 15, 30],
             "default": null,
             "view": "views/preferences/fields/calendar-slot-duration"
+        },
+        "calendarScrollHour": {
+            "type": "enumInt",
+            "options": ["", 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 15],
+            "default": null,
+            "view": "views/preferences/fields/calendar-scroll-hour"
         }
     },
     "noDeletedAttribute": true,

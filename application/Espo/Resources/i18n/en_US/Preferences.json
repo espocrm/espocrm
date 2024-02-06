@@ -34,7 +34,8 @@
         "scopeColorsDisabled": "Disable scope colors",
         "tabColorsDisabled": "Disable tab colors",
         "textSearchStoringDisabled": "Disable text filter storing",
-        "calendarSlotDuration": "Calendar Slot Duration"
+        "calendarSlotDuration": "Calendar Slot Duration",
+        "calendarScrollHour": "Calendar Scroll to Hour"
     },
     "links": {
     },
