@@ -1,15 +1,13 @@
 [
-    "birthdayWithoutYear",
-    "birthdayString",
+    "teams",
     "abonements",
     "assignedUser",
-    "teams",
     "createdAt",
-    "createdBy",
     "modifiedAt",
+    "createdBy",
+    "birthday",
     "address",
     "emailAddress",
     "phoneNumber",
-    "title",
-    "targetLists"
+    "parentNames"
 ]
