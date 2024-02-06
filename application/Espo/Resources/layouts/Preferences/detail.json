@@ -4,24 +4,40 @@
         "tabLabel": "$label:Locale",
         "rows": [
             [
-                {"name": "dateFormat"},
-                {"name": "timeZone"}
-            ],
+                {"name": "language"},
+                false
+            ]
+        ]
+    },
+    {
+        "rows": [
             [
-                {"name": "timeFormat"},
+                {"name": "timeZone"},
                 {"name": "weekStart"}
             ],
             [
-                {"name": "defaultCurrency"},
-                {"name": "thousandSeparator"}
-            ],
-            [
-                false,
-                {"name": "decimalMark"}
-            ],
-            [
-                {"name": "language"},
+                {"name": "dateFormat"},
                 false
+            ],
+            [
+                {"name": "timeFormat"},
+                false
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "defaultCurrency"},
+                false
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "thousandSeparator"},
+                {"name": "decimalMark"}
             ]
         ]
     },
@@ -85,11 +101,19 @@
             [
                 {"name": "scopeColorsDisabled"},
                 {"name": "tabColorsDisabled"}
-            ],
+            ]
+        ]
+    },
+    {
+        "rows": [
             [
                 {"name": "useCustomTabList"},
                 {"name": "tabList"}
-            ],
+            ]
+        ]
+    },
+    {
+        "rows": [
             [
                 {"name": "dashboardLayout"}
             ]
