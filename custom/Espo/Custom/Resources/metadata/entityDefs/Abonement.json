@@ -281,7 +281,8 @@
         "order": "desc",
         "textFilterFields": [
             "name",
-            "number"
+            "number",
+            "contact.lastName"
         ],
         "fullTextSearch": false,
         "countDisabled": false
