@@ -155,13 +155,10 @@ class CalendarView extends View {
     }
 
     setup() {
-        this.wait(
-            Espo.loader.requirePromise('lib!@fullcalendar/moment')
-        );
+        this.wait(Espo.loader.requirePromise('lib!@fullcalendar/moment'));
+        this.wait(Espo.loader.requirePromise('lib!@fullcalendar/moment-timezone'));
 
-        this.wait(
-            Espo.loader.requirePromise('lib!@fullcalendar/moment-timezone')
-        );
+        this.suppressLoadingAlert = this.options.suppressLoadingAlert;
 
         this.date = this.options.date || null;
         this.mode = this.options.mode || this.defaultMode;
@@ -1180,7 +1177,9 @@ class CalendarView extends View {
 
         url += '&agenda=' + encodeURIComponent(agenda);
 
-        Espo.Ui.notify(' ... ');
+        if (!this.suppressLoadingAlert) {
+            Espo.Ui.notify(' ... ');
+        }
 
         Espo.Ajax.getRequest(url).then(data => {
             const events = this.convertToFcEvents(data);
@@ -1191,6 +1190,7 @@ class CalendarView extends View {
         });
 
         this.fetching = true;
+        this.suppressLoadingAlert = false;
 
         setTimeout(() => this.fetching = false, 50)
     }

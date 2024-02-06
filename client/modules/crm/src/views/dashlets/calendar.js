@@ -84,6 +84,7 @@ class CalendarDashletView extends BaseDashletView {
             containerSelector: this.getSelector(),
             teamIdList: teamIdList,
             scrollToNowSlots: 3,
+            suppressLoadingAlert: true,
         }, view => {
             this.listenTo(view, 'view', () => {
                 if (this.getOption('mode') === 'month') {
