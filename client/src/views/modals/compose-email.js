@@ -115,7 +115,7 @@ class ComposeEmailModalView extends EditModalView {
 
             const attributes = this.options.attributes || {};
 
-            document.location.href = helper.composeLink(attributes);
+            this.once('after:render', () => document.location.href = helper.composeLink(attributes));
 
             return;
         }
