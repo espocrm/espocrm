@@ -185,7 +185,7 @@ class BaseFieldView extends View {
     /**
      * Field params.
      *
-     * @type {TParams & module:views/fields/base~params}
+     * @type {TParams & module:views/fields/base~params & Object.<string, *>}
      */
     params = null
 
