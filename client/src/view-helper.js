@@ -531,7 +531,7 @@ class ViewHelper {
             return translationHash[name] || name;
         });
 
-        Handlebars.registerHelper('options', (list, value, options) => {
+        Handlebars.registerHelper('options', (/** any[] */list, value, options) => {
             if (typeof value === 'undefined') {
                 value = false;
             }
@@ -547,10 +547,10 @@ class ViewHelper {
                     return value.indexOf(name) !== -1;
                 }
 
-                return value === name || !value && !name;
+                return value === name || (!value && !name && name !== 0);
             };
 
-            options.hash = /** @type {Object.<string, *>} */ options.hash || {};
+            options.hash = /** @type {Record} */options.hash || {};
 
             const scope = options.hash.scope || false;
             const category = options.hash.category || false;
@@ -558,7 +558,7 @@ class ViewHelper {
             const styleMap = options.hash.styleMap || {};
 
             if (!multiple && options.hash.includeMissingOption && (value || value === '')) {
-                if (!~list.indexOf(value)) {
+                if (!list.includes(value)) {
                     list = Espo.Utils.clone(list);
 
                     list.push(value);
@@ -570,16 +570,15 @@ class ViewHelper {
                 null;
 
             if (translationHash === null) {
+                translationHash = {};
+
                 if (!category && field) {
                     translationHash = this.language
-                        .translate(/** @type {string}*/field, 'options', /** @type {string}*/scope) || {};
+                        .translate(/** @type {string} */field, 'options', /** @type {string} */scope) || {};
 
                     if (typeof translationHash !== 'object') {
                         translationHash = {};
                     }
-                }
-                else {
-                    translationHash = {};
                 }
             }
 
