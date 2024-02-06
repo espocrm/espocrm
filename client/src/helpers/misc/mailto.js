@@ -93,6 +93,10 @@ class MailtoHelper {
             if (attributes.isHtml) {
                 params.body = this.htmlToPlain(params.body);
             }
+
+            if (params.body.length > 700) {
+                params.body = params.body.substring(0, 700) + '...';
+            }
         }
 
         if (attributes.inReplyTo) {
