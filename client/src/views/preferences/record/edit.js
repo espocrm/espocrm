@@ -97,6 +97,7 @@ class PreferencesEditRecordView extends EditRecordView {
         }
 
         if (!this.getUser().isAdmin() || model.isPortal()) {
+            this.hidePanel('dashboard');
             this.hideField('dashboardLayout');
         }
 
