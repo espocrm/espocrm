@@ -47,7 +47,7 @@ class TabListFieldView extends ArrayFieldView {
         });
 
         this.events['click [data-action="editGroup"]'] = e => {
-            let id = $(e.currentTarget).parent().data('value').toString();
+            const id = $(e.currentTarget).parent().data('value').toString();
 
             this.editGroup(id);
         };
@@ -96,7 +96,7 @@ class TabListFieldView extends ArrayFieldView {
                 value.id = this.generateItemId();
             }
 
-            let html = this.getItemHtml(value);
+            const html = this.getItemHtml(value);
 
             this.$list.append(html);
             this.selected.push(value);
@@ -110,7 +110,7 @@ class TabListFieldView extends ArrayFieldView {
     }
 
     removeValue(value) {
-        let index = this.getGroupIndexById(value);
+        const index = this.getGroupIndexById(value);
 
         if (~index) {
             this.$list.children('[data-value="' + value + '"]').remove();
@@ -133,9 +133,9 @@ class TabListFieldView extends ArrayFieldView {
     }
 
     getGroupItemHtml(item) {
-        let label = item.text || '';
+        const label = item.text || '';
 
-        let $label = $('<span>').text(label);
+        const $label = $('<span>').text(label);
 
         let $icon = null;
 
@@ -150,7 +150,7 @@ class TabListFieldView extends ArrayFieldView {
                 .addClass('text-italic');
         }
 
-        let $item = $('<span>').append($label);
+        const $item = $('<span>').append($label);
 
         if ($icon) {
             $item.prepend(
@@ -189,11 +189,11 @@ class TabListFieldView extends ArrayFieldView {
     }
 
     fetchFromDom() {
-        let selected = [];
+        const selected = [];
 
         this.$el.find('.list-group .list-group-item').each((i, el) => {
-            let value = $(el).data('value').toString();
-            let groupItem = this.getGroupValueById(value);
+            const value = $(el).data('value').toString();
+            const groupItem = this.getGroupValueById(value);
 
             if (groupItem) {
                 selected.push(groupItem);
@@ -209,7 +209,7 @@ class TabListFieldView extends ArrayFieldView {
 
     getGroupIndexById(id) {
         for (let i = 0; i < this.selected.length; i++) {
-            let item = this.selected[i];
+            const item = this.selected[i];
 
             if (item && typeof item === 'object') {
                 if (item.id === id) {
@@ -222,7 +222,7 @@ class TabListFieldView extends ArrayFieldView {
     }
 
     getGroupValueById(id) {
-        for (let item of this.selected) {
+        for (const item of this.selected) {
             if (item && typeof item === 'object') {
                 if (item.id === id) {
                     return item;
@@ -234,12 +234,12 @@ class TabListFieldView extends ArrayFieldView {
     }
 
     editGroup(id) {
-        let item = Espo.Utils.cloneDeep(this.getGroupValueById(id) || {});
+        const item = Espo.Utils.cloneDeep(this.getGroupValueById(id) || {});
 
-        let index = this.getGroupIndexById(id);
-        let tabList = Espo.Utils.cloneDeep(this.selected);
+        const index = this.getGroupIndexById(id);
+        const tabList = Espo.Utils.cloneDeep(this.selected);
 
-        let view = item.type === 'divider' ?
+        const view = item.type === 'divider' ?
             'views/settings/modals/edit-tab-divider' :
             'views/settings/modals/edit-tab-group';
 
@@ -247,7 +247,7 @@ class TabListFieldView extends ArrayFieldView {
             view.render();
 
             this.listenToOnce(view, 'apply', itemData => {
-                for (let a in itemData) {
+                for (const a in itemData) {
                     tabList[index][a] = itemData[a];
                 }
 
