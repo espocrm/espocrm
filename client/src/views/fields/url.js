@@ -45,6 +45,7 @@ class UrlFieldView extends VarcharFieldView {
     ]
 
     noSpellCheck = true
+    optionalProtocol = true
 
     DEFAULT_MAX_LENGTH =255
 
@@ -136,8 +137,10 @@ class UrlFieldView extends VarcharFieldView {
             return false;
         }
 
+        const patternName = this.optionalProtocol ? 'uriOptionalProtocol' : 'uri';
+
         /** @var {string} */
-        const pattern = this.getMetadata().get(['app', 'regExpPatterns', 'uriOptionalProtocol', 'pattern']);
+        const pattern = this.getMetadata().get(['app', 'regExpPatterns', patternName, 'pattern']);
 
         const regExp = new RegExp('^' + pattern + '$');
 
