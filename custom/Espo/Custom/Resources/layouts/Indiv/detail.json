@@ -6,7 +6,7 @@
                     "name": "name"
                 },
                 {
-                    "name": "contacts"
+                    "name": "type"
                 }
             ],
             [
@@ -24,16 +24,25 @@
                 {
                     "name": "duration"
                 }
-            ],
-            [
-                false,
-                {
-                    "name": "isCustomPrice"
-                }
             ]
         ],
         "style": "default",
         "label": "Overview"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "isCustomPrice"
+                },
+                false
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Тип розрахунку"
     },
     {
         "rows": [

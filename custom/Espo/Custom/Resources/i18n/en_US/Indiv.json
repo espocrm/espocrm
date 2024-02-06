@@ -19,7 +19,8 @@
         "priceCurrency": "Ціна (Валюта)",
         "priceConverted": "Ціна (Конвертована)",
         "percent": "Відсоток",
-        "salesDate": "Дата розрахунку"
+        "salesDate": "Дата розрахунку",
+        "type": "Тип"
     },
     "links": {
         "parent": "Parent",
@@ -32,6 +33,11 @@
             "Planned": "Planned",
             "Held": "Held",
             "Not Held": "Not Held"
+        },
+        "type": {
+            "1": "Індив",
+            "2": "Дуо",
+            "3": "Трио"
         }
     },
     "labels": {
@@ -53,6 +59,7 @@
     "tooltips": {
         "branchName": "forwarding for branch name from",
         "isCustomPrice": "Задати ціну вручну для цього індиву",
-        "percent": "ВІдсоток який надходить студії"
+        "percent": "ВІдсоток який надходить студії",
+        "type": "Індив - 1 клієнт\nДуо    - 2 клієнти\nТрио  - 3 клієнти"
     }
 }

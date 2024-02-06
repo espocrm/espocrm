@@ -48,7 +48,7 @@
         "style": "default",
         "tabBreak": false,
         "hidden": false,
-        "customLabel": "Тип"
+        "customLabel": "Тип розрахунку"
     },
     {
         "rows": [

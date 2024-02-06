@@ -5,12 +5,8 @@
         "label": "Ім'я"
     },
     {
-        "name": "contacts",
-        "notSortable": true,
-        "label": "Клієнти"
-    },
-    {
-        "name": "price"
+        "name": "price",
+        "label": "Ціна"
     },
     {
         "name": "hall",

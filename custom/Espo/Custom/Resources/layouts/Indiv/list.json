@@ -9,12 +9,8 @@
         "label": "Відповідальний (Педагог)"
     },
     {
-        "name": "price"
-    },
-    {
-        "name": "contacts",
-        "notSortable": true,
-        "label": "Клієнти"
+        "name": "price",
+        "label": "Ціна"
     },
     {
         "name": "hall",

@@ -1,7 +1,13 @@
 [
     "assignedUser",
+    "type",
     "dateStart",
-    "contact",
     "hall",
-    "status"
+    "percent",
+    "isCustomPrice",
+    "salesDate",
+    "status",
+    "price",
+    "createdBy",
+    "createdAt"
 ]

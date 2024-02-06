@@ -140,7 +140,7 @@
             "exportDisabled": false,
             "customizationDisabled": false,
             "isCustom": true,
-            "required": true
+            "required": false
         },
         "isCustomPrice": {
             "notNull": true,
@@ -170,6 +170,22 @@
             "type": "date",
             "required": true,
             "default": "javascript: return this.dateTime.getToday();",
+            "isCustom": true
+        },
+        "type": {
+            "type": "enum",
+            "options": [
+                "1",
+                "2",
+                "3"
+            ],
+            "style": {
+                "1": null,
+                "2": null,
+                "3": null
+            },
+            "default": "1",
+            "tooltip": true,
             "isCustom": true
         }
     },
