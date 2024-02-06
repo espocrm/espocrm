@@ -972,7 +972,7 @@ class NavbarSiteView extends View {
         const url = this.getRouter().getCurrentUrl();
 
         this.urlList
-            .filter(item => item.url.startsWith(url))
+            .filter(item => url.startsWith(item.url))
             .forEach(item => {
                 $tabs.find(`li[data-name="${item.name}"]`).addClass('active');
             });
