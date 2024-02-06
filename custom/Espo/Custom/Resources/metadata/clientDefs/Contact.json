@@ -28,5 +28,10 @@
                 }
             ]
         }
-    }
+    },
+    "filterList": [
+        {
+            "name": "birthday" 
+        }
+    ]
 }

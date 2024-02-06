@@ -30,5 +30,8 @@
             "Other": "Додатково"
         },
         "parentNames": []
+    },
+    "presetFilters": {
+        "birthday": "День народження"
     }
 }

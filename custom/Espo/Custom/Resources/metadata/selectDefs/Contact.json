@@ -1,0 +1,5 @@
+{
+    "primaryFilterClassNameMap": {
+        "birthday": "Espo\\Custom\\SelectFilters\\ContactBirthday"
+    }
+}
