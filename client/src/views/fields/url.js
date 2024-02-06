@@ -146,7 +146,7 @@ class UrlFieldView extends VarcharFieldView {
         }
 
         const msg = this.translate('fieldInvalid', 'messages')
-            .replace('{field}', this.translate(this.name, 'fields', this.entityType));
+            .replace('{field}', this.getLabelText());
 
         this.showValidationMessage(msg);
 
@@ -169,7 +169,7 @@ class UrlFieldView extends VarcharFieldView {
 
         const msg = this.translate('fieldUrlExceedsMaxLength', 'messages')
             .replace('{maxLength}', maxLength)
-            .replace('{field}', this.translate(this.name, 'fields', this.entityType));
+            .replace('{field}', this.getLabelText());
 
         this.showValidationMessage(msg);
 
