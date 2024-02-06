@@ -34,6 +34,8 @@ import Select from 'ui/select'
 
 /**
  * An enum field (select-box).
+ *
+ * @extends BaseFieldView<module:views/fields/enumeration~params>
  */
 class EnumFieldView extends BaseFieldView {
 
@@ -93,6 +95,7 @@ class EnumFieldView extends BaseFieldView {
 
     validationElementSelector = '.selectize-control'
 
+    // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
         const data = super.data();
@@ -136,6 +139,7 @@ class EnumFieldView extends BaseFieldView {
 
         }
 
+        // noinspection JSValidateTypes
         return data;
     }
 

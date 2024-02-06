@@ -33,6 +33,8 @@ import RegExpPattern from 'helpers/reg-exp-pattern';
 
 /**
  * A varchar field.
+ *
+ * @extends BaseFieldView<module:views/fields/varchar~params>
  */
 class VarcharFieldView extends BaseFieldView {
 

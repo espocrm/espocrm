@@ -36,6 +36,7 @@ import $ from 'jquery';
  * A base field view. Can be in different modes. Each mode uses a separate template.
  *
  * @todo Document events.
+ * @template TParams
  */
 class BaseFieldView extends View {
 
@@ -184,7 +185,7 @@ class BaseFieldView extends View {
     /**
      * Field params.
      *
-     * @type {Object.<string,*>}
+     * @type {TParams & module:views/fields/base~params}
      */
     params = null
 
