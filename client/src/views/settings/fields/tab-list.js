@@ -145,6 +145,12 @@ class TabListFieldView extends ArrayFieldView {
                 .addClass('text-muted')
         }
 
+        if (item.type === 'url') {
+            $icon = $('<span>')
+                .addClass('fas fa-link fa-sm')
+                .addClass('text-muted')
+        }
+
         if (item.type === 'divider') {
             $label.addClass('text-soft')
                 .addClass('text-italic');
@@ -239,11 +245,15 @@ class TabListFieldView extends ArrayFieldView {
         const index = this.getGroupIndexById(id);
         const tabList = Espo.Utils.cloneDeep(this.selected);
 
-        const view = item.type === 'divider' ?
-            'views/settings/modals/edit-tab-divider' :
-            'views/settings/modals/edit-tab-group';
+        const view = {
+            divider: 'views/settings/modals/edit-tab-divider',
+            url: 'views/settings/modals/edit-tab-url'
+        }[item.type] ||  'views/settings/modals/edit-tab-group';
 
-        this.createView('dialog', view, {itemData: item}, view => {
+        this.createView('dialog', view, {
+            itemData: item,
+            parentType: this.model.entityType,
+        }, view => {
             view.render();
 
             this.listenToOnce(view, 'apply', itemData => {

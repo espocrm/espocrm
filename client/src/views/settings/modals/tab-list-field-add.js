@@ -37,12 +37,20 @@ class TabListFieldAddSettingsModalView extends ArrayFieldAddModalView {
             this.buttonList.push({
                 name: 'addGroup',
                 text: this.translate('Group Tab', 'labels', 'Settings'),
+                onClick: () => this.actionAddGroup(),
             });
         }
 
         this.buttonList.push({
             name: 'addDivider',
             text: this.translate('Divider', 'labels', 'Settings'),
+            onClick: () => this.actionAddDivider(),
+        });
+
+        this.addButton({
+            name: 'addUrl',
+            text: this.translate('URL', 'labels', 'Settings'),
+            onClick: () => this.actionAddUrl(),
         });
     }
 
@@ -59,6 +67,18 @@ class TabListFieldAddSettingsModalView extends ArrayFieldAddModalView {
         this.trigger('add', {
             type: 'divider',
             text: null,
+        });
+    }
+
+    actionAddUrl() {
+        this.trigger('add', {
+            type: 'url',
+            text: this.translate('URL', 'labels', 'Settings'),
+            url: null,
+            iconClass: null,
+            color: null,
+            aclScope: null,
+            onlyAdmin: false,
         });
     }
 }

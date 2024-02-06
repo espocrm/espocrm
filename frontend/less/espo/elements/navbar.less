@@ -50,6 +50,10 @@
     ul.tabs {
         user-select: none;
 
+        > li:not(.active) > a:focus:not(:hover) {
+            background-color: transparent;
+        }
+
         li > a > .group-caret {
             position: absolute;
             top: 14px;
