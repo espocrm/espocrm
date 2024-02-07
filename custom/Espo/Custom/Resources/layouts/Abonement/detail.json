@@ -86,6 +86,30 @@
         "rows": [
             [
                 {
+                    "name": "startDate"
+                },
+                {
+                    "name": "endDate"
+                },
+                {
+                    "name": "classCount"
+                },
+                {
+                    "name": "classesLeft"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "info",
+        "dynamicLogicStyled": null,
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Активність"
+    },
+    {
+        "rows": [
+            [
+                {
                     "name": "abonplan"
                 },
                 {
@@ -120,30 +144,6 @@
         "tabBreak": false,
         "hidden": false,
         "customLabel": "Розрахунок"
-    },
-    {
-        "rows": [
-            [
-                {
-                    "name": "startDate"
-                },
-                {
-                    "name": "endDate"
-                },
-                {
-                    "name": "classCount"
-                },
-                {
-                    "name": "classesLeft"
-                }
-            ]
-        ],
-        "dynamicLogicVisible": null,
-        "style": "info",
-        "dynamicLogicStyled": null,
-        "tabBreak": false,
-        "hidden": false,
-        "customLabel": "Активність"
     },
     {
         "rows": [

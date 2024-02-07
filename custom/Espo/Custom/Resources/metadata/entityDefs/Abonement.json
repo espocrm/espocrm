@@ -91,7 +91,8 @@
         },
         "contact": {
             "type": "link",
-            "required": true
+            "required": true,
+            "createButton": true
         },
         "group": {
             "type": "link"

@@ -73,7 +73,9 @@
             [
                 {
                     "name": "contact"
-                },
+                }
+            ],
+            [
                 {
                     "name": "groups"
                 }
@@ -81,6 +83,33 @@
         ],
         "style": "default",
         "label": ""
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "startDate"
+                },
+                {
+                    "name": "endDate"
+                }
+            ],
+            [
+                {
+                    "name": "classCount"
+                },
+                {
+                    "name": "classesLeft"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "info",
+        "dynamicLogicStyled": null,
+        "tabBreak": false,
+        "tabLabel": null,
+        "hidden": false,
+        "customLabel": "Активність"
     },
     {
         "rows": [
@@ -121,33 +150,6 @@
         "tabLabel": null,
         "hidden": false,
         "customLabel": "Розрахунок"
-    },
-    {
-        "rows": [
-            [
-                {
-                    "name": "startDate"
-                },
-                {
-                    "name": "endDate"
-                }
-            ],
-            [
-                {
-                    "name": "classCount"
-                },
-                {
-                    "name": "classesLeft"
-                }
-            ]
-        ],
-        "dynamicLogicVisible": null,
-        "style": "info",
-        "dynamicLogicStyled": null,
-        "tabBreak": false,
-        "tabLabel": null,
-        "hidden": false,
-        "customLabel": "Активність"
     },
     {
         "rows": [
