@@ -20,7 +20,7 @@
 }
 
 #layout ul.rows {
-    min-height: 80px;
+    min-height: 20px;
 }
 
 #layout ul.rows > li  {
