@@ -30,6 +30,7 @@
 namespace Espo\ORM\Repository;
 
 use Espo\ORM\Collection;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\Mapper\RDBMapper;
 use Espo\ORM\SthCollection;
 use Espo\ORM\Entity;
@@ -49,6 +50,8 @@ use InvalidArgumentException;
 
 /**
  * Builds select parameters for related records for RDB repository.
+ *
+ * @template TEntity of Entity
  */
 class RDBRelationSelectBuilder
 {
@@ -124,6 +127,7 @@ class RDBRelationSelectBuilder
      * `->columnsWhere(['column' => $value])`
      *
      * @param WhereItem|array<int|string, mixed> $clause Where clause.
+     * @return self<TEntity>
      */
     public function columnsWhere($clause): self
     {
@@ -182,7 +186,7 @@ class RDBRelationSelectBuilder
     /**
      * Find related records by a criteria.
      *
-     * @return Collection<Entity>
+     * @return Collection<TEntity>
      */
     public function find(): Collection
     {
@@ -191,9 +195,12 @@ class RDBRelationSelectBuilder
         $related = $this->getMapper()->selectRelated($this->entity, $this->relationName, $query);
 
         if ($related instanceof Collection) {
+            /** @var Collection<TEntity> $related */
+
             return $this->handleReturnCollection($related);
         }
 
+        /** @var EntityCollection<TEntity> $collection */
         $collection = $this->entityManager->getCollectionFactory()->create($this->foreignEntityType);
 
         $collection->setAsFetched();
@@ -207,6 +214,8 @@ class RDBRelationSelectBuilder
 
     /**
      * Find a first related records by a criteria.
+     *
+     * @return TEntity
      */
     public function findOne(): ?Entity
     {
@@ -236,6 +245,7 @@ class RDBRelationSelectBuilder
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array<string|int, mixed>|null $conditions Join conditions.
+     * @return self<TEntity>
      */
     public function join($target, ?string $alias = null, $conditions = null): self
     {
@@ -251,6 +261,7 @@ class RDBRelationSelectBuilder
      * A relation name or table. A relation name should be in camelCase, a table in CamelCase.
      * @param string|null $alias An alias.
      * @param WhereItem|array<int|string, mixed>|null $conditions Join conditions.
+     * @return self<TEntity>
      */
     public function leftJoin($target, ?string $alias = null, $conditions = null): self
     {
@@ -261,6 +272,8 @@ class RDBRelationSelectBuilder
 
     /**
      * Set DISTINCT parameter.
+     *
+     * @return self<TEntity>
      */
     public function distinct(): self
     {
@@ -271,6 +284,8 @@ class RDBRelationSelectBuilder
 
     /**
      * Return STH collection. Recommended for fetching large number of records.
+     *
+     * @return self<TEntity>
      */
     public function sth(): self
     {
@@ -289,6 +304,7 @@ class RDBRelationSelectBuilder
      *
      * @param WhereItem|array<int|string, mixed>|string $clause A key or where clause.
      * @param array<int, mixed>|scalar|null $value A value. Should be omitted if the first argument is not string.
+     * @return self<TEntity>
      */
     public function where($clause = [], $value = null): self
     {
@@ -319,6 +335,7 @@ class RDBRelationSelectBuilder
      *
      * @param WhereItem|array<int|string, mixed>|string $clause A key or where clause.
      * @param array<int, mixed>|string|null $value A value. Should be omitted if the first argument is not string.
+     * @return self<TEntity>
      */
     public function having($clause = [], $value = null): self
     {
@@ -340,6 +357,7 @@ class RDBRelationSelectBuilder
      *   An attribute to order by or an array or order items.
      *   Passing an array will reset a previously set order.
      * @param (Order::ASC|Order::DESC)|bool|null $direction Select::ORDER_ASC|Select::ORDER_DESC.
+     * @return self<TEntity>
      */
     public function order($orderBy = 'id', $direction = null): self
     {
@@ -350,6 +368,8 @@ class RDBRelationSelectBuilder
 
     /**
      * Apply OFFSET and LIMIT.
+     *
+     * @return self<TEntity>
      */
     public function limit(?int $offset = null, ?int $limit = null): self
     {
@@ -371,6 +391,7 @@ class RDBRelationSelectBuilder
      * @param Selection|Selection[]|Expression|Expression[]|string[]|string|array<int, string[]|string> $select
      *   An array of expressions or one expression.
      * @param string|null $alias An alias. Actual if the first parameter is not an array.
+     * @return self<TEntity>
      */
     public function select($select, ?string $alias = null): self
     {
@@ -389,6 +410,7 @@ class RDBRelationSelectBuilder
      * * `groupBy([$expr1, $expr2, ...])`
      *
      * @param Expression|Expression[]|string|string[] $groupBy
+     * @return self<TEntity>
      */
     public function group($groupBy): self
     {
@@ -400,6 +422,7 @@ class RDBRelationSelectBuilder
     /**
      * @deprecated Use `group` method.
      * @param Expression|Expression[]|string|string[] $groupBy
+     * @return self<TEntity>
      */
     public function groupBy($groupBy): self
     {
@@ -472,8 +495,8 @@ class RDBRelationSelectBuilder
     }
 
     /**
-     * @param Collection<Entity> $collection
-     * @return Collection<Entity>
+     * @param Collection<TEntity> $collection
+     * @return Collection<TEntity>
      */
     private function handleReturnCollection(Collection $collection): Collection
     {
@@ -485,6 +508,7 @@ class RDBRelationSelectBuilder
             return $collection;
         }
 
+        /** @var Collection<TEntity> */
         return $this->entityManager->getCollectionFactory()->createFromSthCollection($collection);
     }
 
