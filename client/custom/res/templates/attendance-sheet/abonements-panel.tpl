@@ -50,8 +50,8 @@
                                 {{#if this.isActive}}
                                     <span class="label label-success">Активний</span>
                                 {{/if}}
-                                {{#if this.isPending}}
-                                    <span title="Очікує" class="cp text-muted far fa-clock"></span>
+                                {{#if this.isNotActivated}}
+                                    <span title="Очікує" data-id={{this.id}} class="cp abon-activate label label-warning">Не активований</span>
                                 {{/if}}
                                 {{#if this.isOutdate}}
                                     <span class="label label-danger">Не активний</span>
@@ -68,6 +68,9 @@
                                 <span title="Оновити" class="btn-add cp highlight text-muted fas fa-sync-alt" data-id={{this.id}} data-action="recalculate"></span>
                                 {{#if this.note}}
                                     <span title="Переглянути замітку" data-id={{this.id}} class="cp highlight text-muted far fa-sticky-note"></span>
+                                {{/if}}
+                                {{#if this.isNotActivated}}
+                                    <span title="Активувати" data-id={{this.id}} class="abon-activate cp highlight text-muted fas fa-play-circle"></span>
                                 {{/if}}
                             </td>
                         </tr>

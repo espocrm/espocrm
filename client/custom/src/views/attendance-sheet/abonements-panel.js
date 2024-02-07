@@ -27,6 +27,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             this.addHandler('click', ".fa-calendar", "handleViewMarks");
             this.addHandler('click', ".floating-view", "handleViewFloatingMarks");
             this.addHandler('click', ".floating-mark", "deleteFloatingMark");
+            this.addHandler('click', ".abon-activate", 'abonementActivate');
         },
 
         afterRender: function () {
@@ -170,6 +171,47 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             delete abonModel.defs.fields.classesLeft.default;
         },
 
+        abonementActivate: function (e) {
+            const abon = this.abonements.list.find(abon => abon.id === e.target.dataset.id);
+            if (!abon.isPaid) {
+                Espo.Ui.notify('Абонемент не сплачений', 'error', 2000);
+                return;
+            }
+
+            const formatedStartDate = abon.startDate.split('-').reverse().join('.');
+            this.confirm({
+                message: `Дата початку: ${ formatedStartDate }`,
+                confirmText: 'Активувати', // text of the confirmation button
+            }).then(() => {
+                this.activateAbonement(abon.id)
+                    .then(abonUpdated => {
+                        abon.isActivated = true;
+                        abon.isNotActivated = false;
+                        abon.endDate = abonUpdated.endDate;
+                        this.setAbonStatus(abon);
+                        this.reRender();
+                    })
+                    .catch(err => {
+                        this.handleError(error);
+                    });
+            });
+        },
+
+        activateAbonement: function(abonementId) {
+            return fetch('/api/v1/Abonement/' + abonementId, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        isActivated: true
+                    })
+                })
+                .then(responce => {
+                    return responce.json();
+                })
+        },
+
         createFloatingMark: async function(e) {
             this.showModalLoading(true);
             try {
@@ -232,21 +274,33 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         fetchAbonements: function(training, groupId, groupName) {
             this.trainingId = training.id;
             this.training = training;
-            this.groupId = groupId;//from training
-            this.groupName = groupName;//from training
+            this.groupId = groupId;//fix: add from training
+            this.groupName = groupName;//fix: add from training
             this.isLoading(true);
             this.getCollectionFactory().create('Abonement')
                 .then(collection => {
                     collection.maxSize = 10000;
-                    collection.where = [{
+                    collection.where = [
+                    {
                         "type": "linkedWith",
                         "attribute": "groups",
                         "value": [ groupId ],
-                    }, {
-                        "type": "lessThanOrEquals",
-                        "attribute": "startDate",
-                        "value": training.startDateOnly
-                    }, {
+                    }, 
+                    {
+                        "type": "or",
+                        "value": [
+                            {
+                                "type": "lessThanOrEquals",
+                                "attribute": "startDate",
+                                "value": training.startDateOnly
+                            },
+                            {
+                                "type": "isFalse",
+                                "attribute": "isActivated"
+                            }
+                        ]
+                    },
+                    {
                         "type": "or",
                         "value": [
                             {
@@ -258,6 +312,10 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                             {
                                 "type": "isTrue",
                                 "attribute": "isFreezed"
+                            },
+                            {   /* dont have end date */
+                                "type": "isFalse",
+                                "attribute": "isActivated"
                             }
                         ]
                     }];
@@ -474,13 +532,11 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 this.$el.find(`input[data-abonement-id=${abonementId}]`)[0].checked = false;
                 return;
             }
-            /*
-            if (this.isOutdate(abon)) {
-                Espo.Ui.error('Абонемент більше не діє: ' + abon.endDate);
+            if (abon.isNotActivated) {
+                Espo.Ui.error('Абонемент не активовано');
                 this.$el.find(`input[data-abonement-id=${abon.id}]`)[0].checked = false;
                 return;
             }
-            */
             if (abon.classesLeft <= 0) {
                 Espo.Ui.error('В абонементі більше немає занять');
                 this.$el.find(`input[data-abonement-id=${abonementId}]`)[0].checked = false;
@@ -641,18 +697,15 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
                 abon.isEmpty = false;
                 abon.isActive = true;
             }
-            
             if (this.isOutdate(abon)) {
                 abon.isOutdate = true;
                 abon.isActive = false;
                 abon.isEmpty = false;
             }
-            /*
-            if (this.isPending(abon)) {
-                abon.isPending = true;
+            if (!abon.isActivated) {
+                abon.isNotActivated = true;
                 abon.isActive = false;
             }
-            */
             if (abon.isFreezed) {
                 abon.isOutdate = false;
                 abon.isActive = false;
@@ -667,6 +720,8 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
         },
 
         isOutdate: function(abon) {
+            if (!abon.endDate) return false;//not activated=>not have endDate=>not outdated 
+            
             const endDate = new Date(abon.endDate);
             const today = new Date(this.today);
 
