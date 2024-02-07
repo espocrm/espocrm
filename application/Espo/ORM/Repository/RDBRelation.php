@@ -50,9 +50,6 @@ use RuntimeException;
  */
 class RDBRelation
 {
-    private EntityManager $entityManager;
-    private HookMediator $hookMediator;
-    private Entity $entity;
     private string $entityType;
     private ?string $foreignEntityType = null;
     private string $relationName;
@@ -60,14 +57,11 @@ class RDBRelation
     private bool $noBuilder = false;
 
     public function __construct(
-        EntityManager $entityManager,
-        Entity $entity,
+        private EntityManager $entityManager,
+        private Entity $entity,
         string $relationName,
-        HookMediator $hookMediator
+        private HookMediator $hookMediator
     ) {
-        $this->entityManager = $entityManager;
-        $this->entity = $entity;
-        $this->hookMediator = $hookMediator;
 
         if (!$entity->hasId()) {
             throw new RuntimeException("Can't use an entity w/o ID.");

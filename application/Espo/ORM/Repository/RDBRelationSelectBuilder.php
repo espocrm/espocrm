@@ -52,24 +52,18 @@ use InvalidArgumentException;
  */
 class RDBRelationSelectBuilder
 {
-    private EntityManager $entityManager;
-    private Entity $entity;
     private string $foreignEntityType;
-    private string $relationName;
     private ?string $relationType;
     private SelectBuilder $builder;
     private ?string $middleTableAlias = null;
     private bool $returnSthCollection = false;
 
     public function __construct(
-        EntityManager $entityManager,
-        Entity $entity,
-        string $relationName,
+        private EntityManager $entityManager,
+        private Entity $entity,
+        private string $relationName,
         ?Select $query = null
     ) {
-        $this->entityManager = $entityManager;
-        $this->entity = $entity;
-        $this->relationName = $relationName;
         $this->relationType = $entity->getRelationType($relationName);
         $entityType = $entity->getEntityType();
 
