@@ -13,6 +13,10 @@
         <% } %>
         <div class="panel-body panel-body-form">
 
+        <% if (panel.noteText) { %>
+        <div class="alert alert-<%= panel.noteStyle %>"><%= panel.noteText %></div>
+        <% } %>
+
         <% var rows = panel.rows || [] %>
         <% var columns = panel.columns || [] %>
 

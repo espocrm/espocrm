@@ -45,6 +45,8 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
             'tabBreak',
             'tabLabel',
             'hidden',
+            'noteText',
+            'noteStyle',
         ],
 
         dataAttributesDefs: {
@@ -81,6 +83,12 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                     'warning',
                     'info',
                 ],
+                style: {
+                    'info': 'info',
+                    'success': 'success',
+                    'danger': 'danger',
+                    'warning': 'warning',
+                },
                 default: 'default',
                 translation: 'LayoutManager.options.style',
                 tooltip: 'panelStyle',
@@ -104,6 +112,27 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
             },
             tabLabel: {
                 type: 'varchar',
+            },
+            noteText: {
+                type: 'text',
+                tooltip: 'noteText',
+            },
+            noteStyle: {
+                type: 'enum',
+                options: [
+                    'info',
+                    'success',
+                    'danger',
+                    'warning',
+                ],
+                style: {
+                    'info': 'info',
+                    'success': 'success',
+                    'danger': 'danger',
+                    'warning': 'warning',
+                },
+                default: 'info',
+                translation: 'LayoutManager.options.style',
             },
         },
 
@@ -133,6 +162,16 @@ define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep
                                 attribute: 'style',
                                 type: 'notEquals',
                                 value: 'default'
+                            }
+                        ]
+                    }
+                },
+                noteStyle: {
+                    visible: {
+                        conditionGroup: [
+                            {
+                                attribute: 'noteText',
+                                type: 'isNotEmpty',
                             }
                         ]
                     }

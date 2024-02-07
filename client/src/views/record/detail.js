@@ -92,12 +92,14 @@ class DetailRecordView extends BaseRecordView {
      * @property {string} [label] A translatable label.
      * @property {string} [customLabel] A custom label.
      * @property {string} [name] A name. Useful to be able to show/hide by a name.
-     * @property {'default'|'success'|'danger'|'warning'} [style] A style.
+     * @property {'default'|'success'|'danger'|'warning'|'info'} [style] A style.
      * @property {boolean} [tabBreak] Is a tab-break.
      * @property {string} [tabLabel] A tab label. If starts with `$`, a translation
      *   of the `tabs` category is used.
      * @property {module:views/record/detail~rowDefs[]} [rows] Rows.
      * @property {module:views/record/detail~rowDefs[]} [columns] Columns.
+     * @property {string} [noteText] A note text.
+     * @property {'success'|'danger'|'warning'|'info'} [noteStyle] A note style.
      */
 
     /**
@@ -3052,6 +3054,12 @@ class DetailRecordView extends BaseRecordView {
             panel.style = item.style || 'default';
             panel.rows = [];
             panel.tabNumber = tabNumber;
+            panel.noteText = item.noteText;
+            panel.noteStyle = item.noteStyle || 'info';
+
+            if (panel.noteText) {
+                panel.noteText = this.getHelper().transformMarkdownText(panel.noteText);
+            }
 
             this.middlePanelDefs[panel.name] = {
                 name: panel.name,

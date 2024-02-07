@@ -13,7 +13,9 @@
         "dynamicLogicVisible": "Conditions making panel visible",
         "dynamicLogicStyled": "Conditions making style applied",
         "tabLabel": "Tab Label",
-        "tabBreak": "Tab-Break"
+        "tabBreak": "Tab-Break",
+        "noteText": "Note Text",
+        "noteStyle": "Note Style"
     },
     "options": {
         "align": {
@@ -40,6 +42,7 @@
         "fieldsIncompatible": "Fields can't be on the layout together: {fields}."
     },
     "tooltips": {
+        "noteText": "A text to be displayed in the panel. Markdown is supported.",
         "tabBreak": "A separate tab for the panel and all following panels until the next tab-break.",
         "noLabel": "Don't display a column label in the header.",
         "notSortable": "Disables the ability to sort by the column.",
