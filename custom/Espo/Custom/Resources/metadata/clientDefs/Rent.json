@@ -102,14 +102,7 @@
                         }
                     ]
                 },
-                "required": {
-                    "conditionGroup": [
-                        {
-                            "type": "isTrue",
-                            "attribute": "isOneTime"
-                        }
-                    ]
-                }
+                "required": null
             },
             "abonplan": {
                 "visible": {

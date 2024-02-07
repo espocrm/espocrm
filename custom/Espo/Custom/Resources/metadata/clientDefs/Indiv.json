@@ -79,6 +79,10 @@
                 "visible": null
             },
             "price": {
+                "readOnly": null,
+                "required": null
+            },
+            "percent": {
                 "readOnly": {
                     "conditionGroup": [
                         {
@@ -96,7 +100,7 @@
                     ]
                 }
             },
-            "percent": {
+            "cost": {
                 "readOnly": {
                     "conditionGroup": [
                         {

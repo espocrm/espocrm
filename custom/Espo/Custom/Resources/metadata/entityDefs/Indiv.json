@@ -156,7 +156,8 @@
         },
         "price": {
             "type": "currency",
-            "isCustom": true
+            "isCustom": true,
+            "readOnly": true
         },
         "percent": {
             "type": "int",
@@ -185,6 +186,13 @@
                 "3": null
             },
             "default": "1",
+            "tooltip": true,
+            "isCustom": true
+        },
+        "cost": {
+            "type": "currency",
+            "required": false,
+            "min": 0,
             "tooltip": true,
             "isCustom": true
         }

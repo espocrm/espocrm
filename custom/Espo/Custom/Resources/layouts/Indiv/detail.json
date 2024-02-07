@@ -51,13 +51,19 @@
                     "name": "salesDate"
                 },
                 {
-                    "name": "price"
+                    "name": "cost"
                 }
             ],
             [
                 {
                     "name": "percent"
                 },
+                {
+                    "name": "price"
+                }
+            ],
+            [
+                false,
                 {
                     "name": "isPaid"
                 }
