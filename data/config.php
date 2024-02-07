@@ -90,8 +90,8 @@ return [
     ],
     9 => (object) [
       'type' => 'group',
-      'text' => 'Розрахунки',
-      'iconClass' => 'fas fa-calculator',
+      'text' => 'Аналітика',
+      'iconClass' => 'fas fa-chart-bar',
       'color' => NULL,
       'id' => '845134',
       'itemList' => [
@@ -355,8 +355,8 @@ return [
     1 => 'email',
     2 => 'phone'
   ],
-  'cacheTimestamp' => 1707000191,
-  'microtime' => 1707000191.850032,
+  'cacheTimestamp' => 1707264148,
+  'microtime' => 1707264148.954642,
   'siteUrl' => 'https://dsfreedom.art',
   'fullTextSearchMinLength' => 4,
   'appTimestamp' => 1695834342,
