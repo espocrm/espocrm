@@ -69,7 +69,7 @@ class Saver implements SaverInterface
             $emailAddressData = $entity->get('emailAddressData');
         }
 
-        if ($emailAddressData !== null) {
+        if ($emailAddressData !== null && $entity->isAttributeChanged('emailAddressData')) {
             $this->storeData($entity);
 
             return;

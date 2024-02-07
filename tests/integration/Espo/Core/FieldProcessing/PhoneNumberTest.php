@@ -31,10 +31,12 @@ namespace tests\integration\Espo\Core\FieldProcessing;
 
 use Espo\Core\ORM\EntityManager;
 
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\Core\{
     Field\PhoneNumberGroup,
     Field\PhoneNumber,
-};
+    Record\ServiceContainer,
+    Record\UpdateParams};
 
 class PhoneNumberTest extends \tests\integration\Core\BaseTestCase
 {
@@ -98,5 +100,23 @@ class PhoneNumberTest extends \tests\integration\Core\BaseTestCase
         $group5 = $contact->getPhoneNumberGroup();
 
         $this->assertEquals(1, $group5->getCount());
+    }
+
+    public function testPhoneNumber2(): void
+    {
+        $service = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(Contact::class);
+        $em = $this->getEntityManager();
+
+        /** @var Contact $contact */
+        $contact = $em->createEntity(Contact::ENTITY_TYPE);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->update($contact->getId(), (object) [
+            'phoneNumber' => '+11111111111',
+        ], UpdateParams::create());
+
+        $em->refreshEntity($contact);
+
+        $this->assertEquals('+11111111111', $contact->getPhoneNumber());
     }
 }

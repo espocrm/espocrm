@@ -31,10 +31,12 @@ namespace tests\integration\Espo\Core\FieldProcessing;
 
 use Espo\Core\ORM\EntityManager;
 
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\Core\{
     Field\EmailAddressGroup,
     Field\EmailAddress,
-};
+    Record\ServiceContainer,
+    Record\UpdateParams};
 
 class EmailAddressTest extends \tests\integration\Core\BaseTestCase
 {
@@ -119,5 +121,23 @@ class EmailAddressTest extends \tests\integration\Core\BaseTestCase
         $this->assertEquals(1, $group->getCount());
 
         $this->assertEquals('test@test.com', $group->getPrimary()->getAddress());
+    }
+
+    public function testEmailAddress3(): void
+    {
+        $service = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(Contact::class);
+        $em = $this->getEntityManager();
+
+        /** @var Contact $contact */
+        $contact = $em->createEntity(Contact::ENTITY_TYPE);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->update($contact->getId(), (object) [
+            'emailAddress' => 'test@test.com',
+        ], UpdateParams::create());
+
+        $em->refreshEntity($contact);
+
+        $this->assertEquals('test@test.com', $contact->getEmailAddress());
     }
 }

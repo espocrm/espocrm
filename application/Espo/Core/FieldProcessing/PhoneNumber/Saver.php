@@ -74,7 +74,7 @@ class Saver implements SaverInterface
             $phoneNumberData = $entity->get('phoneNumberData');
         }
 
-        if ($phoneNumberData !== null) {
+        if ($phoneNumberData !== null && $entity->isAttributeChanged('phoneNumberData')) {
             $this->storeData($entity);
 
             return;
