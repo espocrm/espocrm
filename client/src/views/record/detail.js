@@ -3058,6 +3058,12 @@ class DetailRecordView extends BaseRecordView {
             panel.noteStyle = item.noteStyle || 'info';
 
             if (panel.noteText) {
+                if (panel.noteText.startsWith('$') && !panel.noteText.includes(' ')) {
+                    const label = panel.noteText.substring(1);
+
+                    panel.noteText = this.translate(label, 'panelNotes', this.entityType);
+                }
+
                 panel.noteText = this.getHelper().transformMarkdownText(panel.noteText);
             }
 
