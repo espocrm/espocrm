@@ -1050,6 +1050,14 @@ section {
     > .list {
         border: var(--panel-border-width) solid var(--default-border-color);
     }
+
+    > .list-expanded {
+        > ul > {
+            li:last-child {
+                border-bottom: 0;
+            }
+        }
+    }
 }
 
 .list > {
