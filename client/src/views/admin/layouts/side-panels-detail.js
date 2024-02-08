@@ -53,6 +53,12 @@ define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], f
                     'warning',
                     'info',
                 ],
+                style: {
+                    'info': 'info',
+                    'success': 'success',
+                    'danger': 'danger',
+                    'warning': 'warning',
+                },
                 default: 'default',
                 translation: 'LayoutManager.options.style',
                 tooltip: 'panelStyle',
