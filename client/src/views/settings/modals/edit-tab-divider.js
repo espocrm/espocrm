@@ -61,7 +61,9 @@ class EditTabDividerSettingsModalView extends ModalView {
                     [
                         {
                             name: 'text',
-                            labelText: this.translate('label', 'fields', 'Admin'),
+                            labelText: this.options.parentType === 'Preferences' ?
+                                this.translate('label', 'tabFields', 'Preferences') :
+                                this.translate('label', 'fields', 'Admin'),
                         },
                         false,
                     ],

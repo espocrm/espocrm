@@ -57,5 +57,10 @@
         "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
         "followCreatedEntities": "When create new records, they will be automatically followed even if assigned to another user.",
         "followCreatedEntityTypeList": "When create new records of selected entity types, they will be followed automatically even if assigned to another user."
+    },
+    "tabFields": {
+        "label": "Label",
+        "iconClass": "Icon",
+        "color": "Color"
     }
 }

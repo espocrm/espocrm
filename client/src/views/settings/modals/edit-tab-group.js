@@ -61,21 +61,29 @@ class SettingsEditTabGroupModalView extends Modal {
                     [
                         {
                             name: 'text',
-                            labelText: this.translate('label', 'fields', 'Admin'),
+                            labelText: this.options.parentType === 'Preferences' ?
+                                this.translate('label', 'tabFields', 'Preferences') :
+                                this.translate('label', 'fields', 'Admin'),
                         },
                         {
                             name: 'iconClass',
-                            labelText: this.translate('iconClass', 'fields', 'EntityManager'),
+                            labelText: this.options.parentType === 'Preferences' ?
+                                this.translate('iconClass', 'tabFields', 'Preferences') :
+                                this.translate('iconClass', 'fields', 'EntityManager'),
                         },
                         {
                             name: 'color',
-                            labelText: this.translate('color', 'fields', 'EntityManager'),
+                            labelText: this.options.parentType === 'Preferences' ?
+                                this.translate('color', 'tabFields', 'Preferences') :
+                                this.translate('color', 'fields', 'EntityManager'),
                         },
                     ],
                     [
                         {
                             name: 'itemList',
-                            labelText: this.translate('tabList', 'fields', 'Settings'),
+                            labelText:this.options.parentType === 'Preferences' ?
+                                this.translate('tabList', 'fields', 'Preferences') :
+                                this.translate('tabList', 'fields', 'Settings'),
                         },
                         false
                     ]
