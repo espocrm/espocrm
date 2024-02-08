@@ -1,0 +1,11 @@
+{
+    "detailActionList": [
+        {
+            "name": "viewAuditLog",
+            "label": "View Audit Log",
+            "actionFunction": "show",
+            "checkVisibilityFunction": "isAvailable",
+            "handler": "handlers/record/view-audit-log"
+        }
+    ]
+}

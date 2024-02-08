@@ -285,7 +285,9 @@
         "Show Navigation Panel": "Show Navigation Panel",
         "Hide Navigation Panel": "Hide Navigation Panel",
         "Copy to Clipboard": "Copy to Clipboard",
-        "Copied to clipboard": "Copied to clipboard"
+        "Copied to clipboard": "Copied to clipboard",
+        "Audit Log": "Audit Log",
+        "View Audit Log": "View Audit Log"
     },
     "messages": {
         "pleaseWait": "Please wait...",

@@ -118,6 +118,30 @@ class Stream
     /**
      * @throws BadRequest
      * @throws Forbidden
+     * @throws NotFound
+     */
+    public function getActionListUpdates(Request $request): stdClass
+    {
+        $id = $request->getRouteParam('id');
+        $scope = $request->getRouteParam('scope');
+
+        if ($scope === null || $id === null) {
+            throw new BadRequest();
+        }
+
+        $searchParams = $this->fetchSearchParams($request);
+
+        $result = $this->service->findUpdates($scope, $id, $searchParams);
+
+        return (object) [
+            'total' => $result->getTotal(),
+            'list' => $result->getValueMapList(),
+        ];
+    }
+
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
      */
     private function fetchSearchParams(Request $request): SearchParams
     {
@@ -144,6 +168,20 @@ class Stream
 
         if ($request->getQueryParam('skipOwn') === 'true') {
             $searchParams = $searchParams->withBoolFilterAdded('skipOwn');
+        }
+
+        $beforeNumber = $request->getQueryParam('beforeNumber');
+
+        if ($beforeNumber) {
+            $searchParams = $searchParams
+                ->withWhereAdded(
+                    WhereItem
+                        ::createBuilder()
+                        ->setAttribute('number')
+                        ->setType(WhereItem\Type::LESS_THAN)
+                        ->setValue($beforeNumber)
+                        ->build()
+                );
         }
 
         return $searchParams;

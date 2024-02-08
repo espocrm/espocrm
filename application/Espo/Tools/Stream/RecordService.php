@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SearchParams;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Entities\Note;
@@ -52,7 +53,8 @@ class RecordService
         private Acl $acl,
         private NoteAccessControl $noteAccessControl,
         private Helper $helper,
-        private QueryHelper $queryHelper
+        private QueryHelper $queryHelper,
+        private Metadata $metadata
     ) {}
 
     /**
@@ -79,6 +81,56 @@ class RecordService
             throw new Forbidden();
         }
 
+        return $this->findInternal($scope, $id, $searchParams);
+    }
+
+    /**
+     * Find a record stream records.
+     *
+     * @return RecordCollection<Note>
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
+     */
+    public function findUpdates(string $scope, string $id, SearchParams $searchParams): RecordCollection
+    {
+        if ($this->user->isPortal()) {
+            throw new Forbidden();
+        }
+
+        if ($this->acl->getPermissionLevel('audit') !== Table::LEVEL_YES) {
+            throw new Forbidden();
+        }
+
+        $entity = $this->entityManager->getEntityById($scope, $id);
+
+        if (!$entity) {
+            throw new NotFound();
+        }
+
+        if (!$this->acl->checkEntityRead($entity)) {
+            throw new Forbidden();
+        }
+
+        if ($entity instanceof User && !$this->user->isAdmin()) {
+            throw new Forbidden();
+        }
+
+        $searchParams = $searchParams->withPrimaryFilter('updates');
+
+        return $this->findInternal($scope, $id, $searchParams);
+    }
+
+    /**
+     * Find a record stream records.
+     *
+     * @return RecordCollection<Note>
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
+     */
+    private function findInternal(string $scope, string $id, SearchParams $searchParams): RecordCollection
+    {
         $builder = $this->queryHelper->buildBaseQueryBuilder($searchParams);
 
         $where = $this->user->isPortal() ?
@@ -103,6 +155,7 @@ class RecordService
         $this->applyPortalAccess($builder, $where);
         $this->applyAccess($builder, $id, $scope, $where);
         $this->applyIgnore($where);
+        $this->applyStatusIgnore($scope, $where);
 
         $builder->where($where);
 
@@ -320,5 +373,23 @@ class RecordService
         $where[] = [
             'OR' => $orGroup,
         ];
+    }
+
+    /**
+     * @param array<string|int, mixed> $where
+     */
+    private function applyStatusIgnore(string $scope, array &$where): void
+    {
+        $field = $this->metadata->get("scopes.$scope.statusField");
+
+        if (!$field) {
+            return;
+        }
+
+        if ($this->acl->checkField($scope, $field)) {
+            return;
+        }
+
+        $where[] = ['type!=' => Note::TYPE_STATUS];
     }
 }

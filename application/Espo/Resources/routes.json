@@ -522,6 +522,16 @@
         }
     },
     {
+        "route": "/:controller/:id/updateStream",
+        "method": "get",
+        "params": {
+            "controller": "Stream",
+            "action": "listUpdates",
+            "id": ":id",
+            "scope": ":controller"
+        }
+    },
+    {
         "route": "/:controller/:id/subscription",
         "method": "put",
         "params": {

@@ -78,6 +78,14 @@
             "translation": "Role.options.levelList",
             "view": "views/role/fields/permission"
         },
+        "auditPermission": {
+            "type": "enum",
+            "options": ["not-set", "yes", "no"],
+            "default": "not-set",
+            "tooltip": true,
+            "translation": "Role.options.levelList",
+            "view": "views/role/fields/permission"
+        },
         "data": {
             "type": "jsonObject"
         },

@@ -76,8 +76,14 @@ class HookProcessor
      */
     public function afterSave(Entity $entity, array $options): void
     {
-        if ($this->checkHasStream($entity->getEntityType())) {
+        $hasStream = $this->checkHasStream($entity->getEntityType());
+
+        if ($hasStream) {
             $this->afterSaveStream($entity, $options);
+        }
+
+        if (!$hasStream) {
+            $this->afterSaveNoStream($entity, $options);
         }
 
         if (
@@ -606,6 +612,24 @@ class HookProcessor
 
             // @todo
             // Add time period (a few minutes). If before, remove RELATE note, don't create 'unrelate' if before.
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $options
+     */
+    private function afterSaveNoStream(Entity $entity, array $options): void
+    {
+        if (!$entity instanceof CoreEntity) {
+            return;
+        }
+
+        if (!empty($options[self::OPTION_NO_STREAM]) || !empty($options[SaveOption::SILENT])) {
+            return;
+        }
+
+        if (!$entity->isNew()) {
+            $this->service->handleAudited($entity, $options);
         }
     }
 }
