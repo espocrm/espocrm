@@ -60,12 +60,6 @@
         },
         {
             "fileMatch": [
-                "*/metadata//*.json"
-            ],
-            "url": "./schema/metadata/.json"
-        },
-        {
-            "fileMatch": [
                 "*/metadata/entityAcl/*.json"
             ],
             "url": "./schema/metadata/entityAcl.json"
