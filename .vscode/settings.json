@@ -16,7 +16,7 @@
             "fileMatch": [
                 "*/Resources/module.json"
             ],
-            "url": "./schema/routes.json"
+            "url": "./schema/module.json"
         },
         {
             "fileMatch": [
