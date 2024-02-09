@@ -13,8 +13,9 @@ class MyController {
 
     public function getActionTest(Request $request, Response $response): string 
     {
-        $this->makeBackup();
-        $this->sendBackup();
+        //$this->makeBackup();
+        //$this->sendBackup();
+        return 'test';
     }
 
     private function makeBackup()
