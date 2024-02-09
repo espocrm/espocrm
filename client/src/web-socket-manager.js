@@ -72,7 +72,7 @@ class WebSocketManager {
          * @private
          * @type {{category: string, callback: Function}[]}
          */
-        this.subscribtions = [];
+        this.subscriptions = [];
 
         /**
          * @private
@@ -191,8 +191,8 @@ class WebSocketManager {
 
                 if (code === ab.CONNECTION_LOST || code === ab.CONNECTION_UNREACHABLE) {
                     if (this.isConnected) {
-                        this.subscribeQueue = this.subscribtions;
-                        this.subscribtions = [];
+                        this.subscribeQueue = this.subscriptions;
+                        this.subscriptions = [];
                     }
 
                     setTimeout(() => this.connect(auth, userId), this.reconnectInterval * 1000);
@@ -227,7 +227,7 @@ class WebSocketManager {
         try {
             this.connection.subscribe(category, callback);
 
-            this.subscribtions.push({
+            this.subscriptions.push({
                 category: category,
                 callback: callback,
             });
@@ -257,7 +257,7 @@ class WebSocketManager {
             return item.category !== category && item.callback !== callback;
         });
 
-        this.subscribtions = this.subscribtions.filter(item => {
+        this.subscriptions = this.subscriptions.filter(item => {
             return item.category !== category && item.callback !== callback;
         });
 
@@ -285,7 +285,7 @@ class WebSocketManager {
         }
 
         this.subscribeQueue = [];
-        this.subscribtions = [];
+        this.subscriptions = [];
 
         try {
             this.connection.close();
