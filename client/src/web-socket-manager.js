@@ -36,6 +36,23 @@ import Base64 from 'js-base64';
 class WebSocketManager {
 
     /**
+     * @private
+     * @type {number}
+     */
+    pingInterval = 60;
+
+    /**
+     * @private
+     * @type {number}
+     */
+    reconnectInterval = 3;
+
+    /**
+     * @private
+     */
+    pingTimeout
+
+    /**
      * @param {module:models/settings} config A config.
      */
     constructor(config) {
@@ -133,45 +150,58 @@ class WebSocketManager {
      */
     connect(auth, userId) {
         const authArray = Base64.decode(auth).split(':');
-
         const authToken = authArray[1];
 
-        let url = this.protocolPart + this.url;
-
-        url += '?authToken=' + authToken + '&userId=' + userId;
+        const url = `${this.protocolPart + this.url}?authToken=${authToken}&userId=${userId}`;
 
         try {
-            this.connection = new ab.Session(
-                url,
-                () => {
-                    this.isConnected = true;
-
-                    this.subscribeQueue.forEach(item => {
-                        this.subscribe(item.category, item.callback);
-                    });
-
-                    this.subscribeQueue = [];
-                },
-                e => {
-                    if (e === ab.CONNECTION_CLOSED) {
-                        this.subscribeQueue = [];
-                    }
-
-                    if (e === ab.CONNECTION_LOST || e === ab.CONNECTION_UNREACHABLE) {
-                        this.subscribeQueue = this.subscribtions;
-                        this.subscribtions = [];
-
-                        setTimeout(() => this.connect(auth, userId), 3000);
-                    }
-                },
-                {skipSubprotocolCheck: true}
-            );
+            this.connectInternal(auth, userId, url);
         }
         catch (e) {
             console.error(e.message);
 
             this.connection = null;
         }
+    }
+
+    /**
+     * @private
+     * @param {string} auth
+     * @param {string} userId
+     * @param {string} url
+     */
+    connectInternal(auth, userId, url) {
+        this.connection = new ab.Session(
+            url,
+            () => {
+                this.isConnected = true;
+
+                this.subscribeQueue.forEach(item => {
+                    this.subscribe(item.category, item.callback);
+                });
+
+                this.subscribeQueue = [];
+
+                this.schedulePing();
+            },
+            code => {
+                if (code === ab.CONNECTION_CLOSED) {
+                    this.subscribeQueue = [];
+                }
+
+                if (code === ab.CONNECTION_LOST || code === ab.CONNECTION_UNREACHABLE) {
+                    if (this.isConnected) {
+                        this.subscribeQueue = this.subscribtions;
+                        this.subscribtions = [];
+                    }
+
+                    setTimeout(() => this.connect(auth, userId), this.reconnectInterval * 1000);
+                }
+
+                this.isConnected = false;
+            },
+            {skipSubprotocolCheck: true}
+        );
     }
 
     /**
@@ -248,6 +278,8 @@ class WebSocketManager {
      * Close a connection.
      */
     close() {
+        this.stopPing();
+
         if (!this.connection) {
             return;
         }
@@ -263,6 +295,35 @@ class WebSocketManager {
         }
 
         this.isConnected = false;
+    }
+
+    /**
+     * @private
+     */
+    stopPing() {
+        this.pingTimeout = undefined;
+    }
+
+    /**
+     * @private
+     */
+    schedulePing() {
+        //ab._debugws = true;
+
+        if (!this.connection) {
+            this.stopPing();
+
+            return;
+        }
+
+        this.pingTimeout = setTimeout(() => {
+            if (!this.connection) {
+                return;
+            }
+
+            this.connection.publish('', '');
+            this.schedulePing();
+        }, this.pingInterval * 1000);
     }
 }
 
