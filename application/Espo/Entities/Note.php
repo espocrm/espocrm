@@ -240,7 +240,8 @@ class Note extends Entity
 
     public function setSuperParent(LinkParent $superParent): self
     {
-        $this->setValueObject('superParent', $superParent);
+        $this->set('superParentId', $superParent->getId());
+        $this->set('superParentType', $superParent->getEntityType());
 
         return $this;
     }
