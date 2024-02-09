@@ -5,17 +5,18 @@
         "label": "Ім'я (name)"
     },
     {
-        "name": "parentNames",
-        "notSortable": true,
-        "label": "Ім'я батьків"
-    },
-    {
         "name": "phoneNumber",
         "notSortable": true,
         "align": "left",
         "label": "Телефон"
     },
     {
-        "name": "birthday"
+        "name": "birthday",
+        "label": "Дата народження"
+    },
+    {
+        "name": "parentNames",
+        "notSortable": true,
+        "label": "Ім'я батьків"
     }
 ]

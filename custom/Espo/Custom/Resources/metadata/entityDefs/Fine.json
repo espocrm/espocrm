@@ -2,9 +2,9 @@
     "fields": {
         "name": {
             "type": "varchar",
-            "required": false,
+            "required": true,
             "pattern": "$noBadCharacters",
-            "readOnly": true,
+            "readOnly": false,
             "options": []
         },
         "description": {
@@ -38,7 +38,8 @@
             "view": "views/fields/teams"
         },
         "user": {
-            "type": "link"
+            "type": "link",
+            "required": true
         },
         "amount": {
             "type": "currency",

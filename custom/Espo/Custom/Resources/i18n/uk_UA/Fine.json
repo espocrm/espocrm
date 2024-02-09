@@ -3,7 +3,7 @@
         "Create Fine": "Створити Штраф"
     },
     "fields": {
-        "user": "Педагог",
+        "user": "Юзер",
         "amount": "Сума",
         "amountCurrency": "Сума (Валюта)",
         "amountConverted": "Сума (Конвертована)",
