@@ -1,22 +1,22 @@
 <?php
 
-namespace Espo\Custom\Controllers;
+namespace Espo\Custom\Jobs;
 
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\ORM\EntityManager;
+use Espo\Core\Job\JobDataLess;
 use Espo\Core\Utils\Config;
 
-class MyController {
+class MakeBackup implements JobDataLess
+{
+    public function __construct(private Config $config)
+    {
+    }
 
-    public function __construct(private Config $config) {}
-
-    public function getActionTest(Request $request, Response $response): string 
+    public function run(): void 
     {
         $this->makeBackup();
         $this->sendBackup();
     }
-
+    
     private function makeBackup()
     {
         $script = $this->getScriptPath('make-backup.sh');
