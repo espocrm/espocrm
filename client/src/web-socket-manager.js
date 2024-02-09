@@ -53,6 +53,12 @@ class WebSocketManager {
 
         /**
          * @private
+         * @type {{category: string, callback: Function}[]}
+         */
+        this.subscribtions = [];
+
+        /**
+         * @private
          * @type {boolean}
          */
         this.isConnected = false;
@@ -152,6 +158,9 @@ class WebSocketManager {
                     }
 
                     if (e === ab.CONNECTION_LOST || e === ab.CONNECTION_UNREACHABLE) {
+                        this.subscribeQueue = this.subscribtions;
+                        this.subscribtions = [];
+
                         setTimeout(() => this.connect(auth, userId), 3000);
                     }
                 },
@@ -169,7 +178,7 @@ class WebSocketManager {
      * Subscribe to a topic.
      *
      * @param {string} category A topic.
-     * @param {Function} callback A callback.
+     * @param {function(string, *): void} callback A callback.
      */
     subscribe(category, callback) {
         if (!this.connection) {
@@ -187,6 +196,11 @@ class WebSocketManager {
 
         try {
             this.connection.subscribe(category, callback);
+
+            this.subscribtions.push({
+                category: category,
+                callback: callback,
+            });
         }
         catch (e) {
             if (e.message) {
@@ -213,6 +227,10 @@ class WebSocketManager {
             return item.category !== category && item.callback !== callback;
         });
 
+        this.subscribtions = this.subscribtions.filter(item => {
+            return item.category !== category && item.callback !== callback;
+        });
+
         try {
             this.connection.unsubscribe(category, callback);
         }
@@ -233,6 +251,9 @@ class WebSocketManager {
         if (!this.connection) {
             return;
         }
+
+        this.subscribeQueue = [];
+        this.subscribtions = [];
 
         try {
             this.connection.close();
