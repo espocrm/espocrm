@@ -69,7 +69,7 @@ class UpdateNoteStreamView extends NoteStreamView {
 
             this.fieldsArr = [];
 
-            const fields = data.fields;
+            const fields = this.fieldList = data.fields;
 
             fields.forEach(field => {
                 const type = model.getFieldType(field) || 'base';
@@ -105,6 +105,7 @@ class UpdateNoteStreamView extends NoteStreamView {
                     },
                     mode: 'detail',
                     inlineEditDisabled: true,
+                    selector: `.row[data-name="${field}"] .cell-was`,
                 });
 
                 this.createView(field + 'Became', viewName, {
@@ -115,6 +116,7 @@ class UpdateNoteStreamView extends NoteStreamView {
                     },
                     mode: 'detail',
                     inlineEditDisabled: true,
+                    selector: `.row[data-name="${field}"] .cell-became`,
                 });
 
                 this.fieldsArr.push({
@@ -135,6 +137,16 @@ class UpdateNoteStreamView extends NoteStreamView {
     toggleDetails(event, target) {
         if (this.$el.find('.details').hasClass('hidden')) {
             this.$el.find('.details').removeClass('hidden');
+
+            this.fieldList.forEach(field => {
+                const wasField = this.getView(field + 'Was');
+                const becomeField = this.getView(field + 'Became');
+
+                if (wasField && becomeField) {
+                    wasField.trigger('panel-show-propagated');
+                    becomeField.trigger('panel-show-propagated');
+                }
+            });
 
             $(target).find('span')
                 .removeClass('fa-chevron-down')

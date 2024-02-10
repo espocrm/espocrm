@@ -926,7 +926,7 @@ class Service
 
             if (
                 $fieldDefs &&
-                in_array($fieldDefs->getType(), [FieldType::TEXT, FieldType::WYSIWYG])
+                $fieldDefs->getType() == FieldType::WYSIWYG
             ) {
                 continue;
             }
