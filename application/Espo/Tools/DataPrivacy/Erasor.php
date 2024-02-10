@@ -89,7 +89,7 @@ class Erasor implements
 
         foreach ($fieldList as $field) {
             if (in_array($field, $forbiddenFieldList)) {
-                throw new Forbidden("Field '{$field}' is forbidden to edit.");
+                throw new Forbidden("Field '$field' is forbidden to edit.");
             }
         }
 

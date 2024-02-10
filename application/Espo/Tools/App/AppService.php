@@ -193,7 +193,7 @@ class AppService
         unset($data->authTokenId);
         unset($data->password);
 
-        $forbiddenAttributeList = $this->acl->getScopeForbiddenAttributeList('User');
+        $forbiddenAttributeList = $this->acl->getScopeForbiddenAttributeList(User::ENTITY_TYPE);
 
         $isPortal = $user->isPortal();
 

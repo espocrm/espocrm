@@ -210,10 +210,8 @@ class Service
             return [];
         }
 
-        $contactForbiddenFieldList = $this->acl->getScopeForbiddenFieldList(Contact::ENTITY_TYPE);
-
-        if (in_array('emailAddress', $contactForbiddenFieldList)) {
-            return [];
+        if (!$this->acl->checkField(Contact::ENTITY_TYPE, 'emailAddress')) {
+            return[];
         }
 
         $dataList = [];

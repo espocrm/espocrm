@@ -43,6 +43,7 @@ use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\FieldSanitize\SanitizeManager;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Repository\Option\SaveOption;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ActionHistory\ActionLogger;
@@ -653,57 +654,45 @@ class Service implements Crud,
     public function populateDefaults(Entity $entity, stdClass $data): void
     {
         if (!$this->user->isPortal()) {
-            $forbiddenFieldList = null;
-
-            if ($entity->hasAttribute('assignedUserId')) {
-                $forbiddenFieldList = $this->acl
-                    ->getScopeForbiddenFieldList($this->entityType, AclTable::ACTION_EDIT);
-
-                if (in_array('assignedUser', $forbiddenFieldList)) {
-                    $entity->set('assignedUserId', $this->user->getId());
-                    $entity->set('assignedUserName', $this->user->getName());
-                }
+            if (
+                $entity->hasAttribute('assignedUserId') &&
+                !$this->acl->checkField($this->entityType, 'assignedUser', AclTable::ACTION_EDIT)
+            ) {
+                $entity->set('assignedUserId', $this->user->getId());
+                $entity->set('assignedUserName', $this->user->getName());
             }
 
             if (
                 $entity instanceof CoreEntity &&
-                $entity->hasLinkMultipleField('teams')
+                $entity->hasLinkMultipleField('teams') &&
+                $this->user->getDefaultTeam() &&
+                !$this->acl->checkField($this->entityType, 'teams', AclTable::ACTION_EDIT)
             ) {
-                if (is_null($forbiddenFieldList)) {
-                    $forbiddenFieldList = $this->acl
-                        ->getScopeForbiddenFieldList($this->entityType, AclTable::ACTION_EDIT);
+                $defaultTeamId = $this->user->getDefaultTeam()->getId();
+
+                $entity->addLinkMultipleId('teams', $defaultTeamId);
+
+                $teamsNames = $entity->get('teamsNames');
+
+                if (!$teamsNames || !is_object($teamsNames)) {
+                    $teamsNames = (object) [];
                 }
 
-                if (
-                    in_array('teams', $forbiddenFieldList) &&
-                    $this->user->get('defaultTeamId')
-                ) {
+                $teamsNames->$defaultTeamId = $this->user->get('defaultTeamName');
 
-                    $defaultTeamId = $this->user->get('defaultTeamId');
-
-                    $entity->addLinkMultipleId('teams', $defaultTeamId);
-
-                    $teamsNames = $entity->get('teamsNames');
-
-                    if (!$teamsNames || !is_object($teamsNames)) {
-                        $teamsNames = (object) [];
-                    }
-
-                    $teamsNames->$defaultTeamId = $this->user->get('defaultTeamName');
-
-                    $entity->set('teamsNames', $teamsNames);
-
-                }
+                $entity->set('teamsNames', $teamsNames);
             }
         }
 
         foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
             $type = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, 'type');
 
-            if ($type === 'currency') {
-                if ($entity->get($field) && !$entity->get($field . 'Currency')) {
-                    $entity->set($field . 'Currency', $this->config->get('defaultCurrency'));
-                }
+            if (
+                $type === FieldType::CURRENCY &&
+                $entity->get($field) &&
+                !$entity->get($field . 'Currency')
+            ) {
+                $entity->set($field . 'Currency', $this->config->get('defaultCurrency'));
             }
         }
     }

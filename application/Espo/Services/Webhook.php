@@ -33,7 +33,6 @@ use Espo\Entities\Webhook as WebhookEntity;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Di;
-
 use Espo\Entities\User;
 
 use stdClass;
@@ -96,6 +95,9 @@ class Webhook extends Record implements
         parent::filterUpdateInput($data);
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
         $this->checkEntityUserIsApi($entity);
@@ -106,6 +108,9 @@ class Webhook extends Record implements
         }
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function checkMaxCount(): void
     {
         $maxCount = $this->config->get('webhookMaxCountPerUser', self::WEBHOOK_MAX_COUNT_PER_USER);
@@ -122,12 +127,18 @@ class Webhook extends Record implements
         }
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {
         $this->checkEntityUserIsApi($entity);
         $this->processEntityEventData($entity);
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function checkEntityUserIsApi(Entity $entity): void
     {
         $userId = $entity->get('userId');
@@ -144,6 +155,9 @@ class Webhook extends Record implements
         }
     }
 
+    /**
+     * @throws Forbidden
+     */
     protected function processEntityEventData(Entity $entity): void
     {
         $event = $entity->get('event');
@@ -164,7 +178,6 @@ class Webhook extends Record implements
             throw new Forbidden("Not supported event.");
         }
 
-        $arr = explode('.', $event);
         $entityType = $arr[0];
         $type = $arr[1];
 
@@ -204,9 +217,7 @@ class Webhook extends Record implements
                 throw new Forbidden("Field is empty.");
             }
 
-            $forbiddenFieldList = $this->getAcl()->getScopeForbiddenFieldList($entityType);
-
-            if (in_array($field, $forbiddenFieldList)) {
+            if (!$this->acl->checkField($entityType, $field)) {
                 throw new Forbidden("Field is forbidden.");
             }
 
@@ -214,6 +225,7 @@ class Webhook extends Record implements
                 throw new Forbidden("Field does not exist.");
             }
         } else {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
             $entity->set('field', null);
         }
     }

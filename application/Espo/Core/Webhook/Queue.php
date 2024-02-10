@@ -172,6 +172,7 @@ class Queue
             ->limit(0, $batchSize)
             ->find();
 
+        /** @var ?Webhook $webhook */
         $webhook = $this->entityManager->getEntityById(Webhook::ENTITY_TYPE, $webhookId);
 
         if (!$webhook || !$webhook->get('isActive')) {
@@ -187,6 +188,7 @@ class Queue
         $user = null;
 
         if ($webhook->get('userId')) {
+            /** @var ?User $user */
             $user = $this->entityManager->getEntity(User::ENTITY_TYPE, $webhook->get('userId'));
 
             if (!$user) {

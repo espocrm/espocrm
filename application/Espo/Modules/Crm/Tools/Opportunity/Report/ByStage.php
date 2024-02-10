@@ -78,8 +78,8 @@ class ByStage
             throw new Forbidden();
         }
 
-        if (in_array('amount', $this->acl->getScopeForbiddenAttributeList(Opportunity::ENTITY_TYPE))) {
-            throw new Forbidden();
+        if (!$this->acl->checkField(Opportunity::ENTITY_TYPE, 'amount')) {
+            throw new Forbidden("No access to 'amount' field.");
         }
 
         [$from, $to] = $range->getRange();

@@ -109,17 +109,12 @@ class InboxService
                 throw new Forbidden("No access to current group folder.");
             }
 
-            if (
-                in_array(
-                    'groupFolder',
-                    $this->aclManager->getScopeForbiddenFieldList($user, Email::ENTITY_TYPE, Table::ACTION_EDIT)
-                )
-            ) {
+            if (!$this->aclManager->checkField($user, Email::ENTITY_TYPE, 'groupFolder', Table::ACTION_EDIT)) {
                 throw new Forbidden("No access to `groupFolder` field.");
             }
         }
 
-        if ($folderId && strpos($folderId, 'group:') === 0) {
+        if ($folderId && str_starts_with($folderId, 'group:')) {
             try {
                 $this->moveToGroupFolder($email, substr($folderId, 6), $user);
             }
@@ -180,12 +175,7 @@ class InboxService
             throw new Forbidden("No read access to email to unset group folder.");
         }
 
-        if (
-            in_array(
-                'groupFolder',
-                $this->aclManager->getScopeForbiddenFieldList($user, Email::ENTITY_TYPE, Table::ACTION_EDIT)
-            )
-        ) {
+        if (!$this->aclManager->checkField($user, Email::ENTITY_TYPE, 'groupFolder', Table::ACTION_EDIT)) {
             throw new Forbidden("No access to `groupFolder` field.");
         }
 

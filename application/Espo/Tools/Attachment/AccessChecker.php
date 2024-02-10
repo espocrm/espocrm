@@ -60,19 +60,11 @@ class AccessChecker
         Attachment::ROLE_INLINE_ATTACHMENT,
     ];
 
-    private User $user;
-    private Acl $acl;
-    private Metadata $metadata;
-
     public function __construct(
-        User $user,
-        Acl $acl,
-        Metadata $metadata
-    ) {
-        $this->user = $user;
-        $this->acl = $acl;
-        $this->metadata = $metadata;
-    }
+        private User $user,
+        private Acl $acl,
+        private Metadata $metadata
+    ) {}
 
     /**
      * Check access to a field and role allowance.
@@ -103,7 +95,7 @@ class AccessChecker
         $fieldType = $this->metadata->get(['entityDefs', $relatedEntityType, 'fields', $field, 'type']);
 
         if (!$fieldType) {
-            throw new Forbidden("Field '{$field}' does not exist.");
+            throw new Forbidden("Field '$field' does not exist.");
         }
 
         $fieldTypeList = $role === Attachment::ROLE_INLINE_ATTACHMENT ?
@@ -111,7 +103,7 @@ class AccessChecker
             $this->attachmentFieldTypeList;
 
         if (!in_array($fieldType, $fieldTypeList)) {
-            throw new Forbidden("Field type '{$fieldType}' is not allowed for {$role}.");
+            throw new Forbidden("Field type '$fieldType' is not allowed for $role.");
         }
 
         if ($this->user->isAdmin() && $relatedEntityType === Settings::ENTITY_TYPE) {
@@ -125,8 +117,8 @@ class AccessChecker
             throw new Forbidden("No access to " . $relatedEntityType . ".");
         }
 
-        if (in_array($field, $this->acl->getScopeForbiddenFieldList($relatedEntityType, Table::ACTION_EDIT))) {
-            throw new Forbidden("No access to field '" . $field . "'.");
+        if (!$this->acl->checkField($relatedEntityType, $field, Table::ACTION_EDIT)) {
+            throw new Forbidden("No access to field '$field'.");
         }
     }
 }
