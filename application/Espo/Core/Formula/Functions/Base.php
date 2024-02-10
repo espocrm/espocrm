@@ -40,7 +40,7 @@ use Espo\Core\Formula\Argument;
 use stdClass;
 
 /**
- * @deprecated Use BaseFormula instead.
+ * @deprecated Use BaseFunction instead.
  */
 abstract class Base implements Injectable
 {
