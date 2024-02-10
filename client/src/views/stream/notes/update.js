@@ -57,10 +57,10 @@ class UpdateNoteStreamView extends NoteStreamView {
         this.wait(true);
 
         this.getModelFactory().create(this.model.get('parentType'), model => {
-            let modelWas = model;
-            let modelBecame = model.clone();
+            const modelWas = model;
+            const modelBecame = model.clone();
 
-            let data = this.model.get('data');
+            const data = this.model.get('data');
 
             data.attributes = data.attributes || {};
 
@@ -69,18 +69,18 @@ class UpdateNoteStreamView extends NoteStreamView {
 
             this.fieldsArr = [];
 
-            let fields = data.fields;
+            const fields = data.fields;
 
             fields.forEach(field => {
-                let type = model.getFieldType(field) || 'base';
-                let viewName = this.getMetadata().get(['entityDefs', model.entityType, 'fields', field, 'view']) ||
+                const type = model.getFieldType(field) || 'base';
+                const viewName = this.getMetadata().get(['entityDefs', model.entityType, 'fields', field, 'view']) ||
                     this.getFieldManager().getViewName(type);
 
-                let attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.entityType, field);
+                const attributeList = this.getFieldManager().getEntityTypeFieldAttributeList(model.entityType, field);
 
                 let hasValue = false;
 
-                for (let attribute of attributeList) {
+                for (const attribute of attributeList) {
                     if (attribute in data.attributes.was) {
                         hasValue = true;
 
