@@ -239,6 +239,7 @@ class DateFieldView extends BaseFieldView {
                 autoclose: true,
                 todayHighlight: true,
                 keyboardNavigation: true,
+                assumeNearbyYear: true,
                 todayBtn: this.getConfig().get('datepickerTodayButton') || false,
                 orientation: 'bottom auto',
                 templates: {
