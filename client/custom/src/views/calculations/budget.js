@@ -186,9 +186,15 @@ define('custom:views/calculations/budget', ['view'], function (View) {
             detailsList.forEach(details => {
                 detailsTable += 
                 `<tr class="list-row">
-                    <td class="cell">${ details.value.toLocaleString('en') }</td>
-                    <td class="cell">${ details.name } <span class="text-soft">(${details.count})</span></td>
-                </tr>`
+                    <td class="cell">${ details.value.toLocaleString('en') }</td>`;
+                    
+                        if (details.count !== undefined) {
+                            detailsTable += `<td class="cell">${ details.name } <span class="text-soft">(${details.count})</span></td>`;
+                        } else {
+                            detailsTable += `<td class="cell">${ details.name }</span></td>`;
+                        }
+
+                detailsTable +=  `</tr>`
             });
             detailsTable += `</table>`;
 
