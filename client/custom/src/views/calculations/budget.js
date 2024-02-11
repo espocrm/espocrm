@@ -187,7 +187,7 @@ define('custom:views/calculations/budget', ['view'], function (View) {
                 detailsTable += 
                 `<tr class="list-row">
                     <td class="cell">${ details.value.toLocaleString('en') }</td>
-                    <td class="cell">${ details.name }</td>
+                    <td class="cell">${ details.name } <span class="text-soft">(${details.count})</span></td>
                 </tr>`
             });
             detailsTable += `</table>`;
