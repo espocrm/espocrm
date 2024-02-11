@@ -11,11 +11,11 @@
         <div>
             {{#if isSuperadmin}}
                 {{#each teams}} 
-                    <button value={{this.id}} class="btn-team btn btn-default">{{this.name}}</button>
+                    <button value={{this.id}} class="btn-team btn btn-default margin-bottom">{{this.name}}</button>
                 {{/each}}
             {{else}}
                 {{#each teams}} 
-                    <button disabled="disabled" value={{this.id}} class="btn-team btn btn-default">{{this.name}}</button>
+                    <button disabled="disabled" value={{this.id}} class="btn-team btn btn-default margin-bottom">{{this.name}}</button>
                 {{/each}}
             {{/if}}
         </div>
@@ -24,29 +24,29 @@
         </div>
         <div id="filterButtons">
             <button data-action="filterToday" class="btn-date btn btn-default margin-bottom" value="today">Сьогодні</button>
-            <button data-action="filterWeek" class="btn-date btn btn-default" value="week">Тиждень</button>
-            <button data-action="filterMonth" class="btn-date btn btn-default" value="month">Місяць</button>
-            <button data-action="filterBetweenDates" class="btn-date btn btn-default" value="between">Проміжок</button>
+            <button data-action="filterWeek" class="btn-date btn btn-default margin-bottom" value="week">Тиждень</button>
+            <button data-action="filterMonth" class="btn-date btn btn-default margin-bottom" value="month">Місяць</button>
+            <button data-action="filterBetweenDates" class="btn-date btn btn-default margin-bottom" value="between">Проміжок</button>
         </div>
         <div>
             <label class="control-label small" data-name="date">Дата</label>
         </div>
         <div>
             {{#ifEqual filterValue 'today'}}
-                <input id="dateToday" class="btn btn-default" type="date" value={{dateFrom}} disabled="disabled"></input>
+                <input id="dateToday" class="btn btn-default margin-bottom" type="date" value={{dateFrom}} disabled="disabled"></input>
             {{/ifEqual}}
             {{#ifEqual filterValue 'week'}}
-                <input id="dateBetween1" class="btn btn-default" type="date" value={{dateFrom}} disabled="disabled"></input>
-                <input id="dateBetween2" class="btn btn-default" type="date" value={{dateTo}} disabled="disabled"></input>
+                <input id="dateBetween1" class="btn btn-default margin-bottom" type="date" value={{dateFrom}} disabled="disabled"></input>
+                <input id="dateBetween2" class="btn btn-default margin-bottom" type="date" value={{dateTo}} disabled="disabled"></input>
             {{/ifEqual}}
             {{#ifEqual filterValue 'month'}}
-                <input id="dateBetween1" class="btn btn-default" type="date" value={{dateFrom}} disabled="disabled"></input>
-                <input id="dateBetween2" class="btn btn-default" type="date" value={{dateTo}} disabled="disabled"></input>
+                <input id="dateBetween1" class="btn btn-default margin-bottom" type="date" value={{dateFrom}} disabled="disabled"></input>
+                <input id="dateBetween2" class="btn btn-default margin-bottom" type="date" value={{dateTo}} disabled="disabled"></input>
             {{/ifEqual}}
             {{#ifEqual filterValue 'between'}}
                 <input id="dateBetween1" class="btn btn-default margin-bottom" type="date" value={{dateFrom}}></input>
-                <input id="dateBetween2" class="btn btn-default" type="date" value={{dateTo}}></input>
-                <button id="findBetweenDates" class="btn btn-primary btn-icon-wide">
+                <input id="dateBetween2" class="btn btn-default margin-bottom" type="date" value={{dateTo}}></input>
+                <button id="findBetweenDates" class="btn btn-primary btn-icon-wide margin-bottom">
                     <span class="fas fa-search"></span>
                 </button>
             {{/ifEqual}}
