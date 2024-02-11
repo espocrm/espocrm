@@ -504,12 +504,14 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         this.getModelFactory().create('Attachment', model => {
             const canceledList = [];
             const fileList = [];
+            const uploadedList = [];
 
             for (let i = 0; i < files.length; i++) {
                 fileList.push(files[i]);
 
                 totalCount++;
             }
+
 
             /** @type module:helpers/file-upload */
             const uploadHelper = new FileUpload(this.getConfig());
@@ -566,9 +568,10 @@ class AttachmentMultipleFieldView extends BaseFieldView {
                         $attachmentBox.trigger('ready');
 
                         uploadedCount++;
+                        uploadedList.push(attachment);
 
                         if (uploadedCount === totalCount && this.isUploading) {
-                            this.model.trigger('attachment-uploaded:' + this.name);
+                            this.model.trigger('attachment-uploaded:' + this.name, uploadedList);
                             this.afterAttachmentsUploaded.call(this);
 
                             this.isUploading = false;

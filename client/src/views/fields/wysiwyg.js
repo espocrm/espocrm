@@ -207,12 +207,6 @@ class WysiwygFieldView extends TextFieldView {
                 tooltip: this.translate('Attach File'),
                 click: () => {
                     this.attachFile();
-
-                    this.listenToOnce(this.model, 'attachment-uploaded:attachments', () => {
-                        if (this.isEditMode()) {
-                            Espo.Ui.success(this.translate('Attached'));
-                        }
-                    });
                 }
             });
 
@@ -852,7 +846,18 @@ class WysiwygFieldView extends TextFieldView {
     attachFile() {
         const $form = this.$el.closest('.record');
 
-        $form.find('.field[data-name="' + this.params.attachmentField + '"] input.file').click();
+        $form.find(`.field[data-name="${this.params.attachmentField}"] input.file`).click();
+
+        this.stopListening(this.model, 'attachment-uploaded:attachments');
+
+        this.listenToOnce(this.model, 'attachment-uploaded:attachments', /** module:model[] */attachments => {
+            if (this.isEditMode()) {
+                const msg = this.translate('Attached') + '\n' +
+                    attachments.map(m => m.attributes.name).join('\n');
+
+                Espo.Ui.notify(msg, 'success', 3000);
+            }
+        });
     }
 
     initEspoPlugin() {
