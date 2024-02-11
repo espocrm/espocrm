@@ -185,7 +185,7 @@ define('custom:views/calculations/budget', ['view'], function (View) {
             let detailsTable = `<table class="table table-details" style="border-radius: 5px;">`;
             detailsList.forEach(details => {
                 detailsTable += 
-                `<tr class="list-row">
+                `<tr class="list-row nowrap">
                     <td class="cell">${ details.value.toLocaleString('en') }</td>`;
                     
                         if (details.count !== undefined) {
