@@ -26,16 +26,35 @@ class BudgetService {
     public function getDetails($date, $teamsIds)
     {
         $abons = $this->getProfitByDate('Abonement', $date, $date, $teamsIds);
+        $abonsOnetime = $this->filterByAbonplanName($abons, 'Разове заняття');
+        $abonsTrial = $this->filterByAbonplanName($abons, 'Пробне заняття');
         $indivs = $this->getProfitByDate('Indiv', $date, $date, $teamsIds);
         $rents = $this->getProfitByDate('Rent', $date, $date, $teamsIds);
         $rentplans = $this->getProfitByDate('RentPlan', $date, $date, $teamsIds);
         $goods = $this->getProfitByDate('Goods', $date, $date, $teamsIds);
 
+        $allAbonsTotalSum = $this->getTotalSumByDate($date, $abons, 'price', 'salesDate');
+        $onetimeAbonsTotalSum = $this->getTotalSumByDate($date, $abonsOnetime, 'price', 'salesDate');
+        $trialAbonsTotalSum = $this->getTotalSumByDate($date, $abonsTrial, 'price', 'salesDate');
+        
+        $regularAbonsTotalSum = $allAbonsTotalSum - $onetimeAbonsTotalSum - $trialAbonsTotalSum;
+        $regularAbonsCount = count($abons) - count($abonsOnetime) - count($abonsTrial);
+
         $profitDetailList = [
             [
                 'name' => 'Абонементи', 
-                'value' => $this->getTotalSumByDate($date, $abons, 'price', 'salesDate'),
-                'count' => count($abons)
+                'value' => $regularAbonsTotalSum,
+                'count' => $regularAbonsCount
+            ],
+            [
+                'name' => 'Абонементи разові', 
+                'value' => $onetimeAbonsTotalSum,
+                'count' => count($abonsOnetime)
+            ],
+            [
+                'name' => 'Абонементи пробні', 
+                'value' => $trialAbonsTotalSum,
+                'count' => count($abonsTrial)
             ],
             [
                 'name' => 'Індиви', 
@@ -65,6 +84,17 @@ class BudgetService {
             'profitDetails' => $profitDetailList,
             'expensesDetails' => $this->getExpensesDetailList($expensesList)
         );
+    }
+
+    public function filterByAbonplanName($abons, $abonplanName)
+    {
+        $abonsByName = [];
+        foreach($abons as $abon) {
+            if ($abon->get('abonplanName') == $abonplanName) {
+                array_push($abonsByName, $abon);
+            }
+        }
+        return $abonsByName; 
     }
 
     private function getExpensesDetailList($expensesList)
