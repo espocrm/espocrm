@@ -105,7 +105,7 @@ class LabelManagerEditView extends View {
         this.dirtyLabelList.push(name);
         this.setConfirmLeaveOut(true);
 
-        if (!this.hasView(category)) {
+        if (!this.getCategoryView(category)) {
             return;
         }
 
@@ -165,7 +165,6 @@ class LabelManagerEditView extends View {
             Espo.Ui.success(this.translate('Saved'));
 
             this.getHelper().broadcastChannel.postMessage('update:language');
-
             this.getLanguage().loadSkipCache();
         })
         .catch(() => {
@@ -181,17 +180,17 @@ class LabelManagerEditView extends View {
         this.setConfirmLeaveOut(false);
 
         this.getCategoryList().forEach(category => {
-            if (!this.hasView(category)) {
+            if (!this.getCategoryView(category)) {
                 return;
             }
 
-            this.getView(category).categoryData = this.scopeData[category];
-            this.getView(category).reRender();
+            this.getCategoryView(category).categoryData = this.scopeData[category];
+            this.getCategoryView(category).reRender();
         });
     }
 
     showCategory(category) {
-        this.$el.find('a[data-action="showCategory"][data-name="'+category+'"]').addClass('hidden');
+        this.$el.find(`a[data-action="showCategory"][data-name="${category}"]`).addClass('hidden');
 
         if (this.hasView(category)) {
             this.$el.find(`a[data-action="hideCategory"][data-name="${category}"]`).removeClass('hidden');
