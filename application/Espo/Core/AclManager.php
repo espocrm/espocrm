@@ -638,48 +638,40 @@ class AclManager
      */
     public function getScopeRestrictedFieldList(string $scope, $type): array
     {
-        if (is_array($type)) {
-            $typeList = $type;
+        $typeList = !is_array($type) ? [$type] : $type;
 
-            $list = [];
+        $list = [];
 
-            foreach ($typeList as $type) {
-                $list = array_merge(
-                    $list,
-                    $this->globalRestriction->getScopeRestrictedFieldList($scope, $type)
-                );
-            }
-
-            return array_unique($list);
+        foreach ($typeList as $type) {
+            $list = array_merge(
+                $list,
+                $this->globalRestriction->getScopeRestrictedFieldList($scope, $type)
+            );
         }
 
-        return $this->globalRestriction->getScopeRestrictedFieldList($scope, $type);
+        return array_unique($list);
     }
 
     /**
      * Get a restricted attribute list for a specific scope by a restriction type.
      *
-     * @param GlobalRestriction::TYPE_*|array<int,GlobalRestriction::TYPE_*> $type
+     * @param GlobalRestriction::TYPE_*|array<int, GlobalRestriction::TYPE_*> $type
      * @return string[]
      */
     public function getScopeRestrictedAttributeList(string $scope, $type): array
     {
-        if (is_array($type)) {
-            $typeList = $type;
+        $typeList = !is_array($type) ? [$type] : $type;
 
-            $list = [];
+        $list = [];
 
-            foreach ($typeList as $type) {
-                $list = array_merge(
-                    $list,
-                    $this->globalRestriction->getScopeRestrictedAttributeList($scope, $type)
-                );
-            }
-
-            return array_unique($list);
+        foreach ($typeList as $type) {
+            $list = array_merge(
+                $list,
+                $this->globalRestriction->getScopeRestrictedAttributeList($scope, $type)
+            );
         }
 
-        return $this->globalRestriction->getScopeRestrictedAttributeList($scope, $type);
+        return array_unique($list);
     }
 
     /**
@@ -690,22 +682,18 @@ class AclManager
      */
     public function getScopeRestrictedLinkList(string $scope, $type): array
     {
-        if (is_array($type)) {
-            $typeList = $type;
+        $typeList = !is_array($type) ? [$type] : $type;
 
-            $list = [];
+        $list = [];
 
-            foreach ($typeList as $type) {
-                $list = array_merge(
-                    $list,
-                    $this->globalRestriction->getScopeRestrictedLinkList($scope, $type)
-                );
-            }
-
-            return array_unique($list);
+        foreach ($typeList as $type) {
+            $list = array_merge(
+                $list,
+                $this->globalRestriction->getScopeRestrictedLinkList($scope, $type)
+            );
         }
 
-        return $this->globalRestriction->getScopeRestrictedLinkList($scope, $type);
+        return array_unique($list);
     }
 
     /**
