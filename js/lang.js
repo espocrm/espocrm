@@ -94,16 +94,6 @@ class Lang
                 'custom/Espo/Modules/' + moduleName + '/Resources/i18n/' + this.language + '/';
         });
 
-        this.moduleList.forEach(moduleName => {
-            let dir = this.espoPath + 'application/Espo/Modules/' + moduleName + '/Resources/i18n/' +
-                this.baseLanguage + '/';
-
-            dirs.push(dir);
-
-            dirNames[dir] = 'application/Espo/Modules/' + moduleName +
-                '/Resources/i18n/' + this.language + '/';
-        });
-
         this.dirs = dirs;
 
         this.isWin = /^win/.test(os.platform());
