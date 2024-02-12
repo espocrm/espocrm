@@ -11,10 +11,21 @@
             <button class="btn btn-default btn-xs-wide" data-action="cancel">{{translate 'Cancel'}}</button>
         </div>
     </div>
+
+    <div class="button-container negate-no-side-margin">
+        <input
+            type="text"
+            maxlength="64"
+            placeholder="{{translate 'Search'}}"
+            data-name="quick-search"
+            class="form-control"
+            spellcheck="false"
+        >
+    </div>
 {{/unless}}
 
 {{#each categoryList}}
-<div class="panel panel-default" data-name="{{./this}}" style="overflow: hidden;">
+<div class="panel panel-default category-panel" data-name="{{./this}}" style="overflow: hidden;">
     <div class="panel-heading clearfix">
         <div
             class="pull-left"
@@ -39,12 +50,12 @@
             ><span class="fas fa-chevron-up"></span></a>
         </div>
         <h4 class="panel-title">
-            <span class="action" style="cursor: pointer;" data-action="showCategory" data-name="{{./this}}">
+            <span class="action" style="cursor: pointer;" data-action="toggleCategory" data-name="{{./this}}">
             {{translate this}}
             </span>
         </h4>
     </div>
-    <div class="panel-body hidden" data-name="{{./this}}">
-    </div>
+    <div class="panel-body hidden" data-name="{{./this}}">{{{var this ../this}}}</div>
 </div>
 {{/each}}
+<div class="no-data hidden">{{translate 'No Data'}}</div>

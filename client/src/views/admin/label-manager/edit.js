@@ -32,7 +32,22 @@ class LabelManagerEditView extends View {
 
     template = 'admin/label-manager/edit'
 
+    /**
+     * @type {Object.<string, Object.<string, string>>}
+     */
+    scopeData
+
     events = {
+        /** @this LabelManagerEditView */
+        'click [data-action="toggleCategory"]': function (e) {
+            const name = $(e.currentTarget).data('name');
+
+            this.toggleCategory(name);
+        },
+        /** @this LabelManagerEditView */
+        'keyup input[data-name="quick-search"]': function (e) {
+            this.processQuickSearch(e.currentTarget.value);
+        },
         /** @this LabelManagerEditView */
         'click [data-action="showCategory"]': function (e) {
             const name = $(e.currentTarget).data('name');
@@ -73,19 +88,28 @@ class LabelManagerEditView extends View {
         this.scope = this.options.scope;
         this.language = this.options.language;
 
+        this.categoryShownMap = {};
         this.dirtyLabelList = [];
 
-        this.wait(true);
+        this.wait(
+            Espo.Ajax.postRequest('LabelManager/action/getScopeData', {
+                scope: this.scope,
+                language: this.language,
+            }).then(data => {
+                this.scopeData = data;
 
-        Espo.Ajax.postRequest('LabelManager/action/getScopeData', {
-            scope: this.scope,
-            language: this.language,
-        }).then(data => {
-            this.scopeData = data;
+                this.scopeDataInitial = Espo.Utils.cloneDeep(this.scopeData);
 
-            this.scopeDataInitial = Espo.Utils.cloneDeep(this.scopeData);
-            this.wait(false);
-        });
+                Object.keys(this.scopeData).forEach(category => {
+                    this.createView(category, 'views/admin/label-manager/category', {
+                        selector: `.panel-body[data-name="${category}"]`,
+                        categoryData: this.getCategoryData(category),
+                        scope: this.scope,
+                        language: this.language,
+                    });
+                });
+            })
+        );
     }
 
     getCategoryList() {
@@ -127,6 +151,9 @@ class LabelManagerEditView extends View {
     afterRender() {
         this.$save = this.$el.find('button[data-action="save"]');
         this.$cancel = this.$el.find('button[data-action="cancel"]');
+
+        this.$panels = this.$el.find('.category-panel');
+        this.$noData = this.$el.find('.no-data');
     }
 
     actionSave() {
@@ -189,42 +216,120 @@ class LabelManagerEditView extends View {
         });
     }
 
+    toggleCategory(category) {
+
+        !this.categoryShownMap[category] ?
+            this.showCategory(category) :
+            this.hideCategory(category);
+    }
+
     showCategory(category) {
         this.$el.find(`a[data-action="showCategory"][data-name="${category}"]`).addClass('hidden');
 
-        if (this.hasView(category)) {
-            this.$el.find(`a[data-action="hideCategory"][data-name="${category}"]`).removeClass('hidden');
-            this.$el.find(`.panel-body[data-name="${category}"]`).removeClass('hidden');
+        this.$el.find(`a[data-action="hideCategory"][data-name="${category}"]`).removeClass('hidden');
+        this.$el.find(`.panel-body[data-name="${category}"]`).removeClass('hidden');
 
-            return;
-        }
-
-        this.createView(category, 'views/admin/label-manager/category', {
-            selector: `.panel-body[data-name="${category}"]`,
-            categoryData: this.getCategoryData(category),
-            scope: this.scope,
-            language: this.language,
-        }, view => {
-            this.$el.find(`.panel-body[data-name="${category}"]`).removeClass('hidden');
-            this.$el.find(`a[data-action="hideCategory"][data-name="${category}"]`).removeClass('hidden');
-
-            view.render();
-        });
+        this.categoryShownMap[category] = true;
     }
 
     hideCategory(category) {
-        this.clearView(category);
-
         this.$el.find(`.panel-body[data-name="${category}"]`).addClass('hidden');
         this.$el.find(`a[data-action="showCategory"][data-name="${category}"]`).removeClass('hidden');
         this.$el.find(`a[data-action="hideCategory"][data-name="${category}"]`).addClass('hidden');
+
+        this.categoryShownMap[category] = false;
     }
 
     getCategoryData(category) {
         return this.scopeData[category] || {};
     }
+
+    processQuickSearch(text) {
+        text = text.trim();
+
+        if (!text) {
+            this.$panels.removeClass('hidden');
+            this.$panels.find('.row').removeClass('hidden');
+            this.$noData.addClass('hidden');
+
+            return;
+        }
+
+        const matchedCategoryList = [];
+        /** @type {Object.<string, string[]>} */
+        const matchedMapList = {};
+
+        const lowerCaseText = text.toLowerCase();
+
+        let anyMatched = false;
+
+        Object.keys(this.scopeData).forEach(/** string */category => {
+            matchedMapList[category] = []
+
+            Object.keys(this.scopeData[category]).forEach(/** string */item => {
+                let matched = false;
+
+                const value = /** @type {string} */this.scopeData[category][item];
+
+                if (
+                    value.toLowerCase().indexOf(lowerCaseText) === 0 ||
+                    item.toLowerCase().indexOf(lowerCaseText) === 0
+                ) {
+                    matched = true;
+                }
+
+                if (!matched) {
+                    const wordList = value.split(' ').concat(value.split(' '));
+
+                    for (const word of wordList) {
+                        if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
+                            matched = true;
+
+                            break;
+                        }
+                    }
+                }
+
+                if (!matched) {
+                    return;
+                }
+
+                anyMatched = true;
+
+                matchedMapList[category].push(item);
+
+                if (!matchedCategoryList.includes(category)) {
+                    matchedCategoryList.push(category);
+                }
+            });
+        });
+
+        if (!anyMatched) {
+            this.$panels.addClass('hidden');
+            this.$panels.find('.row').addClass('hidden');
+            this.$noData.removeClass('hidden');
+
+            return;
+        }
+
+        this.$noData.addClass('hidden');
+
+        Object.keys(this.scopeData).forEach(/** string */category => {
+            const $categoryPanel = this.$panels.filter(`[data-name="${category}"]`);
+
+            Object.keys(this.scopeData[category]).forEach(/** string */item => {
+                const $row = $categoryPanel.find(`.row[data-name="${item}"]`);
+
+                matchedMapList[category].includes(item) ?
+                    $row.removeClass('hidden') :
+                    $row.addClass('hidden');
+            });
+
+            matchedCategoryList.includes(category) ?
+                $categoryPanel.removeClass('hidden') :
+                $categoryPanel.addClass('hidden');
+        });
+    }
 }
 
 export default LabelManagerEditView;
-
-
