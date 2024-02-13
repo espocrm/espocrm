@@ -1587,22 +1587,29 @@ class FormulaTest extends \PHPUnit\Framework\TestCase
         $this->assertIsInt($actual);
     }
 
-    function testDatetime()
+    public function testDatetimeNow(): void
     {
         $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\now"
             }
         '));
+
         $actual = $this->createProcessor()->process($item);
         $this->assertEquals(date('Y-m-d H:i:s'), $actual);
+    }
 
+    public function testDatetimeToday(): void
+    {
         $item = new Argument(self::stringToNode('
             {
                 "type": "datetime\\\\today"
             }
         '));
+
+        /** @noinspection PhpUnhandledExceptionInspection */
         $actual = $this->createProcessor()->process($item);
+
         $this->assertEquals(date('Y-m-d'), $actual);
     }
 
