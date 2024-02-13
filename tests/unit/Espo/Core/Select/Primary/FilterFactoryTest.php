@@ -33,13 +33,14 @@ use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingData;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Core\Select\Primary\FilterFactory as PrimaryFilterFactory;
 use Espo\Core\Select\Primary\Filters\Followed;
 use Espo\Core\Utils\Metadata;
-
 use Espo\Entities\User;
+use PHPUnit\Framework\TestCase;
 
-class FilterFactoryTest extends \PHPUnit\Framework\TestCase
+class FilterFactoryTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -87,6 +88,10 @@ class FilterFactoryTest extends \PHPUnit\Framework\TestCase
             ->for($className)
             ->bindValue('$entityType', $entityType)
             ->bindValue('$name', $name);
+
+        $binder
+            ->for(FieldHelper::class)
+            ->bindValue('$entityType', $entityType);
 
         $bindingContainer = new BindingContainer($bindingData);
 

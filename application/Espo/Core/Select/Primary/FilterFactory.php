@@ -33,6 +33,7 @@ use Espo\Core\Binding\Binder;
 use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingData;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Select\Helpers\FieldHelper;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 
@@ -60,6 +61,10 @@ class FilterFactory
             ->for($className)
             ->bindValue('$entityType', $entityType)
             ->bindValue('$name', $name);
+
+        $binder
+            ->for(FieldHelper::class)
+            ->bindValue('$entityType', $entityType);
 
         $bindingContainer = new BindingContainer($bindingData);
 

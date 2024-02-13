@@ -198,9 +198,7 @@ class SelectBuilderTest extends \tests\integration\Core\BaseTestCase
                     ],
                 ]),
                 'OR' => [
-                    [
-                        'assignedUserId' => $userId,
-                    ],
+                    'assignedUserId=' => $userId,
                 ],
                 'type' => 'Customer',
                 [
