@@ -486,7 +486,7 @@ class Step1ImportView extends View {
      * @param {File} file
      */
     loadFile(file) {
-        const blob = file.slice(0, 1024 * 16);
+        const blob = file.slice(0, 1024 * 512);
 
         const readerPreview = new FileReader();
 
