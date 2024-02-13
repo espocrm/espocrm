@@ -42,28 +42,17 @@ class RoleAddFieldModalView extends ModalView {
     }
 
     data() {
-        const dataList = [];
-
-        this.fieldList.forEach((field, i) => {
-            if (i % 4 === 0) {
-                dataList.push([]);
-            }
-
-            dataList[dataList.length -1].push({
-                name: field,
-                label: this.translate(field, 'fields', this.scope),
-            });
-        });
-
-        console.log(dataList);
-
         return {
-            dataList: dataList,
+            dataList: this.dataList,
             scope: this.scope,
         };
     }
 
     setup() {
+        this.addHandler('keyup', 'input[data-name="quick-search"]', (e, /** HTMLInputElement */target) => {
+            this.processQuickSearch(target.value);
+        });
+
         const scope = this.scope = this.options.scope;
 
         this.headerText = this.translate(scope, 'scopeNamesPlural') + ' · ' + this.translate('Add Field');
@@ -91,6 +80,78 @@ class RoleAddFieldModalView extends ModalView {
         });
 
         this.fieldList = this.getLanguage().sortFieldList(scope, fieldList);
+
+        /** @type {{name: string, label: string}[]} */
+        this.dataList = this.fieldList.map(field => {
+            return {
+                name: field,
+                label: this.translate(field, 'fields', this.scope),
+            };
+        });
+    }
+
+    afterRender() {
+        this.$table = this.$el.find('table.fields-table');
+    }
+
+    processQuickSearch(text) {
+        text = text.trim();
+
+        if (!text) {
+            this.$table.find('tr').removeClass('hidden');
+
+            return;
+        }
+
+        const matchedList = [];
+
+        const lowerCaseText = text.toLowerCase();
+
+        this.dataList.forEach(item => {
+            let matched = false;
+
+            const field = item.name;
+            const label = item.label;
+
+            if (
+                label.indexOf(lowerCaseText) === 0 ||
+                field.toLowerCase().indexOf(lowerCaseText) === 0
+            ) {
+                matched = true;
+            }
+
+            if (!matched) {
+                const wordList = label.split(' ').concat(label.split(' '));
+
+                wordList.forEach((word) => {
+                    if (word.toLowerCase().indexOf(lowerCaseText) === 0) {
+                        matched = true;
+                    }
+                });
+            }
+
+            if (matched) {
+                matchedList.push(item);
+            }
+        });
+
+        if (matchedList.length === 0) {
+            this.$table.find('tr').addClass('hidden');
+
+            return;
+        }
+
+        this.dataList.forEach(item => {
+            const $row = this.$table.find(`tr[data-name="${item.name}"]`);
+
+            if (!matchedList.includes(item)) {
+                $row.addClass('hidden');
+
+                return;
+            }
+
+            $row.removeClass('hidden');
+        });
     }
 }
 
