@@ -78,7 +78,7 @@ class IndexImportView extends View {
 
         let url = '#Import';
 
-        if (this.options.fromAdmin) {
+        if (this.options.fromAdmin && this.step === 1) {
             url = '#Admin/import';
         }
 
