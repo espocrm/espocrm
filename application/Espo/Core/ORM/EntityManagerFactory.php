@@ -121,7 +121,12 @@ class EntityManagerFactory
                 ->build()
         );
 
-        $sqlExecutor = new DefaultSqlExecutor($pdoProvider, $this->log, $this->configDataProvider->logSql());
+        $sqlExecutor = new DefaultSqlExecutor(
+            $pdoProvider,
+            $this->log,
+            $this->configDataProvider->logSql(),
+            $this->configDataProvider->logSql()
+        );
 
         $binding = BindingContainerBuilder::create()
             ->bindInstance(DatabaseParams::class, $databaseParams)
