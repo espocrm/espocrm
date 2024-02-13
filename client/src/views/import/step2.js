@@ -442,7 +442,7 @@ class Step2ImportView extends View {
                     $option.prop('selected', true);
                 }
                 else {
-                    if (name.toLowerCase().replace('_', '') === field.toLowerCase()) {
+                    if (name.toLowerCase().replace(/_/g, '') === field.toLowerCase()) {
                         $option.prop('selected', true);
                     }
                 }
