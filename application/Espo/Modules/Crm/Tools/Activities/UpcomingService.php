@@ -33,11 +33,14 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Select\Where\Converter;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Classes\Select\Meeting\PrimaryFilters\Planned;
+use Espo\Modules\Crm\Classes\Select\Task\PrimaryFilters\Actual;
 use Espo\Modules\Crm\Entities\Task;
 use Espo\Modules\Crm\Tools\Activities\Upcoming\Params;
 use Espo\ORM\EntityCollection;
@@ -49,6 +52,7 @@ use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Select\Where\Item as WhereItem;
 use Espo\Core\Select\Where\ConverterFactory as WhereConverterFactory;
 use Espo\Core\Select\SelectBuilderFactory;
+use Espo\ORM\Query\SelectBuilder;
 
 use PDO;
 use DateTime;
@@ -102,7 +106,7 @@ class UpcomingService
             }
 
             if (
-                !$this->acl->checkScope($entityType, 'read') ||
+                !$this->acl->checkScope($entityType, Table::ACTION_READ) ||
                 !$this->metadata->get(['entityDefs', $entityType, 'fields', 'dateStart']) ||
                 !$this->metadata->get(['entityDefs', $entityType, 'fields', 'dateEnd'])
             ) {
@@ -182,8 +186,7 @@ class UpcomingService
      */
     private function getEntityTypeQuery(string $entityType, User $user, int $futureDays): Select
     {
-        $beforeString = (new DateTime())
-            ->modify('+' . $futureDays . ' days')
+        $beforeString = (new DateTime())->modify('+' . $futureDays . ' days')
             ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
 
         $builder = $this->selectBuilderFactory
@@ -193,114 +196,17 @@ class UpcomingService
             ->withBoolFilter('onlyMy')
             ->withStrictAccessControl();
 
-        $primaryFilter = 'planned';
+        $primaryFilter = Planned::NAME;
 
         if ($entityType === Task::ENTITY_TYPE) {
-            $primaryFilter = 'actual';
+            $primaryFilter = Actual::NAME;
         }
 
         $builder->withPrimaryFilter($primaryFilter);
 
         $queryBuilder = $builder->buildQueryBuilder();
 
-        $converter = $this->whereConverterFactory->create($entityType, $user);
-
-        $timeZone = $this->getUserTimeZone($user);
-
-        if ($entityType === Task::ENTITY_TYPE) {
-            $upcomingTaskFutureDays = $this->config->get(
-                'activitiesUpcomingTaskFutureDays',
-                self::UPCOMING_ACTIVITIES_TASK_FUTURE_DAYS
-            );
-
-            $taskBeforeString = (new DateTime())
-                ->modify('+' . $upcomingTaskFutureDays . ' days')
-                ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-
-            $queryBuilder->where([
-                'OR' => [
-                    [
-                        'dateStart' => null,
-                        'OR' => [
-                            'dateEnd' => null,
-                            $converter->convert(
-                                $queryBuilder,
-                                WhereItem::fromRaw([
-                                    'type' => 'before',
-                                    'attribute' => 'dateEnd',
-                                    'value' => $taskBeforeString,
-                                ])
-                            )->getRaw()
-                        ]
-                    ],
-                    [
-                        'dateStart!=' => null,
-                        'OR' => [
-                            $converter->convert(
-                                $queryBuilder,
-                                WhereItem::fromRaw([
-                                    'type' => 'past',
-                                    'attribute' => 'dateStart',
-                                    'dateTime' => true,
-                                    'timeZone' => $timeZone,
-                                ])
-                            )->getRaw(),
-                            $converter->convert(
-                                $queryBuilder,
-                                WhereItem::fromRaw([
-                                    'type' => 'today',
-                                    'attribute' => 'dateStart',
-                                    'dateTime' => true,
-                                    'timeZone' => $timeZone,
-                                ])
-                            )->getRaw(),
-                            $converter->convert(
-                                $queryBuilder,
-                                WhereItem::fromRaw([
-                                    'type' => 'before',
-                                    'attribute' => 'dateStart',
-                                    'value' => $beforeString,
-                                ])
-                            )->getRaw(),
-                        ]
-                    ],
-                ],
-            ]);
-        }
-        else {
-            $queryBuilder->where([
-                'OR' => [
-                    $converter->convert(
-                        $queryBuilder,
-                        WhereItem::fromRaw([
-                            'type' => 'today',
-                            'attribute' => 'dateStart',
-                            'dateTime' => true,
-                            'timeZone' => $timeZone,
-                        ])
-                    )->getRaw(),
-                    [
-                        $converter->convert(
-                            $queryBuilder,
-                            WhereItem::fromRaw([
-                                'type' => 'future',
-                                'attribute' => 'dateEnd',
-                                'dateTime' => true,
-                                'timeZone' => $timeZone,
-                            ])
-                        )->getRaw(),
-                        $converter->convert(
-                            $queryBuilder,
-                            WhereItem::fromRaw([
-                                'type' => 'before',
-                                'attribute' => 'dateStart',
-                                'value' => $beforeString,
-                            ])
-                        )->getRaw(),
-                    ],
-                ],
-            ]);
-        }
+        $this->apply($entityType, $user, $queryBuilder, $beforeString);
 
         $queryBuilder->select([
             'id',
@@ -344,5 +250,130 @@ class UpcomingService
         if (!$this->acl->check($entity, Table::ACTION_READ)) {
             throw new Forbidden();
         }
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    private function applyTask(
+        User $user,
+        SelectBuilder $queryBuilder,
+        string $beforeString
+    ): void {
+
+        $converter = $this->whereConverterFactory->create(Task::ENTITY_TYPE, $user);
+        $timeZone = $this->getUserTimeZone($user);
+
+        $upcomingTaskFutureDays = $this->config->get(
+            'activitiesUpcomingTaskFutureDays',
+            self::UPCOMING_ACTIVITIES_TASK_FUTURE_DAYS
+        );
+
+        $taskBeforeString = (new DateTime())
+            ->modify('+' . $upcomingTaskFutureDays . ' days')
+            ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
+
+        $queryBuilder->where([
+            'OR' => [
+                [
+                    'dateStart' => null,
+                    'OR' => [
+                        'dateEnd' => null,
+                        $converter->convert(
+                            $queryBuilder,
+                            WhereItem::fromRaw([
+                                'type' => 'before',
+                                'attribute' => 'dateEnd',
+                                'value' => $taskBeforeString,
+                            ])
+                        )->getRaw()
+                    ]
+                ],
+                [
+                    'dateStart!=' => null,
+                    'OR' => [
+                        $converter->convert(
+                            $queryBuilder,
+                            WhereItem::fromRaw([
+                                'type' => 'past',
+                                'attribute' => 'dateStart',
+                                'dateTime' => true,
+                                'timeZone' => $timeZone,
+                            ])
+                        )->getRaw(),
+                        $converter->convert(
+                            $queryBuilder,
+                            WhereItem::fromRaw([
+                                'type' => 'today',
+                                'attribute' => 'dateStart',
+                                'dateTime' => true,
+                                'timeZone' => $timeZone,
+                            ])
+                        )->getRaw(),
+                        $converter->convert(
+                            $queryBuilder,
+                            WhereItem::fromRaw([
+                                'type' => 'before',
+                                'attribute' => 'dateStart',
+                                'value' => $beforeString,
+                            ])
+                        )->getRaw(),
+                    ]
+                ],
+            ],
+        ]);
+    }
+
+    /**
+     * @throws BadRequest
+     */
+    private function apply(
+        string $entityType,
+        User $user,
+        SelectBuilder $queryBuilder,
+        string $beforeString
+    ): void {
+
+        if ($entityType === Task::ENTITY_TYPE) {
+            $this->applyTask($user, $queryBuilder, $beforeString);
+
+            return;
+        }
+
+        $converter = $this->whereConverterFactory->create($entityType, $user);
+        $timeZone = $this->getUserTimeZone($user);
+
+        $queryBuilder->where([
+            'OR' => [
+                $converter->convert(
+                    $queryBuilder,
+                    WhereItem::fromRaw([
+                        'type' => 'today',
+                        'attribute' => 'dateStart',
+                        'dateTime' => true,
+                        'timeZone' => $timeZone,
+                    ])
+                )->getRaw(),
+                [
+                    $converter->convert(
+                        $queryBuilder,
+                        WhereItem::fromRaw([
+                            'type' => 'future',
+                            'attribute' => 'dateEnd',
+                            'dateTime' => true,
+                            'timeZone' => $timeZone,
+                        ])
+                    )->getRaw(),
+                    $converter->convert(
+                        $queryBuilder,
+                        WhereItem::fromRaw([
+                            'type' => 'before',
+                            'attribute' => 'dateStart',
+                            'value' => $beforeString,
+                        ])
+                    )->getRaw(),
+                ],
+            ],
+        ]);
     }
 }
