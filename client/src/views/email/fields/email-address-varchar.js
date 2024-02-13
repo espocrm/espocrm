@@ -73,14 +73,12 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                 key === 'Enter'
             ) {
                 const $input = $(e.currentTarget);
-                const address = $input.val().replace(',', '').replace(';', '').trim();
 
-                if (address.indexOf('@') === -1) {
-                    return;
-                }
+                const address = this.obtainEmailAddressFromString($input.val());
 
-                if (this.checkEmailAddressInString(address)) {
+                if (address) {
                     this.addAddress(address, '');
+
                     $input.val('');
                 }
             }
@@ -92,13 +90,10 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
             }
 
             const $input = $(e.currentTarget);
-            const address = $input.val().replace(',', '').replace(';', '').trim();
 
-            if (address.indexOf('@') === -1) {
-                return;
-            }
+            const address = this.obtainEmailAddressFromString($input.val());
 
-            if (this.checkEmailAddressInString(address)) {
+            if (address) {
                 this.addAddress(address, '');
 
                 $input.val('');
@@ -149,6 +144,27 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                 scope: scope,
             });
         },
+    }
+
+    /**
+     *
+     * @param {string} input
+     * @return {string}
+     */
+    obtainEmailAddressFromString(input) {
+        input = input.replace(',', '').replace(';', '').trim();
+
+        const address = input.split(' ').find(it => it.includes('@'));
+
+        if (!address) {
+            return undefined;
+        }
+
+        if (!this.checkEmailAddressInString(address)) {
+            return undefined;
+        }
+
+        return address;
     }
 
     getAutocompleteMaxCount() {
