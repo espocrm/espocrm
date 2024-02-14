@@ -84,7 +84,7 @@ class RoleAddFieldModalView extends ModalView {
             {
                 name: 'cancel',
                 label: 'Cancel',
-                onClick: () => this.close(),
+                onClick: () => this.actionCancel(),
             },
         ]
 
