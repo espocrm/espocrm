@@ -21,7 +21,7 @@
         "psr/container": "^1.1",
         "slim/slim": "^4.12",
         "slim/psr7": "^1",
-        "dragonmantank/cron-expression": "^3.0",
+        "dragonmantank/cron-expression": "^3.3",
         "laminas/laminas-mail": "^2.25.1",
         "laminas/laminas-ldap": "^2.18",
         "laminas/laminas-servicemanager": "^3.22",
