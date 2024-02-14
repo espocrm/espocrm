@@ -1,8 +1,17 @@
 [
-    {"name":"username"},
-    {"name":"isDenied", "widthPx": 100},
-    {"name":"ipAddress", "width": 14},
-    {"name":"denialReason", "width": 22},
-    {"name":"user", "width": 16},
-    {"name":"createdAt", "width": 14}
+    {"name": "username"},
+    {"name": "ipAddress", "width": 14},
+    {"name": "denialReason", "width": 22},
+    {"name": "user", "width": 16},
+    {"name": "createdAt", "width": 14},
+    {
+        "name":"isDenied",
+        "widthPx": 100,
+        "hidden": true
+    },
+    {
+        "name": "portal",
+        "width": 13,
+        "hidden": true
+    }
 ]
