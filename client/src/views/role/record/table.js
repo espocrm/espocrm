@@ -353,6 +353,16 @@ class RoleRecordTableView extends View {
     }
 
     setupFieldTableDataList() {
+        /**
+         * @type {
+         *     {
+         *         name: string,
+         *         list: {
+         *             name: string,
+         *             list: {name: 'read'|'edit', value: 'yes'|'no'}[],
+         *          }[],
+         *     }[]
+         * } */
         this.fieldTableDataList = [];
 
         this.scopeList.forEach(scope => {
@@ -660,43 +670,34 @@ class RoleRecordTableView extends View {
             scope: scope,
             ignoreFieldList: ignoreFieldList,
             type: this.type,
-        }, (view) => {
+        }, view => {
             view.render();
 
-            this.listenTo(view, 'add-field', field => {
+            this.listenTo(view, 'add-fields', /** string[] */fields => {
                 view.close();
 
-                this.fieldTableDataList.forEach(scopeData =>{
-                    if (scopeData.name !== scope) {
-                        return;
-                    }
+                const scopeData = this.fieldTableDataList.find(it => it.name === scope);
 
-                    let found = false;
+                if (!scopeData) {
+                    return;
+                }
 
-                    scopeData.list.forEach(d => {
-                        if (d.name === field) {
-                            found = true;
-                        }
+                fields.filter(field => !scopeData.list.find(it => it.name === field))
+                    .forEach(field => {
+                        scopeData.list.unshift({
+                            name: field,
+                            list: [
+                                {
+                                    name: 'read',
+                                    value: 'no',
+                                },
+                                {
+                                    name: 'edit',
+                                    value: 'no',
+                                },
+                            ]
+                        });
                     });
-
-                    if (found) {
-                        return;
-                    }
-
-                    scopeData.list.unshift({
-                        name: field,
-                        list: [
-                            {
-                                name: 'read',
-                                value: 'yes',
-                            },
-                            {
-                                name: 'edit',
-                                value: 'yes',
-                            },
-                        ]
-                    });
-                });
 
                 this.reRenderPreserveSearch();
             });

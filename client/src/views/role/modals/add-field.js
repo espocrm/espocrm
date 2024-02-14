@@ -37,7 +37,7 @@ class RoleAddFieldModalView extends ModalView {
     events = {
         /** @this RoleAddFieldModalView */
         'click a[data-action="addField"]': function (e) {
-            this.trigger('add-field', $(e.currentTarget).data().name);
+            this.trigger('add-fields', [$(e.currentTarget).data().name]);
         }
     }
 
@@ -52,6 +52,44 @@ class RoleAddFieldModalView extends ModalView {
         this.addHandler('keyup', 'input[data-name="quick-search"]', (e, /** HTMLInputElement */target) => {
             this.processQuickSearch(target.value);
         });
+
+        this.addHandler('click', 'input[type="checkbox"]', (e, /** HTMLInputElement */target) => {
+            const name = target.dataset.name;
+
+            if (target.checked) {
+                this.checkedList.push(name);
+            } else {
+                const index = this.checkedList.indexOf(name);
+
+                if (index !== -1) {
+                    this.checkedList.splice(index, 1);
+                }
+            }
+
+            this.checkedList.length ?
+                this.enableButton('select') :
+                this.disableButton('select');
+        });
+
+        this.buttonList = [
+            {
+                name: 'select',
+                label: 'Select',
+                style: 'danger',
+                disabled: true,
+                onClick: () => {
+                    this.trigger('add-fields', this.checkedList);
+                },
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+                onClick: () => this.close(),
+            },
+        ]
+
+        /** @type {string[]} */
+        this.checkedList = [];
 
         const scope = this.scope = this.options.scope;
 
