@@ -336,7 +336,7 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
             const autocomplete = new Autocomplete(this.$input.get(0), {
                 name: this.name,
                 autoSelectFirst: true,
-                triggerSelectOnValidInput: true,
+                triggerSelectOnValidInput: false,
                 focusOnSelect: true,
                 minChars: 1,
                 forceHide: true,
@@ -354,15 +354,15 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                     return this.getHelper().escapeString(item.name) + ' &#60;' +
                         this.getHelper().escapeString(item.id) + '&#62;';
                 },
-                lookupFunction: (query, done) => {
-                    Espo.Ajax
+                lookupFunction: query => {
+                    return Espo.Ajax
                         .getRequest('EmailAddress/search', {
                             q: query,
                             maxSize: this.getAutocompleteMaxCount(),
                             onlyActual: true,
                         })
                         .then(/** Record[] */response => {
-                            const result = response.map(item => {
+                            return response.map(item => {
                                 return {
                                     id: item.emailAddress,
                                     name: item.entityName,
@@ -374,8 +374,6 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                                     value: item.emailAddress,
                                 };
                             });
-
-                            done(result);
                         });
                 },
             });

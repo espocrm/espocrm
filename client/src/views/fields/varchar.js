@@ -291,10 +291,9 @@ class VarcharFieldView extends BaseFieldView {
                 onSelect: () => this.trigger('change'),
                 lookup: this.params.options,
                 lookupFunction: this.useAutocompleteUrl ?
-                    (query, done) => {
-                        Espo.Ajax.getRequest(this.getAutocompleteUrl(query))
-                            .then(response => this.transformAutocompleteResult(response))
-                            .then(result => done(result));
+                    query => {
+                        return Espo.Ajax.getRequest(this.getAutocompleteUrl(query))
+                            .then(response => this.transformAutocompleteResult(response));
                     } :
                     undefined,
             });

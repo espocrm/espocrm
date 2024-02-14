@@ -73,8 +73,8 @@ class EmailEmailAddressFieldView extends BaseFieldView {
                 return this.getHelper().escapeString(item.name) + ' &#60;' +
                     this.getHelper().escapeString(item.id) + '&#62;';
             },
-            lookupFunction: (query, done) => {
-                Espo.Ajax
+            lookupFunction: query => {
+                return Espo.Ajax
                     .getRequest('EmailAddress/search', {
                         q: query,
                         maxSize: this.getAutocompleteMaxCount(),
@@ -99,7 +99,7 @@ class EmailEmailAddressFieldView extends BaseFieldView {
                             result = result.filter(item => item.emailAddress !== current)
                         }
 
-                        done(result);
+                        return result;
                     });
             },
         });

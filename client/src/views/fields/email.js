@@ -363,7 +363,7 @@ class EmailFieldView extends VarcharFieldView {
                 focusOnSelect: true,
                 minChars: 1,
                 forceHide: true,
-                handleFocusMode: 2,
+                handleFocusMode: 1,
                 onSelect: item => {
                     this.$element.val(item.emailAddress);
                 },
@@ -371,14 +371,14 @@ class EmailFieldView extends VarcharFieldView {
                     return this.getHelper().escapeString(item.name) + ' &#60;' +
                         this.getHelper().escapeString(item.id) + '&#62;';
                 },
-                lookupFunction: (query, done) => {
-                    Espo.Ajax
+                lookupFunction: query => {
+                    return Espo.Ajax
                         .getRequest('EmailAddress/search', {
                             q: query,
                             maxSize: this.getAutocompleteMaxCount(),
                         })
                         .then(/** Record[] */response => {
-                            const result = response.map(item => {
+                            return response.map(item => {
                                 return {
                                     id: item.emailAddress,
                                     name: item.entityName,
@@ -390,8 +390,6 @@ class EmailFieldView extends VarcharFieldView {
                                     value: item.emailAddress,
                                 };
                             });
-
-                            done(result);
                         });
                 },
             });

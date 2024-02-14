@@ -40,17 +40,17 @@ class Autocomplete {
 
     /**
      * @typedef {{
-     *     name: string,
+     *     name?: string,
      *     forceHide?: boolean,
      *     lookup?: string[],
-     *     lookupFunction?: function (string, function (module:ui/autocomplete~item[])): void,
+     *     lookupFunction?: function (string): Promise<module:ui/autocomplete~item[]>,
      *     minChars?: Number,
      *     formatResult?: function (module:ui/autocomplete~item): string,
      *     onSelect?: function (module:ui/autocomplete~item): void,
      *     beforeRender?: function (HTMLElement): void,
      *     triggerSelectOnValidInput?: boolean,
      *     autoSelectFirst?: boolean,
-     *     handleFocusMode?: 1|2,
+     *     handleFocusMode?: 1|2|3,
      *     focusOnSelect?: boolean,
      * }} module:ui/autocomplete~options
      */
@@ -64,9 +64,10 @@ class Autocomplete {
 
         const lookup = options.lookupFunction ?
             (query, done) => {
-                options.lookupFunction(query, items => {
-                    done({suggestions: items});
-                });
+                options.lookupFunction(query)
+                    .then(items => {
+                        done({suggestions: items})
+                    });
             } :
             options.lookup;
 
@@ -122,7 +123,7 @@ class Autocomplete {
             triggerSelectOnValidInput: options.triggerSelectOnValidInput,
         });
 
-        this.$element.attr('autocomplete', 'espo-' + options.name);
+        this.$element.attr('autocomplete', 'espo-' + (options.name || 'dummy'));
 
         if (options.handleFocusMode) {
             this.initHandleFocus(options);
@@ -155,6 +156,10 @@ class Autocomplete {
             }
 
             this.$element.autocomplete('onFocus');
+
+            if (options.handleFocusMode === 3) {
+                this.$element.on('change', () => this.$element.val(''));
+            }
         });
     }
 
