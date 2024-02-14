@@ -33,7 +33,7 @@ define('views/admin/auth-log-record/record/list', ['views/record/list'], functio
         rowActionsView: 'views/record/row-actions/view-and-remove',
 
         massActionList: ['remove'],
-
         checkAllResultMassActionList: ['remove'],
+        forceSettings: true,
     });
 });

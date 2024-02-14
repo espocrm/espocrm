@@ -5,5 +5,4 @@
     {"name":"denialReason", "width": 22},
     {"name":"user", "width": 16},
     {"name":"createdAt", "width": 14}
-
 ]
