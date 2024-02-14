@@ -98,11 +98,9 @@ class RoleAddFieldModalView extends ModalView {
         const fields = this.getMetadata().get(`entityDefs.${scope}.fields`) || {};
         const fieldList = [];
 
-        Object.keys(fields).forEach(field => {
-            if (field in this.options.ignoreFieldList) {
-                return;
-            }
+        const ignoreFieldList = this.options.ignoreFieldList || [];
 
+        Object.keys(fields).filter(field => !ignoreFieldList.includes(field)).forEach(field => {
             if (!this.getFieldManager().isEntityTypeFieldAvailable(scope, field)) {
                 return;
             }
