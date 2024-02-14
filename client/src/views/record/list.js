@@ -332,6 +332,22 @@ class ListRecordView extends View {
     quickEditDisabled = false
 
     /**
+     * Force settings.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    forceSettings = false
+
+    /**
+     * Disable settings.
+     *
+     * @protected
+     * @type {boolean}
+     */
+    settingsDisabled = false
+
+    /**
      * Column definitions.
      *
      * @typedef module:views/record/list~columnDefs
@@ -3403,9 +3419,16 @@ class ListRecordView extends View {
         }
 
         if (
-            !this.getMetadata().get(`scopes.${this.entityType}.object`) ||
+            (
+                !this.forceSettings &&
+                !this.getMetadata().get(`scopes.${this.entityType}.object`)
+            ) ||
             this.getConfig().get('listViewSettingsDisabled')
         ) {
+            return;
+        }
+
+        if (this.settingsDisabled) {
             return;
         }
 
