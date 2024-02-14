@@ -130,6 +130,10 @@ class RoleAddFieldModalView extends ModalView {
 
     afterRender() {
         this.$table = this.$el.find('table.fields-table');
+
+        setTimeout(() => {
+            this.element.querySelector('input[data-name="quick-search"]').focus();
+        }, 0);
     }
 
     processQuickSearch(text) {
