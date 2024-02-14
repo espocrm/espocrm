@@ -528,6 +528,10 @@ class MainView extends View {
      * @param {string} name A name.
      */
     disableMenuItem(name) {
+        if (!this.$headerActionsContainer) {
+            return;
+        }
+
         this.$headerActionsContainer
             .find('[data-name="' + name + '"]')
             .addClass('disabled')
@@ -540,6 +544,10 @@ class MainView extends View {
      * @param {string} name A name.
      */
     enableMenuItem(name) {
+        if (!this.$headerActionsContainer) {
+            return;
+        }
+
         this.$headerActionsContainer
             .find('[data-name="' + name + '"]')
             .removeClass('disabled')
