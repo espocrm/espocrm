@@ -28,6 +28,7 @@
 
 import VarcharFieldView from 'views/fields/varchar';
 import MailtoHelper from 'helpers/misc/mailto';
+import Autocomplete from 'ui/autocomplete';
 
 class EmailFieldView extends VarcharFieldView {
 
@@ -355,43 +356,47 @@ class EmailFieldView extends VarcharFieldView {
         this.manageAddButton();
 
         if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
-            this.$element.autocomplete({
-                serviceUrl: () => {
-                    return `EmailAddress/search` +
-                        `?maxSize=${this.getAutocompleteMaxCount()}`
-                },
-                paramName: 'q',
-                minChars: 1,
+            const autocomplete = new Autocomplete(this.$element.get(0), {
+                name: this.name,
                 autoSelectFirst: true,
-                triggerSelectOnValidInput: false,
-                formatResult: /** Record */suggestion => {
-                    return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
-                        this.getHelper().escapeString(suggestion.id) + '&#62;';
-                },
-                transformResult: /** Record */response => {
-                    response = JSON.parse(response);
-                    const list = [];
-
-                    response.forEach(item => {
-                        list.push({
-                            id: item.emailAddress,
-                            name: item.entityName,
-                            emailAddress: item.emailAddress,
-                            entityId: item.entityId,
-                            entityName: item.entityName,
-                            entityType: item.entityType,
-                            data: item.emailAddress,
-                            value: item.emailAddress,
-                        });
-                    });
-
-                    return {suggestions: list};
-                },
-                onSelect: /** Record */item => {
+                triggerSelectOnValidInput: true,
+                focusOnSelect: true,
+                minChars: 1,
+                forceHide: true,
+                handleFocusMode: 2,
+                onSelect: item => {
                     this.$element.val(item.emailAddress);
-                    this.$element.focus();
+                },
+                formatResult: item => {
+                    return this.getHelper().escapeString(item.name) + ' &#60;' +
+                        this.getHelper().escapeString(item.id) + '&#62;';
+                },
+                lookupFunction: (query, done) => {
+                    Espo.Ajax
+                        .getRequest('EmailAddress/search', {
+                            q: query,
+                            maxSize: this.getAutocompleteMaxCount(),
+                        })
+                        .then(/** Record[] */response => {
+                            const result = response.map(item => {
+                                return {
+                                    id: item.emailAddress,
+                                    name: item.entityName,
+                                    emailAddress: item.emailAddress,
+                                    entityId: item.entityId,
+                                    entityName: item.entityName,
+                                    entityType: item.entityType,
+                                    data: item.emailAddress,
+                                    value: item.emailAddress,
+                                };
+                            });
+
+                            done(result);
+                        });
                 },
             });
+
+            this.once('render remove', () => autocomplete.dispose());
         }
     }
 

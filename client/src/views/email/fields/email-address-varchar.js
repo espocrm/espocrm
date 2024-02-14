@@ -29,6 +29,7 @@
 import BaseFieldView from 'views/fields/base';
 import EmailFromAddressFieldView from 'views/email/fields/from-address-varchar';
 import EmailEmailAddressFieldView from 'views/email/fields/email-address';
+import Autocomplete from 'ui/autocomplete';
 
 class EmailAddressVarcharFieldView extends BaseFieldView {
 
@@ -332,64 +333,54 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                 this.addAddressHtml(item, this.nameHash[item] || '');
             });
 
-            this.$input.autocomplete({
-                serviceUrl: () => {
-                    return `EmailAddress/search` +
-                        `?maxSize=${this.getAutocompleteMaxCount()}` +
-                        `&onlyActual=true`;
-                },
-                paramName: 'q',
-                minChars: 1,
+            const autocomplete = new Autocomplete(this.$input.get(0), {
+                name: this.name,
                 autoSelectFirst: true,
-                noCache: true,
-                triggerSelectOnValidInput: false,
-                beforeRender: () => {
-                    // Prevent an issue that suggestions are shown and not hidden
-                    // when clicking outside the window and then focusing back on the document.
-                    if (this.$input.get(0) !== document.activeElement) {
-                        setTimeout(() => this.$input.autocomplete('hide'), 30);
-                    }
-                },
-                formatResult: (/** Record */suggestion) => {
-                    return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
-                        this.getHelper().escapeString(suggestion.id) + '&#62;';
-                },
-                transformResult: (response) => {
-                    response = JSON.parse(response);
-                    const list = [];
-
-                    response.forEach((item) => {
-                        list.push({
-                            id: item.emailAddress,
-                            name: item.entityName,
-                            emailAddress: item.emailAddress,
-                            entityId: item.entityId,
-                            entityName: item.entityName,
-                            entityType: item.entityType,
-                            data: item.emailAddress,
-                            value: item.emailAddress,
-                        });
-                    });
-
-                    return {
-                        suggestions: list
-                    };
-                },
-                onSelect: (/** Record */item) => {
-                    this.addAddress(item.emailAddress, item.entityName, item.entityType, item.entityId);
+                triggerSelectOnValidInput: true,
+                focusOnSelect: true,
+                minChars: 1,
+                forceHide: true,
+                onSelect: item => {
+                    this.addAddress(
+                        item.emailAddress,
+                        item.entityName,
+                        item.entityType,
+                        item.entityId
+                    );
 
                     this.$input.val('');
-                    this.$input.focus();
+                },
+                formatResult: item => {
+                    return this.getHelper().escapeString(item.name) + ' &#60;' +
+                        this.getHelper().escapeString(item.id) + '&#62;';
+                },
+                lookupFunction: (query, done) => {
+                    Espo.Ajax
+                        .getRequest('EmailAddress/search', {
+                            q: query,
+                            maxSize: this.getAutocompleteMaxCount(),
+                            onlyActual: true,
+                        })
+                        .then(/** Record[] */response => {
+                            const result = response.map(item => {
+                                return {
+                                    id: item.emailAddress,
+                                    name: item.entityName,
+                                    emailAddress: item.emailAddress,
+                                    entityId: item.entityId,
+                                    entityName: item.entityName,
+                                    entityType: item.entityType,
+                                    data: item.emailAddress,
+                                    value: item.emailAddress,
+                                };
+                            });
+
+                            done(result);
+                        });
                 },
             });
 
-            this.once('render', () => {
-                this.$input.autocomplete('dispose');
-            });
-
-            this.once('remove', () => {
-                this.$input.autocomplete('dispose');
-            });
+            this.once('render remove', () => autocomplete.dispose());
         }
 
         if (this.mode === 'search' && this.getAcl().check('Email', 'create')) {

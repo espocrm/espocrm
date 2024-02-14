@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import BaseFieldView from 'views/fields/base';
+import Autocomplete from 'ui/autocomplete';
 
 class EmailEmailAddressFieldView extends BaseFieldView {
 
@@ -57,57 +58,53 @@ class EmailEmailAddressFieldView extends BaseFieldView {
     initSearchAutocomplete() {
         this.$input = this.$input || this.$el.find('input');
 
-        this.$input.autocomplete({
-            serviceUrl: () => {
-                return `EmailAddress/search` +
-                    `?maxSize=${this.getAutocompleteMaxCount()}`
-            },
-            paramName: 'q',
-            minChars: 1,
+        const autocomplete = new Autocomplete(this.$input.get(0), {
+            name: this.name,
             autoSelectFirst: true,
-            triggerSelectOnValidInput: false,
-            noCache: true,
-            formatResult: /** Record */suggestion => {
-                return this.getHelper().escapeString(suggestion.name) + ' &#60;' +
-                    this.getHelper().escapeString(suggestion.id) + '&#62;';
-            },
-            transformResult: response => {
-                response = JSON.parse(response);
-
-                let list = response.map(item => {
-                    return {
-                        id: item.emailAddress,
-                        name: item.entityName,
-                        emailAddress: item.emailAddress,
-                        entityId: item.entityId,
-                        entityName: item.entityName,
-                        entityType: item.entityType,
-                        data: item.emailAddress,
-                        value: item.emailAddress,
-                    }
-                });
-
-                if (this.skipCurrentInAutocomplete) {
-                    const current = this.$input.val();
-
-                    list = list.filter(item => item.emailAddress !== current)
-                }
-
-                return {suggestions: list};
-            },
-            onSelect: /** Record */item => {
+            triggerSelectOnValidInput: true,
+            focusOnSelect: true,
+            minChars: 1,
+            forceHide: true,
+            handleFocusMode: 2,
+            onSelect: item => {
                 this.$input.val(item.emailAddress);
-                this.$input.focus();
+            },
+            formatResult: item => {
+                return this.getHelper().escapeString(item.name) + ' &#60;' +
+                    this.getHelper().escapeString(item.id) + '&#62;';
+            },
+            lookupFunction: (query, done) => {
+                Espo.Ajax
+                    .getRequest('EmailAddress/search', {
+                        q: query,
+                        maxSize: this.getAutocompleteMaxCount(),
+                    })
+                    .then(/** Record[] */response => {
+                        let result = response.map(item => {
+                            return {
+                                id: item.emailAddress,
+                                name: item.entityName,
+                                emailAddress: item.emailAddress,
+                                entityId: item.entityId,
+                                entityName: item.entityName,
+                                entityType: item.entityType,
+                                data: item.emailAddress,
+                                value: item.emailAddress,
+                            };
+                        });
+
+                        if (this.skipCurrentInAutocomplete) {
+                            const current = this.$input.val();
+
+                            result = result.filter(item => item.emailAddress !== current)
+                        }
+
+                        done(result);
+                    });
             },
         });
 
-        this.once('render', () => {
-            this.$input.autocomplete('dispose');
-        });
-
-        this.once('remove', () => {
-            this.$input.autocomplete('dispose');
-        });
+        this.once('render remove', () => autocomplete.dispose());
     }
 
     fetchSearch() {
