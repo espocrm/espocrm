@@ -30,6 +30,7 @@
 
 import BaseFieldView from 'views/fields/base';
 import RegExpPattern from 'helpers/reg-exp-pattern';
+import Autocomplete from 'ui/autocomplete';
 
 /**
  * A varchar field.
@@ -191,6 +192,9 @@ class VarcharFieldView extends BaseFieldView {
         return '';
     }
 
+    /**
+     * @return {module:ui/autocomplete~item[]}
+     */
     transformAutocompleteResult(response) {
         const responseParsed = typeof response === 'string' ?
             JSON.parse(response) :
@@ -200,17 +204,15 @@ class VarcharFieldView extends BaseFieldView {
 
         responseParsed.list.forEach(item => {
             list.push({
-                id: item.id,
-                name: item.name || item.id,
-                data: item.id,
+                //id: item.id,
+                //name: item.name || item.id,
+                //data: item.id,
                 value: item.name || item.id,
                 attributes: item,
             });
         });
 
-        return {
-            suggestions: list,
-        };
+        return list;
     }
 
     setupSearch() {
@@ -280,64 +282,24 @@ class VarcharFieldView extends BaseFieldView {
                 this.useAutocompleteUrl
             )
         ) {
-            // noinspection JSUnusedGlobalSymbols
-            const autocompleteOptions = {
-                minChars: 0,
-                lookup: this.params.options,
-                maxHeight: 200,
-                triggerSelectOnValidInput: false,
+            const autocomplete = new Autocomplete(this.$element.get(0), {
+                name: this.name,
+                triggerSelectOnValidInput: true,
                 autoSelectFirst: true,
-                beforeRender: $c => {
-                    if (this.$element.hasClass('input-sm')) {
-                        $c.addClass('small');
-                    }
-                },
-                formatResult: suggestion => {
-                    return this.getHelper().escapeString(suggestion.value);
-                },
-                lookupFilter: (suggestion, query, queryLowerCase) => {
-                    if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
-                        return suggestion.value.length !== queryLowerCase.length;
-                    }
-
-                    return false;
-                },
-                onSelect: () => {
-                    this.trigger('change');
-
-                    this.$element.focus();
-                },
-            };
-
-            if (this.useAutocompleteUrl) {
-                autocompleteOptions.noCache = true;
-                autocompleteOptions.lookup = (query, done) => {
-                    Espo.Ajax.getRequest(this.getAutocompleteUrl(query))
-                        .then(response => {
-                            return this.transformAutocompleteResult(response);
-                        })
-                        .then(result => {
-                            done(result);
-                        });
-                };
-            }
-
-            this.$element.autocomplete(autocompleteOptions);
-            this.$element.attr('autocomplete', 'espo-' + this.name);
-
-            // Prevent showing suggestions after select.
-            this.$element.off('focus.autocomplete');
-
-            this.$element.on('focus', () => {
-                if (this.$element.val()) {
-                    return;
-                }
-
-                this.$element.autocomplete('onValueChange');
+                handleFocusMode: 1,
+                focusOnSelect: true,
+                onSelect: () => this.trigger('change'),
+                lookup: this.params.options,
+                lookupFunction: this.useAutocompleteUrl ?
+                    (query, done) => {
+                        Espo.Ajax.getRequest(this.getAutocompleteUrl(query))
+                            .then(response => this.transformAutocompleteResult(response))
+                            .then(result => done(result));
+                    } :
+                    undefined,
             });
 
-            this.once('render', () => this.$element.autocomplete('dispose'));
-            this.once('remove', () => this.$element.autocomplete('dispose'));
+            this.once('render remove', () => autocomplete.dispose());
         }
 
         if (this.isSearchMode()) {

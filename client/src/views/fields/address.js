@@ -30,6 +30,7 @@
 
 import BaseFieldView from 'views/fields/base';
 import Varchar from 'views/fields/varchar';
+import Autocomplete from 'ui/autocomplete';
 
 /**
  * An address field.
@@ -362,178 +363,66 @@ class AddressFieldView extends BaseFieldView {
 
     afterRender() {
         if (this.mode === this.MODE_EDIT) {
-            this.$street = this.$el.find('[data-name="' + this.streetField + '"]');
-            this.$postalCode = this.$el.find('[data-name="' + this.postalCodeField + '"]');
-            this.$state = this.$el.find('[data-name="' + this.stateField + '"]');
-            this.$city = this.$el.find('[data-name="' + this.cityField + '"]');
-            this.$country = this.$el.find('[data-name="' + this.countryField + '"]');
+            this.$street = this.$el.find(`[data-name="${this.streetField}"]`);
+            this.$postalCode = this.$el.find(`[data-name="${this.postalCodeField}"]`);
+            this.$state = this.$el.find(`[data-name="${this.stateField}"]`);
+            this.$city = this.$el.find(`[data-name="${this.cityField}"]`);
+            this.$country = this.$el.find(`[data-name="${this.countryField}"]`);
 
-            this.$street.on('change', () => {
-                this.trigger('change');
-            });
+            this.$street.on('change', () => this.trigger('change'));
+            this.$postalCode.on('change', () => this.trigger('change'));
+            this.$state.on('change', () => this.trigger('change'));
+            this.$city.on('change', () => this.trigger('change'));
+            this.$country.on('change', () => this.trigger('change'));
 
-            this.$postalCode.on('change', () => {
-                this.trigger('change');
-            });
-
-            this.$state.on('change', () => {
-                this.trigger('change');
-            });
-
-            this.$city.on('change', () => {
-                this.trigger('change');
-            });
-
-            this.$country.on('change', () => {
-                this.trigger('change');
-            });
-
-            let countryList = this.getConfig().get('addressCountryList') || [];
+            const countryList = this.getConfig().get('addressCountryList') || [];
+            const cityList = this.getConfig().get('addressCityList') || [];
+            const stateList = this.getConfig().get('addressStateList') || [];
 
             if (countryList.length) {
-                this.$country.autocomplete({
-                    minChars: 0,
+                const autocomplete = new Autocomplete(this.$country.get(0), {
+                    name: this.name + 'Country',
+                    triggerSelectOnValidInput: true,
+                    autoSelectFirst: true,
+                    handleFocusMode: 1,
+                    focusOnSelect: true,
                     lookup: countryList,
-                    maxHeight: 200,
-                    formatResult: suggestion => {
-                        return this.getHelper().escapeString(suggestion.value);
-                    },
-                    lookupFilter: (suggestion, query, queryLowerCase) => {
-                        if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
-                            if (suggestion.value.length === queryLowerCase.length) {
-                                return false;
-                            }
-
-                            return true;
-                        }
-
-                        return false;
-                    },
-                    onSelect: () => {
-                        this.trigger('change');
-
-                        this.$country.focus();
-                    },
+                    onSelect: () => this.trigger('change'),
                 });
 
-                this.$country.on('focus', () => {
-                    if (this.$country.val()) {
-                        return;
-                    }
-
-                    this.$country.autocomplete('onValueChange');
-                });
-
-                this.once('render', () => {
-                    this.$country.autocomplete('dispose');
-                });
-
-                this.once('remove', () => {
-                    this.$country.autocomplete('dispose');
-                });
-
-                this.$country.attr('autocomplete', 'espo-country');
+                this.once('render remove', () => autocomplete.dispose());
             }
-
-            let cityList = this.getConfig().get('addressCityList') || [];
 
             if (cityList.length) {
-                this.$city.autocomplete({
-                    minChars: 0,
+                const autocomplete = new Autocomplete(this.$city.get(0), {
+                    name: this.name + 'City',
+                    triggerSelectOnValidInput: true,
+                    autoSelectFirst: true,
+                    handleFocusMode: 1,
+                    focusOnSelect: true,
                     lookup: cityList,
-                    maxHeight: 200,
-                    formatResult: (suggestion) => {
-                        return this.getHelper().escapeString(suggestion.value);
-                    },
-                    lookupFilter: (suggestion, query, queryLowerCase) => {
-                        if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
-                            if (suggestion.value.length === queryLowerCase.length) {
-                                return false;
-                            }
-
-                            return true;
-                        }
-
-                        return false;
-                    },
-                    onSelect: () => {
-                        this.trigger('change');
-
-                        this.$city.focus();
-                    },
+                    onSelect: () => this.trigger('change'),
                 });
 
-                this.$city.on('focus', () => {
-                    if (this.$city.val()) {
-                        return;
-                    }
-
-                    this.$city.autocomplete('onValueChange');
-                });
-
-                this.once('render', () => {
-                    this.$city.autocomplete('dispose');
-                });
-
-                this.once('remove', () => {
-                    this.$city.autocomplete('dispose');
-                });
-
-                this.$city.attr('autocomplete', 'espo-city');
+                this.once('render remove', () => autocomplete.dispose());
             }
 
-            let stateList = this.getConfig().get('addressStateList') || [];
-
             if (stateList.length) {
-                this.$state.autocomplete({
-                    minChars: 0,
+                const autocomplete = new Autocomplete(this.$state.get(0), {
+                    name: this.name + 'State',
+                    triggerSelectOnValidInput: true,
+                    autoSelectFirst: true,
+                    handleFocusMode: 1,
+                    focusOnSelect: true,
                     lookup: stateList,
-                    maxHeight: 200,
-                    formatResult: suggestion => {
-                        return this.getHelper().escapeString(suggestion.value);
-                    },
-                    lookupFilter: function (suggestion, query, queryLowerCase) {
-                        if (suggestion.value.toLowerCase().indexOf(queryLowerCase) === 0) {
-                            if (suggestion.value.length === queryLowerCase.length) {
-                                return false;
-                            }
-
-                            return true;
-                        }
-
-                        return false;
-                    },
-                    onSelect: () => {
-                        this.trigger('change');
-
-                        this.$state.focus();
-                    },
+                    onSelect: () => this.trigger('change'),
                 });
 
-                this.$state.on('focus', () => {
-                    if (this.$state.val()) {
-                        return;
-                    }
-
-                    this.$state.autocomplete('onValueChange');
-                });
-
-                this.once('render', () => {
-                    this.$state.autocomplete('dispose');
-                });
-
-                this.once('remove', () => {
-                    this.$state.autocomplete('dispose');
-                });
-
-                this.$state.attr('autocomplete', 'espo-state');
+                this.once('render remove', () => autocomplete.dispose());
             }
 
             this.controlStreetTextareaHeight();
-
-            this.$street.on('input', () => {
-                this.controlStreetTextareaHeight();
-            });
+            this.$street.on('input', () => this.controlStreetTextareaHeight());
         }
     }
 
