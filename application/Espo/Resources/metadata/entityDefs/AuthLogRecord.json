@@ -66,7 +66,7 @@
         },
         "authenticationMethod": {
             "type": "enum",
-            "view": "views/auth-log-record/fields/authentication-method",
+            "view": "views/admin/auth-log-record/fields/authentication-method",
             "translation": "Settings.options.authenticationMethod"
         }
     },
