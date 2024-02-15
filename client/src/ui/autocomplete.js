@@ -121,7 +121,7 @@ class Autocomplete {
                     this.$element.focus();
                 }
             },
-            triggerSelectOnValidInput: options.triggerSelectOnValidInput,
+            triggerSelectOnValidInput: options.triggerSelectOnValidInput || false,
         });
 
         this.$element.attr('autocomplete', 'espo-' + (options.name || 'dummy'));
