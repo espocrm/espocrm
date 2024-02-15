@@ -31,9 +31,9 @@ namespace tests\unit\Espo\Tools;
 
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
+use Espo\Tools\EntityManager\NameUtil;
 use Espo\Tools\FieldManager\FieldManager;
 use Espo\Core\InjectableFactory;
-
 use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
 
@@ -49,15 +49,20 @@ class FieldManagerTest extends TestCase
         $this->language = $this->createMock(Language::class);
         $this->baseLanguage = $this->createMock(Language::class);
         $this->defaultLanguage = $this->createMock(Language::class);
-
         $this->metadataHelper = $this->createMock(Metadata\Helper::class);
+        $nameUtil = $this->createMock(NameUtil::class);
+
+        $nameUtil->expects($this->any())
+            ->method('addCustomPrefix')
+            ->willReturnCallback(fn ($it) => $it);
 
         $this->fieldManager = new FieldManager(
             $this->createMock(InjectableFactory::class),
             $this->metadata,
             $this->language,
             $this->baseLanguage,
-            $this->metadataHelper
+            $this->metadataHelper,
+            $nameUtil
         );
 
         $this->reflection = new ReflectionHelper($this->fieldManager);
