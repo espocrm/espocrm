@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\EntityManager;
 
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Route;
 use Espo\Core\Utils\Util;
@@ -94,7 +95,8 @@ class NameUtil
         private Metadata $metadata,
         private ServiceFactory $serviceFactory,
         private EntityManager $entityManager,
-        private Route $routeUtil
+        private Route $routeUtil,
+        private Config $config
     ) {}
 
     public function nameIsBad(string $name): bool
@@ -243,5 +245,16 @@ class NameUtil
         }
 
         return false;
+    }
+
+    public function addCustomPrefix(string $name, bool $ucFirst = false): string
+    {
+        if ($this->config->get('customPrefixDisabled')) {
+            return $name;
+        }
+
+        $prefix = $ucFirst ? 'C' : 'c';
+
+        return $prefix . ucfirst($name);
     }
 }

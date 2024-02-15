@@ -40,6 +40,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
 use Espo\Core\Utils\Util;
 
+use Espo\Tools\EntityManager\NameUtil;
 use RuntimeException;
 use stdClass;
 
@@ -87,7 +88,8 @@ class FieldManager
         private Metadata $metadata,
         private Language $language,
         private Language $baseLanguage,
-        private MetadataHelper $metadataHelper
+        private MetadataHelper $metadataHelper,
+        private NameUtil $nameUtil
     ) {}
 
     /**
@@ -113,14 +115,19 @@ class FieldManager
 
     /**
      * @param array<string, mixed> $fieldDefs
+     * @return string An actual name.
      * @throws BadRequest
      * @throws Conflict
      * @throws Error
      */
-    public function create(string $scope, string $name, array $fieldDefs): void
+    public function create(string $scope, string $name, array $fieldDefs): string
     {
         if (strlen($name) === 0) {
             throw new BadRequest("Empty field name.");
+        }
+
+        if (!$this->isScopeCustom($scope)) {
+            $name = $this->nameUtil->addCustomPrefix($name);
         }
 
         if (strlen(Util::camelCaseToUnderscore($name)) > self::MAX_NAME_LENGTH) {
@@ -199,6 +206,8 @@ class FieldManager
         }
 
         $this->update($scope, $name, $fieldDefs, true);
+
+        return $name;
     }
 
     /**

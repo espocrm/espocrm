@@ -60,7 +60,7 @@ class SanitizeTest extends BaseTestCase
             'sicCode' => ' ',
             'phoneNumber' => '+380 9044 433 11',
             'description' => '',
-            'array' => [
+            'cArray' => [
                 ' test ',
                 'hello',
             ],
@@ -73,7 +73,7 @@ class SanitizeTest extends BaseTestCase
         $this->assertEquals('Test 1', $account->getName());
         $this->assertEquals(null, $account->get('sicCode'));
         $this->assertEquals(null, $account->get('description'));
-        $this->assertEquals(['test', 'hello'], $account->get('array'));
+        $this->assertEquals(['test', 'hello'], $account->get('cArray'));
 
         /** @noinspection PhpUnhandledExceptionInspection */
         /** @var Account $account */
@@ -88,11 +88,11 @@ class SanitizeTest extends BaseTestCase
                 ],
             ],
             'description' => 'Test',
-            'array' => null,
+            'cArray' => null,
         ], CreateParams::create());
 
         $this->assertEquals('Test', $account->get('description'));
-        $this->assertEquals([], $account->get('array'));
+        $this->assertEquals([], $account->get('cArray'));
 
         $numbers = $account->getPhoneNumberGroup()->getNumberList();
         $this->assertCount(2, $numbers);

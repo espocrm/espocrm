@@ -124,6 +124,8 @@ class LinkManager
                 $params['relationName'] :
                 lcfirst($entity) . $entityForeign;
 
+            $relationName = $this->nameUtil->addCustomPrefix($relationName);
+
             if ($this->isNameTooLong($relationName)) {
                 throw new Error("Relation name is too long.");
             }
@@ -141,6 +143,14 @@ class LinkManager
             }
         }
 
+        if (!$this->isScopeCustom($entity)) {
+            $link = $this->nameUtil->addCustomPrefix($link);
+        }
+
+        if (!$entityForeign || !$this->isScopeCustom($entityForeign)) {
+            $linkForeign = $this->nameUtil->addCustomPrefix($linkForeign);
+        }
+
         $linkParams = LinkParams::createBuilder()
             ->setType($linkType)
             ->setEntityType($entity)
@@ -150,15 +160,15 @@ class LinkManager
             ->setName($relationName)
             ->build();
 
+        if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {
+            throw new Error('Bad link name.');
+        }
+
         if (
             $this->isNameTooLong($link) ||
             $this->isNameTooLong($linkForeign)
         ) {
             throw new Error("Link name is too long.");
-        }
-
-        if (is_numeric($link[0]) || is_numeric($linkForeign[0])) {
-            throw new Error('Bad link name.');
         }
 
         if (preg_match('/[^a-z]/', $link[0])) {
@@ -1088,5 +1098,10 @@ class LinkManager
         if ($this->isLanguageNotBase()) {
             $this->baseLanguage->save();
         }
+    }
+
+    private function isScopeCustom(string $scope): bool
+    {
+        return (bool) $this->metadata->get("scopes.$scope.isCustom");
     }
 }

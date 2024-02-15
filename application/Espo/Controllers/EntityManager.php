@@ -66,7 +66,7 @@ class EntityManager
      * @throws Error
      * @throws Conflict
      */
-    public function postActionCreateEntity(Request $request): bool
+    public function postActionCreateEntity(Request $request): stdClass
     {
         $data = $request->getParsedBody();
 
@@ -142,9 +142,9 @@ class EntityManager
             $params['kanbanStatusIgnoreList'] = $data['kanbanStatusIgnoreList'];
         }
 
-        $this->entityManagerTool->create($name, $type, $params);
+        $name = $this->entityManagerTool->create($name, $type, $params);
 
-        return true;
+        return (object) ['name' => $name];
     }
 
     /**

@@ -288,5 +288,6 @@ return [
     'phoneNumberPreferredCountryList' => ['us', 'de'],
     'adminUpgradeDisabled' => false,
     'wysiwygCodeEditorDisabled' => false,
+    'customPrefixDisabled' => false,
     'isInstalled' => false,
 ];

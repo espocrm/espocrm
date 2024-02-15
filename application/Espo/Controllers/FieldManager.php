@@ -100,18 +100,18 @@ class FieldManager
 
         $fieldManagerTool = $this->fieldManagerTool;
 
-        $fieldManagerTool->create($scope, $name, get_object_vars($data));
+        $name = $fieldManagerTool->create($scope, $name, get_object_vars($data));
 
         try {
             $this->dataManager->rebuild([$scope]);
         }
         catch (Error $e) {
-            $fieldManagerTool->delete($scope, $data->name);
+            $fieldManagerTool->delete($scope, $name);
 
             throw new Error($e->getMessage());
         }
 
-        return $fieldManagerTool->read($scope, $data->name);
+        return $fieldManagerTool->read($scope, $name);
     }
 
     /**

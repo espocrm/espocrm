@@ -205,6 +205,7 @@ return [
         'authAnotherUserDisabled',
         'emailAddressEntityLookupDefaultOrder',
         'phoneNumberEntityLookupDefaultOrder',
+        'customPrefixDisabled',
         'latestVersion',
     ],
     'superAdminItems' => [
