@@ -30,6 +30,7 @@
 
 import View from 'view';
 import StoredTextSearch from 'helpers/misc/stored-text-search';
+import Autocomplete from 'ui/autocomplete';
 
 /**
  * @typedef {Object} module:views/record/search~boolFilterDefs
@@ -716,37 +717,17 @@ class SearchView extends View {
             return;
         }
 
-        let preventCloseOnBlur = false;
-
-
-        // noinspection JSUnusedGlobalSymbols
-        const options = {
-            minChars: 0,
-            noCache: true,
+        const autocomplete = new Autocomplete(this.$textFilter.get(0), {
             triggerSelectOnValidInput: false,
-            beforeRender: $container => {
-                $container.addClass('text-search-suggestions');
-
-                $container.off('mousedown');
-                $container.on('mousedown', e => {
-                    if (e.originalEvent.button !== 0) {
-                        return;
-                    }
-
-                    preventCloseOnBlur = true;
-                    setTimeout(() => preventCloseOnBlur = false, 201);
-                });
-
-                $container.find('a[data-action="clearStoredTextSearch"]').on('click', e => {
-                    e.stopPropagation();
-                    e.preventDefault();
-
-                    const text = e.currentTarget.getAttribute('data-value');
-
-                    this.storedTextSearchHelper.remove(text);
-
-                    setTimeout(() => this.$textFilter.focus(), 205);
-                });
+            focusOnSelect: true,
+            onSelect: () => {
+                setTimeout(() => autocomplete.hide(), 1);
+            },
+            lookupFunction: query => {
+                return Promise.resolve(
+                    this.storedTextSearchHelper.match(query, this.autocompleteLimit)
+                        .map(item => ({value: item}))
+                );
             },
             formatResult: item => {
                 return $('<span>')
@@ -763,38 +744,25 @@ class SearchView extends View {
                     )
                     .get(0).innerHTML;
             },
-            lookup: (text, done) => {
-                const suggestions = this.storedTextSearchHelper.match(text, this.autocompleteLimit)
-                    .map(item => {
-                        return {value: item};
-                    });
+            beforeRender: container => {
+                const $container = $(container);
+                $container.addClass('text-search-suggestions');
 
-                done({suggestions: suggestions});
+                $container.find('a[data-action="clearStoredTextSearch"]').on('click', e => {
+                    e.stopPropagation();
+                    e.preventDefault();
+
+                    const text = e.currentTarget.getAttribute('data-value');
+                    this.storedTextSearchHelper.remove(text);
+
+                    autocomplete.hide();
+                    // 200 is hardcoded in autocomplete lib.
+                    setTimeout(() => this.$textFilter.focus(), 201);
+                });
             },
-            onSelect: () => {
-                this.$textFilter.focus();
-                this.$textFilter.autocomplete('hide');
-            },
-        };
-
-        this.$textFilter.autocomplete(options);
-
-        this.$textFilter.on('blur', () => {
-            if (preventCloseOnBlur) {
-                return;
-            }
-
-            setTimeout(() => this.$textFilter.autocomplete('hide'), 1);
         });
 
-        this.$textFilter.on('focus', () => {
-            if (this.$textFilter.val()) {
-                this.$textFilter.autocomplete('hide');
-            }
-        });
-
-        this.once('render', () => this.$textFilter.autocomplete('dispose'));
-        this.once('remove', () => this.$textFilter.autocomplete('dispose'));
+        this.once('render remove', () => autocomplete.dispose());
     }
 
     initQuickSearchUi() {
