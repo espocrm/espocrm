@@ -625,6 +625,7 @@ class LinkFieldView extends BaseFieldView {
                     handleFocusMode: 2,
                     autoSelectFirst: true,
                     forceHide: true,
+                    triggerSelectOnValidInput: false,
                     onSelect: item => {
                         this.getModelFactory().create(this.foreignScope, model => {
                             model.set(item.attributes);
@@ -664,6 +665,7 @@ class LinkFieldView extends BaseFieldView {
                         focusOnSelect: true,
                         handleFocusMode: 3,
                         autoSelectFirst: true,
+                        triggerSelectOnValidInput: false,
                         forceHide: true,
                         onSelect: item => {
                             this.getModelFactory().create(this.foreignScope, model => {

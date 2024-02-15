@@ -60,6 +60,7 @@ class Autocomplete {
      * @param {module:ui/autocomplete~options} options
      */
     constructor(element, options) {
+        /** @private */
         this.$element = $(element);
 
         const lookup = options.lookupFunction ?
@@ -165,6 +166,10 @@ class Autocomplete {
 
     dispose() {
         this.$element.autocomplete('dispose');
+    }
+
+    hide() {
+        this.$element.autocomplete('hide');
     }
 }
 

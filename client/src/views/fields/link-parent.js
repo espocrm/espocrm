@@ -507,6 +507,7 @@ class LinkParentFieldView extends BaseFieldView {
                     focusOnSelect: true,
                     handleFocusMode: 2,
                     autoSelectFirst: true,
+                    triggerSelectOnValidInput: false,
                     forceHide: true,
                     minChars: this.autocompleteOnEmpty ? 0 : 1,
                     onSelect: item => {

@@ -525,6 +525,7 @@ class LinkMultipleFieldView extends BaseFieldView {
                     focusOnSelect: true,
                     handleFocusMode: 3,
                     autoSelectFirst: true,
+                    triggerSelectOnValidInput: false,
                     forceHide: true,
                     onSelect: item => {
                         this.getModelFactory().create(this.foreignScope, model => {
