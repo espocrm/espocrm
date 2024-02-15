@@ -443,15 +443,15 @@ class FieldManager
     private function prepareClientDefsOptionsDynamicLogic(&$clientDefs, $name): void
     {
         if (!array_key_exists('dynamicLogic', $clientDefs)) {
-            $clientDefs['dynamicLogic'] = array();
+            $clientDefs['dynamicLogic'] = [];
         }
 
         if (!array_key_exists('options', $clientDefs['dynamicLogic'])) {
-            $clientDefs['dynamicLogic']['options'] = array();
+            $clientDefs['dynamicLogic']['options'] = [];
         }
 
         if (!array_key_exists($name, $clientDefs['dynamicLogic']['options'])) {
-            $clientDefs['dynamicLogic']['options'][$name] = array();
+            $clientDefs['dynamicLogic']['options'][$name] = [];
         }
     }
 
@@ -664,7 +664,7 @@ class FieldManager
      * @param array<string, mixed> $fieldDefs
      * @return array<string, mixed>
      */
-    private function prepareFieldDefs(string $scope, string $name, $fieldDefs)
+    private function prepareFieldDefs(string $scope, string $name, array $fieldDefs): array
     {
         $additionalParamList = [
             'type' => [
@@ -697,12 +697,10 @@ class FieldManager
             throw new RuntimeException("No type.");
         }
 
-        if (isset($fieldDefs['fieldManagerAdditionalParamList'])) {
-            foreach ($fieldDefs['fieldManagerAdditionalParamList'] as $additionalParam) {
-                $additionalParamList[$additionalParam->name] = [
-                    'type' => $type,
-                ];
-            }
+        foreach (($fieldDefs['fieldManagerAdditionalParamList'] ?? []) as $additionalParam) {
+            $additionalParamList[$additionalParam->name] = [
+                'type' => $type,
+            ];
         }
 
         $fieldDefsByType = $this->metadataHelper->getFieldDefsByType($fieldDefs);
@@ -737,32 +735,34 @@ class FieldManager
         $filteredFieldDefs = !empty($actualCustomFieldDefs) ? $actualCustomFieldDefs : [];
 
         foreach ($fieldDefs as $paramName => $paramValue) {
-            if (in_array($paramName, $permittedParamList)) {
+            if (!in_array($paramName, $permittedParamList)) {
+                continue;
+            }
 
-                $defaultParamValue = null;
+            $defaultParamValue = null;
 
-                switch ($params[$paramName]['type']) {
-                    case 'bool':
-                        $defaultParamValue = false;
-                        break;
-                }
+            switch ($params[$paramName]['type']) {
+                case 'bool':
+                    $defaultParamValue = false;
 
-                $actualValue = array_key_exists($paramName, $actualFieldDefs) ?
-                    $actualFieldDefs[$paramName] :
-                    $defaultParamValue;
+                    break;
+            }
 
-                if (
-                    !array_key_exists($paramName, $actualCustomFieldDefs) &&
-                    !Util::areValuesEqual($actualValue, $paramValue)
-                ) {
-                    $filteredFieldDefs[$paramName] = $paramValue;
+            $actualValue = array_key_exists($paramName, $actualFieldDefs) ?
+                $actualFieldDefs[$paramName] :
+                $defaultParamValue;
 
-                    continue;
-                }
+            if (
+                !array_key_exists($paramName, $actualCustomFieldDefs) &&
+                !Util::areValuesEqual($actualValue, $paramValue)
+            ) {
+                $filteredFieldDefs[$paramName] = $paramValue;
 
-                if (array_key_exists($paramName, $actualCustomFieldDefs)) {
-                    $filteredFieldDefs[$paramName] = $paramValue;
-                }
+                continue;
+            }
+
+            if (array_key_exists($paramName, $actualCustomFieldDefs)) {
+                $filteredFieldDefs[$paramName] = $paramValue;
             }
         }
 
@@ -774,6 +774,7 @@ class FieldManager
 
         if ($actualCustomFieldDefs) {
             $actualCustomFieldDefs = array_diff_key($actualCustomFieldDefs, array_flip($permittedParamList));
+
             foreach ($actualCustomFieldDefs as $paramName => $paramValue) {
                 if (!array_key_exists($paramName, $filteredFieldDefs)) {
                     $filteredFieldDefs[$paramName] = $paramValue;
@@ -805,14 +806,14 @@ class FieldManager
         $metaLinkDefs = $this->metadataHelper->getLinkDefsInFieldMeta($scope, $fieldDefs);
 
         if (isset($linkDefs) || isset($metaLinkDefs)) {
-            $metaLinkDefs = $metaLinkDefs ?? array();
-            $linkDefs = $linkDefs ?? array();
+            $metaLinkDefs = $metaLinkDefs ?? [];
+            $linkDefs = $linkDefs ?? [];
 
             $normalizedLinkedDefs = Util::merge($metaLinkDefs, $linkDefs);
             if (!empty($normalizedLinkedDefs)) {
-                $defs->links = (object) array(
+                $defs->links = (object) [
                     $fieldName => (object) $normalizedLinkedDefs,
-                );
+                ];
             }
         }
 
