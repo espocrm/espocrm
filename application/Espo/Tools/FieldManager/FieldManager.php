@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\FieldManager;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Language;
 use Espo\Core\InjectableFactory;
@@ -39,6 +40,7 @@ use Espo\Core\Exceptions\Error;
 use Espo\Core\Utils\Metadata\Helper as MetadataHelper;
 use Espo\Core\Utils\Util;
 
+use RuntimeException;
 use stdClass;
 
 /**
@@ -72,6 +74,13 @@ class FieldManager
 
     // 64 - margin (for attribute name suffixes and prefixes)
     private const MAX_NAME_LENGTH = 50;
+
+    /** @var array<string, array<string, mixed>> */
+    private array $defaultParams = [
+        FieldType::ENUM => [
+            'maxLength' => 100,
+        ],
+    ];
 
     public function __construct(
         private InjectableFactory $injectableFactory,
@@ -175,6 +184,18 @@ class FieldManager
 
         if (preg_match('/[^a-zA-Z\d]/', $name)) {
             throw new Error("Field name should contain only letters and numbers.");
+        }
+
+        $type = $fieldDefs['type'] ?? null;
+
+        if (!$type) {
+            throw new BadRequest("No type.");
+        }
+
+        foreach (($this->defaultParams[$type] ?? []) as $param => $value) {
+            if (!array_key_exists($param, $fieldDefs)) {
+                $fieldDefs[$param] = $value;
+            }
         }
 
         $this->update($scope, $name, $fieldDefs, true);
@@ -670,10 +691,16 @@ class FieldManager
             ],
         ];
 
+        $type = $fieldDefs['type'] ?? null;
+
+        if (!$type) {
+            throw new RuntimeException("No type.");
+        }
+
         if (isset($fieldDefs['fieldManagerAdditionalParamList'])) {
             foreach ($fieldDefs['fieldManagerAdditionalParamList'] as $additionalParam) {
                 $additionalParamList[$additionalParam->name] = [
-                    'type' => $fieldDefs['type']
+                    'type' => $type,
                 ];
             }
         }
@@ -702,7 +729,10 @@ class FieldManager
         assert($actualFieldDefs !== null);
         assert($actualCustomFieldDefs !== null);
 
-        $permittedParamList = array_keys($params);
+        $permittedParamList = array_unique(array_merge(
+            array_keys($params),
+            array_keys($this->defaultParams[$type] ?? [])
+        ));
 
         $filteredFieldDefs = !empty($actualCustomFieldDefs) ? $actualCustomFieldDefs : [];
 
