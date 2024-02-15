@@ -1758,14 +1758,17 @@ class DetailRecordView extends BaseRecordView {
                 previousButtonEnabled = true;
             }
 
-            if (this.indexOfRecord < this.model.collection.total - 1) {
+            const total = this.model.collection.total !== undefined ?
+                this.model.collection.total : this.model.collection.length;
+
+            if (this.indexOfRecord < total - 1) {
                 nextButtonEnabled = true;
             }
             else {
-                if (this.model.collection.total === -1) {
+                if (total === -1) {
                     nextButtonEnabled = true;
                 }
-                else if (this.model.collection.total === -2) {
+                else if (total === -2) {
                     if (this.indexOfRecord < this.model.collection.length - 1) {
                         nextButtonEnabled = true;
                     }
