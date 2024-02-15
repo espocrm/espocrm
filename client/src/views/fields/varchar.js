@@ -204,9 +204,6 @@ class VarcharFieldView extends BaseFieldView {
 
         responseParsed.list.forEach(item => {
             list.push({
-                //id: item.id,
-                //name: item.name || item.id,
-                //data: item.id,
                 value: item.name || item.id,
                 attributes: item,
             });

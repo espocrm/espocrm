@@ -31,6 +31,7 @@
 import BaseFieldView from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
 import Select from 'ui/select';
+import Autocomplete from 'ui/autocomplete';
 
 /**
  * A link-parent field (belongs-to-parent relation).
@@ -498,82 +499,40 @@ class LinkParentFieldView extends BaseFieldView {
                         e.currentTarget.value = this.model.get(this.nameName) || '';
                     }
                 }, 100);
-
-                if (!this.autocompleteDisabled) {
-                    setTimeout(() => this.$elementName.autocomplete('clear'), 300);
-                }
             });
 
             if (!this.autocompleteDisabled) {
-                this.$elementName.autocomplete({
-                    serviceUrl: (q) => {
-                        return this.getAutocompleteUrl(q);
-                    },
-                    minChars: this.autocompleteOnEmpty ? 0 : 1,
-                    paramName: 'q',
-                    triggerSelectOnValidInput: false,
+                const autocomplete = new Autocomplete(this.$elementName.get(0), {
+                    name: this.name,
+                    focusOnSelect: true,
+                    handleFocusMode: 2,
                     autoSelectFirst: true,
-                    noCache: true,
-                    beforeRender: ($c) => {
-                        if (this.$elementName.hasClass('input-sm')) {
-                            $c.addClass('small');
-                        }
-                    },
-                    formatResult: (/** Record */suggestion) => {
-                        return this.getHelper().escapeString(suggestion.name);
-                    },
-                    transformResult: (response) => {
-                        response = JSON.parse(response);
-                        const list = [];
-
-                        response.list.forEach(item => {
-                            list.push({
-                                id: item.id,
-                                name: item.name || item.id,
-                                data: item.id,
-                                value: item.name || item.id,
-                                attributes: item,
-                            });
-                        });
-
-                        return {suggestions: list};
-                    },
-                    onSelect: (/** Record */s) => {
-                        this.getModelFactory().create(this.foreignScope, (model) => {
-                            model.set(s.attributes);
+                    forceHide: true,
+                    minChars: this.autocompleteOnEmpty ? 0 : 1,
+                    onSelect: item => {
+                        this.getModelFactory().create(this.foreignScope, model => {
+                            model.set(item.attributes);
 
                             this.select(model);
                             this.$elementName.focus();
                         });
                     },
+                    lookupFunction: query => {
+                        return Promise.resolve(this.getAutocompleteUrl(query))
+                            .then(url => Espo.Ajax.getRequest(url, {q: query}))
+                            .then(/** {list: Record[]} */response => {
+                                return response.list.map(item => ({
+                                    value: item.name,
+                                    attributes: item,
+                                }));
+                            });
+                    },
                 });
 
-                this.$elementName.off('focus.autocomplete');
-
-                this.$elementName.on('focus', () => {
-                    if (this.$elementName.val()) {
-                        this.$elementName.get(0).select();
-
-                        return;
-                    }
-
-                    this.$elementName.autocomplete('onFocus');
-                });
-
-                this.$elementName.attr('autocomplete', 'espo-' + this.name);
+                this.once('render remove', () => autocomplete.dispose());
 
                 Select.init(this.$elementType, {});
             }
-
-            const $elementName = this.$elementName;
-
-            this.once('render', () => {
-                $elementName.autocomplete('dispose');
-            });
-
-            this.once('remove', () => {
-                $elementName.autocomplete('dispose');
-            });
         }
 
         if (this.isSearchMode()) {

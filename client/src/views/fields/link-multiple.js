@@ -30,6 +30,7 @@
 
 import BaseFieldView from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
+import Autocomplete from 'ui/autocomplete';
 
 /**
  * A link-multiple field (for has-many relations).
@@ -518,69 +519,16 @@ class LinkMultipleFieldView extends BaseFieldView {
         if (this.isEditMode() || this.isSearchMode()) {
             this.$element = this.$el.find('input.main-element');
 
-            const $element = this.$element;
-
             if (!this.autocompleteDisabled) {
-                // Does not work well with autocompleteOnEmpty.
-                /*this.$element.on('blur', () => {
-                    setTimeout(() => this.$element.autocomplete('clear'), 300);
-                });*/
-
-                const minChar = this.autocompleteOnEmpty ? 0 : 1;
-
-                this.$element.autocomplete({
-                    lookup: (q, callback) => {
-                        Promise.resolve(this.getAutocompleteUrl(q))
-                            .then(url => {
-                                Espo.Ajax
-                                    .getRequest(url, {q: q})
-                                    .then(response => {
-                                        callback(this._transformAutocompleteResult(response));
-                                    });
-                            });
-                    },
-                    minChars: minChar,
-                    paramName: 'q',
-                    noCache: true,
+                const autocomplete = new Autocomplete(this.$element.get(0), {
+                    minChars: this.autocompleteOnEmpty ? 0 : 1,
+                    focusOnSelect: true,
+                    handleFocusMode: 3,
                     autoSelectFirst: true,
-                    triggerSelectOnValidInput: false,
-                    beforeRender: $c => {
-                        if (this.$element.hasClass('input-sm')) {
-                            $c.addClass('small');
-                        }
-
-                        // Prevent an issue that suggestions are shown and not hidden
-                        // when clicking outside the window and then focusing back on the document.
-                        if (this.$element.get(0) !== document.activeElement) {
-                            setTimeout(() => this.$element.autocomplete('hide'), 30);
-                        }
-                    },
-                    formatResult: suggestion => {
-                        // noinspection JSUnresolvedReference
-                        return this.getHelper().escapeString(suggestion.name);
-                    },
-                    transformResult: response => {
-                        response = JSON.parse(response);
-
-                        const list = [];
-
-                        response.list.forEach((item) => {
-                            list.push({
-                                id: item.id,
-                                name: item.name || item.id,
-                                data: item.id,
-                                value: item.name || item.id,
-                            });
-                        });
-
-                        return {
-                            suggestions: list
-                        };
-                    },
-                    onSelect: s => {
+                    forceHide: true,
+                    onSelect: item => {
                         this.getModelFactory().create(this.foreignScope, model => {
-                            // noinspection JSUnresolvedReference
-                            model.set(s.attributes);
+                            model.set(item.attributes);
 
                             this.select([model])
 
@@ -588,22 +536,19 @@ class LinkMultipleFieldView extends BaseFieldView {
                             this.$element.focus();
                         });
                     },
+                    lookupFunction: query => {
+                        return Espo.Ajax.getRequest(this.getAutocompleteUrl(query), {q: query})
+                            .then(/** {list: Record[]} */response => {
+                                return response.list.map(item => ({
+                                    value: item.name,
+                                    attributes: item,
+                                }));
+                            });
+                    },
                 });
 
-                this.$element.attr('autocomplete', 'espo-' + this.name);
-
-                this.once('render', () => {
-                    $element.autocomplete('dispose');
-                });
-
-                this.once('remove', () => {
-                    $element.autocomplete('dispose');
-                });
+                this.once('render remove', () => autocomplete.dispose());
             }
-
-            $element.on('change', () => {
-                $element.val('');
-            });
 
             this.renderLinks();
 
@@ -1121,25 +1066,6 @@ class LinkMultipleFieldView extends BaseFieldView {
                     });
                 });
         });
-    }
-
-    /**
-     * @private
-     */
-    _transformAutocompleteResult(response) {
-        const list = [];
-
-        response.list.forEach(item => {
-            list.push({
-                id: item.id,
-                name: item.name || item.id,
-                data: item.id,
-                value: item.name || item.id,
-                attributes: item,
-            });
-        });
-
-        return {suggestions: list};
     }
 
     actionCreateLink() {

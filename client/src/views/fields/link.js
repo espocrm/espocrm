@@ -30,6 +30,7 @@
 
 import BaseFieldView from 'views/fields/base';
 import RecordModal from 'helpers/record-modal';
+import Autocomplete from 'ui/autocomplete';
 
 /**
  * A link field (belongs-to relation).
@@ -604,10 +605,6 @@ class LinkFieldView extends BaseFieldView {
                         e.currentTarget.value = this.model.get(this.nameName);
                     }
                 }, 100);
-
-                if (!this.autocompleteDisabled) {
-                    setTimeout(() => this.$elementName.autocomplete('clear'), 300);
-                }
             });
 
             const $elementName = this.$elementName;
@@ -623,111 +620,54 @@ class LinkFieldView extends BaseFieldView {
                     });
                 }
 
-                this.$elementName.autocomplete({
-                    beforeRender: $c => {
-                        if (this.$elementName.hasClass('input-sm')) {
-                            $c.addClass('small');
-                        }
-
-                        // Prevent an issue that suggestions are shown and not hidden
-                        // when clicking outside the window and then focusing back on the document.
-                        if (this.$elementName.get(0) !== document.activeElement) {
-                            setTimeout(() => this.$elementName.autocomplete('hide'), 30);
-                        }
-                    },
-                    lookup: (q, callback) => {
-                        if (!this.autocompleteOnEmpty && q.length === 0) {
-                            isEmptyQueryResult = true;
-
-                            const emptyResult = this.getEmptyAutocompleteResult();
-
-                            if (emptyResult) {
-                                callback(this._transformAutocompleteResult(emptyResult));
-                            }
-
-                            return;
-                        }
-
-                        isEmptyQueryResult = false;
-
-                        Promise.resolve(this.getAutocompleteUrl(q))
-                            .then(url => {
-                                Espo.Ajax
-                                    .getRequest(url, {q: q})
-                                    .then(response => {
-                                        callback(this._transformAutocompleteResult(response));
-                                    });
-                            });
-                    },
-                    minChars: 0,
-                    triggerSelectOnValidInput: false,
+                const autocomplete = new Autocomplete(this.$elementName.get(0), {
+                    name: this.name,
+                    handleFocusMode: 2,
                     autoSelectFirst: true,
-                    noCache: true,
-                    formatResult: suggestion => {
-                        // noinspection JSUnresolvedReference
-                        return this.getHelper().escapeString(suggestion.name);
-                    },
-                    onSelect: s => {
-                        this.getModelFactory().create(this.foreignScope, (model) => {
-                            // noinspection JSUnresolvedReference
-                            model.set(s.attributes);
-
+                    forceHide: true,
+                    onSelect: item => {
+                        this.getModelFactory().create(this.foreignScope, model => {
+                            model.set(item.attributes);
                             this.select(model);
 
                             this.$elementName.focus();
                         });
                     },
+                    lookupFunction: query => {
+                        if (!this.autocompleteOnEmpty && query.length === 0) {
+                            isEmptyQueryResult = true;
+
+                            const emptyResult = this.getEmptyAutocompleteResult();
+
+                            if (emptyResult) {
+                                return Promise.resolve(this._transformAutocompleteResult({list: emptyResult}));
+                            }
+
+                            return Promise.resolve([]);
+                        }
+
+                        isEmptyQueryResult = false;
+
+                        return Promise.resolve(this.getAutocompleteUrl(query))
+                            .then(url => Espo.Ajax.getRequest(url, {q: query}))
+                            .then(response => this._transformAutocompleteResult(response));
+                    },
                 });
 
-                this.$elementName.off('focus.autocomplete');
-
-                this.$elementName.on('focus', () => {
-                    if (this.$elementName.val()) {
-                        this.$elementName.get(0).select();
-
-                        return;
-                    }
-
-                    this.$elementName.autocomplete('onFocus');
-                });
-
-                this.$elementName.attr('autocomplete', 'espo-' + this.name);
-
-                this.once('render', () => {
-                    $elementName.autocomplete('dispose');
-                });
-
-                this.once('remove', () => {
-                    $elementName.autocomplete('dispose');
-                });
+                this.once('render remove', () => autocomplete.dispose());
 
                 if (this.isSearchMode()) {
                     const $elementOneOf = this.$el.find('input.element-one-of');
 
-                    // noinspection JSCheckFunctionSignatures
-                    $elementOneOf.autocomplete({
-                        beforeRender: $c => {
-                            if (this.$elementName.hasClass('input-sm')) {
-                                $c.addClass('small');
-                            }
-                        },
-                        serviceUrl: () => {
-                            return this.getAutocompleteUrl();
-                        },
+                    const autocomplete = new Autocomplete($elementOneOf.get(0), {
                         minChars: 1,
-                        paramName: 'q',
-                        noCache: true,
-                        formatResult: suggestion => {
-                            // noinspection JSUnresolvedReference
-                            return this.getHelper().escapeString(suggestion.name);
-                        },
-                        transformResult: response => {
-                            return this._transformAutocompleteResult(JSON.parse(response));
-                        },
-                        onSelect: s => {
+                        focusOnSelect: true,
+                        handleFocusMode: 3,
+                        autoSelectFirst: true,
+                        forceHide: true,
+                        onSelect: item => {
                             this.getModelFactory().create(this.foreignScope, model => {
-                                // noinspection JSUnresolvedReference
-                                model.set(s.attributes);
+                                model.set(item.attributes);
 
                                 this.selectOneOf([model]);
 
@@ -735,17 +675,18 @@ class LinkFieldView extends BaseFieldView {
                                 setTimeout(() => $elementOneOf.focus(), 50);
                             });
                         },
+                        lookupFunction: query => {
+                            return Espo.Ajax.getRequest(this.getAutocompleteUrl(query), {q: query})
+                                .then(/** {list: Record[]} */response => {
+                                    return response.list.map(item => ({
+                                        value: item.name,
+                                        attributes: item,
+                                    }));
+                                });
+                        },
                     });
 
-                    $elementOneOf.attr('autocomplete', 'espo-' + this.name);
-
-                    this.once('render', () => {
-                        $elementOneOf.autocomplete('dispose');
-                    });
-
-                    this.once('remove', () => {
-                        $elementOneOf.autocomplete('dispose');
-                    });
+                    this.once('render remove', () => autocomplete.dispose());
 
                     this.$el.find('select.search-type').on('change', () => {
                         this.trigger('change');
@@ -789,7 +730,7 @@ class LinkFieldView extends BaseFieldView {
             });
         });
 
-        return {suggestions: list};
+        return list;
     }
 
     /** @inheritDoc */
@@ -1286,6 +1227,9 @@ class LinkFieldView extends BaseFieldView {
         });
     }
 
+    /**
+     * @return {Record[]|undefined}
+     */
     getEmptyAutocompleteResult() {
         return undefined;
     }
