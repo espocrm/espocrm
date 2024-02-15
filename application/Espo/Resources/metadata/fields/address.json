@@ -14,21 +14,21 @@
         },
         "city": {
             "type":"varchar",
-            "maxLength": 255,
+            "maxLength": 100,
             "view": "views/fields/address-city",
             "customizationOptionsDisabled": true,
             "pattern": "$noBadCharacters"
         },
         "state": {
             "type":"varchar",
-            "maxLength": 255,
+            "maxLength": 100,
             "view": "views/fields/address-state",
             "customizationOptionsDisabled": true,
             "pattern": "$noBadCharacters"
         },
         "country": {
             "type":"varchar",
-            "maxLength": 255,
+            "maxLength": 100,
             "view": "views/fields/address-country",
             "customizationOptionsDisabled": true,
             "pattern": "$noBadCharacters"
