@@ -103,6 +103,20 @@
 
 /* end budget */
 
+/* attendance statistics */
+
+
+/* end attendance statistics */
+
+.trainer:hover {
+    background-color: var(--btn-default-hover-bg);
+}
+
+.trainer-selected {
+    background-color: var(--btn-default-hover-bg) !important;
+}
+
+/* loader animation */
 
 .lds-default {
     display: inline-block;
