@@ -3141,6 +3141,10 @@ class DetailRecordView extends BaseRecordView {
                         view.model = this.model;
                         view.mode = this.fieldsMode;
 
+                        if (this.readOnly) {
+                            view.setReadOnly();
+                        }
+
                         selector = `.field[data-name="${name}"]`;
                     }
 
