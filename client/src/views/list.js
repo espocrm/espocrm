@@ -181,7 +181,10 @@ class ListView extends MainView {
         this.collectionUrl = this.collection.url;
         this.collectionMaxSize = this.collection.maxSize;
 
-        /** @type {string} */
+        /**
+         * @type {string}
+         * @protected
+         */
         this._primaryFilter = this.options.params.primaryFilter;
         this._fromAdmin = this.options.params.fromAdmin;
 
