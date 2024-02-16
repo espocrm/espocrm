@@ -50,11 +50,11 @@ class DetailRecordView extends BaseRecordView {
      * @property {boolean} [returnAfterCreate]
      * @property {boolean} [editModeDisabled]
      * @property {boolean} [confirmLeaveDisabled]
-     * @property {boolean} [editModeDisabled]
      * @property {boolean} [isWide]
      * @property {string} [sideView]
      * @property {string} [bottomView]
      * @property {string} [inlineEditDisabled] Disable inline edit.
+     * @property {boolean} [buttonsDisabled] Disable buttons.
      * @property {string} [navigateButtonsDisabled]
      * @property {Object} [dynamicLogicDefs]
      * @property {module:view-record-helper} [recordHelper] A record helper. For a form state management.
