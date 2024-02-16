@@ -71,6 +71,7 @@ class SearchView extends View {
     toShowApplyFiltersButton = false
     toShowResetFiltersText = false
     isSearchedWithAdvancedFilter = false
+    primaryFiltersDisabled = false
 
     viewModeIconClassMap = {
         list: 'fas fa-align-justify',
@@ -93,7 +94,7 @@ class SearchView extends View {
             filterDataList: this.getFilterDataList(),
             presetName: this.presetName,
             presetFilterList: this.getPresetFilterList(),
-            leftDropdown: this.isLeftDropdown(),
+            leftDropdown: this.hasLeftDropdown(),
             textFilterDisabled: this.textFilterDisabled,
             viewMode: this.viewMode,
             viewModeDataList: this.viewModeDataList || [],
@@ -101,6 +102,7 @@ class SearchView extends View {
             isWide: this.options.isWide,
             toShowApplyFiltersButton: this.toShowApplyFiltersButton,
             toShowResetFiltersText: this.toShowResetFiltersText,
+            primaryFiltersDisabled: this.primaryFiltersDisabled,
         };
     }
 
@@ -108,6 +110,7 @@ class SearchView extends View {
         this.entityType = this.collection.entityType;
         this.scope = this.options.scope || this.entityType;
         this.filtersLayoutName = this.options.filtersLayoutName || this.filtersLayoutName;
+        this.primaryFiltersDisabled = this.options.primaryFiltersDisabled || this.primaryFiltersDisabled;
 
         /** @type {module:search-manager} */
         this.searchManager = this.options.searchManager;
@@ -192,42 +195,7 @@ class SearchView extends View {
                 });
             })
         );
-
-        const filterList = this.options.filterList ||
-            this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
-
-        this.presetFilterList = Espo.Utils.clone(filterList).filter(item => {
-            if (typeof item === 'string') {
-                return true;
-            }
-
-            item = item || {};
-
-            if (item.aux) {
-                return false;
-            }
-
-            if (item.inPortalDisabled && this.getUser().isPortal()) {
-                return false;
-            }
-
-            if (item.isPortalOnly && !this.getUser().isPortal()) {
-                return false;
-            }
-
-            if (item.accessDataList) {
-                if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
-                    return false;
-                }
-            }
-
-            return true;
-        });
-
-        ((this.getPreferences().get('presetFilters') || {})[this.scope] || [])
-            .forEach(item => {
-                this.presetFilterList.push(item);
-            });
+        this.setupPresetFilters();
 
         if (this.getMetadata().get(['scopes', this.entityType, 'stream'])) {
             this.boolFilterList.push('followed');
@@ -275,6 +243,50 @@ class SearchView extends View {
         );
     }
 
+    setupPresetFilters() {
+        if (this.primaryFiltersDisabled) {
+            this.presetFilterList = [];
+
+            return;
+        }
+
+        const filterList = this.options.filterList ||
+            this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
+
+        this.presetFilterList = Espo.Utils.clone(filterList).filter(item => {
+            if (typeof item === 'string') {
+                return true;
+            }
+
+            item = item || {};
+
+            if (item.aux) {
+                return false;
+            }
+
+            if (item.inPortalDisabled && this.getUser().isPortal()) {
+                return false;
+            }
+
+            if (item.isPortalOnly && !this.getUser().isPortal()) {
+                return false;
+            }
+
+            if (item.accessDataList) {
+                if (!Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
+
+        ((this.getPreferences().get('presetFilters') || {})[this.scope] || [])
+            .forEach(item => {
+                this.presetFilterList.push(item);
+            });
+    }
+
     setupViewModeDataList() {
         if (!this.viewModeList) {
             return [];
@@ -315,14 +327,18 @@ class SearchView extends View {
         }
     }
 
-    isLeftDropdown() {
+    hasLeftDropdown() {
+        if (this.primaryFiltersDisabled && !this.boolFilterList.length) {
+            return false;
+        }
+
         return this.presetFilterList.length ||
             this.boolFilterList.length ||
             Object.keys(this.advanced || {}).length;
     }
 
     handleLeftDropdownVisibility() {
-        if (this.isLeftDropdown()) {
+        if (this.hasLeftDropdown()) {
             this.$leftDropdown.removeClass('hidden');
         }
         else {

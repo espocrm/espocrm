@@ -388,6 +388,10 @@ class SearchManager {
         }
     }
 
+    clearPreset() {
+        delete this.data.presetName;
+    }
+
     /**
      * Empty data.
      */

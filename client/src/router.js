@@ -234,6 +234,7 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
         this.options = options || {};
         this.setupRoutes();
 
+        this._isReturn = false;
         this.history = [];
 
         let hashHistory = [window.location.hash];
@@ -413,10 +414,18 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
      * Navigate.
      *
      * @param {string} fragment An URL fragment.
-     * @param {{trigger?: boolean, replace?: boolean}} [options] Options: trigger, replace.
+     * @param {{
+     *     trigger?: boolean,
+     *     replace?: boolean,
+     *     isReturn?: boolean,
+     * }} [options] Options.
      */
     navigate: function (fragment, options) {
         this.history.push(fragment);
+
+        if (options && options.isReturn) {
+            this._isReturn = true;
+        }
 
         return Backbone.Router.prototype.navigate.call(this, fragment, options);
     },
@@ -568,6 +577,13 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
      * @fires module:router#routed
      */
     dispatch: function (controller, action, options) {
+        if (this._isReturn) {
+            options = {...options};
+            options.isReturn = true;
+
+            this._isReturn = false;
+        }
+
         const o = {
             controller: controller,
             action: action,

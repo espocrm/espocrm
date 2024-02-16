@@ -181,6 +181,10 @@ class ListView extends MainView {
         this.collectionUrl = this.collection.url;
         this.collectionMaxSize = this.collection.maxSize;
 
+        /** @type {string} */
+        this._primaryFilter = this.options.params.primaryFilter;
+        this._fromAdmin = this.options.params.fromAdmin;
+
         this.setupModes();
         this.setViewMode(this.viewMode);
 
@@ -225,7 +229,7 @@ class ListView extends MainView {
             this.setupCreateButton();
         }
 
-        if (this.options.params && this.options.params.fromAdmin) {
+        if (this._fromAdmin || this._primaryFilter) {
             this.keepCurrentRootUrl = true;
         }
     }
@@ -352,6 +356,8 @@ class ListView extends MainView {
             viewMode: this.viewMode,
             viewModeList: this.viewModeList,
             isWide: true,
+            disableSavePreset: !!this._primaryFilter,
+            primaryFiltersDisabled: !!this._primaryFilter,
         }, view => {
             this.listenTo(view, 'reset', () => this.resetSorting());
 
@@ -441,9 +447,15 @@ class ListView extends MainView {
     setupSearchManager() {
         const collection = this.collection;
 
+        let key = 'list';
+
+        if (this._primaryFilter) {
+            key += 'Filter' + Espo.Utils.upperCaseFirst(this._primaryFilter);
+        }
+
         const searchManager = new SearchManager(
             collection,
-            'list',
+            key,
             this.getStorage(),
             this.getDateTime(),
             this.getSearchDefaultData()
@@ -451,6 +463,11 @@ class ListView extends MainView {
 
         searchManager.scope = this.scope;
         searchManager.loadStored();
+
+        if (this._primaryFilter) {
+            searchManager.clearPreset();
+            searchManager.setPrimary(this._primaryFilter);
+        }
 
         collection.where = searchManager.getWhere();
 
@@ -678,7 +695,7 @@ class ListView extends MainView {
         const $root = $('<span>')
             .text(this.getLanguage().translate(this.scope, 'scopeNamesPlural'));
 
-        if (this.options.params && this.options.params.fromAdmin) {
+        if (this._fromAdmin) {
             const $root = $('<a>')
                 .attr('href', '#Admin')
                 .text(this.translate('Administration', 'labels', 'Admin'));
@@ -693,6 +710,11 @@ class ListView extends MainView {
 
         if (headerIconHtml) {
             $root.prepend(headerIconHtml);
+        }
+
+        if (this._primaryFilter) {
+            const label = this.translate(this._primaryFilter, 'presetFilters', this.entityType);
+            $root.append(' · ' + label);
         }
 
         return this.buildHeaderHtml([$root]);

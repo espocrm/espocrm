@@ -598,14 +598,9 @@ class MainView extends View {
         event.stopPropagation();
 
         this.getRouter().checkConfirmLeaveOut(() => {
-            const options = {
-                isReturn: true,
-            };
-
             const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
-            this.getRouter().navigate(rootUrl, {trigger: false});
-            this.getRouter().dispatch(this.scope, null, options);
+            this.getRouter().navigate(rootUrl, {trigger: true, isReturn: true});
         });
     }
 

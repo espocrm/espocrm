@@ -81,7 +81,11 @@ class RecordController extends Controller {
     actionList(options) {
         const isReturn = options.isReturn || this.getRouter().backProcessed;
 
-        const key = this.name + 'List';
+        let key = this.name + 'List';
+
+        if (options.primaryFilter) {
+            key += 'Filter' + Espo.Utils.upperCaseFirst(options.primaryFilter);
+        }
 
         if (!isReturn && this.getStoredMainView(key)) {
             this.clearStoredMainView(key);
