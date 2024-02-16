@@ -43,8 +43,6 @@ use Espo\Tools\ExportCustom\Service as ExportCustomService;
 use Espo\Tools\LinkManager\LinkManager;
 use stdClass;
 
-use const FILTER_SANITIZE_STRING;
-
 class EntityManager
 {
     /**
@@ -78,9 +76,6 @@ class EntityManager
 
         $name = $data['name'];
         $type = $data['type'];
-
-        $name = filter_var($name, FILTER_SANITIZE_STRING);
-        $type = filter_var($type, FILTER_SANITIZE_STRING);
 
         if (!is_string($name) || !is_string($type)) {
             throw new BadRequest();
@@ -163,8 +158,6 @@ class EntityManager
 
         $name = $data['name'];
 
-        $name = filter_var($name, FILTER_SANITIZE_STRING);
-
         if (!is_string($name)) {
             throw new BadRequest();
         }
@@ -190,8 +183,6 @@ class EntityManager
         }
 
         $name = $data['name'];
-
-        $name = filter_var($name, FILTER_SANITIZE_STRING);
 
         if (!is_string($name)) {
             throw new BadRequest();
@@ -234,11 +225,15 @@ class EntityManager
                 throw new BadRequest();
             }
 
-            $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
+            $params[$item] = htmlspecialchars($data[$item]);
         }
 
         foreach ($additionalParamList as $item) {
-            $params[$item] = filter_var($data[$item] ?? null, FILTER_SANITIZE_STRING);
+            $params[$item] = $data[$item];
+
+            if (is_string($params[$item])) {
+                $params[$item] = htmlspecialchars($params[$item]);
+            }
         }
 
         $params['labelForeign'] = $params['labelForeign'] ?? $params['linkForeign'];
@@ -321,7 +316,7 @@ class EntityManager
 
         foreach ($paramList as $item) {
             if (array_key_exists($item, $data)) {
-                $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
+                $params[$item] = htmlspecialchars($data[$item]);
             }
         }
 
@@ -398,7 +393,7 @@ class EntityManager
         $params = [];
 
         foreach ($paramList as $item) {
-            $params[$item] = filter_var($data[$item], FILTER_SANITIZE_STRING);
+            $params[$item] = htmlspecialchars($data[$item]);
         }
 
         /**
