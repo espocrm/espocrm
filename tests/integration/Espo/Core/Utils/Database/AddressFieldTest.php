@@ -34,10 +34,10 @@ class AddressFieldTest extends Base
     public function fieldlist()
     {
         return [
-            ['testAddressStreet', 255],
-            ['testAddressCity', 255],
-            ['testAddressState', 255],
-            ['testAddressCountry', 255],
+            ['testAddressStreet', 100],
+            ['testAddressCity', 100],
+            ['testAddressState', 100],
+            ['testAddressCountry', 100],
             ['testAddressPostalCode', 40],
         ];
     }

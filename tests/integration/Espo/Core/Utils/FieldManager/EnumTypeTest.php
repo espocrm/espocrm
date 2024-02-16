@@ -74,7 +74,7 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
         $app = $this->createApplication();
 
         $metadata = $app->getContainer()->get('metadata');
-        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.testEnum');
+        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestEnum');
 
         $this->assertEquals('enum', $savedFieldDefs['type']);
         $this->assertEquals('option2', $savedFieldDefs['default']);
@@ -87,13 +87,13 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
         $account = $entityManager->getEntity('Account');
         $account->set([
             'name' => 'Test',
-            'testEnum' => 'option1'
+            'cTestEnum' => 'option1',
         ]);
 
         $entityManager->saveEntity($account);
 
         $account = $entityManager->getEntity('Account', $account->id);
-        $this->assertEquals('option1', $account->get('testEnum'));
+        $this->assertEquals('option1', $account->get('cTestEnum'));
     }
 
     public function testUpdate()
@@ -109,13 +109,13 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
         $fieldDefs['default'] = 'option3';
         $fieldDefs['readOnly'] = true;
 
-        $fieldManager->update('Account', 'testEnum', $fieldDefs);
+        $fieldManager->update('Account', 'cTestEnum', $fieldDefs);
         $this->getContainer()->get('dataManager')->rebuild(['Account']);
 
         $app = $this->createApplication();
 
         $metadata = $app->getContainer()->get('metadata');
-        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.testEnum');
+        $savedFieldDefs = $metadata->get('entityDefs.Account.fields.cTestEnum');
 
         $this->assertFalse($savedFieldDefs['required']);
         $this->assertEquals('option3', $savedFieldDefs['default']);
@@ -131,6 +131,6 @@ class EnumTypeTest extends \tests\integration\Core\BaseTestCase
         $entityManager->saveEntity($account);
 
         $account = $entityManager->getEntity('Account', $account->id);
-        $this->assertEquals('option3', $account->get('testEnum'));
+        $this->assertEquals('option3', $account->get('cTestEnum'));
     }
 }
