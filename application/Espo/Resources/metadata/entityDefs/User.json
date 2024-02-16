@@ -515,11 +515,6 @@
             "entity": "LayoutSet",
             "noJoin": true
         },
-        "preferences": {
-            "type": "hasOne",
-            "entity": "Preferences",
-            "noJoin": true
-        },
         "userData": {
             "type": "hasOne",
             "entity": "UserData",
