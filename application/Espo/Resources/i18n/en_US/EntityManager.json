@@ -46,7 +46,8 @@
         "layout": "Layout",
         "author": "Author",
         "module": "Module",
-        "version": "Version"
+        "version": "Version",
+        "primaryFilters": "Primary Filters"
     },
     "options": {
         "type": {

@@ -26,43 +26,10 @@
     </div>
 </div>
 
+<div class="record record-container">{{{record}}}</div>
 <div class="record">
     <div class="record-grid">
         <div class="left">
-            <div class="panel panel-default">
-                <div class="panel-body panel-body-form">
-                    <div class="row">
-                        <div class="cell col-sm-6 form-group">
-                            <label
-                                class="control-label"
-                            >{{translate 'name' scope='EntityManager' category='fields'}}</label>
-                            <div class="field">
-                                {{scope}}
-                            </div>
-                        </div>
-                        {{#if type}}
-                        <div class="cell col-sm-6 form-group">
-                            <label
-                                class="control-label"
-                            >{{translate 'type' scope='EntityManager' category='fields'}}</label>
-                            <div class="field">
-                                {{type}}
-                            </div>
-                        </div>
-                        {{/if}}
-                    </div>
-                    <div class="row">
-                        <div class="cell col-sm-6 form-group">
-                            <label
-                                class="control-label"
-                            >{{translate 'label' scope='EntityManager' category='fields'}}</label>
-                            <div class="field">
-                                {{label}}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <div class="panel panel-default">
                 <div class="panel-body panel-body-form">
                     <div class="row">

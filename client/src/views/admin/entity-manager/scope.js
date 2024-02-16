@@ -27,6 +27,9 @@
  ************************************************************************/
 
 import View from 'view';
+import DetailRecordView from 'views/record/detail';
+import Model from 'model';
+import EntityManagerPrimaryFiltersFieldView from 'views/admin/entity-manager/fields/primary-filters';
 
 class EntityManagerScopeView extends View {
 
@@ -68,6 +71,84 @@ class EntityManagerScopeView extends View {
         this.scope = this.options.scope;
 
         this.setupScopeData();
+
+        this.model = new Model({
+            name: this.scope,
+            type: this.type,
+            label: this.label,
+            primaryFilters: this.getPrimaryFilters(),
+        });
+
+        this.model.setDefs({
+            fields: {
+                name: {
+                    type: 'varchar',
+                },
+                type: {
+                    type: 'varchar',
+                },
+                label: {
+                    type: 'varchar',
+                },
+                primaryFilters: {
+                    type: 'array',
+                },
+            }
+        });
+
+        this.recordView = new DetailRecordView({
+            model: this.model,
+            inlineEditDisabled: true,
+            buttonsDisabled: true,
+            readOnly: true,
+            detailLayout: [
+                {
+                    tabBreak: true,
+                    tabLabel: this.translate('General', 'labels', 'Settings'),
+                    rows: [
+                        [
+                            {
+                                name: 'name',
+                                labelText: this.translate('name', 'fields', 'EntityManager'),
+                            },
+                            {
+                                name: 'type',
+                                labelText: this.translate('type', 'fields', 'EntityManager'),
+                            }
+                        ],
+                        [
+                            {
+                                name: 'label',
+                                labelText: this.translate('label', 'fields', 'EntityManager'),
+                            },
+                            false
+                        ]
+                    ]
+                },
+                {
+                    tabBreak: true,
+                    tabLabel: this.translate('Details'),
+                    rows: [
+                        [
+                            {
+                                view: new EntityManagerPrimaryFiltersFieldView({
+                                    name: 'primaryFilters',
+                                    labelText: this.translate('primaryFilters', 'fields', 'EntityManager'),
+                                    targetEntityType: this.scope,
+                                }),
+                            },
+                            false
+                        ]
+                    ]
+                }
+            ],
+        });
+
+        this.assignView('record', this.recordView, '.record-container');
+
+        if (!this.type) {
+            this.recordView.hideField('type');
+        }
     }
 
     setupScopeData() {
@@ -181,6 +262,19 @@ class EntityManagerScopeView extends View {
     broadcastUpdate() {
         this.getHelper().broadcastChannel.postMessage('update:metadata');
         this.getHelper().broadcastChannel.postMessage('update:settings');
+    }
+
+    /**
+     * @return {string[]}
+     */
+    getPrimaryFilters() {
+        return this.getMetadata().get(`clientDefs.${this.scope}.filterList`, []).map(item => {
+            if (typeof item === 'object' && item.name) {
+                return item.name;
+            }
+
+            return item.toString();
+        });
     }
 }
 
