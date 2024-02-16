@@ -75,6 +75,9 @@ class RecordController extends Controller {
         this.handleCheckAccess('read');
     }
 
+    /**
+     * @param {Record} options
+     */
     actionList(options) {
         const isReturn = options.isReturn || this.getRouter().backProcessed;
 
