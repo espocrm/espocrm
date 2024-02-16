@@ -1,0 +1,34 @@
+{
+    "view": "custom:views/dashlets/attendance-statistics",
+    "aclScope": "Account",
+    "options": {
+        "fields": {
+            "title": {
+                "type": "varchar"
+            },
+            "autorefreshInterval": {
+                "type": "enumFloat",
+                "options": [0, 0.5, 1, 2, 5, 10]
+            },
+            "teams": {
+                "type": "array"
+            }
+        },
+        "defaults": {
+            "title": "Відвідування"
+        },
+        "layout": [
+            {
+                "rows": [
+                    [
+                        {"name": "title"},
+                        {"name": "autorefreshInterval"}
+                    ],
+                    [
+                        {"name": "teams", "label": "Команди"}
+                    ]
+                ]
+            }
+        ]
+    }
+}

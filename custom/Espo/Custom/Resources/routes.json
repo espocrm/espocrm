@@ -27,5 +27,16 @@
             "dateFrom": ":dateFrom",
             "teams": ":teams"
         }
+    },
+    {
+        "route": "/Attendance/statistics/:date/:trainerId/:teamsIds",
+        "method": "get",
+        "params": {
+            "controller": "AttendanceController",
+            "action": "statistics",
+            "date": ":date",
+            "teamsIds": ":teams",
+            "trainerId": ":trainerId"
+        }
     }
 ]
