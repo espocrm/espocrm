@@ -26,127 +26,126 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/entity-manager/scope', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class EntityManagerScopeView extends View {
 
-        template: 'admin/entity-manager/scope',
+    template = 'admin/entity-manager/scope'
 
-        scope: null,
+    scope
 
-        data: function () {
-            return {
-                scope: this.scope,
-                isEditable: this.isEditable,
-                isRemovable: this.isRemovable,
-                isCustomizable: this.isCustomizable,
-                type: this.type,
-                hasLayouts: this.hasLayouts,
-                label: this.label,
-                hasFormula: this.hasFormula,
-                hasFields: this.hasFields,
-                hasRelationships: this.hasRelationships,
-            };
+    data() {
+        return {
+            scope: this.scope,
+            isEditable: this.isEditable,
+            isRemovable: this.isRemovable,
+            isCustomizable: this.isCustomizable,
+            type: this.type,
+            hasLayouts: this.hasLayouts,
+            label: this.label,
+            hasFormula: this.hasFormula,
+            hasFields: this.hasFields,
+            hasRelationships: this.hasRelationships,
+        };
+    }
+
+    events = {
+        /** @this EntityManagerScopeView */
+        'click [data-action="editEntity"]': function () {
+            this.getRouter().navigate(`#Admin/entityManager/edit&scope=${this.scope}`, {trigger: true});
         },
-
-        events: {
-            'click [data-action="editEntity"]': function () {
-                this.getRouter().navigate('#Admin/entityManager/edit&scope=' + this.scope, {trigger: true});
-            },
-            'click [data-action="removeEntity"]': function () {
-                this.removeEntity();
-            },
-            'click [data-action="editFormula"]': function () {
-                this.editFormula();
-            },
+        /** @this EntityManagerScopeView */
+        'click [data-action="removeEntity"]': function () {
+            this.removeEntity();
         },
-
-        setup: function () {
-            this.scope = this.options.scope;
-
-            this.setupScopeData();
+        /** @this EntityManagerScopeView */
+        'click [data-action="editFormula"]': function () {
+            this.editFormula();
         },
+    }
 
-        setupScopeData: function () {
-            let scopeData = this.getMetadata().get(['scopes', this.scope]);
-            let entityManagerData = this.getMetadata().get(['scopes', this.scope, 'entityManager']) || {};
+    setup() {
+        this.scope = this.options.scope;
 
-            if (!scopeData) {
-                throw new Espo.Exceptions.NotFound();
-            }
+        this.setupScopeData();
+    }
 
-            this.isRemovable = !!scopeData.isCustom;
+    setupScopeData() {
+        const scopeData = /** @type {Record} */this.getMetadata().get(['scopes', this.scope]);
+        const entityManagerData = this.getMetadata().get(['scopes', this.scope, 'entityManager']) || {};
 
-            if (scopeData.isNotRemovable) {
-                this.isRemovable = false;
-            }
+        if (!scopeData) {
+            throw new Espo.Exceptions.NotFound();
+        }
 
-            this.isCustomizable = !!scopeData.customizable;
-            this.type = scopeData.type;
-            this.isEditable = true;
-            this.hasLayouts = scopeData.layouts;
-            this.hasFormula = this.isCustomizable;
-            this.hasFields = this.isCustomizable;
-            this.hasRelationships = this.isCustomizable;
+        this.isRemovable = !!scopeData.isCustom;
 
-            if (!scopeData.customizable) {
-                this.isEditable = false;
-            }
+        if (scopeData.isNotRemovable) {
+            this.isRemovable = false;
+        }
 
-            if ('edit' in entityManagerData) {
-                this.isEditable = entityManagerData.edit;
-            }
+        this.isCustomizable = !!scopeData.customizable;
+        this.type = scopeData.type;
+        this.isEditable = true;
+        this.hasLayouts = scopeData.layouts;
+        this.hasFormula = this.isCustomizable;
+        this.hasFields = this.isCustomizable;
+        this.hasRelationships = this.isCustomizable;
 
-            if ('layouts' in entityManagerData) {
-                this.hasLayouts = entityManagerData.layouts;
-            }
+        if (!scopeData.customizable) {
+            this.isEditable = false;
+        }
 
-            if ('formula' in entityManagerData) {
-                this.hasFormula = entityManagerData.formula;
-            }
+        if ('edit' in entityManagerData) {
+            this.isEditable = entityManagerData.edit;
+        }
 
-            if ('fields' in entityManagerData) {
-                this.hasFields = entityManagerData.fields;
-            }
+        if ('layouts' in entityManagerData) {
+            this.hasLayouts = entityManagerData.layouts;
+        }
 
-            if ('relationships' in entityManagerData) {
-                this.hasRelationships = entityManagerData.relationships;
-            }
+        if ('formula' in entityManagerData) {
+            this.hasFormula = entityManagerData.formula;
+        }
 
-            this.label = this.getLanguage().translate(this.scope, 'scopeNames');
-        },
+        if ('fields' in entityManagerData) {
+            this.hasFields = entityManagerData.fields;
+        }
 
-        editFormula: function () {
-            Espo.Ui.notify(' ... ');
+        if ('relationships' in entityManagerData) {
+            this.hasRelationships = entityManagerData.relationships;
+        }
 
-            Espo.loader.requirePromise('views/admin/entity-manager/modals/select-formula')
-                .then(View => {
-                    /** @type {module:views/modal} */
-                    let view = new View({
-                        scope: this.scope,
-                    });
+        this.label = this.getLanguage().translate(this.scope, 'scopeNames');
+    }
 
-                    this.assignView('dialog', view).then(() => {
-                        Espo.Ui.notify(false);
+    editFormula() {
+        Espo.Ui.notify(' ... ');
 
-                        view.render();
-                    });
+        Espo.loader.requirePromise('views/admin/entity-manager/modals/select-formula')
+            .then(View => {
+                /** @type {module:views/modal} */
+                const view = new View({
+                    scope: this.scope,
                 });
-        },
 
-        removeEntity: function () {
-            var scope = this.scope;
+                this.assignView('dialog', view).then(() => {
+                    Espo.Ui.notify(false);
 
-            this.confirm(this.translate('confirmRemove', 'messages', 'EntityManager'), () => {
-                Espo.Ui.notify(
-                    this.translate('pleaseWait', 'messages')
-                );
+                    view.render();
+                });
+            });
+    }
 
-                this.disableButtons();
+    removeEntity() {
+        const scope = this.scope;
 
-                Espo.Ajax.postRequest('EntityManager/action/removeEntity', {
-                    name: scope,
-                })
+        this.confirm(this.translate('confirmRemove', 'messages', 'EntityManager'), () => {
+            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+
+            this.disableButtons();
+
+            Espo.Ajax.postRequest('EntityManager/action/removeEntity', {name: scope})
                 .then(() => {
                     this.getMetadata()
                         .loadSkipCache()
@@ -155,34 +154,34 @@ define('views/admin/entity-manager/scope', ['view'], function (Dep) {
                                 Espo.Ui.notify(false);
 
                                 this.broadcastUpdate();
-
                                 this.getRouter().navigate('#Admin/entityManager', {trigger: true});
                             });
                         });
                 })
                 .catch(() => this.enableButtons());
-            });
-        },
+        });
+    }
 
-        updatePageTitle: function () {
-            this.setPageTitle(
-                this.getLanguage().translate('Entity Manager', 'labels', 'Admin')
-            );
-        },
+    updatePageTitle() {
+        this.setPageTitle(
+            this.getLanguage().translate('Entity Manager', 'labels', 'Admin')
+        );
+    }
 
-        disableButtons: function () {
-            this.$el.find('.btn.action').addClass('disabled').attr('disabled', 'disabled');
-            this.$el.find('.item-dropdown-button').addClass('disabled').attr('disabled', 'disabled');
-        },
+    disableButtons() {
+        this.$el.find('.btn.action').addClass('disabled').attr('disabled', 'disabled');
+        this.$el.find('.item-dropdown-button').addClass('disabled').attr('disabled', 'disabled');
+    }
 
-        enableButtons: function () {
-            this.$el.find('.btn.action').removeClass('disabled').removeAttr('disabled');
-            this.$el.find('.item-dropdown-button"]').removeClass('disabled').removeAttr('disabled');
-        },
+    enableButtons() {
+        this.$el.find('.btn.action').removeClass('disabled').removeAttr('disabled');
+        this.$el.find('.item-dropdown-button"]').removeClass('disabled').removeAttr('disabled');
+    }
 
-        broadcastUpdate: function () {
-            this.getHelper().broadcastChannel.postMessage('update:metadata');
-            this.getHelper().broadcastChannel.postMessage('update:settings');
-        },
-    });
-});
+    broadcastUpdate() {
+        this.getHelper().broadcastChannel.postMessage('update:metadata');
+        this.getHelper().broadcastChannel.postMessage('update:settings');
+    }
+}
+
+export default EntityManagerScopeView;
