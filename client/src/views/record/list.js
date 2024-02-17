@@ -35,6 +35,7 @@ import RecordModal from 'helpers/record-modal';
 import SelectProvider from 'helpers/list/select-provider';
 import RecordListSettingsView from 'views/record/list/settings';
 import ListSettingsHelper from 'helpers/list/settings';
+import StickyBarHelper from 'helpers/list/misc/sticky-bar';
 
 /**
  * A record-list view. Renders and processes list items, actions.
@@ -777,117 +778,11 @@ class ListRecordView extends View {
         this.deactivate();
     }
 
-    /**
-     * @protected
-     */
-    initStickedBar() {
-        const controlSticking = () => {
-            if (this.checkedList.length === 0 && !this.allResultIsChecked) {
-                return;
-            }
+    /** @protected */
+    initStickyBar() {
+        this._stickyBarHelper = new StickyBarHelper(this);
 
-            const scrollTop = $scrollable.scrollTop();
-
-            const stickTop = buttonsTop;
-            const edge = middleTop + $middle.outerHeight(true);
-
-            if (isSmallWindow && $('#navbar .navbar-body').hasClass('in')) {
-                return;
-            }
-
-            if (scrollTop >= edge) {
-                $stickedBar.removeClass('hidden');
-                $navbarRight.addClass('has-sticked-bar');
-
-                return;
-            }
-
-            if (scrollTop > stickTop) {
-                $stickedBar.removeClass('hidden');
-                $navbarRight.addClass('has-sticked-bar');
-
-                return;
-            }
-
-            $stickedBar.addClass('hidden');
-            $navbarRight.removeClass('has-sticked-bar');
-        };
-
-        const $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
-        const $middle = this.$el.find('> .list');
-
-        const $window = $(window);
-
-        let $scrollable = $window;
-        let $navbarRight = $('#navbar .navbar-right');
-
-        this.on('render', () => {
-            this.$stickedBar = null;
-        });
-
-        const isModal = !!this.$el.closest('.modal-body').length;
-
-        const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-        const navbarHeight = this.getThemeManager().getParam('navbarHeight');
-
-        const isSmallWindow = $(window.document).width() < screenWidthXs;
-
-        const getOffsetTop = (element) => {
-            let offsetTop = 0;
-
-            const withHeader = !isSmallWindow && !isModal;
-
-            do {
-                if (element.classList.contains('modal-body')) {
-                    break;
-                }
-
-                if (!isNaN(element.offsetTop)) {
-                    offsetTop += element.offsetTop;
-                }
-
-                element = element.offsetParent;
-            } while (element);
-
-            if (withHeader) {
-                offsetTop -= navbarHeight;
-            }
-
-            return offsetTop;
-        };
-
-        if (isModal) {
-            $scrollable = this.$el.closest('.modal-body');
-            $navbarRight = $scrollable.parent().find('.modal-footer');
-        }
-
-        let middleTop = getOffsetTop($middle.get(0));
-        let buttonsTop =  getOffsetTop(this.$el.find('.list-buttons-container').get(0));
-
-        if (!isModal) {
-            // padding
-            middleTop -= 5;
-            buttonsTop -= 5;
-        }
-
-        $scrollable.off('scroll.list-' + this.cid);
-        $scrollable.on('scroll.list-' + this.cid, () => controlSticking());
-
-        $window.off('resize.list-' + this.cid);
-        $window.on('resize.list-' + this.cid, () => controlSticking());
-
-        this.on('check', () => {
-            if (this.checkedList.length === 0 && !this.allResultIsChecked) {
-                return;
-            }
-
-            controlSticking();
-        });
-
-        this.on('remove', () => {
-            $scrollable.off('scroll.list-' + this.cid);
-            $window.off('resize.list-' + this.cid);
-        });
+        this._stickyBarHelper.init();
     }
 
     /**
@@ -901,8 +796,8 @@ class ListRecordView extends View {
             !this.stickedBarDisabled &&
             this.massActionList.length
         ) {
-            if (!this.$stickedBar) {
-                this.initStickedBar();
+            if (!this._stickyBarHelper) {
+                this.initStickyBar();
             }
         }
     }
@@ -913,8 +808,8 @@ class ListRecordView extends View {
     hideActions() {
         this.$el.find('.actions-button').addClass('hidden');
 
-        if (this.$stickedBar) {
-            this.$stickedBar.addClass('hidden');
+        if (this._stickyBarHelper) {
+            this._stickyBarHelper.hide();
         }
     }
 
@@ -2689,6 +2584,24 @@ class ListRecordView extends View {
             view: this.rowActionsView,
             options: options,
         };
+    }
+
+    /**
+     * Is all-result is checked.
+     *
+     * @return {boolean}
+     */
+    isAllResultChecked() {
+        return this.allResultIsChecked;
+    }
+
+    /**
+     * Get checked record IDs.
+     *
+     * @return {string[]}
+     */
+    getCheckedIds() {
+        return Espo.Utils.clone(this.checkedList);
     }
 
     /**
