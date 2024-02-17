@@ -34,7 +34,7 @@ class AddressFieldTest extends Base
     public function fieldlist()
     {
         return [
-            ['testAddressStreet', 100],
+            ['testAddressStreet', 255],
             ['testAddressCity', 100],
             ['testAddressState', 100],
             ['testAddressCountry', 100],
