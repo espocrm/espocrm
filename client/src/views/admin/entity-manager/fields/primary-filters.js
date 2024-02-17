@@ -37,8 +37,17 @@ class EntityManagerPrimaryFiltersFieldView extends ArrayFieldView {
                 <tbody>
                     {{#each dateList}}
                         <tr>
-                            <td style="width: 50%">{{name}}</td>
-                            <td style="width: 50%">{{label}}</td>
+                            <td style="width: 42%">{{name}}</td>
+                            <td style="width: 42%">{{label}}</td>
+                            <td style="width: 16%; text-align: center;">
+                                <a
+                                    role="button"
+                                    data-action="copyToClipboard"
+                                    data-name="{{name}}"
+                                    class="text-soft"
+                                    title="{{translate 'Copy to Clipboard'}}"
+                                ><span class="far fa-copy"></span></a>
+                            </td>
                         </tr>
                     {{/each}}
                 </tbody>
@@ -73,6 +82,27 @@ class EntityManagerPrimaryFiltersFieldView extends ArrayFieldView {
                 name: item,
                 label: this.translate(item, 'presetFilters', this.targetEntityType),
             };
+        });
+    }
+
+    setup() {
+        super.setup();
+
+        this.addActionHandler('copyToClipboard', (e, target) => this.copyToClipboard(target.dataset.name));
+    }
+
+    /**
+     * @private
+     * @param {string} name
+     */
+    copyToClipboard(name) {
+        const urlPart = `#${this.targetEntityType}/list/primaryFilter=${name}`;
+
+        navigator.clipboard.writeText(urlPart).then(() => {
+            const msg = this.translate('urlHashCopiedToClipboard', 'messages', 'EntityManager')
+                .replace('{name}', name);
+
+            Espo.Ui.notify(msg, 'success', undefined, {closeButton: true});
         });
     }
 }
