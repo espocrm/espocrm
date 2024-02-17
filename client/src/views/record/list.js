@@ -113,9 +113,7 @@ class ListRecordView extends View {
      */
     scope = null
 
-    /**
-     * @protected
-     */
+    /** @protected */
     _internalLayoutType = 'list-row'
 
     /**
@@ -132,19 +130,13 @@ class ListRecordView extends View {
      */
     showCount = true
 
-    /**
-     * @protected
-     */
+    /** @protected */
     rowActionsColumnWidth = 25
 
-    /**
-     * @protected
-     */
+    /** @protected */
     checkboxColumnWidth = 40
 
-    /**
-     * @protected
-     */
+    /** @protected */
     minColumnWidth = 100
 
     /**
@@ -378,9 +370,7 @@ class ListRecordView extends View {
      */
     listLayout = null
 
-    /**
-     * @private
-     */
+    /** @private */
     _internalLayout = null
 
     /**
@@ -482,9 +472,7 @@ class ListRecordView extends View {
      */
     noDataDisabled = false
 
-    /**
-     * @private
-     */
+    /** @private */
     _$focusedCheckbox = null
 
     /**
@@ -499,9 +487,7 @@ class ListRecordView extends View {
      */
     massActionDefs = null
 
-    /**
-     * @private
-     */
+    /** @private */
     _additionalRowActionList
 
     /** @inheritDoc */
@@ -785,9 +771,7 @@ class ListRecordView extends View {
         this._stickyBarHelper.init();
     }
 
-    /**
-     * @protected
-     */
+    /** @protected */
     showActions() {
         this.$el.find('.actions-button').removeClass('hidden');
 
@@ -802,9 +786,7 @@ class ListRecordView extends View {
         }
     }
 
-    /**
-     * @protected
-     */
+    /** @protected */
     hideActions() {
         this.$el.find('.actions-button').addClass('hidden');
 
@@ -813,9 +795,7 @@ class ListRecordView extends View {
         }
     }
 
-    /**
-     * @protected
-     */
+    /** @protected */
     selectAllHandler(isChecked) {
         this.checkedList = [];
 
@@ -1018,9 +998,7 @@ class ListRecordView extends View {
         });
     }
 
-    /**
-     * @protected
-     */
+    /** @protected */
     deactivate() {
         if (this.$el) {
             this.$el.find(".pagination li").addClass('disabled');
@@ -1970,9 +1948,7 @@ class ListRecordView extends View {
         }
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     setupMassActions() {
         if (this.massActionsDisabled) {
             this.massActionList = [];
@@ -2168,9 +2144,7 @@ class ListRecordView extends View {
         });
     }
 
-    /**
-     * @protected
-     */
+    /** @protected */
     setupMassActionItems() {}
 
     /**
@@ -2294,9 +2268,7 @@ class ListRecordView extends View {
         return selectProvider.getFromLayout(this.entityType, this.listLayout);
     }
 
-    /**
-     * @protected
-     */
+    /** @protected */
     _getHeaderDefs() {
         const defs = [];
 
@@ -2396,9 +2368,7 @@ class ListRecordView extends View {
         return defs;
     }
 
-    /**
-     * @protected
-     */
+    /** @protected */
     _convertLayout(listLayout, model) {
         model = model || this.collection.prepareModel();
 
@@ -2622,9 +2592,7 @@ class ListRecordView extends View {
         return list;
     }
 
-    /**
-     * @protected
-     */
+    /** @protected */
     getInternalLayoutForModel(callback, model) {
         const scope = model.entityType;
 
@@ -2639,9 +2607,7 @@ class ListRecordView extends View {
         callback(this._internalLayout[scope]);
     }
 
-    /**
-     * @protected
-     */
+    /** @protected */
     getInternalLayout(callback, model) {
         if (
             (this.scope === null) &&
@@ -3323,9 +3289,7 @@ class ListRecordView extends View {
         handler.process(model, action);
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     setupSettings() {
         if (!this.options.settingsEnabled || !this.collection.entityType || !this.layoutName) {
             return;
