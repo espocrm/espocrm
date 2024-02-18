@@ -31,6 +31,7 @@
 import BaseRecordView from 'views/record/base';
 import ViewRecordHelper from 'view-record-helper';
 import ActionItemSetup from 'helpers/action-item-setup';
+import StickyBarHelper from 'helpers/record/misc/sticky-bar';
 
 /**
  * A detail record view.
@@ -1419,102 +1420,16 @@ class DetailRecordView extends BaseRecordView {
         }
     }
 
-    /**
-     * @private
-     */
+    /** @private */
     initStickableButtonsContainer() {
-        const $containers = this.$el.find('.detail-button-container');
-        const $container = this.$el.find('.detail-button-container.record-buttons');
+        const helper = new StickyBarHelper(
+            this,
+            this.stickButtonsFormBottomSelector,
+            this.stickButtonsContainerAllTheWay,
+            this.numId
+        );
 
-        if (!$container.length) {
-            return;
-        }
-
-        const navbarHeight = this.getThemeManager().getParam('navbarHeight');
-        const screenWidthXs = this.getThemeManager().getParam('screenWidthXs');
-
-        const isSmallScreen = $(window.document).width() < screenWidthXs;
-
-        const getOffsetTop = (/** JQuery */$element) => {
-            let element = /** @type {HTMLElement} */$element.get(0);
-
-            let value = 0;
-
-            while (element) {
-                value += !isNaN(element.offsetTop) ? element.offsetTop : 0;
-
-                element = element.offsetParent;
-            }
-
-            if (isSmallScreen) {
-                return value;
-            }
-
-            return value - navbarHeight;
-        };
-
-        let stickTop = getOffsetTop($container);
-        const blockHeight = $container.outerHeight();
-
-        stickTop -= 5; // padding;
-
-        const $block = $('<div>')
-            .css('height', blockHeight + 'px')
-            .html('&nbsp;')
-            .hide()
-            .insertAfter($container);
-
-        let $middle = this.getMiddleView().$el;
-        const $window = $(window);
-        const $navbarRight = $('#navbar .navbar-right');
-
-        if (this.stickButtonsFormBottomSelector) {
-            const $bottom = this.$el.find(this.stickButtonsFormBottomSelector);
-
-            if ($bottom.length) {
-                $middle = $bottom;
-            }
-        }
-
-        $window.off('scroll.detail-' + this.numId);
-
-        $window.on('scroll.detail-' + this.numId, () => {
-            const edge = $middle.position().top + $middle.outerHeight(false) - blockHeight;
-            const scrollTop = $window.scrollTop();
-
-            if (scrollTop >= edge && !this.stickButtonsContainerAllTheWay) {
-                $containers.hide();
-                $navbarRight.removeClass('has-sticked-bar');
-                $block.show();
-
-                return;
-            }
-
-            if (isSmallScreen && $('#navbar .navbar-body').hasClass('in')) {
-                return;
-            }
-
-            if (scrollTop > stickTop) {
-                if (!$containers.hasClass('stick-sub')) {
-                    $containers.addClass('stick-sub');
-                    $block.show();
-                }
-
-                $navbarRight.addClass('has-sticked-bar');
-
-                $containers.show();
-
-                return;
-            }
-
-            if ($containers.hasClass('stick-sub')) {
-                $containers.removeClass('stick-sub');
-                $navbarRight.removeClass('has-sticked-bar');
-                $block.hide();
-            }
-
-            $containers.show();
-        });
+        helper.init();
     }
 
     fetch() {
