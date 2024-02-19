@@ -50,8 +50,9 @@ use Espo\ORM\Query\Part\WhereClause;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\QueryBuilder as BaseQueryBuilder;
+use PHPUnit\Framework\TestCase;
 
-class ConverterTest extends \PHPUnit\Framework\TestCase
+class ConverterTest extends TestCase
 {
     protected function setUp() : void
     {
@@ -105,11 +106,8 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->converter = new Converter(
-            $this->entityType,
             $this->itemConverter,
-            $this->scanner,
-            $this->randomStringGenerator,
-            $this->ormDefs
+            $this->scanner
         );
     }
 
@@ -210,184 +208,6 @@ class ConverterTest extends \PHPUnit\Framework\TestCase
                 ['test1=' => 'value1'],
                 ['test2!=' => 'value2'],
             ],
-        ];
-
-        $this->assertEquals($expected, $whereClause->getRaw());
-    }
-
-    public function testConvertInCategoryManyMany()
-    {
-        $this->ormDefs
-            ->expects($this->any())
-            ->method('getEntity')
-            ->with($this->entityType)
-            ->willReturn(
-                EntityDefs::fromRaw(
-                    [
-                        'relations' => [
-                            'test' => [
-                                'type' => Entity::MANY_MANY,
-                                'entity' => 'Foreign',
-                                'midKeys' => ['localId', 'foreignId'],
-                            ],
-                        ],
-                    ],
-                    $this->entityType
-                )
-            );
-
-        $item = Item::fromRaw([
-            'type' => 'and',
-            'value' => [
-                [
-                    'type' => 'inCategory',
-                    'attribute' => 'test',
-                    'value' => 'value',
-                ],
-            ],
-        ]);
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('distinct');
-
-        $this->queryBuilder
-            ->method('join')
-            ->withConsecutive(
-                [
-                    'test',
-                    'testInCategoryFilter',
-                ],
-                [
-                    'ForeignPath',
-                    'foreignPath',
-                    [
-                         "foreignPath.descendorId:" => "testInCategoryFilterMiddle.foreignId",
-                    ]
-                ]
-            );
-
-        $whereClause = $this->converter->convert($this->queryBuilder, $item);
-
-        $expected = [
-            'foreignPath.ascendorId' => 'value',
-        ];
-
-        $this->assertEquals($expected, $whereClause->getRaw());
-    }
-
-    public function testConvertInCategoryBelongsTo()
-    {
-        $this->ormDefs
-            ->expects($this->any())
-            ->method('getEntity')
-            ->with($this->entityType)
-            ->willReturn(
-                EntityDefs::fromRaw(
-                    [
-                        'relations' => [
-                            'test' => [
-                                'type' => Entity::BELONGS_TO,
-                                'entity' => 'Foreign',
-                                'key' => 'foreignId',
-                            ],
-                        ],
-                    ],
-                    $this->entityType
-                )
-            );
-
-        $item = Item::fromRaw([
-            'type' => 'and',
-            'value' => [
-                [
-                    'type' => 'inCategory',
-                    'attribute' => 'test',
-                    'value' => 'value',
-                ],
-            ],
-        ]);
-
-        $this->queryBuilder
-            ->expects($this->never())
-            ->method('distinct');
-
-        $this->queryBuilder
-            ->method('join')
-            ->withConsecutive(
-                [
-                    'ForeignPath',
-                    'foreignPath',
-                    [
-                        "foreignPath.descendorId:" => "foreignId",
-                    ]
-                ]
-            );
-
-        $whereClause = $this->converter->convert($this->queryBuilder, $item);
-
-        $expected = [
-            'foreignPath.ascendorId' => 'value',
-        ];
-
-        $this->assertEquals($expected, $whereClause->getRaw());
-    }
-
-    public function testConvertIsUserFromTeams()
-    {
-        $this->ormDefs
-            ->expects($this->any())
-            ->method('getEntity')
-            ->with($this->entityType)
-            ->willReturn(
-                EntityDefs::fromRaw(
-                    [
-                        'relations' => [
-                            'user' => [
-                                'type' => Entity::BELONGS_TO,
-                                'entity' => 'User',
-                                'key' => 'userId',
-                            ],
-                        ],
-                    ],
-                    $this->entityType
-                )
-            );
-
-        $item = Item::fromRaw([
-            'type' => 'and',
-            'value' => [
-                [
-                    'type' => 'isUserFromTeams',
-                    'attribute' => 'user',
-                    'value' => 'valueTeamId',
-                ],
-            ],
-        ]);
-
-        $this->queryBuilder
-            ->expects($this->once())
-            ->method('distinct');
-
-        $aliasName = 'userIsUserFromTeamsFilterRandom';
-
-        $this->queryBuilder
-            ->method('join')
-            ->withConsecutive(
-                [
-                    'TeamUser',
-                    $aliasName . 'Middle',
-                    [
-                        $aliasName . 'Middle.userId:' => 'userId',
-                        $aliasName . 'Middle.deleted' => false,
-                    ]
-                ]
-            );
-
-        $whereClause = $this->converter->convert($this->queryBuilder, $item);
-
-        $expected = [
-            $aliasName . 'Middle.teamId' => 'valueTeamId',
         ];
 
         $this->assertEquals($expected, $whereClause->getRaw());
