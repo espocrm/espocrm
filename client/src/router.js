@@ -590,6 +590,11 @@ const Router = Backbone.Router.extend(/** @lends Router# */ {
             options: options,
         };
 
+        if (controller && /[a-z]/.test(controller[0])) {
+            o.controllerClassName = controller;
+            delete o.controller;
+        }
+
         this._last = o;
 
         this.trigger('routed', o);
