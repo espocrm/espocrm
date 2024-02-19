@@ -39,9 +39,11 @@ class PanelStreamView extends RelationshipPanelView {
     relatedListFiltersDisabled = true
     layoutName = null
     filterList = ['all', 'posts', 'updates']
-
     /** @type {import('collections/note').default} */
     collection
+
+    /** @private */
+    _justPosted = false
 
     additionalEvents = {
         /** @this PanelStreamView */
@@ -308,7 +310,7 @@ class PanelStreamView extends RelationshipPanelView {
         this.isSubscribedToWebSocket = true;
 
         this.getHelper().webSocketManager.subscribe(topic, (t, /** Record */data) => {
-            if (data.createdById === this.getUser().id) {
+            if (data.createdById === this.getUser().id && this._justPosted) {
                 return;
             }
 
@@ -603,6 +605,9 @@ class PanelStreamView extends RelationshipPanelView {
             model.set('isInternal', this.isInternalNoteMode);
 
             this.prepareNoteForPost(model);
+
+            this._justPosted = true;
+            setTimeout(() => this._justPosted = false, 1000);
 
             Espo.Ui.notify(' ... ');
 
