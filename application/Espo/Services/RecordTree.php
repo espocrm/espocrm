@@ -199,6 +199,7 @@ class RecordTree extends Record
         $one = $this->entityManager
             ->getRDBRepository($this->subjectEntityType)
             ->clone($query)
+            ->select(['id'])
             ->findOne();
 
         if ($one) {
