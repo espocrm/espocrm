@@ -118,7 +118,10 @@
     "noSmtpSetup": "SMTP ist nicht konfiguriert: {link}",
     "sendConfirm": "Die E-Mail senden?",
     "removeSelectedRecordsConfirmation": "Sind Sie sicher, dass Sie ausgewählte E-Mails entfernen möchten?\n\nSie werden auch für andere Benutzer entfernt.",
-    "removeRecordConfirmation": "Sind Sie sicher, dass Sie die E-Mail entfernen möchten?\n\nSie wird auch für andere Benutzer entfernt."
+    "removeRecordConfirmation": "Sind Sie sicher, dass Sie die E-Mail entfernen möchten?\n\nSie wird auch für andere Benutzer entfernt.",
+    "invalidCredentials": "Ungültige Zugangsdaten.",
+    "unknownError": "Unbekannter Fehler.",
+    "recipientAddressRejected": "Empfängeradresse wurde abgelehnt."
   },
   "presetFilters": {
     "sent": "Gesendet",

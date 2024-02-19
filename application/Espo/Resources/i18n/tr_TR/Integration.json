@@ -1,13 +1,13 @@
 {
   "fields": {
-    "enabled": "Etkinleştirildi ",
-    "clientId": "Müşteri ID",
+    "enabled": "Etkinleştirildi",
+    "clientId": "Alıcı ID",
     "clientSecret": "Müşteri Özel Anahtarı",
     "redirectUri": "Yönlendirme URI",
     "apiKey": "API Anahtarı"
   },
   "messages": {
-    "selectIntegration": "Menüden bir entegrasyon seçin",
+    "selectIntegration": "Menüden bir entegrasyon seçin.",
     "noIntegrations": "Geçerli entegrasyon yok"
   },
   "titles": {

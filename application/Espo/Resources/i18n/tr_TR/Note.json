@@ -1,11 +1,11 @@
 {
   "fields": {
     "post": "Yayınla",
-    "attachments": "Dosya Ekle",
+    "attachments": "Ekler",
     "targetType": "Hedef",
     "teams": "Takımlar",
     "users": "Kullanıcılar",
-    "portals": "Portallar",
+    "portals": "Portaller",
     "type": "Tip",
     "related": "İlgili",
     "createdByGender": "Cinsiyete Göre Oluşturuldu",
@@ -27,9 +27,14 @@
       "teams": "Belirli takımlara",
       "all": "Tüm dahili kullanıcılara",
       "portals": "Portal kullanıcılarına"
+    },
+    "type": {
+      "Post": "İleti"
     }
   },
   "links": {
-    "related": "İlgili"
+    "related": "İlgili",
+    "portals": "Portaller",
+    "attachments": "Ekler"
   }
 }

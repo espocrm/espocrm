@@ -1,11 +1,10 @@
 {
   "fields": {
-    "name": "İsim",
-    "emailAddress": "Eposta",
+    "name": "Ad",
     "accountRole": "Başlık",
     "account": "Hesap",
     "accounts": "Hesaplar",
-    "phoneNumber": "Telefon ",
+    "phoneNumber": "Telefon",
     "accountType": "Hesap Türü",
     "doNotCall": "Arama Yapma",
     "address": "Adres",
@@ -14,10 +13,10 @@
     "campaign": "Kampanya",
     "targetLists": "Hedef Listeler",
     "targetList": "Hedef Liste",
-    "portalUser": "Portal Kullanıcı",
+    "portalUser": "Portal Kullanıcısı",
     "originalLead": "Orijinal Müşteri Potansiyeli",
     "acceptanceStatus": "Kabul Durumu",
-    "accountIsInactive": "Hesap Inaktif",
+    "accountIsInactive": "Hesap Pasif",
     "acceptanceStatusMeetings": "Kabul Durumu (Toplantılar)",
     "acceptanceStatusCalls": "Kabul Durumu (Aramalar)"
   },
@@ -47,7 +46,7 @@
   },
   "presetFilters": {
     "portalUsers": "Portal Kullanıcıları",
-    "notPortalUsers": "Portal Kullanıcıları Değildir",
+    "notPortalUsers": "Portal Kullanıcısı Değildir",
     "accountActive": "Aktif"
   }
 }

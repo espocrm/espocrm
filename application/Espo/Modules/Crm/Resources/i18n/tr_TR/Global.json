@@ -7,8 +7,8 @@
     "meetings": "Toplantılar",
     "calls": "Aramalar",
     "tasks": "Görevler",
-    "emails": "Epostalar",
-    "accounts": "Hesaplar",
+    "emails": "Emailler",
+    "accounts": "Firmalar",
     "cases": "Dosyalar",
     "documents": "Belgeler",
     "account": "Hesap",
@@ -30,16 +30,16 @@
     "DocumentFolder": "Doküman Klasörü",
     "Campaign": "Kampanya",
     "TargetList": "Hedef Liste",
-    "MassEmail": "Toplu E-posta",
+    "MassEmail": "Toplu Eposta",
     "EmailQueueItem": "E-posta Kuyruğu Öğesi",
-    "CampaignTrackingUrl": "İzleme URL'si",
+    "CampaignTrackingUrl": "İzleme URL'i",
     "Activities": "Faaliyetler",
     "KnowledgeBaseArticle": "Bilgi Bankası Makalesi",
     "KnowledgeBaseCategory": "Bilgi Bankası Kategorisi",
     "CampaignLogRecord": "Kampanya Günlüğü Kaydı"
   },
   "scopeNamesPlural": {
-    "Account": "Hesaplar",
+    "Account": "Firmalar",
     "Contact": "Kişiler",
     "Lead": "Müşteri Potansiyelleri",
     "Target": "Hedefler",
@@ -53,10 +53,10 @@
     "DocumentFolder": "Doküman Klasörleri",
     "Campaign": "Kampanyalar",
     "TargetList": "Hedef Listeler",
-    "MassEmail": "Toplu E-postalar",
-    "EmailQueueItem": "E-posta Kuyruğu Öğeleri",
+    "MassEmail": "Toplu Email",
+    "EmailQueueItem": "Email Kuyruğu Öğeleri",
     "CampaignTrackingUrl": "İzleme URL'leri",
-    "Activities": "Faaliyetler ",
+    "Activities": "Faaliyetler",
     "KnowledgeBaseArticle": "Bilgi bankası",
     "KnowledgeBaseCategory": "Bilgi Tabanı Kategorileri",
     "CampaignLogRecord": "Kampanya Günlük Kayıtları"
@@ -104,12 +104,16 @@
     "addressStreet": "Sokak",
     "billingAddressMap": "Harita",
     "addressMap": "Harita",
+    "shippingAddressCity": "Şehir (Sevkiyat)",
+    "shippingAddressStreet": "Sokak (Sevkiyat)",
+    "shippingAddressCountry": "Ülke (Sevkiyat)",
+    "shippingAddressState": "Bölge (Sevkiyat)",
+    "shippingAddressPostalCode": "Posta Kodu (Sevkiyat)",
     "shippingAddressMap": "Harita (Sevkiyat)"
   },
   "options": {
     "reminderTypes": {
-      "Popup": "Yeni Pencere",
-      "Email": "E-posta   "
+      "Popup": "Yeni Pencere"
     }
   }
 }

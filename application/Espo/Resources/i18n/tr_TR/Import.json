@@ -22,7 +22,7 @@
     "Set as Not Duplicate": "Çifte Kayıt Değil Olarak İşaretle",
     "File (CSV)": "Dosya (CSV)",
     "First Row Value": "İlk Satır Değeri",
-    "Skip": "Geç",
+    "Skip": "Atla",
     "Header Row Value": "Başlık Satır Değeri",
     "Field": "Alan",
     "What to Import?": "Aktarılacak Olan?",
@@ -31,6 +31,7 @@
     "Properties": "Özellikler",
     "Header Row": "Başlık Satırı",
     "Person Name Format": "Kişi İsim Formatı",
+    "Smith John": "John Smith",
     "Field Delimiter": "Alan Sınırlayıcı",
     "Date Format": "Tarih Formatı",
     "Decimal Mark": "Ondalık İşareti",
@@ -48,6 +49,7 @@
     "Skip searching for duplicates": "Çiftleri aramaktan vazgeç",
     "Timezone": "Saat dilimi",
     "Remove Import Log": "İçe Aktarma Günlüğünü Kaldır",
+    "New Import": "Yeni İçe Aktarma",
     "Import Results": "İçeri Alma Sonuçları",
     "Silent Mode": "Sessiz mod"
   },
@@ -59,7 +61,9 @@
     "removeDuplicates": "Kopya olarak tanınan tüm içe aktarılan kayıtları kalıcı olarak kaldıracaktır.",
     "confirmRevert": "İçe aktarılan tüm kayıtları kalıcı olarak kaldıracaktır. Emin misin?",
     "confirmRemoveDuplicates": "Kopya olarak tanınan tüm içe aktarılan kayıtları kalıcı olarak kaldıracaktır. Emin misin?",
-    "removeImportLog": "İçe aktarma günlüğünü kaldıracaktır. İçe aktarılan tüm kayıtlar tutulacaktır. İçe aktarmanın başarılı olduğundan eminseniz kullanın."
+    "removeImportLog": "İçe aktarma günlüğünü kaldıracaktır. İçe aktarılan tüm kayıtlar tutulacaktır. İçe aktarmanın başarılı olduğundan eminseniz kullanın.",
+    "importRunning": "İçe Aktarılıyor...",
+    "noErrors": "Hata yok"
   },
   "fields": {
     "file": "Dosya",
@@ -75,5 +79,8 @@
       "In Process": "Süreç İçinde",
       "Complete": "Tamamlandı"
     }
+  },
+  "params": {
+    "phoneNumberCountry": "Telefon ülke kodu"
   }
 }

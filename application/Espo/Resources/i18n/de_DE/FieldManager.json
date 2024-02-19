@@ -67,8 +67,8 @@
       "forbidden": "Verboten",
       "internal": "Intern",
       "onlyAdmin": "Nur Admin",
-      "readOnly": "Nur Lesen",
-      "nonAdminReadOnly": "Nicht-Admin nur Lesen"
+      "readOnly": "Schreibgeschützt",
+      "nonAdminReadOnly": "Schreibgeschützt für Nicht-Admins"
     }
   },
   "tooltips": {
@@ -96,7 +96,9 @@
     "displayAsList": "Jeder Wert in eine neue Zeile.",
     "optionsVarchar": "Eine Liste mit Werten zur Autovervollständigung.",
     "currencyDecimal": "Verwenden Sie den DB-Typ Dezimal. In der Anwendung werden die Werte als Strings dargestellt. Überprüfen Sie diesen Parameter, wenn Präzision erforderlich ist.",
-    "optionsReference": "Wiederverwendung von Optionen aus einem anderen Feld."
+    "optionsReference": "Wiederverwendung von Optionen aus einem anderen Feld.",
+    "readOnlyAfterCreate": "Der Feldwert kann beim Anlegen eines neuen Datensatzes angegeben werden. Danach wird das Feld schreibgeschützt. Es kann weiterhin durch Formeln berechnet werden.",
+    "linkReadOnly": "Der Feldwert kann nicht vom Benutzer angegeben werden. Er kann aber durch eine Formel berechnet werden.\n\nAußerdem wird die Möglichkeit, einen Bezugsdatensatz aus Beziehungspaneelen zu erstellen, deaktiviert."
   },
   "fieldParts": {
     "address": {
@@ -133,7 +135,7 @@
     "bool": "Ein Kontrollkästchen. Zwei mögliche Werte: wahr und falsch.",
     "multiEnum": "Eine Liste von Werten, mehrere Werte können ausgewählt werden. Die Liste ist geordnet.",
     "checklist": "Eine Liste von Ankreuzfeldern.",
-    "array": "Eine Liste von Werten, ähnlich dem Multi-Enum-Feld.",
+    "array": "Eine Liste von Werten, ähnlich dem Mehrfachauswahlfeld.",
     "address": "Eine Adresse mit Straße, Stadt, Bundesland, Postleitzahl und Land.",
     "url": "Zum Speichern von Links.",
     "wysiwyg": "Ein Text mit HTML-Unterstützung.",
@@ -145,11 +147,11 @@
     "barcode": "Ein Strichcode. Kann als PDF ausgedruckt werden.",
     "email": "Eine Reihe von E-Mail-Adressen mit ihren Parametern: Ausgewählt, Ungültig, Primär.",
     "phone": "Eine Reihe von Telefonnummern mit ihren Parametern: Typ, Ausgewählt, Ungültig, Primär.",
-    "foreign": "Ein Feld eines Bezugsdatensatzes. Schreibgeschützt",
+    "foreign": "Ein Feld eines Bezugsdatensatzes. Schreibgeschützt.",
     "link": "Ein Datensatz, der durch eine Belongs-To-Beziehung (Viele-zu-Eins- oder Eins-zu-Eins-Beziehung) verbunden ist.",
     "linkParent": "Ein Datensatz, der über die Beziehung zwischen Eltern und Angehörigen in Beziehung steht. Kann von verschiedenen Entitätstypen sein.",
     "linkMultiple": "Eine Gruppe von Datensätzen, die durch Mehrfachbeziehungen (n:n oder 1:n) verbunden sind. Nicht alle Beziehungen haben ihre Mehrfachlinks-Felder. Nur diejenigen, bei denen die Option \"Mehrere Felder verlinken\" aktiviert ist.",
-    "urlMultiple": "Mehrere Verknüpfungen."
+    "urlMultiple": "Mehrere Weblinks."
   },
   "messages": {
     "fieldNameIsNotAllowed": "Der Feldname '{field}' ist nicht erlaubt.",

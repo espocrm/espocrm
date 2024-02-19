@@ -1,16 +1,16 @@
 {
   "modes": {
     "month": "Ay",
-    "week": "hafta",
-    "agendaWeek": "hafta",
+    "week": "Hafta",
+    "agendaWeek": "Hafta",
     "day": "Gün",
     "agendaDay": "Gün",
-    "timeline": "Zaman Tüneli"
+    "timeline": "Zaman Çizelgesi"
   },
   "labels": {
     "Today": "Bugün",
     "Create": "Oluştur",
-    "Shared": "Paylaşım seçenekleri:  ",
+    "Shared": "Paylaşım",
     "Add User": "Kullanıcı Ekle",
     "current": "Mevcut",
     "time": "saat",

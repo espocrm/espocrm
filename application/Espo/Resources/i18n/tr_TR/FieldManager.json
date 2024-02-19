@@ -97,5 +97,15 @@
     "datetimeOptional": {
       "date": "Tarih"
     }
+  },
+  "fieldInfo": {
+    "email": "Parametreleriyle birlikte bir dizi email adresi: Devre dışı bırakıldı, Geçersiz, Öncelikli.",
+    "phone": "Parametreleriyle birlikte bir dizi telefon numarası: Tür, Devre Dışı Bırakılmış, Geçersiz, Öncelikli.",
+    "urlMultiple": "Çoklu bağlantı."
+  },
+  "messages": {
+    "fieldNameIsNotAllowed": "'{field}' alan adına izin verilmiyor.",
+    "fieldAlreadyExists": "'{field}' alanı '{entityType}' içinde zaten mevcut.",
+    "linkWithSameNameAlreadyExists": "'{field}' adlı bağlantı '{entityType}' içinde zaten mevcut."
   }
 }

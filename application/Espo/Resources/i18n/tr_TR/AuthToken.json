@@ -11,12 +11,12 @@
   },
   "presetFilters": {
     "active": "Aktif",
-    "inactive": "Inaktif"
+    "inactive": "Pasif"
   },
   "labels": {
-    "Set Inactive": "Inaktif Yap"
+    "Set Inactive": "Pasif Yap"
   },
   "massActions": {
-    "setInactive": "Inaktif Yap"
+    "setInactive": "Pasif Yap"
   }
 }

@@ -34,6 +34,8 @@
   },
   "links": {
     "superParent": "Super Eltern",
-    "related": "Verbunden"
+    "related": "Verbunden",
+    "portals": "Portale",
+    "attachments": "Anhänge"
   }
 }

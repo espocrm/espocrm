@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "İsim",
+    "name": "Ad",
     "parent": "Üst Seçenek",
     "status": "Durum",
     "dateStart": "Başlangıç Tarihi",

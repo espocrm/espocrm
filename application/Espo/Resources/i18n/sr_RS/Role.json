@@ -4,16 +4,12 @@
     "roles": "Uloge",
     "assignmentPermission": "Dozvola zaduživanja",
     "userPermission": "Dozvola korisnika",
-    "portalPermission": "Dozvola za portal"
+    "portalPermission": "Dozvola za portal",
+    "exportPermission": "Eksportuj Permisije"
   },
   "links": {
     "users": "Korisnici",
     "teams": "Timovi"
-  },
-  "tooltips": {
-    "assignmentPermission": "Omogućava da se ograniči sposobnost da se zadužuju upisi  i postavljaju poruke drugim korisnicima.\nsve - Nikakvo ograničenje\ntim- može zadužiti i pisati samo članovima tima\nne- može zadužiti i pisati samo sebi",
-    "userPermission": "Omogućava da se ograniči sposobnost korisnicima da vide aktivnosti, kalendar i tok drugima \nsve - da vide sve\ntim - mogu da vide aktivnosti samo članova tima\nne - ne vide.",
-    "portalPermission": "Definiše se pristup informacijama sa portala, mogućnost postavljanja poruka korisnicima portala."
   },
   "labels": {
     "Access": "Pristup",

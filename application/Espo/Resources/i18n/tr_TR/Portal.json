@@ -1,19 +1,19 @@
 {
   "fields": {
-    "name": "İsim",
+    "name": "Ad",
     "portalRoles": "Roller",
     "isActive": "Aktif",
     "isDefault": "Ön Tanımlı",
     "tabList": "Sekme Listesi",
     "quickCreateList": "Çabuk liste oluştur",
-    "theme": "Tema ",
+    "theme": "Tema",
     "language": "Dil",
     "dashboardLayout": "Gösterge Paneli Düzeni",
     "dateFormat": "Tarih Formatı",
     "timeFormat": "Zaman Formatı",
     "timeZone": "Saat Dilimi",
     "weekStart": "Haftanın ilk günü",
-    "defaultCurrency": "Ön Tanımlı Döviz",
+    "defaultCurrency": "Varsayılan Döviz",
     "customUrl": "Özel URL",
     "customId": "Özel kimlik",
     "authenticationProvider": "Kimlik Doğrulama Sağlayıcı"
@@ -21,7 +21,7 @@
   "links": {
     "users": "Kullanıcılar",
     "portalRoles": "Roller",
-    "notes": "Notlar ",
+    "notes": "Notlar",
     "authenticationProvider": "Kimlik Doğrulama Sağlayıcı"
   },
   "tooltips": {

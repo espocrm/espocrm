@@ -4,16 +4,17 @@
     "timeFormat": "Saat Biçimi",
     "timeZone": "Zaman Dilimi",
     "weekStart": "Hafta Başlangıç Günü",
-    "thousandSeparator": "Binlik Ayraç",
+    "thousandSeparator": "Bindelik Ayraç",
     "decimalMark": "Ondalık Ayraç",
     "defaultCurrency": "Varsayılan Para Birimi",
-    "currencyList": "para Birimi Listesi",
+    "currencyList": "Para Birimi Listesi",
     "language": "Dil",
-    "signature": "E-mail İmzası",
+    "exportDelimiter": "Dışa Aktarma Sınırlayıcısı",
+    "signature": "Email İmzası",
     "dashboardTabList": "Sekme Listesi",
     "tabList": "Sekme Listesi",
     "defaultReminders": "Ön Tanımlı Hatırlatıcılar",
-    "theme": "Tema ",
+    "theme": "Tema",
     "useCustomTabList": "Özel Sekme Listesi",
     "receiveAssignmentEmailNotifications": "Ödev sırasında e-posta bildirimleri",
     "receiveMentionEmailNotifications": "Yayınlarda bahsedilen bildirimlerle ilgili e-posta bildirimleri",
@@ -28,7 +29,9 @@
     "followCreatedEntityTypeList": "Belirli varlık türlerinin kayıtlarını otomatik takip et",
     "emailUseExternalClient": "Harici bir e-posta istemcisi kullanın",
     "scopeColorsDisabled": "Kapsam renklerini devre dışı bırak",
-    "tabColorsDisabled": "Sekme renklerini devre dışı bırak"
+    "tabColorsDisabled": "Sekme renklerini devre dışı bırak",
+    "dashboardLocked": "Kontrol Panelini Kilitle",
+    "textSearchStoringDisabled": "Metin filtre saklamayı devre dışı bırak"
   },
   "options": {
     "weekStart": {
@@ -39,7 +42,7 @@
   "labels": {
     "Notifications": "Bildirimler",
     "User Interface": "Kullanıcı Arayüzü",
-    "Misc": "Diğerleri",
+    "Misc": "Çeşit",
     "Locale": "Lokal",
     "Reset Dashboard to Default": "Panoyu Varsayılan Ayarlara Sıfırla"
   },

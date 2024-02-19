@@ -346,7 +346,6 @@
     "noAccessToForeignRecord": "Die Operation erfordert `{action}`-Zugriff auf den fremden Datensatz.",
     "fieldShouldBeNumber": "{field} sollte eine gültige Zahl sein",
     "maintenanceModeError": "Die Anwendung befindet sich im Wartungsmodus.",
-    "noLinkAccess": "Kein Zugriff, um Operation für einen bestimmten Datensatz zu verknüpfen.",
     "cannotRelateNonExisting": "Kann nicht mit einem nicht existierenden {foreignEntityType} Datensatz verknüpft werden.",
     "cannotRelateForbidden": "Kann nicht mit verbotenem {foreignEntityType} Datensatz verknüpft werden. Zugriff auf `{action}` erforderlich.",
     "cannotRelateForbiddenLink": "Kein Zugriff auf den Link '{link}'.",
@@ -354,7 +353,13 @@
     "fieldNotMatchingPattern$uriOptionalProtocol": "{field} muss eine gültige URL sein",
     "fieldShouldBeLess": "{field} sollte nicht größer als {value} sein",
     "fieldShouldBeGreater": "{field} sollte nicht kleiner sein als {value}",
-    "cannotUnrelateRequiredLink": "Kann die Verknüpfung nicht lösen."
+    "cannotUnrelateRequiredLink": "Kann die Verknüpfung nicht lösen.",
+    "fieldPhoneInvalidCode": "Ungültiger Ländercode",
+    "fieldPhoneTooShort": "{field} ist zu kurz",
+    "fieldPhoneTooLong": "{field} ist zu lang",
+    "barcodeInvalid": "{field} ist kein gültiger {type}",
+    "noLinkAccess": "Kann nicht mit dem Datensatz {foreignEntityType} über den Link '{link}' verknüpft werden. Kein Zugriff.",
+    "attemptIntervalFailure": "Der Vorgang ist während eines bestimmten Zeitintervalls nicht erlaubt. Warten Sie vor dem nächsten Versuch einige Zeit."
   },
   "boolFilters": {
     "onlyMy": "Nur meine",
@@ -784,8 +789,8 @@
     "datetimeOptional_valid": "Ungültiger Datum-Uhrzeit Wert.",
     "datetime_valid": "Ungültiger Datum-Uhrzeit Wert.",
     "date_valid": "Ungültiger Datumswert.",
-    "enum_valid": "Ungültiger Enum-Wert. Der Wert muss eine der definierten Enum-Optionen sein. Ein leerer Wert ist nur zulässig, wenn das Feld eine leere Option hat.",
-    "multiEnum_valid": "Ungültiger Multi-Enum-Wert. Werte müssen eine der definierten Feldoptionen sein.",
+    "enum_valid": "Ungültiger Auswahlwert. Der Wert muss eine der definierten Auswahloptionen sein. Ein leerer Wert ist nur zulässig, wenn das Feld eine leere Option hat.",
+    "multiEnum_valid": "Ungültiger Mehrfachauswahlwert. Werte müssen eine der definierten Feldoptionen sein.",
     "int_valid": "Ungültiger ganzzahliger Zahlenwert.",
     "float_valid": "Ungültiger Zahlenwert."
   },

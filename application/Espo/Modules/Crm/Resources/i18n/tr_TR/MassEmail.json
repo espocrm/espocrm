@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "İsim",
+    "name": "Ad",
     "status": "Durum ",
     "storeSentEmails": "Gönderilen E-postaları Sakla",
     "startAt": "Başlangıç ​​Tarihi",
