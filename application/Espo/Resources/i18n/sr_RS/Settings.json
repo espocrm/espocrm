@@ -127,7 +127,8 @@
     "Mass Email": "Masovna e-poruka",
     "Test Connection": "test veze",
     "Connecting": "Povezivanje ...",
-    "Activities": "Aktivnosti"
+    "Activities": "Aktivnosti",
+    "Admin Notifications": "Admin Notifikacija"
   },
   "messages": {
     "ldapTestConnection": "Veza uspešno uspostavljena."

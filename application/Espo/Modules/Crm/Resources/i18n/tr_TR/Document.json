@@ -4,13 +4,13 @@
     "Details": "Detaylar"
   },
   "fields": {
-    "name": "İsim",
-    "status": "Durum ",
+    "name": "Ad",
+    "status": "Durum",
     "file": "Dosya",
-    "type": "tip ",
-    "publishDate": "Yayım tarihi:",
-    "expirationDate": "Bitiş Tarihi ",
-    "description": "Tanım ",
+    "type": "Tip",
+    "publishDate": "Yayım tarihi",
+    "expirationDate": "Bitiş Tarihi",
+    "description": "Tanım",
     "accounts": "Hesaplar",
     "folder": "Klasör"
   },
@@ -23,9 +23,9 @@
   },
   "options": {
     "status": {
-      "Active": "Aktif ",
+      "Active": "Aktif",
       "Draft": "Taslak",
-      "Expired": "Süresi Dolan ",
+      "Expired": "Süresi Dolan",
       "Canceled": "İptal edildi"
     },
     "type": {
@@ -35,7 +35,7 @@
     }
   },
   "presetFilters": {
-    "active": "Aktif ",
-    "draft": "Taslak "
+    "active": "Aktif",
+    "draft": "Taslak"
   }
 }

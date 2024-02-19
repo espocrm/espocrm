@@ -21,5 +21,8 @@
       "notContains": "ne sadrži",
       "notHas": "ne sadrži"
     }
+  },
+  "labels": {
+    "Field": "Polje"
   }
 }

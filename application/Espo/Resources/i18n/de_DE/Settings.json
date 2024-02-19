@@ -72,11 +72,11 @@
     "streamEmailNotifications": "Benachrichtigungen im Ereignisverlauf für interne Benutzer",
     "portalStreamEmailNotifications": "Benachrichtigungen im Ereignisverlauf für Portalnutzer",
     "streamEmailNotificationsEntityList": "Umfang der E-Mail-Benachrichtigungen über Ereignisse",
-    "calendarEntityList": "Kalenderentitätsliste",
+    "calendarEntityList": "Entitätsliste: Kalender",
     "mentionEmailNotifications": "E-Mail Benachrichtigungen für Erwähnungen in Beiträgen",
     "massEmailDisableMandatoryOptOutLink": "Verpflichtenden Opt-out Link deaktivieren",
-    "activitiesEntityList": "Aktivitätenentitätsliste",
-    "historyEntityList": "Verlaufsentitätenliste",
+    "activitiesEntityList": "Entitätsliste: Aktivitäten",
+    "historyEntityList": "Entitätsliste: Verlauf",
     "currencyFormat": "Währungsformat",
     "currencyDecimalPlaces": "Dezimalstellen der Währung",
     "followCreatedEntities": "Eigene Einträge abonnieren",
@@ -154,7 +154,11 @@
     "oidcAllowAdminUser": "OIDC OIDC-Anmeldung für Admin-Benutzer zulassen",
     "oidcLogoutUrl": "OIDC Abmelde-URL",
     "recordsPerPageKanban": "Einträge pro Seite (Kanban)",
-    "auth2FAInPortal": "2FA in Portalen erlauben"
+    "auth2FAInPortal": "2FA in Portalen erlauben",
+    "massEmailMaxPerBatchCount": "Maximale Anzahl von E-Mails pro Batch",
+    "phoneNumberNumericSearch": "Numerische Rufnummernsuche",
+    "phoneNumberInternational": "Internationale Telefonnummern",
+    "phoneNumberPreferredCountryList": "Bevorzugte Ländervorwahlen"
   },
   "tooltips": {
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
@@ -260,7 +264,8 @@
     "IdP Group": "IdP Gruppe",
     "Divider": "Trenner",
     "General": "Allgemein",
-    "Navbar": "Navigationsleiste"
+    "Navbar": "Navigationsleiste",
+    "Phone Numbers": "Telefonnummern"
   },
   "messages": {
     "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt."

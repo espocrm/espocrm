@@ -1,6 +1,6 @@
 {
   "fields": {
-    "name": "İsim",
+    "name": "Ad",
     "account": "Hesap",
     "stage": "Aşama",
     "amount": "Tutar",

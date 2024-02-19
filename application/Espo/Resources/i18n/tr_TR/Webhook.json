@@ -1,6 +1,13 @@
 {
+  "labels": {
+    "Create Webhook": "Web Oltası Oluştur"
+  },
   "fields": {
     "event": "Etkinlik",
+    "isActive": "Aktif",
+    "user": "API Kullanıcısı",
+    "entityType": "Varlık Türü",
+    "field": "Alan",
     "secretKey": "Gizli Anahtar"
   },
   "links": {

@@ -124,7 +124,9 @@
     "enterCodeSentBySms": "Gib den Code ein, welcher dir per SMS gesendet wurde.",
     "passwordChangeRequestNotFound": "Der Antrag auf Passwortänderung wurde nicht gefunden. Er könnte abgelaufen sein. Versuchen Sie, die Passwortänderung erneut über die [login page]({url}) anzufordern.",
     "loginAs": "Öffnen Sie den Anmeldelink in einem Inkognito-Fenster, um Ihre aktuelle Sitzung beizubehalten. Melden Sie sich mit Ihren Administrator-Anmeldedaten an.",
-    "failedToLogIn": "Anmeldung fehlgeschlagen"
+    "failedToLogIn": "Anmeldung fehlgeschlagen",
+    "2faMethodNotConfigured": "Die 2FA-Methode ist im System nicht vollständig konfiguriert.",
+    "loginError": "Ein Fehler ist aufgetreten"
   },
   "boolFilters": {
     "onlyMyTeam": "Nur mein Team"

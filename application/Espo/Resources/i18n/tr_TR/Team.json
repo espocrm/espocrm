@@ -1,7 +1,7 @@
 {
   "fields": {
-    "name": "İsim",
-    "roles": "Görevler",
+    "name": "Ad",
+    "roles": "Roller",
     "positionList": "Pozisyon Listesi"
   },
   "links": {
@@ -12,7 +12,7 @@
   },
   "tooltips": {
     "roles": "Rollere Erişim. Bu ekibin kullanıcıları, seçilen rollerden erişim kontrolü düzeyi elde eder.",
-    "positionList": "Bu takımda mevcut pozisyonlar. Örneğin Satış Görevlisi, Müdür."
+    "positionList": "Bu takımdaki mevcut pozisyonlar. Örn, Satış Görevlisi, Müdür."
   },
   "labels": {
     "Create Team": "Takım Oluştur"

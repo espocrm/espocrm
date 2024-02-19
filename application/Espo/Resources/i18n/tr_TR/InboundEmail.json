@@ -1,19 +1,19 @@
 {
   "fields": {
-    "name": "İsim",
-    "emailAddress": "E-mail Adresi",
+    "name": "Ad",
+    "emailAddress": "Email Adresi",
     "status": "Durum",
     "assignToUser": "Kullanıcıyı Görevlendir",
     "username": "Kullanıcı Adı",
     "password": "Şifre",
     "monitoredFolders": "İzlenen Klasörler",
-    "trashFolder": "Çöp Klasörü ",
+    "trashFolder": "Çöp Kutusu",
     "createCase": "Dosya Oluştur",
-    "reply": "Oto-Cevap",
+    "reply": "Otomatik Cevap",
     "caseDistribution": "Dosya Dağıtımı",
-    "replyEmailTemplate": "Cevapla E-mail Taslağı",
+    "replyEmailTemplate": "Cevapla Email Taslağı",
     "replyFromAddress": "Cevaplayan Adres",
-    "replyToAddress": "Cevaplanan Asres",
+    "replyToAddress": "Cevaplanan Adres",
     "replyFromName": "Cevaplayan İsim",
     "targetUserPosition": "Hedef Kullanıcı Pozisyonu",
     "fetchSince": "Şundan itibaren çek",
@@ -34,7 +34,7 @@
     "smtpAuthMechanism": "SMTP Kimlik Doğrulama Tipi"
   },
   "tooltips": {
-    "reply": "E-posta gönderenlerine e-postalarının alındığını bildirin. \\ N \\ n Döngüleri önlemek için belirli bir süre boyunca belirli bir alıcıya yalnızca bir e-posta gönderilir.",
+    "reply": "Emaillerin gönderenlerine emaillerinin alındığını bildirin. \\ N \\ n Döngüleri önlemek için belirli bir süre boyunca belirli bir alıcıya yalnızca bir e-posta gönderilir.",
     "createCase": "Gelen maillerden otomatik Dosya oluştur",
     "replyToAddress": "Bu mail kutusuna ait email adreslerini, cevapların buraya düşmesi için belirtiniz.",
     "caseDistribution": "Dosyaların nasıl görevlendireleceği. Direk kullanıcıyı görevlendir yada takım arasında",
@@ -56,7 +56,7 @@
   "options": {
     "status": {
       "Active": "Aktif",
-      "Inactive": "Inaktif"
+      "Inactive": "Pasif"
     },
     "caseDistribution": {
       "": "Hiç",
@@ -69,7 +69,7 @@
     }
   },
   "labels": {
-    "Create InboundEmail": "E-mail Hesabı Oluştur",
+    "Create InboundEmail": "Email Hesabı Oluştur",
     "Actions": "Eylemler",
     "Main": "Ana"
   },

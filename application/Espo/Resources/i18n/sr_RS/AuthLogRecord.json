@@ -1,1 +1,23 @@
-{}
+{
+  "fields": {
+    "username": "Korisničko ime",
+    "ipAddress": "IP Adresa"
+  },
+  "links": {
+    "authToken": "Auth Token napravljen",
+    "user": "Korisnik",
+    "actionHistoryRecords": "Istorija Akcija"
+  },
+  "presetFilters": {
+    "denied": "Odbijeno",
+    "accepted": "Prihvaćeno"
+  },
+  "options": {
+    "denialReason": {
+      "CREDENTIALS": "Pokrešni kredencijali",
+      "INACTIVE_USER": "Neaktivan korisnik",
+      "IS_PORTAL_USER": "Korisnik portala",
+      "IS_NOT_PORTAL_USER": "Nije korisnik portala"
+    }
+  }
+}

@@ -7,22 +7,22 @@
     "Formula": "formül"
   },
   "fields": {
-    "name": "İsim",
+    "name": "Ad",
     "type": "Tip",
     "labelSingular": "Tekil Etiket",
     "labelPlural": "Çoğul Etiket",
     "stream": "Akış",
     "label": "Etiket",
     "linkType": "Bağlantı Tipi",
-    "entityForeign": "Dış Varlık",
-    "linkForeign": "Dış Bağlantı",
+    "entityForeign": "Harici Değerler",
+    "linkForeign": "Harici Bağlantı",
     "link": "Bağlantı",
-    "labelForeign": "Dış Etiket",
+    "labelForeign": "Harici Etiket",
     "sortBy": "Ön Tanımlı Sıralama (alan)",
     "sortDirection": "Ön Tanımlı Sıralama (yön)",
     "relationName": "Orta Tablo İsmi",
     "linkMultipleField": "Birden Çok Alanı Bağla",
-    "linkMultipleFieldForeign": "Birden Çok Alana Dış Bağlantı",
+    "linkMultipleFieldForeign": "Birden Çok Alana Harici Bağlantı",
     "disabled": "Devre dışı",
     "textFilterFields": "Metin Filtre Alanları",
     "audited": "Denetlenmiş",
@@ -34,6 +34,10 @@
     "kanbanStatusIgnoreList": "Kanban görünümünde yok sayılan gruplar",
     "iconClass": "Simge",
     "fullTextSearch": "Tam Metin Arama",
+    "updateDuplicateCheck": "Güncellemede yinelenen kontrolü",
+    "duplicateCheckFieldList": "Tekrarlanan onay alanları",
+    "layout": "Düzen",
+    "author": "Yazar",
     "module": "Modül",
     "version": "Sürüm"
   },
@@ -62,7 +66,10 @@
   "messages": {
     "entityCreated": "Varlık oluşturuldu",
     "linkAlreadyExists": "İsim çakışmalarını bağla.",
-    "linkConflict": "İsim çakışması: aynı isimde bağlantı veya alan zaten var"
+    "linkConflict": "İsim çakışması: aynı isimde bağlantı veya alan zaten var",
+    "nameIsAlreadyUsed": "'{name}' adı zaten kullanılıyor.",
+    "nameIsNotAllowed": "'{name}' ismine izin verilmiyor.",
+    "nameIsTooLong": "Ad çok uzun."
   },
   "tooltips": {
     "statusField": "Bu alanın güncellemeleri akış halinde kaydedildi.",
@@ -72,6 +79,7 @@
     "linkAudited": "Ilgili kayıt oluşturma ve varolan kayıt ile bağlantı Akış kaydedilecektir.",
     "linkMultipleField": "Bağlantı Çoklu alan ilişkileri düzenlemenin kullanışlı bir yoludur. Çok sayıda ilgili kayıt olabiliyorsa kullanmayın.",
     "entityType": "Taban Artı - Etkinlikler, Geçmiş ve Görevler panellerine sahiptir. \\ N \\ nEvent - Takvim ve Etkinlikler panelinde kullanılabilir.",
-    "fullTextSearch": "Yeniden oluşturmanın çalıştırılması gerekiyor."
+    "fullTextSearch": "Yeniden oluşturmanın çalıştırılması gerekiyor.",
+    "updateDuplicateCheck": "Bir kaydı güncellerken kopyaları kontrol edin."
   }
 }

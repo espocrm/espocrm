@@ -17,6 +17,7 @@
     "Layout": "Disposition"
   },
   "tooltips": {
-    "link": "Si cette case est cochée, une valeur de champ sera affichée sous forme de lien pointant vers la vue détaillée de l'enregistrement. Habituellement, il est utilisé pour les champs * Nom *."
+    "link": "Si cette case est cochée, une valeur de champ sera affichée sous forme de lien pointant vers la vue détaillée de l'enregistrement. Habituellement, il est utilisé pour les champs * Nom *.",
+    "notSortable": "Désactiver la possibilité de trier par colonne."
   }
 }

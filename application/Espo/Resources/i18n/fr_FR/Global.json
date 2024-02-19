@@ -204,7 +204,11 @@
     "Convert Currency": "Convertir la monnaie",
     "Middle Name": "Second prénom",
     "View on Map": "Voir sur la carte",
-    "Preview": "Prévisualisation"
+    "Preview": "Prévisualisation",
+    "Sort": "Trier",
+    "Global Search": "Recherche générale",
+    "Copy to Clipboard": "Copier dans le presse-papiers",
+    "Copied to clipboard": "Copié dans le presse-papiers"
   },
   "messages": {
     "pleaseWait": "Veuillez patienter...",
@@ -219,7 +223,7 @@
     "confirmation": "Êtes-vous sûr?",
     "unlinkAllConfirmation": "Êtes-vous certain de vouloir déconnecter tous les enregistrements liés ?",
     "resetPreferencesConfirmation": "Êtes-vous sûr de vouloir réinitialiser vos préférences?",
-    "removeRecordConfirmation": "Êtes-vous sûr de vouloir supprimer cet enregistrement?",
+    "removeRecordConfirmation": "Êtes-vous sûr de vouloir supprimer cet enregistrement ?",
     "unlinkRecordConfirmation": "Êtes-vous sûr de vouloir casser cette relation?",
     "removeSelectedRecordsConfirmation": "Êtes-vous sûr de vouloir supprimer les enregistrements sélectionnés?",
     "massUpdateResult": "{count} enregistrements ont été mis à jour",
@@ -257,9 +261,11 @@
     "fieldNotMatchingPattern$digits": "{field} ne peut contenir que des chiffres",
     "confirmAppRefresh": "L'application a été mise à jour. Il est recommandé de rafraîchir la page pour en assurer le bon fonctionnement.",
     "fieldShouldBeNumber": "{field} devrait être un nombre valide",
+    "maintenanceModeError": "L'application est actuellement en mode maintenance.",
     "fieldNotMatchingPattern$uriOptionalProtocol": "{field} doit être une URL valide",
     "fieldShouldBeLess": "{field} ne devrait pas être supérieur à {value}",
-    "fieldShouldBeGreater": "{field} ne devrait pas être inférieur à {value}"
+    "fieldShouldBeGreater": "{field} ne devrait pas être inférieur à {value}",
+    "fieldPhoneInvalidCode": "Le code du pays est invalide"
   },
   "boolFilters": {
     "onlyMy": "Perso",
@@ -311,7 +317,8 @@
     "targetListIsOptedOut": "Est désinscrit (liste cible)",
     "phoneNumberIsOptedOut": "Le numéro de téléphone est désactivé",
     "types": "Les types",
-    "middleName": "Second prénom"
+    "middleName": "Second prénom",
+    "phoneNumberIsInvalid": "Le numéro de téléphone est invalide"
   },
   "links": {
     "assignedUser": "Utilisateur assigné",
@@ -615,5 +622,8 @@
   },
   "listViewModes": {
     "list": "liste"
+  },
+  "fieldValidations": {
+    "phoneNumber": "Numéro de téléphone valide"
   }
 }

@@ -11,12 +11,19 @@
     "bottomMargin": "Donja margina",
     "printFooter": "Štampaj futer",
     "footerPosition": "Pozicija futera",
-    "variables": "Dostupni upisi"
+    "variables": "Dostupni upisi",
+    "pageOrientation": "Orijentacija Stranice",
+    "pageFormat": "Format papria"
   },
   "labels": {
     "Create Template": "Napravi šablon"
   },
   "tooltips": {
     "footer": "Koristiti {pageNumber} za štampanje broja stranice."
+  },
+  "options": {
+    "pageOrientation": {
+      "Portrait": "Portret"
+    }
   }
 }
