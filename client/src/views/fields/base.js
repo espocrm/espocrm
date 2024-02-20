@@ -694,6 +694,7 @@ class BaseFieldView extends View {
     /** @inheritDoc */
     init() {
         this.validations = Espo.Utils.clone(this.validations);
+        this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
 
         this._hasTemplateContent = !!this.templateContent;
 
