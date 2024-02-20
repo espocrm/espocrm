@@ -227,6 +227,12 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                     type: 'isNotEmpty',
                 },
             },
+            emailAddressIsInvalid: {
+                type: 'isFalse',
+                data: {
+                    type: 'isFalse',
+                },
+            },
         };
 
         if (
