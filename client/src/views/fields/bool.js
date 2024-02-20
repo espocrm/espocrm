@@ -48,7 +48,7 @@ class BoolFieldView extends BaseFieldView {
 
     /** @inheritDoc */
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.valueIsSet = this.model.has(this.name);
 
@@ -68,9 +68,10 @@ class BoolFieldView extends BaseFieldView {
     }
 
     fetch() {
-        let value = this.$element.get(0).checked;
+        // noinspection JSUnresolvedReference
+        const value = this.$element.get(0).checked;
 
-        let data = {};
+        const data = {};
 
         data[this.name] = value;
 
@@ -78,7 +79,7 @@ class BoolFieldView extends BaseFieldView {
     }
 
     fetchSearch() {
-        let type = this.$element.val();
+        const type = this.$element.val();
 
         if (!type) {
             return null;
