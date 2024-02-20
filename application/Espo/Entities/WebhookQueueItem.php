@@ -29,7 +29,18 @@
 
 namespace Espo\Entities;
 
-class WebhookQueueItem extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class WebhookQueueItem extends Entity
 {
     public const ENTITY_TYPE = 'WebhookQueueItem';
+
+    public const STATUS_PENDING = 'Pending';
+    public const STATUS_SUCCESS = 'Success';
+    public const STATUS_FAILED = 'Failed';
+
+    public function getAttempts(): int
+    {
+        return $this->get('attempts') ?? 0;
+    }
 }
