@@ -121,6 +121,7 @@ class BaseDashletView extends View {
         this.render();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Show options.
      */
@@ -147,9 +148,9 @@ class BaseDashletView extends View {
 
         this.setupDefaultOptions();
 
-        let options = Espo.Utils.cloneDeep(this.defaultOptions);
+        const options = Espo.Utils.cloneDeep(this.defaultOptions);
 
-        for (let key in options) {
+        for (const key in options) {
             if (typeof options[key] == 'function') {
                 options[key] = options[key].call(this);
             }
@@ -161,7 +162,7 @@ class BaseDashletView extends View {
             storedOptions = this.getPreferences().getDashletOptions(this.id) || {};
         }
         else {
-            let allOptions = this.getConfig().get('forcedDashletsOptions') ||
+            const allOptions = this.getConfig().get('forcedDashletsOptions') ||
                 this.getConfig().get('dashletsOptions') || {};
 
             storedOptions = allOptions[this.id] || {};
@@ -170,11 +171,11 @@ class BaseDashletView extends View {
         this.optionsData = _.extend(options, storedOptions);
 
         if (this.optionsData.autorefreshInterval) {
-            let interval = this.optionsData.autorefreshInterval * 60000;
+            const interval = this.optionsData.autorefreshInterval * 60000;
 
             let t;
 
-            let process = () => {
+            const process = () => {
                 t = setTimeout(() => {
                     this.actionRefresh();
 
