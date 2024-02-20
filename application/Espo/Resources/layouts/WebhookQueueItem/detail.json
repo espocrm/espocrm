@@ -1,0 +1,25 @@
+[
+    {
+        "rows": [
+            [
+                {"name": "event"},
+                {"name": "webhook"}
+            ],
+            [
+                {"name": "target"},
+                {"name": "status"}
+            ],
+            [
+                {"name": "processedAt"},
+                {"name": "createdAt"}
+            ],
+            [
+                {"name": "attempts"},
+                {"name": "processAt"}
+            ],
+            [
+                {"name": "data"}
+            ]
+        ]
+    }
+]

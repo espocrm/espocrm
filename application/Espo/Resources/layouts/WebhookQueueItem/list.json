@@ -1,0 +1,26 @@
+[
+    {
+        "name": "event",
+        "link": true
+    },
+    {
+        "name": "status",
+        "width": 12
+    },
+    {
+        "name": "webhook",
+        "width": 16
+    },
+    {
+        "name": "target",
+        "width": 16
+    },
+    {
+        "name": "createdAt",
+        "width": 14
+    },
+    {
+        "name": "processedAt",
+        "width": 14
+    }
+]
