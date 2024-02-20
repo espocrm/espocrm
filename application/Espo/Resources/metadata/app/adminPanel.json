@@ -249,14 +249,27 @@
         ],
         "order": 20
     },
-    "data":{
-        "label": "Data",
+    "setup": {
+        "label": "Setup",
         "itemList": [
             {
-                "url": "#Admin/import",
-                "label": "Import",
-                "iconClass": "fas fa-file-import",
-                "description": "import"
+                "url": "#Admin/workingTimeCalendar",
+                "label": "Working Time Calendars",
+                "iconClass": "far fa-calendar-alt",
+                "description": "workingTimeCalendars"
+            },
+            {
+                "url": "#Admin/layoutSets",
+                "label": "Layout Sets",
+                "iconClass": "fas fa-table",
+                "description": "layoutSets"
+            },
+            {
+
+                "url": "#Admin/dashboardTemplates",
+                "label": "Dashboard Templates",
+                "iconClass": "fas fa-th-large",
+                "description": "dashboardTemplates"
             },
             {
                 "url": "#Admin/leadCapture",
@@ -269,7 +282,6 @@
                 "label": "PDF Templates",
                 "iconClass": "fas fa-file-pdf",
                 "description": "pdfTemplates"
-
             },
             {
 
@@ -279,24 +291,22 @@
                 "description": "webhooks"
             },
             {
-
-                "url": "#Admin/dashboardTemplates",
-                "label": "Dashboard Templates",
-                "iconClass": "fas fa-th-large",
-                "description": "dashboardTemplates"
-            },
+                "url": "#Admin/authenticationProviders",
+                "label": "Authentication Providers",
+                "iconClass": "fas fa-sign-in-alt",
+                "description": "authenticationProviders"
+            }
+        ],
+        "order": 24
+    },
+    "data": {
+        "label": "Data",
+        "itemList": [
             {
-                "url": "#Admin/layoutSets",
-                "label": "Layout Sets",
-                "iconClass": "fas fa-table",
-                "description": "layoutSets"
-
-            },
-            {
-                "url": "#Admin/workingTimeCalendar",
-                "label": "Working Time Calendars",
-                "iconClass": "far fa-calendar-alt",
-                "description": "workingTimeCalendars"
+                "url": "#Admin/import",
+                "label": "Import",
+                "iconClass": "fas fa-file-import",
+                "description": "import"
             },
             {
                 "url": "#Admin/attachments",
@@ -309,12 +319,6 @@
                 "label": "Jobs",
                 "iconClass": "fas fa-list-ul",
                 "description": "jobs"
-            },
-            {
-                "url": "#Admin/authenticationProviders",
-                "label": "Authentication Providers",
-                "iconClass": "fas fa-sign-in-alt",
-                "description": "authenticationProviders"
             },
             {
                 "url": "#Admin/emailAddresses",
