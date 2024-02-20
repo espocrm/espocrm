@@ -9,7 +9,8 @@
         "url": {
             "type": "varchar",
             "maxLength": 512,
-            "required": true
+            "required": true,
+            "copyToClipboard": true
         },
         "isActive": {
             "type": "bool",

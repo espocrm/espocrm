@@ -1,5 +1,6 @@
 {
     "controller": "controllers/record",
+    "inlineEditDisabled": true,
     "recordViews": {
         "list": "views/webhook/record/list"
     },
