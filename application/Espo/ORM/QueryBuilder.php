@@ -29,16 +29,20 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\Query\Delete;
 use Espo\ORM\Query\DeleteBuilder;
+use Espo\ORM\Query\Insert;
 use Espo\ORM\Query\InsertBuilder;
 use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Selection;
 use Espo\ORM\Query\Query;
+use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
+use Espo\ORM\Query\Union;
 use Espo\ORM\Query\UnionBuilder;
+use Espo\ORM\Query\Update;
 use Espo\ORM\Query\UpdateBuilder;
 
-use ReflectionClass;
 use RuntimeException;
 
 /**
@@ -58,7 +62,7 @@ class QueryBuilder
      *
      * @param Selection|Selection[]|Expression|string $select
      * An array of expressions or one expression.
-     * @param string|null $alias An alias. Actual if the first parameter is not an array.
+     * @param ?string $alias An alias. Actual if the first parameter is not an array.
      */
     public function select($select = null, ?string $alias = null): SelectBuilder
     {
@@ -111,14 +115,26 @@ class QueryBuilder
      */
     public function clone(Query $query): SelectBuilder|UpdateBuilder|DeleteBuilder|InsertBuilder|UnionBuilder
     {
-        $class = new ReflectionClass($query);
-
-        $methodName = ucfirst($class->getShortName());
-
-        if (!method_exists($this, $methodName)) {
-            throw new RuntimeException("Can't clone an unsupported query.");
+        if ($query instanceof Select) {
+            return $this->select()->clone($query);
         }
 
-        return $this->$methodName()->clone($query);
+        if ($query instanceof Update) {
+            return $this->update()->clone($query);
+        }
+
+        if ($query instanceof Delete) {
+            return $this->delete()->clone($query);
+        }
+
+        if ($query instanceof Insert) {
+            return $this->insert()->clone($query);
+        }
+
+        if ($query instanceof Union) {
+            return $this->union()->clone($query);
+        }
+
+        throw new RuntimeException("Can't clone an unsupported query.");
     }
 }
