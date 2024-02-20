@@ -157,6 +157,16 @@ class CalendarDashletView extends BaseDashletView {
         view.actionRefresh();
     }
 
+    autoRefresh() {
+        const view = this.getCalendarView();
+
+        if (!view) {
+            return;
+        }
+
+        view.actionRefresh({suppressLoadingAlert: true});
+    }
+
     actionNext() {
         const view = this.getCalendarView();
 

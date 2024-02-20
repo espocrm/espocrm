@@ -177,7 +177,7 @@ class BaseDashletView extends View {
 
             const process = () => {
                 t = setTimeout(() => {
-                    this.actionRefresh();
+                    this.autoRefresh();
 
                     process();
                 }, interval);
@@ -210,6 +210,15 @@ class BaseDashletView extends View {
 
         this.setupActionList();
         this.setupButtonList();
+    }
+
+    /**
+     * Called on auto-refresh.
+     *
+     * @protected
+     */
+    autoRefresh() {
+        this.actionRefresh();
     }
 
     /**

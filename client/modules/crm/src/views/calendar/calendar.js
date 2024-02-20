@@ -1283,7 +1283,14 @@ class CalendarView extends View {
         event.remove();
     }
 
-    actionRefresh() {
+    /**
+     * @param {{suppressLoadingAlert: boolean}} [options]
+     */
+    actionRefresh(options) {
+        if (options && options.suppressLoadingAlert) {
+            this.suppressLoadingAlert = true;
+        }
+
         this.calendar.refetchEvents();
     }
 
