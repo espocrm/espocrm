@@ -11,7 +11,7 @@
                     class="btn btn-{{#if style}}{{style}}{{else}}default{{/if}} btn-xs-wide main-header-manu-action action{{#if disabled}} disabled{{/if}}{{#if hidden}} hidden{{/if}}{{#if className}} {{className}}{{/if}}"
                     data-name="{{name}}"
                     data-action="{{action}}"
-                    {{#each data}} data-{{@key}}="{{./this}}"{{/each}}
+                    {{#each data}} data-{{hyphen @key}}="{{./this}}"{{/each}}
                     {{#if title}}title="{{title}}"{{/if}}
                 >
                 {{#if iconHtml}}
