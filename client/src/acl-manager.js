@@ -483,7 +483,7 @@ class AclManager {
      * @returns {boolean} True if access allowed.
      */
     checkField(scope, field, action) {
-        return !~this.getScopeForbiddenFieldList(scope, action).indexOf(field);
+        return !this.getScopeForbiddenFieldList(scope, action).includes(field);
     }
 }
 
