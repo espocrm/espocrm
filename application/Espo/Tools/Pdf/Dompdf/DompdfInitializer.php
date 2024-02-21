@@ -38,6 +38,8 @@ class DompdfInitializer
 {
     private string $defaultFontFace = 'DejaVu Sans';
 
+    private const PT = 2.83465;
+
     public function __construct(
         private Config $config
     ) {}
@@ -51,7 +53,7 @@ class DompdfInitializer
         $pdf = new Dompdf($options);
 
         $size = $template->getPageFormat() === Template::PAGE_FORMAT_CUSTOM ?
-            [0.0, 0.0, $template->getPageWidth(), $template->getPageHeight()] :
+            [0.0, 0.0, $template->getPageWidth() * self::PT, $template->getPageHeight() * self::PT] :
             $template->getPageFormat();
 
         $orientation = $template->getPageOrientation() === Template::PAGE_ORIENTATION_PORTRAIT ?

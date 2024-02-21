@@ -29,7 +29,11 @@
 
 use Espo\Core\Container;
 use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Entities\Template;
+use Espo\ORM\EntityManager;
+use Espo\Tools\Pdf\Template as PdfTemplate;
 
 /** @noinspection PhpMultipleClassDeclarationsInspection */
 class AfterUpgrade
@@ -44,5 +48,35 @@ class AfterUpgrade
         ]);
 
         $configWriter->save();
+
+        $em = $container->getByClass(EntityManager::class);
+        $config = $container->getByClass(Config::class);
+
+        $this->updateTemplates($em, $config);
+    }
+
+    private function updateTemplates(EntityManager $entityManager, Config $config): void
+    {
+        if ($config->get('pdfEngine') !== 'Dompdf') {
+            return;
+        }
+
+        /** @var iterable<Template> $templates */
+        $templates = $entityManager->getRDBRepositoryByClass(Template::class)
+            ->sth()
+            ->where(['pageFormat' => PdfTemplate::PAGE_FORMAT_CUSTOM])
+            ->find();
+
+        foreach ($templates as $template) {
+            $width = $template->get('pageWidth') ?? 0.0;
+            $height = $template->get('pageHeight') ?? 0.0;
+
+            $template->setMultiple([
+                'pageWidth' => $width / 2.83465,
+                'pageHeight' => $height / 2.83465,
+            ]);
+
+            $entityManager->saveEntity($template);
+        }
     }
 }
