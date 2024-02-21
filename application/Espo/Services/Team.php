@@ -31,10 +31,7 @@ namespace Espo\Services;
 
 use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
 use Espo\Entities\User as UserEntity;
-use Espo\ORM\Entity;
-
 use Espo\Core\Select\SearchParams;
-
 use Espo\Core\Di;
 
 /**
@@ -45,15 +42,6 @@ class Team extends Record implements
     Di\DataManagerAware
 {
     use Di\DataManagerSetter;
-
-    public function afterUpdateEntity(Entity $entity, $data)
-    {
-        parent::afterUpdateEntity($entity, $data);
-
-        if (property_exists($data, 'rolesIds')) {
-            $this->clearRolesCache();
-        }
-    }
 
     protected function clearRolesCache(): void
     {

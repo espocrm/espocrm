@@ -838,15 +838,19 @@ class Service implements Crud,
         $this->recordHookManager->processBeforeUpdate($entity, $params);
         $this->beforeUpdateEntity($entity, $data);
 
-        $this->entityManager->saveEntity($entity, [SaveOption::API => true]);
+        $this->entityManager->saveEntity($entity, [
+            SaveOption::API => true,
+            SaveOption::KEEP_DIRTY => true,
+        ]);
+
+        $this->recordHookManager->processAfterUpdate($entity, $params);
+        $entity->updateFetchedValues();
 
         $this->afterUpdateEntity($entity, $data);
 
         if ($this->metadata->get(['recordDefs', $this->entityType, 'loadAdditionalFieldsAfterUpdate'])) {
             $this->loadAdditionalFields($entity);
         }
-
-        $this->recordHookManager->processAfterUpdate($entity, $params);
 
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::UPDATE, $entity);

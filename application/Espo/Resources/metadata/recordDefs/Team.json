@@ -4,6 +4,9 @@
             "allowed": true
         }
     },
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Team\\AfterUpdate"
+    ],
     "beforeLinkHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Team\\BeforeLinkUserCheck"
     ]
