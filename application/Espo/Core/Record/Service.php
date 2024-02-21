@@ -648,40 +648,61 @@ class Service implements Crud,
     }
 
     /**
+     * If no edit access to assignedUser field.
+     */
+    private function isAssignedUserShouldBeSetWithSelf(): bool
+    {
+        if ($this->user->isPortal()) {
+            return false;
+        }
+
+        $defs = $this->entityManager->getDefs()->getEntity($this->entityType);
+
+        if (
+            !$defs->hasField('assignedUser') ||
+            $defs->getField('assignedUser')->getType() !== FieldType::LINK
+        ) {
+            return false;
+        }
+
+        if ($this->acl->checkField($this->entityType, 'assignedUser', AclTable::ACTION_EDIT)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * @param TEntity $entity
      * @todo Move the logic to a class. Make customizable (recordDefs)?
      */
     public function populateDefaults(Entity $entity, stdClass $data): void
     {
-        if (!$this->user->isPortal()) {
-            if (
-                $entity->hasAttribute('assignedUserId') &&
-                !$this->acl->checkField($this->entityType, 'assignedUser', AclTable::ACTION_EDIT)
-            ) {
-                $entity->set('assignedUserId', $this->user->getId());
-                $entity->set('assignedUserName', $this->user->getName());
+        if ($this->isAssignedUserShouldBeSetWithSelf()) {
+            $entity->set('assignedUserId', $this->user->getId());
+            $entity->set('assignedUserName', $this->user->getName());
+        }
+
+        if (
+            !$this->user->isPortal() &&
+            $entity instanceof CoreEntity &&
+            $entity->hasLinkMultipleField('teams') &&
+            $this->user->getDefaultTeam() &&
+            !$this->acl->checkField($this->entityType, 'teams', AclTable::ACTION_EDIT)
+        ) {
+            $defaultTeamId = $this->user->getDefaultTeam()->getId();
+
+            $entity->addLinkMultipleId('teams', $defaultTeamId);
+
+            $teamsNames = $entity->get('teamsNames');
+
+            if (!$teamsNames || !is_object($teamsNames)) {
+                $teamsNames = (object) [];
             }
 
-            if (
-                $entity instanceof CoreEntity &&
-                $entity->hasLinkMultipleField('teams') &&
-                $this->user->getDefaultTeam() &&
-                !$this->acl->checkField($this->entityType, 'teams', AclTable::ACTION_EDIT)
-            ) {
-                $defaultTeamId = $this->user->getDefaultTeam()->getId();
+            $teamsNames->$defaultTeamId = $this->user->get('defaultTeamName');
 
-                $entity->addLinkMultipleId('teams', $defaultTeamId);
-
-                $teamsNames = $entity->get('teamsNames');
-
-                if (!$teamsNames || !is_object($teamsNames)) {
-                    $teamsNames = (object) [];
-                }
-
-                $teamsNames->$defaultTeamId = $this->user->get('defaultTeamName');
-
-                $entity->set('teamsNames', $teamsNames);
-            }
+            $entity->set('teamsNames', $teamsNames);
         }
 
         foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
