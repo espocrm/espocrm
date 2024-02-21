@@ -1211,7 +1211,7 @@ class Service implements Crud,
 
         $this->getRepository()
             ->getRelation($entity, $link)
-            ->relate($foreignEntity);
+            ->relate($foreignEntity, null, [SaveOption::API => true]);
     }
 
     /**
@@ -1267,7 +1267,7 @@ class Service implements Crud,
 
         $this->getRepository()
             ->getRelation($entity, $link)
-            ->unrelate($foreignEntity);
+            ->unrelate($foreignEntity, [SaveOption::API => true]);
     }
 
     /**
@@ -1512,7 +1512,7 @@ class Service implements Crud,
         if ($this->acl->getLevel($foreignEntityType, $accessActionRequired) === AclTable::LEVEL_ALL) {
             $this->getRepository()
                 ->getRelation($entity, $link)
-                ->massRelate($query);
+                ->massRelate($query, [SaveOption::API => true]);
 
             return true;
         }
