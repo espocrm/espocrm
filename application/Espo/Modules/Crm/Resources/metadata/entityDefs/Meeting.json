@@ -91,6 +91,7 @@
             "customizationReadOnlyDisabled": true,
             "customizationAuditedDisabled": true,
             "customizationOptionsReferenceDisabled": true,
+            "directAccessDisabled": true,
             "where": {
                 "=": {
                     "whereClause": {
