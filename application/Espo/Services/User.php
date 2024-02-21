@@ -110,7 +110,7 @@ class User extends Record implements
         return $passwordHash->hash($password);
     }
 
-    protected function filterInput($data)
+    protected function filterInput(stdClass $data): void
     {
         parent::filterInput($data);
 

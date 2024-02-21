@@ -48,6 +48,7 @@ use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ActionHistory\ActionLogger;
 use Espo\Core\Record\Formula\Processor as FormulaProcessor;
+use Espo\Core\Select\Primary\Filters\One;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table as AclTable;
@@ -213,6 +214,7 @@ class Service implements Crud,
      * Add an action-history record.
      *
      * @param Action::* $action
+     * @noinspection PhpDocSignatureInspection
      */
     public function processActionHistoryRecord(string $action, Entity $entity): void
     {
@@ -243,6 +245,7 @@ class Service implements Crud,
      * @return TEntity
      * @throws NotFoundSilent If not found.
      * @throws Forbidden If no read access.
+     * @noinspection PhpDocSignatureInspection
      */
     public function read(string $id, ReadParams $params): Entity
     {
@@ -271,6 +274,7 @@ class Service implements Crud,
      *
      * @throws Forbidden If no read access.
      * @return ?TEntity
+     * @noinspection PhpDocSignatureInspection
      */
     public function getEntity(string $id): ?Entity
     {
@@ -281,7 +285,7 @@ class Service implements Crud,
                 ->withSearchParams(
                     SearchParams::create()
                         ->withSelect(['*'])
-                        ->withPrimaryFilter('one')
+                        ->withPrimaryFilter(One::NAME)
                 )
                 ->withAdditionalApplierClassNameList(
                     $this->createSelectApplierClassNameListProvider()->get($this->entityType)
@@ -345,6 +349,7 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @return void
+     * @todo Add void return type in v9.0.
      */
     public function loadAdditionalFields(Entity $entity)
     {
@@ -355,8 +360,8 @@ class Service implements Crud,
 
     /**
      * @param Entity $entity
-     * @todo Make private.
-     * @note Not to be extended.
+     * @todo Make private in v9.0
+     * @deprecated
      */
     protected function loadListAdditionalFields(Entity $entity, ?SearchParams $searchParams = null): void
     {
@@ -372,15 +377,14 @@ class Service implements Crud,
     }
 
     /**
-     * Warning: Do not extend.
+     * Validate an entity.
      *
-     * @todo Fix signature.
-     * @param TEntity $entity
-     * @param stdClass $data
-     * @return void
+     * @param TEntity $entity An entity.
+     * @param stdClass $data Raw input data.
      * @throws BadRequest
+     * @noinspection PhpDocSignatureInspection
      */
-    public function processValidation(Entity $entity, $data)
+    public function processValidation(Entity $entity, stdClass $data): void
     {
         $params = FieldValidationParams
             ::create()
@@ -399,6 +403,7 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @throws Forbidden
+     * @noinspection PhpDocSignatureInspection
      */
     protected function processAssignmentCheck(Entity $entity): void
     {
@@ -411,6 +416,7 @@ class Service implements Crud,
      * Check whether assignment can be applied for an entity.
      *
      * @param TEntity $entity
+     * @noinspection PhpDocSignatureInspection
      */
     public function checkAssignment(Entity $entity): bool
     {
@@ -456,6 +462,8 @@ class Service implements Crud,
      * @param string $attribute
      * @param mixed $value
      * @return mixed
+     * @deprecated As of v8.2.
+     * @todo Make private or remove in v9.0.
      */
     protected function filterInputAttribute($attribute, $value)
     {
@@ -472,11 +480,7 @@ class Service implements Crud,
         return $value;
     }
 
-    /**
-     * @param stdClass $data
-     * @return void
-     */
-    protected function filterInput($data)
+    protected function filterInput(stdClass $data): void
     {
         foreach($this->readOnlyAttributeList as $attribute) {
             unset($data->$attribute);
@@ -589,6 +593,7 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @throws Conflict
+     * @noinspection PhpDocSignatureInspection
      */
     protected function processConcurrencyControl(Entity $entity, stdClass $data, int $versionNumber): void
     {
@@ -631,6 +636,7 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @throws Conflict
+     * @noinspection PhpDocSignatureInspection
      */
     protected function processDuplicateCheck(Entity $entity): void
     {
@@ -675,6 +681,7 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @todo Move the logic to a class. Make customizable (recordDefs)?
+     * @noinspection PhpDocSignatureInspection
      */
     public function populateDefaults(Entity $entity, stdClass $data): void
     {
@@ -725,6 +732,7 @@ class Service implements Crud,
      * @throws BadRequest
      * @throws Forbidden If no create access.
      * @throws Conflict
+     * @noinspection PhpDocSignatureInspection
      */
     public function create(stdClass $data, CreateParams $params): Entity
     {
@@ -777,6 +785,7 @@ class Service implements Crud,
      * @throws Forbidden If no access.
      * @throws Conflict
      * @throws BadRequest
+     * @noinspection PhpDocSignatureInspection
      */
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
@@ -849,6 +858,7 @@ class Service implements Crud,
      * @throws Forbidden
      * @throws BadRequest
      * @throws NotFound
+     * @throws Conflict
      */
     public function delete(string $id, DeleteParams $params): void
     {
@@ -883,7 +893,6 @@ class Service implements Crud,
      * @return RecordCollection<TEntity>
      * @throws Forbidden
      * @throws BadRequest
-     * @throws Error
      */
     public function find(SearchParams $searchParams, ?FindParams $params = null): RecordCollection
     {
@@ -947,6 +956,7 @@ class Service implements Crud,
 
     /**
      * @return TEntity|null
+     * @noinspection PhpDocSignatureInspection
      */
     private function getEntityEvenDeleted(string $id): ?Entity
     {
@@ -1012,7 +1022,6 @@ class Service implements Crud,
      * @throws NotFound If a record not found.
      * @throws Forbidden If no access.
      * @throws BadRequest
-     * @throws Error
      */
     public function findLinked(string $id, string $link, SearchParams $searchParams): RecordCollection
     {
@@ -1121,6 +1130,7 @@ class Service implements Crud,
      * @return ?RecordCollection<Entity>
      * @throws Forbidden
      * @throws NotFound
+     * @throws BadRequest
      */
     private function processFindLinkedMethod(string $id, string $link, SearchParams $searchParams): ?RecordCollection
     {
@@ -1661,6 +1671,7 @@ class Service implements Crud,
      * Check whether an entity has a duplicate.
      *
      * @param TEntity $entity
+     * @noinspection PhpDocSignatureInspection
      */
     public function checkIsDuplicate(Entity $entity): bool
     {
@@ -1710,6 +1721,7 @@ class Service implements Crud,
      *
      * @param TEntity $entity
      * @return void
+     * @todo Add void return type in v9.0.
      */
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -1738,6 +1750,7 @@ class Service implements Crud,
      * @return RecordCollection<User>
      * @throws NotFound
      * @throws Forbidden
+     * @throws BadRequest
      */
     protected function findLinkedFollowers(string $id, SearchParams $params): RecordCollection
     {
@@ -1802,6 +1815,7 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
+     * @noinspection PhpDocSignatureInspection
      */
     protected function afterCreateProcessDuplicating(Entity $entity, CreateParams $params): void
     {
@@ -1828,6 +1842,7 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @param TEntity $duplicatingEntity
+     * @noinspection PhpDocSignatureInspection
      */
     protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity): void
     {
@@ -1908,6 +1923,7 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
+     * @noinspection PhpDocSignatureInspection
      */
     private function processApiBeforeCreateApiScript(Entity $entity, CreateParams $params): void
     {
@@ -1918,6 +1934,7 @@ class Service implements Crud,
 
     /**
      * @param TEntity $entity
+     * @noinspection PhpDocSignatureInspection
      */
     private function processApiBeforeUpdateApiScript(Entity $entity, UpdateParams $params): void
     {
@@ -1930,6 +1947,9 @@ class Service implements Crud,
      * @param TEntity $entity
      * @param stdClass $data
      * @return void
+     * @noinspection PhpDocSignatureInspection
+     * @deprecated As of v8.2.
+     * @todo Remove in v10.0.
      */
     protected function beforeCreateEntity(Entity $entity, $data)
     {}
@@ -1938,6 +1958,9 @@ class Service implements Crud,
      * @param TEntity $entity
      * @param stdClass $data
      * @return void
+     * @noinspection PhpDocSignatureInspection
+     * @deprecated As of v8.2.
+     * @todo Remove in v10.0.
      */
     protected function afterCreateEntity(Entity $entity, $data)
     {}
@@ -1946,6 +1969,9 @@ class Service implements Crud,
      * @param TEntity $entity
      * @param stdClass $data
      * @return void
+     * @noinspection PhpDocSignatureInspection
+     * @deprecated As of v8.2.
+     * @todo Remove in v10.0.
      */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {}
@@ -1954,6 +1980,9 @@ class Service implements Crud,
      * @param TEntity $entity
      * @param stdClass $data
      * @return void
+     * @noinspection PhpDocSignatureInspection
+     * @deprecated As of v8.2.
+     * @todo Remove in v10.0.
      */
     protected function afterUpdateEntity(Entity $entity, $data)
     {}
@@ -1961,6 +1990,9 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @return void
+     * @noinspection PhpDocSignatureInspection
+     * @deprecated As of v8.2.
+     * @todo Remove in v10.0.
      */
     protected function beforeDeleteEntity(Entity $entity)
     {}
@@ -1968,6 +2000,9 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @return void
+     * @noinspection PhpDocSignatureInspection
+     * @deprecated As of v8.2.
+     * @todo Remove in v10.0.
      */
     protected function afterDeleteEntity(Entity $entity)
     {}

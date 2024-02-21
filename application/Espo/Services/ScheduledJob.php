@@ -29,23 +29,23 @@
 
 namespace Espo\Services;
 
+use Espo\Entities\ScheduledJob as ScheduledJobEntity;
 use Espo\ORM\Entity;
-
 use Espo\Core\Exceptions\BadRequest;
-
 use Cron\CronExpression;
 
 use Exception;
+use stdClass;
 
 /**
- * @extends Record<\Espo\Entities\ScheduledJob>
+ * @extends Record<ScheduledJobEntity>
  */
 class ScheduledJob extends Record
 {
     /** Should not be removed. */
     protected bool $findLinkedLogCountQueryDisabled = true;
 
-    public function processValidation(Entity $entity, $data)
+    public function processValidation(Entity $entity, stdClass $data): void
     {
         parent::processValidation($entity, $data);
 
@@ -57,7 +57,7 @@ class ScheduledJob extends Record
             /** @phpstan-ignore-next-line*/
             $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
         }
-        catch (Exception $e) {
+        catch (Exception) {
             throw new BadRequest("Not valid scheduling expression.");
         }
     }

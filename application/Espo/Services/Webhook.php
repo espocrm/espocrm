@@ -77,7 +77,7 @@ class Webhook extends Record implements
         }
     }
 
-    protected function filterInput($data)
+    protected function filterInput(stdClass $data): void
     {
         parent::filterInput($data);
 

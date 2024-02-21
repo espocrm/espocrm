@@ -46,7 +46,7 @@ use Espo\Core\Di;
 use stdClass;
 
 /**
- * @extends Record<\Espo\Entities\EmailAccount>
+ * @extends Record<EmailAccountEntity>
  */
 class EmailAccount extends Record implements
 
@@ -54,7 +54,7 @@ class EmailAccount extends Record implements
 {
     use Di\CryptSetter;
 
-    protected function filterInput($data)
+    protected function filterInput(stdClass $data): void
     {
         parent::filterInput($data);
 
@@ -67,7 +67,7 @@ class EmailAccount extends Record implements
         }
     }
 
-    public function processValidation(Entity $entity, $data)
+    public function processValidation(Entity $entity, stdClass $data): void
     {
         parent::processValidation($entity, $data);
 

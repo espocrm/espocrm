@@ -258,6 +258,7 @@ class RecordBase extends Base implements
      * @throws Forbidden
      * @throws BadRequest
      * @throws NotFound
+     * @throws Conflict
      * @noinspection PhpUnusedParameterInspection
      */
     public function deleteActionDelete(Request $request, Response $response): bool

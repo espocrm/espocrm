@@ -38,9 +38,10 @@ use Espo\Services\Record as RecordService;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
 
 use Espo\Core\Di;
+use stdClass;
 
 /**
- * @extends Record<\Espo\Entities\InboundEmail>
+ * @extends Record<InboundEmailEntity>
  */
 class InboundEmail extends RecordService implements
 
@@ -50,7 +51,7 @@ class InboundEmail extends RecordService implements
     use Di\CryptSetter;
     use Di\EmailSenderSetter;
 
-    protected function filterInput($data)
+    protected function filterInput(stdClass $data): void
     {
         parent::filterInput($data);
 
@@ -63,7 +64,7 @@ class InboundEmail extends RecordService implements
         }
     }
 
-    public function processValidation(Entity $entity, $data)
+    public function processValidation(Entity $entity, stdClass $data): void
     {
         parent::processValidation($entity, $data);
 
