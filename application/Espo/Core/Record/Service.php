@@ -763,7 +763,6 @@ class Service implements Crud,
 
         $this->processApiBeforeCreateApiScript($entity, $params);
         $this->recordHookManager->processBeforeCreate($entity, $params);
-
         $this->beforeCreateEntity($entity, $data);
 
         $this->entityManager->saveEntity($entity, [SaveOption::API => true]);
@@ -771,6 +770,7 @@ class Service implements Crud,
         $this->afterCreateEntity($entity, $data);
         $this->afterCreateProcessDuplicating($entity, $params);
         $this->loadAdditionalFields($entity);
+        $this->recordHookManager->processAfterCreate($entity, $params);
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::CREATE, $entity);
 
@@ -846,6 +846,8 @@ class Service implements Crud,
             $this->loadAdditionalFields($entity);
         }
 
+        $this->recordHookManager->processAfterUpdate($entity, $params);
+
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::UPDATE, $entity);
 
@@ -882,8 +884,11 @@ class Service implements Crud,
 
         $this->recordHookManager->processBeforeDelete($entity, $params);
         $this->beforeDeleteEntity($entity);
+
         $this->getRepository()->remove($entity);
+
         $this->afterDeleteEntity($entity);
+        $this->recordHookManager->processAfterDelete($entity, $params);
         $this->processActionHistoryRecord(Action::DELETE, $entity);
     }
 

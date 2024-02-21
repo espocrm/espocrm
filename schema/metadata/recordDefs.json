@@ -144,6 +144,13 @@
                 "type": "string"
             }
         },
+        "afterCreateHookClassNameList": {
+            "description": "After-create hooks. Should implement the Espo\\Core\\Record\\Hook\\CreateHook or Espo\\Core\\Record\\Hook\\SaveHook interface. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "beforeUpdateHookClassNameList": {
             "description": "Before-update hooks. Should implement the Espo\\Core\\Record\\Hook\\UpdateHook or Espo\\Core\\Record\\Hook\\SaveHook interface.",
             "type": "array",
@@ -151,8 +158,22 @@
                 "type": "string"
             }
         },
+        "afterUpdateHookClassNameList": {
+            "description": "Before-update hooks. Should implement the Espo\\Core\\Record\\Hook\\UpdateHook or Espo\\Core\\Record\\Hook\\SaveHook interface. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "beforeDeleteHookClassNameList": {
             "description": "Before-delete hooks. Should implement the Espo\\Core\\Record\\Hook\\DeleteHook interface.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "afterDeleteHookClassNameList": {
+            "description": "Before-delete hooks. Should implement the Espo\\Core\\Record\\Hook\\DeleteHook interface. As of v8.2.",
             "type": "array",
             "items": {
                 "type": "string"

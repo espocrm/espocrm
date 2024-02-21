@@ -42,10 +42,13 @@ class Provider
 
     /** @var array<string, class-string[]> */
     private $typeInterfaceListMap = [
-        Type::BEFORE_CREATE => [CreateHook::class, SaveHook::class],
         Type::BEFORE_READ => [ReadHook::class],
+        Type::BEFORE_CREATE => [CreateHook::class, SaveHook::class],
+        Type::AFTER_CREATE => [CreateHook::class, SaveHook::class],
         Type::BEFORE_UPDATE => [UpdateHook::class, SaveHook::class],
+        Type::AFTER_UPDATE => [UpdateHook::class, SaveHook::class],
         Type::BEFORE_DELETE => [DeleteHook::class],
+        Type::AFTER_DELETE => [DeleteHook::class],
         Type::BEFORE_LINK => [LinkHook::class],
         Type::BEFORE_UNLINK => [UnlinkHook::class],
     ];
