@@ -767,10 +767,12 @@ class Service implements Crud,
 
         $this->entityManager->saveEntity($entity, [SaveOption::API => true]);
 
+        $this->recordHookManager->processAfterCreate($entity, $params);
         $this->afterCreateEntity($entity, $data);
         $this->afterCreateProcessDuplicating($entity, $params);
+
         $this->loadAdditionalFields($entity);
-        $this->recordHookManager->processAfterCreate($entity, $params);
+
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::CREATE, $entity);
 
