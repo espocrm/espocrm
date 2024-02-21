@@ -50,23 +50,43 @@ class PhoneFieldView extends VarcharFieldView {
             const $target = $(e.currentTarget);
             const $block = $(e.currentTarget).closest('div.phone-number-block');
             const property = $target.data('property-type');
+            const $input = $block.find('input.phone-number');
 
             if (property === 'primary') {
                 if (!$target.hasClass('active')) {
-                    if ($block.find('input.phone-number').val() !== '') {
+                    if ($input.val() !== '') {
                         this.$el.find('button.phone-property[data-property-type="primary"]')
                             .removeClass('active').children().addClass('text-muted');
 
                         $target.addClass('active').children().removeClass('text-muted');
                     }
                 }
+
+                this.trigger('change');
+
+                return;
             }
-            else {
-                if ($target.hasClass('active')) {
-                    $target.removeClass('active').children().addClass('text-muted');
-                } else {
-                    $target.addClass('active').children().removeClass('text-muted');
-                }
+
+            let active = false;
+
+            if ($target.hasClass('active')) {
+                $target.removeClass('active').children().addClass('text-muted');
+            } else {
+                $target.addClass('active').children().removeClass('text-muted');
+
+                active = true;
+            }
+
+            if (property === 'optOut') {
+                active ?
+                    $input.addClass('text-strikethrough') :
+                    $input.removeClass('text-strikethrough');
+            }
+
+            if (property === 'invalid') {
+                active ?
+                    $input.addClass('text-danger') :
+                    $input.removeClass('text-danger');
             }
 
             this.trigger('change');

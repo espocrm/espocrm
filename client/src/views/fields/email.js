@@ -50,22 +50,43 @@ class EmailFieldView extends VarcharFieldView {
             const $target = $(e.currentTarget);
             const $block = $(e.currentTarget).closest('div.email-address-block');
             const property = $target.data('property-type');
+            const $input = $block.find('input.email-address');
 
             if (property === 'primary') {
                 if (!$target.hasClass('active')) {
-                    if ($block.find('input.email-address').val() !== '') {
+                    if ($input.val() !== '') {
                         this.$el.find('button.email-property[data-property-type="primary"]')
                             .removeClass('active').children().addClass('text-muted');
 
                         $target.addClass('active').children().removeClass('text-muted');
                     }
                 }
+
+                this.trigger('change');
+
+                return;
+            }
+
+            let active = false;
+
+            if ($target.hasClass('active')) {
+                $target.removeClass('active').children().addClass('text-muted');
             } else {
-                if ($target.hasClass('active')) {
-                    $target.removeClass('active').children().addClass('text-muted');
-                } else {
-                    $target.addClass('active').children().removeClass('text-muted');
-                }
+                $target.addClass('active').children().removeClass('text-muted');
+
+                active = true;
+            }
+
+            if (property === 'optOut') {
+                active ?
+                    $input.addClass('text-strikethrough') :
+                    $input.removeClass('text-strikethrough');
+            }
+
+            if (property === 'invalid') {
+                active ?
+                    $input.addClass('text-danger') :
+                    $input.removeClass('text-danger');
             }
 
             this.trigger('change');
