@@ -381,6 +381,10 @@ class LinkFieldView extends BaseFieldView {
 
         this.controlCreateButtonVisibility();
 
+        for (const [foreign, field] of Object.entries(this.getDependantForeignMap())) {
+            this.model.set(field, model.get(foreign))
+        }
+
         this.getSelectFieldHandler().then(handler => {
             handler.getAttributes(model)
                 .then(attributes => {
@@ -399,6 +403,10 @@ class LinkFieldView extends BaseFieldView {
         this.trigger('change');
 
         this.controlCreateButtonVisibility();
+
+        for (const [, field] of Object.entries(this.getDependantForeignMap())) {
+            this.model.clear(field)
+        }
 
         this.getSelectFieldHandler().then(handler => {
             handler.getClearAttributes()
@@ -506,6 +514,49 @@ class LinkFieldView extends BaseFieldView {
         return this.getConfig().get('recordsPerPage');
     }
 
+    /**
+     * @private
+     * @return {string[]}
+     */
+    getMandatorySelectAttributeList() {
+        const list = this.mandatorySelectAttributeList || this.panelDefs.selectMandatoryAttributeList || []
+
+        const map = this.getDependantForeignMap();
+
+        return [...list, ...Object.keys(map)];
+    }
+
+    /**
+     * @private
+     * @return {Record<string>}
+     */
+    getDependantForeignMap() {
+        if (this._dependantForeignMap) {
+            return this._dependantForeignMap;
+        }
+
+        const map = {};
+
+        this.model.getFieldList()
+            .filter(it => {
+                return this.model.getFieldType(it) === 'foreign' &&
+                    this.model.getFieldParam(it, 'link') === this.name;
+            })
+            .forEach(field => {
+                const foreign = this.model.getFieldParam(field, 'field');
+
+                if (!foreign) {
+                    return;
+                }
+
+                map[foreign] = field ;
+            });
+
+        this._dependantForeignMap = map;
+
+        return map;
+    }
+
     // noinspection JSUnusedLocalSymbols
     /**
      * Compose an autocomplete URL. Can be extended.
@@ -518,8 +569,7 @@ class LinkFieldView extends BaseFieldView {
         let url = this.foreignScope + '?maxSize=' + this.getAutocompleteMaxCount();
 
         if (!this.forceSelectAllAttributes) {
-            const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
-                this.panelDefs.selectMandatoryAttributeList;
+            const mandatorySelectAttributeList = this.getMandatorySelectAttributeList();
 
             let select = ['id', 'name'];
 
@@ -1053,8 +1103,7 @@ class LinkFieldView extends BaseFieldView {
             this.getMetadata().get(['clientDefs', this.foreignScope, 'modalViews', 'select']) ||
             this.selectRecordsView;
 
-        const mandatorySelectAttributeList = this.mandatorySelectAttributeList ||
-            panelDefs.selectMandatoryAttributeList;
+        const mandatorySelectAttributeList = this.getMandatorySelectAttributeList();
 
         const createButton = this.isEditMode() && (!this.createDisabled || this.forceCreateButton);
 
