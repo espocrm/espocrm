@@ -268,6 +268,7 @@ class Service implements Crud,
      */
     public function processActionHistoryRecord(string $action, Entity $entity): void
     {
+        /** @noinspection PhpDeprecationInspection */
         if (
             $this->actionHistoryDisabled ||
             $this->config->get('actionHistoryDisabled') ||
@@ -400,6 +401,7 @@ class Service implements Crud,
      * @param TEntity $entity
      * @return void
      * @todo Add void return type in v9.0.
+     * @noinspection PhpDocSignatureInspection
      */
     public function loadAdditionalFields(Entity $entity)
     {
@@ -537,6 +539,7 @@ class Service implements Crud,
         }
 
         if (!$this->user->isAdmin()) {
+            /** @noinspection PhpDeprecationInspection */
             foreach ($this->nonAdminReadOnlyAttributeList as $attribute) {
                 unset($data->$attribute);
             }
@@ -556,7 +559,9 @@ class Service implements Crud,
         unset($data->versionNumber);
 
         $this->filterInput($data);
+        /** @noinspection PhpDeprecationInspection */
         $this->handleInput($data);
+        /** @noinspection PhpDeprecationInspection */
         $this->handleCreateInput($data);
     }
 
@@ -574,6 +579,7 @@ class Service implements Crud,
 
         $this->filterInput($data);
         $this->filterReadOnlyAfterCreate($data);
+        /** @noinspection PhpDeprecationInspection */
         $this->handleInput($data);
     }
 
@@ -792,11 +798,13 @@ class Service implements Crud,
 
         $this->processApiBeforeCreateApiScript($entity, $params);
         $this->recordHookManager->processBeforeCreate($entity, $params);
+        /** @noinspection PhpDeprecationInspection */
         $this->beforeCreateEntity($entity, $data);
 
         $this->entityManager->saveEntity($entity, [SaveOption::API => true]);
 
         $this->recordHookManager->processAfterCreate($entity, $params);
+        /** @noinspection PhpDeprecationInspection */
         $this->afterCreateEntity($entity, $data);
         $this->afterCreateProcessDuplicating($entity, $params);
 
@@ -857,6 +865,7 @@ class Service implements Crud,
         $this->processAssignmentCheck($entity);
         $this->getLinkCheck()->processFields($entity);
 
+        /** @noinspection PhpDeprecationInspection */
         $checkForDuplicates =
             $this->metadata->get(['recordDefs', $this->entityType, 'updateDuplicateCheck']) ??
             $this->checkForDuplicatesInUpdate;
@@ -867,6 +876,7 @@ class Service implements Crud,
 
         $this->processApiBeforeUpdateApiScript($entity, $params);
         $this->recordHookManager->processBeforeUpdate($entity, $params);
+        /** @noinspection PhpDeprecationInspection */
         $this->beforeUpdateEntity($entity, $data);
 
         $this->entityManager->saveEntity($entity, [
@@ -877,6 +887,7 @@ class Service implements Crud,
         $this->recordHookManager->processAfterUpdate($entity, $params);
         $entity->updateFetchedValues();
 
+        /** @noinspection PhpDeprecationInspection */
         $this->afterUpdateEntity($entity, $data);
 
         if ($this->metadata->get(['recordDefs', $this->entityType, 'loadAdditionalFieldsAfterUpdate'])) {
@@ -918,10 +929,12 @@ class Service implements Crud,
         }
 
         $this->recordHookManager->processBeforeDelete($entity, $params);
+        /** @noinspection PhpDeprecationInspection */
         $this->beforeDeleteEntity($entity);
 
         $this->getRepository()->remove($entity);
 
+        /** @noinspection PhpDeprecationInspection */
         $this->afterDeleteEntity($entity);
         $this->recordHookManager->processAfterDelete($entity, $params);
         $this->processActionHistoryRecord(Action::DELETE, $entity);
@@ -971,6 +984,7 @@ class Service implements Crud,
             ->find();
 
         foreach ($collection as $entity) {
+            /** @noinspection PhpDeprecationInspection */
             $this->loadListAdditionalFields($entity, $preparedSearchParams);
 
             $this->prepareEntityForOutput($entity);
@@ -1145,6 +1159,7 @@ class Service implements Crud,
             ->find();
 
         foreach ($collection as $itemEntity) {
+            /** @noinspection PhpDeprecationInspection */
             $this->loadListAdditionalFields($itemEntity, $preparedSearchParams);
 
             $recordService->prepareEntityForOutput($itemEntity);
@@ -1582,14 +1597,17 @@ class Service implements Crud,
             throw new Forbidden();
         }
 
+        /** @noinspection PhpDeprecationInspection */
         if (in_array($link, $this->forbiddenLinkList)) {
             throw new Forbidden();
         }
 
+        /** @noinspection PhpDeprecationInspection */
         if (in_array($link, $this->internalLinkList)) {
             throw new Forbidden();
         }
 
+        /** @noinspection PhpDeprecationInspection */
         if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
             throw new Forbidden();
         }
@@ -1617,25 +1635,28 @@ class Service implements Crud,
             throw new Forbidden("Only manyMany, hasMany & hasChildren relations are allowed.");
         }
 
-        $forbiddenLinkList = $this->acl
-            ->getScopeForbiddenLinkList($this->entityType, AclTable::ACTION_EDIT);
+        $forbiddenLinkList = $this->acl->getScopeForbiddenLinkList($this->entityType, AclTable::ACTION_EDIT);
 
         if (in_array($link, $forbiddenLinkList)) {
             throw new Forbidden();
         }
 
+        /** @noinspection PhpDeprecationInspection */
         if (in_array($link, $this->forbiddenLinkList)) {
             throw new Forbidden();
         }
 
+        /** @noinspection PhpDeprecationInspection */
         if (in_array($link, $this->readOnlyLinkList)) {
             throw new Forbidden();
         }
 
+        /** @noinspection PhpDeprecationInspection */
         if (!$this->user->isAdmin() && in_array($link, $this->nonAdminReadOnlyLinkList)) {
             throw new Forbidden();
         }
 
+        /** @noinspection PhpDeprecationInspection */
         if (!$this->user->isAdmin() && in_array($link, $this->onlyAdminLinkList)) {
             throw new Forbidden();
         }
@@ -1760,6 +1781,7 @@ class Service implements Crud,
      * @param TEntity $entity
      * @return void
      * @todo Add void return type in v9.0.
+     * @noinspection PhpDocSignatureInspection
      */
     public function prepareEntityForOutput(Entity $entity)
     {
@@ -1865,6 +1887,7 @@ class Service implements Crud,
 
         $attributes = $this->createEntityDuplicator()->duplicate($entity);
 
+        /** @noinspection PhpDeprecationInspection */
         foreach ($this->duplicateIgnoreAttributeList as $attribute) {
             unset($attributes->$attribute);
         }
@@ -1942,6 +1965,7 @@ class Service implements Crud,
 
     protected function prepareSearchParamsSelect(SearchParams $searchParams): SearchParams
     {
+        /** @noinspection PhpDeprecationInspection */
         if ($this->forceSelectAllAttributes) {
             return $searchParams->withSelect(null);
         }
@@ -1956,12 +1980,14 @@ class Service implements Crud,
 
         /** @var string[] $mandatoryAttributeList */
         $mandatoryAttributeList = $this->metadata->get("recordDefs.$this->entityType.mandatoryAttributeList") ?? [];
+        /** @noinspection PhpDeprecationInspection */
         $mandatoryAttributeList = array_merge($this->mandatorySelectAttributeList, $mandatoryAttributeList);
 
         if ($mandatoryAttributeList === []) {
             return $searchParams;
         }
 
+        /** @noinspection PhpDeprecationInspection */
         $select = array_unique(
             array_merge(
                 $searchParams->getSelect(),
