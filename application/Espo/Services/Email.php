@@ -29,7 +29,6 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Utils\SystemUser;
 use Espo\Tools\Email\SendService;
 use Espo\ORM\Entity;
 use Espo\Entities\User;
@@ -40,7 +39,6 @@ use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Mail\Exceptions\SendingError;
-use Espo\Core\Mail\Sender;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Record\CreateParams;
 
@@ -52,15 +50,7 @@ use stdClass;
  */
 class Email extends Record
 {
-
     protected $getEntityBeforeUpdate = true;
-
-    /** @var string[] */
-    protected $allowedForUpdateFieldList = [
-        'parent',
-        'teams',
-        'assignedUser',
-    ];
 
     protected $mandatorySelectAttributeList = [
         'name',
@@ -134,39 +124,6 @@ class Email extends Record
         return $entity;
     }
 
-    protected function beforeCreateEntity(Entity $entity, $data)
-    {
-        /** @var EmailEntity $entity */
-
-        if ($entity->getStatus() === EmailEntity::STATUS_SENDING) {
-            $messageId = Sender::generateMessageId($entity);
-
-            $entity->set('messageId', '<' . $messageId . '>');
-        }
-    }
-
-    /**
-     * @throws BadRequest
-     * @throws Error
-     * @throws SendingError
-     */
-    protected function afterUpdateEntity(Entity $entity, $data)
-    {
-        /** @var EmailEntity $entity */
-
-        if ($entity->getStatus() === EmailEntity::STATUS_SENDING) {
-            $this->getSendService()->send($entity, $this->user);
-        }
-
-        $this->loadAdditionalFields($entity);
-
-        if (!isset($data->from) && !isset($data->to) && !isset($data->cc)) {
-            $entity->clear('nameHash');
-            $entity->clear('idHash');
-            $entity->clear('typeHash');
-        }
-    }
-
     public function getEntity(string $id): ?Entity
     {
         /** @var ?EmailEntity $entity */
@@ -200,101 +157,5 @@ class Email extends Record
     static public function parseFromAddress(?string $string): string
     {
         return Util::parseFromAddress($string);
-    }
-
-    protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-        /** @var EmailEntity $entity */
-
-        $skipFilter = false;
-
-        if ($this->user->isAdmin()) {
-            $skipFilter = true;
-        }
-
-        if ($this->isEmailManuallyArchived($entity)) {
-            $skipFilter = true;
-        }
-        else if ($entity->isAttributeChanged('dateSent')) {
-            $entity->set('dateSent', $entity->getFetched('dateSent'));
-        }
-
-        if ($entity->getStatus() === EmailEntity::STATUS_DRAFT) {
-            $skipFilter = true;
-        }
-
-        if (
-            $entity->getStatus() === EmailEntity::STATUS_SENDING &&
-            $entity->getFetched('status') === EmailEntity::STATUS_DRAFT
-        ) {
-            $skipFilter = true;
-        }
-
-        if (
-            $entity->isAttributeChanged('status') &&
-            $entity->getFetched('status') === EmailEntity::STATUS_ARCHIVED
-        ) {
-            $entity->set('status', EmailEntity::STATUS_ARCHIVED);
-        }
-
-        if (!$skipFilter) {
-            $this->clearEntityForUpdate($entity);
-        }
-
-        if ($entity->getStatus() == EmailEntity::STATUS_SENDING) {
-            $messageId = Sender::generateMessageId($entity);
-
-            $entity->set('messageId', '<' . $messageId . '>');
-        }
-    }
-
-    private function isEmailManuallyArchived(EmailEntity $email): bool
-    {
-        if ($email->getStatus() !== EmailEntity::STATUS_ARCHIVED) {
-            return false;
-        }
-
-        $userId = $email->getCreatedBy()?->getId();
-
-        if (!$userId) {
-            return false;
-        }
-
-        /** @var ?User $user */
-        $user = $this->entityManager
-            ->getRDBRepositoryByClass(User::class)
-            ->getById($userId);
-
-        if (!$user) {
-            return true;
-        }
-
-        return $user->getUserName() !== SystemUser::NAME;
-    }
-
-    private function clearEntityForUpdate(EmailEntity $email): void
-    {
-        $fieldDefsList = $this->entityManager
-            ->getDefs()
-            ->getEntity(EmailEntity::ENTITY_TYPE)
-            ->getFieldList();
-
-        foreach ($fieldDefsList as $fieldDefs) {
-            $field = $fieldDefs->getName();
-
-            if ($fieldDefs->getParam('isCustom')) {
-                continue;
-            }
-
-            if (in_array($field, $this->allowedForUpdateFieldList)) {
-                continue;
-            }
-
-            $attributeList = $this->fieldUtil->getAttributeList(EmailEntity::ENTITY_TYPE, $field);
-
-            foreach ($attributeList as $attribute) {
-                $email->clear($attribute);
-            }
-        }
     }
 }

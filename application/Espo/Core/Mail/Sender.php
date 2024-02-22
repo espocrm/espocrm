@@ -579,7 +579,7 @@ class Sender
             ) {
                 $messageId = $this->generateMessageId($email);
 
-                $email->set('messageId', '<' . $messageId . '>');
+                $email->setMessageId('<' . $messageId . '>');
 
                 if ($email->hasId()) {
                     $this->entityManager->saveEntity($email, [SaveOption::SILENT => true]);

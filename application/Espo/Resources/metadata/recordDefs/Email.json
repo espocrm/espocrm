@@ -1,4 +1,5 @@
 {
+    "loadAdditionalFieldsAfterUpdate": true,
     "readLoaderClassNameList": [
         "Espo\\Classes\\FieldProcessing\\Email\\AddressDataLoader",
         "Espo\\Classes\\FieldProcessing\\Email\\UserColumnsLoader",
@@ -14,5 +15,14 @@
         "moveToFolder": {
             "implementationClassName": "Espo\\Classes\\MassAction\\Email\\MoveToFolder"
         }
-    }
+    },
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Email\\BeforeCreate"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Email\\BeforeUpdate"
+    ],
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Email\\AfterUpdate"
+    ]
 }
