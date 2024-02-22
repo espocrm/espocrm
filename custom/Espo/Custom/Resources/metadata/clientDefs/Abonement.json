@@ -120,6 +120,16 @@
                         }
                     ]
                 }
+            },
+            "endDate": {
+                "readOnly": {
+                    "conditionGroup": [
+                        {
+                            "type": "isFalse",
+                            "attribute": "isActivated"
+                        }
+                    ]
+                }
             }
         }
     }

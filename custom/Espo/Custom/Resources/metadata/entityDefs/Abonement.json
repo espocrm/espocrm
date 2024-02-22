@@ -53,7 +53,7 @@
         "endDate": {
             "notNull": false,
             "type": "date",
-            "readOnly": true,
+            "readOnly": false,
             "tooltip": false,
             "isCustom": true
         },
