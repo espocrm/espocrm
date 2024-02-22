@@ -30,12 +30,9 @@
 namespace Espo\Modules\Crm\Services;
 
 use Espo\Core\Acl\Table;
-use Espo\Modules\Crm\Entities\Campaign;
-use Espo\Modules\Crm\Entities\CampaignLogRecord as CampaignLogRecordEntity;
 use Espo\ORM\Entity;
 use Espo\ORM\Query\Select;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
 use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
@@ -46,9 +43,10 @@ use Espo\Core\Utils\Metadata;
 
 use PDO;
 use Espo\Core\Di;
+use RuntimeException;
 
 /**
- * @extends Record<\Espo\Modules\Crm\Entities\TargetList>
+ * @extends Record<TargetListEntity>
  */
 class TargetList extends Record implements
 
@@ -56,17 +54,13 @@ class TargetList extends Record implements
 {
     use Di\HookManagerSetter;
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $targetLinkList = [];
     protected $noEditAccessRequiredLinkList = [];
     protected $duplicatingLinkList = [];
     protected $linkMandatorySelectAttributeList = [];
 
-    /**
-     * @var array<string, string>
-     */
+    /** @var array<string, string> */
     protected $entityTypeLinkMap = [];
 
     public function setMetadata(Metadata $metadata): void
@@ -92,129 +86,11 @@ class TargetList extends Record implements
         }
     }
 
-    protected function afterCreateEntity(Entity $entity, $data)
-    {
-        if (
-            property_exists($data, 'sourceCampaignId') &&
-            !empty($data->includingActionList)
-        ) {
-            $excludingActionList = [];
-
-            if (!empty($data->excludingActionList)) {
-                $excludingActionList = $data->excludingActionList;
-            }
-
-            $this->populateFromCampaignLog(
-                $entity,
-                $data->sourceCampaignId,
-                $data->includingActionList,
-                $excludingActionList
-            );
-        }
-    }
-
-    /**
-     * @param string[] $includingActionList
-     * @param string[] $excludingActionList
-     * @throws BadRequest
-     * @throws NotFound
-     * @throws Forbidden
-     */
-    protected function populateFromCampaignLog(
-        TargetListEntity $entity,
-        string $sourceCampaignId,
-        array $includingActionList,
-        array $excludingActionList
-    ): void {
-
-        if (empty($sourceCampaignId)) {
-            throw new BadRequest();
-        }
-
-        $campaign = $this->entityManager->getEntity(Campaign::ENTITY_TYPE, $sourceCampaignId);
-
-        if (!$campaign) {
-            throw new NotFound();
-        }
-
-        if (!$this->acl->check($campaign, Table::ACTION_READ)) {
-            throw new Forbidden();
-        }
-
-        $queryBuilder = $this->entityManager
-            ->getQueryBuilder()
-            ->select()
-            ->from(CampaignLogRecordEntity::ENTITY_TYPE)
-            ->where([
-                'isTest' => false,
-                'campaignId' => $sourceCampaignId,
-            ])
-            ->select(['id', 'parentId', 'parentType']);
-
-        $notQueryBuilder = clone $queryBuilder;
-
-        $queryBuilder->where([
-            'action=' => $includingActionList,
-        ]);
-
-        $queryBuilder->group([
-            'parentId',
-            'parentType',
-            'id',
-        ]);
-
-        $notQueryBuilder->where([
-            'action=' => $excludingActionList,
-        ]);
-
-        $notQueryBuilder->select(['id']);
-
-        $list = $this->entityManager
-            ->getRDBRepository(CampaignLogRecordEntity::ENTITY_TYPE)
-            ->clone($queryBuilder->build())
-            ->find();
-
-        foreach ($list as $logRecord) {
-            if (!$logRecord->get('parentType')) {
-                continue;
-            }
-
-            if (empty($this->entityTypeLinkMap[$logRecord->get('parentType')])) {
-                continue;
-            }
-
-            $existing = null;
-
-            if (!empty($excludingActionList)) {
-                $cloneQueryBuilder = clone $notQueryBuilder;
-
-                $cloneQueryBuilder->where([
-                    'parentType' => $logRecord->get('parentType'),
-                    'parentId' => $logRecord->get('parentId'),
-                ]);
-
-                $existing = $this->entityManager
-                    ->getRDBRepository(CampaignLogRecordEntity::ENTITY_TYPE)
-                    ->clone($cloneQueryBuilder->build())
-                    ->findOne();
-            }
-
-            if ($existing) {
-                continue;
-            }
-
-            $relation = $this->entityTypeLinkMap[$logRecord->get('parentType')];
-
-            $this->getRepository()
-                ->getRelation($entity, $relation)
-                ->relateById($logRecord->get('parentId'));
-        }
-    }
-
     /**
      * @throws Forbidden
      * @throws Error
      * @throws NotFound
+     * @todo Move.
      */
     public function unlinkAll(string $id, string $link): void
     {
@@ -246,12 +122,8 @@ class TargetList extends Record implements
         $updateQuery = $this->entityManager->getQueryBuilder()
             ->update()
             ->in($linkEntityType)
-            ->set([
-                'deleted' => true,
-            ])
-            ->where([
-                'targetListId' => $entity->getId(),
-            ])
+            ->set(['deleted' => true])
+            ->where(['targetListId' => $entity->getId()])
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($updateQuery);
@@ -267,7 +139,7 @@ class TargetList extends Record implements
         $entityType = $seed->getRelationParam($link, 'entity');
 
         if (!$entityType) {
-            throw new Error();
+            throw new RuntimeException();
         }
 
         $linkEntityType = ucfirst(
@@ -275,13 +147,13 @@ class TargetList extends Record implements
         );
 
         if ($linkEntityType === '') {
-            throw new Error();
+            throw new RuntimeException();
         }
 
         $key = $seed->getRelationParam($link, 'midKeys')[1] ?? null;
 
         if (!$key) {
-            throw new Error();
+            throw new RuntimeException();
         }
 
         return $this->entityManager->getQueryBuilder()
@@ -291,13 +163,13 @@ class TargetList extends Record implements
                 'id',
                 'name',
                 'createdAt',
-                ["'{$entityType}'", 'entityType'],
+                ["'$entityType'", 'entityType'],
             ])
             ->join(
                 $linkEntityType,
                 'j',
                 [
-                    "j.{$key}:" => 'id',
+                    "j.$key:" => 'id',
                     'j.deleted' => false,
                     'j.optedOut' => true,
                     'j.targetListId' => $targetListId,
@@ -309,7 +181,8 @@ class TargetList extends Record implements
 
     /**
      * @return RecordCollection<Entity>
-     * @throws Error
+     * @noinspection PhpUnused
+     * @todo Move? Use Tools\TargetList\MetadataProvider.
      */
     protected function findLinkedOptedOut(string $id, SearchParams $searchParams): RecordCollection
     {
@@ -372,10 +245,11 @@ class TargetList extends Record implements
     /**
      * @throws NotFound
      * @throws Error
+     * @todo Move. Use Tools\TargetList\MetadataProvider.
      */
     public function optOut(string $id, string $targetType, string $targetId): void
     {
-        $targetList = $this->entityManager->getEntity('TargetList', $id);
+        $targetList = $this->entityManager->getEntityById(TargetListEntity::ENTITY_TYPE, $id);
 
         if (!$targetList) {
             throw new NotFound();
@@ -412,16 +286,17 @@ class TargetList extends Record implements
     /**
      * @throws NotFound
      * @throws Error
+     * @todo Move. Use Tools\TargetList\MetadataProvider.
      */
     public function cancelOptOut(string $id, string $targetType, string $targetId): void
     {
-        $targetList = $this->entityManager->getEntity('TargetList', $id);
+        $targetList = $this->entityManager->getEntityById(TargetListEntity::ENTITY_TYPE, $id);
 
         if (!$targetList) {
             throw new NotFound();
         }
 
-        $target = $this->entityManager->getEntity($targetType, $targetId);
+        $target = $this->entityManager->getEntityById($targetType, $targetId);
 
         if (!$target) {
             throw new NotFound();
@@ -459,9 +334,7 @@ class TargetList extends Record implements
         foreach ($this->duplicatingLinkList as $link) {
             $linkedList = $repository
                 ->getRelation($duplicatingEntity, $link)
-                ->where([
-                    '@relation.optedOut' => false,
-                ])
+                ->where(['@relation.optedOut' => false])
                 ->find();
 
             foreach ($linkedList as $linked) {

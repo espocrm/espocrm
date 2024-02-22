@@ -27,29 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Entities;
+namespace Espo\Modules\Crm\Tools\TargetList;
 
-use Espo\Core\Field\LinkParent;
-use Espo\Core\ORM\Entity;
+use Espo\Core\Utils\Metadata;
+use Espo\Modules\Crm\Entities\TargetList;
+use Espo\ORM\Defs;
 
-class CampaignLogRecord extends Entity
+class MetadataProvider
 {
-    public const ENTITY_TYPE = 'CampaignLogRecord';
+    public function __construct(
+        private Metadata $metadata,
+        private Defs $defs
+    ) {}
 
-    public const ACTION_LEAD_CREATED = 'Lead Created';
-    public const ACTION_SENT = 'Sent';
-    public const ACTION_BOUNCED = 'Bounced';
-    public const ACTION_OPTED_IN = 'Opted In';
-    public const ACTION_OPTED_OUT = 'Opted Out';
-    public const ACTION_OPENED = 'Opened';
-    public const ACTION_CLICKED = 'Clicked';
-
-    public const BOUNCED_TYPE_HARD = 'Hard';
-    public const BOUNCED_TYPE_SOFT = 'Soft';
-
-    public function getParent(): ?LinkParent
+    /**
+     * @return string[]
+     */
+    public function getTargetLinkList(): array
     {
-        /** @var ?LinkParent */
-        return $this->getValueObject('parent');
+        return $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
+    }
+
+    /**
+     * @return array<string, string>
+     */
+    public function getEntityTypeLinkMap(): array
+    {
+        $map = [];
+
+        foreach ($this->getTargetLinkList() as $link) {
+            $entityType = $this->defs
+                ->getEntity(TargetList::ENTITY_TYPE)
+                ->getRelation($link)
+                ->getForeignEntityType();
+
+            $map[$entityType] = $link;
+        }
+
+        return $map;
     }
 }

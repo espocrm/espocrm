@@ -10,7 +10,8 @@
         "includingActionList": "Including",
         "excludingActionList": "Excluding",
         "targetStatus": "Target Status",
-        "isOptedOut": "Is Opted Out"
+        "isOptedOut": "Is Opted Out",
+        "sourceCampaign": "Source Campaign"
     },
     "links": {
         "accounts": "Accounts",

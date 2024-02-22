@@ -6,5 +6,8 @@
     "listLoaderClassNameList": [
         "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\TargetList\\EntryCountLoader",
         "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\TargetList\\OptedOutCountLoader"
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\TargetList\\AfterCreate"
     ]
 }

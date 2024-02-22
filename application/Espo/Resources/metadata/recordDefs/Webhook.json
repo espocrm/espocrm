@@ -6,5 +6,20 @@
         "update": {
             "allowed": true
         }
-    }
+    },
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Webhook\\BeforeSave"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Webhook\\BeforeSave"
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Webhook\\AfterSave"
+    ],
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Webhook\\AfterSave"
+    ],
+    "afterDeleteHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Webhook\\AfterDelete"
+    ]
 }
