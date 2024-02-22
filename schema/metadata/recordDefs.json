@@ -115,6 +115,10 @@
                 "type": "object",
                 "description": "A link.",
                 "properties": {
+                    "countDisabled": {
+                        "type": "boolean",
+                        "description": "Disable total count. As of v8.2."
+                    },
                     "selectAccessControlDisabled": {
                         "description": "Disable access control when listing related records; only access to a parent record will be checked.",
                         "type": "boolean"

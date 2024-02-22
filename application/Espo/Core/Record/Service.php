@@ -1116,11 +1116,8 @@ class Service implements Crud,
 
         $recordService = $this->recordServiceContainer->get($foreignEntityType);
 
-        $disableCountPropertyName = 'findLinked' . ucfirst($link) . 'CountQueryDisabled';
-
-        $disableCount =
-            property_exists($this, $disableCountPropertyName) &&
-            $this->$disableCountPropertyName;
+        $disableCount = $this->metadata
+            ->get("recordDefs.$this->entityType.relationships.$link.countDisabled") ?? false;
 
         $maxSize = $searchParams->getMaxSize();
 

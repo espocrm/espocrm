@@ -42,9 +42,6 @@ use stdClass;
  */
 class ScheduledJob extends Record
 {
-    /** Should not be removed. */
-    protected bool $findLinkedLogCountQueryDisabled = true;
-
     public function processValidation(Entity $entity, stdClass $data): void
     {
         parent::processValidation($entity, $data);
