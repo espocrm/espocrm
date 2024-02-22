@@ -10,5 +10,6 @@
             "allowed": true
         }
     },
+    "forceSelectAllAttributes": true,
     "actionHistoryDisabled": true
 }

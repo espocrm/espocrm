@@ -35,5 +35,4 @@ namespace Espo\Services;
 class ActionHistoryRecord extends Record
 {
     protected bool $listCountQueryDisabled = true;
-    protected $forceSelectAllAttributes = true;
 }

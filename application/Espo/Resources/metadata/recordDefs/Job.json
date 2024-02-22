@@ -3,5 +3,6 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "forceSelectAllAttributes": true
 }

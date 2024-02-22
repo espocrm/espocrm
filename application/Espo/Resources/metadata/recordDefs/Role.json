@@ -4,6 +4,7 @@
             "allowed": true
         }
     },
+    "forceSelectAllAttributes": true,
     "beforeCreateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Role\\BeforeSaveValidate"
     ],

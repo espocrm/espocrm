@@ -4,5 +4,6 @@
             "allowed": true
         }
     },
-    "actionHistoryDisabled": true
+    "actionHistoryDisabled": true,
+    "forceSelectAllAttributes": true
 }

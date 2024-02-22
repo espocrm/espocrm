@@ -131,7 +131,8 @@ class Service implements Crud,
 
     /**
      * @var bool
-     * @todo Move to metadata.
+     * @deprecated As of v8.2. Use metadata > recordDefs > forceSelectAllAttributes..
+     * @todo Remove in v9.0.
      */
     protected $forceSelectAllAttributes = false;
 
@@ -1945,6 +1946,10 @@ class Service implements Crud,
     protected function prepareSearchParamsSelect(SearchParams $searchParams): SearchParams
     {
         if ($this->forceSelectAllAttributes) {
+            return $searchParams->withSelect(null);
+        }
+
+        if ($this->metadata->get("recordDefs.$this->entityType.forceSelectAllAttributes")) {
             return $searchParams->withSelect(null);
         }
 
