@@ -1960,7 +1960,7 @@ class Service implements Crud,
      * @return void
      * @noinspection PhpDocSignatureInspection
      * @deprecated As of v8.2.
-     * @todo Remove in v10.0.
+     * @todo Remove (or add types) in v10.0.
      */
     protected function beforeCreateEntity(Entity $entity, $data)
     {}
@@ -1971,7 +1971,7 @@ class Service implements Crud,
      * @return void
      * @noinspection PhpDocSignatureInspection
      * @deprecated As of v8.2.
-     * @todo Remove in v10.0.
+     * @todo Remove (or add types) in v10.0.
      */
     protected function afterCreateEntity(Entity $entity, $data)
     {}
@@ -1982,7 +1982,7 @@ class Service implements Crud,
      * @return void
      * @noinspection PhpDocSignatureInspection
      * @deprecated As of v8.2.
-     * @todo Remove in v10.0.
+     * @todo Remove (or add types) in v10.0.
      */
     protected function beforeUpdateEntity(Entity $entity, $data)
     {}
@@ -1993,7 +1993,7 @@ class Service implements Crud,
      * @return void
      * @noinspection PhpDocSignatureInspection
      * @deprecated As of v8.2.
-     * @todo Remove in v10.0.
+     * @todo Remove (or add types) in v10.0.
      */
     protected function afterUpdateEntity(Entity $entity, $data)
     {}
@@ -2003,7 +2003,7 @@ class Service implements Crud,
      * @return void
      * @noinspection PhpDocSignatureInspection
      * @deprecated As of v8.2.
-     * @todo Remove in v10.0.
+     * @todo Remove (or add types) in v10.0.
      */
     protected function beforeDeleteEntity(Entity $entity)
     {}
@@ -2013,7 +2013,7 @@ class Service implements Crud,
      * @return void
      * @noinspection PhpDocSignatureInspection
      * @deprecated As of v8.2.
-     * @todo Remove in v10.0.
+     * @todo Remove (or add types) in v10.0.
      */
     protected function afterDeleteEntity(Entity $entity)
     {}

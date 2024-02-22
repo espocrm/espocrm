@@ -27,47 +27,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Modules\Crm\Classes\RecordHooks\Case;
 
-use Espo\Entities\Webhook as WebhookEntity;
+use Espo\Core\Acl;
+use Espo\Core\Field\LinkParent;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Entities\Email;
+use Espo\Modules\Crm\Entities\CaseObj;
 use Espo\ORM\Entity;
-
-use stdClass;
+use Espo\ORM\EntityManager;
 
 /**
- * @extends Record<WebhookEntity>
+ * @implements SaveHook<CaseObj>
+ * @noinspection PhpUnused
  */
-class Webhook extends Record
+class AfterCreate implements SaveHook
 {
-    /** @var string[] */
-    protected $onlyAdminAttributeList = ['userId', 'userName'];
-    /** @var string[] */
-    protected $readOnlyAttributeList = ['secretKey'];
+    public function __construct(
+        private EntityManager $entityManager,
+        private Acl $acl
+    ) {}
 
-    public function populateDefaults(Entity $entity, stdClass $data): void
+    public function process(Entity $entity): void
     {
-        parent::populateDefaults($entity, $data);
+        /** @var ?string $emailId */
+        $emailId = $entity->get('originalEmailId');
 
-        if ($this->user->isApi()) {
-            $entity->set('userId', $this->user->getId());
-        }
-    }
-
-    protected function filterInput(stdClass $data): void
-    {
-        parent::filterInput($data);
-
-        unset($data->entityType);
-        unset($data->field);
-        unset($data->type);
-    }
-
-    public function filterUpdateInput(stdClass $data): void
-    {
-        if (!$this->user->isAdmin()) {
-            unset($data->event);
+        if (!$emailId) {
+            return;
         }
 
-        parent::filterUpdateInput($data);
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getById($emailId);
+
+        if (!$email || $email->getParentId() || !$this->acl->check($email)) {
+            return;
+        }
+
+        $email->setParent(LinkParent::createFromEntity($entity));
+
+        $this->entityManager->saveEntity($email);
     }
 }

@@ -27,47 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Modules\Crm\Classes\RecordHooks\Case;
 
-use Espo\Entities\Webhook as WebhookEntity;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\CaseObj;
+use Espo\Modules\Crm\Entities\Contact;
 use Espo\ORM\Entity;
-
-use stdClass;
+use Espo\ORM\EntityManager;
 
 /**
- * @extends Record<WebhookEntity>
+ * @implements SaveHook<CaseObj>
+ * @noinspection PhpUnused
  */
-class Webhook extends Record
+class BeforeCreate implements SaveHook
 {
-    /** @var string[] */
-    protected $onlyAdminAttributeList = ['userId', 'userName'];
-    /** @var string[] */
-    protected $readOnlyAttributeList = ['secretKey'];
+    public function __construct(
+        private EntityManager $entityManager,
+        private User $user
+    ) {}
 
-    public function populateDefaults(Entity $entity, stdClass $data): void
+    public function process(Entity $entity): void
     {
-        parent::populateDefaults($entity, $data);
-
-        if ($this->user->isApi()) {
-            $entity->set('userId', $this->user->getId());
-        }
-    }
-
-    protected function filterInput(stdClass $data): void
-    {
-        parent::filterInput($data);
-
-        unset($data->entityType);
-        unset($data->field);
-        unset($data->type);
-    }
-
-    public function filterUpdateInput(stdClass $data): void
-    {
-        if (!$this->user->isAdmin()) {
-            unset($data->event);
+        if (!$this->user->isPortal()) {
+            return;
         }
 
-        parent::filterUpdateInput($data);
+        if (!$entity->has('accountId') && $this->user->getContactId()) {
+            /** @var ?Contact $contact */
+            $contact = $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $this->user->getContactId());
+
+            if ($contact && $contact->getAccount()) {
+                $entity->set('accountId', $contact->getAccount()->getId());
+            }
+        }
+
+        if (!$entity->has('contactId') && $this->user->getContactId()) {
+            $entity->set('contactId', $this->user->getContactId());
+        }
     }
 }

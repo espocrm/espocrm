@@ -69,6 +69,14 @@
             "type": "link",
             "readOnly": true
         },
+        "originalEmail": {
+            "type": "link",
+            "notStorable": true,
+            "entity": "Email",
+            "customizationDisabled": true,
+            "layoutAvailabilityList": [],
+            "directAccessDisabled": true
+        },
         "createdAt": {
             "type": "datetime",
             "readOnly": true,

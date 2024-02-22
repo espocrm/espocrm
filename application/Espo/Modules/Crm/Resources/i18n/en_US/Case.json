@@ -11,7 +11,8 @@
         "description": "Description",
         "inboundEmail": "Group Email Account",
         "lead": "Lead",
-        "attachments": "Attachments"
+        "attachments": "Attachments",
+        "originalEmail": "Original Email"
     },
     "links": {
         "inboundEmail": "Group Email Account",

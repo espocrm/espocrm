@@ -27,47 +27,49 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\RecordHooks\Webhook;
 
-use Espo\Entities\Webhook as WebhookEntity;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Core\Webhook\Manager;
+use Espo\Entities\Webhook;
 use Espo\ORM\Entity;
-
-use stdClass;
+use RuntimeException;
 
 /**
- * @extends Record<WebhookEntity>
+ * @implements SaveHook<Webhook>
  */
-class Webhook extends Record
+class AfterSave implements SaveHook
 {
-    /** @var string[] */
-    protected $onlyAdminAttributeList = ['userId', 'userName'];
-    /** @var string[] */
-    protected $readOnlyAttributeList = ['secretKey'];
+    public function __construct(
+        private Manager $webhookManager
+    ) {}
 
-    public function populateDefaults(Entity $entity, stdClass $data): void
+    public function process(Entity $entity): void
     {
-        parent::populateDefaults($entity, $data);
+        $event = $entity->getEvent();
 
-        if ($this->user->isApi()) {
-            $entity->set('userId', $this->user->getId());
-        }
-    }
-
-    protected function filterInput(stdClass $data): void
-    {
-        parent::filterInput($data);
-
-        unset($data->entityType);
-        unset($data->field);
-        unset($data->type);
-    }
-
-    public function filterUpdateInput(stdClass $data): void
-    {
-        if (!$this->user->isAdmin()) {
-            unset($data->event);
+        if (!$event) {
+            throw new RuntimeException("No 'event'.");
         }
 
-        parent::filterUpdateInput($data);
+        if ($entity->isNew()) {
+            if ($entity->isActive()) {
+                $this->webhookManager->addEvent($event);
+            }
+
+            return;
+        }
+
+        if (!$entity->isAttributeChanged('isActive')) {
+            return;
+        }
+
+        if ($entity->isActive()) {
+            $this->webhookManager->addEvent($event);
+
+            return;
+        }
+
+        $this->webhookManager->removeEvent($event);
     }
 }
