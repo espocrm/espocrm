@@ -6,5 +6,8 @@
         "update": {
             "allowed": true
         }
-    }
+    },
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\LeadCapture\\BeforeCreate"
+    ]
 }

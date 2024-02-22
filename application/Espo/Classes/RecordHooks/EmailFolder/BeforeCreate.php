@@ -27,20 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\RecordHooks\EmailFolder;
 
-use Espo\ORM\Entity;
+use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Entities\EmailFolder;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
 
 /**
- * @extends Record<\Espo\Entities\EmailFolder>
+ * @implements SaveHook<EmailFolder>
  */
-class EmailFolder extends Record
+class BeforeCreate implements SaveHook
 {
-    protected function beforeCreateEntity(Entity $entity, $data)
-    {
-        parent::beforeCreateEntity($entity, $data);
+    public function __construct(
+        private User $user,
+        private Acl $acl
+    ) {}
 
+    public function process(Entity $entity): void
+    {
         if (!$this->user->isAdmin() || !$entity->get('assignedUserId')) {
             $entity->set('assignedUserId', $this->user->getId());
         }

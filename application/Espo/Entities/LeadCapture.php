@@ -29,7 +29,9 @@
 
 namespace Espo\Entities;
 
-class LeadCapture extends \Espo\Core\ORM\Entity
+use Espo\Core\ORM\Entity;
+
+class LeadCapture extends Entity
 {
     public const ENTITY_TYPE = 'LeadCapture';
 
@@ -92,6 +94,13 @@ class LeadCapture extends \Espo\Core\ORM\Entity
     public function getApiKey(): ?string
     {
         return $this->get('apiKey');
+    }
+
+    public function setApiKey(string $apiKey): self
+    {
+        $this->set('apiKey', $apiKey);
+
+        return $this;
     }
 
     public function getName(): ?string

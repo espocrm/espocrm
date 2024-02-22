@@ -27,32 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\RecordHooks\EmailFilter;
 
+use Espo\Core\Acl;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Record\Hook\SaveHook;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
-use Espo\Entities\EmailFilter as EmailFilterEntity;
+use Espo\Entities\EmailFilter;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Entities\User as UserEntity;
 use Espo\ORM\Entity;
 
-use Espo\Core\Exceptions\Forbidden;
-use stdClass;
-
 /**
- * @extends Record<EmailFilterEntity>
+ * @implements SaveHook<EmailFilter>
  */
-class EmailFilter extends Record
+class BeforeSave implements SaveHook
 {
-    /**
-     * @param EmailFilterEntity $entity
-     * @throws Forbidden
-     */
-    protected function beforeCreateEntity(Entity $entity, $data)
-    {
-        parent::beforeCreateEntity($entity, $data);
+    public function __construct(
+        private Acl $acl
+    ) {}
 
+    /**
+     * @inheritDoc
+     */
+    public function process(Entity $entity): void
+    {
         // Check if own.
-        if (!$this->acl->checkEntityEdit($entity)) {
+        if ($entity->isNew() && !$this->acl->checkEntityEdit($entity)) {
             throw new Forbidden();
         }
 
@@ -60,26 +61,17 @@ class EmailFilter extends Record
     }
 
     /**
-     * @param EmailFilterEntity $entity
      * @throws Forbidden
      */
-    protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-        parent::beforeUpdateEntity($entity, $data);
-
-        $this->controlEntityValues($entity);
-    }
-
-    /**
-     * @throws Forbidden
-     */
-    private function controlEntityValues(EmailFilterEntity $entity): void
+    private function controlEntityValues(EmailFilter $entity): void
     {
         if ($entity->isGlobal()) {
-            $entity->set('parentId', null);
-            $entity->set('parentType', null);
+            $entity->setMultiple([
+                'parentType' => null,
+                'parentId' => null,
+            ]);
 
-            if ($entity->getAction() !== EmailFilterEntity::ACTION_SKIP) {
+            if ($entity->getAction() !== EmailFilter::ACTION_SKIP) {
                 throw new Forbidden("Not allowed `action`.");
             }
         }
@@ -93,9 +85,9 @@ class EmailFilter extends Record
             !in_array(
                 $entity->getAction(),
                 [
-                    EmailFilterEntity::ACTION_NONE,
-                    EmailFilterEntity::ACTION_SKIP,
-                    EmailFilterEntity::ACTION_MOVE_TO_FOLDER,
+                    EmailFilter::ACTION_NONE,
+                    EmailFilter::ACTION_SKIP,
+                    EmailFilter::ACTION_MOVE_TO_FOLDER,
                 ]
             )
         ) {
@@ -107,8 +99,8 @@ class EmailFilter extends Record
             !in_array(
                 $entity->getAction(),
                 [
-                    EmailFilterEntity::ACTION_SKIP,
-                    EmailFilterEntity::ACTION_MOVE_TO_GROUP_FOLDER,
+                    EmailFilter::ACTION_SKIP,
+                    EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER,
                 ]
             )
         ) {
@@ -117,26 +109,19 @@ class EmailFilter extends Record
 
         if (
             $entity->getParentType() === EmailAccountEntity::ENTITY_TYPE &&
-            $entity->getAction() !== EmailFilterEntity::ACTION_SKIP
+            $entity->getAction() !== EmailFilter::ACTION_SKIP
         ) {
             throw new Forbidden("Not allowed `action`.");
         }
 
-        if ($entity->getAction() !== EmailFilterEntity::ACTION_MOVE_TO_FOLDER) {
+        if ($entity->getAction() !== EmailFilter::ACTION_MOVE_TO_FOLDER) {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
             $entity->set('emailFolderId', null);
         }
 
-        if ($entity->getAction() !== EmailFilterEntity::ACTION_MOVE_TO_GROUP_FOLDER) {
+        if ($entity->getAction() !== EmailFilter::ACTION_MOVE_TO_GROUP_FOLDER) {
+            /** @noinspection PhpRedundantOptionalArgumentInspection */
             $entity->set('groupEmailFolderId', null);
         }
-    }
-
-    public function filterUpdateInput(stdClass $data): void
-    {
-        parent::filterUpdateInput($data);
-
-        unset($data->isGlobal);
-        unset($data->parentId);
-        unset($data->parentType);
     }
 }
