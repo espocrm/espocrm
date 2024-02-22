@@ -35,20 +35,16 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Entities\Team as TeamEntity;
 use Espo\Entities\User as UserEntity;
-use Espo\Modules\Crm\Entities\Contact;
-use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
-use Espo\Core\Di;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\DeleteParams;
 use Espo\Core\Record\UpdateParams;
 use Espo\Core\Utils\ApiKey as ApiKeyUtil;
 use Espo\Core\Utils\PasswordHash;
-use Espo\Core\Utils\Util;
 use Espo\ORM\Entity;
 use Espo\ORM\Query\SelectBuilder;
+use Espo\Tools\User\UserUtil;
 use Espo\Tools\UserSecurity\Password\Checker as PasswordChecker;
 use Espo\Tools\UserSecurity\Password\Generator as PasswordGenerator;
 use Espo\Tools\UserSecurity\Password\Sender as PasswordSender;
@@ -59,25 +55,13 @@ use Exception;
 /**
  * @extends Record<UserEntity>
  */
-class User extends Record implements
-
-    Di\DataManagerAware
+class User extends Record
 {
-    use Di\DataManagerSetter;
-
     /** @var string[] */
     protected $mandatorySelectAttributeList = [
         'isActive',
         'userName',
         'type',
-    ];
-
-    /** @var string[] */
-    private $allowedUserTypeList = [
-        UserEntity::TYPE_REGULAR,
-        UserEntity::TYPE_ADMIN,
-        UserEntity::TYPE_PORTAL,
-        UserEntity::TYPE_API,
     ];
 
     /**
@@ -231,7 +215,6 @@ class User extends Record implements
 
     /**
      * @throws SendingError
-     * @throws Error
      */
     private function sendPassword(UserEntity $user, string $password): void
     {
@@ -268,188 +251,15 @@ class User extends Record implements
         return $apiKeyUtil->getSecretKeyForUserId($id);
     }
 
-    protected function getInternalUserCount(): int
-    {
-        return $this->entityManager
-            ->getRDBRepository(UserEntity::ENTITY_TYPE)
-            ->where([
-                'isActive' => true,
-                'type' => [
-                    UserEntity::TYPE_ADMIN,
-                    UserEntity::TYPE_REGULAR,
-                ],
-            ])
-            ->count();
-    }
-
-    protected function getPortalUserCount(): int
-    {
-        return $this->entityManager
-            ->getRDBRepositoryByClass(UserEntity::class)
-            ->where([
-                'isActive' => true,
-                'type' => UserEntity::TYPE_PORTAL,
-            ])
-            ->count();
-    }
-
     /**
      * @throws Conflict
      */
     private function processUserExistsChecking(UserEntity $user): void
     {
-        $existing = $this->getRepository()
-            ->select('id')
-            ->where(['userName' => $user->getUserName()])
-            ->findOne();
+        $util = $this->injectableFactory->create(UserUtil::class);
 
-        if ($existing) {
+        if ($util->checkExists($user)) {
             throw new Conflict('userNameExists');
-        }
-    }
-
-    /**
-     * @param UserEntity $entity
-     * @throws Forbidden
-     * @throws Conflict
-     */
-    protected function beforeCreateEntity(Entity $entity, $data)
-    {
-        $userLimit = $this->config->get('userLimit');
-
-        if (
-            $userLimit &&
-            !$this->user->isSuperAdmin() &&
-            !$entity->isPortal() && !$entity->isApi()
-        ) {
-            $userCount = $this->getInternalUserCount();
-
-            if ($userCount >= $userLimit) {
-                throw new Forbidden("User limit {$userLimit} is reached.");
-            }
-        }
-
-        $portalUserLimit = $this->config->get('portalUserLimit');
-
-        if (
-            $portalUserLimit &&
-            !$this->user->isSuperAdmin() &&
-            $entity->isPortal()
-        ) {
-            $portalUserCount = $this->getPortalUserCount();
-
-            if ($portalUserCount >= $portalUserLimit) {
-                throw new Forbidden("Portal user limit {$portalUserLimit} is reached.");
-            }
-        }
-
-        $this->processUserExistsChecking($entity);
-
-        if ($entity->isApi()) {
-            $entity->set('apiKey', Util::generateApiKey());
-
-            if ($entity->getAuthMethod() === Hmac::NAME) {
-                $secretKey = Util::generateSecretKey();
-
-                $entity->set('secretKey', $secretKey);
-            }
-        }
-
-        if (
-            !$entity->isSuperAdmin() &&
-            $entity->getType() &&
-            !in_array($entity->getType(), $this->allowedUserTypeList)
-        ) {
-            throw new Forbidden();
-        }
-    }
-
-    /**
-     * @param UserEntity $entity
-     * @throws Forbidden
-     * @throws Conflict
-     */
-    protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-        $userLimit = $this->config->get('userLimit');
-
-        if (
-            $userLimit &&
-            !$this->user->isSuperAdmin() &&
-            (
-                (
-                    $entity->isActive() &&
-                    $entity->isAttributeChanged('isActive') &&
-                    !$entity->isPortal() &&
-                    !$entity->isApi()
-                ) ||
-                (
-                    !$entity->isPortal() &&
-                    !$entity->isApi() &&
-                    $entity->isAttributeChanged('type') &&
-                    (
-                        $entity->isRegular() ||
-                        $entity->isAdmin()
-                    ) &&
-                    (
-                        $entity->getFetched('type') == UserEntity::TYPE_PORTAL ||
-                        $entity->getFetched('type') == UserEntity::TYPE_API
-                    )
-                )
-            )
-        ) {
-            $userCount = $this->getInternalUserCount();
-
-            if ($userCount >= $userLimit) {
-                throw new Forbidden("User limit {$userLimit} is reached.");
-            }
-        }
-
-        $portalUserLimit = $this->config->get('portalUserLimit');
-
-        if (
-            $portalUserLimit &&
-            !$this->user->isSuperAdmin() &&
-            (
-                (
-                    $entity->isActive() &&
-                    $entity->isAttributeChanged('isActive') &&
-                    $entity->isPortal()
-                ) ||
-                (
-                    $entity->isPortal() &&
-                    $entity->isAttributeChanged('type')
-                )
-            )
-        ) {
-            $portalUserCount = $this->getPortalUserCount();
-
-            if ($portalUserCount >= $portalUserLimit) {
-                throw new Forbidden("Portal user limit {$portalUserLimit} is reached.");
-            }
-        }
-
-        if ($entity->isAttributeChanged('userName')) {
-            $this->processUserExistsChecking($entity);
-        }
-
-        if (
-            $entity->isApi() &&
-            $entity->isAttributeChanged('authMethod') &&
-            $entity->getAuthMethod() === Hmac::NAME
-        ) {
-            $secretKey = Util::generateSecretKey();
-
-            $entity->set('secretKey', $secretKey);
-        }
-
-        if (
-            !$entity->isSuperAdmin() &&
-            $entity->isAttributeChanged('type') &&
-            $entity->getType() &&
-            !in_array($entity->getType(), $this->allowedUserTypeList)
-        ) {
-            throw new Forbidden("Can't change type.");
         }
     }
 
@@ -460,60 +270,6 @@ class User extends Record implements
         }
 
         parent::delete($id, $params);
-    }
-
-    public function afterUpdateEntity(Entity $entity, $data)
-    {
-        assert($entity instanceof UserEntity);
-
-        parent::afterUpdateEntity($entity, $data);
-
-        if (
-            property_exists($data, 'rolesIds') ||
-            property_exists($data, 'teamsIds') ||
-            property_exists($data, 'type') ||
-            property_exists($data, 'portalRolesIds') ||
-            property_exists($data, 'portalsIds')
-        ) {
-            $this->clearRoleCache($entity);
-        }
-
-        if (
-            property_exists($data, 'portalRolesIds') ||
-            property_exists($data, 'portalsIds') ||
-            property_exists($data, 'contactId') ||
-            property_exists($data, 'accountsIds')
-        ) {
-            $this->clearPortalRolesCache();
-        }
-
-        if (
-            $entity->isPortal() &&
-            $entity->getContactId() &&
-            (
-                property_exists($data, 'firstName') ||
-                property_exists($data, 'lastName') ||
-                property_exists($data, 'salutationName')
-            )
-        ) {
-            $contact = $this->entityManager->getEntityById(Contact::ENTITY_TYPE, $entity->getContactId());
-
-            if ($contact) {
-                if (property_exists($data, 'firstName')) {
-                    $contact->set('firstName', $data->firstName);
-                }
-
-                if (property_exists($data, 'lastName')) {
-                    $contact->set('lastName', $data->lastName);
-                }
-
-                if (property_exists($data, 'salutationName')) {
-                    $contact->set('salutationName', $data->salutationName);
-                }
-
-                $this->entityManager->saveEntity($contact);
-            }
-        }
     }
 
     /**
@@ -548,28 +304,9 @@ class User extends Record implements
         }
     }
 
-    protected function clearRoleCache(UserEntity $user): void
-    {
-        $this->createAclCacheClearer()->clearForUser($user);
-
-        $this->dataManager->updateCacheTimestamp();
-    }
-
-    protected function clearPortalRolesCache(): void
-    {
-        $this->createAclCacheClearer()->clearForAllPortalUsers();
-
-        $this->dataManager->updateCacheTimestamp();
-    }
-
     private function createPasswordChecker(): PasswordChecker
     {
         return $this->injectableFactory->create(PasswordChecker::class);
-    }
-
-    private function createAclCacheClearer(): AclCacheClearer
-    {
-        return $this->injectableFactory->create(AclCacheClearer::class);
     }
 
     private function createPasswordGenerator(): PasswordGenerator
