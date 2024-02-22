@@ -3,5 +3,6 @@
   <component name="PhpEntryPointsManager">
     <pattern value="\Espo\Controllers\*" member="*Action*" />
     <pattern value="\Espo\Modules\*\Controllers\*" member="*Action*" />
+    <suppressed_annotations>@implements</suppressed_annotations>
   </component>
 </project>
