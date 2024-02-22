@@ -181,6 +181,7 @@ abstract class BaseQueryComposer implements QueryComposer
     protected int $aliasMaxLength = 256;
 
     protected bool $indexHints = true;
+    protected bool $skipForeignIfForUpdate = false;
 
     protected EntityFactory $entityFactory;
     protected PDO $pdo;
@@ -746,8 +747,20 @@ abstract class BaseQueryComposer implements QueryComposer
     /**
      * @param array<string, mixed> $params
      */
+    private function skipForeign(array $params): bool
+    {
+        return $this->skipForeignIfForUpdate && ($params['forUpdate'] ?? false);
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     */
     protected function getJoinsPart(Entity $entity, array $params, bool $includeBelongsTo = false): string
     {
+        if ($includeBelongsTo && $this->skipForeign($params)) {
+            $includeBelongsTo = false;
+        }
+
         $joinsPart = '';
 
         if ($includeBelongsTo) {
@@ -1910,6 +1923,10 @@ abstract class BaseQueryComposer implements QueryComposer
             $this->getAttributeParam($entity, $attribute, 'notStorable') &&
             $attributeType !== Entity::FOREIGN
         ) {
+            return null;
+        }
+
+        if ($attributeType === Entity::FOREIGN && $this->skipForeign($params)) {
             return null;
         }
 
