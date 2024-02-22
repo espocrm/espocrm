@@ -228,7 +228,7 @@ class EmailDetailView extends DetailView {
             attributes.emailAddress = this.model.get('from');
         }
 
-        attributes.emailId = this.model.id;
+        attributes.originalEmailId = this.model.id;
 
         const viewName = this.getMetadata().get('clientDefs.Lead.modalViews.edit') || 'views/modals/edit';
 
@@ -432,7 +432,7 @@ class EmailDetailView extends DetailView {
             attributes.emailAddress = this.model.get('from');
         }
 
-        attributes.emailId = this.model.id;
+        attributes.originalEmailId = this.model.id;
 
         const viewName = this.getMetadata().get('clientDefs.Contact.modalViews.edit') || 'views/modals/edit';
 

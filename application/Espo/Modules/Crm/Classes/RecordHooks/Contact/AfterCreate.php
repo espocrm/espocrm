@@ -27,26 +27,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+namespace Espo\Modules\Crm\Classes\RecordHooks\Contact;
 
-use Espo\Services\Record;
+use Espo\Core\Acl;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Core\Utils\Config;
+use Espo\Entities\Email;
+use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
 
 /**
- * @extends Record<\Espo\Modules\Crm\Entities\Contact>
+ * @implements SaveHook<Contact>
  */
-class Contact extends Record
+class AfterCreate implements SaveHook
 {
-    protected $readOnlyAttributeList = [
-        'inboundEmailId',
-        'portalUserId'
-    ];
+    public function __construct(
+        private EntityManager $entityManager,
+        private Config $config,
+        private Acl $acl
+    ) {}
 
-    protected $linkMandatorySelectAttributeList = [
-        'targetLists' => ['isOptedOut'],
-    ];
+    public function process(Entity $entity): void
+    {
+        $emailId = $entity->get('originalEmailId');
 
-    protected $mandatorySelectAttributeList = [
-        'accountId',
-        'accountName',
-    ];
+        if (!$emailId) {
+            return;
+        }
+
+        /** @var ?Email $email */
+        $email = $this->entityManager->getEntityById(Email::ENTITY_TYPE, $emailId);
+
+        if (!$email || $email->getParentId() || !$this->acl->check($email)) {
+            return;
+        }
+
+        if ($this->config->get('b2cMode') || !$entity->getAccount()) {
+            $email->set([
+                'parentType' => Contact::ENTITY_TYPE,
+                'parentId' => $entity->getId(),
+            ]);
+        } else if ($entity->getAccount()) {
+            $email->set([
+                'parentType' => Account::ENTITY_TYPE,
+                'parentId' => $entity->getAccount()->getId(),
+            ]);
+        }
+
+        $this->entityManager->saveEntity($email);
+    }
 }

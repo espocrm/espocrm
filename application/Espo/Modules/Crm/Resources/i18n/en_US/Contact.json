@@ -21,7 +21,8 @@
         "acceptanceStatus": "Acceptance Status",
         "accountIsInactive": "Account Inactive",
         "acceptanceStatusMeetings": "Acceptance Status (Meetings)",
-        "acceptanceStatusCalls": "Acceptance Status (Calls)"
+        "acceptanceStatusCalls": "Acceptance Status (Calls)",
+        "originalEmail": "Original Email"
     },
     "links": {
         "opportunities": "Opportunities",

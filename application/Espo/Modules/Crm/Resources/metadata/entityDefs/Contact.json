@@ -530,6 +530,14 @@
             "notStorable": true,
             "readOnly": true,
             "utility": true
+        },
+        "originalEmail": {
+            "type": "link",
+            "notStorable": true,
+            "entity": "Email",
+            "customizationDisabled": true,
+            "layoutAvailabilityList": [],
+            "directAccessDisabled": true
         }
     },
     "links": {

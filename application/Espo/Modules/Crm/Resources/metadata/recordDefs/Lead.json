@@ -1,3 +1,6 @@
 {
-    "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General"
+    "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General",
+    "afterCreateHookClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\Lead\\AfterCreate"
+    ]
 }
