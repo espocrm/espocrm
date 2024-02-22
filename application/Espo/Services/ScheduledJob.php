@@ -29,11 +29,11 @@
 
 namespace Espo\Services;
 
+use Cron\CronExpression;
+use Espo\Core\Utils\DateTime;
 use Espo\Entities\ScheduledJob as ScheduledJobEntity;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\BadRequest;
-use Cron\CronExpression;
-
 use Exception;
 use stdClass;
 
@@ -42,17 +42,22 @@ use stdClass;
  */
 class ScheduledJob extends Record
 {
+    // @todo Move to field validator.
     public function processValidation(Entity $entity, stdClass $data): void
     {
         parent::processValidation($entity, $data);
 
-        $scheduling = $entity->get('scheduling');
+        $scheduling = $entity->getScheduling();
+
+        if (!$scheduling) {
+            throw new BadRequest();
+        }
 
         try {
             $cronExpression = CronExpression::factory($scheduling);
 
             /** @phpstan-ignore-next-line*/
-            $cronExpression->getNextRunDate()->format('Y-m-d H:i:s');
+            $cronExpression->getNextRunDate()->format(DateTime::SYSTEM_DATE_TIME_FORMAT);
         }
         catch (Exception) {
             throw new BadRequest("Not valid scheduling expression.");
