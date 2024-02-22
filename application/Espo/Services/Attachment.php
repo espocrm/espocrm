@@ -29,19 +29,14 @@
 
 namespace Espo\Services;
 
-use Espo\ORM\Entity;
-
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
-
 use Espo\Entities\Attachment as AttachmentEntity;
-
 use Espo\Tools\Attachment\AccessChecker;
-use Espo\Tools\Attachment\Checker;
-
 use Espo\Tools\Attachment\DetailsObtainer;
 use Espo\Tools\Attachment\FieldData;
+
 use stdClass;
 
 /**
@@ -51,13 +46,6 @@ class Attachment extends Record
 {
     /** @var string[] */
     protected $notFilteringAttributeList = ['contents'];
-
-    protected function afterCreateEntity(Entity $entity, $data)
-    {
-        if (!empty($data->file)) {
-            $entity->clear('contents');
-        }
-    }
 
     public function filterUpdateInput(stdClass $data): void
     {
@@ -147,49 +135,8 @@ class Attachment extends Record
         $maxSize = $this->getDetailsObtainer()->getUploadMaxSize($dummy);
 
         if ($maxSize && $size > $maxSize * 1024 * 1024) {
-            throw new Error("File size should not exceed {$maxSize} Mb.");
+            throw new Error("File size should not exceed $maxSize Mb.");
         }
-    }
-
-    /**
-     * @param AttachmentEntity $entity
-     * @throws Forbidden
-     */
-    protected function beforeCreateEntity(Entity $entity, $data)
-    {
-        $storage = $entity->getStorage();
-
-        $availableStorageList = $this->config->get('attachmentAvailableStorageList') ?? [];
-
-        if (
-            $storage &&
-            (
-                !in_array($storage, $availableStorageList) ||
-                !$this->metadata->get(['app', 'fileStorage', 'implementationClassNameMap', $storage])
-            )
-        ) {
-            $entity->clear('storage');
-        }
-
-        if (!$entity->getRole()) {
-            $entity->set('role', AttachmentEntity::ROLE_ATTACHMENT);
-        }
-
-        $size = $entity->getSize();
-
-        $maxSize = $this->getDetailsObtainer()->getUploadMaxSize($entity);
-
-        // Checking not actual file size but a set value.
-        if ($size && $size > $maxSize) {
-            throw new Forbidden("Attachment size exceeds `attachmentUploadMaxSize`.");
-        }
-
-        $this->getChecker()->checkType($entity);
-    }
-
-    private function getChecker(): Checker
-    {
-        return $this->injectableFactory->create(Checker::class);
     }
 
     private function getDetailsObtainer(): DetailsObtainer

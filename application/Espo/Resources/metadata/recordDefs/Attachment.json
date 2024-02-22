@@ -3,5 +3,11 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Attachment\\BeforeCreate"
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Attachment\\AfterCreate"
+    ]
 }
