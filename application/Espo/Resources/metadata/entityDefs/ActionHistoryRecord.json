@@ -68,8 +68,9 @@
         }
     },
     "collection": {
-        "sortBy": "number",
-        "asc": false,
-        "textFilterFields": ["ipAddress", "userName"]
+        "orderBy": "number",
+        "order": "asc",
+        "textFilterFields": ["ipAddress", "userName"],
+        "countDisabled": true
     }
 }

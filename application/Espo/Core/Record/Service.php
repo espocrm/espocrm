@@ -116,7 +116,6 @@ class Service implements Crud,
     protected string $entityType;
     protected bool $getEntityBeforeUpdate = false;
     protected bool $noEditAccessRequiredForLink = false;
-    protected bool $listCountQueryDisabled = false;
     protected bool $maxSelectTextAttributeLengthDisabled = false;
     protected ?int $maxSelectTextAttributeLength = null;
 
@@ -131,7 +130,7 @@ class Service implements Crud,
 
     /**
      * @var bool
-     * @deprecated As of v8.2. Use metadata > recordDefs > forceSelectAllAttributes..
+     * @deprecated As of v8.2. Use metadata > recordDefs > forceSelectAllAttributes.
      * @todo Remove in v9.0.
      */
     protected $forceSelectAllAttributes = false;
@@ -945,9 +944,7 @@ class Service implements Crud,
             $params = FindParams::create();
         }
 
-        $disableCount =
-            $params->noTotal() ||
-            $this->listCountQueryDisabled ||
+        $disableCount = $params->noTotal() ||
             $this->metadata->get(['entityDefs', $this->entityType, 'collection', 'countDisabled']);
 
         $maxSize = $searchParams->getMaxSize();

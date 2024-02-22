@@ -120,7 +120,8 @@
     "collection": {
         "orderBy": "number",
         "order": "desc",
-        "textFilterFields": ["id", "name", "methodName", "serviceName"]
+        "textFilterFields": ["id", "name", "methodName", "serviceName"],
+        "countDisabled": true
     },
     "indexes": {
         "executeTime": {
