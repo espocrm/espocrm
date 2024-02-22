@@ -27,14 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+namespace Espo\Modules\Crm\Hooks\MassEmail;
 
-use Espo\Services\Record;
+use Espo\Core\Hook\Hook\AfterRemove;
+use Espo\Modules\Crm\Entities\EmailQueueItem;
+use Espo\Modules\Crm\Entities\MassEmail;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Repository\Option\RemoveOptions;
 
 /**
- * @extends Record<\Espo\Modules\Crm\Entities\CampaignTrackingUrl>
+ * @implements AfterRemove<MassEmail>
  */
-class CampaignTrackingUrl extends Record
+class DeleteQueue implements AfterRemove
 {
-    protected $mandatorySelectAttributeList = ['campaignId'];
+    public function __construct(private EntityManager $entityManager) {}
+
+    public function afterRemove(Entity $entity, RemoveOptions $options): void
+    {
+        $deleteQuery = $this->entityManager
+            ->getQueryBuilder()
+            ->delete()
+            ->from(EmailQueueItem::ENTITY_TYPE)
+            ->where(['massEmailId' => $entity->getId()])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($deleteQuery);
+    }
 }

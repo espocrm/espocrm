@@ -27,14 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+namespace Espo\Modules\Crm\Classes\RecordHooks\CampaignTrackingUrl;
 
-use Espo\Services\Record;
+use Espo\Core\Acl;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Modules\Crm\Entities\CampaignTrackingUrl;
+use Espo\ORM\Entity;
 
 /**
- * @extends Record<\Espo\Modules\Crm\Entities\CampaignTrackingUrl>
+ * @implements SaveHook<CampaignTrackingUrl>
  */
-class CampaignTrackingUrl extends Record
+class BeforeCreate implements SaveHook
 {
-    protected $mandatorySelectAttributeList = ['campaignId'];
+    public function __construct(
+        private Acl $acl
+    ) {}
+
+    public function process(Entity $entity): void
+    {
+        if (!$this->acl->check($entity, Acl\Table::ACTION_EDIT)) {
+            throw new Forbidden("No 'edit' access.");
+        }
+    }
 }

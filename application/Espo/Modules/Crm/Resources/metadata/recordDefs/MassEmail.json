@@ -6,5 +6,8 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "beforeCreateHookClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\MassEmail\\BeforeCreate"
+    ]
 }
