@@ -29,9 +29,6 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
-use Espo\ORM\Entity;
-use Espo\Repositories\Portal as Repository;
 use Espo\Entities\Portal as PortalEntity;
 use Espo\Core\Di;
 use stdClass;
@@ -77,39 +74,5 @@ class Portal extends Record implements
         }
 
         unset($data->customUrl);
-    }
-
-    protected function afterUpdateEntity(Entity $entity, $data)
-    {
-        /** @var PortalEntity $entity */
-
-        $this->loadUrlField($entity);
-
-        if (property_exists($data, 'portalRolesIds')) {
-            $this->clearRolesCache();
-        }
-    }
-
-    protected function loadUrlField(PortalEntity $entity): void
-    {
-        $this->getPortalRepository()->loadUrlField($entity);
-    }
-
-    protected function clearRolesCache(): void
-    {
-        $this->createAclCacheClearer()->clearForAllPortalUsers();
-
-        $this->dataManager->updateCacheTimestamp();
-    }
-
-    private function getPortalRepository(): Repository
-    {
-        /** @var Repository */
-        return $this->getRepository();
-    }
-
-    private function createAclCacheClearer(): AclCacheClearer
-    {
-        return $this->injectableFactory->create(AclCacheClearer::class);
     }
 }

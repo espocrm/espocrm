@@ -9,5 +9,8 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Portal\\AfterUpdate"
+    ]
 }

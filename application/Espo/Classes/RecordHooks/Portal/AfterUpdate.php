@@ -27,50 +27,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Repositories;
+namespace Espo\Classes\RecordHooks\Portal;
 
-use Espo\Entities\Portal as PortalEntity;
-use Espo\Core\Repositories\Database;
-
-use Espo\Core\Di;
+use Espo\Core\Acl\Cache\Clearer;
+use Espo\Core\DataManager;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Entities\Portal;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\Repositories\Portal as PortalRepository;
 
 /**
- * @extends Database<PortalEntity>
+ * @implements SaveHook<Portal>
  */
-class Portal extends Database implements
-
-    Di\ConfigAware
+class AfterUpdate implements SaveHook
 {
-    use Di\ConfigSetter;
+    public function __construct(
+        private Clearer $clearer,
+        private DataManager $dataManager,
+        private EntityManager $entityManager
+    ) {}
 
-    public function loadUrlField(PortalEntity $entity): void
+    public function process(Entity $entity): void
     {
-        if ($entity->get('customUrl')) {
-            $entity->set('url', $entity->get('customUrl'));
+        $this->getPortalRepository()->loadUrlField($entity);
+
+        if (!$entity->isAttributeChanged('portalRolesIds')) {
+            return;
         }
 
-        $siteUrl = $this->config->get('siteUrl');
-        $siteUrl = rtrim($siteUrl , '/') . '/';
+        $this->clearer->clearForAllPortalUsers();
+        $this->dataManager->updateCacheTimestamp();
+    }
 
-        $url = $siteUrl . 'portal/';
-
-        if ($entity->getId() === $this->config->get('defaultPortalId')) {
-            $entity->set('isDefault', true);
-            $entity->setFetched('isDefault', true);
-        }
-        else {
-            if ($entity->get('customId')) {
-                $url .= $entity->get('customId') . '/';
-            } else {
-                $url .= $entity->getId() . '/';
-            }
-
-            $entity->set('isDefault', false);
-            $entity->setFetched('isDefault', false);
-        }
-
-        if (!$entity->get('customUrl')) {
-            $entity->set('url', $url);
-        }
+    private function getPortalRepository(): PortalRepository
+    {
+        /** @var PortalRepository */
+        return $this->entityManager->getRDBRepositoryByClass(Portal::class);
     }
 }
