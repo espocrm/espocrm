@@ -36,8 +36,6 @@ use stdClass;
  */
 class AuthToken extends Record
 {
-    protected $actionHistoryDisabled = true;
-
     public function filterUpdateInput(stdClass $data): void
     {
         parent::filterUpdateInput($data);

@@ -44,15 +44,6 @@ class Meeting extends Record implements
     use Di\HookManagerSetter;
 
     /**
-     * @var string[]
-     */
-    protected $duplicateIgnoreAttributeList = [
-        'usersColumns',
-        'contactsColumns',
-        'leadsColumns',
-    ];
-
-    /**
      * @todo Move to assignment checker?
      */
     public function checkAssignment(Entity $entity): bool

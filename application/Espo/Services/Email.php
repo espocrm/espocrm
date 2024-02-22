@@ -50,7 +50,7 @@ use stdClass;
  */
 class Email extends Record
 {
-    protected $getEntityBeforeUpdate = true;
+    protected bool $getEntityBeforeUpdate = true;
 
     protected $mandatorySelectAttributeList = [
         'name',

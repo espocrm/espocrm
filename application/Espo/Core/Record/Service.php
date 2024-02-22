@@ -59,15 +59,12 @@ use Espo\Core\FieldProcessing\ReadLoadProcessor;
 use Espo\Core\FieldValidation\FieldValidationParams as FieldValidationParams;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Record\Duplicator\EntityDuplicator;
-use Espo\Core\Record\HookManager as RecordHookManager;
 use Espo\Core\Record\Select\ApplierClassNameListProvider;
 use Espo\Core\Select\SearchParams;
-use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Di;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\ORM\Collection;
-use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\WhereClause;
 use Espo\Tools\Stream\Service as StreamService;
 use Espo\Entities\User;
@@ -116,17 +113,15 @@ class Service implements Crud,
     use Di\AssignmentCheckerManagerSetter;
     use Di\RecordHookManagerSetter;
 
-    /** @var bool */
-    protected $getEntityBeforeUpdate = false;
-    /** @var string */
-    protected $entityType;
-    /** @var ?StreamService */
-    private $streamService = null;
-    /**
-     * @var string[]
-     * @todo Maybe remove it?
-     */
-    protected $notFilteringAttributeList = [];
+    protected string $entityType;
+    protected bool $getEntityBeforeUpdate = false;
+    protected bool $noEditAccessRequiredForLink = false;
+    protected bool $listCountQueryDisabled = false;
+    protected bool $maxSelectTextAttributeLengthDisabled = false;
+    protected ?int $maxSelectTextAttributeLength = null;
+    /** @var string[] */
+    protected array $noEditAccessRequiredLinkList = [];
+
     /** @var string[] */
     protected $forbiddenAttributeList = [];
     /** @var string[] */
@@ -147,32 +142,41 @@ class Service implements Crud,
     protected $nonAdminReadOnlyLinkList = [];
     /** @var string[] */
     protected $onlyAdminLinkList = [];
-    /** @var array<string, string[]> */
-    protected $linkMandatorySelectAttributeList = [];
-    /** @var string[] */
-    protected $noEditAccessRequiredLinkList = [];
-    /** @var bool */
-    protected $noEditAccessRequiredForLink = false;
-    /** @var bool */
-    protected $checkForDuplicatesInUpdate = false;
-    /** @var bool */
-    protected $actionHistoryDisabled = false;
+
+    private ?StreamService $streamService = null;
+
     /** @var string[] */
     protected $duplicatingLinkList = [];
-    /** @var bool */
-    protected $listCountQueryDisabled = false;
-    /** @var ?int */
-    protected $maxSelectTextAttributeLength = null;
-    /** @var bool */
-    protected $maxSelectTextAttributeLengthDisabled = false;
     /** @var ?string[] */
     protected $selectAttributeList = null;
     /** @var string[] */
     protected $mandatorySelectAttributeList = [];
-    /** @var bool */
+
+    /**
+     * @var string[]
+     * @todo Maybe remove it?
+     */
+    protected $notFilteringAttributeList = [];
+
+    /**
+     * @var array<string, string[]>
+     * @todo Move to metadata.
+     */
+    protected $linkMandatorySelectAttributeList = [];
+
+    /**
+     * @var bool
+     * @todo Move to metadata.
+     */
     protected $forceSelectAllAttributes = false;
-    /** @var string[] */
+
+    /**
+     * @deprecated As of v8.2. Use 'duplicateIgnore' metadata or field duplicators.
+     * @todo Remove in v9.0.
+     * @var string[]
+     */
     protected $duplicateIgnoreAttributeList = [];
+
     /**
      * @var string[]
      * @deprecated As of v8.0. Use `suppressValidationList` metadata parameter.
@@ -180,16 +184,20 @@ class Service implements Crud,
      */
     protected $validateSkipFieldList = [];
 
-    /** @var Acl */
-    protected $acl = null;
-    /** @var User */
-    protected $user = null;
-    /** @var EntityManager */
-    protected $entityManager;
-    /** @var SelectBuilderFactory */
-    protected $selectBuilderFactory;
-    /** @var RecordHookManager */
-    protected $recordHookManager;
+    /**
+     * @var bool
+     * @deprecated As of v8.2. Use metadata > recordDefs.
+     * @todo Remove in v9.0.
+     */
+    protected $checkForDuplicatesInUpdate = false;
+
+    /**
+     * @var bool
+     * @deprecated As of v8.2. Use metadata > recordDefs.
+     * @todo Remove in v9.0.
+     */
+    protected $actionHistoryDisabled = false;
+
     private ?ListLoadProcessor $listLoadProcessor = null;
     private ?DuplicateFinder $duplicateFinder = null;
     private ?LinkCheck $linkCheck = null;
@@ -218,11 +226,11 @@ class Service implements Crud,
      */
     public function processActionHistoryRecord(string $action, Entity $entity): void
     {
-        if ($this->actionHistoryDisabled) {
-            return;
-        }
-
-        if ($this->config->get('actionHistoryDisabled')) {
+        if (
+            $this->actionHistoryDisabled ||
+            $this->config->get('actionHistoryDisabled') ||
+            $this->metadata->get("recordDefs.$this->entityType.actionHistoryDisabled")
+        ) {
             return;
         }
 

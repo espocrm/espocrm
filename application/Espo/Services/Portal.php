@@ -42,7 +42,7 @@ class Portal extends Record implements
 {
     use Di\DataManagerSetter;
 
-    protected $getEntityBeforeUpdate = true;
+    protected bool $getEntityBeforeUpdate = true;
 
     protected $mandatorySelectAttributeList = [
         'customUrl',

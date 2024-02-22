@@ -34,6 +34,5 @@ namespace Espo\Services;
  */
 class AuthLogRecord extends Record
 {
-    protected $actionHistoryDisabled = true;
     protected $forceSelectAllAttributes = true;
 }

@@ -6,5 +6,6 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "actionHistoryDisabled": true
 }

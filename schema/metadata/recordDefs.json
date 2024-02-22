@@ -91,6 +91,10 @@
             "description": "Disable export regardless ACL.",
             "type": "boolean"
         },
+        "actionHistoryDisabled": {
+            "description": "Disable Action History processing. As of v8.2.",
+            "type": "boolean"
+        },
         "updateDuplicateCheck": {
             "description": "If true, then duplicate checking will be processed while updating a record.",
             "type": "boolean"

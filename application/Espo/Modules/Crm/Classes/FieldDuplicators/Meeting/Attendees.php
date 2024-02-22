@@ -27,12 +27,16 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Modules\Crm\Classes\FieldDuplicators\Meeting;
 
-/**
- * @extends Record<\Espo\Entities\Notification>
- */
-class Notification extends \Espo\Services\Record
+use Espo\Core\Record\Duplicator\FieldDuplicator;
+use Espo\ORM\Entity;
+use stdClass;
+
+class Attendees implements FieldDuplicator
 {
-    protected $actionHistoryDisabled = true;
+    public function duplicate(Entity $entity, string $field): stdClass
+    {
+        return (object) [$field . 'Columns' => null];
+    }
 }
