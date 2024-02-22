@@ -31,10 +31,8 @@ namespace Espo\Services;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Repositories\User as UserRepository;
 use Espo\Core\Acl\Table as AclTable;
-use Espo\Entities\Preferences;
 use Espo\Entities\Note as NoteEntity;
 use Espo\Entities\User as UserEntity;
 use Espo\ORM\Entity;
@@ -46,130 +44,6 @@ use stdClass;
  */
 class Note extends Record
 {
-    protected function afterCreateEntity(Entity $entity, $data)
-    {
-        parent::afterCreateEntity($entity, $data);
-
-        /** @var NoteEntity $entity */
-
-        $this->processFollowAfterCreate($entity);
-    }
-
-    protected function processFollowAfterCreate(NoteEntity $entity): void
-    {
-        $parentType = $entity->getParentType();
-        $parentId = $entity->getParentId();
-
-        if (
-            $entity->getType() !== NoteEntity::TYPE_POST ||
-            !$parentType ||
-            !$parentId
-        ) {
-            return;
-        }
-
-        if (!$this->metadata->get(['scopes', $parentType, 'stream'])) {
-            return;
-        }
-
-        $preferences = $this->entityManager->getEntityById(Preferences::ENTITY_TYPE, $this->user->getId());
-
-        if (!$preferences) {
-            return;
-        }
-
-        if (!$preferences->get('followEntityOnStreamPost')) {
-            return;
-        }
-
-        $parent = $this->entityManager->getEntityById($parentType, $parentId);
-
-        if (!$parent || $this->user->isSystem() || $this->user->isApi()) {
-            return;
-        }
-
-        $this->getStreamService()->followEntity($parent, $this->user->getId());
-    }
-
-    /**
-     * @param NoteEntity $entity
-     * @param stdClass $data
-     * @throws Forbidden
-     */
-    protected function beforeCreateEntity(Entity $entity, $data)
-    {
-        $parentType = $data->parentType ?? null;
-        $parentId = $data->parentId ?? null;
-
-        if ($parentType && $parentId) {
-            $parent = $this->entityManager->getEntity($data->parentType, $data->parentId);
-
-            if ($parent && !$this->acl->check($parent, AclTable::ACTION_READ)) {
-                throw new Forbidden();
-            }
-        }
-
-        parent::beforeCreateEntity($entity, $data);
-
-        if (!$entity->isPost() && !$this->user->isAdmin()) {
-            throw new ForbiddenSilent("Only 'Post' type allowed.");
-        }
-
-        if ($this->user->isPortal()) {
-            $entity->set('isInternal', false);
-        }
-
-        if ($entity->isPost()) {
-            $this->handlePostText($entity);
-        }
-
-        $targetType = $entity->getTargetType();
-
-        $entity->clear('isGlobal');
-
-        switch ($targetType) {
-            case NoteEntity::TARGET_ALL:
-
-                $entity->clear('usersIds');
-                $entity->clear('teamsIds');
-                $entity->clear('portalsIds');
-                $entity->set('isGlobal', true);
-
-                break;
-
-            case NoteEntity::TARGET_SELF:
-
-                $entity->clear('usersIds');
-                $entity->clear('teamsIds');
-                $entity->clear('portalsIds');
-                $entity->set('usersIds', [$this->user->getId()]);
-                $entity->set('isForSelf', true);
-
-                break;
-
-            case NoteEntity::TARGET_USERS:
-
-                $entity->clear('teamsIds');
-                $entity->clear('portalsIds');
-
-                break;
-
-            case NoteEntity::TARGET_TEAMS:
-
-                $entity->clear('usersIds');
-                $entity->clear('portalsIds');
-
-                break;
-
-            case NoteEntity::TARGET_PORTALS:
-
-                $entity->clear('usersIds');
-                $entity->clear('teamsIds');
-
-                break;
-        }
-    }
-
     public function filterUpdateInput(stdClass $data): void
     {
         parent::filterUpdateInput($data);
@@ -181,44 +55,6 @@ class Note extends Record
         unset($data->teamsIds);
         unset($data->portalsIds);
         unset($data->isGlobal);
-    }
-
-    /**
-     * @param NoteEntity $entity
-     * @param stdClass $data
-     * @throws Forbidden
-     */
-    protected function beforeUpdateEntity(Entity $entity, $data)
-    {
-        parent::beforeUpdateEntity($entity, $data);
-
-        if ($entity->isPost()) {
-            $this->handlePostText($entity);
-        }
-
-        if (!$entity->isPost() && !$this->user->isAdmin()) {
-            throw new ForbiddenSilent("Only 'Post' type allowed.");
-        }
-    }
-
-    protected function handlePostText(NoteEntity $entity): void
-    {
-        $post = $entity->getPost();
-
-        if (empty($post)) {
-            return;
-        }
-
-        $siteUrl = $this->config->getSiteUrl();
-
-        // PhpStorm inspection highlights RegExpRedundantEscape by a mistake.
-        /** @noinspection RegExpRedundantEscape */
-        $regexp = '/' . preg_quote($siteUrl, '/') .
-            '(\/portal|\/portal\/[a-zA-Z0-9]*)?\/#([A-Z][a-zA-Z0-9]*)\/view\/([a-zA-Z0-9-]*)/';
-
-        $post = preg_replace($regexp, '[\2/\3](#\2/view/\3)', $post);
-
-        $entity->set('post', $post);
     }
 
     /**

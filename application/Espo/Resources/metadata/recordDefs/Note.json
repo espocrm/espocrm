@@ -1,5 +1,14 @@
 {
     "readLoaderClassNameList": [
         "Espo\\Classes\\FieldProcessing\\Note\\AttachmentsLoader"
+    ],
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Note\\BeforeCreate"
+    ],
+    "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Note\\BeforeUpdate"
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Note\\AfterCreate"
     ]
 }
