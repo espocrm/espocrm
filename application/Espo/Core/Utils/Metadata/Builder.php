@@ -61,6 +61,9 @@ class Builder
         ['recordDefs', self::ANY_KEY, 'beforeCreateHookClassNameList'],
         ['recordDefs', self::ANY_KEY, 'beforeUpdateHookClassNameList'],
         ['recordDefs', self::ANY_KEY, 'beforeDeleteHookClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'afterCreateHookClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'afterUpdateHookClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'afterDeleteHookClassNameList'],
         ['recordDefs', self::ANY_KEY, 'beforeLinkHookClassNameList'],
         ['recordDefs', self::ANY_KEY, 'beforeUnlinkHookClassNameList'],
     ];
