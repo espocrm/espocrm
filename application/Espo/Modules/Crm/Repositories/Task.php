@@ -28,6 +28,7 @@
  ************************************************************************/
 
 namespace Espo\Modules\Crm\Repositories;
+
 use Espo\Modules\Crm\Entities\Task as TaskEntity;
 use Espo\Core\Repositories\Event as EventRepository;
 
