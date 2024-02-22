@@ -40,9 +40,4 @@ class Contact extends Record
         'inboundEmailId',
         'portalUserId'
     ];
-
-    protected $mandatorySelectAttributeList = [
-        'accountId',
-        'accountName',
-    ];
 }

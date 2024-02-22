@@ -153,12 +153,6 @@ class Service implements Crud,
     /** @var ?string[] */
     protected $selectAttributeList = null;
 
-    /**
-     * @var string[]
-     * @todo Move to metadata.
-     */
-    protected $mandatorySelectAttributeList = [];
-
 
     /**
      * @var bool
@@ -179,6 +173,13 @@ class Service implements Crud,
      * @todo Remove in v9.0.
      */
     protected $validateSkipFieldList = [];
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use recordDefs > mandatoryAttributeList.
+     * @todo Remove in v10.0. Fix usages.
+     */
+    protected $mandatorySelectAttributeList = [];
 
     /**
      * @var bool
@@ -1874,18 +1875,26 @@ class Service implements Crud,
             return $searchParams->withSelect($this->selectAttributeList);
         }
 
-        if (count($this->mandatorySelectAttributeList) && $searchParams->getSelect() !== null) {
-            $select = array_unique(
-                array_merge(
-                    $searchParams->getSelect(),
-                    $this->mandatorySelectAttributeList
-                )
-            );
-
-            return $searchParams->withSelect($select);
+        if ($searchParams->getSelect() === null) {
+            return $searchParams;
         }
 
-        return $searchParams;
+        /** @var string[] $mandatoryAttributeList */
+        $mandatoryAttributeList = $this->metadata->get("recordDefs.$this->entityType.mandatoryAttributeList") ?? [];
+        $mandatoryAttributeList = array_merge($this->mandatorySelectAttributeList, $mandatoryAttributeList);
+
+        if ($mandatoryAttributeList === []) {
+            return $searchParams;
+        }
+
+        $select = array_unique(
+            array_merge(
+                $searchParams->getSelect(),
+                $this->mandatorySelectAttributeList
+            )
+        );
+
+        return $searchParams->withSelect($select);
     }
 
     protected function prepareLinkSearchParams(SearchParams $searchParams, string $link): SearchParams

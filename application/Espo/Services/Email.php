@@ -41,7 +41,6 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Record\CreateParams;
-
 use Espo\Tools\Email\Util;
 use stdClass;
 
@@ -51,27 +50,6 @@ use stdClass;
 class Email extends Record
 {
     protected bool $getEntityBeforeUpdate = true;
-
-    protected $mandatorySelectAttributeList = [
-        'name',
-        'createdById',
-        'dateSent',
-        'fromString',
-        'fromEmailAddressId',
-        'fromEmailAddressName',
-        'parentId',
-        'parentType',
-        'isHtml',
-        'isReplied',
-        'status',
-        'accountId',
-        'folderId',
-        'messageId',
-        'sentById',
-        'replyToString',
-        'hasAttachment',
-        'groupFolderId',
-    ];
 
     private ?SendService $sendService = null;
 

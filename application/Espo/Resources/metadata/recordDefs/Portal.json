@@ -10,6 +10,10 @@
             "allowed": true
         }
     },
+    "mandatoryAttributeList": [
+        "customUrl",
+        "customId"
+    ],
     "afterUpdateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Portal\\AfterUpdate"
     ]

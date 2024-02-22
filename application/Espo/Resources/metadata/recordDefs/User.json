@@ -7,6 +7,11 @@
             "implementationClassName": "Espo\\Classes\\MassAction\\User\\MassDelete"
         }
     },
+    "mandatoryAttributeList": [
+        "isActive",
+        "userName",
+        "type"
+    ],
     "readLoaderClassNameList": [
         "Espo\\Classes\\FieldProcessing\\User\\LastAccessLoader"
     ],

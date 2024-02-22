@@ -7,6 +7,9 @@
             "allowed": true
         }
     },
+    "mandatoryAttributeList": [
+        "campaignId"
+    ],
     "beforeCreateHookClassNameList": [
         "Espo\\Modules\\Crm\\Classes\\RecordHooks\\MassEmail\\BeforeCreate"
     ]

@@ -99,6 +99,11 @@
             "description": "If true, then duplicate checking will be processed while updating a record.",
             "type": "boolean"
         },
+        "mandatoryAttributeList": {
+            "description": "Mandatory attributes to be selected when calling find records. As of v8.2.",
+            "type": "array",
+            "items": {"type": "string"}
+        },
         "relationships": {
             "description": "Relationship parameters. Key-object pairs, where keys are link names.",
             "type": "object",

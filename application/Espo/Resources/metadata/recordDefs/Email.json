@@ -16,6 +16,26 @@
             "implementationClassName": "Espo\\Classes\\MassAction\\Email\\MoveToFolder"
         }
     },
+    "mandatoryAttributeList": [
+        "name",
+        "createdById",
+        "dateSent",
+        "fromString",
+        "fromEmailAddressId",
+        "fromEmailAddressName",
+        "parentId",
+        "parentType",
+        "isHtml",
+        "isReplied",
+        "status",
+        "accountId",
+        "folderId",
+        "messageId",
+        "sentById",
+        "replyToString",
+        "hasAttachment",
+        "groupFolderId"
+    ],
     "beforeCreateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Email\\BeforeCreate"
     ],

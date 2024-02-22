@@ -44,11 +44,6 @@ class Portal extends Record implements
 
     protected bool $getEntityBeforeUpdate = true;
 
-    protected $mandatorySelectAttributeList = [
-        'customUrl',
-        'customId',
-    ];
-
     public function filterCreateInput(stdClass $data): void
     {
         parent::filterCreateInput($data);

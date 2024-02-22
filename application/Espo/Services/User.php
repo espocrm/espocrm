@@ -57,13 +57,6 @@ use Exception;
  */
 class User extends Record
 {
-    /** @var string[] */
-    protected $mandatorySelectAttributeList = [
-        'isActive',
-        'userName',
-        'type',
-    ];
-
     /**
      * @throws Forbidden
      */
