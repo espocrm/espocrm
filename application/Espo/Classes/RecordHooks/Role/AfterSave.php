@@ -27,12 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\RecordHooks\Role;
+
+use Espo\Core\Acl\Cache\Clearer;
+use Espo\Core\DataManager;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Entities\Role;
+use Espo\ORM\Entity;
 
 /**
- * @extends Record<\Espo\Entities\PortalRole>
+ * @implements SaveHook<Role>
  */
-class PortalRole extends Record
+class AfterSave implements SaveHook
 {
-    protected $forceSelectAllAttributes = true;
+    public function __construct(
+        private Clearer $clearer,
+        private DataManager $dataManager
+    ) {}
+
+    public function process(Entity $entity): void
+    {
+        $this->clearer->clearForAllInternalUsers();
+        $this->dataManager->updateCacheTimestamp();
+    }
 }

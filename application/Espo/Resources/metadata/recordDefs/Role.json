@@ -9,5 +9,11 @@
     ],
     "beforeUpdateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Role\\BeforeSaveValidate"
+    ],
+    "afterCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Role\\AfterSave"
+    ],
+    "afterUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Role\\AfterSave"
     ]
 }
