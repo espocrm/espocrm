@@ -41,6 +41,7 @@ use Espo\Entities\Template;
 
 /**
  * @deprecated Left for bc.
+ * @todo Remove in v10.0.
  */
 class Pdf
 {
