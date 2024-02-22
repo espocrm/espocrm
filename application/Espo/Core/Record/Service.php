@@ -124,6 +124,8 @@ class Service implements Crud,
     protected array $noEditAccessRequiredLinkList = [];
     /** @var array<string, string[]> */
     protected array $linkMandatorySelectAttributeList = [];
+    /** @var string[] */
+    protected array $duplicatingLinkList = [];
 
     /** @var string[] */
     protected $forbiddenAttributeList = [];
@@ -147,12 +149,6 @@ class Service implements Crud,
     protected $onlyAdminLinkList = [];
 
     private ?StreamService $streamService = null;
-
-    /** @var string[] */
-    protected $duplicatingLinkList = [];
-    /** @var ?string[] */
-    protected $selectAttributeList = null;
-
 
     /**
      * @var bool
@@ -1869,10 +1865,6 @@ class Service implements Crud,
     {
         if ($this->forceSelectAllAttributes) {
             return $searchParams->withSelect(null);
-        }
-
-        if ($this->selectAttributeList) {
-            return $searchParams->withSelect($this->selectAttributeList);
         }
 
         if ($searchParams->getSelect() === null) {

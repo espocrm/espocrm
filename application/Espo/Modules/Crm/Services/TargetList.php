@@ -55,12 +55,9 @@ class TargetList extends Record implements
     use Di\HookManagerSetter;
 
     /** @var string[] */
-    protected $targetLinkList = [];
-    protected array $noEditAccessRequiredLinkList = [];
-    protected $duplicatingLinkList = [];
-
+    protected array $targetLinkList = [];
     /** @var array<string, string> */
-    protected $entityTypeLinkMap = [];
+    protected array $entityTypeLinkMap = [];
 
     public function setMetadata(Metadata $metadata): void
     {
