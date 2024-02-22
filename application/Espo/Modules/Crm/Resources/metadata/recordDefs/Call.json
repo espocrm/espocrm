@@ -12,5 +12,8 @@
     "beforeUpdateHookClassNameList": [
         "__APPEND__",
         "Espo\\Classes\\RecordHooks\\Event\\BeforeUpdatePreserveDuration"
+    ],
+    "afterUpdateHookClassNameList": [
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\Call\\AfterUpdate"
     ]
 }

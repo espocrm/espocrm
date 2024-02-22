@@ -27,8 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Services;
+namespace Espo\Modules\Crm\Classes\RecordHooks\Call;
 
-class Call extends Meeting
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Core\Record\ServiceContainer;
+use Espo\Modules\Crm\Entities\Call;
+use Espo\ORM\Entity;
+
+/**
+ * @implements SaveHook<Call>
+ */
+class AfterUpdate implements SaveHook
 {
+    public function __construct(
+        private ServiceContainer $serviceContainer
+    ) {}
+
+    public function process(Entity $entity): void
+    {
+        if (
+            !$entity->isAttributeChanged('contactsIds') &&
+            !$entity->isAttributeChanged('leadsIds')
+        ) {
+            return;
+        }
+
+        $this->serviceContainer->getByClass(Call::class)->loadAdditionalFields($entity);
+    }
 }
