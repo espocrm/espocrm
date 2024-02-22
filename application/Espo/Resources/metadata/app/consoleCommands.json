@@ -36,11 +36,11 @@
     },
     "rebuildCategoryPaths": {
         "className": "Espo\\Classes\\ConsoleCommands\\RebuildCategoryPaths",
-        "listed": false
+        "listed": true
     },
     "populateArrayValues": {
         "className": "Espo\\Classes\\ConsoleCommands\\PopulateArrayValues",
-        "listed": false
+        "listed": true
     },
     "populateNumbers": {
         "className": "Espo\\Classes\\ConsoleCommands\\PopulateNumbers",
