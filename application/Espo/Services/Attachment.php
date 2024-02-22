@@ -44,9 +44,6 @@ use stdClass;
  */
 class Attachment extends Record
 {
-    /** @var string[] */
-    protected $notFilteringAttributeList = ['contents'];
-
     public function filterUpdateInput(stdClass $data): void
     {
         parent::filterUpdateInput($data);

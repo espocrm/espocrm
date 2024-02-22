@@ -153,12 +153,6 @@ class Service implements Crud,
     protected $mandatorySelectAttributeList = [];
 
     /**
-     * @var string[]
-     * @todo Maybe remove it?
-     */
-    protected $notFilteringAttributeList = [];
-
-    /**
      * @var array<string, string[]>
      * @todo Move to metadata.
      */
@@ -466,28 +460,6 @@ class Service implements Crud,
         $manager->process($this->entityType, $data);
     }
 
-    /**
-     * @param string $attribute
-     * @param mixed $value
-     * @return mixed
-     * @deprecated As of v8.2.
-     * @todo Make private or remove in v9.0.
-     */
-    protected function filterInputAttribute($attribute, $value)
-    {
-        if (in_array($attribute, $this->notFilteringAttributeList)) {
-            return $value;
-        }
-
-        $methodName = 'filterInputAttribute' . ucfirst($attribute);
-
-        if (method_exists($this, $methodName)) {
-            $value = $this->$methodName($value);
-        }
-
-        return $value;
-    }
-
     protected function filterInput(stdClass $data): void
     {
         foreach($this->readOnlyAttributeList as $attribute) {
@@ -496,10 +468,6 @@ class Service implements Crud,
 
         foreach ($this->forbiddenAttributeList as $attribute) {
             unset($data->$attribute);
-        }
-
-        foreach (get_object_vars($data) as $key => $value) {
-            $data->$key = $this->filterInputAttribute($key, $data->$key);
         }
 
         if (!$this->user->isAdmin()) {
