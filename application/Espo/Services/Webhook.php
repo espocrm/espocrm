@@ -39,11 +39,6 @@ use stdClass;
  */
 class Webhook extends Record
 {
-    /** @var string[] */
-    protected $onlyAdminAttributeList = ['userId', 'userName'];
-    /** @var string[] */
-    protected $readOnlyAttributeList = ['secretKey'];
-
     public function populateDefaults(Entity $entity, stdClass $data): void
     {
         parent::populateDefaults($entity, $data);

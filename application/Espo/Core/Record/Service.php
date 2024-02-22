@@ -127,27 +127,6 @@ class Service implements Crud,
     /** @var string[] */
     protected array $duplicatingLinkList = [];
 
-    /** @var string[] */
-    protected $forbiddenAttributeList = [];
-    /** @var string[] */
-    protected $internalAttributeList = [];
-    /** @var string[] */
-    protected $onlyAdminAttributeList = [];
-    /** @var string[] */
-    protected $readOnlyAttributeList = [];
-    /** @var string[] */
-    protected $nonAdminReadOnlyAttributeList = [];
-    /** @var string[] */
-    protected $forbiddenLinkList = [];
-    /** @var string[] */
-    protected $internalLinkList = [];
-    /** @var string[] */
-    protected $readOnlyLinkList = [];
-    /** @var string[] */
-    protected $nonAdminReadOnlyLinkList = [];
-    /** @var string[] */
-    protected $onlyAdminLinkList = [];
-
     private ?StreamService $streamService = null;
 
     /**
@@ -155,6 +134,76 @@ class Service implements Crud,
      * @todo Move to metadata.
      */
     protected $forceSelectAllAttributes = false;
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > entityAcl.
+     * @todo Remove in v9.0.
+     */
+    protected array $forbiddenAttributeList = [];
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > entityAcl.
+     * @todo Remove in v9.0.
+     */
+    protected array $internalAttributeList = [];
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > entityAcl.
+     * @todo Remove in v9.0.
+     */
+    protected $onlyAdminAttributeList = [];
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > entityAcl.
+     * @todo Remove in v9.0.
+     */
+    protected $readOnlyAttributeList = [];
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > entityAcl.
+     * @todo Remove in v9.0.
+     */
+    protected $nonAdminReadOnlyAttributeList = [];
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > entityAcl.
+     * @todo Remove in v9.0.
+     */
+    protected $forbiddenLinkList = [];
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > entityAcl.
+     * @todo Remove in v9.0.
+     */
+    protected $internalLinkList = [];
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > entityAcl.
+     * @todo Remove in v9.0.
+     */
+    protected $readOnlyLinkList = [];
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > entityAcl.
+     * @todo Remove in v9.0.
+     */
+    protected $nonAdminReadOnlyLinkList = [];
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > entityAcl.
+     * @todo Remove in v9.0.
+     */
+    protected $onlyAdminLinkList = [];
 
     /**
      * @deprecated As of v8.2. Use 'duplicateIgnore' metadata or field duplicators.
@@ -387,10 +436,12 @@ class Service implements Crud,
      */
     public function processValidation(Entity $entity, stdClass $data): void
     {
+        /** @noinspection PhpDeprecationInspection */
         $params = FieldValidationParams
             ::create()
             ->withSkipFieldList($this->validateSkipFieldList);
 
+        /** @noinspection PhpDeprecationInspection */
         if (!empty($this->validateSkipFieldList)) {
             trigger_error(
                 '$validateSkipFieldList is deprecated and will be removed in v9.0.',
@@ -461,15 +512,18 @@ class Service implements Crud,
 
     protected function filterInput(stdClass $data): void
     {
+        /** @noinspection PhpDeprecationInspection */
         foreach($this->readOnlyAttributeList as $attribute) {
             unset($data->$attribute);
         }
 
+        /** @noinspection PhpDeprecationInspection */
         foreach ($this->forbiddenAttributeList as $attribute) {
             unset($data->$attribute);
         }
 
         if (!$this->user->isAdmin()) {
+            /** @noinspection PhpDeprecationInspection */
             foreach ($this->onlyAdminAttributeList as $attribute) {
                 unset($data->$attribute);
             }
@@ -1711,15 +1765,42 @@ class Service implements Crud,
      */
     public function prepareEntityForOutput(Entity $entity)
     {
+        /** @noinspection PhpDeprecationInspection */
+        if ($this->internalAttributeList !== []) {
+            trigger_error(
+                '$internalAttributeList is deprecated and will be removed in v9.0.',
+                E_USER_DEPRECATED
+            );
+        }
+
+        /** @noinspection PhpDeprecationInspection */
+        if ($this->forbiddenAttributeList !== []) {
+            trigger_error(
+                '$forbiddenAttributeList is deprecated and will be removed in v9.0.',
+                E_USER_DEPRECATED
+            );
+        }
+
+        /** @noinspection PhpDeprecationInspection */
+        if ($this->onlyAdminAttributeList !== []) {
+            trigger_error(
+                '$onlyAdminAttributeList is deprecated and will be removed in v9.0.',
+                E_USER_DEPRECATED
+            );
+        }
+
+        /** @noinspection PhpDeprecationInspection */
         foreach ($this->internalAttributeList as $attribute) {
             $entity->clear($attribute);
         }
 
+        /** @noinspection PhpDeprecationInspection */
         foreach ($this->forbiddenAttributeList as $attribute) {
             $entity->clear($attribute);
         }
 
         if (!$this->user->isAdmin()) {
+            /** @noinspection PhpDeprecationInspection */
             foreach ($this->onlyAdminAttributeList as $attribute) {
                 $entity->clear($attribute);
             }
