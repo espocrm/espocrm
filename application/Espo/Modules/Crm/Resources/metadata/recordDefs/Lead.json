@@ -2,5 +2,10 @@
     "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General",
     "afterCreateHookClassNameList": [
         "Espo\\Modules\\Crm\\Classes\\RecordHooks\\Lead\\AfterCreate"
-    ]
+    ],
+    "relationships": {
+        "targetLists": {
+            "mandatoryAttributeList": ["isOptedOut"]
+        }
+    }
 }

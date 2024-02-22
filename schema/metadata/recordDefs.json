@@ -104,6 +104,7 @@
             "type": "object",
             "additionalProperties": {
                 "type": "object",
+                "description": "A link.",
                 "properties": {
                     "selectAccessControlDisabled": {
                         "description": "Disable access control when listing related records; only access to a parent record will be checked.",
@@ -126,6 +127,11 @@
                     "linkCheckDisabled": {
                         "description": "Disable a link-check functionality when linking through link or link-multiple field.",
                         "type": "boolean"
+                    },
+                    "mandatoryAttributeList": {
+                        "description": "Mandatory attributes to be selected when find related. As of v8.2.",
+                        "type": "array",
+                        "items": {"type": "string"}
                     }
                 }
             }

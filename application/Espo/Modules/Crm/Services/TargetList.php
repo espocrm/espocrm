@@ -58,7 +58,6 @@ class TargetList extends Record implements
     protected $targetLinkList = [];
     protected array $noEditAccessRequiredLinkList = [];
     protected $duplicatingLinkList = [];
-    protected $linkMandatorySelectAttributeList = [];
 
     /** @var array<string, string> */
     protected $entityTypeLinkMap = [];

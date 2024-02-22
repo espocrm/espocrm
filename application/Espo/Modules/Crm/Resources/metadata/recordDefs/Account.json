@@ -1,3 +1,11 @@
 {
-    "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General"
+    "duplicateWhereBuilderClassName": "Espo\\Classes\\DuplicateWhereBuilders\\General",
+    "relationships": {
+        "contacts": {
+            "mandatoryAttributeList": ["accountIsInactive"]
+        },
+        "targetLists": {
+            "mandatoryAttributeList": ["isOptedOut"]
+        }
+    }
 }

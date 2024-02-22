@@ -119,8 +119,11 @@ class Service implements Crud,
     protected bool $listCountQueryDisabled = false;
     protected bool $maxSelectTextAttributeLengthDisabled = false;
     protected ?int $maxSelectTextAttributeLength = null;
+
     /** @var string[] */
     protected array $noEditAccessRequiredLinkList = [];
+    /** @var array<string, string[]> */
+    protected array $linkMandatorySelectAttributeList = [];
 
     /** @var string[] */
     protected $forbiddenAttributeList = [];
@@ -149,14 +152,13 @@ class Service implements Crud,
     protected $duplicatingLinkList = [];
     /** @var ?string[] */
     protected $selectAttributeList = null;
-    /** @var string[] */
-    protected $mandatorySelectAttributeList = [];
 
     /**
-     * @var array<string, string[]>
+     * @var string[]
      * @todo Move to metadata.
      */
-    protected $linkMandatorySelectAttributeList = [];
+    protected $mandatorySelectAttributeList = [];
+
 
     /**
      * @var bool
@@ -1892,16 +1894,18 @@ class Service implements Crud,
             return $searchParams;
         }
 
-        $mandatorySelectAttributeList = $this->linkMandatorySelectAttributeList[$link] ?? null;
+        $list1 = $this->linkMandatorySelectAttributeList[$link] ?? [];
+        $list2 = $this->metadata->get("recordDefs.$this->entityType.relationships.$link.mandatoryAttributeList") ?? [];
 
-        if ($mandatorySelectAttributeList === null) {
+        if ($list1 === [] && $list2 === []) {
             return $searchParams;
         }
 
         $select = array_unique(
             array_merge(
                 $searchParams->getSelect(),
-                $mandatorySelectAttributeList
+                $list1,
+                $list2
             )
         );
 

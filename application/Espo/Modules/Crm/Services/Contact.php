@@ -41,10 +41,6 @@ class Contact extends Record
         'portalUserId'
     ];
 
-    protected $linkMandatorySelectAttributeList = [
-        'targetLists' => ['isOptedOut'],
-    ];
-
     protected $mandatorySelectAttributeList = [
         'accountId',
         'accountName',
