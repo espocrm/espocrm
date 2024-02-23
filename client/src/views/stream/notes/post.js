@@ -36,7 +36,7 @@ class PostNoteStreamView extends NoteStreamView {
     isRemovable = true
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.showAttachments = !!(this.model.get('attachmentsIds') || []).length;
         data.showPost = !!this.model.get('post');
@@ -49,7 +49,7 @@ class PostNoteStreamView extends NoteStreamView {
         this.createField('post', null, null, 'views/stream/fields/post');
 
         this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple', {
-            previewSize: this.options.isNotification ? 'small' : 'medium'
+            previewSize: this.options.isNotification || this.options.isUserStream ? 'small' : 'medium'
         });
 
         this.isInternal = this.model.get('isInternal');

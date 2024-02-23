@@ -45,7 +45,7 @@ class EmailSentNoteStreamView extends NoteStreamView {
     }
 
     setup() {
-        let data = /** @type Object.<string, *> */this.model.get('data') || {};
+        let data = /** @type {Record} */this.model.get('data') || {};
 
         this.emailId = data.emailId;
         this.emailName = data.emailName;
@@ -63,7 +63,17 @@ class EmailSentNoteStreamView extends NoteStreamView {
             }
 
             if ((this.model.get('attachmentsIds') || []).length) {
-                this.createField('attachments', 'attachmentMultiple', {}, 'views/stream/fields/attachment-multiple');
+                this.createField(
+                    'attachments',
+                    'attachmentMultiple',
+                    {},
+                    'views/stream/fields/attachment-multiple',
+                    {
+                        previewSize: this.options.isNotification || this.options.isUserStream ?
+                            'small' : 'medium',
+                    }
+                );
+
                 this.hasAttachments = true;
             }
         }

@@ -46,7 +46,7 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
     }
 
     setup() {
-        let data = /** @type Object.<string, *> */this.model.get('data') || {};
+        const data = /** @type {Record} */this.model.get('data') || {};
 
         this.emailId = data.emailId;
         this.emailName = data.emailName;
@@ -68,7 +68,11 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
                     'attachments',
                     'attachmentMultiple',
                     {},
-                    'views/stream/fields/attachment-multiple'
+                    'views/stream/fields/attachment-multiple',
+                    {
+                        previewSize: this.options.isNotification || this.options.isUserStream ?
+                            'small' : 'medium',
+                    }
                 );
 
                 this.hasAttachments = true;
