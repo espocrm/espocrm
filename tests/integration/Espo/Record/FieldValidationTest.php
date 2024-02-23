@@ -66,7 +66,7 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Account')
             ->create((object) [
                 'name' => null,
@@ -84,7 +84,7 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $entity = $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Account')
             ->create(
                 (object) [
@@ -96,7 +96,7 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Account')
             ->update(
                 $entity->id,
@@ -120,7 +120,7 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Account')
             ->create(
                 (object) [
@@ -141,7 +141,7 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Account')
             ->create((object) [
                 'name' => 'test',
@@ -164,7 +164,7 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Account')
             ->create((object) [
                 'name' => '123456',
@@ -183,7 +183,7 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Account')
             ->create((object) [
                 'name' => '12345',
@@ -205,7 +205,7 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Account')
             ->create((object) [
                 'name' => 'test',
@@ -245,7 +245,7 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Account')
             ->create((object) [
                 'name' => 'test',
@@ -268,7 +268,7 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Account')
             ->create((object) [
                 'name' => 'test',
@@ -289,7 +289,7 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Lead')
             ->create((object) [
                 'lastName' => 'test',
@@ -308,7 +308,7 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Lead')
             ->create((object) [
                 'lastName' => 'test',
@@ -330,7 +330,7 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Lead')
             ->create((object) [
                 'lastName' => 'test',
@@ -357,7 +357,7 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Lead')
             ->create((object) [
                 'lastName' => 'test',
@@ -377,7 +377,7 @@ class FieldValidationTest extends BaseTestCase
         $this->expectException(BadRequest::class);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Lead')
             ->create((object) [
                 'lastName' => 'test',
@@ -396,7 +396,7 @@ class FieldValidationTest extends BaseTestCase
         ]);
 
         $app->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Lead')
             ->create((object) [
                 'lastName' => 'test',
@@ -409,7 +409,7 @@ class FieldValidationTest extends BaseTestCase
     public function testSkipRequired()
     {
         $this->getContainer()
-            ->get('serviceFactory')
+            ->getByClass(ServiceContainer::class)
             ->create('Meeting')
             ->create((object) [
                 'name' => 'test',
