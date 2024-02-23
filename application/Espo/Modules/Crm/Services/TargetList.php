@@ -31,19 +31,13 @@ namespace Espo\Modules\Crm\Services;
 
 use Espo\Core\Acl\Table;
 use Espo\ORM\Entity;
-use Espo\ORM\Query\Select;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\Error;
 use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
-use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Services\Record;
-use Espo\Core\Select\SearchParams;
 use Espo\Core\Utils\Metadata;
-
-use PDO;
 use Espo\Core\Di;
-use RuntimeException;
 
 /**
  * @extends Record<TargetListEntity>
@@ -125,117 +119,6 @@ class TargetList extends Record implements
         $this->entityManager->getQueryExecutor()->execute($updateQuery);
 
         $this->hookManager->process('TargetList', 'afterUnlinkAll', $entity, [], ['link' => $link]);
-    }
-
-    protected function getOptedOutSelectQueryForLink(string $targetListId, string $link): Select
-    {
-        /** @var TargetListEntity $seed */
-        $seed = $this->getRepository()->getNew();
-
-        $entityType = $seed->getRelationParam($link, 'entity');
-
-        if (!$entityType) {
-            throw new RuntimeException();
-        }
-
-        $linkEntityType = ucfirst(
-            $seed->getRelationParam($link, 'relationName') ?? ''
-        );
-
-        if ($linkEntityType === '') {
-            throw new RuntimeException();
-        }
-
-        $key = $seed->getRelationParam($link, 'midKeys')[1] ?? null;
-
-        if (!$key) {
-            throw new RuntimeException();
-        }
-
-        return $this->entityManager->getQueryBuilder()
-            ->select()
-            ->from($entityType)
-            ->select([
-                'id',
-                'name',
-                'createdAt',
-                ["'$entityType'", 'entityType'],
-            ])
-            ->join(
-                $linkEntityType,
-                'j',
-                [
-                    "j.$key:" => 'id',
-                    'j.deleted' => false,
-                    'j.optedOut' => true,
-                    'j.targetListId' => $targetListId,
-                ]
-            )
-            ->order('createdAt', 'DESC')
-            ->build();
-    }
-
-    /**
-     * @return RecordCollection<Entity>
-     * @noinspection PhpUnused
-     * @todo Move? Use Tools\TargetList\MetadataProvider.
-     */
-    protected function findLinkedOptedOut(string $id, SearchParams $searchParams): RecordCollection
-    {
-        $offset = $searchParams->getOffset() ?? 0;
-        $maxSize = $searchParams->getMaxSize() ?? 0;
-
-        $em = $this->entityManager;
-        $queryBuilder = $em->getQueryBuilder();
-
-        $queryList = [];
-
-        foreach ($this->targetLinkList as $link) {
-            $queryList[] = $this->getOptedOutSelectQueryForLink($id, $link);
-        }
-
-        $builder = $queryBuilder
-            ->union()
-            ->all();
-
-        foreach ($queryList as $query) {
-            $builder->query($query);
-        }
-
-        $countQuery = $queryBuilder
-            ->select()
-            ->fromQuery($builder->build(), 'c')
-            ->select('COUNT:(c.id)', 'count')
-            ->build();
-
-        $row = $em->getQueryExecutor()
-            ->execute($countQuery)
-            ->fetch(PDO::FETCH_ASSOC);
-
-        $totalCount = $row['count'];
-
-        $unionQuery = $builder
-            ->limit($offset, $maxSize)
-            ->order('createdAt', 'DESC')
-            ->build();
-
-        $sth = $em->getQueryExecutor()->execute($unionQuery);
-
-        $collection = $this->entityManager
-            ->getCollectionFactory()
-            ->create();
-
-        while ($row = $sth->fetch(PDO::FETCH_ASSOC)) {
-            $itemEntity = $this->entityManager->getNewEntity($row['entityType']);
-
-            $itemEntity->set($row);
-            $itemEntity->setAsFetched();
-
-            $collection[] = $itemEntity;
-        }
-
-        /** @var RecordCollection<Entity> */
-        return new RecordCollection($collection, $totalCount);
     }
 
     /**

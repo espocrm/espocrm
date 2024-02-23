@@ -54,5 +54,10 @@
         "route": "/Campaign/:id/generateMailMerge",
         "method": "post",
         "actionClassName": "Espo\\Modules\\Crm\\Tools\\Campaign\\Api\\PostGenerateMailMerge"
+    },
+    {
+        "route": "/TargetList/:id/optedOut",
+        "method": "get",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\TargetList\\Api\\GetOptedOut"
     }
 ]
