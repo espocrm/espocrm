@@ -74,6 +74,8 @@ class ListWithCategories extends ListView {
             this.categoryScope = this.scope + 'Category';
         }
 
+        this.categoryField = this.getMetadata().get(`scopes.${this.categoryScope}.categoryField`) || this.categoryField;
+
         this.showEditLink =
             this.getAcl().check(this.categoryScope, 'edit') ||
             this.getAcl().check(this.categoryScope, 'create');

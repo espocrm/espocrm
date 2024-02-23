@@ -33,7 +33,7 @@ use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
-
+use Espo\ORM\Query\Part\Order;
 use Espo\Core\Acl\Table as AclTable;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
@@ -41,11 +41,9 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Record\UpdateParams;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\Where\Item as WhereItem;
-
 use Espo\Core\Acl\Exceptions\NotImplemented;
 
 use ArrayAccess;
-use Espo\ORM\Query\Part\Order;
 use stdClass;
 
 /**
@@ -57,6 +55,7 @@ class RecordTree extends Record
     private const MAX_DEPTH = 2;
 
     private ?Entity $seed = null;
+
     /** @var ?string */
     protected $subjectEntityType = null;
     /** @var ?string */
@@ -65,10 +64,6 @@ class RecordTree extends Record
     public function __construct(string $entityType = '')
     {
         parent::__construct($entityType);
-
-        if (!$this->subjectEntityType) {
-            $this->subjectEntityType = substr($this->entityType, 0, strlen($this->entityType) - 8);
-        }
 
         $this->readOnlyLinkList[] = 'children';
     }
@@ -99,7 +94,7 @@ class RecordTree extends Record
      * @throws BadRequest
      * @throws Forbidden
      */
-    protected function getTreeInternal(
+    private function getTreeInternal(
         string $parentId = null,
         array $params = [],
         ?int $maxDepth = null,
@@ -166,10 +161,8 @@ class RecordTree extends Record
 
     protected function checkFilterOnlyNotEmpty(): bool
     {
-        assert($this->subjectEntityType !== null);
-
         try {
-            if (!$this->acl->checkScope($this->subjectEntityType, Table::ACTION_CREATE)) {
+            if (!$this->acl->checkScope($this->getSubjectEntityType(), Table::ACTION_CREATE)) {
                 return true;
             }
         }
@@ -186,27 +179,23 @@ class RecordTree extends Record
      */
     protected function checkItemIsEmpty(Entity $entity): bool
     {
-        if (!$this->categoryField) {
-            return false;
-        }
-
-        assert($this->subjectEntityType !== null);
+        $entityType = $this->getSubjectEntityType();
 
         $query = $this->selectBuilderFactory
             ->create()
-            ->from($this->subjectEntityType)
+            ->from($entityType)
             ->withStrictAccessControl()
             ->withWhere(
                 WhereItem::fromRaw([
                     'type' => 'inCategory',
-                    'attribute' => $this->categoryField,
+                    'attribute' => $this->getCategoryField(),
                     'value' => $entity->getId(),
                 ])
             )
             ->build();
 
         $one = $this->entityManager
-            ->getRDBRepository($this->subjectEntityType)
+            ->getRDBRepository($entityType)
             ->clone($query)
             ->select(['id'])
             ->findOne();
@@ -282,7 +271,7 @@ class RecordTree extends Record
         return $arr;
     }
 
-    protected function getSeed(): Entity
+    private function getSeed(): Entity
     {
         if (empty($this->seed)) {
             $this->seed = $this->entityManager->getNewEntity($this->entityType);
@@ -291,7 +280,7 @@ class RecordTree extends Record
         return $this->seed;
     }
 
-    protected function hasOrder(): bool
+    private function hasOrder(): bool
     {
         $seed = $this->getSeed();
 
@@ -305,6 +294,7 @@ class RecordTree extends Record
     /**
      * @throws Forbidden
      * @throws Error
+     * @todo Refactor.
      */
     protected function beforeCreateEntity(Entity $entity, $data)
     {
@@ -418,5 +408,19 @@ class RecordTree extends Record
         }
 
         return $idList;
+    }
+
+    private function getSubjectEntityType(): string
+    {
+        return $this->metadata->get("scopes.$this->entityType.categoryParentEntityType") ??
+            $this->subjectEntityType ??
+            substr($this->entityType, 0, strlen($this->entityType) - 8);
+    }
+
+    private function getCategoryField(): string
+    {
+        return $this->metadata->get("scopes.$this->entityType.categoryField") ??
+            $this->categoryField ??
+            'category';
     }
 }
