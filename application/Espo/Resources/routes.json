@@ -503,6 +503,11 @@
     },
     {
         "route": "/:entityType/:id/followers",
+        "method": "get",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\GetFollowers"
+    },
+    {
+        "route": "/:entityType/:id/followers",
         "method": "post",
         "actionClassName": "Espo\\Tools\\Stream\\Api\\PostFollowers"
     },

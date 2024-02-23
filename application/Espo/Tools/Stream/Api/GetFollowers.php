@@ -36,15 +36,17 @@ use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Record\SearchParamsFetcher;
 use Espo\Tools\Stream\FollowerRecordService;
 
 /**
  * @noinspection PhpUnused
  */
-class DeleteFollowers implements Action
+class GetFollowers implements Action
 {
     public function __construct(
         private FollowerRecordService $service,
+        private SearchParamsFetcher $searchParamsFetcher,
         private Acl $acl
     ) {}
 
@@ -52,8 +54,6 @@ class DeleteFollowers implements Action
     {
         $entityType = $request->getRouteParam('entityType');
         $id = $request->getRouteParam('id');
-
-        $data = $request->getParsedBody();
 
         if (!$entityType || !$id) {
             throw new BadRequest();
@@ -63,22 +63,13 @@ class DeleteFollowers implements Action
             throw new Forbidden();
         }
 
-        $ids = $data->ids ?? (isset($data->id) ? [$data->id] : []);
+        $searchParams = $this->searchParamsFetcher->fetch($request);
 
-        if ($ids === [] || !is_array($ids)) {
-            throw new BadRequest("No ids.");
-        }
+        $collection = $this->service->find($entityType, $id, $searchParams);
 
-        foreach ($ids as $userId) {
-            if (!is_string($userId)) {
-                throw new BadRequest("Bad id item.");
-            }
-        }
-
-        foreach ($ids as $userId) {
-            $this->service->unlink($entityType, $id, $userId);
-        }
-
-        return ResponseComposer::json(true);
+        return ResponseComposer::json((object) [
+            'total' => $collection->getTotal(),
+            'list' => $collection->getValueMapList(),
+        ]);
     }
 }

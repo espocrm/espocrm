@@ -29,9 +29,12 @@
 
 namespace Espo\Tools\Stream;
 
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Error\Body as ErrorBody;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\Record\Collection;
+use Espo\Core\Select\SearchParams;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -49,6 +52,23 @@ class FollowerRecordService
     ) {}
 
     /**
+     * Find followers.
+     *
+     * @return Collection<User>
+     * @throws Forbidden
+     * @throws NotFound
+     * @throws BadRequest
+     */
+    public function find(string $entityType, string $id, SearchParams $params): Collection
+    {
+        $this->checkReadAccess($entityType);
+
+        $entity = $this->getEntity($entityType, $id);
+
+        return $this->service->findEntityFollowers($entity, $params);
+    }
+
+    /**
      * Add a user to followers.
      *
      * @throws NotFound
@@ -56,9 +76,9 @@ class FollowerRecordService
      */
     public function link(string $entityType, string $id, string $userId): void
     {
-        $this->checkAccess($entityType);
+        $this->checkEditAccess($entityType);
 
-        $entity = $this->getEntity($entityType, $id);
+        $entity = $this->getEntityForEdit($entityType, $id);
         $user = $this->getUser($userId);
 
         $this->follow($entity, $user);
@@ -72,9 +92,9 @@ class FollowerRecordService
      */
     public function unlink(string $entityType, string $id, string $userId): void
     {
-        $this->checkAccess($entityType);
+        $this->checkEditAccess($entityType);
 
-        $entity = $this->getEntity($entityType, $id);
+        $entity = $this->getEntityForEdit($entityType, $id);
         $user = $this->getUser($userId);
 
         $this->service->unfollowEntity($entity, $user->getId());
@@ -89,10 +109,25 @@ class FollowerRecordService
      * @throws Forbidden
      * @throws NotFound
      */
-    private function checkAccess(string $entityType): void
+    private function checkReadAccess(string $entityType): void
+    {
+        if (!$this->acl->check($entityType, Acl\Table::ACTION_READ)) {
+            throw new Forbidden("No 'read'' access to $entityType scope.");
+        }
+
+        if (!$this->hasStream($entityType)) {
+            throw new NotFound("No stream.");
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    private function checkEditAccess(string $entityType): void
     {
         if (!$this->acl->check($entityType, Acl\Table::ACTION_EDIT)) {
-            throw new Forbidden("No edit access to $entityType scope.");
+            throw new Forbidden("No 'edit' access to $entityType scope.");
         }
 
         if (!$this->hasStream($entityType)) {
@@ -126,6 +161,25 @@ class FollowerRecordService
      * @throws Forbidden
      */
     private function getEntity(string $entityType, string $id): Entity
+    {
+        $entity = $this->entityManager->getEntityById($entityType, $id);
+
+        if (!$entity) {
+            throw new NotFound("Record not found.");
+        }
+
+        if (!$this->acl->check($entity, Acl\Table::ACTION_READ)) {
+            throw new Forbidden("No 'read' access.");
+        }
+
+        return $entity;
+    }
+
+    /**
+     * @throws NotFound
+     * @throws Forbidden
+     */
+    private function getEntityForEdit(string $entityType, string $id): Entity
     {
         $entity = $this->entityManager->getEntityById($entityType, $id);
 

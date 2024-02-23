@@ -1180,16 +1180,19 @@ class Service implements Crud,
      * @throws Forbidden
      * @throws NotFound
      * @throws BadRequest
+     * @todo Remove in v9.0.
      */
     private function processFindLinkedMethod(string $id, string $link, SearchParams $searchParams): ?RecordCollection
     {
-        if ($link === 'followers') {
-            return $this->findLinkedFollowers($id, $searchParams);
-        }
-
         $methodName = 'findLinked' . ucfirst($link);
 
         if (method_exists($this, $methodName)) {
+            trigger_error(
+                "Usage of $methodName method is deprecated and will be removed in v9.0.",
+                E_USER_DEPRECATED
+            );
+
+
             return $this->$methodName($id, $searchParams);
         }
 
@@ -1695,27 +1698,6 @@ class Service implements Crud,
         foreach ($forbiddenAttributeList as $attribute) {
             $entity->clear($attribute);
         }
-    }
-
-    /**
-     * @return RecordCollection<User>
-     * @throws NotFound
-     * @throws Forbidden
-     * @throws BadRequest
-     */
-    protected function findLinkedFollowers(string $id, SearchParams $params): RecordCollection
-    {
-        $entity = $this->getRepository()->getById($id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
-            throw new Forbidden();
-        }
-
-        return $this->getStreamService()->findEntityFollowers($entity, $params);
     }
 
     private function createEntityDuplicator(): EntityDuplicator

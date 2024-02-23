@@ -29,11 +29,13 @@
 
 namespace Espo\Tools\Stream\Api;
 
+use Espo\Core\Acl;
 use Espo\Core\Api\Action;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 use Espo\Core\Api\ResponseComposer;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Tools\Stream\FollowerRecordService;
 
 /**
@@ -42,7 +44,8 @@ use Espo\Tools\Stream\FollowerRecordService;
 class PostFollowers implements Action
 {
     public function __construct(
-        private FollowerRecordService $service
+        private FollowerRecordService $service,
+        private Acl $acl
     ) {}
 
     public function process(Request $request): Response
@@ -54,6 +57,10 @@ class PostFollowers implements Action
 
         if (!$entityType || !$id) {
             throw new BadRequest();
+        }
+
+        if (!$this->acl->check($entityType)) {
+            throw new Forbidden();
         }
 
         $ids = $data->ids ?? (isset($data->id) ? [$data->id] : []);
