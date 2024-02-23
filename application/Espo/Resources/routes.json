@@ -502,6 +502,16 @@
         }
     },
     {
+        "route": "/:entityType/:id/followers",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\PostFollowers"
+    },
+    {
+        "route": "/:entityType/:id/followers",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\DeleteFollowers"
+    },
+    {
         "route": "/:controller/:id/stream",
         "method": "get",
         "params": {

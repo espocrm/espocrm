@@ -33,7 +33,6 @@ use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Error\Body as ErrorBody;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ConflictSilent;
 use Espo\Core\Exceptions\Forbidden;
@@ -1312,23 +1311,19 @@ class Service implements Crud,
     /**
      * @throws Forbidden
      * @throws NotFound
+     * @todo Remove in v9.0.
      */
     private function processLinkMethod(string $id, string $link, string $foreignId): bool
     {
-        if ($link === 'followers') {
-            $this->linkFollowers($id, $foreignId);
-
-            return true;
-        }
-
         $methodName = 'link' . ucfirst($link);
 
-        if (
-            $link !== 'entity' &&
-            $link !== 'entityMass' &&
-            method_exists($this, $methodName)
-        ) {
+        if ($link !== 'entity' && $link !== 'entityMass' && method_exists($this, $methodName)) {
             $this->$methodName($id, $foreignId);
+
+            trigger_error(
+                "Usage of $methodName method is deprecated and will be removed in v9.0.",
+                E_USER_DEPRECATED
+            );
 
             return true;
         }
@@ -1339,152 +1334,24 @@ class Service implements Crud,
     /**
      * @throws Forbidden
      * @throws NotFound
+     * @todo Remove in v9.0.
      */
     private function processUnlinkMethod(string $id, string $link, string $foreignId): bool
     {
-        if ($link === 'followers') {
-            $this->unlinkFollowers($id, $foreignId);
-
-            return true;
-        }
-
         $methodName = 'unlink' . ucfirst($link);
 
-        if (
-            $link !== 'entity' &&
-            method_exists($this, $methodName)
-        ) {
+        if ($link !== 'entity' && method_exists($this, $methodName)) {
             $this->$methodName($id, $foreignId);
+
+            trigger_error(
+                "Usage of $methodName method is deprecated and will be removed in v9.0.",
+                E_USER_DEPRECATED
+            );
 
             return true;
         }
 
         return false;
-    }
-
-    /**
-     * @throws Forbidden
-     * @throws NotFound
-     * @throws ForbiddenSilent
-     */
-    protected function linkFollowers(string $id, string $foreignId): void
-    {
-        if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
-            throw new Forbidden();
-        }
-
-        if (!$this->metadata->get(['scopes', $this->entityType, 'stream'])) {
-            throw new NotFound();
-        }
-
-        $entity = $this->getRepository()->getById($id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $foreignId);
-
-        if (!$user) {
-            throw new NotFound();
-        }
-
-        if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
-            throw new ForbiddenSilent("No 'edit' access.");
-        }
-
-        if (!$this->acl->check($entity, AclTable::ACTION_STREAM)) {
-            throw new ForbiddenSilent("No 'stream' access.");
-        }
-
-        if (!$user->isPortal() && !$this->acl->check($user, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent("No 'read' access to user.");
-        }
-
-        if ($user->isPortal() && $this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES) {
-            throw new ForbiddenSilent("No 'portal' permission.");
-        }
-
-        if (
-            !$user->isPortal() &&
-            $this->user->getId() !== $user->getId() &&
-            !$this->acl->checkUserPermission($user, 'followerManagement')
-        ) {
-            throw new Forbidden();
-        }
-
-        $result = $this->getStreamService()->followEntity($entity, $foreignId);
-
-        if (!$result) {
-            throw ForbiddenSilent::createWithBody(
-                "Could not add user to followers.",
-                ErrorBody::create()
-                    ->withMessageTranslation(
-                        'couldNotAddFollowerUserHasNoAccessToStream',
-                        'Stream',
-                        [
-                            'userName' => $user->getUserName() ?? '',
-                        ]
-                    )
-                    ->encode()
-            );
-        }
-    }
-
-    /**
-     * @throws Forbidden
-     * @throws NotFound
-     * @throws ForbiddenSilent
-     */
-    protected function unlinkFollowers(string $id, string $foreignId): void
-    {
-        if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
-            throw new Forbidden();
-        }
-
-        if (!$this->metadata->get(['scopes', $this->entityType, 'stream'])) {
-            throw new NotFound();
-        }
-
-        $entity = $this->getRepository()->getById($id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $foreignId);
-
-        if (!$user) {
-            throw new NotFound();
-        }
-
-        if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
-            throw new ForbiddenSilent("No 'edit' access.");
-        }
-
-        if (!$this->acl->check($entity, AclTable::ACTION_STREAM)) {
-            throw new ForbiddenSilent("No 'stream' access.");
-        }
-
-        if (!$user->isPortal() && !$this->acl->check($user, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent("No 'read' access to user.");
-        }
-
-        if ($user->isPortal() && $this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES) {
-            throw new ForbiddenSilent("No 'portal' permission.");
-        }
-
-        if (
-            !$user->isPortal() &&
-            $this->user->getId() !== $user->getId() &&
-            !$this->acl->checkUserPermission($user, 'followerManagement')
-        ) {
-            throw new Forbidden();
-        }
-
-        $this->getStreamService()->unfollowEntity($entity, $foreignId);
     }
 
     /**
