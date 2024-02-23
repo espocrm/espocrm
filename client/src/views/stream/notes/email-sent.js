@@ -45,7 +45,7 @@ class EmailSentNoteStreamView extends NoteStreamView {
     }
 
     setup() {
-        let data = /** @type {Record} */this.model.get('data') || {};
+        const data = /** @type {Record} */this.model.get('data') || {};
 
         this.emailId = data.emailId;
         this.emailName = data.emailName;
