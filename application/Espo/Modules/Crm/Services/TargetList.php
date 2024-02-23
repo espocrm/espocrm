@@ -29,178 +29,29 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\Core\Acl\Table;
 use Espo\ORM\Entity;
-use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\Error;
 use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
 use Espo\Services\Record;
 use Espo\Core\Utils\Metadata;
-use Espo\Core\Di;
 
 /**
  * @extends Record<TargetListEntity>
  */
-class TargetList extends Record implements
-
-    Di\HookManagerAware
+class TargetList extends Record
 {
-    use Di\HookManagerSetter;
-
-    /** @var string[] */
-    protected array $targetLinkList = [];
-    /** @var array<string, string> */
-    protected array $entityTypeLinkMap = [];
-
     public function setMetadata(Metadata $metadata): void
     {
         parent::setMetadata($metadata);
 
-        $this->targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
+        $targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
 
-        $this->duplicatingLinkList = $this->targetLinkList;
-        $this->noEditAccessRequiredLinkList = $this->targetLinkList;
+        $this->duplicatingLinkList = $targetLinkList;
+        $this->noEditAccessRequiredLinkList = $targetLinkList;
 
-        foreach ($this->targetLinkList as $link) {
+        foreach ($targetLinkList as $link) {
             /** @var string $link */
             $this->linkMandatorySelectAttributeList[$link] = ['targetListIsOptedOut'];
-
-            $entityType = $this->entityManager
-                ->getDefs()
-                ->getEntity(TargetListEntity::ENTITY_TYPE)
-                ->getRelation($link)
-                ->getForeignEntityType();
-
-            $this->entityTypeLinkMap[$entityType] = $link;
         }
-    }
-
-    /**
-     * @throws Forbidden
-     * @throws Error
-     * @throws NotFound
-     * @todo Move.
-     */
-    public function unlinkAll(string $id, string $link): void
-    {
-        /** @var ?TargetListEntity $entity */
-        $entity = $this->getRepository()->getById($id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        if (!$this->acl->check($entity, Table::ACTION_EDIT)) {
-            throw new Forbidden();
-        }
-
-        $foreignEntityType = $entity->getRelationParam($link, 'entity');
-
-        if (!$foreignEntityType) {
-            throw new Error();
-        }
-
-        $linkEntityType = ucfirst(
-            $entity->getRelationParam($link, 'relationName') ?? ''
-        );
-
-        if ($linkEntityType === '') {
-            throw new Error();
-        }
-
-        $updateQuery = $this->entityManager->getQueryBuilder()
-            ->update()
-            ->in($linkEntityType)
-            ->set(['deleted' => true])
-            ->where(['targetListId' => $entity->getId()])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($updateQuery);
-
-        $this->hookManager->process('TargetList', 'afterUnlinkAll', $entity, [], ['link' => $link]);
-    }
-
-    /**
-     * @throws NotFound
-     * @throws Error
-     * @todo Move. Use Tools\TargetList\MetadataProvider.
-     */
-    public function optOut(string $id, string $targetType, string $targetId): void
-    {
-        $targetList = $this->entityManager->getEntityById(TargetListEntity::ENTITY_TYPE, $id);
-
-        if (!$targetList) {
-            throw new NotFound();
-        }
-
-        $target = $this->entityManager->getEntity($targetType, $targetId);
-
-        if (!$target) {
-            throw new NotFound();
-        }
-
-        $map = $this->entityTypeLinkMap;
-
-        if (empty($map[$targetType])) {
-            throw new Error();
-        }
-
-        $link = $map[$targetType];
-
-        $this->entityManager
-            ->getRDBRepository(TargetListEntity::ENTITY_TYPE)
-            ->getRelation($targetList, $link)
-            ->relateById($targetId, ['optedOut' => true]);
-
-        $hookData = [
-           'link' => $link,
-           'targetId' => $targetId,
-           'targetType' => $targetType,
-        ];
-
-        $this->hookManager->process('TargetList', 'afterOptOut', $targetList, [], $hookData);
-    }
-
-    /**
-     * @throws NotFound
-     * @throws Error
-     * @todo Move. Use Tools\TargetList\MetadataProvider.
-     */
-    public function cancelOptOut(string $id, string $targetType, string $targetId): void
-    {
-        $targetList = $this->entityManager->getEntityById(TargetListEntity::ENTITY_TYPE, $id);
-
-        if (!$targetList) {
-            throw new NotFound();
-        }
-
-        $target = $this->entityManager->getEntityById($targetType, $targetId);
-
-        if (!$target) {
-            throw new NotFound();
-        }
-
-        $map = $this->entityTypeLinkMap;
-
-        if (empty($map[$targetType])) {
-            throw new Error();
-        }
-
-        $link = $map[$targetType];
-
-        $this->entityManager
-            ->getRDBRepository(TargetListEntity::ENTITY_TYPE)
-            ->getRelation($targetList, $link)
-            ->updateColumnsById($targetId, ['optedOut' => false]);
-
-        $hookData = [
-           'link' => $link,
-           'targetId' => $targetId,
-           'targetType' => $targetType,
-        ];
-
-        $this->hookManager->process('TargetList', 'afterCancelOptOut', $targetList, [], $hookData);
     }
 
     /**

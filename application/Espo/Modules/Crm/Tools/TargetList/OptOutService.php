@@ -31,6 +31,7 @@ namespace Espo\Modules\Crm\Tools\TargetList;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\HookManager;
 use Espo\Core\Record\Collection;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\Core\Record\EntityProvider;
@@ -48,8 +49,85 @@ class OptOutService
     public function __construct(
         private EntityManager $entityManager,
         private MetadataProvider $metadataProvider,
-        private EntityProvider $entityProvider
+        private EntityProvider $entityProvider,
+        private HookManager $hookManager
     ) {}
+
+    /**
+     * Opt out a target.
+     *
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    public function optOut(string $id, string $targetType, string $targetId): void
+    {
+        $targetList = $this->entityProvider->get(TargetList::class, $id);
+
+        $target = $this->entityManager->getEntityById($targetType, $targetId);
+
+        if (!$target) {
+            throw new NotFound();
+        }
+
+        $map = $this->metadataProvider->getEntityTypeLinkMap();
+
+        if (empty($map[$targetType])) {
+            throw new Forbidden("Not supported target type.");
+        }
+
+        $link = $map[$targetType];
+
+        $this->entityManager
+            ->getRDBRepository(TargetList::ENTITY_TYPE)
+            ->getRelation($targetList, $link)
+            ->relateById($targetId, ['optedOut' => true]);
+
+        $hookData = [
+            'link' => $link,
+            'targetId' => $targetId,
+            'targetType' => $targetType,
+        ];
+
+        $this->hookManager->process(TargetList::ENTITY_TYPE, 'afterOptOut', $targetList, [], $hookData);
+    }
+
+    /**
+     * Cancel opt-out for a target.
+     *
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    public function cancelOptOut(string $id, string $targetType, string $targetId): void
+    {
+        $targetList = $this->entityProvider->get(TargetList::class, $id);
+
+        $target = $this->entityManager->getEntityById($targetType, $targetId);
+
+        if (!$target) {
+            throw new NotFound();
+        }
+
+        $map = $this->metadataProvider->getEntityTypeLinkMap();
+
+        if (empty($map[$targetType])) {
+            throw new Forbidden("Not supported target type.");
+        }
+
+        $link = $map[$targetType];
+
+        $this->entityManager
+            ->getRDBRepository(TargetList::ENTITY_TYPE)
+            ->getRelation($targetList, $link)
+            ->updateColumnsById($targetId, ['optedOut' => false]);
+
+        $hookData = [
+            'link' => $link,
+            'targetId' => $targetId,
+            'targetType' => $targetType,
+        ];
+
+        $this->hookManager->process('TargetList', TargetList::ENTITY_TYPE, $targetList, [], $hookData);
+    }
 
     /**
      * Find opted out targets in a target list.
