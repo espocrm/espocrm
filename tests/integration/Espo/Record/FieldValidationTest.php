@@ -67,7 +67,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account')
+            ->get('Account')
             ->create((object) [
                 'name' => null,
             ], CreateParams::create());
@@ -85,7 +85,7 @@ class FieldValidationTest extends BaseTestCase
 
         $entity = $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account')
+            ->get('Account')
             ->create(
                 (object) [
                     'name' => 'test'
@@ -97,7 +97,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account')
+            ->get('Account')
             ->update(
                 $entity->id,
                 (object) [
@@ -121,7 +121,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account')
+            ->get('Account')
             ->create(
                 (object) [
 
@@ -142,7 +142,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account')
+            ->get('Account')
             ->create((object) [
                 'name' => 'test',
             ], CreateParams::create());
@@ -165,7 +165,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account')
+            ->get('Account')
             ->create((object) [
                 'name' => '123456',
             ], CreateParams::create());
@@ -184,7 +184,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account')
+            ->get('Account')
             ->create((object) [
                 'name' => '12345',
             ], CreateParams::create());
@@ -206,7 +206,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account')
+            ->get('Account')
             ->create((object) [
                 'name' => 'test',
                 'assignedUserId' => null,
@@ -246,7 +246,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account')
+            ->get('Account')
             ->create((object) [
                 'name' => 'test',
                 'assignedUserId' => $this->getAdminUser()->getId(),
@@ -269,7 +269,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account')
+            ->get('Account')
             ->create((object) [
                 'name' => 'test',
                 'teamsIds' => [],
@@ -290,7 +290,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Lead')
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
                 'opportunityAmount' => null,
@@ -309,7 +309,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Lead')
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
                 'opportunityAmount' => 100,
@@ -331,7 +331,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Lead')
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
                 'opportunityAmount' => 100,
@@ -358,7 +358,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Lead')
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
             ], CreateParams::create());
@@ -378,7 +378,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Lead')
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
                 'status' => null,
@@ -397,7 +397,7 @@ class FieldValidationTest extends BaseTestCase
 
         $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Lead')
+            ->get('Lead')
             ->create((object) [
                 'lastName' => 'test',
                 'status' => 'New',
@@ -408,9 +408,10 @@ class FieldValidationTest extends BaseTestCase
 
     public function testSkipRequired()
     {
+        /** @noinspection PhpUnhandledExceptionInspection */
         $this->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Meeting')
+            ->get('Meeting')
             ->create((object) [
                 'name' => 'test',
                 'dateStart' => '2021-01-01 00:00:00',
