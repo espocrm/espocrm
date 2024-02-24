@@ -96,11 +96,11 @@ define('views/user/fields/teams', ['views/fields/link-multiple-with-role'], func
         },
 
         getDetailLinkHtml: function (id, name) {
-            name = name || this.nameHash[id];
+            name = name || this.nameHash[id] || id;
 
             let role = (this.columns[id] || {})[this.columnName] || '';
 
-            let $el = $('<div>')
+            const $el = $('<div>')
                 .append(
                     $('<a>')
                         .attr('href', '#' + this.foreignScope + '/view/' + id)
