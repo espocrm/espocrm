@@ -82,14 +82,7 @@
                 }
             },
             "startDate": {
-                "readOnly": {
-                    "conditionGroup": [
-                        {
-                            "type": "isTrue",
-                            "attribute": "isActivated"
-                        }
-                    ]
-                }
+                "readOnly": null
             },
             "abonplan": {
                 "readOnly": {

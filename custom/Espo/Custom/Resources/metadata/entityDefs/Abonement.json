@@ -82,7 +82,8 @@
             "readOnly": false,
             "tooltip": false,
             "isCustom": true,
-            "default": "javascript: return this.dateTime.getToday();"
+            "default": "javascript: return this.dateTime.getToday();",
+            "required": true
         },
         "abonplan": {
             "type": "link",
