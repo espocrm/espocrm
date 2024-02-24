@@ -112,7 +112,8 @@
             "layoutDetailDisabled": true,
             "tooltip": true,
             "default": true,
-            "customizationAuditedDisabled": true
+            "customizationAuditedDisabled": true,
+            "audited": true
         },
         "title": {
             "type": "varchar",
@@ -315,23 +316,27 @@
             "additionalAttributeList": ["columns"],
             "layoutDetailDisabled": true,
             "view": "views/user/fields/teams",
-            "default": "javascript: return {teamsIds: []}"
+            "default": "javascript: return {teamsIds: []}",
+            "audited": true
         },
         "roles": {
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "portals": {
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "portalRoles": {
             "type": "linkMultiple",
             "layoutDetailDisabled": true,
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "contact": {
             "type": "link",
@@ -340,7 +345,8 @@
             "fieldManagerParamList": [
                 "inlineEditDisabled",
                 "tooltipText"
-            ]
+            ],
+            "audited": true
         },
         "accounts": {
             "type": "linkMultiple",
@@ -349,7 +355,8 @@
             "fieldManagerParamList": [
                 "inlineEditDisabled",
                 "tooltipText"
-            ]
+            ],
+            "audited": true
         },
         "account": {
             "type": "link",
@@ -358,7 +365,8 @@
             "foreignAccessDisabled": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
-            "readOnly": true
+            "readOnly": true,
+            "audited": true
         },
         "portal": {
             "type": "link",

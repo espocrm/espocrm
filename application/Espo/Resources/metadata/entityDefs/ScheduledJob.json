@@ -12,13 +12,15 @@
         "status": {
             "type": "enum",
             "options": ["Active", "Inactive"],
-            "default": "Active"
+            "default": "Active",
+            "audited": true
         },
         "scheduling": {
             "type": "varchar",
             "required": true,
             "view": "views/scheduled-job/fields/scheduling",
-            "tooltip": true
+            "tooltip": true,
+            "audited": true
         },
         "lastRun": {
             "type": "datetime",

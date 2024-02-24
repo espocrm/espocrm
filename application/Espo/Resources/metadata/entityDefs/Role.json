@@ -12,7 +12,8 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "userPermission": {
             "type": "enum",
@@ -20,7 +21,8 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "messagePermission": {
             "type": "enum",
@@ -28,7 +30,8 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "portalPermission": {
             "type": "enum",
@@ -36,7 +39,8 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "groupEmailAccountPermission": {
             "type": "enum",
@@ -44,7 +48,8 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "exportPermission": {
             "type": "enum",
@@ -52,7 +57,8 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "massUpdatePermission": {
             "type": "enum",
@@ -60,7 +66,8 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "dataPrivacyPermission": {
             "type": "enum",
@@ -68,7 +75,8 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "followerManagementPermission": {
             "type": "enum",
@@ -76,7 +84,8 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "auditPermission": {
             "type": "enum",
@@ -84,13 +93,16 @@
             "default": "not-set",
             "tooltip": true,
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "data": {
-            "type": "jsonObject"
+            "type": "jsonObject",
+            "audited": true
         },
         "fieldData": {
-            "type": "jsonObject"
+            "type": "jsonObject",
+            "audited": true
         },
         "createdAt": {
             "type": "datetime",

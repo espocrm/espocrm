@@ -7,10 +7,12 @@
             "pattern": "$noBadCharacters"
         },
         "data": {
-            "type": "jsonObject"
+            "type": "jsonObject",
+            "audited": true
         },
         "fieldData": {
-            "type": "jsonObject"
+            "type": "jsonObject",
+            "audited": true
         },
         "exportPermission": {
             "type": "enum",
@@ -18,7 +20,8 @@
             "default": "not-set",
             "tooltip": "Role.exportPermission",
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "massUpdatePermission": {
             "type": "enum",
@@ -26,7 +29,8 @@
             "default": "not-set",
             "tooltip": "Role.massUpdatePermission",
             "translation": "Role.options.levelList",
-            "view": "views/role/fields/permission"
+            "view": "views/role/fields/permission",
+            "audited": true
         },
         "createdAt": {
             "type": "datetime",
