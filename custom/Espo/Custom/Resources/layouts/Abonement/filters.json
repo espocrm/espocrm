@@ -1,8 +1,14 @@
 [
     "contact",
+    "salesDate",
+    "activationDateTime",
     "groups",
     "abonplan",
     "startDate",
     "endDate",
-    "isActive"
+    "isActive",
+    "isActivated",
+    "assignedUser",
+    "createdAt",
+    "createdBy"
 ]
