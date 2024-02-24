@@ -32,6 +32,11 @@
         {
             "name": "autocompleteOnEmpty",
             "type": "bool"
+        },
+        {
+            "name": "audited",
+            "type": "bool",
+            "tooltip": true
         }
     ],
     "actualFields": [
