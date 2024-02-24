@@ -42,7 +42,7 @@ class RestoreDeletedTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account');
+            ->get('Account');
 
         $account = $service->create((object) [
             'name' => 'Test'
@@ -63,7 +63,7 @@ class RestoreDeletedTest extends \tests\integration\Core\BaseTestCase
 
         $service = $app->getContainer()
             ->getByClass(ServiceContainer::class)
-            ->create('Account');
+            ->get('Account');
 
         $account = $service->create((object) [
             'name' => 'Test'

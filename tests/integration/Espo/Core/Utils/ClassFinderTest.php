@@ -36,15 +36,15 @@ class ClassFinderTest extends \tests\integration\Core\BaseTestCase
         $classFinder = $this->getContainer()->get('classFinder');
 
         $this->assertEquals(
-            'Espo\\Modules\\Crm\\Services\\Account',
-            $classFinder->find('Services', 'Account')
+            'Espo\\Entities\\Crm\\Services\\Account',
+            $classFinder->find('Entities', 'Account')
         );
 
         $this->assertEquals(
-            'Espo\\Services\\Record',
-            $classFinder->find('Services', 'Record')
+            'Espo\\Entities\\Email',
+            $classFinder->find('Entities', 'Email')
         );
 
-        $this->assertTrue(file_exists('data/cache/application/classmapServices.php'));
+        $this->assertTrue(file_exists('data/cache/application/classmapEntities.php'));
     }
 }
