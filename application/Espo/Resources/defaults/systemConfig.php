@@ -191,6 +191,8 @@ return [
         'cleanupDeletedRecords',
         'cleanupSubscribers',
         'cleanupSubscribersPeriod',
+        'cleanupAudit',
+        'cleanupAuditPeriod',
         'authTokenPreventConcurrent',
         'emailParser',
         'passwordRecoveryDisabled',

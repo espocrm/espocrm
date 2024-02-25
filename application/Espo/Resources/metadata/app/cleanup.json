@@ -21,5 +21,8 @@
     },
     "subscribers": {
         "className": "Espo\\Classes\\Cleanup\\Subscribers"
+    },
+    "audit": {
+        "className": "Espo\\Classes\\Cleanup\\Audit"
     }
 }

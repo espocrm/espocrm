@@ -234,6 +234,8 @@ return [
     'cleanupActionHistoryPeriod' => '15 days',
     'cleanupAuthTokenPeriod' => '1 month',
     'cleanupSubscribers' => true,
+    'cleanupAudit' => true,
+    'cleanupAuditPeriod' => '3 months',
     'currencyFormat' => 2,
     'currencyDecimalPlaces' => 2,
     'aclAllowDeleteCreated' => false,
