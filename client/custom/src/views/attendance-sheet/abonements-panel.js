@@ -25,8 +25,8 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             this.addHandler('click', ".other-group", 'handleEditAbonOtherGroups');
             this.addHandler('click', ".btn-add", "handleAddButton");
             this.addHandler('click', ".btn-floating-mark", "createFloatingMark");
-            this.addHandler('click', ".fa-calendar", "handleViewMarks");
-            this.addHandler('click', ".floating-view", "handleViewFloatingMarks");
+            this.addHandler('click', ".marks-calendar", "handleViewMarks");
+            this.addHandler('click', ".floating-calendar", "handleViewFloatingMarks");
             this.addHandler('click', ".floating-mark", "deleteFloatingMark");
             this.addHandler('click', ".abon-activate", 'abonementActivate');
         },
