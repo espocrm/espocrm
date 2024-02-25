@@ -36,7 +36,7 @@ class ClassFinderTest extends \tests\integration\Core\BaseTestCase
         $classFinder = $this->getContainer()->get('classFinder');
 
         $this->assertEquals(
-            'Espo\\Entities\\Crm\\Entities\\Account',
+            'Espo\\Modules\\Crm\\Entities\\Account',
             $classFinder->find('Entities', 'Account')
         );
 
