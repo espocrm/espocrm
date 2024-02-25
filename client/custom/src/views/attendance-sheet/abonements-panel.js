@@ -14,6 +14,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             this.marksTotal = 0;
             this.marks = { list: [], total: 0 };
             
+            Espo.loader.requirePromise('fullcalendar');
             this.initHandlers();
         },
 
@@ -449,58 +450,80 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             this.viewMarks(abon);
         },
 
-        viewMarks: function(abon) {
-            this.getCollectionFactory().create('Mark')
-                .then(collection => {
-                    collection.maxSize = 10000;
-                    collection.where = [{
-                        "type": "equals",
-                        "attribute": "abonementId",
-                        "value": abon.id 
-                    }];
-                    return collection.fetch();
-                })
-                .then(marks => {
-                    this.createView('dialog', 'views/modal', {
-                        templateContent: this.getMarksLayout(marks),
-                        headerText: `Відмітки абонементу: ${ abon.name }`,
-                        backdrop: true,
-                        message: '',
-                        buttonList: [
-                            {
-                                name: 'close',
-                                label: this.translate('Close'),
-                            }
-                        ],
-                    }, view => {
-                        view.render();
-                    });
-                })
-                .catch((error) => {
-                    console.error(error);
+        viewMarks: async function(abon) {
+            try {
+                const trainingEvents = await this.getTrainingsAsMarks(abon);
+                const noMarksMsg =  trainingEvents.length ? '' : 'Відміток поки немає';
+                
+                this.createView('dialog', 'views/modal', {
+                    templateContent: `<div class="calendar-container">${noMarksMsg}</div>`,
+                    headerText: `Відмітки абонементу: ${ abon.name } | занять: ${abon.classCount} відміток: ${abon.classCount - abon.classesLeft}`,
+                    backdrop: true,
+                }, view => {
+                    view.render();
+                    if (!trainingEvents.length) return;
+
+                    view.$el.find(`.modal-body`)[0].classList.add('marks-calendar-bg');//change bg-color
+                    calendarElement = view.$el.find(`.calendar-container`)[0];
+                    this.createMarksCalendar(calendarElement, trainingEvents);
                 });
+            } catch (error) {
+                this.handleError(error);
+            }
         },
 
-        getMarksLayout: function(marks) {
-            let layout = `
-                <table class="table table-hover" style="border-radius: 8px;">
-                    <tr class="text-soft">
-                        <th>Дата створення</th>
-                        <th>Час створення</th>
-                        <th>Заняття</th>
-                        <th>Відповідальний</th>
-                    </tr>`;
-            marks.list.forEach(mark => {
-                const dateTime = mark.name.split(' ');
-                layout += `
-                    <tr>
-                        <td>${ dateTime[0] }</td>
-                        <td>${ dateTime[1] }</td>
-                        <td>${ mark.trainingName }</td>
-                        <td>${ mark.assignedUserName }</td>
-                    </tr>`;
+        getTrainingsAsMarks: async function(abon) {
+            try {
+                const markCollection = await this.getCollectionFactory().create('Mark');
+                markCollection.maxSize = 1000;
+                markCollection.where = [{
+                    "type": "equals",
+                    "attribute": "abonementId",
+                    "value": abon.id 
+                }];
+                const marks = await markCollection.fetch();
+
+                const trainingsIds = marks.list.map(mark => mark.trainingId);
+                
+                const trainingCollection = await this.getCollectionFactory().create('Training');
+                trainingCollection.maxSize = 1000;
+                trainingCollection.where = [{
+                    "type": "equals",
+                    "attribute": "id",
+                    "value": trainingsIds
+                }];
+                const trainings = await trainingCollection.fetch();
+
+                const trainingEvents = trainings.list.map(training => {
+                    return {
+                        id: training.id,
+                        title: training.groupName,
+                        start: training.dateStart.split(' ').join('T'),
+                    }
+                });
+
+                return trainingEvents;
+            } catch(error) {
+                this.handleError(error);
+            }
+        },
+
+        createMarksCalendar: function(calendarElement, trainingEvents) {
+            const calendar = new window.FullCalendar.Calendar(calendarElement, {
+                firstDay: 1,
+                locale: 'ua',
+                eventClick: (info) => Espo.Ui.notify(info.event.title, 'success', 2000),
+                initialDate: trainingEvents[trainingEvents.length - 1].start.split('T')[0],
+                events: trainingEvents,
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    meridiem: false
+                },
+                eventColor: 'red'
             });
-            return marks.list.length ? layout : 'Немає данних';
+
+            calendar.render();
         },
 
         handleShowNote: function(e) {

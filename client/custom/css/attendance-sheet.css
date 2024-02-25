@@ -63,6 +63,10 @@
     opacity: 0.2;
 }
 
+.marks-calendar-bg {
+    background-color: var(--panel-bg);
+}
+
 /* budget */
 
 #date::-webkit-calendar-picker-indicator {
