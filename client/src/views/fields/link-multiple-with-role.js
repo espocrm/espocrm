@@ -94,6 +94,11 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
                 this.skipRoles = true;
             }
         }
+
+        if (this.roleType === this.ROLE_TYPE_ENUM) {
+            this.styleMap = /** @type {Record<string>}*/ this.getMetadata()
+                .get(['entityDefs', this.model.entityType, 'fields', this.roleField, 'style']) || {};
+        }
     }
 
     getAttributeList() {
@@ -136,8 +141,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
         }
 
         if (role) {
-            let style = this.getMetadata()
-                .get(['entityDefs', this.model.entityType, 'fields', this.roleField, 'style', role]);
+            let style = this.styleMap[role];
 
             let className = 'text';
 
@@ -240,6 +244,12 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
 
             if (role === (roleValue || '')) {
                 $option.attr('selected', 'selected');
+            }
+
+            const style = this.styleMap[role];
+
+            if (style) {
+                $option.addClass('text-' + style)
             }
 
             $role.append($option);
