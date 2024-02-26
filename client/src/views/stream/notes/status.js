@@ -50,15 +50,21 @@ class StatusNoteStreamView extends NoteStreamView {
     }
 
     setup() {
-        let data = this.model.get('data');
+        const data = this.model.get('data');
 
-        let field = data.field;
-        let value = data.value;
+        const field = data.field;
+        const value = data.value;
 
         this.style = data.style || 'default';
         this.statusText = this.getLanguage().translateOption(value, field, this.model.get('parentType'));
 
-        this.messageData['field'] = this.translate(field, 'fields', this.model.get('parentType')).toLowerCase();
+        let fieldLabel = this.translate(field, 'fields', this.model.get('parentType')).toLowerCase();
+
+        if (this.isToUpperCaseStringItems()) {
+            fieldLabel = Espo.Utils.upperCaseFirst(fieldLabel);
+        }
+
+        this.messageData['field'] = fieldLabel;
 
         this.createMessage();
     }
