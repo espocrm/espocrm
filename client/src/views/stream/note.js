@@ -106,7 +106,7 @@ class NoteStreamView extends View {
             this.createField('parent');
         }
 
-        let translatedEntityType = this.translateEntityType(this.model.get('parentType'));
+        const translatedEntityType = this.translateEntityType(this.model.get('parentType'));
 
         this.messageData = {
             'user': 'field:createdBy',
@@ -132,9 +132,9 @@ class NoteStreamView extends View {
 
         string = string.toLowerCase();
 
-        let language = this.getPreferences().get('language') || this.getConfig().get('language');
+        const language = this.getPreferences().get('language') || this.getConfig().get('language');
 
-        if (~['de_DE', 'nl_NL'].indexOf(language)) {
+        if (['de_DE', 'nl_NL'].includes(language)) {
             string = Espo.Utils.upperCaseFirst(string);
         }
 
@@ -144,7 +144,7 @@ class NoteStreamView extends View {
     createField(name, type, params, view, options) {
         type = type || this.model.getFieldType(name) || 'base';
 
-        let o = {
+        const o = {
             model: this.model,
             defs: {
                 name: name,
@@ -155,7 +155,7 @@ class NoteStreamView extends View {
         };
 
         if (options) {
-            for (let i in options) {
+            for (const i in options) {
                 o[i] = options[i];
             }
         }
@@ -174,7 +174,7 @@ class NoteStreamView extends View {
     createMessage() {
         if (!this.messageTemplate) {
             let isTranslated = false;
-            let parentType = this.model.get('parentType') || null;
+            const parentType = this.model.get('parentType') || null;
 
             if (this.isMale()) {
                 this.messageTemplate = this.translate(this.messageName, 'streamMessagesMale', parentType) || '';
@@ -227,7 +227,7 @@ class NoteStreamView extends View {
             return;
         }
 
-        let iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
+        const iconClass = this.getMetadata().get(['clientDefs', scope, 'iconClass']);
 
         if (!iconClass) {
             return;
