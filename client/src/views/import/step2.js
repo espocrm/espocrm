@@ -63,6 +63,10 @@ class Step2ImportView extends View {
 
             this.$el.find('.field[data-name="' + field + '"]').parent().remove();
         },
+        /** @this Step2ImportView */
+        'keyup input.add-field-quick-search-input': function (e) {
+            this.processFieldFilterQuickSearch(e.currentTarget.value);
+        },
     }
 
     data() {
@@ -113,6 +117,15 @@ class Step2ImportView extends View {
         });
 
         this.mapping = mapping;
+
+        /** @type {string[]} */
+        this.fieldList = this.getFieldList();
+
+        this.fieldTranslations = this.fieldList.reduce((map, item) => {
+            map[item] = this.translate(item, 'fields', this.scope);
+
+            return map;
+        }, {});
     }
 
     afterRender() {
@@ -223,6 +236,76 @@ class Step2ImportView extends View {
         this.getDefaultFieldList().forEach(name => {
             this.addField(name);
         });
+
+        this.$addFieldButton = this.$el.find('button.add-field')
+        this.$defaultFieldList = this.$el.find('ul.default-field-list');
+        this.$fieldQuickSearch = this.$el.find('input.add-field-quick-search-input');
+
+        this.initQuickSearchUi();
+    }
+
+    resetFieldFilterQuickSearch() {
+        this.$fieldQuickSearch.val('');
+        this.$defaultFieldList.find('li.item').removeClass('hidden');
+    }
+
+    initQuickSearchUi() {
+        this.$addFieldButton.parent().on('show.bs.dropdown', () => {
+            setTimeout(() => {
+                this.$fieldQuickSearch.focus();
+
+                const width = this.$fieldQuickSearch.outerWidth();
+
+                this.$fieldQuickSearch.css('minWidth', width);
+            }, 1);
+        });
+
+        this.$addFieldButton.parent().on('hide.bs.dropdown', () => {
+            this.resetFieldFilterQuickSearch();
+
+            this.$fieldQuickSearch.css('minWidth', '');
+        });
+    }
+
+    /**
+     * @private
+     * @param {string} text
+     */
+    processFieldFilterQuickSearch(text) {
+        text = text.trim();
+        text = text.toLowerCase();
+
+        console.log(text);
+
+        /** @type {JQuery} */
+        const $li = this.$defaultFieldList.find('li.item');
+
+        if (text === '') {
+            $li.removeClass('hidden');
+
+            return;
+        }
+
+        $li.addClass('hidden');
+
+        this.fieldList.forEach(field => {
+            let label = this.fieldTranslations[field] || field;
+            label = label.toLowerCase();
+
+            const wordList = label.split(' ');
+
+            let matched = label.indexOf(text) === 0;
+
+            if (!matched) {
+                matched = wordList
+                    .filter(word => word.length > 3 && word.indexOf(text) === 0)
+                    .length > 0;
+            }
+
+            if (matched) {
+                $li.filter(`[data-name="${field}"]`).removeClass('hidden');
+            }
+        });
     }
 
     /**
@@ -248,6 +331,9 @@ class Step2ImportView extends View {
             })
     }
 
+    /**
+     * @return {string[]}
+     */
     getFieldList() {
         const defs = this.getMetadata().get('entityDefs.' + this.scope + '.fields');
         const forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope, 'edit');
@@ -454,6 +540,9 @@ class Step2ImportView extends View {
         return $select;
     }
 
+    /**
+     * @param {string} name
+     */
     addField(name) {
         this.$el.find('[data-action="addField"][data-name="' + name + '"]')
             .parent()
@@ -496,6 +585,8 @@ class Step2ImportView extends View {
             view.render();
             view.notify(false);
         });
+
+        this.resetFieldFilterQuickSearch();
     }
 
     disableButtons() {

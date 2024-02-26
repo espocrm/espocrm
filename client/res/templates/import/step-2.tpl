@@ -13,13 +13,16 @@
         <div class="panel-body">
             <div class="button-container">
                 <div class="btn-group">
-                    <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <button class="btn btn-default dropdown-toggle add-field" data-toggle="dropdown">
                         {{translate 'Add Field' scope='Import'}}
                         <span class="caret"></span>
                     </button>
-                    <ul class="dropdown-menu pull-left">
+                    <ul class="dropdown-menu pull-left default-field-list">
+                        <li class="quick-search-list-item">
+                            <input class="form-control add-field-quick-search-input">
+                        </li>
                     {{#each fieldList}}
-                        <li>
+                        <li class="item" data-name="{{./this}}">
                             <a
                                 role="button"
                                 tabindex="0"
