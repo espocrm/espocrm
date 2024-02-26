@@ -120,10 +120,15 @@ class Service implements Crud,
 
     /** @var string[] */
     protected array $noEditAccessRequiredLinkList = [];
-    /** @var array<string, string[]> */
-    protected array $linkMandatorySelectAttributeList = [];
 
     private ?StreamService $streamService = null;
+
+    /**
+     * @var array<string, string[]>
+     * @deprecated As of v8.2. Use metadata > recordDefs > relationships > {link} > mandatoryAttributeList.
+     * @todo Remove in v9.0.
+     */
+    protected array $linkMandatorySelectAttributeList = [];
 
     /**
      * @var string[]
@@ -1867,12 +1872,17 @@ class Service implements Crud,
         return $searchParams->withSelect($select);
     }
 
+    /**
+     * Do not extend.
+     * @internal
+     */
     protected function prepareLinkSearchParams(SearchParams $searchParams, string $link): SearchParams
     {
         if ($searchParams->getSelect() === null) {
             return $searchParams;
         }
 
+        /** @noinspection PhpDeprecationInspection */
         $list1 = $this->linkMandatorySelectAttributeList[$link] ?? [];
         $list2 = $this->metadata->get("recordDefs.$this->entityType.relationships.$link.mandatoryAttributeList") ?? [];
 

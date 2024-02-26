@@ -29,7 +29,9 @@
 
 namespace Espo\Modules\Crm\Services;
 
+use Espo\Core\Select\SearchParams;
 use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
+use Espo\Modules\Crm\Tools\TargetList\MetadataProvider;
 use Espo\Services\Record;
 use Espo\Core\Utils\Metadata;
 
@@ -45,10 +47,25 @@ class TargetList extends Record
         $targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
 
         $this->noEditAccessRequiredLinkList = $targetLinkList;
+    }
 
-        foreach ($targetLinkList as $link) {
-            /** @var string $link */
-            $this->linkMandatorySelectAttributeList[$link] = ['targetListIsOptedOut'];
+    protected function prepareLinkSearchParams(SearchParams $searchParams, string $link): SearchParams
+    {
+        $searchParams = parent::prepareLinkSearchParams($searchParams, $link);
+
+        if ($searchParams->getSelect() === null) {
+            return $searchParams;
         }
+
+        $metadataProvider = $this->injectableFactory->create(MetadataProvider::class);
+
+        if (!in_array($link, $metadataProvider->getTargetLinkList())) {
+            return $searchParams;
+        }
+
+        $select = array_merge($searchParams->getSelect(), ['targetListIsOptedOut']);
+        $select = array_unique($select);
+
+        return $searchParams->withSelect($select);
     }
 }
