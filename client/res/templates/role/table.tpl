@@ -104,7 +104,7 @@
                             <span
                                 title="{{translate name scope='Role' category='actions'}}"
                                 class="text-{{prop ../../../styleMap value}}"
-                            >{{translateOption value scope='Role' field='accessList'}}</span>
+                            >{{translateOption value scope='Role' field='levelList'}}</span>
                         </td>
                         {{/each}}
                         <td colspan="3"></td>

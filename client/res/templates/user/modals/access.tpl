@@ -6,7 +6,7 @@
                     <label class="control-label" data-name="{{name}}">{{translate name category="fields" scope="Role"}}</label>
                     <div class="field" data-name="{{name}}">
                         <span class="text-{{lookup ../styleMap value}}">
-                            {{translateOption value scope="Role" field="assignmentPermission" translatedOptions=levelListTranslation}}
+                            {{translateOption value scope="Role" field="assignmentPermission" translatedOptions=../levelListTranslation}}
                         </span>
                     </div>
                 </div>
