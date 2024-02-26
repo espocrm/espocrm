@@ -77,11 +77,8 @@ class Note extends Record
 
         $userTeamIdList = $this->user->getTeamIdList();
 
-        /** @var string[] $userIdList */
         $userIdList = $entity->getLinkMultipleIdList('users');
-        /** @var string[] $portalIdList */
         $portalIdList = $entity->getLinkMultipleIdList('portals');
-        /** @var string[] $teamIdList */
         $teamIdList = $entity->getLinkMultipleIdList('teams');
 
         /** @var iterable<UserEntity> $targetUserList */

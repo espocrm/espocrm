@@ -31,21 +31,18 @@ namespace Espo\Repositories;
 
 use Espo\Entities\Import as ImportEntity;
 use Espo\Entities\ImportEntity as ImportEntityEntity;
-
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\Query\Select as Query;
 use Espo\ORM\Query\SelectBuilder;
-
 use Espo\Entities\Attachment as AttachmentEntity;
-
 use Espo\Core\Repositories\Database;
 use Espo\Entities\ImportError;
 
 use LogicException;
 
 /**
- * @extends Database<\Espo\Entities\Import>
+ * @extends Database<ImportEntity>
  */
 class Import extends Database
 {
@@ -75,8 +72,6 @@ class Import extends Database
         if (!$entityType) {
             throw new LogicException();
         }
-
-        $param = null;
 
         switch ($link) {
             case 'imported':

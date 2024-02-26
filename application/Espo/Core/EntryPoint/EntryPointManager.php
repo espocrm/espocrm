@@ -54,7 +54,7 @@ class EntryPointManager
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new NotFoundSilent("Entry point '{$name}' not found.");
+            throw new NotFoundSilent("Entry point '$name' not found.");
         }
 
         $noAuth = false;
@@ -79,7 +79,7 @@ class EntryPointManager
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new NotFoundSilent("Entry point '{$name}' not found.");
+            throw new NotFoundSilent("Entry point '$name' not found.");
         }
 
         $entryPoint = $this->injectableFactory->create($className);

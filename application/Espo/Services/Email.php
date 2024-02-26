@@ -114,11 +114,11 @@ class Email extends Record
         return $entity;
     }
 
-    private function markAsRead(string $id, ?string $userId = null): void
+    private function markAsRead(string $id): void
     {
         $service = $this->injectableFactory->create(InboxService::class);
 
-        $service->markAsRead($id, $userId);
+        $service->markAsRead($id);
     }
 
     /**
