@@ -14,7 +14,7 @@
                 {{#each layout}}
                     <li class="cell" draggable="true" {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}>
                         <div class="left" style="width: calc(100% - 17px);">
-                            <span>{{label}}</span>
+                            <span>{{labelText}}</span>
                         </div>
                         {{#if ../editable}}
                         {{#unless notEditable}}
@@ -42,7 +42,7 @@
                         {{#each ../dataAttributeList}}data-{{toDom this}}="{{prop ../this this}}" {{/each}}
                     >
                         <div class="left" style="width: calc(100% - 17px);">
-                            <span>{{label}}</span>
+                            <span>{{labelText}}</span>
                         </div>
                         {{#if ../editable}}
                         {{#unless notEditable}}

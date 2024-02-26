@@ -178,7 +178,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
 
                 this.enabledFields.push({
                     name: item.name,
-                    label: label,
+                    labelText: label,
                 });
 
                 this.enabledFieldsList.push(item.name);
@@ -201,7 +201,7 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
 
                 const o = {
                     name: fieldName,
-                    label: label,
+                    labelText: label,
                 };
 
                 const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
@@ -219,14 +219,14 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             }
 
             this.enabledFields.forEach(item => {
-                if (duplicateLabelList.includes(item.label)) {
-                    item.label += ' (' + item.name + ')';
+                if (duplicateLabelList.includes(item.labelText)) {
+                    item.labelText += ' (' + item.name + ')';
                 }
             });
 
             this.disabledFields.forEach(item => {
-                if (duplicateLabelList.includes(item.label)) {
-                    item.label += ' (' + item.name + ')';
+                if (duplicateLabelList.includes(item.labelText)) {
+                    item.labelText += ' (' + item.name + ')';
                 }
             });
 
@@ -237,11 +237,11 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
 
                 this.enabledFields.forEach(item => {
                     if (it.name === item.name) {
-                        label = item.label;
+                        label = item.labelText;
                     }
                 });
 
-                it.label = label;
+                it.labelText = label;
                 this.itemsData[it.name] = Espo.Utils.cloneDeep(it);
             }
         },

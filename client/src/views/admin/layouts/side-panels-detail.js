@@ -160,8 +160,8 @@ define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], f
 
                     panelListAll.push(item.name);
 
-                    if (item.label) {
-                        labels[item.name] = item.label;
+                    if (item.labelText) {
+                        labels[item.name] = item.labelText;
                     }
                     params[item.name] = item;
                 });
@@ -205,14 +205,14 @@ define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], f
                 if (disabled) {
                     let o = {
                         name: item,
-                        label: labelText,
+                        labelText: labelText,
                     };
 
                     if (o.name[0] === '_') {
                         o.notEditable = true;
 
                         if (o.name === '_delimiter_') {
-                            o.label = '. . .';
+                            o.labelText = '. . .';
                         }
                     }
 
@@ -223,13 +223,13 @@ define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], f
 
                 let o = {
                     name: item,
-                    label: labelText,
+                    labelText: labelText,
                 };
 
                 if (o.name[0] === '_') {
                     o.notEditable = true;
                     if (o.name === '_delimiter_') {
-                        o.label = '. . .';
+                        o.labelText = '. . .';
                     }
                 }
 

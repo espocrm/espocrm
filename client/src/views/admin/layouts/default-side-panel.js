@@ -133,7 +133,7 @@ define('views/admin/layouts/default-side-panel', ['views/admin/layouts/rows'], f
 
                 this.enabledFields.push({
                     name: item.name,
-                    label: label,
+                    labelText: label,
                 });
 
                 this.enabledFieldsList.push(item.name);
@@ -163,7 +163,7 @@ define('views/admin/layouts/default-side-panel', ['views/admin/layouts/rows'], f
 
                     let o = {
                         name: fieldName,
-                        label: label,
+                        labelText: label,
                     };
 
                     let fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
@@ -180,13 +180,13 @@ define('views/admin/layouts/default-side-panel', ['views/admin/layouts/rows'], f
 
             this.enabledFields.forEach(item =>  {
                 if (~duplicateLabelList.indexOf(item.label)) {
-                    item.label += ' (' + item.name + ')';
+                    item.labelText += ' (' + item.name + ')';
                 }
             });
 
             this.disabledFields.forEach(item => {
                 if (~duplicateLabelList.indexOf(item.label)) {
-                    item.label += ' (' + item.name + ')';
+                    item.labelText += ' (' + item.name + ')';
                 }
             });
 
@@ -197,11 +197,11 @@ define('views/admin/layouts/default-side-panel', ['views/admin/layouts/rows'], f
 
                 this.enabledFields.forEach(item => {
                     if (item.name === this.rowLayout[i].name) {
-                        label = item.label;
+                        label = item.labelText;
                     }
                 });
 
-                this.rowLayout[i].label = label;
+                this.rowLayout[i].labelText = label;
 
                 this.itemsData[this.rowLayout[i].name] = Espo.Utils.cloneDeep(this.rowLayout[i]);
             }

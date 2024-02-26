@@ -82,7 +82,7 @@ define('views/admin/layouts/mass-update', ['views/admin/layouts/rows'], function
                     for (let i in layout) {
                         this.enabledFields.push({
                             name: layout[i],
-                            label: this.getLanguage().translate(layout[i], 'fields', this.scope),
+                            labelText: this.getLanguage().translate(layout[i], 'fields', this.scope),
                         });
 
                         this.enabledFieldsList.push(layout[i]);
@@ -92,7 +92,7 @@ define('views/admin/layouts/mass-update', ['views/admin/layouts/rows'], function
                         if (!_.contains(this.enabledFieldsList, allFields[i])) {
                             this.disabledFields.push({
                                 name: allFields[i],
-                                label: this.getLanguage().translate(allFields[i], 'fields', this.scope),
+                                labelText: this.getLanguage().translate(allFields[i], 'fields', this.scope),
                             });
                         }
                     }
@@ -100,7 +100,7 @@ define('views/admin/layouts/mass-update', ['views/admin/layouts/rows'], function
                     this.rowLayout = this.enabledFields;
 
                     for (let i in this.rowLayout) {
-                        this.rowLayout[i].label = this.getLanguage()
+                        this.rowLayout[i].labelText = this.getLanguage()
                             .translate(this.rowLayout[i].name, 'fields', this.scope);
 
                         this.itemsData[this.rowLayout[i].name] = Espo.Utils.cloneDeep(this.rowLayout[i]);

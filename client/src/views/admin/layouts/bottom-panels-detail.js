@@ -89,8 +89,8 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
 
                 panelListAll.push(item.name);
 
-                if (item.label) {
-                    labels[item.name] = item.label;
+                if (item.labelText) {
+                    labels[item.name] = item.labelText;
                 }
 
                 params[item.name] = Espo.Utils.clone(item);
@@ -222,13 +222,13 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                 if (disabled) {
                     const o = {
                         name: item,
-                        label: labelText,
+                        labelText: labelText,
                     };
 
                     if (o.name[0] === '_') {
                         if (o.name === '_delimiter_') {
                             o.notEditable = true;
-                            o.label = '. . .';
+                            o.labelText = '. . .';
                         }
                     }
 
@@ -239,13 +239,13 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
 
                 const o = {
                     name: item,
-                    label: labelText,
+                    labelText: labelText,
                 };
 
                 if (o.name[0] === '_') {
                     if (o.name === '_delimiter_') {
                         o.notEditable = true;
-                        o.label = '. . .';
+                        o.labelText = '. . .';
                     }
                 }
 
