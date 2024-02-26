@@ -26,10 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/detail-small', ['views/admin/layouts/detail'], function (Dep) {
+import LayoutDetailView from 'views/admin/layouts/detail';
 
-    return Dep.extend({
-
-        columnCount: 2,
-    });
-});
+export default class extends LayoutDetailView {}

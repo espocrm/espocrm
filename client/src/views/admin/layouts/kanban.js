@@ -26,34 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/kanban', ['views/admin/layouts/list'], function (Dep) {
+import LayoutListView from 'views/admin/layouts/list';
 
-    return Dep.extend({
+class LayoutKanbanView extends LayoutListView {
 
-        dataAttributeList: ['name', 'link', 'align', 'view', 'isLarge'],
+    dataAttributeList = [
+        'name',
+        'link',
+        'align',
+        'view',
+        'isLarge',
+    ]
 
-        dataAttributesDefs: {
-            link: {type: 'bool'},
-            isLarge: {type: 'bool'},
-            width: {type: 'float'},
-            align: {
-                type: 'enum',
-                options: ["left", "right"]
-            },
-            view: {
-                type: 'varchar',
-                readOnly: true
-            },
-            name: {
-                type: 'varchar',
-                readOnly: true
-            }
+    dataAttributesDefs = {
+        link: {type: 'bool'},
+        isLarge: {type: 'bool'},
+        width: {type: 'float'},
+        align: {
+            type: 'enum',
+            options: ['left', 'right'],
         },
+        view: {
+            type: 'varchar',
+            readOnly: true,
+        },
+        name: {
+            type: 'varchar',
+            readOnly: true,
+        },
+    }
 
-        editable: true,
+    editable = true
+    ignoreList = []
+    ignoreTypeList = []
+}
 
-        ignoreList: [],
-
-        ignoreTypeList: [],
-    });
-});
+export default LayoutKanbanView;

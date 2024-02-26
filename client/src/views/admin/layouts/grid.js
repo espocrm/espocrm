@@ -26,545 +26,553 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/grid', ['views/admin/layouts/base'], function (Dep) {
+import LayoutBaseView from 'views/admin/layouts/base';
 
-    return Dep.extend({
+class LayoutGridView extends LayoutBaseView {
 
-        template: 'admin/layouts/grid',
+    template = 'admin/layouts/grid'
 
-        dataAttributeList: null,
-        panels: null,
-        columnCount: 2,
-        panelDataAttributeList: ['panelName', 'style'],
-        panelDataAttributesDefs: {},
-        panelDynamicLogicDefs: null,
+    dataAttributeList = null
+    panels = null
+    columnCount = 2
+    panelDataAttributeList = ['panelName', 'style']
+    panelDataAttributesDefs = {}
+    panelDynamicLogicDefs = null
 
-        data: function () {
-            return {
-                scope: this.scope,
-                type: this.type,
-                buttonList: this.buttonList,
-                enabledFields: this.enabledFields,
-                disabledFields: this.disabledFields,
-                panels: this.panels,
-                columnCount: this.columnCount,
-                panelDataList: this.getPanelDataList(),
-            };
+    data() {
+        return {
+            scope: this.scope,
+            type: this.type,
+            buttonList: this.buttonList,
+            enabledFields: this.enabledFields,
+            disabledFields: this.disabledFields,
+            panels: this.panels,
+            columnCount: this.columnCount,
+            panelDataList: this.getPanelDataList(),
+        };
+    }
+
+    additionalEvents = {
+        /** @this LayoutGridView */
+        'click #layout a[data-action="addPanel"]': function () {
+            this.addPanel();
+            this.setIsChanged();
+            this.makeDraggable();
         },
-
-        emptyCellTemplate:
-            '<li class="empty disabled cell">' +
-            '<a role="button" data-action="minusCell" class="remove-field"><i class="fas fa-minus"></i></a>' +
-            '</li>',
-
-        additionalEvents: {
-            'click #layout a[data-action="addPanel"]': function () {
-                this.addPanel();
-                this.setIsChanged();
-                this.makeDraggable();
-            },
-            'click #layout a[data-action="removePanel"]': function (e) {
-                $(e.target).closest('ul.panels > li').find('ul.cells > li').each((i, li) => {
-                    if ($(li).attr('data-name')) {
-                        $(li).appendTo($('#layout ul.disabled'));
-                    }
-                });
-
-                $(e.target).closest('ul.panels > li').remove();
-
-                const number = $(e.currentTarget).data('number');
-                this.clearView('panels-' + number);
-
-                let index = -1;
-
-                this.panels.forEach((item, i) => {
-                    if (item.number === number) {
-                        index = i;
-                    }
-                });
-
-                if (~index) {
-                    this.panels.splice(index, 1);
+        /** @this LayoutGridView */
+        'click #layout a[data-action="removePanel"]': function (e) {
+            $(e.target).closest('ul.panels > li').find('ul.cells > li').each((i, li) => {
+                if ($(li).attr('data-name')) {
+                    $(li).appendTo($('#layout ul.disabled'));
                 }
+            });
 
-                this.normalizeDisabledItemList();
+            $(e.target).closest('ul.panels > li').remove();
 
-                this.setIsChanged();
-            },
-            'click #layout a[data-action="addRow"]': function (e) {
-                const tpl = this.unescape($("#layout-row-tpl").html());
-                const html = _.template(tpl);
+            const number = $(e.currentTarget).data('number');
+            this.clearView('panels-' + number);
 
-                $(e.target).closest('ul.panels > li').find('ul.rows').append(html);
+            let index = -1;
 
-                this.setIsChanged();
-                this.makeDraggable();
-            },
-            'click #layout a[data-action="removeRow"]': function (e) {
-                $(e.target).closest('ul.rows > li').find('ul.cells > li').each((i, li) => {
-                    if ($(li).attr('data-name')) {
-                        $(li).appendTo($('#layout ul.disabled'));
-                    }
-                });
+            this.panels.forEach((item, i) => {
+                if (item.number === number) {
+                    index = i;
+                }
+            });
 
-                $(e.target).closest('ul.rows > li').remove();
+            if (~index) {
+                this.panels.splice(index, 1);
+            }
 
-                this.normalizeDisabledItemList();
+            this.normalizeDisabledItemList();
 
-                this.setIsChanged();
-            },
-            'click #layout a[data-action="removeField"]': function (e) {
-                const $li = $(e.target).closest('li');
-                const index = $li.index();
-                const $ul = $li.parent();
+            this.setIsChanged();
+        },
+        /** @this LayoutGridView */
+        'click #layout a[data-action="addRow"]': function (e) {
+            const tpl = this.unescape($("#layout-row-tpl").html());
+            const html = _.template(tpl);
 
-                $li.appendTo($('ul.disabled'));
+            $(e.target).closest('ul.panels > li').find('ul.rows').append(html);
 
-                const $empty = $($('#empty-cell-tpl').html());
+            this.setIsChanged();
+            this.makeDraggable();
+        },
+        /** @this LayoutGridView */
+        'click #layout a[data-action="removeRow"]': function (e) {
+            $(e.target).closest('ul.rows > li').find('ul.cells > li').each((i, li) => {
+                if ($(li).attr('data-name')) {
+                    $(li).appendTo($('#layout ul.disabled'));
+                }
+            });
 
-                if (parseInt($ul.attr('data-cell-count')) === 1) {
-                    for (let i = 0; i < this.columnCount; i++) {
-                        $ul.append($empty.clone());
-                    }
+            $(e.target).closest('ul.rows > li').remove();
+
+            this.normalizeDisabledItemList();
+
+            this.setIsChanged();
+        },
+        /** @this LayoutGridView */
+        'click #layout a[data-action="removeField"]': function (e) {
+            const $li = $(e.target).closest('li');
+            const index = $li.index();
+            const $ul = $li.parent();
+
+            $li.appendTo($('ul.disabled'));
+
+            const $empty = $($('#empty-cell-tpl').html());
+
+            if (parseInt($ul.attr('data-cell-count')) === 1) {
+                for (let i = 0; i < this.columnCount; i++) {
+                    $ul.append($empty.clone());
+                }
+            } else {
+                if (index === 0) {
+                    $ul.prepend($empty);
                 } else {
-                    if (index === 0) {
-                        $ul.prepend($empty);
-                    } else {
-                        $empty.insertAfter($ul.children(':nth-child(' + index + ')'));
-                    }
+                    $empty.insertAfter($ul.children(':nth-child(' + index + ')'));
                 }
+            }
 
-                const cellCount = $ul.children().length;
-                $ul.attr('data-cell-count', cellCount.toString());
-                $ul.closest('li').attr('data-cell-count', cellCount.toString());
+            const cellCount = $ul.children().length;
+            $ul.attr('data-cell-count', cellCount.toString());
+            $ul.closest('li').attr('data-cell-count', cellCount.toString());
 
-                this.setIsChanged();
+            this.setIsChanged();
 
-                this.makeDraggable();
-            },
-            'click #layout a[data-action="minusCell"]': function (e) {
-                if (this.columnCount < 2) {
+            this.makeDraggable();
+        },
+        /** @this LayoutGridView */
+        'click #layout a[data-action="minusCell"]': function (e) {
+            if (this.columnCount < 2) {
+                return;
+            }
+
+            const $li = $(e.currentTarget).closest('li');
+            const $ul = $li.parent();
+
+            $li.remove();
+
+            const cellCount = $ul.children().length || 2;
+
+            this.setIsChanged();
+
+            this.makeDraggable();
+
+            $ul.attr('data-cell-count', cellCount.toString());
+            $ul.closest('li').attr('data-cell-count', cellCount.toString());
+        },
+        /** @this LayoutGridView */
+        'click #layout a[data-action="plusCell"]': function (e) {
+            const $li = $(e.currentTarget).closest('li');
+            const $ul = $li.find('ul');
+
+            const $empty = $($('#empty-cell-tpl').html());
+
+            $ul.append($empty);
+
+            const cellCount = $ul.children().length;
+
+            $ul.attr('data-cell-count', cellCount.toString());
+            $ul.closest('li').attr('data-cell-count', cellCount.toString());
+
+            this.setIsChanged();
+
+            this.makeDraggable();
+        },
+        /** @this LayoutGridView */
+        'click #layout a[data-action="edit-panel-label"]': function (e) {
+            const $header = $(e.target).closest('header');
+            const $label = $header.children('label');
+            const panelName = $label.text();
+
+            const id = $header.closest('li').data('number').toString();
+
+            const attributes = {
+                panelName: panelName,
+            };
+
+            this.panelDataAttributeList.forEach((item) => {
+                if (item === 'panelName') {
                     return;
                 }
 
-                const $li = $(e.currentTarget).closest('li');
-                const $ul = $li.parent();
-
-                $li.remove();
-
-                const cellCount = parseInt($ul.children().length || 2);
-
-                this.setIsChanged();
-
-                this.makeDraggable();
-
-                $ul.attr('data-cell-count', cellCount.toString());
-                $ul.closest('li').attr('data-cell-count', cellCount.toString());
-            },
-            'click #layout a[data-action="plusCell"]': function (e) {
-                const $li = $(e.currentTarget).closest('li');
-                const $ul = $li.find('ul');
-
-                const $empty = $($('#empty-cell-tpl').html());
-
-                $ul.append($empty);
-
-                const cellCount = $ul.children().length;
-
-                $ul.attr('data-cell-count', cellCount.toString());
-                $ul.closest('li').attr('data-cell-count', cellCount.toString());
-
-                this.setIsChanged();
-
-                this.makeDraggable();
-            },
-            'click #layout a[data-action="edit-panel-label"]': function (e) {
-                const $header = $(e.target).closest('header');
-                const $label = $header.children('label');
-                const panelName = $label.text();
-
-                const id = $header.closest('li').data('number').toString();
-
-                const attributes = {
-                    panelName: panelName,
-                };
-
-                this.panelDataAttributeList.forEach((item) => {
-                    if (item === 'panelName') {
-                        return;
-                    }
-
-                    attributes[item] = this.panelsData[id][item];
-                });
-
-                const attributeList = this.panelDataAttributeList;
-                const attributeDefs = this.panelDataAttributesDefs;
-
-                this.createView('dialog', 'views/admin/layouts/modals/panel-attributes', {
-                    attributeList: attributeList,
-                    attributeDefs: attributeDefs,
-                    attributes: attributes,
-                    dynamicLogicDefs: this.panelDynamicLogicDefs,
-                }, (view) => {
-                    view.render();
-
-                    this.listenTo(view, 'after:save', (attributes) => {
-                        $label.text(attributes.panelName);
-                        $label.attr('data-is-custom', 'true');
-
-                        this.panelDataAttributeList.forEach((item) => {
-                            if (item === 'panelName') {
-                                return;
-                            }
-
-                            this.panelsData[id][item] = attributes[item];
-                        });
-
-                        view.close();
-
-                        this.$el.find('.well').focus();
-
-                        this.setIsChanged();
-                    });
-                });
-            }
-        },
-
-        normalizeDisabledItemList: function () {
-            //$('#layout ul.cells.disabled > li').each((i, el) => {});
-        },
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.events = {
-                ...this.additionalEvents,
-                ...this.events,
-            };
-
-            this.panelsData = {};
-
-            Espo.loader.require('res!client/css/misc/layout-manager-grid.css', styleCss => {
-                this.$style = $('<style>').html(styleCss).appendTo($('body'));
+                attributes[item] = this.panelsData[id][item];
             });
-        },
 
-        onRemove: function () {
-            if (this.$style) this.$style.remove();
-        },
+            const attributeList = this.panelDataAttributeList;
+            const attributeDefs = this.panelDataAttributesDefs;
 
-        addPanel: function () {
-            this.lastPanelNumber ++;
-
-            const number = this.lastPanelNumber;
-
-            const data = {
-                customLabel: null,
-                rows: [[]],
-                number: number,
-            };
-
-            this.panels.push(data);
-
-            const attributes = {};
-
-            for (const attribute in this.panelDataAttributesDefs) {
-                const item = this.panelDataAttributesDefs[attribute];
-
-                if ('default' in item) {
-                    attributes[attribute] = item.default;
-                }
-            }
-
-            this.panelsData[number.toString()] = attributes;
-
-            const $li = $('<li class="panel-layout"></li>');
-
-            $li.attr('data-number', number);
-
-            this.$el.find('ul.panels').append($li);
-
-            this.createPanelView(data, true, (view) => {
+            this.createView('dialog', 'views/admin/layouts/modals/panel-attributes', {
+                attributeList: attributeList,
+                attributeDefs: attributeDefs,
+                attributes: attributes,
+                dynamicLogicDefs: this.panelDynamicLogicDefs,
+            }, (view) => {
                 view.render();
-            });
-        },
 
-        getPanelDataList: function () {
-            const panelDataList = [];
-
-            this.panels.forEach((item) => {
-                const o = {};
-
-                o.viewKey = 'panel-' + item.number;
-                o.number = item.number;
-
-                panelDataList.push(o);
-            });
-
-            return panelDataList;
-        },
-
-        prepareLayout: function () {
-            return new Promise(resolve => {
-                let countLoaded = 0;
-
-                this.setupPanels(() => {
-                    countLoaded ++;
-
-                    if (countLoaded === this.panels.length) {
-                        resolve();
-                    }
-                });
-            });
-        },
-
-        setupPanels: function (callback) {
-            this.lastPanelNumber = -1;
-
-            this.panels = Espo.Utils.cloneDeep(this.panels);
-
-            this.panels.forEach((panel, i) => {
-                panel.number = i;
-                this.lastPanelNumber ++;
-                this.createPanelView(panel, false, callback);
-                this.panelsData[i.toString()] = panel;
-            });
-        },
-
-        createPanelView: function (data, empty, callback) {
-            data.label = data.label || '';
-
-            data.isCustomLabel = false;
-
-            if (data.customLabel) {
-                data.labelTranslated = data.customLabel;
-                data.isCustomLabel = true;
-            } else {
-                data.labelTranslated = this.translate(data.label, 'labels', this.scope);
-            }
-
-            data.style = data.style || null;
-
-            data.rows.forEach(row => {
-                const rest = this.columnCount - row.length;
-
-                if (empty) {
-                    for (let i = 0; i < rest; i++) {
-                        row.push(false);
-                    }
-                }
-
-                for (const i in row) {
-                    if (row[i] !== false) {
-                        row[i].label = this.getLanguage().translate(row[i].name, 'fields', this.scope);
-
-                        if ('customLabel' in row[i]) {
-                            row[i].hasCustomLabel = true;
-                        }
-                    }
-                }
-            });
-
-            this.createView('panel-' + data.number, 'view', {
-                selector: 'li.panel-layout[data-number="'+data.number+'"]',
-                template: 'admin/layouts/grid-panel',
-                data: () => {
-                    const o = Espo.Utils.clone(data);
-
-                    o.dataAttributeList = [];
+                this.listenTo(view, 'after:save', (attributes) => {
+                    $label.text(attributes.panelName);
+                    $label.attr('data-is-custom', 'true');
 
                     this.panelDataAttributeList.forEach((item) => {
                         if (item === 'panelName') {
                             return;
                         }
 
-                        o.dataAttributeList.push(item);
+                        this.panelsData[id][item] = attributes[item];
                     });
 
-                    return o;
-                }
-            }, callback);
-        },
+                    view.close();
 
-        makeDraggable: function () {
-            const self = this;
+                    this.$el.find('.well').focus();
 
-            const $panels = $('#layout ul.panels');
-            const $rows = $('#layout ul.rows');
-
-            $panels.sortable({
-                distance: 4,
-                update: () => {
                     this.setIsChanged();
-                },
+                });
             });
+        }
+    }
 
-            $panels.disableSelection();
+    normalizeDisabledItemList() {
+        //$('#layout ul.cells.disabled > li').each((i, el) => {});
+    }
 
-            $rows.sortable({
-                distance: 4,
-                connectWith: '.rows',
-                update: () => {
-                    this.setIsChanged();
-                },
-            });
-            $rows.disableSelection();
+    setup() {
+        super.setup();
 
-            const $li = $('#layout ul.cells > li');
+        this.events = {
+            ...this.additionalEvents,
+            ...this.events,
+        };
 
-            $li.draggable({revert: 'invalid', revertDuration: 200, zIndex: 10})
-                .css('cursor', 'pointer');
+        this.panelsData = {};
 
-            $li.droppable().droppable('destroy');
+        Espo.loader.require('res!client/css/misc/layout-manager-grid.css', styleCss => {
+            this.$style = $('<style>').html(styleCss).appendTo($('body'));
+        });
+    }
 
-            $('#layout ul.cells:not(.disabled) > li').droppable({
-                accept: '.cell',
-                zIndex: 10,
-                hoverClass: 'ui-state-hover',
-                drop: function (e, ui) {
-                    const index = ui.draggable.index();
-                    const parent = ui.draggable.parent();
+    onRemove() {
+        if (this.$style) this.$style.remove();
+    }
 
-                    if (parent.get(0) === $(this).parent().get(0)) {
-                        if ($(this).index() < ui.draggable.index()) {
-                            $(this).before(ui.draggable);
-                        } else {
-                            $(this).after(ui.draggable);
-                        }
-                    } else {
-                        ui.draggable.insertAfter($(this));
+    addPanel() {
+        this.lastPanelNumber ++;
 
-                        if (index === 0) {
-                            $(this).prependTo(parent);
-                        } else {
-                            $(this).insertAfter(parent.children(':nth-child(' + (index) + ')'));
-                        }
-                    }
+        const number = this.lastPanelNumber;
 
-                    ui.draggable.css({
-                        top: 0,
-                        left: 0,
-                    });
+        const data = {
+            customLabel: null,
+            rows: [[]],
+            number: number,
+        };
 
-                    if ($(this).parent().hasClass('disabled') && !$(this).data('name')) {
-                        $(this).remove();
-                    }
+        this.panels.push(data);
 
-                    self.makeDraggable();
+        const attributes = {};
 
-                    self.setIsChanged();
+        for (const attribute in this.panelDataAttributesDefs) {
+            const item = this.panelDataAttributesDefs[attribute];
+
+            if ('default' in item) {
+                attributes[attribute] = item.default;
+            }
+        }
+
+        this.panelsData[number.toString()] = attributes;
+
+        const $li = $('<li class="panel-layout"></li>');
+
+        $li.attr('data-number', number);
+
+        this.$el.find('ul.panels').append($li);
+
+        this.createPanelView(data, true, (view) => {
+            view.render();
+        });
+    }
+
+    getPanelDataList() {
+        const panelDataList = [];
+
+        this.panels.forEach((item) => {
+            const o = {};
+
+            o.viewKey = 'panel-' + item.number;
+            o.number = item.number;
+
+            panelDataList.push(o);
+        });
+
+        return panelDataList;
+    }
+
+    prepareLayout() {
+        return new Promise(resolve => {
+            let countLoaded = 0;
+
+            this.setupPanels(() => {
+                countLoaded ++;
+
+                if (countLoaded === this.panels.length) {
+                    resolve();
                 }
             });
-        },
+        });
+    }
 
-        afterRender: function () {
-            this.makeDraggable();
+    setupPanels(callback) {
+        this.lastPanelNumber = -1;
 
-            const wellElement = /** @type {HTMLElement} */this.$el.find('.enabled-well').get(0);
+        this.panels = Espo.Utils.cloneDeep(this.panels);
 
-            wellElement.focus({preventScroll: true});
-        },
+        this.panels.forEach((panel, i) => {
+            panel.number = i;
+            this.lastPanelNumber ++;
+            this.createPanelView(panel, false, callback);
+            this.panelsData[i.toString()] = panel;
+        });
+    }
 
-        fetch: function () {
-            const layout = [];
+    createPanelView(data, empty, callback) {
+        data.label = data.label || '';
 
-            $("#layout ul.panels > li").each((i, el) => {
-                const $label = $(el).find('header label');
+        data.isCustomLabel = false;
 
-                const id = $(el).data('number').toString();
+        if (data.customLabel) {
+            data.labelTranslated = data.customLabel;
+            data.isCustomLabel = true;
+        } else {
+            data.labelTranslated = this.translate(data.label, 'labels', this.scope);
+        }
 
-                const o = {
-                    rows: []
-                };
+        data.style = data.style || null;
+
+        data.rows.forEach(row => {
+            const rest = this.columnCount - row.length;
+
+            if (empty) {
+                for (let i = 0; i < rest; i++) {
+                    row.push(false);
+                }
+            }
+
+            for (const i in row) {
+                if (row[i] !== false) {
+                    row[i].label = this.getLanguage().translate(row[i].name, 'fields', this.scope);
+
+                    if ('customLabel' in row[i]) {
+                        row[i].hasCustomLabel = true;
+                    }
+                }
+            }
+        });
+
+        this.createView('panel-' + data.number, 'view', {
+            selector: 'li.panel-layout[data-number="'+data.number+'"]',
+            template: 'admin/layouts/grid-panel',
+            data: () => {
+                const o = Espo.Utils.clone(data);
+
+                o.dataAttributeList = [];
 
                 this.panelDataAttributeList.forEach((item) => {
                     if (item === 'panelName') {
                         return;
                     }
 
-                    o[item] = this.panelsData[id][item];
+                    o.dataAttributeList.push(item);
                 });
 
-                o.style = o.style || 'default';
+                return o;
+            }
+        }, callback);
+    }
 
-                const name = $(el).find('header').data('name');
+    makeDraggable() {
+        const self = this;
 
-                if (name) {
-                    o.name = name;
-                }
+        const $panels = $('#layout ul.panels');
+        const $rows = $('#layout ul.rows');
 
-                if ($label.attr('data-is-custom')) {
-                    o.customLabel = $label.text();
+        $panels.sortable({
+            distance: 4,
+            update: () => {
+                this.setIsChanged();
+            },
+        });
+
+        // noinspection JSUnresolvedReference
+        $panels.disableSelection();
+
+        $rows.sortable({
+            distance: 4,
+            connectWith: '.rows',
+            update: () => {
+                this.setIsChanged();
+            },
+        });
+
+        // noinspection JSUnresolvedReference
+        $rows.disableSelection();
+
+        const $li = $('#layout ul.cells > li');
+
+        // noinspection JSValidateTypes
+        $li.draggable({revert: 'invalid', revertDuration: 200, zIndex: 10})
+            .css('cursor', 'pointer');
+
+        $li.droppable().droppable('destroy');
+
+        $('#layout ul.cells:not(.disabled) > li').droppable({
+            accept: '.cell',
+            zIndex: 10,
+            hoverClass: 'ui-state-hover',
+            drop: function (e, ui) {
+                const index = ui.draggable.index();
+                const parent = ui.draggable.parent();
+
+                if (parent.get(0) === $(this).parent().get(0)) {
+                    if ($(this).index() < ui.draggable.index()) {
+                        $(this).before(ui.draggable);
+                    } else {
+                        $(this).after(ui.draggable);
+                    }
                 } else {
-                    o.label = $label.data('label');
+                    ui.draggable.insertAfter($(this));
+
+                    if (index === 0) {
+                        $(this).prependTo(parent);
+                    } else {
+                        $(this).insertAfter(parent.children(':nth-child(' + (index) + ')'));
+                    }
                 }
 
-                $(el).find('ul.rows > li').each((i, li) => {
-                    const row = [];
-
-                    $(li).find('ul.cells > li').each((i, li) => {
-                        let cell = false;
-
-                        if (!$(li).hasClass('empty')) {
-                            cell = {};
-
-                            this.dataAttributeList.forEach(attr => {
-                                const defs = this.dataAttributesDefs[attr] || {};
-
-                                if (defs.notStorable) {
-                                    return;
-                                }
-
-                                if (attr === 'customLabel') {
-                                    if ($(li).get(0).hasAttribute('data-custom-label')) {
-                                        cell[attr] = $(li).attr('data-custom-label');
-                                    }
-
-                                    return;
-                                }
-
-                                const value = $(li).data(Espo.Utils.toDom(attr)) || null;
-
-                                if (value) {
-                                    cell[attr] = value;
-                                }
-                            });
-                        }
-
-                        row.push(cell);
-                    });
-
-                    o.rows.push(row);
+                ui.draggable.css({
+                    top: 0,
+                    left: 0,
                 });
 
-                layout.push(o);
+                if ($(this).parent().hasClass('disabled') && !$(this).data('name')) {
+                    $(this).remove();
+                }
+
+                self.makeDraggable();
+
+                self.setIsChanged();
+            }
+        });
+    }
+
+    afterRender() {
+        this.makeDraggable();
+
+        const wellElement = /** @type {HTMLElement} */this.$el.find('.enabled-well').get(0);
+
+        wellElement.focus({preventScroll: true});
+    }
+
+    fetch() {
+        const layout = [];
+
+        $("#layout ul.panels > li").each((i, el) => {
+            const $label = $(el).find('header label');
+
+            const id = $(el).data('number').toString();
+
+            const o = {
+                rows: []
+            };
+
+            this.panelDataAttributeList.forEach((item) => {
+                if (item === 'panelName') {
+                    return;
+                }
+
+                o[item] = this.panelsData[id][item];
             });
 
-            return layout;
-        },
+            o.style = o.style || 'default';
 
-        validate: function (layout) {
-            let fieldCount = 0;
+            const name = $(el).find('header').data('name');
 
-            layout.forEach(panel => {
-                panel.rows.forEach(row => {
-                    row.forEach(cell => {
-                        if (cell !== false && cell !== null) {
-                            fieldCount++;
-                        }
-                    });
-                });
-            });
-
-            if (fieldCount === 0) {
-                Espo.Ui.error(
-                    this.translate('cantBeEmpty', 'messages', 'LayoutManager')
-                );
-
-                return false;
+            if (name) {
+                o.name = name;
             }
 
-            return true;
-        },
-    });
-});
+            if ($label.attr('data-is-custom')) {
+                o.customLabel = $label.text();
+            } else {
+                o.label = $label.data('label');
+            }
+
+            $(el).find('ul.rows > li').each((i, li) => {
+                const row = [];
+
+                $(li).find('ul.cells > li').each((i, li) => {
+                    let cell = false;
+
+                    if (!$(li).hasClass('empty')) {
+                        cell = {};
+
+                        this.dataAttributeList.forEach(attr => {
+                            const defs = this.dataAttributesDefs[attr] || {};
+
+                            if (defs.notStorable) {
+                                return;
+                            }
+
+                            if (attr === 'customLabel') {
+                                if ($(li).get(0).hasAttribute('data-custom-label')) {
+                                    cell[attr] = $(li).attr('data-custom-label');
+                                }
+
+                                return;
+                            }
+
+                            const value = $(li).data(Espo.Utils.toDom(attr)) || null;
+
+                            if (value) {
+                                cell[attr] = value;
+                            }
+                        });
+                    }
+
+                    row.push(cell);
+                });
+
+                o.rows.push(row);
+            });
+
+            layout.push(o);
+        });
+
+        return layout;
+    }
+
+    validate(layout) {
+        let fieldCount = 0;
+
+        layout.forEach(panel => {
+            panel.rows.forEach(row => {
+                row.forEach(cell => {
+                    if (cell !== false && cell !== null) {
+                        fieldCount++;
+                    }
+                });
+            });
+        });
+
+        if (fieldCount === 0) {
+            Espo.Ui.error(
+                this.translate('cantBeEmpty', 'messages', 'LayoutManager')
+            );
+
+            return false;
+        }
+
+        return true;
+    }
+}
+
+export default LayoutGridView;

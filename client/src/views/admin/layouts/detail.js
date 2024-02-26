@@ -26,411 +26,413 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/detail', ['views/admin/layouts/grid'], function (Dep) {
+import LayoutGridView from 'views/admin/layouts/grid';
 
-    return Dep.extend({
+class LayoutDetailView extends LayoutGridView {
 
-        dataAttributeList: [
-            'name',
-            'fullWidth',
-            'customLabel',
-            'noLabel',
-        ],
+    dataAttributeList = [
+        'name',
+        'fullWidth',
+        'customLabel',
+        'noLabel',
+    ]
 
-        panelDataAttributeList: [
-            'panelName',
-            'dynamicLogicVisible',
-            'style',
-            'dynamicLogicStyled',
-            'tabBreak',
-            'tabLabel',
-            'hidden',
-            'noteText',
-            'noteStyle',
-        ],
+    panelDataAttributeList = [
+        'panelName',
+        'dynamicLogicVisible',
+        'style',
+        'dynamicLogicStyled',
+        'tabBreak',
+        'tabLabel',
+        'hidden',
+        'noteText',
+        'noteStyle',
+    ]
 
-        dataAttributesDefs: {
-            fullWidth: {
-                type: 'bool',
-            },
-            name: {
-                readOnly: true,
-            },
-            label: {
-                type: 'varchar',
-                readOnly: true,
-            },
-            customLabel: {
-                type: 'varchar',
-                readOnly: true,
-            },
-            noLabel: {
-                type: 'bool',
-                readOnly: true,
-            },
+    dataAttributesDefs = {
+        fullWidth: {
+            type: 'bool',
         },
+        name: {
+            readOnly: true,
+        },
+        label: {
+            type: 'varchar',
+            readOnly: true,
+        },
+        customLabel: {
+            type: 'varchar',
+            readOnly: true,
+        },
+        noLabel: {
+            type: 'bool',
+            readOnly: true,
+        },
+    }
 
-        panelDataAttributesDefs: {
-            panelName: {
-                type: 'varchar',
-            },
+    panelDataAttributesDefs = {
+        panelName: {
+            type: 'varchar',
+        },
+        style: {
+            type: 'enum',
+            options: [
+                'default',
+                'success',
+                'danger',
+                'warning',
+                'info',
+            ],
             style: {
-                type: 'enum',
-                options: [
-                    'default',
-                    'success',
-                    'danger',
-                    'warning',
-                    'info',
-                ],
-                style: {
-                    'info': 'info',
-                    'success': 'success',
-                    'danger': 'danger',
-                    'warning': 'warning',
-                },
-                default: 'default',
-                translation: 'LayoutManager.options.style',
-                tooltip: 'panelStyle',
+                'info': 'info',
+                'success': 'success',
+                'danger': 'danger',
+                'warning': 'warning',
             },
-            dynamicLogicVisible: {
-                type: 'base',
-                view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
+            default: 'default',
+            translation: 'LayoutManager.options.style',
+            tooltip: 'panelStyle',
+        },
+        dynamicLogicVisible: {
+            type: 'base',
+            view: 'views/admin/field-manager/fields/dynamic-logic-conditions'
+        },
+        dynamicLogicStyled: {
+            type: 'base',
+            view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+            tooltip: 'dynamicLogicStyled',
+        },
+        hidden: {
+            type: 'bool',
+            tooltip: 'hiddenPanel',
+        },
+        tabBreak: {
+            type: 'bool',
+            tooltip: 'tabBreak',
+        },
+        tabLabel: {
+            type: 'varchar',
+        },
+        noteText: {
+            type: 'text',
+            tooltip: 'noteText',
+        },
+        noteStyle: {
+            type: 'enum',
+            options: [
+                'info',
+                'success',
+                'danger',
+                'warning',
+            ],
+            style: {
+                'info': 'info',
+                'success': 'success',
+                'danger': 'danger',
+                'warning': 'warning',
+            },
+            default: 'info',
+            translation: 'LayoutManager.options.style',
+        },
+    }
+
+    defaultPanelFieldList = [
+        'modifiedAt',
+        'createdAt',
+        'modifiedBy',
+        'createdBy',
+    ]
+
+    panelDynamicLogicDefs = {
+        fields: {
+            tabLabel: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            attribute: 'tabBreak',
+                            type: 'isTrue',
+                        }
+                    ]
+                }
             },
             dynamicLogicStyled: {
-                type: 'base',
-                view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
-                tooltip: 'dynamicLogicStyled',
-            },
-            hidden: {
-                type: 'bool',
-                tooltip: 'hiddenPanel',
-            },
-            tabBreak: {
-                type: 'bool',
-                tooltip: 'tabBreak',
-            },
-            tabLabel: {
-                type: 'varchar',
-            },
-            noteText: {
-                type: 'text',
-                tooltip: 'noteText',
+                visible: {
+                    conditionGroup: [
+                        {
+                            attribute: 'style',
+                            type: 'notEquals',
+                            value: 'default'
+                        }
+                    ]
+                }
             },
             noteStyle: {
-                type: 'enum',
-                options: [
-                    'info',
-                    'success',
-                    'danger',
-                    'warning',
-                ],
-                style: {
-                    'info': 'info',
-                    'success': 'success',
-                    'danger': 'danger',
-                    'warning': 'warning',
-                },
-                default: 'info',
-                translation: 'LayoutManager.options.style',
+                visible: {
+                    conditionGroup: [
+                        {
+                            attribute: 'noteText',
+                            type: 'isNotEmpty',
+                        }
+                    ]
+                }
             },
-        },
+        }
+    }
 
-        defaultPanelFieldList: [
-            'modifiedAt',
-            'createdAt',
-            'modifiedBy',
-            'createdBy',
-        ],
+    setup() {
+        super.setup();
 
-        panelDynamicLogicDefs: {
-            fields: {
-                tabLabel: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                attribute: 'tabBreak',
-                                type: 'isTrue',
-                            }
-                        ]
-                    }
-                },
-                dynamicLogicStyled: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                attribute: 'style',
-                                type: 'notEquals',
-                                value: 'default'
-                            }
-                        ]
-                    }
-                },
-                noteStyle: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                attribute: 'noteText',
-                                type: 'isNotEmpty',
-                            }
-                        ]
-                    }
-                },
-            }
-        },
+        this.panelDataAttributesDefs = Espo.Utils.cloneDeep(this.panelDataAttributesDefs);
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        this.panelDataAttributesDefs.dynamicLogicVisible.scope = this.scope;
+        this.panelDataAttributesDefs.dynamicLogicStyled.scope = this.scope;
 
-            this.panelDataAttributesDefs = Espo.Utils.cloneDeep(this.panelDataAttributesDefs);
+        this.wait(true);
 
-            this.panelDataAttributesDefs.dynamicLogicVisible.scope = this.scope;
-            this.panelDataAttributesDefs.dynamicLogicStyled.scope = this.scope;
+        this.loadLayout(() => {
+            this.setupPanels();
+            this.wait(false);
+        });
+    }
 
-            this.wait(true);
+    loadLayout(callback) {
+        let layout;
+        let model;
 
-            this.loadLayout(() => {
-                this.setupPanels();
-                this.wait(false);
-            });
-        },
+        const promiseList = [];
 
-        loadLayout: function (callback) {
-            let layout;
-            let model;
+        promiseList.push(
+            new Promise(resolve => {
+                this.getModelFactory().create(this.scope, (m) => {
+                    this.getHelper()
+                        .layoutManager
+                        .getOriginal(this.scope, this.type, this.setId, (layoutLoaded) => {
+                            layout = layoutLoaded;
+                            model = m;
+                            resolve();
+                        });
+                });
+            })
+        );
 
-            const promiseList = [];
-
+        if (['detail', 'detailSmall'].includes(this.type)) {
             promiseList.push(
                 new Promise(resolve => {
-                    this.getModelFactory().create(this.scope, (m) => {
-                        this.getHelper()
-                            .layoutManager
-                            .getOriginal(this.scope, this.type, this.setId, (layoutLoaded) => {
-                                layout = layoutLoaded;
-                                model = m;
-                                resolve();
-                            });
-                    });
-                })
-            );
-
-            if (['detail', 'detailSmall'].includes(this.type)) {
-                promiseList.push(
-                    new Promise(resolve => {
-                        this.getHelper().layoutManager.getOriginal(
-                            this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type),
-                            this.setId,
-                            layoutLoaded => {
-                                this.sidePanelsLayout = layoutLoaded;
-
-                                resolve();
-                            }
-                        );
-                    })
-                );
-            }
-
-            promiseList.push(
-                new Promise(resolve => {
-                    if (this.getMetadata().get(['clientDefs', this.scope, 'layoutDefaultSidePanelDisabled'])) {
-                        resolve();
-
-                        return;
-                    }
-
-                    if (this.typeDefs.allFields) {
-                        resolve();
-
-                        return;
-                    }
-
                     this.getHelper().layoutManager.getOriginal(
-                        this.scope,
-                        'defaultSidePanel',
+                        this.scope, 'sidePanels' + Espo.Utils.upperCaseFirst(this.type),
                         this.setId,
                         layoutLoaded => {
-                            this.defaultPanelFieldList = Espo.Utils.clone(this.defaultPanelFieldList);
-
-                            layoutLoaded.forEach(item => {
-                                let field = item.name;
-
-                                if (!field) {
-                                    return;
-                                }
-
-                                if (field === ':assignedUser') {
-                                    field = 'assignedUser';
-                                }
-
-                                if (!this.defaultPanelFieldList.includes(field)) {
-                                    this.defaultPanelFieldList.push(field);
-                                }
-                            });
+                            this.sidePanelsLayout = layoutLoaded;
 
                             resolve();
                         }
                     );
                 })
             );
+        }
 
-            Promise.all(promiseList).then(() => {
-                this.readDataFromLayout(model, layout);
+        promiseList.push(
+            new Promise(resolve => {
+                if (this.getMetadata().get(['clientDefs', this.scope, 'layoutDefaultSidePanelDisabled'])) {
+                    resolve();
 
-                if (callback) {
-                    callback();
+                    return;
                 }
-            });
-        },
 
-        readDataFromLayout: function (model, layout) {
-            const allFields = [];
+                if (this.typeDefs.allFields) {
+                    resolve();
 
-            for (const field in model.defs.fields) {
-                if (this.isFieldEnabled(model, field)) {
-                    allFields.push(field);
+                    return;
                 }
+
+                this.getHelper().layoutManager.getOriginal(
+                    this.scope,
+                    'defaultSidePanel',
+                    this.setId,
+                    layoutLoaded => {
+                        this.defaultPanelFieldList = Espo.Utils.clone(this.defaultPanelFieldList);
+
+                        layoutLoaded.forEach(item => {
+                            let field = item.name;
+
+                            if (!field) {
+                                return;
+                            }
+
+                            if (field === ':assignedUser') {
+                                field = 'assignedUser';
+                            }
+
+                            if (!this.defaultPanelFieldList.includes(field)) {
+                                this.defaultPanelFieldList.push(field);
+                            }
+                        });
+
+                        resolve();
+                    }
+                );
+            })
+        );
+
+        Promise.all(promiseList).then(() => {
+            this.readDataFromLayout(model, layout);
+
+            if (callback) {
+                callback();
             }
+        });
+    }
 
-            this.enabledFields = [];
-            this.disabledFields = [];
+    readDataFromLayout(model, layout) {
+        const allFields = [];
 
-            this.panels = layout;
+        for (const field in model.defs.fields) {
+            if (this.isFieldEnabled(model, field)) {
+                allFields.push(field);
+            }
+        }
 
-            layout.forEach((panel) => {
-                panel.rows.forEach((row) => {
-                    row.forEach(cell => {
-                        this.enabledFields.push(cell.name);
-                    });
+        this.enabledFields = [];
+        this.disabledFields = [];
+
+        this.panels = layout;
+
+        layout.forEach((panel) => {
+            panel.rows.forEach((row) => {
+                row.forEach(cell => {
+                    this.enabledFields.push(cell.name);
                 });
             });
+        });
 
-            allFields.sort((v1, v2) => {
-                return this.translate(v1, 'fields', this.scope)
-                    .localeCompare(this.translate(v2, 'fields', this.scope));
-            });
+        allFields.sort((v1, v2) => {
+            return this.translate(v1, 'fields', this.scope)
+                .localeCompare(this.translate(v2, 'fields', this.scope));
+        });
 
-            for (const i in allFields) {
-                if (!_.contains(this.enabledFields, allFields[i])) {
-                    this.disabledFields.push(allFields[i]);
-                }
+        for (const i in allFields) {
+            if (!_.contains(this.enabledFields, allFields[i])) {
+                this.disabledFields.push(allFields[i]);
             }
-        },
+        }
+    }
 
-        isFieldEnabled: function (model, name) {
-            if (this.hasDefaultPanel()) {
-                if (this.defaultPanelFieldList.includes(name)) {
+    isFieldEnabled(model, name) {
+        if (this.hasDefaultPanel()) {
+            if (this.defaultPanelFieldList.includes(name)) {
+                return false;
+            }
+        }
+
+        const layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+
+        let realType = this.realType;
+
+        if (realType === 'detailSmall') {
+            realType = 'detail';
+        }
+
+        if (
+            layoutList &&
+            !layoutList.includes(this.type) &&
+            !layoutList.includes(realType)
+        ) {
+            return false;
+        }
+
+        const layoutIgnoreList = model.getFieldParam(name, 'layoutIgnoreList') || [];
+
+        if (layoutIgnoreList.includes(realType)) {
+            return false;
+        }
+
+        return !model.getFieldParam(name, 'disabled') &&
+            !model.getFieldParam(name, 'utility') &&
+            !model.getFieldParam(name, 'layoutDetailDisabled');
+    }
+
+    hasDefaultPanel() {
+        if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) === false) {
+            return false;
+        }
+
+        if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) {
+            return false;
+        }
+
+        if (this.sidePanelsLayout) {
+            for (const name in this.sidePanelsLayout) {
+                if (name === 'default' && this.sidePanelsLayout[name].disabled) {
                     return false;
                 }
             }
+        }
 
-            const layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+        return true;
+    }
 
-            let realType = this.realType;
+    validate(layout) {
+        if (!super.validate(layout)) {
+            return false;
+        }
 
-            if (realType === 'detailSmall') {
-                realType = 'detail';
-            }
+        const fieldList = [];
 
-            if (
-                layoutList &&
-                !layoutList.includes(this.type) &&
-                !layoutList.includes(realType)
-            ) {
-                return false;
-            }
-
-            const layoutIgnoreList = model.getFieldParam(name, 'layoutIgnoreList') || [];
-
-            if (layoutIgnoreList.includes(realType)) {
-                return false;
-            }
-
-            return !model.getFieldParam(name, 'disabled') &&
-                !model.getFieldParam(name, 'utility') &&
-                !model.getFieldParam(name, 'layoutDetailDisabled');
-        },
-
-        hasDefaultPanel: function () {
-            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) === false) {
-                return false;
-            }
-
-            if (this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])) {
-                return false;
-            }
-
-            if (this.sidePanelsLayout) {
-                for (const name in this.sidePanelsLayout) {
-                    if (name === 'default' && this.sidePanelsLayout[name].disabled) {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
-        },
-
-        validate: function (layout) {
-            if (!Dep.prototype.validate.call(this, layout)) {
-                return false;
-            }
-
-            const fieldList = [];
-
-            layout.forEach(panel => {
-                panel.rows.forEach(row => {
-                    row.forEach(cell => {
-                        if (cell !== false && cell !== null) {
-                            if (cell.name) {
-                                fieldList.push(cell.name);
-                            }
+        layout.forEach(panel => {
+            panel.rows.forEach(row => {
+                row.forEach(cell => {
+                    if (cell !== false && cell !== null) {
+                        if (cell.name) {
+                            fieldList.push(cell.name);
                         }
-                    });
+                    }
                 });
             });
+        });
 
-            let incompatibleFieldList = [];
+        let incompatibleFieldList = [];
 
-            let isIncompatible = false;
+        let isIncompatible = false;
 
-            fieldList.forEach(field => {
+        fieldList.forEach(field => {
+            if (isIncompatible) {
+                return;
+            }
+
+            const defs = /** @type {Record} */
+                this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) || {};
+
+            const targetFieldList = defs.detailLayoutIncompatibleFieldList || [];
+
+            targetFieldList.forEach(itemField => {
                 if (isIncompatible) {
                     return;
                 }
 
-                const defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', field]) || {};
+                if (~fieldList.indexOf(itemField)) {
+                    isIncompatible = true;
 
-                const targetFieldList = defs.detailLayoutIncompatibleFieldList || [];
-
-                targetFieldList.forEach(itemField => {
-                    if (isIncompatible) {
-                        return;
-                    }
-
-                    if (~fieldList.indexOf(itemField)) {
-                        isIncompatible = true;
-
-                        incompatibleFieldList = [field].concat(targetFieldList);
-                    }
-                });
+                    incompatibleFieldList = [field].concat(targetFieldList);
+                }
             });
+        });
 
-            if (isIncompatible) {
-                Espo.Ui.error(
-                    this.translate('fieldsIncompatible', 'messages', 'LayoutManager')
-                        .replace(
-                            '{fields}',
-                            incompatibleFieldList
-                                .map(field => this.translate(field, 'fields', this.scope))
-                                .join(', ')
-                        )
-                );
+        if (isIncompatible) {
+            Espo.Ui.error(
+                this.translate('fieldsIncompatible', 'messages', 'LayoutManager')
+                    .replace(
+                        '{fields}',
+                        incompatibleFieldList
+                            .map(field => this.translate(field, 'fields', this.scope))
+                            .join(', ')
+                    )
+            );
 
-                return false;
-            }
+            return false;
+        }
 
-            return true;
-        },
-    });
-});
+        return true;
+    }
+}
+
+export default LayoutDetailView;
