@@ -26,266 +26,266 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) {
+import LayoutRowsView from 'views/admin/layouts/rows';
 
-    // noinspection JSUnusedLocalSymbols
-    return Dep.extend({
+class LayoutListView extends LayoutRowsView {
 
-        dataAttributeList: [
-            'name',
-            'widthComplex',
-            'width',
-            'widthPx',
-            'link',
-            'notSortable',
-            'noLabel',
-            'align',
-            'view',
-            'customLabel',
-            'label',
-            'hidden',
-        ],
+    dataAttributeList = [
+        'name',
+        'widthComplex',
+        'width',
+        'widthPx',
+        'link',
+        'notSortable',
+        'noLabel',
+        'align',
+        'view',
+        'customLabel',
+        'label',
+        'hidden',
+    ]
 
-        dataAttributesDefs: {
-            widthComplex: {
-                label: 'width',
-                type: 'base',
-                view: 'views/admin/layouts/fields/width-complex',
-                tooltip: 'width',
-                notStorable: true,
-            },
-            link: {
-                type: 'bool',
-                tooltip: true,
-            },
-            width: {
-                type: 'float',
-                min: 0,
-                max: 100,
-                hidden: true,
-            },
+    dataAttributesDefs = {
+        widthComplex: {
+            label: 'width',
+            type: 'base',
+            view: 'views/admin/layouts/fields/width-complex',
+            tooltip: 'width',
+            notStorable: true,
+        },
+        link: {
+            type: 'bool',
+            tooltip: true,
+        },
+        width: {
+            type: 'float',
+            min: 0,
+            max: 100,
+            hidden: true,
+        },
+        widthPx: {
+            type: 'int',
+            min: 0,
+            max: 720,
+            hidden: true,
+        },
+        notSortable: {
+            type: 'bool',
+            tooltip: true,
+        },
+        align: {
+            type: 'enum',
+            options: ['left', 'right'],
+        },
+        view: {
+            type: 'varchar',
+            readOnly: true,
+        },
+        noLabel: {
+            type: 'bool',
+            tooltip: true,
+        },
+        customLabel: {
+            type: 'varchar',
+            readOnly: true,
+        },
+        name: {
+            type: 'varchar',
+            readOnly: true,
+        },
+        label: {
+            type: 'varchar',
+            readOnly: true,
+        },
+        hidden: {
+            type: 'bool',
+        },
+    }
+
+    dataAttributesDynamicLogicDefs = {
+        fields: {
             widthPx: {
-                type: 'int',
-                min: 0,
-                max: 720,
-                hidden: true,
-            },
-            notSortable: {
-                type: 'bool',
-                tooltip: true,
-            },
-            align: {
-                type: 'enum',
-                options: ['left', 'right'],
-            },
-            view: {
-                type: 'varchar',
-                readOnly: true,
-            },
-            noLabel: {
-                type: 'bool',
-                tooltip: true,
-            },
-            customLabel: {
-                type: 'varchar',
-                readOnly: true,
-            },
-            name: {
-                type: 'varchar',
-                readOnly: true,
-            },
-            label: {
-                type: 'varchar',
-                readOnly: true,
-            },
-            hidden: {
-                type: 'bool',
-            },
-        },
-
-        dataAttributesDynamicLogicDefs: {
-            fields: {
-                widthPx: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                attribute: 'width',
-                                type: 'isEmpty',
-                            }
-                        ]
-                    }
-                },
-            }
-        },
-
-        editable: true,
-        languageCategory: 'fields',
-        ignoreList: [],
-        ignoreTypeList: [],
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.wait(true);
-
-            this.loadLayout(() => {
-                this.wait(false);
-            });
-        },
-
-        loadLayout: function (callback) {
-            this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), (model) => {
-                this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, (layout) => {
-                    this.readDataFromLayout(model, layout);
-
-                    if (callback) {
-                        callback();
-                    }
-                });
-            });
-        },
-
-        readDataFromLayout: function (model, layout) {
-            const allFields = [];
-
-            for (const field in model.defs.fields) {
-                if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
-                    allFields.push(field);
+                visible: {
+                    conditionGroup: [
+                        {
+                            attribute: 'width',
+                            type: 'isEmpty',
+                        }
+                    ]
                 }
+            },
+        }
+    }
+
+    editable = true
+    languageCategory = 'fields'
+    ignoreList = []
+    ignoreTypeList = []
+
+    setup() {
+        super.setup();
+
+        this.wait(true);
+
+        this.loadLayout(() => {
+            this.wait(false);
+        });
+    }
+
+    loadLayout(callback) {
+        this.getModelFactory().create(Espo.Utils.hyphenToUpperCamelCase(this.scope), (model) => {
+            this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, (layout) => {
+                this.readDataFromLayout(model, layout);
+
+                if (callback) {
+                    callback();
+                }
+            });
+        });
+    }
+
+    readDataFromLayout(model, layout) {
+        const allFields = [];
+
+        for (const field in model.defs.fields) {
+            if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
+                allFields.push(field);
+            }
+        }
+
+        allFields.sort((v1, v2) => {
+            return this.translate(v1, 'fields', this.scope)
+                .localeCompare(this.translate(v2, 'fields', this.scope));
+        });
+
+        this.enabledFieldsList = [];
+
+        this.enabledFields = [];
+        this.disabledFields = [];
+
+        const labelList = [];
+        const duplicateLabelList = [];
+
+        for (const item of layout) {
+            const label = this.getLanguage().translate(item.name, 'fields', this.scope);
+
+            if (labelList.includes(label)) {
+                duplicateLabelList.push(label);
             }
 
-            allFields.sort((v1, v2) => {
-                return this.translate(v1, 'fields', this.scope)
-                    .localeCompare(this.translate(v2, 'fields', this.scope));
+            labelList.push(label);
+
+            this.enabledFields.push({
+                name: item.name,
+                labelText: label,
             });
 
-            this.enabledFieldsList = [];
+            this.enabledFieldsList.push(item.name);
+        }
 
-            this.enabledFields = [];
-            this.disabledFields = [];
-
-            const labelList = [];
-            const duplicateLabelList = [];
-
-            for (const item of layout) {
-                const label = this.getLanguage().translate(item.name, 'fields', this.scope);
-
-                if (labelList.includes(label)) {
-                    duplicateLabelList.push(label);
-                }
-
-                labelList.push(label);
-
-                this.enabledFields.push({
-                    name: item.name,
-                    labelText: label,
-                });
-
-                this.enabledFieldsList.push(item.name);
+        for (const field of allFields) {
+            if (this.enabledFieldsList.includes(field)) {
+                continue;
             }
 
-            for (const field of allFields) {
-                if (this.enabledFieldsList.includes(field)) {
-                    continue;
-                }
+            const label = this.getLanguage().translate(field, 'fields', this.scope);
 
-                const label = this.getLanguage().translate(field, 'fields', this.scope);
-
-                if (labelList.includes(label)) {
-                    duplicateLabelList.push(label);
-                }
-
-                labelList.push(label);
-
-                const fieldName = field;
-
-                const o = {
-                    name: fieldName,
-                    labelText: label,
-                };
-
-                const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
-
-                if (fieldType) {
-                    if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
-                        o.notSortable = true;
-
-                        this.itemsData[fieldName] = this.itemsData[fieldName] || {};
-                        this.itemsData[fieldName].notSortable = true;
-                    }
-                }
-
-                this.disabledFields.push(o);
+            if (labelList.includes(label)) {
+                duplicateLabelList.push(label);
             }
+
+            labelList.push(label);
+
+            const fieldName = field;
+
+            const o = {
+                name: fieldName,
+                labelText: label,
+            };
+
+            const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
+
+            if (fieldType) {
+                if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
+                    o.notSortable = true;
+
+                    this.itemsData[fieldName] = this.itemsData[fieldName] || {};
+                    this.itemsData[fieldName].notSortable = true;
+                }
+            }
+
+            this.disabledFields.push(o);
+        }
+
+        this.enabledFields.forEach(item => {
+            if (duplicateLabelList.includes(item.labelText)) {
+                item.labelText += ' (' + item.name + ')';
+            }
+        });
+
+        this.disabledFields.forEach(item => {
+            if (duplicateLabelList.includes(item.labelText)) {
+                item.labelText += ' (' + item.name + ')';
+            }
+        });
+
+        this.rowLayout = layout;
+
+        for (const it of this.rowLayout) {
+            let label = this.getLanguage().translate(it.name, 'fields', this.scope);
 
             this.enabledFields.forEach(item => {
-                if (duplicateLabelList.includes(item.labelText)) {
-                    item.labelText += ' (' + item.name + ')';
+                if (it.name === item.name) {
+                    label = item.labelText;
                 }
             });
 
-            this.disabledFields.forEach(item => {
-                if (duplicateLabelList.includes(item.labelText)) {
-                    item.labelText += ' (' + item.name + ')';
-                }
-            });
+            it.labelText = label;
+            this.itemsData[it.name] = Espo.Utils.cloneDeep(it);
+        }
+    }
 
-            this.rowLayout = layout;
+    // noinspection JSUnusedLocalSymbols
+    checkFieldType(type) {
+        return true;
+    }
 
-            for (const it of this.rowLayout) {
-                let label = this.getLanguage().translate(it.name, 'fields', this.scope);
+    isFieldEnabled(model, name) {
+        if (this.ignoreList.indexOf(name) !== -1) {
+            return false;
+        }
 
-                this.enabledFields.forEach(item => {
-                    if (it.name === item.name) {
-                        label = item.labelText;
-                    }
-                });
+        if (this.ignoreTypeList.indexOf(model.getFieldParam(name, 'type')) !== -1) {
+            return false;
+        }
 
-                it.labelText = label;
-                this.itemsData[it.name] = Espo.Utils.cloneDeep(it);
-            }
-        },
+        /** @type {string[]|null} */
+        const layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
 
-        // noinspection JSUnusedLocalSymbols
-        checkFieldType: function (type) {
-            return true;
-        },
+        let realType = this.realType;
 
-        isFieldEnabled: function (model, name) {
-            if (this.ignoreList.indexOf(name) !== -1) {
-                return false;
-            }
+        if (realType === 'listSmall') {
+            realType = 'list';
+        }
 
-            if (this.ignoreTypeList.indexOf(model.getFieldParam(name, 'type')) !== -1) {
-                return false;
-            }
+        if (
+            layoutList &&
+            !layoutList.includes(this.type) &&
+            !layoutList.includes(realType)
+        ) {
+            return false;
+        }
 
-            /** @type {string[]|null} */
-            const layoutList = model.getFieldParam(name, 'layoutAvailabilityList');
+        const layoutIgnoreList = model.getFieldParam(name, 'layoutIgnoreList') || [];
 
-            let realType = this.realType;
+        if (layoutIgnoreList.includes(realType)) {
+            return false;
+        }
 
-            if (realType === 'listSmall') {
-                realType = 'list';
-            }
+        return !model.getFieldParam(name, 'disabled') &&
+            !model.getFieldParam(name, 'utility') &&
+            !model.getFieldParam(name, 'layoutListDisabled');
+    }
+}
 
-            if (
-                layoutList &&
-                !layoutList.includes(this.type) &&
-                !layoutList.includes(realType)
-            ) {
-                return false;
-            }
-
-            const layoutIgnoreList = model.getFieldParam(name, 'layoutIgnoreList') || [];
-
-            if (layoutIgnoreList.includes(realType)) {
-                return false;
-            }
-
-            return !model.getFieldParam(name, 'disabled') &&
-                !model.getFieldParam(name, 'utility') &&
-                !model.getFieldParam(name, 'layoutListDisabled');
-        },
-    });
-});
+export default LayoutListView;

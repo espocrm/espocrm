@@ -26,280 +26,279 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/side-panels-detail', ['views/admin/layouts/rows'], function (Dep) {
+import LayoutRowsView from 'views/admin/layouts/rows';
 
-    return Dep.extend({
+class LayoutSidePanelsDetailView extends LayoutRowsView {
 
-        dataAttributeList: [
-            'name',
-            'dynamicLogicVisible',
-            'style',
-            'dynamicLogicStyled',
-            'sticked',
-        ],
+    dataAttributeList = [
+        'name',
+        'dynamicLogicVisible',
+        'style',
+        'dynamicLogicStyled',
+        'sticked',
+    ]
 
-        dataAttributesDefs: {
-            dynamicLogicVisible: {
-                type: 'base',
-                view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
-                tooltip: 'dynamicLogicVisible',
-            },
+    dataAttributesDefs = {
+        dynamicLogicVisible: {
+            type: 'base',
+            view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+            tooltip: 'dynamicLogicVisible',
+        },
+        style: {
+            type: 'enum',
+            options: [
+                'default',
+                'success',
+                'danger',
+                'warning',
+                'info',
+            ],
             style: {
-                type: 'enum',
-                options: [
-                    'default',
-                    'success',
-                    'danger',
-                    'warning',
-                    'info',
-                ],
-                style: {
-                    'info': 'info',
-                    'success': 'success',
-                    'danger': 'danger',
-                    'warning': 'warning',
-                },
-                default: 'default',
-                translation: 'LayoutManager.options.style',
-                tooltip: 'panelStyle',
+                'info': 'info',
+                'success': 'success',
+                'danger': 'danger',
+                'warning': 'warning',
             },
+            default: 'default',
+            translation: 'LayoutManager.options.style',
+            tooltip: 'panelStyle',
+        },
+        dynamicLogicStyled: {
+            type: 'base',
+            view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
+            tooltip: 'dynamicLogicStyled',
+        },
+        sticked: {
+            type: 'bool',
+            tooltip: 'sticked',
+        },
+        name: {
+            readOnly: true,
+        },
+    }
+
+    dataAttributesDynamicLogicDefs = {
+        fields: {
             dynamicLogicStyled: {
-                type: 'base',
-                view: 'views/admin/field-manager/fields/dynamic-logic-conditions',
-                tooltip: 'dynamicLogicStyled',
-            },
-            sticked: {
-                type: 'bool',
-                tooltip: 'sticked',
-            },
-            name: {
-                readOnly: true,
-            },
-        },
-
-        dataAttributesDynamicLogicDefs: {
-            fields: {
-                dynamicLogicStyled: {
-                    visible: {
-                        conditionGroup: [
-                            {
-                                type: 'and',
-                                value: [
-                                    {
-                                        attribute: 'style',
-                                        type: 'notEquals',
-                                        value: 'default',
-                                    },
-                                    {
-                                        attribute: 'style',
-                                        type: 'isNotEmpty',
-                                    },
-                                ]
-                            }
-
-                        ]
-                    }
-                },
-            }
-        },
-
-        editable: true,
-
-        ignoreList: [],
-
-        ignoreTypeList: [],
-
-        viewType: 'detail',
-
-        setup: function () {
-            Dep.prototype.setup.call(this);
-
-            this.dataAttributesDefs = Espo.Utils.cloneDeep(this.dataAttributesDefs);
-
-            this.dataAttributesDefs.dynamicLogicVisible.scope = this.scope;
-            this.dataAttributesDefs.dynamicLogicStyled.scope = this.scope;
-
-            this.wait(true);
-
-            this.loadLayout(() => {
-                this.wait(false);
-            });
-        },
-
-        loadLayout: function (callback) {
-            this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, (layout) => {
-                this.readDataFromLayout(layout);
-
-                if (callback) {
-                    callback();
-                }
-            });
-        },
-
-        readDataFromLayout: function (layout) {
-            var panelListAll = [];
-            var labels = {};
-            var params = {};
-
-            layout = Espo.Utils.cloneDeep(layout);
-
-            if (
-                this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) !== false &&
-                !this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])
-            ) {
-                panelListAll.push('default');
-
-                labels['default'] = 'Default';
-            }
-
-            (this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.viewType]) || [])
-                .forEach(item => {
-                    if (!item.name) {
-                        return;
-                    }
-
-                    panelListAll.push(item.name);
-
-                    if (item.labelText) {
-                        labels[item.name] = item.labelText;
-                    }
-                    params[item.name] = item;
-                });
-
-            this.disabledFields = [];
-
-            layout = layout || {};
-
-            this.rowLayout = [];
-
-            panelListAll.push('_delimiter_');
-
-            if (!layout['_delimiter_']) {
-                layout['_delimiter_'] = {
-                    disabled: true,
-                };
-            }
-
-            panelListAll.forEach((item, index) => {
-                let disabled = false;
-                let itemData = layout[item] || {};
-
-                if (itemData.disabled) {
-                    disabled = true;
-                }
-
-                if (!layout[item]) {
-                    if ((params[item] || {}).disabled) {
-                        disabled = true;
-                    }
-                }
-
-                var labelText;
-
-                if (labels[item]) {
-                    labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);
-                } else {
-                    labelText = this.getLanguage().translate(item, 'panels', this.scope);
-                }
-
-                if (disabled) {
-                    let o = {
-                        name: item,
-                        labelText: labelText,
-                    };
-
-                    if (o.name[0] === '_') {
-                        o.notEditable = true;
-
-                        if (o.name === '_delimiter_') {
-                            o.labelText = '. . .';
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'and',
+                            value: [
+                                {
+                                    attribute: 'style',
+                                    type: 'notEquals',
+                                    value: 'default',
+                                },
+                                {
+                                    attribute: 'style',
+                                    type: 'isNotEmpty',
+                                },
+                            ]
                         }
-                    }
 
-                    this.disabledFields.push(o);
+                    ]
+                }
+            },
+        }
+    }
 
+    editable = true
+    ignoreList = []
+    //ignoreTypeList = []
+    viewType = 'detail'
+
+    setup() {
+        super.setup();
+
+        this.dataAttributesDefs = Espo.Utils.cloneDeep(this.dataAttributesDefs);
+
+        this.dataAttributesDefs.dynamicLogicVisible.scope = this.scope;
+        this.dataAttributesDefs.dynamicLogicStyled.scope = this.scope;
+
+        this.wait(true);
+
+        this.loadLayout(() => {
+            this.wait(false);
+        });
+    }
+
+    loadLayout(callback) {
+        this.getHelper().layoutManager.getOriginal(this.scope, this.type, this.setId, (layout) => {
+            this.readDataFromLayout(layout);
+
+            if (callback) {
+                callback();
+            }
+        });
+    }
+
+    readDataFromLayout(layout) {
+        const panelListAll = [];
+        const labels = {};
+        const params = {};
+
+        layout = Espo.Utils.cloneDeep(layout);
+
+        if (
+            this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanel', this.viewType]) !== false &&
+            !this.getMetadata().get(['clientDefs', this.scope, 'defaultSidePanelDisabled'])
+        ) {
+            panelListAll.push('default');
+
+            labels['default'] = 'Default';
+        }
+
+        (this.getMetadata().get(['clientDefs', this.scope, 'sidePanels', this.viewType]) || [])
+            .forEach(item => {
+                if (!item.name) {
                     return;
                 }
 
-                let o = {
+                panelListAll.push(item.name);
+
+                if (item.labelText) {
+                    labels[item.name] = item.labelText;
+                }
+
+                params[item.name] = item;
+            });
+
+        this.disabledFields = [];
+
+        layout = layout || {};
+
+        this.rowLayout = [];
+
+        panelListAll.push('_delimiter_');
+
+        if (!layout['_delimiter_']) {
+            layout['_delimiter_'] = {
+                disabled: true,
+            };
+        }
+
+        panelListAll.forEach((item, index) => {
+            let disabled = false;
+            const itemData = layout[item] || {};
+
+            if (itemData.disabled) {
+                disabled = true;
+            }
+
+            if (!layout[item]) {
+                if ((params[item] || {}).disabled) {
+                    disabled = true;
+                }
+            }
+
+            let labelText;
+
+            if (labels[item]) {
+                labelText = this.getLanguage().translate(labels[item], 'labels', this.scope);
+            } else {
+                labelText = this.getLanguage().translate(item, 'panels', this.scope);
+            }
+
+            if (disabled) {
+                const o = {
                     name: item,
                     labelText: labelText,
                 };
 
                 if (o.name[0] === '_') {
                     o.notEditable = true;
+
                     if (o.name === '_delimiter_') {
                         o.labelText = '. . .';
                     }
                 }
 
-                if (o.name in params) {
-                    this.dataAttributeList.forEach(attribute => {
-                        if (attribute === 'name') {
-                            return;
-                        }
+                this.disabledFields.push(o);
 
-                        var itemParams = params[o.name] || {};
+                return;
+            }
 
-                        if (attribute in itemParams) {
-                            o[attribute] = itemParams[attribute];
-                        }
-                    });
+            const o = {
+                name: item,
+                labelText: labelText,
+            };
+
+            if (o.name[0] === '_') {
+                o.notEditable = true;
+                if (o.name === '_delimiter_') {
+                    o.labelText = '. . .';
                 }
+            }
 
-                for (var i in itemData) {
-                    o[i] = itemData[i];
-                }
-
-                o.index = ('index' in itemData) ? itemData.index : index;
-
-                this.rowLayout.push(o);
-
-                this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
-            });
-
-            this.rowLayout.sort((v1, v2) => {
-                return v1.index - v2.index;
-            });
-        },
-
-        fetch: function () {
-            let layout = {};
-
-            $('#layout ul.disabled > li').each((i, el) => {
-                var name = $(el).attr('data-name');
-
-                layout[name] = {
-                    disabled: true,
-                };
-            });
-
-            $('#layout ul.enabled > li').each((i, el) => {
-                let $el = $(el);
-                let o = {};
-
-                let name = $el.attr('data-name');
-
-                let attributes = this.itemsData[name] || {};
-
-                attributes.name = name;
-
+            if (o.name in params) {
                 this.dataAttributeList.forEach(attribute => {
                     if (attribute === 'name') {
                         return;
                     }
 
-                    if (attribute in attributes) {
-                        o[attribute] = attributes[attribute];
+                    const itemParams = params[o.name] || {};
+
+                    if (attribute in itemParams) {
+                        o[attribute] = itemParams[attribute];
                     }
                 });
+            }
 
-                o.index = i;
+            for (const i in itemData) {
+                o[i] = itemData[i];
+            }
 
-                layout[name] = o;
-            })
+            o.index = ('index' in itemData) ? itemData.index : index;
 
-            return layout;
-        },
-    });
-});
+            this.rowLayout.push(o);
+
+            this.itemsData[o.name] = Espo.Utils.cloneDeep(o);
+        });
+
+        this.rowLayout.sort((v1, v2) => {
+            return v1.index - v2.index;
+        });
+    }
+
+    fetch() {
+        const layout = {};
+
+        $('#layout ul.disabled > li').each((i, el) => {
+            const name = $(el).attr('data-name');
+
+            layout[name] = {
+                disabled: true,
+            };
+        });
+
+        $('#layout ul.enabled > li').each((i, el) => {
+            const $el = $(el);
+            const o = {};
+
+            const name = $el.attr('data-name');
+
+            const attributes = this.itemsData[name] || {};
+
+            attributes.name = name;
+
+            this.dataAttributeList.forEach(attribute => {
+                if (attribute === 'name') {
+                    return;
+                }
+
+                if (attribute in attributes) {
+                    o[attribute] = attributes[attribute];
+                }
+            });
+
+            o.index = i;
+
+            layout[name] = o;
+        })
+
+        return layout;
+    }
+}
+
+export default LayoutSidePanelsDetailView;

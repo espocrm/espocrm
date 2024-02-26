@@ -26,118 +26,119 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/rows', ['views/admin/layouts/base'], function (Dep) {
+import LayoutBaseView from 'views/admin/layouts/base';
 
-    return Dep.extend({
+class LayoutRowsView extends LayoutBaseView {
 
-        template: 'admin/layouts/rows',
+    template = 'admin/layouts/rows'
 
-        dataAttributeList: null,
-        dataAttributesDefs: {},
-        editable: false,
+    dataAttributeList = null
+    dataAttributesDefs = {}
+    editable = false
 
-        data: function () {
-            return {
-                scope: this.scope,
-                type: this.type,
-                buttonList: this.buttonList,
-                enabledFields: this.enabledFields,
-                disabledFields: this.disabledFields,
-                layout: this.rowLayout,
-                dataAttributeList: this.dataAttributeList,
-                dataAttributesDefs: this.dataAttributesDefs,
-                editable: this.editable,
-            };
-        },
+    data() {
+        return {
+            scope: this.scope,
+            type: this.type,
+            buttonList: this.buttonList,
+            enabledFields: this.enabledFields,
+            disabledFields: this.disabledFields,
+            layout: this.rowLayout,
+            dataAttributeList: this.dataAttributeList,
+            dataAttributesDefs: this.dataAttributesDefs,
+            editable: this.editable,
+        };
+    }
 
-        setup: function () {
-            this.itemsData = {};
+    setup() {
+        this.itemsData = {};
 
-            Dep.prototype.setup.call(this);
+        super.setup();
 
-            this.events['click a[data-action="editItem"]'] = e => {
-                const name = $(e.target).closest('li').data('name');
+        this.events['click a[data-action="editItem"]'] = e => {
+            const name = $(e.target).closest('li').data('name');
 
-                this.editRow(name);
-            };
+            this.editRow(name);
+        };
 
-            this.on('update-item', (name, attributes) => {
-                this.itemsData[name] = Espo.Utils.cloneDeep(attributes);
-            });
+        this.on('update-item', (name, attributes) => {
+            this.itemsData[name] = Espo.Utils.cloneDeep(attributes);
+        });
 
-            Espo.loader.require('res!client/css/misc/layout-manager-rows.css', styleCss => {
-                this.$style = $('<style>').html(styleCss).appendTo($('body'));
-            });
-        },
+        Espo.loader.require('res!client/css/misc/layout-manager-rows.css', styleCss => {
+            this.$style = $('<style>').html(styleCss).appendTo($('body'));
+        });
+    }
 
-        onRemove: function () {
-            if (this.$style) {
-                this.$style.remove();
-            }
-        },
+    onRemove() {
+        if (this.$style) {
+            this.$style.remove();
+        }
+    }
 
-        editRow: function (name) {
-            const attributes = Espo.Utils.cloneDeep(this.itemsData[name] || {});
+    editRow(name) {
+        const attributes = Espo.Utils.cloneDeep(this.itemsData[name] || {});
+        attributes.name = name;
+
+        this.openEditDialog(attributes)
+    }
+
+    afterRender() {
+        $('#layout ul.enabled, #layout ul.disabled').sortable({
+            connectWith: '#layout ul.connected',
+            update: e => {
+                if (!$(e.target).hasClass('disabled')) {
+                    this.onDrop(e);
+                    this.setIsChanged();
+                }
+            },
+        });
+
+        this.$el.find('.enabled-well').focus();
+    }
+
+    onDrop(e) {}
+
+    fetch() {
+        const layout = [];
+
+        $("#layout ul.enabled > li").each((i, el) => {
+            const o = {};
+
+            const name = $(el).data('name');
+
+            const attributes = this.itemsData[name] || {};
             attributes.name = name;
 
-            this.openEditDialog(attributes)
-        },
+            this.dataAttributeList.forEach(attribute => {
+                const defs = this.dataAttributesDefs[attribute] || {};
 
-        afterRender: function () {
-            $('#layout ul.enabled, #layout ul.disabled').sortable({
-                connectWith: '#layout ul.connected',
-                update: e => {
-                    if (!$(e.target).hasClass('disabled')) {
-                        this.onDrop(e);
-                        this.setIsChanged();
-                    }
-                },
+                if (defs.notStorable) {
+                    return;
+                }
+
+                const value = attributes[attribute] || null;
+
+                if (value) {
+                    o[attribute] = value;
+                }
             });
 
-            this.$el.find('.enabled-well').focus();
-        },
+            layout.push(o);
+        });
 
-        onDrop: function (e) {},
+        return layout;
+    }
 
-        fetch: function () {
-            const layout = [];
+    validate(layout) {
+        if (layout.length === 0) {
+            Espo.Ui.error(this.translate('cantBeEmpty', 'messages', 'LayoutManager'));
 
-            $("#layout ul.enabled > li").each((i, el) => {
-                const o = {};
-
-                const name = $(el).data('name');
-
-                const attributes = this.itemsData[name] || {};
-                attributes.name = name;
-
-                this.dataAttributeList.forEach(attribute => {
-                    const defs = this.dataAttributesDefs[attribute] || {};
-
-                    if (defs.notStorable) {
-                        return;
-                    }
-
-                    const value = attributes[attribute] || null;
-
-                    if (value) {
-                        o[attribute] = value;
-                    }
-                });
-
-                layout.push(o);
-            });
-
-            return layout;
-        },
-
-        validate: function (layout) {
-            if (layout.length === 0) {
-                this.notify('Layout cannot be empty', 'error');
-
-                return false;
-            }
-
-            return true;
+            return false;
         }
-    });
-});
+
+        return true;
+    }
+}
+
+export default LayoutRowsView;
