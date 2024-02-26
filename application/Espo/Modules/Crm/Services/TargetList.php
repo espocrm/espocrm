@@ -29,7 +29,6 @@
 
 namespace Espo\Modules\Crm\Services;
 
-use Espo\ORM\Entity;
 use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
 use Espo\Services\Record;
 use Espo\Core\Utils\Metadata;
@@ -45,33 +44,11 @@ class TargetList extends Record
 
         $targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
 
-        $this->duplicatingLinkList = $targetLinkList;
         $this->noEditAccessRequiredLinkList = $targetLinkList;
 
         foreach ($targetLinkList as $link) {
             /** @var string $link */
             $this->linkMandatorySelectAttributeList[$link] = ['targetListIsOptedOut'];
-        }
-    }
-
-    /**
-     * @todo Don't use additionalColumnsConditions.
-     */
-    protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity): void
-    {
-        $repository = $this->getRepository();
-
-        foreach ($this->duplicatingLinkList as $link) {
-            $linkedList = $repository
-                ->getRelation($duplicatingEntity, $link)
-                ->where(['@relation.optedOut' => false])
-                ->find();
-
-            foreach ($linkedList as $linked) {
-                $repository
-                    ->getRelation($entity, $link)
-                    ->relate($linked, ['optedOut' => false]);
-            }
         }
     }
 }

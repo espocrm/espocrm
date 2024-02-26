@@ -8,6 +8,7 @@
         "Espo\\Modules\\Crm\\Classes\\FieldProcessing\\TargetList\\OptedOutCountLoader"
     ],
     "afterCreateHookClassNameList": [
-        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\TargetList\\AfterCreate"
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\TargetList\\AfterCreate",
+        "Espo\\Modules\\Crm\\Classes\\RecordHooks\\TargetList\\AfterCreateDuplicate"
     ]
 }
