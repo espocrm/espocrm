@@ -132,13 +132,17 @@ class NoteStreamView extends View {
 
         string = string.toLowerCase();
 
-        const language = this.getPreferences().get('language') || this.getConfig().get('language');
-
-        if (['de_DE', 'nl_NL'].includes(language)) {
+        if (this.isToUpperCaseStringItems()) {
             string = Espo.Utils.upperCaseFirst(string);
         }
 
         return string;
+    }
+
+    isToUpperCaseStringItems() {
+        const language = this.getPreferences().get('language') || this.getConfig().get('language');
+
+        return ['de_DE', 'nl_NL'].includes(language);
     }
 
     createField(name, type, params, view, options) {
