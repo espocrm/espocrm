@@ -145,6 +145,7 @@ class TargetListCreate implements CreateHook
                 $foreignLink => [
                     'massLink' => true,
                     'linkRequiredForeignAccess' => 'read',
+                    'mandatoryAttributeList' => ['targetListIsOptedOut'],
                 ],
             ],
         ]);

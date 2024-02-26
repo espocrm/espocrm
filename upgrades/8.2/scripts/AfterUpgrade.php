@@ -102,6 +102,7 @@ class AfterUpgrade
                     $link => [
                         'massLink' => true,
                         'linkRequiredForeignAccess' => 'read',
+                        'mandatoryAttributeList' => ['targetListIsOptedOut'],
                     ]
                 ]
             ]);

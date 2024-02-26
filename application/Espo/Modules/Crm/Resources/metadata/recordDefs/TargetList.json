@@ -14,19 +14,23 @@
     "relationships": {
         "users": {
             "massLink": true,
-            "linkRequiredForeignAccess": "read"
+            "linkRequiredForeignAccess": "read",
+            "mandatoryAttributeList": ["targetListIsOptedOut"]
         },
         "leads": {
             "massLink": true,
-            "linkRequiredForeignAccess": "read"
+            "linkRequiredForeignAccess": "read",
+            "mandatoryAttributeList": ["targetListIsOptedOut"]
         },
         "contacts": {
             "massLink": true,
-            "linkRequiredForeignAccess": "read"
+            "linkRequiredForeignAccess": "read",
+            "mandatoryAttributeList": ["targetListIsOptedOut"]
         },
         "accounts": {
             "massLink": true,
-            "linkRequiredForeignAccess": "read"
+            "linkRequiredForeignAccess": "read",
+            "mandatoryAttributeList": ["targetListIsOptedOut"]
         }
     }
 }
