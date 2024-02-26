@@ -129,7 +129,7 @@
                                 data-scope="{{../../name}}"
                                 data-action="{{name}}"
                                 title="{{translate name scope='Role' category='actions'}}"
-                            >{{options ../../../fieldLevelList value scope='Role' field='accessList' styleMap=../../../styleMap}}</select>
+                            >{{options ../../../fieldLevelList value scope='Role' field='levelList' styleMap=../../../styleMap}}</select>
                         </td>
                         {{/each}}
                         <td colspan="2">

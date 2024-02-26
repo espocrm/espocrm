@@ -608,7 +608,7 @@ class RoleRecordTableView extends View {
             .map(item => {
                 return {
                     value: item,
-                    text: this.translate(item, 'levelList', 'Role'),
+                    text: this.getLanguage().translateOption(item, 'levelList', 'Role'),
                 };
             });
 
@@ -646,7 +646,7 @@ class RoleRecordTableView extends View {
             map(item => {
                 return {
                     value: item,
-                    text: this.translate(item, 'levelList', 'Role'),
+                    text: this.getLanguage().translateOption(item, 'levelList', 'Role'),
                 };
             });
 
