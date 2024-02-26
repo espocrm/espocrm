@@ -157,8 +157,8 @@ class LayoutSidePanelsDetailView extends LayoutRowsView {
 
                 panelListAll.push(item.name);
 
-                if (item.labelText) {
-                    labels[item.name] = item.labelText;
+                if (item.label) {
+                    labels[item.name] = item.label;
                 }
 
                 params[item.name] = item;
