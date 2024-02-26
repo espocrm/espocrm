@@ -512,6 +512,7 @@ define('custom:views/attendance-sheet/abonements-panel', ['view'],  function (De
             const calendar = new window.FullCalendar.Calendar(calendarElement, {
                 firstDay: 1,
                 locale: 'ua',
+                showNonCurrentDates: false,
                 eventClick: (info) => Espo.Ui.notify(info.event.title, 'success', 2000),
                 initialDate: trainingEvents[trainingEvents.length - 1].start.split('T')[0],
                 events: trainingEvents,
