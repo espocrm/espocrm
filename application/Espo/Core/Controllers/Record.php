@@ -79,7 +79,6 @@ class Record extends RecordBase
      * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
-     * @throws Error
      */
     public function postActionCreateLink(Request $request): bool
     {

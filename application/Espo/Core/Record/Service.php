@@ -32,7 +32,6 @@ namespace Espo\Core\Record;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ConflictSilent;
 use Espo\Core\Exceptions\Forbidden;
@@ -114,14 +113,24 @@ class Service implements Crud,
 
     protected string $entityType;
     protected bool $getEntityBeforeUpdate = false;
-    protected bool $noEditAccessRequiredForLink = false;
+
     protected bool $maxSelectTextAttributeLengthDisabled = false;
     protected ?int $maxSelectTextAttributeLength = null;
 
-    /** @var string[] */
-    protected array $noEditAccessRequiredLinkList = [];
-
     private ?StreamService $streamService = null;
+
+    /**
+     * @deprecated As of v8.2. Use metadata > recordDefs > relationships > {link} > linkRequiredAccess.
+     * @todo Remove in v9.0.
+     */
+    protected bool $noEditAccessRequiredForLink = false;
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > recordDefs > relationships > {link} > linkRequiredAccess.
+     * @todo Remove in v9.0.
+     */
+    protected array $noEditAccessRequiredLinkList = [];
 
     /**
      * @var array<string, string[]>
@@ -495,6 +504,7 @@ class Service implements Crud,
                     ->bindInstance(Acl::class, $this->acl)
                     ->bindInstance(User::class, $this->user)
                     ->inContext(LinkCheck::class, function (ContextualBinder $binder) {
+                        /** @noinspection PhpDeprecationInspection */
                         $binder
                             ->bindValue('$noEditAccessRequiredLinkList', $this->noEditAccessRequiredLinkList)
                             ->bindValue('$noEditAccessRequiredForLink', $this->noEditAccessRequiredForLink);
@@ -1372,7 +1382,6 @@ class Service implements Crud,
      * @throws BadRequest
      * @throws Forbidden
      * @throws NotFound
-     * @throws Error
      */
     public function massLink(string $id, string $link, SearchParams $searchParams): bool
     {
@@ -1380,8 +1389,8 @@ class Service implements Crud,
             throw new Forbidden();
         }
 
-        if (!$id || !$link) {
-            throw new BadRequest();
+        if (!$this->metadata->get("recordDefs.$this->entityType.relationships.$link.massLink")) {
+            throw new Forbidden("Mass link is not allowed.");
         }
 
         $this->processForbiddenLinkEditCheck($link);
@@ -1392,15 +1401,11 @@ class Service implements Crud,
             throw new NotFound();
         }
 
+        $this->getLinkCheck()->processLink($entity, $link);
+
         // Not used link-check deliberately. Only edit access.
         if (!$this->acl->check($entity, AclTable::ACTION_EDIT)) {
             throw new Forbidden();
-        }
-
-        $methodName = 'massLink' . ucfirst($link);
-
-        if (method_exists($this, $methodName)) {
-            return $this->$methodName($id, $searchParams);
         }
 
         if (!$entity instanceof CoreEntity) {
@@ -1409,15 +1414,13 @@ class Service implements Crud,
 
         $foreignEntityType = $entity->getRelationParam($link, 'entity');
 
-        if (empty($foreignEntityType)) {
+        if (!$foreignEntityType) {
             throw new LogicException("Link '$link' has no 'entity'.");
         }
 
-        $accessActionRequired = AclTable::ACTION_EDIT;
-
-        if (in_array($link, $this->noEditAccessRequiredLinkList)) {
-            $accessActionRequired = AclTable::ACTION_READ;
-        }
+        $accessActionRequired = $this->metadata
+            ->get("recordDefs.$this->entityType.relationships.$link.linkRequiredForeignAccess") ??
+            AclTable::ACTION_EDIT;
 
         if (!$this->acl->check($foreignEntityType, $accessActionRequired)) {
             throw new Forbidden();
@@ -1437,11 +1440,14 @@ class Service implements Crud,
             return true;
         }
 
+        // @todo Apply access control filter if $accessActionRequired === 'read'. For better performance.
+
         $countRelated = 0;
 
         $foreignCollection = $this->entityManager
             ->getRDBRepository($foreignEntityType)
             ->clone($query)
+            ->sth()
             ->find();
 
         foreach ($foreignCollection as $foreignEntity) {
@@ -1451,7 +1457,7 @@ class Service implements Crud,
 
             $this->getRepository()
                 ->getRelation($entity, $link)
-                ->relate($foreignEntity);
+                ->relate($foreignEntity, [SaveOption::API => true]);
 
             $countRelated++;
         }

@@ -31,6 +31,7 @@ use Espo\Core\Container;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\Template;
 use Espo\ORM\EntityManager;
 use Espo\Tools\Pdf\Template as PdfTemplate;
@@ -53,6 +54,7 @@ class AfterUpgrade
         $config = $container->getByClass(Config::class);
 
         $this->updateTemplates($em, $config);
+        $this->updateTargetList($container->getByClass(Metadata::class));
     }
 
     private function updateTemplates(EntityManager $entityManager, Config $config): void
@@ -78,5 +80,39 @@ class AfterUpgrade
 
             $entityManager->saveEntity($template);
         }
+    }
+
+    private function updateTargetList(Metadata $metadata): void
+    {
+        $links = $metadata->get('entityDefs.TargetList.links') ?? [];
+
+        $toSave = false;
+
+        foreach ($links as $link => $defs) {
+            if (empty($defs['isCustom'])) {
+                continue;
+            }
+
+            if (!$metadata->get("clientDefs.TargetList.relationshipPanels.$link.massSelect")) {
+                continue;
+            }
+
+            $metadata->set('recordDefs', 'TargetList', [
+                'relationships' => [
+                    $link => [
+                        'massLink' => true,
+                        'linkRequiredForeignAccess' => 'read',
+                    ]
+                ]
+            ]);
+
+            $toSave = true;
+        }
+
+        if (!$toSave) {
+            return;
+        }
+
+        $metadata->save();
     }
 }

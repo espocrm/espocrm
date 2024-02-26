@@ -480,6 +480,10 @@
                     "syncWithModel": {
                         "type": "boolean",
                         "description": "Re-fetch records when the parent model is saved or refreshed by WebSocket."
+                    },
+                    "massSelect": {
+                        "type": "boolean",
+                        "description": "Allow mass select."
                     }
                 }
             }

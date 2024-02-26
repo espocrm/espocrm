@@ -150,6 +150,10 @@
                         "description": "Mandatory attributes to be selected when find related. As of v8.2.",
                         "type": "array",
                         "items": {"type": "string"}
+                    },
+                    "massLink": {
+                        "type": "boolean",
+                        "default": "Allow mass link. As of v8.2."
                     }
                 }
             }

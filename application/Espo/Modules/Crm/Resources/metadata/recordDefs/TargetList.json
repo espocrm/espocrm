@@ -10,5 +10,23 @@
     "afterCreateHookClassNameList": [
         "Espo\\Modules\\Crm\\Classes\\RecordHooks\\TargetList\\AfterCreate",
         "Espo\\Modules\\Crm\\Classes\\RecordHooks\\TargetList\\AfterCreateDuplicate"
-    ]
+    ],
+    "relationships": {
+        "users": {
+            "massLink": true,
+            "linkRequiredForeignAccess": "read"
+        },
+        "leads": {
+            "massLink": true,
+            "linkRequiredForeignAccess": "read"
+        },
+        "contacts": {
+            "massLink": true,
+            "linkRequiredForeignAccess": "read"
+        },
+        "accounts": {
+            "massLink": true,
+            "linkRequiredForeignAccess": "read"
+        }
+    }
 }

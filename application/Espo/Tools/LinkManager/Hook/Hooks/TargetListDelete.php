@@ -99,7 +99,8 @@ class TargetListDelete implements DeleteHook
             ]);
         }
 
-        $this->metadata->delete('clientDefs', TargetList::ENTITY_TYPE, ['relationshipPanels.' . $foreignLink]);
+        $this->metadata->delete('clientDefs', TargetList::ENTITY_TYPE, ["relationshipPanels.$foreignLink"]);
+        $this->metadata->delete('recordDefs', TargetList::ENTITY_TYPE, ["relationships.$foreignLink"]);
 
         $this->metadata->save();
     }

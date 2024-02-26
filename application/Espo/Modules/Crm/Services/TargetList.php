@@ -33,22 +33,12 @@ use Espo\Core\Select\SearchParams;
 use Espo\Modules\Crm\Entities\TargetList as TargetListEntity;
 use Espo\Modules\Crm\Tools\TargetList\MetadataProvider;
 use Espo\Services\Record;
-use Espo\Core\Utils\Metadata;
 
 /**
  * @extends Record<TargetListEntity>
  */
 class TargetList extends Record
 {
-    public function setMetadata(Metadata $metadata): void
-    {
-        parent::setMetadata($metadata);
-
-        $targetLinkList = $this->metadata->get(['scopes', 'TargetList', 'targetLinkList']) ?? [];
-
-        $this->noEditAccessRequiredLinkList = $targetLinkList;
-    }
-
     protected function prepareLinkSearchParams(SearchParams $searchParams, string $link): SearchParams
     {
         $searchParams = parent::prepareLinkSearchParams($searchParams, $link);
