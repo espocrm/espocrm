@@ -119,7 +119,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
             role = '';
         }
 
-        let $el = $('<div>')
+        const $el = $('<div>')
             .append(
                 $('<a>')
                     .attr('href', '#' + this.foreignScope + '/view/' + id)
@@ -128,7 +128,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
             );
 
         if (this.isDetailMode()) {
-            let iconHtml = this.getIconHtml(id);
+            const iconHtml = this.getIconHtml(id);
 
             if (iconHtml) {
                 $el.prepend(iconHtml);
@@ -153,7 +153,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
 
             className = className + '-' + style;
 
-            let text = this.roleType === this.ROLE_TYPE_ENUM ?
+            const text = this.roleType === this.ROLE_TYPE_ENUM ?
                 this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope) :
                 role;
 
@@ -170,7 +170,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
 
     getValueForDisplay() {
         if (this.isDetailMode() || this.isListMode()) {
-            let names = [];
+            const names = [];
 
             this.ids.forEach(id => {
                 names.push(
@@ -188,7 +188,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
 
         this.deleteLinkHtml(id);
 
-        let index = this.ids.indexOf(id);
+        const index = this.ids.indexOf(id);
 
         if (index > -1) {
             this.ids.splice(index, 1);
@@ -227,14 +227,14 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
     getJQSelect(id, roleValue) {
         // Do not use the `html` method to avoid XSS.
 
-        let $role = $('<select>')
+        const $role = $('<select>')
             .addClass('role form-control input-sm')
             .attr('data-id', id);
 
         this.roleList.forEach(role => {
-            let text = this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope);
+            const text = this.getLanguage().translateOption(role, this.roleField, this.roleFieldScope);
 
-            let $option = $('<option>')
+            const $option = $('<option>')
                 .val(role)
                 .text(text);
 
@@ -260,16 +260,16 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
             return super.addLinkHtml(id, name);
         }
 
-        let role = (this.columns[id] || {})[this.columnName];
+        const role = (this.columns[id] || {})[this.columnName];
 
-        let $container = this.$el.find('.link-container');
+        const $container = this.$el.find('.link-container');
 
-        let $el = $('<div>')
+        const $el = $('<div>')
             .addClass('form-inline clearfix')
             .addClass('list-group-item link-with-role link-group-item-with-columns')
             .addClass('link-' + id);
 
-        let $remove = $('<a>')
+        const $remove = $('<a>')
             .attr('role', 'button')
             .attr('tabindex', '0')
             .attr('data-id', id)
@@ -279,13 +279,13 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
                 $('<span>').addClass('fas fa-times')
             );
 
-        let $left = $('<div>').addClass('pull-left');
-        let $right = $('<div>').append($remove);
+        const $left = $('<div>').addClass('pull-left');
+        const $right = $('<div>').append($remove);
 
-        let $name = $('<div>')
+        const $name = $('<div>')
             .addClass('link-item-name')
             .text(name)
-            .append('&nbsp;')
+            .append('&nbsp;');
 
         let $role;
 
@@ -293,7 +293,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
             $role = this.getJQSelect(id, role);
         }
         else {
-            let text = this.rolePlaceholderText || this.translate(this.roleField, 'fields', this.roleFieldScope);
+            const text = this.rolePlaceholderText || this.translate(this.roleField, 'fields', this.roleFieldScope);
 
             $role = $('<input>')
                 .addClass('role form-control input-sm')
@@ -320,7 +320,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
         }
 
         if (this.isEditMode() && $role) {
-            let fetch = ($target) => {
+            const fetch = ($target) => {
                 if (!$target || !$target.length) {
                     return;
                 }
@@ -330,7 +330,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
                 }
 
                 let value = $target.val().toString().trim();
-                let id = $target.data('id');
+                const id = $target.data('id');
 
                 if (value === '') {
                     value = null;
@@ -352,7 +352,7 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
     }
 
     fetch() {
-        let data = super.fetch();
+        const data = super.fetch();
 
         if (!this.skipRoles) {
             data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
