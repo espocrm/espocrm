@@ -108,6 +108,11 @@
             "type": "array",
             "items": {"type": "string"}
         },
+        "duplicateLinkList": {
+            "description": "Links to be copied when duplicating a record. As of v8.2.",
+            "type": "array",
+            "items": {"type": "string"}
+        },
         "relationships": {
             "description": "Relationship parameters. Key-object pairs, where keys are link names.",
             "type": "object",

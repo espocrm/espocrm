@@ -122,10 +122,15 @@ class Service implements Crud,
     protected array $noEditAccessRequiredLinkList = [];
     /** @var array<string, string[]> */
     protected array $linkMandatorySelectAttributeList = [];
-    /** @var string[] */
-    protected array $duplicatingLinkList = [];
 
     private ?StreamService $streamService = null;
+
+    /**
+     * @var string[]
+     * @deprecated As of v8.2. Use metadata > recordDefs > duplicateLinkList.
+     * @todo Remove in v9.0.
+     */
+    protected array $duplicatingLinkList = [];
 
     /**
      * @var bool
@@ -805,6 +810,7 @@ class Service implements Crud,
         $this->recordHookManager->processAfterCreate($entity, $params);
         /** @noinspection PhpDeprecationInspection */
         $this->afterCreateEntity($entity, $data);
+        /** @noinspection PhpDeprecationInspection */
         $this->afterCreateProcessDuplicating($entity, $params);
 
         $this->loadAdditionalFields($entity);
@@ -1750,6 +1756,8 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @noinspection PhpDocSignatureInspection
+     * @todo Make private in v9.0.
+     * @deprecated As of v8.2. Use afterCreate record hook instead.
      */
     protected function afterCreateProcessDuplicating(Entity $entity, CreateParams $params): void
     {
@@ -1770,6 +1778,7 @@ class Service implements Crud,
             return;
         }
 
+        /** @noinspection PhpDeprecationInspection */
         $this->duplicateLinks($entity, $duplicatingEntity);
     }
 
@@ -1777,18 +1786,32 @@ class Service implements Crud,
      * @param TEntity $entity
      * @param TEntity $duplicatingEntity
      * @noinspection PhpDocSignatureInspection
+     * @todo Make private in v9.0.
+     * @deprecated As of v8.2. Use afterCreate record hook instead.
      */
     protected function duplicateLinks(Entity $entity, Entity $duplicatingEntity): void
     {
-        $repository = $this->getRepository();
+        /** @noinspection PhpDeprecationInspection */
+        if ($this->duplicatingLinkList !== []) {
+            trigger_error(
+                '$duplicatingLinkList is deprecated and will be removed in v9.0.',
+                E_USER_DEPRECATED
+            );
+        }
 
-        foreach ($this->duplicatingLinkList as $link) {
-            $linkedList = $repository
+        /** @noinspection PhpDeprecationInspection */
+        $linkList = array_merge(
+            $this->duplicatingLinkList,
+            $this->metadata->get("recordDefs.$this->entityType.duplicateLinkList") ?? [],
+        );
+
+        foreach ($linkList as $link) {
+            $linkedList = $this->getRepository()
                 ->getRelation($duplicatingEntity, $link)
                 ->find();
 
             foreach ($linkedList as $linked) {
-                $repository
+                $this->getRepository()
                     ->getRelation($entity, $link)
                     ->relate($linked);
             }
