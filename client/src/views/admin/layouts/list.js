@@ -28,6 +28,7 @@
 
 define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) {
 
+    // noinspection JSUnusedLocalSymbols
     return Dep.extend({
 
         dataAttributeList: [
@@ -149,7 +150,6 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
 
             for (const field in model.defs.fields) {
                 if (this.checkFieldType(model.getFieldParam(field, 'type')) && this.isFieldEnabled(model, field)) {
-
                     allFields.push(field);
                 }
             }
@@ -167,81 +167,82 @@ define('views/admin/layouts/list', ['views/admin/layouts/rows'], function (Dep) 
             const labelList = [];
             const duplicateLabelList = [];
 
-            for (const i in layout) {
-                const label = this.getLanguage().translate(layout[i].name, 'fields', this.scope);
+            for (const item of layout) {
+                const label = this.getLanguage().translate(item.name, 'fields', this.scope);
 
-                if (~labelList.indexOf(label)) {
+                if (labelList.includes(label)) {
                     duplicateLabelList.push(label);
                 }
 
                 labelList.push(label);
 
                 this.enabledFields.push({
-                    name: layout[i].name,
+                    name: item.name,
                     label: label,
                 });
 
-                this.enabledFieldsList.push(layout[i].name);
+                this.enabledFieldsList.push(item.name);
             }
 
-            for (const i in allFields) {
-                if (!_.contains(this.enabledFieldsList, allFields[i])) {
-                    const label = this.getLanguage().translate(allFields[i], 'fields', this.scope);
-
-                    if (~labelList.indexOf(label)) {
-
-                        duplicateLabelList.push(label);
-                    }
-
-                    labelList.push(label);
-
-                    const fieldName = allFields[i];
-
-                    const o = {
-                        name: fieldName,
-                        label: label,
-                    };
-
-                    const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
-
-                    if (fieldType) {
-                        if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
-                            o.notSortable = true;
-
-                            this.itemsData[fieldName] = this.itemsData[fieldName] || {};
-                            this.itemsData[fieldName].notSortable = true;
-                        }
-                    }
-
-                    this.disabledFields.push(o);
+            for (const field of allFields) {
+                if (this.enabledFieldsList.includes(field)) {
+                    continue;
                 }
+
+                const label = this.getLanguage().translate(field, 'fields', this.scope);
+
+                if (labelList.includes(label)) {
+                    duplicateLabelList.push(label);
+                }
+
+                labelList.push(label);
+
+                const fieldName = field;
+
+                const o = {
+                    name: fieldName,
+                    label: label,
+                };
+
+                const fieldType = this.getMetadata().get(['entityDefs', this.scope, 'fields', fieldName, 'type']);
+
+                if (fieldType) {
+                    if (this.getMetadata().get(['fields', fieldType, 'notSortable'])) {
+                        o.notSortable = true;
+
+                        this.itemsData[fieldName] = this.itemsData[fieldName] || {};
+                        this.itemsData[fieldName].notSortable = true;
+                    }
+                }
+
+                this.disabledFields.push(o);
             }
 
             this.enabledFields.forEach(item => {
-                if (~duplicateLabelList.indexOf(item.label)) {
+                if (duplicateLabelList.includes(item.label)) {
                     item.label += ' (' + item.name + ')';
                 }
             });
 
             this.disabledFields.forEach(item => {
-                if (~duplicateLabelList.indexOf(item.label)) {
+                if (duplicateLabelList.includes(item.label)) {
                     item.label += ' (' + item.name + ')';
                 }
             });
 
             this.rowLayout = layout;
 
-            for (const i in this.rowLayout) {
-                let label = this.getLanguage().translate(this.rowLayout[i].name, 'fields', this.scope);
+            for (const it of this.rowLayout) {
+                let label = this.getLanguage().translate(it.name, 'fields', this.scope);
 
                 this.enabledFields.forEach(item => {
-                    if (item.name === this.rowLayout[i].name) {
+                    if (it.name === item.name) {
                         label = item.label;
                     }
                 });
 
-                this.rowLayout[i].label = label;
-                this.itemsData[this.rowLayout[i].name] = Espo.Utils.cloneDeep(this.rowLayout[i]);
+                it.label = label;
+                this.itemsData[it.name] = Espo.Utils.cloneDeep(it);
             }
         },
 
