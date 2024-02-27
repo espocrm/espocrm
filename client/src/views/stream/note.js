@@ -128,10 +128,8 @@ class NoteStreamView extends View {
             (this.translate(entityType, 'scopeNamesPlural') || '') :
             (this.translate(entityType, 'scopeNames') || '');
 
-        string = string.toLowerCase();
-
-        if (this.isToUpperCaseStringItems()) {
-            string = Espo.Utils.upperCaseFirst(string);
+        if (!this.isToUpperCaseStringItems()) {
+            string = string.toLowerCase();
         }
 
         return string;
