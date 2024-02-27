@@ -65,9 +65,7 @@ class StreamUpdateNoteRowActionsView extends StreamDefaultNoteRowActionsView {
             return false;
         }
 
-        const data = /** @type {Record} */ this.model.get('data') || {};
-
-        const fieldList = /** @type {string[]} */data.fields || [];
+        const fieldList = this.getFieldList();
 
         if (!fieldList.length) {
             return false;
@@ -94,9 +92,19 @@ class StreamUpdateNoteRowActionsView extends StreamDefaultNoteRowActionsView {
         this.getRouter().dispatch(entityType, 'edit', {
             id: entityId,
             attributes: this.getPreviousAttributes(),
+            highlightFieldList: this.getFieldList(),
         });
 
         this.getRouter().navigate(`#${entityType}/edit/${entityId}`, {trigger: false});
+    }
+
+    /**
+     * @return {string[]}
+     */
+    getFieldList() {
+        const data = /** @type {Record} */ this.model.get('data') || {};
+
+        return /** @type {string[]} */data.fields || [];
     }
 
     /**

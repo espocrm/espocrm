@@ -921,6 +921,12 @@ class BaseFieldView extends View {
         }
     }
 
+    highlight() {
+        const $cell = this.get$cell();
+
+        $cell.addClass('highlighted');
+    }
+
     /** @inheritDoc */
     setupFinal() {
         this.wait(

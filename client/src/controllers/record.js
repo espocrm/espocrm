@@ -393,6 +393,10 @@ class RecordController extends Controller {
                         o.attributes = options.attributes;
                     }
 
+                    if (options.highlightFieldList) {
+                        o.highlightFieldList = options.highlightFieldList;
+                    }
+
                     this.main(this.getViewName('edit'), o);
                 });
 

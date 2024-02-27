@@ -147,6 +147,8 @@ class EditRecordView extends DetailRecordView {
                 this.focusForCreate();
             });
         }
+
+        this.setupHighlight();
     }
 
     /** @inheritDoc */
@@ -256,6 +258,22 @@ class EditRecordView extends DetailRecordView {
         }
 
         this.actionSaveAndNew({focusForCreate: true});
+    }
+
+    /** @private */
+    setupHighlight() {
+        if (!this.options.highlightFieldList) {
+            return;
+        }
+
+        this.on('after:render', () => {
+            const fieldList = /** @type {string[]} */this.options.highlightFieldList;
+
+            fieldList
+                .map(it => this.getFieldView(it))
+                .filter(view => view)
+                .forEach(view => view.highlight());
+        });
     }
 }
 
