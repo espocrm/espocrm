@@ -32,6 +32,7 @@ class UpdateNoteStreamView extends NoteStreamView {
 
     template = 'stream/notes/update'
     messageName = 'update'
+    rowActionsView = 'views/stream/record/row-actions/update'
 
     data() {
         return {

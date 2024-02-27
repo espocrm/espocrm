@@ -390,7 +390,8 @@
         "error404": "The url you requested can't be handled.",
         "error403": "You don't have an access to this area.",
         "emptyMassUpdate": "No fields available for Mass Update.",
-        "attemptIntervalFailure": "The operation is not allowed during a specific time interval. Wait for some time before the next attempt."
+        "attemptIntervalFailure": "The operation is not allowed during a specific time interval. Wait for some time before the next attempt.",
+        "confirmRestoreFromAudit": "The previous values will be set in a form. Then you can save the record to restore the previous values."
     },
     "boolFilters": {
         "onlyMy": "Only My",

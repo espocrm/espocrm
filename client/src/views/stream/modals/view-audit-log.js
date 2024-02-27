@@ -73,6 +73,7 @@ class StreamViewAuditLogModalView extends ModalView {
                     model: this.model,
                     // Prevents 'No Data' being displayed.
                     skipBuildRows: true,
+                    type: 'listAuditLog',
                 });
 
                 Espo.Ui.notify(' ... ');

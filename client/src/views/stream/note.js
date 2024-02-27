@@ -72,6 +72,9 @@ class NoteStreamView extends View {
     init() {
         this.createField('createdAt', null, null, 'views/fields/datetime-short');
 
+        /** @type {string} */
+        this.listType = this.options.listType;
+
         this.isUserStream = this.options.isUserStream;
         this.isThis = !this.isUserStream;
 
@@ -115,6 +118,7 @@ class NoteStreamView extends View {
                 model: this.model,
                 isEditable: this.isEditable,
                 isRemovable: this.isRemovable,
+                listType: this.listType,
             });
         }
     }
