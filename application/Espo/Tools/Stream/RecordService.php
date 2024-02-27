@@ -32,7 +32,9 @@ namespace Espo\Tools\Stream;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\SearchParams;
+use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
@@ -44,6 +46,7 @@ use Espo\Core\Record\Collection as RecordCollection;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
 use Espo\Tools\Stream\RecordService\QueryHelper;
+use stdClass;
 
 class RecordService
 {
@@ -54,7 +57,8 @@ class RecordService
         private NoteAccessControl $noteAccessControl,
         private Helper $helper,
         private QueryHelper $queryHelper,
-        private Metadata $metadata
+        private Metadata $metadata,
+        private FieldUtil $fieldUtil
     ) {}
 
     /**
@@ -127,7 +131,6 @@ class RecordService
      * @return RecordCollection<Note>
      * @throws Forbidden
      * @throws BadRequest
-     * @throws NotFound
      */
     private function findInternal(string $scope, string $id, SearchParams $searchParams): RecordCollection
     {
@@ -174,25 +177,7 @@ class RecordService
             ->find();
 
         foreach ($collection as $e) {
-            if (
-                $e->getType() === Note::TYPE_POST ||
-                $e->getType() === Note::TYPE_EMAIL_RECEIVED
-            ) {
-                $e->loadAttachments();
-            }
-
-            if (
-                $e->getParentId() && $e->getParentType() &&
-                ($e->getParentId() !== $id || $e->getParentType() !== $scope)
-            ) {
-                $e->loadParentNameField('parent');
-            }
-
-            if ($e->getRelatedId() && $e->getRelatedType()) {
-                $e->loadParentNameField('related');
-            }
-
-            $this->noteAccessControl->apply($e, $this->user);
+            $this->prepareNote($e, $scope, $id);
         }
 
         $count = $this->entityManager
@@ -391,5 +376,118 @@ class RecordService
         }
 
         $where[] = ['type!=' => Note::TYPE_STATUS];
+    }
+
+    private function prepareNote(Note $note, string $scope, string $id): void
+    {
+        if (
+            $note->getType() === Note::TYPE_POST ||
+            $note->getType() === Note::TYPE_EMAIL_RECEIVED
+        ) {
+            $note->loadAttachments();
+        }
+
+        if (
+            $note->getParentId() && $note->getParentType() &&
+            ($note->getParentId() !== $id || $note->getParentType() !== $scope)
+        ) {
+            $note->loadParentNameField('parent');
+        }
+
+        if ($note->getRelatedId() && $note->getRelatedType()) {
+            $note->loadParentNameField('related');
+        }
+
+        $this->noteAccessControl->apply($note, $this->user);
+
+        if ($note->getType() === Note::TYPE_UPDATE) {
+            $this->prepareNoteUpdate($note);
+        }
+    }
+
+    private function prepareNoteUpdate(Note $note): void
+    {
+        $data = $note->getData();
+
+        /** @var ?string[] $fieldList */
+        $fieldList = $data->fields ?? null;
+        $attributes = $data->attributes ?? null;
+
+        if (!$attributes instanceof stdClass) {
+            return;
+        }
+
+        $was = $attributes->was ?? null;
+
+        if (!$was instanceof stdClass) {
+            return;
+        }
+
+        if (!is_array($fieldList)) {
+            return;
+        }
+
+        foreach ($fieldList as $field) {
+            if ($this->loadNoteUpdateWasForField($note, $field, $was)) {
+                $note->setData($data);
+            }
+        }
+    }
+
+    private function loadNoteUpdateWasForField(Note $note, string $field, stdClass $was): bool
+    {
+        if (!$note->getParentType() || !$note->getParentId()) {
+            return false;
+        }
+
+        $type = $this->fieldUtil->getFieldType($note->getParentType(), $field);
+
+        if ($type === FieldType::LINK_MULTIPLE) {
+            $this->loadNoteUpdateWasForFieldLinkMultiple($note, $field, $was);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private function loadNoteUpdateWasForFieldLinkMultiple(Note $note, string $field, stdClass $was): void
+    {
+        /** @var ?string[] $ids */
+        $ids = $was->{$field . 'Ids'} ?? null;
+
+        $names = (object) [];
+
+        if (!is_array($ids)) {
+            return;
+        }
+
+        $entityType = $note->getParentType();
+
+        if (!$entityType) {
+            return;
+        }
+
+        $foreignEntityType = $this->entityManager
+            ->getDefs()
+            ->getEntity($entityType)
+            ->tryGetRelation($field)
+            ?->tryGetForeignEntityType();
+
+        if (!$foreignEntityType) {
+            return;
+        }
+
+        $collection = $this->entityManager
+            ->getRDBRepository($foreignEntityType)
+            ->select(['id', 'name'])
+            ->where(['id' => $ids])
+            ->find();
+
+        foreach ($collection as $entity) {
+            $names->{$entity->getId()} = $entity->get('name');
+        }
+
+        $was->{$field . 'Names'} = $names;
     }
 }

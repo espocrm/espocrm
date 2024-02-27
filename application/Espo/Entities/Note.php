@@ -253,6 +253,13 @@ class Note extends Entity
         return $this;
     }
 
+    public function setData(stdClass $data): self
+    {
+        $this->set('data', $data);
+
+        return $this;
+    }
+
     public function loadAdditionalFields(): void
     {
         if (
