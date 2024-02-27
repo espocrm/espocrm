@@ -50,20 +50,14 @@ class NoteStreamView extends View {
      */
     messageData = null
 
-    /**
-     * @protected
-     */
+    /** @protected */
     isEditable = false
-
-    /**
-     * @protected
-     */
+    /** @protected */
     isRemovable = false
-
-    /**
-     * @protected
-     */
+    /** @protected */
     isSystemAvatar = false
+
+    rowActionsView = 'views/stream/record/row-actions/default'
 
     data() {
         return {
@@ -115,7 +109,7 @@ class NoteStreamView extends View {
         };
 
         if (!this.options.noEdit && (this.isEditable || this.isRemovable)) {
-            this.createView('right', 'views/stream/row-actions/default', {
+            this.createView('right', this.rowActionsView, {
                 selector: '.right-container',
                 acl: this.options.acl,
                 model: this.model,
