@@ -119,6 +119,10 @@ class LinkMultipleFactory implements ValueFactory
 
     private function loadColumnData(Entity $entity, string $field): stdClass
     {
+        if ($entity->isNew()) {
+            return (object) [];
+        }
+
         $columnData = (object) [];
 
         $select = ['id'];
