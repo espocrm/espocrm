@@ -9,6 +9,10 @@
             "description": "A class for building a where clause for duplicate checking. Should implement Espo\\Core\\Duplicate\\WhereBuilder interface.",
             "type": "string"
         },
+        "defaultsPopulatorClassName": {
+            "description": "Populates default values when creating a record. Should implement Espo\\Core\\Record\\Create\\DefaultsPopulator. As of v8.2.",
+            "type": "string"
+        },
         "readLoaderClassNameList": {
             "description": "Classes to load additional fields for an entity. Should implement Espo\\Core\\FieldProcessing\\Loader interface.",
             "type": "array",

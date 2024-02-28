@@ -41,10 +41,11 @@ use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\FieldSanitize\SanitizeManager;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Repository\Option\SaveOption;
-use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ActionHistory\ActionLogger;
+use Espo\Core\Record\Create\DefaultsPopulator;
+use Espo\Core\Record\Create\DefaultsPopulatorFactory;
 use Espo\Core\Record\Formula\Processor as FormulaProcessor;
 use Espo\Core\Select\Primary\Filters\One;
 use Espo\Core\Utils\Json;
@@ -262,6 +263,8 @@ class Service implements Crud,
     private ?DuplicateFinder $duplicateFinder = null;
     private ?LinkCheck $linkCheck = null;
     private ?ActionLogger $actionLogger = null;
+    /** @var ?DefaultsPopulator<Entity> */
+    private ?DefaultsPopulator $defaultsPopulator = null;
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
@@ -708,75 +711,26 @@ class Service implements Crud,
     }
 
     /**
-     * If no edit access to assignedUser field.
-     */
-    private function isAssignedUserShouldBeSetWithSelf(): bool
-    {
-        if ($this->user->isPortal()) {
-            return false;
-        }
-
-        $defs = $this->entityManager->getDefs()->getEntity($this->entityType);
-
-        if (
-            !$defs->hasField('assignedUser') ||
-            $defs->getField('assignedUser')->getType() !== FieldType::LINK
-        ) {
-            return false;
-        }
-
-        if ($this->acl->checkField($this->entityType, 'assignedUser', AclTable::ACTION_EDIT)) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
      * @param TEntity $entity
-     * @todo Move the logic to a class. Make customizable (recordDefs)?
      * @noinspection PhpDocSignatureInspection
      */
     public function populateDefaults(Entity $entity, stdClass $data): void
     {
-        if ($this->isAssignedUserShouldBeSetWithSelf()) {
-            $entity->set('assignedUserId', $this->user->getId());
-            $entity->set('assignedUserName', $this->user->getName());
+        $this->getDefaultsPopulator()->populate($entity);
+    }
+
+    /**
+     * @return DefaultsPopulator<Entity>
+     */
+    private function getDefaultsPopulator(): DefaultsPopulator
+    {
+        if (!$this->defaultsPopulator) {
+            $this->defaultsPopulator = $this->injectableFactory
+                ->create(DefaultsPopulatorFactory::class)
+                ->create($this->entityType);
         }
 
-        if (
-            !$this->user->isPortal() &&
-            $entity instanceof CoreEntity &&
-            $entity->hasLinkMultipleField('teams') &&
-            $this->user->getDefaultTeam() &&
-            !$this->acl->checkField($this->entityType, 'teams', AclTable::ACTION_EDIT)
-        ) {
-            $defaultTeamId = $this->user->getDefaultTeam()->getId();
-
-            $entity->addLinkMultipleId('teams', $defaultTeamId);
-
-            $teamsNames = $entity->get('teamsNames');
-
-            if (!$teamsNames || !is_object($teamsNames)) {
-                $teamsNames = (object) [];
-            }
-
-            $teamsNames->$defaultTeamId = $this->user->get('defaultTeamName');
-
-            $entity->set('teamsNames', $teamsNames);
-        }
-
-        foreach ($this->fieldUtil->getEntityTypeFieldList($this->entityType) as $field) {
-            $type = $this->fieldUtil->getEntityTypeFieldParam($this->entityType, $field, 'type');
-
-            if (
-                $type === FieldType::CURRENCY &&
-                $entity->get($field) &&
-                !$entity->get($field . 'Currency')
-            ) {
-                $entity->set($field . 'Currency', $this->config->get('defaultCurrency'));
-            }
-        }
+        return $this->defaultsPopulator;
     }
 
     /**
