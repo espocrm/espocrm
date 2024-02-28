@@ -29,19 +29,19 @@
 
 namespace Espo\Classes\Record\Webhook;
 
-use Espo\Core\Record\Defaults\DefaultsDefaultsPopulator;
-use Espo\Core\Record\Defaults\DefaultsPopulator as DefaultsPopulatorInterface;
+use Espo\Core\Record\Defaults\DefaultPopulator;
+use Espo\Core\Record\Defaults\Populator;
 use Espo\Entities\User;
 use Espo\Entities\Webhook;
 use Espo\ORM\Entity;
 
 /**
- * @implements DefaultsPopulatorInterface<Webhook>
+ * @implements Populator<Webhook>
  */
-class DefaultsPopulator implements DefaultsPopulatorInterface
+class DefaultsPopulator implements Populator
 {
     public function __construct(
-        private DefaultsDefaultsPopulator $defaultsDefaultsPopulator,
+        private DefaultPopulator $defaultsDefaultsPopulator,
         private User $user
     ) {}
 

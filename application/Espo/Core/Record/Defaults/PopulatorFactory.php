@@ -29,19 +29,40 @@
 
 namespace Espo\Core\Record\Defaults;
 
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Metadata;
 use Espo\ORM\Entity;
 
-/**
- * Populate default values.
- *
- * @template TEntity of Entity
- * @noinspection PhpUnused
- */
-interface DefaultsPopulator
+class PopulatorFactory
 {
+    /** @var class-string<DefaultPopulator> */
+    private string $defaultClassName = DefaultPopulator::class;
+
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata
+    ) {}
+
     /**
-     * @param TEntity $entity
-     * @noinspection PhpDocSignatureInspection
+     * @return Populator<Entity>
      */
-    public function populate(Entity $entity): void;
+    public function create(string $entityType): Populator
+    {
+        return $this->injectableFactory->create($this->getClassName($entityType));
+    }
+
+    /**
+     * @return class-string<Populator<Entity>>
+     */
+    private function getClassName(string $entityType): string
+    {
+        /** @var ?class-string<Populator<Entity>> $className */
+        $className = $this->metadata->get("recordDefs.$entityType.defaultsPopulatorClassName");
+
+        if ($className) {
+            return $className;
+        }
+
+        return $this->defaultClassName;
+    }
 }

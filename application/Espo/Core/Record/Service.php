@@ -44,8 +44,8 @@ use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Access\LinkCheck;
 use Espo\Core\Record\ActionHistory\Action;
 use Espo\Core\Record\ActionHistory\ActionLogger;
-use Espo\Core\Record\Defaults\DefaultsPopulator;
-use Espo\Core\Record\Defaults\DefaultsPopulatorFactory;
+use Espo\Core\Record\Defaults\Populator as DefaultsPopulator;
+use Espo\Core\Record\Defaults\PopulatorFactory as DefaultsPopulatorFactory;
 use Espo\Core\Record\Formula\Processor as FormulaProcessor;
 use Espo\Core\Select\Primary\Filters\One;
 use Espo\Core\Utils\Json;
@@ -713,6 +713,7 @@ class Service implements Crud,
     /**
      * @param TEntity $entity
      * @noinspection PhpDocSignatureInspection
+     * @noinspection PhpUnusedParameterInspection
      */
     public function populateDefaults(Entity $entity, stdClass $data): void
     {

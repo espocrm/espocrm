@@ -10,7 +10,7 @@
             "type": "string"
         },
         "defaultsPopulatorClassName": {
-            "description": "Populates default values when creating a record. Should implement Espo\\Core\\Record\\Create\\DefaultsPopulator. As of v8.2.",
+            "description": "Populates default values when creating a record. Should implement Espo\\Core\\Record\\Defaults\\Populator. As of v8.2.",
             "type": "string"
         },
         "readLoaderClassNameList": {

@@ -40,9 +40,9 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 /**
- * @implements DefaultsPopulator<Entity>
+ * @implements Populator<Entity>
  */
-class DefaultsDefaultsPopulator implements DefaultsPopulator
+class DefaultPopulator implements Populator
 {
     public function __construct(
         private Acl $acl,
