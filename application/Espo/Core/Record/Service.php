@@ -568,7 +568,7 @@ class Service implements Crud,
         }
     }
 
-    public function filterCreateInput(stdClass $data): void
+    private function filterInputSystemAttributes(stdClass $data): void
     {
         unset($data->deleted);
         unset($data->id);
@@ -579,8 +579,13 @@ class Service implements Crud,
         unset($data->createdByName);
         unset($data->createdAt);
         unset($data->versionNumber);
+    }
 
+    public function filterCreateInput(stdClass $data): void
+    {
+        $this->filterInputSystemAttributes($data);
         $this->filterInput($data);
+        
         /** @noinspection PhpDeprecationInspection */
         $this->handleInput($data);
         /** @noinspection PhpDeprecationInspection */
@@ -589,18 +594,10 @@ class Service implements Crud,
 
     public function filterUpdateInput(stdClass $data): void
     {
-        unset($data->deleted);
-        unset($data->id);
-        unset($data->modifiedById);
-        unset($data->modifiedByName);
-        unset($data->modifiedAt);
-        unset($data->createdById);
-        unset($data->createdByName);
-        unset($data->createdAt);
-        unset($data->versionNumber);
-
+        $this->filterInputSystemAttributes($data);
         $this->filterInput($data);
         $this->filterReadOnlyAfterCreate($data);
+
         /** @noinspection PhpDeprecationInspection */
         $this->handleInput($data);
     }
