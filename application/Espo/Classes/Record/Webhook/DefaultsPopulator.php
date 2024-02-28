@@ -29,8 +29,8 @@
 
 namespace Espo\Classes\Record\Webhook;
 
-use Espo\Core\Record\Create\DefaultsDefaultsPopulator;
-use Espo\Core\Record\Create\DefaultsPopulator as DefaultsPopulatorInterface;
+use Espo\Core\Record\Defaults\DefaultsDefaultsPopulator;
+use Espo\Core\Record\Defaults\DefaultsPopulator as DefaultsPopulatorInterface;
 use Espo\Entities\User;
 use Espo\Entities\Webhook;
 use Espo\ORM\Entity;
