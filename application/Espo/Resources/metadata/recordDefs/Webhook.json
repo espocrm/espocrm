@@ -1,4 +1,5 @@
 {
+    "defaultsPopulatorClassName": "Espo\\Classes\\Record\\Webhook\\DefaultsPopulator",
     "massActions": {
         "delete": {
             "allowed": true

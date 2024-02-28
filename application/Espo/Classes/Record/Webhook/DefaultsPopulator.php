@@ -27,31 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\Record\Webhook;
 
-use Espo\Entities\Webhook as WebhookEntity;
-use stdClass;
+use Espo\Core\Record\Create\DefaultsDefaultsPopulator;
+use Espo\Core\Record\Create\DefaultsPopulator as DefaultsPopulatorInterface;
+use Espo\Entities\User;
+use Espo\Entities\Webhook;
+use Espo\ORM\Entity;
 
 /**
- * @extends Record<WebhookEntity>
+ * @implements DefaultsPopulatorInterface<Webhook>
  */
-class Webhook extends Record
+class DefaultsPopulator implements DefaultsPopulatorInterface
 {
-    protected function filterInput(stdClass $data): void
-    {
-        parent::filterInput($data);
+    public function __construct(
+        private DefaultsDefaultsPopulator $defaultsDefaultsPopulator,
+        private User $user
+    ) {}
 
-        unset($data->entityType);
-        unset($data->field);
-        unset($data->type);
-    }
-
-    public function filterUpdateInput(stdClass $data): void
+    public function populate(Entity $entity): void
     {
-        if (!$this->user->isAdmin()) {
-            unset($data->event);
+        $this->defaultsDefaultsPopulator->populate($entity);
+
+        if ($this->user->isApi()) {
+            $entity->set('userId', $this->user->getId());
         }
-
-        parent::filterUpdateInput($data);
     }
 }
