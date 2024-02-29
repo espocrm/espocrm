@@ -19,5 +19,8 @@
     "type": "Base",
     "module": "Custom",
     "object": true,
-    "isCustom": true
+    "isCustom": true,
+    "statusField": null,
+    "kanbanStatusIgnoreList": null,
+    "duplicateCheckFieldList": []
 }

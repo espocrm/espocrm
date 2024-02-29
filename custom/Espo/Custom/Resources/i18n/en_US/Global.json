@@ -29,7 +29,7 @@
         "AttendanceSheet": "Журнал",
         "ProductItem": "Продукт",
         "Goods": "Товар",
-        "CalculationBudget": "Бютжет"
+        "CalculationBudget": "Бюджет"
     },
     "scopeNamesPlural": {
         "Training": "Заняття",
@@ -61,7 +61,7 @@
         "AttendanceSheet": "Журнал",
         "ProductItem": "Продукти",
         "Goods": "Товари",
-        "CalculationBudget": "Бютжет"
+        "CalculationBudget": "Бюджет"
     },
     "labels": {
         "Schedule Training": "Schedule Заняття",

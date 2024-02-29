@@ -21,7 +21,8 @@
         "AdminMark": "Робочий вихід",
         "CalculationExpenses": "Витрати",
         "Discount": "Знижка",
-        "Rent": "Оренда"
+        "Rent": "Оренда",
+        "CalculationBudget": "Бюджет"
     },
     "scopeNamesPlural": {
         "WeekTemplate": "Назви шаблонів",
@@ -33,6 +34,7 @@
         "AdminMark": "Робочі виходи",
         "CalculationExpenses": "Витрати",
         "Discount": "Знижки",
-        "Rent": "Оренда"
+        "Rent": "Оренда",
+        "CalculationBudget": "Бюджет"
     }
 }

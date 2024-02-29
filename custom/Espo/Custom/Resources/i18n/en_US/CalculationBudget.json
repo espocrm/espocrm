@@ -1,9 +1,7 @@
 {
-    "fields": {
-    },
-    "links": {
-    },
+    "fields": [],
+    "links": [],
     "labels": {
-        "Create CalculationBudget": "Create Бютжет"
+        "Create CalculationBudget": "Створити Бюджет"
     }
 }
