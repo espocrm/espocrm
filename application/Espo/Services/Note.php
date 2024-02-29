@@ -37,26 +37,11 @@ use Espo\Entities\Note as NoteEntity;
 use Espo\Entities\User as UserEntity;
 use Espo\ORM\Entity;
 
-use stdClass;
-
 /**
  * @extends Record<NoteEntity>
  */
 class Note extends Record
 {
-    public function filterUpdateInput(stdClass $data): void
-    {
-        parent::filterUpdateInput($data);
-
-        unset($data->parentId);
-        unset($data->parentType);
-        unset($data->targetType);
-        unset($data->usersIds);
-        unset($data->teamsIds);
-        unset($data->portalsIds);
-        unset($data->isGlobal);
-    }
-
     /**
      * @throws BadRequest
      * @throws Forbidden
@@ -203,35 +188,6 @@ class Note extends Record
                 }
             }
         }
-    }
-
-    public function link(string $id, string $link, string $foreignId) : void
-    {
-        if ($link === 'teams' || $link === 'users') {
-            throw new Forbidden();
-        }
-
-        parent::link($id, $link, $foreignId);
-    }
-
-    public function unlink(string $id, string $link, string $foreignId) : void
-    {
-        if ($link === 'teams' || $link === 'users') {
-            throw new Forbidden();
-        }
-
-        parent::unlink($id, $link, $foreignId);
-    }
-
-    /**
-     * @param NoteEntity $entity
-     * @return void
-     */
-    public function loadAdditionalFields(Entity $entity)
-    {
-        parent::loadAdditionalFields($entity);
-
-        $entity->loadAdditionalFields();
     }
 
     private function getUserRepository(): UserRepository

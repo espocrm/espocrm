@@ -264,7 +264,8 @@ class Note extends Entity
     {
         if (
             $this->getType() == self::TYPE_POST ||
-            $this->getType() == self::TYPE_EMAIL_RECEIVED
+            $this->getType() == self::TYPE_EMAIL_RECEIVED ||
+            $this->getType() == self::TYPE_EMAIL_SENT
         ) {
             $this->loadAttachments();
         }

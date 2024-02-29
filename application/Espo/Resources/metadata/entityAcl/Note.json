@@ -1,0 +1,10 @@
+{
+    "links": {
+        "teams": {
+            "readOnly": true
+        },
+        "users": {
+            "readOnly": true
+        }
+    }
+}

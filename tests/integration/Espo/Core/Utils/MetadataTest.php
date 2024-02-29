@@ -31,8 +31,9 @@ namespace tests\integration\Espo\Core\Utils;
 
 use Espo\Core\Utils\Json;
 use Espo\Core\Utils\Metadata;
+use tests\integration\Core\BaseTestCase;
 
-class MetadataTest extends \tests\integration\Core\BaseTestCase
+class MetadataTest extends BaseTestCase
 {
     private $filePath1 = 'custom/Espo/Custom/Resources/metadata/app/rebuild.json';
     private $filePath2 = 'custom/Espo/Custom/Resources/metadata/recordDefs/Note.json';
@@ -45,9 +46,6 @@ class MetadataTest extends \tests\integration\Core\BaseTestCase
         parent::tearDown();
     }
 
-    /**
-     * @throws \Espo\Core\Exceptions\Error
-     */
     public function testAppend1()
     {
         $initial = $this->getMetadata()->get(['app', 'rebuild', 'actionClassNameList']);
@@ -63,7 +61,7 @@ class MetadataTest extends \tests\integration\Core\BaseTestCase
         $contents2 = Json::encode(
             (object) [
                 'readLoaderClassNameList' => [
-                    "\\Espo\\Classes\\FieldProcessing\\Note\\AttachmentsLoader",
+                    "\\Espo\\Classes\\FieldProcessing\\Note\\AdditionalFieldsLoader",
                 ]
             ]
         );
@@ -88,8 +86,8 @@ class MetadataTest extends \tests\integration\Core\BaseTestCase
 
         $this->assertSame(
             [
-                "Espo\\Classes\\FieldProcessing\\Note\\AttachmentsLoader",
-                "\\Espo\\Classes\\FieldProcessing\\Note\\AttachmentsLoader",
+                "Espo\\Classes\\FieldProcessing\\Note\\AdditionalFieldsLoader",
+                "\\Espo\\Classes\\FieldProcessing\\Note\\AdditionalFieldsLoader",
             ],
             $metadata->get(['recordDefs', 'Note', 'readLoaderClassNameList'])
         );

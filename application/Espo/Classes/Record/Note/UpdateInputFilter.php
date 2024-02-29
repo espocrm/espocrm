@@ -27,14 +27,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\Record\Note;
 
-use Espo\Core\ORM\Entity;
+use Espo\Core\Record\Input\Data;
+use Espo\Core\Record\Input\Filter;
 
 /**
- * @extends Record<Entity>
+ * @noinspection PhpUnused
  */
-class Portal extends Record
+class UpdateInputFilter implements Filter
 {
-    protected bool $getEntityBeforeUpdate = true;
+    public function filter(Data $data): void
+    {
+        $data->clear('parentId');
+        $data->clear('parentType');
+        $data->clear('targetType');
+        $data->clear('usersIds');
+        $data->clear('teamsIds');
+        $data->clear('portalsIds');
+        $data->clear('isGlobal');
+    }
 }

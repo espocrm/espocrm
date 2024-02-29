@@ -27,14 +27,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\Record\Portal;
 
-use Espo\Core\ORM\Entity;
+use Espo\Core\Record\Input\Data;
+use Espo\Core\Record\Input\Filter;
+use Espo\Core\Utils\Config;
+use Espo\Entities\User;
 
 /**
- * @extends Record<Entity>
+ * @noinspection PhpUnused
  */
-class Portal extends Record
+class InputFilter implements Filter
 {
-    protected bool $getEntityBeforeUpdate = true;
+    public function __construct(
+        private User $user,
+        private Config $config
+    ) {}
+
+    public function filter(Data $data): void
+    {
+        if (!$this->config->get('restrictedMode')) {
+            return;
+        }
+
+        if ($this->user->isSuperAdmin()) {
+            return;
+        }
+
+        $data->clear('customUrl');
+    }
 }
