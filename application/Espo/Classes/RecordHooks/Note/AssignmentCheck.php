@@ -27,33 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\RecordHooks\Note;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Repositories\User as UserRepository;
+use Espo\Core\Acl;
 use Espo\Core\Acl\Table as AclTable;
-use Espo\Entities\Note as NoteEntity;
-use Espo\Entities\User as UserEntity;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Entities\Note;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\Repositories\User as UserRepository;
 
 /**
- * @extends Record<NoteEntity>
+ * @implements SaveHook<Note>
  */
-class Note extends Record
+class AssignmentCheck implements SaveHook
 {
-    /**
-     * @throws BadRequest
-     * @throws Forbidden
-     */
-    protected function processAssignmentCheck(Entity $entity): void
+    public function __construct(
+        private User $user,
+        private Acl $acl,
+        private EntityManager $entityManager
+    ) {}
+
+    public function process(Entity $entity): void
     {
-        /** @var NoteEntity $entity */
-
-        if (!$entity->isNew()) {
-            return;
-        }
-
         $targetType = $entity->getTargetType();
 
         if (!$targetType) {
@@ -66,17 +65,15 @@ class Note extends Record
         $portalIdList = $entity->getLinkMultipleIdList('portals');
         $teamIdList = $entity->getLinkMultipleIdList('teams');
 
-        /** @var iterable<UserEntity> $targetUserList */
+        /** @var iterable<User> $targetUserList */
         $targetUserList = [];
 
-        if ($targetType === NoteEntity::TARGET_USERS) {
-            /** @var iterable<UserEntity> $targetUserList */
+        if ($targetType === Note::TARGET_USERS) {
+            /** @var iterable<User> $targetUserList */
             $targetUserList = $this->entityManager
-                ->getRDBRepository(UserEntity::ENTITY_TYPE)
+                ->getRDBRepository(User::ENTITY_TYPE)
                 ->select(['id', 'type'])
-                ->where([
-                    'id' => $userIdList,
-                ])
+                ->where(['id' => $userIdList])
                 ->find();
         }
 
@@ -97,34 +94,34 @@ class Note extends Record
 
         if ($messagePermission === AclTable::LEVEL_NO) {
             if (
-                $targetType !== NoteEntity::TARGET_SELF &&
-                $targetType !== NoteEntity::TARGET_PORTALS &&
+                $targetType !== Note::TARGET_SELF &&
+                $targetType !== Note::TARGET_PORTALS &&
                 !(
-                    $targetType === NoteEntity::TARGET_USERS &&
+                    $targetType === Note::TARGET_USERS &&
                     count($userIdList) === 1 &&
                     $userIdList[0] === $this->user->getId()
                 ) &&
                 !(
-                    $targetType === NoteEntity::TARGET_USERS && $allTargetUsersArePortal
+                    $targetType === Note::TARGET_USERS && $allTargetUsersArePortal
                 )
             ) {
                 throw new Forbidden('Not permitted to post to anybody except self.');
             }
         }
 
-        if ($targetType === NoteEntity::TARGET_TEAMS) {
+        if ($targetType === Note::TARGET_TEAMS) {
             if (empty($teamIdList)) {
                 throw new BadRequest("No team IDS.");
             }
         }
 
-        if ($targetType === NoteEntity::TARGET_USERS) {
+        if ($targetType === Note::TARGET_USERS) {
             if (empty($userIdList)) {
                 throw new BadRequest("No user IDs.");
             }
         }
 
-        if ($targetType === NoteEntity::TARGET_PORTALS) {
+        if ($targetType === Note::TARGET_PORTALS) {
             if (empty($portalIdList)) {
                 throw new BadRequest("No portal IDs.");
             }
@@ -135,7 +132,7 @@ class Note extends Record
         }
 
         if (
-            $targetType === NoteEntity::TARGET_USERS &&
+            $targetType === Note::TARGET_USERS &&
             $this->acl->getPermissionLevel('portal') !== AclTable::LEVEL_YES
         ) {
             if ($hasPortalTargetUser) {
@@ -144,14 +141,14 @@ class Note extends Record
         }
 
         if ($messagePermission === AclTable::LEVEL_TEAM) {
-            if ($targetType === NoteEntity::TARGET_ALL) {
+            if ($targetType === Note::TARGET_ALL) {
                 throw new Forbidden('Not permitted to post to all.');
             }
         }
 
         if (
             $messagePermission === AclTable::LEVEL_TEAM &&
-            $targetType === NoteEntity::TARGET_TEAMS
+            $targetType === Note::TARGET_TEAMS
         ) {
             if (empty($userTeamIdList)) {
                 throw new Forbidden('Not permitted to post to foreign teams.');
@@ -166,7 +163,7 @@ class Note extends Record
 
         if (
             $messagePermission === AclTable::LEVEL_TEAM &&
-            $targetType === NoteEntity::TARGET_USERS
+            $targetType === Note::TARGET_USERS
         ) {
             if (empty($userTeamIdList)) {
                 throw new Forbidden('Not permitted to post to users from foreign teams.');
@@ -193,6 +190,6 @@ class Note extends Record
     private function getUserRepository(): UserRepository
     {
         /** @var UserRepository */
-        return $this->entityManager->getRepository(UserEntity::ENTITY_TYPE);
+        return $this->entityManager->getRepository(User::ENTITY_TYPE);
     }
 }

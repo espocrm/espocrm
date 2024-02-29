@@ -6,6 +6,7 @@
         "Espo\\Classes\\Record\\Note\\UpdateInputFilter"
     ],
     "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Note\\AssignmentCheck",
         "Espo\\Classes\\RecordHooks\\Note\\BeforeCreate"
     ],
     "beforeUpdateHookClassNameList": [
