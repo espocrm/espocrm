@@ -858,10 +858,10 @@ class Parser
 
         foreach ($this->priorityList as $operationList) {
             foreach ($operationList as $operator) {
-                $startFrom = 1;
+                $offset = -1;
 
                 while (true) {
-                    $index = strpos($expression, $operator, $startFrom);
+                    $index = strrpos($expression, $operator, $offset);
 
                     if ($index === false) {
                         break;
@@ -871,66 +871,63 @@ class Parser
                         break;
                     }
 
-                    $startFrom = $index + 1;
+                    $offset = -(strlen($expression) - $index) - 1;
                 }
 
-                if ($index !== false) {
-                    $possibleRightOperator = null;
+                if ($index === false) {
+                    continue;
+                }
 
-                    if (strlen($operator) === 1) {
-                        if ($index < strlen($expression) - 1) {
-                            $possibleRightOperator = trim($operator . $expression[$index + 1]);
-                        }
+                $possibleRightOperator = null;
+
+                if (strlen($operator) === 1) {
+                    if ($index < strlen($expression) - 1) {
+                        $possibleRightOperator = trim($operator . $expression[$index + 1]);
                     }
+                }
 
-                    if (
-                        $possibleRightOperator &&
-                        $possibleRightOperator != $operator &&
-                        !empty($this->operatorMap[$possibleRightOperator])
-                    ) {
-                        continue;
+                if (
+                    $possibleRightOperator &&
+                    $possibleRightOperator != $operator &&
+                    !empty($this->operatorMap[$possibleRightOperator])
+                ) {
+                    continue;
+                }
+
+                $possibleLeftOperator = null;
+
+                if (strlen($operator) === 1) {
+                    if ($index > 0) {
+                        $possibleLeftOperator = trim($expression[$index - 1] . $operator);
                     }
+                }
 
-                    $possibleLeftOperator = null;
+                if (
+                    $possibleLeftOperator &&
+                    $possibleLeftOperator != $operator &&
+                    !empty($this->operatorMap[$possibleLeftOperator])
+                ) {
+                    continue;
+                }
 
-                    if (strlen($operator) === 1) {
-                        if ($index > 0) {
-                            $possibleLeftOperator = trim($expression[$index - 1] . $operator);
-                        }
-                    }
+                $firstPart = substr($expression, 0, $index);
+                $secondPart = substr($expression, $index + strlen($operator));
 
-                    if (
-                        $possibleLeftOperator &&
-                        $possibleLeftOperator != $operator &&
-                        !empty($this->operatorMap[$possibleLeftOperator])
-                    ) {
-                        continue;
-                    }
+                $modifiedFirstPart = $modifiedSecondPart = '';
 
-                    $firstPart = substr($expression, 0, $index);
-                    $secondPart = substr($expression, $index + strlen($operator));
+                $isString = $this->processString($firstPart, $modifiedFirstPart);
 
-                    $modifiedFirstPart = $modifiedSecondPart = '';
+                $this->processString($secondPart, $modifiedSecondPart);
 
-                    $isString = $this->processString($firstPart, $modifiedFirstPart);
+                if (
+                    substr_count($modifiedFirstPart, '(') === substr_count($modifiedFirstPart, ')') &&
+                    substr_count($modifiedSecondPart, '(') === substr_count($modifiedSecondPart, ')') &&
+                    !$isString
+                ) {
+                    if ($minIndex === null || $index > $minIndex) {
+                        $minIndex = $index;
 
-                    $this->processString($secondPart, $modifiedSecondPart);
-
-                    if (
-                        substr_count($modifiedFirstPart, '(') === substr_count($modifiedFirstPart, ')') &&
-                        substr_count($modifiedSecondPart, '(') === substr_count($modifiedSecondPart, ')') &&
-                        !$isString
-                    ) {
-                        if ($minIndex === null) {
-                            $minIndex = $index;
-
-                            $firstOperator = $operator;
-                        }
-                        else if ($index < $minIndex) {
-                            $minIndex = $index;
-
-                            $firstOperator = $operator;
-                        }
+                        $firstOperator = $operator;
                     }
                 }
             }

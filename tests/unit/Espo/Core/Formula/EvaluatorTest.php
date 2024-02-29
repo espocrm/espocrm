@@ -71,7 +71,56 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
     {
         $expression = "5 - (2 + 1)";
         $actual = $this->evaluator->process($expression);
-        $this->assertEquals(2, $actual);
+        $this->assertEquals(5 - (2 + 1), $actual);
+    }
+
+    public function testEvaluateMathExpression2(): void
+    {
+        $expression = "5 - 2 + 1";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 - 2 + 1, $actual);
+    }
+
+    public function testEvaluateMathExpression3(): void
+    {
+        $expression = "5 - 2 - 1";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 - 2 - 1, $actual);
+    }
+
+    public function testEvaluateMathExpression4(): void
+    {
+        $expression = "5-2-1";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 - 2 - 1, $actual);
+    }
+
+    public function testEvaluateMathExpression5(): void
+    {
+        $expression = "5 * 2 / 3.0";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * 2 / 3.0, $actual);
+    }
+
+    public function testEvaluateMathExpression6(): void
+    {
+        $expression = "5 * 2 + 3 * 4";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * 2 + 3 * 4, $actual);
+    }
+
+    public function testEvaluateMathExpression7(): void
+    {
+        $expression = "5 * (2 + 3) * 4";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * (2 + 3) * 4, $actual);
+    }
+
+    public function testEvaluateMathExpression8(): void
+    {
+        $expression = "5 * (2 + 3) * 4 - (5 - 4)";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * (2 + 3) * 4 - (5 - 4), $actual);
     }
 
     public function testEvaluateList1()
