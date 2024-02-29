@@ -132,7 +132,7 @@
             "type": "text",
             "rowsMin": 2,
             "cutHeight": 200,
-            "maxLength": 120,
+            "maxLength": null,
             "isCustom": true,
             "audited": true
         },
