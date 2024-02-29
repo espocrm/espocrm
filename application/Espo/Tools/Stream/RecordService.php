@@ -32,9 +32,7 @@ namespace Espo\Tools\Stream;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Select\SearchParams;
-use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Metadata;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
@@ -46,7 +44,6 @@ use Espo\Core\Record\Collection as RecordCollection;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
 use Espo\Tools\Stream\RecordService\QueryHelper;
-use stdClass;
 
 class RecordService
 {
@@ -58,7 +55,7 @@ class RecordService
         private Helper $helper,
         private QueryHelper $queryHelper,
         private Metadata $metadata,
-        private FieldUtil $fieldUtil
+        private NoteHelper $noteHelper
     ) {}
 
     /**
@@ -401,93 +398,7 @@ class RecordService
         $this->noteAccessControl->apply($note, $this->user);
 
         if ($note->getType() === Note::TYPE_UPDATE) {
-            $this->prepareNoteUpdate($note);
+            $this->noteHelper->prepare($note);
         }
-    }
-
-    private function prepareNoteUpdate(Note $note): void
-    {
-        $data = $note->getData();
-
-        /** @var ?string[] $fieldList */
-        $fieldList = $data->fields ?? null;
-        $attributes = $data->attributes ?? null;
-
-        if (!$attributes instanceof stdClass) {
-            return;
-        }
-
-        $was = $attributes->was ?? null;
-
-        if (!$was instanceof stdClass) {
-            return;
-        }
-
-        if (!is_array($fieldList)) {
-            return;
-        }
-
-        foreach ($fieldList as $field) {
-            if ($this->loadNoteUpdateWasForField($note, $field, $was)) {
-                $note->setData($data);
-            }
-        }
-    }
-
-    private function loadNoteUpdateWasForField(Note $note, string $field, stdClass $was): bool
-    {
-        if (!$note->getParentType() || !$note->getParentId()) {
-            return false;
-        }
-
-        $type = $this->fieldUtil->getFieldType($note->getParentType(), $field);
-
-        if ($type === FieldType::LINK_MULTIPLE) {
-            $this->loadNoteUpdateWasForFieldLinkMultiple($note, $field, $was);
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private function loadNoteUpdateWasForFieldLinkMultiple(Note $note, string $field, stdClass $was): void
-    {
-        /** @var ?string[] $ids */
-        $ids = $was->{$field . 'Ids'} ?? null;
-
-        $names = (object) [];
-
-        if (!is_array($ids)) {
-            return;
-        }
-
-        $entityType = $note->getParentType();
-
-        if (!$entityType) {
-            return;
-        }
-
-        $foreignEntityType = $this->entityManager
-            ->getDefs()
-            ->getEntity($entityType)
-            ->tryGetRelation($field)
-            ?->tryGetForeignEntityType();
-
-        if (!$foreignEntityType) {
-            return;
-        }
-
-        $collection = $this->entityManager
-            ->getRDBRepository($foreignEntityType)
-            ->select(['id', 'name'])
-            ->where(['id' => $ids])
-            ->find();
-
-        foreach ($collection as $entity) {
-            $names->{$entity->getId()} = $entity->get('name');
-        }
-
-        $was->{$field . 'Names'} = $names;
     }
 }

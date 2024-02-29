@@ -66,7 +66,8 @@ class UserRecordService
         private UserAclManagerProvider $userAclManagerProvider,
         private NoteAccessControl $noteAccessControl,
         private Helper $helper,
-        private QueryHelper $queryHelper
+        private QueryHelper $queryHelper,
+        private NoteHelper $noteHelper
     ) {}
 
     /**
@@ -610,6 +611,7 @@ class UserRecordService
         foreach ($collection as $e) {
             $this->loadNoteAdditionalFields($e);
             $this->noteAccessControl->apply($e, $user);
+            $this->noteHelper->prepare($e);
         }
 
         return RecordCollection::createNoCount($collection, $maxSize);
