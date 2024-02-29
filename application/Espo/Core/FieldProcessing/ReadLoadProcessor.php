@@ -29,6 +29,10 @@
 
 namespace Espo\Core\FieldProcessing;
 
+use Espo\Core\Acl;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingContainerBuilder;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Loader\Params;
@@ -43,10 +47,19 @@ class ReadLoadProcessor
     /** @var array<string, Loader<Entity>[]> */
     private array $loaderListMapCache = [];
 
+    private BindingContainer $bindingContainer;
+
     public function __construct(
         private InjectableFactory $injectableFactory,
-        private Metadata $metadata)
-    {}
+        private Metadata $metadata,
+        private Acl $acl,
+        private User $user
+    ) {
+        $this->bindingContainer = BindingContainerBuilder::create()
+            ->bindInstance(User::class, $this->user)
+            ->bindInstance(Acl::class, $this->acl)
+            ->build();
+    }
 
     public function process(Entity $entity, ?Params $params = null): void
     {
@@ -100,6 +113,6 @@ class ReadLoadProcessor
      */
     private function createLoader(string $className): Loader
     {
-        return $this->injectableFactory->create($className);
+        return $this->injectableFactory->createWithBinding($className, $this->bindingContainer);
     }
 }

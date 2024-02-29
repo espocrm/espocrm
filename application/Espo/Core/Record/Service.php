@@ -413,13 +413,14 @@ class Service implements Crud,
 
     private function createReadLoadProcessor(): ReadLoadProcessor
     {
-        return $this->injectableFactory->create(ReadLoadProcessor::class);
+        return $this->injectableFactory->createWithBinding(ReadLoadProcessor::class, $this->createBinding());
     }
 
     private function getListLoadProcessor(): ListLoadProcessor
     {
         if (!$this->listLoadProcessor) {
-            $this->listLoadProcessor = $this->injectableFactory->create(ListLoadProcessor::class);
+            $this->listLoadProcessor =
+                $this->injectableFactory->createWithBinding(ListLoadProcessor::class, $this->createBinding());
         }
 
         return $this->listLoadProcessor;
