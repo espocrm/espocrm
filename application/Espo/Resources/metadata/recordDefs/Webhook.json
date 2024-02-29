@@ -8,6 +8,9 @@
             "allowed": true
         }
     },
+    "updateInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\Webhook\\UpdateInputFilter"
+    ],
     "beforeCreateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Webhook\\BeforeSave"
     ],

@@ -166,6 +166,20 @@
             "type": "boolean",
             "description": "Load additional fields after update. Needed for cases when additional fields need to be re-loaded since they are not actual after update."
         },
+        "createInputFilterClassNameList": {
+            "description": "Create input filters. Should implement Espo\\Core\\Record\\Input\\Filter. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "updateInputFilterClassNameList": {
+            "description": "Update input filters. Should implement Espo\\Core\\Record\\Input\\Filter. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "beforeReadHookClassNameList": {
             "description": "Before-read hooks. Should implement the Espo\\Core\\Record\\Hook\\ReadHook interface.",
             "type": "array",

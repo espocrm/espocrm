@@ -47,6 +47,9 @@ use Espo\Core\Record\ActionHistory\ActionLogger;
 use Espo\Core\Record\Defaults\Populator as DefaultsPopulator;
 use Espo\Core\Record\Defaults\PopulatorFactory as DefaultsPopulatorFactory;
 use Espo\Core\Record\Formula\Processor as FormulaProcessor;
+use Espo\Core\Record\Input\Data;
+use Espo\Core\Record\Input\Filter;
+use Espo\Core\Record\Input\FilterProvider;
 use Espo\Core\Select\Primary\Filters\One;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
@@ -265,6 +268,10 @@ class Service implements Crud,
     private ?ActionLogger $actionLogger = null;
     /** @var ?DefaultsPopulator<Entity> */
     private ?DefaultsPopulator $defaultsPopulator = null;
+    /** @var ?Filter[] */
+    private ?array $createFilterList = null;
+    /** @var ?Filter[] */
+    private ?array $updateFilterList = null;
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
@@ -585,11 +592,17 @@ class Service implements Crud,
     {
         $this->filterInputSystemAttributes($data);
         $this->filterInput($data);
-        
+
         /** @noinspection PhpDeprecationInspection */
         $this->handleInput($data);
         /** @noinspection PhpDeprecationInspection */
         $this->handleCreateInput($data);
+
+        $wrappedData = new Data($data);
+
+        foreach ($this->getCreateFilterList() as $filter) {
+            $filter->filter($wrappedData);
+        }
     }
 
     public function filterUpdateInput(stdClass $data): void
@@ -600,6 +613,47 @@ class Service implements Crud,
 
         /** @noinspection PhpDeprecationInspection */
         $this->handleInput($data);
+
+        $wrappedData = new Data($data);
+
+        foreach ($this->getUpdateFilterList() as $filter) {
+            $filter->filter($wrappedData);
+        }
+    }
+
+    private function createFilterProvider(): FilterProvider
+    {
+        return $this->injectableFactory->createWithBinding(
+            FilterProvider::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(User::class, $this->user)
+                ->bindInstance(Acl::class, $this->acl)
+                ->build()
+        );
+    }
+
+    /**
+     * @return Filter[]
+     */
+    private function getCreateFilterList(): array
+    {
+        if ($this->createFilterList === null) {
+            $this->createFilterList = $this->createFilterProvider()->getForCreate($this->entityType);
+        }
+
+        return $this->createFilterList;
+    }
+
+    /**
+     * @return Filter[]
+     */
+    private function getUpdateFilterList(): array
+    {
+        if ($this->updateFilterList === null) {
+            $this->updateFilterList = $this->createFilterProvider()->getForUpdate($this->entityType);
+        }
+
+        return $this->updateFilterList;
     }
 
     private function filterReadOnlyAfterCreate(stdClass $data): void

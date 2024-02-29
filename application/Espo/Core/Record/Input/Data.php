@@ -27,31 +27,64 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Core\Record\Input;
 
-use Espo\Entities\Webhook as WebhookEntity;
 use stdClass;
 
-/**
- * @extends Record<WebhookEntity>
- */
-class Webhook extends Record
+class Data
 {
-    protected function filterInput(stdClass $data): void
-    {
-        parent::filterInput($data);
+    public function __construct(private stdClass $raw) {}
 
-        unset($data->entityType);
-        unset($data->field);
-        unset($data->type);
+    /**
+     * Get all attributes.
+     *
+     * @return string[]
+     */
+    public function getAttributeList(): array
+    {
+        return array_keys(get_object_vars($this->raw));
     }
 
-    public function filterUpdateInput(stdClass $data): void
+    /**
+     * Unset an attribute.
+     *
+     * @param string $name An attribute name.
+     */
+    public function clear(string $name): self
     {
-        if (!$this->user->isAdmin()) {
-            unset($data->event);
-        }
+        unset($this->raw->$name);
 
-        parent::filterUpdateInput($data);
+        return $this;
+    }
+
+    /**
+     * Whether an attribute is set.
+     *
+     * @param string $name An attribute name.
+     */
+    public function has(string $name): bool
+    {
+        return property_exists($this->raw, $name);
+    }
+
+    /**
+     * Get an attribute value.
+     *
+     * @param string $name An attribute name.
+     */
+    public function get(string $name): mixed
+    {
+        return $this->raw->$name ?? null;
+    }
+
+    /**
+     * Set an attribute value.
+     *
+     * @param string $name An attribute name.
+     * @param mixed $value A value
+     */
+    public function set(string $name, mixed $value): mixed
+    {
+        return $this->raw->$name = $value;
     }
 }
