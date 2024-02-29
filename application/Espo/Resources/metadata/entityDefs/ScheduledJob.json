@@ -20,7 +20,10 @@
             "required": true,
             "view": "views/scheduled-job/fields/scheduling",
             "tooltip": true,
-            "audited": true
+            "audited": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\ScheduledJob\\Scheduling\\Valid"
+            ]
         },
         "lastRun": {
             "type": "datetime",

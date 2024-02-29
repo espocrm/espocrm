@@ -27,40 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\FieldValidators\ScheduledJob\Scheduling;
 
 use Cron\CronExpression;
-use Espo\Core\Utils\DateTime;
-use Espo\Entities\ScheduledJob as ScheduledJobEntity;
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\Entities\ScheduledJob;
 use Espo\ORM\Entity;
-use Espo\Core\Exceptions\BadRequest;
 use Exception;
-use stdClass;
 
 /**
- * @extends Record<ScheduledJobEntity>
+ * @implements Validator<ScheduledJob>
  */
-class ScheduledJob extends Record
+class Valid implements Validator
 {
-    // @todo Move to field validator.
-    public function processValidation(Entity $entity, stdClass $data): void
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
-        parent::processValidation($entity, $data);
-
         $scheduling = $entity->getScheduling();
 
-        if (!$scheduling) {
-            throw new BadRequest();
+        if ($scheduling === null) {
+            return null;
         }
 
         try {
-            $cronExpression = CronExpression::factory($scheduling);
-
-            /** @phpstan-ignore-next-line*/
-            $cronExpression->getNextRunDate()->format(DateTime::SYSTEM_DATE_TIME_FORMAT);
+            new CronExpression($scheduling);
         }
         catch (Exception) {
-            throw new BadRequest("Not valid scheduling expression.");
+            return Failure::create();
         }
+
+        return null;
     }
 }
