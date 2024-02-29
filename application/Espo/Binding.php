@@ -144,11 +144,6 @@ class Binding implements BindingProcessor
         );
 
         $binder->bindService(
-            'Espo\\Core\\Record\\HookManager',
-            'recordHookManager'
-        );
-
-        $binder->bindService(
             'Espo\\Core\\HookManager',
             'hookManager'
         );

@@ -30,6 +30,9 @@
 namespace tests\unit\Espo\Core\Record;
 
 use Espo\Core\{
+    Acl,
+    Binding\BindingContainer,
+    Binding\BindingContainerBuilder,
     Record\HookManager,
     Record\Hook\Provider,
     Record\Hook\Type,
@@ -38,9 +41,9 @@ use Espo\Core\{
     Record\UpdateParams,
     Record\DeleteParams,
     InjectableFactory,
-    Utils\Metadata,
-};
+    Utils\Metadata};
 
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 use tests\unit\testClasses\Core\Record\Hooks\{
@@ -65,11 +68,6 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
     private $metadata;
 
     /**
-     * @var Provider
-     */
-    private $provider;
-
-    /**
      * @var HookManager
      */
     private $manager;
@@ -81,14 +79,24 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
 
     private $entityType = 'Test';
 
+    private ?BindingContainer $bindingContainer;
+
     protected function setUp(): void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
         $this->metadata = $this->createMock(Metadata::class);
 
-        $this->provider = new Provider($this->metadata, $this->injectableFactory);
+        $acl = $this->createMock(Acl::class);
+        $user = $this->createMock(User::class);
 
-        $this->manager = new HookManager($this->provider);
+        $this->bindingContainer = BindingContainerBuilder::create()
+            ->bindInstance(User::class, $user)
+            ->bindInstance(Acl::class, $acl)
+            ->build();
+
+        $provider = new Provider($this->metadata, $this->injectableFactory, $acl, $user);
+
+        $this->manager = new HookManager($provider);
 
         $this->entity = $this->createEntity($this->entityType);
     }
@@ -212,8 +220,8 @@ class HookManagerTest extends \PHPUnit\Framework\TestCase
         foreach ($hookClassNameList as $i => $className) {
             $this->injectableFactory
                 ->expects($this->any())
-                ->method('create')
-                ->with($className)
+                ->method('createWithBinding')
+                ->with($className, $this->bindingContainer)
                 ->willReturn($hookList[$i]);
         }
     }

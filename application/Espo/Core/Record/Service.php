@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Record;
 
+use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Binding\ContextualBinder;
 use Espo\Core\Exceptions\Conflict;
@@ -98,8 +99,7 @@ class Service implements Crud,
     Di\FieldValidationManagerAware,
     Di\RecordServiceContainerAware,
     Di\SelectBuilderFactoryAware,
-    Di\AssignmentCheckerManagerAware,
-    Di\RecordHookManagerAware
+    Di\AssignmentCheckerManagerAware
 {
     use Di\ConfigSetter;
     use Di\ServiceFactorySetter;
@@ -113,7 +113,6 @@ class Service implements Crud,
     use Di\RecordServiceContainerSetter;
     use Di\SelectBuilderFactorySetter;
     use Di\AssignmentCheckerManagerSetter;
-    use Di\RecordHookManagerSetter;
 
     protected string $entityType;
     protected bool $getEntityBeforeUpdate = false;
@@ -268,6 +267,7 @@ class Service implements Crud,
     private ?ActionLogger $actionLogger = null;
     /** @var ?DefaultsPopulator<Entity> */
     private ?DefaultsPopulator $defaultsPopulator = null;
+    private ?HookManager $recordHookManager = null;
     /** @var ?Filter[] */
     private ?array $createFilterList = null;
     /** @var ?Filter[] */
@@ -342,7 +342,7 @@ class Service implements Crud,
             throw new NotFoundSilent("Record $id does not exist.");
         }
 
-        $this->recordHookManager->processBeforeRead($entity, $params);
+        $this->getRecordHookManager()->processBeforeRead($entity, $params);
         $this->processActionHistoryRecord(Action::READ, $entity);
 
         return $entity;
@@ -623,13 +623,7 @@ class Service implements Crud,
 
     private function createFilterProvider(): FilterProvider
     {
-        return $this->injectableFactory->createWithBinding(
-            FilterProvider::class,
-            BindingContainerBuilder::create()
-                ->bindInstance(User::class, $this->user)
-                ->bindInstance(Acl::class, $this->acl)
-                ->build()
-        );
+        return $this->injectableFactory->createWithBinding(FilterProvider::class, $this->createBinding());
     }
 
     /**
@@ -822,13 +816,13 @@ class Service implements Crud,
         }
 
         $this->processApiBeforeCreateApiScript($entity, $params);
-        $this->recordHookManager->processBeforeCreate($entity, $params);
+        $this->getRecordHookManager()->processBeforeCreate($entity, $params);
         /** @noinspection PhpDeprecationInspection */
         $this->beforeCreateEntity($entity, $data);
 
         $this->entityManager->saveEntity($entity, [SaveOption::API => true]);
 
-        $this->recordHookManager->processAfterCreate($entity, $params);
+        $this->getRecordHookManager()->processAfterCreate($entity, $params);
         /** @noinspection PhpDeprecationInspection */
         $this->afterCreateEntity($entity, $data);
         /** @noinspection PhpDeprecationInspection */
@@ -901,7 +895,7 @@ class Service implements Crud,
         }
 
         $this->processApiBeforeUpdateApiScript($entity, $params);
-        $this->recordHookManager->processBeforeUpdate($entity, $params);
+        $this->getRecordHookManager()->processBeforeUpdate($entity, $params);
         /** @noinspection PhpDeprecationInspection */
         $this->beforeUpdateEntity($entity, $data);
 
@@ -910,7 +904,7 @@ class Service implements Crud,
             SaveOption::KEEP_DIRTY => true,
         ]);
 
-        $this->recordHookManager->processAfterUpdate($entity, $params);
+        $this->getRecordHookManager()->processAfterUpdate($entity, $params);
         $entity->updateFetchedValues();
 
         /** @noinspection PhpDeprecationInspection */
@@ -954,7 +948,7 @@ class Service implements Crud,
             throw new ForbiddenSilent("No delete access.");
         }
 
-        $this->recordHookManager->processBeforeDelete($entity, $params);
+        $this->getRecordHookManager()->processBeforeDelete($entity, $params);
         /** @noinspection PhpDeprecationInspection */
         $this->beforeDeleteEntity($entity);
 
@@ -962,7 +956,7 @@ class Service implements Crud,
 
         /** @noinspection PhpDeprecationInspection */
         $this->afterDeleteEntity($entity);
-        $this->recordHookManager->processAfterDelete($entity, $params);
+        $this->getRecordHookManager()->processAfterDelete($entity, $params);
         $this->processActionHistoryRecord(Action::DELETE, $entity);
     }
 
@@ -1275,7 +1269,7 @@ class Service implements Crud,
 
         $this->getLinkCheck()->processLinkForeign($entity, $link, $foreignEntity);
 
-        $this->recordHookManager->processBeforeLink($entity, $link, $foreignEntity);
+        $this->getRecordHookManager()->processBeforeLink($entity, $link, $foreignEntity);
 
         $this->getRepository()
             ->getRelation($entity, $link)
@@ -1331,7 +1325,7 @@ class Service implements Crud,
 
         $this->getLinkCheck()->processUnlinkForeign($entity, $link, $foreignEntity);
 
-        $this->recordHookManager->processBeforeUnlink($entity, $link, $foreignEntity);
+        $this->getRecordHookManager()->processBeforeUnlink($entity, $link, $foreignEntity);
 
         $this->getRepository()
             ->getRelation($entity, $link)
@@ -1998,4 +1992,22 @@ class Service implements Crud,
      */
     protected function afterDeleteEntity(Entity $entity)
     {}
+
+    private function createBinding(): BindingContainer
+    {
+        return BindingContainerBuilder::create()
+            ->bindInstance(User::class, $this->user)
+            ->bindInstance(Acl::class, $this->acl)
+            ->build();
+    }
+
+    private function getRecordHookManager(): HookManager
+    {
+        if (!$this->recordHookManager) {
+            $this->recordHookManager =
+                $this->injectableFactory->createWithBinding(HookManager::class, $this->createBinding());
+        }
+
+        return $this->recordHookManager;
+    }
 }

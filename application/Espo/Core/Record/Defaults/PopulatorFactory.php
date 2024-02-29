@@ -29,8 +29,11 @@
 
 namespace Espo\Core\Record\Defaults;
 
+use Espo\Core\Acl;
+use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 
 class PopulatorFactory
@@ -40,7 +43,9 @@ class PopulatorFactory
 
     public function __construct(
         private InjectableFactory $injectableFactory,
-        private Metadata $metadata
+        private Metadata $metadata,
+        private User $user,
+        private Acl $acl
     ) {}
 
     /**
@@ -48,7 +53,12 @@ class PopulatorFactory
      */
     public function create(string $entityType): Populator
     {
-        return $this->injectableFactory->create($this->getClassName($entityType));
+        $binding = BindingContainerBuilder::create()
+            ->bindInstance(User::class, $this->user)
+            ->bindInstance(Acl::class, $this->acl)
+            ->build();
+
+        return $this->injectableFactory->createWithBinding($this->getClassName($entityType), $binding);
     }
 
     /**

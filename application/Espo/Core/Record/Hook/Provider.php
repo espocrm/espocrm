@@ -29,9 +29,13 @@
 
 namespace Espo\Core\Record\Hook;
 
+use Espo\Core\Acl;
+use Espo\Core\Binding\BindingContainer;
+use Espo\Core\Binding\BindingContainerBuilder;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\InjectableFactory;
 
+use Espo\Entities\User;
 use ReflectionClass;
 use RuntimeException;
 
@@ -53,10 +57,19 @@ class Provider
         Type::BEFORE_UNLINK => [UnlinkHook::class],
     ];
 
+    private BindingContainer $bindingContainer;
+
     public function __construct(
         private Metadata $metadata,
-        private InjectableFactory $injectableFactory
-    ) {}
+        private InjectableFactory $injectableFactory,
+        private Acl $acl,
+        private User $user
+    ) {
+        $this->bindingContainer = BindingContainerBuilder::create()
+            ->bindInstance(User::class, $this->user)
+            ->bindInstance(Acl::class, $this->acl)
+            ->build();
+    }
 
     /**
      * @return object[]
@@ -107,7 +120,7 @@ class Provider
                 throw new RuntimeException("Hook '$className' does not implement any required interface.");
             }
 
-            $list[] = $this->injectableFactory->create($className);
+            $list[] = $this->injectableFactory->createWithBinding($className, $this->bindingContainer);
         }
 
         return $list;
