@@ -27,22 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Record\Hook;
+namespace Espo\Classes\RecordHooks\Team;
 
-class Type
+use Espo\Core\Acl\Cache\Clearer;
+use Espo\Core\DataManager;
+use Espo\Core\Record\Hook\UnlinkHook;
+use Espo\Entities\Team;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+
+/**
+ * @implements UnlinkHook<Team>
+ */
+class ClearCacheAfterUnlink implements UnlinkHook
 {
-    public const BEFORE_READ = 'beforeRead';
+    public function __construct(
+        private Clearer $clearer,
+        private DataManager $dataManager
+    ) {}
 
-    public const BEFORE_CREATE = 'beforeCreate';
-    public const BEFORE_UPDATE = 'beforeUpdate';
-    public const BEFORE_DELETE = 'beforeDelete';
+    public function process(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        if ($link !== 'users' || !$foreignEntity instanceof User) {
+            return;
+        }
 
-    public const AFTER_CREATE = 'afterCreate';
-    public const AFTER_UPDATE = 'afterUpdate';
-    public const AFTER_DELETE = 'afterDelete';
-
-    public const BEFORE_LINK = 'beforeLink';
-    public const BEFORE_UNLINK = 'beforeUnlink';
-    public const AFTER_LINK = 'afterLink';
-    public const AFTER_UNLINK = 'afterUnlink';
+        $this->clearer->clearForUser($foreignEntity);
+        $this->dataManager->updateCacheTimestamp();
+    }
 }

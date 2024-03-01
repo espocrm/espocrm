@@ -55,6 +55,8 @@ class Provider
         Type::AFTER_DELETE => [DeleteHook::class],
         Type::BEFORE_LINK => [LinkHook::class],
         Type::BEFORE_UNLINK => [UnlinkHook::class],
+        Type::AFTER_LINK => [LinkHook::class],
+        Type::AFTER_UNLINK => [UnlinkHook::class],
     ];
 
     private BindingContainer $bindingContainer;

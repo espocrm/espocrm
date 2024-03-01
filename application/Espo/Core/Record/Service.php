@@ -1275,6 +1275,8 @@ class Service implements Crud,
         $this->getRepository()
             ->getRelation($entity, $link)
             ->relate($foreignEntity, null, [SaveOption::API => true]);
+
+        $this->getRecordHookManager()->processAfterLink($entity, $link, $foreignEntity);
     }
 
     /**
@@ -1331,6 +1333,8 @@ class Service implements Crud,
         $this->getRepository()
             ->getRelation($entity, $link)
             ->unrelate($foreignEntity, [SaveOption::API => true]);
+
+        $this->getRecordHookManager()->processAfterUnlink($entity, $link, $foreignEntity);
     }
 
     /**

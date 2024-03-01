@@ -68,6 +68,8 @@ class Builder
         ['recordDefs', self::ANY_KEY, 'afterDeleteHookClassNameList'],
         ['recordDefs', self::ANY_KEY, 'beforeLinkHookClassNameList'],
         ['recordDefs', self::ANY_KEY, 'beforeUnlinkHookClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'afterLinkHookClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'afterUnlinkHookClassNameList'],
     ];
 
     private const ANY_KEY = '__ANY__';

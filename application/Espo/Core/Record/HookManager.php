@@ -165,6 +165,20 @@ class HookManager
         }
     }
 
+    public function processAfterLink(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        foreach ($this->getAfterLinkHookList($entity->getEntityType()) as $hook) {
+            $hook->process($entity, $link, $foreignEntity);
+        }
+    }
+
+    public function processAfterUnlink(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        foreach ($this->getAfterUnlinkHookList($entity->getEntityType()) as $hook) {
+            $hook->process($entity, $link, $foreignEntity);
+        }
+    }
+
     /**
      * @return ReadHook<Entity>[]
      */
@@ -244,5 +258,23 @@ class HookManager
     {
         /** @var UnlinkHook<Entity>[] */
         return $this->provider->getList($entityType, Type::BEFORE_UNLINK);
+    }
+
+    /**
+     * @return LinkHook<Entity>[]
+     */
+    private function getAfterLinkHookList(string $entityType): array
+    {
+        /** @var LinkHook<Entity>[] */
+        return $this->provider->getList($entityType, Type::AFTER_LINK);
+    }
+
+    /**
+     * @return UnlinkHook<Entity>[]
+     */
+    private function getAfterUnlinkHookList(string $entityType): array
+    {
+        /** @var UnlinkHook<Entity>[] */
+        return $this->provider->getList($entityType, Type::AFTER_UNLINK);
     }
 }

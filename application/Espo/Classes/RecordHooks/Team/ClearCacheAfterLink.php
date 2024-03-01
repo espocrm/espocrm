@@ -27,55 +27,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\RecordHooks\Team;
 
-use Espo\Core\Acl\Cache\Clearer as AclCacheClearer;
-use Espo\Entities\User as UserEntity;
-use Espo\Core\Di;
+use Espo\Core\Acl\Cache\Clearer;
+use Espo\Core\DataManager;
+use Espo\Core\Record\Hook\LinkHook;
+use Espo\Entities\Team;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
 
 /**
- * @extends Record<\Espo\Entities\Team>
+ * @implements LinkHook<Team>
  */
-class Team extends Record implements
-
-    Di\DataManagerAware
+class ClearCacheAfterLink implements LinkHook
 {
-    use Di\DataManagerSetter;
+    public function __construct(
+        private Clearer $clearer,
+        private DataManager $dataManager
+    ) {}
 
-    public function link(string $id, string $link, string $foreignId): void
+    public function process(Entity $entity, string $link, Entity $foreignEntity): void
     {
-        parent::link($id, $link, $foreignId);
-
-        if ($link === 'users') {
-            /** @var ?UserEntity $user */
-            $user = $this->entityManager->getEntityById(UserEntity::ENTITY_TYPE, $foreignId);
-
-            if ($user) {
-                $this->createAclCacheClearer()->clearForUser($user);
-            }
-
-            $this->dataManager->updateCacheTimestamp();
+        if ($link !== 'users' || !$foreignEntity instanceof User) {
+            return;
         }
-    }
 
-    public function unlink(string $id, string $link, string $foreignId): void
-    {
-        parent::unlink($id, $link, $foreignId);
-
-        if ($link === 'users') {
-            /** @var ?UserEntity $user */
-            $user = $this->entityManager->getEntityById(UserEntity::ENTITY_TYPE, $foreignId);
-
-            if ($user) {
-                $this->createAclCacheClearer()->clearForUser($user);
-            }
-
-            $this->dataManager->updateCacheTimestamp();
-        }
-    }
-
-    private function createAclCacheClearer(): AclCacheClearer
-    {
-        return $this->injectableFactory->create(AclCacheClearer::class);
+        $this->clearer->clearForUser($foreignEntity);
+        $this->dataManager->updateCacheTimestamp();
     }
 }

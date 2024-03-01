@@ -242,6 +242,20 @@
             "items": {
                 "type": "string"
             }
+        },
+        "afterLinkHookClassNameList": {
+            "description": "After-link hooks. Should implement the Espo\\Core\\Record\\Hook\\LinkHook interface. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
+        "afterUnlinkHookClassNameList": {
+            "description": "After-unlink hooks. Should implement the Espo\\Core\\Record\\Hook\\UnlinkHook interface. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
         }
     }
 }
