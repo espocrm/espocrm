@@ -27,56 +27,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\RecordHooks\Email;
 
-use Espo\Tools\Email\SendService;
+use Espo\Core\Record\Hook\ReadHook;
+use Espo\Core\Record\ReadParams;
+use Espo\Entities\Email;
 use Espo\ORM\Entity;
-use Espo\Entities\Email as EmailEntity;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Exceptions\Conflict;
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Mail\Exceptions\SendingError;
-use Espo\Core\Record\CreateParams;
-use stdClass;
+use Espo\Tools\Email\InboxService;
 
 /**
- * @extends Record<EmailEntity>
+ * @implements ReadHook<Email>
  */
-class Email extends Record
+class MarkAsRead implements ReadHook
 {
-    protected bool $getEntityBeforeUpdate = true;
+    public function __construct(
+        private InboxService $inboxService
+    ) {}
 
-    private ?SendService $sendService = null;
-
-    private function getSendService(): SendService
+    public function process(Entity $entity, ReadParams $params): void
     {
-        if (!$this->sendService) {
-            $this->sendService = $this->injectableFactory->create(SendService::class);
+        if ($entity->isRead()) {
+            return;
         }
 
-        return $this->sendService;
-    }
-
-    /**
-     * @todo Move to hook? Make sure needed data is loaded before sending.
-     *
-     * @throws BadRequest
-     * @throws Error
-     * @throws Forbidden
-     * @throws Conflict
-     * @throws BadRequest
-     * @throws SendingError
-     */
-    public function create(stdClass $data, CreateParams $params): Entity
-    {
-        /** @var EmailEntity $entity */
-        $entity = parent::create($data, $params);
-
-        if ($entity->getStatus() === EmailEntity::STATUS_SENDING) {
-            $this->getSendService()->send($entity, $this->user);
-        }
-
-        return $entity;
+        $this->inboxService->markAsRead($entity->getId());
     }
 }

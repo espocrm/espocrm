@@ -36,10 +36,14 @@
         "hasAttachment",
         "groupFolderId"
     ],
+    "beforeReadHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Email\\MarkAsRead"
+    ],
     "beforeCreateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\Email\\BeforeCreate"
     ],
     "beforeUpdateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\Email\\MarkAsReadBeforeUpdate",
         "Espo\\Classes\\RecordHooks\\Email\\BeforeUpdate"
     ],
     "afterUpdateHookClassNameList": [
