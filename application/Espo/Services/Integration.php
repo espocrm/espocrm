@@ -33,6 +33,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Config\ConfigWriter;
+use Espo\Entities\Integration as IntegrationEntity;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
@@ -41,29 +42,12 @@ use stdClass;
 
 class Integration
 {
-    /** @var EntityManager */
-    protected $entityManager;
-
-    /** @var User */
-    protected $user;
-
-    /** @var Config */
-    protected $config;
-
-    /** @var ConfigWriter */
-    protected $configWriter;
-
     public function __construct(
-        EntityManager $entityManager,
-        User $user,
-        Config $config,
-        ConfigWriter $configWriter
-    ) {
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-        $this->config = $config;
-        $this->configWriter = $configWriter;
-    }
+        private EntityManager $entityManager,
+        private User $user,
+        private Config $config,
+        private ConfigWriter $configWriter
+    ) {}
 
     /**
      * @return void
@@ -84,7 +68,7 @@ class Integration
     {
         $this->processAccessCheck();
 
-        $entity = $this->entityManager->getEntity('Integration', $id);
+        $entity = $this->entityManager->getEntityById(IntegrationEntity::ENTITY_TYPE, $id);
 
         if (!$entity) {
             throw new NotFound();
@@ -101,7 +85,7 @@ class Integration
     {
         $this->processAccessCheck();
 
-        $entity = $this->entityManager->getEntity('Integration', $id);
+        $entity = $this->entityManager->getEntityById(IntegrationEntity::ENTITY_TYPE, $id);
 
         if (!$entity) {
             throw new NotFound();
@@ -111,18 +95,15 @@ class Integration
 
         $this->entityManager->saveEntity($entity);
 
-        $integrationsConfigData = $this->config->get('integrations') ?? (object) [];
+        $configData = $this->config->get('integrations') ?? (object) [];
 
-        if (!($integrationsConfigData instanceof stdClass)) {
-            $integrationsConfigData = (object) [];
+        if (!$configData instanceof stdClass) {
+            $configData = (object) [];
         }
 
-        $integrationName = $id;
+        $configData->$id = $entity->get('enabled');
 
-        $integrationsConfigData->$integrationName = $entity->get('enabled');
-
-        $this->configWriter->set('integrations', $integrationsConfigData);
-
+        $this->configWriter->set('integrations', $configData);
         $this->configWriter->save();
 
         return $entity;

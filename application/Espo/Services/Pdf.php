@@ -31,7 +31,6 @@ namespace Espo\Services;
 
 use Espo\Core\Exceptions\NotFound;
 use Espo\ORM\Entity;
-
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Tools\Pdf\Data;
@@ -41,7 +40,7 @@ use Espo\Entities\Template;
 
 /**
  * @deprecated Left for bc.
- * @todo Remove in v10.0.
+ * @todo Remove in v9.0.
  */
 class Pdf
 {
@@ -54,6 +53,7 @@ class Pdf
     }
 
     /**
+     * @deprecated
      * @throws Error
      * @throws Forbidden
      */
@@ -74,7 +74,7 @@ class Pdf
      * @throws Forbidden
      * @throws NotFound
      *
-     * @deprecated Left for bc.
+     * @deprecated
      */
     public function buildFromTemplate(
         Entity $entity,
