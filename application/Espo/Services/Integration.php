@@ -41,24 +41,16 @@ use stdClass;
 
 class Integration
 {
-    /**
-     * @var EntityManager
-     */
+    /** @var EntityManager */
     protected $entityManager;
 
-    /**
-     * @var User
-     */
+    /** @var User */
     protected $user;
 
-    /**
-     * @var Config
-     */
+    /** @var Config */
     protected $config;
 
-    /**
-     * @var ConfigWriter
-     */
+    /** @var ConfigWriter */
     protected $configWriter;
 
     public function __construct(
