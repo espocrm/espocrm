@@ -27,37 +27,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\RecordHooks\EmailAccount;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Mail\Account\PersonalAccount\AccountFactory;
-use Espo\Core\Mail\Exceptions\NoSmtp;
-use Espo\Entities\EmailAccount as EmailAccountEntity;
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Record\Hook\SaveHook;
+use Espo\Core\Utils\Config;
+use Espo\Entities\EmailAccount;
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use const PHP_INT_MAX;
 
 /**
- * @extends Record<EmailAccountEntity>
+ * @implements SaveHook<EmailAccount>
  */
-class EmailAccount extends Record
+class BeforeCreate implements SaveHook
 {
-    /**
-     * @return ?array<string, mixed>
-     * @throws Error
-     * @throws NoSmtp
-     * @internal Left for bc.
-     * @deprecated As of v7.3. Use Espo\Core\Mail\Account\PersonalAccount.
-     * @todo Remove in v9.0.
-     */
-    public function getSmtpParamsFromAccount(EmailAccountEntity $emailAccount): ?array
-    {
-        $params = $this->injectableFactory
-            ->create(AccountFactory::class)
-            ->create($emailAccount->getId())
-            ->getSmtpParams();
+    public function __construct(
+        private User $user,
+        private Config $config,
+        private EntityManager $entityManager
+    ) {}
 
-        if (!$params) {
-            return null;
+    public function process(Entity $entity): void
+    {
+        if ($this->user->isAdmin()) {
+            return;
         }
 
-        return $params->toArray();
+        $entity->set('assignedUserId', $this->user->getId());
+
+        $count = $this->entityManager
+            ->getRDBRepository(EmailAccount::ENTITY_TYPE)
+            ->where(['assignedUserId' => $this->user->getId()])
+            ->count();
+
+        if ($count >= $this->config->get('maxEmailAccountCount', PHP_INT_MAX)) {
+            throw new Forbidden("Email Account number for user limit exceeded.");
+        }
     }
 }

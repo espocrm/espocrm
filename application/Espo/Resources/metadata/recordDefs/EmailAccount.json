@@ -12,5 +12,8 @@
     ],
     "updateInputFilterClassNameList": [
         "Espo\\Classes\\Record\\InboundEmail\\PasswordsInputFilter"
+    ],
+    "beforeCreateHookClassNameList": [
+        "Espo\\Classes\\RecordHooks\\EmailAccount\\BeforeCreate"
     ]
 }
