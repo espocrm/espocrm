@@ -279,11 +279,7 @@ class Email extends Entity
             }
         }
 
-        return str_replace(
-            "<table class=\"table table-bordered\">",
-            "<table class=\"table table-bordered\" width=\"100%\">",
-            $body
-        );
+        return $body;
     }
 
     /**
