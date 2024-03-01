@@ -27,53 +27,45 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\Record\InboundEmail;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Mail\Account\GroupAccount\AccountFactory;
-use Espo\Core\Mail\Exceptions\NoSmtp;
-use Espo\ORM\Entity;
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Services\Record as RecordService;
-use Espo\Entities\InboundEmail as InboundEmailEntity;
-
-use stdClass;
+use Espo\Core\Record\Input\Data;
+use Espo\Core\Record\Input\Filter;
+use Espo\Core\Utils\Crypt;
 
 /**
- * @extends Record<InboundEmailEntity>
+ * @noinspection PhpUnused
  */
-class InboundEmail extends RecordService
+class PasswordsInputFilter implements Filter
 {
-    public function processValidation(Entity $entity, stdClass $data): void
-    {
-        parent::processValidation($entity, $data);
-
-        if ($entity->get('useImap')) {
-            if (!$entity->get('fetchSince')) {
-                throw new BadRequest("EmailAccount validation: fetchSince is required.");
-            }
-        }
-    }
+    public function __construct(
+        private Crypt $crypt
+    ) {}
 
     /**
-     * @return ?array<string, mixed>
-     * @throws Error
-     * @throws NoSmtp
-     * @internal Left for bc.
-     * @deprecated
-     * @todo Remove in v9.0.
+     * @throws BadRequest
      */
-    public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount): ?array
+    public function filter(Data $data): void
     {
-        $params = $this->injectableFactory
-            ->create(AccountFactory::class)
-            ->create($emailAccount->getId())
-            ->getSmtpParams();
+        $password = $data->get('password');
 
-        if (!$params) {
-            return null;
+        if ($password !== null) {
+            if (!is_string($password)) {
+                throw new BadRequest();
+            }
+
+            $data->set('password', $this->crypt->encrypt($password));
         }
 
-        return $params->toArray();
+        $smtpPassword = $data->get('smtpPassword');
+
+        if ($smtpPassword !== null) {
+            if (!is_string($smtpPassword)) {
+                throw new BadRequest();
+            }
+
+            $data->set('smtpPassword', $this->crypt->encrypt($smtpPassword));
+        }
     }
 }

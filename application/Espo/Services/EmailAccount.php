@@ -32,41 +32,19 @@ namespace Espo\Services;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Account\PersonalAccount\AccountFactory;
 use Espo\Core\Mail\Exceptions\NoSmtp;
-
 use Espo\ORM\Entity;
-
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Record\CreateParams;
-
 use Espo\Entities\EmailAccount as EmailAccountEntity;
-
-use Espo\Core\Di;
 
 use stdClass;
 
 /**
  * @extends Record<EmailAccountEntity>
  */
-class EmailAccount extends Record implements
-
-    Di\CryptAware
+class EmailAccount extends Record
 {
-    use Di\CryptSetter;
-
-    protected function filterInput(stdClass $data): void
-    {
-        parent::filterInput($data);
-
-        if (property_exists($data, 'password')) {
-            $data->password = $this->crypt->encrypt($data->password);
-        }
-
-        if (property_exists($data, 'smtpPassword')) {
-            $data->smtpPassword = $this->crypt->encrypt($data->smtpPassword);
-        }
-    }
-
     public function processValidation(Entity $entity, stdClass $data): void
     {
         parent::processValidation($entity, $data);

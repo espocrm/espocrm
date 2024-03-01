@@ -6,5 +6,11 @@
         "delete": {
             "allowed": true
         }
-    }
+    },
+    "createInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\InboundEmail\\PasswordsInputFilter"
+    ],
+    "updateInputFilterClassNameList": [
+        "Espo\\Classes\\Record\\InboundEmail\\PasswordsInputFilter"
+    ]
 }
