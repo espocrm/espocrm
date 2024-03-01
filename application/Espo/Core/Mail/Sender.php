@@ -369,10 +369,10 @@ class Sender
 
         $fromName = $params['fromName'] ?? $config->get('outboundEmailFromName');
 
-        if ($email->get('from')) {
-            $fromAddress = trim(
-                $email->get('from')
-            );
+        $fromAddress = $email->get('from');
+
+        if ($fromAddress) {
+            $fromAddress = trim($fromAddress);
         }
         else {
             if (empty($params['fromAddress']) && !$config->get('outboundEmailFromAddress')) {
@@ -381,7 +381,7 @@ class Sender
 
             $fromAddress = $params['fromAddress'] ?? $config->get('outboundEmailFromAddress');
 
-            $email->set('from', $fromAddress);
+            $email->setFromAddress($fromAddress);
         }
 
         $message->addFrom($fromAddress, $fromName);
@@ -398,8 +398,7 @@ class Sender
 
         $senderHeader->setAddress($fromAddress);
 
-        $message->getHeaders()
-            ->addHeader($senderHeader);
+        $message->getHeaders()->addHeader($senderHeader);
 
         if (!empty($params['replyToAddress'])) {
             $message->setReplyTo(
@@ -672,16 +671,9 @@ class Sender
     {
         $rand = mt_rand(1000, 9999);
 
-        if ($email->getParentType() && $email->getParentId()) {
-            $messageId =
-                '' . $email->get('parentType') . '/' .
-                $email->get('parentId') . '/' . time() . '/' . $rand . '@espo';
-        }
-        else {
-            $messageId =
-                md5($email->get('name')) . '/' .time() . '/' .
-                $rand .  '@espo';
-        }
+        $messageId = $email->getParentType() && $email->getParentId() ?
+            sprintf("%s/%s/%s/%s@espo", $email->getParentType(), $email->getParentId(), time(), $rand) :
+            sprintf("%s/%s/%s@espo", md5($email->get('name')), time(), $rand);
 
         if ($email->get('isSystem')) {
             $messageId .= '-system';
@@ -707,48 +699,32 @@ class Sender
         $value = $email->get('to');
 
         if ($value) {
-            $arr = explode(';', $value);
-
-            foreach ($arr as $address) {
-                $message->addTo(
-                    trim($address)
-                );
+            foreach (explode(';', $value) as $address) {
+                $message->addTo(trim($address));
             }
         }
 
         $value = $email->get('cc');
 
         if ($value) {
-            $arr = explode(';', $value);
-
-            foreach ($arr as $address) {
-                $message->addCC(
-                    trim($address)
-                );
+            foreach (explode(';', $value) as $address) {
+                $message->addCC(trim($address));
             }
         }
 
         $value = $email->get('bcc');
 
         if ($value) {
-            $arr = explode(';', $value);
-
-            foreach ($arr as $address) {
-                $message->addBCC(
-                    trim($address)
-                );
+            foreach (explode(';', $value) as $address) {
+                $message->addBCC(trim($address));
             }
         }
 
         $value = $email->get('replyTo');
 
         if ($value) {
-            $arr = explode(';', $value);
-
-            foreach ($arr as $address) {
-                $message->addReplyTo(
-                    trim($address)
-                );
+            foreach (explode(';', $value) as $address) {
+                $message->addReplyTo(trim($address));
             }
         }
     }
