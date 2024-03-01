@@ -84,7 +84,8 @@
         "exampleRequestUrl": {
             "type": "varchar",
             "notStorable": true,
-            "readOnly": true
+            "readOnly": true,
+            "copyToClipboard": true
         },
         "exampleRequestMethod": {
             "type": "varchar",
