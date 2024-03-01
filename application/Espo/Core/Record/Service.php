@@ -1872,7 +1872,7 @@ class Service implements Crud,
         $select = array_unique(
             array_merge(
                 $searchParams->getSelect(),
-                $this->mandatorySelectAttributeList
+                $mandatoryAttributeList
             )
         );
 
