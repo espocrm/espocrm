@@ -587,6 +587,10 @@
                     "type": ["string", "boolean"],
                     "description": "Enable a tooltip for the field. A tooltip text is taken from the language by: {EntityType} > tooltips > {fieldName}. If defined as a string, then text will be taken from the language by: {EntityType} > tooltips > {value}."
                 },
+                "forceValidation": {
+                    "type": "boolean",
+                    "description": "Always to perform validation, regardless whether field values are sent. As of v8.2."
+                },
                 "validatorClassNameMap": {
                     "type": "object",
                     "description": "Validators defined as validation-type => class-name map. Classes should implement Espo\\Core\\FieldValidation\\Validator interface. If not defined for a type, metadata > fields > {fieldType} > validatorClassNameMap > {type} is used.",

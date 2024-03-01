@@ -58,7 +58,11 @@
             "type": "bool"
         },
         "fetchSince": {
-            "type": "date"
+            "type": "date",
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\InboundEmail\\FetchSince\\Required"
+            ],
+            "forceValidation": true
         },
         "fetchData": {
             "type": "jsonObject",

@@ -27,38 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\FieldValidators\InboundEmail\FetchSince;
 
-use Espo\Core\Exceptions\Error;
-use Espo\Core\Mail\Account\GroupAccount\AccountFactory;
-use Espo\Core\Mail\Exceptions\NoSmtp;
-use Espo\Services\Record as RecordService;
-use Espo\Entities\InboundEmail as InboundEmailEntity;
+use Espo\Core\FieldValidation\Validator;
+use Espo\Core\FieldValidation\Validator\Data;
+use Espo\Core\FieldValidation\Validator\Failure;
+use Espo\Entities\EmailAccount;
+use Espo\Entities\InboundEmail;
+use Espo\ORM\Entity;
 
 /**
- * @extends Record<InboundEmailEntity>
+ * @implements Validator<InboundEmail|EmailAccount>
  */
-class InboundEmail extends RecordService
+class Required implements Validator
 {
-    /**
-     * @return ?array<string, mixed>
-     * @throws Error
-     * @throws NoSmtp
-     * @internal Left for bc.
-     * @deprecated
-     * @todo Remove in v9.0.
-     */
-    public function getSmtpParamsFromAccount(InboundEmailEntity $emailAccount): ?array
+    public function validate(Entity $entity, string $field, Data $data): ?Failure
     {
-        $params = $this->injectableFactory
-            ->create(AccountFactory::class)
-            ->create($emailAccount->getId())
-            ->getSmtpParams();
-
-        if (!$params) {
+        if (!$entity->isAvailableForFetching()) {
             return null;
         }
 
-        return $params->toArray();
+        if (!$entity->get('fetchSince')) {
+            return Failure::create();
+        }
+
+        return null;
     }
 }

@@ -34,7 +34,6 @@ use Espo\Core\Mail\Account\PersonalAccount\AccountFactory;
 use Espo\Core\Mail\Exceptions\NoSmtp;
 use Espo\ORM\Entity;
 use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Record\CreateParams;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
 
@@ -45,17 +44,6 @@ use stdClass;
  */
 class EmailAccount extends Record
 {
-    public function processValidation(Entity $entity, stdClass $data): void
-    {
-        parent::processValidation($entity, $data);
-
-        if ($entity->get('useImap')) {
-            if (!$entity->get('fetchSince')) {
-                throw new BadRequest("EmailAccount validation: fetchSince is required.");
-            }
-        }
-    }
-
     public function create(stdClass $data, CreateParams $params): Entity
     {
         if (!$this->user->isAdmin()) {

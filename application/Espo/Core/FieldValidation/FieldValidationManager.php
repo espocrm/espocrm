@@ -29,6 +29,8 @@
 
 namespace Espo\Core\FieldValidation;
 
+use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
+use Espo\ORM\Defs;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldValidation\Exceptions\ValidationError;
@@ -56,7 +58,8 @@ class FieldValidationManager
         private Metadata $metadata,
         private FieldUtil $fieldUtil,
         CheckerFactory $factory,
-        private ValidatorFactory $validatorFactory
+        private ValidatorFactory $validatorFactory,
+        private Defs $defs
     ) {
         $this->checkerFactory = $factory;
     }
@@ -116,10 +119,13 @@ class FieldValidationManager
 
         $failureList = [];
 
+        $entityDefs = $this->defs->getEntity($entity->getEntityType());
+
         foreach ($fieldList as $field) {
             if (
                 !$entity->isNew() &&
                 $dataIsSet &&
+                !$entityDefs->tryGetField($field)?->getParam('forceValidation') &&
                 !$this->isFieldSetInData($entity->getEntityType(), $field, $data)
             ) {
                 continue;
