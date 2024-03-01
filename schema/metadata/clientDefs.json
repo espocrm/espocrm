@@ -484,6 +484,13 @@
                     "massSelect": {
                         "type": "boolean",
                         "description": "Allow mass select."
+                    },
+                    "createAttributeMap": {
+                        "type": "object",
+                        "additionalProperties": {
+                            "type": "string"
+                        },
+                        "description": "Attributes to carry over to a related record when creating. Mapping Parent => Related."
                     }
                 }
             }
