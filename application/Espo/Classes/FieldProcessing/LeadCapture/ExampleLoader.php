@@ -27,42 +27,58 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Services;
+namespace Espo\Classes\FieldProcessing\LeadCapture;
 
-use Espo\Entities\LeadCapture as LeadCaptureEntity;
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\FieldUtil;
+use Espo\Core\Utils\Util;
+use Espo\Entities\LeadCapture;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\Entity;
-use Espo\Core\Utils\Util;
+use Espo\ORM\EntityManager;
 
 /**
- * @extends Record<LeadCaptureEntity>
+ * @implements Loader<LeadCapture>
  */
-class LeadCapture extends Record
+class ExampleLoader implements Loader
 {
-    /**
-     * @param LeadCaptureEntity $entity
-     */
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        parent::prepareEntityForOutput($entity);
+    public function __construct(
+        private FieldUtil $fieldUtil,
+        private Config $config,
+        private EntityManager $entityManager
+    ) {}
 
+    public function process(Entity $entity, Params $params): void
+    {
         $entity->set('exampleRequestMethod', 'POST');
 
         $entity->set('exampleRequestHeaders', [
             'Content-Type: application/json',
         ]);
 
+        $this->processRequestUrl($entity);
+        $this->processRequestPayload($entity);
+    }
+
+    private function processRequestUrl(LeadCapture $entity): void
+    {
         $apiKey = $entity->getApiKey();
+        $siteUrl = $this->config->get('siteUrl');
 
-        if ($apiKey) {
-            $requestUrl = $this->config->getSiteUrl() . '/api/v1/LeadCapture/' . $apiKey;
-
-            $entity->set('exampleRequestUrl', $requestUrl);
+        if (!$apiKey) {
+            return;
         }
 
-        $fieldUtil = $this->fieldUtil;
+        $requestUrl = "$siteUrl/api/v1/LeadCapture/$apiKey";
 
-        $requestPayload = "```{\n";
+        $entity->set('exampleRequestUrl', $requestUrl);
+    }
+
+    private function processRequestPayload(LeadCapture $entity): void
+    {
+        $requestPayload = "```\n{\n";
 
         $attributeList = [];
 
@@ -76,7 +92,7 @@ class LeadCapture extends Record
         ];
 
         foreach ($entity->getFieldList() as $field) {
-            foreach ($fieldUtil->getActualAttributeList(Lead::ENTITY_TYPE, $field) as $attribute) {
+            foreach ($this->fieldUtil->getActualAttributeList(Lead::ENTITY_TYPE, $field) as $attribute) {
                 if (!in_array($attribute, $attributeIgnoreList)) {
                     $attributeList[] = $attribute;
                 }
@@ -101,7 +117,7 @@ class LeadCapture extends Record
             $requestPayload .= "\n";
         }
 
-        $requestPayload .= '}```';
+        $requestPayload .= "}\n```";
 
         $entity->set('exampleRequestPayload', $requestPayload);
     }
