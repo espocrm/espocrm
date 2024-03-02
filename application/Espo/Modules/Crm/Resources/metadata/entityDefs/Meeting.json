@@ -417,5 +417,6 @@
         "assignedUserStatus": {
             "columns": ["assignedUserId", "status"]
         }
-    }
+    },
+    "repositoryClassName": "Espo\\Core\\Repositories\\Event"
 }
