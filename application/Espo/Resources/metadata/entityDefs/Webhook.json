@@ -93,5 +93,6 @@
         "entityTypeField": {
             "columns": ["entityType", "field"]
         }
-    }
+    },
+    "hooksDisabled": true
 }

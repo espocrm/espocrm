@@ -84,6 +84,10 @@
             "type": "boolean",
             "description": "Do not add the `deleted` attribute."
         },
+        "hooksDisabled": {
+            "type": "boolean",
+            "description": "Disable hooks. As of v8.2."
+        },
         "entityClassName": {
             "type": "string",
             "description": "An entity. Should implement Espo\\ORM\\Entity. Usually should extend Espo\\Core\\ORM\\Entity. As of v8.2."

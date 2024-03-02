@@ -38,8 +38,6 @@ use Espo\Core\Repositories\Database;
  */
 class Webhook extends Database
 {
-    protected $hooksDisabled = true;
-
     protected function beforeSave(Entity $entity, array $options = [])
     {
         if ($entity->isNew()) {

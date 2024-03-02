@@ -72,5 +72,6 @@
         "order": "asc",
         "textFilterFields": ["ipAddress", "userName"],
         "countDisabled": true
-    }
+    },
+    "hooksDisabled": true
 }

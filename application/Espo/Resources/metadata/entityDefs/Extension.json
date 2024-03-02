@@ -55,5 +55,6 @@
     "collection": {
         "orderBy": "createdAt",
         "order": "desc"
-    }
+    },
+    "hooksDisabled": true
 }

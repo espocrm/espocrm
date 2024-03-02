@@ -52,8 +52,6 @@ class PhoneNumber extends Database implements
     use Di\AclManagerSetter;
     use Di\ConfigSetter;
 
-    protected $hooksDisabled = true;
-
     private const ERASED_PREFIX = 'ERASED:';
 
     private const LOOKUP_SMALL_MAX_SIZE = 20;

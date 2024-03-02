@@ -133,5 +133,6 @@
         "statusScheduledJobId": {
             "columns": ["status", "scheduledJobId"]
         }
-    }
+    },
+    "hooksDisabled": true
 }

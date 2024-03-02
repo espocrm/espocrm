@@ -51,8 +51,6 @@ class EmailAddress extends Database implements
     use Di\AclManagerSetter;
     use Di\ConfigSetter;
 
-    protected $hooksDisabled = true;
-
     private const LOOKUP_SMALL_MAX_SIZE = 20;
     private const LOOKUP_MAX_SIZE = 50;
 

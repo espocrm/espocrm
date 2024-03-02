@@ -105,5 +105,6 @@
         "requestTime": {
             "columns": ["requestTime"]
         }
-    }
+    },
+    "hooksDisabled": true
 }

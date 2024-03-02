@@ -39,8 +39,6 @@ use Espo\Core\Repositories\Database;
  */
 class UniqueId extends Database
 {
-    protected $hooksDisabled = true;
-
     public function getNew(): Entity
     {
         $entity = parent::getNew();
