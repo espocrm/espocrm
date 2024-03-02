@@ -41,6 +41,8 @@ use Espo\Tools\Export\Params as ExportParams;
 use Espo\Core\Di;
 
 /**
+ * Extending is not recommended. Use composition with metadata > recordDefs.
+ *
  * @template TEntity of Entity
  * @extends RecordService<TEntity>
  */

@@ -83,6 +83,8 @@ use const E_USER_DEPRECATED;
  * The layer between a controller and ORM repository. For CRUD and other operations with records.
  * Access control is processed here.
  *
+ * Extending is not recommended. Use composition with metadata > recordDefs.
+ *
  * @template TEntity of Entity
  * @implements Crud<TEntity>
  */
