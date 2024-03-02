@@ -87,6 +87,13 @@ class ClassNameProvider
     private function findEntityClassName(string $entityType): string
     {
         /** @var ?class-string<Entity> $className */
+        $className = $this->metadata->get("entityDefs.$entityType.entityClassName");
+
+        if ($className) {
+            return $className;
+        }
+
+        /** @var ?class-string<Entity> $className */
         $className = $this->classFinder->find('Entities', $entityType);
 
         if ($className) {
@@ -114,6 +121,13 @@ class ClassNameProvider
      */
     private function findRepositoryClassName(string $entityType): string
     {
+        /** @var ?class-string<Repository<Entity>> $className */
+        $className = $this->metadata->get("entityDefs.$entityType.repositoryClassName");
+
+        if ($className) {
+            return $className;
+        }
+
         /** @var ?class-string<Repository<Entity>> $className */
         $className = $this->classFinder->find('Repositories', $entityType);
 

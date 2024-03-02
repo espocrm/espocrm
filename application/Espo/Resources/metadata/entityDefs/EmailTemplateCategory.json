@@ -94,5 +94,6 @@
                 }
             }
         }
-    }
+    },
+    "repositoryClassName": "Espo\\Core\\Repositories\\CategoryTree"
 }

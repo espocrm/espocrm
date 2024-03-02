@@ -83,6 +83,14 @@
         "noDeletedAttribute": {
             "type": "boolean",
             "description": "Do not add the `deleted` attribute."
+        },
+        "entityClassName": {
+            "type": "string",
+            "description": "An entity. Should implement Espo\\ORM\\Entity. Usually should extend Espo\\Core\\ORM\\Entity. As of v8.2."
+        },
+        "repositoryClassName": {
+            "type": "string",
+            "description": "A repository. Should implement Espo\\ORM\\Repository\\Repository. As of v8.2."
         }
     },
     "definitions": {
