@@ -29,7 +29,6 @@
 
 namespace Espo\Services;
 
-use Espo\Core\Authentication\Logins\Hmac;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Mail\Exceptions\SendingError;
@@ -40,7 +39,6 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\DeleteParams;
 use Espo\Core\Record\UpdateParams;
-use Espo\Core\Utils\ApiKey as ApiKeyUtil;
 use Espo\Core\Utils\PasswordHash;
 use Espo\ORM\Entity;
 use Espo\ORM\Query\SelectBuilder;
@@ -214,34 +212,6 @@ class User extends Record
         $this->injectableFactory
             ->create(PasswordSender::class)
             ->sendPassword($user, $password);
-    }
-
-    public function prepareEntityForOutput(Entity $entity)
-    {
-        assert($entity instanceof UserEntity);
-
-        parent::prepareEntityForOutput($entity);
-
-        $entity->clear('sendAccessInfo');
-
-        if ($entity->isApi()) {
-            if ($this->user->isAdmin()) {
-                if ($entity->getAuthMethod() === Hmac::NAME) {
-                    $secretKey = $this->getSecretKeyForUserId($entity->getId());
-                    $entity->set('secretKey', $secretKey);
-                }
-            } else {
-                $entity->clear('apiKey');
-                $entity->clear('secretKey');
-            }
-        }
-    }
-
-    protected function getSecretKeyForUserId(string $id): ?string
-    {
-        $apiKeyUtil = $this->injectableFactory->create(ApiKeyUtil::class);
-
-        return $apiKeyUtil->getSecretKeyForUserId($id);
     }
 
     /**

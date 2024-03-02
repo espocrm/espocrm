@@ -180,6 +180,13 @@
                 "type": "string"
             }
         },
+        "outputFilterClassNameList": {
+            "description": "Output filters. Should implement Espo\\Core\\Record\\Output\\Filter. As of v8.2.",
+            "type": "array",
+            "items": {
+                "type": "string"
+            }
+        },
         "beforeReadHookClassNameList": {
             "description": "Before-read hooks. Should implement the Espo\\Core\\Record\\Hook\\ReadHook interface.",
             "type": "array",

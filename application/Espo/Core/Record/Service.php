@@ -272,6 +272,8 @@ class Service implements Crud,
     private ?array $createFilterList = null;
     /** @var ?Filter[] */
     private ?array $updateFilterList = null;
+    /** @var ?Output\Filter<Entity>[] */
+    private ?array $outputFilterList = null;
 
     protected const MAX_SELECT_TEXT_ATTRIBUTE_LENGTH = 10000;
 
@@ -397,6 +399,7 @@ class Service implements Crud,
             throw new ForbiddenSilent("No 'read' access.");
         }
 
+        /** @noinspection PhpDeprecationInspection */
         $this->prepareEntityForOutput($entity);
 
         return $entity;
@@ -750,6 +753,7 @@ class Service implements Crud,
         }
 
         foreach ($duplicates as $e) {
+            /** @noinspection PhpDeprecationInspection */
             $this->prepareEntityForOutput($e);
         }
 
@@ -831,6 +835,7 @@ class Service implements Crud,
 
         $this->loadAdditionalFields($entity);
 
+        /** @noinspection PhpDeprecationInspection */
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::CREATE, $entity);
 
@@ -915,6 +920,7 @@ class Service implements Crud,
             $this->loadAdditionalFields($entity);
         }
 
+        /** @noinspection PhpDeprecationInspection */
         $this->prepareEntityForOutput($entity);
         $this->processActionHistoryRecord(Action::UPDATE, $entity);
 
@@ -1008,6 +1014,7 @@ class Service implements Crud,
             /** @noinspection PhpDeprecationInspection */
             $this->loadListAdditionalFields($entity, $preparedSearchParams);
 
+            /** @noinspection PhpDeprecationInspection */
             $this->prepareEntityForOutput($entity);
         }
 
@@ -1180,6 +1187,7 @@ class Service implements Crud,
             /** @noinspection PhpDeprecationInspection */
             $this->loadListAdditionalFields($itemEntity, $preparedSearchParams);
 
+            /** @noinspection PhpDeprecationInspection */
             $recordService->prepareEntityForOutput($itemEntity);
         }
 
@@ -1667,6 +1675,8 @@ class Service implements Crud,
     /**
      * Prepare an entity for output. Clears not allowed attributes.
      *
+     * Do not extend. Prefer metadata recordDefs > outputFilterClassNameList.
+     *
      * @param TEntity $entity
      * @return void
      * @todo Add void return type in v9.0.
@@ -1720,6 +1730,23 @@ class Service implements Crud,
         foreach ($forbiddenAttributeList as $attribute) {
             $entity->clear($attribute);
         }
+
+        foreach ($this->getOutputFilterList() as $filter) {
+            $filter->filter($entity);
+        }
+    }
+
+    /**
+     * @return Output\Filter<Entity>[]
+     */
+    private function getOutputFilterList(): array
+    {
+        if ($this->outputFilterList === null) {
+            $this->outputFilterList =
+                $this->injectableFactory->create(Output\FilterProvider::class)->get($this->entityType);
+        }
+
+        return $this->outputFilterList;
     }
 
     private function createEntityDuplicator(): EntityDuplicator

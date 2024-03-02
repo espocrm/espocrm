@@ -12,6 +12,9 @@
         "userName",
         "type"
     ],
+    "outputFilterClassNameList": [
+        "Espo\\Classes\\Record\\User\\OutputFilter"
+    ],
     "readLoaderClassNameList": [
         "Espo\\Classes\\FieldProcessing\\User\\LastAccessLoader"
     ],

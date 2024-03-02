@@ -59,6 +59,7 @@ class Builder
         ['recordDefs', self::ANY_KEY, 'selectApplierClassNameList'],
         ['recordDefs', self::ANY_KEY, 'createInputFilterClassNameList'],
         ['recordDefs', self::ANY_KEY, 'updateInputFilterClassNameList'],
+        ['recordDefs', self::ANY_KEY, 'outputFilterClassNameList'],
         ['recordDefs', self::ANY_KEY, 'beforeReadHookClassNameList'],
         ['recordDefs', self::ANY_KEY, 'beforeCreateHookClassNameList'],
         ['recordDefs', self::ANY_KEY, 'beforeUpdateHookClassNameList'],
