@@ -27,23 +27,31 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Repositories;
+namespace Espo\Modules\Crm\Hooks\KnowledgeBaseArticle;
 
+use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
- * @extends \Espo\Core\Repositories\Database<\Espo\Modules\Crm\Entities\KnowledgeBaseArticle>
+ * @implements BeforeSave<KnowledgeBaseArticle>
  */
-class KnowledgeBaseArticle extends \Espo\Core\Repositories\Database
+class SetOrder implements BeforeSave
 {
-    protected function beforeSave(Entity $entity, array $options = [])
-    {
-        parent::beforeSave($entity, $options);
+    public function __construct(
+        private EntityManager $entityManager
+    ) {}
 
-        $order = $entity->get('order');
+    public function beforeSave(Entity $entity, SaveOptions $options): void
+    {
+        $order = $entity->getOrder();
 
         if (is_null($order)) {
-            $order = $this->min('order');
+            $order = $this->entityManager
+                ->getRDBRepository($entity->getEntityType())
+                ->min('order');
 
             if (!$order) {
                 $order = 9999;
