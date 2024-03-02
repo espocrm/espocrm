@@ -33,5 +33,24 @@
         {
             "name": "birthday" 
         }
-    ]
+    ],
+    "menu": {
+        "list": {
+            "buttons": [
+                "__APPEND__",
+                {
+                    "label": "Дні народження",
+                    "name": "birthdays",
+                    "action": "ShowBirthdays",
+                    "style": "default",
+                    "acl": "edit",
+                    "aclScope": "Contact",
+                    "data": {
+                        "handler": "custom:show-birthdays"
+                    },
+                    "initFunction": "initBirthdays"
+                }
+            ]
+        }
+    }
 }
