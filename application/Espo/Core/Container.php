@@ -101,7 +101,7 @@ class Container implements ContainerInterface
             $this->load($id);
 
             if (!$this->isSet($id)) {
-                throw new NotFoundException("Could not load '{$id}' service.");
+                throw new NotFoundException("Could not load '$id' service.");
             }
         }
 
@@ -154,7 +154,7 @@ class Container implements ContainerInterface
         $binding = $this->bindingContainer->getByInterface($className);
 
         if ($binding->getType() !== Binding::CONTAINER_SERVICE) {
-            throw new NotFoundException("No service bound to `{$className}`.");
+            throw new NotFoundException("No service bound to `$className`.");
         }
 
         $id = $binding->getValue();
@@ -212,7 +212,7 @@ class Container implements ContainerInterface
         $className = $this->configuration->getServiceClassName($id);
 
         if ($className === null) {
-            throw new RuntimeException("No class-name for service '{$id}'.");
+            throw new RuntimeException("No class-name for service '$id'.");
         }
 
         $this->classCache[$id] = new ReflectionClass($className);
@@ -229,13 +229,13 @@ class Container implements ContainerInterface
         $loadMethod = $loaderClass->getMethod('load');
 
         if (!$loadMethod->hasReturnType()) {
-            throw new RuntimeException("Loader method for service '{$id}' does not have a return type.");
+            throw new RuntimeException("Loader method for service '$id' does not have a return type.");
         }
 
         $returnType = $loadMethod->getReturnType();
 
         if (!$returnType instanceof ReflectionNamedType) {
-            throw new RuntimeException("Loader method for service '{$id}' does not have a named return type.");
+            throw new RuntimeException("Loader method for service '$id' does not have a named return type.");
         }
 
         /** @var class-string $className */
@@ -253,7 +253,7 @@ class Container implements ContainerInterface
     public function getClass(string $id): ReflectionClass
     {
         if (!$this->has($id)) {
-            throw new RuntimeException("Service '{$id}' does not exist.");
+            throw new RuntimeException("Service '$id' does not exist.");
         }
 
         if (!isset($this->classCache[$id])) {
@@ -271,11 +271,11 @@ class Container implements ContainerInterface
         assert($this->configuration !== null);
 
         if (!$this->configuration->isSettable($id)) {
-            throw new NotSettableException("Service '{$id}' is not settable.");
+            throw new NotSettableException("Service '$id' is not settable.");
         }
 
         if ($this->isSet($id)) {
-            throw new NotSettableException("Service '{$id}' is already set.");
+            throw new NotSettableException("Service '$id' is already set.");
         }
 
         $this->setForced($id, $object);
@@ -343,7 +343,7 @@ class Container implements ContainerInterface
         $className = $this->configuration->getServiceClassName($id);
 
         if (!$className || !class_exists($className)) {
-            throw new RuntimeException("Could not load '{$id}' service.");
+            throw new RuntimeException("Could not load '$id' service.");
         }
 
         $dependencyList = $this->configuration->getServiceDependencyList($id);
