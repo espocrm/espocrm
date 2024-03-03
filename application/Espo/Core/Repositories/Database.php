@@ -90,11 +90,11 @@ class Database extends RDBRepository
         $this->applicationState = $applicationState;
         $this->recordIdGenerator = $recordIdGenerator;
 
-        $hooksDisabled = $this->hooksDisabled || $metadata->get("entityDefs.$entityType.hooksDisabled");
+        $this->hooksDisabled = $this->hooksDisabled || $metadata->get("entityDefs.$entityType.hooksDisabled");
 
         $hookMediator = null;
 
-        if (!$hooksDisabled) {
+        if (!$this->hooksDisabled) {
             $hookMediator = new HookMediator($hookManager);
         }
 
