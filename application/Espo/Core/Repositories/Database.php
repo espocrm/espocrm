@@ -42,6 +42,7 @@ use Espo\Core\HookManager;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Id\RecordIdGenerator;
 use Espo\Core\Utils\Metadata;
+use stdClass;
 
 /**
  * A database repository. Extending is not recommended. Use hooks, field saver framework instead.
@@ -139,6 +140,8 @@ class Database extends RDBRepository
     }
 
     /**
+     * @deprecated Do not extend. Use hooks.
+     *
      * @param TEntity $entity
      * @param array<string, mixed> $options
      * @return void
@@ -176,6 +179,8 @@ class Database extends RDBRepository
     }
 
     /**
+     * @deprecated Do not extend. Use hooks.
+     *
      * @param TEntity $entity
      * @param array<string, mixed> $options
      * @return void
@@ -190,6 +195,8 @@ class Database extends RDBRepository
     }
 
     /**
+     * @deprecated Do not extend.
+     *
      * @param TEntity $entity
      * @param string $relationName
      * @param array<string, mixed> $params
@@ -217,15 +224,18 @@ class Database extends RDBRepository
     }
 
     /**
+     * @deprecated Do not extend. Use hooks.
+     *
      * @param TEntity $entity
      * @param string $relationName
      * @param Entity|string $foreign
-     * @param \stdClass|array<string, mixed>|null $data
+     * @param stdClass|array<string, mixed>|null $data
      * @param array<string, mixed> $options
      * @return void
      */
     protected function afterRelate(Entity $entity, $relationName, $foreign, $data = null, array $options = [])
     {
+        /** @noinspection PhpDeprecationInspection */
         parent::afterRelate($entity, $relationName, $foreign, $data, $options);
 
         if ($this->hooksDisabled || !empty($options[SaveOption::SKIP_HOOKS])) {
@@ -255,6 +265,8 @@ class Database extends RDBRepository
     }
 
     /**
+     * @deprecated Do not extend. Use hooks.
+     *
      * @param TEntity $entity
      * @param string $relationName
      * @param Entity|string $foreign
@@ -263,6 +275,7 @@ class Database extends RDBRepository
      */
     protected function afterUnrelate(Entity $entity, $relationName, $foreign, array $options = [])
     {
+        /** @noinspection PhpDeprecationInspection */
         parent::afterUnrelate($entity, $relationName, $foreign, $options);
 
         if ($this->hooksDisabled || !empty($options[SaveOption::SKIP_HOOKS])) {
@@ -288,6 +301,8 @@ class Database extends RDBRepository
     }
 
     /**
+     * @deprecated Do not extend. Use hooks.
+     *
      * @param TEntity $entity
      * @param array<string, mixed> $options
      * @return void
@@ -302,6 +317,8 @@ class Database extends RDBRepository
     }
 
     /**
+     * @deprecated Do not extend. Use hooks.
+     *
      * @param TEntity $entity
      * @param array<string, mixed> $options
      * @return void

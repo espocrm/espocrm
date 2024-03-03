@@ -490,6 +490,7 @@ class RDBRepository implements Repository
 
     /**
      * Use hooks instead.
+     *
      * @param array<string, mixed> $options
      * @return void
      */
@@ -499,7 +500,8 @@ class RDBRepository implements Repository
     }
 
     /**
-     * Use hooks instead.
+     * @deprecated Use hooks instead.
+     *
      * @param array<string, mixed> $options
      * @return void
      */
@@ -509,7 +511,8 @@ class RDBRepository implements Repository
     }
 
     /**
-     * Use hooks instead.
+     * @deprecated Use hooks instead.
+     *
      * @param array<string, mixed> $options
      * @return void
      */
@@ -519,7 +522,8 @@ class RDBRepository implements Repository
     }
 
     /**
-     * Use hooks instead.
+     * @deprecated Use hooks instead.
+     *
      * @param array<string, mixed> $options
      * @return void
      */
