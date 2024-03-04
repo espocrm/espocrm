@@ -82,11 +82,13 @@
         },
         "account": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "customizationReadOnlyDisabled": true
         },
         "contact": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "customizationReadOnlyDisabled": true
         },
         "createdAt": {
             "type": "datetime",

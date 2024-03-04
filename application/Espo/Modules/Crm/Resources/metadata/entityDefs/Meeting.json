@@ -70,7 +70,8 @@
         },
         "account": {
             "type": "link",
-            "readOnly": true
+            "readOnly": true,
+            "customizationReadOnlyDisabled": true
         },
         "acceptanceStatus": {
             "type": "enum",
