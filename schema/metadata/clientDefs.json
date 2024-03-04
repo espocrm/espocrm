@@ -195,6 +195,10 @@
                             },
                             "accessDataList": {
                                 "$ref": "#/definitions/accessDataList"
+                            },
+                            "aux": {
+                                "type": "boolean",
+                                "description": "Makes the filter not available on the list view."
                             }
                         }
                     }
