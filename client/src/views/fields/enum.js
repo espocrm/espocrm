@@ -268,6 +268,7 @@ class EnumFieldView extends BaseFieldView {
      * Set an option list.
      *
      * @param {string[]} optionList An option list.
+     * @return {Promise}
      */
     setOptionList(optionList) {
         const previousOptions = this.params.options;
@@ -283,7 +284,7 @@ class EnumFieldView extends BaseFieldView {
         const isChanged = !_(previousOptions).isEqual(optionList);
 
         if (!this.isEditMode() || !isChanged) {
-            return;
+            return Promise.resolve();
         }
 
         let triggerChange = false;
@@ -295,7 +296,7 @@ class EnumFieldView extends BaseFieldView {
             triggerChange = true;
         }
 
-        this.reRender()
+        return this.reRender()
             .then(() => {
                 if (triggerChange) {
                     this.trigger('change');
@@ -305,10 +306,12 @@ class EnumFieldView extends BaseFieldView {
 
     /**
      * Reset a previously set option list.
+     *
+     * @return {Promise}
      */
     resetOptionList() {
         if (!this.originalOptionList) {
-            return;
+            return Promise.resolve();
         }
 
         const previousOptions = this.params.options;
@@ -318,12 +321,14 @@ class EnumFieldView extends BaseFieldView {
         const isChanged = !_(previousOptions).isEqual(this.originalOptionList);
 
         if (!this.isEditMode() || !isChanged) {
-            return;
+            return Promise.resolve();
         }
 
         if (this.isRendered()) {
-            this.reRender();
+            return this.reRender();
         }
+
+        return Promise.resolve();
     }
 
     setupSearch() {
