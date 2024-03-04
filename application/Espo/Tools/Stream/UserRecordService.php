@@ -52,6 +52,7 @@ use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
+use Espo\Tools\Stream\RecordService\NoteHelper;
 use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class UserRecordService

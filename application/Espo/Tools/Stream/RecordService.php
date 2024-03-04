@@ -43,6 +43,7 @@ use Espo\Core\Acl\Table;
 use Espo\Core\Record\Collection as RecordCollection;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Tools\Stream\RecordService\Helper;
+use Espo\Tools\Stream\RecordService\NoteHelper;
 use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class RecordService

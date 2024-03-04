@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Stream;
+namespace Espo\Tools\Stream\RecordService;
 
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\FieldUtil;

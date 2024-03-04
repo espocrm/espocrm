@@ -43,6 +43,7 @@ use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Query\Select;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\SthCollection;
+use Espo\Tools\Stream\RecordService\NoteHelper;
 use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class GlobalRecordService
