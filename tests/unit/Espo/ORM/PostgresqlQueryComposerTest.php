@@ -126,6 +126,40 @@ class PostgresqlQueryComposerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($expectedSql, $sql);
     }
 
+    public function testSelect1()
+    {
+        $query = SelectBuilder::create()
+            ->from('Comment')
+            ->select(['name', 'postId', 'postName'])
+            ->build();
+
+        $sql = $this->queryComposer->composeSelect($query);
+
+        $expectedSql =
+            'SELECT "comment"."name" AS "name", "comment"."post_id" AS "postId", "post"."name" AS "postName" ' .
+            'FROM "comment" LEFT JOIN "post" AS "post" ON "comment"."post_id" = "post"."id" ' .
+            'WHERE "comment"."deleted" = false';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
+    public function testSelectForUpdate1()
+    {
+        $query = SelectBuilder::create()
+            ->from('Comment')
+            ->select(['name', 'postId', 'postName'])
+            ->forUpdate()
+            ->build();
+
+        $sql = $this->queryComposer->composeSelect($query);
+
+        $expectedSql =
+            'SELECT "comment"."name" AS "name", "comment"."post_id" AS "postId" ' .
+            'FROM "comment" WHERE "comment"."deleted" = false FOR UPDATE';
+
+        $this->assertEquals($expectedSql, $sql);
+    }
+
     public function testDelete1(): void
     {
         $query = DeleteBuilder::create()
