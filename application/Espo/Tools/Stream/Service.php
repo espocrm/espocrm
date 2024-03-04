@@ -901,10 +901,6 @@ class Service
         $was = [];
         $became = [];
 
-        $entityDefs = $this->entityManager
-            ->getDefs()
-            ->getEntity($entity->getEntityType());
-
         foreach ($auditedFields as $field => $item) {
             $updated = false;
 
@@ -921,15 +917,6 @@ class Service
             }
 
             $updatedFieldList[] = $field;
-
-            $fieldDefs = $entityDefs->hasField($field) ? $entityDefs->getField($field) : null;
-
-            if (
-                $fieldDefs &&
-                $fieldDefs->getType() == FieldType::WYSIWYG
-            ) {
-                continue;
-            }
 
             foreach ($item['actualList'] as $attribute) {
                 $was[$attribute] = $entity->getFetched($attribute);
