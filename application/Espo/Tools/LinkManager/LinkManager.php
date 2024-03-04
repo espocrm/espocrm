@@ -84,6 +84,8 @@ class LinkManager
      *     auditedForeign?: bool,
      *     layout?: string,
      *     layoutForeign?: string,
+     *     selectFilter?: string,
+     *     selectFilterForeign?: string,
      *     parentEntityTypeList?: string[],
      *     foreignLinkEntityTypeList?: string[],
      * } $params
@@ -550,6 +552,10 @@ class LinkManager
 
         $this->setLayouts($params);
 
+        if ($linkType !== self::CHILDREN_TO_PARENT) {
+            $this->setSelectFilters($params);
+        }
+
         $this->metadata->save();
 
         $this->language->set($entity, 'fields', $link, $label);
@@ -589,20 +595,22 @@ class LinkManager
 
     /**
      * @param array{
-     *   entity: string,
-     *   link: string,
-     *   entityForeign?: ?string,
-     *   linkForeign?: ?string,
-     *   label?: string,
-     *   labelForeign?: string,
-     *   linkMultipleField?: bool,
-     *   linkMultipleFieldForeign?: bool,
-     *   audited?: bool,
-     *   auditedForeign?: bool,
-     *   parentEntityTypeList?: string[],
-     *   foreignLinkEntityTypeList?: string[],
-     *   layout?: string,
-     *   layoutForeign?: string,
+     *     entity: string,
+     *     link: string,
+     *     entityForeign?: ?string,
+     *     linkForeign?: ?string,
+     *     label?: string,
+     *     labelForeign?: string,
+     *     linkMultipleField?: bool,
+     *     linkMultipleFieldForeign?: bool,
+     *     audited?: bool,
+     *     auditedForeign?: bool,
+     *     parentEntityTypeList?: string[],
+     *     foreignLinkEntityTypeList?: string[],
+     *     layout?: string,
+     *     layoutForeign?: string,
+     *     selectFilter?: string,
+     *     selectFilterForeign?: string,
      * } $params
      * @throws BadRequest
      * @throws Error
@@ -767,6 +775,11 @@ class LinkManager
         }
 
         $this->setLayouts($params);
+
+        if ($linkType !== self::CHILDREN_TO_PARENT) {
+            $this->setSelectFilters($params);
+        }
+
         $this->metadata->save();
 
         $label = null;
@@ -978,6 +991,39 @@ class LinkManager
             'relationshipPanels' => [
                 $link => [
                     'layout' => $layout,
+                ]
+            ]
+        ]);
+    }
+
+    /**
+     * @param array{
+     *   entity: string,
+     *   link: string,
+     *   entityForeign?: ?string,
+     *   linkForeign?: ?string,
+     *   selectFilter?: string,
+     *   selectFilterForeign?: string,
+     * } $params
+     */
+    private function setSelectFilters(array $params): void
+    {
+        $this->setSelectFilter($params['entity'], $params['link'], $params['selectFilter'] ?? null);
+
+        if (!isset($params['entityForeign']) || !isset($params['linkForeign'])) {
+            return;
+        }
+
+        $this->setSelectFilter(
+            $params['entityForeign'], $params['linkForeign'], $params['selectFilterForeign'] ?? null);
+    }
+
+    private function setSelectFilter(string $entityType, string $link, ?string $selectFilter): void
+    {
+        $this->metadata->set('clientDefs', $entityType, [
+            'relationshipPanels' => [
+                $link => [
+                    'selectPrimaryFilterName' => $selectFilter,
                 ]
             ]
         ]);

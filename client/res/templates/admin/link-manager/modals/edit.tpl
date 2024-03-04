@@ -100,6 +100,22 @@
     </div>
 </div>
 
+    <div class="row">
+        <div class="cell form-group col-md-4" data-name="selectFilterForeign">
+            <label class="control-label" data-name="selectFilterForeign">{{translate 'selectFilter' category='fields' scope='EntityManager'}}</label>
+            <div class="field" data-name="selectFilterForeign">
+                {{{selectFilterForeign}}}
+            </div>
+        </div>
+        <div class="cell form-group col-md-4"></div>
+        <div class="cell form-group col-md-4" data-name="selectFilter">
+            <label class="control-label" data-name="selectFilter">{{translate 'selectFilter' category='fields' scope='EntityManager'}}</label>
+            <div class="field" data-name="selectFilter">
+                {{{selectFilter}}}
+            </div>
+        </div>
+    </div>
+
 <div class="row">
 	<div class="cell form-group col-md-4"></div>
 	<div class="cell form-group col-md-4" data-name="parentEntityTypeList">

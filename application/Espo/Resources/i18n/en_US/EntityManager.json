@@ -44,6 +44,7 @@
         "updateDuplicateCheck": "Duplicate check on update",
         "duplicateCheckFieldList": "Duplicate check fields",
         "layout": "Layout",
+        "selectFilter": "Select Filter",
         "author": "Author",
         "module": "Module",
         "version": "Version",
@@ -99,6 +100,7 @@
         "disabled": "Check if you don't need this entity in your system.",
         "linkAudited": "Creating related record and linking with existing record will be logged in Stream.",
         "linkMultipleField": "Link Multiple field provides a handy way to edit relations. Don't use it if you can have a large number of related records.",
+        "linkSelectFilter": "A primary filter to apply by default when selecting a record.",
         "entityType": "Base Plus - has Activities, History and Tasks panels.\n\nEvent - available in Calendar and Activities panel.",
         "countDisabled": "Total number won't be displayed on the list view. Can decrease loading time when the DB table is big.",
         "fullTextSearch": "Running rebuild is required."

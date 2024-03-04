@@ -182,6 +182,13 @@ class LinkManagerEditModalView extends ModalView {
             this.model.set('layout', layout);
             this.model.set('layoutForeign', layoutForeign);
 
+            const selectFilter = this.getRelationshipPanelParam(scope, link, 'selectPrimaryFilterName');
+            const selectFilterForeign =
+                this.getRelationshipPanelParam(entityForeign, linkForeign, 'selectPrimaryFilterName');
+
+            this.model.set('selectFilter', selectFilter);
+            this.model.set('selectFilterForeign', selectFilterForeign);
+
             isCustom = this.getMetadata().get(`entityDefs.${entity}.links.${link}.isCustom`);
         }
 
@@ -374,6 +381,7 @@ class LinkManagerEditModalView extends ModalView {
             params: {
                 options: [''],
             },
+            translatedOptions: {'': this.translate('Default')},
         });
 
         this.layoutForeignFieldView = new EnumFieldView({
@@ -391,6 +399,40 @@ class LinkManagerEditModalView extends ModalView {
 
         this.assignView('layout', this.layoutFieldView, '.field[data-name="layout"]');
         this.assignView('layoutForeign', this.layoutForeignFieldView, '.field[data-name="layoutForeign"]');
+
+        this.selectFilterFieldView = new EnumFieldView({
+            name: 'selectFilter',
+            model: model,
+            mode: 'edit',
+            defs: {
+                name: 'selectFilter',
+            },
+            params: {
+                options: [''],
+            },
+            translatedOptions: {'': this.translate('all', 'presetFilters')},
+            tooltip: true,
+            tooltipText: this.translate('linkSelectFilter', 'tooltips', 'EntityManager'),
+        });
+
+        this.selectFilterForeignFieldView = new EnumFieldView({
+            name: 'selectFilterForeign',
+            model: model,
+            mode: 'edit',
+            defs: {
+                name: 'selectFilterForeign',
+            },
+            params: {
+                options: ['', ...this.getEntityTypeFilters(this.scope)],
+            },
+            translatedOptions: this.getEntityTypeFiltersTranslations(this.scope),
+            tooltip: true,
+            tooltipText: this.translate('linkSelectFilter', 'tooltips', 'EntityManager'),
+        });
+
+        this.assignView('selectFilter', this.selectFilterFieldView, '.field[data-name="selectFilter"]');
+        this.assignView('selectFilterForeign', this.selectFilterForeignFieldView,
+            '.field[data-name="selectFilterForeign"]');
 
         this.createView('parentEntityTypeList', 'views/fields/entity-type-list', {
             model: model,
@@ -450,6 +492,9 @@ class LinkManagerEditModalView extends ModalView {
 
         this.controlLayoutField();
         this.listenTo(this.model, 'change:entityForeign', () => this.controlLayoutField());
+
+        this.controlFilterField();
+        this.listenTo(this.model, 'change:entityForeign', () => this.controlFilterField());
     }
 
     getEntityTypeLayouts(entityType) {
@@ -473,6 +518,32 @@ class LinkManagerEditModalView extends ModalView {
         return map;
     }
 
+    getEntityTypeFiltersTranslations(entityType) {
+        const map = {};
+
+        this.getEntityTypeFilters(entityType).forEach(item => {
+            map[item] = this.getLanguage().translate(item, 'presetFilters', entityType);
+        });
+
+        map[''] = this.translate('all', 'presetFilters');
+
+        return map;
+    }
+
+    /**
+     * @param {string} entityType
+     * @return {string[]}
+     */
+    getEntityTypeFilters(entityType) {
+        return this.getMetadata().get(`clientDefs.${entityType}.filterList`, []).map(item => {
+            if (typeof item === 'string') {
+                return item;
+            }
+
+            return item.name;
+        });
+    }
+
     controlLayoutField() {
         const foreignEntityType = this.model.get('entityForeign');
 
@@ -484,7 +555,23 @@ class LinkManagerEditModalView extends ModalView {
             this.getEntityTypeLayoutsTranslations(foreignEntityType) :
             {};
 
-        this.layoutFieldView.setOptionList(layouts);
+        this.layoutFieldView.setOptionList(layouts)
+            .then(() => this.layoutFieldView.reRender());
+    }
+
+    controlFilterField() {
+        const foreignEntityType = this.model.get('entityForeign');
+
+        const layouts = foreignEntityType ?
+            ['', ...this.getEntityTypeFilters(foreignEntityType)] :
+            [''];
+
+        this.selectFilterFieldView.translatedOptions = foreignEntityType ?
+            this.getEntityTypeFiltersTranslations(foreignEntityType) :
+            {};
+
+        this.selectFilterFieldView.setOptionList(layouts)
+            .then(() => this.selectFilterFieldView.reRender());
     }
 
     toPlural(string) {
@@ -694,6 +781,9 @@ class LinkManagerEditModalView extends ModalView {
 
             this.showField('layout');
             this.showField('layoutForeign');
+
+            this.showField('selectFilter');
+            this.showField('selectFilterForeign');
         }
         else {
             this.hideField('relationName');
@@ -707,6 +797,9 @@ class LinkManagerEditModalView extends ModalView {
 
                 this.showField('layout');
                 this.hideField('layoutForeign');
+
+                this.showField('selectFilter');
+                this.showField('selectFilterForeign');
             }
             else if (linkType === 'manyToOne') {
                 this.hideField('linkMultipleField');
@@ -717,6 +810,9 @@ class LinkManagerEditModalView extends ModalView {
 
                 this.hideField('layout');
                 this.showField('layoutForeign');
+
+                this.showField('selectFilter');
+                this.showField('selectFilterForeign');
             }
             else {
                 this.hideField('linkMultipleField');
@@ -734,6 +830,9 @@ class LinkManagerEditModalView extends ModalView {
 
                     this.showField('layout');
                     this.hideField('layoutForeign');
+
+                    this.hideField('selectFilter');
+                    this.hideField('selectFilterForeign');
                 }
                 else if (linkType === 'childrenToParent') {
                     this.hideField('audited');
@@ -744,6 +843,9 @@ class LinkManagerEditModalView extends ModalView {
 
                     this.hideField('entityForeign');
                     this.hideField('labelForeign');
+
+                    this.hideField('selectFilter');
+                    this.hideField('selectFilterForeign');
 
                     if (!this.noParentEntityTypeList) {
                         this.showField('parentEntityTypeList');
@@ -761,6 +863,15 @@ class LinkManagerEditModalView extends ModalView {
 
                     this.hideField('layout');
                     this.hideField('layoutForeign');
+
+                    if (linkType) {
+                        this.showField('selectFilter');
+                        this.showField('selectFilterForeign');
+                    }
+                    else {
+                        this.hideField('selectFilter');
+                        this.hideField('selectFilterForeign');
+                    }
                 }
             }
         }
@@ -815,6 +926,8 @@ class LinkManagerEditModalView extends ModalView {
             'auditedForeign',
             'layout',
             'layoutForeign',
+            'selectFilter',
+            'selectFilterForeign',
             'parentEntityTypeList',
             'foreignLinkEntityTypeList',
         ];
@@ -899,6 +1012,8 @@ class LinkManagerEditModalView extends ModalView {
             auditedForeign: auditedForeign,
             layout: layout,
             layoutForeign: layoutForeign,
+            selectFilter: this.model.get('selectFilter'),
+            selectFilterForeign: this.model.get('selectFilterForeign'),
         };
 
         if (!this.isNew) {
@@ -921,6 +1036,14 @@ class LinkManagerEditModalView extends ModalView {
             if (this.noParentEntityTypeList) {
                 attributes.parentEntityTypeList = null;
             }
+
+            delete attributes.selectFilter;
+            delete attributes.selectFilterForeign;
+        }
+
+        if (linkType === 'parentToChildren') {
+            delete attributes.selectFilter;
+            delete attributes.selectFilterForeign;
         }
 
         Espo.Ajax
@@ -1004,6 +1127,16 @@ class LinkManagerEditModalView extends ModalView {
         });
 
         return list;
+    }
+
+    /**
+     * @param {string} entityType
+     * @param {string} link
+     * @param {string} param
+     * @return {*}
+     */
+    getRelationshipPanelParam(entityType, link, param) {
+        return this.getMetadata().get(`clientDefs.${entityType}.relationshipPanels.${link}.${param}`);
     }
 
     broadcastUpdate() {

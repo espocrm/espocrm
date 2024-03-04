@@ -270,21 +270,31 @@ class EntityManager
             $params['layoutForeign'] = $data['layoutForeign'];
         }
 
+        if (array_key_exists('selectFilter', $data)) {
+            $params['selectFilter'] = $data['selectFilter'];
+        }
+
+        if (array_key_exists('selectFilterForeign', $data)) {
+            $params['selectFilterForeign'] = $data['selectFilterForeign'];
+        }
+
         /** @var array{
-         *   linkType: string,
-         *   entity: string,
-         *   link: string,
-         *   entityForeign: string,
-         *   linkForeign: string,
-         *   label: string,
-         *   labelForeign: string,
-         *   relationName?: ?string,
-         *   linkMultipleField?: bool,
-         *   linkMultipleFieldForeign?: bool,
-         *   audited?: bool,
-         *   auditedForeign?: bool,
-         *   layout?: string,
-         *   layoutForeign?: string,
+         *     linkType: string,
+         *     entity: string,
+         *     link: string,
+         *     entityForeign: string,
+         *     linkForeign: string,
+         *     label: string,
+         *     labelForeign: string,
+         *     relationName?: ?string,
+         *     linkMultipleField?: bool,
+         *     linkMultipleFieldForeign?: bool,
+         *     audited?: bool,
+         *     auditedForeign?: bool,
+         *     layout?: string,
+         *     layoutForeign?: string,
+         *     selectFilter?: string,
+         *     selectFilterForeign?: string,
          * } $params
          */
 
@@ -347,26 +357,36 @@ class EntityManager
             $params['layout'] = $data['layout'];
         }
 
-        if (array_key_exists('auditedForeign', $data)) {
+        if (array_key_exists('layoutForeign', $data)) {
             $params['layoutForeign'] = $data['layoutForeign'];
+        }
+
+        if (array_key_exists('selectFilter', $data)) {
+            $params['selectFilter'] = $data['selectFilter'];
+        }
+
+        if (array_key_exists('selectFilterForeign', $data)) {
+            $params['selectFilterForeign'] = $data['selectFilterForeign'];
         }
 
         /**
          * @var array{
-         *   entity: string,
-         *   link: string,
-         *   entityForeign?: ?string,
-         *   linkForeign?: ?string,
-         *   label?: string,
-         *   labelForeign?: string,
-         *   linkMultipleField?: bool,
-         *   linkMultipleFieldForeign?: bool,
-         *   audited?: bool,
-         *   auditedForeign?: bool,
-         *   parentEntityTypeList?: string[],
-         *   foreignLinkEntityTypeList?: string[],
-         *   layout?: string,
-         *   layoutForeign?: string,
+         *     entity: string,
+         *     link: string,
+         *     entityForeign?: ?string,
+         *     linkForeign?: ?string,
+         *     label?: string,
+         *     labelForeign?: string,
+         *     linkMultipleField?: bool,
+         *     linkMultipleFieldForeign?: bool,
+         *     audited?: bool,
+         *     auditedForeign?: bool,
+         *     parentEntityTypeList?: string[],
+         *     foreignLinkEntityTypeList?: string[],
+         *     layout?: string,
+         *     layoutForeign?: string,
+         *     selectFilter?: string,
+         *     selectFilterForeign?: string,
          * } $params
          */
 
