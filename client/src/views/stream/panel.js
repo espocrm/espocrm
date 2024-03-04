@@ -748,7 +748,7 @@ class PanelStreamView extends RelationshipPanelView {
      * @return {import('views/stream/record/list').default}
      */
     getListView() {
-        this.getView('list')
+        return this.getView('list')
     }
 
     actionRefresh() {
