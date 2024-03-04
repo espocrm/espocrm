@@ -111,14 +111,13 @@ class LinkManagerEditModalView extends ModalView {
         let linkType;
 
         if (!isNew) {
-            const entityForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.entity');
-            const linkForeign = this.getMetadata().get('entityDefs.' + scope + '.links.' + link + '.foreign');
+            const entityForeign = this.getMetadata().get(`entityDefs.${scope}.links.${link}.entity`);
+            const linkForeign = this.getMetadata().get(`entityDefs.${scope}.links.${link}.foreign`);
             const label = this.getLanguage().translate(link, 'links', scope);
             let labelForeign = this.getLanguage().translate(linkForeign, 'links', entityForeign);
 
-            const type = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.type');
-            const foreignType = this.getMetadata()
-                .get('entityDefs.' + entityForeign + '.links.' + linkForeign + '.type');
+            const type = this.getMetadata().get(`entityDefs.${entity}.links.${link}.type`);
+            const foreignType = this.getMetadata().get(`entityDefs.${entityForeign}.links.${linkForeign}.type`);
 
             if (type === 'belongsToParent') {
                 linkType = 'childrenToParent';
@@ -164,7 +163,7 @@ class LinkManagerEditModalView extends ModalView {
 
             if (linkType === 'manyToMany') {
                 const relationName = this.getMetadata()
-                    .get('entityDefs.' + entity + '.links.' + link + '.relationName');
+                    .get(`entityDefs.${entity}.links.${link}.relationName`);
 
                 this.model.set('relationName', relationName);
             }
@@ -176,15 +175,14 @@ class LinkManagerEditModalView extends ModalView {
             this.model.set('audited', audited);
             this.model.set('auditedForeign', auditedForeign);
 
-            const layout = this.getMetadata()
-                .get(['clientDefs', scope, 'relationshipPanels', link, 'layout']);
-            const layoutForeign = this.getMetadata()
-                .get(['clientDefs', entityForeign, 'relationshipPanels', linkForeign, 'layout']);
+            const layout = this.getMetadata().get(`clientDefs.${scope}.relationshipPanels.${link}.layout`);
+            const layoutForeign =
+                this.getMetadata().get(`clientDefs.${entityForeign}.relationshipPanels.${linkForeign}.layout`);
 
             this.model.set('layout', layout);
             this.model.set('layoutForeign', layoutForeign);
 
-            isCustom = this.getMetadata().get('entityDefs.' + entity + '.links.' + link + '.isCustom');
+            isCustom = this.getMetadata().get(`entityDefs.${entity}.links.${link}.isCustom`);
         }
 
         const scopes = this.getMetadata().get('scopes') || null;
