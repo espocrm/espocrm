@@ -56,7 +56,8 @@ class GlobalRecordService
         private Metadata $metadata,
         private EntityManager $entityManager,
         private QueryHelper $queryHelper,
-        private NoteAccessControl $noteAccessControl
+        private NoteAccessControl $noteAccessControl,
+        private NoteHelper $noteHelper
     ) {}
 
     /**
@@ -134,6 +135,7 @@ class GlobalRecordService
         foreach ($collection as $note) {
             $note->loadAdditionalFields();
             $this->noteAccessControl->apply($note, $this->user);
+            $this->noteHelper->prepare($note);
         }
 
         return RecordCollection::createNoCount($collection, $maxSize);
