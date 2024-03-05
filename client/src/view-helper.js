@@ -260,9 +260,17 @@ class ViewHelper {
         });
 
         Handlebars.registerHelper('prop', (object, name) => {
+            if (object === undefined) {
+                console.warn(`Undefined value passed to 'prop' helper.`);
+
+                return undefined;
+            }
+
             if (name in object) {
                 return object[name];
             }
+
+            return undefined;
         });
 
         Handlebars.registerHelper('var', (name, context, options) => {
