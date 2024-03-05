@@ -120,6 +120,12 @@ class Rsa implements SignatureVerifier
             'e' => new BigInteger('0x' . bin2hex(Util::base64UrlDecode($key->getE())), 16),
         ]);
 
-        return $publicKey->toString('PKCS8');
+        $pem = $publicKey->toString('PKCS8');
+
+        if (!is_string($pem)) {
+            throw new RuntimeException();
+        }
+
+        return $pem;
     }
 }
