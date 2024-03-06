@@ -51,7 +51,7 @@
             [{"name": "followCreatedEntities"}, {"name": "emailAddressIsOptedOutByDefault"}],
             [{"name": "aclAllowDeleteCreated"}, {"name": "cleanupDeletedRecords"}],
             [{"name": "exportDisabled"}, {"name": "b2cMode"}],
-            [{"name": "pdfEngine"}, false]
+            [{"name": "pdfEngine"}, {"name": "mapProvider"}]
         ]
 
     },
