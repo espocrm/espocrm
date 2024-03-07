@@ -10,14 +10,16 @@
         "oldId": "OldId",
         "oldParentPhone": "OldParentPhone",
         "oldRemoved": "OldRemoved",
-        "oldCreatedAt": "OldCreatedAt"
+        "oldCreatedAt": "OldCreatedAt",
+        "tickets": "Квитки"
     },
     "links": {
         "abonements": "Абонементи",
         "indivs": "Індиви",
         "rents": "Аренда",
         "indivsMany": "Індиви",
-        "rentPlans": "Планові оренди"
+        "rentPlans": "Планові оренди",
+        "tickets": "Квитки"
     },
     "labels": {
         "Create Contact": "Створити Клієнт"

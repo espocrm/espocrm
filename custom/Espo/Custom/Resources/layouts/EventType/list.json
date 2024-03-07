@@ -1,0 +1,10 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "description"
+    }
+]

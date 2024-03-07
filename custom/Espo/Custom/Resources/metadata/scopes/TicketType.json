@@ -1,0 +1,23 @@
+{
+    "entity": true,
+    "layouts": true,
+    "tab": true,
+    "acl": true,
+    "aclPortal": true,
+    "aclPortalLevelList": [
+        "all",
+        "account",
+        "contact",
+        "own",
+        "no"
+    ],
+    "customizable": true,
+    "importable": true,
+    "notifications": true,
+    "stream": false,
+    "disabled": false,
+    "type": "Base",
+    "module": "Custom",
+    "object": true,
+    "isCustom": true
+}

@@ -115,6 +115,58 @@
         "teams": {
             "type": "linkMultiple",
             "view": "views/fields/teams"
+        },
+        "eventType": {
+            "type": "link"
+        },
+        "map": {
+            "type": "text",
+            "rowsMin": 2,
+            "cutHeight": 800,
+            "tooltip": true,
+            "isCustom": true
+        },
+        "numberOfFloors": {
+            "type": "int",
+            "default": 1,
+            "min": 1,
+            "max": 3,
+            "tooltip": true,
+            "isCustom": true
+        },
+        "map2": {
+            "type": "text",
+            "rowsMin": 2,
+            "cutHeight": 800,
+            "isCustom": true
+        },
+        "map3": {
+            "type": "text",
+            "rowsMin": 2,
+            "cutHeight": 800,
+            "isCustom": true
+        },
+        "ticketTypes": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": false,
+            "layoutMassUpdateDisabled": false,
+            "layoutListDisabled": false,
+            "noLoad": false,
+            "importDisabled": false,
+            "exportDisabled": false,
+            "customizationDisabled": true,
+            "isCustom": true
+        },
+        "tickets": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": true,
+            "isCustom": true
         }
     },
     "links": {
@@ -139,6 +191,27 @@
             "entity": "Team",
             "relationName": "entityTeam",
             "layoutRelationshipsDisabled": true
+        },
+        "eventType": {
+            "type": "belongsTo",
+            "foreign": "events",
+            "entity": "EventType",
+            "audited": false,
+            "isCustom": true
+        },
+        "ticketTypes": {
+            "type": "hasMany",
+            "foreign": "event",
+            "entity": "TicketType",
+            "audited": false,
+            "isCustom": true
+        },
+        "tickets": {
+            "type": "hasMany",
+            "foreign": "event",
+            "entity": "Ticket",
+            "audited": false,
+            "isCustom": true
         }
     },
     "collection": {

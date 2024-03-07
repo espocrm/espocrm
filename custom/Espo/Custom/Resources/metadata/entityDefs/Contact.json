@@ -107,6 +107,17 @@
             "type": "datetime",
             "minuteStep": 30,
             "isCustom": true
+        },
+        "tickets": {
+            "type": "linkMultiple",
+            "layoutDetailDisabled": true,
+            "layoutMassUpdateDisabled": true,
+            "layoutListDisabled": true,
+            "noLoad": true,
+            "importDisabled": true,
+            "exportDisabled": true,
+            "customizationDisabled": true,
+            "isCustom": true
         }
     },
     "links": {
@@ -143,6 +154,13 @@
             "type": "hasMany",
             "foreign": "contact",
             "entity": "RentPlan",
+            "audited": false,
+            "isCustom": true
+        },
+        "tickets": {
+            "type": "hasMany",
+            "foreign": "contact",
+            "entity": "Ticket",
             "audited": false,
             "isCustom": true
         }

@@ -29,7 +29,10 @@
         "AttendanceSheet": "Журнал",
         "ProductItem": "Продукт",
         "Goods": "Товар",
-        "CalculationBudget": "Бюджет"
+        "CalculationBudget": "Бюджет",
+        "EventType": "Тип івенту",
+        "TicketType": "Тип квитка",
+        "Ticket": "Квиток"
     },
     "scopeNamesPlural": {
         "Training": "Заняття",
@@ -61,7 +64,10 @@
         "AttendanceSheet": "Журнал",
         "ProductItem": "Продукти",
         "Goods": "Товари",
-        "CalculationBudget": "Бюджет"
+        "CalculationBudget": "Бюджет",
+        "EventType": "Типи івентів",
+        "TicketType": "Типи квитків",
+        "Ticket": "Квитки"
     },
     "labels": {
         "Schedule Training": "Schedule Заняття",

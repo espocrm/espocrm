@@ -1,0 +1,11 @@
+{
+    "labels": {
+        "Create EventType": "Створити Тип івенту"
+    },
+    "fields": {
+        "events": "Івенти"
+    },
+    "links": {
+        "events": "Івенти"
+    }
+}

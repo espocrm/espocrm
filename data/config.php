@@ -60,13 +60,14 @@ return [
     2 => 'Contact',
     3 => 'Abonement',
     4 => 'Goods',
-    5 => 'RentPlan',
-    6 => (object) [
+    5 => 'Ticket',
+    6 => 'RentPlan',
+    7 => (object) [
       'type' => 'divider',
       'text' => 'Менеджмент',
       'id' => '117676'
     ],
-    7 => (object) [
+    8 => (object) [
       'type' => 'group',
       'text' => 'Адмін',
       'iconClass' => 'fas fa-user-edit',
@@ -77,7 +78,7 @@ return [
         1 => 'Mark'
       ]
     ],
-    8 => (object) [
+    9 => (object) [
       'type' => 'group',
       'text' => 'Облік',
       'iconClass' => 'fas fa-file-invoice-dollar',
@@ -88,7 +89,7 @@ return [
         1 => 'Fine'
       ]
     ],
-    9 => (object) [
+    10 => (object) [
       'type' => 'group',
       'text' => 'Аналітика',
       'iconClass' => 'fas fa-chart-bar',
@@ -98,7 +99,7 @@ return [
         0 => 'CalculationBudget'
       ]
     ],
-    10 => (object) [
+    11 => (object) [
       'type' => 'group',
       'text' => 'Послуги',
       'iconClass' => 'fas fa-hand-holding-usd',
@@ -112,7 +113,7 @@ return [
         4 => 'Discount'
       ]
     ],
-    11 => (object) [
+    12 => (object) [
       'type' => 'group',
       'text' => 'Групи',
       'iconClass' => 'fas fa-users-cog',
@@ -123,7 +124,7 @@ return [
         1 => 'Direction'
       ]
     ],
-    12 => (object) [
+    13 => (object) [
       'type' => 'group',
       'text' => 'Розклад',
       'iconClass' => 'fas fa-calendar-minus',
@@ -134,7 +135,7 @@ return [
         1 => 'WeekTemplate'
       ]
     ],
-    13 => (object) [
+    14 => (object) [
       'type' => 'group',
       'text' => 'Студія',
       'iconClass' => 'fas fa-door-open',
@@ -146,8 +147,7 @@ return [
         2 => 'Branch'
       ]
     ],
-    14 => '_delimiter_',
-    15 => 'Stream',
+    15 => '_delimiter_',
     16 => (object) [
       'type' => 'group',
       'text' => 'Налаштування',
@@ -156,7 +156,9 @@ return [
       'id' => '3560',
       'itemList' => [
         0 => 'CustomSettings',
-        1 => 'TrainerCategory'
+        1 => 'TrainerCategory',
+        2 => 'EventType',
+        3 => 'TicketType'
       ]
     ],
     17 => (object) [
@@ -170,7 +172,8 @@ return [
         1 => 'Opportunity',
         2 => 'Meeting'
       ]
-    ]
+    ],
+    18 => 'Stream'
   ],
   'quickCreateList' => [
     0 => 'Contact',
@@ -355,8 +358,8 @@ return [
     1 => 'email',
     2 => 'phone'
   ],
-  'cacheTimestamp' => 1707264148,
-  'microtime' => 1707264148.954642,
+  'cacheTimestamp' => 1709835192,
+  'microtime' => 1709835192.533476,
   'siteUrl' => 'https://dsfreedom.art',
   'fullTextSearchMinLength' => 4,
   'appTimestamp' => 1695834342,
@@ -375,8 +378,8 @@ return [
   'addressStateList' => [],
   'workingTimeCalendarName' => NULL,
   'workingTimeCalendarId' => NULL,
-  'companyLogoId' => '65a19bab94082c0b3',
-  'companyLogoName' => 'logo-svg (7).png',
+  'companyLogoId' => '65e7240e590737b5d',
+  'companyLogoName' => 'logo.png',
   'latestVersion' => '8.0.2',
   'outboundEmailBccAddress' => NULL,
   'massEmailDisableMandatoryOptOutLink' => false,

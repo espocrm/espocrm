@@ -1,0 +1,104 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#b235d1",
+    "iconClass": "fas fa-address-card",
+    "kanbanViewMode": true,
+    "relationshipPanels": {
+        "event": {
+            "layout": null
+        },
+        "contact": {
+            "layout": null
+        },
+        "ticketType": {
+            "layout": null
+        }
+    },
+    "dynamicLogic": {
+        "fields": {
+            "bookedStart": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "or",
+                            "value": [
+                                {
+                                    "type": "equals",
+                                    "attribute": "status",
+                                    "value": "booked"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "status",
+                                    "value": "notPaid"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "or",
+                            "value": [
+                                {
+                                    "type": "equals",
+                                    "attribute": "status",
+                                    "value": "booked"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "status",
+                                    "value": "notPaid"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "bookedEnd": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "or",
+                            "value": [
+                                {
+                                    "type": "equals",
+                                    "attribute": "status",
+                                    "value": "booked"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "status",
+                                    "value": "notPaid"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "or",
+                            "value": [
+                                {
+                                    "type": "equals",
+                                    "attribute": "status",
+                                    "value": "booked"
+                                },
+                                {
+                                    "type": "equals",
+                                    "attribute": "status",
+                                    "value": "notPaid"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            }
+        }
+    }
+}

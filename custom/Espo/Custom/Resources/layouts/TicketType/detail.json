@@ -1,0 +1,38 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "event"
+                }
+            ],
+            [
+                {
+                    "name": "title"
+                },
+                {
+                    "name": "bookingTime"
+                }
+            ],
+            [
+                {
+                    "name": "nameOnMap"
+                },
+                {
+                    "name": "color"
+                }
+            ],
+            [
+                false,
+                {
+                    "name": "price"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    }
+]

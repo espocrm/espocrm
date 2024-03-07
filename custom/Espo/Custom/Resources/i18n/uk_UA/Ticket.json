@@ -1,0 +1,36 @@
+{
+    "labels": {
+        "Create Ticket": "Створити Квиток"
+    },
+    "fields": {
+        "price": "Ціна",
+        "priceCurrency": "Ціна (Валюта)",
+        "priceConverted": "Ціна (Конвертована)",
+        "salesDate": "Дата розрахунку",
+        "isPaid": "Сплачено",
+        "event": "Івент",
+        "status": "Статус",
+        "bookedStart": "Початок бронювання",
+        "bookedEnd": "Кінець бронювання",
+        "contact": "Клієнт",
+        "ticketType": "Тип квитка",
+        "seat": "Місце"
+    },
+    "tooltips": {
+        "salesDate": "Дата сплати за білет",
+        "bookedStart": "Дата та час початку бронювання",
+        "bookedEnd": "Дата та час закінчення бронювання"
+    },
+    "links": {
+        "event": "Івент",
+        "contact": "Клієнт",
+        "ticketType": "Тип квитка"
+    },
+    "options": {
+        "status": {
+            "booked": "Заброньовано",
+            "notPaid": "Не сплачено",
+            "paid": "Сплачено"
+        }
+    }
+}

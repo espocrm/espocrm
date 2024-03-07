@@ -1,0 +1,16 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#893ba6",
+    "iconClass": "fas fa-ad",
+    "relationshipPanels": {
+        "event": {
+            "layout": null
+        },
+        "tickets": {
+            "layout": null
+        }
+    }
+}

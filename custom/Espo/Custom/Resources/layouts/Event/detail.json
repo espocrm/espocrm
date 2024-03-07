@@ -1,13 +1,12 @@
 [
     {
-        "label": "Overview",
         "rows": [
             [
                 {
                     "name": "name"
                 },
                 {
-                    "name": "parent"
+                    "name": "eventType"
                 }
             ],
             [
@@ -28,16 +27,74 @@
                 {
                     "name": "duration"
                 },
+                false
+            ],
+            [
                 {
-                    "name": "reminders"
+                    "name": "description"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "numberOfFloors"
+                },
+                {
+                    "name": "ticketTypes"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": {
+            "conditionGroup": [
+                {
+                    "type": "equals",
+                    "attribute": "eventTypeId",
+                    "data": {
+                        "field": "eventType",
+                        "values": {
+                            "eventTypeName": "Звітній концерт"
+                        }
+                    },
+                    "value": "65e984224c6684f2f"
+                }
+            ]
+        },
+        "style": "info",
+        "dynamicLogicStyled": null,
+        "tabBreak": true,
+        "tabLabel": "Квитки та зал",
+        "hidden": false,
+        "customLabel": "Параметри"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "map"
                 }
             ],
             [
                 {
-                    "name": "description",
-                    "fullWidth": true
+                    "name": "map2"
+                }
+            ],
+            [
+                {
+                    "name": "map3"
                 }
             ]
-        ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "info",
+        "dynamicLogicStyled": null,
+        "tabBreak": false,
+        "tabLabel": null,
+        "hidden": false,
+        "customLabel": "Посадочні місця"
     }
 ]

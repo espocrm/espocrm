@@ -1,0 +1,32 @@
+[
+    {
+        "rows": [
+            [
+                {
+                    "name": "name"
+                },
+                {
+                    "name": "event"
+                }
+            ],
+            [
+                {
+                    "name": "nameOnMap"
+                },
+                {
+                    "name": "title"
+                }
+            ],
+            [
+                {
+                    "name": "bookingTime"
+                },
+                {
+                    "name": "price"
+                }
+            ]
+        ],
+        "style": "default",
+        "label": ""
+    }
+]

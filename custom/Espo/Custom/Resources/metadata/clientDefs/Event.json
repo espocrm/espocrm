@@ -74,10 +74,60 @@
                         }
                     ]
                 }
+            },
+            "numberOfFloors": {
+                "required": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "eventTypeId",
+                            "data": {
+                                "field": "eventType",
+                                "values": {
+                                    "eventTypeName": "Звітній концерт"
+                                }
+                            },
+                            "value": "65e984224c6684f2f"
+                        }
+                    ]
+                }
+            },
+            "map2": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "greaterThanOrEquals",
+                            "attribute": "numberOfFloors",
+                            "value": 2
+                        }
+                    ]
+                }
+            },
+            "map3": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "greaterThanOrEquals",
+                            "attribute": "numberOfFloors",
+                            "value": 3
+                        }
+                    ]
+                }
             }
         }
     },
     "kanbanViewMode": false,
     "color": "#bc29bf",
-    "iconClass": "fas fa-star"
+    "iconClass": "fas fa-star",
+    "relationshipPanels": {
+        "eventType": {
+            "layout": null
+        },
+        "ticketTypes": {
+            "layout": null
+        },
+        "tickets": {
+            "layout": null
+        }
+    }
 }

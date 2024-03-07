@@ -1,0 +1,13 @@
+{
+    "controller": "controllers/record",
+    "boolFilterList": [
+        "onlyMy"
+    ],
+    "color": "#a059cc",
+    "iconClass": "far fa-star",
+    "relationshipPanels": {
+        "events": {
+            "layout": null
+        }
+    }
+}

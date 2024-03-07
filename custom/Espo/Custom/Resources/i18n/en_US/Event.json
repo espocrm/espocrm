@@ -8,10 +8,20 @@
         "reminders": "Reminders",
         "dateStartDate": "Date Start (all day)",
         "dateEndDate": "Date End (all day)",
-        "isAllDay": "Is All-Day"
+        "isAllDay": "Is All-Day",
+        "eventType": "Тип івенту",
+        "map": "Карта",
+        "numberOfFloors": "Кількість поверхів",
+        "map2": "Карта (2 поверх)",
+        "map3": "Карта (3 поверх)",
+        "ticketTypes": "Типи квитків",
+        "tickets": "Квитки"
     },
     "links": {
-        "parent": "Parent"
+        "parent": "Parent",
+        "eventType": "Тип івенту",
+        "ticketTypes": "Типи квитків",
+        "tickets": "Квитки"
     },
     "options": {
         "status": {
@@ -35,5 +45,9 @@
         "planned": "Planned",
         "held": "Held",
         "todays": "Today's"
+    },
+    "tooltips": {
+        "map": "Карта посадочних місць",
+        "numberOfFloors": "Кількість поверхів в актовому залі"
     }
 }

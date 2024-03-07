@@ -1,0 +1,3 @@
+{
+    "beforeSaveCustomScript": "name = string\\concatenate(nameOnMap, ' - ', title, ' (', price, 'грн)');"
+}

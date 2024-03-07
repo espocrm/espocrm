@@ -1,39 +1,53 @@
 {
-  "fields": {
-    "parent": "Батько",
-    "dateStart": "Дата початку",
-    "dateEnd": "Дата завершення",
-    "duration": "Тривалість",
-    "status": "Статус",
-    "reminders": "Нагадування",
-    "dateStartDate": "Дата початку (цілий день)",
-    "dateEndDate": "Дата завершення (цілий день)",
-    "isAllDay": "Є цілий день"
-  },
-  "links": {
-    "parent": "Батько"
-  },
-  "options": {
-    "status": {
-      "Planned": "Заплановано",
-      "Held": "Проведено",
-      "Not Held": "Не проведено"
+    "fields": {
+        "parent": "Батько",
+        "dateStart": "Дата початку",
+        "dateEnd": "Дата завершення",
+        "duration": "Тривалість",
+        "status": "Статус",
+        "reminders": "Нагадування",
+        "dateStartDate": "Дата початку (цілий день)",
+        "dateEndDate": "Дата завершення (цілий день)",
+        "isAllDay": "Є цілий день",
+        "eventType": "Тип івенту",
+        "map": "Карта",
+        "numberOfFloors": "Кількість поверхів",
+        "map2": "Карта (2 поверх)",
+        "map3": "Карта (3 поверх)",
+        "ticketTypes": "Типи квитків",
+        "tickets": "Квитки"
+    },
+    "links": {
+        "parent": "Батько",
+        "eventType": "Тип івенту",
+        "ticketTypes": "Типи квитків",
+        "tickets": "Квитки"
+    },
+    "options": {
+        "status": {
+            "Planned": "Заплановано",
+            "Held": "Проведено",
+            "Not Held": "Не проведено"
+        }
+    },
+    "labels": {
+        "Create Event": "Створити Івент",
+        "Schedule Event": "Розклад Івент",
+        "Log Event": "Журнал Івент",
+        "Set Held": "Позначити проведеним",
+        "Set Not Held": "Позначити непроведеним"
+    },
+    "massActions": {
+        "setHeld": "Позначити проведеним",
+        "setNotHeld": "Позначити непроведеним"
+    },
+    "presetFilters": {
+        "planned": "Заплановано",
+        "held": "Проведені",
+        "todays": "Сьогоднішні"
+    },
+    "tooltips": {
+        "map": "Карта посадочних місць",
+        "numberOfFloors": "Кількість поверхів в актовому залі"
     }
-  },
-  "labels": {
-    "Create Event": "Створити Івент",
-    "Schedule Event": "Розклад Івент",
-    "Log Event": "Журнал Івент",
-    "Set Held": "Позначити проведеним",
-    "Set Not Held": "Позначити непроведеним"
-  },
-  "massActions": {
-    "setHeld": "Позначити проведеним",
-    "setNotHeld": "Позначити непроведеним"
-  },
-  "presetFilters": {
-    "planned": "Заплановано",
-    "held": "Проведені",
-    "todays": "Сьогоднішні"
-  }
 }
