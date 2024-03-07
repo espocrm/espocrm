@@ -110,13 +110,16 @@
                                 "description": "A 'read' access level."
                             },
                             "edit": {
-                                "$ref": "#/definitions/levels"
+                                "$ref": "#/definitions/levels",
+                                "description": "An 'edit' access level."
                             },
                             "delete": {
-                                "$ref": "#/definitions/levels"
+                                "$ref": "#/definitions/levels",
+                                "description": "A 'delete' access level."
                             },
                             "stream": {
-                                "$ref": "#/definitions/levels"
+                                "$ref": "#/definitions/levels",
+                                "description": "A 'stream' access level."
                             }
                         }
                     },
