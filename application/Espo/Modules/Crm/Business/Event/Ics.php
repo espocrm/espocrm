@@ -135,6 +135,6 @@ class Ics
             return '';
         }
 
-        return str_replace(["\r\n", "\n"], "\\r\\n", $string);
+        return str_replace(["\r\n", "\n"], "\\n", $string);
     }
 }
