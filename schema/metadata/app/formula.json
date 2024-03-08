@@ -32,6 +32,14 @@
                     }
                 ]
             }
+        },
+        "functionClassNameMap": {
+            "type": "object",
+            "description": "Function implementations. Should implement Espo\\Core\\Formula\\Func.",
+            "additionalProperties": {
+                "type": "string",
+                "description": "A function."
+            }
         }
     }
 }
