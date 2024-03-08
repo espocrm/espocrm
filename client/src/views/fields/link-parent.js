@@ -533,6 +533,8 @@ class LinkParentFieldView extends BaseFieldView {
                 this.once('render remove', () => autocomplete.dispose());
 
                 Select.init(this.$elementType, {});
+
+                this.$elementType.on('change', () => autocomplete.clear());
             }
         }
 

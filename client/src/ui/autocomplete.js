@@ -29,6 +29,9 @@
 import $ from 'jquery';
 import Handlebars from 'handlebars';
 
+/**
+ * An autocomplete.
+ */
 class Autocomplete {
 
     /** @module ui/autocomplete */
@@ -164,12 +167,25 @@ class Autocomplete {
         });
     }
 
+    /**
+     * Dispose.
+     */
     dispose() {
         this.$element.autocomplete('dispose');
     }
 
+    /**
+     * Hide.
+     */
     hide() {
         this.$element.autocomplete('hide');
+    }
+
+    /**
+     * Clear.
+     */
+    clear() {
+        this.$element.autocomplete('clear');
     }
 }
 
