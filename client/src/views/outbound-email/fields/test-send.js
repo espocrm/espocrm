@@ -76,8 +76,17 @@ define('views/outbound-email/fields/test-send', ['views/fields/base'], function 
             };
         },
 
+        enableButton: function () {
+            this.$el.find('button').removeClass('disabled').removeAttr('disabled');
+        },
+
+        disabledButton: function () {
+            this.$el.find('button').addClass('disabled').attr('disabled', 'disabled');
+        },
+
+
         send: function () {
-            var data = this.getSmtpData();
+            const data = this.getSmtpData();
 
             this.createView('popup', 'views/outbound-email/modals/test-send', {
                 emailAddress: this.getUser().get('emailAddress')
@@ -85,7 +94,8 @@ define('views/outbound-email/fields/test-send', ['views/fields/base'], function 
                 view.render();
 
                 this.listenToOnce(view, 'send', (emailAddress) => {
-                    this.$el.find('button').addClass('disabled');
+                    this.disabledButton();
+
                     data.emailAddress = emailAddress;
 
                     this.notify('Sending...');
@@ -94,7 +104,7 @@ define('views/outbound-email/fields/test-send', ['views/fields/base'], function 
 
                     Espo.Ajax.postRequest('Email/sendTest', data)
                         .then(() => {
-                            this.$el.find('button').removeClass('disabled');
+                            this.enableButton();
 
                             Espo.Ui.success(this.translate('testEmailSent', 'messages', 'Email'));
                         })
@@ -116,12 +126,16 @@ define('views/outbound-email/fields/test-send', ['views/fields/base'], function 
                                     const data = /** @type {Record} */JSON.parse(xhr.responseText);
 
                                     if (data.messageTranslation) {
+                                        this.enableButton();
+
                                         return;
                                     }
 
                                     reason = data.message || reason;
                                 }
                                 catch (e) {
+                                    this.enableButton();
+
                                     console.error('Could not parse error response body.');
 
                                     return;
@@ -137,7 +151,7 @@ define('views/outbound-email/fields/test-send', ['views/fields/base'], function 
 
                             xhr.errorIsHandled = true;
 
-                            this.$el.find('button').removeClass('disabled');
+                            this.enableButton();
                         }
                     );
                 });
