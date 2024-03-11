@@ -61,8 +61,7 @@ class NotificationContainerFieldView extends BaseFieldView {
 
         type = type.replace(/ /g, '');
 
-        let viewName = this.getMetadata()
-            .get('clientDefs.Notification.itemViews.' + type) ||
+        const viewName = this.getMetadata().get(`clientDefs.Notification.itemViews.${type}`) ||
             'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
 
         this.createView('notification', viewName, {
@@ -81,7 +80,7 @@ class NotificationContainerFieldView extends BaseFieldView {
         this.getModelFactory().create('Note', model => {
             model.set(data);
 
-            let viewName = this.getMetadata().get('clientDefs.Note.itemViews.' + data.type) ||
+            const viewName = this.getMetadata().get(`clientDefs.Note.itemViews.${data.type}`) ||
                 'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
 
             this.createView('notification', viewName, {
@@ -106,7 +105,7 @@ class NotificationContainerFieldView extends BaseFieldView {
         this.getModelFactory().create('Note', model => {
             model.set(data);
 
-            let viewName = 'views/stream/notes/mention-in-post';
+            const viewName = 'views/stream/notes/mention-in-post';
 
             this.createView('notification', viewName, {
                 model: model,
