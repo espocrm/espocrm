@@ -54,6 +54,10 @@ define('views/admin/field-manager/fields/foreign/link', ['views/fields/enum'], f
                     return;
                 }
 
+                if (links[item].utility) {
+                    return;
+                }
+
                 return true;
             });
 
