@@ -35,6 +35,14 @@ class NotificationContainerFieldView extends BaseFieldView {
     listTemplate = 'notification/fields/container'
     detailTemplate = 'notification/fields/container'
 
+    types = [
+        'Assign',
+        'EmailReceived',
+        'EntityRemoved',
+        'Message',
+        'System',
+    ]
+
     setup() {
         switch (this.model.get('type')) {
             case 'Note':
@@ -61,8 +69,15 @@ class NotificationContainerFieldView extends BaseFieldView {
 
         type = type.replace(/ /g, '');
 
-        const viewName = this.getMetadata().get(`clientDefs.Notification.itemViews.${type}`) ||
-            'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
+        let viewName = this.getMetadata().get(`clientDefs.Notification.itemViews.${type}`);
+
+        if (!viewName) {
+            if (!this.types.includes(type)) {
+                return;
+            }
+
+            viewName = 'views/notification/items/' + Espo.Utils.camelCaseToHyphen(type);
+        }
 
         this.createView('notification', viewName, {
             model: this.model,
@@ -80,8 +95,12 @@ class NotificationContainerFieldView extends BaseFieldView {
         this.getModelFactory().create('Note', model => {
             model.set(data);
 
-            const viewName = this.getMetadata().get(`clientDefs.Note.itemViews.${data.type}`) ||
-                'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
+            let viewName = this.getMetadata().get(`clientDefs.Note.itemViews.${data.type}`);
+
+            if (!viewName) {
+                // @todo Ceck if type exists.
+                viewName = 'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
+            }
 
             this.createView('notification', viewName, {
                 model: model,
