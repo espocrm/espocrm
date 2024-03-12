@@ -195,10 +195,6 @@ class Renamer
             return Result::createFail(FailReason::NAME_USED);
         }
 
-        if (!$this->fileManager->isFile($this->getClassFilePath(ClassType::ENTITY, $entityType))) {
-            return Result::createFail(FailReason::NOT_CUSTOM);
-        }
-
         if (!$this->fileManager->isFile($this->getClassFilePath(ClassType::CONTROLLER, $entityType))) {
             return Result::createFail(FailReason::NOT_CUSTOM);
         }
