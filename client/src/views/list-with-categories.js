@@ -119,6 +119,10 @@ class ListWithCategories extends ListView {
 
         if (this.hasNavigationPanelStoredValue()) {
             this.hasNavigationPanel = this.getNavigationPanelStoredValue();
+        } else {
+            this.hasNavigationPanel =
+                this.getMetadata().get(`scopes.${this.categoryScope}.showNavigationPanel`) ||
+                this.hasNavigationPanel;
         }
 
         const params = this.options.params || {};

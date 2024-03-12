@@ -615,6 +615,10 @@
             "description": "A scope color in HEX.",
             "type": "string"
         },
+        "listDefaultViewMode": {
+            "description": "A default list view mode. E.g. list, kanban.",
+            "type": "string"
+        },
         "kanbanViewMode": {
             "description": "Whether the scope has the kanban view mode on the list view.",
             "type": "boolean"
