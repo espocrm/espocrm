@@ -1,5 +1,8 @@
 {
     "controller": "controllers/record",
+    "views": {
+        "list": "views/group-email-folder/list"
+    },
     "recordViews": {
         "list": "views/group-email-folder/record/list"
     },
@@ -7,6 +10,19 @@
     "massUpdateDisabled": true,
     "mergeDisabled": true,
     "massRemoveDisabled": true,
+    "menu": {
+        "list": {
+            "buttons": [
+                {
+                    "name": "emails",
+                    "labelTranslation": "Global.scopeNamesPlural.Email",
+                    "link": "#Email",
+                    "style": "default",
+                    "aclScope": "Email"
+                }
+            ]
+        }
+    },
     "relationshipPanels": {
         "emails": {
             "select": false,
