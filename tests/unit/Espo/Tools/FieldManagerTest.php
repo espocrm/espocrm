@@ -398,26 +398,4 @@ class FieldManagerTest extends TestCase
 
         $this->assertEquals($data, $this->fieldManager->read('Account', 'varName'));
     }
-
-    public function testNormalizeDefs()
-    {
-        $input1 = 'fieldName';
-        $input2 = [
-            "type" => "varchar",
-            "maxLength" => "50",
-        ];
-
-        $result = (object) [
-            'fields' => (object) [
-                'fieldName' => (object) [
-                    "type" => "varchar",
-                    "maxLength" => "50",
-                ],
-            ],
-        ];
-        $this->assertEquals(
-            $result,
-            $this->reflection->invokeMethod('normalizeDefs', ['CustomEntity', $input1, $input2])
-        );
-    }
 }
