@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\File;
 
+use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
@@ -61,15 +62,19 @@ class Saver implements SaverInterface
     {
         $attribute = $name . 'Id';
 
-        if (!$entity->get($attribute)) {
-            return;
-        }
-
         if (!$entity->isAttributeChanged($attribute)) {
             return;
         }
 
-        $attachment = $this->entityManager->getEntity('Attachment', $entity->get($attribute));
+        $id = $entity->get($attribute);
+
+        if (!$id) {
+            $this->removePrevious($entity, $attribute);
+
+            return;
+        }
+
+        $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
 
         if (!$attachment) {
             return;
@@ -86,13 +91,18 @@ class Saver implements SaverInterface
             return;
         }
 
-        $previousAttachmentId = $entity->getFetched($attribute);
+        $this->removePrevious($entity, $attribute);
+    }
 
-        if (!$previousAttachmentId) {
+    private function removePrevious(Entity $entity, string $attribute): void
+    {
+        $previousId = $entity->getFetched($attribute);
+
+        if (!$previousId) {
             return;
         }
 
-        $previousAttachment = $this->entityManager->getEntity('Attachment', $previousAttachmentId);
+        $previousAttachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $previousId);
 
         if (!$previousAttachment) {
             return;
