@@ -714,13 +714,11 @@ class FieldManager
 
         $fieldDefsByType = $this->metadataHelper->getFieldDefsByType($fieldDefs);
 
-        if (!isset($fieldDefsByType['params'])) {
-            return $fieldDefs;
-        }
+        $paramDataList = $fieldDefsByType['params'] ?? [];
 
         $params = [];
 
-        foreach ($fieldDefsByType['params'] as $paramData) {
+        foreach ($paramDataList as $paramData) {
             $params[$paramData['name']] = $paramData;
         }
 
