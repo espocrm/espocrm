@@ -1370,11 +1370,14 @@ class Import
 
     private static function encodeUrl(string $string): string
     {
-        return preg_replace_callback(
+        /** @noinspection RegExpRedundantEscape */
+        $result = preg_replace_callback(
             "/[^-\._~:\/\?#\\[\\]@!\$&'\(\)\*\+,;=]+/",
             fn ($match) => rawurlencode($match[0]),
             $string
         );
+
+        return $result ?? $string;
     }
 
     /**
