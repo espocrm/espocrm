@@ -391,6 +391,25 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "float"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "decimalPlaces": {
+                                "type": "number",
+                                "description": "Decimal places."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "float"},
                                     {"const": "currency"}
                                 ]
