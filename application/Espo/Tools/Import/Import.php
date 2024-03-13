@@ -64,6 +64,7 @@ use Exception;
 use LogicException;
 use PDOException;
 
+
 class Import
 {
     private const DEFAULT_DELIMITER = ',';
@@ -93,6 +94,7 @@ class Import
         private Log $log,
         private FieldValidationManager $fieldValidationManager,
         private PhoneNumberSanitizer $phoneNumberSanitizer
+
     ) {
         $this->params = Params::create();
     }
@@ -500,6 +502,7 @@ class Import
 
         $entity->set($params->getDefaultValues());
 
+        // Values are not supposed to be sanitized with the field Sanitizer.
         $valueMap = $this->prepareRowValueMap($attributeList, $row);
 
         $failureList = [];
@@ -940,6 +943,10 @@ class Import
 
                 return $value;
             }
+
+            if ($fieldType === FieldType::URL) {
+                $value = self::encodeUrl($value);
+            }
         }
 
         switch ($type) {
@@ -1359,6 +1366,15 @@ class Import
                 $this->processForeignAttribute($entity, $attribute);
             }
         }
+    }
+
+    private static function encodeUrl(string $string): string
+    {
+        return preg_replace_callback(
+            "/[^-\._~:\/\?#\\[\\]@!\$&'\(\)\*\+,;=]+/",
+            fn ($match) => rawurlencode($match[0]),
+            $string
+        );
     }
 
     /**
