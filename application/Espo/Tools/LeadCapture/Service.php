@@ -69,6 +69,7 @@ class Service
     /**
      * @throws ForbiddenSilent
      * @throws NotFound
+     * @throws Forbidden
      */
     public function generateNewApiKeyForEntity(string $id): Entity
     {

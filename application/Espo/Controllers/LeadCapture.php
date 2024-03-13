@@ -29,8 +29,6 @@
 
 namespace Espo\Controllers;
 
-use Espo\Core\Exceptions\ForbiddenSilent;
-
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
@@ -97,7 +95,7 @@ class LeadCapture extends Record
     /**
      * @throws BadRequest
      * @throws NotFound
-     * @throws ForbiddenSilent
+     * @throws Forbidden
      */
     public function postActionGenerateNewApiKey(Request $request): stdClass
     {
