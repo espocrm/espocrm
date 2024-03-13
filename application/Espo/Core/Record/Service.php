@@ -376,7 +376,10 @@ class Service implements Crud,
 
             // @todo Apply access control filter. If a parameter enabled? Check compatibility.
 
-            $query = $builder->build();
+            $query = $builder
+                ->buildQueryBuilder()
+                ->order([])
+                ->build();
         }
         catch (BadRequest $e) {
             throw new RuntimeException($e->getMessage());
