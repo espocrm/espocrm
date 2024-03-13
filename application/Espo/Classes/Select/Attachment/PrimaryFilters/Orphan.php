@@ -30,6 +30,8 @@
 namespace Espo\Classes\Select\Attachment\PrimaryFilters;
 
 use Espo\Core\Select\Primary\Filter;
+use Espo\Entities\Attachment;
+use Espo\Entities\Settings;
 use Espo\ORM\Query\SelectBuilder;
 
 class Orphan implements Filter
@@ -37,32 +39,35 @@ class Orphan implements Filter
     public function apply(SelectBuilder $queryBuilder): void
     {
         $queryBuilder->where([
-            'role' => ['Attachment', 'Inline Attachment'],
+            'role' => [
+                Attachment::ROLE_ATTACHMENT,
+                Attachment::ROLE_INLINE_ATTACHMENT,
+            ],
             [
                 'OR' => [
                     [
-                        'parentId' => null,
                         'parentType!=' => null,
-                        'relatedType=' => null,
+                        'parentId' => null,
+                        'relatedType' => null,
                     ],
                     [
-                        'parentType' => null,
-                        'relatedId' => null,
                         'relatedType!=' => null,
+                        'relatedId' => null,
+                        'parentType' => null,
                     ],
                 ],
             ],
             [
                 'OR' => [
-                    'relatedType!=' => 'Settings',
-                    'relatedType=' => null,
+                    'relatedType!=' => Settings::ENTITY_TYPE,
+                    'relatedType' => null,
                 ],
             ],
             'attachmentChild.id' => null,
         ]);
 
         $queryBuilder->leftJoin(
-            'Attachment',
+            Attachment::ENTITY_TYPE,
             'attachmentChild',
             [
                 'attachmentChild.sourceId:' => 'attachment.id',
