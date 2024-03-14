@@ -274,6 +274,7 @@ class Extension implements Command
             $isInstalled = $extension->get('isInstalled');
 
             $io->writeLine(' Name: ' . $extension->get('name'));
+            $io->writeLine(' Version: ' . $extension->get('version'));
             $io->writeLine(' ID: ' . $extension->getId());
             $io->writeLine(' Installed: ' . ($isInstalled ? 'yes' : 'no'));
 
