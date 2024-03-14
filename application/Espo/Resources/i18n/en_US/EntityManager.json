@@ -78,7 +78,7 @@
         }
     },
     "messages": {
-        "urlHashCopiedToClipboard": "A URL hash fragment of the list view with the applied *{name}* filter is copied to the clipboard. You can add it to a navbar.",
+        "urlHashCopiedToClipboard": "A URL fragment for the *{name}* filter is copied to the clipboard. You can add it to the navbar.",
         "confirmRemoveLink": "Are you sure you want to remove the *{link}* relationship?",
         "nameIsAlreadyUsed": "Name '{name}' is already used.",
         "nameIsNotAllowed": "Name '{name}' is not allowed.",
