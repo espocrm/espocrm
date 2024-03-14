@@ -570,41 +570,52 @@ class PhoneFieldView extends VarcharFieldView {
         })
     }
 
+    /**
+     * @return {{
+     *     phoneNumber: string,
+     *     primary: boolean,
+     *     type: string,
+     *     optOut: boolean,
+     *     invalid: boolean,
+     * }[]}
+     */
     fetchPhoneNumberData() {
-        const data = [];
-
         const $list = this.$el.find('div.phone-number-block');
 
-        if ($list.length) {
-            $list.each((i, d) => {
-                const row = {};
-                const $d = $(d);
-
-                /** @type {HTMLInputElement} */
-                const inputElement = $d.find('input.phone-number').get(0);
-
-                if (!inputElement) {
-                    return;
-                }
-
-                row.phoneNumber = inputElement.value.trim();
-
-                if (this.intlTelInputMap.has(inputElement)) {
-                    row.phoneNumber = this.intlTelInputMap.get(inputElement).getNumber();
-                }
-
-                if (row.phoneNumber === '') {
-                    return;
-                }
-
-                row.primary = $d.find('button[data-property-type="primary"]').hasClass('active');
-                row.type = $d.find('select[data-property-type="type"]').val();
-                row.optOut = $d.find('button[data-property-type="optOut"]').hasClass('active');
-                row.invalid = $d.find('button[data-property-type="invalid"]').hasClass('active');
-
-                data.push(row);
-            });
+        if (!$list.length) {
+            return [];
         }
+
+        const data = [];
+
+        $list.each((i, d) => {
+            const row = {};
+            const $d = $(d);
+
+            /** @type {HTMLInputElement} */
+            const inputElement = $d.find('input.phone-number').get(0);
+
+            if (!inputElement) {
+                return;
+            }
+
+            row.phoneNumber = inputElement.value.trim();
+
+            if (this.intlTelInputMap.has(inputElement)) {
+                row.phoneNumber = this.intlTelInputMap.get(inputElement).getNumber();
+            }
+
+            if (row.phoneNumber === '') {
+                return;
+            }
+
+            row.primary = $d.find('button[data-property-type="primary"]').hasClass('active');
+            row.type = $d.find('select[data-property-type="type"]').val();
+            row.optOut = $d.find('button[data-property-type="optOut"]').hasClass('active');
+            row.invalid = $d.find('button[data-property-type="invalid"]').hasClass('active');
+
+            data.push(row);
+        });
 
         return data;
     }
