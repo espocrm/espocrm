@@ -138,7 +138,6 @@ class Avatar extends Image
             ->color('#FFF')
             ->background($color)
             ->fontSize()
-            //->preferBold()
             ->generate();
 
         $response
