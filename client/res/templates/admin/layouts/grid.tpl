@@ -11,11 +11,11 @@
         <div class="well enabled-well" tabindex="-1">
             <header>{{translate 'Layout' scope='LayoutManager'}}</header>
             <ul class="panels">
-            {{#each panelDataList}}
-            <li data-number="{{number}}" class="panel-layout">
-            {{{var viewKey ../this}}}
-            </li>
-            {{/each}}
+                {{#each panelDataList}}
+                    <li data-number="{{number}}" class="panel-layout" data-tab-break="{{tabBreak}}">
+                        {{{var viewKey ../this}}}
+                    </li>
+                {{/each}}
             </ul>
 
             <div><a role="button" tabindex="0" data-action="addPanel">{{translate 'Add Panel' scope='Admin'}}</a></div>

@@ -1,14 +1,15 @@
 <header data-name="{{name}}">
-    <label
-        data-is-custom="{{#if isCustomLabel}}true{{/if}}"
-        data-label="{{label}}"
-    >{{labelTranslated}}</label>&nbsp;
     <a
         role="button"
         tabindex="0"
         data-action="edit-panel-label"
         class="edit-panel-label"
     ><i class="fas fa-pencil-alt fa-sm"></i></a>
+    <label
+        data-is-custom="{{#if isCustomLabel}}true{{/if}}"
+        data-label="{{label}}"
+        class="panel-label"
+    >{{labelTranslated}}</label>&nbsp;
     <a
         role="button"
         tabindex="0"
