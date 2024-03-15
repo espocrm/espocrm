@@ -267,6 +267,11 @@ class User extends Person
         return $value;
     }
 
+    public function getAvatarId(): ?string
+    {
+        return $this->get('avatarId');
+    }
+
     /**
      * @return ?string
      */

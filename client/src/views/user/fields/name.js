@@ -43,7 +43,7 @@ define('views/user/fields/name', ['views/fields/person-name'], function (Dep) {
         },
 
         getAvatarHtml: function () {
-            return this.getHelper().getAvatarHtml(this.model.id, 'small', 16, 'avatar-link');
+            return this.getHelper().getAvatarHtml(this.model.id, 'small', 18, 'avatar-link');
         },
     });
 });

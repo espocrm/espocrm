@@ -54,7 +54,7 @@ class AssignedUsersFieldView extends LinkMultipleFieldView {
         let html = super.getDetailLinkHtml(id);
 
         let avatarHtml = this.isDetailMode() ?
-            this.getHelper().getAvatarHtml(id, 'small', 14, 'avatar-link') : '';
+            this.getHelper().getAvatarHtml(id, 'small', 16, 'avatar-link') : '';
 
         if (!avatarHtml) {
             return html;

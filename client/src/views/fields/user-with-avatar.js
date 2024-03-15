@@ -45,7 +45,7 @@ class UserWithAvatarFieldView extends UserFieldView {
     }
 
     getAvatarHtml() {
-        return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 14, 'avatar-link');
+        return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 16, 'avatar-link');
     }
 }
 

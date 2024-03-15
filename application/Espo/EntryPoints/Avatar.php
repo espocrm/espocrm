@@ -36,33 +36,39 @@ use Espo\Core\Api\Response;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
-
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
-use Identicon\Identicon;
 
+use LasseRafn\InitialAvatarGenerator\InitialAvatar;
+
+/**
+ * @noinspection PhpUnused
+ */
 class Avatar extends Image
 {
     protected string $systemColor = '#a4b5bd';
 
-    /** @var array<int, string|array{int, int, int}> */
+    /** @var string[] */
     protected $colorList = [
-        [111, 168, 214],
-        [237, 197, 85],
-        [212, 114, 155],
+        '#6fa8d6',
+        '#edc555',
+        '#d4729b',
         '#8093BD',
-        [124, 196, 164],
-        [138, 124, 194],
-        [222, 102, 102],
+        '#7cc4a4',
+        '#8a7cc2',
+        '#de6666',
         '#ABE3A1',
         '#E8AF64',
     ];
 
-    /**
-     * @return string|array{int, int, int}
-     */
-    private function getColor(string $hash)
+    private function getColor(User $user): string
     {
+        if ($user->getUserName() === SystemUser::NAME) {
+            return $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
+        }
+
+        $hash = $user->getId();
+
         $length = strlen($hash);
 
         $sum = 0;
@@ -94,14 +100,13 @@ class Avatar extends Image
     public function run(Request $request, Response $response): void
     {
         $userId = $request->getQueryParam('id');
-        $size = $request->getQueryParam('size') ?? null;
+        $size = $request->getQueryParam('size') ?? 'small';
 
         if (!$userId) {
             throw new BadRequest();
         }
 
-        /** @var ?User $user */
-        $user = $this->entityManager->getEntityById(User::ENTITY_TYPE, $userId);
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById( $userId);
 
         if (!$user) {
             $this->renderBlank($response);
@@ -109,43 +114,38 @@ class Avatar extends Image
             return;
         }
 
-        $id = $user->get('avatarId');
-
-        if ($id) {
-            $this->show($response, $id, $size, true);
+        if ($user->getAvatarId()) {
+            $this->show($response, $user->getAvatarId(), $size, true);
 
             return;
         }
 
-        $identicon = new Identicon();
+        $sizes = $this->getSizes()[$size];
 
-        if (!$size) {
-            $size = 'small';
-        }
-
-        if (empty($this->getSizes()[$size])) {
+        if (empty($sizes)) {
             $this->renderBlank($response);
 
             return;
         }
 
-        $width = $this->getSizes()[$size][0];
+        $width = $sizes[0];
+        $color = $this->getColor($user);
+
+        $image = (new InitialAvatar())
+            ->name($user->getName() ?? $user->getUserName() ?? $userId)
+            ->width($width)
+            ->height($width)
+            ->color('#FFF')
+            ->background($color)
+            ->fontSize()
+            //->preferBold()
+            ->generate();
 
         $response
             ->setHeader('Cache-Control', 'max-age=360000, must-revalidate')
             ->setHeader('Content-Type', 'image/png');
 
-        $hash = $userId;
-
-        $color = $this->getColor($userId);
-
-        if ($user->getUserName() === SystemUser::NAME) {
-            $color = $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
-        }
-
-        $imgContent = $identicon->getImageData($hash, $width, $color);
-
-        $response->writeBody($imgContent);
+        $response->writeBody($image->stream('png', 100));
     }
 
     /**

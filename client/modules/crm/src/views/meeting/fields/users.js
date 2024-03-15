@@ -49,7 +49,7 @@ define('crm:views/meeting/fields/users', ['crm:views/meeting/fields/attendees'],
         },
 
         getIconHtml: function (id) {
-            let iconHtml = this.getHelper().getAvatarHtml(id, 'small', 14, 'avatar-link');
+            let iconHtml = this.getHelper().getAvatarHtml(id, 'small', 16, 'avatar-link');
 
             if (iconHtml) {
                 iconHtml += ' ';
