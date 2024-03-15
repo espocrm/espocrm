@@ -1703,17 +1703,19 @@ label.attach-file-label {
     margin-bottom: 0;
 }
 
-.list-row > .cell > .attachment-block-container > .attachment-block > .attachment-preview {
-    margin-bottom: -@table-cell-padding;
-    margin-top: -@table-cell-padding;
-}
+.list-row > .cell {
+    > .attachment-block-container > .attachment-block > .attachment-preview {
+        margin-bottom: -@table-cell-padding + 2px;
+        margin-top: -@table-cell-padding + 2px;
 
-.list-row > .cell > .attachment-block-container > .attachment-block > .attachment-preview:not(.no-shrink) {
-    max-height: @line-height-computed + @table-cell-padding + @table-cell-padding;
+        &:not(.no-shrink) {
+            max-height: @line-height-computed + @table-cell-padding + @table-cell-padding - 4px;
 
-    img {
-        max-height: @line-height-computed + @table-cell-padding + @table-cell-padding;
-        vertical-align: top;
+            img {
+                max-height: @line-height-computed + @table-cell-padding + @table-cell-padding - 4px;
+                vertical-align: top;
+            }
+        }
     }
 }
 

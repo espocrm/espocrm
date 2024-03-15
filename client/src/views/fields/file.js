@@ -50,8 +50,6 @@ class FileFieldView extends LinkFieldView {
     validations = ['ready', 'required']
     searchTypeList = ['isNotEmpty', 'isEmpty']
 
-    ROW_HEIGHT = 37
-
     events = {
         /** @this FileFieldView */
         'click a.remove-attachment': function (e) {
@@ -341,7 +339,7 @@ class FileFieldView extends LinkFieldView {
         let maxHeight = (this.imageSizes[previewSize] || {})[1];
 
         if (this.isListMode() && !this.params.listPreviewSize) {
-            maxHeight = this.ROW_HEIGHT + 'px';
+            maxHeight =  '';
         }
 
         // noinspection HtmlRequiredAltAttribute,RequiredAttributes
