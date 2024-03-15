@@ -78,10 +78,6 @@ class Controller {
         this._dateTime = injections.dateTime || null;
         this._broadcastChannel = injections.broadcastChannel || null;
 
-        if (!this.baseController) {
-            this.on('logout', () => this.clearAllStoredMainViews());
-        }
-
         this.set('masterRendered', false);
     }
 
@@ -259,13 +255,22 @@ class Controller {
     }
 
     /**
+     * @param {string} key
+     * @return {string}
+     * @private
+     */
+    _composeMainViewKey(key) {
+        return `mainView-${this.name}-${key}`;
+    }
+
+    /**
      * Get a stored main view.
      *
      * @param {string} key A key.
      * @returns {module:view|null}
      */
     getStoredMainView(key) {
-        return this.get('storedMainView-' + key);
+        return this.get(this._composeMainViewKey(key));
     }
 
     /**
@@ -274,7 +279,7 @@ class Controller {
      * @returns {boolean}
      */
     hasStoredMainView(key) {
-        return this.has('storedMainView-' + key);
+        return this.has(this._composeMainViewKey(key));
     }
 
     /**
@@ -288,7 +293,7 @@ class Controller {
             view.remove(true);
         }
 
-        this.unset('storedMainView-' + key);
+        this.unset(this._composeMainViewKey(key));
     }
 
     /**
@@ -298,7 +303,7 @@ class Controller {
      * @param {module:view} view A view.
      */
     storeMainView(key, view) {
-        this.set('storedMainView-' + key, view);
+        this.set(this._composeMainViewKey(key), view);
 
         this.listenTo(view, 'remove', (o) => {
             o = o || {};
@@ -311,21 +316,6 @@ class Controller {
 
             this.clearStoredMainView(key);
         });
-    }
-
-    /**
-     * Clear all stored main views.
-     */
-    clearAllStoredMainViews() {
-        for (const k in this.params) {
-            if (k.indexOf('storedMainView-') !== 0) {
-                continue;
-            }
-
-            const key = k.slice(15);
-
-            this.clearStoredMainView(key);
-        }
     }
 
     /**

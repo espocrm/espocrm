@@ -81,7 +81,7 @@ class RecordController extends Controller {
     actionList(options) {
         const isReturn = options.isReturn || this.getRouter().backProcessed;
 
-        let key = this.name + 'List';
+        let key = 'list';
 
         if (options.primaryFilter) {
             key += 'Filter' + Espo.Utils.upperCaseFirst(options.primaryFilter);
@@ -259,7 +259,7 @@ class RecordController extends Controller {
      */
     prepareModelCreate(model, options) {
         this.listenToOnce(model, 'before:save', () => {
-            const key = this.name + 'List';
+            const key = 'list';
 
             const stored = this.getStoredMainView(key);
 
@@ -273,7 +273,7 @@ class RecordController extends Controller {
         });
 
         this.listenToOnce(model, 'after:save', () => {
-            const key = this.name + 'List';
+            const key = 'list';
 
             const stored = this.getStoredMainView(key);
 
@@ -342,7 +342,7 @@ class RecordController extends Controller {
      */
     prepareModelEdit(model, options) {
         this.listenToOnce(model, 'before:save', () => {
-            const key = this.name + 'List';
+            const key = 'list';
 
             const stored = this.getStoredMainView(key);
 

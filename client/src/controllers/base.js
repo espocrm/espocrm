@@ -36,6 +36,31 @@ import BaseView from 'views/base';
  */
 class BaseController extends Controller {
 
+    constructor(params, injections) {
+        super(params, injections);
+
+        this.on('logout', () => this._clearAllStoredMainViews());
+    }
+
+    _clearAllStoredMainViews() {
+        for (const name in this.params) {
+            if (!name.startsWith('mainView-')) {
+                continue;
+            }
+
+            const [, scope, key] = name.split('-', 3);
+            const actualKey = `mainView-${scope}-${key}`;
+
+            const view = /** @type {module:view} */this.get(actualKey);
+
+            if (view) {
+                view.remove(true);
+            }
+
+            this.unset(actualKey);
+        }
+    }
+
     /**
      * Log in.
      *

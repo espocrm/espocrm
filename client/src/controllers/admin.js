@@ -106,7 +106,7 @@ class AdminController extends Controller {
     // noinspection JSUnusedGlobalSymbols
     actionIndex(options) {
         let isReturn = options.isReturn;
-        const key = this.name + 'Index';
+        const key = 'index';
 
         if (this.getRouter().backProcessed) {
             isReturn = true;
