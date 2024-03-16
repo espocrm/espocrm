@@ -42,6 +42,9 @@ class BaseController extends Controller {
         this.on('logout', () => this._clearAllStoredMainViews());
     }
 
+    /**
+     * @private
+     */
     _clearAllStoredMainViews() {
         for (const name in this.params) {
             if (!name.startsWith('mainView-')) {
@@ -58,6 +61,27 @@ class BaseController extends Controller {
             }
 
             this.unset(actualKey);
+        }
+    }
+
+    /**
+     * Clear a stored main view.
+     *
+     * @param {string} scope
+     */
+    clearScopeStoredMainView(scope) {
+        for (const key in this.params) {
+            if (!key.startsWith(`mainView-${scope}-`)) {
+                continue;
+            }
+
+            const view = /** @type {module:view} */this.get(key);
+
+            if (view) {
+                view.remove(true);
+            }
+
+            this.unset(key);
         }
     }
 
