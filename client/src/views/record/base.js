@@ -939,6 +939,8 @@ class BaseRecordView extends View {
 
     /**
      * Processed after save.
+     *
+     * @protected
      */
     afterSave() {
         if (this.isNew) {
@@ -953,11 +955,15 @@ class BaseRecordView extends View {
 
     /**
      * Processed before before-save.
+     *
+     * @protected
      */
     beforeBeforeSave() {}
 
     /**
      * Processed before save.
+     *
+     * @protected
      */
     beforeSave() {
         Espo.Ui.notify(this.translate('saving', 'messages'));
@@ -965,11 +971,15 @@ class BaseRecordView extends View {
 
     /**
      * Processed after save error.
+     *
+     * @protected
      */
     afterSaveError() {}
 
     /**
      * Processed after save a not modified record.
+     *
+     * @protected
      */
     afterNotModified() {
         Espo.Ui.warning(this.translate('notModified', 'messages'));
@@ -979,6 +989,8 @@ class BaseRecordView extends View {
 
     /**
      * Processed after save not valid.
+     *
+     * @protected
      */
     afterNotValid() {
         Espo.Ui.error(this.translate('Not valid'));
@@ -1159,6 +1171,8 @@ class BaseRecordView extends View {
      * @param {function} saveResolve Resolve the save promise.
      * @param {function} saveReject Reject the same promise.
      * @return {Promise<boolean>}
+     *
+     * @protected
      */
     handleSaveError(xhr, options, saveResolve, saveReject) {
         let handlerData = null;
@@ -1243,7 +1257,7 @@ class BaseRecordView extends View {
     /**
      * Fetch data from the form.
      *
-     * @return {Object.<string,*>}
+     * @return {Object.<string, *>}
      */
     fetch() {
         let data = {};
