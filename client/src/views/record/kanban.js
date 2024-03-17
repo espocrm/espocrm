@@ -263,14 +263,13 @@ class KanbanRecordView extends ListRecordView {
             throw new Error("No status field for entity type '" + this.scope + "'.");
         }
 
-        this.statusList = Espo.Utils.clone(this.getMetadata().get(
-            ['entityDefs', this.scope, 'fields', this.statusField, 'options'])
-        );
+        this.statusList = this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.statusField}.options`) || [];
+        this.statusList = [...this.statusList];
 
         const statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
 
-        this.statusList = this.statusList.filter((item) => {
-            if (~statusIgnoreList.indexOf(item)) {
+        this.statusList = this.statusList.filter(item => {
+            if (statusIgnoreList.includes(item)) {
                 return;
             }
 
