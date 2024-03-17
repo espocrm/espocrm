@@ -653,27 +653,35 @@ class Collection {
 
     /**
      * Next page.
+     *
+     * @returns {Promise}
      */
     nextPage() {
-        this.setOffset(this.offset + this.maxSize);
+        return this.setOffset(this.offset + this.maxSize);
     }
 
     /**
      * Previous page.
+     *
+     * @returns {Promise}
      */
     previousPage() {
-        this.setOffset(this.offset - this.maxSize);
+        return this.setOffset(this.offset - this.maxSize);
     }
 
     /**
      * First page.
+     *
+     * @returns {Promise}
      */
     firstPage() {
-        this.setOffset(0);
+        return this.setOffset(0);
     }
 
     /**
      * Last page.
+     *
+     * @returns {Promise}
      */
     lastPage() {
         let offset = this.total - this.total % this.maxSize;
@@ -682,13 +690,14 @@ class Collection {
             offset = this.total - this.maxSize;
         }
 
-        this.setOffset(offset);
+        return this.setOffset(offset);
     }
 
     /**
      * Set an offset.
      *
      * @param {number} offset Offset.
+     * @returns {Promise}
      */
     setOffset(offset) {
         if (offset < 0) {
@@ -700,7 +709,8 @@ class Collection {
         }
 
         this.offset = offset;
-        this.fetch();
+
+        return this.fetch();
     }
 
     /**

@@ -591,15 +591,25 @@ class ListRecordView extends View {
 
             Espo.Ui.notify(' ... ');
 
-            this.collection.once('sync', () => {
-                Espo.Ui.notify(false);
-            });
+            this.collection.once('sync', () => Espo.Ui.notify(false));
 
             if (page === 'current') {
                 this.collection.fetch();
             }
             else {
-                this.collection[page + 'Page'].call(this.collection);
+                if (page === 'next') {
+                    this.collection.nextPage();
+                }
+                else if (page === 'previous') {
+                    this.collection.previousPage();
+                }
+                else if (page === 'last') {
+                    this.collection.lastPage();
+                }
+                else if (page === 'first') {
+                    this.collection.firstPage();
+                }
+
                 this.trigger('paginate');
             }
 
