@@ -351,6 +351,7 @@ class ListView extends MainView {
      * @protected
      */
     createSearchView() {
+        // noinspection JSValidateTypes
         return this.createView('search', this.searchView, {
             collection: this.collection,
             fullSelector: '#main > .search-container',
@@ -643,6 +644,7 @@ class ListView extends MainView {
 
         const listViewName = this.getRecordViewName();
 
+        // noinspection JSValidateTypes
         return this.createView('list', listViewName, o, view => {
             if (!this.hasParentView()) {
                 view.undelegateEvents();
@@ -794,6 +796,7 @@ class ListView extends MainView {
             returnDispatchParams: returnDispatchParams,
         };
 
+        // noinspection JSValidateTypes
         return this.createView('quickCreate', viewName, options, (view) => {
             view.render();
             view.notify(false);
