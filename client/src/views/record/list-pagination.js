@@ -26,31 +26,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/record/list-pagination', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class RecordListPagination extends View {
 
-        template: 'record/list-pagination',
+    template = 'record/list-pagination'
 
-        data: function () {
-            const previous = this.collection.offset > 0;
-            const next = this.collection.total - this.collection.offset > this.collection.maxSize ||
-                this.collection.total === -1;
+    data() {
+        const previous = this.collection.offset > 0;
+        const next = this.collection.total - this.collection.offset > this.collection.maxSize ||
+            this.collection.total === -1;
 
-            const last = next && this.collection.total >= 0;
+        const last = next && this.collection.total >= 0;
 
-            const from = this.collection.offset + 1;
-            const to = this.collection.offset + this.collection.length;
+        const from = this.collection.offset + 1;
+        const to = this.collection.offset + this.collection.length;
 
-            return {
-                total: this.getHelper().numberUtil.formatInt(this.collection.total),
-                from: this.getHelper().numberUtil.formatInt(from),
-                to: this.getHelper().numberUtil.formatInt(to),
-                previous: previous,
-                next: next,
-                last: last,
-                noTotal: this.collection.total === -1 || this.collection.total === -2,
-            };
-        },
-    });
-});
+        return {
+            total: this.getHelper().numberUtil.formatInt(this.collection.total),
+            from: this.getHelper().numberUtil.formatInt(from),
+            to: this.getHelper().numberUtil.formatInt(to),
+            previous: previous,
+            next: next,
+            last: last,
+            noTotal: this.collection.total === -1 || this.collection.total === -2,
+        };
+    }
+}
+
+export default RecordListPagination;
