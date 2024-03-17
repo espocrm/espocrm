@@ -495,22 +495,51 @@ input.global-search-input {
     }
 }
 
-.list-container .pagination {
+ul.pagination {
+    display: inline-block;
     margin: 0;
 
-    a.pagination-btn {
-        width: 40px;
-        text-align: center;
-    }
+    > li {
+        display: inline-block;
+        float: left;
 
-    a.pagination-btn-middle {
-        min-width: 130px;
-        text-align: center;
+        a {
+            color: var(--gray-soft);
+
+            &:hover,
+            &:focus {
+                color: var(--gray-light)
+            }
+
+            &:focus:not(:hover) {
+                background-color: var(--btn-default-bg);
+            }
+        }
+
+        &:first-child > a {
+            border-top-left-radius: var(--border-radius);
+            border-bottom-left-radius: var(--border-radius);
+        }
+
+        &:last-child > a {
+            border-top-right-radius: var(--border-radius);
+            border-bottom-right-radius: var(--border-radius);
+        }
+
+        a.pagination-btn {
+            min-width: 40px;
+            text-align: center;
+        }
+
+        a.pagination-btn-middle {
+            min-width: 130px;
+            text-align: center;
+        }
     }
 }
 
 .list-bottom-bar {
-    margin-top: 10px;
+    margin-top: var(--vertical-gap);
 }
 
 .radio-container {

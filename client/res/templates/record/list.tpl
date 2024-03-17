@@ -227,9 +227,9 @@
 </div>
 
 {{#if bottomBar}}
-<div class="list-bottom-bar">
-{{#if paginationBottom}} {{{pagination}}} {{/if}}
-</div>
+    <div class="list-bottom-bar">
+        {{#if paginationBottom}} {{{pagination}}} {{/if}}
+    </div>
 {{/if}}
 
 {{else}}

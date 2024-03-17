@@ -37,12 +37,18 @@ define('views/record/list-pagination', ['view'], function (Dep) {
             const next = this.collection.total - this.collection.offset > this.collection.maxSize ||
                 this.collection.total === -1;
 
+            const last = next && this.collection.total >= 0;
+
+            const from = this.collection.offset + 1;
+            const to = this.collection.offset + this.collection.length;
+
             return {
-                total: this.collection.total,
-                from: this.collection.offset + 1 ,
-                to: this.collection.offset + this.collection.length,
+                total: this.getHelper().numberUtil.formatInt(this.collection.total),
+                from: this.getHelper().numberUtil.formatInt(from),
+                to: this.getHelper().numberUtil.formatInt(to),
                 previous: previous,
                 next: next,
+                last: last,
                 noTotal: this.collection.total === -1 || this.collection.total === -2,
             };
         },
