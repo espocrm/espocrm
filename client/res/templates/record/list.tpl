@@ -227,8 +227,10 @@
 </div>
 
 {{#if bottomBar}}
-    <div class="list-bottom-bar">
-        {{#if paginationBottom}} {{{pagination}}} {{/if}}
+    <div class="list-bottom-bar clearfix">
+        {{#if paginationBottom}}
+            {{{pagination}}}
+        {{/if}}
     </div>
 {{/if}}
 
