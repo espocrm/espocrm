@@ -874,7 +874,6 @@ class ListRecordView extends View {
             entityType: this.entityType,
             header: this.header,
             headerDefs: this._getHeaderDefs(),
-            paginationEnabled: this.pagination,
             hasPagination: this.pagination,
             showMoreActive: this.collection.hasMore(),
             showMoreEnabled: this.showMore,
