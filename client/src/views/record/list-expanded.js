@@ -39,7 +39,7 @@ class ListExpandedRecordView extends ListRecordView {
     rowActionsView = false
     _internalLayoutType = 'list-row-expanded'
     presentationType = 'expanded'
-    pagination = false
+    paginationDisabled = true
     header = false
     _internalLayout = null
     checkedList = null
@@ -47,8 +47,6 @@ class ListExpandedRecordView extends ListRecordView {
 
     setup() {
         super.setup();
-
-        this.pagination = false;
 
         this.on('after:save', model => {
             const view = this.getView(model.id);

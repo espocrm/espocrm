@@ -32,6 +32,8 @@ class RecordListPagination extends View {
 
     template = 'record/list-pagination'
 
+    isComponent = true
+
     data() {
         const previous = this.collection.offset > 0;
         const next = this.collection.total - this.collection.offset > this.collection.maxSize ||

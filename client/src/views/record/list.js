@@ -472,6 +472,13 @@ class ListRecordView extends View {
      */
     noDataDisabled = false
 
+    /**
+     * Disable pagination.
+     *
+     * @protected
+     */
+    paginationDisabled = false
+
     /** @private */
     _$focusedCheckbox = null
 
@@ -913,6 +920,10 @@ class ListRecordView extends View {
         }
 
         this.pagination = this.options.pagination == null ? this.pagination : this.options.pagination;
+
+        if (this.paginationDisabled) {
+            this.pagination = false;
+        }
 
         this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes :
             this.options.checkboxes;
@@ -1943,6 +1954,18 @@ class ListRecordView extends View {
             this.buildRows();
         }
 
+        if (this.pagination) {
+            this.createView('pagination', 'views/record/list-pagination', {
+                collection: this.collection,
+                displayTotalCount: this.displayTotalCount,
+            });
+
+            this.createView('paginationSticky', 'views/record/list-pagination', {
+                collection: this.collection,
+                displayTotalCount: this.displayTotalCount,
+            });
+        }
+
         this._renderEmpty = this.options.skipBuildRows;
     }
 
@@ -2740,7 +2763,7 @@ class ListRecordView extends View {
         }
 
         let iteration = 0;
-        const repeatCount = !this.pagination ? 1 : 3;
+        const repeatCount = 1;//!this.pagination ? 1 : 3;
 
         const callbackWrapped = () => {
             iteration++;
@@ -2771,18 +2794,6 @@ class ListRecordView extends View {
                 }
             });
         });
-
-        if (this.pagination) {
-            this.createView('pagination', 'views/record/list-pagination', {
-                collection: this.collection,
-                displayTotalCount: this.displayTotalCount,
-            }, callbackWrapped);
-
-            this.createView('paginationSticky', 'views/record/list-pagination', {
-                collection: this.collection,
-                displayTotalCount: this.displayTotalCount,
-            }, callbackWrapped);
-        }
     }
 
     /**
