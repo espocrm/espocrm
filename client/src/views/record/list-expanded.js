@@ -48,6 +48,8 @@ class ListExpandedRecordView extends ListRecordView {
     setup() {
         super.setup();
 
+        this.pagination = false;
+
         this.on('after:save', model => {
             const view = this.getView(model.id);
 
