@@ -774,10 +774,9 @@ class ListRecordView extends View {
         this.deactivate();
     }
 
-    /** @protected */
+    /** @private */
     initStickyBar() {
         this._stickyBarHelper = new StickyBarHelper(this);
-
         this._stickyBarHelper.init();
     }
 
@@ -1946,6 +1945,8 @@ class ListRecordView extends View {
     }
 
     afterRender() {
+        this._stickyBarHelper = null;
+
         this.$selectAllCheckbox = this.$el.find('input.select-all');
 
         if (this.allResultIsChecked) {
