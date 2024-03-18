@@ -48,7 +48,7 @@ class StickyBarHelper {
 
     init() {
         const controlSticking = () => {
-            if (this.view.getCheckedIds().length === 0 && !this.view.isAllResultChecked()) {
+            if (!this.view.toShowStickyBar()) {
                 return;
             }
 
@@ -128,7 +128,7 @@ class StickyBarHelper {
         }
 
         let middleTop = getOffsetTop($middle.get(0));
-        let buttonsTop =  getOffsetTop(this.$el.find('.list-buttons-container').get(0));
+        let buttonsTop = getOffsetTop(this.$el.find('.list-buttons-container').get(0));
 
         if (!isModal) {
             // padding

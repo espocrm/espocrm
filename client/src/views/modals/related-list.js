@@ -424,7 +424,11 @@ class RelatedListModalView extends ModalView {
             pagination: this.getConfig().get('listPagination') ||
                 this.getMetadata().get(['clientDefs', this.scope, 'listPagination']) ||
                 null,
-        }, view => {
+        }, /** import('views/record/list').default */view => {
+
+            this.listenTo(view, 'after:paginate', () => {
+                this.bodyElement.scrollTop = 0;
+            });
 
             this.listenToOnce(view, 'select', model => {
                 this.trigger('select', model);

@@ -2,12 +2,6 @@
 
 {{#if topBar}}
 <div class="list-buttons-container clearfix">
-    {{#if paginationTop}}
-    <div>
-        {{{pagination}}}
-    </div>
-    {{/if}}
-
     {{#if displayActionsButtonGroup}}
     <div class="btn-group actions">
         {{#if massActionList}}
@@ -112,7 +106,15 @@
                 {{/each}}
             </ul>
         </div>
+
+        {{#if hasPagination}}
+            {{{paginationSticky}}}
+        {{/if}}
     </div>
+    {{/if}}
+
+    {{#if hasPagination}}
+        {{{pagination}}}
     {{/if}}
 
     {{#if settings}}
@@ -205,34 +207,27 @@
         {{/each}}
         </tbody>
     </table>
-    {{#unless paginationEnabled}}
-    {{#if showMoreEnabled}}
-    <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
-        <a
-            type="button"
-            role="button"
-            tabindex="0"
-            class="btn btn-default btn-block"
-            data-action="showMore"
-            {{#if showCount}}title="{{translate 'Total'}}: {{totalCountFormatted}}"{{/if}}
-        >
-            {{#if showCount}}
-            <div class="pull-right text-muted more-count">{{moreCountFormatted}}</div>
-            {{/if}}
-            <span>{{translate 'Show more'}}</span>
-        </a>
-    </div>
-    {{/if}}
+
+    {{#unless hasPagination}}
+        {{#if showMoreEnabled}}
+            <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
+                <a
+                    type="button"
+                    role="button"
+                    tabindex="0"
+                    class="btn btn-default btn-block"
+                    data-action="showMore"
+                    {{#if showCount}}title="{{translate 'Total'}}: {{totalCountFormatted}}"{{/if}}
+                >
+                    {{#if showCount}}
+                    <div class="pull-right text-muted more-count">{{moreCountFormatted}}</div>
+                    {{/if}}
+                    <span>{{translate 'Show more'}}</span>
+                </a>
+            </div>
+        {{/if}}
     {{/unless}}
 </div>
-
-{{#if bottomBar}}
-    <div class="list-bottom-bar clearfix">
-        {{#if paginationBottom}}
-            {{{pagination}}}
-        {{/if}}
-    </div>
-{{/if}}
 
 {{else}}
     {{#unless noDataDisabled}}

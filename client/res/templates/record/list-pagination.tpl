@@ -1,19 +1,12 @@
 <div class="btn-group pagination clearfix">
-    <a
-        class="pagination-btn btn btn-default btn-icon{{#unless previous}} disabled{{/unless}}"
-        role="button"
-        tabindex="0"
-        data-page="previous"
-        title="{{translate 'Previous Page'}}"
-    ><span class="fas fa-chevron-left"></span></a>
     <div class="btn-group">
         <a
-            class="pagination-btn-middle btn btn-default dropdown-toggle"
+            class="pagination-btn-middle btn btn-text dropdown-toggle"
             role="button"
             tabindex="0"
             data-toggle="dropdown"
             {{#unless noTotal}}title="{{translate 'Total'}}: {{total}}"{{/unless}}
-        >{{from}} - {{to}}</a>
+        >{{from}} - {{to}}{{#unless noTotal}} / {{total}}{{/unless}}</a>
         <ul class="dropdown-menu pull-right">
             <li>
                 <a
@@ -34,7 +27,14 @@
         </ul>
     </div>
     <a
-        class="pagination-btn btn btn-default btn-icon{{#unless next}} disabled{{/unless}}"
+        class="pagination-btn btn btn-text btn-icon{{#unless previous}} disabled{{/unless}}"
+        role="button"
+        tabindex="0"
+        data-page="previous"
+        title="{{translate 'Previous Page'}}"
+    ><span class="fas fa-chevron-left"></span></a>
+    <a
+        class="pagination-btn btn btn-text btn-icon{{#unless next}} disabled{{/unless}}"
         role="button"
         tabindex="0"
         data-page="next"

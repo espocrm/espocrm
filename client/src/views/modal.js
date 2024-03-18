@@ -240,6 +240,12 @@ class ModalView extends View {
     isCollapsed = false
 
     /**
+     * @type {HTMLElement}
+     * @protected
+     */
+    bodyElement
+
+    /**
      * @inheritDoc
      */
     events = {
@@ -359,6 +365,11 @@ class ModalView extends View {
             });
 
             this.setElement(this.containerSelector + ' .body');
+
+            this.bodyElement = this.element;
+
+            // @todo Review that the element is set back to the container afterwards.
+            //     Force keeping set to the body?
         });
 
         this.on('after:render', () => {

@@ -587,6 +587,8 @@ class ListRelatedView extends MainView {
                 return;
             }
 
+            this.listenTo(view, 'after:paginate', () => window.scrollTo({top: 0}));
+
             this.listenToOnce(view, 'after:render', () => {
                 if (!this.hasParentView()) {
                     view.undelegateEvents();

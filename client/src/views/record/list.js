@@ -258,7 +258,7 @@ class ListRecordView extends View {
      * Where to display the pagination. Can be overridden by an option parameter.
      *
      * @protected
-     * @type {'top'|'bottom'|boolean|null}
+     * @type {boolean}
      */
     pagination = false
 
@@ -591,7 +591,11 @@ class ListRecordView extends View {
 
             Espo.Ui.notify(' ... ');
 
-            this.collection.once('sync', () => Espo.Ui.notify(false));
+            this.collection.once('sync', () => {
+                Espo.Ui.notify(false);
+
+                this.trigger('after:paginate');
+            });
 
             if (page === 'current') {
                 this.collection.fetch();
@@ -774,6 +778,13 @@ class ListRecordView extends View {
         this.deactivate();
     }
 
+    /**
+     * @return {boolean}
+     */
+    toShowStickyBar() {
+        return this.getCheckedIds().length > 0 || this.isAllResultChecked() || this.pagination;
+    }
+
     /** @private */
     initStickyBar() {
         this._stickyBarHelper = new StickyBarHelper(this);
@@ -799,7 +810,7 @@ class ListRecordView extends View {
     hideActions() {
         this.$el.find('.actions-button').addClass('hidden');
 
-        if (this._stickyBarHelper) {
+        if (this._stickyBarHelper && !this.pagination) {
             this._stickyBarHelper.hide();
         }
     }
@@ -834,13 +845,6 @@ class ListRecordView extends View {
 
     /** @inheritDoc */
     data() {
-        const paginationTop = this.pagination === 'both' ||
-            this.pagination === 'top';
-
-        const paginationBottom = this.pagination === 'both' ||
-            this.pagination === true ||
-            this.pagination === 'bottom';
-
         const moreCount = this.collection.total - this.collection.length;
         let checkAllResultDisabled = this.checkAllResultDisabled;
 
@@ -850,10 +854,10 @@ class ListRecordView extends View {
             }
         }
 
-        const displayTotalCount = this.displayTotalCount && this.collection.total > 0;
+        const displayTotalCount = this.displayTotalCount && this.collection.total > 0 && !this.pagination;
 
         const topBar =
-            paginationTop ||
+            this.pagination ||
             this.checkboxes ||
             (this.buttonList.length && !this.buttonsDisabled) ||
             (this.dropdownItemList.length && !this.buttonsDisabled) ||
@@ -868,8 +872,7 @@ class ListRecordView extends View {
             header: this.header,
             headerDefs: this._getHeaderDefs(),
             paginationEnabled: this.pagination,
-            paginationTop: paginationTop,
-            paginationBottom: paginationBottom,
+            hasPagination: this.pagination,
             showMoreActive: this.collection.hasMore(),
             showMoreEnabled: this.showMore,
             showCount: this.showCount && this.collection.total > 0,
@@ -878,7 +881,6 @@ class ListRecordView extends View {
             massActionList: this.massActionList,
             rowList: this.rowList,
             topBar: topBar,
-            bottomBar: paginationBottom,
             checkAllResultDisabled: checkAllResultDisabled,
             buttonList: this.buttonList,
             dropdownItemList: this.dropdownItemList,
@@ -908,9 +910,7 @@ class ListRecordView extends View {
             this.header = false;
         }
 
-        this.pagination = _.isUndefined(this.options.pagination) || this.options.pagination === null ?
-            this.pagination :
-            this.options.pagination;
+        this.pagination = this.options.pagination == null ? this.pagination : this.options.pagination;
 
         this.checkboxes = _.isUndefined(this.options.checkboxes) ? this.checkboxes :
             this.options.checkboxes;
@@ -1010,7 +1010,7 @@ class ListRecordView extends View {
     /** @protected */
     deactivate() {
         if (this.$el) {
-            this.$el.find(".pagination li").addClass('disabled');
+            this.$el.find(".pagination a").addClass('disabled');
             this.$el.find("a.sort").addClass('disabled');
         }
     }
@@ -1957,6 +1957,10 @@ class ListRecordView extends View {
                 this.checkRecord(id);
             });
         }
+
+        if (this.pagination && this.$el.find('> .list').length) {
+            this.initStickyBar();
+        }
     }
 
     /** @private */
@@ -2734,7 +2738,7 @@ class ListRecordView extends View {
         }
 
         let iteration = 0;
-        const repeatCount = !this.pagination ? 1 : 2;
+        const repeatCount = !this.pagination ? 1 : 3;
 
         const callbackWrapped = () => {
             iteration++;
@@ -2769,6 +2773,12 @@ class ListRecordView extends View {
         if (this.pagination) {
             this.createView('pagination', 'views/record/list-pagination', {
                 collection: this.collection,
+                displayTotalCount: this.displayTotalCount,
+            }, callbackWrapped);
+
+            this.createView('paginationSticky', 'views/record/list-pagination', {
+                collection: this.collection,
+                displayTotalCount: this.displayTotalCount,
             }, callbackWrapped);
         }
     }

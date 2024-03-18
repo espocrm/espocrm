@@ -41,15 +41,18 @@ class RecordListPagination extends View {
 
         const from = this.collection.offset + 1;
         const to = this.collection.offset + this.collection.length;
+        const total = this.collection.total;
+
+        const noTotal = !this.options.displayTotalCount || this.collection.total < 0;
 
         return {
-            total: this.getHelper().numberUtil.formatInt(this.collection.total),
+            total: this.getHelper().numberUtil.formatInt(total),
             from: this.getHelper().numberUtil.formatInt(from),
             to: this.getHelper().numberUtil.formatInt(to),
             previous: previous,
             next: next,
             last: last,
-            noTotal: this.collection.total === -1 || this.collection.total === -2,
+            noTotal: noTotal,
         };
     }
 }

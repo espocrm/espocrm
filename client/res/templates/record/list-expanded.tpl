@@ -1,12 +1,6 @@
 {{#if collection.models.length}}
 {{#if topBar}}
 <div class="list-buttons-container clearfix">
-    {{#if paginationTop}}
-    <div>
-        {{{pagination}}}
-    </div>
-    {{/if}}
-
     {{#if checkboxes}}
     {{#if massActionList}}
     <div class="btn-group actions">
@@ -55,7 +49,7 @@
     {{/each}}
     </ul>
 
-    {{#unless paginationEnabled}}
+    {{#unless hasPagination}}
     {{#if showMoreEnabled}}
     {{#if showMoreActive}}
     <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
@@ -77,12 +71,6 @@
     {{/if}}
     {{/unless}}
 </div>
-
-{{#if bottomBar}}
-<div>
-{{#if paginationBottom}} {{{pagination}}} {{/if}}
-</div>
-{{/if}}
 
 {{else}}
     {{#unless noDataDisabled}}
