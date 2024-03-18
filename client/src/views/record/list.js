@@ -2762,36 +2762,25 @@ class ListRecordView extends View {
             return;
         }
 
-        let iteration = 0;
-        const repeatCount = 1;//!this.pagination ? 1 : 3;
-
-        const callbackWrapped = () => {
-            iteration++;
-
-            if (iteration === repeatCount) {
-                if (typeof callback === 'function') {
-                    callback();
-                }
-            }
-        };
-
         this.wait(true);
 
         const modelList = this.collection.models;
-        const count = modelList.length;
-        let builtCount = 0;
+        let counter = 0;
 
-        modelList.forEach(model => {
-            this.buildRow(iteration, model, () => {
-                builtCount++;
+        modelList.forEach((model, i) => {
+            this.buildRow(i, model, () => {
+                counter++;
 
-                if (builtCount === count) {
-                    callbackWrapped();
-
-                    this.wait(false);
-
-                    this.trigger('after:build-rows');
+                if (counter !== modelList.length) {
+                    return;
                 }
+
+                if (typeof callback === 'function') {
+                    callback();
+                }
+
+                this.wait(false);
+                this.trigger('after:build-rows');
             });
         });
     }
