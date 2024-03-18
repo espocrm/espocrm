@@ -29,6 +29,7 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Utils\Config;
 use Espo\Entities\User;
 use Espo\Tools\FieldManager\FieldManager as FieldManagerTool;
 use Espo\Core\Api\Request;
@@ -49,7 +50,8 @@ class FieldManager
     public function __construct(
         private User $user,
         private DataManager $dataManager,
-        private FieldManagerTool $fieldManagerTool
+        private FieldManagerTool $fieldManagerTool,
+        private Config $config
     ) {
         $this->checkControllerAccess();
     }
@@ -103,7 +105,7 @@ class FieldManager
         $name = $fieldManagerTool->create($scope, $name, get_object_vars($data));
 
         try {
-            $this->dataManager->rebuild([$scope]);
+            $this->rebuild($scope);
         }
         catch (Error $e) {
             $fieldManagerTool->delete($scope, $name);
@@ -145,7 +147,7 @@ class FieldManager
         $fieldManagerTool->update($scope, $name, get_object_vars($data));
 
         if ($fieldManagerTool->isChanged()) {
-            $this->dataManager->rebuild([$scope]);
+            $this->rebuild($scope);
         } else {
             $this->dataManager->clearCache();
         }
@@ -195,8 +197,18 @@ class FieldManager
 
         $this->fieldManagerTool->resetToDefault($scope, $name);
 
-        $this->dataManager->rebuild([$scope]);
+        $this->rebuild($scope);
 
         return true;
+    }
+
+    /**
+     * @throws Error
+     */
+    private function rebuild(string $scope): void
+    {
+        $argument = $this->config->get('database.platform') === 'Postgresql' ? null : [$scope];
+
+        $this->dataManager->rebuild($argument);
     }
 }
