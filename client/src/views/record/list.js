@@ -1994,7 +1994,7 @@ class ListRecordView extends View {
             });
         }
 
-        if (this.pagination && this.$el.find('> .list').length) {
+        if (this.pagination && this.$el.find('.list-buttons-container').length) {
             this.initStickyBar();
         }
     }
