@@ -70,6 +70,8 @@ class ListWithCategories extends ListView {
     setup() {
         super.setup();
 
+        this.defaultMaxSize = this.collection.maxSize;
+
         if (!this.categoryScope) {
             this.categoryScope = this.scope + 'Category';
         }
@@ -327,6 +329,8 @@ class ListWithCategories extends ListView {
 
         this.nestedCategoriesCollection.reset();
         this.collection.reset();
+        this.collection.offset = 0;
+        this.collection.maxSize = this.defaultMaxSize;
 
         this.$listContainer.empty();
 
@@ -530,8 +534,11 @@ class ListWithCategories extends ListView {
                         this.currentCategoryName = model.get('name');
                     }
 
-                    this.applyCategoryToCollection();
+                    this.collection.offset = 0;
+                    this.collection.maxSize = this.defaultMaxSize;
+                    this.collection.reset();
 
+                    this.applyCategoryToCollection();
                     this.collection.abortLastFetch();
 
                     Espo.Ui.notify(' ... ');

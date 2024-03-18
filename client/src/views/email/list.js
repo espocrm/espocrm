@@ -455,6 +455,8 @@ class EmailListView extends ListView {
 
                     Espo.Ui.notify(' ... ');
 
+                    this.collection.offset = 0;
+
                     xhr = this.collection
                         .fetch()
                         .then(() => Espo.Ui.notify(false));

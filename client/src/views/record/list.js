@@ -731,6 +731,7 @@ class ListRecordView extends View {
     }
 
     resetCustomOrder() {
+        this.collection.offset = 0;
         this.collection.resetOrderToDefault();
         this.collection.trigger('order-changed');
 
@@ -764,6 +765,8 @@ class ListRecordView extends View {
         while (this.collection.length > maxSizeLimit) {
             this.collection.pop();
         }
+
+        this.collection.offset = 0;
 
         this.collection
             .sort(orderBy, order)

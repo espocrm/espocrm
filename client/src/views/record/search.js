@@ -322,6 +322,8 @@ class SearchView extends View {
             }
         }
 
+        this.collection.offset = 0;
+
         if (toTriggerEvent) {
             this.trigger('change-view-mode', mode);
         }
