@@ -67,7 +67,7 @@ class NotificationContainerFieldView extends BaseFieldView {
             return;
         }
 
-        type = type.replace(/ /g, '');
+        type = Espo.Utils.upperCaseFirst(type.replace(/ /g, ''));
 
         let viewName = this.getMetadata().get(`clientDefs.Notification.itemViews.${type}`);
 
@@ -97,10 +97,12 @@ class NotificationContainerFieldView extends BaseFieldView {
 
             let viewName = this.getMetadata().get(`clientDefs.Note.itemViews.${data.type}`);
 
+
             if (!viewName) {
-                // @todo Ceck if type exists.
+                // @todo Check if type exists.
                 viewName = 'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
             }
+
 
             this.createView('notification', viewName, {
                 model: model,
