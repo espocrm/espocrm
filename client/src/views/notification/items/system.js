@@ -40,7 +40,7 @@ class SystemNotificationItemView extends BaseNotificationItemView {
     }
 
     setup() {
-        let data = this.model.get('data') || {};
+        const data = this.model.get('data') || {};
 
         this.userId = data.userId;
     }

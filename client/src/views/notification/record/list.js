@@ -46,7 +46,7 @@ class NotificationListRecordView extends ListExpandedRecordView {
                 return;
             }
 
-            let lengthBeforeFetch = options.lengthBeforeFetch || 0;
+            const lengthBeforeFetch = options.lengthBeforeFetch || 0;
 
             if (lengthBeforeFetch === 0) {
                 this.reRender();
@@ -54,12 +54,12 @@ class NotificationListRecordView extends ListExpandedRecordView {
                 return;
             }
 
-            let $list = this.$el.find(this.listContainerEl);
+            const $list = this.$el.find(this.listContainerEl);
 
-            let rowCount = this.collection.length - lengthBeforeFetch;
+            const rowCount = this.collection.length - lengthBeforeFetch;
 
             for (let i = rowCount - 1; i >= 0; i--) {
-                let model = this.collection.at(i);
+                const model = this.collection.at(i);
 
                 $list.prepend(
                     $(this.getRowContainerHtml(model.id))
@@ -72,16 +72,16 @@ class NotificationListRecordView extends ListExpandedRecordView {
         });
 
         this.events['auxclick a[href][data-scope][data-id]'] = e => {
-            let isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
+            const isCombination = e.button === 1 && (e.ctrlKey || e.metaKey);
 
             if (!isCombination) {
                 return;
             }
 
-            let $target = $(e.currentTarget);
+            const $target = $(e.currentTarget);
 
-            let id = $target.attr('data-id');
-            let scope = $target.attr('data-scope');
+            const id = $target.attr('data-id');
+            const scope = $target.attr('data-scope');
 
             e.preventDefault();
             e.stopPropagation();

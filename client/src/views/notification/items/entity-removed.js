@@ -35,7 +35,7 @@ class EmailRemovedNotificationItemView extends BaseNotificationItemView {
     template = 'notification/items/entity-removed'
 
     setup() {
-        let data = /** @type Object.<string, *> */this.model.get('data') || {};
+        const data = /** @type {Object.<string, *>} */this.model.get('data') || {};
 
         this.userId = data.userId;
 
