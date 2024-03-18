@@ -1090,8 +1090,6 @@ class NavbarSiteView extends View {
         const tabDefsList = [];
 
         const colorsDisabled =
-            this.getPreferences().get('scopeColorsDisabled') ||
-            this.getPreferences().get('tabColorsDisabled') ||
             this.getConfig().get('scopeColorsDisabled') ||
             this.getConfig().get('tabColorsDisabled');
 

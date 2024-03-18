@@ -31,8 +31,6 @@
         "followCreatedEntities": "Auto-follow created records",
         "followCreatedEntityTypeList": "Auto-follow created records of specific entity types",
         "emailUseExternalClient": "Use an external email client",
-        "scopeColorsDisabled": "Disable scope colors",
-        "tabColorsDisabled": "Disable tab colors",
         "textSearchStoringDisabled": "Disable text filter storing",
         "calendarSlotDuration": "Calendar Slot Duration",
         "calendarScrollHour": "Calendar Scroll to Hour"

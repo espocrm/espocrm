@@ -153,15 +153,6 @@ class PreferencesEditRecordView extends EditRecordView {
             hideNotificationPanel = false;
         }
 
-        if (this.getConfig().get('scopeColorsDisabled')) {
-            this.hideField('scopeColorsDisabled');
-            this.hideField('tabColorsDisabled');
-        }
-
-        if (this.getConfig().get('tabColorsDisabled')) {
-            this.hideField('tabColorsDisabled');
-        }
-
         if (hideNotificationPanel) {
             this.hidePanel('notifications');
         }
