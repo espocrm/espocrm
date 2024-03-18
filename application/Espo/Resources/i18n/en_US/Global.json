@@ -116,6 +116,10 @@
         "GlobalStream": "Global Stream"
     },
     "labels": {
+        "Previous Page": "Previous Page",
+        "Next Page": "Next Page",
+        "First Page": "First Page",
+        "Last Page": "Last Page",
         "Sort": "Sort",
         "Misc": "Misc",
         "Merge": "Merge",

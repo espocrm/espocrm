@@ -582,7 +582,7 @@ class ListRecordView extends View {
          * @param {JQueryKeyEventObject} e
          * @this ListRecordView
          */
-        'click .pagination a': function (e) {
+        'click .pagination a[data-page]': function (e) {
             const page = $(e.currentTarget).data('page');
 
             if ($(e.currentTarget).parent().hasClass('disabled')) {
