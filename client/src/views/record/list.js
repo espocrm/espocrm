@@ -1391,9 +1391,20 @@ class ListRecordView extends View {
 
                 this.collection.trigger('after:mass-remove');
 
-                const msg = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
+                const showSuccess = () => {
+                    const msgKey = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
+                    const msg = this.translate(msgKey, 'messages').replace('{count}', count);
 
-                Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                    Espo.Ui.success(msg);
+                }
+
+                if (this.pagination) {
+                    this.collection.fetch().then(() => showSuccess());
+
+                    return;
+                }
+
+                showSuccess();
             });
         });
     }
@@ -3137,9 +3148,18 @@ class ListRecordView extends View {
             model
                 .destroy({wait: true, fromList: true})
                 .then(() => {
-                    Espo.Ui.success(this.translate('Removed'));
+                    if (!this.pagination) {
+                        Espo.Ui.success(this.translate('Removed'));
+                    }
 
                     this.removeRecordFromList(id);
+
+                    if (this.pagination) {
+                        this.collection.fetch()
+                            .then(() => {
+                                Espo.Ui.success(this.translate('Removed'))
+                            });
+                    }
                 })
                 .catch(() => {
                     this.collection.push(model);
