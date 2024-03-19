@@ -634,9 +634,6 @@ class ListView extends MainView {
             this.getConfig().get('listPagination') ||
             this.getMetadata().get(['clientDefs', this.scope, 'listPagination'])
         ) {
-            // @todo Remove in v8.1.
-            console.warn(`'listPagination' parameter is deprecated and will be removed in the future.`);
-
             o.pagination = true;
         }
 
