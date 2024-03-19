@@ -111,7 +111,7 @@ class Queue
                 'event' => $item->get('event'),
                 'targetId' => $item->get('targetId'),
                 'targetType' => $item->get('targetType'),
-                'status' => 'Pending',
+                'status' => WebhookQueueItem::STATUS_PENDING,
                 'data' => $item->get('data'),
                 'attempts' => 0,
             ]);
