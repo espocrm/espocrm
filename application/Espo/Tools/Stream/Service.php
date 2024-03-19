@@ -591,7 +591,7 @@ class Service
         $data = [];
 
         if ($entity->get('assignedUserId')) {
-            if (!$entity->has('assignedUserName')) {
+            if (!$entity->get('assignedUserName')) {
                 $this->loadAssignedUserName($entity);
             }
 
@@ -772,7 +772,7 @@ class Service
         $this->setSuperParent($entity, $note, true);
 
         if ($entity->get('assignedUserId')) {
-            if (!$entity->has('assignedUserName')) {
+            if (!$entity->get('assignedUserName')) {
                 $this->loadAssignedUserName($entity);
             }
 
