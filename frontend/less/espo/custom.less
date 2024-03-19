@@ -2013,8 +2013,9 @@ img.avatar.avatar-link {
 }
 
 div[data-scope="User"] .field[data-name="avatar"] {
-    img {
-        border-radius: var(--border-radius);
+    > a > img,
+    > img {
+        border-radius: 50%;
     }
 }
 
