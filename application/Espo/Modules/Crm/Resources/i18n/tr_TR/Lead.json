@@ -7,6 +7,7 @@
   },
   "fields": {
     "name": "Ad",
+    "emailAddress": "Eposta",
     "title": "Başlık",
     "website": "Web sitesi",
     "phoneNumber": "Telefon",
@@ -18,8 +19,8 @@
     "opportunityAmount": "Fırsat Tutarı",
     "opportunityAmountConverted": "Fırsat Tutarı (dönüştürülmüş)",
     "description": "Açıklama",
-    "createdAccount": "Hesap",
-    "createdContact": "Bağlantı",
+    "createdAccount": "Firma",
+    "createdContact": "Kişi",
     "createdOpportunity": "Fırsat",
     "campaign": "Kampanya",
     "targetLists": "Hedef Listeler",
@@ -34,10 +35,10 @@
     "targetLists": "Hedef Listeler",
     "campaignLogRecords": "Kampanya Günlüğü",
     "campaign": "Kampanya",
-    "createdAccount": "Hesap",
+    "createdAccount": "Firma",
     "createdContact": "Kişi",
     "createdOpportunity": "Fırsat",
-    "cases": "Dosyalar",
+    "cases": "Olaylar",
     "documents": "Belgeler"
   },
   "options": {
@@ -60,7 +61,7 @@
     }
   },
   "presetFilters": {
-    "active": "Aktif ",
+    "active": "Etkin",
     "actual": "Gerçek",
     "converted": "Dönüştürülmüş"
   }

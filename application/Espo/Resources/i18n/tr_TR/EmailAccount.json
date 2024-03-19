@@ -5,41 +5,42 @@
     "host": "Sunucu",
     "username": "Kullanıcı Adı",
     "password": "Şifre",
+    "port": "Bağlantı Noktası",
     "monitoredFolders": "İzlenen Klasörler",
     "fetchSince": "İtibaren Getir",
-    "emailAddress": "Email Adresi",
+    "emailAddress": "Eposta Adresi",
     "sentFolder": "Gönderilenler Klasörü",
-    "storeSentEmails": "Gönderilen Emailleri Sakla",
-    "keepFetchedEmailsUnread": "Getirilen Emailleri Okunmadı Olarak Tut",
+    "storeSentEmails": "Gönderilen Epostaları Sakla",
+    "keepFetchedEmailsUnread": "Getirilen Epostaları Okunmadı Olarak Tut",
     "emailFolder": "Klasöre Koy",
     "useSmtp": "SMTP kullan",
     "smtpHost": "SMTP Sunucusu",
     "smtpPort": "SMTP Bağlantı Noktası",
     "smtpSecurity": "SMTP Güvenliği",
-    "smtpUsername": "SMTP kullanıcı adı ",
-    "smtpPassword": "SMTP şifresi ",
-    "useImap": "E-postaları Al",
+    "smtpUsername": "SMTP Kullanıcı Adı",
+    "smtpPassword": "SMTP şifresi",
+    "useImap": "Epostaları Al",
     "smtpAuthMechanism": "SMTP Kimlik Doğrulama Mekanizması"
   },
   "links": {
     "filters": "Filtreler",
-    "emails": "E-postalar "
+    "emails": "Epostalar"
   },
   "options": {
     "status": {
-      "Active": "Arşiv",
+      "Active": "Etkin",
       "Inactive": "Pasif"
     },
     "smtpAuthMechanism": {
-      "plain": "SADE",
+      "plain": "DÜZ",
       "login": "GİRİŞ"
     }
   },
   "labels": {
-    "Create EmailAccount": "E-mail Hesabı Oluştur",
+    "Create EmailAccount": "Eposta Hesabı Oluştur",
     "Main": "Anasayfa",
     "Test Connection": "Bağlantıyı Test Et",
-    "Send Test Email": "Test E-postası gönder"
+    "Send Test Email": "Test epostası gönder"
   },
   "messages": {
     "couldNotConnectToImap": "IMAP Sunucusuna Bağlanılamıyor",
@@ -47,6 +48,6 @@
   },
   "tooltips": {
     "monitoredFolders": "Harici bir e-posta istemcisinden gönderilen e-postaları senkronize etmek için bir 'Gönderilmiş' klasörü ekleyebilirsiniz.",
-    "storeSentEmails": "Gönderilen e-postalar IMAP sunucusunda saklanır. E-posta Adresi alanına, adres e-postalarının gönderilmesi gerekir."
+    "storeSentEmails": "Gönderilen e-postalar IMAP sunucusunda saklanır. Eposta Adresi alanına, adres epostalarının gönderilmesi gerekir."
   }
 }

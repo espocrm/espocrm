@@ -2,7 +2,7 @@
   "fields": {
     "name": "Nome",
     "body": "Corpo",
-    "entityType": "Tipo di entità",
+    "entityType": "Tipo di Entità",
     "header": "Intestazione",
     "footer": "Piè di pagina",
     "leftMargin": "Margine sinistro",
@@ -18,7 +18,8 @@
     "pageHeight": "Altezza della pagina",
     "headerPosition": "Posizione Intestazione",
     "printHeader": "Stampa Intestazione",
-    "title": "Titolo"
+    "title": "Titolo",
+    "style": "Stile"
   },
   "labels": {
     "Create Template": "Crea Modello"

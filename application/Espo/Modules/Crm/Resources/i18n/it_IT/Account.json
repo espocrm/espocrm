@@ -19,7 +19,7 @@
   "links": {
     "contacts": "Contatti",
     "opportunities": "Opportunità",
-    "cases": "Ticket",
+    "cases": "Casi",
     "documents": "Documenti",
     "meetingsPrimary": "Riunioni (ampliato)",
     "callsPrimary": "Chiamate (ampliato)",
@@ -30,7 +30,7 @@
     "campaign": "Campagna",
     "portalUsers": "Utenti Portale",
     "originalLead": "Lead Originale",
-    "contactsPrimary": "Contatti (primari)"
+    "contactsPrimary": "Contatti (Primario)"
   },
   "options": {
     "type": {

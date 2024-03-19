@@ -1,0 +1,18 @@
+{
+  "fields": {
+    "event": "Evento",
+    "target": "Destinazione",
+    "data": "Dati",
+    "status": "Stato",
+    "processedAt": "Elaborato",
+    "attempts": "Tentativi",
+    "processAt": "Elaborazione"
+  },
+  "options": {
+    "status": {
+      "Pending": "In Attesa",
+      "Success": "Successo",
+      "Failed": "Fallito"
+    }
+  }
+}

@@ -9,7 +9,8 @@
     "dynamicLogicVisible": "Condities waardoor paneel zichtbaar is",
     "hidden": "Verborgen",
     "dynamicLogicStyled": "Voorwaarden voor toegepaste stijl",
-    "noLabel": "Geen label"
+    "noLabel": "Geen label",
+    "width": "Breedte"
   },
   "options": {
     "align": {
@@ -37,7 +38,8 @@
     "dynamicLogicStyled": "Een kleur zal worden toegepast indien aan een specifieke voorwaarde is voldaan . De kleur wordt bepaald door de *Stijl* parameter.",
     "tabBreak": "Een apart tabblad voor het paneel en alle volgende panelen tot de volgende tab-break.",
     "noLabel": "Toon geen kolomlabel in de kop.",
-    "notSortable": "Schakelt de mogelijkheid uit om te sorteren op de kolom."
+    "notSortable": "Schakelt de mogelijkheid uit om te sorteren op de kolom.",
+    "width": "Een kolombreedte. Het is aanbevolen om één kolom te hebben zonder gespecificeerde breedte, meestal moet dit het veld *Name* zijn."
   },
   "messages": {
     "cantBeEmpty": "Lay-out kan niet leeg zijn.",

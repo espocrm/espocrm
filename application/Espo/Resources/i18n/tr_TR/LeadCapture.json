@@ -2,7 +2,7 @@
   "fields": {
     "name": "Ad",
     "campaign": "Kampanya",
-    "isActive": "Aktif mi?",
+    "isActive": "Etkin mi?",
     "subscribeToTargetList": "Hedef Listeye Abone Ol",
     "subscribeContactToTargetList": "Abone Mevcut ise İletişime Geçin",
     "targetList": "Hedef Liste",
@@ -13,9 +13,11 @@
     "targetTeam": "Hedef Takım",
     "exampleRequestMethod": "Yöntem",
     "exampleRequestPayload": "Yük",
+    "createLeadBeforeOptInConfirmation": "Onaydan önce Potansiyel Müşteri Oluşturun",
     "duplicateCheck": "Yineleme Kontrolü",
+    "skipOptInConfirmationIfSubscribed": "Potansiyel müşteri zaten hedef listesindeyse onayı atla",
     "smtpAccount": "SMTP Hesabı",
-    "inboundEmail": "Grup e-mail Adresi",
+    "inboundEmail": "Grup Eposta Adresi",
     "phoneNumberCountry": "Telefon ülke kodu"
   },
   "links": {
@@ -23,7 +25,7 @@
     "campaign": "Kampanyalar",
     "targetTeam": "Hedef Takım",
     "logRecords": "Kayıt",
-    "inboundEmail": "Grup e-mail Hesabı"
+    "inboundEmail": "Grup Eposta Hesabı"
   },
   "labels": {
     "Create LeadCapture": "Giriş Noktası Oluştur",

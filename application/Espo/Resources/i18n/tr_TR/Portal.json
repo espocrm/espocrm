@@ -2,7 +2,7 @@
   "fields": {
     "name": "Ad",
     "portalRoles": "Roller",
-    "isActive": "Aktif",
+    "isActive": "Etkin mi?",
     "isDefault": "Ön Tanımlı",
     "tabList": "Sekme Listesi",
     "quickCreateList": "Çabuk liste oluştur",

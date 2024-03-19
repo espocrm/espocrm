@@ -15,7 +15,8 @@
   },
   "filters": {
     "all": "Alle",
-    "updates": "Aktualisierungen"
+    "updates": "Aktualisierungen",
+    "activity": "Aktivität"
   },
   "messages": {
     "writeMessage": "Schreiben Sie hier Ihre Nachricht"
@@ -29,7 +30,15 @@
       "portals": "An alle Portal Benutzer"
     },
     "type": {
-      "Post": "Senden"
+      "Post": "Senden",
+      "Create": "Erstellen",
+      "CreateRelated": "Verknüpft erstellen",
+      "Update": "Aktualisieren",
+      "Assign": "Zuweisen",
+      "Relate": "Verknüpfen",
+      "Unrelate": "Verknüpfung lösen",
+      "EmailReceived": "E-Mail erhalten",
+      "EmailSent": "E-Mail gesendet"
     }
   },
   "links": {
@@ -37,5 +46,9 @@
     "related": "Verbunden",
     "portals": "Portale",
     "attachments": "Anhänge"
+  },
+  "labels": {
+    "View Posts": "Nachrichten anzeigen",
+    "View Activity": "Aktivitäten anzeigen"
   }
 }

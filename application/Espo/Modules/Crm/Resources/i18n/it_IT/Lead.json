@@ -18,7 +18,7 @@
     "opportunityAmount": "Importo Opportunità",
     "opportunityAmountConverted": "Importo Opportunità (convertito)",
     "description": "Descrizione",
-    "createdContact": "Contatti",
+    "createdContact": "Contatto",
     "createdOpportunity": "Opportunità",
     "campaign": "Campagna",
     "targetLists": "Liste di Destinazione",
@@ -28,15 +28,16 @@
     "opportunityAmountCurrency": "Valuta dell'importo della proposta",
     "acceptanceStatusMeetings": "Stato Accettazione (Riunioni)",
     "acceptanceStatusCalls": "Stato Accettazione (Chiamate)",
-    "convertedAt": "Convertito"
+    "convertedAt": "Convertito",
+    "originalEmail": "Email Originale"
   },
   "links": {
     "targetLists": "Liste di Destinazione",
     "campaignLogRecords": "Log campagna",
     "campaign": "Campagna",
-    "createdContact": "Contatti",
+    "createdContact": "Contatto",
     "createdOpportunity": "Opportunità",
-    "cases": "Tickets",
+    "cases": "Casi",
     "documents": "Documenti"
   },
   "options": {
@@ -46,7 +47,7 @@
       "In Process": "In corso",
       "Converted": "Convertito",
       "Recycled": "Recuperato",
-      "Dead": "Fuori uso"
+      "Dead": "Archiviato"
     },
     "source": {
       "Call": "Chiamata",

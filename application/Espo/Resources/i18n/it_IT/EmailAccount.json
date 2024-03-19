@@ -18,7 +18,7 @@
     "smtpUsername": "Nome utente SMTP",
     "smtpPassword": "Password SMTP",
     "useImap": "Scarica email",
-    "smtpAuthMechanism": "Meccanismo di autenticazione SMTP",
+    "smtpAuthMechanism": "Meccanismo di Autenticazione SMTP",
     "security": "Sicurezza"
   },
   "links": {
@@ -29,10 +29,6 @@
     "status": {
       "Active": "Attivo",
       "Inactive": "Inattivo"
-    },
-    "smtpAuthMechanism": {
-      "plain": "Semplice",
-      "login": "Accesso"
     }
   },
   "labels": {

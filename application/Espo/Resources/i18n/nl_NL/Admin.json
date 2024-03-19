@@ -157,7 +157,6 @@
     "minHeight": "Minimale hoogte (px)",
     "provider": "Leverancier",
     "typeList": "Type lijst",
-    "rows": "Aantal regels in tekstvak",
     "lengthOfCut": "Afbreeklengte",
     "sourceList": "Lijst bronnen",
     "tooltipText": "Tekst van de tooltip",
@@ -198,7 +197,12 @@
     "globalRestrictions": "Globale beperkingen",
     "decimal": "Decimaal",
     "optionsReference": "Opties Referentie",
-    "copyToClipboard": "Kopieer naar klembord knop"
+    "copyToClipboard": "Kopieer naar klembord knop",
+    "rows": "Max aantal rijen",
+    "readOnlyAfterCreate": "Alleen lezen na aanmaken",
+    "createButton": "Knop aanmaken",
+    "autocompleteOnEmpty": "Autoaanvullen bij lege invoer",
+    "relateOnImport": "Relateer op import"
   },
   "messages": {
     "selectEntityType": "Selecteer de eenheid soort in het linker menu.",

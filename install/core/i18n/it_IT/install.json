@@ -1,6 +1,6 @@
 {
   "labels": {
-    "Main page title": "Benvenuti in EspoCRM",
+    "Main page title": "Benvenuto in EspoCRM",
     "Start page title": "Contratto di licenza",
     "Step1 page title": "Contratto di licenza",
     "License Agreement": "Contratto di licenza",
@@ -33,7 +33,6 @@
     "Install": "Installa",
     "Configuration Instructions": "Istruzioni di configurazione",
     "phpVersion": "Versione PHP",
-    "requiredMysqlVersion": "Versione MySQL",
     "dbHostName": "Nome Host",
     "dbName": "Nome Database",
     "dbUserName": "Nome Utente Database",
@@ -47,7 +46,10 @@
     "extension is missing": "Manca l'estensione",
     "headerTitle": "Installazione di EspoCRM",
     "Crontab setup instructions": "Senza eseguire i lavori pianificati, le e-mail in entrata, le notifiche e i promemoria non funzioneranno. Qui puoi leggere {SETUP_INSTRUCTIONS}.",
-    "Setup instructions": "Istruzioni di installazione"
+    "Setup instructions": "Istruzioni di installazione",
+    "requiredMysqlVersion": "Versione MySQL",
+    "requiredMariadbVersion": "Versione MariaDB",
+    "requiredPostgresqlVersion": "Versione PostgreSQL"
   },
   "fields": {
     "Choose your language": "Scegli la lingua",

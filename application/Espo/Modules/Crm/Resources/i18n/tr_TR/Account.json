@@ -14,23 +14,24 @@
     "campaign": "Kampanya",
     "targetLists": "Hedef Listeler",
     "targetList": "Hedef Liste",
-    "originalLead": "Orijinal Müşteri Potansiyeli",
+    "originalLead": "Orijinal Potansiyel",
     "contactIsInactive": "Pasif"
   },
   "links": {
     "contacts": "Kişiler",
     "opportunities": "Fırsatlar",
-    "cases": "Dosyalar",
+    "cases": "Olaylar",
     "documents": "Belgeler",
     "meetingsPrimary": "Toplantılar (genişletildi)",
     "callsPrimary": "Aramalar (genişletildi)",
     "tasksPrimary": "Görevler (genişletildi)",
-    "emailsPrimary": "Emailler (genişletildi)",
+    "emailsPrimary": "Epostalar (genişletildi)",
     "targetLists": "Hedef Listeler",
     "campaignLogRecords": "Kampanya Günlüğü",
     "campaign": "Kampanya",
     "portalUsers": "Portal Kullanıcıları",
-    "originalLead": "Orijinal Müşteri Potansiyeli"
+    "originalLead": "Orijinal Potansiyel",
+    "contactsPrimary": "Kişiler (Birincil)"
   },
   "options": {
     "type": {
@@ -54,7 +55,7 @@
       "Energy": "Enerji",
       "Entertainment & Leisure": "Eğlence ve Hobi",
       "Finance": "Finans",
-      "Food & Beverage": "Yiyecek ve İçecek",
+      "Food & Beverage": "Gıda",
       "Grocery": "Bakkal",
       "Healthcare": "Sağlık Hizmeti",
       "Insurance": "Sigortacılık",
@@ -94,7 +95,7 @@
     }
   },
   "labels": {
-    "Create Account": "Hesap Oluştur",
+    "Create Account": "Firma Oluştur",
     "Copy Billing": "Faturalamayı Kopyala",
     "Set Primary": "Birincil Yap"
   },

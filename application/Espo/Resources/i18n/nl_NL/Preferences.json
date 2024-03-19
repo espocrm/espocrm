@@ -28,8 +28,6 @@
     "followCreatedEntities": "Aangemaakte records automatisch volgen",
     "followCreatedEntityTypeList": "Aangemaakte records van specifieke entiteitstypen automatisch volgen",
     "emailUseExternalClient": "Gebruik een externe e-mail cliënt",
-    "scopeColorsDisabled": "Schakel bereikkleuren uit",
-    "tabColorsDisabled": "Tabbladkleuren uitschakelen",
     "assignmentNotificationsIgnoreEntityTypeList": "Kennisgevingen van toewijzing in de applicatie",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Kennisgevingen van e-mailtoewijzingen",
     "dashboardLocked": "Dashboard vergrendelen",

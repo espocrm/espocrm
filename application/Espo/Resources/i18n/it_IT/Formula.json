@@ -5,7 +5,7 @@
   },
   "fields": {
     "target": "Destinatario",
-    "targetType": "Tipo di Obiettivo",
+    "targetType": "Destinazione",
     "error": "Errore"
   },
   "messages": {

@@ -19,7 +19,8 @@
     "pageHeight": "Pagina Hoogte (mm)",
     "headerPosition": "Koptekst Positie",
     "printHeader": "Kop afdrukken",
-    "title": "Titel"
+    "title": "Titel",
+    "style": "Stijl"
   },
   "labels": {
     "Create Template": "Creëer Sjabloon"

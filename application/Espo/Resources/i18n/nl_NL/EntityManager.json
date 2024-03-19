@@ -74,7 +74,8 @@
     "beforeSaveApiScript": "Een script dat wordt aangeroepen bij aanmaken en update API requests voordat een entiteit wordt opgeslagen. Te gebruiken voor aangepaste validatie en duplicaat controle.",
     "nameIsAlreadyUsed": "Naam '{name}' wordt al gebruikt.",
     "nameIsNotAllowed": "Naam '{name}' is niet toegestaan.",
-    "nameIsTooLong": "Naam is te lang."
+    "nameIsTooLong": "Naam is te lang.",
+    "confirmRemoveLink": "Weet je zeker dat je de *{link}* relatie wilt verwijderen?"
   },
   "tooltips": {
     "statusField": "Updates van dit veld zijn gelogd in stream.",

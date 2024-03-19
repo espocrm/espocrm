@@ -11,7 +11,10 @@
     "dynamicLogicStyled": "Condizioni che applicano lo stile.",
     "noLabel": "Nessuna Etichetta",
     "tabLabel": "Etichetta Scheda",
-    "tabBreak": "Interruzione Scheda"
+    "tabBreak": "Interruzione Scheda",
+    "width": "Larghezza",
+    "noteText": "Testo Nota",
+    "noteStyle": "Stile Nota"
   },
   "options": {
     "align": {
@@ -39,7 +42,9 @@
     "dynamicLogicStyled": "Un colore verrà applicato se viene soddisfatta una condizione specifica. Il colore è definito dal parametro *Stile*.",
     "tabBreak": "Una scheda separata per il pannello e per tutti i pannelli successivi fino alla successiva interruzione di scheda.",
     "noLabel": "Non visualizzare l'etichetta della colonna nell'intestazione.",
-    "notSortable": "Disabilita la possibilità di ordinare per colonna."
+    "notSortable": "Disabilita la possibilità di ordinare per colonna.",
+    "width": "Larghezza della colonna. Si raccomanda di avere una colonna senza larghezza specificata, di solito dovrebbe essere il campo *Nome*.",
+    "noteText": "Un testo da visualizzare nel pannello. Il Markdown è supportato."
   },
   "messages": {
     "cantBeEmpty": "Il layout non può essere vuoto.",

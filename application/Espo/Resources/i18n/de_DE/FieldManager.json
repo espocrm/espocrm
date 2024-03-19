@@ -98,7 +98,8 @@
     "currencyDecimal": "Verwenden Sie den DB-Typ Dezimal. In der Anwendung werden die Werte als Strings dargestellt. Überprüfen Sie diesen Parameter, wenn Präzision erforderlich ist.",
     "optionsReference": "Wiederverwendung von Optionen aus einem anderen Feld.",
     "readOnlyAfterCreate": "Der Feldwert kann beim Anlegen eines neuen Datensatzes angegeben werden. Danach wird das Feld schreibgeschützt. Es kann weiterhin durch Formeln berechnet werden.",
-    "linkReadOnly": "Der Feldwert kann nicht vom Benutzer angegeben werden. Er kann aber durch eine Formel berechnet werden.\n\nAußerdem wird die Möglichkeit, einen Bezugsdatensatz aus Beziehungspaneelen zu erstellen, deaktiviert."
+    "linkReadOnly": "Der Feldwert kann nicht vom Benutzer angegeben werden. Er kann aber durch eine Formel berechnet werden.\n\nAußerdem wird die Möglichkeit, einen Bezugsdatensatz aus Beziehungspaneelen zu erstellen, deaktiviert.",
+    "relateOnImport": "Beim Importieren mit diesem Feld wird automatisch ein Datensatz mit einem passenden Fremddatensatz verknüpft. Verwenden Sie diese Funktion nur, wenn das Fremdfeld als eindeutig angesehen wird."
   },
   "fieldParts": {
     "address": {
@@ -156,6 +157,7 @@
   "messages": {
     "fieldNameIsNotAllowed": "Der Feldname '{field}' ist nicht erlaubt.",
     "fieldAlreadyExists": "Das Feld '{field}' existiert bereits in '{entityType}'.",
-    "linkWithSameNameAlreadyExists": "Verknüpfung mit dem Namen '{field}' existiert bereits in '{entityType}'."
+    "linkWithSameNameAlreadyExists": "Verknüpfung mit dem Namen '{field}' existiert bereits in '{entityType}'.",
+    "confirmRemove": "Sind Sie sicher, dass Sie das Feld *{field}* entfernen wollen?\n\nDurch das Entfernen von Feldern werden keine Daten aus der Datenbank entfernt. Die Daten werden aus der Datenbank entfernt, wenn Sie einen Hard Rebuild durchführen."
   }
 }

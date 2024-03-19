@@ -4,27 +4,27 @@
     "number": "Numara",
     "status": "Durum",
     "account": "Hesap",
-    "contact": "Bağlantı",
-    "contacts": "Bağlantılar",
+    "contact": "Kişi",
+    "contacts": "Kişiler",
     "priority": "Öncelik",
     "type": "Tür",
     "description": "Açıklama",
-    "lead": "Müşteri Potansiyeli",
+    "lead": "Potansiyel",
     "attachments": "Ekler",
-    "inboundEmail": "Grup Email Hesabı"
+    "inboundEmail": "Grup Eposta Hesabı"
   },
   "links": {
     "account": "Hesap",
     "contact": "İletişim (Birincil)",
-    "Contacts": "İletişim kişileri",
+    "Contacts": "Kişiler",
     "meetings": "Toplantılar",
     "calls": "Aramalar",
     "tasks": "Görevler",
-    "emails": "Emailler",
+    "emails": "Epostalar",
     "articles": "Bilgi Bankası Makaleleri",
-    "lead": "Müşteri Potansiyeli",
+    "lead": "Potansiyel",
     "attachments": "Ekler",
-    "inboundEmail": "Grup Email Hesabı"
+    "inboundEmail": "Grup Eposta Hesabı"
   },
   "options": {
     "status": {

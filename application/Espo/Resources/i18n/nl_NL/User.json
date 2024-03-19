@@ -125,7 +125,9 @@
     "enterCodeSentBySms": "Voer de code in die per SMS naar uw telefoonnummer is gestuurd.",
     "passwordChangeRequestNotFound": "Het verzoek om het wachtwoord te wijzigen is niet gevonden. Het kan verlopen zijn. Probeer een nieuw wachtwoord op te vragen vanaf de [login page]({url}).",
     "loginAs": "Open de inloglink in een incognitovenster om uw huidige sessie te behouden. Gebruik uw beheerdersgegevens om in te loggen.",
-    "failedToLogIn": "Aanmelden mislukt"
+    "failedToLogIn": "Aanmelden mislukt",
+    "2faMethodNotConfigured": "De 2FA-methode is niet volledig geconfigureerd in het systeem.",
+    "loginError": "Fout opgetreden"
   },
   "boolFilters": {
     "onlyMyTeam": "Alleen mijn groep"

@@ -15,7 +15,8 @@
   "filters": {
     "all": "Hepsi",
     "posts": "Yazılar",
-    "updates": "Güncellemeler"
+    "updates": "Güncellemeler",
+    "activity": "Aktivite"
   },
   "messages": {
     "writeMessage": "Mesajınızı buraya yazınız"
@@ -29,12 +30,25 @@
       "portals": "Portal kullanıcılarına"
     },
     "type": {
-      "Post": "İleti"
+      "Post": "İleti",
+      "Create": "Oluştur",
+      "CreateRelated": "İlgili Oluştur",
+      "Update": "Güncelleme",
+      "Status": "Durum",
+      "Assign": "Atanmış",
+      "Relate": "İlgili",
+      "Unrelate": "İlgiliyi Kaldır",
+      "EmailReceived": "Eposta Alındı",
+      "EmailSent": "Eposta Gönderildi"
     }
   },
   "links": {
     "related": "İlgili",
     "portals": "Portaller",
     "attachments": "Ekler"
+  },
+  "labels": {
+    "View Posts": "Eposta Görüntüleme",
+    "View Activity": "Aktivite Görüntüleme"
   }
 }

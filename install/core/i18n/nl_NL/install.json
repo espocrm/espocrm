@@ -27,7 +27,6 @@
     "Install": "Installeren",
     "Configuration Instructions": "Configuratie Instructies",
     "phpVersion": "PHP versie",
-    "requiredMysqlVersion": "MySQL versie",
     "dbHostName": "Hostnaam",
     "dbName": "Database naam",
     "dbUserName": "Database gebruikersnaam",

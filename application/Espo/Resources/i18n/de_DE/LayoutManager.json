@@ -10,7 +10,9 @@
     "noLabel": "Kein Label",
     "tabLabel": "Registerkartenbeschriftung",
     "tabBreak": "Registerkartenumbruch",
-    "width": "Breite"
+    "width": "Breite",
+    "noteText": "Notiztext",
+    "noteStyle": "Notizstil"
   },
   "options": {
     "align": {
@@ -38,7 +40,8 @@
     "tabBreak": "Eine eigene Registerkarte für das Panel und alle folgenden Paneele bis zum nächsten Registerkartenumbruch.",
     "noLabel": "Zeige keine Spaltenbeschriftung in der Kopfzeile an.",
     "notSortable": "Deaktiviert die Möglichkeit, nach der Spalte zu sortieren.",
-    "width": "Eine Spaltenbreite. Es wird empfohlen, eine Spalte ohne angegebene Breite zu haben, normalerweise sollte es das Feld *Name* sein."
+    "width": "Eine Spaltenbreite. Es wird empfohlen, eine Spalte ohne angegebene Breite zu haben, normalerweise sollte es das Feld *Name* sein.",
+    "noteText": "Ein Text, der im Panel angezeigt werden soll. Markdown wird unterstützt."
   },
   "messages": {
     "cantBeEmpty": "Layout kann nicht leer sein.",

@@ -2,7 +2,7 @@
   "fields": {
     "billingAddress": "Fatura Adresi",
     "shippingAddress": "Teslimat Adresi",
-    "website": "Web sitesi "
+    "website": "Web sitesi"
   },
   "links": {
     "meetings": "Toplantılar",

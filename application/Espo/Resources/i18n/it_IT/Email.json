@@ -28,8 +28,8 @@
     "isReplied": "Risposto",
     "isNotReplied": "Non risposto",
     "folder": "Cartella",
-    "inboundEmails": "Gruppo di account",
-    "emailAccounts": "Account Personale",
+    "inboundEmails": "Gruppo di Account",
+    "emailAccounts": "Account Personali",
     "hasAttachment": "Ha Allegato",
     "sentBy": "Inviata da",
     "assignedUsers": "Utenti assegnati",
@@ -58,7 +58,7 @@
   "links": {
     "replied": "Risposto",
     "replies": "Risposte",
-    "inboundEmails": "Gruppi di account",
+    "inboundEmails": "Gruppi di Account",
     "emailAccounts": "Account Personali",
     "assignedUsers": "Utenti assegnati",
     "sentBy": "Inviata da",
@@ -122,7 +122,10 @@
     "noSmtpSetup": "SMTP non configurato: {link}",
     "sendConfirm": "Invia email?",
     "removeSelectedRecordsConfirmation": "Sei sicuro di voler rimuovere le mail selezionate?\n\nSaranno rimosse anche per gli altri utenti.",
-    "removeRecordConfirmation": "Sei sicuro di voler rimuovere la mail selezionata?\n\nSarà rimossa anche per gli altri utenti."
+    "removeRecordConfirmation": "Sei sicuro di voler rimuovere la mail selezionata?\n\nSarà rimossa anche per gli altri utenti.",
+    "invalidCredentials": "Credenziali non valide.",
+    "unknownError": "Errore sconosciuto.",
+    "recipientAddressRejected": "Indirizzo del destinatario respinto."
   },
   "presetFilters": {
     "sent": "Inviata",

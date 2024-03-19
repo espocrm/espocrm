@@ -27,12 +27,12 @@
     "followCreatedEntities": "Eigene Einträge abonnieren",
     "followCreatedEntityTypeList": "Der Benutzer abonniert erstellte Einträge bestimmter Entitätstypen automatisch",
     "emailUseExternalClient": "Verwende einen externen E-Mail-Client",
-    "scopeColorsDisabled": "Bereichsfarben deaktivieren",
-    "tabColorsDisabled": "Tabfarben deaktivieren",
     "assignmentNotificationsIgnoreEntityTypeList": "In-App-Benachrichtigungen über Zuweisungen",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "E-Mail-Benachrichtigungen über Zuweisungen",
     "dashboardLocked": "Dashboard sperren",
-    "textSearchStoringDisabled": "Textfilterspeicherung deaktivieren"
+    "textSearchStoringDisabled": "Textfilterspeicherung deaktivieren",
+    "calendarSlotDuration": "Kalender - Dauer des Zeitfensters",
+    "calendarScrollHour": "Kalender - Zur Stunde springen"
   },
   "options": {
     "weekStart": {
@@ -52,5 +52,9 @@
     "doNotFillAssignedUserIfNotRequired": "Beim Erstellen eines Datensatzes wird der zugewiesene Benutzer nicht mit dem eigenen Benutzer ausgefüllt, es sei denn, das Feld ist erforderlich.",
     "followCreatedEntities": "Wenn neue Datensätze erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind.",
     "followCreatedEntityTypeList": "Wenn neue Datensätze von ausgewählten Entitätstypen erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind."
+  },
+  "tabFields": {
+    "label": "Bezeichnung",
+    "color": "Farbe"
   }
 }

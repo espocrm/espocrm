@@ -36,7 +36,7 @@
     "ldapUserLoginFilter": "Filtro accessi utente",
     "ldapAccountDomainNameShort": "Account Nome di Dominio abbreviato",
     "ldapOptReferrals": "Scegliere rinvii",
-    "exportDisabled": "Disabilita esporta (sarà consentito solo all'admin)",
+    "exportDisabled": "Disabilita Esportazione",
     "b2cMode": "Modalità B2C",
     "avatarsDisabled": "Disabilita avatar",
     "displayListViewRecordCount": "Mostra Totale Trovati (in Vista Lista)",
@@ -61,7 +61,7 @@
     "ldapUserFirstNameAttribute": "Attributo nome dell'utente",
     "ldapUserLastNameAttribute": "Attributo cognome dell'utente",
     "ldapUserEmailAddressAttribute": "Attributo indirizzo email dell'utente",
-    "ldapUserTeams": "Teams utente",
+    "ldapUserTeams": "Team Utente",
     "ldapUserDefaultTeam": "Team Predefinito Utente",
     "ldapUserPhoneNumberAttribute": "Attributo numero di telefono dell'utente",
     "assignmentNotificationsEntityList": "Entità da notificare al momento dell'assegnazione",
@@ -89,7 +89,7 @@
     "tabColorsDisabled": "Disabilita colori schede",
     "tabIconsDisabled": "Disabilita icone schede",
     "textFilterUseContainsForVarchar": "Utilizza l'operatore ' Contains ' quando si filtrano i campi varchar",
-    "emailAddressIsOptedOutByDefault": "Contrassegnare i nuovi indirizzi email come esclusi",
+    "emailAddressIsOptedOutByDefault": "Segna i nuovi indirizzi email come esclusi",
     "outboundEmailBccAddress": "CCN indirizzi per client esterni",
     "adminNotificationsNewExtensionVersion": "Mostra una notifica quando sono disponibili nuove versioni delle estensioni",
     "cleanupDeletedRecords": "Pulisci i record eliminati",
@@ -140,7 +140,13 @@
     "oidcAllowAdminUser": "OIDC Consente l'accesso a OIDC per gli utenti admin",
     "pdfEngine": "Motore PDF",
     "recordsPerPageKanban": "Elementi Per Pagina (Kanban)",
-    "auth2FAInPortal": "Abilita la 2FA nei portali"
+    "auth2FAInPortal": "Abilita la 2FA nei portali",
+    "massEmailMaxPerBatchCount": "Numero massimo di e-mail inviate per ciclo",
+    "phoneNumberNumericSearch": "Ricerca numerica per i numeri di telefono",
+    "phoneNumberInternational": "Numeri di telefono internazionali",
+    "phoneNumberPreferredCountryList": "Prefissi telefonici preferiti",
+    "jobForceUtc": "Forza Fuso Orario UTC",
+    "emailAddressSelectEntityTypeList": "Entità Selezione Indirizzi Email"
   },
   "tooltips": {
     "recordsPerPage": "Numero di record inizialmente mostrati in vista lista.",
@@ -167,7 +173,7 @@
     "ldapUserLoginFilter": "Il filtro che consente di limitare gli utenti che sono in grado di utilizzare EspoCRM. Per esempio. \"memberOf = CN = espoGroup, OU = gruppi, OU = espocrm, DC = test, DC = lan\".",
     "ldapAccountDomainName": "Il dominio utilizzato per l'autorizzazione al server LDAP.",
     "ldapAccountDomainNameShort": "Il breve dominio utilizzato per l'autorizzazione al server LDAP.",
-    "ldapUserTeams": "Teams per l'utente creato. Per ulteriori informazioni, vedere il profilo utente.",
+    "ldapUserTeams": "Team per l'utente creato. Per ulteriori informazioni, vedere il profilo utente.",
     "ldapUserDefaultTeam": "Team predefinito per l'utente creato. Per ulteriori informazioni, vedi il profilo utente.",
     "b2cMode": "Di base, EspoCRM è adattato per B2B. Ma puoi passare a B2C.",
     "currencyDecimalPlaces": "Numero di cifre decimali. Se vuoto, verranno visualizzate tutti le cifre decimali.",
@@ -222,7 +228,9 @@
     "oidcUsernameClaim": "Una richiesta da utilizzare per il nome utente (per la corrispondenza e la creazione di utenti).",
     "oidcTeams": "Team Espo mappati rispetto a gruppi/team/ruoli del fornitore di identità. I team con un valore di mappatura vuoto saranno sempre assegnati a un utente (al momento della creazione o della sincronizzazione).",
     "oidcLogoutUrl": "Un URL a cui il browser reindirizzerà dopo il logout da Espo. È progettato per cancellare le informazioni della sessione nel browser e per effettuare il logout lato provider. Di solito l'URL contiene un parametro Redirect-URL, per tornare a Espo.\n\nSegnaposti disponibili:\n* `{siteUrl}`\n* `{clientId}`",
-    "recordsPerPageKanban": "Numero di record inizialmente visualizzati nelle colonne kanban."
+    "recordsPerPageKanban": "Numero di record inizialmente visualizzati nelle colonne kanban.",
+    "jobForceUtc": "Utilizza il fuso orario UTC per i lavori pianificati. Altrimenti, verrà utilizzato il fuso orario impostato nelle impostazioni.",
+    "emailAddressSelectEntityTypeList": "Entità disponibili quando si cerca un indirizzo email da un pannello."
   },
   "labels": {
     "System": "Sistema",
@@ -244,7 +252,8 @@
     "Attachments": "Allegati",
     "IdP Group": "Gruppo IDP",
     "Divider": "Divisore",
-    "General": "Generale"
+    "General": "Generale",
+    "Phone Numbers": "Numeri di Telefono"
   },
   "messages": {
     "ldapTestConnection": "La connessione è stata stabilita con successo"

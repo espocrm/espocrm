@@ -94,7 +94,10 @@
     "displayAsList": "Ogni elemento è inserito in una nuova riga.",
     "optionsVarchar": "Un elenco di valori per il completamento automatico.",
     "currencyDecimal": "Usa il DB di tipo Decimale. Nell'applicazione, i valori saranno rappresentati come stringhe. Selezionare questo parametro se è richiesta maggiore precisione.",
-    "optionsReference": "Riutilizza le opzioni di un altro campo."
+    "optionsReference": "Riutilizza le opzioni di un altro campo.",
+    "readOnlyAfterCreate": "Il valore del campo può essere specificato quando si crea un nuovo record. Successivamente, il campo diventerà di sola lettura. Può comunque essere calcolato con una formula.",
+    "linkReadOnly": "Il valore del campo non può essere specificato dall'utente. Ma può essere calcolato con una formula.\n\nInoltre, disabilita la possibilità di creare un record correlato dai pannelli delle relazioni.",
+    "relateOnImport": "Quando si importa con questo campo, si mette automaticamente in relazione un record con un record straniero corrispondente. Utilizzare questa funzionalità solo se il campo straniero è considerato unico."
   },
   "fieldParts": {
     "address": {
@@ -152,6 +155,7 @@
   "messages": {
     "fieldNameIsNotAllowed": "Nome campo '{field}' non è permesso.",
     "fieldAlreadyExists": "Campo '{field}' già esistente in '{entityType}'.",
-    "linkWithSameNameAlreadyExists": "Collegamento con il nome '{field}' già esistente in '{entityType}'."
+    "linkWithSameNameAlreadyExists": "Collegamento con il nome '{field}' già esistente in '{entityType}'.",
+    "confirmRemove": "Si è sicuri di voler rimuovere il campo *{field}*?\n\nLa rimozione del campo non rimuove i dati dal database. I dati del database verranno rimossi solo se si esegue un hard rebuild."
   }
 }

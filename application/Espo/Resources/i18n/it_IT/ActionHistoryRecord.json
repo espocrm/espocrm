@@ -1,13 +1,18 @@
 {
   "fields": {
+    "user": "Utente",
+    "action": "Azione",
     "createdAt": "Data",
-    "targetType": "Tipo di Obiettivo",
+    "target": "Destinazione",
+    "targetType": "Entità",
     "authToken": "Token di Autenticazione",
+    "ipAddress": "Indirizzo IP",
     "authLogRecord": "Record Registro Autenticazioni",
-    "userType": "Tipologia di utente"
+    "userType": "Tipo Utente"
   },
   "links": {
     "authToken": "Token di Autenticazione",
+    "target": "Destinazione",
     "authLogRecord": "Record Registro Autenticazioni"
   },
   "presetFilters": {

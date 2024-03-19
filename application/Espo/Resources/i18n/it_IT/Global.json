@@ -24,7 +24,7 @@
     "PasswordChangeRequest": "Richiesta di Cambio Password",
     "ActionHistoryRecord": "Record di cronologia delle azioni",
     "AuthToken": "Token di Autenticazione",
-    "UniqueId": "ID univoco",
+    "UniqueId": "ID Univoco",
     "LastViewed": "Ultima Visualizzazione",
     "Settings": "Impostazioni",
     "FieldManager": "Gestione campo",
@@ -41,7 +41,7 @@
     "AuthLogRecord": "Autorizzazione log record",
     "AuthFailLogRecord": "Autorizzazione log record fallita",
     "EmailTemplateCategory": "Categorie Modelli email",
-    "LeadCapture": "Punto di ingresso cattura lead",
+    "LeadCapture": "Punto di Ingresso Cattura Lead",
     "LeadCaptureLogRecord": "Registro Acquisizioni Lead",
     "ArrayValue": "Valore di matrice",
     "ApiUser": "Utente API",
@@ -54,11 +54,14 @@
     "WorkingTimeCalendar": "Calendario Lavorativo",
     "WorkingTimeRange": "Intervallo di Lavoro",
     "GroupEmailFolder": "Cartella Email di Gruppo",
-    "AuthenticationProvider": "Provider di Autenticazione"
+    "AuthenticationProvider": "Provider di Autenticazione",
+    "GlobalStream": "Flusso Attività Globale",
+    "WebhookQueueItem": "Elemento Coda Webhook"
   },
   "scopeNamesPlural": {
     "Email": "Email",
     "User": "Utenti",
+    "Team": "Team",
     "Role": "Ruoli",
     "EmailTemplate": "Modelli Email",
     "EmailAccount": "Account Email Personale",
@@ -81,11 +84,11 @@
     "PasswordChangeRequest": "Richiesta di Cambio Password",
     "ActionHistoryRecord": "Storico Azioni",
     "AuthToken": "Tokens di Autenticazione",
-    "UniqueId": "ID univoci",
+    "UniqueId": "ID Univoci",
     "LastViewed": "Ultime Visualizzazioni",
     "AuthLogRecord": "Registro Autenticazioni",
     "AuthFailLogRecord": "Registro Autenticazioni Fallite",
-    "EmailTemplateCategory": "Categorie Modeli Email",
+    "EmailTemplateCategory": "Categorie Modelli Email",
     "Import": "Importa",
     "LeadCapture": "Cattura Lead",
     "LeadCaptureLogRecord": "Registro Acquisizioni Lead",
@@ -101,7 +104,9 @@
     "WorkingTimeCalendar": "Calendari Lavorativi",
     "WorkingTimeRange": "Intervalli di Lavoro",
     "GroupEmailFolder": "Cartelle Email di Gruppo",
-    "AuthenticationProvider": "Provider di Autenticazione"
+    "AuthenticationProvider": "Provider di Autenticazione",
+    "GlobalStream": "Flusso Attività Globale",
+    "WebhookQueueItem": "Elementi Coda Webhook"
   },
   "labels": {
     "Misc": "Varie",
@@ -267,7 +272,9 @@
     "Hide Navigation Panel": "Nascondi Pannello di Navigazione",
     "Print": "Stampa",
     "Copy to Clipboard": "Copia negli Appunti",
-    "Copied to clipboard": "Copiato negli appunti"
+    "Copied to clipboard": "Copiato negli appunti",
+    "Audit Log": "Registro Revisioni",
+    "View Audit Log": "Vedi Registro Revisioni"
   },
   "messages": {
     "pleaseWait": "Attendere...",
@@ -287,7 +294,7 @@
     "removeSelectedRecordsConfirmation": "Sei sicuro di voler rimuovere i record selezionati?",
     "massUpdateResult": "{count} Record sono stati aggiornati",
     "massUpdateResultSingle": "Record aggiornati: {count}",
-    "noRecordsUpdated": "Nessun record sono stati aggiornati",
+    "noRecordsUpdated": "Nessun record è stato aggiornato",
     "massRemoveResult": "{count} Record sono stati rimossi",
     "massRemoveResultSingle": "Record rimossi: {count}",
     "noRecordsRemoved": "Nessun record è stato rimosso",
@@ -306,7 +313,7 @@
     "confirmMassUnfollow": "Vuoi veramente non seguire più i record selezionati?",
     "massFollowResult": "Ora sono seguiti {count} record",
     "massUnfollowResult": "Ora non sono più seguiti {count} record",
-    "massFollowResultSingle": "Ora è seguito {count} record",
+    "massFollowResultSingle": "{count} record sono adesso seguiti",
     "massUnfollowResultSingle": "Ora non è più seguito {count} record",
     "massFollowZeroResult": "Nulla è stato seguito",
     "massUnfollowZeroResult": "Nulla è stato non più seguito",
@@ -355,7 +362,6 @@
     "noAccessToForeignRecord": "L'operazione richiede l'accesso `{action}` al record esterno.",
     "fieldShouldBeNumber": "{field} deve essere un numero valido",
     "maintenanceModeError": "L'applicazione è attualmente in modalità di manutenzione.",
-    "noLinkAccess": "Nessun accesso all'operazione di collegamento per un record specifico.",
     "cannotRelateNonExisting": "Impossibile collegarsi a un record {foreignEntityType} inesistente.",
     "cannotRelateForbidden": "Impossibile collegarsi a un record {foreignEntityType} proibito. È richiesto l'accesso a `{action}`.",
     "cannotRelateForbiddenLink": "Nessun accesso al collegamento '{link}'.",
@@ -363,7 +369,14 @@
     "fieldNotMatchingPattern$uriOptionalProtocol": "{field} deve essere un URL valido",
     "fieldShouldBeLess": "{field} non dovrebbe essere maggiore di {value}",
     "fieldShouldBeGreater": "{field} non dovrebbe essere inferiore a {value}",
-    "cannotUnrelateRequiredLink": "Impossibile scollegare il collegamento in quanto richiesto."
+    "cannotUnrelateRequiredLink": "Impossibile scollegare il collegamento in quanto richiesto.",
+    "fieldPhoneInvalidCode": "Prefisso telefonico non valido",
+    "fieldPhoneTooShort": "{field} è troppo corto",
+    "fieldPhoneTooLong": "{field} è troppo lungo",
+    "barcodeInvalid": "{field} non è un {type} valido",
+    "noLinkAccess": "Impossibile relazionarsi con il record {foreignEntityType} attraverso il link '{link}'. Nessun accesso.",
+    "attemptIntervalFailure": "L'operazione non è consentita durante un intervallo di tempo specifico. Attendere qualche istante prima del prossimo tentativo.",
+    "confirmRestoreFromAudit": "I valori precedenti verranno memorizzati in un modulo. Successivamente, è possibile salvare il record per ripristinare i valori precedenti."
   },
   "boolFilters": {
     "onlyMy": "Solo i miei",
@@ -411,7 +424,7 @@
     "phoneNumberOther": "Telefono (Altro)",
     "order": "Ordine",
     "parent": "Genitore",
-    "children": "Bambini",
+    "children": "Figli",
     "emailAddressData": "Dati dell'indirizzo e-mail",
     "phoneNumberData": "Dati del numero di telefono",
     "ids": "ID",
@@ -423,16 +436,19 @@
     "types": "Modello",
     "middleName": "Secondo Nome",
     "emailAddressIsInvalid": "L'Indirizzo Email non è valido",
-    "phoneNumberIsInvalid": "Il Numero di Telefono non è valido"
+    "phoneNumberIsInvalid": "Il Numero di Telefono non è valido",
+    "users": "Utenti",
+    "childList": "Lista Figli"
   },
   "links": {
     "assignedUser": "Utente Assegnato",
     "createdBy": "Creato da",
     "modifiedBy": "Modificato da",
     "roles": "Ruoli",
+    "teams": "Team",
     "users": "Utenti",
     "parent": "Genitore",
-    "children": "Bambini"
+    "children": "Figli"
   },
   "dashlets": {
     "Stream": "Flusso Attività",
@@ -442,7 +458,7 @@
   "notificationMessages": {
     "assign": "{entityType} {entity} è stato assegnato a te",
     "emailReceived": "Email ricevuta da {from}",
-    "entityRemoved": "{user} Ha rimosso {entityType} {entity}"
+    "entityRemoved": "{user} ha rimosso {entityType} {entity}"
   },
   "streamMessages": {
     "post": "{user} ha scritto {entityType} {entity}",
@@ -451,15 +467,15 @@
     "update": "{user} ha aggiornato {entityType} {entity}",
     "postTargetTeam": "{user} ha scritto al team {target}",
     "postTargetTeams": "{user} ha scritto ai team {target}",
-    "postTargetPortal": "{user} Ha postato sul portale {target}",
+    "postTargetPortal": "{user} ha postato sul portale {target}",
     "postTargetPortals": "{user} ha postato sui portali {target}",
-    "postTarget": "{user} Ha postato a {target}",
-    "postTargetYou": "{user} Ha postato a te",
-    "postTargetYouAndOthers": "{user} Ha postato a {target} e a te",
-    "postTargetAll": "{user} Ha postato a tutti",
-    "mentionInPost": "{user} Ha menzionato {mentioned} in {entityType} {entity}",
+    "postTarget": "{user} ha postato a {target}",
+    "postTargetYou": "{user} ha postato a te",
+    "postTargetYouAndOthers": "{user} ha postato a {target} e a te",
+    "postTargetAll": "{user} ha postato a tutti",
+    "mentionInPost": "{user} ha menzionato {mentioned} in {entityType} {entity}",
     "mentionYouInPost": "{user} Ti ha menzionato in {entityType} {entity}",
-    "mentionInPostTarget": "{user} Ha menzionato {mentioned} in un post",
+    "mentionInPostTarget": "{user} ha menzionato {mentioned} in un post",
     "mentionYouInPostTarget": "{user} Ti ha menzionato in un post riguardante {target}",
     "mentionYouInPostTargetAll": "{user} Ti ha menzionato in un post visibile a tutti",
     "mentionYouInPostTargetNoTarget": "{user} Ti ha menzionato in un post",
@@ -467,8 +483,8 @@
     "createThis": "{user} ha creato {entityType}",
     "createAssignedThis": "{user} ha creato {entityType} assegnandolo a {assignee}",
     "createAssigned": "{user} ha creato {entityType} {entity} assegnato a {assignee}",
-    "assign": "{user} Ha assegnato {entityType} {entity} a {assignee}",
-    "assignThis": "{user} Ha assegnato {entityType} a {assignee}",
+    "assign": "{user} ha assegnato {entityType} {entity} a {assignee}",
+    "assignThis": "{user} ha assegnato {entityType} a {assignee}",
     "postThis": "{user} ha scritto",
     "attachThis": "{user} ha allegato",
     "statusThis": "{user} ha aggiornato {field}",
@@ -493,11 +509,11 @@
     "createAssignedYou": "{user} ha creato {entityType} {entity} e lo ha assegnato a te",
     "createAssignedThisSelf": "{user} ha creato questo {entityType} e lo ha auto-assegnato",
     "createAssignedSelf": "{user} ha creato {entityType} {entity} e lo ha auto-assegnato",
-    "assignYou": "{user} Ha assegnato {entityType} {entity} a te",
-    "assignThisVoid": "{user} Ha revocato questo {entityType}",
-    "assignVoid": "{user} Ha revocato {entityType} {entity}",
-    "assignThisSelf": "{user} Ha auto-assegnato {entityType}",
-    "assignSelf": "{user} Ha auto-assegnato {entityType} {entity}",
+    "assignYou": "{user} ha assegnato {entityType} {entity} a te",
+    "assignThisVoid": "{user} ha revocato questo {entityType}",
+    "assignVoid": "{user} ha revocato {entityType} {entity}",
+    "assignThisSelf": "{user} ha auto-assegnato {entityType}",
+    "assignSelf": "{user} ha auto-assegnato {entityType} {entity}",
     "unrelate": "{user} ha scollegato {relatedEntityType} {relatedEntity} da {entityType} {entity}",
     "unrelateThis": "{user} ha scollegato {relatedEntityType} {relatedEntity} da questa {entityType}"
   },
@@ -724,7 +740,7 @@
         "foreground": "Colore del Testo",
         "transparent": "Trasparente",
         "setTransparent": "Imposta Trasparente",
-        "resetToDefault": "Ripristina ai Valori Predefiniti"
+        "resetToDefault": "Ripristina Valori Predefiniti"
       },
       "shortcut": {
         "shortcuts": "Tasti rapidi",

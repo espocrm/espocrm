@@ -53,7 +53,8 @@
     "WorkingTimeCalendar": "Werktijd Kalender",
     "WorkingTimeRange": "Werktijdbereik",
     "GroupEmailFolder": "Groep e-mail map",
-    "AuthenticationProvider": "Authenticatie aanbieder"
+    "AuthenticationProvider": "Authenticatie aanbieder",
+    "GlobalStream": "Globale stroming"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -98,7 +99,8 @@
     "WorkingTimeCalendar": "Werktijd kalenders",
     "WorkingTimeRange": "Werktijdbereiken",
     "GroupEmailFolder": "Groep e-mailmappen",
-    "AuthenticationProvider": "Authenticatie aanbieders"
+    "AuthenticationProvider": "Authenticatie aanbieders",
+    "GlobalStream": "Globale stroming"
   },
   "labels": {
     "Misc": "Overig",
@@ -344,7 +346,6 @@
     "noAccessToForeignRecord": "Operatie vereist `{action}` toegang tot vreemd record.",
     "fieldShouldBeNumber": "{field} moet een geldig nummer zijn",
     "maintenanceModeError": "De applicatie staat momenteel in onderhoudsmodus.",
-    "noLinkAccess": "Geen toegang tot de linkoperatie voor een specifieke record.",
     "cannotRelateNonExisting": "Kan geen relatie leggen met niet bestaande {foreignEntityType} record.",
     "cannotRelateForbidden": "Kan geen relatie leggen met verboden {foreignEntityType} record. `{action}` toegang vereist.",
     "cannotRelateForbiddenLink": "Geen toegang tot link \"{link}\".",
@@ -352,7 +353,13 @@
     "fieldNotMatchingPattern$uriOptionalProtocol": "{field} moet een geldige URL zijn",
     "fieldShouldBeLess": "{field} mag niet groter zijn dan {value}",
     "fieldShouldBeGreater": "{field} mag niet kleiner zijn dan {value}",
-    "cannotUnrelateRequiredLink": "Kan vereiste link niet ontkoppelen."
+    "cannotUnrelateRequiredLink": "Kan vereiste link niet ontkoppelen.",
+    "fieldPhoneInvalidCode": "Ongeldige landcode",
+    "fieldPhoneTooShort": "{field} is te kort",
+    "fieldPhoneTooLong": "{field} is te lang",
+    "barcodeInvalid": "{field} is ongeldig {type}",
+    "noLinkAccess": "Kan geen relatie leggen met {foreignEntityType} record via de link '{link}'. Geen toegang.",
+    "attemptIntervalFailure": "De bewerking is niet toegestaan tijdens een bepaald tijdsinterval. Wacht enige tijd voor de volgende poging."
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",

@@ -6,15 +6,17 @@
     "bodyContains": "Mesaj İçeriği",
     "action": "Eylem",
     "isGlobal": "Küresel mi",
-    "emailFolder": "Klasör"
+    "emailFolder": "Klasör",
+    "groupEmailFolder": "Grup Eposta Klasörü",
+    "markAsRead": "Okundu olarak işaretle"
   },
   "labels": {
-    "Create EmailFilter": "E-mail Filtresi Oluştur",
-    "Emails": "E-postalar "
+    "Create EmailFilter": "Eposta Filtresi Oluştur",
+    "Emails": "Epostalar"
   },
   "tooltips": {
-    "from": "Belirtilen adreslere email gönderilir. İhtiyaç yok ise boş bırakın. Joker karakter de kullanabilirsiniz *.",
-    "to": "Belirtilen adrese gönderilen emailler. Gerekirse boş bırakın. Joker karakteri * kullanabilirsiniz.",
+    "from": "Belirtilen adreslere eposta gönderilir. İhtiyaç yok ise boş bırakın. Joker karakter de kullanabilirsiniz *.",
+    "to": "Belirtilen adrese gönderilen epostalar. Gerekirse boş bırakın. Joker karakteri * kullanabilirsiniz.",
     "name": "Filtreye açıklayıcı bir ad verin.",
     "bodyContains": "E-postanın gövdesi belirtilen kelimeleri veya cümleleri içerir.",
     "isGlobal": "Bu filtre, sisteme gelen tüm e-postalara uygulanır."
@@ -24,5 +26,9 @@
       "Skip": "Yoksay",
       "Move to Folder": "Klasöre Yaz"
     }
+  },
+  "links": {
+    "emailFolder": "Klasör",
+    "groupEmailFolder": "Grup Eposta Klasörü"
   }
 }

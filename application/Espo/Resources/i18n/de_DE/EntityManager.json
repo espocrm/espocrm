@@ -39,7 +39,9 @@
     "updateDuplicateCheck": "Duplikatsprüfung bei Aktualisierung",
     "duplicateCheckFieldList": "Duplikatsprüfung der Felder",
     "author": "Autor",
-    "module": "Modul"
+    "module": "Modul",
+    "selectFilter": "Filter auswählen",
+    "primaryFilters": "Primäre Filter"
   },
   "options": {
     "type": {
@@ -62,6 +64,9 @@
     "sortDirection": {
       "asc": "Aufsteigend",
       "desc": "Absteigend"
+    },
+    "module": {
+      "Custom": "Benutzerdefiniert"
     }
   },
   "messages": {
@@ -73,7 +78,9 @@
     "beforeSaveApiScript": "Ein Skript, das bei API-Anfragen zum Erstellen und Aktualisieren aufgerufen wird, bevor eine Entität gespeichert wird. Verwenden Sie es für die benutzerdefinierte Validierung und die Überprüfung von Duplikaten.",
     "nameIsAlreadyUsed": "Name '{name}' wird bereits verwendet.",
     "nameIsNotAllowed": "Name '{name}' ist nicht erlaubt.",
-    "nameIsTooLong": "Der Name ist zu lang."
+    "nameIsTooLong": "Der Name ist zu lang.",
+    "confirmRemoveLink": "Sind Sie sicher, dass Sie die *{link}*-Beziehung entfernen wollen?",
+    "urlHashCopiedToClipboard": "Ein URL-Fragment für den Filter *{name}* wird in die Zwischenablage kopiert. Sie können es der Navigationsleiste hinzufügen."
   },
   "tooltips": {
     "statusField": "Updates dieses Feldes werden im Ereignisverlauf protokolliert.",
@@ -87,6 +94,7 @@
     "countDisabled": "Die Gesamtzahl wird in der Listenansicht nicht angezeigt. Dies verringert die Ladezeit, wenn die DB-Tabelle sehr groß ist.",
     "optimisticConcurrencyControl": "Verhindert Schreibkonflikte.",
     "duplicateCheckFieldList": "Welche Felder bei der Überprüfung auf Duplikate zu prüfen sind.",
-    "updateDuplicateCheck": "Prüfung auf Duplikate beim Aktualisieren eines Datensatzes."
+    "updateDuplicateCheck": "Prüfung auf Duplikate beim Aktualisieren eines Datensatzes.",
+    "linkSelectFilter": "Ein primärer Filter, der standardmäßig bei der Auswahl eines Datensatzes angewendet wird."
   }
 }

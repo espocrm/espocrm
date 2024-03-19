@@ -11,7 +11,8 @@
     "followerManagementPermission": "Abonnentenverwaltung-Berechtigung",
     "data": "Daten",
     "fieldData": "Felddaten",
-    "messagePermission": "Nachrichtenberechtigung"
+    "messagePermission": "Nachrichtenberechtigung",
+    "auditPermission": "Audit-Erlaubnis"
   },
   "links": {
     "users": "Benutzer"
@@ -58,6 +59,7 @@
     "portalPermission": "Zugang zu Portalinformationen, die Möglichkeit, Nachrichten an Portalnutzer zu senden.",
     "groupEmailAccountPermission": "Zugang zu Gruppen-E-Mail-Konten und die Möglichkeit, E-Mails über Gruppen-SMTP zu versenden.",
     "exportPermission": "Erlaubt den Export von Datensätzen.",
-    "massUpdatePermission": "Die Berechtigung, Massenaktualisierungen von Datensätzen durchzuführen."
+    "massUpdatePermission": "Die Berechtigung, Massenaktualisierungen von Datensätzen durchzuführen.",
+    "auditPermission": "Gewährt die Ansicht des Audit-Protokolls."
   }
 }

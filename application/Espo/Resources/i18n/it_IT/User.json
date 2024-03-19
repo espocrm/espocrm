@@ -16,7 +16,8 @@
     "newPasswordConfirm": "Conferma la nuova password",
     "isActive": "È attivo",
     "isPortalUser": "È il portale per l'utente",
-    "contact": "Contatti",
+    "contact": "Contatto",
+    "accounts": "Account",
     "account": "Account (Primario)",
     "sendAccessInfo": "Invia email all'utente con i dati di accesso",
     "portal": "Portale",
@@ -43,7 +44,8 @@
     "notes": "Note",
     "portals": "Portali",
     "portalRoles": "Ruoli Portale",
-    "contact": "Contatti",
+    "contact": "Contatto",
+    "accounts": "Account",
     "account": "Account (Primario}",
     "tasks": "Compiti",
     "defaultTeam": "Team Predefinito",
@@ -59,7 +61,7 @@
     "Access": "Permessi",
     "Preferences": "Preferenze",
     "Change Password": "Cambia password",
-    "Teams and Access Control": "Controllo Teams e Accessi",
+    "Teams and Access Control": "Controllo Team e Accessi",
     "Forgot Password?": "Password dimenticata?",
     "Password Change Request": "Richiesta di Cambio Password",
     "Email Address": "Indirizzo email",
@@ -67,7 +69,7 @@
     "Email Accounts": "Account Email",
     "Portal": "Portale",
     "Create Portal User": "Crea Utente Portale",
-    "Proceed w/o Contact": "Procedi senza contatto",
+    "Proceed w/o Contact": "Procedi senza Contatto",
     "Generate New API Key": "Genera nuova API Key",
     "Generate New Password": "Genera nuova password",
     "Code": "Codice",
@@ -84,9 +86,9 @@
     "defaultTeam": "Tutti i record creati da questo utente saranno collegati a questo team per impostazione predefinita.",
     "userName": "Lettere a-z, numeri 0-9, puntini, trattini, @ e sottolineature sono permessi.",
     "isAdmin": "L'utente Admin può accedere a tutto.",
-    "isActive": "Se non verificato, l'utente non sarà in grado di effettuare il login.",
+    "isActive": "Se deselezionato, l'utente non sarà in grado di effettuare il login.",
     "teams": "Team a cui appartiene l'utente. Il livello di controllo di accesso viene ereditato dai ruoli del team.",
-    "roles": "Ruoli di accesso aggiuntivi. Usalo se l'utente non appartiene ad alcun gruppo o è necessario estendere il livello di controllo di accesso in esclusiva per questo utente.",
+    "roles": "Ruoli di accesso aggiuntivi. Usalo se l'utente non appartiene ad alcun team o è necessario estendere il livello di controllo di accesso in esclusiva per questo utente.",
     "portalRoles": "Ulteriori ruoli portale. Usalo per estendere il livello di controllo di accesso esclusivamente per questo utente.",
     "portals": "Portali a cui l'utente ha accesso.",
     "layoutSet": "Saranno applicati all'utente i layout di un gruppo specifico, anziché quelli predefiniti."
@@ -125,7 +127,9 @@
     "enterCodeSentBySms": "Inserisci il codice inviato via SMS al tuo numero di telefono.",
     "passwordChangeRequestNotFound": "La richiesta di modifica della password non è stata trovata. Potrebbe essere scaduta. Prova ad avviare un nuovo recupero della password dalla [Pagina di Login]({url}).",
     "loginAs": "Apri il link di accesso in una finestra in incognito per preservare la sessione corrente. Per accedere, utilizza le tue credenziali di amministratore.",
-    "failedToLogIn": "Accesso non riuscito"
+    "failedToLogIn": "Accesso non riuscito",
+    "2faMethodNotConfigured": "Il metodo 2FA non è stato configurato interamente nel sistema.",
+    "loginError": "Si è verificato un errore"
   },
   "boolFilters": {
     "onlyMyTeam": "Solo il mio Team"
@@ -133,7 +137,7 @@
   "presetFilters": {
     "active": "Attivo",
     "activePortal": "Portale attivo",
-    "activeApi": "API attiva"
+    "activeApi": "API Attiva"
   },
   "options": {
     "gender": {

@@ -48,7 +48,9 @@
     "WorkingTimeCalendar": "Arbeitszeitkalender",
     "WorkingTimeRange": "Arbeitszeitzeitraum",
     "GroupEmailFolder": "E-Mail Gruppenordner",
-    "AuthenticationProvider": "Authentifizierungsanbieter"
+    "AuthenticationProvider": "Authentifizierungsanbieter",
+    "GlobalStream": "Globales Ereignis",
+    "WebhookQueueItem": "Webhook-Warteschlangeelement"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -92,7 +94,9 @@
     "WorkingTimeCalendar": "Arbeitszeitkalender",
     "WorkingTimeRange": "Arbeitszeitzeiträume",
     "GroupEmailFolder": "E-Mail Gruppenordner",
-    "AuthenticationProvider": "Authentifizierungsanbieter"
+    "AuthenticationProvider": "Authentifizierungsanbieter",
+    "GlobalStream": "Globale Ereignisse",
+    "WebhookQueueItem": "Webhook-Warteschlangenelemente"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -258,7 +262,9 @@
     "Hide Navigation Panel": "Navigationsleiste verstecken",
     "Print": "Drucken",
     "Copy to Clipboard": "In Zwischenablage kopieren",
-    "Copied to clipboard": "In Zwischenablage kopiert"
+    "Copied to clipboard": "In Zwischenablage kopiert",
+    "Audit Log": "Audit-Protokoll",
+    "View Audit Log": "Audit-Protokoll anzeigen"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -359,7 +365,8 @@
     "fieldPhoneTooLong": "{field} ist zu lang",
     "barcodeInvalid": "{field} ist kein gültiger {type}",
     "noLinkAccess": "Kann nicht mit dem Datensatz {foreignEntityType} über den Link '{link}' verknüpft werden. Kein Zugriff.",
-    "attemptIntervalFailure": "Der Vorgang ist während eines bestimmten Zeitintervalls nicht erlaubt. Warten Sie vor dem nächsten Versuch einige Zeit."
+    "attemptIntervalFailure": "Der Vorgang ist während eines bestimmten Zeitintervalls nicht erlaubt. Warten Sie vor dem nächsten Versuch einige Zeit.",
+    "confirmRestoreFromAudit": "Die vorherigen Werte werden in ein Formular eingetragen. Dann können Sie den Datensatz speichern, um die vorherigen Werte wiederherzustellen."
   },
   "boolFilters": {
     "onlyMy": "Nur meine",
@@ -417,7 +424,9 @@
     "types": "Typen",
     "middleName": "Zweiter Vorname",
     "emailAddressIsInvalid": "E-Mail-Adresse ist ungültig",
-    "phoneNumberIsInvalid": "Telefonnummer ist ungültig"
+    "phoneNumberIsInvalid": "Telefonnummer ist ungültig",
+    "users": "Benutzer",
+    "childList": "Untergeordnete Liste"
   },
   "links": {
     "assignedUser": "Zugewiesener Benutzer",
@@ -790,7 +799,7 @@
     "datetime_valid": "Ungültiger Datum-Uhrzeit Wert.",
     "date_valid": "Ungültiger Datumswert.",
     "enum_valid": "Ungültiger Auswahlwert. Der Wert muss eine der definierten Auswahloptionen sein. Ein leerer Wert ist nur zulässig, wenn das Feld eine leere Option hat.",
-    "multiEnum_valid": "Ungültiger Mehrfachauswahlwert. Werte müssen eine der definierten Feldoptionen sein.",
+    "multiEnum_valid": "Ungültiger Mehrfachauswahlwert. Werte müssen einer der definierten Feldoptionen entsprechen.",
     "int_valid": "Ungültiger ganzzahliger Zahlenwert.",
     "float_valid": "Ungültiger Zahlenwert."
   },

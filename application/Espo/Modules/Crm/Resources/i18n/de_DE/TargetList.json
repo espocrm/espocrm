@@ -9,7 +9,8 @@
     "excludingActionList": "Exklusive",
     "optedOutCount": "gesetzte Opt-Out Anzahl",
     "targetStatus": "Zielstatus",
-    "isOptedOut": "Ist Opt-Out gesetzt"
+    "isOptedOut": "Ist Opt-Out gesetzt",
+    "sourceCampaign": "Kampagnenquelle"
   },
   "links": {
     "accounts": "Firmen",

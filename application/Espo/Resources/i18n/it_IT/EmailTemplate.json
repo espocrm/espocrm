@@ -5,6 +5,7 @@
     "body": "Corpo",
     "subject": "Oggetto",
     "attachments": "Allegati",
+    "oneOff": "Una tantum",
     "category": "Categoria",
     "insertField": "Segnaposti"
   },
@@ -13,7 +14,7 @@
     "Available placeholders": "Segnaposto disponibili"
   },
   "tooltips": {
-    "oneOff": "Seleziona se hai intenzione di utilizzare questo modello una sola volta. Per esempio. per Email Massive."
+    "oneOff": "Seleziona se hai intenzione di utilizzare questo modello una sola volta. Ad esempio, per Email Massive."
   },
   "presetFilters": {
     "actual": "Attivo"

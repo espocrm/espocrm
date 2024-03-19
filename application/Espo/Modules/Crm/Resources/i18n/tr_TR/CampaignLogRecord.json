@@ -25,7 +25,7 @@
       "Opted Out": "Devre dışı bırakıldı",
       "Bounced": "Geri Döndü",
       "Clicked": "tıklandı",
-      "Lead Created": "Müşteri Potansiyeli Oluşturuldu"
+      "Lead Created": "Potansiyel Oluşturuldu"
     }
   },
   "labels": {
@@ -37,6 +37,6 @@
     "optedOut": "Devre dışı bırakıldı",
     "bounced": "Geri Döndü",
     "clicked": "tıklandı",
-    "leadCreated": "Müşteri Potansiyeli Oluşturuldu"
+    "leadCreated": "Potansiyel Oluşturuldu"
   }
 }

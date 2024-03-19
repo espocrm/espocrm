@@ -9,6 +9,7 @@
     "Install": "Installieren"
   },
   "messages": {
-    "uninstalled": "Erweiterung {name} wurde deinstalliert"
+    "uninstalled": "Erweiterung {name} wurde deinstalliert",
+    "fileExceedsMaxUploadSize": "Die Dateigröße überschreitet die maximale Upload-Größe {maxSize}. Erwägen Sie die Erhöhung von `post_max_size` oder installieren Sie die Erweiterung über CLI."
   }
 }

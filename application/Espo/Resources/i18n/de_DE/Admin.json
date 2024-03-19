@@ -74,7 +74,8 @@
     "Configuration Instructions": "Konfigurationsanleitung",
     "Working Time Calendars": "Arbeitszeitkalender",
     "Group Email Folders": "E-Mail Gruppenordner",
-    "Authentication Providers": "Authentifizierungsanbieter"
+    "Authentication Providers": "Authentifizierungsanbieter",
+    "Setup": "Einrichtung"
   },
   "layouts": {
     "list": "Liste",
@@ -202,7 +203,10 @@
     "rows": "Maximale Anzahl an Reihen",
     "readOnlyAfterCreate": "Schreibgeschützt nach Erstellung",
     "createButton": "Schaltfläche erstellen",
-    "autocompleteOnEmpty": "Autovervollständigung bei leerer Eingabe"
+    "autocompleteOnEmpty": "Autovervollständigung bei leerer Eingabe",
+    "relateOnImport": "Beim Import verknüpfen",
+    "aclScope": "ACL Geltungsbereich",
+    "onlyAdmin": "Nur für Administrator"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",

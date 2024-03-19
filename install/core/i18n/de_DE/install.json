@@ -29,7 +29,6 @@
     "Install": "Installieren",
     "Configuration Instructions": "Konfigurationsanleitung",
     "phpVersion": "PHP Version",
-    "requiredMysqlVersion": "MySQL Version",
     "dbHostName": "Hostname",
     "dbName": "Datenbankname",
     "dbUserName": "Datenbankbenutzer",
@@ -42,7 +41,9 @@
     "is recommended": "wird empfohlen",
     "extension is missing": "Erweiterung fehlt",
     "Crontab setup instructions": "Ohne die Ausführung geplanter Jobs werden eingehende E-Mails, Benachrichtigungen und Erinnerungen nicht funktionieren. Hier können Sie die {SETUP_INSTRUCTIONS} lesen.",
-    "Setup instructions": "Setup-Anweisungen"
+    "Setup instructions": "Setup-Anweisungen",
+    "requiredMariadbVersion": "MariaDB Version",
+    "requiredPostgresqlVersion": "PostgreSQL Version"
   },
   "fields": {
     "Choose your language": "Wählen Sie Ihre Sprache",

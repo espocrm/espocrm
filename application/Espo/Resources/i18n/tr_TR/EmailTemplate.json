@@ -14,7 +14,7 @@
     "Available placeholders": "Kullanılabilir yer tutucular"
   },
   "tooltips": {
-    "oneOff": "Taslağı sadece bir defa kullanacak iseniz işaretleyiniz. Ör. Toplu Mail için"
+    "oneOff": "Taslağı sadece bir defa kullanacaksanız işaretleyiniz. Ör. toplu posta için"
   },
   "presetFilters": {
     "actual": "Güncel"
@@ -22,7 +22,7 @@
   "placeholderTexts": {
     "optOutLink": "abonelikten çıkma bağlantısı",
     "today": "Günün tarihi",
-    "now": "şu anki tarih & saat",
+    "now": "Şu anki tarih & saat",
     "currentYear": "Geçerli Yıl"
   }
 }

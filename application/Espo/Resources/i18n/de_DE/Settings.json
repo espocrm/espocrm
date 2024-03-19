@@ -158,7 +158,9 @@
     "massEmailMaxPerBatchCount": "Maximale Anzahl von E-Mails pro Batch",
     "phoneNumberNumericSearch": "Numerische Rufnummernsuche",
     "phoneNumberInternational": "Internationale Telefonnummern",
-    "phoneNumberPreferredCountryList": "Bevorzugte Ländervorwahlen"
+    "phoneNumberPreferredCountryList": "Bevorzugte Ländervorwahlen",
+    "jobForceUtc": "UTC-Zeitzone erzwingen",
+    "emailAddressSelectEntityTypeList": "Auswahlbereiche für E-Mail-Adressen"
   },
   "tooltips": {
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
@@ -207,7 +209,7 @@
     "daemonInterval": "Intervall zwischen Prozess Cron läuft in Sekunden.",
     "daemonMaxProcessNumber": "Die maximale Anzahl von Cron-Prozessen, die gleichzeitig ausgeführt werden.",
     "daemonProcessTimeout": "Maximale Ausführungszeit (in Sekunden) für einen einzelnen Cron-Prozess.",
-    "cronDisabled": "Cron läuft nicht.",
+    "cronDisabled": "Cron wird nicht ausgeführt.",
     "maintenanceMode": "Nur Administratoren haben Zugriff auf das System.",
     "ldapAccountCanonicalForm": "Format der Kontoinformationen. Es gibt vier Optionen:\n\n- 'Dn' - LDAP DN im Format 'CN=tester,OU=espocrm,DC=test, DC=lan'.\n\n- 'Username' - im Format 'tester'.\n\n- 'Backslash' - im Format 'COMPANY\\tester'.\n\n- 'Principal' - im Format 'tester@company.com'.",
     "massEmailVerp": "Variabler Rücklaufpfad für Rückläufer. Zur besseren Behandlung von zurückgewiesenen Nachrichten. Stellen Sie sicher, dass Ihr SMTP-Provider dies unterstützt.",
@@ -219,7 +221,7 @@
     "addressStateList": "Nennen Sie Vorschläge für Adressfelder.",
     "addressCityList": "Stadtvorschläge für Adressfelder.",
     "addressCountryList": "Ländervorschläge für Adressfelder.",
-    "exportDisabled": "Benutzer können keine Datensätze exportieren. Nur Admin wird erlaubt sein.",
+    "exportDisabled": "Benutzer können keine Datensätze exportieren. Nur der Administrator erhält die Erlaubnis.",
     "globalSearchEntityList": "Welche Datensätze mit der Globalen Suche durchsucht werden können.",
     "siteUrl": "Eine URL dieser EspoCRM-Instanz. Sie müssen sie ändern, wenn Sie in eine andere Domäne umziehen.",
     "useCache": "Eine Deaktivierung wird nicht empfohlen, es sei denn zu Entwicklungszwecken.",
@@ -241,7 +243,9 @@
     "oidcUsernameClaim": "Ein Claim, der für einen Benutzernamen verwendet wird (für den Abgleich und die Erstellung von Benutzern).",
     "oidcTeams": "Espo-Teams, die den Gruppen/Teams/Rollen des Identitätsanbieters zugeordnet sind. Teams mit einem leeren Zuordnungswert werden immer einem Benutzer zugewiesen (beim Erstellen oder Synchronisieren).",
     "oidcLogoutUrl": "Eine URL, an die der Browser nach der Abmeldung von Espo weitergeleitet wird. Sie dient dazu, die Sitzungsinformationen im Browser zu löschen und die Abmeldung auf der Anbieterseite durchzuführen. Normalerweise enthält die URL einen redirect-URL Parameter, um zu Espo zurückzukehren.\n\nVerfügbare Platzhalter:\n* `{siteUrl}`\n* `{clientId}`",
-    "recordsPerPageKanban": "Anzahl der Datensätze, die initial in den Kanban-Spalten angezeigt werden."
+    "recordsPerPageKanban": "Anzahl der Datensätze, die initial in den Kanban-Spalten angezeigt werden.",
+    "jobForceUtc": "Verwenden Sie die UTC-Zeitzone für geplante Jobs. Andernfalls wird die in den Einstellungen festgelegte Zeitzone verwendet.",
+    "emailAddressSelectEntityTypeList": "Entitätstypen, die bei der Suche nach einer E-Mail-Adresse in einem Modal verfügbar sind."
   },
   "labels": {
     "Locale": "Lokale Einstellungen",

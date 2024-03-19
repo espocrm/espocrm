@@ -2,6 +2,7 @@
   "fields": {
     "number": "Numero",
     "data": "Dati",
+    "target": "Destinazione",
     "leadCapture": "Cattura Lead",
     "createdAt": "Entrato",
     "isCreated": "Lead Creato"

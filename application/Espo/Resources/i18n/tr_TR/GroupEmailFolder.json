@@ -1,1 +1,8 @@
-{}
+{
+  "links": {
+    "emails": "Epostalar"
+  },
+  "labels": {
+    "Create GroupEmailFolder": "Klasör Oluştır"
+  }
+}

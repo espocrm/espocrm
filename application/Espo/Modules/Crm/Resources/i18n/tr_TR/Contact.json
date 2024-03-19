@@ -1,6 +1,7 @@
 {
   "fields": {
     "name": "Ad",
+    "emailAddress": "Eposta",
     "accountRole": "Başlık",
     "account": "Hesap",
     "accounts": "Hesaplar",
@@ -14,28 +15,29 @@
     "targetLists": "Hedef Listeler",
     "targetList": "Hedef Liste",
     "portalUser": "Portal Kullanıcısı",
-    "originalLead": "Orijinal Müşteri Potansiyeli",
+    "originalLead": "Orijinal Potansiyel",
     "acceptanceStatus": "Kabul Durumu",
-    "accountIsInactive": "Hesap Pasif",
+    "accountIsInactive": "Pasif Hesap",
     "acceptanceStatusMeetings": "Kabul Durumu (Toplantılar)",
     "acceptanceStatusCalls": "Kabul Durumu (Aramalar)"
   },
   "links": {
     "opportunities": "Fırsatlar",
-    "cases": "Dosyalar",
+    "cases": "Olaylar",
     "targetLists": "Hedef Listeler",
     "campaignLogRecords": "Kampanya Günlüğü",
     "campaign": "Kampanya",
     "account": "Hesap (Birincil)",
     "accounts": "Hesaplar",
-    "casesPrimary": "Dosyalar (Birincil)",
+    "casesPrimary": "Olaylar (Birincil)",
     "portalUser": "Portal Kullanıcı",
-    "originalLead": "Orijinal Müşteri Potansiyeli",
+    "originalLead": "Orijinal Potansiyel",
     "documents": "Belgeler",
-    "tasksPrimary": "Görevler (genişletilmiş)"
+    "tasksPrimary": "Görevler (genişletilmiş)",
+    "opportunitiesPrimary": "Fırsatlar (Birincil)"
   },
   "labels": {
-    "Create Contact": "Bağlantı Oluştur"
+    "Create Contact": "Kişi Oluştur"
   },
   "options": {
     "opportunityRole": {
@@ -47,6 +49,6 @@
   "presetFilters": {
     "portalUsers": "Portal Kullanıcıları",
     "notPortalUsers": "Portal Kullanıcısı Değildir",
-    "accountActive": "Aktif"
+    "accountActive": "Etkin"
   }
 }

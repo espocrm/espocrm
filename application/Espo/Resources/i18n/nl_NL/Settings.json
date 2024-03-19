@@ -151,7 +151,12 @@
     "oidcAllowAdminUser": "OIDC Inlog OIDC toestaan voor admin-gebruikers",
     "oidcLogoutUrl": "OIDC Uitlog URL",
     "recordsPerPageKanban": "Records per pagina (Kanban)",
-    "auth2FAInPortal": "Sta 2FA toe in portalen"
+    "auth2FAInPortal": "Sta 2FA toe in portalen",
+    "massEmailMaxPerBatchCount": "Max aantal verzonden e-mails per batch",
+    "phoneNumberNumericSearch": "Numeriek telefoonnummer zoeken",
+    "phoneNumberInternational": "Internationale telefoonnummers",
+    "phoneNumberPreferredCountryList": "Voorkeur telefoon landcodes",
+    "jobForceUtc": "UTC-tijdzone afdwingen"
   },
   "tooltips": {
     "recordsPerPage": "Aantal zichtbare records in lijsten.",
@@ -234,7 +239,8 @@
     "oidcUsernameClaim": "Een claim om te gebruiken voor een gebruikersnaam (voor het matchen en aanmaken van gebruikers).",
     "oidcTeams": "Espo-teams gemapt tegen groepen/teams/rollen van de identity provider. Teams met een lege mapping waarde worden altijd toegewezen aan een gebruiker (bij het aanmaken of synchroniseren).",
     "oidcLogoutUrl": "Een URL waarnaar de browser zal doorverwijzen na het afmelden bij Espo. Bedoeld voor het wissen van de sessiegegevens in de browser en het afmelden aan de providerzijde. Meestal bevat de URL een redirect-URL parameter, om terug te keren naar Espo.\n\nBeschikbare plaatshouders:\n* `{siteUrl}`\n* `{clientId}`",
-    "recordsPerPageKanban": "Aantal records dat aanvankelijk in kanban-kolommen wordt weergegeven."
+    "recordsPerPageKanban": "Aantal records dat aanvankelijk in kanban-kolommen wordt weergegeven.",
+    "jobForceUtc": "Gebruik de UTC-tijdzone voor geplande taken. Anders wordt de tijdzone gebruikt die is ingesteld in de instellingen."
   },
   "labels": {
     "System": "Systeem",
@@ -258,7 +264,8 @@
     "IdP Group": "IdP Groep",
     "Divider": "Scheider",
     "General": "Algemeen",
-    "Navbar": "Navigatiebalk"
+    "Navbar": "Navigatiebalk",
+    "Phone Numbers": "Telefoonnummers"
   },
   "messages": {
     "ldapTestConnection": "De verbinding is succesvol tot stand gebracht."

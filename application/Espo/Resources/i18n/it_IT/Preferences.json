@@ -13,9 +13,9 @@
     "signature": "Firma email",
     "dashboardTabList": "Elenco Schede",
     "tabList": "Elenco Schede",
-    "defaultReminders": "Promemoria predefiniti",
+    "defaultReminders": "Promemoria Predefiniti",
     "theme": "Tema",
-    "useCustomTabList": "Elenco Schede Personalizzate",
+    "useCustomTabList": "Elenco Schede Personalizzato",
     "receiveAssignmentEmailNotifications": "Notifiche via email al momento dell' assegnazione",
     "receiveMentionEmailNotifications": "Notifiche via email in caso di menzioni nei post",
     "receiveStreamEmailNotifications": "Notifiche via email per i messaggi e gli aggiornamenti di stato",
@@ -27,13 +27,13 @@
     "followEntityOnStreamPost": "Segui automaticamente dopo la pubblicazione in Stream",
     "followCreatedEntities": "Segui automaticamente i record creati",
     "followCreatedEntityTypeList": "Segui automaticamente i record creati di tipi di entità specifici\n",
-    "emailUseExternalClient": "Utilizzare un client di posta elettronica esterno",
-    "scopeColorsDisabled": "Disabilita colori entità",
-    "tabColorsDisabled": "Disabilita colori schede",
+    "emailUseExternalClient": "Utilizza un client di posta elettronica esterno",
     "assignmentNotificationsIgnoreEntityTypeList": "Notifiche di assegnazione in-app",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Notifiche di assegnazione e-mail",
     "dashboardLocked": "Blocca Dashboard",
-    "textSearchStoringDisabled": "Disabilita la memorizzazione dei filtri di testo"
+    "textSearchStoringDisabled": "Disabilita la memorizzazione dei filtri di testo",
+    "calendarSlotDuration": "Durata Slot Calendario",
+    "calendarScrollHour": "Orario Predefinito Scorrimento Calendario"
   },
   "options": {
     "weekStart": {
@@ -53,5 +53,10 @@
     "doNotFillAssignedUserIfNotRequired": "Quando si crea un record, l'utente assegnato non verrà riempito con il proprio utente a meno che il campo non sia obbligatorio.",
     "followCreatedEntities": "Quando si creano nuovi record, verranno automaticamente seguiti anche se assegnati a un altro utente.",
     "followCreatedEntityTypeList": "Quando si creano nuovi record di tipi di entità selezionati, questi verranno seguiti automaticamente anche se assegnati a un altro utente."
+  },
+  "tabFields": {
+    "label": "Etichetta",
+    "iconClass": "Icona",
+    "color": "Colore"
   }
 }

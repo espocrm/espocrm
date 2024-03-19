@@ -25,7 +25,7 @@
     "Header Row Value": "Intestazione riga",
     "Field": "Campo",
     "What to Import?": "Cosa Importare?",
-    "Entity Type": "Tipo di entità",
+    "Entity Type": "Tipo di Entità",
     "What to do?": "Cosa fare?",
     "Properties": "Proprietà",
     "Header Row": "Intestazione riga",
@@ -62,10 +62,11 @@
     "confirmRemoveDuplicates": "Questo rimuoverà permanentemente tutti i record importati che sono stati riconosciuti come duplicati. Sei sicuro?",
     "removeImportLog": "Questo rimuoverà il registro di importazione. Tutti i record importati verranno mantenuti. Usalo se sei sicuro che l'importazione va bene.",
     "confirmRemoveImportLog": "Così facendo rimuoverai il log di importazione. Tutti i record importati rimarranno a sistema. Non sarai in grado di ripristinare i risultati di importazione. Sei sicuro?",
-    "importRunning": "Importazione in corso..."
+    "importRunning": "Importazione in corso...",
+    "noErrors": "Nessun errore"
   },
   "fields": {
-    "entityType": "Tipo di entità",
+    "entityType": "Tipo di Entità",
     "imported": "Record Importati",
     "duplicates": "Record duplicati",
     "updated": "Record aggiornati",
@@ -96,5 +97,8 @@
   },
   "links": {
     "errors": "Errori"
+  },
+  "params": {
+    "phoneNumberCountry": "Prefisso telefonico"
   }
 }

@@ -7,7 +7,7 @@
   },
   "options": {
     "dateTimeDefault": {
-      "": "Hiçbiri ",
+      "": "Hiçbiri",
       "javascript: return this.dateTime.getNow(1);": "Şimdi",
       "javascript: return this.dateTime.getNow(5);": "Şimdi (5dk)",
       "javascript: return this.dateTime.getNow(15);": "Şimdi (15dk)",
@@ -99,7 +99,7 @@
     }
   },
   "fieldInfo": {
-    "email": "Parametreleriyle birlikte bir dizi email adresi: Devre dışı bırakıldı, Geçersiz, Öncelikli.",
+    "email": "Parametreleriyle birlikte bir dizi eposta adresi: Devre dışı bırakıldı, Geçersiz, Öncelikli.",
     "phone": "Parametreleriyle birlikte bir dizi telefon numarası: Tür, Devre Dışı Bırakılmış, Geçersiz, Öncelikli.",
     "urlMultiple": "Çoklu bağlantı."
   },

@@ -1,6 +1,8 @@
 {
   "fields": {
     "attachments": "Allegati",
+    "targetType": "Destinazione",
+    "teams": "Team",
     "users": "Utenti",
     "portals": "Portali",
     "type": "Tipo",
@@ -14,7 +16,8 @@
   "filters": {
     "all": "Tutti",
     "posts": "Messaggi",
-    "updates": "Aggiornamenti"
+    "updates": "Aggiornamenti",
+    "activity": "Attività"
   },
   "messages": {
     "writeMessage": "Scrivi il tuo messaggio qui"
@@ -22,14 +25,31 @@
   "options": {
     "targetType": {
       "self": "a me stesso",
-      "users": "A utente particolare",
-      "teams": "A team particolare",
+      "users": "Ad un utente particolare",
+      "teams": "Ad un team particolare",
       "all": "A tutti gli utenti interni",
       "portals": "Agli utenti del portale"
+    },
+    "type": {
+      "Create": "Crea",
+      "CreateRelated": "Crea correlato",
+      "Update": "Aggiornamento",
+      "Status": "Stato",
+      "Assign": "Assegna",
+      "Relate": "Collega",
+      "Unrelate": "Scollega",
+      "EmailReceived": "Email Ricevuta",
+      "EmailSent": "Email Inviata"
     }
   },
   "links": {
     "superParent": "Super Genitore",
-    "related": "Relativo"
+    "related": "Correlato",
+    "portals": "Portali",
+    "attachments": "Allegati"
+  },
+  "labels": {
+    "View Posts": "Vedi Post",
+    "View Activity": "Vedi Attività"
   }
 }

@@ -14,7 +14,10 @@
     "variables": "Uygun Yertutucuları",
     "pageOrientation": "Sayfa yönlendirmesi",
     "pageFormat": "Kağıt Biçimi",
-    "fontFace": "Yazı Tipi"
+    "fontFace": "Yazı Tipi",
+    "pageWidth": "Sayfa Genişliği (mm",
+    "pageHeight": "Sayfa Yüksekliği (mm)",
+    "style": "Stil"
   },
   "labels": {
     "Create Template": "Şablon Oluştur"

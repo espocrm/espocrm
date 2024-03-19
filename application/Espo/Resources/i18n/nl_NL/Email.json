@@ -118,7 +118,10 @@
     "noSmtpSetup": "SMTP is niet geconfigureerd: {link}",
     "sendConfirm": "De e-mail verzenden?",
     "removeSelectedRecordsConfirmation": "Weet u zeker dat u geselecteerde e-mails wilt verwijderen?\n\nZe zullen ook voor andere gebruikers worden verwijderd.",
-    "removeRecordConfirmation": "Weet u zeker dat u de e-mail wilt verwijderen?\n\nHij zal ook voor andere gebruikers worden verwijderd."
+    "removeRecordConfirmation": "Weet u zeker dat u de e-mail wilt verwijderen?\n\nHij zal ook voor andere gebruikers worden verwijderd.",
+    "invalidCredentials": "Ongeldige gegevens.",
+    "unknownError": "Onbekende fout.",
+    "recipientAddressRejected": "Adres ontvanger geweigerd."
   },
   "presetFilters": {
     "sent": "Verzend",
