@@ -369,7 +369,6 @@ class Service
         $this->entityManager->getQueryExecutor()->execute($delete);
     }
 
-
     private function loadAssignedUserName(Entity $entity): void
     {
         $user = $this->entityManager
@@ -591,9 +590,7 @@ class Service
         $data = [];
 
         if ($entity->get('assignedUserId')) {
-            if (!$entity->get('assignedUserName')) {
-                $this->loadAssignedUserName($entity);
-            }
+            $this->loadAssignedUserName($entity);
 
             $data['assignedUserId'] = $entity->get('assignedUserId');
             $data['assignedUserName'] = $entity->get('assignedUserName');
@@ -772,9 +769,7 @@ class Service
         $this->setSuperParent($entity, $note, true);
 
         if ($entity->get('assignedUserId')) {
-            if (!$entity->get('assignedUserName')) {
-                $this->loadAssignedUserName($entity);
-            }
+            $this->loadAssignedUserName($entity);
 
             $note->set('data', [
                 'assignedUserId' => $entity->get('assignedUserId'),
