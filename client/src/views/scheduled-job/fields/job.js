@@ -51,11 +51,12 @@ define('views/scheduled-job/fields/job', ['views/fields/enum'], function (Dep) {
 
             if (this.model.isNew()) {
                 this.on('change', () => {
-                    var job = this.model.get('job');
+                    const job = this.model.get('job');
 
                     if (job) {
-                        var label = this.getLanguage().translateOption(job, 'job', 'ScheduledJob');
-                        var scheduling = this.getMetadata().get('entityDefs.ScheduledJob.jobSchedulingMap.' + job) ||
+                        const label = this.getLanguage().translateOption(job, 'job', 'ScheduledJob');
+                        const scheduling =
+                            this.getMetadata().get(`entityDefs.ScheduledJob.jobSchedulingMap.${job}`) ||
                             '*/10 * * * *';
 
                         this.model.set('name', label);
