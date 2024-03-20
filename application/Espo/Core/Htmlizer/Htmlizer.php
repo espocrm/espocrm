@@ -740,15 +740,16 @@ class Htmlizer
             $className = $metadata->get(['app', 'templateHelpers', $name]);
 
             // Not using FQN deliberately.
+            /** @noinspection PhpFullyQualifiedNameUsageInspection */
             $data = new \Espo\Core\Htmlizer\Helper\Data(
                 $name,
                 $argumentList,
                 (object) $options,
                 $context['_this'],
                 $rootData,
-                $context['fn.blockParams'],
                 $context['fn'] ?? null,
-                $context['inverse'] ?? null
+                $context['inverse'] ?? null,
+                //$context['fn.blockParams'],
             );
 
             $helper = $injectableFactory->create($className);
