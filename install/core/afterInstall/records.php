@@ -90,7 +90,7 @@ return [
             'name' => 'Process Webhook Queue',
             'job' => 'ProcessWebhookQueue',
             'status' => 'Active',
-            'scheduling' => '*/5 * * * *',
+            'scheduling' => '*/2 * * * *',
         ],
     ],
 ];
