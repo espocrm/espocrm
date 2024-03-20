@@ -67,7 +67,7 @@ class Data
 
     /**
      * @param mixed[] $argumentList
-     * @param array<string, mixed> $context
+     * @param mixed $context
      * @param array<string, mixed> $rootContext
      * @param int $blockParams
      */
@@ -75,7 +75,7 @@ class Data
         string $name,
         array $argumentList,
         stdClass $options,
-        array $context,
+        mixed $context,
         array $rootContext,
         int $blockParams,
         ?Closure $func,
@@ -97,9 +97,9 @@ class Data
     }
 
     /**
-     * @return array<string, mixed>
+     * @return mixed A context.
      */
-    public function getContext(): array
+    public function getContext(): mixed
     {
         return $this->context;
     }
