@@ -27,41 +27,34 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Hooks\Opportunity;
+namespace Espo\Modules\Crm\Classes\RecordHooks\Opportunity;
 
-use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Record\Hook\SaveHook;
 use Espo\Core\Utils\Metadata;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\ORM\Entity;
-use Espo\ORM\Repository\Option\SaveOptions;
 
 /**
- * @implements BeforeSave<Opportunity>
+ * @implements SaveHook<Opportunity>
  */
-class Probability implements BeforeSave
+class BeforeUpdate implements SaveHook
 {
-    public static int $order = 7;
+    public function __construct(
+        private Metadata $metadata
+    ) {}
 
-    public function __construct(private Metadata $metadata) {}
-
-    /**
-     * @param Opportunity $entity
-     */
-    public function beforeSave(Entity $entity, SaveOptions $options): void
+    public function process(Entity $entity): void
     {
-        if (!$entity->isNew()) {
-            return;
-        }
+        $this->setProbability($entity);
+    }
 
-        if ($entity->get('probability') !== null) {
+    private function setProbability(Opportunity $entity): void
+    {
+        if ($entity->isAttributeWritten('probability') && $entity->getProbability() !== null) {
             return;
         }
 
         $stage = $entity->getStage();
-
-        if (!$stage) {
-            return;
-        }
 
         $probability = $this->metadata->get("entityDefs.Opportunity.fields.stage.probabilityMap.$stage") ?? 0;
 
