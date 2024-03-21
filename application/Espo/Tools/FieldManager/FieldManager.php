@@ -849,6 +849,8 @@ class FieldManager
     }
 
     /**
+     * @todo Add interfaces for hooks.
+     *
      * @param string $name
      * @param array<string, mixed> $defs
      * @param array<string, mixed> $options
