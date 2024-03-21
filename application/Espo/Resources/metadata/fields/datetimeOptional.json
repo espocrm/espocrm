@@ -102,5 +102,9 @@
     "personalData": true,
     "valueFactoryClassName": "Espo\\Core\\Field\\DateTimeOptional\\DateTimeOptionalFactory",
     "attributeExtractorClassName": "Espo\\Core\\Field\\DateTimeOptional\\DateTimeOptionalAttributeExtractor",
+    "sanitizerClassNameList": [
+        "Espo\\Classes\\FieldSanitizers\\Datetime",
+        "Espo\\Classes\\FieldSanitizers\\DatetimeOptionalDate"
+    ],
     "default": null
 }

@@ -31,7 +31,11 @@ namespace tests\integration\Espo\Record;
 
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
+use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Modules\Crm\Entities\Opportunity;
+use Espo\Modules\Crm\Entities\Task;
 use Espo\Tools\FieldManager\FieldManager;
 use tests\integration\Core\BaseTestCase;
 
@@ -39,6 +43,8 @@ class SanitizeTest extends BaseTestCase
 {
     public function testSanitize(): void
     {
+        // phone
+
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->getInjectableFactory()
             ->create(FieldManager::class)
@@ -101,5 +107,79 @@ class SanitizeTest extends BaseTestCase
 
         $this->assertEquals('+380904443322', $numbers[0]);
         $this->assertEquals('+380904443333', $numbers[1]);
+
+        // datetime
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $meeting = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Meeting::class)
+            ->create((object) [
+                'name' => 'Test',
+                'dateStart' => '2030-12-10 10:11:12',
+                'dateEnd' => '2030-12-10T10:11:12-01:00',
+                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+            ], CreateParams::create());
+
+        $this->assertEquals('2030-12-10 10:11:12', $meeting->get('dateStart'));
+        $this->assertEquals('2030-12-10 11:11:12', $meeting->get('dateEnd'));
+
+        // datetimeOptional
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $task = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Task::class)
+            ->create((object) [
+                'name' => 'Test',
+                'dateStartDate' => '2030-12-10T10:11:12-01:00',
+                'dateEnd' => '2030-12-10T10:11:12-01:00',
+                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+            ], CreateParams::create());
+
+        $this->assertEquals('2030-12-10', $task->get('dateStartDate'));
+        $this->assertEquals('2030-12-10 11:11:12', $task->get('dateEnd'));
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $task = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Task::class)
+            ->create((object) [
+                'name' => 'Test',
+                'dateStartDate' => '2030-12-10',
+                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+            ], CreateParams::create());
+
+        $this->assertEquals('2030-12-10', $task->get('dateStartDate'));
+
+        // date
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $meeting = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Opportunity::class)
+            ->create((object) [
+                'name' => 'Test',
+                'closeDate' => '2030-12-10T10:11:12-01:00',
+                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'probability' => 10,
+                'amount' => 1.0,
+            ], CreateParams::create());
+
+        $this->assertEquals('2030-12-10', $meeting->get('closeDate'));
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $meeting = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Opportunity::class)
+            ->create((object) [
+                'name' => 'Test',
+                'closeDate' => '2030-12-10',
+                'assignedUserId' => $this->getContainer()->getByClass(User::class)->getId(),
+                'probability' => 10,
+                'amount' => 1.0,
+            ], CreateParams::create());
+
+        $this->assertEquals('2030-12-10', $meeting->get('closeDate'));
     }
 }
