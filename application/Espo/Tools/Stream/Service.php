@@ -788,7 +788,7 @@ class Service
         }
 
         if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
-            $noteOptions[SaveOption::CREATED_BY_ID] = SaveOption::MODIFIED_BY_ID;
+            $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
@@ -825,7 +825,7 @@ class Service
         }
 
         if (!empty($options[SaveOption::MODIFIED_BY_ID])) {
-            $noteOptions[SaveOption::CREATED_BY_ID] = SaveOption::MODIFIED_BY_ID;
+            $noteOptions[SaveOption::CREATED_BY_ID] = $options[SaveOption::MODIFIED_BY_ID];
         }
 
         $this->entityManager->saveEntity($note, $noteOptions);
