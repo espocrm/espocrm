@@ -2596,16 +2596,50 @@ table.table td.cell .html-container {
 
     div.item-list > div {
         margin: 0 0 10px 0;
+
+        &:not(.group-operator) {
+            border-radius: var(--border-radius-small);
+
+            a[data-action="remove"] {
+                visibility: hidden;
+            }
+
+            outline: var(--default-border-color) 1px solid;
+            outline-offset: 4px;
+
+            &:hover:not(:has(div.item-list > div:hover)) {
+                outline: var(--default-border-color) 1px solid;
+
+                > .group-head > a[data-action="remove"] {
+                    visibility: visible;
+                }
+
+                > .dynamic-logic-edit-item-row a[data-action="remove"] {
+                    visibility: visible;
+                }
+            }
+        }
     }
 
     div.group-head {
         line-height: @input-height-base;
+
+        a[data-action="remove"] {
+            margin-right: 5px;
+            position: relative;
+            top: -4px
+        }
     }
 
     .dynamic-logic-edit-item-row {
         > div:first-child,
         > div:last-child {
             padding-top: 7px;
+        }
+
+        a[data-action="remove"] {
+            margin-right: 5px;
+            margin-top: 1px;
         }
     }
 
