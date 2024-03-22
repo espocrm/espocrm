@@ -3,14 +3,18 @@
     &.multi {
         .selectize-input {
             font-size: @font-size-small;
-            padding: 4px 7px 0;
+            padding: 2px 7px 0;
+
+            > .item {
+                margin: 0 3px 2px 0;
+            }
         }
     }
 
     &.single {
         .selectize-input {
             font-size: @font-size-small;
-            padding: 4px 19px 3px 10px;
+            padding: 3px 19px 3px 10px;
             min-height: @input-height-small;
         }
 
@@ -101,7 +105,7 @@
         .selectize-input {
             &.dropdown-active:after,
             &:after {
-                top: 13px;
+                top: 12px;
             }
         }
     }

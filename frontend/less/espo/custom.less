@@ -384,7 +384,7 @@ div.list-expanded > ul > li > div.expanded-row > .cell:first-child {
 }
 
 .filter .selectize-input {
-    min-height: 30px;
+    min-height: @input-height-small;
 }
 
 .btn.active {
@@ -730,7 +730,7 @@ input.global-search-input {
 
 .field .link-container .list-group-item .form-control,
 .field .link-container .list-group-item .btn {
-    margin-top: 1px;
+    margin-top: 2px;
     margin-bottom: 0;
 }
 
@@ -797,6 +797,7 @@ input.global-search-input {
         > .list-group-item {
             padding-top: 4px;
             padding-bottom: 4px;
+            line-height: @line-height-small-computed;
         }
     }
     .input-group {
