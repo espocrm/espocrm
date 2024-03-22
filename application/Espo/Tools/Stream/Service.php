@@ -87,9 +87,7 @@ class Service
     ];
     /** @var string[] */
     private $dangerDefaultStyleList = [
-        'Not Held',
         'Closed Lost',
-        'Dead',
     ];
 
     /**

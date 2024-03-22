@@ -174,8 +174,10 @@
                 "Closed Lost": 0
             },
             "style": {
+                "Proposal": "primary",
+                "Negotiation": "warning",
                 "Closed Won": "success",
-                "Closed Lost": "danger"
+                "Closed Lost": "info"
             },
             "fieldManagerAdditionalParamList": [
                 {

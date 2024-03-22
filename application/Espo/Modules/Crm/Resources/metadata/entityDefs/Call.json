@@ -10,7 +10,8 @@
             "options": ["Planned", "Held", "Not Held"],
             "default": "Planned",
             "style": {
-                "Held": "success"
+                "Held": "success",
+                "Not Held": "info"
             },
             "audited": true,
             "customizationOptionsReferenceDisabled": true

@@ -7,7 +7,17 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Draft", "In Review", "Published", "Archived"],
+            "options": [
+                "Draft",
+                "In Review",
+                "Published",
+                "Archived"
+            ],
+            "style": {
+                "In Review": "primary",
+                "Published": "success",
+                "Archived": "info"
+            },
             "view": "crm:views/knowledge-base-article/fields/status",
             "default": "Draft",
             "customizationOptionsReferenceDisabled": true

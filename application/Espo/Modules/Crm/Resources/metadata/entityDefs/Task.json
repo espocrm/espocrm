@@ -7,9 +7,17 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Not Started", "Started", "Completed", "Canceled", "Deferred"],
+            "options": [
+                "Not Started",
+                "Started",
+                "Completed",
+                "Canceled",
+                "Deferred"
+            ],
             "style": {
-                "Completed": "success"
+                "Completed": "success",
+                "Started": "primary",
+                "Canceled": "info"
             },
             "default": "Not Started",
             "audited": true,
@@ -24,7 +32,12 @@
         },
         "priority": {
             "type": "enum",
-            "options": ["Low", "Normal", "High", "Urgent"],
+            "options": [
+                "Low",
+                "Normal",
+                "High",
+                "Urgent"
+            ],
             "default": "Normal",
             "displayAsLabel": true,
             "style": {

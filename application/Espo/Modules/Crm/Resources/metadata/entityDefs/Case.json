@@ -15,8 +15,10 @@
             "default": "New",
             "style": {
                 "Closed": "success",
-                "Duplicate": "danger",
-                "Rejected": "danger"
+                "Assigned": "primary",
+                "Duplicate": "info",
+                "Pending": "warning",
+                "Rejected": "info"
             },
             "audited": true,
             "fieldManagerAdditionalParamList": [

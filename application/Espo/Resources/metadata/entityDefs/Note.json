@@ -183,21 +183,10 @@
         "fullTextSearchOrderType": "original"
     },
     "statusStyles": {
-        "Lead": {
-            "Assigned" : "primary",
-            "In Process" : "primary"
-        },
-        "Case": {
-            "Assigned" : "primary"
-        },
-        "Opportunity": {
-            "Proposal": "primary",
-            "Negotiation": "primary"
-        },
-        "Task": {
-            "Started" : "primary",
-            "Canceled" : "danger"
-        }
+        "Lead": {},
+        "Case": {},
+        "Opportunity": {},
+        "Task": {}
     },
     "indexes": {
         "createdAt": {

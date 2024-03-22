@@ -28,12 +28,20 @@
         },
         "status": {
             "type": "enum",
-            "options": ["New", "Assigned", "In Process", "Converted", "Recycled", "Dead"],
+            "options": [
+                "New",
+                "Assigned",
+                "In Process",
+                "Converted",
+                "Recycled",
+                "Dead"
+            ],
             "default": "New",
             "style": {
+                "In Process": "primary",
                 "Converted": "success",
-                "Recycled": "danger",
-                "Dead": "danger"
+                "Recycled": "info",
+                "Dead": "info"
             },
             "audited": true,
             "fieldManagerAdditionalParamList": [
