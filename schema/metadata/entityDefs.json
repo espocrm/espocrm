@@ -269,6 +269,26 @@
                             "type": {
                                 "anyOf": [
                                     {"const": "varchar"},
+                                    {"const": "url"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "copyToClipboard": {
+                                "type": "boolean",
+                                "description": "Display 'Copy to Clipboard' button."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "varchar"},
                                     {"const": "text"},
                                     {"const": "url"},
                                     {"const": "int"},
