@@ -77,7 +77,8 @@
             "layoutListDisabled": true,
             "fieldManagerParamList": [
                 "tooltipText"
-            ]
+            ],
+            "copyToClipboard": true
         },
         "secretKey": {
             "type": "varchar",
@@ -90,7 +91,8 @@
             "layoutListDisabled": true,
             "fieldManagerParamList": [
                 "tooltipText"
-            ]
+            ],
+            "copyToClipboard": true
         },
         "salutationName": {
             "type": "enum",
