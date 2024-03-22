@@ -29,11 +29,17 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Active", "Draft", "Expired", "Canceled"],
+            "options": [
+                "Draft",
+                "Active",
+                "Canceled",
+                "Expired"
+            ],
             "style": {
-                "Canceled": "danger",
+                "Canceled": "info",
                 "Expired": "danger"
             },
+            "default": "Active",
             "customizationOptionsReferenceDisabled": true
         },
         "type": {

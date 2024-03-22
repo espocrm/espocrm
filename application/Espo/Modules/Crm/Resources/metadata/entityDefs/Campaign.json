@@ -7,8 +7,17 @@
         },
         "status": {
             "type": "enum",
-            "options": ["Planning", "Active", "Inactive", "Complete"],
+            "options": [
+                "Planning",
+                "Active",
+                "Inactive",
+                "Complete"
+            ],
             "default": "Planning",
+            "style": {
+                "Inactive": "info",
+                "Complete": "success"
+            },
             "customizationOptionsReferenceDisabled": true
         },
         "type": {
