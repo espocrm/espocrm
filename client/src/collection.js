@@ -704,7 +704,12 @@ class Collection {
             throw new RangeError('offset can not be less than 0');
         }
 
-        if (offset > this.total && this.total !== -1 && offset > 0) {
+        if (
+            offset > this.total &&
+            this.total !== -1 &&
+            this.total !== -2 &&
+            offset > 0
+        ) {
             throw new RangeError('offset can not be larger than total count');
         }
 
