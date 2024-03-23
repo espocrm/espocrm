@@ -33,7 +33,7 @@
                                 data-name="{{name}}"
                                 data-action="selectPreset"
                             >
-                                <div>
+                                <div class="{{#if style}}text-{{style}}{{/if}}">
                                 {{#if label}}{{label}}{{else}}{{translate name category='presetFilters' scope=../entityType}}{{/if}}
                                 </div>
                             </a>
