@@ -596,35 +596,7 @@ class ListRecordView extends View {
                 return;
             }
 
-            Espo.Ui.notify(' ... ');
-
-            this.collection.once('sync', () => {
-                Espo.Ui.notify(false);
-
-                this.trigger('after:paginate');
-            });
-
-            if (page === 'current') {
-                this.collection.fetch();
-            }
-            else {
-                if (page === 'next') {
-                    this.collection.nextPage();
-                }
-                else if (page === 'previous') {
-                    this.collection.previousPage();
-                }
-                else if (page === 'last') {
-                    this.collection.lastPage();
-                }
-                else if (page === 'first') {
-                    this.collection.firstPage();
-                }
-
-                this.trigger('paginate');
-            }
-
-            this.deactivate();
+            this.goToPage(page);
         },
         /** @this ListRecordView */
         'mousedown input.record-checkbox': function () {
@@ -718,6 +690,41 @@ class ListRecordView extends View {
         'click a.reset-custom-order': function () {
             this.resetCustomOrder();
         },
+    }
+
+    /**
+     * @private
+     * @param {'first'|'last'|'next'|'previous'|'current'} page
+     */
+    goToPage(page) {
+        Espo.Ui.notify(' ... ');
+
+        const onSync = () => {
+            Espo.Ui.notify(false);
+            this.trigger('after:paginate');
+        };
+
+        if (page === 'current') {
+            this.collection.fetch().then(() => onSync());
+        }
+        else {
+            if (page === 'next') {
+                this.collection.nextPage().then(() => onSync());
+            }
+            else if (page === 'previous') {
+                this.collection.previousPage().then(() => onSync());
+            }
+            else if (page === 'last') {
+                this.collection.lastPage().then(() => onSync());
+            }
+            else if (page === 'first') {
+                this.collection.firstPage().then(() => onSync());
+            }
+
+            this.trigger('paginate');
+        }
+
+        this.deactivate();
     }
 
     /**
