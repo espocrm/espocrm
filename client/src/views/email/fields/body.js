@@ -39,10 +39,14 @@ class EmailBodyFieldView extends WysiwygFieldView {
     setupToolbar() {
         super.setupToolbar();
 
-        this.toolbar.unshift([
-            'insert-field',
-            ['insert-field']
-        ]);
+        const attachmentItem = this.toolbar.find(it => it[0] === 'attachment');
+
+        if (attachmentItem) {
+            attachmentItem[1].push('insert-field');
+        } else {
+            this.toolbar.push(['insert-field', ['insert-field']]);
+        }
+
 
         this.buttons['insert-field'] = () => {
             const ui = $.summernote.ui;
