@@ -2890,16 +2890,13 @@ class ListRecordView extends View {
 
                 this.buildRow(i, model, view => {
                     const model = view.model;
-
                     const $existingRow = this.getDomRowItem(model.id);
 
                     if ($existingRow && $existingRow.length) {
                         $existingRow.remove();
                     }
 
-                    $list.append(
-                        $(this.getRowContainerHtml(model.id))
-                    );
+                    $list.append(this.getRowContainerHtml(model.id));
 
                     view.render()
                         .then(() => {
@@ -2915,18 +2912,20 @@ class ListRecordView extends View {
             this.noRebuild = true;
         };
 
-        this.listenToOnce(collection, 'update', (collection, o) => {
+        const onUpdate = (c, /** Record */o) => {
             if (o.changes.merged.length) {
                 collection.lengthCorrection += o.changes.merged.length;
             }
-        });
+        };
+
+        this.listenToOnce(collection, 'update', onUpdate);
 
         // If using promise callback, then need to pass `noRebuild: true`.
         collection.fetch({
             success: success,
             remove: false,
             more: true,
-        });
+        }).catch(() => this.stopListening(collection, 'update', onUpdate));
     }
 
     getDomRowItem(id) {
