@@ -35,17 +35,16 @@ class RecordListPagination extends View {
     isComponent = true
 
     data() {
-        const previous = this.collection.offset > 0;
-        const next = this.collection.total - this.collection.offset > this.collection.maxSize ||
-            this.collection.total === -1;
-
-        const last = next && this.collection.total >= 0;
-
-        const from = this.collection.offset + 1;
-        const to = this.collection.offset + this.collection.length;
         const total = this.collection.total;
+        const offset = this.collection.offset;
+        const length = this.collection.length;
 
-        const noTotal = !this.options.displayTotalCount || this.collection.total < 0;
+        const previous = offset > 0;
+        const next = total - offset > length || total === -1;
+        const last = next && total >= 0;
+
+        const from = offset + 1;
+        const to = offset + length;
 
         return {
             total: this.getHelper().numberUtil.formatInt(total),
@@ -54,7 +53,7 @@ class RecordListPagination extends View {
             previous: previous,
             next: next,
             last: last,
-            noTotal: noTotal,
+            noTotal: !this.options.displayTotalCount || total < 0,
         };
     }
 

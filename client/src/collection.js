@@ -657,9 +657,7 @@ class Collection {
      * @returns {Promise}
      */
     nextPage() {
-        const offset = this.offset + Math.max(this.maxSize, this.length);
-
-        return this.setOffset(offset);
+        return this.setOffset(this.offset + this.length);
     }
 
     /**
@@ -721,7 +719,7 @@ class Collection {
      * @return {boolean}
      */
     hasMore() {
-        return this.total > this.length || this.total === -1;
+        return this.total > (this.length + this.offset) || this.total === -1;
     }
 
     /**
