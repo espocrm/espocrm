@@ -1879,18 +1879,7 @@ class ListRecordView extends View {
                 const id = $(e.target).attr('data-id');
 
                 if (id) {
-                    const model = this.collection.get(id);
-
-                    if (this.checkboxes) {
-                        const list = [];
-
-                        list.push(model);
-
-                        this.trigger('select', list);
-                    }
-                    else {
-                        this.trigger('select', model);
-                    }
+                    this.selectModel(id);
                 }
 
                 e.stopPropagation();
@@ -1986,6 +1975,22 @@ class ListRecordView extends View {
         }
 
         this._renderEmpty = this.options.skipBuildRows;
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     */
+    selectModel(id) {
+        const model = this.collection.get(id);
+
+        if (this.checkboxes) {
+            this.trigger('select', [model]);
+
+            return;
+        }
+
+        this.trigger('select', model);
     }
 
     afterRender() {
