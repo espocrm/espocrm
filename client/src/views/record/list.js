@@ -706,24 +706,25 @@ class ListRecordView extends View {
 
         if (page === 'current') {
             this.collection.fetch().then(() => onSync());
-        }
-        else {
-            if (page === 'next') {
-                this.collection.nextPage().then(() => onSync());
-            }
-            else if (page === 'previous') {
-                this.collection.previousPage().then(() => onSync());
-            }
-            else if (page === 'last') {
-                this.collection.lastPage().then(() => onSync());
-            }
-            else if (page === 'first') {
-                this.collection.firstPage().then(() => onSync());
-            }
+            this.deactivate();
 
-            this.trigger('paginate');
+            return;
         }
 
+        if (page === 'next') {
+            this.collection.nextPage().then(() => onSync());
+        }
+        else if (page === 'previous') {
+            this.collection.previousPage().then(() => onSync());
+        }
+        else if (page === 'last') {
+            this.collection.lastPage().then(() => onSync());
+        }
+        else if (page === 'first') {
+            this.collection.firstPage().then(() => onSync());
+        }
+
+        this.trigger('paginate');
         this.deactivate();
     }
 

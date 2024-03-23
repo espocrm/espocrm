@@ -208,25 +208,23 @@
         </tbody>
     </table>
 
-    {{#unless hasPagination}}
-        {{#if showMoreEnabled}}
-            <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
-                <a
-                    type="button"
-                    role="button"
-                    tabindex="0"
-                    class="btn btn-default btn-block"
-                    data-action="showMore"
-                    {{#if showCount}}title="{{translate 'Total'}}: {{totalCountFormatted}}"{{/if}}
-                >
-                    {{#if showCount}}
-                    <div class="pull-right text-muted more-count">{{moreCountFormatted}}</div>
-                    {{/if}}
-                    <span>{{translate 'Show more'}}</span>
-                </a>
-            </div>
-        {{/if}}
-    {{/unless}}
+    {{#if showMoreEnabled}}
+        <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
+            <a
+                type="button"
+                role="button"
+                tabindex="0"
+                class="btn btn-default btn-block"
+                data-action="showMore"
+                {{#if showCount}}title="{{translate 'Total'}}: {{totalCountFormatted}}"{{/if}}
+            >
+                {{#if showCount}}
+                <div class="pull-right text-muted more-count">{{moreCountFormatted}}</div>
+                {{/if}}
+                <span>{{translate 'Show more'}}</span>
+            </a>
+        </div>
+    {{/if}}
 </div>
 
 {{else}}

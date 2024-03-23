@@ -57,6 +57,10 @@ class RecordListPagination extends View {
             noTotal: noTotal,
         };
     }
+
+    setup() {
+        this.listenTo(this.collection, 'sync', () => this.reRender());
+    }
 }
 
 export default RecordListPagination;

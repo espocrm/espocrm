@@ -657,7 +657,9 @@ class Collection {
      * @returns {Promise}
      */
     nextPage() {
-        return this.setOffset(this.offset + this.maxSize);
+        const offset = this.offset + Math.max(this.maxSize, this.length);
+
+        return this.setOffset(offset);
     }
 
     /**
@@ -710,7 +712,7 @@ class Collection {
 
         this.offset = offset;
 
-        return this.fetch();
+        return this.fetch({maxSize: this.maxSize});
     }
 
     /**
@@ -751,6 +753,10 @@ class Collection {
      * @param {{
      *     remove?: boolean,
      *     more?: boolean,
+     *     offset?: number,
+     *     maxSize?: number,
+     *     orderBy?: string,
+     *     order?: 'asc'|'desc',
      * } & Object.<string, *>} [options] Options.
      * @returns {Promise}
      * @fires Collection#sync Unless `{silent: true}`.
@@ -767,20 +773,17 @@ class Collection {
 
         const length = this.length + this.lengthCorrection;
 
-        if (!('maxSize' in options)) {
-            options.data.maxSize = options.more ? this.maxSize : (
-                (length > this.maxSize) ? length : this.maxSize
-            );
+        if ('maxSize' in options) {
+            options.data.maxSize = options.maxSize;
+        } else {
+            options.data.maxSize = options.more ? this.maxSize : Math.max(length, this.maxSize);
 
             if (this.maxMaxSize && options.data.maxSize > this.maxMaxSize) {
                 options.data.maxSize = this.maxMaxSize;
             }
         }
-        else {
-            options.data.maxSize = options.maxSize;
-        }
 
-        options.data.offset = options.more ? length : this.offset;
+        options.data.offset = options.more ? (this.offset + length) : this.offset;
         options.data.orderBy = this.orderBy;
         options.data.order = this.order;
         options.data.where = this.getWhere();
