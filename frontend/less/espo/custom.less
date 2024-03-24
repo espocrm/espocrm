@@ -925,8 +925,26 @@ input.global-search-input {
     margin-top: 3px;
 }
 
-.list-row-buttons span.caret {
-    border-top-color: var(--text-muted-color);
+.list-row-buttons {
+    .btn {
+        .caret {
+            border-top-color: var(--text-muted-color);
+        }
+
+        &:hover {
+            .caret {
+                border-top-color: var(--btn-text-color);
+            }
+        }
+    }
+
+    &.open {
+        .btn {
+            .caret {
+                border-top-color: var(--btn-text-color);
+            }
+        }
+    }
 }
 
 .list {
@@ -969,6 +987,30 @@ input.global-search-input {
             margin: 0;
             position: relative;
             top: 3px;
+        }
+    }
+
+    th {
+        .btn-group {
+            .btn {
+                .caret {
+                    border-top-color: var(--text-muted-color);
+                }
+
+                &:hover {
+                    .caret {
+                        border-top-color: var(--btn-text-color);
+                    }
+                }
+            }
+
+            &.open {
+                .btn {
+                    .caret {
+                        border-top-color: var(--btn-text-color);
+                    }
+                }
+            }
         }
     }
 }
