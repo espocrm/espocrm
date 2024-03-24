@@ -1969,7 +1969,11 @@ td > span.color-icon {
         top: -1px;
     }
 
-    padding-left: 26px;
+    padding-left: 28px;
+
+    > .icon:first-child {
+        margin-right: 1px;
+    }
 }
 
 .stream-head-container {
@@ -1991,34 +1995,6 @@ td > span.color-icon {
     margin-bottom: -2px;
 }
 
-.list table td img.image-preview {
-    border-radius: var(--border-radius-small);
-}
-
-img.avatar {
-    border-radius: 50%;
-}
-
-img.avatar.avatar-link {
-    display: inline-block;
-    margin-top: 0;
-    margin-right: 3px;
-    position: relative;
-    vertical-align: top;
-    top: 2px;
-
-    &[width="14"] {
-        top: 2px;
-        vertical-align: baseline;
-    }
-}
-
-div[data-scope="User"] .field[data-name="avatar"] {
-    > a > img,
-    > img {
-        border-radius: 50%;
-    }
-}
 
 .stream-post-container .cell-post {
     overflow-wrap: break-word;
@@ -2030,7 +2006,7 @@ div[data-scope="User"] .field[data-name="avatar"] {
 .stream-details-container,
 .stream-subject-container
 {
-    padding: 2px 0 2px 26px;
+    padding: 2px 0 2px 28px;
     margin-bottom: 2px;
 }
 
@@ -2063,6 +2039,35 @@ div[data-scope="User"] .field[data-name="avatar"] {
 
     > li:last-child {
         margin-bottom: 0;
+    }
+}
+
+.list table td img.image-preview {
+    border-radius: var(--border-radius-small);
+}
+
+img.avatar {
+    border-radius: 50%;
+}
+
+img.avatar.avatar-link {
+    display: inline-block;
+    margin-top: 0;
+    margin-right: 3px;
+    position: relative;
+    vertical-align: top;
+    top: 2px;
+
+    &[width="14"] {
+        top: 2px;
+        vertical-align: baseline;
+    }
+}
+
+div[data-scope="User"] .field[data-name="avatar"] {
+    > a > img,
+    > img {
+        border-radius: 50%;
     }
 }
 

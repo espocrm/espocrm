@@ -41,6 +41,13 @@ class AssignNoteStreamView extends NoteStreamView {
         super.init();
     }
 
+    data() {
+        return {
+            ...super.data(),
+            iconHtml: this.getIconHtml(),
+        };
+    }
+
     setup() {
         const data = this.model.get('data');
 

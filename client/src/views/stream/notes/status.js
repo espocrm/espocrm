@@ -38,6 +38,7 @@ class StatusNoteStreamView extends NoteStreamView {
             ...super.data(),
             style: this.style,
             statusText: this.statusText,
+            iconHtml: this.getIconHtml(),
         };
     }
 

@@ -39,6 +39,7 @@ class UpdateNoteStreamView extends NoteStreamView {
             ...super.data(),
             fieldsArr: this.fieldsArr,
             parentType: this.model.get('parentType'),
+            iconHtml: this.getIconHtml(),
         };
     }
 
