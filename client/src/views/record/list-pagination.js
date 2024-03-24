@@ -58,7 +58,14 @@ class RecordListPagination extends View {
     }
 
     setup() {
-        this.listenTo(this.collection, 'sync', () => this.reRender());
+        this.listenTo(this.collection, 'sync', () => {
+            if (!this.element) {
+                // A hack. Prevents warnings in console.
+                return;
+            }
+
+            this.reRender();
+        });
     }
 }
 
