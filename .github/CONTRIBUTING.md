@@ -1,8 +1,10 @@
 ## Issues
 
-When reporting a possible bug, please provide detail steps so that we will be able
-to reproduce the issue. Please try not to use phrases like "very big bug",
+When reporting a possible bug, provide detail steps so that we will be able
+to reproduce the issue. Try not to use phrases like "very big bug",
 "huge issue", "useless feature", etc. No need to use exclamation marks as well.
+
+Steps to reproduce should be clear and unambiguous.
 
 Note that we don't provide developer help or any kind of support on GitHub.
 For this, please use our [forum](https://forum.espocrm.com).
