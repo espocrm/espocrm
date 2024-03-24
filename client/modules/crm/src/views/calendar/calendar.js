@@ -672,24 +672,19 @@ class CalendarView extends View {
             if (end) {
                 start = end;
             }
-        } else {
-            if (
-                (
-                    start.format('d') !== end.format('d') &&
-                    (end.hours() !== 0 || end.minutes() !== 0)
-                ) &&
-                (end.unix() - start.unix() >= 86400)
-            ) {
-                event.allDay = true;
+        } else if (
+            start.format('YYYY-DD') !== end.format('YYYY-DD') &&
+            end.unix() - start.unix() >= 86400
+        ) {
+            event.allDay = true;
 
-                //if (!notInitial) {
-                    if (end.hours() !== 0 || end.minutes() !== 0) {
-                        end.add(1, 'days');
-                    }
-                //}
-            } else {
-                event.allDay = false;
+            //if (!notInitial) {
+            if (end.hours() !== 0 || end.minutes() !== 0) {
+                end.add(1, 'days');
             }
+            //}
+        } else {
+            event.allDay = false;
         }
 
         event.allDayCopy = event.allDay;
