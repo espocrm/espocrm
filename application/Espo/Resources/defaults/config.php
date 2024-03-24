@@ -185,7 +185,7 @@ return [
     'followCreatedEntities' => false,
     'b2cMode' => false,
     'restrictedMode' => false,
-    'theme' => 'Violet',
+    'theme' => 'Light',
     'themeParams' => (object) ['navbar' => 'side'],
     'massEmailMaxPerHourCount' => 100,
     'massEmailMaxPerBatchCount' => null,

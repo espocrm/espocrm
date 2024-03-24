@@ -269,11 +269,11 @@ class Installer
     public function getThemeList(): array
     {
         return [
+            'Light',
             'Violet',
-            'Espo',
             'Dark',
             'Glass',
-            'Light',
+            'Espo',
             'Sakura',
             'Hazyblue',
         ];
@@ -392,7 +392,7 @@ class Installer
             'passwordSalt' => $this->getPasswordHash()->generateSalt(),
             'cryptKey' => Util::generateSecretKey(),
             'hashSecretKey' => Util::generateSecretKey(),
-            'theme' => $saveData['theme'] ?? 'Violet',
+            'theme' => $saveData['theme'] ?? 'Light',
         ];
 
         if (empty($saveData['defaultPermissions']['user'])) {
