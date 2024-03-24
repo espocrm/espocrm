@@ -85,13 +85,13 @@ class MentionInPostNoteStreamView extends NoteStreamView {
         this.messageName = 'mentionYouInPostTarget';
 
         if (this.model.has('teamsIds') && this.model.get('teamsIds').length) {
-            let teamIdList = this.model.get('teamsIds');
-            let teamNameHash = this.model.get('teamsNames') || {};
+            const teamIdList = this.model.get('teamsIds');
+            const teamNameHash = this.model.get('teamsNames') || {};
 
-            let teamHtmlList = [];
+            const teamHtmlList = [];
 
             teamIdList.forEach(teamId => {
-                let teamName = teamNameHash[teamId];
+                const teamName = teamNameHash[teamId];
 
                 if (!teamName) {
                     return;
@@ -113,8 +113,8 @@ class MentionInPostNoteStreamView extends NoteStreamView {
         }
 
         if (this.model.has('usersIds') && this.model.get('usersIds').length) {
-            var userIdList = this.model.get('usersIds');
-            var userNameHash = this.model.get('usersNames') || {};
+            const userIdList = this.model.get('usersIds');
+            const userNameHash = this.model.get('usersNames') || {};
 
             if (userIdList.length === 1 && userIdList[0] === this.model.get('createdById')) {
                 this.messageName = 'mentionYouInPostTargetNoTarget';
@@ -123,10 +123,10 @@ class MentionInPostNoteStreamView extends NoteStreamView {
                 return;
             }
 
-            let userHtmlList = [];
+            const userHtmlList = [];
 
             userIdList.forEach(userId => {
-                let userName = userNameHash[userId];
+                const userName = userNameHash[userId];
 
                 if (!userName) {
                     return;

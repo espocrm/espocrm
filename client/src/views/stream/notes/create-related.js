@@ -50,7 +50,7 @@ class CreateRelatedNoteStreamView extends NoteStreamView {
     }
 
     setup() {
-        let data = this.model.get('data') || {};
+        const data = this.model.get('data') || {};
 
         this.entityType = this.model.get('relatedType') || data.entityType || null;
         this.entityId = this.model.get('relatedId') || data.entityId || null;
