@@ -874,18 +874,24 @@ class ListRecordView extends View {
 
         const displayTotalCount = this.displayTotalCount && this.collection.total > 0 && !this.pagination;
 
-        const topBar =
+        let topBar = this.collection.length && (
             this.pagination ||
             this.checkboxes ||
             (this.buttonList.length && !this.buttonsDisabled) ||
             (this.dropdownItemList.length && !this.buttonsDisabled) ||
             this.forceDisplayTopBar ||
-            displayTotalCount;
+            displayTotalCount
+        );
+
+        if (!topBar && this.pagination && !this.collection.length && this.collection.offset > 0) {
+            topBar = true;
+        }
 
         const noDataDisabled = this.noDataDisabled || this._renderEmpty;
 
         return {
             scope: this.scope,
+            collectionLength: this.collection.models.length,
             entityType: this.entityType,
             header: this.header,
             headerDefs: this._getHeaderDefs(),

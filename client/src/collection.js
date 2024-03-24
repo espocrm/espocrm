@@ -666,7 +666,7 @@ class Collection {
      * @returns {Promise}
      */
     previousPage() {
-        return this.setOffset(this.offset - this.maxSize);
+        return this.setOffset(Math.max(0, this.offset - this.maxSize));
     }
 
     /**

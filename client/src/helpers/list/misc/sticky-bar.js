@@ -82,6 +82,10 @@ class StickyBarHelper {
         const $stickedBar = this.$stickedBar = this.$el.find('.sticked-bar');
         const $middle = this.$el.find('> .list');
 
+        if (!$middle.get(0)) {
+            return;
+        }
+
         const $window = $(window);
 
         let $scrollable = $window;
