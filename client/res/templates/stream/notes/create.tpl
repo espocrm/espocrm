@@ -16,7 +16,7 @@
 
 {{#if statusText}}
     <div class="stream-post-container">
-        <span class="label label-{{statusStyle}}">{{statusText}}</span>
+        <span class="label label-state label-{{statusStyle}}">{{statusText}}</span>
     </div>
 {{/if}}
 

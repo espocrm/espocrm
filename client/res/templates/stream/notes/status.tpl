@@ -15,7 +15,7 @@
 </div>
 
 <div class="stream-post-container">
-    <span class="label label-{{style}}">{{statusText}}</span>
+    <span class="label label-state label-{{style}}">{{statusText}}</span>
 </div>
 
 <div class="stream-date-container">

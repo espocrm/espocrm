@@ -204,6 +204,40 @@ label {
     padding: @label-padding-small;
 }
 
+.label.label-state {
+    font-weight: 400;
+
+    &.label-default {
+        color: var(--state-default-text);
+        background-color: var(--state-default-bg);
+    }
+
+    &.label-primary {
+        color: var(--state-primary-text);
+        background-color: var(--state-primary-bg);
+    }
+
+    &.label-info {
+        color: var(--state-info-text);
+        background-color: var(--state-info-bg);
+    }
+
+    &.label-danger {
+        color: var(--state-danger-text);
+        background-color: var(--state-danger-bg);
+    }
+
+    &.label-warning {
+        color: var(--state-warning-text);
+        background-color: var(--state-warning-bg);
+    }
+
+    &.label-success {
+        color: var(--state-success-text);
+        background-color: var(--state-success-bg);
+    }
+}
+
 .small .label-md,
 .label-lg.small {
     font-size: 75%;
