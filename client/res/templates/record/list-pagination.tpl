@@ -29,14 +29,12 @@
                 <li>
                     <div class="input-group page-input-group">
                         <span class="input-group-addon">{{translate 'Page'}}</span>
-
                         <input
                             class="form-control page-input"
                             type="text"
                             inputmode="numeric"
                             pattern="[0-9]*"
                             value="{{currentPageNumber}}"
-                            {{#if lastPageNumber}}max="{{lastPageNumber}}"{{/if}}
                         >
                     </div>
                 </li>
