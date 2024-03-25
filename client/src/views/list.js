@@ -172,6 +172,14 @@ class ListView extends MainView {
         'Control+Period': function (e) {
             this.handleShortcutKeyCtrlPeriod(e);
         },
+        /** @this ListView */
+        'Control+ArrowLeft': function (e) {
+            this.handleShortcutKeyControlArrowLeft(e);
+        },
+        /** @this ListView */
+        'Control+ArrowRight': function (e) {
+            this.handleShortcutKeyControlArrowRight(e);
+        },
     }
 
     /** @inheritDoc */
@@ -930,6 +938,24 @@ class ListView extends MainView {
         }
 
         this.getSearchView().selectNextPreset();
+    }
+
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyControlArrowLeft(e) {
+        this.getRecordView().trigger('request-page', 'previous');
+    }
+
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * @protected
+     * @param {JQueryKeyEventObject} e
+     */
+    handleShortcutKeyControlArrowRight(e) {
+        this.getRecordView().trigger('request-page', 'next');
     }
 }
 

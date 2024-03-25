@@ -55,6 +55,7 @@ class KanbanRecordView extends ListRecordView {
     _internalLayout = null
     buttonsDisabled = false
     backDragStarted = true
+    paginationDisabled = true
 
     /**
      * A button list.

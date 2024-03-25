@@ -66,6 +66,14 @@ class RelatedListModalView extends ModalView {
         'Control+Period': function (e) {
             this.handleShortcutKeyCtrlPeriod(e);
         },
+        /** @this RelatedListModalView */
+        'Control+ArrowLeft': function () {
+            this.handleShortcutKeyControlArrowLeft();
+        },
+        /** @this RelatedListModalView */
+        'Control+ArrowRight': function () {
+            this.handleShortcutKeyControlArrowRight();
+        },
     }
 
     events = {
@@ -332,6 +340,14 @@ class RelatedListModalView extends ModalView {
      */
     getSearchView() {
         return this.getView('search');
+    }
+
+    /**
+     * @protected
+     * @return {module:views/record/list}
+     */
+    getRecordView() {
+        return this.getView('list');
     }
 
     setupSearch() {
@@ -652,6 +668,20 @@ class RelatedListModalView extends ModalView {
         }
 
         this.getSearchView().selectNextPreset();
+    }
+
+    /**
+     * @protected
+     */
+    handleShortcutKeyControlArrowLeft() {
+        this.getRecordView().trigger('request-page', 'previous');
+    }
+
+    /**
+     * @protected
+     */
+    handleShortcutKeyControlArrowRight() {
+        this.getRecordView().trigger('request-page', 'next');
     }
 }
 

@@ -841,10 +841,19 @@ class Collection {
     }
 
     /**
+     * Is being fetched.
+     *
+     * @return {boolean}
+     */
+    isBeingFetched() {
+        return this.lastSyncPromise && this.lastSyncPromise.getReadyState() < 4;
+    }
+
+    /**
      * Abort the last fetch.
      */
     abortLastFetch() {
-        if (this.lastSyncPromise && this.lastSyncPromise.getReadyState() < 4) {
+        if (this.isBeingFetched()) {
             this.lastSyncPromise.abort();
         }
     }

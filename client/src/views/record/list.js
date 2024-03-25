@@ -895,7 +895,7 @@ class ListRecordView extends View {
             entityType: this.entityType,
             header: this.header,
             headerDefs: this._getHeaderDefs(),
-            hasPagination: this.pagination,
+            hasPagination: this.hasPagination(),
             showMoreActive: this.collection.hasMore(),
             showMoreEnabled: this.showMore,
             showCount: this.showCount && this.collection.total > 0,
@@ -1971,6 +1971,22 @@ class ListRecordView extends View {
             this.createView('paginationSticky', 'views/record/list-pagination', {
                 collection: this.collection,
                 displayTotalCount: this.displayTotalCount,
+            });
+
+            this.on('request-page', /** string */page => {
+                if (this.collection.isBeingFetched()) {
+                    return;
+                }
+
+                if (page === 'next' && !this.collection.hasNextPage()) {
+                    return;
+                }
+
+                if (page === 'previous' && !this.collection.hasPreviousPage()) {
+                    return;
+                }
+
+                this.goToPage(page);
             });
         }
 
@@ -3375,6 +3391,15 @@ class ListRecordView extends View {
         });
 
         this.assignView('settings', view, '.settings-container');
+    }
+
+    /**
+     * Whether the pagination is enabled.
+     *
+     * @return {boolean}
+     */
+    hasPagination() {
+        return this.pagination;
     }
 }
 
