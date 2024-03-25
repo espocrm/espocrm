@@ -652,6 +652,24 @@ class Collection {
     }
 
     /**
+     * Has previous page.
+     *
+     * @return {boolean}
+     */
+    hasPreviousPage() {
+        return this.offset > 0;
+    }
+
+    /**
+     * Has next page.
+     *
+     * @return {boolean}
+     */
+    hasNextPage() {
+        return this.total - this.offset > this.length || this.total === -1;
+    }
+
+    /**
      * Next page.
      *
      * @returns {Promise}

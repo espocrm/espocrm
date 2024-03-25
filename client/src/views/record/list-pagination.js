@@ -39,8 +39,7 @@ class RecordListPagination extends View {
         const offset = this.collection.offset;
         const length = this.collection.length;
 
-        const previous = offset > 0;
-        const next = total - offset > length || total === -1;
+        const next = this.collection.hasNextPage();
         const last = next && total >= 0;
 
         const from = offset + 1;
@@ -50,7 +49,7 @@ class RecordListPagination extends View {
             total: this.getHelper().numberUtil.formatInt(total),
             from: this.getHelper().numberUtil.formatInt(from),
             to: this.getHelper().numberUtil.formatInt(to),
-            previous: previous,
+            previous: this.collection.hasPreviousPage(),
             next: next,
             last: last,
             noTotal: !this.options.displayTotalCount || total < 0,
