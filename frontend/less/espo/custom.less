@@ -2118,21 +2118,6 @@ div[data-scope="User"] .field[data-name="avatar"] {
     line-height: @line-height-computed;
 }
 
-.legend-container > table {
-    margin: 0 auto;
-}
-
-.legend-container {
-    overflow-x: hidden;
-    overflow-y: hidden;
-    padding-top: 7px;
-}
-
-.legend-container table td {
-    padding: 2px 2px;
-    line-height: 1em;
-}
-
 .flotr-mouse-value {
     cursor: default;
     font-size: 13px;
@@ -2154,29 +2139,50 @@ div[data-scope="User"] .field[data-name="avatar"] {
     padding: 0 1px 1px;
 }
 
-.legend-container td.flotr-legend-label {
-    white-space: nowrap;
-    text-overflow: ellipsis;
-    overflow: hidden;
-}
+.legend-container {
+    overflow-x: hidden;
+    overflow-y: hidden;
+    padding-top: 7px;
 
-.legend-container td.flotr-legend-label > span {
-    display: block;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    line-height: 1.3em;
-    max-height: 15px;
-}
+    > table {
+        margin: 0 auto;
+    }
 
-.legend-container .flotr-legend-color-box > div {
-    position: relative;
-    top: 1px;
-}
+    table td {
+        padding: 2px 2px;
+        line-height: 1em;
+    }
 
-.legend-container .flotr-legend-color-box > div > div > div {
-    position: relative;
-    top: -2px;
-    left: -2px;
+    td.flotr-legend-label {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+
+    td.flotr-legend-label > span {
+        display: block;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        line-height: 1.3em;
+        max-height: 15px;
+    }
+
+    .flotr-legend-color-box > div {
+        position: relative;
+        top: 1px;
+
+        > div {
+            border-radius: var(--border-radius-small);
+
+            > div {
+                position: relative;
+                top: -1px;
+                left: 0;
+                border-radius: var(--border-radius-small);
+                margin: -1px;
+            }
+        }
+    }
 }
 
 .textcomplete-item a {
