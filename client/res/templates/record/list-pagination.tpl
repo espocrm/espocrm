@@ -22,8 +22,25 @@
                     tabindex="0"
                     data-page="last"
                     class="{{#unless last}}disabled{{/unless}}"
-                >{{translate 'Last Page'}}</a>
+                >{{translate 'Last Page'}}{{#if lastPageNumber}} · {{lastPageNumber}}{{/if}}</a>
             </li>
+            {{#if hasGoToPage}}
+                <li class="divider"></li>
+                <li>
+                    <div class="input-group page-input-group">
+                        <span class="input-group-addon">{{translate 'Page'}}</span>
+
+                        <input
+                            class="form-control page-input"
+                            type="text"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            value="{{currentPageNumber}}"
+                            {{#if lastPageNumber}}max="{{lastPageNumber}}"{{/if}}
+                        >
+                    </div>
+                </li>
+            {{/if}}
         </ul>
     </div>
     <a

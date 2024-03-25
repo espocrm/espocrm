@@ -45,7 +45,12 @@ class RecordListPagination extends View {
         const from = offset + 1;
         const to = offset + length;
 
+        const lastPageNumber = this.getLastPageNumber();
+
         return {
+            hasGoToPage: lastPageNumber > 1 || total < 0,
+            currentPageNumber: this.getCurrentPageNumber(),
+            lastPageNumber: lastPageNumber,
             total: this.getHelper().numberUtil.formatInt(total),
             from: this.getHelper().numberUtil.formatInt(from),
             to: this.getHelper().numberUtil.formatInt(to),
@@ -65,6 +70,69 @@ class RecordListPagination extends View {
 
             this.reRender();
         });
+
+
+        this.addHandler('change', 'input.page-input', (e, /** HTMLInputElement */input) => {
+            if (input.value === '') {
+                input.value = this.getCurrentPageNumber();
+
+                return;
+            }
+
+            const result = this.goToNumber(parseInt(input.value));
+
+            if (!result) {
+                input.value = this.getCurrentPageNumber();
+            }
+        });
+
+        this.addHandler('focus', 'input.page-input', (e, /** HTMLInputElement */input) => {
+            input.select();
+        });
+
+        this.addHandler('input', 'input.page-input', (e, /** HTMLInputElement */input) => {
+            input.value = input.value.replace(/[^0-9.]/g, '');
+        });
+
+        this.addHandler('click', '.page-input-group > .input-group-addon', e => {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+        });
+    }
+
+    /**
+     * @return {number|null}
+     */
+    getCurrentPageNumber() {
+        return Math.floor(this.collection.offset / this.collection.maxSize) + 1;
+    }
+
+    /**
+     * @return {number|null}
+     */
+    getLastPageNumber() {
+        return this.collection.total >= 0 ?
+            Math.floor(this.collection.total / this.collection.maxSize) + 1 :
+            null;
+    }
+
+    /**
+     * @param {Number} number
+     * @return {Promise|null}
+     */
+    goToNumber(number) {
+        const offset = (number - 1) * this.collection.maxSize;
+
+        if (this.collection.total >= 0 && offset > this.collection.total) {
+            Espo.Ui.warning(this.translate('pageNumberIsOutOfBound', 'messages'));
+
+            return null;
+        }
+
+        Espo.Ui.notify(' ... ');
+
+       return this.collection.setOffset(offset)
+            .then(() => Espo.Ui.notify(false));
     }
 }
 
