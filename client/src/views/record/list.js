@@ -1412,12 +1412,6 @@ class ListRecordView extends View {
                     Espo.Ui.success(msg);
                 }
 
-                if (this.pagination) {
-                    this.collection.fetch().then(() => showSuccess());
-
-                    return;
-                }
-
                 showSuccess();
             });
         });
@@ -3163,23 +3157,14 @@ class ListRecordView extends View {
 
             Espo.Ui.notify(' ... ');
 
-            model
-                .destroy({wait: true, fromList: true})
+            model.destroy({wait: true, fromList: true})
                 .then(() => {
-                    if (!this.pagination) {
-                        Espo.Ui.success(this.translate('Removed'));
-                    }
+                    Espo.Ui.success(this.translate('Removed'));
 
                     this.removeRecordFromList(id);
-
-                    if (this.pagination) {
-                        this.collection.fetch()
-                            .then(() => {
-                                Espo.Ui.success(this.translate('Removed'))
-                            });
-                    }
                 })
                 .catch(() => {
+                    // @todo Revert to the same position.
                     this.collection.push(model);
                 });
         });

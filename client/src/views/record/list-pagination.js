@@ -58,7 +58,7 @@ class RecordListPagination extends View {
     }
 
     setup() {
-        this.listenTo(this.collection, 'sync', () => {
+        this.listenTo(this.collection, 'update', () => {
             if (!this.element) {
                 // A hack. Prevents warnings in console.
                 return;
