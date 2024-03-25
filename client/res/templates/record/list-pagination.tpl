@@ -22,7 +22,7 @@
                     tabindex="0"
                     data-page="last"
                     class="{{#unless last}}disabled{{/unless}}"
-                >{{translate 'Last Page'}}{{#if lastPageNumber}} · {{lastPageNumber}}{{/if}}</a>
+                >{{translate 'Last Page'}}{{#if hasLastPageNumber}} · {{lastPageNumber}}{{/if}}</a>
             </li>
             {{#if hasGoToPage}}
                 <li class="divider"></li>

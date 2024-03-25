@@ -51,6 +51,7 @@ class RecordListPagination extends View {
             hasGoToPage: lastPageNumber > 1 || total < 0,
             currentPageNumber: this.getCurrentPageNumber(),
             lastPageNumber: lastPageNumber,
+            hasLastPageNumber: lastPageNumber > 1,
             total: this.getHelper().numberUtil.formatInt(total),
             from: this.getHelper().numberUtil.formatInt(from),
             to: this.getHelper().numberUtil.formatInt(to),
