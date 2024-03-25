@@ -442,9 +442,8 @@ class RelatedListModalView extends ModalView {
                 null,
         }, /** import('views/record/list').default */view => {
 
-            this.listenTo(view, 'after:paginate', () => {
-                this.bodyElement.scrollTop = 0;
-            });
+            this.listenTo(view, 'after:paginate', () => this.bodyElement.scrollTop = 0);
+            this.listenTo(view, 'sort', () => this.bodyElement.scrollTop = 0);
 
             this.listenToOnce(view, 'select', model => {
                 this.trigger('select', model);
