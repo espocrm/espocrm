@@ -26,79 +26,86 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/stream/notes/event-confirmation', ['views/stream/note'], function (Dep) {
+import NoteStreamView from 'views/stream/note';
 
-    return Dep.extend({
+class EventConfirmationNoteView extends NoteStreamView {
 
-        // language=Handlebars
-        templateContent: `
-            {{#unless noEdit}}
-            <div class="pull-right right-container cell-buttons">
-            {{{right}}}
+    // language=Handlebars
+    templateContent = `
+        {{#unless noEdit}}
+        <div class="pull-right right-container cell-buttons">
+        {{{right}}}
+        </div>
+        {{/unless}}
+
+        <div class="stream-head-container">
+            <div class="pull-left">
+                {{{avatar}}}
             </div>
-            {{/unless}}
-
-            <div class="stream-head-container">
-                <div class="pull-left">
-                    {{{avatar}}}
-                </div>
-                <div class="stream-head-text-container">
-                    <span class="{{iconClass}} text-{{style}}"></span>
-                    <span class="text-muted message">{{{message}}}</span>
-                </div>
+            <div class="stream-head-text-container">
+                {{#if iconHtml}}{{{iconHtml}}}{{/if}}
+                <span class="text-muted message">{{{message}}}</span>
             </div>
-            <div class="stream-date-container">
-                <a class="text-muted small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
-            </div>
-        `,
+        </div>
+        <div class="stream-post-container">
+            <span class="{{statusIconClass}} text-{{style}}"></span>
+        </div>
+        <div class="stream-date-container">
+            <a class="text-muted small" href="#Note/view/{{model.id}}">{{{createdAt}}}</a>
+        </div>
+    `
 
-        data: function () {
-            let iconClass = ({
-                'success': 'fas fa-check fa-sm',
-                'danger': 'fas fa-times fa-sm',
-                'warning': 'fas fa-question fa-sm',
-            })[this.style] || '';
+    data() {
+        const statusIconClass = ({
+            'success': 'fas fa-check fa-sm',
+            'danger': 'fas fa-times fa-sm',
+            'warning': 'fas fa-question fa-sm',
+        })[this.style] || '';
 
-            return _.extend({
-                statusText: this.statusText,
-                style: this.style,
-                iconClass: iconClass,
-            }, Dep.prototype.data.call(this));
-        },
+        return {
+            ...super.data(),
+            statusText: this.statusText,
+            style: this.style,
+            statusIconClass: statusIconClass,
+            iconHtml: this.getIconHtml(),
+        };
+    }
 
-        init: function () {
-            if (this.getUser().isAdmin()) {
-                this.isRemovable = true;
-            }
+    init() {
+        if (this.getUser().isAdmin()) {
+            this.isRemovable = true;
+        }
 
-            Dep.prototype.init.call(this);
-        },
+        super.init();
+    }
 
-        setup: function () {
-            this.inviteeType = this.model.get('relatedType');
-            this.inviteeId = this.model.get('relatedId');
-            this.inviteeName = this.model.get('relatedName');
+    setup() {
+        this.inviteeType = this.model.get('relatedType');
+        this.inviteeId = this.model.get('relatedId');
+        this.inviteeName = this.model.get('relatedName');
 
-            let data = this.model.get('data') || {};
+        const data = this.model.get('data') || {};
 
-            let status = data.status || 'Tentative';
-            this.style = data.style || 'default';
-            this.statusText = this.getLanguage().translateOption(status, 'acceptanceStatus', 'Meeting');
+        const status = data.status || 'Tentative';
+        this.style = data.style || 'default';
+        this.statusText = this.getLanguage().translateOption(status, 'acceptanceStatus', 'Meeting');
 
-            this.messageName = 'eventConfirmation' + status;
+        this.messageName = 'eventConfirmation' + status;
 
-            if (this.isThis) {
-                this.messageName += 'This';
-            }
+        if (this.isThis) {
+            this.messageName += 'This';
+        }
 
-            this.messageData['invitee'] =
-                $('<a>')
-                    .attr('href', '#' + this.inviteeType + '/view/' + this.inviteeId)
-                    .attr('data-id', this.inviteeId)
-                    .attr('data-scope', this.inviteeType)
-                    .text(this.inviteeName);
+        this.messageData['invitee'] =
+            $('<a>')
+                .attr('href', '#' + this.inviteeType + '/view/' + this.inviteeId)
+                .attr('data-id', this.inviteeId)
+                .attr('data-scope', this.inviteeType)
+                .text(this.inviteeName);
 
-            this.createMessage();
-        },
-    });
-});
+        this.createMessage();
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default EventConfirmationNoteView;
