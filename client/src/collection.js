@@ -724,7 +724,7 @@ class Collection {
      * @return {boolean}
      */
     hasMore() {
-        return this.total > (this.length + this.offset) || this.total === -1;
+        return this.total > (this.length + this.offset + this.lengthCorrection) || this.total === -1;
     }
 
     /**

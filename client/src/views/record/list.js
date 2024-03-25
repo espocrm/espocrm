@@ -863,7 +863,7 @@ class ListRecordView extends View {
 
     /** @inheritDoc */
     data() {
-        const moreCount = this.collection.total - this.collection.length;
+        const moreCount = this.collection.total - this.collection.length - this.collection.offset;
         let checkAllResultDisabled = this.checkAllResultDisabled;
 
         if (!this.massActionsDisabled) {
@@ -2837,14 +2837,12 @@ class ListRecordView extends View {
         const final = () => {
             $showMore.parent().append($showMore);
 
-            if (
-                collection.total > collection.length + collection.lengthCorrection ||
-                collection.total === -1
-            ) {
-                const moreCount = collection.total - collection.length - collection.lengthCorrection;
-                const moreCountString = this.getNumberUtil().formatInt(moreCount);
+            if (collection.hasMore()) {
+                const moreCount = collection.total - collection.offset -
+                    collection.length - collection.lengthCorrection;
 
-                this.$el.find('.more-count').text(moreCountString);
+                this.$el.find('.more-count')
+                    .text(this.getNumberUtil().formatInt(moreCount));
 
                 $showMore.removeClass('hidden');
                 $container.addClass('has-show-more');
