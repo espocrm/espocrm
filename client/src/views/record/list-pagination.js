@@ -45,11 +45,14 @@ class RecordListPagination extends View {
         const from = offset + 1;
         const to = offset + length;
 
+        const currentPageNumber = this.getCurrentPageNumber();
         const lastPageNumber = this.getLastPageNumber();
+
+        const noTotal = !this.displayTotalCount || total < 0;
 
         return {
             hasGoToPage: lastPageNumber > 1 || total < 0,
-            currentPageNumber: this.getCurrentPageNumber(),
+            currentPageNumber: currentPageNumber,
             lastPageNumber: lastPageNumber,
             hasLastPageNumber: lastPageNumber > 1,
             total: this.getHelper().numberUtil.formatInt(total),
@@ -58,7 +61,7 @@ class RecordListPagination extends View {
             previous: this.collection.hasPreviousPage(),
             next: next,
             last: last,
-            noTotal: !this.options.displayTotalCount || total < 0,
+            noTotal: noTotal,
         };
     }
 
@@ -99,6 +102,8 @@ class RecordListPagination extends View {
             e.preventDefault();
             e.stopImmediatePropagation();
         });
+
+        this.displayTotalCount = this.options.displayTotalCount;
     }
 
     /**
