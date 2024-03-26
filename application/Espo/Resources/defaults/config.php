@@ -291,5 +291,6 @@ return [
     'adminUpgradeDisabled' => false,
     'wysiwygCodeEditorDisabled' => false,
     'customPrefixDisabled' => false,
+    'listPagination' => true,
     'isInstalled' => false,
 ];
