@@ -31,6 +31,9 @@
                 ".",
                 ",",
                 "'"
+            ],
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Settings\\ThousandSeparator\\Valid"
             ]
         },
         "decimalMark": {
