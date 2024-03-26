@@ -46,6 +46,8 @@ class StickyBarHelper {
     $navbarRight
     /** @private */
     $middle
+    /** @private */
+    _isReady = false
 
     /**
      * @param {import('views/record/list').default} view
@@ -92,6 +94,8 @@ class StickyBarHelper {
 
             this._controlSticking();
         });
+
+        this._isReady = true;
     }
 
     _getMiddleTop() {
@@ -188,6 +192,10 @@ class StickyBarHelper {
 
     destroy() {
         this.stopListening(this.view, 'check');
+
+        if (!this._isReady) {
+            return;
+        }
 
         this.$window.off(`resize.list-${this.view.cid}`);
         this.$scrollable.off(`scroll.list-${this.view.cid}`);
