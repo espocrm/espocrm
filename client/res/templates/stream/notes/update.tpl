@@ -19,7 +19,7 @@
 
 {{#if fieldDataList.length}}
     <div class="fields stream-details-container">
-        <span class="text-muted small">{{fieldsString}}</span>
+        <span class="text-muted">{{fieldsString}}</span>
     </div>
 {{/if}}
 
@@ -31,7 +31,7 @@
             {{#each fieldDataList}}
                 <tr class="row" data-name="{{field}}">
                     <td style="width: 30%">
-                        <span class="text-muted">{{label}}</span>
+                        <span class="">{{label}}</span>
                     </td>
                     <td style="width: 30%" class="cell-was">
                         {{#unless noValues}}
