@@ -1965,11 +1965,13 @@ class ListRecordView extends View {
             this.createView('pagination', 'views/record/list-pagination', {
                 collection: this.collection,
                 displayTotalCount: this.displayTotalCount,
+                recordView: this,
             });
 
             this.createView('paginationSticky', 'views/record/list-pagination', {
                 collection: this.collection,
                 displayTotalCount: this.displayTotalCount,
+                recordView: this,
             });
 
             this.on('request-page', /** string */page => {

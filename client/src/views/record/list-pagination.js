@@ -66,6 +66,8 @@ class RecordListPagination extends View {
     }
 
     setup() {
+        this.recordView = /** @type {import('views/record/list').default} */this.options.recordView;
+
         this.listenTo(this.collection, 'update', () => {
             if (!this.element) {
                 // A hack. Prevents warnings in console.
@@ -138,7 +140,11 @@ class RecordListPagination extends View {
         Espo.Ui.notify(' ... ');
 
        return this.collection.setOffset(offset)
-            .then(() => Espo.Ui.notify(false));
+            .then(() => {
+                Espo.Ui.notify(false);
+
+                this.recordView.trigger('after:paginate');
+            });
     }
 }
 
