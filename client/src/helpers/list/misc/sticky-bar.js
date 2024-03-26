@@ -140,11 +140,11 @@ class StickyBarHelper {
             buttonsTop -= 5;
         }
 
-        $scrollable.off('scroll.list-' + this.view.cid);
-        $scrollable.on('scroll.list-' + this.view.cid, () => controlSticking());
+        $scrollable.off(`scroll.list-${this.view.cid}`);
+        $scrollable.on(`scroll.list-${this.view.cid}`, () => controlSticking());
 
-        $window.off('resize.list-' + this.view.cid);
-        $window.on('resize.list-' + this.view.cid, () => controlSticking());
+        $window.off(`resize.list-${this.view.cid}`);
+        $window.on(`resize.list-${this.view.cid}`, () => controlSticking());
 
         this.view.on('check', () => {
             if (this.view.getCheckedIds().length === 0 && !this.view.isAllResultChecked()) {
@@ -155,8 +155,8 @@ class StickyBarHelper {
         });
 
         this.view.on('remove', () => {
-            $scrollable.off('scroll.list-' + this.view.cid);
-            $window.off('resize.list-' + this.view.cid);
+            $scrollable.off(`scroll.list-${this.view.cid}`);
+            $window.off(`resize.list-${this.view.cid}`);
         });
     }
 
