@@ -806,7 +806,6 @@ class ListRecordView extends View {
     /** @private */
     initStickyBar() {
         this._stickyBarHelper = new StickyBarHelper(this);
-        this._stickyBarHelper.init();
     }
 
     /** @protected */
@@ -2009,8 +2008,12 @@ class ListRecordView extends View {
         this.trigger('select', model);
     }
 
+    onRemove() {
+        this.destroyStickyBar();
+    }
+
     afterRender() {
-        this._stickyBarHelper = null;
+        this.destroyStickyBar();
 
         this.$selectAllCheckbox = this.$el.find('input.select-all');
 
@@ -2026,6 +2029,15 @@ class ListRecordView extends View {
         if (this.pagination && this.$el.find('.list-buttons-container').length) {
             this.initStickyBar();
         }
+    }
+
+    /** @private */
+    destroyStickyBar() {
+        if (this._stickyBarHelper) {
+            this._stickyBarHelper.destroy();
+        }
+
+        this._stickyBarHelper = null;
     }
 
     /** @private */
