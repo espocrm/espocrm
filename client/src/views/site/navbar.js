@@ -1261,7 +1261,7 @@ class NavbarSiteView extends View {
      * @return {MenuDataItem[]}
      */
     getMenuDataList() {
-        let avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 16, 'avatar-link');
+        let avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 20, 'avatar-link');
 
         if (avatarHtml) {
             avatarHtml += ' ';

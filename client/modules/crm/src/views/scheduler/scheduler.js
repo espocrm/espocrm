@@ -561,7 +561,7 @@ class SchedulerView extends View {
         // noinspection HtmlRequiredAltAttribute,RequiredAttributes
         return $('<img>')
             .addClass('avatar avatar-link')
-            .attr('width', '14')
+            .attr('width', '16')
             .attr('src', this.getBasePath() + '?entryPoint=avatar&size=small&id=' + id + '&t=' + t)
             .get(0).outerHTML;
     }
