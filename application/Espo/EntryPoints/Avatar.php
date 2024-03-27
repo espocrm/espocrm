@@ -40,6 +40,7 @@ use Espo\Core\Utils\SystemUser;
 use Espo\Entities\User;
 
 use LasseRafn\InitialAvatarGenerator\InitialAvatar;
+use LasseRafn\StringScript;
 
 /**
  * @noinspection PhpUnused
@@ -131,8 +132,14 @@ class Avatar extends Image
         $width = $sizes[0];
         $color = $this->getColor($user);
 
-        $image = (new InitialAvatar())
-            ->name($user->getName() ?? $user->getUserName() ?? $userId)
+        $avatar = (new InitialAvatar())
+            ->name($user->getName() ?? $user->getUserName() ?? $userId);
+
+        if ($user->getName() && !self::isAllowedLanguage($avatar)) {
+            $avatar = $avatar->name($user->getUserName() ?? $userId);
+        }
+
+        $image = $avatar
             ->width($width)
             ->height($width)
             ->color('#FFF')
@@ -185,5 +192,48 @@ class Avatar extends Image
         $response
             ->setHeader('Content-Type', 'image/png')
             ->writeBody($contents);
+    }
+
+    private static function isAllowedLanguage(InitialAvatar $avatar): bool
+    {
+        $initials = $avatar->getInitials();
+
+        if (StringScript::isArabic($initials)) {
+            return false;
+        }
+
+        if (StringScript::isArmenian($initials)) {
+            return false;
+        }
+
+        if (StringScript::isBengali($initials)) {
+            return false;
+        }
+
+        if (StringScript::isGeorgian($initials)) {
+            return false;
+        }
+
+        if (StringScript::isHebrew($initials)) {
+            return false;
+        }
+
+        if (StringScript::isMongolian($initials)) {
+            return false;
+        }
+
+        if (StringScript::isThai($initials)) {
+            return false;
+        }
+
+        if (StringScript::isTibetan($initials)) {
+            return false;
+        }
+
+        if (StringScript::isJapanese($initials) || StringScript::isChinese($initials)) {
+            return false;
+        }
+
+        return true;
     }
 }
