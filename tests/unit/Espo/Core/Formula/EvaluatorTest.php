@@ -867,6 +867,26 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    public function testNumberPower1(): void
+    {
+        $expression = "number\\power(3, 2)";
+
+        $this->assertSame(
+            9,
+            $this->evaluator->process($expression)
+        );
+    }
+
+    public function testNumberPower2(): void
+    {
+        $expression = "number\\power(3.0, 2.0)";
+
+        $this->assertSame(
+            9.0,
+            $this->evaluator->process($expression)
+        );
+    }
+
     public function testNullCoalescing1(): void
     {
         $expression = "null ?? 1";

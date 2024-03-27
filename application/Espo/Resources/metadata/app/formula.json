@@ -183,6 +183,11 @@
             "insertText": "number\\abs(VALUE)"
         },
         {
+            "name": "number\\power",
+            "insertText": "number\\power(VALUE, EXP)",
+            "returnType": "int|float"
+        },
+        {
             "name": "number\\round",
             "insertText": "number\\round(VALUE, PRECISION)",
             "returnType": "int|float"
