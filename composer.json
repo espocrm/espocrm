@@ -110,6 +110,9 @@
         }
     ],
     "scripts": {
-        "setConfigParams": "php dev/set-config-params.php"
+        "setConfigParams": "php dev/set-config-params.php",
+        "post-install-cmd": [
+            "php dev/vendor-cleanup.php"
+        ]
     }
 }
