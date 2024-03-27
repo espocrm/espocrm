@@ -34,24 +34,22 @@ use Espo\Core\Job\JobDataLess;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
-
 use DateTime;
 
+/**
+ * @noinspection PhpUnused
+ */
 class AuthTokenControl implements JobDataLess
 {
-    private Config $config;
-    private EntityManager $entityManager;
-
-    public function __construct(Config $config, EntityManager $entityManager)
-    {
-        $this->config = $config;
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(
+        private Config $config,
+        private EntityManager $entityManager
+    ) {}
 
     public function run(): void
     {
-        $authTokenLifetime = $this->config->get('authTokenLifetime');
-        $authTokenMaxIdleTime = $this->config->get('authTokenMaxIdleTime');
+        $authTokenLifetime = (int) ($this->config->get('authTokenLifetime', 0) * 60);
+        $authTokenMaxIdleTime = (int) ($this->config->get('authTokenMaxIdleTime', 0) * 60);
 
         if (!$authTokenLifetime && !$authTokenMaxIdleTime) {
             return;
@@ -63,26 +61,21 @@ class AuthTokenControl implements JobDataLess
 
         if ($authTokenLifetime) {
             $dt = new DateTime();
+            $dt->modify("-$authTokenLifetime minutes");
 
-            $dt->modify('-' . $authTokenLifetime . ' hours');
-
-            $authTokenLifetimeThreshold = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-
-            $whereClause['createdAt<'] = $authTokenLifetimeThreshold;
+            $whereClause['createdAt<'] = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
         if ($authTokenMaxIdleTime) {
             $dt = new DateTime();
+            $dt->modify("-$authTokenMaxIdleTime minutes");
 
-            $dt->modify('-' . $authTokenMaxIdleTime . ' hours');
-
-            $authTokenMaxIdleTimeThreshold = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
-
-            $whereClause['lastAccess<'] = $authTokenMaxIdleTimeThreshold;
+            $whereClause['lastAccess<'] = $dt->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
         $tokenList = $this->entityManager
             ->getRDBRepository(AuthToken::ENTITY_TYPE)
+            ->sth()
             ->where($whereClause)
             ->limit(0, 500)
             ->find();
