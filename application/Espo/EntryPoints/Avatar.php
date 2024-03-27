@@ -143,6 +143,7 @@ class Avatar extends Image
             ->width($width)
             ->height($width)
             ->color('#FFF')
+            ->fontSize(0.54)
             ->background($color)
             ->generate();
 
