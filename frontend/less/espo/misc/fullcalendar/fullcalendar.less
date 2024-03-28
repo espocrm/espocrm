@@ -30,6 +30,25 @@
 .fc {
     overflow: hidden;
 
+    @supports not selector(::-webkit-scrollbar) {
+        .fc-scroller {
+            scrollbar-width: thin;
+        }
+
+        .fc-timegrid {
+            table.fc-col-header th:last-child,
+            table.fc-scrollgrid-sync-table td:last-child {
+                .fc-scrollgrid-sync-inner {
+                    border-right: 1px solid var(--calendar-border);
+                }
+            }
+
+            table[role="presentation"] td.fc-day:last-child > div.fc-timegrid-col-frame {
+                border-right: 1px solid var(--calendar-border);
+            }
+        }
+    }
+
     th {
         font-weight: normal;
     }
