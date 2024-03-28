@@ -41,6 +41,8 @@ use DateTime;
  */
 class AuthTokenControl implements JobDataLess
 {
+    private const LIMIT = 500;
+
     public function __construct(
         private Config $config,
         private EntityManager $entityManager
@@ -77,7 +79,7 @@ class AuthTokenControl implements JobDataLess
             ->getRDBRepository(AuthToken::ENTITY_TYPE)
             ->sth()
             ->where($whereClause)
-            ->limit(0, 500)
+            ->limit(0, self::LIMIT)
             ->find();
 
         foreach ($tokenList as $token) {
