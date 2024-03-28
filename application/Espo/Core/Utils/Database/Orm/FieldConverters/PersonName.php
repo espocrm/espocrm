@@ -93,12 +93,11 @@ class PersonName implements FieldConverter
         $whereItems[] = "CONCAT:($firstName, ' ', $lastName)";
         $whereItems[] = "CONCAT:($lastName, ' ', $firstName)";
 
-        if ($format === 'firstMiddleLast') {
+        if ($format === self::FORMAT_FIRST_MIDDLE_LAST) {
             $whereItems[] = "CONCAT:($firstName, ' ', $middleName, ' ', $lastName)";
-        } else
-            if ($format === 'lastFirstMiddle') {
-                $whereItems[] = "CONCAT:($lastName, ' ', $firstName, ' ', $middleName)";
-            }
+        } else if ($format === self::FORMAT_LAST_FIRST_MIDDLE) {
+            $whereItems[] = "CONCAT:($lastName, ' ', $firstName, ' ', $middleName)";
+        }
 
         $selectExpression = $this->getSelect($fullList);
         $selectForeignExpression = $this->getSelect($fullList, '{alias}');
