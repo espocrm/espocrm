@@ -36,6 +36,9 @@ use Espo\Core\Utils\Database\Orm\FieldConverter;
 use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Type\AttributeType;
 
+/**
+ * @noinspection PhpUnused
+ */
 class PersonName implements FieldConverter
 {
     private const FORMAT_LAST_FIRST = 'lastFirst';
@@ -87,14 +90,14 @@ class PersonName implements FieldConverter
             $whereItems[] = $fieldNameTrimmed;
         }
 
-        $whereItems[] = "CONCAT:({$firstName}, ' ', {$lastName})";
-        $whereItems[] = "CONCAT:({$lastName}, ' ', {$firstName})";
+        $whereItems[] = "CONCAT:($firstName, ' ', $lastName)";
+        $whereItems[] = "CONCAT:($lastName, ' ', $firstName)";
 
         if ($format === 'firstMiddleLast') {
-            $whereItems[] = "CONCAT:({$firstName}, ' ', {$middleName}, ' ', {$lastName})";
+            $whereItems[] = "CONCAT:($firstName, ' ', $middleName, ' ', $lastName)";
         } else
             if ($format === 'lastFirstMiddle') {
-                $whereItems[] = "CONCAT:({$lastName}, ' ', {$firstName}, ' ', {$middleName})";
+                $whereItems[] = "CONCAT:($lastName, ' ', $firstName, ' ', $middleName)";
             }
 
         $selectExpression = $this->getSelect($fullList);
@@ -104,8 +107,8 @@ class PersonName implements FieldConverter
             $format === self::FORMAT_FIRST_MIDDLE_LAST ||
             $format === self::FORMAT_LAST_FIRST_MIDDLE
         ) {
-            $selectExpression = "REPLACE:({$selectExpression}, '  ', ' ')";
-            $selectForeignExpression = "REPLACE:({$selectForeignExpression}, '  ', ' ')";
+            $selectExpression = "REPLACE:($selectExpression, '  ', ' ')";
+            $selectForeignExpression = "REPLACE:($selectForeignExpression, '  ', ' ')";
         }
 
         $attributeDefs = AttributeDefs::create($name)
@@ -175,7 +178,7 @@ class PersonName implements FieldConverter
                 $item = $alias . '.' . $item;
             }
 
-            $item = "IFNULL:({$item}, '')";
+            $item = "IFNULL:($item, '')";
         }
 
         return "NULLIF:(TRIM:(CONCAT:(" . implode(", ", $fullList) . ")), '')";
