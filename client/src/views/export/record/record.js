@@ -54,7 +54,7 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
             this.formatList = this.options.formatList;
             this.scope = this.options.scope;
 
-            let fieldsData = this.getExportFieldsData();
+            const fieldsData = this.getExportFieldsData();
 
             this.setupExportFieldDefs(fieldsData);
             this.setupExportLayout(fieldsData);
@@ -70,7 +70,7 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
         },
 
         setupExportFieldDefs: function (fieldsData) {
-            let fieldDefs = {
+            const fieldDefs = {
                 format: {
                     type: 'enum',
                     options: this.formatList,
@@ -88,12 +88,12 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
             this.customParams = {};
 
             this.formatList.forEach(format => {
-                let fields = this.getFormatParamsDefs(format).fields || {};
+                const fields = this.getFormatParamsDefs(format).fields || {};
 
                 this.customParams[format] = [];
 
-                for (let name in fields) {
-                    let newName = this.modifyParamName(format, name);
+                for (const name in fields) {
+                    const newName = this.modifyParamName(format, name);
 
                     this.customParams[format].push(name);
 
@@ -107,7 +107,7 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
         setupExportLayout: function (fieldsData) {
             this.detailLayout = [];
 
-            let mainPanel = {
+            const mainPanel = {
                 rows: [
                     [
                         {name: 'format'},
@@ -131,7 +131,7 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
             this.detailLayout.push(mainPanel);
 
             this.formatList.forEach(format => {
-                let rows = this.getFormatParamsDefs(format).layout || [];
+                const rows = this.getFormatParamsDefs(format).layout || [];
 
                 rows.forEach(row => {
                     row.forEach(item => {
@@ -152,10 +152,10 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
             };
 
             this.formatList.forEach(format => {
-                let defs = this.getFormatParamsDefs(format).dynamicLogic || {};
+                const defs = this.getFormatParamsDefs(format).dynamicLogic || {};
 
                 this.customParams[format].forEach(param => {
-                    let logic = defs[param] || {};
+                    const logic = defs[param] || {};
 
                     if (!logic.visible) {
                         logic.visible = {};
@@ -171,7 +171,7 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
                         value: format,
                     });
 
-                    let newName = this.modifyParamName(format, param);
+                    const newName = this.modifyParamName(format, param);
 
                     this.dynamicLogicDefs.fields[newName] = logic;
                 });
@@ -191,7 +191,7 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
          * @return {Object.<string, *>}
          */
         getFormatParamsDefs: function (format) {
-            let defs = this.getMetadata().get(['app', 'export', 'formatDefs', format]) || {};
+            const defs = this.getMetadata().get(['app', 'export', 'formatDefs', format]) || {};
 
             return Espo.Utils.cloneDeep(defs.params || {});
         },
@@ -213,19 +213,21 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
          */
         getExportFieldsData: function () {
             let fieldList = this.getFieldManager().getEntityTypeFieldList(this.scope);
-            let forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope);
+            const forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope);
 
             fieldList = fieldList.filter(item => {
                 return !~forbiddenFieldList.indexOf(item);
             });
 
             fieldList = fieldList.filter(item => {
-                let defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', item]) || {};
+                /** @type {Record} */
+                const defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', item]) || {};
 
                 if (
                     defs.disabled ||
                     defs.exportDisabled ||
-                    defs.type === 'map'
+                    defs.type === 'map' ||
+                    defs.utility
                 ) {
                     return false
                 }
@@ -237,13 +239,13 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
 
             fieldList.unshift('id');
 
-            let fieldListTranslations = {};
+            const fieldListTranslations = {};
 
             fieldList.forEach(item => {
                 fieldListTranslations[item] = this.getLanguage().translate(item, 'fields', this.scope);
             });
 
-            let setFieldList = this.model.get('fieldList') || [];
+            const setFieldList = this.model.get('fieldList') || [];
 
             setFieldList.forEach(item => {
                 if (~fieldList.indexOf(item)) {
@@ -254,11 +256,11 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
                     return;
                 }
 
-                let arr = item.split('_');
+                const arr = item.split('_');
 
                 fieldList.push(item);
 
-                let foreignScope = this.getMetadata().get(['entityDefs', this.scope, 'links', arr[0], 'entity']);
+                const foreignScope = this.getMetadata().get(['entityDefs', this.scope, 'links', arr[0], 'entity']);
 
                 if (!foreignScope) {
                     return;
@@ -285,7 +287,7 @@ define('views/export/record/record', ['views/record/edit-for-modal'], function (
         },
 
         controlFormatField: function () {
-            let format = this.model.get('format');
+            const format = this.model.get('format');
 
             this.formatList
                 .filter(item => item !== format)

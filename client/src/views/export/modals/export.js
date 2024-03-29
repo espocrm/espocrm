@@ -66,8 +66,10 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
             if (this.options.fieldList) {
                 const fieldList = this.options.fieldList
                     .filter(field => {
-                        return !this.getMetadata()
-                            .get(`entityDefs.${this.scope}.fields.${field}.exportDisabled`);
+                        /** @type {Record} */
+                        const defs = this.getMetadata().get(`entityDefs.${this.scope}.fields.${field}`) || {};
+
+                        return !defs.exportDisabled && !defs.utility;
                     });
 
                 this.model.set('fieldList', fieldList);
@@ -76,7 +78,7 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
                 this.model.set('exportAllFields', true);
             }
 
-            let formatList =
+            const formatList =
                 this.getMetadata().get(['scopes', this.scope, 'exportFormatList']) ||
                 this.getMetadata().get('app.export.formatList');
 
@@ -95,9 +97,9 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
         },
 
         actionExport: function () {
-            let recordView = this.getRecordView();
+            const recordView = this.getRecordView();
 
-            let data = recordView.fetch();
+            const data = recordView.fetch();
 
             this.model.set(data);
 
@@ -105,13 +107,13 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
                 return;
             }
 
-            let returnData = {
+            const returnData = {
                 exportAllFields: data.exportAllFields,
                 format: data.format,
             };
 
             if (!data.exportAllFields) {
-                let attributeList = [];
+                const attributeList = [];
 
                 data.fieldList.forEach(item => {
                     if (item === 'id') {
@@ -120,7 +122,7 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
                         return;
                     }
 
-                    let type = this.getMetadata().get(['entityDefs', this.scope, 'fields', item, 'type']);
+                    const type = this.getMetadata().get(['entityDefs', this.scope, 'fields', item, 'type']);
 
                     if (type) {
                         this.getFieldManager().getAttributeList(type, item)
@@ -141,9 +143,9 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
             returnData.params = {};
 
             recordView.getFormatParamList(data.format).forEach(param => {
-                let name = recordView.modifyParamName(data.format, param);
+                const name = recordView.modifyParamName(data.format, param);
 
-                let fieldView = recordView.getFieldView(name);
+                const fieldView = recordView.getFieldView(name);
 
                 if (!fieldView || fieldView.disabled) {
                     return;
@@ -152,7 +154,7 @@ define('views/export/modals/export', ['views/modal', 'model'], function (Dep, Mo
                 this.getFieldManager()
                     .getActualAttributeList(fieldView.type, param)
                     .forEach(subParam => {
-                        let name = recordView.modifyParamName(data.format, subParam);
+                        const name = recordView.modifyParamName(data.format, subParam);
 
                         returnData.params[subParam] = data[name];
                     });
