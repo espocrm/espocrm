@@ -58,9 +58,9 @@ class Avatar extends Image
         '#8093BD',
         '#7cc4a4',
         '#8a7cc2',
-        '#e3b87b', // dark yellow
         '#96dc89', // green
-        '#d6aa6b',
+        '#d6aa6b', // dark yellow
+        '#e6859d', // red,
     ];
 
     /**
