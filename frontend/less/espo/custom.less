@@ -2140,10 +2140,14 @@ img.avatar.avatar-link {
     }
 }
 
-div[data-scope="User"] .field[data-name="avatar"] {
-    > a > img,
-    > img {
-        border-radius: 50%;
+div[data-scope="User"],
+div[data-scope="PortalUser"],
+div[data-scope="ApiUser"] {
+    .field[data-name="avatar"] {
+        > a > img,
+        > img {
+            border-radius: 50%;
+        }
     }
 }
 
