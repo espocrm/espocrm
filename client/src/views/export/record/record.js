@@ -26,282 +26,271 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/export/record/record', ['views/record/edit-for-modal'], function (Dep) {
+import EditForModalRecordView from 'views/record/edit-for-modal';
+
+class ExportRecordView extends EditForModalRecordView {
+
+    formatList = null
 
     /**
-     * @class
-     * @name Class
-     * @memberOf module:views/export/record/record
-     * @extends module:views/record/edit-for-modal
+     * @type {Object.<string, string[]>},
      */
-    return Dep.extend(/** @lends module:views/export/record/record.Class# */{
+    customParams = null
 
-        /**
-         * @type {string[]},
-         */
-        formatList: null,
 
-        /**
-         * @type {Object.<string, string[]>},
-         */
-        customParams: null,
+    setupBeforeFinal() {
+        this.formatList = this.options.formatList;
+        this.scope = this.options.scope;
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
+        const fieldsData = this.getExportFieldsData();
 
-        setupBeforeFinal: function () {
-            this.formatList = this.options.formatList;
-            this.scope = this.options.scope;
+        this.setupExportFieldDefs(fieldsData);
+        this.setupExportLayout(fieldsData);
+        this.setupExportDynamicLogic();
 
-            const fieldsData = this.getExportFieldsData();
+        this.controlFormatField();
+        this.listenTo(this.model, 'change:format', () => this.controlFormatField());
 
-            this.setupExportFieldDefs(fieldsData);
-            this.setupExportLayout(fieldsData);
-            this.setupExportDynamicLogic();
+        this.controlAllFields();
+        this.listenTo(this.model, 'change:exportAllFields', () => this.controlAllFields());
 
-            this.controlFormatField();
-            this.listenTo(this.model, 'change:format', () => this.controlFormatField());
+        super.setupBeforeFinal();
+    }
 
-            this.controlAllFields();
-            this.listenTo(this.model, 'change:exportAllFields', () => this.controlAllFields());
+    setupExportFieldDefs(fieldsData) {
+        const fieldDefs = {
+            format: {
+                type: 'enum',
+                options: this.formatList,
+            },
+            fieldList: {
+                type: 'multiEnum',
+                options: fieldsData.list,
+                required: true,
+            },
+            exportAllFields: {
+                type: 'bool',
+            },
+        };
 
-            Dep.prototype.setupBeforeFinal.call(this);
-        },
+        this.customParams = {};
 
-        setupExportFieldDefs: function (fieldsData) {
-            const fieldDefs = {
-                format: {
-                    type: 'enum',
-                    options: this.formatList,
-                },
-                fieldList: {
-                    type: 'multiEnum',
-                    options: fieldsData.list,
-                    required: true,
-                },
-                exportAllFields: {
-                    type: 'bool',
-                },
-            };
+        this.formatList.forEach(format => {
+            const fields = this.getFormatParamsDefs(format).fields || {};
 
-            this.customParams = {};
+            this.customParams[format] = [];
 
-            this.formatList.forEach(format => {
-                const fields = this.getFormatParamsDefs(format).fields || {};
+            for (const name in fields) {
+                const newName = this.modifyParamName(format, name);
 
-                this.customParams[format] = [];
+                this.customParams[format].push(name);
 
-                for (const name in fields) {
-                    const newName = this.modifyParamName(format, name);
+                fieldDefs[newName] = Espo.Utils.cloneDeep(fields[name]);
+            }
+        });
 
-                    this.customParams[format].push(name);
+        this.model.setDefs({fields: fieldDefs});
+    }
 
-                    fieldDefs[newName] = Espo.Utils.cloneDeep(fields[name]);
-                }
-            });
+    setupExportLayout(fieldsData) {
+        this.detailLayout = [];
 
-            this.model.setDefs({fields: fieldDefs});
-        },
-
-        setupExportLayout: function (fieldsData) {
-            this.detailLayout = [];
-
-            const mainPanel = {
-                rows: [
-                    [
-                        {name: 'format'},
-                        false
-                    ],
-                    [
-                        {name: 'exportAllFields'},
-                        false
-                    ],
-                    [
-                        {
-                            name: 'fieldList',
-                            options: {
-                                translatedOptions: fieldsData.translations,
-                            },
-                        }
-                    ],
-                ]
-            };
-
-            this.detailLayout.push(mainPanel);
-
-            this.formatList.forEach(format => {
-                const rows = this.getFormatParamsDefs(format).layout || [];
-
-                rows.forEach(row => {
-                    row.forEach(item => {
-                        item.name = this.modifyParamName(format, item.name);
-                    });
-                })
-
-                this.detailLayout.push({
-                    name: format,
-                    rows: rows,
-                })
-            });
-        },
-
-        setupExportDynamicLogic: function () {
-            this.dynamicLogicDefs = {
-                fields: {},
-            };
-
-            this.formatList.forEach(format => {
-                const defs = this.getFormatParamsDefs(format).dynamicLogic || {};
-
-                this.customParams[format].forEach(param => {
-                    const logic = defs[param] || {};
-
-                    if (!logic.visible) {
-                        logic.visible = {};
+        const mainPanel = {
+            rows: [
+                [
+                    {name: 'format'},
+                    false
+                ],
+                [
+                    {name: 'exportAllFields'},
+                    false
+                ],
+                [
+                    {
+                        name: 'fieldList',
+                        options: {
+                            translatedOptions: fieldsData.translations,
+                        },
                     }
+                ],
+            ]
+        };
 
-                    if (!logic.visible.conditionGroup) {
-                        logic.visible.conditionGroup = [];
-                    }
+        this.detailLayout.push(mainPanel);
 
-                    logic.visible.conditionGroup.push({
-                        type: 'equals',
-                        attribute: 'format',
-                        value: format,
-                    });
+        this.formatList.forEach(format => {
+            const rows = this.getFormatParamsDefs(format).layout || [];
 
-                    const newName = this.modifyParamName(format, param);
-
-                    this.dynamicLogicDefs.fields[newName] = logic;
+            rows.forEach(row => {
+                row.forEach(item => {
+                    item.name = this.modifyParamName(format, item.name);
                 });
-            });
-        },
+            })
 
-        /**
-         * @param {string} format
-         * @return {string[]}
-         */
-        getFormatParamList: function (format) {
-            return Object.keys(this.getFormatParamsDefs(format).fields || {});
-        },
+            this.detailLayout.push({
+                name: format,
+                rows: rows,
+            })
+        });
+    }
 
-        /**
-         * @private
-         * @return {Object.<string, *>}
-         */
-        getFormatParamsDefs: function (format) {
-            const defs = this.getMetadata().get(['app', 'export', 'formatDefs', format]) || {};
+    setupExportDynamicLogic() {
+        this.dynamicLogicDefs = {
+            fields: {},
+        };
 
-            return Espo.Utils.cloneDeep(defs.params || {});
-        },
+        this.formatList.forEach(format => {
+            const defs = this.getFormatParamsDefs(format).dynamicLogic || {};
 
-        /**
-         * @param {string} format
-         * @param {string} name
-         * @return {string}
-         */
-        modifyParamName: function (format, name) {
-            return format + Espo.Utils.upperCaseFirst(name);
-        },
+            this.customParams[format].forEach(param => {
+                const logic = defs[param] || {};
 
-        /**
-         * @return {{
-         *   translations: Object.<string, string>,
-         *   list: string[]
-         * }}
-         */
-        getExportFieldsData: function () {
-            let fieldList = this.getFieldManager().getEntityTypeFieldList(this.scope);
-            const forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope);
-
-            fieldList = fieldList.filter(item => {
-                return !~forbiddenFieldList.indexOf(item);
-            });
-
-            fieldList = fieldList.filter(item => {
-                /** @type {Record} */
-                const defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', item]) || {};
-
-                if (
-                    defs.disabled ||
-                    defs.exportDisabled ||
-                    defs.type === 'map' ||
-                    defs.utility
-                ) {
-                    return false
+                if (!logic.visible) {
+                    logic.visible = {};
                 }
 
-                return true;
-            });
-
-            this.getLanguage().sortFieldList(this.scope, fieldList);
-
-            fieldList.unshift('id');
-
-            const fieldListTranslations = {};
-
-            fieldList.forEach(item => {
-                fieldListTranslations[item] = this.getLanguage().translate(item, 'fields', this.scope);
-            });
-
-            const setFieldList = this.model.get('fieldList') || [];
-
-            setFieldList.forEach(item => {
-                if (~fieldList.indexOf(item)) {
-                    return;
+                if (!logic.visible.conditionGroup) {
+                    logic.visible.conditionGroup = [];
                 }
 
-                if (!~item.indexOf('_')) {
-                    return;
-                }
+                logic.visible.conditionGroup.push({
+                    type: 'equals',
+                    attribute: 'format',
+                    value: format,
+                });
 
-                const arr = item.split('_');
+                const newName = this.modifyParamName(format, param);
 
-                fieldList.push(item);
-
-                const foreignScope = this.getMetadata().get(['entityDefs', this.scope, 'links', arr[0], 'entity']);
-
-                if (!foreignScope) {
-                    return;
-                }
-
-                fieldListTranslations[item] = this.getLanguage().translate(arr[0], 'links', this.scope) + '.' +
-                    this.getLanguage().translate(arr[1], 'fields', foreignScope);
+                this.dynamicLogicDefs.fields[newName] = logic;
             });
+        });
+    }
 
-            return {
-                list: fieldList,
-                translations: fieldListTranslations,
-            };
-        },
+    /**
+     * @param {string} format
+     * @return {string[]}
+     */
+    getFormatParamList(format) {
+        return Object.keys(this.getFormatParamsDefs(format).fields || {});
+    }
 
-        controlAllFields: function () {
-            if (!this.model.get('exportAllFields')) {
-                this.showField('fieldList');
+    /**
+     * @private
+     * @return {Object.<string, *>}
+     */
+    getFormatParamsDefs(format) {
+        const defs = this.getMetadata().get(['app', 'export', 'formatDefs', format]) || {};
 
+        return Espo.Utils.cloneDeep(defs.params || {});
+    }
+
+    /**
+     * @param {string} format
+     * @param {string} name
+     * @return {string}
+     */
+    modifyParamName(format, name) {
+        return format + Espo.Utils.upperCaseFirst(name);
+    }
+
+    /**
+     * @return {{
+     *   translations: Object.<string, string>,
+     *   list: string[]
+     * }}
+     */
+    getExportFieldsData() {
+        let fieldList = this.getFieldManager().getEntityTypeFieldList(this.scope);
+        const forbiddenFieldList = this.getAcl().getScopeForbiddenFieldList(this.scope);
+
+        fieldList = fieldList.filter(item => {
+            return !~forbiddenFieldList.indexOf(item);
+        });
+
+        fieldList = fieldList.filter(item => {
+            /** @type {Record} */
+            const defs = this.getMetadata().get(['entityDefs', this.scope, 'fields', item]) || {};
+
+            if (
+                defs.disabled ||
+                defs.exportDisabled ||
+                defs.type === 'map' ||
+                defs.utility
+            ) {
+                return false
+            }
+
+            return true;
+        });
+
+        this.getLanguage().sortFieldList(this.scope, fieldList);
+
+        fieldList.unshift('id');
+
+        const fieldListTranslations = {};
+
+        fieldList.forEach(item => {
+            fieldListTranslations[item] = this.getLanguage().translate(item, 'fields', this.scope);
+        });
+
+        const setFieldList = this.model.get('fieldList') || [];
+
+        setFieldList.forEach(item => {
+            if (~fieldList.indexOf(item)) {
                 return;
             }
 
-            this.hideField('fieldList');
-        },
+            if (!~item.indexOf('_')) {
+                return;
+            }
 
-        controlFormatField: function () {
-            const format = this.model.get('format');
+            const arr = item.split('_');
 
-            this.formatList
-                .filter(item => item !== format)
-                .forEach(format => {
+            fieldList.push(item);
+
+            const foreignScope = this.getMetadata().get(['entityDefs', this.scope, 'links', arr[0], 'entity']);
+
+            if (!foreignScope) {
+                return;
+            }
+
+            fieldListTranslations[item] = this.getLanguage().translate(arr[0], 'links', this.scope) + '.' +
+                this.getLanguage().translate(arr[1], 'fields', foreignScope);
+        });
+
+        return {
+            list: fieldList,
+            translations: fieldListTranslations,
+        };
+    }
+
+    controlAllFields() {
+        if (!this.model.get('exportAllFields')) {
+            this.showField('fieldList');
+
+            return;
+        }
+
+        this.hideField('fieldList');
+    }
+
+    controlFormatField() {
+        const format = this.model.get('format');
+
+        this.formatList
+            .filter(item => item !== format)
+            .forEach(format => {
+                this.hidePanel(format);
+            });
+
+        this.formatList
+            .filter(item => item === format)
+            .forEach(format => {
+                this.customParams[format].length ?
+                    this.showPanel(format) :
                     this.hidePanel(format);
-                });
+            });
+    }
+}
 
-            this.formatList
-                .filter(item => item === format)
-                .forEach(format => {
-                    this.customParams[format].length ?
-                        this.showPanel(format) :
-                        this.hidePanel(format);
-                });
-        },
-    });
-});
+export default ExportRecordView;
