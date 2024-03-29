@@ -4,6 +4,8 @@
         "edit": false,
         "editSmall": false
     },
+    "mergeDisabled": true,
+    "massUpdateDisabled": true,
     "defaultSidePanelFieldLists": {
         "detail": ["createdAt"]
     },
