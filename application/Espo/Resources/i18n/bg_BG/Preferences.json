@@ -28,8 +28,6 @@
     "followCreatedEntities": "Автоматично последване на създадените записи",
     "followCreatedEntityTypeList": "Автоматично последване на създадени записи за конкретни типове обекти",
     "emailUseExternalClient": "Използва се външен имейл клиент",
-    "scopeColorsDisabled": "Забранете цветовете",
-    "tabColorsDisabled": "Забранете цветове за табовете",
     "assignmentNotificationsIgnoreEntityTypeList": "Известия за назначения на записи (в приложението)",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Известия за назначения на записи (по имейл)",
     "dashboardLocked": "Заключи дашборда",

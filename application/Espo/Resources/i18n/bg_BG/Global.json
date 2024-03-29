@@ -58,7 +58,8 @@
     "WorkingTimeCalendar": "Календар на работно време",
     "WorkingTimeRange": "Диапазон на работното време",
     "GroupEmailFolder": "Групова имейл папка",
-    "AuthenticationProvider": "Доставчик на удостоверяване"
+    "AuthenticationProvider": "Доставчик на удостоверяване",
+    "GlobalStream": "Глобална активност"
   },
   "scopeNamesPlural": {
     "Email": "Имейли",
@@ -106,7 +107,8 @@
     "WorkingTimeCalendar": "Календари на работното време",
     "WorkingTimeRange": "Диапазони на работно време",
     "GroupEmailFolder": "Групови имейл папки",
-    "AuthenticationProvider": "Доставчици на удостоверяване"
+    "AuthenticationProvider": "Доставчици на удостоверяване",
+    "GlobalStream": "Глобална активност"
   },
   "labels": {
     "Misc": "Разни",
@@ -341,6 +343,7 @@
     "notUpdated": "Не е актуализиран",
     "maintenanceMode": "Приложението в момента е в режим на поддръжка. Само администратори имат достъп.\n\nРежимът на поддръжка може да бъде деактивиран в Администриране → Настройки.",
     "fieldInvalid": "{field} е невалидно",
+    "fieldPhoneInvalid": "{field} е невалидно",
     "resolveSaveConflict": "Записът е променен. Трябва да разрешите конфликта, преди да можете да запазите записа.",
     "massActionProcessed": "Масовото действие е обработено успешно.",
     "fieldUrlExceedsMaxLength": "Кодираният URL адрес надвишава максималната дължина от {maxLength}",
@@ -366,7 +369,6 @@
     "noAccessToForeignRecord": "Операцията изисква `{action}` достъп до чужд запис.",
     "fieldShouldBeNumber": "{field} трябва да е валидно число",
     "maintenanceModeError": "В момента приложението е в режим на поддръжка.",
-    "noLinkAccess": "Нямате достъп до операция за свързване за конкретен запис.",
     "cannotRelateNonExisting": "Не може да се свърже с несъществуващ {foreignEntityType} запис.",
     "cannotRelateForbidden": "Не може да се свърже със забранен запис {foreignEntityType}. Изисква се достъп „{action}“.",
     "cannotRelateForbiddenLink": "Няма достъп до връзката „{link}“.",
@@ -374,7 +376,13 @@
     "fieldNotMatchingPattern$uriOptionalProtocol": "{field} трябва да бъде валиден URL",
     "fieldShouldBeLess": "Стойността на {field} не трябва да бъде по-голяма от {value}",
     "fieldShouldBeGreater": "Стойността на {field} не трябва да бъде по-малко от {value}",
-    "cannotUnrelateRequiredLink": "Не може да се отсвърже тази релация."
+    "cannotUnrelateRequiredLink": "Не може да се отсвърже тази релация.",
+    "fieldPhoneInvalidCode": "Невалиден код на държавата",
+    "fieldPhoneTooShort": "{field} е твърде кратко",
+    "fieldPhoneTooLong": "{field} е твърде дълго",
+    "barcodeInvalid": "{field} не е валидно {type}",
+    "noLinkAccess": "Не може да свържете със запис {foreignEntityType} чрез връзката „{link}“. Нямате достъп.",
+    "attemptIntervalFailure": "Операцията не е разрешена през определен интервал от време. Изчакайте известно време преди следващия опит."
   },
   "boolFilters": {
     "onlyMy": "Само мои",

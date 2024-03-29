@@ -156,7 +156,6 @@
     "minHeight": "Мин. височина (px)",
     "provider": "Доставчик",
     "typeList": "Вид Списък",
-    "rows": "Брой редове на текстово поле",
     "lengthOfCut": "Дължина на ограничаване",
     "sourceList": "Източник Списък",
     "tooltipText": "Текст на подсказка",
@@ -197,7 +196,12 @@
     "globalRestrictions": "Глобални рестрикции",
     "decimal": "Десетична",
     "optionsReference": "Избор на опции от други полета",
-    "copyToClipboard": "Бутон за копиране"
+    "copyToClipboard": "Бутон за копиране",
+    "rows": "Максимален брой редове",
+    "readOnlyAfterCreate": "Read-only след създаване",
+    "createButton": "Бутон за създаване",
+    "autocompleteOnEmpty": "Автоматично довършване при натискане",
+    "relateOnImport": "Релации при импорт"
   },
   "messages": {
     "selectEntityType": "Изберете вида обект от лявото меню.",

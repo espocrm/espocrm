@@ -264,7 +264,12 @@
     "Copy to Clipboard": "In Zwischenablage kopieren",
     "Copied to clipboard": "In Zwischenablage kopiert",
     "Audit Log": "Audit-Protokoll",
-    "View Audit Log": "Audit-Protokoll anzeigen"
+    "View Audit Log": "Audit-Protokoll anzeigen",
+    "Previous Page": "Vorherige Seite",
+    "Next Page": "Nächste Seite",
+    "First Page": "Erste Seite",
+    "Last Page": "Letzte Seite",
+    "Page": "Seite"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -366,7 +371,8 @@
     "barcodeInvalid": "{field} ist kein gültiger {type}",
     "noLinkAccess": "Kann nicht mit dem Datensatz {foreignEntityType} über den Link '{link}' verknüpft werden. Kein Zugriff.",
     "attemptIntervalFailure": "Der Vorgang ist während eines bestimmten Zeitintervalls nicht erlaubt. Warten Sie vor dem nächsten Versuch einige Zeit.",
-    "confirmRestoreFromAudit": "Die vorherigen Werte werden in ein Formular eingetragen. Dann können Sie den Datensatz speichern, um die vorherigen Werte wiederherzustellen."
+    "confirmRestoreFromAudit": "Die vorherigen Werte werden in ein Formular eingetragen. Dann können Sie den Datensatz speichern, um die vorherigen Werte wiederherzustellen.",
+    "pageNumberIsOutOfBound": "Die Seitenzahl liegt außerhalb des Bereichs"
   },
   "boolFilters": {
     "onlyMy": "Nur meine",

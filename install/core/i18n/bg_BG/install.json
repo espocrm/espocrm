@@ -31,7 +31,6 @@
     "Install": "Инсталирай",
     "Configuration Instructions": "Инструкция за конфигуриране",
     "phpVersion": "PHP версия",
-    "requiredMysqlVersion": "MySQL версия",
     "dbHostName": "Хост/Сървър",
     "dbName": "Име на базата данни",
     "dbUserName": "Потребителско име за базата данни",

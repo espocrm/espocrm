@@ -19,7 +19,8 @@
     "pageHeight": "Височина на страницата (mm)",
     "headerPosition": "Позиция на хедъра",
     "printHeader": "Принтирай хедъра",
-    "title": "Заглавие"
+    "title": "Заглавие",
+    "style": "Стил"
   },
   "labels": {
     "Create Template": "Създаване на шаблон"
@@ -37,11 +38,6 @@
       "today": "Днес (дата)",
       "now": "Сега (дата-час)",
       "pagebreak": "Разделител на страница"
-    },
-    "fontFace": {
-      "cid0cs": "CID-0 CS",
-      "cid0jp": "CID-0 JP",
-      "cid0kr": "CID-0 KR"
     },
     "pageFormat": {
       "Custom": "Персонализиран"

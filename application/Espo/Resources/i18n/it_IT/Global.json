@@ -274,7 +274,12 @@
     "Copy to Clipboard": "Copia negli Appunti",
     "Copied to clipboard": "Copiato negli appunti",
     "Audit Log": "Registro Revisioni",
-    "View Audit Log": "Vedi Registro Revisioni"
+    "View Audit Log": "Vedi Registro Revisioni",
+    "Previous Page": "Pagina Precedente",
+    "Next Page": "Prossima Pagina",
+    "First Page": "Prima Pagina",
+    "Last Page": "Ultima Pagina",
+    "Page": "Pagina"
   },
   "messages": {
     "pleaseWait": "Attendere...",
@@ -376,7 +381,8 @@
     "barcodeInvalid": "{field} non è un {type} valido",
     "noLinkAccess": "Impossibile relazionarsi con il record {foreignEntityType} attraverso il link '{link}'. Nessun accesso.",
     "attemptIntervalFailure": "L'operazione non è consentita durante un intervallo di tempo specifico. Attendere qualche istante prima del prossimo tentativo.",
-    "confirmRestoreFromAudit": "I valori precedenti verranno memorizzati in un modulo. Successivamente, è possibile salvare il record per ripristinare i valori precedenti."
+    "confirmRestoreFromAudit": "I valori precedenti verranno memorizzati in un modulo. Successivamente, è possibile salvare il record per ripristinare i valori precedenti.",
+    "pageNumberIsOutOfBound": "Il numero della pagina è fuori dal limite"
   },
   "boolFilters": {
     "onlyMy": "Solo i miei",
