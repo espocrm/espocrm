@@ -63,6 +63,12 @@ class Avatar extends Image
         '#d6aa6b',
     ];
 
+    /**
+     * @noinspection SpellCheckingInspection
+     * The explicintly specified font prevents warnings in some environments.
+     */
+    private string $fontFile = 'vendor/lasserafn/php-initial-avatar-generator/src/fonts/OpenSans-Regular.ttf';
+
     private function getColor(User $user): string
     {
         if ($user->getUserName() === SystemUser::NAME) {
@@ -149,6 +155,7 @@ class Avatar extends Image
             ->height($width)
             ->color('#FFF')
             ->fontSize(0.54)
+            ->font($this->fontFile)
             ->background($color)
             ->generate();
 
