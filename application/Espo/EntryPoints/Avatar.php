@@ -47,10 +47,11 @@ use LasseRafn\StringScript;
  */
 class Avatar extends Image
 {
-    protected string $systemColor = '#a4b5bd';
+    private string $systemColor = '#a4b5bd';
+    private string $portalColor = '#c9a3d1';
 
     /** @var string[] */
-    protected $colorList = [
+    private array $colorList = [
         '#6fa8d6',
         '#edc555',
         '#d4729b',
@@ -66,6 +67,10 @@ class Avatar extends Image
     {
         if ($user->getUserName() === SystemUser::NAME) {
             return $this->metadata->get(['app', 'avatars', 'systemColor']) ?? $this->systemColor;
+        }
+
+        if ($user->isPortal()) {
+            return $this->metadata->get(['app', 'avatars', 'portalColor']) ?? $this->portalColor;
         }
 
         $hash = $user->getId();
