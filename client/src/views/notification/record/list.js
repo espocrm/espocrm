@@ -93,8 +93,11 @@ class NotificationListRecordView extends ListExpandedRecordView {
         };
     }
 
+    /**
+     * @return {Promise}
+     */
     showNewRecords() {
-        this.collection.fetchNew();
+        return this.collection.fetchNew();
     }
 }
 

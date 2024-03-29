@@ -33,7 +33,19 @@ class NotificationListView extends View {
     template = 'notification/list'
 
     setup() {
-        this.addActionHandler('refresh', () => this.getRecordView().showNewRecords());
+        this.addActionHandler('refresh', () => {
+            Espo.Ui.notify(' ... ');
+
+            const $btn = this.$el.find('[data-action="refresh"]');
+            $btn.addClass('disabled').attr('disabled', 'disabled');
+
+            this.getRecordView().showNewRecords()
+                .then(() => {
+                    Espo.Ui.notify(false);
+                    $btn.removeClass('disabled').removeAttr('disabled');
+                })
+        });
+
         this.addActionHandler('markAllNotificationsRead', () => this.actionMarkAllRead());
 
         const promise =
@@ -47,8 +59,7 @@ class NotificationListView extends View {
     }
 
     afterRender() {
-        const viewName = this.getMetadata()
-                .get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
+        const viewName = this.getMetadata().get(['clientDefs', 'Notification', 'recordViews', 'list']) ||
             'views/notification/record/list';
 
         const options = {
