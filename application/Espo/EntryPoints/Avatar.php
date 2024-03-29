@@ -52,15 +52,15 @@ class Avatar extends Image
 
     /** @var string[] */
     private array $colorList = [
-        '#6fa8d6',
-        '#edc555',
+        '#6fa8d6', // blue
+        '#e0ba4f', // yellow
         '#d4729b',
         '#8093BD',
         '#7cc4a4',
         '#8a7cc2',
-        '#de6666',
-        '#ABE3A1',
-        '#E8AF64',
+        '#dbb072',
+        '#96dc89', // green
+        '#d6aa6b',
     ];
 
     private function getColor(User $user): string
