@@ -67,7 +67,7 @@ class Avatar extends Image
      * @noinspection SpellCheckingInspection
      * The explicintly specified font prevents warnings in some environments.
      */
-    private string $fontFile = 'vendor/lasserafn/php-initial-avatar-generator/src/fonts/OpenSans-Regular.ttf';
+    private string $fontFile = 'vendor/lasserafn/php-initial-avatar-generator/src/fonts/OpenSans-Semibold.ttf';
 
     private function getColor(User $user): string
     {
@@ -154,7 +154,8 @@ class Avatar extends Image
             ->width($width)
             ->height($width)
             ->color('#FFF')
-            ->fontSize(0.54)
+            ->fontSize(0.56)
+            ->preferBold()
             ->font($this->fontFile)
             ->background($color)
             ->generate();
