@@ -121,28 +121,19 @@ class CalendarModeButtons extends View {
             }
         });
 
-        if (currentIndex >= this.visibleModeListCount) {
-            const tmp = list[this.visibleModeListCount - 1];
-
-            list[this.visibleModeListCount - 1] = list[currentIndex];
-            list[currentIndex] = tmp;
-        }
-
         return list;
     }
 
     getVisibleModeDataList() {
         const fullList = this.getModeDataList();
 
-        const list = [];
+        const current = fullList.find(it => it.mode === this.mode);
 
-        fullList.forEach((o, i) => {
-            if (i >= this.visibleModeListCount) {
-                return;
-            }
+        const list = fullList.slice(0, this.visibleModeListCount);
 
-            list.push(o);
-        });
+        if (current && !list.find(it => it.mode === this.mode)) {
+            list.push(current);
+        }
 
         return list;
     }
