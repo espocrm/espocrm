@@ -26,130 +26,142 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+import View from 'view';
+
 /** @module modules/crm/views/calendar/mode-buttons */
 
-define('crm:views/calendar/mode-buttons', ['view'], function (Dep) {
+class CalendarModeButtons extends View {
 
-    return Dep.extend({
+    template = 'crm:calendar/mode-buttons'
 
-        template: 'crm:calendar/mode-buttons',
+    visibleModeListCount = 3
 
-        visibleModeListCount: 3,
+    data() {
+        const scopeFilterList = Espo.Utils.clone(this.scopeList);
+        scopeFilterList.unshift('all');
 
-        data: function () {
-            let scopeFilterList = Espo.Utils.clone(this.scopeList);
-            scopeFilterList.unshift('all');
+        const scopeFilterDataList = [];
 
-            var scopeFilterDataList = [];
+        this.scopeList.forEach(scope => {
+            const o = {scope: scope};
 
-            this.scopeList.forEach(scope => {
-                let o = {scope: scope};
+            if (!this.getCalendarParentView().enabledScopeList.includes(scope)) {
+                o.disabled = true;
+            }
 
-                if (!~this.getParentView().enabledScopeList.indexOf(scope)) {
-                    o.disabled = true;
-                }
+            scopeFilterDataList.push(o);
+        });
 
-                scopeFilterDataList.push(o);
-            });
+        return {
+            mode: this.mode,
+            visibleModeDataList: this.getVisibleModeDataList(),
+            hiddenModeDataList: this.getHiddenModeDataList(),
+            scopeFilterDataList: scopeFilterDataList,
+            isCustomViewAvailable: this.isCustomViewAvailable,
+            hasMoreItems: this.isCustomViewAvailable,
+            hasWorkingTimeCalendarLink: this.getAcl().checkScope('WorkingTimeCalendar'),
+        };
+    }
 
-            return {
-                mode: this.mode,
-                visibleModeDataList: this.getVisibleModeDataList(),
-                hiddenModeDataList: this.getHiddenModeDataList(),
-                scopeFilterDataList: scopeFilterDataList,
-                isCustomViewAvailable: this.isCustomViewAvailable,
-                hasMoreItems: this.isCustomViewAvailable,
-                hasWorkingTimeCalendarLink: this.getAcl().checkScope('WorkingTimeCalendar'),
+    /**
+     * @return {
+     *     import('modules/crm/views/calendar/calendar').default|
+     *     import('modules/crm/views/calendar/timeline').default
+     * }
+     */
+    getCalendarParentView() {
+        // noinspection JSValidateTypes
+        return this.getParentView();
+    }
+
+    setup() {
+        this.isCustomViewAvailable = this.options.isCustomViewAvailable;
+        this.modeList = this.options.modeList;
+        this.scopeList = this.options.scopeList;
+        this.mode = this.options.mode;
+    }
+
+    /**
+     * @param {boolean} [originalOrder]
+     * @return {Object.<string, *>[]}
+     */
+    getModeDataList(originalOrder) {
+        const list = [];
+
+        this.modeList.forEach(name => {
+            const o = {
+                mode: name,
+                label: this.translate(name, 'modes', 'Calendar'),
+                labelShort: this.translate(name, 'modes', 'Calendar').substring(0, 2),
             };
-        },
 
-        setup: function () {
-            this.isCustomViewAvailable = this.options.isCustomViewAvailable;
-            this.modeList = this.options.modeList;
-            this.scopeList = this.options.scopeList;
-            this.mode = this.options.mode;
-        },
+            list.push(o);
+        });
 
-        /**
-         * @param {boolean} originalOrder
-         * @return {Object.<string, *>[]}
-         */
-        getModeDataList: function (originalOrder) {
-            var list = [];
+        if (this.isCustomViewAvailable) {
+            (this.getPreferences().get('calendarViewDataList') || []).forEach(item => {
+                item = Espo.Utils.clone(item);
 
-            this.modeList.forEach(name => {
-                var o = {
-                    mode: name,
-                    label: this.translate(name, 'modes', 'Calendar'),
-                    labelShort: this.translate(name, 'modes', 'Calendar').substr(0, 2),
-                };
-
-                list.push(o);
+                item.mode = 'view-' + item.id;
+                item.label = item.name;
+                item.labelShort = (item.name || '').substring(0, 2);
+                list.push(item);
             });
+        }
 
-            if (this.isCustomViewAvailable) {
-                (this.getPreferences().get('calendarViewDataList') || []).forEach(item => {
-                    item = Espo.Utils.clone(item);
+        if (originalOrder) {
+            return list;
+        }
 
-                    item.mode = 'view-' + item.id;
-                    item.label = item.name;
-                    item.labelShort = (item.name || '').substr(0, 2);
-                    list.push(item);
-                });
+        let currentIndex = -1;
+
+        list.forEach((item, i) => {
+            if (item.mode === this.mode) {
+                currentIndex = i;
+            }
+        });
+
+        if (currentIndex >= this.visibleModeListCount) {
+            const tmp = list[this.visibleModeListCount - 1];
+
+            list[this.visibleModeListCount - 1] = list[currentIndex];
+            list[currentIndex] = tmp;
+        }
+
+        return list;
+    }
+
+    getVisibleModeDataList() {
+        const fullList = this.getModeDataList();
+
+        const list = [];
+
+        fullList.forEach((o, i) => {
+            if (i >= this.visibleModeListCount) {
+                return;
             }
 
-            if (originalOrder) {
-                return list;
+            list.push(o);
+        });
+
+        return list;
+    }
+
+    getHiddenModeDataList() {
+        const fullList = this.getModeDataList();
+
+        const list = [];
+
+        fullList.forEach((o, i) => {
+            if (i < this.visibleModeListCount) {
+                return;
             }
 
-            let currentIndex = -1;
+            list.push(o);
+        });
 
-            list.forEach((item, i) => {
-                if (item.mode === this.mode) {
-                    currentIndex = i;
-                }
-            });
+        return list;
+    }
+}
 
-            if (currentIndex >= this.visibleModeListCount) {
-                let tmp = list[this.visibleModeListCount - 1];
-
-                list[this.visibleModeListCount - 1] = list[currentIndex];
-                list[currentIndex] = tmp;
-            }
-
-            return list;
-        },
-
-        getVisibleModeDataList: function () {
-            var fullList =  this.getModeDataList();
-
-            var list = [];
-
-            fullList.forEach((o, i) => {
-                if (i >= this.visibleModeListCount) {
-                    return;
-                }
-
-                list.push(o);
-            });
-
-            return list;
-        },
-
-        getHiddenModeDataList: function () {
-            var fullList =  this.getModeDataList();
-
-            var list = [];
-
-            fullList.forEach((o, i) => {
-                if (i < this.visibleModeListCount) {
-                    return;
-                }
-
-                list.push(o);
-            });
-
-            return list;
-        },
-    });
-});
+export default CalendarModeButtons;

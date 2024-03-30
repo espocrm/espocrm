@@ -62,7 +62,7 @@ class TimelineView extends View {
         },
         /** @this TimelineView */
         'click [data-action="mode"]': function (e) {
-            let mode = $(e.currentTarget).data('mode');
+            const mode = $(e.currentTarget).data('mode');
 
             this.selectMode(mode)
         },
@@ -72,10 +72,10 @@ class TimelineView extends View {
         },
         /** @this TimelineView */
         'click [data-action="toggleScopeFilter"]': function (e) {
-            let $target = $(e.currentTarget);
-            let filterName = $target.data('name');
+            const $target = $(e.currentTarget);
+            const filterName = $target.data('name');
 
-            let $check = $target.find('.filter-check-icon');
+            const $check = $target.find('.filter-check-icon');
 
             if ($check.hasClass('hidden')) {
                 $check.removeClass('hidden');
@@ -89,12 +89,12 @@ class TimelineView extends View {
         },
         /** @this TimelineView */
         'click [data-action="toggleCalendarType"]': function (e) {
-            let $target = $(e.currentTarget);
-            let calendarType = $target.data('name');
+            const $target = $(e.currentTarget);
+            const calendarType = $target.data('name');
 
             $target.parent().parent().find('.calendar-type-check-icon').addClass('hidden');
 
-            let $check = $target.find('.calendar-type-check-icon');
+            const $check = $target.find('.calendar-type-check-icon');
 
             if ($check.hasClass('hidden')) {
                 $check.removeClass('hidden');
@@ -104,7 +104,7 @@ class TimelineView extends View {
                 .find('.calendar-type-label')
                 .text(this.getCalendarTypeLabel(calendarType));
 
-            let $showSharedCalendarOptions = this.$el
+            const $showSharedCalendarOptions = this.$el
                 .find('> .button-container button[data-action="showSharedCalendarOptions"]');
 
             if (calendarType === 'shared') {
@@ -126,7 +126,7 @@ class TimelineView extends View {
     }
 
     data() {
-        let calendarTypeDataList = this.getCalendarTypeDataList();
+        const calendarTypeDataList = this.getCalendarTypeDataList();
 
         return {
             mode: this.mode,
@@ -163,7 +163,7 @@ class TimelineView extends View {
             this.isCustomViewAvailable = false;
         }
 
-        let scopeList = [];
+        const scopeList = [];
 
         this.scopeList.forEach(scope => {
             if (this.getAcl().check(scope)) {
@@ -184,9 +184,9 @@ class TimelineView extends View {
         }
 
          this.enabledScopeList.forEach(item => {
-            let color = this.getMetadata().get(['clientDefs', item, 'color']);
+             const color = this.getMetadata().get(['clientDefs', item, 'color']);
 
-            if (color) {
+             if (color) {
                 this.colors[item] = color;
             }
         });
@@ -201,7 +201,7 @@ class TimelineView extends View {
             }
         }
 
-        if (this.getAcl().get('userPermission' === 'no')) {
+        if (this.getAcl().getPermissionLevel('userPermission') === 'no') {
             if (this.calendarType === 'shared') {
                 this.calendarType = 'single';
             }
@@ -222,8 +222,9 @@ class TimelineView extends View {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
-     * @return {module:modules/crm/views/calendar/mode-buttons}
+     * @return {import('./mode-buttons').default}
      */
     getModeButtonsView() {
         return this.getView('modeButtons');
@@ -234,9 +235,9 @@ class TimelineView extends View {
     }
 
     getCalendarTypeDataList() {
-        let list = [];
+        const list = [];
 
-        let o = {
+        const o = {
             type: 'single',
             disabled: this.calendarType !== 'single',
             label: this.getCalendarTypeLabel('single'),
@@ -248,7 +249,7 @@ class TimelineView extends View {
             return list;
         }
 
-        if (this.getAcl().get('userPermission') !== 'no') {
+        if (this.getAcl().getPermissionLevel('userPermission') !== 'no') {
             list.push({
                 type: 'shared',
                 label: this.getCalendarTypeLabel('shared'),
@@ -291,7 +292,7 @@ class TimelineView extends View {
     }
 
     toggleScopeFilter(name) {
-        let index = this.enabledScopeList.indexOf(name);
+        const index = this.enabledScopeList.indexOf(name);
 
         if (!~index) {
             this.enabledScopeList.push(name);
@@ -304,13 +305,13 @@ class TimelineView extends View {
     }
 
     getStoredEnabledScopeList() {
-        let key = 'calendarEnabledScopeList';
+        const key = 'calendarEnabledScopeList';
 
         return this.getStorage().get('state', key) || null;
     }
 
     storeEnabledScopeList(enabledScopeList) {
-        let key = 'calendarEnabledScopeList';
+        const key = 'calendarEnabledScopeList';
 
         this.getStorage().set('state', key, enabledScopeList);
     }
@@ -332,7 +333,7 @@ class TimelineView extends View {
      * @return {Object}
      */
     convertEvent(o) {
-        let userId = o.userId || this.userList[0].id || this.getUser().id;
+        const userId = o.userId || this.userList[0].id || this.getUser().id;
 
         let event;
 
@@ -492,14 +493,14 @@ class TimelineView extends View {
             percent *= -1;
         }
 
-        let alpha = color.substring(7);
+        const alpha = color.substring(7);
 
-        let f = parseInt(color.slice(1, 7), 16),
-            t = percent<0?0:255,
-            p = percent < 0 ?percent *- 1 : percent,
+        const f = parseInt(color.slice(1, 7), 16),
+            t = percent < 0 ? 0 : 255,
+            p = percent < 0 ? percent * -1 : percent,
             R = f >> 16,
-            G = f >> 8&0x00FF,
-            B = f&0x0000FF;
+            G = f >> 8 & 0x00FF,
+            B = f & 0x0000FF;
 
         return "#" + (
             0x1000000 + (
@@ -510,10 +511,10 @@ class TimelineView extends View {
     }
 
     convertEventList(list) {
-        let resultList = [];
+        const resultList = [];
 
         list.forEach(item => {
-            let event = this.convertEvent(item);
+            const event = this.convertEvent(item);
 
             if (!event) {
                 return;
@@ -530,14 +531,14 @@ class TimelineView extends View {
             this.$container = $(this.options.containerSelector);
         }
 
-        let $timeline = this.$timeline = this.$el.find('div.timeline');
+        const $timeline = this.$timeline = this.$el.find('div.timeline');
 
         this.initUserList();
         this.initDates();
         this.initGroupsDataSet();
 
         this.fetchEvents(this.start, this.end, eventList => {
-            let itemsDataSet = new DataSet(eventList);
+            const itemsDataSet = new DataSet(eventList);
 
             this.timeline = new Timeline($timeline.get(0), itemsDataSet, this.groupsDataSet, {
                 dataAttributes: 'all',
@@ -552,7 +553,7 @@ class TimelineView extends View {
                     },
                 },
                 moment: date => {
-                    let m = moment(date);
+                    const m = moment(date);
 
                     if (date && date.noTimeZone) {
                         return m;
@@ -592,9 +593,9 @@ class TimelineView extends View {
                 }
 
                 if (e.item) {
-                    let $item = this.$el.find('.timeline .vis-item[data-id="'+e.item+'"]');
-                    let id = $item.attr('data-record-id');
-                    let scope = $item.attr('data-scope');
+                    const $item = this.$el.find('.timeline .vis-item[data-id="' + e.item + '"]');
+                    const id = $item.attr('data-record-id');
+                    const scope = $item.attr('data-scope');
 
                     if (id && scope) {
                         this.viewEvent(scope, id);
@@ -604,7 +605,7 @@ class TimelineView extends View {
                 }
 
                 if (e.what === 'background' && e.group && e.time) {
-                    let dateStart = moment(e.time).utc().format(this.getDateTime().internalDateTimeFormat);
+                    const dateStart = moment(e.time).utc().format(this.getDateTime().internalDateTimeFormat);
 
                     this.createEvent(dateStart, e.group);
                 }
@@ -641,7 +642,7 @@ class TimelineView extends View {
 
     createEvent(dateStart, userId) {
         if (!dateStart) {
-            let time = (this.timeline.getWindow().end - this.timeline.getWindow().start) / 2 +
+            const time = (this.timeline.getWindow().end - this.timeline.getWindow().start) / 2 +
                 this.timeline.getWindow().start;
 
             dateStart = moment(time)
@@ -655,7 +656,7 @@ class TimelineView extends View {
             }
         }
 
-        let attributes = {dateStart: dateStart};
+        const attributes = {dateStart: dateStart};
 
         if (userId) {
             let userName;
@@ -689,7 +690,7 @@ class TimelineView extends View {
     viewEvent(scope, id) {
         Espo.Ui.notify(' ... ');
 
-        let viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
+        const viewName = this.getMetadata().get(['clientDefs', scope, 'modalViews', 'detail']) ||
             'views/modals/detail';
 
         this.createView('quickView', viewName, {
@@ -718,7 +719,7 @@ class TimelineView extends View {
 
     runFetch() {
         this.fetchEvents(this.start, this.end, eventList => {
-            let itemsDataSet = new DataSet(eventList);
+            const itemsDataSet = new DataSet(eventList);
 
             this.timeline.setItems(itemsDataSet);
             this.triggerView();
@@ -751,9 +752,9 @@ class TimelineView extends View {
     }
 
     triggerView() {
-        let m = this.start.clone().add(Math.round((this.end.unix() - this.start.unix()) / 2), 'seconds');
+        const m = this.start.clone().add(Math.round((this.end.unix() - this.start.unix()) / 2), 'seconds');
 
-        let date = m.format(this.getDateTime().internalDateFormat);
+        const date = m.format(this.getDateTime().internalDateFormat);
 
         this.date = date;
 
@@ -835,7 +836,7 @@ class TimelineView extends View {
     }
 
     getSharedCalenderUserList() {
-        let list = Espo.Utils.clone(this.getPreferences().get('sharedCalendarUserList'));
+        const list = Espo.Utils.clone(this.getPreferences().get('sharedCalendarUserList'));
 
         if (list && list.length) {
             let isBad = false;
@@ -872,7 +873,7 @@ class TimelineView extends View {
     }
 
     initGroupsDataSet() {
-        let list = [];
+        const list = [];
 
         this.userList.forEach((user, i)  =>{
             list.push({
@@ -912,7 +913,7 @@ class TimelineView extends View {
         }
 
         let t;
-        let cache = this.getCache();
+        const cache = this.getCache();
 
         if (cache) {
             t = cache.get('app', 'timestamp');
@@ -936,12 +937,12 @@ class TimelineView extends View {
         from = from.clone().add((-1) * this.leftMargin, 'seconds');
         to = to.clone().add(this.rightMargin, 'seconds');
 
-        let fromString = from.utc().format(this.getDateTime().internalDateTimeFormat);
-        let toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
+        const fromString = from.utc().format(this.getDateTime().internalDateTimeFormat);
+        const toString = to.utc().format(this.getDateTime().internalDateTimeFormat);
 
         let url = 'Timeline?from=' + fromString + '&to=' + toString;
 
-        let userIdList = this.userList.map(user => {
+        const userIdList = this.userList.map(user => {
             return user.id;
         });
 
@@ -957,10 +958,10 @@ class TimelineView extends View {
             this.fetchedStart = from.clone();
             this.fetchedEnd = to.clone();
 
-            let eventList = [];
+            const eventList = [];
 
-            for (let userId in data) {
-                let userEventList = data[userId];
+            for (const userId in data) {
+                const userEventList = data[userId];
 
                 userEventList.forEach(item => {
                     item.userId = userId;
@@ -969,7 +970,7 @@ class TimelineView extends View {
                 });
             }
 
-            let convertedEventList = this.convertEventList(eventList);
+            const convertedEventList = this.convertEventList(eventList);
 
             callback(convertedEventList);
 
@@ -994,13 +995,13 @@ class TimelineView extends View {
     }
 
     actionAddUser() {
-        let boolFilterList = [];
+        const boolFilterList = [];
 
-        if (this.getAcl().get('userPermission') === 'team') {
+        if (this.getAcl().getPermissionLevel('userPermission') === 'team') {
             boolFilterList.push('onlyMyTeam');
         }
 
-        let viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
+        const viewName = this.getMetadata().get('clientDefs.' + this.foreignScope + '.modalViews.select') ||
             'views/modals/select-records';
 
         Espo.Ui.notify(' ... ');
@@ -1034,14 +1035,14 @@ class TimelineView extends View {
     }
 
     getColorFromScopeName(scope) {
-        let additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
+        const additionalColorList = this.getMetadata().get('clientDefs.Calendar.additionalColorList') || [];
 
         if (!additionalColorList.length) {
             return;
         }
 
-        let colors = this.getMetadata().get('clientDefs.Calendar.colors') || {};
-        let scopeList = this.getConfig().get('calendarEntityList') || [];
+        const colors = this.getMetadata().get('clientDefs.Calendar.colors') || {};
+        const scopeList = this.getConfig().get('calendarEntityList') || [];
 
         let index = 0;
         let j = 0;
@@ -1066,16 +1067,18 @@ class TimelineView extends View {
         return this.colors[scope];
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionPrevious() {
-        let start = this.timeline.getWindow().start;
+        const start = this.timeline.getWindow().start;
 
         this.timeline.moveTo(start);
 
         this.triggerView();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionNext() {
-        let end = this.timeline.getWindow().end;
+        const end = this.timeline.getWindow().end;
 
         this.timeline.moveTo(end);
 

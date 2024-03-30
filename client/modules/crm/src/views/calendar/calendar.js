@@ -340,7 +340,7 @@ class CalendarView extends View {
     }
 
     /**
-     * @return {module:modules/crm/views/calendar/mode-buttons}
+     * @return {import('./mode-buttons').default}
      */
     getModeButtonsView() {
         return this.getView('modeButtons');
