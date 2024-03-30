@@ -41,7 +41,7 @@ class MeetingPopupNotificationView extends PopupNotificationView {
             return;
         }
 
-        let promise = this.getModelFactory().create(this.notificationData.entityType, model => {
+        const promise = this.getModelFactory().create(this.notificationData.entityType, model => {
             let dateAttribute = 'dateStart';
 
             if (this.notificationData.entityType === 'Task') {
