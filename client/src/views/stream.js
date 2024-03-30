@@ -137,12 +137,10 @@ class StreamView extends View {
 
         Espo.Ui.notify(' ... ');
 
-        this.listenToOnce(this.collection, 'sync', () => {
-            Espo.Ui.notify(false);
-        });
-
+        this.collection.abortLastFetch();
         this.collection.reset();
-        this.collection.fetch();
+        this.collection.fetch()
+            .then(() => Espo.Ui.notify(false));
     }
 
     setFilter(filter) {

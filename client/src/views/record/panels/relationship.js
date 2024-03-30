@@ -547,6 +547,7 @@ class RelationshipPanelView extends BottomPanelView {
             }
         });
 
+        this.collection.abortLastFetch();
         this.collection.reset();
 
         const listView = this.getView('list');
