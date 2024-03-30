@@ -151,6 +151,7 @@ class SidePanelView extends View {
         this.readOnly = this.readOnly || this.options.readOnly;
         this.inlineEditDisabled = this.inlineEditDisabled || this.options.inlineEditDisabled;
 
+        /** @type {import('views/record/base').default} */
         this.recordViewObject = this.options.recordViewObject;
     }
 

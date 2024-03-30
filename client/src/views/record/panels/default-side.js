@@ -98,9 +98,10 @@ class DefaultSidePanelView extends SidePanelView {
                         baseName: 'modified',
                     },
                 });
-            }
-            if (!this.model.get('modifiedById') && !this.model.get('modifiedAt')) {
-                this.recordViewObject.hideField('complexModified');
+
+                if (!this.isModifiedVisible()) {
+                    this.recordViewObject.hideField('complexModified');
+                }
             }
         } else {
             this.recordViewObject.hideField('complexModified');
@@ -126,7 +127,7 @@ class DefaultSidePanelView extends SidePanelView {
                     return;
                 }
 
-                if (!this.model.get('modifiedById') && !this.model.get('modifiedAt')) {
+                if (!this.isModifiedVisible()) {
                     return;
                 }
 
@@ -150,6 +151,26 @@ class DefaultSidePanelView extends SidePanelView {
 
             this.listenTo(this.model, 'change:followersIds', () => this.controlFollowersField());
         }
+    }
+
+    /**
+     * @private
+     * @return {boolean}
+     */
+    isModifiedVisible() {
+        if (!this.hasComplexModified) {
+            return false;
+        }
+
+        if (!this.model.get('modifiedById') && !this.model.get('modifiedAt')) {
+            return false;
+        }
+
+        if (!this.model.get('modifiedById') && this.model.get('modifiedAt') === this.model.get('createdAt')) {
+            return false;
+        }
+
+        return true;
     }
 
     controlFollowersField() {
