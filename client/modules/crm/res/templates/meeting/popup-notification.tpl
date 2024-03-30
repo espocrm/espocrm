@@ -14,9 +14,9 @@
 
 </div>
 
-<div class="cell form-group" data-name="{{dateAttribute}}">
-    <div class="field" data-name="{{dateAttribute}}">
-        {{{dateField}}}
+<div class="cell form-group" data-name="{{dateField}}">
+    <div class="field" data-name="{{dateField}}">
+        {{{date}}}
     </div>
 </div>
 

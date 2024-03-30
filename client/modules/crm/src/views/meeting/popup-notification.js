@@ -42,23 +42,17 @@ class MeetingPopupNotificationView extends PopupNotificationView {
         }
 
         const promise = this.getModelFactory().create(this.notificationData.entityType, model => {
-            let dateAttribute = 'dateStart';
+            const field = this.notificationData.dateField;
+            const fieldType = model.getFieldParam(field, 'type') || 'base';
+            const viewName = this.getFieldManager().getViewName(fieldType);
 
-            if (this.notificationData.entityType === 'Task') {
-                dateAttribute = 'dateEnd';
-            }
+            model.set(this.notificationData.attributes);
 
-            this.dateAttribute = dateAttribute;
-
-            model.set(dateAttribute, this.notificationData[dateAttribute]);
-
-            this.createView('dateField', 'views/fields/datetime', {
+            this.createView('date', viewName, {
                 model: model,
                 mode: 'detail',
-                selector: '.field[data-name="' + dateAttribute + '"]',
-                defs: {
-                    name: dateAttribute,
-                },
+                selector: `.field[data-name="${field}"]`,
+                name: field,
                 readOnly: true,
             });
         });
@@ -69,7 +63,7 @@ class MeetingPopupNotificationView extends PopupNotificationView {
     data() {
         return {
             header: this.translate(this.notificationData.entityType, 'scopeNames'),
-            dateAttribute: this.dateAttribute,
+            dateField: this.notificationData.dateField,
             ...super.data(),
         };
     }

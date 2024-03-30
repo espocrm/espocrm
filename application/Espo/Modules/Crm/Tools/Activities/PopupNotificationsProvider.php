@@ -126,15 +126,19 @@ class PopupNotificationsProvider implements Provider
                 }
             }
 
-            $dateAttribute = $entityType === Task::ENTITY_TYPE ?
+            $dateField = $entityType === Task::ENTITY_TYPE ?
                 'dateEnd' :
                 'dateStart';
 
             $data = (object) [
                 'id' => $entity->getId(),
                 'entityType' => $entityType,
-                $dateAttribute => $entity->get($dateAttribute),
                 'name' => $entity->get('name'),
+                'dateField' => $dateField,
+                'attributes' => (object) [
+                    $dateField => $entity->get($dateField),
+                    $dateField . 'Date' => $entity->get($dateField . 'Date'),
+                ],
             ];
 
             $resultList[] = new Item($reminderId, $data);
