@@ -3410,12 +3410,14 @@ pre {
 }
 
 a.close {
-    color: var(--gray-soft);
-}
+    color: var(--text-muted-color);
+    opacity: 1;
 
-a.close:hover {
-    color: var(--gray-soft);
-    opacity: 0.8;
+    &:hover,
+    &:hover:active {
+        opacity: 1;
+        color: var(--gray-soft);
+    }
 }
 
 .wysiwyg-iframe-container.fallback {
