@@ -26,250 +26,262 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/detail', ['views/detail', 'lib!moment'], function (Dep, moment) {
+import DetailView from 'views/detail';
+import moment from 'moment';
 
-    return Dep.extend({
+class MeetingDetailView extends DetailView {
 
-        cancellationPeriod: '8 hours',
+    cancellationPeriod = '8 hours'
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
+        this.setupStatuses();
+
+        this.addMenuItem('buttons', {
+            name: 'sendInvitations',
+            text: this.translate('Send Invitations', 'labels', 'Meeting'),
+            acl: 'edit',
+            hidden: true,
+            onClick: () => this.actionSendInvitations(),
+        });
+
+        this.addMenuItem('dropdown', {
+            name: 'sendCancellation',
+            text: this.translate('Send Cancellation', 'labels', 'Meeting'),
+            acl: 'edit',
+            hidden: true,
+            onClick: () => this.actionSendCancellation(),
+        });
+
+        this.controlSendInvitationsButton();
+        this.controlAcceptanceStatusButton();
+        this.controlSendCancellationButton();
+
+        this.listenTo(this.model, 'sync', () => {
             this.controlSendInvitationsButton();
-            this.controlAcceptanceStatusButton();
             this.controlSendCancellationButton();
+        });
 
-            this.listenTo(this.model, 'sync', () => {
-                this.controlSendInvitationsButton();
-                this.controlSendCancellationButton();
-            });
+        this.listenTo(this.model, 'sync', () => this.controlAcceptanceStatusButton());
 
-            this.listenTo(this.model, 'sync', () => {
-                this.controlAcceptanceStatusButton();
-            });
+        this.setupCancellationPeriod();
+    }
 
-            this.setupCancellationPeriod();
-        },
+    setupStatuses() {
+        this.canceledStatusList = this.getMetadata().get(`scopes.${this.entityType}.canceledStatusList`) || [];
 
-        setupCancellationPeriod: function () {
-            this.cancellationPeriodAmount = 0;
-            this.cancellationPeriodUnits = 'hours';
+        this.notActualStatusList = [
+            ...(this.getMetadata().get(`scopes.${this.entityType}.completedStatusList`) || []),
+            ...this.canceledStatusList,
+        ];
+    }
 
-            let cancellationPeriod = this.getConfig().get('eventCancellationPeriod') || this.cancellationPeriod;
+    setupCancellationPeriod() {
+        this.cancellationPeriodAmount = 0;
+        this.cancellationPeriodUnits = 'hours';
 
-            if (!cancellationPeriod) {
-                return;
-            }
+        const cancellationPeriod = this.getConfig().get('eventCancellationPeriod') || this.cancellationPeriod;
 
-            let arr = cancellationPeriod.split(' ');
+        if (!cancellationPeriod) {
+            return;
+        }
 
-            this.cancellationPeriodAmount = parseInt(arr[0]);
-            this.cancellationPeriodUnits = arr[1] ?? 'hours';
-        },
+        const arr = cancellationPeriod.split(' ');
 
-        controlAcceptanceStatusButton: function () {
-            if (!this.model.has('status')) {
-                return;
-            }
+        this.cancellationPeriodAmount = parseInt(arr[0]);
+        this.cancellationPeriodUnits = arr[1] ?? 'hours';
+    }
 
-            if (!this.model.has('usersIds')) {
-                return;
-            }
+    controlAcceptanceStatusButton() {
+        if (!this.model.has('status')) {
+            return;
+        }
 
-            if (~['Held', 'Not Held'].indexOf(this.model.get('status'))) {
-                this.removeMenuItem('setAcceptanceStatus');
+        if (!this.model.has('usersIds')) {
+            return;
+        }
 
-                return;
-            }
+        if (this.notActualStatusList.includes(this.model.get('status'))) {
+            this.removeMenuItem('setAcceptanceStatus');
 
-            if (!~this.model.getLinkMultipleIdList('users').indexOf(this.getUser().id)) {
-                this.removeMenuItem('setAcceptanceStatus');
+            return;
+        }
 
-                return;
-            }
+        if (!this.model.getLinkMultipleIdList('users').includes(this.getUser().id)) {
+            this.removeMenuItem('setAcceptanceStatus');
 
-            let acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
+            return;
+        }
 
-            let text;
-            let style = 'default';
+        const acceptanceStatus = this.model.getLinkMultipleColumn('users', 'status', this.getUser().id);
 
-            if (acceptanceStatus && acceptanceStatus !== 'None') {
-                text = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
+        let text;
+        let style = 'default';
 
-                style = this.getMetadata()
-                    .get(['entityDefs', this.model.entityType, 'fields',
-                        'acceptanceStatus', 'style', acceptanceStatus]);
-            }
-            else {
-                text = this.translate('Acceptance', 'labels', 'Meeting');
-            }
+        if (acceptanceStatus && acceptanceStatus !== 'None') {
+            text = this.getLanguage().translateOption(acceptanceStatus, 'acceptanceStatus', this.model.entityType);
 
-            this.removeMenuItem('setAcceptanceStatus', true);
+            style = this.getMetadata()
+                .get(['entityDefs', this.model.entityType, 'fields',
+                    'acceptanceStatus', 'style', acceptanceStatus]);
+        }
+        else {
+            text = this.translate('Acceptance', 'labels', 'Meeting');
+        }
 
-            let iconHtml = '';
+        this.removeMenuItem('setAcceptanceStatus', true);
 
-            if (style) {
-                let iconClass = ({
-                    'success': 'fas fa-check-circle',
-                    'danger': 'fas fa-times-circle',
-                    'warning': 'fas fa-question-circle',
-                })[style];
+        let iconHtml = '';
 
-                iconHtml = $('<span>')
-                    .addClass(iconClass)
-                    .addClass('text-' + style)
-                    .get(0).outerHTML;
-            }
+        if (style) {
+            const iconClass = ({
+                'success': 'fas fa-check-circle',
+                'danger': 'fas fa-times-circle',
+                'warning': 'fas fa-question-circle',
+            })[style];
 
-            this.addMenuItem('buttons', {
-                text: text,
-                action: 'setAcceptanceStatus',
-                iconHtml: iconHtml,
-            });
-        },
+            iconHtml = $('<span>')
+                .addClass(iconClass)
+                .addClass('text-' + style)
+                .get(0).outerHTML;
+        }
 
-        controlSendInvitationsButton: function () {
-            let show = true;
+        this.addMenuItem('buttons', {
+            text: text,
+            action: 'setAcceptanceStatus',
+            iconHtml: iconHtml,
+        });
+    }
 
-            if (['Held', 'Not Held'].includes(this.model.get('status'))) {
+    controlSendInvitationsButton() {
+        let show = true;
+
+        if (this.notActualStatusList.includes(this.model.get('status'))) {
+            show = false;
+        }
+
+        if (
+            show &&
+            !this.getAcl().checkModel(this.model, 'edit')
+        ) {
+            show = false;
+        }
+
+        if (show) {
+            const userIdList = this.model.getLinkMultipleIdList('users');
+            const contactIdList = this.model.getLinkMultipleIdList('contacts');
+            const leadIdList = this.model.getLinkMultipleIdList('leads');
+
+            if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
                 show = false;
             }
+            /*else if (
+                !contactIdList.length &&
+                !leadIdList.length &&
+                userIdList.length === 1 &&
+                userIdList[0] === this.getUser().id &&
+                this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === 'Accepted'
+            ) {
+                show = false;
+            }*/
+        }
+
+        if (show) {
+            const dateEnd = this.model.get('dateEnd');
 
             if (
-                show &&
-                !this.getAcl().checkModel(this.model, 'edit')
+                dateEnd &&
+                this.getDateTime().toMoment(dateEnd).isBefore(moment.now())
             ) {
                 show = false;
             }
+        }
 
-            if (show) {
-                let userIdList = this.model.getLinkMultipleIdList('users');
-                let contactIdList = this.model.getLinkMultipleIdList('contacts');
-                let leadIdList = this.model.getLinkMultipleIdList('leads');
+        show ?
+            this.showHeaderActionItem('sendInvitations') :
+            this.hideHeaderActionItem('sendInvitations');
+    }
 
-                if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
-                    show = false;
-                }
-                /*else if (
-                    !contactIdList.length &&
-                    !leadIdList.length &&
-                    userIdList.length === 1 &&
-                    userIdList[0] === this.getUser().id &&
-                    this.model.getLinkMultipleColumn('users', 'status', this.getUser().id) === 'Accepted'
-                ) {
-                    show = false;
-                }*/
+    controlSendCancellationButton() {
+        let show = this.canceledStatusList.includes(this.model.get('status'));
+
+        if (show) {
+            const dateEnd = this.model.get('dateEnd');
+
+            if (
+                dateEnd &&
+                this.getDateTime()
+                    .toMoment(dateEnd)
+                    .subtract(this.cancellationPeriodAmount, this.cancellationPeriodUnits)
+                    .isBefore(moment.now())
+            ) {
+                show = false;
             }
+        }
 
-            if (show) {
-                let dateEnd = this.model.get('dateEnd');
+        if (show) {
+            const userIdList = this.model.getLinkMultipleIdList('users');
+            const contactIdList = this.model.getLinkMultipleIdList('contacts');
+            const leadIdList = this.model.getLinkMultipleIdList('leads');
 
-                if (
-                    dateEnd &&
-                    this.getDateTime().toMoment(dateEnd).isBefore(moment.now())
-                ) {
-                    show = false;
-                }
+            if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
+                show = false;
             }
+        }
 
-            if (show) {
-                this.addMenuItem('buttons', {
-                    text: this.translate('Send Invitations', 'labels', 'Meeting'),
-                    action: 'sendInvitations',
-                    acl: 'edit',
-                });
+        show ?
+            this.showHeaderActionItem('sendCancellation') :
+            this.hideHeaderActionItem('sendCancellation');
+    }
 
-                return;
-            }
+    actionSendInvitations() {
+        Espo.Ui.notify(' ... ');
 
-            this.removeMenuItem('sendInvitations');
-        },
+        this.createView('dialog', 'crm:views/meeting/modals/send-invitations', {
+            model: this.model,
+        }).then(view => {
+            Espo.Ui.notify(false);
 
-        controlSendCancellationButton: function () {
-            let show = this.model.get('status') === 'Not Held';
+            view.render();
 
-            if (show) {
-                let dateEnd = this.model.get('dateEnd');
+            this.listenToOnce(view, 'sent', () => this.model.fetch());
+        });
+    }
 
-                if (
-                    dateEnd &&
-                    this.getDateTime()
-                        .toMoment(dateEnd)
-                        .subtract(this.cancellationPeriodAmount, this.cancellationPeriodUnits)
-                        .isBefore(moment.now())
-                ) {
-                    show = false;
-                }
-            }
+    actionSendCancellation() {
+        Espo.Ui.notify(' ... ');
 
-            if (show) {
-                let userIdList = this.model.getLinkMultipleIdList('users');
-                let contactIdList = this.model.getLinkMultipleIdList('contacts');
-                let leadIdList = this.model.getLinkMultipleIdList('leads');
+        this.createView('dialog', 'crm:views/meeting/modals/send-cancellation', {
+            model: this.model,
+        }).then(view => {
+            Espo.Ui.notify(false);
 
-                if (!contactIdList.length && !leadIdList.length && !userIdList.length) {
-                    show = false;
-                }
-            }
+            view.render();
 
-            if (show) {
-                this.addMenuItem('dropdown', {
-                    text: this.translate('Send Cancellation', 'labels', 'Meeting'),
-                    action: 'sendCancellation',
-                    acl: 'edit',
-                });
+            this.listenToOnce(view, 'sent', () => this.model.fetch());
+        });
+    }
 
-                return;
-            }
+    // noinspection JSUnusedGlobalSymbols
+    actionSetAcceptanceStatus() {
+        this.createView('dialog', 'crm:views/meeting/modals/acceptance-status', {
+            model: this.model
+        }, (view) => {
+            view.render();
 
-            this.removeMenuItem('sendCancellation');
-        },
+            this.listenTo(view, 'set-status', (status) => {
+                this.removeMenuItem('setAcceptanceStatus');
 
-        actionSendInvitations: function () {
-            Espo.Ui.notify(' ... ');
-
-            this.createView('dialog', 'crm:views/meeting/modals/send-invitations', {
-                model: this.model,
-            }).then(view => {
-                Espo.Ui.notify(false);
-
-                view.render();
-
-                this.listenToOnce(view, 'sent', () => this.model.fetch());
-            });
-        },
-
-        actionSendCancellation: function () {
-            Espo.Ui.notify(' ... ');
-
-            this.createView('dialog', 'crm:views/meeting/modals/send-cancellation', {
-                model: this.model,
-            }).then(view => {
-                Espo.Ui.notify(false);
-
-                view.render();
-
-                this.listenToOnce(view, 'sent', () => this.model.fetch());
-            });
-        },
-
-        actionSetAcceptanceStatus: function () {
-            this.createView('dialog', 'crm:views/meeting/modals/acceptance-status', {
-                model: this.model
-            }, (view) => {
-                view.render();
-
-                this.listenTo(view, 'set-status', (status) => {
-                    this.removeMenuItem('setAcceptanceStatus');
-
-                    Espo.Ajax.postRequest(this.model.entityType + '/action/setAcceptanceStatus', {
-                        id: this.model.id,
-                        status: status,
-                    }).then(() => {
-                        this.model.fetch();
-                    });
+                Espo.Ajax.postRequest(this.model.entityType + '/action/setAcceptanceStatus', {
+                    id: this.model.id,
+                    status: status,
+                }).then(() => {
+                    this.model.fetch();
                 });
             });
-        },
-    });
-});
+        });
+    }
+}
+
+export default MeetingDetailView;
