@@ -50,7 +50,7 @@ class ModalView extends View {
      * @property {string} [html] HTML.
      * @property {boolean} [pullLeft=false] Deprecated. Use the `position` property.
      * @property {'left'|'right'} [position='left'] A position.
-     * @property {'default'|'danger'|'success'|'warning'} [style='default'] A style.
+     * @property {'default'|'danger'|'success'|'warning'|'info'} [style='default'] A style.
      * @property {boolean} [hidden=false] Is hidden.
      * @property {boolean} [disabled=false] Disabled.
      * @property {function(module:ui.Dialog): void} [onClick] Called on click. If not defined, then
