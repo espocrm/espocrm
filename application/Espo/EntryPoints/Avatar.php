@@ -50,7 +50,10 @@ class Avatar extends Image
     private string $systemColor = '#a4b5bd';
     private string $portalColor = '#c9a3d1';
 
-    /** @var string[] */
+    /**
+     * @noinspection SpellCheckingInspection
+     * @var string[]
+     */
     private array $colorList = [
         '#6fa8d6', // blue
         '#e3bf59', // yellow
@@ -58,7 +61,7 @@ class Avatar extends Image
         '#8093BD',
         '#7cc4a4',
         '#8a7cc2',
-        '#87d96c', // green
+        '#77c9c0', // light blue
         '#d6aa6b', // dark yellow
         '#e6859d', // red,
     ];
