@@ -429,6 +429,43 @@ class MainView extends View {
     }
 
     /**
+     * Update a menu item.
+     *
+     * @param {string} name An item name.
+     * @param {module:views/main~MenuItem} item New item definitions to write.
+     * @param {boolean} [doNotReRender=false] Skip re-render.
+     *
+     * @since 8.2.0
+     */
+    updateMenuItem(name, item, doNotReRender) {
+        const actionItem = this._getHeaderActionItem(name);
+
+        if (!actionItem) {
+            return;
+        }
+
+        for (const key in item) {
+            actionItem[key] = item[key];
+        }
+
+        if (doNotReRender) {
+            return;
+        }
+
+        if (this.isRendered()) {
+            this.getHeaderView().reRender();
+
+            return;
+        }
+
+        if (this.isBeingRendered()) {
+            this.whenRendered().then(() => {
+                this.getHeaderView().reRender();
+            })
+        }
+    }
+
+    /**
      * Add a menu item.
      *
      * @param {'buttons'|'dropdown'} type A type.

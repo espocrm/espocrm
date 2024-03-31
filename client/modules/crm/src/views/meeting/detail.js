@@ -54,6 +54,13 @@ class MeetingDetailView extends DetailView {
             onClick: () => this.actionSendCancellation(),
         });
 
+        this.addMenuItem('buttons', {
+            name: 'setAcceptanceStatus',
+            text: '',
+            hidden: true,
+            onClick: () => this.actionSetAcceptanceStatus(),
+        });
+
         this.controlSendInvitationsButton();
         this.controlAcceptanceStatusButton();
         this.controlSendCancellationButton();
@@ -103,13 +110,13 @@ class MeetingDetailView extends DetailView {
         }
 
         if (this.notActualStatusList.includes(this.model.get('status'))) {
-            this.removeMenuItem('setAcceptanceStatus');
+            this.hideHeaderActionItem('setAcceptanceStatus');
 
             return;
         }
 
         if (!this.model.getLinkMultipleIdList('users').includes(this.getUser().id)) {
-            this.removeMenuItem('setAcceptanceStatus');
+            this.hideHeaderActionItem('setAcceptanceStatus');
 
             return;
         }
@@ -130,8 +137,6 @@ class MeetingDetailView extends DetailView {
             text = this.translate('Acceptance', 'labels', 'Meeting');
         }
 
-        this.removeMenuItem('setAcceptanceStatus', true);
-
         let iconHtml = '';
 
         if (style) {
@@ -147,10 +152,10 @@ class MeetingDetailView extends DetailView {
                 .get(0).outerHTML;
         }
 
-        this.addMenuItem('buttons', {
+        this.updateMenuItem('setAcceptanceStatus', {
             text: text,
-            action: 'setAcceptanceStatus',
             iconHtml: iconHtml,
+            hidden: false,
         });
     }
 
@@ -242,7 +247,6 @@ class MeetingDetailView extends DetailView {
             model: this.model,
         }).then(view => {
             Espo.Ui.notify(false);
-
             view.render();
 
             this.listenToOnce(view, 'sent', () => this.model.fetch());
@@ -256,7 +260,6 @@ class MeetingDetailView extends DetailView {
             model: this.model,
         }).then(view => {
             Espo.Ui.notify(false);
-
             view.render();
 
             this.listenToOnce(view, 'sent', () => this.model.fetch());
@@ -265,20 +268,30 @@ class MeetingDetailView extends DetailView {
 
     // noinspection JSUnusedGlobalSymbols
     actionSetAcceptanceStatus() {
+
         this.createView('dialog', 'crm:views/meeting/modals/acceptance-status', {
             model: this.model
         }, (view) => {
             view.render();
 
-            this.listenTo(view, 'set-status', (status) => {
-                this.removeMenuItem('setAcceptanceStatus');
 
-                Espo.Ajax.postRequest(this.model.entityType + '/action/setAcceptanceStatus', {
-                    id: this.model.id,
-                    status: status,
-                }).then(() => {
-                    this.model.fetch();
-                });
+            this.listenTo(view, 'set-status', (status) => {
+                this.disableMenuItem('setAcceptanceStatus');
+                Espo.Ui.notify(' ... ');
+
+                Espo.Ajax
+                    .postRequest(this.model.entityType + '/action/setAcceptanceStatus', {
+                        id: this.model.id,
+                        status: status,
+                    })
+                    .then(() => {
+                        this.model.fetch()
+                            .then(() => {
+                                Espo.Ui.notify(false);
+                                this.enableMenuItem('setAcceptanceStatus');
+                            });
+                    })
+                    .catch(() => this.enableMenuItem('setAcceptanceStatus'));
             });
         });
     }
