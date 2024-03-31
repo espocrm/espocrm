@@ -57,13 +57,13 @@ class Avatar extends Image
     private array $colorList = [
         '#6fa8d6', // blue
         '#e3bf59', // yellow
-        '#d4729b',
-        '#8093BD',
-        '#7cc4a4',
-        '#8a7cc2',
-        '#77c9c0', // light blue
+        '#d4729b', // red
+        '#8093BD', // gray blue
+        '#7cbac4', // blue in green
+        '#8a7cc2', // purple
+        '#77c9b9', // green
         '#d6aa6b', // dark yellow
-        '#e6859d', // red,
+        '#e6859d', // red
     ];
 
     /**
