@@ -228,6 +228,7 @@ class BaseEntity implements Entity
             return $this->id;
         }
 
+        // Legacy.
         $method = '_get' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
@@ -286,6 +287,7 @@ class BaseEntity implements Entity
      * Get a value from the container.
      *
      * @return mixed
+     * @todo Add return type in v9.0.
      */
     protected function getFromContainer(string $attribute)
     {
@@ -324,6 +326,7 @@ class BaseEntity implements Entity
      * Get a value from the fetched-container.
      *
      * @return mixed
+     * @todo Add return type in v9.0.
      */
     protected function getFromFetchedContainer(string $attribute)
     {
@@ -359,6 +362,7 @@ class BaseEntity implements Entity
             return (bool) $this->id;
         }
 
+        // Legacy.
         $method = '_has' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
@@ -417,6 +421,7 @@ class BaseEntity implements Entity
     {
         $preparedValue = $this->prepareAttributeValue($attribute, $value);
 
+        // Legacy.
         $method = '_set' . ucfirst($attribute);
 
         if (method_exists($this, $method)) {
