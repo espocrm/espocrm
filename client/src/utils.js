@@ -420,8 +420,9 @@ Espo.Utils = {
     /**
      * A shallow clone.
      *
-     * @param {*} obj An object.
-     * @returns {*}
+     * @template {*} TObject
+     * @param {TObject} obj An object.
+     * @returns {TObject}
      */
     clone: function (obj) {
         if (!Espo.Utils.isObject(obj)) {
@@ -434,8 +435,9 @@ Espo.Utils = {
     /**
      * A deep clone.
      *
-     * @param {*} data An object.
-     * @returns {*}
+     * @template {*} TObject
+     * @param {TObject} data An object.
+     * @returns {TObject}
      */
     cloneDeep: function (data) {
         data = Espo.Utils.clone(data);
