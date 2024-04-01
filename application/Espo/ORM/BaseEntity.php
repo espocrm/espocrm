@@ -271,10 +271,11 @@ class BaseEntity implements Entity
     protected function setInContainer(string $attribute, $value): void
     {
         $this->valuesContainer[$attribute] = $value;
+        $this->writtenMap[$attribute] = true;
     }
 
     /**
-     * whether an attribute is set in the container.
+     * Whether an attribute is set in the container.
      */
     protected function hasInContainer(string $attribute): bool
     {
@@ -409,6 +410,9 @@ class BaseEntity implements Entity
         $this->valueAccessor->set($field, $value);
     }
 
+    /**
+     * @todo Make private in v9.0.
+     */
     protected function populateFromArrayItem(string $attribute, mixed $value): void
     {
         $preparedValue = $this->prepareAttributeValue($attribute, $value);
@@ -422,8 +426,6 @@ class BaseEntity implements Entity
         }
 
         $this->setInContainer($attribute, $preparedValue);
-
-        $this->writtenMap[$attribute] = true;
     }
 
     protected function prepareAttributeValue(string $attribute, mixed $value): mixed
@@ -965,7 +967,11 @@ class BaseEntity implements Entity
                 continue;
             }
 
+            $wasSet = $this->hasInContainer($attribute);
+
             $this->setInContainer($attribute, $defs['default']);
+
+            $this->writtenMap[$attribute] = $wasSet;
         }
     }
 
