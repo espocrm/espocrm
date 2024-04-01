@@ -86,6 +86,7 @@
         "sentCount": {
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -94,6 +95,7 @@
             "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -102,6 +104,7 @@
             "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -109,6 +112,7 @@
         "optedInCount": {
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -117,6 +121,7 @@
             "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -125,6 +130,7 @@
             "view": "crm:views/campaign/fields/int-with-percentage",
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -132,6 +138,7 @@
         "hardBouncedCount": {
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -139,6 +146,7 @@
         "softBouncedCount": {
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -146,6 +154,7 @@
         "leadCreatedCount": {
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -153,6 +162,7 @@
         "openedPercentage": {
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -160,6 +170,7 @@
         "clickedPercentage": {
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -167,6 +178,7 @@
         "optedOutPercentage": {
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -174,6 +186,7 @@
         "bouncedPercentage": {
             "type": "int",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true
@@ -181,6 +194,7 @@
         "revenue": {
             "type": "currency",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "readOnly": true,
             "utility": true

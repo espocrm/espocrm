@@ -735,6 +735,10 @@
                     },
                     "description": "A list of layout types the field won't be available in. As of v8.2."
                 },
+                "orderDisabled": {
+                    "type": "boolean",
+                    "default": "Disables the ability to order by the field."
+                },
                 "textFilterDisabled": {
                     "type": "boolean",
                     "description": "Disables the ability to add the field to text filters (in the Entity Manager tool)."

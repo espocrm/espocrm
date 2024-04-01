@@ -9,6 +9,7 @@
             "type": "int",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "layoutFiltersDisabled": true,
             "layoutMassUpdateDisabled": true
         },
@@ -16,6 +17,7 @@
             "type": "int",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "layoutListDisabled": true,
             "layoutFiltersDisabled": true,
             "layoutMassUpdateDisabled": true
@@ -26,6 +28,7 @@
         "sourceCampaign": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "customizationDisabled": true,
             "layoutAvailabilityList": []
@@ -71,6 +74,7 @@
             "layoutFiltersDisabled": true,
             "layoutLinkDisabled": true,
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true
         },
         "excludingActionList": {
@@ -80,12 +84,14 @@
             "layoutFiltersDisabled": true,
             "layoutLinkDisabled": true,
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true
         },
         "targetStatus": {
             "type": "enum",
             "options": ["Listed", "Opted Out"],
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,
@@ -98,6 +104,7 @@
         "isOptedOut": {
             "type": "bool",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "layoutListDisabled": true,
             "layoutDetailDisabled": true,

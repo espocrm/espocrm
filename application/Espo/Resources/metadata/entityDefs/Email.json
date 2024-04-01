@@ -10,6 +10,7 @@
             "type": "varchar",
             "required": true,
             "notStorable": true,
+            "orderDisabled": true,
             "view": "views/email/fields/subject",
             "utility": true
         },
@@ -27,6 +28,7 @@
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "textFilterDisabled": true,
             "layoutFiltersDisabled": true,
             "customizationDisabled": true,
@@ -49,6 +51,7 @@
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "textFilterDisabled": true,
             "layoutFiltersDisabled": true,
             "customizationDisabled": true,
@@ -58,6 +61,7 @@
             "type": "varchar",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "textFilterDisabled": true,
             "layoutFiltersDisabled": true,
             "customizationDisabled": true,
@@ -72,6 +76,7 @@
         "from": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "required": true,
             "view": "views/email/fields/from-address-varchar",
             "textFilterDisabled": true,
@@ -82,6 +87,7 @@
         "to": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "required": true,
             "view": "views/email/fields/email-address-varchar",
             "validatorClassName": "Espo\\Classes\\FieldValidators\\Email\\EmailAddresses",
@@ -97,6 +103,7 @@
         "cc": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "views/email/fields/email-address-varchar",
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\Email\\Addresses\\Valid",
@@ -110,6 +117,7 @@
         "bcc": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "views/email/fields/email-address-varchar",
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\Email\\Addresses\\Valid",
@@ -123,6 +131,7 @@
         "replyTo": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "views/email/fields/email-address-varchar",
             "textFilterDisabled": true,
             "customizationDisabled": true,
@@ -132,6 +141,7 @@
         "personStringData": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true,
             "view": "views/email/fields/person-string-data",
             "customizationDisabled": true
@@ -198,6 +208,7 @@
         "folder": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "entity": "EmailFolder",
             "customizationDisabled": true
@@ -205,6 +216,7 @@
         "nameHash": {
             "type": "text",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "utility": true,
             "customizationDisabled": true
@@ -219,6 +231,7 @@
         "idHash": {
             "type": "text",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "utility": true,
             "customizationDisabled": true

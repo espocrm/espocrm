@@ -224,6 +224,7 @@
         "contactRole": {
             "type": "enum",
             "notStorable": true,
+            "orderDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "layoutAvailabilityList": ["listForContact"],

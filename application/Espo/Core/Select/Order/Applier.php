@@ -62,13 +62,17 @@ class Applier
 
         $orderBy = $params->getOrderBy();
 
-        if (/*$params->forbidComplexExpressions() && */$orderBy) {
+        if ($orderBy) {
             if (
                 !is_string($orderBy) ||
                 str_contains($orderBy, '.') ||
                 str_contains($orderBy, ':')
             ) {
                 throw new Forbidden("Complex expressions are forbidden in 'orderBy'.");
+            }
+
+            if ($this->metadataProvider->isFieldOrderDisabled($this->entityType, $orderBy)) {
+                throw new Forbidden("Order by the field '$orderBy' is disabled.");
             }
         }
 

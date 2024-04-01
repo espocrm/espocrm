@@ -2259,11 +2259,11 @@ class ListRecordView extends View {
             forbiddenFieldList = [];
         }
 
-        if (!forbiddenFieldList.length) {
+        /*if (!forbiddenFieldList.length) {
             this._cachedFilteredListLayout = listLayout;
 
             return this._cachedFilteredListLayout;
-        }
+        }*/
 
         const filteredListLayout = Espo.Utils.cloneDeep(listLayout);
 
@@ -2281,6 +2281,19 @@ class ListRecordView extends View {
         deleteIndexes
             .reverse()
             .forEach(index => filteredListLayout.splice(index, 1));
+
+        /** @type {Record<Record>} */
+        const fieldDefs = this.getMetadata().get(`entityDefs.${this.entityType}.fields`) || {};
+
+        filteredListLayout.forEach(item => {
+            if (!item.name || !fieldDefs[item.name]) {
+                return;
+            }
+
+            if (fieldDefs[item.name].orderDisabled) {
+                item.notSortable = true;
+            }
+        });
 
         this._cachedFilteredListLayout = filteredListLayout;
 

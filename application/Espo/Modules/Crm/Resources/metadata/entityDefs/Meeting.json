@@ -55,6 +55,7 @@
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/meeting/fields/reminders",
             "layoutListDisabled": true,
             "validatorClassNameList": [
@@ -77,6 +78,7 @@
         "acceptanceStatus": {
             "type": "enum",
             "notStorable": true,
+            "orderDisabled": true,
             "options": ["None", "Accepted", "Tentative", "Declined"],
             "style": {
                 "Accepted": "success",
@@ -281,6 +283,7 @@
         "sourceEmail": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,

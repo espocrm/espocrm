@@ -41,7 +41,8 @@
         },
         "childList": {
             "type": "jsonArray",
-            "notStorable": true
+            "notStorable": true,
+            "orderDisabled": true
         }
     },
     "links": {

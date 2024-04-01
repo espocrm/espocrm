@@ -52,6 +52,7 @@
             "internal": true,
             "utility": true,
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "fieldManagerParamList": []
         },
@@ -85,6 +86,7 @@
             "maxLength": 100,
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "layoutMassUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "layoutFiltersDisabled": true,
@@ -127,6 +129,7 @@
             "type": "varchar",
             "maxLength": 100,
             "notStorable": true,
+            "orderDisabled": true,
             "where": {
                 "LIKE": {
                     "whereClause": {
@@ -245,24 +248,28 @@
         "token": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true,
             "customizationDisabled": true
         },
         "authTokenId": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true,
             "customizationDisabled": true
         },
         "authLogRecordId": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true,
             "customizationDisabled": true
         },
         "ipAddress": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true,
             "customizationDisabled": true
         },
@@ -275,6 +282,7 @@
         "acceptanceStatus": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "exportDisabled": true,
             "utility": true,
             "fieldManagerParamList": []
@@ -282,6 +290,7 @@
         "acceptanceStatusMeetings": {
             "type": "enum",
             "notStorable": true,
+            "orderDisabled": true,
             "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
@@ -294,6 +303,7 @@
         "acceptanceStatusCalls": {
             "type": "enum",
             "notStorable": true,
+            "orderDisabled": true,
             "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
@@ -306,6 +316,7 @@
         "teamRole": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true,
             "fieldManagerParamList": []
         },
@@ -363,6 +374,7 @@
         "account": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "directAccessDisabled": true,
             "foreignAccessDisabled": true,
             "layoutDetailDisabled": true,
@@ -373,6 +385,7 @@
         "portal": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "utility": true
         },
@@ -386,6 +399,7 @@
         "sendAccessInfo": {
             "type": "bool",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true
         },
         "gender": {
@@ -446,6 +460,7 @@
         "lastAccess": {
             "type": "datetime",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "layoutListDisabled": true,
             "layoutFiltersDisabled": true,

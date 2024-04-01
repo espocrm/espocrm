@@ -73,12 +73,14 @@
             "type": "bool",
             "readOnly": true,
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/task/fields/is-overdue",
             "utility": true
         },
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/meeting/fields/reminders",
             "dateField": "dateEnd",
             "validatorClassNameList": [

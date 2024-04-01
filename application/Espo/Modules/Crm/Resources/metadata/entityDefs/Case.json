@@ -74,6 +74,7 @@
         "originalEmail": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "entity": "Email",
             "customizationDisabled": true,
             "layoutAvailabilityList": [],

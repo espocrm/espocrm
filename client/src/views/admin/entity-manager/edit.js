@@ -138,7 +138,7 @@ class EntityManagerEditView extends View {
                         return false;
                     }
 
-                    if (fieldDefs[item].notStorable) {
+                    if (fieldDefs[item].orderDisabled) {
                         return false;
                     }
 

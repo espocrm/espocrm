@@ -47,6 +47,7 @@
         "reminders": {
             "type": "jsonArray",
             "notStorable": true,
+            "orderDisabled": true,
             "view": "crm:views/meeting/fields/reminders",
             "layoutListDisabled": true,
             "validatorClassNameList": [
@@ -82,6 +83,7 @@
             },
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
+            "orderDisabled": true,
             "importDisabled": true,
             "exportDisabled": true,
             "customizationDefaultDisabled": true,
@@ -304,6 +306,7 @@
         "phoneNumbersMap": {
             "type": "jsonObject",
             "notStorable": true,
+            "orderDisabled": true,
             "utility": true,
             "customizationDisabled": true
         },

@@ -10,7 +10,8 @@
         },
         "noteData": {
             "type": "jsonObject",
-            "notStorable": true
+            "notStorable": true,
+            "orderDisabled": true
         },
         "type": {
             "type": "varchar"

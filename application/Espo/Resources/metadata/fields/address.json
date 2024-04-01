@@ -41,6 +41,7 @@
         "map": {
             "type": "map",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "layoutListDisabled": true,
             "provider": "Google",

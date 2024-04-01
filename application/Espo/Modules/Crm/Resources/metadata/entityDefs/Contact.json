@@ -19,6 +19,7 @@
         },
         "accountAnyId": {
             "notStorable": true,
+            "orderDisabled": true,
             "customizationDisabled": true,
             "utility": true,
             "type": "varchar",
@@ -277,6 +278,7 @@
         "accountRole": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "directUpdateDisabled": true,
             "layoutDetailDisabled": true,
             "layoutMassUpdateDisabled": true,
@@ -377,6 +379,7 @@
         "opportunityRole": {
             "type": "enum",
             "notStorable": true,
+            "orderDisabled": true,
             "options": ["", "Decision Maker", "Evaluator", "Influencer"],
             "layoutMassUpdateDisabled": true,
             "layoutListDisabled": true,
@@ -397,6 +400,7 @@
         "acceptanceStatus": {
             "type": "varchar",
             "notStorable": true,
+            "orderDisabled": true,
             "exportDisabled": true,
             "utility": true,
             "fieldManagerParamList": []
@@ -404,6 +408,7 @@
         "acceptanceStatusMeetings": {
             "type": "enum",
             "notStorable": true,
+            "orderDisabled": true,
             "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
@@ -416,6 +421,7 @@
         "acceptanceStatusCalls": {
             "type": "enum",
             "notStorable": true,
+            "orderDisabled": true,
             "directUpdateDisabled": true,
             "layoutAvailabilityList": ["filters"],
             "importDisabled": true,
@@ -472,6 +478,7 @@
         "targetList": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
@@ -528,12 +535,14 @@
         "targetListIsOptedOut": {
             "type": "bool",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "utility": true
         },
         "originalEmail": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "entity": "Email",
             "customizationDisabled": true,
             "layoutAvailabilityList": [],

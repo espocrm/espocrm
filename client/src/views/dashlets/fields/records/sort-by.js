@@ -53,7 +53,7 @@ define('views/dashlets/fields/records/sort-by', ['views/fields/enum'], function 
 
             var orderableFieldList = Object.keys(fieldDefs)
                 .filter(item => {
-                    if (fieldDefs[item].notStorable) {
+                    if (fieldDefs[item].orderDisabled) {
                         return false;
                     }
 

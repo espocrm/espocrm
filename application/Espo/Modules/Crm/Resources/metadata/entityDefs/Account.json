@@ -93,6 +93,7 @@
             "type": "varchar",
             "notStorable": true,
             "utility": true,
+            "orderDisabled": true,
             "maxLength": 100,
             "pattern": "$noBadCharacters",
             "layoutMassUpdateDisabled": true,
@@ -106,6 +107,7 @@
         "contactIsInactive": {
             "type": "bool",
             "notStorable": true,
+            "orderDisabled": true,
             "default": false,
             "utility": true
         },
@@ -201,6 +203,7 @@
         "targetList": {
             "type": "link",
             "notStorable": true,
+            "orderDisabled": true,
             "layoutDetailDisabled": true,
             "layoutListDisabled": true,
             "layoutMassUpdateDisabled": true,
@@ -216,6 +219,7 @@
         "targetListIsOptedOut": {
             "type": "bool",
             "notStorable": true,
+            "orderDisabled": true,
             "readOnly": true,
             "utility": true
         }
