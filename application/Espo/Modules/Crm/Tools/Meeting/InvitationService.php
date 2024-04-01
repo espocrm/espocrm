@@ -39,6 +39,7 @@ use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Core\Mail\SmtpParams;
 use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Business\Event\Invitations;
 use Espo\Modules\Crm\Entities\Meeting;
@@ -51,31 +52,16 @@ class InvitationService
     private const TYPE_INVITATION = 'invitation';
     private const TYPE_CANCELLATION = 'cancellation';
 
-    private RecordServiceContainer $recordServiceContainer;
-    private SendService $sendService;
-    private User $user;
-    private InjectableFactory $injectableFactory;
-    private Acl $acl;
-    private EntityManager $entityManager;
-    private Config $config;
-
     public function __construct(
-        RecordServiceContainer $recordServiceContainer,
-        SendService $sendService,
-        User $user,
-        InjectableFactory $injectableFactory,
-        Acl $acl,
-        EntityManager $entityManager,
-        Config $config
-    ) {
-        $this->recordServiceContainer = $recordServiceContainer;
-        $this->sendService = $sendService;
-        $this->user = $user;
-        $this->injectableFactory = $injectableFactory;
-        $this->acl = $acl;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-    }
+        private RecordServiceContainer $recordServiceContainer,
+        private SendService $sendService,
+        private User $user,
+        private InjectableFactory $injectableFactory,
+        private Acl $acl,
+        private EntityManager $entityManager,
+        private Config $config,
+        private Metadata $metadata
+    ) {}
 
     /**
      * Send invitation emails for a meeting (or call). Checks access. Uses user's SMTP if available.
@@ -133,6 +119,8 @@ class InvitationService
         if (!$this->acl->checkEntityEdit($entity)) {
             throw new Forbidden("No edit access.");
         }
+
+        $this->checkStatus($entity);
 
         $linkList = [
             'users',
@@ -220,5 +208,22 @@ class InvitationService
         }
 
         return $this->injectableFactory->createWithBinding(Invitations::class, $builder->build());
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkStatus(Entity $entity): void
+    {
+        $entityType = $entity->getEntityType();
+
+        $notActualStatusList = [
+            ...($this->metadata->get("scopes.$entityType.completedStatusList") ?? []),
+            ...($this->metadata->get("scopes.$entityType.canceledStatusList") ?? []),
+        ];
+
+        if (in_array($entity->get('status'), $notActualStatusList)) {
+            throw new Forbidden("Can't send invitation for not actual event.");
+        }
     }
 }
