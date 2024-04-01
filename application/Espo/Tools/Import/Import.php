@@ -598,13 +598,19 @@ class Import
             }
         }
         catch (Exception $e) {
-            $this->log->error("Import: " . $e->getMessage());
-
             $errorType = null;
 
             if ((int) $e->getCode() === 23000 && $e instanceof PDOException) {
                 $errorType = ImportError::TYPE_INTEGRITY_CONSTRAINT_VIOLATION;
             }
+
+            $msg = "Import: " . $e->getMessage();
+
+            if (!$errorType && !$e->getMessage()) {
+                $msg .= "; {$e->getFile()}, {$e->getLine()}";
+            }
+
+            $this->log->error($msg);
 
             $this->createError(
                 $errorType,
