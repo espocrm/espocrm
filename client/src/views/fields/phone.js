@@ -371,6 +371,7 @@ class PhoneFieldView extends VarcharFieldView {
 
         data.itemMaxLength = this.itemMaxLength;
 
+        // noinspection JSValidateTypes
         return data;
     }
 
