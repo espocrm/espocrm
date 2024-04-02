@@ -31,6 +31,7 @@ namespace tests\integration\Espo\Record;
 
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
+use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Meeting;
@@ -107,6 +108,44 @@ class SanitizeTest extends BaseTestCase
 
         $this->assertEquals('+380904443322', $numbers[0]);
         $this->assertEquals('+380904443333', $numbers[1]);
+
+        $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
+        $configWriter->set('phoneNumberExtensions', true);
+        $configWriter->save();
+
+        /** @var Account $account */
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $account = $service->create((object) [
+            'name' => 'Test 3',
+            'phoneNumberData' => [
+                (object) [
+                    'phoneNumber' => '+38 09 044 433 22 ext. 0001',
+                ],
+                (object) [
+                    'phoneNumber' => '+38 09 044 433 33 x. 1001',
+                ],
+                (object) [
+                    'phoneNumber' => '+380904443344x.1000',
+                ],
+                (object) [
+                    'phoneNumber' => '+380904443355#1000',
+                ],
+                (object) [
+                    'phoneNumber' => '+380904443366 # 1000',
+                ],
+            ],
+        ], CreateParams::create());
+
+        $numbers = $account->getPhoneNumberGroup()->getNumberList();
+        $this->assertCount(5, $numbers);
+
+        sort($numbers);
+
+        $this->assertEquals('+380904443322 ext. 0001', $numbers[0]);
+        $this->assertEquals('+380904443333 ext. 1001', $numbers[1]);
+        $this->assertEquals('+380904443344 ext. 1000', $numbers[2]);
+        $this->assertEquals('+380904443355 ext. 1000', $numbers[3]);
+        $this->assertEquals('+380904443366 ext. 1000', $numbers[4]);
 
         // datetime
 

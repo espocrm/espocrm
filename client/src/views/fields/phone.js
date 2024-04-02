@@ -297,7 +297,7 @@ class PhoneFieldView extends VarcharFieldView {
                 item.erased = number.indexOf(this.erasedPlaceholder) === 0;
 
                 if (!item.erased) {
-                    item.valueForLink = number.replace(/ /g, '');
+                    item.valueForLink = this.formatForLink(number);
 
                     if (this.isReadMode()) {
                         item.phoneNumber = this.formatNumber(item.phoneNumber);
@@ -312,7 +312,7 @@ class PhoneFieldView extends VarcharFieldView {
             const o = {
                 phoneNumber: this.formatNumber(number),
                 primary: true,
-                valueForLink: number.replace(/ /g, ''),
+                valueForLink: this.formatForLink(number),
             };
 
             if (this.isReadMode()) {
@@ -325,8 +325,6 @@ class PhoneFieldView extends VarcharFieldView {
 
             phoneNumberData = [o];
         }
-
-
 
         const data = {
             ...super.data(),
@@ -343,7 +341,7 @@ class PhoneFieldView extends VarcharFieldView {
                 data.isErased = this.model.get(this.name).indexOf(this.erasedPlaceholder) === 0;
 
                 if (!data.isErased) {
-                    data.valueForLink = this.model.get(this.name).replace(/ /g, '');
+                    data.valueForLink = this.formatForLink(this.model.get(this.name));
                 }
             }
 
@@ -354,6 +352,18 @@ class PhoneFieldView extends VarcharFieldView {
         data.itemMaxLength = this.itemMaxLength;
 
         return data;
+    }
+
+    /**
+     * @private
+     * @param {string} number
+     */
+    formatForLink(number) {
+        if (this.allowExtensions && this.useInternational) {
+            return number;
+        }
+
+        return number.replace(/ /g, '');
     }
 
     focusOnLast(cursorAtEnd) {
@@ -449,7 +459,14 @@ class PhoneFieldView extends VarcharFieldView {
                         return;
                     }
 
-                    obj.setNumber(obj.getNumber());
+                    let number = obj.getNumber();
+                    const ext = obj.getExtension();
+
+                    if (this.allowExtensions && ext) {
+                        number += ' ext. ' + ext;
+                    }
+
+                    obj.setNumber(number);
                 });
             });
         }
@@ -529,6 +546,7 @@ class PhoneFieldView extends VarcharFieldView {
 
         this.phoneNumberOptedOutByDefault = this.getConfig().get('phoneNumberIsOptedOutByDefault');
         this.useInternational = this.getConfig().get('phoneNumberInternational') || false;
+        this.allowExtensions = this.getConfig().get('phoneNumberExtensions') || false;
         this.preferredCountryList = this.getConfig().get('phoneNumberPreferredCountryList') || [];
 
         if (this.useInternational && !this.isListMode() && !this.isSearchMode()) {
@@ -603,6 +621,12 @@ class PhoneFieldView extends VarcharFieldView {
 
             if (this.intlTelInputMap.has(inputElement)) {
                 row.phoneNumber = this.intlTelInputMap.get(inputElement).getNumber();
+
+                const ext = this.intlTelInputMap.get(inputElement).getExtension() || null;
+
+                if (this.allowExtensions && ext) {
+                    row.phoneNumber += ' ext. ' + ext;
+                }
             }
 
             if (row.phoneNumber === '') {

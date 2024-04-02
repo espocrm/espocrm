@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,30 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import EditRecordView from 'views/record/edit';
+namespace Espo\Core\PhoneNumber;
 
-class SettingsEditRecordView extends EditRecordView {
+class Util
+{
+    /**
+     * @internal Do not use in custom code.
+     * @return array{string, ?string}
+     */
+    public static function splitExtension(string $value): array
+    {
+        $ext = null;
 
-    saveAndContinueEditingAction = false
+        $delimiters = [
+            'ext.',
+            'x.',
+            'x',
+            '#',
+        ];
 
-    sideView = null
+        foreach ($delimiters as $delimiter) {
+            $index = strrpos($value, $delimiter);
 
-    layoutName = 'settings'
+            if ($index === false || $index < 2) {
+                continue;
+            }
 
-    setup() {
-        super.setup();
+            $ext = trim(substr($value, $index + strlen($delimiter)));
+            $value = trim(substr($value, 0, $index));
 
-        this.listenTo(this.model, 'after:save', () => {
-            this.getConfig().set(this.model.getClonedAttributes());
-        });
-    }
-
-    exit(after) {
-        if (after === 'cancel') {
-            this.getRouter().navigate('#Admin', {trigger: true});
+            break;
         }
+
+        return [$value, $ext];
     }
 }
-
-export default SettingsEditRecordView;
-

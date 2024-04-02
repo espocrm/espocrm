@@ -31,10 +31,14 @@ namespace tests\integration\Espo\Record;
 
 use Espo\Core\Application;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Conflict;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
+use Espo\Core\Utils\Config\ConfigWriter;
 use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Lead;
 use Espo\ORM\EntityManager;
 use Espo\Tools\App\SettingsService as SettingsService;
@@ -470,5 +474,48 @@ class FieldValidationTest extends BaseTestCase
             'lastName' => 'Test Bad 1',
             'opportunityAmount' => 'bad-value',
         ], CreateParams::create());
+    }
+
+    public function testPhoneNumber(): void
+    {
+        $service = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(Account::class);
+
+        $configWriter = $this->getInjectableFactory()->create(ConfigWriter::class);
+        $configWriter->set('phoneNumberExtensions', true);
+        $configWriter->save();
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->create((object)[
+            'name' => 'Test 1',
+            'phoneNumberData' => [
+                (object)[
+                    'phoneNumber' => '+38 09 044 433 22 ext. 001',
+                ],
+            ],
+        ], CreateParams::create());
+
+        $thrown = false;
+
+        try {
+            /** @noinspection PhpUnhandledExceptionInspection */
+            $service->create((object)[
+                'name' => 'Test 2',
+                'phoneNumberData' => [
+                    (object)[
+                        'phoneNumber' => '+38 09 044 433 22 ext. ABC',
+                    ],
+                    (object)[
+                        'phoneNumber' => '+38 09 044 433 33 ext. 1234567',
+                    ],
+                ],
+            ], CreateParams::create());
+        }
+        catch (BadRequest) {
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
     }
 }

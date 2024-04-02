@@ -287,6 +287,7 @@ return [
     'cleanupDeletedRecords' => true,
     'phoneNumberNumericSearch' => true,
     'phoneNumberInternational' => true,
+    'phoneNumberExtensions' => false,
     'phoneNumberPreferredCountryList' => ['us', 'de'],
     'adminUpgradeDisabled' => false,
     'wysiwygCodeEditorDisabled' => false,

@@ -65,7 +65,7 @@
         "label": "Phone Numbers",
         "rows": [
             [{"name": "phoneNumberInternational"}, {"name": "phoneNumberPreferredCountryList"}],
-            [{"name": "phoneNumberNumericSearch"}, false]
+            [{"name": "phoneNumberNumericSearch"}, {"name": "phoneNumberExtensions"}]
         ]
     },
     {

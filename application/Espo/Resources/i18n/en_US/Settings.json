@@ -113,6 +113,7 @@
         "textFilterUseContainsForVarchar": "Use 'contains' operator when filtering varchar fields",
         "phoneNumberNumericSearch": "Numeric phone number search",
         "phoneNumberInternational": "International phone numbers",
+        "phoneNumberExtensions": "Phone number extensions",
         "phoneNumberPreferredCountryList": "Preferred telephone country codes",
         "authTokenPreventConcurrent": "Only one auth token per user",
         "scopeColorsDisabled": "Disable scope colors",

@@ -706,6 +706,9 @@
         "phoneNumberInternational": {
             "type": "bool"
         },
+        "phoneNumberExtensions": {
+            "type": "bool"
+        },
         "phoneNumberPreferredCountryList": {
             "type": "multiEnum",
             "view": "views/settings/fields/phone-number-preferred-country-list"
