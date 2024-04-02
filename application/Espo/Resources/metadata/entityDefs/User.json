@@ -387,6 +387,7 @@
             "notStorable": true,
             "orderDisabled": true,
             "readOnly": true,
+            "customizationDisabled": true,
             "utility": true
         },
         "avatar": {
