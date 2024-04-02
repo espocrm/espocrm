@@ -374,6 +374,7 @@
             "type": "link",
             "notStorable": true,
             "readOnly": true,
+            "customizationDisabled": true,
             "utility": true
         },
         "avatar": {
