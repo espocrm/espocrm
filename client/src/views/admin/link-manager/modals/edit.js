@@ -594,32 +594,32 @@ class LinkManagerEditModalView extends ModalView {
         let linkForeign;
 
         if (linkType === 'childrenToParent') {
-                this.model.set('link', 'parent');
-                this.model.set('label', 'Parent');
+            this.model.set('link', 'parent');
+            this.model.set('label', 'Parent');
 
-                linkForeign = this.toPlural(Espo.Utils.lowerCaseFirst(this.scope));
+            linkForeign = this.toPlural(Espo.Utils.lowerCaseFirst(this.scope));
 
-                if (this.getMetadata().get(['entityDefs', this.scope, 'links', 'parent'])) {
-                    this.model.set('link', 'parentAnother');
-                    this.model.set('label', 'Parent Another');
+            if (this.getMetadata().get(['entityDefs', this.scope, 'links', 'parent'])) {
+                this.model.set('link', 'parentAnother');
+                this.model.set('label', 'Parent Another');
 
-                    linkForeign += 'Another';
-                }
+                linkForeign += 'Another';
+            }
 
-                this.model.set('linkForeign', linkForeign);
+            this.model.set('linkForeign', linkForeign);
 
-                this.model.set('labelForeign', '');
-                this.model.set('entityForeign', null);
+            this.model.set('labelForeign', null);
+            this.model.set('entityForeign', null);
 
-                return;
+            return;
         }
         else {
             if (!entityForeign || !linkType) {
-                this.model.set('link', '');
-                this.model.set('linkForeign', '');
+                this.model.set('link', null);
+                this.model.set('linkForeign', null);
 
-                this.model.set('label', '');
-                this.model.set('labelForeign', '');
+                this.model.set('label', null);
+                this.model.set('labelForeign', null);
 
                 return;
             }
@@ -661,10 +661,12 @@ class LinkManagerEditModalView extends ModalView {
 
                 let relationName;
 
-                if (this.scope.localeCompare(entityForeign)) {
-                    relationName = Espo.Utils.lowerCaseFirst(this.scope) + entityForeign;
-                } else {
-                    relationName = Espo.Utils.lowerCaseFirst(entityForeign) + this.scope;
+                relationName = this.scope.localeCompare(entityForeign) ?
+                    Espo.Utils.lowerCaseFirst(this.scope) + entityForeign :
+                    Espo.Utils.lowerCaseFirst(entityForeign) + this.scope;
+
+                if (relationName[0] !== 'c' || !/[A-Z]/.test(relationName[1])) {
+                    relationName = 'c' + Espo.Utils.upperCaseFirst(relationName);
                 }
 
                 this.model.set('relationName', relationName);
@@ -715,11 +717,21 @@ class LinkManagerEditModalView extends ModalView {
         this.model.set('link', link);
         this.model.set('linkForeign', linkForeign);
 
-        const label = Espo.Utils.upperCaseFirst(link.replace(/([a-z])([A-Z])/g, '$1 $2'));
-        const labelForeign = Espo.Utils.upperCaseFirst(linkForeign.replace(/([a-z])([A-Z])/g, '$1 $2'));
+        let label = Espo.Utils.upperCaseFirst(link.replace(/([a-z])([A-Z])/g, '$1 $2'));
+        let labelForeign = Espo.Utils.upperCaseFirst(linkForeign.replace(/([a-z])([A-Z])/g, '$1 $2'));
 
-        this.model.set('label', label);
-        this.model.set('labelForeign', labelForeign);
+        if (label.startsWith('C ')) {
+            label = label.substring(2);
+        }
+
+        if (labelForeign.startsWith('C ')) {
+            labelForeign = labelForeign.substring(2);
+        }
+
+        // @todo Use entity labels as initial link labels?
+
+        this.model.set('label', label || null);
+        this.model.set('labelForeign', labelForeign || null);
     }
 
     handleLinkChange(field) {
