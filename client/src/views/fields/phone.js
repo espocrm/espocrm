@@ -44,6 +44,8 @@ class PhoneFieldView extends VarcharFieldView {
 
     validations = ['required', 'phoneData']
 
+    maxExtensionLength = 6
+
     events = {
         /** @this PhoneFieldView */
         'click [data-action="switchPhoneProperty"]': function (e) {
@@ -219,7 +221,9 @@ class PhoneFieldView extends VarcharFieldView {
                 if (element) {
                     const obj = this.intlTelInputMap.get(element);
 
-                    if (obj && !obj.isPossibleNumber()) {
+                    const isPossible = obj.isPossibleNumber();
+
+                    if (obj && !isPossible) {
                         notValid = true;
 
                         const code = obj.getValidationError();
@@ -235,6 +239,22 @@ class PhoneFieldView extends VarcharFieldView {
                             .replace('{field}', this.getLabelText());
 
                         this.showValidationMessage(msg, selector);
+                    }
+
+                    if (
+                        obj &&
+                        isPossible &&
+                        this.allowExtensions &&
+                        obj.getExtension() &&
+                        obj.getExtension().length > this.maxExtensionLength
+                    ) {
+                        const msg = this.translate('fieldPhoneExtensionTooLong', 'messages')
+                            .replace('{maxLength}', this.maxExtensionLength.toString())
+                            .replace('{field}', this.getLabelText());
+
+                        this.showValidationMessage(msg, selector);
+
+                        notValid = true;
                     }
                 }
             }

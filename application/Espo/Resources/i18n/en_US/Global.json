@@ -322,6 +322,7 @@
         "fieldPhoneTooShort": "{field} is too short",
         "fieldPhoneTooLong": "{field} is too long",
         "fieldPhoneInvalidCharacters": "Only digits, latin letters and characters `-+_@:#().` are allowed",
+        "fieldPhoneExtensionTooLong": "Extension should not be longer than {maxLength}",
         "fieldShouldBeEmail": "{field} should be a valid email",
         "fieldShouldBeFloat": "{field} should be a valid float",
         "fieldShouldBeInt": "{field} should be a valid integer",
