@@ -1,0 +1,27 @@
+[
+    {
+        "name": "bookedStart",
+        "align": "left"
+    },
+    {
+        "name": "bookedEnd",
+        "align": "left"
+    },
+    {
+        "name": "row",
+        "align": "left"
+    },
+    {
+        "name": "seat",
+        "align": "left"
+    },
+    {
+        "name": "phone",
+        "align": "right"
+    },
+    {
+        "name": "contact",
+        "link": true,
+        "align": "right"
+    }
+]

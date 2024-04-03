@@ -91,7 +91,7 @@
         },
         "contact": {
             "type": "link",
-            "required": true,
+            "required": false,
             "createButton": true
         },
         "ticketType": {
@@ -101,6 +101,24 @@
             "type": "int",
             "required": true,
             "min": 1,
+            "isCustom": true
+        },
+        "row": {
+            "type": "int",
+            "required": true,
+            "min": 1,
+            "isCustom": true
+        },
+        "phone": {
+            "type": "varchar",
+            "maxLength": 15,
+            "options": [],
+            "isCustom": true
+        },
+        "email": {
+            "type": "varchar",
+            "maxLength": 50,
+            "options": [],
             "isCustom": true
         }
     },

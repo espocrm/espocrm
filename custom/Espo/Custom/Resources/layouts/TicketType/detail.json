@@ -14,9 +14,15 @@
                     "name": "title"
                 },
                 {
-                    "name": "bookingTime"
+                    "name": "price"
                 }
-            ],
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    },
+    {
+        "rows": [
             [
                 {
                     "name": "nameOnMap"
@@ -24,15 +30,12 @@
                 {
                     "name": "color"
                 }
-            ],
-            [
-                false,
-                {
-                    "name": "price"
-                }
             ]
         ],
+        "dynamicLogicVisible": null,
         "style": "default",
-        "label": "Overview"
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Мапа"
     }
 ]

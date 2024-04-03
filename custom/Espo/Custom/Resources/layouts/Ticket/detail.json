@@ -6,14 +6,16 @@
                     "name": "name"
                 },
                 {
-                    "name": "event"
+                    "name": "status"
                 }
             ],
             [
                 {
-                    "name": "status"
+                    "name": "event"
                 },
-                false
+                {
+                    "name": "contact"
+                }
             ]
         ],
         "style": "default",
@@ -59,16 +61,16 @@
         "rows": [
             [
                 {
-                    "name": "contact"
+                    "name": "row"
                 },
                 {
-                    "name": "ticketType"
+                    "name": "seat"
                 }
             ],
             [
                 false,
                 {
-                    "name": "seat"
+                    "name": "ticketType"
                 }
             ]
         ],

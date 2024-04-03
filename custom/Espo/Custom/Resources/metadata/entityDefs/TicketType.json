@@ -46,14 +46,6 @@
             "type": "link",
             "required": true
         },
-        "bookingTime": {
-            "type": "int",
-            "required": true,
-            "default": 24,
-            "min": 1,
-            "tooltip": true,
-            "isCustom": true
-        },
         "nameOnMap": {
             "type": "varchar",
             "required": true,
@@ -73,7 +65,7 @@
             "type": "colorpicker",
             "maxLength": 7,
             "required": true,
-            "default": "#969696",
+            "default": "#808080",
             "tooltip": true,
             "isCustom": true
         },

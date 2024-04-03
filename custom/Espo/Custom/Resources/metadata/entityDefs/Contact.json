@@ -40,7 +40,7 @@
                 "Mobile",
                 "Other"
             ],
-            "defaultType": "Parent"
+            "defaultType": "Mobile"
         },
         "parentNames": {
             "type": "array",

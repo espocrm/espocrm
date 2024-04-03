@@ -1,0 +1,16 @@
+[
+    {
+        "name": "name",
+        "link": true,
+        "label": "Ім'я"
+    },
+    {
+        "name": "status"
+    },
+    {
+        "name": "row"
+    },
+    {
+        "name": "seat"
+    }
+]

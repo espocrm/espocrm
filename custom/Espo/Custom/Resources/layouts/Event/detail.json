@@ -8,13 +8,13 @@
                 {
                     "name": "eventType"
                 }
-            ],
-            [
-                {
-                    "name": "status"
-                },
-                false
-            ],
+            ]
+        ],
+        "style": "default",
+        "label": "Overview"
+    },
+    {
+        "rows": [
             [
                 {
                     "name": "dateStart"
@@ -27,7 +27,42 @@
                 {
                     "name": "duration"
                 },
-                false
+                {
+                    "name": "status"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "tabLabel": null,
+        "hidden": false,
+        "customLabel": "Дата та час"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "address"
+                },
+                {
+                    "name": "place"
+                }
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "tabLabel": null,
+        "hidden": false,
+        "customLabel": "Адреса та місце"
+    },
+    {
+        "rows": [
+            [
+                {
+                    "name": "posterLink"
+                }
             ],
             [
                 {
@@ -35,14 +70,17 @@
                 }
             ]
         ],
+        "dynamicLogicVisible": null,
         "style": "default",
-        "label": "Overview"
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Додатково"
     },
     {
         "rows": [
             [
                 {
-                    "name": "numberOfFloors"
+                    "name": "bookingTime"
                 },
                 {
                     "name": "ticketTypes"
@@ -69,10 +107,16 @@
         "tabBreak": true,
         "tabLabel": "Квитки та зал",
         "hidden": false,
-        "customLabel": "Параметри"
+        "customLabel": "Параметри квитків"
     },
     {
         "rows": [
+            [
+                {
+                    "name": "numberOfFloors"
+                },
+                false
+            ],
             [
                 {
                     "name": "map"
@@ -89,12 +133,26 @@
                 }
             ]
         ],
-        "dynamicLogicVisible": null,
+        "dynamicLogicVisible": {
+            "conditionGroup": [
+                {
+                    "type": "equals",
+                    "attribute": "eventTypeId",
+                    "data": {
+                        "field": "eventType",
+                        "values": {
+                            "eventTypeName": "Концерт"
+                        }
+                    },
+                    "value": "65e984224c6684f2f"
+                }
+            ]
+        },
         "style": "info",
         "dynamicLogicStyled": null,
         "tabBreak": false,
         "tabLabel": null,
         "hidden": false,
-        "customLabel": "Посадочні місця"
+        "customLabel": "Параметри залу"
     }
 ]

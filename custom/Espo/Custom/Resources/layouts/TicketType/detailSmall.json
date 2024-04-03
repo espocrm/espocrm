@@ -18,9 +18,7 @@
                 }
             ],
             [
-                {
-                    "name": "bookingTime"
-                },
+                false,
                 {
                     "name": "price"
                 }

@@ -11,7 +11,10 @@
         "bookedEnd": "Кінець бронювання",
         "contact": "Клієнт",
         "ticketType": "Тип квитка",
-        "seat": "Місце"
+        "seat": "Місце",
+        "row": "Ряд",
+        "phone": "Телефон",
+        "email": "Email"
     },
     "links": {
         "event": "Івент",
@@ -22,7 +25,7 @@
         "Create Ticket": "Create Квиток"
     },
     "tooltips": {
-        "salesDate": "Дата сплати за білет",
+        "salesDate": "Дата сплати за квиток",
         "bookedStart": "Дата та час початку бронювання",
         "bookedEnd": "Дата та час закінчення бронювання"
     },

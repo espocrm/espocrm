@@ -14,17 +14,32 @@
                     "name": "parentNames"
                 },
                 {
-                    "name": "phoneNumber"
+                    "name": "birthday"
                 }
-            ],
+            ]
+        ],
+        "style": "default",
+        "label": ""
+    },
+    {
+        "rows": [
             [
                 {
                     "name": "emailAddress"
                 },
                 {
-                    "name": "birthday"
+                    "name": "phoneNumber"
                 }
-            ],
+            ]
+        ],
+        "dynamicLogicVisible": null,
+        "style": "default",
+        "tabBreak": false,
+        "hidden": false,
+        "customLabel": "Контакти"
+    },
+    {
+        "rows": [
             [
                 {
                     "name": "description"
@@ -32,6 +47,9 @@
             ]
         ],
         "style": "default",
+        "tabBreak": null,
+        "tabLabel": null,
+        "hidden": null,
         "label": ""
     },
     {

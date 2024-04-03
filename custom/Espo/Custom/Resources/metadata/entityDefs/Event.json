@@ -167,6 +167,34 @@
             "exportDisabled": true,
             "customizationDisabled": true,
             "isCustom": true
+        },
+        "address": {
+            "type": "varchar",
+            "required": true,
+            "maxLength": 150,
+            "options": [],
+            "isCustom": true
+        },
+        "posterLink": {
+            "type": "varchar",
+            "maxLength": 150,
+            "options": [],
+            "isCustom": true
+        },
+        "bookingTime": {
+            "type": "int",
+            "default": 24,
+            "min": 1,
+            "tooltip": true,
+            "isCustom": true
+        },
+        "place": {
+            "type": "varchar",
+            "maxLength": 150,
+            "options": [
+                "34 канал"
+            ],
+            "isCustom": true
         }
     },
     "links": {
