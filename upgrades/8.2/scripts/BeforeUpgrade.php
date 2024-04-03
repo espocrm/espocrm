@@ -33,11 +33,16 @@ use Espo\ORM\EntityManager;
 /** @noinspection PhpMultipleClassDeclarationsInspection */
 class BeforeUpgrade
 {
+    private ?Container $container = null;
+
     /**
      * @throws Exception
      */
     public function run(Container $container): void
     {
+        $this->container = $container;
+        $this->processCheckExtensions();
+
         $this->checkRepositories($container->getByClass(EntityManager::class));
     }
 
@@ -92,5 +97,52 @@ class BeforeUpgrade
             " should extend from Espo\\Core\\Repositories\\Database. Fix before upgrading.";
 
         throw new Exception($msg);
+    }
+
+    /**
+     * @throws Error
+     */
+    private function processCheckExtensions(): void
+    {
+        $errorMessageList = [];
+
+        $this->processCheckExtension('Advanced Pack', '3.1.0', $errorMessageList);
+        $this->processCheckExtension('Real Estate', '1.8.0', $errorMessageList);
+
+        if (!count($errorMessageList)) {
+            return;
+        }
+
+        $message = implode("\n\n", $errorMessageList);
+
+        throw new Error($message);
+    }
+
+    private function processCheckExtension(string $name, string $minVersion, array &$errorMessageList): void
+    {
+        $em = $this->container->get('entityManager');
+
+        $extension = $em->getRDBRepository('Extension')
+            ->where([
+                'name' => $name,
+                'isInstalled' => true,
+            ])
+            ->findOne();
+
+        if (!$extension) {
+            return;
+        }
+
+        $version = $extension->get('version');
+
+        if (version_compare($version, $minVersion, '>=')) {
+            return;
+        }
+
+        $message =
+            "EspoCRM 8.2 is not compatible with '$name' extension of versions lower than $minVersion. " .
+            "Please upgrade the extension or uninstall it.";
+
+        $errorMessageList[] = $message;
     }
 }
