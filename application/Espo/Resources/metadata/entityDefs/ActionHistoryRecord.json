@@ -69,7 +69,7 @@
     },
     "collection": {
         "orderBy": "number",
-        "order": "asc",
+        "order": "desc",
         "textFilterFields": ["ipAddress", "userName"],
         "countDisabled": true
     },
