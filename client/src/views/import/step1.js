@@ -673,7 +673,7 @@ class Step1ImportView extends View {
             label = label.replace(new RegExp(item, 'g'), value);
         }
 
-        return format + ' - ' + label;
+        return format + ' · ' + label;
     }
 
     getDateFormatDataList() {
