@@ -538,7 +538,8 @@ class LinkMultipleFieldView extends BaseFieldView {
                         });
                     },
                     lookupFunction: query => {
-                        return Espo.Ajax.getRequest(this.getAutocompleteUrl(query), {q: query})
+                        return Promise.resolve(this.getAutocompleteUrl(query))
+                            .then(url => Espo.Ajax.getRequest(url, {q: query}))
                             .then(/** {list: Record[]} */response => {
                                 return response.list.map(item => ({
                                     value: item.name,
