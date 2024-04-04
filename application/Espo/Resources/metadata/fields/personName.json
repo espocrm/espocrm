@@ -17,7 +17,8 @@
     ],
     "fields": {
         "salutation": {
-            "type": "enum"
+            "type": "enum",
+            "customizationOptionsReferenceDisabled": true
         },
         "first": {
             "type": "varchar",
