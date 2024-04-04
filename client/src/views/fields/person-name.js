@@ -51,14 +51,14 @@ class PersonNameFieldView extends VarcharFieldView {
     ]
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         data.ucName = Espo.Utils.upperCaseFirst(this.name);
         data.salutationValue = this.model.get(this.salutationField);
         data.firstValue = this.model.get(this.firstField);
         data.lastValue = this.model.get(this.lastField);
         data.middleValue = this.model.get(this.middleField);
-        data.salutationOptions = this.model.getFieldParam(this.salutationField, 'options');
+        data.salutationOptions = this.salutationOptions;
 
         if (this.isEditMode()) {
             data.firstMaxLength = this.model.getFieldParam(this.firstField, 'maxLength');
@@ -89,12 +89,14 @@ class PersonNameFieldView extends VarcharFieldView {
     setup() {
         super.setup();
 
-        let ucName = Espo.Utils.upperCaseFirst(this.name);
+        const ucName = Espo.Utils.upperCaseFirst(this.name);
 
         this.salutationField = 'salutation' + ucName;
         this.firstField = 'first' + ucName;
         this.lastField = 'last' + ucName;
         this.middleField = 'middle' + ucName;
+
+        this.salutationOptions = this.model.getFieldParam(this.salutationField, 'options');
     }
 
     afterRender() {
@@ -127,9 +129,9 @@ class PersonNameFieldView extends VarcharFieldView {
 
     getFormattedValue() {
         let salutation = this.model.get(this.salutationField);
-        let first = this.model.get(this.firstField);
-        let last = this.model.get(this.lastField);
-        let middle = this.model.get(this.middleField);
+        const first = this.model.get(this.firstField);
+        const last = this.model.get(this.lastField);
+        const middle = this.model.get(this.middleField);
 
         if (salutation) {
             salutation = this.getLanguage()
@@ -146,7 +148,7 @@ class PersonNameFieldView extends VarcharFieldView {
 
     _getTemplateName() {
         if (this.isEditMode()) {
-            let prop = 'editTemplate' + Espo.Utils.upperCaseFirst(this.getFormat().toString());
+            const prop = 'editTemplate' + Espo.Utils.upperCaseFirst(this.getFormat().toString());
 
             if (prop in this) {
                 return this[prop];
@@ -163,20 +165,20 @@ class PersonNameFieldView extends VarcharFieldView {
     }
 
     formatHasMiddle() {
-        let format = this.getFormat();
+        const format = this.getFormat();
 
         return format === 'firstMiddleLast' || format === 'lastFirstMiddle';
     }
 
     validateRequired() {
-        let isRequired = this.isRequired();
+        const isRequired = this.isRequired();
 
-        let validate = (name) => {
+        const validate = (name) => {
             if (this.model.isRequired(name)) {
                 if (!this.model.get(name)) {
-                    let msg = this.translate('fieldIsRequired', 'messages')
+                    const msg = this.translate('fieldIsRequired', 'messages')
                         .replace('{field}', this.translate(name, 'fields', this.model.entityType));
-                    this.showValidationMessage(msg, '[data-name="'+name+'"]');
+                    this.showValidationMessage(msg, '[data-name="' + name + '"]');
 
                     return true;
                 }
@@ -185,7 +187,7 @@ class PersonNameFieldView extends VarcharFieldView {
 
         if (isRequired) {
             if (!this.model.get(this.firstField) && !this.model.get(this.lastField)) {
-                let msg = this.translate('fieldIsRequired', 'messages')
+                const msg = this.translate('fieldIsRequired', 'messages')
                     .replace('{field}', this.getLabelText());
 
                 this.showValidationMessage(msg, '[data-name="'+this.lastField+'"]');
@@ -226,7 +228,7 @@ class PersonNameFieldView extends VarcharFieldView {
     }
 
     fetch() {
-        let data = {};
+        const data = {};
 
         data[this.salutationField] = this.$salutation.val() || null;
         data[this.firstField] = this.$first.val().trim() || null;
@@ -251,8 +253,8 @@ class PersonNameFieldView extends VarcharFieldView {
      */
     formatName(data) {
         let name;
-        let format = this.getFormat();
-        let arr = [];
+        const format = this.getFormat();
+        const arr = [];
 
         arr.push(data.salutation);
 
