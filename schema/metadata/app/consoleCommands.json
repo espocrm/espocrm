@@ -15,6 +15,10 @@
             "listed": {
                 "type": "boolean",
                 "description": "Whether the command is listed when running bin/command."
+            },
+            "noSystemUser": {
+                "type": "boolean",
+                "description": "Do not load the system user."
             }
         }
     }

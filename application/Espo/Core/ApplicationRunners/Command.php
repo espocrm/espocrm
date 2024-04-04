@@ -40,7 +40,6 @@ use Exception;
 class Command implements Runner
 {
     use Cli;
-    use SetupSystemUser;
 
     public function __construct(private ConsoleCommandManager $commandManager)
     {}
