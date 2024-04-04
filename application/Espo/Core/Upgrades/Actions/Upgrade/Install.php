@@ -29,63 +29,62 @@
 
 namespace Espo\Core\Upgrades\Actions\Upgrade;
 
+use Espo\Core\Exceptions\Error;
+
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
     /**
      * @param array<string, mixed> $data
-     * @return mixed
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
-    public function stepBeforeUpgradeScript(array $data)
+    public function stepBeforeUpgradeScript(array $data): void
     {
-        /** @phpstan-ignore-next-line */
-        return $this->stepBeforeInstallScript($data);
+        $this->stepBeforeInstallScript($data);
     }
 
     /**
      * @param array<string, mixed> $data
-     * @return mixed
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
-    public function stepAfterUpgradeScript(array $data)
+    public function stepAfterUpgradeScript(array $data): void
     {
-        /** @phpstan-ignore-next-line */
-        return $this->stepAfterInstallScript($data);
+        $this->stepAfterInstallScript($data);
     }
 
     /**
-     * @return void
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
-    protected function finalize()
+    protected function finalize(): void
     {
-        $manifest = $this->getManifest();
-
         $configWriter = $this->createConfigWriter();
-
-        $configWriter->set('version', $manifest['version']);
-
+        $configWriter->set('version', $this->getTargetVersion());
         $configWriter->save();
     }
 
     /**
      * Delete temporary package files.
      *
-     * @return bool
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
-    protected function deletePackageFiles()
+    protected function deletePackageFiles(): bool
     {
         $res = parent::deletePackageFiles();
-
         $res &= $this->deletePackageArchive();
 
-        /** @var bool @res */
+        return (bool) $res;
+    }
 
-        return $res;
+    /**
+     * @throws Error
+     */
+    private function getTargetVersion(): string
+    {
+        $version = $this->getManifest()['version'];
+
+        if (!$version) {
+            throw new Error("No 'version' in manifest.");
+        }
+
+        return $version;
     }
 }

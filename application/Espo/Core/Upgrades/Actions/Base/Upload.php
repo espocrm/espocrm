@@ -30,8 +30,9 @@
 namespace Espo\Core\Upgrades\Actions\Base;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Upgrades\Actions\Base;
 
-class Upload extends \Espo\Core\Upgrades\Actions\Base
+class Upload extends Base
 {
     /**
      * Upload an upgrade/extension package.
@@ -40,7 +41,7 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base
      * @return string ID of upgrade/extension process.
      * @throws Error
      */
-    public function run($data)
+    public function run(mixed $data): string
     {
         $processId = $this->createProcessId();
 
@@ -54,7 +55,7 @@ class Upload extends \Espo\Core\Upgrades\Actions\Base
         $contents = null;
 
         if (!empty($data)) {
-            list($prefix, $contents) = explode(',', $data);
+            [, $contents] = explode(',', $data);
 
             $contents = base64_decode($contents);
         }

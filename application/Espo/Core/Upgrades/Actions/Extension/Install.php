@@ -29,24 +29,21 @@
 
 namespace Espo\Core\Upgrades\Actions\Extension;
 
-use Espo\Core\Upgrades\ExtensionManager;
+use Espo\Core\Upgrades\Base;
 use Espo\Core\Utils\Util;
 use Espo\Core\Exceptions\Error;
 
+use Espo\Entities\Extension;
 use Throwable;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
-    /**
-     * @var ?\Espo\Entities\Extension
-     */
-    protected $extensionEntity = null;
+    protected ?Extension $extensionEntity = null;
 
     /**
-     * @return void
      * @throws Error
      */
-    protected function beforeRunAction()
+    protected function beforeRunAction(): void
     {
         $this->findExtension();
 
@@ -59,10 +56,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * @return void
      * @throws Error
      */
-    protected function afterRunAction()
+    protected function afterRunAction(): void
     {
         if (!$this->isNew()) {
             $this->deleteExtension();
@@ -72,12 +68,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * Copy Existing files to backup directory.
+     * Copy Existing files to a backup directory.
      *
-     * @return bool
      * @throws Error
      */
-    protected function backupExistingFiles()
+    protected function backupExistingFiles(): bool
     {
         parent::backupExistingFiles();
 
@@ -92,10 +87,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         return $this->copy($source, $destination, true);
     }
 
-    /**
-     * @return bool
-     */
-    protected function isNew()
+    protected function isNew(): bool
     {
         $extensionEntity = $this->getExtensionEntity();
 
@@ -103,16 +95,15 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
             $id = $extensionEntity->get('id');
         }
 
-        return isset($id) ? false : true;
+        return !isset($id);
     }
 
     /**
      * Get extension ID. It's an ID of existing entity (if available) or Installation ID.
      *
-     * @return string
      * @throws Error
      */
-    protected function getExtensionId()
+    protected function getExtensionId(): string
     {
         $extensionEntity = $this->getExtensionEntity();
 
@@ -129,10 +120,8 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
     /**
      * Get entity of this extension.
-     *
-     * @return \Espo\Entities\Extension|null
      */
-    protected function getExtensionEntity()
+    protected function getExtensionEntity(): ?Extension
     {
         return $this->extensionEntity;
     }
@@ -140,15 +129,14 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     /**
      * Find Extension entity.
      *
-     * @return ?\Espo\Entities\Extension
      * @throws Error
      */
-    protected function findExtension()
+    protected function findExtension(): ?Extension
     {
         $manifest = $this->getManifest();
 
         $this->extensionEntity = $this->getEntityManager()
-            ->getRDBRepository('Extension')
+            ->getRDBRepository(Extension::ENTITY_TYPE)
             ->where([
                 'name' => $manifest['name'],
                 'isInstalled' => true,
@@ -161,17 +149,16 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     /**
      * Create a record of Extension Entity.
      *
-     * @return void
      * @throws Error
      */
-    protected function storeExtension()
+    protected function storeExtension(): void
     {
         $entityManager = $this->getEntityManager();
 
-        $extensionEntity = $entityManager->getEntity('Extension', $this->getProcessId());
+        $extensionEntity = $entityManager->getEntity(Extension::ENTITY_TYPE, $this->getProcessId());
 
-        if (!isset($extensionEntity)) {
-            $extensionEntity = $entityManager->getNewEntity('Extension');
+        if (!$extensionEntity) {
+            $extensionEntity = $entityManager->getNewEntity(Extension::ENTITY_TYPE);
         }
 
         $manifest = $this->getManifest();
@@ -209,10 +196,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     /**
      * Compare version between installed and a new extensions.
      *
-     * @return void
      * @throws Error
      */
-    protected function compareVersion()
+    protected function compareVersion(): void
     {
         $manifest = $this->getManifest();
         $extensionEntity = $this->getExtensionEntity();
@@ -228,18 +214,17 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     /**
      * If extension already installed, uninstall an old version.
      *
-     * @return void
      * @throws Error
      */
-    protected function uninstallExtension()
+    protected function uninstallExtension(): void
     {
         $extensionEntity = $this->getExtensionEntity();
 
         if (!$extensionEntity) {
-            throw new Error("Can't unistall not existing extension.");
+            throw new Error("Can't uninstall not existing extension.");
         }
 
-        $this->executeAction(ExtensionManager::UNINSTALL, [
+        $this->executeAction(Base::UNINSTALL, [
             'id' => $extensionEntity->get('id'),
             'skipSystemRebuild' => true,
             'skipAfterScript' => true,
@@ -250,10 +235,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     /**
      * Delete extension package.
      *
-     * @return void
      * @throws Error
      */
-    protected function deleteExtension()
+    protected function deleteExtension(): void
     {
         $extensionEntity = $this->getExtensionEntity();
 
@@ -261,7 +245,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
             throw new Error("Can't delete not existing extension.");
         }
 
-        $this->executeAction(ExtensionManager::DELETE, [
+        $this->executeAction(Base::DELETE, [
             'id' => $extensionEntity->get('id'),
             'parentProcessId' => $this->getProcessId(),
         ]);
@@ -269,10 +253,9 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 
     /**
      * @param array<string, string[]|string> $dependencyList
-     * @return bool
      * @throws Error
      */
-    protected function checkDependencies($dependencyList)
+    protected function checkDependencies($dependencyList): bool
     {
         return $this->getHelper()->checkDependencies($dependencyList);
     }

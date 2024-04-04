@@ -33,33 +33,21 @@ use Espo\Core\Exceptions\Error;
 
 class Helper
 {
-    /**
-     * @var ?\Espo\Core\Upgrades\Actions\Base
-     */
-    private $actionObject;
+    private ?Base $actionObject;
 
-    /**
-     * @param ?\Espo\Core\Upgrades\Actions\Base $actionObject $actionObject
-     */
-    public function __construct($actionObject = null)
+    public function __construct(?Base $actionObject = null)
     {
         if (isset($actionObject)) {
             $this->setActionObject($actionObject);
         }
     }
 
-    /**
-     * @return void
-     */
-    public function setActionObject(\Espo\Core\Upgrades\Actions\Base $actionObject)
+    public function setActionObject(Base $actionObject): void
     {
         $this->actionObject = $actionObject;
     }
 
-    /**
-     * @return ?\Espo\Core\Upgrades\Actions\Base
-     */
-    protected function getActionObject()
+    private function getActionObject(): ?Base
     {
         return $this->actionObject;
     }
@@ -68,12 +56,11 @@ class Helper
      * Check dependencies.
      *
      * @param array<string, string[]|string> $dependencyList
-     * @return bool
      * @throws Error
      */
-    public function checkDependencies($dependencyList)
+    public function checkDependencies(mixed $dependencyList): bool
     {
-        if (!is_array($dependencyList)) { /** @phpstan-ignore-line */
+        if (!is_array($dependencyList)) {
             $dependencyList = (array) $dependencyList;
         }
 
