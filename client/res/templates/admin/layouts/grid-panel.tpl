@@ -45,7 +45,9 @@
                 {{#if hasCustomLabel}}
                 data-custom-label="{{customLabel}}"
                 {{/if}}
-                data-no-label="{{noLabel}}" >
+                data-no-label="{{noLabel}}"
+                title="{{label}}"
+            >
                 <div class="left" style="width: calc(100% - 14px);">{{label}}</div>
                 <div class="right" style="width: 14px;">
                     <a
