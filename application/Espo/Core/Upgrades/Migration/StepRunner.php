@@ -29,17 +29,20 @@
 
 namespace Espo\Core\Upgrades\Migration;
 
+use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
+use RuntimeException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
 class StepRunner
 {
     public function __construct(
-        private Config $config
+        private Config $config,
+        private InjectableFactory $injectableFactory
     ) {}
 
-    public function run(string $step): bool
+    public function runAfterUpgrade(string $step): bool
     {
         $phpExecutablePath = $this->getPhpExecutablePath();
 
@@ -50,6 +53,21 @@ class StepRunner
         $process->run();
 
         return $process->isSuccessful();
+    }
+
+    public function runPrepare(string $step): void
+    {
+        $dir = 'V' . str_replace('.', '_', $step);
+
+        $className = "Espo\\Core\\Upgrades\\Migrations\\$dir\\Prepare";
+
+        if (!class_exists($className)) {
+            throw new RuntimeException("No prepare script $step.");
+        }
+
+        /** @var Script $script */
+        $script = $this->injectableFactory->create($className);
+        $script->run();
     }
 
     private function getPhpExecutablePath(): string

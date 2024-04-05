@@ -32,10 +32,7 @@ namespace Espo\Core\Console\Commands;
 use Espo\Core\Console\Command;
 use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
-use Espo\Core\DataManager;
-use Espo\Core\Exceptions\Error;
-use Espo\Core\InjectableFactory;
-use Espo\Core\Upgrades\Migration;
+use Espo\Core\Upgrades\Migration\AfterUpgradeRunner;
 use RuntimeException;
 
 /**
@@ -44,8 +41,7 @@ use RuntimeException;
 class MigrationVersionStep implements Command
 {
     public function __construct(
-        private InjectableFactory $injectableFactory,
-        private DataManager $dataManager
+        private AfterUpgradeRunner $afterUpgradeRunner
     ) {}
 
     public function run(Params $params, IO $io): void
@@ -56,25 +52,7 @@ class MigrationVersionStep implements Command
             throw new RuntimeException("No step parameter.");
         }
 
-        $dir = 'V' . str_replace('.', '_', $step);
-
-        /** @var class-string<Migration\Script> $className */
-        $className = "Espo\\Core\\Upgrades\\Migrations\\$dir\\AfterUpgrade";
-
-        if (!class_exists($className)) {
-            $io->writeLine("No after-upgrade script.");
-        }
-
-        /** @var Migration\Script $script */
-        $script = $this->injectableFactory->create($className);
-        $script->run();
-
-        try {
-            $this->dataManager->rebuild();
-        }
-        catch (Error $e) {
-            throw new RuntimeException("Error while rebuild: " . $e->getMessage());
-        }
+        $this->afterUpgradeRunner->run($step);
 
         $io->writeLine("Done.");
     }

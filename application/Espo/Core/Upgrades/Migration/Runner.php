@@ -30,6 +30,7 @@
 namespace Espo\Core\Upgrades\Migration;
 
 use Espo\Core\Console\IO;
+use Exception;
 use RuntimeException;
 
 class Runner
@@ -45,27 +46,38 @@ class Runner
         $version = $this->versionDataProvider->getPreviousVersion();
         $targetVersion = $this->versionDataProvider->getTargetVersion();
 
-        $fullList = $this->stepsProvider->getAfterUpgrade();
-        $steps = VersionUtil::extractSteps($version, $targetVersion, $fullList);
+        $fullPrepareSteps = $this->stepsProvider->getPrepare();
+        $prepareSteps = VersionUtil::extractSteps($version, $targetVersion, $fullPrepareSteps);
 
-        if ($steps === []) {
+        if ($prepareSteps !== []) {
+            $io->write(" Running prepare migrations...");
+
+            foreach ($prepareSteps as $step) {
+                $this->runPrepareStep($io, $step);
+            }
+        }
+
+        $fullAfterSteps = $this->stepsProvider->getAfterUpgrade();
+        $afterSteps = VersionUtil::extractSteps($version, $targetVersion, $fullAfterSteps);
+
+        if ($afterSteps === []) {
             $io->writeLine(" No migrations to run.");
 
             return;
         }
 
-        $io->write(" Running migrations...");
+        $io->write(" Running after-upgrade migrations...");
 
-        foreach ($steps as $step) {
-            $this->runVersionStep($io, $step);
+        foreach ($afterSteps as $step) {
+            $this->runAfterUpgradeStep($io, $step);
         }
     }
 
-    private function runVersionStep(IO $io, string $step): void
+    private function runAfterUpgradeStep(IO $io, string $step): void
     {
         $io->write("    $step...");
 
-        $isSuccessful = $this->stepRunner->run($step);
+        $isSuccessful = $this->stepRunner->runAfterUpgrade($step);
 
         if ($isSuccessful) {
             $io->writeLine(" DONE");
@@ -76,5 +88,21 @@ class Runner
         $io->writeLine(" FAIL");
 
         throw new RuntimeException();
+    }
+
+    private function runPrepareStep(IO $io, string $step): void
+    {
+        $io->write("    $step...");
+
+        try {
+            $this->stepRunner->runPrepare($step);
+        }
+        catch (Exception $e) {
+            $io->writeLine(" FAIL");
+
+            throw new RuntimeException($e->getMessage());
+        }
+
+        $io->writeLine(" DONE");
     }
 }

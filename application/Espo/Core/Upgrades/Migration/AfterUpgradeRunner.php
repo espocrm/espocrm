@@ -29,51 +29,37 @@
 
 namespace Espo\Core\Upgrades\Migration;
 
-use Espo\Core\Utils\File\Manager;
-use const SORT_STRING;
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\InjectableFactory;
+use RuntimeException;
 
-class StepsProvider
+class AfterUpgradeRunner
 {
-    private string $dir = 'application/Espo/Core/Upgrades/Migrations';
-
     public function __construct(
-        private Manager $fileManager
+        private InjectableFactory $injectableFactory,
+        private DataManager $dataManager
     ) {}
 
-    /**
-     * @return string[]
-     */
-    public function getPrepare(): array
+    public function run(string $step): void
     {
-        return $this->get('Prepare');
-    }
+        $dir = 'V' . str_replace('.', '_', $step);
 
-    /**
-     * @return string[]
-     */
-    public function getAfterUpgrade(): array
-    {
-        return $this->get('AfterUpgrade');
-    }
+        $className = "Espo\\Core\\Upgrades\\Migrations\\$dir\\AfterUpgrade";
 
-    /**
-     * @return string[]
-     */
-    private function get(string $name): array
-    {
-        $list = $this->fileManager->getDirList($this->dir);
+        if (!class_exists($className)) {
+            throw new RuntimeException("No after-upgrade script $step.");
+        }
 
-        $list = array_filter($list, function ($item) use ($name) {
-            $dir = $this->dir . '/' . $item;
+        /** @var Script $script */
+        $script = $this->injectableFactory->create($className);
+        $script->run();
 
-            return $this->fileManager->isFile("$dir/$name.php");
-        });
-
-        $list = array_values($list);
-        $list = array_map(fn ($item) => substr(str_replace('_', '.', $item), 1), $list);
-
-        sort($list, SORT_STRING);
-
-        return $list;
+        try {
+            $this->dataManager->rebuild();
+        }
+        catch (Error $e) {
+            throw new RuntimeException("Error while rebuild: " . $e->getMessage());
+        }
     }
 }
