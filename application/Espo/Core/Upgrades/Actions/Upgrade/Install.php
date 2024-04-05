@@ -30,6 +30,9 @@
 namespace Espo\Core\Upgrades\Actions\Upgrade;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Upgrades\Migration\Script;
+use Espo\Core\Upgrades\Migration\VersionUtil;
+use RuntimeException;
 
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
@@ -49,6 +52,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     public function stepAfterUpgradeScript(array $data): void
     {
         $this->stepAfterInstallScript($data);
+        $this->runMigrationAfterInstallScript();
     }
 
     /**
@@ -82,9 +86,54 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         $version = $this->getManifest()['version'];
 
         if (!$version) {
-            throw new Error("No 'version' in manifest.");
+            throw new RuntimeException("No 'version' in manifest.");
         }
 
         return $version;
+    }
+
+    /**
+     * @throws Error
+     */
+    private function runMigrationAfterInstallScript(): void
+    {
+        $targetVersion = $this->getTargetVersion();
+        $version = $this->getConfig()->get('version');
+
+        if (!$version || !is_string($version)) {
+            throw new RuntimeException("No or bad 'version' in config.");
+        }
+
+        $script = $this->getMigrationAfterInstallScript($version, $targetVersion);
+
+        if (!$script) {
+            return;
+        }
+
+        $script->run();
+    }
+
+    private function getMigrationAfterInstallScript(string $version, string $targetVersion): ?Script
+    {
+        $isPatch = VersionUtil::isPatch($version, $targetVersion);
+        $a = VersionUtil::split($targetVersion);
+
+        $dir = $isPatch ?
+            'V' . $a[0] . '_' . $a[1] . '_' . $a[2] :
+            'V' . $a[0] . '_' . $a[1];
+
+        $className = "Espo\\Core\\Upgrades\\Migrations\\$dir\\AfterUpgrade";
+
+        if (!class_exists($className)) {
+            return null;
+        }
+
+        $script = $this->getInjectableFactory()->create($className);
+
+        if (!$script instanceof Script) {
+            throw new RuntimeException("$className does not implement Script interface.");
+        }
+
+        return $script;
     }
 }

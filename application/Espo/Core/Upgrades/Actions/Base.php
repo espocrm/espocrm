@@ -131,7 +131,7 @@ abstract class Base
         return $this->getContainer()->getByClass(FileManager::class);
     }
 
-    private function getConfig(): Config
+    protected function getConfig(): Config
     {
         return $this->getContainer()->getByClass(Config::class);
     }
@@ -139,6 +139,11 @@ abstract class Base
     protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->getByClass(EntityManager::class);
+    }
+
+    protected function getInjectableFactory(): InjectableFactory
+    {
+        return $this->getContainer()->getByClass(InjectableFactory::class);
     }
 
     protected function createConfigWriter(): ConfigWriter

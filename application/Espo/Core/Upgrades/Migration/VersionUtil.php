@@ -32,20 +32,17 @@ namespace Espo\Core\Upgrades\Migration;
 use RuntimeException;
 use const SORT_STRING;
 
-class StepsExtractor
+class VersionUtil
 {
     /**
      * @param string[] $fullList
      * @return string[]
      */
-    public function extract(string $from, string $to, array $fullList): array
+    public static function extractSteps(string $from, string $to, array $fullList): array
     {
         sort($fullList, SORT_STRING);
 
-        $aFrom = self::split($from);
-        $aTo = self::split($to);
-
-        $isHotfix = $aFrom[0] === $aTo[0] && $aFrom[1] === $aTo[1];
+        $isPatch = self::isPatch($from, $to);
 
         $list = [];
 
@@ -62,7 +59,7 @@ class StepsExtractor
                 continue;
             }
 
-            if (!$isHotfix && $a[2] !== null) {
+            if (!$isPatch && $a[2] !== null) {
                 continue;
             }
 
@@ -75,7 +72,7 @@ class StepsExtractor
     /**
      * @return array{string, string, ?string}
      */
-    private static function split(string $version): array
+    public static function split(string $version): array
     {
         $array = explode('.', $version, 3);
 
@@ -89,5 +86,13 @@ class StepsExtractor
 
         /** @var array{string, string, string} */
         return $array;
+    }
+
+    public static function isPatch(string $from, string $to): bool
+    {
+        $aFrom = self::split($from);
+        $aTo = self::split($to);
+
+        return $aFrom[0] === $aTo[0] && $aFrom[1] === $aTo[1];
     }
 }

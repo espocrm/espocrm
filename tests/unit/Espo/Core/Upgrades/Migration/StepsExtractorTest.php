@@ -29,16 +29,14 @@
 
 namespace tests\unit\Espo\Core\Upgrades\Migration;
 
-use Espo\Core\Upgrades\Migration\StepsExtractor;
+use Espo\Core\Upgrades\Migration\VersionUtil;
 use PHPUnit\Framework\TestCase;
 
 class StepsExtractorTest extends TestCase
 {
     public function testGet1(): void
     {
-        $extractor = new StepsExtractor();
-
-        $list = $extractor->extract('8.0.0', '8.3.0', [
+        $list = VersionUtil::extractSteps('8.0.0', '8.3.0', [
             '7.0',
             '7.5',
             '8.0',
@@ -56,9 +54,7 @@ class StepsExtractorTest extends TestCase
 
     public function testGet2(): void
     {
-        $extractor = new StepsExtractor();
-
-        $list = $extractor->extract('8.0.0', '8.3.1', [
+        $list = VersionUtil::extractSteps('8.0.0', '8.3.1', [
             '7.0',
             '7.5',
             '8.0',
@@ -76,9 +72,7 @@ class StepsExtractorTest extends TestCase
 
     public function testGet3(): void
     {
-        $extractor = new StepsExtractor();
-
-        $list = $extractor->extract('8.0.0', '8.3.5', [
+        $list = VersionUtil::extractSteps('8.0.0', '8.3.5', [
             '7.0',
             '7.5',
             '8.0',
@@ -96,9 +90,7 @@ class StepsExtractorTest extends TestCase
 
     public function testGet4(): void
     {
-        $extractor = new StepsExtractor();
-
-        $list = $extractor->extract('8.2.0', '8.3.5', [
+        $list = VersionUtil::extractSteps('8.2.0', '8.3.5', [
             '7.0',
             '7.5',
             '8.0',
@@ -115,9 +107,7 @@ class StepsExtractorTest extends TestCase
 
     public function testGet5(): void
     {
-        $extractor = new StepsExtractor();
-
-        $list = $extractor->extract('8.0.4', '8.3.5', [
+        $list = VersionUtil::extractSteps('8.0.4', '8.3.5', [
             '7.0',
             '7.5',
             '8.0',
@@ -135,9 +125,7 @@ class StepsExtractorTest extends TestCase
 
     public function testGetMajor1(): void
     {
-        $extractor = new StepsExtractor();
-
-        $list = $extractor->extract('7.5.4', '8.3.5', array_reverse([
+        $list = VersionUtil::extractSteps('7.5.4', '8.3.5', array_reverse([
             '7.0',
             '7.5',
             '7.5.1',
@@ -160,9 +148,7 @@ class StepsExtractorTest extends TestCase
 
     public function testGetPatch1(): void
     {
-        $extractor = new StepsExtractor();
-
-        $list = $extractor->extract('8.3.0', '8.3.5', [
+        $list = VersionUtil::extractSteps('8.3.0', '8.3.5', [
             '7.0',
             '7.5',
             '8.0',
@@ -181,9 +167,7 @@ class StepsExtractorTest extends TestCase
 
     public function testGetPatch2(): void
     {
-        $extractor = new StepsExtractor();
-
-        $list = $extractor->extract('8.3.0', '8.3.5', [
+        $list = VersionUtil::extractSteps('8.3.0', '8.3.5', [
             '7.0',
             '7.5',
             '8.0',

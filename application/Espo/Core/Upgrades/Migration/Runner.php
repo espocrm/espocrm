@@ -35,7 +35,6 @@ use RuntimeException;
 class Runner
 {
     public function __construct(
-        private StepsExtractor $stepsExtractor,
         private StepsProvider $stepsProvider,
         private VersionDataProvider $versionDataProvider,
         private StepRunner $stepRunner
@@ -47,7 +46,7 @@ class Runner
         $targetVersion = $this->versionDataProvider->getTargetVersion();
 
         $fullList = $this->stepsProvider->getAfterUpgrade();
-        $steps = $this->stepsExtractor->extract($version, $targetVersion, $fullList);
+        $steps = VersionUtil::extractSteps($version, $targetVersion, $fullList);
 
         if ($steps === []) {
             $io->writeLine(" No migrations to run.");
