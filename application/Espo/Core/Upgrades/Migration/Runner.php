@@ -30,6 +30,9 @@
 namespace Espo\Core\Upgrades\Migration;
 
 use Espo\Core\Console\IO;
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\Config\ConfigWriter;
 use Exception;
 use RuntimeException;
 
@@ -38,11 +41,18 @@ class Runner
     public function __construct(
         private StepsProvider $stepsProvider,
         private VersionDataProvider $versionDataProvider,
-        private StepRunner $stepRunner
+        private StepRunner $stepRunner,
+        private DataManager $dataManager,
+        private ConfigWriter $configWriter
     ) {}
 
+    /**
+     * @throws Error
+     */
     public function run(IO $io): void
     {
+        $this->dataManager->clearCache();
+
         $version = $this->versionDataProvider->getPreviousVersion();
         $targetVersion = $this->versionDataProvider->getTargetVersion();
 
@@ -70,7 +80,13 @@ class Runner
 
         foreach ($afterSteps as $step) {
             $this->runAfterUpgradeStep($io, $step);
+            $this->updateVersion(VersionUtil::stepToVersion($step));
         }
+
+        $this->updateVersion($targetVersion);
+        $this->dataManager->updateAppTimestamp();
+
+        $io->writeLine(" Completed.");
     }
 
     private function runAfterUpgradeStep(IO $io, string $step): void
@@ -104,5 +120,11 @@ class Runner
         }
 
         $io->writeLine(" DONE");
+    }
+
+    private function updateVersion(string $targetVersion): void
+    {
+        $this->configWriter->set('version', $targetVersion);
+        $this->configWriter->save();
     }
 }

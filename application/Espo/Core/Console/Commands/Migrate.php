@@ -32,6 +32,7 @@ namespace Espo\Core\Console\Commands;
 use Espo\Core\Console\Command;
 use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Upgrades\Migration\Runner;
 
 /**
@@ -43,6 +44,9 @@ class Migrate implements Command
         private Runner $runner
     ) {}
 
+    /**
+     * @throws Error
+     */
     public function run(Params $params, IO $io): void
     {
         $this->runner->run($io);

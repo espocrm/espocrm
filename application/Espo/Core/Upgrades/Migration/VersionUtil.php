@@ -95,4 +95,15 @@ class VersionUtil
 
         return $aFrom[0] === $aTo[0] && $aFrom[1] === $aTo[1];
     }
+
+    public static function stepToVersion(string $step): string
+    {
+        $a = self::split($step);
+
+        if ($a[2] === null) {
+            $a[2] = '0';
+        }
+
+        return implode('.', $a);
+    }
 }

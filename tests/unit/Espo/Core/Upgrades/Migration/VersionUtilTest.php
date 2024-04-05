@@ -32,8 +32,15 @@ namespace tests\unit\Espo\Core\Upgrades\Migration;
 use Espo\Core\Upgrades\Migration\VersionUtil;
 use PHPUnit\Framework\TestCase;
 
-class StepsExtractorTest extends TestCase
+class VersionUtilTest extends TestCase
 {
+    public function testStepToVersion(): void
+    {
+        $this->assertEquals('8.0.0', VersionUtil::stepToVersion('8.0'));
+        $this->assertEquals('8.0.1', VersionUtil::stepToVersion('8.0.1'));
+        $this->assertEquals('8.1.0', VersionUtil::stepToVersion('8.1.0'));
+    }
+
     public function testGet1(): void
     {
         $list = VersionUtil::extractSteps('8.0.0', '8.3.0', [
