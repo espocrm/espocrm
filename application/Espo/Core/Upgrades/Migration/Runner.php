@@ -56,8 +56,7 @@ class Runner
         $version = $this->versionDataProvider->getPreviousVersion();
         $targetVersion = $this->versionDataProvider->getTargetVersion();
 
-        $fullPrepareSteps = $this->stepsProvider->getPrepare();
-        $prepareSteps = VersionUtil::extractSteps($version, $targetVersion, $fullPrepareSteps);
+        $prepareSteps = VersionUtil::extractSteps($version, $targetVersion, $this->stepsProvider->getPrepare());
 
         if ($prepareSteps !== []) {
             $io->write(" Running prepare migrations...");
@@ -67,8 +66,7 @@ class Runner
             }
         }
 
-        $fullAfterSteps = $this->stepsProvider->getAfterUpgrade();
-        $afterSteps = VersionUtil::extractSteps($version, $targetVersion, $fullAfterSteps);
+        $afterSteps = VersionUtil::extractSteps($version, $targetVersion, $this->stepsProvider->getAfterUpgrade());
 
         if ($afterSteps === []) {
             $io->writeLine(" No migrations to run.");
