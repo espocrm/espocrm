@@ -29,53 +29,44 @@
 
 namespace Espo\Core\Upgrades\Migration;
 
-use Espo\Core\Console\IO;
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager;
 use RuntimeException;
 
-class Runner
+class VersionDataProvider
 {
+    private string $defaultConfigPath = 'application/Espo/Resources/defaults/config.php';
+
     public function __construct(
-        private StepsExtractor $stepsExtractor,
-        private StepsProvider $stepsProvider,
-        private VersionDataProvider $versionDataProvider,
-        private StepRunner $stepRunner
+        private Config $config,
+        private Manager $fileManager
     ) {}
 
-    public function run(IO $io): void
+    public function getPreviousVersion(): string
     {
-        $version = $this->versionDataProvider->getPreviousVersion();
-        $targetVersion = $this->versionDataProvider->getTargetVersion();
+        $version = $this->config->get('version');
 
-        $fullList = $this->stepsProvider->getAfterUpgrade();
-        $steps = $this->stepsExtractor->extract($version, $targetVersion, $fullList);
-
-        if ($steps === []) {
-            $io->writeLine(" No migrations to run.");
-
-            return;
+        if (!is_string($version) || !$version) {
+            throw new RuntimeException("No or bad 'version' in config.");
         }
 
-        $io->write(" Running migrations...");
-
-        foreach ($steps as $step) {
-            $this->runVersionStep($io, $step);
-        }
+        return $version;
     }
 
-    private function runVersionStep(IO $io, string $step): void
+    public function getTargetVersion(): string
     {
-        $io->write("    $step...");
+        $data = $this->fileManager->getPhpContents($this->defaultConfigPath);
 
-        $isSuccessful = $this->stepRunner->run($step);
-
-        if ($isSuccessful) {
-            $io->writeLine(" DONE");
-
-            return;
+        if (!is_array($data)) {
+            throw new RuntimeException("No default config.");
         }
 
-        $io->writeLine(" FAIL");
+        $version = $data['version'] ?? null;
 
-        throw new RuntimeException();
+        if (!$version || !is_string($version)) {
+            throw new RuntimeException("No or bad 'version' parameter in default config.");
+        }
+
+        return $version;
     }
 }

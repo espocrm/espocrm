@@ -29,53 +29,37 @@
 
 namespace Espo\Core\Upgrades\Migration;
 
-use Espo\Core\Console\IO;
-use RuntimeException;
+use Espo\Core\Utils\Config;
+use Symfony\Component\Process\PhpExecutableFinder;
+use Symfony\Component\Process\Process;
 
-class Runner
+class StepRunner
 {
     public function __construct(
-        private StepsExtractor $stepsExtractor,
-        private StepsProvider $stepsProvider,
-        private VersionDataProvider $versionDataProvider,
-        private StepRunner $stepRunner
+        private Config $config
     ) {}
 
-    public function run(IO $io): void
+    public function run(string $step): bool
     {
-        $version = $this->versionDataProvider->getPreviousVersion();
-        $targetVersion = $this->versionDataProvider->getTargetVersion();
+        $phpExecutablePath = $this->getPhpExecutablePath();
 
-        $fullList = $this->stepsProvider->getAfterUpgrade();
-        $steps = $this->stepsExtractor->extract($version, $targetVersion, $fullList);
+        $command = "command.php migration-version-step --step=$step";
 
-        if ($steps === []) {
-            $io->writeLine(" No migrations to run.");
+        $process = new Process([$phpExecutablePath, $command]);
+        $process->setTimeout(null);
+        $process->run();
 
-            return;
-        }
-
-        $io->write(" Running migrations...");
-
-        foreach ($steps as $step) {
-            $this->runVersionStep($io, $step);
-        }
+        return $process->isSuccessful();
     }
 
-    private function runVersionStep(IO $io, string $step): void
+    private function getPhpExecutablePath(): string
     {
-        $io->write("    $step...");
+        $phpExecutablePath = $this->config->get('phpExecutablePath');
 
-        $isSuccessful = $this->stepRunner->run($step);
-
-        if ($isSuccessful) {
-            $io->writeLine(" DONE");
-
-            return;
+        if (!$phpExecutablePath) {
+            $phpExecutablePath = (new PhpExecutableFinder)->find();
         }
 
-        $io->writeLine(" FAIL");
-
-        throw new RuntimeException();
+        return $phpExecutablePath;
     }
 }

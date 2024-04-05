@@ -43,7 +43,7 @@ class StepsProvider
     /**
      * @return string[]
      */
-    public function get(): array
+    public function getAfterUpgrade(): array
     {
         $list = $this->fileManager->getDirList($this->dir);
 
