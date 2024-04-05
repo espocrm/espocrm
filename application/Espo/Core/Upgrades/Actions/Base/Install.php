@@ -269,7 +269,6 @@ class Install extends Base
         $this->deletePackageFiles();
 
         if ($this->getManifestParam('skipBackup')) {
-
             $path = Util::concatPath($this->getPath('backupPath'), self::FILES);
 
             $this->getFileManager()->removeInDir($path);

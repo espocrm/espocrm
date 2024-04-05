@@ -30,26 +30,20 @@
 namespace Espo\Core\Upgrades\Actions;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Entities\Extension;
+use Espo\ORM\EntityManager;
+use RuntimeException;
 
 class Helper
 {
     private ?Base $actionObject;
 
-    public function __construct(?Base $actionObject = null)
-    {
-        if (isset($actionObject)) {
-            $this->setActionObject($actionObject);
-        }
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function setActionObject(Base $actionObject): void
     {
         $this->actionObject = $actionObject;
-    }
-
-    private function getActionObject(): ?Base
-    {
-        return $this->actionObject;
     }
 
     /**
@@ -60,20 +54,19 @@ class Helper
      */
     public function checkDependencies(mixed $dependencyList): bool
     {
+        if (!$this->actionObject) {
+            throw new RuntimeException("No action passed.");
+        }
+
         if (!is_array($dependencyList)) {
             $dependencyList = (array) $dependencyList;
         }
 
         /** @var array<string, string[]|string> $dependencyList */
 
-        $actionObject = $this->getActionObject();
-
-        assert($actionObject !== null);
-
         foreach ($dependencyList as $extensionName => $extensionVersion) {
-            $dependencyExtensionEntity = $actionObject
-                ->getEntityManager()
-                ->getRDBRepository('Extension')
+            $entity = $this->entityManager
+                ->getRDBRepositoryByClass(Extension::class)
                 ->where([
                     'name' => trim($extensionName),
                     'isInstalled' => true,
@@ -84,14 +77,13 @@ class Helper
                 implode(', ', $extensionVersion) :
                 $extensionVersion;
 
-            $errorMessage = 'Dependency Error: The extension "' . $extensionName .'" with version "'.
-                $versionString . '" is missing.';
+            $errorMessage = "Dependency error: Extension '$extensionName' with version '$versionString' is missing.";
 
             if (
-                !isset($dependencyExtensionEntity) ||
-                !$actionObject->checkVersions(
+                !$entity ||
+                !$this->actionObject->checkVersions(
                     $extensionVersion,
-                    $dependencyExtensionEntity->get('version'),
+                    $entity->getVersion(),
                     $errorMessage
                 )
             ) {

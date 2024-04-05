@@ -45,7 +45,7 @@ class Upload extends Base
     {
         $processId = $this->createProcessId();
 
-        $this->getLog()->debug('Installation process ['.$processId.']: start upload the package.');
+        $this->getLog()->debug("Installation process [$processId]: start upload the package.");
 
         $this->initialize();
         $this->beforeRunAction();
@@ -71,7 +71,7 @@ class Upload extends Base
         $this->afterRunAction();
         $this->finalize();
 
-        $this->getLog()->debug('Installation process ['.$processId.']: end upload the package.');
+        $this->getLog()->debug("Installation process [$processId]: end upload the package.");
 
         return $processId;
     }

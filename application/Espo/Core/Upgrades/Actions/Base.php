@@ -31,12 +31,11 @@ namespace Espo\Core\Upgrades\Actions;
 
 use Espo\Core\DataManager;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\File\Manager;
+use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Util;
 use Espo\Core\Utils\System;
 use Espo\Core\Utils\Json;
 use Espo\Core\Exceptions\Error;
-use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Container;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Upgrades\ActionManager;
@@ -52,93 +51,65 @@ use Throwable;
 
 abstract class Base
 {
+    /** Directory name of files in a package. */
+    protected const FILES = 'files';
+    /** Directory name of scripts in a package. */
+    protected const SCRIPTS = 'scripts';
+
+    private string $defaultPackageType = 'extension';
+    private string $vendorDirName = 'vendor';
+    protected string $manifestName = 'manifest.json';
+    private string $packagePostfix = 'z';
+
     /** @var array<string, mixed> */
     protected mixed $data = [];
     /** @var array<string, mixed> */
-    protected array $params;
-
-    private Container $container;
-    private ?ActionManager $actionManager;
-    private ZipArchive $zipUtil;
-    private ?DatabaseHelper $databaseHelper;
-    private ?Helper $helper;
-
+    private array $params;
     protected ?string $processId = null;
     protected ?string $parentProcessId = null;
-    protected string $manifestName = 'manifest.json';
-
-    protected string $packagePostfix = 'z';
     /** @var array<string, mixed> */
     protected array $scriptParams = [];
 
-    /**
-     * Directory name of files in a package.
-     */
-    const FILES = 'files';
-
-    /**
-     * Directory name of scripts in a package.
-     */
-    const SCRIPTS = 'scripts';
-
-    /**
-     * Package types.
-     *
-     * @var array<string, string>
-     */
-    protected $packageTypes = [
+    /** @var array<string, string> */
+    private array $packageTypes = [
         'upgrade' => 'upgrade',
         'extension' => 'extension',
     ];
 
-    /**
-     * Default package type.
-     */
-    protected string $defaultPackageType = 'extension';
+    private ZipArchive $zipUtil;
+    private ?DatabaseHelper $databaseHelper;
+    private ?Helper $helper;
 
-    protected string $vendorDirName = 'vendor';
-
-    public function __construct(Container $container, ActionManager $actionManager)
-    {
-        $this->container = $container;
-        $this->actionManager = $actionManager;
+    public function __construct(
+        private Container $container,
+        private ActionManager $actionManager
+    ) {
         $this->params = $actionManager->getParams();
 
-        /** @var FileManager $fileManager */
-        $fileManager = $container->get('fileManager');
-
+        $fileManager = $container->getByClass(FileManager::class);
         $this->zipUtil = new ZipArchive($fileManager);
     }
 
-    protected function getContainer(): Container
+    private function getContainer(): Container
     {
         return $this->container;
     }
 
-    protected function getActionManager(): ActionManager
-    {
-        assert($this->actionManager !== null);
-
-        return $this->actionManager;
-    }
-
-    /**
-     */
-    protected function getParams(string $name, mixed $returns = null): mixed
+    private function getParam(string $name): mixed
     {
         if (isset($this->params[$name])) {
             return $this->params[$name];
         }
 
-        return $returns;
+        return null;
     }
 
-    protected function getZipUtil(): ZipArchive
+    private function getZipUtil(): ZipArchive
     {
         return $this->zipUtil;
     }
 
-    protected function getDatabaseHelper(): DatabaseHelper
+    private function getDatabaseHelper(): DatabaseHelper
     {
         if (!isset($this->databaseHelper)) {
             /** @var InjectableFactory $injectableFactory */
@@ -155,22 +126,22 @@ abstract class Base
         return $this->getContainer()->getByClass(Log::class);
     }
 
-    protected function getFileManager(): Manager
+    protected function getFileManager(): FileManager
     {
-        return $this->getContainer()->getByClass(Manager::class);
+        return $this->getContainer()->getByClass(FileManager::class);
     }
 
-    protected function getConfig(): Config
+    private function getConfig(): Config
     {
         return $this->getContainer()->getByClass(Config::class);
     }
 
-    public function getEntityManager(): EntityManager
+    protected function getEntityManager(): EntityManager
     {
         return $this->getContainer()->getByClass(EntityManager::class);
     }
 
-    public function createConfigWriter(): ConfigWriter
+    protected function createConfigWriter(): ConfigWriter
     {
         $injectableFactory = $this->getContainer()->getByClass(InjectableFactory::class);
 
@@ -228,7 +199,7 @@ abstract class Base
         return $this->processId;
     }
 
-    protected function getParentProcessId(): ?string
+    private function getParentProcessId(): ?string
     {
         return $this->parentProcessId;
     }
@@ -238,7 +209,7 @@ abstract class Base
         $this->processId = $processId;
     }
 
-    public function setParentProcessId(string $processId): void
+    protected function setParentProcessId(string $processId): void
     {
         $this->parentProcessId = $processId;
     }
@@ -353,12 +324,12 @@ abstract class Base
     /**
      * @throws Error
      */
-    protected function checkPackageType(): bool
+    private function checkPackageType(): bool
     {
         $manifest = $this->getManifest();
 
         /** check package type */
-        $type = strtolower($this->getParams('name'));
+        $type = strtolower($this->getParam('name'));
 
         $manifestType = isset($manifest['type']) ? strtolower($manifest['type']) : $this->defaultPackageType;
 
@@ -390,7 +361,7 @@ abstract class Base
      * @param string $type Ex. "before", "after".
      * @throws Error
      */
-    protected function runScript($type): void
+    protected function runScript(string $type): void
     {
         $beforeInstallScript = $this->getScriptPath($type);
 
@@ -398,7 +369,7 @@ abstract class Base
             return;
         }
 
-        $scriptNames = $this->getParams('scriptNames');
+        $scriptNames = $this->getParam('scriptNames');
         $scriptName = $scriptNames[$type];
 
         require_once($beforeInstallScript);
@@ -415,14 +386,13 @@ abstract class Base
         }
     }
 
-
     /**
      * @throws Error
      */
     protected function getScriptPath(string $type): ?string
     {
         $packagePath = $this->getPackagePath();
-        $scriptNames = $this->getParams('scriptNames');
+        $scriptNames = $this->getParam('scriptNames');
 
         $scriptName = $scriptNames[$type];
 
@@ -449,7 +419,7 @@ abstract class Base
         $postfix = $isPackage ? $this->packagePostfix : '';
 
         $processId = $this->getProcessId();
-        $path = Util::concatPath($this->getParams($name), $processId);
+        $path = Util::concatPath($this->getParam($name), $processId);
 
         return $path . $postfix;
     }
@@ -492,7 +462,7 @@ abstract class Base
      * @return string[]
      * @throws Error
      */
-    protected function getDeleteFileList(): array
+    private function getDeleteFileList(): array
     {
         if (!isset($this->data['deleteFileList'])) {
             $deleteFileList = [];
@@ -578,7 +548,7 @@ abstract class Base
      */
     protected function getFileDirs(?string $parentDirPath = null): array
     {
-        $dirNames = $this->getParams('customDirNames');
+        $dirNames = $this->getParam('customDirNames');
 
         $paths = [self::FILES, $dirNames['before'], $dirNames['after']];
 
@@ -597,7 +567,7 @@ abstract class Base
      * @return string[]
      * @throws Error
      */
-    protected function getFileList(string $dirPath, bool $skipVendorFileList = false): array
+    private function getFileList(string $dirPath, bool $skipVendorFileList = false): array
     {
         $fileList = [];
 
@@ -627,20 +597,15 @@ abstract class Base
     }
 
     /**
-     *
-     * @param string $sourcePath
-     * @param string $destPath
-     * @param bool $recursively
      * @param string[] $fileList
-     * @param bool $copyOnlyFiles
      * @throws Error
      */
     protected function copy(
-        $sourcePath,
-        $destPath,
-        $recursively = false,
+        string $sourcePath,
+        string $destPath,
+        bool $recursively = false,
         array $fileList = null,
-        $copyOnlyFiles = false
+        bool $copyOnlyFiles = false
     ): bool {
 
         try {
@@ -656,11 +621,9 @@ abstract class Base
     /**
      * Copy files from upgrade/extension package.
      *
-     * @param ?string $type
-     * @param string $dest
      * @throws Error
      */
-    protected function copyFiles($type = null, $dest = ''): bool
+    protected function copyFiles(?string $type = null, string $dest = ''): bool
     {
         $filesPath = $this->getCopyFilesPath($type);
 
@@ -688,14 +651,14 @@ abstract class Base
         switch ($type) {
             case 'before':
             case 'after':
-                $dirNames = $this->getParams('customDirNames');
+                $dirNames = $this->getParam('customDirNames');
 
                 $dirPath = $dirNames[$type];
 
                 break;
 
             case 'vendor':
-                $dirNames = $this->getParams('customDirNames');
+                $dirNames = $this->getParam('customDirNames');
 
                 if (isset($dirNames['vendor'])) {
                     $dirPath = $dirNames['vendor'];
@@ -725,12 +688,12 @@ abstract class Base
      * @return string[]
      * @throws Error
      */
-    protected function getVendorFileList(string $type = 'copy'): array
+    private function getVendorFileList(string $type = 'copy'): array
     {
         $list = [];
 
         $packagePath = $this->getPackagePath();
-        $dirNames = $this->getParams('customDirNames');
+        $dirNames = $this->getParam('customDirNames');
 
         if (!isset($dirNames['vendor'])) {
             return $list;
@@ -795,11 +758,9 @@ abstract class Base
     }
 
     /**
-     * Check if the manifest is correct.
-     *
      * @param array<string, mixed> $manifest
      */
-    protected function checkManifest(array $manifest): bool
+    private function checkManifest(array $manifest): bool
     {
         $requiredFields = [
             'name',
@@ -818,7 +779,7 @@ abstract class Base
     /**
      * @throws Error
      */
-    protected function getManifestParam(string $name, mixed $default = null): mixed
+    protected function getManifestParam(string $name): mixed
     {
         $manifest = $this->getManifest();
 
@@ -826,7 +787,7 @@ abstract class Base
             return $manifest[$name];
         }
 
-        return $default;
+        return null;
     }
 
     /**
@@ -902,7 +863,7 @@ abstract class Base
      */
     protected function executeAction(string $actionName, $data): void
     {
-        $actionManager = $this->getActionManager();
+        $actionManager = $this->actionManager;
 
         $currentAction = $actionManager->getAction();
 
@@ -912,21 +873,16 @@ abstract class Base
     }
 
     protected function initialize(): void
-    {
-    }
+    {}
 
     protected function finalize(): void
-    {
-    }
+    {}
 
     protected function beforeRunAction(): void
-    {
-    }
-
+    {}
 
     protected function afterRunAction(): void
-    {
-    }
+    {}
 
     /**
      * @throws Error
@@ -948,15 +904,19 @@ abstract class Base
 
         $result = $this->getFileManager()->isWritableList($fullFileList);
 
-        if (!$result) {
-            $permissionDeniedList = $this->getFileManager()->getLastPermissionDeniedList();
-
-            $delimiter = $this->isCli() ? "\n" : "<br>";
-
-            $this->throwErrorAndRemovePackage(
-                "Permission denied: " . $delimiter . implode($delimiter, $permissionDeniedList), false, false
-            );
+        if ($result) {
+            return;
         }
+
+        $permissionDeniedList = $this->getFileManager()->getLastPermissionDeniedList();
+
+        $delimiter = $this->isCli() ? "\n" : "<br>";
+
+        $this->throwErrorAndRemovePackage(
+            "Permission denied: " . $delimiter . implode($delimiter, $permissionDeniedList),
+            false,
+            false
+        );
     }
 
     /**
@@ -975,8 +935,8 @@ abstract class Base
 
     protected function getHelper(): Helper
     {
-        if (!isset($this->helper)) {
-            $this->helper = new Helper();
+        if (!$this->helper) {
+            $this->helper = new Helper($this->getEntityManager());
         }
 
         $this->helper->setActionObject($this);
@@ -991,7 +951,7 @@ abstract class Base
      * @param string[] $array
      * @return string[]
      */
-    protected function concatStringWithArray(string $string, array $array): array
+    private function concatStringWithArray(string $string, array $array): array
     {
         foreach ($array as &$value) {
             if (!str_ends_with($string, '/')) {
@@ -1104,7 +1064,7 @@ abstract class Base
     /**
      * @throws Error
      */
-    protected function getTemporaryConfigParamName(bool $isParentProcess = false): ?string
+    private function getTemporaryConfigParamName(bool $isParentProcess = false): ?string
     {
         $processId = $this->getProcessId();
 
@@ -1119,7 +1079,7 @@ abstract class Base
         return 'temporaryUpgradeParams' . $processId;
     }
 
-    protected function isCli(): bool
+    private function isCli(): bool
     {
         if (str_starts_with(php_sapi_name() ?: '', 'cli')) {
             return true;

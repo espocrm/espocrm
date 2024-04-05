@@ -45,7 +45,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      */
     protected function beforeRunAction(): void
     {
-        $this->findExtension();
+        $this->loadExtension();
 
         if (!$this->isNew()) {
             $this->scriptParams['isUpgrade'] = true;
@@ -87,11 +87,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
         return $this->copy($source, $destination, true);
     }
 
-    protected function isNew(): bool
+    private function isNew(): bool
     {
         $extensionEntity = $this->getExtensionEntity();
 
-        if (isset($extensionEntity)) {
+        if ($extensionEntity) {
             $id = $extensionEntity->get('id');
         }
 
@@ -99,63 +99,45 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
     }
 
     /**
-     * Get extension ID. It's an ID of existing entity (if available) or Installation ID.
-     *
-     * @throws Error
+     * Get the entity of the extension.
      */
-    protected function getExtensionId(): string
-    {
-        $extensionEntity = $this->getExtensionEntity();
-
-        if (isset($extensionEntity)) {
-            $extensionEntityId = $extensionEntity->get('id');
-        }
-
-        if (!isset($extensionEntityId)) {
-            return $this->getProcessId();
-        }
-
-        return $extensionEntityId;
-    }
-
-    /**
-     * Get entity of this extension.
-     */
-    protected function getExtensionEntity(): ?Extension
+    private function getExtensionEntity(): ?Extension
     {
         return $this->extensionEntity;
     }
 
     /**
-     * Find Extension entity.
+     * Load the extension entity.
      *
      * @throws Error
      */
-    protected function findExtension(): ?Extension
+    private function loadExtension(): void
     {
         $manifest = $this->getManifest();
 
         $this->extensionEntity = $this->getEntityManager()
-            ->getRDBRepository(Extension::ENTITY_TYPE)
+            ->getRDBRepositoryByClass(Extension::class)
             ->where([
                 'name' => $manifest['name'],
                 'isInstalled' => true,
             ])
             ->findOne();
-
-        return $this->extensionEntity;
     }
 
     /**
-     * Create a record of Extension Entity.
+     * Create a record of an extension entity.
      *
      * @throws Error
      */
-    protected function storeExtension(): void
+    private function storeExtension(): void
     {
         $entityManager = $this->getEntityManager();
 
-        $extensionEntity = $entityManager->getEntity(Extension::ENTITY_TYPE, $this->getProcessId());
+        $extensionEntity = null;
+
+        if ($this->getProcessId()) {
+            $extensionEntity = $entityManager->getEntityById(Extension::ENTITY_TYPE, $this->getProcessId());
+        }
 
         if (!$extensionEntity) {
             $extensionEntity = $entityManager->getNewEntity(Extension::ENTITY_TYPE);
@@ -183,13 +165,11 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
             $entityManager->saveEntity($extensionEntity);
         }
         catch (Throwable $e) {
-            $this->getLog()
-                ->error(
-                    'Error saving Extension entity. The error occurred by existing Hook, more details: ' .
-                    $e->getMessage() .' at '. $e->getFile() . ':' . $e->getLine()
-                );
+            $msg = "Error while saving the extension entity. The error occurred in an existing hook. " .
+                "{$e->getMessage()} at {$e->getFile()}:{$e->getLine()}";
 
-            $this->throwErrorAndRemovePackage('Error saving Extension entity. Check logs for details.', false);
+            $this->getLog()->error($msg);
+            $this->throwErrorAndRemovePackage('Error saving extension entity. Check logs for details.', false);
         }
     }
 
@@ -198,7 +178,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      *
      * @throws Error
      */
-    protected function compareVersion(): void
+    private function compareVersion(): void
     {
         $manifest = $this->getManifest();
         $extensionEntity = $this->getExtensionEntity();
@@ -216,7 +196,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      *
      * @throws Error
      */
-    protected function uninstallExtension(): void
+    private function uninstallExtension(): void
     {
         $extensionEntity = $this->getExtensionEntity();
 
@@ -237,7 +217,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      *
      * @throws Error
      */
-    protected function deleteExtension(): void
+    private function deleteExtension(): void
     {
         $extensionEntity = $this->getExtensionEntity();
 
@@ -255,7 +235,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
      * @param array<string, string[]|string> $dependencyList
      * @throws Error
      */
-    protected function checkDependencies($dependencyList): bool
+    protected function checkDependencies(array $dependencyList): bool
     {
         return $this->getHelper()->checkDependencies($dependencyList);
     }
