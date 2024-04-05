@@ -47,6 +47,8 @@ class VersionUtilTest extends TestCase
             '7.0',
             '7.5',
             '8.0',
+            '8.0.1',
+            '8.0.3',
             '8.1',
             '8.1.4',
             '8.3',
@@ -54,6 +56,8 @@ class VersionUtilTest extends TestCase
         ]);
 
         $this->assertEquals([
+            '8.0.1',
+            '8.0.3',
             '8.1',
             '8.3',
         ], $list);

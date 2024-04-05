@@ -46,6 +46,8 @@ class VersionUtil
 
         $list = [];
 
+        $nextMinorIsPassed = false;
+
         foreach ($fullList as $item) {
             $a = self::split($item);
 
@@ -59,8 +61,14 @@ class VersionUtil
                 continue;
             }
 
-            if (!$isPatch && $a[2] !== null) {
+            $isItemPatch = $a[2] !== null;
+
+            if (!$isPatch && $isItemPatch && $nextMinorIsPassed) {
                 continue;
+            }
+
+            if (!$nextMinorIsPassed && !self::isPatch($from, $v1)) {
+                $nextMinorIsPassed = true;
             }
 
             $list[] = $item;
