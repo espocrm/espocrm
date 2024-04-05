@@ -27,36 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace tests\unit\Espo\Core\Upgrades\Migration;
+namespace Espo\Core\Upgrades\Migration;
 
-use Espo\Core\Upgrades\Migration\StepsProvider;
-use Espo\Core\Utils\File\Manager;
-use PHPUnit\Framework\TestCase;
-
-class StepsProviderTest extends TestCase
+class ExtractedStepsProvider
 {
-    public function testGet1(): void
+    public function __construct(
+        private StepsProvider $stepsProvider
+    ) {}
+
+    /**
+     * @return string[]
+     */
+    public function getAfterUpgrade(string $version, string $targetVersion): array
     {
-        $fileManager = $this->createMock(Manager::class);
+        return VersionUtil::extractSteps($version, $targetVersion, $this->stepsProvider->getAfterUpgrade());
+    }
 
-        $fileManager
-            ->expects($this->once())
-            ->method('getDirList')
-            ->willReturn(['V7_5_1', 'V8_0', 'V8_1', 'V8_2', 'V8_2_2']);
-
-        $fileManager
-            ->expects($this->any())
-            ->method('isFile')
-            ->willReturn(true);
-
-        $provider = new StepsProvider($fileManager);
-
-        $this->assertEquals([
-            '7.5.1',
-            '8.0',
-            '8.1',
-            '8.2',
-            '8.2.2',
-        ], $provider->getAfterUpgrade());
+    /**
+     * @return string[]
+     */
+    public function getPrepare(string $version, string $targetVersion): array
+    {
+        return VersionUtil::extractSteps($version, $targetVersion, $this->stepsProvider->getPrepare());
     }
 }
