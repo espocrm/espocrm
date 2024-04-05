@@ -29,28 +29,29 @@
 
 namespace tests\unit\Espo\Core\Console;
 
+use Espo\Core\ApplicationUser;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Console\CommandManager;
 use Espo\Core\Console\Command;
 use Espo\Core\Console\Command\Params;
 use Espo\Core\Console\IO;
+use PHPUnit\Framework\TestCase;
 
-class CommandManagerTest extends \PHPUnit\Framework\TestCase
+class CommandManagerTest extends TestCase
 {
     private $injectableFactory;
-
     private $metadata;
-
     private $manager;
 
     protected function setUp() : void
     {
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
-
         $this->metadata = $this->createMock(Metadata::class);
 
-        $this->manager = new CommandManager($this->injectableFactory, $this->metadata);
+        $applicationUser = $this->createMock(ApplicationUser::class);
+
+        $this->manager = new CommandManager($this->injectableFactory, $this->metadata, $applicationUser);
 
         $this->command = $this->createMock(Command::class);
     }
@@ -60,10 +61,12 @@ class CommandManagerTest extends \PHPUnit\Framework\TestCase
         $className = 'Test';
 
         $this->metadata
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('get')
-            ->with(['app', 'consoleCommands', 'commandName', 'className'])
-            ->willReturn($className);
+            ->willReturnMap([
+                [['app', 'consoleCommands', 'commandName', 'className'], null, $className],
+                [['app', 'consoleCommands', 'commandName', 'noSystemUser'], null, false],
+            ]);
 
         $this->injectableFactory
             ->expects($this->once())
