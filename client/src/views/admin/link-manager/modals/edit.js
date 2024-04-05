@@ -665,10 +665,6 @@ class LinkManagerEditModalView extends ModalView {
                     Espo.Utils.lowerCaseFirst(this.scope) + entityForeign :
                     Espo.Utils.lowerCaseFirst(entityForeign) + this.scope;
 
-                if (relationName[0] !== 'c' || !/[A-Z]/.test(relationName[1])) {
-                    relationName = 'c' + Espo.Utils.upperCaseFirst(relationName);
-                }
-
                 this.model.set('relationName', relationName);
 
                 break;

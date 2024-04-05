@@ -126,7 +126,9 @@ class LinkManager
                 $params['relationName'] :
                 lcfirst($entity) . $entityForeign;
 
-            $relationName = $this->nameUtil->addCustomPrefix($relationName);
+            if ($relationName[0] !== 'c' || !preg_match('/[A-Z]/', $relationName[1])) {
+                $relationName = $this->nameUtil->addCustomPrefix($relationName);
+            }
 
             if ($this->isNameTooLong($relationName)) {
                 throw new Error("Relation name is too long.");
