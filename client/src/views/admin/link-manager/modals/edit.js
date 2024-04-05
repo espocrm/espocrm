@@ -97,7 +97,19 @@ class LinkManagerEditModalView extends ModalView {
 
         const allEntityList = this.getMetadata().getScopeEntityList()
             .filter(item => {
-                return this.getMetadata().get(['scopes', item, 'customizable']);
+                const defs = /** @type {Record} */this.getMetadata().get(['scopes', item]) || {};
+
+                if (!defs.customizable) {
+                    return false;
+                }
+
+                const emDefs = /** @type {Record} */defs.entityManager || {};
+
+                if (emDefs.relationships === false) {
+                    return false;
+                }
+
+                return true;
             })
             .sort((v1, v2) => {
                 const t1 = this.translate(v1, 'scopeNames');
@@ -196,9 +208,19 @@ class LinkManagerEditModalView extends ModalView {
 
         const entityList = (Object.keys(scopes) || [])
             .filter(item => {
-                const d = scopes[item];
+                const defs = /** @type {Record} */scopes[item] || {};
 
-                return d.customizable && d.entity;
+                if (!defs.entity || !defs.customizable) {
+                    return false;
+                }
+
+                const emDefs = /** @type {Record} */defs.entityManager || {};
+
+                if (emDefs.relationships === false) {
+                    return false;
+                }
+
+                return true;
             })
             .sort((v1, v2) => {
                 const t1 = this.translate(v1, 'scopeNames');
