@@ -255,9 +255,11 @@ abstract class Base
 
         // check acceptableVersions
         if (isset($manifest['acceptableVersions'])) {
+            $version = $this->getConfig()->get('version');
+
             $res &= $this->checkVersions(
                 $manifest['acceptableVersions'],
-                $this->getConfig()->get('version'),
+                $version,
                 'Your EspoCRM version ({version}) is not supported. Required version: {requiredVersion}.'
             );
         }
@@ -274,10 +276,14 @@ abstract class Base
      * @param string[]|string $versionList
      * @throws Error
      */
-    public function checkVersions($versionList, string $currentVersion, string $errorMessage = ''): bool
+    public function checkVersions($versionList, ?string $currentVersion, string $errorMessage = ''): bool
     {
         if (empty($versionList)) {
             return true;
+        }
+
+        if (!$currentVersion) {
+            return false;
         }
 
         if (is_string($versionList)) {
