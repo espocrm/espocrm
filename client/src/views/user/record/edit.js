@@ -124,6 +124,10 @@ class UserEditRecordView extends EditRecordView {
 
         this.hideField('sendAccessInfo');
 
+        if (!this.model.has('sendAccessInfo')) {
+            return;
+        }
+
         this.model.set('sendAccessInfo', false);
     }
 
