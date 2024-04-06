@@ -29,8 +29,8 @@
 
 namespace tests\unit\Espo\Core\Upgrades\Actions;
 
+use PHPUnit\Framework\TestCase;
 use tests\unit\ReflectionHelper;
-
 use Espo\Core\Utils\Util;
 use Espo\Core\Container;
 use Espo\Core\Upgrades\ActionManager;
@@ -40,51 +40,43 @@ use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config\ConfigWriter;
 
-class BaseTest extends \PHPUnit\Framework\TestCase
+class BaseTest extends TestCase
 {
     protected $object;
-
     protected $objects;
-
     protected $fileManager;
-
     protected $reflection;
 
-    protected $actionManagerParams = array(
+    protected $actionManagerParams = [
         'name' => 'Extension',
         'packagePath' => 'tests/unit/testData/Upgrades/data/upload/extensions',
         'backupPath' => 'tests/unit/testData/Upgrades/data/.backup/extensions',
 
-        'scriptNames' => array(
+        'scriptNames' => [
             'before' => 'BeforeInstall',
             'after' => 'AfterInstall',
             'beforeUninstall' => 'BeforeUninstall',
             'afterUninstall' => 'AfterUninstall',
-        )
-    );
+        ]
+    ];
 
     protected $currentVersion = '11.5.2';
 
     protected function setUp() : void
     {
-        $this->container = $this->getMockBuilder(Container::class)->disableOriginalConstructor()->getMock();
-        $this->actionManager = $this->getMockBuilder(ActionManager::class)->disableOriginalConstructor()->getMock();
-
-        $this->config = $this->getMockBuilder(Config::class)->disableOriginalConstructor()->getMock();
-
-        $this->fileManager = $this->getMockBuilder(FileManager::class)->disableOriginalConstructor()->getMock();
-
+        $this->container = $this->createMock(Container::class);
+        $this->actionManager = $this->createMock(ActionManager::class);
+        $this->config = $this->createMock(Config::class);
+        $this->fileManager = $this->createMock(FileManager::class);
         $this->injectableFactory = $this->createMock(InjectableFactory::class);
-
         $this->configWriter = $this->createMock(ConfigWriter::class);
-
-        $this->log = $this->getMockBuilder(Log::class)->disableOriginalConstructor()->getMock();
+        $this->log = $this->createMock(Log::class);
 
         $map = [
-            ['config', $this->config],
-            ['fileManager', $this->fileManager],
-            ['injectableFactory', $this->injectableFactory],
-            ['log', $this->log],
+            [Config::class, $this->config],
+            [FileManager::class, $this->fileManager],
+            [InjectableFactory::class, $this->injectableFactory],
+            [Log::class, $this->log],
         ];
 
         $this->injectableFactory
@@ -95,7 +87,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
         $this->container
             ->expects($this->any())
-            ->method('get')
+            ->method('getByClass')
             ->will($this->returnValueMap($map));
 
         $actionManagerParams = $this->actionManagerParams;
@@ -104,13 +96,15 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             ->method('getParams')
             ->will($this->returnValue($actionManagerParams));
 
-        $this->object = new Base($this->container, $this->actionManager );
+        $this->object = new Base($this->container, $this->actionManager);
 
         $this->reflection = new ReflectionHelper($this->object);
 
+        /** @noinspection PhpArgumentWithoutNamedIdentifierInspection */
+        /** @noinspection SpellCheckingInspection */
         $this->reflection->setProperty('processId', 'ngkdf54n566n45');
 
-        /* create a package durectory with manifest.json file */
+        /* create a package directory with manifest.json file */
         $packagePath = $this->reflection->invokeMethod('getPath');
         $manifestName = $this->reflection->getProperty('manifestName');
 
@@ -136,14 +130,14 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     public function testCreateProcessIdWithExists()
     {
-        $this->expectException('\Espo\Core\Exceptions\Error');
+        $this->expectException('Espo\Core\Exceptions\Error');
 
-        $processId = $this->reflection->invokeMethod('createProcessId', array());
+        $this->reflection->invokeMethod('createProcessId');
     }
 
     public function testCreateProcessId()
     {
-        $processId = $this->reflection->setProperty('processId', null);
+        $this->reflection->setProperty('processId', null);
 
         $processId = $this->reflection->invokeMethod('createProcessId');
         $this->assertEquals( $processId, $this->reflection->invokeMethod('getProcessId') );
@@ -151,7 +145,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     public function testGetProcessId()
     {
-        $this->expectException('\Espo\Core\Exceptions\Error');
+        $this->expectException('Espo\Core\Exceptions\Error');
 
         $this->reflection->setProperty('processId', null);
         $this->reflection->invokeMethod('getProcessId');
@@ -159,7 +153,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     public function testGetManifestIncorrect()
     {
-        $this->expectException('\Espo\Core\Exceptions\Error');
+        $this->expectException('Espo\Core\Exceptions\Error');
 
         $manifest = '{
             "name": "Upgrade 1.0-b3 to 1.0-b4"
@@ -175,7 +169,7 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             ->method('has')
             ->will($this->returnValue(false));
 
-        $this->reflection->invokeMethod('getManifest', array());
+        $this->reflection->invokeMethod('getManifest');
     }
 
     public function testGetManifest()
@@ -200,21 +194,21 @@ class BaseTest extends \PHPUnit\Framework\TestCase
 
     public function acceptableVersions()
     {
-        return array(
-          array( '11.5.2' ),
-          array( array('11.5.2') ),
-          array( array('1.4', '11.5.2')),
-          array( '11.*', ),
-          array( '11.5.*', ),
-          array( '~11.5', ),
-          array( '~11', ),
-          array( '^11.1', ),
-          array( '^11', ),
-          array( '11.1 - 11.9', ),
-          array( '>=11.1', ),
-          array( '<=12', ),
-          array( '>=11 <=12', ),
-        );
+        return [
+          ['11.5.2'],
+          [['11.5.2']],
+          [['1.4', '11.5.2']],
+          ['11.*',],
+          ['11.5.*',],
+          ['~11.5',],
+          ['~11',],
+          ['^11.1',],
+          ['^11',],
+          ['11.1 - 11.9',],
+          ['>=11.1',],
+          ['<=12',],
+          ['>=11 <=12',],
+        ];
     }
 
     /**
@@ -226,19 +220,21 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             $currentVersion = $this->currentVersion;
         }
 
-        $this->assertTrue( $this->reflection->invokeMethod('checkVersions', array($versions, $currentVersion, 'error') ) );
+        $this->assertTrue(
+            $this->reflection->invokeMethod('checkVersions', [$versions, $currentVersion, 'error'])
+        );
     }
 
     public function unacceptableVersions()
     {
-        return array(
-          array( '1.*', ),
-          array( '11\.*', ),
-          array( '11\.5\.2', ),
-          array( '11.5*', ),
-          array( '11.1-11.9', ),
-          array( '.0.1' ),
-        );
+        return [
+          ['1.*',],
+          ['11\.*',],
+          ['11\.5\.2',],
+          ['11.5*',],
+          ['11.1-11.9',],
+          ['.0.1'],
+        ];
     }
 
     /**
@@ -250,22 +246,22 @@ class BaseTest extends \PHPUnit\Framework\TestCase
             $currentVersion = $this->currentVersion;
         }
 
-        $this->expectException('\Espo\Core\Exceptions\Error');
+        $this->expectException('Espo\Core\Exceptions\Error');
 
         $this->config
             ->expects($this->once())
             ->method('has')
             ->will($this->returnValue(false));
 
-        $this->reflection->invokeMethod('checkVersions', array($versions, $currentVersion, 'error'));
+        $this->reflection->invokeMethod('checkVersions', [$versions, $currentVersion, 'error']);
     }
 
     public function testIsAcceptableEmpty()
     {
-        $version = array();
+        $version = [];
 
-        $this->reflection->setProperty('data', array('manifest' => array('acceptableVersions' => $version)));
-        $this->assertTrue( $this->reflection->invokeMethod('isAcceptable') );
+        $this->reflection->setProperty('data', ['manifest' => ['acceptableVersions' => $version]]);
+        $this->assertTrue($this->reflection->invokeMethod('isAcceptable') );
     }
 
     public function testGetPath()
@@ -273,39 +269,37 @@ class BaseTest extends \PHPUnit\Framework\TestCase
         $packageId = $this->reflection->invokeMethod('getProcessId');
         $packagePath = Util::fixPath($this->actionManagerParams['packagePath'] . '/' . $packageId);
 
-        $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', array()) );
-        $this->assertEquals( $packagePath, $this->reflection->invokeMethod('getPath', array('packagePath')) );
+        $this->assertEquals($packagePath, $this->reflection->invokeMethod('getPath') );
+        $this->assertEquals($packagePath, $this->reflection->invokeMethod('getPath', ['packagePath']) );
 
-        $postfix = $this->reflection->getProperty('packagePostfix');
-        $this->assertEquals( $packagePath.$postfix, $this->reflection->invokeMethod('getPath', array('packagePath', true)) );
+        $postfix = 'z';
+        $this->assertEquals($packagePath.$postfix, $this->reflection->invokeMethod('getPath', ['packagePath', true]));
 
         $backupPath = Util::fixPath($this->actionManagerParams['backupPath'] . '/' . $packageId);
 
-        $this->assertEquals( $backupPath, $this->reflection->invokeMethod('getPath', array('backupPath')) );
+        $this->assertEquals( $backupPath, $this->reflection->invokeMethod('getPath', ['backupPath']) );
     }
 
     public function testCheckPackageType()
     {
-        $this->reflection->setProperty('data', array('manifest' => array()));
+        $this->reflection->setProperty('data', ['manifest' => []]);
         $this->assertTrue( $this->reflection->invokeMethod('checkPackageType') );
 
-        $this->reflection->setProperty('data', array('manifest' => array('type' => 'extension')));
+        $this->reflection->setProperty('data', ['manifest' => ['type' => 'extension']]);
         $this->assertTrue( $this->reflection->invokeMethod('checkPackageType') );
     }
 
     public function testCheckPackageTypeUpgrade()
     {
-        $this->expectException('\Espo\Core\Exceptions\Error');
+        $this->expectException('Espo\Core\Exceptions\Error');
 
         $this->config
             ->expects($this->once())
             ->method('has')
             ->will($this->returnValue(false));
 
-        $this->reflection->setProperty('data', array('manifest' => array('type' => 'upgrade')));
+        $this->reflection->setProperty('data', ['manifest' => ['type' => 'upgrade']]);
 
         $this->assertTrue( $this->reflection->invokeMethod('checkPackageType') );
     }
 }
-
-?>

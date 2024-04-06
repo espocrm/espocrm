@@ -35,10 +35,9 @@ class Uninstall extends \Espo\Core\Upgrades\Actions\Base\Uninstall
 {
     /**
      * @param array<string, mixed> $data
-     * @return never
      * @throws Error
      */
-    public function run($data)
+    public function run(mixed $data): mixed
     {
         throw new Error('The operation is not permitted.');
     }

@@ -27,24 +27,53 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades;
+namespace Espo\Core\Upgrades\Migration;
 
-class UpgradeManager extends Base
+use Espo\Core\Utils\File\Manager;
+use const SORT_STRING;
+
+class StepsProvider
 {
-    protected ?string $name = 'Upgrade';
+    private string $dir = 'application/Espo/Core/Upgrades/Migrations';
 
-    /** @var array<string, mixed> */
-    protected array $params = [
-        'packagePath' => 'data/upload/upgrades',
-        'backupPath' => 'data/.backup/upgrades',
-        'scriptNames' => [
-            'before' => 'BeforeUpgrade',
-            'after' => 'AfterUpgrade',
-        ],
-        'customDirNames' => [
-            'before' => 'beforeUpgradeFiles',
-            'after' => 'afterUpgradeFiles',
-            'vendor' => 'vendorFiles',
-        ],
-    ];
+    public function __construct(
+        private Manager $fileManager
+    ) {}
+
+    /**
+     * @return string[]
+     */
+    public function getPrepare(): array
+    {
+        return $this->get('Prepare');
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getAfterUpgrade(): array
+    {
+        return $this->get('AfterUpgrade');
+    }
+
+    /**
+     * @return string[]
+     */
+    private function get(string $name): array
+    {
+        $list = $this->fileManager->getDirList($this->dir);
+
+        $list = array_filter($list, function ($item) use ($name) {
+            $dir = $this->dir . '/' . $item;
+
+            return $this->fileManager->isFile("$dir/$name.php");
+        });
+
+        $list = array_values($list);
+        $list = array_map(fn ($item) => substr(str_replace('_', '.', $item), 1), $list);
+
+        sort($list, SORT_STRING);
+
+        return $list;
+    }
 }

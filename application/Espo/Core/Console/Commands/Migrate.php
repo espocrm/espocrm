@@ -27,24 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades;
+namespace Espo\Core\Console\Commands;
 
-class UpgradeManager extends Base
+use Espo\Core\Console\Command;
+use Espo\Core\Console\Command\Params;
+use Espo\Core\Console\IO;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Upgrades\Migration\Runner;
+
+/**
+ * @noinspection PhpUnused
+ */
+class Migrate implements Command
 {
-    protected ?string $name = 'Upgrade';
+    public function __construct(
+        private Runner $runner
+    ) {}
 
-    /** @var array<string, mixed> */
-    protected array $params = [
-        'packagePath' => 'data/upload/upgrades',
-        'backupPath' => 'data/.backup/upgrades',
-        'scriptNames' => [
-            'before' => 'BeforeUpgrade',
-            'after' => 'AfterUpgrade',
-        ],
-        'customDirNames' => [
-            'before' => 'beforeUpgradeFiles',
-            'after' => 'afterUpgradeFiles',
-            'vendor' => 'vendorFiles',
-        ],
-    ];
+    /**
+     * @throws Error
+     */
+    public function run(Params $params, IO $io): void
+    {
+        $this->runner->run($io);
+    }
 }

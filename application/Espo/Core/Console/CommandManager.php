@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Console;
 
+use Espo\Core\ApplicationUser;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
@@ -44,8 +45,11 @@ class CommandManager
     private const DEFAULT_COMMAND = 'Help';
     private const DEFAULT_COMMAND_FLAG = 'help';
 
-    public function __construct(private InjectableFactory $injectableFactory, private Metadata $metadata)
-    {}
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private Metadata $metadata,
+        private ApplicationUser $applicationUser
+    ) {}
 
     /**
      * @param array<int, string> $argv
@@ -74,6 +78,8 @@ class CommandManager
         }
 
         $io = new IO();
+
+        $this->setupUser($command);
 
         $commandObj = $this->createCommand($command);
 
@@ -145,5 +151,16 @@ class CommandManager
     private function createParamsFromArgv(array $argv): Params
     {
         return Params::fromArgs(array_slice($argv, 1));
+    }
+
+    private function setupUser(string $command): void
+    {
+        $noSystemUser = $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'noSystemUser']);
+
+        if ($noSystemUser) {
+            return;
+        }
+
+        $this->applicationUser->setupSystemUser();
     }
 }

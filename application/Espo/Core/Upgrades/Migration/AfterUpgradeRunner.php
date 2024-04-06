@@ -27,24 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades;
+namespace Espo\Core\Upgrades\Migration;
 
-class UpgradeManager extends Base
+use Espo\Core\DataManager;
+use Espo\Core\Exceptions\Error;
+use Espo\Core\InjectableFactory;
+use RuntimeException;
+
+class AfterUpgradeRunner
 {
-    protected ?string $name = 'Upgrade';
+    public function __construct(
+        private InjectableFactory $injectableFactory,
+        private DataManager $dataManager
+    ) {}
 
-    /** @var array<string, mixed> */
-    protected array $params = [
-        'packagePath' => 'data/upload/upgrades',
-        'backupPath' => 'data/.backup/upgrades',
-        'scriptNames' => [
-            'before' => 'BeforeUpgrade',
-            'after' => 'AfterUpgrade',
-        ],
-        'customDirNames' => [
-            'before' => 'beforeUpgradeFiles',
-            'after' => 'afterUpgradeFiles',
-            'vendor' => 'vendorFiles',
-        ],
-    ];
+    public function run(string $step): void
+    {
+        $dir = 'V' . str_replace('.', '_', $step);
+
+        $className = "Espo\\Core\\Upgrades\\Migrations\\$dir\\AfterUpgrade";
+
+        if (!class_exists($className)) {
+            throw new RuntimeException("No after-upgrade script $step.");
+        }
+
+        /** @var Script $script */
+        $script = $this->injectableFactory->create($className);
+        $script->run();
+
+        try {
+            $this->dataManager->rebuild();
+        }
+        catch (Error $e) {
+            throw new RuntimeException("Error while rebuild: " . $e->getMessage());
+        }
+    }
 }

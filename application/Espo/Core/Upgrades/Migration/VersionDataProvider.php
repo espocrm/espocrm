@@ -27,24 +27,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades;
+namespace Espo\Core\Upgrades\Migration;
 
-class UpgradeManager extends Base
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\File\Manager;
+use RuntimeException;
+
+class VersionDataProvider
 {
-    protected ?string $name = 'Upgrade';
+    private string $defaultConfigPath = 'application/Espo/Resources/defaults/config.php';
 
-    /** @var array<string, mixed> */
-    protected array $params = [
-        'packagePath' => 'data/upload/upgrades',
-        'backupPath' => 'data/.backup/upgrades',
-        'scriptNames' => [
-            'before' => 'BeforeUpgrade',
-            'after' => 'AfterUpgrade',
-        ],
-        'customDirNames' => [
-            'before' => 'beforeUpgradeFiles',
-            'after' => 'afterUpgradeFiles',
-            'vendor' => 'vendorFiles',
-        ],
-    ];
+    public function __construct(
+        private Config $config,
+        private Manager $fileManager
+    ) {}
+
+    public function getPreviousVersion(): string
+    {
+        $version = $this->config->get('version');
+
+        if (!is_string($version) || !$version) {
+            throw new RuntimeException("No or bad 'version' in config.");
+        }
+
+        return $version;
+    }
+
+    public function getTargetVersion(): string
+    {
+        $data = $this->fileManager->getPhpContents($this->defaultConfigPath);
+
+        if (!is_array($data)) {
+            throw new RuntimeException("No default config.");
+        }
+
+        $version = $data['version'] ?? null;
+
+        if (!$version || !is_string($version)) {
+            throw new RuntimeException("No or bad 'version' parameter in default config.");
+        }
+
+        return $version;
+    }
 }

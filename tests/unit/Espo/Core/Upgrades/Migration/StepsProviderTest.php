@@ -27,24 +27,36 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades;
+namespace tests\unit\Espo\Core\Upgrades\Migration;
 
-class UpgradeManager extends Base
+use Espo\Core\Upgrades\Migration\StepsProvider;
+use Espo\Core\Utils\File\Manager;
+use PHPUnit\Framework\TestCase;
+
+class StepsProviderTest extends TestCase
 {
-    protected ?string $name = 'Upgrade';
+    public function testGet1(): void
+    {
+        $fileManager = $this->createMock(Manager::class);
 
-    /** @var array<string, mixed> */
-    protected array $params = [
-        'packagePath' => 'data/upload/upgrades',
-        'backupPath' => 'data/.backup/upgrades',
-        'scriptNames' => [
-            'before' => 'BeforeUpgrade',
-            'after' => 'AfterUpgrade',
-        ],
-        'customDirNames' => [
-            'before' => 'beforeUpgradeFiles',
-            'after' => 'afterUpgradeFiles',
-            'vendor' => 'vendorFiles',
-        ],
-    ];
+        $fileManager
+            ->expects($this->once())
+            ->method('getDirList')
+            ->willReturn(['V7_5_1', 'V8_0', 'V8_1', 'V8_2', 'V8_2_2']);
+
+        $fileManager
+            ->expects($this->any())
+            ->method('isFile')
+            ->willReturn(true);
+
+        $provider = new StepsProvider($fileManager);
+
+        $this->assertEquals([
+            '7.5.1',
+            '8.0',
+            '8.1',
+            '8.2',
+            '8.2.2',
+        ], $provider->getAfterUpgrade());
+    }
 }

@@ -27,24 +27,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades;
+namespace Espo\Core\Upgrades\Migration;
 
-class UpgradeManager extends Base
+class ExtractedStepsProvider
 {
-    protected ?string $name = 'Upgrade';
+    public function __construct(
+        private StepsProvider $stepsProvider
+    ) {}
 
-    /** @var array<string, mixed> */
-    protected array $params = [
-        'packagePath' => 'data/upload/upgrades',
-        'backupPath' => 'data/.backup/upgrades',
-        'scriptNames' => [
-            'before' => 'BeforeUpgrade',
-            'after' => 'AfterUpgrade',
-        ],
-        'customDirNames' => [
-            'before' => 'beforeUpgradeFiles',
-            'after' => 'afterUpgradeFiles',
-            'vendor' => 'vendorFiles',
-        ],
-    ];
+    /**
+     * @return string[]
+     */
+    public function getAfterUpgrade(string $version, string $targetVersion): array
+    {
+        return VersionUtil::extractSteps($version, $targetVersion, $this->stepsProvider->getAfterUpgrade());
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getPrepare(string $version, string $targetVersion): array
+    {
+        return VersionUtil::extractSteps($version, $targetVersion, $this->stepsProvider->getPrepare());
+    }
 }

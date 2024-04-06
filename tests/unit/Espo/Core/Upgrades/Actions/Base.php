@@ -31,8 +31,6 @@ namespace tests\unit\Espo\Core\Upgrades\Actions;
 
 class Base extends \Espo\Core\Upgrades\Actions\Base
 {
-    public function run($data)
-    {
-
-    }
+    public function run(mixed $data): mixed
+    {}
 }

@@ -29,63 +29,111 @@
 
 namespace Espo\Core\Upgrades\Actions\Upgrade;
 
+use Espo\Core\Exceptions\Error;
+use Espo\Core\Upgrades\Migration\Script;
+use Espo\Core\Upgrades\Migration\VersionUtil;
+use RuntimeException;
+
 class Install extends \Espo\Core\Upgrades\Actions\Base\Install
 {
     /**
      * @param array<string, mixed> $data
-     * @return mixed
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
-    public function stepBeforeUpgradeScript(array $data)
+    public function stepBeforeUpgradeScript(array $data): void
     {
-        /** @phpstan-ignore-next-line */
-        return $this->stepBeforeInstallScript($data);
+        $this->stepBeforeInstallScript($data);
     }
 
     /**
      * @param array<string, mixed> $data
-     * @return mixed
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
-    public function stepAfterUpgradeScript(array $data)
+    public function stepAfterUpgradeScript(array $data): void
     {
-        /** @phpstan-ignore-next-line */
-        return $this->stepAfterInstallScript($data);
+        $this->stepAfterInstallScript($data);
+        $this->runMigrationAfterInstallScript();
     }
 
     /**
-     * @return void
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
-    protected function finalize()
+    protected function finalize(): void
     {
-        $manifest = $this->getManifest();
-
         $configWriter = $this->createConfigWriter();
-
-        $configWriter->set('version', $manifest['version']);
-
+        $configWriter->set('version', $this->getTargetVersion());
         $configWriter->save();
     }
 
     /**
      * Delete temporary package files.
      *
-     * @return bool
-     * @throws \Espo\Core\Exceptions\Error
-     * @throws \Espo\Core\Exceptions\Error
+     * @throws Error
      */
-    protected function deletePackageFiles()
+    protected function deletePackageFiles(): bool
     {
         $res = parent::deletePackageFiles();
-
         $res &= $this->deletePackageArchive();
 
-        /** @var bool @res */
+        return (bool) $res;
+    }
 
-        return $res;
+    /**
+     * @throws Error
+     */
+    private function getTargetVersion(): string
+    {
+        $version = $this->getManifest()['version'];
+
+        if (!$version) {
+            throw new RuntimeException("No 'version' in manifest.");
+        }
+
+        return $version;
+    }
+
+    /**
+     * @throws Error
+     */
+    private function runMigrationAfterInstallScript(): void
+    {
+        $targetVersion = $this->getTargetVersion();
+        $version = $this->getConfig()->get('version');
+
+        if (!$version || !is_string($version)) {
+            throw new RuntimeException("No or bad 'version' in config.");
+        }
+
+        $script = $this->getMigrationAfterInstallScript($version, $targetVersion);
+
+        if (!$script) {
+            return;
+        }
+
+        $script->run();
+    }
+
+    private function getMigrationAfterInstallScript(string $version, string $targetVersion): ?Script
+    {
+        $isPatch = VersionUtil::isPatch($version, $targetVersion);
+        $a = VersionUtil::split($targetVersion);
+
+        $dir = $isPatch ?
+            'V' . $a[0] . '_' . $a[1] . '_' . $a[2] :
+            'V' . $a[0] . '_' . $a[1];
+
+        $className = "Espo\\Core\\Upgrades\\Migrations\\$dir\\AfterUpgrade";
+
+        if (!class_exists($className)) {
+            return null;
+        }
+
+        $script = $this->getInjectableFactory()->create($className);
+
+        if (!$script instanceof Script) {
+            throw new RuntimeException("$className does not implement Script interface.");
+        }
+
+        return $script;
     }
 }

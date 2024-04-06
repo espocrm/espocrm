@@ -30,63 +30,43 @@
 namespace Espo\Core\Upgrades\Actions;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Entities\Extension;
+use Espo\ORM\EntityManager;
+use RuntimeException;
 
 class Helper
 {
-    /**
-     * @var ?\Espo\Core\Upgrades\Actions\Base
-     */
-    private $actionObject;
+    private ?Base $actionObject;
 
-    /**
-     * @param ?\Espo\Core\Upgrades\Actions\Base $actionObject $actionObject
-     */
-    public function __construct($actionObject = null)
-    {
-        if (isset($actionObject)) {
-            $this->setActionObject($actionObject);
-        }
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
-    /**
-     * @return void
-     */
-    public function setActionObject(\Espo\Core\Upgrades\Actions\Base $actionObject)
+    public function setActionObject(Base $actionObject): void
     {
         $this->actionObject = $actionObject;
-    }
-
-    /**
-     * @return ?\Espo\Core\Upgrades\Actions\Base
-     */
-    protected function getActionObject()
-    {
-        return $this->actionObject;
     }
 
     /**
      * Check dependencies.
      *
      * @param array<string, string[]|string> $dependencyList
-     * @return bool
      * @throws Error
      */
-    public function checkDependencies($dependencyList)
+    public function checkDependencies(mixed $dependencyList): bool
     {
-        if (!is_array($dependencyList)) { /** @phpstan-ignore-line */
+        if (!$this->actionObject) {
+            throw new RuntimeException("No action passed.");
+        }
+
+        if (!is_array($dependencyList)) {
             $dependencyList = (array) $dependencyList;
         }
 
         /** @var array<string, string[]|string> $dependencyList */
 
-        $actionObject = $this->getActionObject();
-
-        assert($actionObject !== null);
-
         foreach ($dependencyList as $extensionName => $extensionVersion) {
-            $dependencyExtensionEntity = $actionObject
-                ->getEntityManager()
-                ->getRDBRepository('Extension')
+            $entity = $this->entityManager
+                ->getRDBRepositoryByClass(Extension::class)
                 ->where([
                     'name' => trim($extensionName),
                     'isInstalled' => true,
@@ -97,14 +77,13 @@ class Helper
                 implode(', ', $extensionVersion) :
                 $extensionVersion;
 
-            $errorMessage = 'Dependency Error: The extension "' . $extensionName .'" with version "'.
-                $versionString . '" is missing.';
+            $errorMessage = "Dependency error: Extension '$extensionName' with version '$versionString' is missing.";
 
             if (
-                !isset($dependencyExtensionEntity) ||
-                !$actionObject->checkVersions(
+                !$entity ||
+                !$this->actionObject->checkVersions(
                     $extensionVersion,
-                    $dependencyExtensionEntity->get('version'),
+                    $entity->getVersion(),
                     $errorMessage
                 )
             ) {

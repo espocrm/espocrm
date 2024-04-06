@@ -27,24 +27,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Upgrades;
+namespace Espo\Core\Upgrades\Migrations\V8_1;
 
-class UpgradeManager extends Base
+use Espo\Core\Container;
+use Espo\Core\Upgrades\Migration\Script;
+use Espo\Core\InjectableFactory;
+use Espo\Core\Utils\Config;
+
+class AfterUpgrade implements Script
 {
-    protected ?string $name = 'Upgrade';
+    public function __construct(
+        private Container $container
+    ) {}
 
-    /** @var array<string, mixed> */
-    protected array $params = [
-        'packagePath' => 'data/upload/upgrades',
-        'backupPath' => 'data/.backup/upgrades',
-        'scriptNames' => [
-            'before' => 'BeforeUpgrade',
-            'after' => 'AfterUpgrade',
-        ],
-        'customDirNames' => [
-            'before' => 'beforeUpgradeFiles',
-            'after' => 'afterUpgradeFiles',
-            'vendor' => 'vendorFiles',
-        ],
-    ];
+    public function run(): void
+    {
+        $config = $this->container->getByClass(Config::class);
+
+        $configWriter = $this->container->getByClass(InjectableFactory::class)
+            ->create(Config\ConfigWriter::class);
+
+        $configWriter->setMultiple([
+            'phoneNumberNumericSearch' => false,
+            'phoneNumberInternational' => false,
+        ]);
+
+        if ($config->get('pdfEngine') === 'Tcpdf') {
+            $configWriter->set('pdfEngine', 'Dompdf');
+        }
+
+        $configWriter->save();
+    }
 }
