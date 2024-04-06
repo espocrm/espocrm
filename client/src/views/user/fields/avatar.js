@@ -26,113 +26,120 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/fields/avatar', ['views/fields/image'], function (Dep) {
+import ImageFieldView from 'views/fields/image';
 
-    return Dep.extend({
+class UserAvatarFieldView extends ImageFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.on('after:inline-save', () => {
-                this.suspendCache = true;
+        this.on('after:inline-save', () => {
+            this.suspendCache = true;
 
-                this.reRender();
-            });
-        },
+            this.reRender();
+        });
+    }
 
-        handleUploadingFile: function (file) {
-            return new Promise((resolve, reject) => {
-                let fileReader = new FileReader();
+    /**
+     * @protected
+     * @param {File} file
+     * @return {Promise<unknown>}
+     */
+    handleUploadingFile(file) {
+        return new Promise((resolve, reject) => {
+            const fileReader = new FileReader();
 
-                fileReader.onload = (e) => {
-                    this.createView('crop', 'views/modals/image-crop', {contents: e.target.result})
-                        .then(view => {
-                            view.render();
+            fileReader.onload = (e) => {
+                this.createView('crop', 'views/modals/image-crop', {contents: e.target.result})
+                    .then(view => {
+                        view.render();
 
-                            let cropped = false;
+                        let cropped = false;
 
-                            this.listenToOnce(view, 'crop', (dataUrl) => {
-                                cropped = true;
+                        this.listenToOnce(view, 'crop', dataUrl => {
+                            cropped = true;
 
-                                setTimeout(() => {
-                                    fetch(dataUrl)
-                                        .then(result => result.blob())
-                                        .then(blob => {
-                                            resolve(
-                                                new File([blob], 'avatar.jpg', {type: 'image/jpeg'})
-                                            );
-                                        });
-                                }, 10);
-                            });
-
-                            this.listenToOnce(view, 'remove', () => {
-                                if (!cropped) {
-                                    setTimeout(() => this.render(), 10);
-
-                                    reject();
-                                }
-
-                                this.clearView('crop');
-                            });
+                            setTimeout(() => {
+                                fetch(dataUrl)
+                                    .then(result => result.blob())
+                                    .then(blob => {
+                                        resolve(
+                                            new File([blob], 'avatar.jpg', {type: 'image/jpeg'})
+                                        );
+                                    });
+                            }, 10);
                         });
-                };
 
-                fileReader.readAsDataURL(file);
+                        this.listenToOnce(view, 'remove', () => {
+                            if (!cropped) {
+                                setTimeout(() => this.render(), 10);
+
+                                reject();
+                            }
+
+                            this.clearView('crop');
+                        });
+                    });
+            };
+
+            fileReader.readAsDataURL(file);
+        });
+    }
+
+    getValueForDisplay() {
+        if (!this.isReadMode()) {
+            return '';
+        }
+
+        const id = this.model.get(this.idName);
+        const userId = this.model.id;
+
+        let t = this.cacheTimestamp = this.cacheTimestamp || Date.now();
+
+        if (this.suspendCache) {
+            t = Date.now();
+        }
+
+        const src = this.getBasePath() +
+            '?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId +
+            '&t=' + t + '&attachmentId=' + (id || 'false');
+
+        // noinspection HtmlRequiredAltAttribute,RequiredAttributes
+        const $img = $('<img>')
+            .attr('src', src)
+            .attr('alt', this.labelText)
+            .css({
+                maxWidth: (this.imageSizes[this.previewSize] || {})[0],
+                maxHeight: (this.imageSizes[this.previewSize] || {})[1],
             });
-        },
 
-        getValueForDisplay: function () {
-            if (!this.isReadMode()) {
-                return '';
+        if (!this.isDetailMode()) {
+            if (this.getCache()) {
+                t = this.getCache().get('app', 'timestamp');
             }
 
-            let id = this.model.get(this.idName);
-            let userId = this.model.id;
+            const src = `${this.getBasePath()}?entryPoint=avatar&size=${this.previewSize}&id=${userId}&t=${t}`;
 
-            let t = this.cacheTimestamp = this.cacheTimestamp || Date.now();
-
-            if (this.suspendCache) {
-                t = Date.now();
-            }
-
-            let src = this.getBasePath() +
-                '?entryPoint=avatar&size=' + this.previewSize + '&id=' + userId +
-                '&t=' + t + '&attachmentId=' + (id || 'false');
-
-            let $img = $('<img>')
+            $img
+                .attr('width', '16')
                 .attr('src', src)
-                .css({
-                    maxWidth: (this.imageSizes[this.previewSize] || {})[0],
-                    maxHeight: (this.imageSizes[this.previewSize] || {})[1],
-                });
+                .css('maxWidth', '16px');
+        }
 
-            if (!this.isDetailMode()) {
-                if (this.getCache()) {
-                    t = this.getCache().get('app', 'timestamp');
-                }
-
-                let src = this.getBasePath() + '?entryPoint=avatar&size=' +
-                    this.previewSize + '&id=' + userId + '&t=' + t;
-
-                $img
-                    .attr('width', '16')
-                    .attr('src', src)
-                    .css('maxWidth', '16px');
-            }
-
-            if (!id) {
-                return $img
-                    .get(0)
-                    .outerHTML;
-            }
-
-            return $('<a>')
-                .attr('data-id', id)
-                .attr('data-action', 'showImagePreview')
-                .attr('href', this.getBasePath() + '?entryPoint=image&id=' + id)
-                .append($img)
+        if (!id) {
+            return $img
                 .get(0)
                 .outerHTML;
-        },
-    });
-});
+        }
+
+        return $('<a>')
+            .attr('data-id', id)
+            .attr('data-action', 'showImagePreview')
+            .attr('href', this.getBasePath() + '?entryPoint=image&id=' + id)
+            .append($img)
+            .get(0)
+            .outerHTML;
+    }
+}
+
+export default UserAvatarFieldView;

@@ -110,6 +110,7 @@ class FileFieldView extends LinkFieldView {
         },
     }
 
+    // noinspection JSCheckFunctionSignatures
     data() {
         const data = {
             ...super.data(),
@@ -123,6 +124,7 @@ class FileFieldView extends LinkFieldView {
 
         data.valueIsSet = this.model.has(this.idName);
 
+        // noinspection JSValidateTypes
         return data;
     }
 
@@ -523,6 +525,9 @@ class FileFieldView extends LinkFieldView {
         return maxFileSize;
     }
 
+    /**
+     * @param {File} file
+     */
     uploadFile(file) {
         let isCanceled = false;
 
@@ -627,6 +632,11 @@ class FileFieldView extends LinkFieldView {
         });
     }
 
+    /**
+     * @protected
+     * @param {File} file
+     * @return {Promise<unknown>}
+     */
     handleUploadingFile(file) {
         return new Promise(resolve => resolve(file));
     }
