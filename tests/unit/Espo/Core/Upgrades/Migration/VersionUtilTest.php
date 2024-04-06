@@ -197,4 +197,39 @@ class VersionUtilTest extends TestCase
             '8.3.5',
         ], $list);
     }
+
+    public function testGetPatch3(): void
+    {
+        $list = VersionUtil::extractSteps('8.3.0', '8.3.5', [
+            '8.3',
+            '8.3.0-beta',
+            '8.3.0-beta.1',
+            '8.3.0-beta.2',
+            '8.3.2',
+            '8.3.4',
+            '8.3.5',
+            '8.6.1',
+        ]);
+
+        $this->assertEquals([
+            '8.3.2',
+            '8.3.4',
+            '8.3.5',
+        ], $list);
+    }
+
+    public function testGetPatch4(): void
+    {
+        $list = VersionUtil::extractSteps('8.3.0-beta.1', '8.3.0', [
+            '8.3',
+            '8.3.0-beta.1',
+            '8.3.0-beta.2',
+            '8.3.0',
+        ]);
+
+        $this->assertEquals([
+            '8.3.0-beta.2',
+            '8.3.0',
+        ], $list);
+    }
 }

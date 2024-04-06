@@ -30,7 +30,6 @@
 namespace Espo\Core\Upgrades\Migration;
 
 use RuntimeException;
-use const SORT_STRING;
 
 class VersionUtil
 {
@@ -40,16 +39,19 @@ class VersionUtil
      */
     public static function extractSteps(string $from, string $to, array $fullList): array
     {
-        sort($fullList, SORT_STRING);
+        usort($fullList, fn ($v1, $v2) => version_compare($v1, $v2));
 
         $isPatch = self::isPatch($from, $to);
 
         $list = [];
-
         $nextMinorIsPassed = false;
 
         foreach ($fullList as $item) {
             $a = self::split($item);
+
+            if ($isPatch && $a[2] === null) {
+                continue;
+            }
 
             $v1 = $a[0] . '.' . $a[1] . '.' . ($a[2] ?? '0');
 
