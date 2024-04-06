@@ -26,148 +26,153 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/user/fields/generate-password', ['views/fields/base'], function (Dep) {
+import BaseFieldView from 'views/fields/base';
 
-    return Dep.extend({
+class UserGeneratePasswordFieldView extends BaseFieldView {
 
-        templateContent: '<button type="button" class="btn btn-default" data-action="generatePassword">' +
-            '{{translate \'Generate\' scope=\'User\'}}</button>',
+    templateContent = `
+        <button
+            type="button"
+            class="btn btn-default"
+            data-action="generatePassword"
+        >{{translate 'Generate' scope='User'}}</button>`
 
-        events: {
-            'click [data-action="generatePassword"]': function () {
-                this.actionGeneratePassword();
-            },
+    events = {
+        /** @this {UserGeneratePasswordFieldView} */
+        'click [data-action="generatePassword"]': function () {
+            this.actionGeneratePassword();
         },
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.listenTo(this.model, 'change:password', (model, value, o) => {
-                if (o.isGenerated) {
-                    return;
-                }
-
-                if (value !== undefined) {
-                    this.model.set('passwordPreview', null);
-
-                    return;
-                }
-
-                this.model.unset('passwordPreview');
-            });
-
-            this.strengthParams = this.options.strengthParams || {};
-
-            this.passwordStrengthLength = this.strengthParams.passwordStrengthLength ||
-                this.getConfig().get('passwordStrengthLength');
-
-            this.passwordStrengthLetterCount = this.strengthParams.passwordStrengthLetterCount ||
-                this.getConfig().get('passwordStrengthLetterCount');
-
-            this.passwordStrengthNumberCount = this.strengthParams.passwordStrengthNumberCount ||
-                this.getConfig().get('passwordStrengthNumberCount');
-
-            this.passwordGenerateLength = this.strengthParams.passwordGenerateLength ||
-                this.getConfig().get('passwordGenerateLength');
-
-            this.passwordGenerateLetterCount = this.strengthParams.passwordGenerateLetterCount ||
-                this.getConfig().get('passwordGenerateLetterCount');
-
-            this.passwordGenerateNumberCount = this.strengthParams.passwordGenerateNumberCount ||
-                this.getConfig().get('passwordGenerateNumberCount');
-        },
-
-        fetch: function () {
-            return {};
-        },
-
-        actionGeneratePassword: function () {
-            let length = this.passwordStrengthLength;
-            let letterCount = this.passwordStrengthLetterCount;
-            let numberCount = this.passwordStrengthNumberCount;
-
-            const generateLength = this.passwordGenerateLength || 10;
-            const generateLetterCount = this.passwordGenerateLetterCount || 4;
-            const generateNumberCount = this.passwordGenerateNumberCount || 2;
-
-            length = (typeof length === 'undefined') ? generateLength : length;
-            letterCount = (typeof letterCount === 'undefined') ? generateLetterCount : letterCount;
-            numberCount = (typeof numberCount === 'undefined') ? generateNumberCount : numberCount;
-
-            if (length < generateLength) {
-                length = generateLength;
+        this.listenTo(this.model, 'change:password', (model, value, o) => {
+            if (o.isGenerated) {
+                return;
             }
 
-            if (letterCount < generateLetterCount) {
-                letterCount = generateLetterCount;
+            if (value !== undefined) {
+                this.model.set('passwordPreview', null);
+
+                return;
             }
 
-            if (numberCount < generateNumberCount) {
-                numberCount = generateNumberCount;
+            this.model.unset('passwordPreview');
+        });
+
+        this.strengthParams = this.options.strengthParams || {};
+
+        this.passwordStrengthLength = this.strengthParams.passwordStrengthLength ||
+            this.getConfig().get('passwordStrengthLength');
+
+        this.passwordStrengthLetterCount = this.strengthParams.passwordStrengthLetterCount ||
+            this.getConfig().get('passwordStrengthLetterCount');
+
+        this.passwordStrengthNumberCount = this.strengthParams.passwordStrengthNumberCount ||
+            this.getConfig().get('passwordStrengthNumberCount');
+
+        this.passwordGenerateLength = this.strengthParams.passwordGenerateLength ||
+            this.getConfig().get('passwordGenerateLength');
+
+        this.passwordGenerateLetterCount = this.strengthParams.passwordGenerateLetterCount ||
+            this.getConfig().get('passwordGenerateLetterCount');
+
+        this.passwordGenerateNumberCount = this.strengthParams.passwordGenerateNumberCount ||
+            this.getConfig().get('passwordGenerateNumberCount');
+    }
+
+    fetch() {
+        return {};
+    }
+
+    actionGeneratePassword() {
+        let length = this.passwordStrengthLength;
+        let letterCount = this.passwordStrengthLetterCount;
+        let numberCount = this.passwordStrengthNumberCount;
+
+        const generateLength = this.passwordGenerateLength || 10;
+        const generateLetterCount = this.passwordGenerateLetterCount || 4;
+        const generateNumberCount = this.passwordGenerateNumberCount || 2;
+
+        length = (typeof length === 'undefined') ? generateLength : length;
+        letterCount = (typeof letterCount === 'undefined') ? generateLetterCount : letterCount;
+        numberCount = (typeof numberCount === 'undefined') ? generateNumberCount : numberCount;
+
+        if (length < generateLength) {
+            length = generateLength;
+        }
+
+        if (letterCount < generateLetterCount) {
+            letterCount = generateLetterCount;
+        }
+
+        if (numberCount < generateNumberCount) {
+            numberCount = generateNumberCount;
+        }
+
+        const password = this.generatePassword(length, letterCount, numberCount, true);
+
+        this.model.set({
+            password: password,
+            passwordConfirm: password,
+            passwordPreview: password,
+        }, {isGenerated: true});
+    }
+
+    generatePassword(length, letters, numbers, bothCases) {
+        const chars = [
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
+            '0123456789',
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
+            'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+            'abcdefghijklmnopqrstuvwxyz',
+        ];
+
+        let upperCase = 0;
+        let lowerCase = 0;
+
+        if (bothCases) {
+            upperCase = 1;
+            lowerCase = 1;
+
+            if (letters >= 2) {
+                letters = letters - 2;
+            } else {
+                letters = 0;
+            }
+        }
+
+        let either = length - (letters + numbers + upperCase + lowerCase);
+
+        if (either < 0) {
+            either = 0;
+        }
+
+        const setList = [letters, numbers, either, upperCase, lowerCase];
+
+        const shuffle = function (array) {
+            let currentIndex = array.length, temporaryValue, randomIndex;
+
+            while (0 !== currentIndex) {
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
             }
 
-            const password = this.generatePassword(length, letterCount, numberCount, true);
+            return array;
+        };
 
-            this.model.set({
-                password: password,
-                passwordConfirm: password,
-                passwordPreview: password,
-            }, {isGenerated: true});
-        },
+        const array = setList.map(
+            (len, i) => Array(len).fill(chars[i]).map(
+                x => x[Math.floor(Math.random() * x.length)]
+            ).join('')
+        ).concat();
 
-        generatePassword: function (length, letters, numbers, bothCases) {
-            const chars = [
-                'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
-                '0123456789',
-                'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
-                'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
-                'abcdefghijklmnopqrstuvwxyz',
-            ];
+        return shuffle(array).join('');
+    }
+}
 
-            let upperCase = 0;
-            let lowerCase = 0;
-
-            if (bothCases) {
-                upperCase = 1;
-                lowerCase = 1;
-
-                if (letters >= 2) {
-                    letters = letters - 2;
-                } else {
-                    letters = 0;
-                }
-            }
-
-            let either = length - (letters + numbers + upperCase + lowerCase);
-
-            if (either < 0) {
-                either = 0;
-            }
-
-            const setList = [letters, numbers, either, upperCase, lowerCase];
-
-            const shuffle = function (array) {
-                let currentIndex = array.length, temporaryValue, randomIndex;
-
-                while (0 !== currentIndex) {
-                    randomIndex = Math.floor(Math.random() * currentIndex);
-                    currentIndex -= 1;
-                    temporaryValue = array[currentIndex];
-                    array[currentIndex] = array[randomIndex];
-                    array[randomIndex] = temporaryValue;
-                }
-
-                return array;
-            };
-
-            const array = setList.map(
-                (len, i) => Array(len).fill(chars[i]).map(
-                    x => x[Math.floor(Math.random() * x.length)]
-                ).join('')
-            ).concat();
-
-            return shuffle(array).join('');
-        },
-
-    });
-});
+export default UserGeneratePasswordFieldView;
