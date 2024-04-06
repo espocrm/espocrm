@@ -78,23 +78,31 @@ define('views/user/fields/generate-password', ['views/fields/base'], function (D
         },
 
         actionGeneratePassword: function () {
-            var length = this.passwordStrengthLength;
-            var letterCount = this.passwordStrengthLetterCount;
-            var numberCount = this.passwordStrengthNumberCount;
+            let length = this.passwordStrengthLength;
+            let letterCount = this.passwordStrengthLetterCount;
+            let numberCount = this.passwordStrengthNumberCount;
 
-            var generateLength = this.passwordGenerateLength || 10;
-            var generateLetterCount = this.passwordGenerateLetterCount || 4;
-            var generateNumberCount = this.passwordGenerateNumberCount || 2;
+            const generateLength = this.passwordGenerateLength || 10;
+            const generateLetterCount = this.passwordGenerateLetterCount || 4;
+            const generateNumberCount = this.passwordGenerateNumberCount || 2;
 
             length = (typeof length === 'undefined') ? generateLength : length;
             letterCount = (typeof letterCount === 'undefined') ? generateLetterCount : letterCount;
             numberCount = (typeof numberCount === 'undefined') ? generateNumberCount : numberCount;
 
-            if (length < generateLength) length = generateLength;
-            if (letterCount < generateLetterCount) letterCount = generateLetterCount;
-            if (numberCount < generateNumberCount) numberCount = generateNumberCount;
+            if (length < generateLength) {
+                length = generateLength;
+            }
 
-            var password = this.generatePassword(length, letterCount, numberCount, true);
+            if (letterCount < generateLetterCount) {
+                letterCount = generateLetterCount;
+            }
+
+            if (numberCount < generateNumberCount) {
+                numberCount = generateNumberCount;
+            }
+
+            const password = this.generatePassword(length, letterCount, numberCount, true);
 
             this.model.set({
                 password: password,
@@ -104,7 +112,7 @@ define('views/user/fields/generate-password', ['views/fields/base'], function (D
         },
 
         generatePassword: function (length, letters, numbers, bothCases) {
-            var chars = [
+            const chars = [
                 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz',
                 '0123456789',
                 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',
@@ -112,8 +120,8 @@ define('views/user/fields/generate-password', ['views/fields/base'], function (D
                 'abcdefghijklmnopqrstuvwxyz',
             ];
 
-            var upperCase = 0;
-            var lowerCase = 0;
+            let upperCase = 0;
+            let lowerCase = 0;
 
             if (bothCases) {
                 upperCase = 1;
@@ -126,16 +134,16 @@ define('views/user/fields/generate-password', ['views/fields/base'], function (D
                 }
             }
 
-            var either = length - (letters + numbers + upperCase + lowerCase);
+            let either = length - (letters + numbers + upperCase + lowerCase);
 
             if (either < 0) {
                 either = 0;
             }
 
-            var setList = [letters, numbers, either, upperCase, lowerCase];
+            const setList = [letters, numbers, either, upperCase, lowerCase];
 
-            var shuffle = function (array) {
-                var currentIndex = array.length, temporaryValue, randomIndex;
+            const shuffle = function (array) {
+                let currentIndex = array.length, temporaryValue, randomIndex;
 
                 while (0 !== currentIndex) {
                     randomIndex = Math.floor(Math.random() * currentIndex);
@@ -148,14 +156,10 @@ define('views/user/fields/generate-password', ['views/fields/base'], function (D
                 return array;
             };
 
-            var array = setList.map(
-                function (len, i) {
-                    return Array(len).fill(chars[i]).map(
-                        function (x) {
-                            return x[Math.floor(Math.random() * x.length)];
-                        }
-                    ).join('');
-                }
+            const array = setList.map(
+                (len, i) => Array(len).fill(chars[i]).map(
+                    x => x[Math.floor(Math.random() * x.length)]
+                ).join('')
             ).concat();
 
             return shuffle(array).join('');
