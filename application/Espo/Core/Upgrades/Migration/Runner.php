@@ -59,7 +59,7 @@ class Runner
         $prepareSteps = $this->stepsProvider->getPrepare($version, $targetVersion);
 
         if ($prepareSteps !== []) {
-            $io->write(" Running prepare migrations...");
+            $io->writeLine("Running prepare migrations...");
 
             foreach ($prepareSteps as $step) {
                 $this->runPrepareStep($io, $step);
@@ -69,12 +69,12 @@ class Runner
         $afterSteps = $this->stepsProvider->getAfterUpgrade($version, $targetVersion);
 
         if ($afterSteps === []) {
-            $io->writeLine(" No migrations to run.");
+            $io->writeLine("No migrations to run.");
 
             return;
         }
 
-        $io->write(" Running after-upgrade migrations...");
+        $io->writeLine("Running after-upgrade migrations...");
 
         foreach ($afterSteps as $step) {
             $this->runAfterUpgradeStep($io, $step);
@@ -84,12 +84,12 @@ class Runner
         $this->updateVersion($targetVersion);
         $this->dataManager->updateAppTimestamp();
 
-        $io->writeLine(" Completed.");
+        $io->writeLine("Completed.");
     }
 
     private function runAfterUpgradeStep(IO $io, string $step): void
     {
-        $io->write("    $step...");
+        $io->write("  $step...");
 
         $isSuccessful = $this->stepRunner->runAfterUpgrade($step);
 
@@ -101,7 +101,7 @@ class Runner
 
         $io->writeLine(" FAIL");
 
-        throw new RuntimeException();
+        throw new RuntimeException("Step process failed.");
     }
 
     private function runPrepareStep(IO $io, string $step): void

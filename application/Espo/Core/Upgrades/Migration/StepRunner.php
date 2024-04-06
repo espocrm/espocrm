@@ -31,6 +31,7 @@ namespace Espo\Core\Upgrades\Migration;
 
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Log;
 use RuntimeException;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
@@ -39,18 +40,21 @@ class StepRunner
 {
     public function __construct(
         private Config $config,
-        private InjectableFactory $injectableFactory
+        private InjectableFactory $injectableFactory,
+        private Log $log
     ) {}
 
     public function runAfterUpgrade(string $step): bool
     {
         $phpExecutablePath = $this->getPhpExecutablePath();
 
-        $command = "command.php migration-version-step --step=$step";
+        $command = "command.php";
 
-        $process = new Process([$phpExecutablePath, $command]);
+        $process = new Process([$phpExecutablePath, $command, 'migration-version-step', "--step=$step"]);
         $process->setTimeout(null);
         $process->run();
+
+        $this->processLogging($process);
 
         return $process->isSuccessful();
     }
@@ -79,5 +83,18 @@ class StepRunner
         }
 
         return $phpExecutablePath;
+    }
+
+    private function processLogging(Process $process): void
+    {
+        if ($process->isSuccessful()) {
+            return;
+        }
+
+        $output = $process->getOutput();
+
+        if ($output) {
+            $this->log->error("Migration step command: " . $output);
+        }
     }
 }

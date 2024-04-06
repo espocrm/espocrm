@@ -55,5 +55,6 @@ class MigrationVersionStep implements Command
         $this->afterUpgradeRunner->run($step);
 
         $io->writeLine("Done.");
+        $io->setExitStatus(0);
     }
 }
