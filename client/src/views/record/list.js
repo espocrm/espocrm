@@ -570,8 +570,10 @@ class ListRecordView extends View {
             this.actionQuickView({id: id});
         },
         /** @this ListRecordView */
-        'click [data-action="showMore"]': function () {
-            this.showMoreRecords();
+        'click [data-action="showMore"]': async function () {
+            await this.showMoreRecords();
+
+            this.focusOnList();
         },
         'mousedown a.sort': function (e) {
             e.preventDefault();
@@ -692,6 +694,16 @@ class ListRecordView extends View {
         },
     }
 
+    focusOnList() {
+        const element = /** @type {HTMLElement} */this.$el.find('.list').get(0);
+
+        if (!element) {
+            return;
+        }
+
+        element.focus({preventScroll: true});
+    }
+
     /**
      * @private
      * @param {'first'|'last'|'next'|'previous'|'current'} page
@@ -702,6 +714,7 @@ class ListRecordView extends View {
         const onSync = () => {
             Espo.Ui.notify(false);
             this.trigger('after:paginate');
+            this.focusOnList();
         };
 
         if (page === 'current') {
