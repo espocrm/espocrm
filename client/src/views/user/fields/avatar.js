@@ -30,6 +30,14 @@ import ImageFieldView from 'views/fields/image';
 
 class UserAvatarFieldView extends ImageFieldView {
 
+    getAttributeList() {
+        if (this.isEditMode()) {
+            return super.getAttributeList();
+        }
+
+        return [];
+    }
+
     setup() {
         super.setup();
 
