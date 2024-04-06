@@ -47,9 +47,13 @@ define('views/user/fields/generate-password', ['views/fields/base'], function (D
                     return;
                 }
 
-                this.model.set({
-                    passwordPreview: '',
-                });
+                if (value !== undefined) {
+                    this.model.set('passwordPreview', null);
+
+                    return;
+                }
+
+                this.model.unset('passwordPreview');
             });
 
             this.strengthParams = this.options.strengthParams || {};
