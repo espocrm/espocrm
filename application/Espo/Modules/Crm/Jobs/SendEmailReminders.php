@@ -35,7 +35,7 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Log;
-use Espo\Modules\Crm\Business\Reminder\EmailReminder;
+use Espo\Modules\Crm\Tools\Reminder\Sender\EmailReminder;
 use Espo\Modules\Crm\Entities\Reminder;
 use Throwable;
 use DateTime;

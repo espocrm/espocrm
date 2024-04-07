@@ -27,7 +27,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Business\Reminder;
+namespace Espo\Modules\Crm\Tools\Reminder\Sender;
 
 use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Entities\Email;
