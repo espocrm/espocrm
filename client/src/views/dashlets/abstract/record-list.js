@@ -135,7 +135,7 @@ class RecordListDashletView extends BaseDashletView {
             this.createView('list', viewName, {
                 collection: collection,
                 selector: '.list-container',
-                pagination: this.getOption('pagination') ? 'bottom' : false,
+                pagination: !!this.getOption('pagination'),
                 type: 'listDashlet',
                 rowActionsView: this.rowActionsView,
                 checkboxes: false,
