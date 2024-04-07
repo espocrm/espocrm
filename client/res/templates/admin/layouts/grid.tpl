@@ -26,7 +26,7 @@
             <header>{{translate 'Available Fields' scope='Admin'}}</header>
             <ul class="disabled cells clearfix">
                 {{#each disabledFields}}
-                <li class="cell" data-name="{{./this}}">
+                <li class="cell" data-name="{{./this}}" title="{{translate this scope=../scope category='fields'}}">
                     <div class="left" style="width: calc(100% - 14px);">
                         {{translate this scope=../scope category='fields'}}
                     </div>

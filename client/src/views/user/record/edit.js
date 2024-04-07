@@ -124,11 +124,15 @@ class UserEditRecordView extends EditRecordView {
 
         this.hideField('sendAccessInfo');
 
+        if (!this.model.has('sendAccessInfo')) {
+            return;
+        }
+
         this.model.set('sendAccessInfo', false);
     }
 
     controlSendAccessInfoFieldForNew() {
-        let skipSettingTrue = this.recordHelper.getFieldStateParam('sendAccessInfo', 'hidden') === false;
+        const skipSettingTrue = this.recordHelper.getFieldStateParam('sendAccessInfo', 'hidden') === false;
 
         if (this.isPasswordSendable()) {
             this.showField('sendAccessInfo');
@@ -173,7 +177,7 @@ class UserEditRecordView extends EditRecordView {
     getGridLayout(callback) {
         this.getHelper().layoutManager
             .get(this.model.entityType, this.options.layoutName || this.layoutName, simpleLayout => {
-                let layout = Espo.Utils.cloneDeep(simpleLayout);
+                const layout = Espo.Utils.cloneDeep(simpleLayout);
 
                 layout.push({
                     "label": "Teams and Access Control",
@@ -279,7 +283,7 @@ class UserEditRecordView extends EditRecordView {
                     });
                 }
 
-                let gridLayout = {
+                const gridLayout = {
                     type: 'record',
                     layout: this.convertDetailLayout(layout),
                 };
@@ -302,7 +306,7 @@ class UserEditRecordView extends EditRecordView {
     }
 
     fetch() {
-        let data = super.fetch();
+        const data = super.fetch();
 
         if (!this.isNew) {
             if (

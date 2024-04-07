@@ -11,7 +11,7 @@
 
 #layout ul.panels > li {
     padding: 5px 10px;
-    margin-bottom: 20px;
+    margin-bottom: 14px;
     min-height: 80px;
     border: 1px solid var(--select-item-border);
     border-radius: var(--border-radius);

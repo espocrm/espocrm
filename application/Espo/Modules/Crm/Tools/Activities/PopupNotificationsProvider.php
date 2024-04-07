@@ -113,7 +113,8 @@ class PopupNotificationsProvider implements Provider
 
             if (
                 $entity instanceof CoreEntity &&
-                $entity->hasLinkMultipleField('users')
+                $entity->hasLinkMultipleField('users') &&
+                $entity->hasAttribute('usersColumns')
             ) {
                 $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
 

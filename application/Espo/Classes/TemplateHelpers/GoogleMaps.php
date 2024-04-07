@@ -165,7 +165,7 @@ class GoogleMaps implements Helper
 
         $url = "https://maps.googleapis.com/maps/api/staticmap?" .
             'center=' . $addressEncoded .
-            'format=' . $format .
+            '&format=' . $format .
             '&size=' . $size .
             '&key=' . $apiKey;
 
