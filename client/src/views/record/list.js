@@ -56,6 +56,50 @@ class ListRecordView extends View {
      * @property {Object.<string, string|number|boolean>} [data] Data attributes.
      */
 
+    // @todo Rename stickedBarDisabled.
+
+    /**
+     * List view options.
+     *
+     * @typedef {Record} module:views/record/list~options
+     * @property {import('collection').default} collection A collection.
+     * @property {module:views/record/list~columnDefs[]} [listLayout] A layout.
+     * @property {string} [layoutName] A layout name.
+     * @property {boolean} [checkboxes] To show row checkboxes.
+     * @property {boolean} [selectable] Clicking on the record link will trigger the 'select' event.
+     * @property {boolean} [skipBuildRows] Do not build rows on initialization. Use when the collection will be fetched
+     *    afterward.
+     * @property {boolean} [buttonsDisabled] Disable buttons.
+     * @property {boolean} [checkAllResultDisabled] Disable select-all-results.
+     * @property {boolean} [pagination] To enable the pagination.
+     * @property {boolean} [headerDisabled] Disable the header.
+     * @property {boolean} [noDataDisabled] Disable the no-data label (when no results).
+     * @property {string} [rowActionsView] A row actions view.
+     * @property {boolean} [rowActionsDisabled] Disable row actions.
+     * @property {boolean} [showMore] The show-more button.
+     * @property {boolean} [keepCurrentRootUrl] Keep a current root URL.
+     * @property {boolean} [stickedBarDisabled] Disable the sticky bar.
+     * @property {boolean} [massActionsDisabled] Disable mass actions.
+     * @property {module:views/record/list~dropdownItem[]} [dropdownItemList] Dropdown items.
+     * @property {string[]} [mandatorySelectAttributeList] Mandatory select attributes. Attributes to be selected
+     *     regardless being in the layout.
+     * @property {boolean} [editDisabled] Disable edit.
+     * @property {boolean} [removeDisabled] Disable remove.
+     * @property {boolean} [showCount] To show a record count.
+     * @property {boolean} [forceDisplayTopBar] Force displaying the top bar even if empty.
+     * @property {boolean} [unlinkMassAction] Enable the 'unlink' mass-action.
+     * @property {Record} [rowActionsOptions] Row-actions options.
+     * @property {string[]} [additionalRowActionList] Additional row-action list.
+     * @property {boolean} [settingsEnabled] Enable settings dropdown.
+     */
+
+    /**
+     * @param {module:views/record/list~options | Record} options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
+
     /** @inheritDoc */
     template = 'record/list'
 
@@ -81,7 +125,7 @@ class ListRecordView extends View {
     checkboxes = true
 
     /**
-     * If true clicking on the record link will trigger 'select' event with model passed.
+     * If true clicking on the record link will trigger the 'select' event with model passed.
      * Can be overridden by an option parameter.
      */
     selectable = false
@@ -180,7 +224,7 @@ class ListRecordView extends View {
     dropdownItemList = []
 
     /**
-     * Disable a header. Can be overridden by an option parameter.
+     * Disable the header. Can be overridden by an option parameter.
      *
      * @protected
      */
@@ -202,7 +246,7 @@ class ListRecordView extends View {
 
     /**
      * Mandatory select attributes. Can be overridden by an option parameter.
-     * Attributes to be selected regardless being on a layout.
+     * Attributes to be selected regardless being in the layout.
      *
      * @protected
      * @type {string[]|null}
@@ -466,7 +510,7 @@ class ListRecordView extends View {
     mergeDisabled = false
 
     /**
-     * Disable a no-data label (when no result).
+     * Disable the no-data label (when no result).
      *
      * @protected
      */
