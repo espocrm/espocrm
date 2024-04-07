@@ -5,19 +5,10 @@
                 {"name": "name"}
             ],
             [
+                {"name": "isGlobal"}
+            ],
+            [
                 {"name": "parent"}
-            ],
-            [
-                {"name": "action"}
-            ],
-            [
-                {"name": "emailFolder"}
-            ],
-            [
-                {"name": "groupEmailFolder"}
-            ],
-            [
-                {"name": "markAsRead"}
             ],
             [
                 {"name": "from"}
@@ -33,6 +24,22 @@
             ],
             [
                 {"name": "bodyContainsAll"}
+            ]
+        ]
+    },
+    {
+        "rows": [
+            [
+                {"name": "action"}
+            ],
+            [
+                {"name": "emailFolder"}
+            ],
+            [
+                {"name": "groupEmailFolder"}
+            ],
+            [
+                {"name": "markAsRead"}
             ]
         ]
     }
