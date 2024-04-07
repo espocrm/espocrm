@@ -407,24 +407,8 @@ class Service
 
         $queryList = [$builder->build()];
 
-        $link = null;
-
-        switch ($entityType) {
-            case Contact::ENTITY_TYPE:
-                $link = 'contacts';
-
-                break;
-
-            case Lead::ENTITY_TYPE:
-                $link = 'leads';
-
-                break;
-
-            case User::ENTITY_TYPE:
-                $link = 'users';
-
-                break;
-        }
+        /** @var ?string $link */
+        $link = $this->metadata->get("scopes.$targetEntityType.attendeeLinkMap.$entityType");
 
         if (!$link) {
             return $queryList;
