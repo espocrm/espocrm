@@ -307,6 +307,25 @@ class EmailFromAddressVarchar extends BaseFieldView {
             );
         }
 
+        if (this.name === 'from' && this.getAcl().check('EmailFilter', 'create')) {
+            if ($ul.children().length) {
+                $ul.append(`<li class="divider"></li>`)
+            }
+
+            const url = '#EmailFilter/create?from=' + encodeURI(address) +
+                '&returnUrl=' + encodeURI(this.getRouter().getCurrentUrl());
+
+            $ul.append(
+                $('<li>')
+                    .append(
+                        $('<a>')
+                            .attr('tabindex', '0')
+                            .attr('href', url)
+                            .text(this.translate('Create EmailFilter', 'labels', 'EmailFilter'))
+                    )
+            );
+        }
+
         return $container.get(0).outerHTML;
     }
 
