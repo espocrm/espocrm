@@ -56,8 +56,6 @@ class ListRecordView extends View {
      * @property {Object.<string, string|number|boolean>} [data] Data attributes.
      */
 
-    // @todo Rename stickedBarDisabled.
-
     /**
      * List view options.
      *
@@ -78,7 +76,7 @@ class ListRecordView extends View {
      * @property {boolean} [rowActionsDisabled] Disable row actions.
      * @property {boolean} [showMore] The show-more button.
      * @property {boolean} [keepCurrentRootUrl] Keep a current root URL.
-     * @property {boolean} [stickedBarDisabled] Disable the sticky bar.
+     * @property {boolean} [stickyBarDisabled] Disable the sticky bar.
      * @property {boolean} [massActionsDisabled] Disable mass actions.
      * @property {module:views/record/list~dropdownItem[]} [dropdownItemList] Dropdown items.
      * @property {string[]} [mandatorySelectAttributeList] Mandatory select attributes. Attributes to be selected
@@ -465,7 +463,7 @@ class ListRecordView extends View {
      *
      * @protected
      */
-    stickedBarDisabled = false
+    stickyBarDisabled = false
 
     /**
      * Disable the follow/unfollow mass action.
@@ -870,8 +868,8 @@ class ListRecordView extends View {
         this.$el.find('.actions-button').removeClass('hidden');
 
         if (
-            !this.options.stickedBarDisabled &&
-            !this.stickedBarDisabled &&
+            !this.options.stickyBarDisabled &&
+            !this.stickyBarDisabled &&
             this.massActionList.length
         ) {
             if (!this._stickyBarHelper) {
