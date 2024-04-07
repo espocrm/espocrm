@@ -106,7 +106,10 @@ class EmailReminder
             return;
         }
 
-        if ($entity->hasLinkMultipleField('users')) {
+        if (
+            $entity->hasLinkMultipleField('users') &&
+            $entity->hasAttribute('usersColumns')
+        ) {
             $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
             $status = $entity->getLinkMultipleColumn('users', 'status', $user->getId());
 
