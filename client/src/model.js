@@ -772,9 +772,15 @@ class Model {
     }
 
     /**
+     * @typedef {Object} model:model~setRelateItem
+     * @property {string} link
+     * @property {import('model').default} model
+     */
+
+    /**
      * Set relate data (when creating a related record).
      *
-     * @param {Object} data
+     * @param {model:model~setRelateItem | model:model~setRelateItem[]} data
      */
     setRelate(data) {
         const setRelate = options => {

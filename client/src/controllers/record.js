@@ -76,7 +76,10 @@ class RecordController extends Controller {
     }
 
     /**
-     * @param {Record} options
+     * @param {{
+     *     isReturn?: boolean,
+     *     primaryFilter?: string,
+     * } | Record} options
      */
     actionList(options) {
         const isReturn = options.isReturn || this.getRouter().backProcessed;
@@ -128,7 +131,10 @@ class RecordController extends Controller {
 
     /**
      * @protected
-     * @param {Object} options
+     * @param {{
+     *     returnUrl?: string,
+     *     returnDispatchParams?: Record,
+     * } | Record} options
      * @param {module:model} model
      * @param {string|null} [view]
      */
@@ -147,7 +153,7 @@ class RecordController extends Controller {
     /**
      * @protected
      * @param {module:model} model
-     * @param {Object} options
+     * @param {Record} options
      */
     prepareModelView(model, options) {}
 
@@ -158,7 +164,7 @@ class RecordController extends Controller {
      *     id?: string,
      *     isReturn?: boolean,
      *     isAfterCreate?: boolean,
-     * }} options
+     * } | Record} options
      */
     actionView(options) {
         const id = options.id;
@@ -255,7 +261,7 @@ class RecordController extends Controller {
     /**
      * @protected
      * @param {module:model} model
-     * @param {Object} options
+     * @param {Record} options
      */
     prepareModelCreate(model, options) {
         this.listenToOnce(model, 'before:save', () => {
@@ -293,6 +299,16 @@ class RecordController extends Controller {
         });
     }
 
+    /**
+     * @param {{
+     *     options?: Record,
+     *     relate?: model:model~setRelateItem | model:model~setRelateItem[],
+     *     returnUrl?: string,
+     *     returnDispatchParams?: Record,
+     *     options?: Record,
+     *     attributes?: Record,
+     * } | Record} [options]
+     */
     create(options) {
         options = options || {};
 
@@ -325,6 +341,16 @@ class RecordController extends Controller {
         });
     }
 
+    /**
+     * @param {{
+     *     options?: Record,
+     *     relate?: model:model~setRelateItem | model:model~setRelateItem[],
+     *     returnUrl?: string,
+     *     returnDispatchParams?: Record,
+     *     options?: Record,
+     *     attributes?: Record,
+     * } | Record} [options]
+     */
     actionCreate(options) {
         this.create(options);
     }
@@ -338,7 +364,7 @@ class RecordController extends Controller {
     /**
      * @protected
      * @param {module:model} model
-     * @param {Object} options
+     * @param {Record} options
      */
     prepareModelEdit(model, options) {
         this.listenToOnce(model, 'before:save', () => {
@@ -356,6 +382,17 @@ class RecordController extends Controller {
         });
     }
 
+    /**
+     * @param {{
+     *     id: string,
+     *     options?: Record,
+     *     model?: import('model').default,
+     *     returnUrl?: string,
+     *     attributes?: Record,
+     *     highlightFieldList?: string[],
+     *     returnDispatchParams?: Record,
+     * }} options
+     */
     actionEdit(options) {
         const id = options.id;
 
@@ -412,6 +449,12 @@ class RecordController extends Controller {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {{
+     *     ids: string,
+     *     collection: import('collection').default,
+     * }} options
+     */
     actionMerge(options) {
         const ids = options.ids.split(',');
 
@@ -448,6 +491,12 @@ class RecordController extends Controller {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    /**
+     * @param {{
+     *     id: string,
+     *     link: string,
+     * }} options
+     */
     actionRelated(options) {
         const id = options.id;
         const link = options.link;
