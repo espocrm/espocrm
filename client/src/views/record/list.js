@@ -60,6 +60,7 @@ class ListRecordView extends View {
      * @typedef {Record} module:views/record/list~options
      * @property {import('collection').default} collection A collection.
      * @property {module:views/record/list~columnDefs[]} [listLayout] A layout.
+     * @property {string|'list'|'listSmall'} [type] A type.
      * @property {string} [layoutName] A layout name.
      * @property {boolean} [checkboxes] To show row checkboxes.
      * @property {boolean} [selectable] Clicking on the record link will trigger the 'select' event.

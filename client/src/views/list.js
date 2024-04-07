@@ -615,6 +615,7 @@ class ListView extends MainView {
      * @return {Promise<module:views/record/list>}
      */
     createListRecordView(fetch) {
+        /** @type {module:views/record/list~options | Bull.View~Options} */
         const o = {
             collection: this.collection,
             selector: '.list-container',
@@ -650,7 +651,7 @@ class ListView extends MainView {
         const listViewName = this.getRecordViewName();
 
         // noinspection JSValidateTypes
-        return this.createView('list', listViewName, o, view => {
+        return this.createView('list', listViewName, o, /** import('views/record/list').default */view => {
             if (!this.hasParentView()) {
                 view.undelegateEvents();
 

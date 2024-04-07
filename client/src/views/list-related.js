@@ -176,6 +176,7 @@ class ListRelatedView extends MainView {
             throw new Error();
         }
 
+        /** @type {Record} */
         this.panelDefs = this.getMetadata().get(['clientDefs', this.scope, 'relationshipPanels', this.link]) || {};
 
         if (this.panelDefs.fullFormDisabled) {
@@ -524,6 +525,7 @@ class ListRelatedView extends MainView {
      * Create a record list view.
      */
     createListRecordView() {
+        /** @type {module:views/record/list~options | Bull.View~Options} */
         let o = {
             collection: this.collection,
             selector: '.list-container',
@@ -557,6 +559,7 @@ class ListRelatedView extends MainView {
         const massUnlinkDisabled = this.panelDefs.massUnlinkDisabled ||
             this.panelDefs.unlinkDisabled || this.unlinkDisabled;
 
+        /** @type {module:views/record/list~options | Bull.View~Options} */
         o = {
             unlinkMassAction: !massUnlinkDisabled,
             skipBuildRows: true,
