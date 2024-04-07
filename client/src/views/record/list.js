@@ -39,8 +39,6 @@ import StickyBarHelper from 'helpers/list/misc/sticky-bar';
 
 /**
  * A record-list view. Renders and processes list items, actions.
- *
- * @todo Document all options.
  */
 class ListRecordView extends View {
 
