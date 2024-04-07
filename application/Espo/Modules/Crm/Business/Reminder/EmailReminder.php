@@ -29,7 +29,11 @@
 
 namespace Espo\Modules\Crm\Business\Reminder;
 
-use Espo\ORM\Entity;
+use Espo\Core\Mail\Exceptions\SendingError;
+use Espo\Entities\Email;
+use Espo\Entities\User;
+use Espo\Modules\Crm\Entities\Meeting;
+use Espo\Modules\Crm\Entities\Reminder;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Utils\Util;
 use Espo\Core\Htmlizer\HtmlizerFactory as HtmlizerFactory;
@@ -38,71 +42,40 @@ use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\TemplateFileManager;
+use RuntimeException;
 
 class EmailReminder
 {
-    /**
-     * @var EntityManager
-     */
-    protected $entityManager;
-
-    /**
-     * @var EmailSender
-     */
-    protected $emailSender;
-
-    /**
-     * @var Config
-     */
-    protected $config;
-
-    /**
-     * @var TemplateFileManager
-     */
-    protected $templateFileManager;
-
-    /**
-     * @var Language
-     */
-    protected $language;
-
-    /**
-     * @var HtmlizerFactory
-     */
-    protected $htmlizerFactory;
-
     public function __construct(
-        EntityManager $entityManager,
-        TemplateFileManager $templateFileManager,
-        EmailSender $emailSender,
-        Config $config,
-        HtmlizerFactory $htmlizerFactory,
-        Language $language
-    ) {
-        $this->entityManager = $entityManager;
-        $this->templateFileManager = $templateFileManager;
-        $this->emailSender = $emailSender;
-        $this->config = $config;
-        $this->language = $language;
-        $this->htmlizerFactory = $htmlizerFactory;
-    }
+        private EntityManager $entityManager,
+        private TemplateFileManager $templateFileManager,
+        private EmailSender $emailSender,
+        private Config $config,
+        private HtmlizerFactory $htmlizerFactory,
+        private Language $language
+    ) {}
 
-    public function send(Entity $reminder): void
+    /**
+     * @throws SendingError
+     */
+    public function send(Reminder $reminder): void
     {
-        $user = $this->entityManager->getEntity('User', $reminder->get('userId'));
-        $entity = $this->entityManager->getEntity($reminder->get('entityType'), $reminder->get('entityId'));
+        $entityType = $reminder->getTargetEntityType();
+        $entityId = $reminder->getTargetEntityId();
+        $userId = $reminder->getUserId();
 
-        if (!$user || !$entity) {
-            return;
+        if (!$entityType || !$entityId || !$userId) {
+            throw new RuntimeException("Bad reminder.");
         }
 
-        $emailAddress = $user->get('emailAddress');
+        $user = $this->entityManager->getRDBRepositoryByClass(User::class)->getById($userId);
+        $entity = $this->entityManager->getEntityById($entityType, $entityId);
 
-        if (!$emailAddress) {
-            return;
-        }
-
-        if (!$entity instanceof CoreEntity) {
+        if (
+            !$user ||
+            !$entity instanceof CoreEntity ||
+            !$user->getEmailAddress()
+        ) {
             return;
         }
 
@@ -113,39 +86,65 @@ class EmailReminder
             $entity->loadLinkMultipleField('users', ['status' => 'acceptanceStatus']);
             $status = $entity->getLinkMultipleColumn('users', 'status', $user->getId());
 
-            if ($status === 'Declined') {
+            if ($status === Meeting::ATTENDEE_STATUS_DECLINED) {
                 return;
             }
         }
 
-        $email = $this->entityManager->getNewEntity('Email');
+        [$subject, $body] = $this->getSubjectBody($entity, $user);
 
-        $email->set('to', $emailAddress);
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
 
+        $email->addToAddress($user->getEmailAddress());
+        $email->setSubject($subject);
+        $email->setBody($body);
+        $email->setIsHtml();
+
+        $this->emailSender->send($email);
+    }
+
+    /**
+     * @return array{string, string}
+     */
+    private function getTemplates(CoreEntity $entity): array
+    {
         $subjectTpl = $this->templateFileManager
             ->getTemplate('reminder', 'subject', $entity->getEntityType(), 'Crm');
 
         $bodyTpl = $this->templateFileManager
             ->getTemplate('reminder', 'body', $entity->getEntityType(), 'Crm');
 
+        return [$subjectTpl, $bodyTpl];
+    }
+
+    /**
+     * @return array{string, string}
+     */
+    private function getSubjectBody(CoreEntity $entity, User $user): array
+    {
+        $entityType = $entity->getEntityType();
+        $entityId = $entity->getId();
+
+        [$subjectTpl, $bodyTpl] = $this->getTemplates($entity);
+
         $subjectTpl = str_replace(["\n", "\r"], '', $subjectTpl);
 
-        $data = [];
-
         $siteUrl = rtrim($this->config->get('siteUrl'), '/');
-        $recordUrl = $siteUrl . '/#' . $entity->getEntityType() . '/view/' . $entity->getId();
+        $translatedEntityType = $this->language->translateLabel($entityType, 'scopeNames');
 
-        $data['recordUrl'] = $recordUrl;
-        $data['entityType'] = $this->language->translateLabel($entity->getEntityType(), 'scopeNames');
-        $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
-        $data['userName'] = $user->get('name');
+        $data = [
+            'recordUrl' => "$siteUrl/#$entityType/view/$entityId",
+            'entityType' => $translatedEntityType,
+            'entityTypeLowerFirst' => Util::mbLowerCaseFirst($translatedEntityType),
+            'userName' => $user->getName(),
+        ];
 
         $htmlizer = $this->htmlizerFactory->createForUser($user);
 
         $subject = $htmlizer->render(
             $entity,
             $subjectTpl,
-            'reminder-email-subject-' . $entity->getEntityType(),
+            'reminder-email-subject-' . $entityType,
             $data,
             true
         );
@@ -153,15 +152,11 @@ class EmailReminder
         $body = $htmlizer->render(
             $entity,
             $bodyTpl,
-            'reminder-email-body-' . $entity->getEntityType(),
+            'reminder-email-body-' . $entityType,
             $data,
             false
         );
 
-        $email->set('subject', $subject);
-        $email->set('body', $body);
-        $email->set('isHtml', true);
-
-        $this->emailSender->send($email);
+        return [$subject, $body];
     }
 }
