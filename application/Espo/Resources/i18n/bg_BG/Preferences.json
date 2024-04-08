@@ -31,7 +31,8 @@
     "assignmentNotificationsIgnoreEntityTypeList": "Известия за назначения на записи (в приложението)",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Известия за назначения на записи (по имейл)",
     "dashboardLocked": "Заключи дашборда",
-    "textSearchStoringDisabled": "Деактивиране на съхраняването на текстови филтри"
+    "textSearchStoringDisabled": "Деактивиране на съхраняването на текстови филтри",
+    "calendarSlotDuration": "Продължителност на календарния слот"
   },
   "options": {
     "weekStart": {
@@ -51,5 +52,10 @@
     "doNotFillAssignedUserIfNotRequired": "При създаване на запис назначеният потребител няма да бъде попълнен със собствен потребител, освен ако полето не е задължително.",
     "followCreatedEntities": "Когато създавате нови записи, те ще бъдат следвани автоматично, дори ако са назначени на друг потребител.",
     "followCreatedEntityTypeList": "Когато създавате нови записи за избрани типове обекти, те ще бъдат следвани автоматично, дори ако са назначени на друг потребител."
+  },
+  "tabFields": {
+    "label": "Текст",
+    "iconClass": "Иконка",
+    "color": "Цвят"
   }
 }

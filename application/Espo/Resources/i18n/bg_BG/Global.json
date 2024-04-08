@@ -59,7 +59,8 @@
     "WorkingTimeRange": "Диапазон на работното време",
     "GroupEmailFolder": "Групова имейл папка",
     "AuthenticationProvider": "Доставчик на удостоверяване",
-    "GlobalStream": "Глобална активност"
+    "GlobalStream": "Глобална активност",
+    "WebhookQueueItem": "Обект в опашка на Webhook"
   },
   "scopeNamesPlural": {
     "Email": "Имейли",
@@ -108,7 +109,8 @@
     "WorkingTimeRange": "Диапазони на работно време",
     "GroupEmailFolder": "Групови имейл папки",
     "AuthenticationProvider": "Доставчици на удостоверяване",
-    "GlobalStream": "Глобална активност"
+    "GlobalStream": "Глобална активност",
+    "WebhookQueueItem": "Обекти в опашка на Webhook"
   },
   "labels": {
     "Misc": "Разни",
@@ -281,7 +283,14 @@
     "Hide Navigation Panel": "Скриване на страничния панел",
     "Print": "Принтиране",
     "Copy to Clipboard": "Бутон за копиране",
-    "Copied to clipboard": "Копирано в клипборда"
+    "Copied to clipboard": "Копирано в клипборда",
+    "Audit Log": "Одитна история",
+    "View Audit Log": "Преглед на одитна история",
+    "Previous Page": "Предишна страница",
+    "Next Page": "Следваща страница",
+    "First Page": "Първа страница",
+    "Last Page": "Последна страница",
+    "Page": "Страница"
   },
   "messages": {
     "pleaseWait": "Моля изчакайте...",
@@ -382,7 +391,9 @@
     "fieldPhoneTooLong": "{field} е твърде дълго",
     "barcodeInvalid": "{field} не е валидно {type}",
     "noLinkAccess": "Не може да свържете със запис {foreignEntityType} чрез връзката „{link}“. Нямате достъп.",
-    "attemptIntervalFailure": "Операцията не е разрешена през определен интервал от време. Изчакайте известно време преди следващия опит."
+    "attemptIntervalFailure": "Операцията не е разрешена през определен интервал от време. Изчакайте известно време преди следващия опит.",
+    "confirmRestoreFromAudit": "Предишните стойности ще бъдат зададени във формуляр. След това можете да запишете записа, за да възстановите предишните стойности.",
+    "pageNumberIsOutOfBound": "Номер на страницата е невалиден"
   },
   "boolFilters": {
     "onlyMy": "Само мои",
@@ -443,7 +454,9 @@
     "types": "Типове",
     "middleName": "Презиме",
     "emailAddressIsInvalid": "Имейл адреса е невалиден",
-    "phoneNumberIsInvalid": "Телефонния номер е невалиден"
+    "phoneNumberIsInvalid": "Телефонния номер е невалиден",
+    "users": "Потребители",
+    "childList": "Дъщерен списък"
   },
   "links": {
     "assignedUser": "Назначен потребител",

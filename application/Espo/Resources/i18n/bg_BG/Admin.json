@@ -82,7 +82,8 @@
     "Formula Sandbox": "Тестър за формули",
     "Working Time Calendars": "Календари на работното време",
     "Group Email Folders": "Групови имейл папки",
-    "Authentication Providers": "Доставчици на удостоверяване"
+    "Authentication Providers": "Доставчици на удостоверяване",
+    "Setup": "Инсталация"
   },
   "layouts": {
     "list": "Лист",
@@ -201,7 +202,9 @@
     "readOnlyAfterCreate": "Read-only след създаване",
     "createButton": "Бутон за създаване",
     "autocompleteOnEmpty": "Автоматично довършване при натискане",
-    "relateOnImport": "Релации при импорт"
+    "relateOnImport": "Релации при импорт",
+    "aclScope": "ACL обхват",
+    "onlyAdmin": "Само за администратори"
   },
   "messages": {
     "selectEntityType": "Изберете вида обект от лявото меню.",

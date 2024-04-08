@@ -30,7 +30,8 @@
     "opportunityAmountCurrency": "Валута на сумата в сделката",
     "acceptanceStatusMeetings": "Статус на приемане (Срещи)",
     "acceptanceStatusCalls": "Статус на приемане (Разговори)",
-    "convertedAt": "Конвертирана на"
+    "convertedAt": "Конвертирана на",
+    "originalEmail": "Оригинален имейл"
   },
   "links": {
     "targetLists": "Целеви списъци",
