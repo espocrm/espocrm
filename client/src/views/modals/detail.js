@@ -429,26 +429,25 @@ class DetailModalView extends ModalView {
             return;
         }
 
+        const collection = this.model.collection;
+
         const indexOfRecord = this.indexOfRecord;
 
         let previousButtonEnabled = false;
         let nextButtonEnabled = false;
 
-        if (indexOfRecord > 0) {
+        if (indexOfRecord > 0 || collection.offset > 0) {
             previousButtonEnabled = true;
         }
 
-        if (indexOfRecord < this.model.collection.total - 1) {
+        if (indexOfRecord < collection.total - 1 - collection.offset) {
             nextButtonEnabled = true;
         }
-        else {
-            if (this.model.collection.total === -1) {
-                nextButtonEnabled = true;
-            } else if (this.model.collection.total === -2) {
-                if (indexOfRecord < this.model.collection.length - 1) {
-                    nextButtonEnabled = true;
-                }
-            }
+        else if (collection.total === -1) {
+            nextButtonEnabled = true;
+        }
+        else if (collection.total === -2 && indexOfRecord < collection.length - 1 - collection.offset) {
+            nextButtonEnabled = true;
         }
 
         if (previousButtonEnabled) {
@@ -514,7 +513,30 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        if (!(this.indexOfRecord > 0)) {
+        const collection = this.model.collection;
+
+        if (this.indexOfRecord <= 0 && !collection.offset) {
+            return;
+        }
+
+        if (
+            this.indexOfRecord === 0 &&
+            collection.offset > 0 &&
+            collection.maxSize
+        ) {
+            collection.offset = Math.max(0, collection.offset - collection.maxSize);
+
+            collection.fetch()
+                .then(() => {
+                    const indexOfRecord = collection.length - 1;
+
+                    if (indexOfRecord < 0) {
+                        return;
+                    }
+
+                    this.switchToModelByIndex(indexOfRecord);
+                });
+
             return;
         }
 
@@ -528,19 +550,25 @@ class DetailModalView extends ModalView {
             return;
         }
 
-        if (!(this.indexOfRecord < this.model.collection.total - 1) && this.model.collection.total >= 0) {
-            return;
-        }
-
-        if (this.model.collection.total === -2 && this.indexOfRecord >= this.model.collection.length - 1) {
-            return;
-        }
-
         const collection = this.model.collection;
+
+        if (
+            !(this.indexOfRecord < collection.total - 1 - collection.offset) &&
+            this.model.collection.total >= 0
+        ) {
+            return;
+        }
+
+        if (
+            collection.total === -2 &&
+            this.indexOfRecord >= collection.length - 1 - collection.offset
+        ) {
+            return;
+        }
 
         const indexOfRecord = this.indexOfRecord + 1;
 
-        if (indexOfRecord <= collection.length - 1) {
+        if (indexOfRecord <= collection.length - 1 - collection.offset) {
             this.switchToModelByIndex(indexOfRecord);
 
             return;

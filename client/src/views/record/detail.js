@@ -1669,7 +1669,7 @@ class DetailRecordView extends BaseRecordView {
         let nextButtonEnabled = false;
 
         if (navigateButtonsEnabled) {
-            if (this.indexOfRecord > 0) {
+            if (this.indexOfRecord > 0 || this.model.collection.offset) {
                 previousButtonEnabled = true;
             }
 
@@ -2256,23 +2256,34 @@ class DetailRecordView extends BaseRecordView {
     actionPrevious() {
         this.model.abortLastFetch();
 
-        let collection;
-
         if (!this.model.collection) {
-            collection = this.collection;
-
-            if (!collection) {
-                return;
-            }
-
-            this.indexOfRecord--;
-
-            if (this.indexOfRecord < 0) {
-                this.indexOfRecord = 0;
-            }
+            return;
         }
 
-        if (!(this.indexOfRecord > 0)) {
+        const collection = this.model.collection;
+
+        if (this.indexOfRecord <= 0 && !collection.offset) {
+            return;
+        }
+
+        if (
+            this.indexOfRecord === 0 &&
+            collection.offset > 0 &&
+            collection.maxSize
+        ) {
+            collection.offset = Math.max(0, collection.offset - collection.maxSize);
+
+            collection.fetch()
+                .then(() => {
+                    const indexOfRecord = collection.length - 1;
+
+                    if (indexOfRecord < 0) {
+                        return;
+                    }
+
+                    this.switchToModelByIndex(indexOfRecord);
+                });
+
             return;
         }
 
@@ -2284,24 +2295,11 @@ class DetailRecordView extends BaseRecordView {
     actionNext() {
         this.model.abortLastFetch();
 
-        let collection;
-
         if (!this.model.collection) {
-            collection = this.collection;
-
-            if (!collection) {
-                return;
-            }
-
-            this.indexOfRecord--;
-
-            if (this.indexOfRecord < 0) {
-                this.indexOfRecord = 0;
-            }
+            return;
         }
-        else {
-            collection = this.model.collection;
-        }
+
+        const collection = this.model.collection;
 
         if (!(this.indexOfRecord < collection.total - 1 - collection.offset) && collection.total >= 0) {
             return;
@@ -2313,7 +2311,7 @@ class DetailRecordView extends BaseRecordView {
 
         const indexOfRecord = this.indexOfRecord + 1;
 
-        if (indexOfRecord <= collection.length - 1) {
+        if (indexOfRecord <= collection.length - 1 - collection.offset) {
             this.switchToModelByIndex(indexOfRecord);
 
             return;
