@@ -1676,7 +1676,7 @@ class DetailRecordView extends BaseRecordView {
             const total = this.model.collection.total !== undefined ?
                 this.model.collection.total : this.model.collection.length;
 
-            if (this.indexOfRecord < total - 1) {
+            if (this.indexOfRecord < total - 1 - this.model.collection.offset) {
                 nextButtonEnabled = true;
             }
             else {
@@ -1684,7 +1684,7 @@ class DetailRecordView extends BaseRecordView {
                     nextButtonEnabled = true;
                 }
                 else if (total === -2) {
-                    if (this.indexOfRecord < this.model.collection.length - 1) {
+                    if (this.indexOfRecord < this.model.collection.length - 1 - this.model.collection.offset) {
                         nextButtonEnabled = true;
                     }
                 }
@@ -2235,7 +2235,9 @@ class DetailRecordView extends BaseRecordView {
         const model = collection.at(indexOfRecord);
 
         if (!model) {
-            throw new Error("Model is not found in collection by index.");
+            console.error("Model is not found in collection by index.");
+
+            return;
         }
 
         const id = model.id;
@@ -2301,11 +2303,11 @@ class DetailRecordView extends BaseRecordView {
             collection = this.model.collection;
         }
 
-        if (!(this.indexOfRecord < collection.total - 1) && collection.total >= 0) {
+        if (!(this.indexOfRecord < collection.total - 1 - collection.offset) && collection.total >= 0) {
             return;
         }
 
-        if (collection.total === -2 && this.indexOfRecord >= collection.length - 1) {
+        if (collection.total === -2 && this.indexOfRecord >= collection.length - 1 - collection.offset) {
             return;
         }
 
