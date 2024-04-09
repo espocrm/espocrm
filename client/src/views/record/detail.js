@@ -1669,14 +1669,14 @@ class DetailRecordView extends BaseRecordView {
         let nextButtonEnabled = false;
 
         if (navigateButtonsEnabled) {
-            if (this.indexOfRecord > 0) {
+            if (this.indexOfRecord > 0 || this.model.collection.offset) {
                 previousButtonEnabled = true;
             }
 
             const total = this.model.collection.total !== undefined ?
                 this.model.collection.total : this.model.collection.length;
 
-            if (this.indexOfRecord < total - 1) {
+            if (this.indexOfRecord < total - 1 - this.model.collection.offset) {
                 nextButtonEnabled = true;
             }
             else {
@@ -1684,7 +1684,7 @@ class DetailRecordView extends BaseRecordView {
                     nextButtonEnabled = true;
                 }
                 else if (total === -2) {
-                    if (this.indexOfRecord < this.model.collection.length - 1) {
+                    if (this.indexOfRecord < this.model.collection.length - 1 - this.model.collection.offset) {
                         nextButtonEnabled = true;
                     }
                 }
@@ -2235,7 +2235,9 @@ class DetailRecordView extends BaseRecordView {
         const model = collection.at(indexOfRecord);
 
         if (!model) {
-            throw new Error("Model is not found in collection by index.");
+            console.error("Model is not found in collection by index.");
+
+            return;
         }
 
         const id = model.id;
@@ -2254,23 +2256,34 @@ class DetailRecordView extends BaseRecordView {
     actionPrevious() {
         this.model.abortLastFetch();
 
-        let collection;
-
         if (!this.model.collection) {
-            collection = this.collection;
-
-            if (!collection) {
-                return;
-            }
-
-            this.indexOfRecord--;
-
-            if (this.indexOfRecord < 0) {
-                this.indexOfRecord = 0;
-            }
+            return;
         }
 
-        if (!(this.indexOfRecord > 0)) {
+        const collection = this.model.collection;
+
+        if (this.indexOfRecord <= 0 && !collection.offset) {
+            return;
+        }
+
+        if (
+            this.indexOfRecord === 0 &&
+            collection.offset > 0 &&
+            collection.maxSize
+        ) {
+            collection.offset = Math.max(0, collection.offset - collection.maxSize);
+
+            collection.fetch()
+                .then(() => {
+                    const indexOfRecord = collection.length - 1;
+
+                    if (indexOfRecord < 0) {
+                        return;
+                    }
+
+                    this.switchToModelByIndex(indexOfRecord);
+                });
+
             return;
         }
 
@@ -2282,36 +2295,23 @@ class DetailRecordView extends BaseRecordView {
     actionNext() {
         this.model.abortLastFetch();
 
-        let collection;
-
         if (!this.model.collection) {
-            collection = this.collection;
-
-            if (!collection) {
-                return;
-            }
-
-            this.indexOfRecord--;
-
-            if (this.indexOfRecord < 0) {
-                this.indexOfRecord = 0;
-            }
-        }
-        else {
-            collection = this.model.collection;
-        }
-
-        if (!(this.indexOfRecord < collection.total - 1) && collection.total >= 0) {
             return;
         }
 
-        if (collection.total === -2 && this.indexOfRecord >= collection.length - 1) {
+        const collection = this.model.collection;
+
+        if (!(this.indexOfRecord < collection.total - 1 - collection.offset) && collection.total >= 0) {
+            return;
+        }
+
+        if (collection.total === -2 && this.indexOfRecord >= collection.length - 1 - collection.offset) {
             return;
         }
 
         const indexOfRecord = this.indexOfRecord + 1;
 
-        if (indexOfRecord <= collection.length - 1) {
+        if (indexOfRecord <= collection.length - 1 - collection.offset) {
             this.switchToModelByIndex(indexOfRecord);
 
             return;

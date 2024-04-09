@@ -10,7 +10,8 @@
     "excludingActionList": "С изключение на",
     "optedOutCount": "Отписали се",
     "targetStatus": "Целеви статус",
-    "isOptedOut": "Отписал се"
+    "isOptedOut": "Отписал се",
+    "sourceCampaign": "Източник на кампанията"
   },
   "links": {
     "accounts": "Клиенти",
