@@ -843,7 +843,7 @@ class DetailRecordView extends BaseRecordView {
                     this.addDropdownItem({
                         label: 'Convert Currency',
                         name: 'convertCurrency',
-                        groupIndex: 3,
+                        groupIndex: 5,
                     });
                 }
             }
