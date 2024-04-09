@@ -19,6 +19,13 @@
             "noSystemUser": {
                 "type": "boolean",
                 "description": "Do not load the system user."
+            },
+            "allowedOptions": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "Allowed options."
             }
         }
     }

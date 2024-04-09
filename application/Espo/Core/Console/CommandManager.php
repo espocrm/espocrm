@@ -30,6 +30,7 @@
 namespace Espo\Core\Console;
 
 use Espo\Core\ApplicationUser;
+use Espo\Core\Console\Exceptions\InvalidArgument;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
@@ -53,7 +54,6 @@ class CommandManager
 
     /**
      * @param array<int, string> $argv
-     *
      * @return int<0, 255> Exit-status.
      */
     public function run(array $argv): int
@@ -76,6 +76,8 @@ class CommandManager
         if ($command === null) {
             throw new CommandNotSpecified("Command name is not specified.");
         }
+
+        $this->checkParams($command, $params);
 
         $io = new IO();
 
@@ -162,5 +164,24 @@ class CommandManager
         }
 
         $this->applicationUser->setupSystemUser();
+    }
+
+    private function checkParams(string $command, Params $params): void
+    {
+        $allowedOptions = $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'allowedOptions']);
+
+        if (!is_array($allowedOptions)) {
+            return;
+        }
+
+        $notAllowedOptions = array_diff(array_keys($params->getOptions()), $allowedOptions);
+
+        if ($notAllowedOptions === []) {
+            return;
+        }
+
+        $msg = sprintf("Not allowed options: %s.", implode(', ', $notAllowedOptions));
+
+        throw new InvalidArgument($msg);
     }
 }

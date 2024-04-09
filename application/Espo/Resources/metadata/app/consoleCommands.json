@@ -28,7 +28,12 @@
         "listed": true
     },
     "runJob": {
-        "listed": true
+        "listed": true,
+        "allowedOptions": [
+            "job",
+            "targetId",
+            "targetType"
+        ]
     },
     "version": {
         "listed": true,

@@ -30,6 +30,7 @@
 namespace tests\unit\Espo\Core\Console;
 
 use Espo\Core\ApplicationUser;
+use Espo\Core\Console\Exceptions\InvalidArgument;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\Console\CommandManager;
@@ -40,9 +41,9 @@ use PHPUnit\Framework\TestCase;
 
 class CommandManagerTest extends TestCase
 {
-    private $injectableFactory;
-    private $metadata;
-    private $manager;
+    private ?InjectableFactory $injectableFactory = null;
+    private ?Metadata $metadata = null;
+    private ?CommandManager $manager = null;
 
     protected function setUp() : void
     {
@@ -56,27 +57,40 @@ class CommandManagerTest extends TestCase
         $this->command = $this->createMock(Command::class);
     }
 
-    private function initTest(array $argv)
+    private function initTest(?array $allowedOptions = null)
     {
         $className = 'Test';
+
+        $map = [
+            [['app', 'consoleCommands', 'commandName', 'className'], null, $className],
+            [['app', 'consoleCommands', 'commandName', 'noSystemUser'], null, false],
+        ];
+
+        if ($allowedOptions !== null) {
+            $map[] = [['app', 'consoleCommands', 'commandName', 'allowedOptions'], null, $allowedOptions];
+        }
 
         $this->metadata
             ->expects($this->any())
             ->method('get')
-            ->willReturnMap([
-                [['app', 'consoleCommands', 'commandName', 'className'], null, $className],
-                [['app', 'consoleCommands', 'commandName', 'noSystemUser'], null, false],
-            ]);
+            ->willReturnMap($map);
 
         $this->injectableFactory
-            ->expects($this->once())
+            ->expects($this->any())
             ->method('create')
             ->with($className)
             ->willReturn($this->command);
+    }
+
+    public function testWithCommandPhp(): void
+    {
+        $argv = ['command.php', 'command-name', 'a1', 'a2', '--flag', '--flag-a', '-f', '--option-one=test'];
+
+        $this->initTest();
 
         $expectedParams = new Params(
             [
-               'optionOne' => 'test',
+                'optionOne' => 'test',
             ],
             ['flag', 'flagA', 'f'],
             ['a1', 'a2']
@@ -92,17 +106,62 @@ class CommandManagerTest extends TestCase
         $this->manager->run($argv);
     }
 
-    public function testWithCommandPhp()
-    {
-        $argv = ['command.php', 'command-name', 'a1', 'a2', '--flag', '--flag-a', '-f', '--option-one=test'];
-
-        $this->initTest($argv);
-    }
-
-    public function testWithoutCommandPhp()
+    public function testWithoutCommandPhp(): void
     {
         $argv = ['bin/command', 'command-name', 'a1', 'a2', '--flag', '--flag-a', '-f', '--option-one=test'];
 
-        $this->initTest($argv);
+        $this->initTest();
+
+        $expectedParams = new Params(
+            [
+                'optionOne' => 'test',
+            ],
+            ['flag', 'flagA', 'f'],
+            ['a1', 'a2']
+        );
+
+        $io = new IO();
+
+        $this->command
+            ->expects($this->once())
+            ->method('run')
+            ->with($expectedParams, $io);
+
+        $this->manager->run($argv);
+    }
+
+    public function testAllowedOptions(): void
+    {
+        $argv = ['bin/command', 'command-name', '--option-one=test'];
+
+        $this->initTest(['optionOne']);
+
+        $expectedParams = new Params(
+            [
+                'optionOne' => 'test',
+            ],
+            [],
+            []
+        );
+
+        $io = new IO();
+
+        $this->command
+            ->expects($this->once())
+            ->method('run')
+            ->with($expectedParams, $io);
+
+        $this->manager->run($argv);
+    }
+
+    public function testNotAllowedOptions(): void
+    {
+        $argv = ['bin/command', 'command-name', '--option-bad=test'];
+
+        $this->initTest(['optionOne']);
+
+        $this->expectException(InvalidArgument::class);
+
+        $this->manager->run($argv);
     }
 }
