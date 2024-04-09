@@ -52,7 +52,7 @@ class AfterUpgradeRunner
         }
 
         /** @var Script $script */
-        $script = $this->injectableFactory->create($className);
+        $script = $this->injectableFactory->createWith($className, ['isUpgrade' => false]);
         $script->run();
 
         try {

@@ -128,7 +128,7 @@ class Install extends \Espo\Core\Upgrades\Actions\Base\Install
             return null;
         }
 
-        $script = $this->getInjectableFactory()->create($className);
+        $script = $this->getInjectableFactory()->createWith($className, ['isUpgrade' => true]);
 
         if (!$script instanceof Script) {
             throw new RuntimeException("$className does not implement Script interface.");
