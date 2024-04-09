@@ -37,7 +37,8 @@ define('crm:views/record/row-actions/history', ['views/record/row-actions/relati
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.entityType + '/view/' + this.model.id
+                link: '#' + this.model.entityType + '/view/' + this.model.id,
+                groupIndex: 0,
             }];
 
             if (this.model.entityType === 'Email') {
@@ -46,7 +47,8 @@ define('crm:views/record/row-actions/history', ['views/record/row-actions/relati
                     text: this.translate('Reply', 'labels', 'Email'),
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 1,
                 });
             }
 
@@ -58,8 +60,9 @@ define('crm:views/record/row-actions/history', ['views/record/row-actions/relati
                         data: {
                             id: this.model.id
                         },
-                        link: '#' + this.model.entityType + '/edit/' + this.model.id
-                    }
+                        link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                        groupIndex: 0,
+                    },
                 ]);
             }
 
@@ -69,7 +72,8 @@ define('crm:views/record/row-actions/history', ['views/record/row-actions/relati
                     label: 'Remove',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 0,
                 });
             }
 

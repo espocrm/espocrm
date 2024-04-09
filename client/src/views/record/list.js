@@ -52,6 +52,7 @@ class ListRecordView extends View {
      * @property {string} [link] A link.
      * @property {string} [text] A text.
      * @property {Object.<string, string|number|boolean>} [data] Data attributes.
+     * @property {number} [groupIndex] A group index.
      */
 
     /**
@@ -3385,7 +3386,7 @@ class ListRecordView extends View {
         const defs = this.getMetadata().get(`clientDefs.${this.scope}.rowActionDefs`) || {};
 
         const promiseList = list.map(action => {
-            /** @type {{handler: string, label?: string, labelTranslation?: string}} */
+            /** @type {{handler: string, label?: string, labelTranslation?: string, groupIndex?: number}} */
             const itemDefs = defs[action] || {};
 
             if (!itemDefs.handler) {

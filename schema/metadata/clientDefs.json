@@ -139,6 +139,11 @@
                     "handler": {
                         "type": "string",
                         "description": "A handler. Should extend handlers/row-action."
+                    },
+                    "groupIndex": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "description": "A group index."
                     }
                 }
             }

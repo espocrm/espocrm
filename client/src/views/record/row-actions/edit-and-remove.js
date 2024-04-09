@@ -40,7 +40,8 @@ class EditAndRemoveRowActionsView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.entityType + '/edit/' + this.model.id
+                link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                groupIndex: 0,
             });
         }
 
@@ -51,6 +52,7 @@ class EditAndRemoveRowActionsView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
         }
 

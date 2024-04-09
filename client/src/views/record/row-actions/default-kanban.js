@@ -38,6 +38,7 @@ class DefaultKanbanRowActionsView extends DefaultRowActionsView {
                 id: this.model.id,
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
+            groupIndex: 0,
         }];
 
         if (this.options.statusFieldIsEditable) {
@@ -47,6 +48,7 @@ class DefaultKanbanRowActionsView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 1,
             });
         }
 
@@ -58,6 +60,7 @@ class DefaultKanbanRowActionsView extends DefaultRowActionsView {
                     id: this.model.id
                 },
                 link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                groupIndex: 0,
             });
         }
 
@@ -70,6 +73,7 @@ class DefaultKanbanRowActionsView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
         }
 

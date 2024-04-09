@@ -39,6 +39,7 @@ class RelationshipViewOnlyActionsView extends RelationshipActionsView {
                     id: this.model.id,
                 },
                 link: '#' + this.model.entityType + '/view/' + this.model.id,
+                groupIndex: 0,
             }
         ];
     }

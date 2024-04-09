@@ -40,6 +40,7 @@ class RelationshipEditAndRemoveActionsView extends RelationshipActionsView {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
         }
 
@@ -50,6 +51,7 @@ class RelationshipEditAndRemoveActionsView extends RelationshipActionsView {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
         }
 

@@ -47,7 +47,8 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
                         label: 'Complete',
                         data: {
                             id: this.model.id
-                        }
+                        },
+                        groupIndex: 1,
                     });
                 }
             } else {
@@ -58,7 +59,8 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
                         data: {
                             id: this.model.id,
                             scope: this.model.entityType
-                        }
+                        },
+                        groupIndex: 1,
                     });
                     actionList.push({
                         action: 'setNotHeld',
@@ -66,7 +68,8 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
                         data: {
                             id: this.model.id,
                             scope: this.model.entityType
-                        }
+                        },
+                        groupIndex: 1,
                     });
                 }
             }
@@ -78,7 +81,8 @@ define('crm:views/record/row-actions/activities-dashlet', ['views/record/row-act
                     data: {
                         id: this.model.id,
                         scope: this.model.entityType
-                    }
+                    },
+                    groupIndex: 0,
                 });
             }
 

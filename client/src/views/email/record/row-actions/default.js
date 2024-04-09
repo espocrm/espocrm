@@ -47,7 +47,8 @@ define('views/email/record/row-actions/default', ['views/record/row-actions/defa
                 label: 'View',
                 data: {
                     id: this.model.id
-                }
+                },
+                groupIndex: 0,
             }];
 
             if (
@@ -70,8 +71,9 @@ define('views/email/record/row-actions/default', ['views/record/row-actions/defa
                         label: 'Edit',
                         data: {
                             id: this.model.id
-                        }
-                    }
+                        },
+                        groupIndex: 0,
+                    },
                 ]);
             }
 
@@ -82,7 +84,8 @@ define('views/email/record/row-actions/default', ['views/record/row-actions/defa
                         label: 'Move to Trash',
                         data: {
                             id: this.model.id
-                        }
+                        },
+                        groupIndex: 1,
                     });
                 } else {
                     list.push({
@@ -90,7 +93,8 @@ define('views/email/record/row-actions/default', ['views/record/row-actions/defa
                         label: 'Retrieve from Trash',
                         data: {
                             id: this.model.id
-                        }
+                        },
+                        groupIndex: 1,
                     });
                 }
             }
@@ -103,7 +107,8 @@ define('views/email/record/row-actions/default', ['views/record/row-actions/defa
                             label: 'Mark as Important',
                             data: {
                                 id: this.model.id
-                            }
+                            },
+                            groupIndex: 1,
                         });
                     }
                 } else {
@@ -112,7 +117,8 @@ define('views/email/record/row-actions/default', ['views/record/row-actions/defa
                         label: 'Unmark Importance',
                         data: {
                             id: this.model.id
-                        }
+                        },
+                        groupIndex: 1,
                     });
                 }
             }
@@ -123,7 +129,8 @@ define('views/email/record/row-actions/default', ['views/record/row-actions/defa
                     label: 'Move to Folder',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 1,
                 });
             }
 
@@ -133,12 +140,12 @@ define('views/email/record/row-actions/default', ['views/record/row-actions/defa
                     label: 'Remove',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 0,
                 });
             }
 
             return list;
         },
-
     });
 });

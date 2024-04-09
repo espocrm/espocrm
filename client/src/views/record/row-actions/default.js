@@ -29,6 +29,21 @@
 import View from 'view';
 
 /**
+ * @module views/record/row-actions/actions
+ */
+
+/**
+ * @typedef {{
+ *     label?: string,
+ *     labelTranslation?: string,
+ *     acl?: string,
+ *     groupIndex?: number,
+ *     name?: string,
+ *     text?: string,
+ * }} module:views/record/row-actions/actions~item
+ */
+
+/**
  * Row actions.
  */
 class DefaultRowActionsView extends View {
@@ -42,7 +57,7 @@ class DefaultRowActionsView extends View {
         /** @type {Object.<string, {isAvailable: function(module:model, string)}>} */
         this.handlers = this.options.rowActionHandlers || {};
 
-        /** @type {{name: string, acl: string, text: string}[]} */
+        /** @type {module:views/record/row-actions/actions~item[]} */
         this.additionalActionDataList = [];
 
         this.setupAdditionalActions();
@@ -86,6 +101,7 @@ class DefaultRowActionsView extends View {
                 id: this.model.id
             },
             link: '#' + this.model.entityType + '/view/' + this.model.id,
+            groupIndex: 0,
         }];
 
         if (this.options.acl.edit) {
@@ -96,6 +112,7 @@ class DefaultRowActionsView extends View {
                     id: this.model.id
                 },
                 link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                groupIndex: 0,
             });
         }
 
@@ -108,6 +125,7 @@ class DefaultRowActionsView extends View {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
         }
 
@@ -135,6 +153,7 @@ class DefaultRowActionsView extends View {
                     id: this.model.id,
                     actualAction: item.name,
                 },
+                groupIndex: item.groupIndex,
             });
         });
 
@@ -142,9 +161,37 @@ class DefaultRowActionsView extends View {
     }
 
     data() {
+        /** @type {Array<module:views/record/row-actions/actions~item[]>} */
+        const dropdownGroups = [];
+
+        this.getActionList().forEach(item => {
+            // For bc.
+            if (item === false) {
+                return;
+            }
+
+            const index = item.groupIndex === undefined ? 9999 : item.groupIndex;
+
+            if (dropdownGroups[index] === undefined) {
+                dropdownGroups[index] = [];
+            }
+
+            dropdownGroups[index].push(item);
+        });
+
+        const dropdownItemList = [];
+
+        dropdownGroups.forEach(list => {
+            list.forEach(it => dropdownItemList.push(it));
+
+            dropdownItemList.push(false);
+        });
+
+        console.log(dropdownItemList);
+
         return {
             acl: this.options.acl,
-            actionList: this.getActionList(),
+            actionList: dropdownItemList,
             scope: this.model.entityType,
         };
     }
@@ -160,7 +207,7 @@ class DefaultRowActionsView extends View {
         const defs = this.getMetadata().get(`clientDefs.${this.scope}.rowActionDefs`) || {};
 
         list.forEach(action => {
-            /** @type {{label?: string, labelTranslation?: string, acl?: string}} */
+            /** @type {{label?: string, labelTranslation?: string, acl?: string, groupIndex?: number}} */
             const itemDefs = defs[action] || {};
 
             const text = itemDefs.labelTranslation ?
@@ -171,6 +218,7 @@ class DefaultRowActionsView extends View {
                 name: action,
                 acl:  itemDefs.acl,
                 text: text,
+                groupIndex: itemDefs.groupIndex,
             });
         });
     }

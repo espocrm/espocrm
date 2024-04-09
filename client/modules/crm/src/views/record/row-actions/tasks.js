@@ -37,7 +37,8 @@ define('crm:views/record/row-actions/tasks', ['views/record/row-actions/relation
                 data: {
                     id: this.model.id
                 },
-                link: '#' + this.model.entityType + '/view/' + this.model.id
+                link: '#' + this.model.entityType + '/view/' + this.model.id,
+                groupIndex: 0,
             }];
 
             if (this.options.acl.edit) {
@@ -47,7 +48,8 @@ define('crm:views/record/row-actions/tasks', ['views/record/row-actions/relation
                     data: {
                         id: this.model.id
                     },
-                    link: '#' + this.model.entityType + '/edit/' + this.model.id
+                    link: '#' + this.model.entityType + '/edit/' + this.model.id,
+                    groupIndex: 0,
                 });
 
                 if (!~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
@@ -56,7 +58,8 @@ define('crm:views/record/row-actions/tasks', ['views/record/row-actions/relation
                         text: this.translate('Complete', 'labels', 'Task'),
                         data: {
                             id: this.model.id
-                        }
+                        },
+                        groupIndex: 1,
                     });
                 }
             }
@@ -67,7 +70,8 @@ define('crm:views/record/row-actions/tasks', ['views/record/row-actions/relation
                     label: 'Remove',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 0,
                 });
             }
 
