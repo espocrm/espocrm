@@ -51,6 +51,10 @@ class DefaultUserProvider implements UserProvider
     {
         $user = $this->findUser($payload);
 
+        if ($user === false) {
+            return null;
+        }
+
         if ($user) {
             $this->syncUser($user, $payload);
 
@@ -60,7 +64,10 @@ class DefaultUserProvider implements UserProvider
         return $this->tryToCreateUser($payload);
     }
 
-    private function findUser(Payload $payload): ?User
+    /**
+     * @return User|false|null
+     */
+    private function findUser(Payload $payload): User|bool|null
     {
         $usernameClaim = $this->configDataProvider->getUsernameClaim();
 
@@ -82,24 +89,26 @@ class DefaultUserProvider implements UserProvider
             return null;
         }
 
-        if (!$user->isActive()) {
-            return null;
-        }
-
         $userId = $user->getId();
+
+        if (!$user->isActive()) {
+            $this->log->info("Oidc: User $userId found but it's not active.");
+
+            return false;
+        }
 
         $isPortal = $this->applicationState->isPortal();
 
         if (!$isPortal && !$user->isRegular() && !$user->isAdmin()) {
-            $this->log->info("Oidc: User $userId found but it's neither regular user not admin.");
+            $this->log->info("Oidc: User $userId found but it's neither regular user nor admin.");
 
-            return null;
+            return false;
         }
 
         if ($isPortal && !$user->isPortal()) {
             $this->log->info("Oidc: User $userId found but it's not portal user.");
 
-            return null;
+            return false;
         }
 
         if ($isPortal) {
@@ -108,20 +117,20 @@ class DefaultUserProvider implements UserProvider
             if (!$user->getPortals()->hasId($portalId)) {
                 $this->log->info("Oidc: User $userId found but it's not related to current portal.");
 
-                return null;
+                return false;
             }
         }
 
         if ($user->isSuperAdmin()) {
             $this->log->info("Oidc: User $userId found but it's super-admin, not allowed.");
 
-            return null;
+            return false;
         }
 
         if ($user->isAdmin() && !$this->configDataProvider->allowAdminUser()) {
             $this->log->info("Oidc: User $userId found but it's admin, not allowed.");
 
-            return null;
+            return false;
         }
 
         return $user;
