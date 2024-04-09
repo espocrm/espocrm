@@ -27,19 +27,14 @@
  ************************************************************************/
 
 import KnowledgeBaseHelper from 'modules/crm/knowledge-base-helper';
-import Dep from 'views/record/detail';
+import DetailRecordView from 'views/record/detail';
 
-/**
- * @class
- * @name Class
- * @extends Dep
- */
-export default Dep.extend(/** @lends Class# */{
+class KnowledgeBaseRecordDetailView extends DetailRecordView {
 
-    saveAndContinueEditingAction: true,
+    saveAndContinueEditingAction = true
 
-    setup: function () {
-        Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
         if (this.getUser().isPortal()) {
             this.sideDisabled = true;
@@ -52,28 +47,29 @@ export default Dep.extend(/** @lends Class# */{
             });
         }
 
-        if (this.getUser().isPortal()) {
-            if (!this.getAcl().checkScope(this.scope, 'edit')) {
-                if (!this.model.getLinkMultipleIdList('attachments').length) {
-                    this.hideField('attachments');
+        if (
+            this.getUser().isPortal() &&
+            !this.getAcl().checkScope(this.scope, 'edit') &&
+            !this.model.getLinkMultipleIdList('attachments').length
+        ) {
+            this.hideField('attachments');
 
-                    this.listenToOnce(this.model, 'sync', () => {
-                        if (this.model.getLinkMultipleIdList('attachments').length) {
-                            this.showField('attachments');
-                        }
-                    });
+            this.listenToOnce(this.model, 'sync', () => {
+                if (this.model.getLinkMultipleIdList('attachments').length) {
+                    this.showField('attachments');
                 }
-            }
+            });
         }
-    },
+    }
 
-    actionSendInEmail: function () {
-        Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+    // noinspection JSUnusedGlobalSymbols
+    actionSendInEmail() {
+        Espo.Ui.notify(' ... ');
 
-        let helper = new KnowledgeBaseHelper(this.getLanguage());
+        const helper = new KnowledgeBaseHelper(this.getLanguage());
 
         helper.getAttributesForEmail(this.model, {}, attributes => {
-            let viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+            const viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
                 'views/modals/compose-email';
 
             this.createView('composeEmail', viewName, {
@@ -86,13 +82,15 @@ export default Dep.extend(/** @lends Class# */{
                 view.render();
             });
         });
-    },
+    }
 
-    afterRender: function () {
-        Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
         if (this.getUser().isPortal()) {
             this.$el.find('.field[data-name="body"]').css('minHeight', '400px');
         }
-    },
-});
+    }
+}
+
+export default KnowledgeBaseRecordDetailView;
