@@ -39,14 +39,16 @@ define('crm:views/call/record/row-actions/default', ['views/record/row-actions/v
                     label: 'Set Held',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 1,
                 });
                 actionList.push({
                     action: 'setNotHeld',
                     label: 'Set Not Held',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 1,
                 });
             }
 
@@ -57,7 +59,8 @@ define('crm:views/call/record/row-actions/default', ['views/record/row-actions/v
                     data: {
                         id: this.model.id,
                         scope: this.model.entityType
-                    }
+                    },
+                    groupIndex: 0,
                 });
             }
 

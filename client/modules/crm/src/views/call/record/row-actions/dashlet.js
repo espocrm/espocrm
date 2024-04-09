@@ -39,7 +39,8 @@ define('crm:views/call/record/row-actions/dashlet', ['views/record/row-actions/v
                     label: 'Set Held',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 1,
                 });
 
                 actionList.push({
@@ -47,7 +48,8 @@ define('crm:views/call/record/row-actions/dashlet', ['views/record/row-actions/v
                     label: 'Set Not Held',
                     data: {
                         id: this.model.id
-                    }
+                    },
+                    groupIndex: 1,
                 });
             }
 
@@ -58,7 +60,8 @@ define('crm:views/call/record/row-actions/dashlet', ['views/record/row-actions/v
                     data: {
                         id: this.model.id,
                         scope: this.model.entityType
-                    }
+                    },
+                    groupIndex: 0,
                 });
             }
 
