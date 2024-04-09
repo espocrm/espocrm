@@ -69,6 +69,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\Repository\RDBRepository;
 use Espo\ORM\Collection;
 use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Type\AttributeType;
 use Espo\Tools\Stream\Service as StreamService;
 use Espo\Entities\User;
 
@@ -581,6 +582,30 @@ class Service implements Crud,
             foreach ($this->nonAdminReadOnlyAttributeList as $attribute) {
                 unset($data->$attribute);
             }
+        }
+
+        $this->filterInputForeignAttributes($data);
+    }
+
+    private function filterInputForeignAttributes(stdClass $data): void
+    {
+        $entityDefs = $this->entityManager->getDefs()->tryGetEntity($this->entityType);
+
+        if (!$entityDefs) {
+            return;
+        }
+
+        foreach ($entityDefs->getAttributeList() as $attributeDefs) {
+            if (
+                $attributeDefs->getType() !== AttributeType::FOREIGN &&
+                !$attributeDefs->getParam('isLinkMultipleNameMap')
+            ) {
+                continue;
+            }
+
+            $attribute = $attributeDefs->getName();
+
+            unset($data->$attribute);
         }
     }
 

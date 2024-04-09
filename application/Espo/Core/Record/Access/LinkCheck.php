@@ -48,10 +48,13 @@ use Espo\ORM\Defs\FieldDefs;
 use Espo\ORM\Defs\RelationDefs;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
+use stdClass;
 
 /**
  * Check access for record linking. When linking directly through relationships or via link fields.
+ * Also loads foreign name attributes.
  */
 class LinkCheck
 {
@@ -135,6 +138,7 @@ class LinkCheck
             /** @var string[] $oldIds */
             $oldIds = $entity->getFetched($attribute) ?? [];
 
+            $setIds = $ids;
             $ids = array_values(array_diff($ids, $oldIds));
             $removedIds = array_values(array_diff($oldIds, $ids));
 
@@ -148,9 +152,25 @@ class LinkCheck
                 continue;
             }
 
+            $namesAttribute = $name . 'Names';
+
+            $names = $this->prepareNames($entity, $namesAttribute, $setIds);
+
             foreach ($ids as $id) {
-                $this->processLinkedRecordsCheckItem($entity, $relationDefs, $id);
+                $foreignEntity = $this->processLinkedRecordsCheckItem($entity, $relationDefs, $id);
+
+                if ($foreignEntity) {
+                    $names->$id = $foreignEntity->get('name');
+                }
             }
+
+            $namesAttributeDefs = $entityDefs->tryGetAttribute($namesAttribute);
+
+            if (!$namesAttributeDefs || !$namesAttributeDefs->getParam('isLinkMultipleNameMap')) {
+                continue;
+            }
+
+            $entity->set($namesAttribute, $names);
         }
     }
 
@@ -190,13 +210,13 @@ class LinkCheck
         RelationDefs $defs,
         string $id,
         bool $isOne = false
-    ): void {
+    ): ?Entity {
 
         $entityType = $entity->getEntityType();
         $link = $defs->getName();
 
         if ($this->getParam($entityType, $link, 'linkCheckDisabled')) {
-            return;
+            return null;
         }
 
         $foreignEntityType = null;
@@ -206,7 +226,7 @@ class LinkCheck
         }
 
         if (!$foreignEntityType && !$defs->hasForeignEntityType()) {
-            return;
+            return null;
         }
 
         $foreignEntityType ??= $defs->getForeignEntityType();
@@ -226,10 +246,12 @@ class LinkCheck
         $toSkip = $this->linkForeignAccessCheck($isOne, $entityType, $link, $foreignEntity);
 
         if ($toSkip) {
-            return;
+            return $foreignEntity;
         }
 
         $this->linkEntityAccessCheck($entity, $foreignEntity, $link);
+
+        return $foreignEntity;
     }
 
     /**
@@ -548,6 +570,7 @@ class LinkCheck
         foreach ($entityDefs->getRelationList() as $relationDefs) {
             $name = $relationDefs->getName();
             $attribute = $name . 'Id';
+            $nameAttribute = $name . 'Name';
 
             if (
                 !in_array($relationDefs->getType(), $typeList) ||
@@ -562,7 +585,26 @@ class LinkCheck
 
             $id = $entity->get($attribute);
 
-            $this->processLinkedRecordsCheckItem($entity, $relationDefs, $id, true);
+            $foreignEntity = $this->processLinkedRecordsCheckItem($entity, $relationDefs, $id, true);
+
+            if (!$foreignEntity) {
+                continue;
+            }
+
+            $nameAttributeDefs = $entityDefs->tryGetAttribute($nameAttribute);
+
+            if (!$nameAttributeDefs) {
+                return;
+            }
+
+            if (
+                $nameAttributeDefs->getType() === AttributeType::FOREIGN ||
+                $nameAttributeDefs->isNotStorable()
+            ) {
+                $foreignName = $relationDefs->getParam('foreignName') ?? 'name';
+
+                $entity->set($nameAttribute, $foreignEntity->get($foreignName));
+            }
         }
     }
 
@@ -632,5 +674,27 @@ class LinkCheck
         $defaultAttributes = (object) ($fieldDefs->getParam('defaultAttributes') ?? []);
 
         return $defaultAttributes->$attribute ?? null;
+    }
+
+    /**
+     * @param string[] $setIds
+     */
+    private function prepareNames(Entity $entity, string $namesAttribute, array $setIds): stdClass
+    {
+        $oldNames = $entity->getFetched($namesAttribute);
+
+        if (!$oldNames instanceof stdClass) {
+            $oldNames = (object) [];
+        }
+
+        $names = (object) [];
+
+        foreach ($setIds as $id) {
+            if (isset($oldNames->$id)) {
+                $names->$id = $oldNames->$id;
+            }
+        }
+
+        return $names;
     }
 }
