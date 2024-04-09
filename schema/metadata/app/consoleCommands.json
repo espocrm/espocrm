@@ -26,6 +26,13 @@
                     "type": "string"
                 },
                 "description": "Allowed options."
+            },
+            "allowedFlags": {
+                "type": "array",
+                "items": {
+                    "type": "string"
+                },
+                "description": "Allowed flags."
             }
         }
     }

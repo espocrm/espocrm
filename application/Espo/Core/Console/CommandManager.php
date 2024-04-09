@@ -168,6 +168,12 @@ class CommandManager
 
     private function checkParams(string $command, Params $params): void
     {
+        $this->checkOptions($command, $params);
+        $this->checkFlags($command, $params);
+    }
+
+    private function checkOptions(string $command, Params $params): void
+    {
         $allowedOptions = $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'allowedOptions']);
 
         if (!is_array($allowedOptions)) {
@@ -181,6 +187,25 @@ class CommandManager
         }
 
         $msg = sprintf("Not allowed options: %s.", implode(', ', $notAllowedOptions));
+
+        throw new InvalidArgument($msg);
+    }
+
+    private function checkFlags(string $command, Params $params): void
+    {
+        $allowedFlags = $this->metadata->get(['app', 'consoleCommands', lcfirst($command), 'allowedFlags']);
+
+        if (!is_array($allowedFlags)) {
+            return;
+        }
+
+        $notAllowedFlags = array_diff($params->getFlagList(), $allowedFlags);
+
+        if ($notAllowedFlags === []) {
+            return;
+        }
+
+        $msg = sprintf("Not allowed flags: %s.", implode(', ', $notAllowedFlags));
 
         throw new InvalidArgument($msg);
     }

@@ -57,7 +57,7 @@ class CommandManagerTest extends TestCase
         $this->command = $this->createMock(Command::class);
     }
 
-    private function initTest(?array $allowedOptions = null)
+    private function initTest(?array $allowedOptions = null, ?array $allowedFlags = null)
     {
         $className = 'Test';
 
@@ -68,6 +68,10 @@ class CommandManagerTest extends TestCase
 
         if ($allowedOptions !== null) {
             $map[] = [['app', 'consoleCommands', 'commandName', 'allowedOptions'], null, $allowedOptions];
+        }
+
+        if ($allowedFlags!== null) {
+            $map[] = [['app', 'consoleCommands', 'commandName', 'allowedFlags'], null, $allowedFlags];
         }
 
         $this->metadata
@@ -159,6 +163,49 @@ class CommandManagerTest extends TestCase
         $argv = ['bin/command', 'command-name', '--option-bad=test'];
 
         $this->initTest(['optionOne']);
+
+        $this->expectException(InvalidArgument::class);
+
+        $this->manager->run($argv);
+    }
+    public function testAllowedFlags(): void
+    {
+        $argv = ['bin/command', 'command-name', '--flagOne', '-a'];
+
+        $this->initTest(null, ['flagOne', 'a']);
+
+        $expectedParams = new Params(
+            [],
+            ['flagOne', 'a'],
+            []
+        );
+
+        $io = new IO();
+
+        $this->command
+            ->expects($this->once())
+            ->method('run')
+            ->with($expectedParams, $io);
+
+        $this->manager->run($argv);
+    }
+
+    public function testNotAllowedFlags1(): void
+    {
+        $argv = ['bin/command', 'command-name', '--bad-flag'];
+
+        $this->initTest(null, ['flag1']);
+
+        $this->expectException(InvalidArgument::class);
+
+        $this->manager->run($argv);
+    }
+
+    public function testNotAllowedFlags2(): void
+    {
+        $argv = ['bin/command', 'command-name', '-b'];
+
+        $this->initTest(null, ['a']);
 
         $this->expectException(InvalidArgument::class);
 
