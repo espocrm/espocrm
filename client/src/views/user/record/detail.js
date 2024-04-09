@@ -429,7 +429,7 @@ class UserDetailRecordView extends DetailRecordView {
         this.confirm(
             this.translate('generateAndSendNewPassword', 'messages', 'User')
         ).then(() => {
-            Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
+            Espo.Ui.notify(' ... ');
 
             Espo.Ajax
                 .postRequest('UserSecurity/password/generate', {id: this.model.id})
