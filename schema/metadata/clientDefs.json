@@ -787,6 +787,10 @@
                 "configCheck": {
                     "type": "string",
                     "description": "A config path to check. Path items are separated by a dot. If a config value is not empty, then the action is allowed. The `!` prefix reverses the check."
+                },
+                "hidden": {
+                    "type": "boolean",
+                    "description": "Hidden."
                 }
             }
         },
@@ -1039,6 +1043,11 @@
                         "delete",
                         "stream"
                     ]
+                },
+                "groupIndex": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "description": "A group index"
                 }
             }
         },
