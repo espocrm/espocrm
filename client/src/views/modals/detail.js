@@ -220,6 +220,7 @@ class DetailModalView extends ModalView {
             this.addDropdownItem({
                 name: 'duplicate',
                 label: 'Duplicate',
+                groupIndex: 0,
             });
         }
     }
@@ -292,6 +293,7 @@ class DetailModalView extends ModalView {
         this.addDropdownItem({
             name: 'remove',
             label: 'Remove',
+            groupIndex: 0,
         });
     }
 

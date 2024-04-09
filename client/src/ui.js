@@ -53,7 +53,7 @@ import $ from 'jquery';
  * @property {boolean} [keyboard=true] Enable a keyboard control. The `Esc` key closes a dialog.
  * @property {boolean} [footerAtTheTop=false] To display a footer at the top.
  * @property {module:ui.Dialog~Button[]} [buttonList] Buttons.
- * @property {module:ui.Dialog~Button[]} [dropdownItemList] Dropdown action items.
+ * @property {Array<module:ui.Dialog~Button|false>} [dropdownItemList] Dropdown action items.
  * @property {boolean} [fullHeight] Deprecated.
  * @property {Number} [bodyDiffHeight]
  * @property {Number} [screenWidthXs]
@@ -377,6 +377,10 @@ class Dialog {
         });
 
         this.dropdownItemList.forEach(o => {
+            if (o === false) {
+                return;
+            }
+
             if (typeof o.onClick === 'function') {
                 const $button = $('#' + this.id + ' .modal-footer a[data-name="' + o.name + '"]');
 
@@ -521,7 +525,17 @@ class Dialog {
 
         $dropdown.append($ul);
 
-        this.dropdownItemList.forEach(/** module:ui.Dialog~Button */o => {
+        this.dropdownItemList.forEach((o, i) => {
+            if (o === false) {
+                if (i === this.dropdownItemList.length - 1) {
+                    return;
+                }
+
+                $ul.append(`<li class="divider"></li>`);
+
+                return;
+            }
+
             const $a = $('<a>')
                 .attr('role', 'button')
                 .attr('tabindex', '0')
