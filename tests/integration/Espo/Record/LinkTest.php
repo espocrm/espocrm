@@ -277,7 +277,7 @@ class LinkTest extends BaseTestCase
 
         $account = $em->createEntity(Account::ENTITY_TYPE, ['assignedUserId' => $user->getId()]);
         $lead = $em->createEntity(Lead::ENTITY_TYPE);
-        $contact = $em->createEntity(Contact::ENTITY_TYPE);
+        $contact = $em->createEntity(Contact::ENTITY_TYPE, ['lastName' => 'contact']);
         $email = $em->createEntity(Email::ENTITY_TYPE, [
             'assignedUserId' => $user->getId(),
             'parentId' => $lead->getId(),
@@ -399,5 +399,44 @@ class LinkTest extends BaseTestCase
             'contactsIds' => [$contact->getId()],
             'emailsIds' => [$email->getId()]
         ], CreateParams::create());
+    }
+
+    public function testLoadNames(): void
+    {
+        $caseService = $this->getContainer()
+            ->getByClass(ServiceContainer::class)
+            ->getByClass(CaseObj::class);
+
+        $em = $this->getEntityManager();
+
+        $contact = $em->createEntity(Contact::ENTITY_TYPE, ['lastName' => 'contact']);
+        $contact1 = $em->createEntity(Contact::ENTITY_TYPE, ['lastName' => 'contact1']);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $case = $caseService->create((object) [
+            'name' => '1',
+            'contactId' => $contact->getId(),
+            'contactsIds' => [$contact->getId()],
+        ], CreateParams::create());
+
+        $this->assertEquals(
+            (object) [
+                $contact->getId() => $contact->get('name'),
+            ],
+            $case->get('contactsNames')
+        );
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $case = $caseService->update($case->getId(), (object) [
+            'contactsIds' => [$contact->getId(), $contact1->getId()],
+        ], UpdateParams::create());
+
+        $this->assertEquals(
+            (object) [
+                $contact->getId() => $contact->get('name'),
+                $contact1->getId() => $contact1->get('name'),
+            ],
+            $case->get('contactsNames')
+        );
     }
 }
