@@ -24,7 +24,7 @@
             ><span class="fas fa-ellipsis-h"></span></button>
             <ul class="dropdown-menu pull-left">
                 {{#each dropdownItemList}}
-                        {{#if this}}
+                    {{#if this}}
                         {{dropdownItem
                             name
                             scope=../entityType

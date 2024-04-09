@@ -203,6 +203,7 @@ class DetailRecordView extends BaseRecordView {
      * @property {string} [title] A title (not translatable).
      * @property {boolean} [disabled] Disabled.
      * @property {function()} [onClick] A click handler.
+     * @property {number} [groupIndex] A group index.
      */
 
     /**
@@ -223,12 +224,13 @@ class DetailRecordView extends BaseRecordView {
      * A dropdown item list.
      *
      * @protected
-     * @type {Array<module:views/record/detail~dropdownItem|false>}
+     * @type {Array<module:views/record/detail~dropdownItem>}
      */
     dropdownItemList = [
         {
             name: 'delete',
             label: 'Remove',
+            groupIndex: 0,
         },
     ]
 
@@ -774,8 +776,9 @@ class DetailRecordView extends BaseRecordView {
                 !this.getMetadata().get(['clientDefs', this.scope, 'duplicateDisabled'])
             ) {
                 this.addDropdownItem({
-                    'label': 'Duplicate',
-                    'name': 'duplicate',
+                    label: 'Duplicate',
+                    name: 'duplicate',
+                    groupIndex: 0,
                 });
             }
         }
@@ -787,10 +790,11 @@ class DetailRecordView extends BaseRecordView {
                 !this.getUser().isPortal()
             ) {
                 if (this.model.has('assignedUserId')) {
-                    this.dropdownItemList.push({
-                        'label': 'Self-Assign',
-                        'name': 'selfAssign',
-                        'hidden': !!this.model.get('assignedUserId')
+                    this.addDropdownItem({
+                        label: 'Self-Assign',
+                        name: 'selfAssign',
+                        hidden: !!this.model.get('assignedUserId'),
+                        groupIndex: 0,
                     });
 
                     this.listenTo(this.model, 'change:assignedUserId', () => {
@@ -816,9 +820,10 @@ class DetailRecordView extends BaseRecordView {
             }
 
             if (printPdfAction) {
-                this.dropdownItemList.push({
-                    'label': 'Print to PDF',
-                    'name': 'printPdf',
+                this.addDropdownItem({
+                    label: 'Print to PDF',
+                    name: 'printPdf',
+                    groupIndex: 6,
                 });
             }
         }
@@ -838,6 +843,7 @@ class DetailRecordView extends BaseRecordView {
                     this.addDropdownItem({
                         label: 'Convert Currency',
                         name: 'convertCurrency',
+                        groupIndex: 3,
                     });
                 }
             }
@@ -849,8 +855,9 @@ class DetailRecordView extends BaseRecordView {
         ) {
             if (this.getAcl().getPermissionLevel('dataPrivacyPermission') === 'yes') {
                 this.dropdownItemList.push({
-                    'label': 'View Personal Data',
-                    'name': 'viewPersonalData'
+                    label: 'View Personal Data',
+                    name: 'viewPersonalData',
+                    groupIndex: 4,
                 });
             }
         }
@@ -858,7 +865,8 @@ class DetailRecordView extends BaseRecordView {
         if (this.type === this.TYPE_DETAIL && this.getMetadata().get(['scopes', this.scope, 'stream'])) {
             this.addDropdownItem({
                 label: 'View Followers',
-                name: 'viewFollowers'
+                name: 'viewFollowers',
+                groupIndex: 4,
             });
         }
 
@@ -1703,7 +1711,7 @@ class DetailRecordView extends BaseRecordView {
             entityType: this.entityType,
             buttonList: this.buttonList,
             buttonEditList: this.buttonEditList,
-            dropdownItemList: this.dropdownItemList,
+            dropdownItemList: this.getDropdownItemDataList(),
             dropdownEditItemList: this.dropdownEditItemList,
             dropdownItemListEmpty: this.isDropdownItemListEmpty(),
             dropdownEditItemListEmpty: this.isDropdownEditItemListEmpty(),
@@ -1717,6 +1725,40 @@ class DetailRecordView extends BaseRecordView {
             hasMiddleTabs: hasMiddleTabs,
             middleTabDataList: middleTabDataList,
         };
+    }
+
+    /**
+     * @private
+     * @return {Array<module:views/record/detail~dropdownItem|false>}
+     */
+    getDropdownItemDataList() {
+        /** @type {Array<module:views/record/detail~dropdownItem[]>} */
+        const dropdownGroups = [];
+
+        this.dropdownItemList.forEach(item => {
+            // For bc.
+            if (item === false) {
+                return;
+            }
+
+            const index = item.groupIndex === undefined ? 9999 : item.groupIndex;
+
+            if (dropdownGroups[index] === undefined) {
+                dropdownGroups[index] = [];
+            }
+
+            dropdownGroups[index].push(item);
+        });
+
+        const dropdownItemList = [];
+
+        dropdownGroups.forEach(list => {
+            list.forEach(it => dropdownItemList.push(it));
+
+            dropdownItemList.push(false);
+        });
+
+        return dropdownItemList;
     }
 
     init() {
@@ -2768,15 +2810,12 @@ class DetailRecordView extends BaseRecordView {
     /**
      * Add a dropdown item.
      *
-     * @param {module:views/record/detail~dropdownItem|false} o
+     * @param {module:views/record/detail~dropdownItem} o
      * @param {boolean} [toBeginning]
      */
     addDropdownItem(o, toBeginning) {
         if (!o) {
-            toBeginning ?
-                this.dropdownItemList.unshift(false) :
-                this.dropdownItemList.push(false);
-
+            // For bc.
             return;
         }
 

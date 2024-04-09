@@ -129,44 +129,51 @@ class EmailDetailRecordView extends DetailRecordView {
 
         if (this.model.get('isUsers')) {
             this.addDropdownItem({
-                'label': 'Mark as Important',
-                'name': 'markAsImportant',
-                'hidden': this.model.get('isImportant')
+                label: 'Mark as Important',
+                name: 'markAsImportant',
+                hidden: this.model.get('isImportant'),
+                groupIndex: 2,
             });
 
             this.addDropdownItem({
-                'label': 'Unmark Importance',
-                'name': 'markAsNotImportant',
-                'hidden': !this.model.get('isImportant')
+                label: 'Unmark Importance',
+                name: 'markAsNotImportant',
+                hidden: !this.model.get('isImportant'),
+                groupIndex: 2,
             });
 
             this.addDropdownItem({
-                'label': 'Move to Trash',
-                'name': 'moveToTrash',
-                'hidden': this.model.get('inTrash')
+                label: 'Move to Trash',
+                name: 'moveToTrash',
+                hidden: this.model.get('inTrash'),
+                groupIndex: 2,
             });
 
             this.addDropdownItem({
-                'label': 'Retrieve from Trash',
-                'name': 'retrieveFromTrash',
-                'hidden': !this.model.get('inTrash')
+                label: 'Retrieve from Trash',
+                name: 'retrieveFromTrash',
+                hidden: !this.model.get('inTrash'),
+                groupIndex: 2,
             });
 
             this.addDropdownItem({
-                'label': 'Move to Folder',
-                'name': 'moveToFolder'
+                label: 'Move to Folder',
+                name: 'moveToFolder',
+                groupIndex: 2,
             });
         }
 
         this.addDropdownItem({
             label: 'Show Plain Text',
             name: 'showBodyPlain',
-            hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain'))
+            hidden: !(this.model.get('isHtml') && this.model.get('bodyPlain')),
+            groupIndex: 7,
         });
 
         this.addDropdownItem({
             label: 'Print',
             name: 'print',
+            groupIndex: 7,
         });
 
         this.listenTo(this.model, 'change:isImportant', () => {
