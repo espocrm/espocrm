@@ -187,8 +187,6 @@ class DefaultRowActionsView extends View {
             dropdownItemList.push(false);
         });
 
-        console.log(dropdownItemList);
-
         return {
             acl: this.options.acl,
             actionList: dropdownItemList,
