@@ -30,7 +30,6 @@
 namespace Espo\Core\Formula;
 
 use Espo\Core\Formula\Exceptions\UnknownFunction;
-
 use Espo\Core\Formula\Functions\Base;
 use Espo\Core\Formula\Functions\BaseFunction;
 use Espo\ORM\Entity;
@@ -59,8 +58,12 @@ class FunctionFactory
     /**
      * @throws UnknownFunction
      */
-    public function create(string $name, ?Entity $entity = null, ?stdClass $variables = null): Func|BaseFunction|Base
-    {
+    public function create(
+        string $name,
+        ?Entity $entity = null,
+        ?stdClass $variables = null
+    ): Func|FuncVariablesAware|BaseFunction|Base {
+
         if ($this->classNameMap && array_key_exists($name, $this->classNameMap)) {
             $className = $this->classNameMap[$name];
         }
@@ -77,7 +80,7 @@ class FunctionFactory
 
             $typeName = implode('\\', $arr);
 
-            /** @var class-string<Func|BaseFunction|Base> $className */
+            /** @var class-string<Func|FuncVariablesAware|BaseFunction|Base> $className */
             $className = 'Espo\\Core\\Formula\\Functions\\' . $typeName . 'Type';
         }
 
@@ -85,7 +88,12 @@ class FunctionFactory
             throw new UnknownFunction("Unknown function: " . $name);
         }
 
-        if ((new ReflectionClass($className))->implementsInterface(Func::class)) {
+        $class = new ReflectionClass($className);
+
+        if (
+            $class->implementsInterface(Func::class) ||
+            $class->implementsInterface(FuncVariablesAware::class)
+        ) {
             return $this->injectableFactory->create($className);
         }
 

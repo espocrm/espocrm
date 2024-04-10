@@ -27,31 +27,41 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Formula\Functions;
+namespace Espo\Core\Formula;
 
-use Espo\Core\Formula\EvaluatedArgumentList;
 use Espo\Core\Formula\Exceptions\Error;
-use Espo\Core\Formula\FuncVariablesAware;
-use Espo\Core\Formula\Variables;
+use stdClass;
 
-class VariableType implements FuncVariablesAware
+class Variables
 {
-    public function process(EvaluatedArgumentList $arguments, Variables $variables): mixed
+    public function __construct(
+        private stdClass $variables
+    ) {}
+
+    public function has(string $name): bool
     {
-        if (!count($arguments)) {
-            throw new Error("No variable name.");
+        return property_exists($this->variables, $name);
+    }
+
+    /**
+     * @throws Error
+     */
+    public function get(string $name): mixed
+    {
+        if (!property_exists($this->variables, $name)) {
+            throw new Error("Variable $name is not defined.");
         }
 
-        $name = $arguments[0];
+        return $this->variables->$name;
+    }
 
-        if (!is_string($name)) {
-            throw new Error("Bad variable name.");
-        }
+    public function tryGet(string $name): mixed
+    {
+        return $this->variables->$name ?? null;
+    }
 
-        if ($name === '') {
-            throw new Error("Empty variable name.");
-        }
-
-        return $variables->tryGet($name);
+    public function set(string $name, mixed $value): void
+    {
+        $this->variables->$name = $value;
     }
 }
