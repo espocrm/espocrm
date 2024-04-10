@@ -232,13 +232,15 @@ class CurrencyFieldView extends FloatFieldView {
         super.afterRender();
 
         if (this.mode === this.MODE_EDIT) {
-            this.$currency = this.$el.find('[data-name="' + this.currencyFieldName + '"]');
+            this.$currency = this.$el.find(`[data-name="${this.currencyFieldName}"]`);
 
-            this.$currency.on('change', () => {
-                this.model.set(this.currencyFieldName, this.$currency.val(), {ui: true});
-            });
+            if (this.$currency.length) {
+                this.$currency.on('change', () => {
+                    this.model.set(this.currencyFieldName, this.$currency.val(), {ui: true});
+                });
 
-            Select.init(this.$currency);
+                Select.init(this.$currency);
+            }
         }
     }
 
