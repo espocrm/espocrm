@@ -494,7 +494,8 @@ body {
             border-bottom-left-radius: var(--panel-border-radius);
             border-bottom-right-radius: var(--panel-border-radius);
 
-            > table,
+            > table:not(:has(+ .show-more)),
+            > table:not(:has(+ .show-more)) tr:last-child td,
             > .list-group,
             > .list-group:last-child > .list-group-item:last-child,
             > .show-more > a {
@@ -516,6 +517,7 @@ body {
             border-bottom-right-radius: 0;
 
             > table,
+            > table tr:last-child td,
             > .list-group,
             > .list-group:last-child > .list-group-item:last-child,
             > .show-more > a {
