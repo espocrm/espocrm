@@ -130,6 +130,10 @@ class FieldManager
             $name = $this->nameUtil->addCustomPrefix($name);
         }
 
+        if (!$this->isScopeCustomizable($scope)) {
+            throw new Error("Entity type $scope is not customizable.");
+        }
+
         if (strlen(Util::camelCaseToUnderscore($name)) > self::MAX_NAME_LENGTH) {
             throw Error::createWithBody(
                 "Field name should not be longer than " . self::MAX_NAME_LENGTH . ".",
@@ -212,6 +216,7 @@ class FieldManager
 
     /**
      * @param array<string, mixed> $fieldDefs
+     * @throws Error
      */
     public function update(string $scope, string $name, array $fieldDefs, bool $isNew = false): void
     {
@@ -221,6 +226,10 @@ class FieldManager
 
         if (!$this->isCore($scope, $name)) {
             $fieldDefs['isCustom'] = true;
+        }
+
+        if (!$this->isScopeCustomizable($scope)) {
+            throw new Error("Entity type $scope is not customizable.");
         }
 
         $isCustom = false;
@@ -471,6 +480,10 @@ class FieldManager
     {
         if ($this->isCore($scope, $name)) {
             throw new Error("Cannot delete core field '$name' in '$scope'.");
+        }
+
+        if (!$this->isScopeCustomizable($scope)) {
+            throw new Error("Entity type $scope is not customizable.");
         }
 
         $type = $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'type']);
@@ -891,5 +904,18 @@ class FieldManager
         }
 
         return $this->injectableFactory->create($className);
+    }
+
+    private function isScopeCustomizable(string $scope): bool
+    {
+        if (!$this->metadata->get("scopes.$scope.customizable")) {
+            return false;
+        }
+
+        if ($this->metadata->get("scopes.$scope.entityManager.fields") === false) {
+            return false;
+        }
+
+        return true;
     }
 }

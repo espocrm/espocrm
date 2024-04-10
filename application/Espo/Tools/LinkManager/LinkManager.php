@@ -191,6 +191,14 @@ class LinkManager
             throw new Conflict("Link name '$linkForeign' is not allowed.");
         }
 
+        if (!$this->isScopeCustomizable($entity)) {
+            throw new Error("Entity type '$entity' is not customizable.");
+        }
+
+        if ($entityForeign && !$this->isScopeCustomizable($entityForeign)) {
+            throw new Error("Entity type '$entityForeign' is not customizable.");
+        }
+
         foreach ($this->routeUtil->getFullList() as $route) {
             if ($route->getRoute() === "/$entity/:id/$link") {
                 throw new Conflict("Link name '$link' conflicts with existing API endpoint.");
@@ -1151,5 +1159,18 @@ class LinkManager
     private function isScopeCustom(string $scope): bool
     {
         return (bool) $this->metadata->get("scopes.$scope.isCustom");
+    }
+
+    private function isScopeCustomizable(string $scope): bool
+    {
+        if (!$this->metadata->get("scopes.$scope.customizable")) {
+            return false;
+        }
+
+        if ($this->metadata->get("scopes.$scope.entityManager.relationships") === false) {
+            return false;
+        }
+
+        return true;
     }
 }

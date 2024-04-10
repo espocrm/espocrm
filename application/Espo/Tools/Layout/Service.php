@@ -208,9 +208,14 @@ class Service
     /**
      * @throws NotFound
      * @throws Error
+     * @throws Forbidden
      */
     public function update(string $scope, string $name, ?string $setId, mixed $data): mixed
     {
+        if (!$this->isCustomizable($scope)) {
+            throw new Forbidden("$scope is not customizable.");
+        }
+
         if ($setId) {
             $layout = $this->getRecordFromSet($scope, $name, $setId);
 
@@ -368,5 +373,18 @@ class Service
         }
 
         return $team->getLayoutSet()?->getId();
+    }
+
+    private function isCustomizable(string $scope): bool
+    {
+        if (!$this->metadata->get("scopes.$scope.customizable")) {
+            return false;
+        }
+
+        if ($this->metadata->get("scopes.$scope.entityManager.layouts") === false) {
+            return false;
+        }
+
+        return true;
     }
 }
