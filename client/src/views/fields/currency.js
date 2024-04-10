@@ -59,17 +59,16 @@ class CurrencyFieldView extends FloatFieldView {
 
     /** @inheritDoc */
     data() {
-        let currencyValue = this.model.get(this.currencyFieldName) ||
+        const currencyValue = this.model.get(this.currencyFieldName) ||
             this.getPreferences().get('defaultCurrency') ||
             this.getConfig().get('defaultCurrency');
 
-        let multipleCurrencies = !this.isSingleCurrency || currencyValue !== this.defaultCurrency;
+        const multipleCurrencies = !this.isSingleCurrency || currencyValue !== this.defaultCurrency;
 
         return {
             ...super.data(),
             currencyFieldName: this.currencyFieldName,
             currencyValue: currencyValue,
-            currencyOptions: this.currencyOptions,
             currencyList: this.currencyList,
             currencySymbol: this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || '',
             multipleCurrencies: multipleCurrencies,
@@ -92,10 +91,10 @@ class CurrencyFieldView extends FloatFieldView {
 
         this.isSingleCurrency = this.currencyList.length <= 1;
 
-        let currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) ||
+        const currencyValue = this.currencyValue = this.model.get(this.currencyFieldName) ||
             this.defaultCurrency;
 
-        if (!~this.currencyList.indexOf(currencyValue)) {
+        if (!this.currencyList.includes(currencyValue)) {
             this.currencyList = Espo.Utils.clone(this.currencyList);
             this.currencyList.push(currencyValue);
         }
@@ -127,7 +126,7 @@ class CurrencyFieldView extends FloatFieldView {
 
     _getTemplateName() {
         if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
-            var prop;
+            let prop;
 
             if (this.mode === this.MODE_LIST) {
                 prop = 'listTemplate' + this.getCurrencyFormat().toString();
@@ -154,7 +153,7 @@ class CurrencyFieldView extends FloatFieldView {
 
     formatNumberDetail(value) {
         if (value !== null) {
-            let currencyDecimalPlaces = this.decimalPlaces;
+            const currencyDecimalPlaces = this.decimalPlaces;
 
             if (currencyDecimalPlaces === 0) {
                 value = Math.round(value);
@@ -170,7 +169,7 @@ class CurrencyFieldView extends FloatFieldView {
                 );
             }
 
-            let parts = value.toString().split(".");
+            const parts = value.toString().split(".");
 
             parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, this.thousandSeparator);
 
@@ -187,7 +186,7 @@ class CurrencyFieldView extends FloatFieldView {
                 }
 
                 if (currencyDecimalPlaces && decimalPartLength < currencyDecimalPlaces) {
-                    let limit = currencyDecimalPlaces - decimalPartLength;
+                    const limit = currencyDecimalPlaces - decimalPartLength;
 
                     for (let i = 0; i < limit; i++) {
                         parts[1] += '0';
@@ -243,15 +242,17 @@ class CurrencyFieldView extends FloatFieldView {
         }
     }
 
+    // noinspection JSUnusedGlobalSymbols
     validateNumber() {
         if (!this.params.decimal) {
             return this.validateFloat();
         }
 
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (Number.isNaN(Number(value))) {
-            let msg = this.translate('fieldShouldBeNumber', 'messages').replace('{field}', this.getLabelText());
+            const msg = this.translate('fieldShouldBeNumber', 'messages')
+                .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);
 
@@ -264,7 +265,7 @@ class CurrencyFieldView extends FloatFieldView {
 
         value = this.parse(value);
 
-        let data = {};
+        const data = {};
 
         let currencyValue = this.$currency.length ?
             this.$currency.val() :
