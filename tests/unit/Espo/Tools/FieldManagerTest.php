@@ -29,19 +29,17 @@
 
 namespace tests\unit\Espo\Tools;
 
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Metadata;
 use Espo\Tools\EntityManager\NameUtil;
 use Espo\Tools\FieldManager\FieldManager;
 use Espo\Core\InjectableFactory;
 use PHPUnit\Framework\TestCase;
-use tests\unit\ReflectionHelper;
 
 class FieldManagerTest extends TestCase
 {
-    private FieldManager $fieldManager;
-
-    private $reflection;
+    private ?FieldManager $fieldManager = null;
 
     protected function setUp() : void
     {
@@ -64,13 +62,11 @@ class FieldManagerTest extends TestCase
             $this->metadataHelper,
             $nameUtil
         );
-
-        $this->reflection = new ReflectionHelper($this->fieldManager);
     }
 
-    public function testCreateExistingField()
+    public function testCreateExistingField(): void
     {
-        $this->expectException('Espo\Core\Exceptions\Conflict');
+        $this->expectException(Conflict::class);
 
         $data = [
             "type" => "varchar",
@@ -82,16 +78,23 @@ class FieldManagerTest extends TestCase
             ->method('getObjects')
             ->will($this->returnValue($data));
 
+        $this->metadata
+            ->expects($this->any())
+            ->method('get')
+            ->willReturnMap([
+                ["scopes.CustomEntity.customizable", null, true],
+            ]);
+
         $this->fieldManager->create('CustomEntity', 'varName', $data);
     }
 
-    public function testUpdateCoreField()
+    public function testUpdateCoreField(): void
     {
-        $data = array(
+        $data = [
             "type" => "varchar",
             "maxLength" => 100,
             "label" => "Modified Name",
-        );
+        ];
 
         $existingData = (object) [
             "type" => "varchar",
@@ -99,11 +102,12 @@ class FieldManagerTest extends TestCase
             "label" => "Name",
         ];
 
-        $map = array(
+        $map = [
             [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $data['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
-        );
+            ["scopes.Account.customizable", null, true],
+        ];
 
         $this->language
             ->expects($this->once())
@@ -170,19 +174,20 @@ class FieldManagerTest extends TestCase
         $this->fieldManager->update('Account', 'name', $data);
     }
 
-    public function testUpdateCoreFieldWithNoChanges()
+    public function testUpdateCoreFieldWithNoChanges(): void
     {
-        $data = array(
+        $data = [
             "type" => "varchar",
             "maxLength" => 50,
             "label" => "Name",
-        );
+        ];
 
-        $map = array(
+        $map = [
             [['entityDefs', 'Account', 'fields', 'name', 'type'], null, $data['type']],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
-        );
+            ["scopes.Account.customizable", null, true],
+        ];
 
         $this->metadata
             ->expects($this->never())
@@ -256,41 +261,7 @@ class FieldManagerTest extends TestCase
         $this->fieldManager->update('Account', 'name', $data);
     }
 
-    public function dddtestUpdateCustomFieldIsNotChanged()
-    {
-        $data = [
-            "type" => "varchar",
-            "maxLength" => "50",
-            "isCustom" => true,
-        ];
-
-        $map = [
-            ['entityDefs.CustomEntity.fields.varName', [], $data],
-            ['entityDefs.CustomEntity.fields.varName.type', null, $data['type']],
-            [['entityDefs', 'CustomEntity', 'fields', 'varName'], null, $data],
-            ['fields.varchar', null, null],
-            [['fields', 'varchar', 'hookClassName'], null, null],
-        ];
-
-        $this->metadata
-            ->expects($this->any())
-            ->method('get')
-            ->will($this->returnValueMap($map));
-
-        $this->metadata
-            ->expects($this->never())
-            ->method('set')
-            ->will($this->returnValue(true));
-
-        $this->metadata
-            ->expects($this->exactly(1))
-            ->method('getCustom')
-            ->will($this->returnValue((object) []));
-
-        $this->fieldManager->update('CustomEntity', 'varName', $data);
-    }
-
-    public function testUpdateCustomField()
+    public function testUpdateCustomField(): void
     {
         $data = [
             "type" => "varchar",
@@ -303,6 +274,7 @@ class FieldManagerTest extends TestCase
             [['entityDefs', 'CustomEntity', 'fields', 'varName'], null, $data],
             ['fields.varchar', null, null],
             [['fields', 'varchar', 'hookClassName'], null, null],
+            ["scopes.CustomEntity.customizable", null, true],
         ];
 
         $this->metadata
@@ -362,12 +334,12 @@ class FieldManagerTest extends TestCase
                "fullTextSearch": true
             }', true)));
 
-        $data = array(
+        $data = [
             "type" => "varchar",
             "maxLength" => "150",
             "required" => true,
             "isCustom" => true,
-        );
+        ];
 
         $this->metadata
             ->expects($this->exactly(2))
@@ -377,7 +349,7 @@ class FieldManagerTest extends TestCase
         $this->fieldManager->update('CustomEntity', 'varName', $data);
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $data = [
             "type" => "varchar",
