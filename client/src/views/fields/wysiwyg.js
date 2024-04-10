@@ -47,7 +47,7 @@ class WysiwygFieldView extends TextFieldView {
     fallbackBodySideMargin = 5
     fallbackBodyTopMargin = 4
     seeMoreDisabled = true
-    fetchEmptyValueAsNull = false
+    fetchEmptyValueAsNull = true
     validationElementSelector = '.note-editor'
     htmlPurificationDisabled = false
     htmlPurificationForEditDisabled = false
@@ -719,7 +719,7 @@ class WysiwygFieldView extends TextFieldView {
         $div.find('style').remove();
         $div.find('link[ref="stylesheet"]').remove();
 
-        value =  $div.text();
+        value = $div.text();
 
         return value;
     }
@@ -761,20 +761,19 @@ class WysiwygFieldView extends TextFieldView {
         }
         else {
             data[this.name] = this.$element.val();
+        }
 
-            if (this.fetchEmptyValueAsNull) {
-                if (!data[this.name]) {
-                    data[this.name] = null;
-                }
-            }
+        if (this.fetchEmptyValueAsNull && !data[this.name]) {
+            data[this.name] = null;
         }
 
         if (this.model.has('isHtml') && this.hasBodyPlainField) {
-            if (this.model.get('isHtml')) {
-                data[this.name + 'Plain'] = this.htmlToPlain(data[this.name]);
-            }
-            else {
-                data[this.name + 'Plain'] = data[this.name];
+            if (data[this.name] === null) {
+                data[this.name + 'Plain'] = null;
+            } else {
+                data[this.name + 'Plain'] = this.model.get('isHtml') ?
+                    this.htmlToPlain(data[this.name]) :
+                    data[this.name];
             }
         }
 
