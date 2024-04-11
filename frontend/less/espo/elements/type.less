@@ -286,6 +286,22 @@ a.text-soft {
     }
 }
 
+a.text-default {
+    color: var(--text-color);
+
+    &:hover,
+    &:focus {
+        color: var(--text-color);
+    }
+
+    &:hover {
+        > .fas,
+        > .far {
+            color: var(--text-gray-color);
+        }
+    }
+}
+
 .text-primary {
     .text-emphasis-variant-espo(var(--state-primary-text), var(--brand-primary-10));
 }

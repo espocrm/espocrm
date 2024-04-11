@@ -728,6 +728,10 @@ class LinkMultipleFieldView extends BaseFieldView {
             .attr('data-id', id)
             .text(name);
 
+        if (this.mode === this.MODE_LIST) {
+            $a.addClass('text-default');
+        }
+
         if (iconHtml) {
             $a.prepend(iconHtml)
         }
