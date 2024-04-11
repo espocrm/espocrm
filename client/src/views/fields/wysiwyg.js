@@ -236,6 +236,11 @@ class WysiwygFieldView extends TextFieldView {
         if (value) {
             if (!this.htmlPurificationDisabled) {
                 value = this.getHelper().sanitizeHtml(value);
+
+                if (this.isEditMode()) {
+                    // Trick to handle the issue that attributes are re-ordered.
+                    value = this.getHelper().sanitizeHtml(value);
+                }
             } else {
                 value = this.sanitizeHtmlLight(value);
             }
