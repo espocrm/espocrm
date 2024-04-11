@@ -1258,6 +1258,12 @@ class CalendarView extends View {
                 continue;
             }
 
+            if (key === 'className') {
+                event.setProp('classNames', value);
+
+                continue;
+            }
+
             if (this.extendedProps.includes(key)) {
                 event.setExtendedProp(key, value);
 
