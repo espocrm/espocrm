@@ -161,6 +161,7 @@ class ActivitiesDashletView extends BaseDashletView {
 
     actionRefresh() {
         this.collection.fetch({
+            previousTotal: this.collection.total,
             previousDataList: this.collection.models.map(model => {
                 return Espo.Utils.cloneDeep(model.attributes);
             }),

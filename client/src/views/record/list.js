@@ -1985,7 +1985,10 @@ class ListRecordView extends View {
                     return Espo.Utils.cloneDeep(model.attributes);
                 });
 
-                if (_.isEqual(currentDataList, options.previousDataList)) {
+                if (
+                    _.isEqual(currentDataList, options.previousDataList) &&
+                    options.previousTotal === this.collection.total
+                ) {
                     return;
                 }
             }
