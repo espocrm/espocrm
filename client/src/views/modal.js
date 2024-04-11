@@ -342,8 +342,6 @@ class ModalView extends View {
             const footerAtTheTop = (this.footerAtTheTop !== null) ? this.footerAtTheTop :
                 this.getThemeManager().getParam('modalFooterAtTheTop');
 
-            console.log(this.getDialogDropdownItemList());
-
             this.dialog = new Espo.Ui.Dialog({
                 backdrop: this.backdrop,
                 header: headerHtml,
