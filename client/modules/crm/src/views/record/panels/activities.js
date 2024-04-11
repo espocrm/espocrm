@@ -60,9 +60,14 @@ class ActivitiesPanelView extends RelationshipPanelView {
                 {name: 'name', link: true, view: 'views/event/fields/name-for-history'},
             ],
             [
-                {name: 'assignedUser'},
-                {name: 'dateStart'},
-            ],
+                {
+                    name: 'dateStart',
+                    soft: true
+                },
+                {
+                    name: 'assignedUser',
+                }
+            ]
         ]
     }
 

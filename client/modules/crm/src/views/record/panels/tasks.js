@@ -74,7 +74,10 @@ define('crm:views/record/panels/tasks', ['views/record/panels/relationship'], fu
                         name: 'isOverdue'
                     },
                     {name: 'assignedUser'},
-                    {name: 'dateEnd'},
+                    {
+                        name: 'dateEnd',
+                        soft: true
+                    },
                     {name: 'status'},
                 ]
             ]

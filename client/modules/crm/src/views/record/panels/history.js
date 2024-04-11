@@ -49,9 +49,17 @@ class HistoryPanelView extends ActivitiesPanelView {
                     },
                 ],
                 [
-                    {name: 'status'},
-                    {name: 'dateSent'},
-                    {name: 'hasAttachment', view: 'views/email/fields/has-attachment'},
+                    {
+                        name: 'dateSent',
+                        soft: true
+                    },
+                    {
+                        name: 'hasAttachment',
+                        view: 'views/email/fields/has-attachment'
+                    },
+                    {
+                        name: 'status',
+                    },
                 ],
             ]
         },

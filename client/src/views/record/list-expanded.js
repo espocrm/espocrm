@@ -112,6 +112,9 @@ class ListExpandedRecordView extends ListRecordView {
                         },
                         mode: 'list',
                     },
+                    align: rowItem.align,
+                    small: rowItem.small,
+                    soft: rowItem.soft,
                 };
 
                 if (rowItem.options) {
@@ -152,10 +155,8 @@ class ListExpandedRecordView extends ListRecordView {
                 };
             }
         }
-        else {
-            if (this.rowActionsView) {
-                layout.right = this.getRowActionsDefs();
-            }
+        else if (this.rowActionsView) {
+            layout.right = this.getRowActionsDefs();
         }
 
         return layout;
