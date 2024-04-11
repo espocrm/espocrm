@@ -168,6 +168,12 @@ class LinkParentFieldView extends BaseFieldView {
      */
     autocompleteOnEmpty
 
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    displayScopeColorInListMode = true
+
     /** @inheritDoc */
     events = {
         /** @this LinkParentFieldView */

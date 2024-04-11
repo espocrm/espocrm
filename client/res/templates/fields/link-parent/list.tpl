@@ -1,5 +1,5 @@
 {{#if idValue}}
-	{{#if iconHtml}}{{{iconHtml}}}{{/if}}
+	{{#if iconHtml}}{{{iconHtml}}}{{/if~}}
         <a
             href="#{{foreignScope}}/view/{{idValue}}"
             title="{{nameValue}}"
