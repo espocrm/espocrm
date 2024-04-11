@@ -246,6 +246,35 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "enum"},
+                                    {"const": "multiEnum"},
+                                    {"const": "array"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "displayAsLabel": {
+                                "type": "boolean",
+                                "description": "Display as a label."
+                            },
+                            "labelType": {
+                                "type": "string",
+                                "enum": [
+                                    null,
+                                    "state"
+                                ],
+                                "description": "A label type."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "varchar"},
                                     {"const": "enum"},
                                     {"const": "url"}

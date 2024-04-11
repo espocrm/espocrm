@@ -509,9 +509,15 @@ class ArrayFieldView extends BaseFieldView {
 
             const style = this.styleMap[item] || 'default';
 
-            if (this.params.displayAsLabel) {
+            if (this.displayAsLabel) {
+                let className = 'label label-md label-' + style;
+
+                if (this.params.labelType === 'state') {
+                    className += ' label-state'
+                }
+
                 return $('<span>')
-                    .addClass('label label-md label-' + style)
+                    .addClass(className)
                     .text(label)
                     .get(0).outerHTML;
 

@@ -46,6 +46,11 @@
             "type": "bool"
         },
         {
+            "name": "labelType",
+            "type": "enum",
+            "options": ["", "state"]
+        },
+        {
             "name": "audited",
             "type": "bool"
         },

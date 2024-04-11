@@ -212,6 +212,7 @@
         "allowCustomOptions": "Allow Custom Options",
         "displayAsLabel": "Display as Label",
         "displayAsList": "Display as List",
+        "labelType": "Label Type",
         "maxCount": "Max Item Count",
         "accept": "Accept",
         "viewMap": "View Map Button",
@@ -326,6 +327,10 @@
             "small": "Small",
             "medium": "Medium",
             "large": "Large"
+        },
+        "labelType": {
+            "state": "State",
+            "regular": "Regular"
         }
     },
     "logicalOperators": {

@@ -51,6 +51,11 @@
             "type": "bool"
         },
         {
+            "name": "labelType",
+            "type": "enum",
+            "options": ["", "state"]
+        },
+        {
             "name": "displayAsList",
             "type": "bool",
             "tooltip": true
