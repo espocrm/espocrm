@@ -29,8 +29,9 @@
 
 namespace Espo\Core\FieldProcessing\Wysiwyg;
 
+use Espo\Core\ORM\Type\FieldType;
+use Espo\Entities\Attachment;
 use Espo\ORM\Entity;
-
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
 use Espo\Core\FieldProcessing\Saver\Params;
 use Espo\Core\ORM\EntityManager;
@@ -40,15 +41,11 @@ use Espo\Core\ORM\EntityManager;
  */
 class Saver implements SaverInterface
 {
-    private EntityManager $entityManager;
-
     /** @var array<string, string[]> */
     private $fieldListMapCache = [];
 
-    public function __construct(EntityManager $entityManager)
-    {
-        $this->entityManager = $entityManager;
-    }
+    public function __construct(private EntityManager $entityManager)
+    {}
 
     public function process(Entity $entity, Params $params): void
     {
@@ -86,13 +83,13 @@ class Saver implements SaverInterface
         }
 
         foreach ($matches[1] as $id) {
-            $attachment = $this->entityManager->getEntity('Attachment', $id);
+            $attachment = $this->entityManager->getRDBRepositoryByClass(Attachment::class)->getById($id);
 
             if (!$attachment) {
                 continue;
             }
 
-            if ($attachment->get('relatedId')) {
+            if ($attachment->getRelated()) {
                 continue;
             }
 
@@ -123,7 +120,7 @@ class Saver implements SaverInterface
         foreach ($entityDefs->getFieldNameList() as $name) {
             $defs = $entityDefs->getField($name);
 
-            if ($defs->getType() !== 'wysiwyg') {
+            if ($defs->getType() !== FieldType::WYSIWYG) {
                 continue;
             }
 
