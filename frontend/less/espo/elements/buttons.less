@@ -410,6 +410,26 @@ a.btn {
     font-weight: 400;
 }
 
+.btn {
+    .caret {
+        border-top-color: var(--text-muted-color);
+    }
+
+    &:hover {
+        .caret {
+            border-top-color: var(--btn-text-color);
+        }
+    }
+}
+
+&.open {
+    .btn {
+        .caret {
+            border-top-color: var(--btn-text-color);
+        }
+    }
+}
+
 .btn-default {
     .button-variant-espo(
         var(--btn-default-color);
