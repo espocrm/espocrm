@@ -174,13 +174,21 @@
 
 .input-group-container-2 {
     width: ~"calc(100% + 1px)";
+
     > div {
         width: 50%;
         float: left;
+
+        &:first-child {
+            padding-right: 3px;
+        }
+
+        &:last-child {
+            padding-left: 3px;
+            //margin-left: -1px;
+        }
     }
-    > div:last-child {
-        margin-left: -1px;
-    }
+
     &:after {
         clear: both;
         content: " ";
