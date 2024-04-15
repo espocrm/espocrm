@@ -49,6 +49,7 @@ class ClientManager
     private string $favicon196 = 'client/img/favicon196x196.png';
     private string $basePath = '';
     private string $apiUrl = 'api/v1';
+    private string $applicationId = 'espocrm';
 
     private string $nonce;
 
@@ -190,7 +191,7 @@ class ClientManager
         );
 
         $data = [
-            'applicationId' => 'espocrm',
+            'applicationId' => $this->applicationId,
             'apiUrl' => $this->apiUrl,
             'applicationName' => $this->config->get('applicationName', 'EspoCRM'),
             'cacheTimestamp' => $cacheTimestamp,
@@ -383,5 +384,10 @@ class ClientManager
     public function setApiUrl(string $apiUrl): void
     {
         $this->apiUrl = $apiUrl;
+    }
+
+    public function setApplicationId(string $applicationId): void
+    {
+        $this->applicationId = $applicationId;
     }
 }
