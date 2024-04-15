@@ -179,13 +179,24 @@
         width: 50%;
         float: left;
 
-        &:first-child {
-            padding-right: 3px;
+        &:first-child:not(:has(+ div > .hidden)) {
+            //padding-right: 3px;
+            > .input-group-btn:last-child > {
+                > .btn {
+                    border-top-right-radius: 0;
+                    border-bottom-right-radius: 0;
+                }
+            }
         }
 
         &:last-child {
-            padding-left: 3px;
-            //margin-left: -1px;
+            > input {
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+            }
+
+            //padding-left: 3px;
+            margin-left: -1px;
         }
     }
 
