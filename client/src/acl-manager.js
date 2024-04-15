@@ -97,7 +97,7 @@ class AclManager {
 
             const params = {
                 aclAllowDeleteCreated: this.aclAllowDeleteCreated,
-                teamsFieldIsForbidden: !!~forbiddenFieldList.indexOf('teams'),
+                teamsFieldIsForbidden: forbiddenFieldList.includes('teams'),
                 forbiddenFieldList: forbiddenFieldList,
             };
 
@@ -108,6 +108,7 @@ class AclManager {
     }
 
     /**
+     * @return {import('models/user').default}
      * @protected
      */
     getUser() {
@@ -353,7 +354,7 @@ class AclManager {
             const teamsIds = user.get('teamsIds') || [];
 
             teamsIds.forEach(id => {
-                if (~(this.getUser().get('teamsIds') || []).indexOf(id)) {
+                if ((this.getUser().get('teamsIds') || []).includes(id)) {
                     result = true;
                 }
             });
@@ -403,7 +404,7 @@ class AclManager {
             const list = actionData[level] || [];
 
             list.forEach(field => {
-                if (~fieldList.indexOf(field)) {
+                if (fieldList.includes(field)) {
                     return;
                 }
 
@@ -448,7 +449,7 @@ class AclManager {
             const list = actionData[level] || [];
 
             list.forEach(attribute => {
-                if (~attributeList.indexOf(attribute)) {
+                if (attributeList.includes(attribute)) {
                     return;
                 }
 
@@ -472,7 +473,7 @@ class AclManager {
             return true;
         }
 
-        return !!~this.getUser().getLinkMultipleIdList('teams').indexOf(teamId);
+        return this.getUser().getLinkMultipleIdList('teams').includes(teamId);
     }
 
     /**

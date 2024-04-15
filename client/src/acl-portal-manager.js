@@ -44,9 +44,7 @@ class AclPortalManager extends AclManager {
      * @returns {boolean|null} True if in an account, null if not clear.
      */
     checkInAccount(model) {
-        const impl =
-            /** @type {module:acl-portal} */
-            this.getImplementation(model.entityType);
+        const impl = /** @type {module:acl-portal} */this.getImplementation(model.entityType);
 
         return impl.checkInAccount(model);
     }
@@ -78,8 +76,12 @@ class AclPortalManager extends AclManager {
                 implementationClass = this.implementationClassMap[scope];
             }
 
-            this.implementationHash[scope] =
-                new implementationClass(this.getUser(), scope, this.aclAllowDeleteCreated);
+            const params = {
+                aclAllowDeleteCreated: false,
+                forbiddenFieldList: this.getScopeForbiddenFieldList(scope),
+            };
+
+            this.implementationHash[scope] = new implementationClass(this.getUser(), scope, params);
         }
 
         return this.implementationHash[scope];
