@@ -40,8 +40,9 @@ class Acl {
      * @param {module:models/user} user A user.
      * @param {string} scope A scope.
      * @param {Object} params Parameters.
+     * @param {import('acl-manager').default} aclManager
      */
-    constructor(user, scope, params) {
+    constructor(user, scope, params, aclManager) {
         /**
          * A user.
          *
@@ -56,6 +57,12 @@ class Acl {
         this.aclAllowDeleteCreated = params.aclAllowDeleteCreated;
         this.teamsFieldIsForbidden = params.teamsFieldIsForbidden;
         this.forbiddenFieldList = params.forbiddenFieldList;
+
+        /**
+         * @type {import('acl-manager').default}
+         * @private
+         */
+        this._aclManager = aclManager;
     }
 
     /**
@@ -313,6 +320,17 @@ class Acl {
         });
 
         return inTeam;
+    }
+
+    /**
+     * Get a permission level.
+     *
+     * @protected
+     * @param {string} permission A permission name.
+     * @returns {'yes'|'all'|'team'|'no'}
+     */
+    getPermissionLevel(permission) {
+        return this._aclManager.getPermissionLevel(permission);
     }
 }
 

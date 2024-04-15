@@ -81,7 +81,7 @@ class AclPortalManager extends AclManager {
                 forbiddenFieldList: this.getScopeForbiddenFieldList(scope),
             };
 
-            this.implementationHash[scope] = new implementationClass(this.getUser(), scope, params);
+            this.implementationHash[scope] = new implementationClass(this.getUser(), scope, params, this);
         }
 
         return this.implementationHash[scope];

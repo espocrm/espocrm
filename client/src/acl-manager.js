@@ -101,7 +101,7 @@ class AclManager {
                 forbiddenFieldList: forbiddenFieldList,
             };
 
-            this.implementationHash[scope] = new implementationClass(this.getUser(), scope, params);
+            this.implementationHash[scope] = new implementationClass(this.getUser(), scope, params, this);
         }
 
         return this.implementationHash[scope];

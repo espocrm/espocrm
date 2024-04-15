@@ -32,12 +32,12 @@ class UserAcl extends Acl {
 
     // noinspection JSUnusedGlobalSymbols
     checkModelRead(model, data, precise) {
-        // @todo Support getPermissionLevel.
-        /*if (model.isPortal()) {
-            if (this.getPermissionLevel('portalPermission') === 'yes') {
-                return true;
-            }
-        }*/
+        if (
+            model.isPortal() &&
+            this.getPermissionLevel('portalPermission') === 'yes'
+        ) {
+            return true;
+        }
 
         return this.checkModel(model, data, 'read', precise);
     }
