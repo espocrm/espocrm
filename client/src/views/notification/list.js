@@ -33,18 +33,7 @@ class NotificationListView extends View {
     template = 'notification/list'
 
     setup() {
-        this.addActionHandler('refresh', () => {
-            Espo.Ui.notify(' ... ');
-
-            const $btn = this.$el.find('[data-action="refresh"]');
-            $btn.addClass('disabled').attr('disabled', 'disabled');
-
-            this.getRecordView().showNewRecords()
-                .then(() => {
-                    Espo.Ui.notify(false);
-                    $btn.removeClass('disabled').removeAttr('disabled');
-                })
-        });
+        this.addActionHandler('refresh', () => this.actionRefresh());
 
         this.addActionHandler('markAllNotificationsRead', () => this.actionMarkAllRead());
 
@@ -56,6 +45,31 @@ class NotificationListView extends View {
                 })
 
         this.wait(promise);
+    }
+
+    actionRefresh() {
+        Espo.Ui.notify(' ... ');
+
+        const $btn = this.$el.find('[data-action="refresh"]');
+        $btn.addClass('disabled').attr('disabled', 'disabled');
+
+        this.animateRefreshButton();
+
+        this.getRecordView().showNewRecords()
+            .then(() => {
+                Espo.Ui.notify(false);
+            })
+            .finally(() => $btn.removeClass('disabled').removeAttr('disabled'));
+    }
+
+    animateRefreshButton() {
+        const iconEl = this.element.querySelector('button[data-action="refresh"] span');
+
+        if (iconEl) {
+            iconEl.classList.add('animation-spin-fast');
+
+            setTimeout(() => iconEl.classList.remove('animation-spin-fast'), 500);
+        }
     }
 
     afterRender() {
@@ -96,12 +110,19 @@ class NotificationListView extends View {
     }
 
     actionMarkAllRead() {
+        Espo.Ui.notify(' ... ');
+
+        const $link = this.$el.find('[data-action="markAllNotificationsRead"]');
+        $link.attr('disabled', 'disabled').addClass('disabled');
+
         Espo.Ajax.postRequest('Notification/action/markAllRead')
             .then(() => {
                 this.trigger('all-read');
+                Espo.Ui.notify(false);
 
                 this.$el.find('.badge-circle-warning').remove();
-            });
+            })
+            .finally(() => $link.removeAttr('disabled').removeClass('disabled'));
     }
 
     /**
