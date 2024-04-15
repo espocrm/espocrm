@@ -119,6 +119,7 @@ class Acl {
         if (action === null) {
             return true;
         }
+
         if (!(action in data)) {
             return false;
         }
@@ -155,8 +156,7 @@ class Acl {
             if (inTeam === null) {
                 if (precise) {
                     result = null;
-                }
-                else {
+                } else {
                     return true;
                 }
             }
@@ -168,8 +168,7 @@ class Acl {
         if (isOwner === null) {
             if (precise) {
                 result = null;
-            }
-            else {
+            } else {
                 return true;
             }
         }
@@ -227,20 +226,21 @@ class Acl {
             return false;
         }
 
-        if (model.has('createdById')) {
-            if (model.get('createdById') === this.getUser().id && this.aclAllowDeleteCreated) {
-                if (!model.has('assignedUserId')) {
-                    return true;
-                }
+        if (
+            model.has('createdById') &&
+            model.get('createdById') === this.getUser().id &&
+            this.aclAllowDeleteCreated
+        ) {
+            if (!model.has('assignedUserId')) {
+                return true;
+            }
 
-                if (!model.get('assignedUserId')) {
-                    return true;
-                }
+            if (!model.get('assignedUserId')) {
+                return true;
+            }
 
-                if (model.get('assignedUserId') === this.getUser().id) {
-                    return true;
-                }
-
+            if (model.get('assignedUserId') === this.getUser().id) {
+                return true;
             }
         }
 
@@ -265,15 +265,13 @@ class Acl {
                 result = null;
             }
         }
-        else {
-            if (model.hasField('createdBy')) {
-                if (this.getUser().id === model.get('createdById')) {
-                    return true;
-                }
+        else if (model.hasField('createdBy')) {
+            if (this.getUser().id === model.get('createdById')) {
+                return true;
+            }
 
-                if (!model.has('createdById')) {
-                    result = null;
-                }
+            if (!model.has('createdById')) {
+                result = null;
             }
         }
 
@@ -282,7 +280,7 @@ class Acl {
                 return null;
             }
 
-            if (~(model.get('assignedUsersIds') || []).indexOf(this.getUser().id)) {
+            if ((model.get('assignedUsersIds') || []).includes(this.getUser().id)) {
                 return true;
             }
 
@@ -314,7 +312,7 @@ class Acl {
         let inTeam = false;
 
         userTeamIdList.forEach(id => {
-            if (~teamIdList.indexOf(id)) {
+            if (teamIdList.includes(id)) {
                 inTeam = true;
             }
         });
