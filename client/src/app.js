@@ -78,7 +78,7 @@ class App {
          * @private
          * @type {string}
          */
-        this.id = options.id || 'espocrm-application-id';
+        this.id = options.id || 'espocrm';
 
         /**
          * Use cache.

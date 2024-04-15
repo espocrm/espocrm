@@ -190,7 +190,7 @@ class ClientManager
         );
 
         $data = [
-            'applicationId' => 'espocrm-application-id',
+            'applicationId' => 'espocrm',
             'apiUrl' => $this->apiUrl,
             'applicationName' => $this->config->get('applicationName', 'EspoCRM'),
             'cacheTimestamp' => $cacheTimestamp,
