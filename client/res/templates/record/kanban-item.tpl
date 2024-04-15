@@ -9,7 +9,7 @@
             {{/if}}
             <div class="form-group">
                 <div
-                    class="field{{#if isAlignRight}} field-right-align{{/if}}{{#if isLarge}} field-large{{/if}}"
+                    class="field{{#if isAlignRight}} field-right-align{{/if}}{{#if isLarge}} field-large{{/if}}{{#if isMuted}} text-muted{{/if}}"
                     data-name="{{name}}"
                 >{{{var key ../this}}}</div>
             </div>

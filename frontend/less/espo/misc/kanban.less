@@ -199,6 +199,7 @@ div.list-kanban > div > table {
         .panel {
             .form-group {
                 margin-bottom: 3px;
+
                 .field-right-align {
                     text-align: right;
                 }
@@ -208,10 +209,22 @@ div.list-kanban > div > table {
                     word-wrap: break-word;
                     font-size: @font-size-base;
                     overflow: hidden;
-                }
-                .field.field-large {
-                    font-size: @font-size-large;
-                    color: @gray;
+
+                    &.field-large {
+                        font-size: @font-size-large;
+                        color: var(--gray);
+
+                        &.text-muted {
+                            color: var(--text-muted-color);
+                        }
+                    }
+
+                    &.text-muted {
+                        > a {
+                            color: var(--text-muted-color);
+                        }
+
+                    }
                 }
             }
             div:last-child > .form-group {

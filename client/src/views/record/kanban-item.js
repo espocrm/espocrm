@@ -56,6 +56,7 @@ class KanbanRecordItem extends View {
                 name: name,
                 isAlignRight: item.align === 'right',
                 isLarge: item.isLarge,
+                isMuted: item.isMuted,
                 isFirst: i === 0,
                 key: key,
             };

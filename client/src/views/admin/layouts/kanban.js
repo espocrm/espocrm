@@ -36,11 +36,13 @@ class LayoutKanbanView extends LayoutListView {
         'align',
         'view',
         'isLarge',
+        'isMuted',
     ]
 
     dataAttributesDefs = {
         link: {type: 'bool'},
         isLarge: {type: 'bool'},
+        isMuted: {type: 'bool'},
         width: {type: 'float'},
         align: {
             type: 'enum',

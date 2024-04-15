@@ -7,6 +7,7 @@
         "panelName": "Panel Name",
         "style": "Style",
         "sticked": "Sticked",
+        "isMuted": "Muted color",
         "isLarge": "Large font size",
         "hidden": "Hidden",
         "noLabel": "No Label",
