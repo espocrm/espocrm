@@ -521,7 +521,6 @@ class LinkMultipleFieldView extends BaseFieldView {
 
             if (!this.autocompleteDisabled) {
                 const autocomplete = new Autocomplete(this.$element.get(0), {
-                    minChars: this.autocompleteOnEmpty ? 0 : 1,
                     focusOnSelect: true,
                     handleFocusMode: 3,
                     autoSelectFirst: true,
@@ -538,6 +537,16 @@ class LinkMultipleFieldView extends BaseFieldView {
                         });
                     },
                     lookupFunction: query => {
+                        if (!this.autocompleteOnEmpty && query.length === 0) {
+                            const emptyResult = this.getEmptyAutocompleteResult();
+
+                            if (emptyResult) {
+                                return Promise.resolve(this._transformAutocompleteResult({list: emptyResult}));
+                            }
+
+                            return Promise.resolve([]);
+                        }
+
                         return Promise.resolve(this.getAutocompleteUrl(query))
                             .then(url => Espo.Ajax.getRequest(url, {q: query}))
                             .then(/** {list: Record[]} */response => {
@@ -1097,6 +1106,23 @@ class LinkMultipleFieldView extends BaseFieldView {
                 });
             });
         });
+    }
+
+    /** @private */
+    _transformAutocompleteResult(response) {
+        const list = [];
+
+        response.list.forEach(item => {
+            list.push({
+                id: item.id,
+                name: item.name || item.id,
+                data: item.id,
+                value: item.name || item.id,
+                attributes: item,
+            });
+        });
+
+        return list;
     }
 
     /**
