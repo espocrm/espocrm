@@ -66,6 +66,12 @@ class Autocomplete {
         /** @private */
         this.$element = $(element);
 
+        this.$element.on('keydown', e => {
+            if (e.code === 'Tab' && !this.$element.val()) {
+                e.stopImmediatePropagation();
+            }
+        });
+
         const lookup = options.lookupFunction ?
             (query, done) => {
                 options.lookupFunction(query)

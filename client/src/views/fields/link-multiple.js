@@ -1098,6 +1098,16 @@ class LinkMultipleFieldView extends BaseFieldView {
             });
         });
     }
+
+    /**
+     * Get an empty autocomplete result.
+     *
+     * @protected
+     * @return {[{name: ?string, id: string} & Record]}
+     */
+    getEmptyAutocompleteResult() {
+        return undefined;
+    }
 }
 
 export default LinkMultipleFieldView;

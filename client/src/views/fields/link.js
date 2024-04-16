@@ -660,16 +660,6 @@ class LinkFieldView extends BaseFieldView {
             const $elementName = this.$elementName;
 
             if (!this.autocompleteDisabled) {
-                let isEmptyQueryResult = false;
-
-                if (this.getEmptyAutocompleteResult()) {
-                    this.$elementName.on('keydown', e => {
-                        if (e.code === 'Tab' && isEmptyQueryResult) {
-                            e.stopImmediatePropagation();
-                        }
-                    });
-                }
-
                 const autocomplete = new Autocomplete(this.$elementName.get(0), {
                     name: this.name,
                     handleFocusMode: 2,
@@ -686,8 +676,6 @@ class LinkFieldView extends BaseFieldView {
                     },
                     lookupFunction: query => {
                         if (!this.autocompleteOnEmpty && query.length === 0) {
-                            isEmptyQueryResult = true;
-
                             const emptyResult = this.getEmptyAutocompleteResult();
 
                             if (emptyResult) {
@@ -696,8 +684,6 @@ class LinkFieldView extends BaseFieldView {
 
                             return Promise.resolve([]);
                         }
-
-                        isEmptyQueryResult = false;
 
                         return Promise.resolve(this.getAutocompleteUrl(query))
                             .then(url => Espo.Ajax.getRequest(url, {q: query}))
