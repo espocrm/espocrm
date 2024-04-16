@@ -490,14 +490,14 @@ class Service
         $data = [];
 
         $data['emailId'] = $email->getId();
-        $data['emailName'] = $email->get('name');
+        $data['emailName'] = $email->getSubject();
         $data['isInitial'] = $isInitial;
 
         if ($withContent) {
             $data['attachmentsIds'] = $email->get('attachmentsIds');
         }
 
-        $from = $email->get('from');
+        $from = $email->getFromAddress();
 
         if ($from) {
             $person = $this->getEmailAddressRepository()->getEntityByAddress($from);
@@ -506,10 +506,18 @@ class Service
                 $data['personEntityType'] = $person->getEntityType();
                 $data['personEntityName'] = $person->get('name');
                 $data['personEntityId'] = $person->getId();
+
+                if (
+                    !$isInitial &&
+                    $person instanceof User &&
+                    ($person->isRegular() || $person->isAdmin())
+                ) {
+                    $note->setType(Note::TYPE_EMAIL_SENT);
+                }
             }
         }
 
-        $note->set('data', (object) $data);
+        $note->setData((object) $data);
 
         $this->entityManager->saveEntity($note);
     }
