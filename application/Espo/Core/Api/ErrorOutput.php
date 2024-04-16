@@ -126,18 +126,18 @@ class ErrorOutput
             $exception->getLogLevel() :
             Log::LEVEL_ERROR;
 
-        $messageLineFile =
-            'line: ' . $exception->getLine() . ', ' .
-            'file: ' . $exception->getFile();
-
         $logMessageItemList = [];
 
         if ($message) {
-            $logMessageItemList[] = "$message";
+            $logMessageItemList[] = $message;
         }
 
         $logMessageItemList[] = $request->getMethod() . ' ' . $request->getResourcePath();
-        $logMessageItemList[] = $messageLineFile;
+
+        // Skip if created with a static constructor.
+        if (!$exception instanceof HasBody || !$exception->getBody()) {
+            $logMessageItemList[] = "line: {$exception->getLine()}, file: {$exception->getFile()}";
+        }
 
         $logMessage = "($statusCode) " . implode("; ", $logMessageItemList);
 
