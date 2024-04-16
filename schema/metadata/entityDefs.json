@@ -512,7 +512,8 @@
                                 "anyOf": [
                                     {"const": "link"},
                                     {"const": "linkMultiple"},
-                                    {"const": "linkOne"}
+                                    {"const": "linkOne"},
+                                    {"const": "linkParent"}
                                 ]
                             }
                         }
