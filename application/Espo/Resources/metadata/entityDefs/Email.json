@@ -344,6 +344,7 @@
             "fieldManagerParamList": [
                 "required",
                 "entityList",
+                "autocompleteOnEmpty",
                 "audited",
                 "tooltipText"
             ]
