@@ -37,7 +37,7 @@ class Autocomplete {
     /** @module ui/autocomplete */
 
     /**
-     * @typedef {Object & Record} module:ui/autocomplete~item
+     * @typedef {Object} module:ui/autocomplete~item
      * @property {string} value
      */
 
@@ -46,10 +46,10 @@ class Autocomplete {
      *     name?: string,
      *     forceHide?: boolean,
      *     lookup?: string[],
-     *     lookupFunction?: function (string): Promise<module:ui/autocomplete~item[]>,
+     *     lookupFunction?: function (string): Promise<Array<module:ui/autocomplete~item & Record>>,
      *     minChars?: Number,
-     *     formatResult?: function (module:ui/autocomplete~item): string,
-     *     onSelect?: function (module:ui/autocomplete~item): void,
+     *     formatResult?: function (module:ui/autocomplete~item & Record): string,
+     *     onSelect?: function (module:ui/autocomplete~item & Record): void,
      *     beforeRender?: function (HTMLElement): void,
      *     triggerSelectOnValidInput?: boolean,
      *     autoSelectFirst?: boolean,
