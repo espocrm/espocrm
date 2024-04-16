@@ -1280,7 +1280,10 @@ class LinkFieldView extends BaseFieldView {
     }
 
     /**
-     * @return {Record[]|undefined}
+     * Get an empty autocomplete result.
+     *
+     * @protected
+     * @return {[{name: ?string, id: string} & Record]}
      */
     getEmptyAutocompleteResult() {
         return undefined;
