@@ -109,6 +109,7 @@ class DetailView extends MainView {
         this.setupRecord();
         this.setupPageTitle();
         this.initFollowButtons();
+        this.initStarButtons();
         this.initRedirect();
     }
 
@@ -219,6 +220,86 @@ class DetailView extends MainView {
     getRecordViewName() {
         return this.getMetadata()
             .get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
+    }
+
+    /** @private */
+    initStarButtons() {
+        if (!this.getMetadata().get(`scopes.${this.scope}.stars`)) {
+            return;
+        }
+
+        this.addStarButtons();
+        this.listenTo(this.model, 'change:isStarred', () => this.controlStarButtons());
+    }
+
+    /** @private */
+    addStarButtons() {
+        const isStarred = this.model.get('isStarred');
+
+        this.addMenuItem('buttons', {
+            name: 'unstar',
+            iconHtml: '<span class="fas fa-star fa-sm text-warning"></span>',
+            text: this.translate('Starred'),
+            hidden: !isStarred,
+            //title: this.translate('Unstar'),
+            onClick: () => this.actionUnstar(),
+        }, true);
+
+        this.addMenuItem('buttons', {
+            name: 'star',
+            iconHtml: '<span class="far fa-star fa-sm"></span>',
+            text: this.translate('Star'),
+            //title: this.translate('Star'),
+            hidden: isStarred || !this.model.has('isStarred'),
+            onClick: () => this.actionStar(),
+        }, true);
+    }
+
+    /** @private */
+    controlStarButtons() {
+        const isStarred = this.model.get('isStarred');
+
+        if (isStarred) {
+            this.hideHeaderActionItem('star');
+            this.showHeaderActionItem('unstar');
+
+            return;
+        }
+
+        this.hideHeaderActionItem('unstar');
+        this.showHeaderActionItem('star');
+    }
+
+    /**
+     * Action 'star'.
+     */
+    actionStar() {
+        this.disableMenuItem('star');
+
+        Espo.Ajax
+            .putRequest(`${this.entityType}/${this.model.id}/starSubscription`)
+            .then(() => {
+                this.hideHeaderActionItem('star');
+
+                this.model.set('isStarred', true, {sync: true});
+            })
+            .finally(() => this.enableMenuItem('star'));
+    }
+
+    /**
+     * Action 'unstar'.
+     */
+    actionUnstar() {
+        this.disableMenuItem('unstar');
+
+        Espo.Ajax
+            .deleteRequest(`${this.entityType}/${this.model.id}/starSubscription`)
+            .then(() => {
+                this.hideHeaderActionItem('unstar');
+
+                this.model.set('isStarred', false, {sync: true});
+            })
+            .finally(() => this.enableMenuItem('unstar'));
     }
 
     /** @private */

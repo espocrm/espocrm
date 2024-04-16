@@ -253,7 +253,7 @@ class SearchView extends View {
         const filterList = this.options.filterList ||
             this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || [];
 
-        this.presetFilterList = Espo.Utils.clone(filterList).filter(item => {
+        this.presetFilterList = filterList.filter(item => {
             if (typeof item === 'string') {
                 return true;
             }
@@ -280,6 +280,12 @@ class SearchView extends View {
 
             return true;
         });
+
+        if (this.getMetadata().get(`scopes.${this.scope}.stars`)) {
+            this.presetFilterList.unshift({
+                name: 'starred',
+            });
+        }
 
         ((this.getPreferences().get('presetFilters') || {})[this.scope] || [])
             .forEach(item => {

@@ -193,6 +193,9 @@
         "Country": "Country",
         "City": "City",
         "PostalCode": "Postal Code",
+        "Star": "Star",
+        "Unstar": "Unstar",
+        "Starred": "Starred",
         "Followed": "Followed",
         "Follow": "Follow",
         "Followers": "Followers",
@@ -407,7 +410,8 @@
     },
     "presetFilters": {
         "followed": "Followed",
-        "all": "All"
+        "all": "All",
+        "starred": "Starred"
     },
     "massActions": {
         "delete": "Delete",

@@ -66,6 +66,7 @@ class NameUtil
         'stream',
         'subscription',
         'followers',
+        'starSubscription',
         'action',
         'null',
         'false',

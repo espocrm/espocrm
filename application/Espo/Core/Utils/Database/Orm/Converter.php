@@ -520,6 +520,18 @@ class Converter
         }
 
         // @todo Refactor.
+        if ($scopeDefs['stars'] ?? false) {
+            if (!isset($entityMetadata['fields']['isStarred'])) {
+                $ormMetadata[$entityType]['attributes']['isStarred'] = [
+                    'type' => Entity::BOOL,
+                    'notStorable' => true,
+                    'notExportable' => true,
+                    'readOnly' => true,
+                ];
+            }
+        }
+
+        // @todo Refactor.
         if ($this->metadata->get(['entityDefs', $entityType, 'optimisticConcurrencyControl'])) {
             $ormMetadata[$entityType]['attributes']['versionNumber'] = [
                 'type' => Entity::INT,

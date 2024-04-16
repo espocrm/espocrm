@@ -1,5 +1,12 @@
 {
     "Global": {
+        "stars": {
+            "location": "scopes",
+            "fieldDefs": {
+                "type": "bool",
+                "tooltip": true
+            }
+        },
         "optimisticConcurrencyControl": {
             "location": "entityDefs",
             "fieldDefs": {

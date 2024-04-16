@@ -565,6 +565,16 @@
         }
     },
     {
+        "route": "/:entityType/:id/starSubscription",
+        "method": "put",
+        "actionClassName": "Espo\\Tools\\Stars\\Api\\PutStar"
+    },
+    {
+        "route": "/:entityType/:id/starSubscription",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Stars\\Api\\DeleteUnstar"
+    },
+    {
         "route": "/:controller/:id/:link",
         "method": "get",
         "params": {

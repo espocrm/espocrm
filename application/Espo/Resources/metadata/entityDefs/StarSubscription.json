@@ -1,0 +1,23 @@
+{
+    "fields": {
+        "id": {
+            "type": "id",
+            "dbType": "bigint",
+            "autoincrement": true
+        },
+        "entity": {
+            "type": "linkParent"
+        },
+        "user": {
+            "type": "link"
+        },
+        "createdAt": {
+            "type": "datetime"
+        }
+    },
+    "indexes": {
+        "userEntity": {
+            "columns": ["userId", "entityId", "entityType"]
+        }
+    }
+}
