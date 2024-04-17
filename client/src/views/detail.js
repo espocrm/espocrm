@@ -239,6 +239,7 @@ class DetailView extends MainView {
         this.addMenuItem('buttons', {
             name: 'unstar',
             iconHtml: '<span class="fas fa-star fa-sm text-warning"></span>',
+            className: 'btn-s-wide',
             text: this.translate('Starred'),
             hidden: !isStarred,
             //title: this.translate('Unstar'),
@@ -248,6 +249,7 @@ class DetailView extends MainView {
         this.addMenuItem('buttons', {
             name: 'star',
             iconHtml: '<span class="far fa-star fa-sm"></span>',
+            className: 'btn-s-wide',
             text: this.translate('Star'),
             //title: this.translate('Star'),
             hidden: isStarred || !this.model.has('isStarred'),
