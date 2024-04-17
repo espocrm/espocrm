@@ -21,6 +21,10 @@
             "description": "Whether the entity has the stream.",
             "type": "boolean"
         },
+        "stars": {
+            "description": "Enables stars.",
+            "type": "boolean"
+        },
         "importable": {
             "description": "Whether the entity is available in the Import tool.",
             "type": "boolean"
