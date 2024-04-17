@@ -485,6 +485,7 @@ class HookProcessor
 
     private function afterSaveStreamNotNew2(CoreEntity $entity): void
     {
+        // Not recommended to use.
         $methodName = 'isChangedWithAclAffect';
 
         if (
