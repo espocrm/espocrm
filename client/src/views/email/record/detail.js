@@ -302,7 +302,9 @@ class EmailDetailRecordView extends DetailRecordView {
     }
 
     actionMoveToFolder() {
-        this.createView('dialog', 'views/email-folder/modals/select-folder', {}, (view) => {
+        this.createView('dialog', 'views/email-folder/modals/select-folder', {
+            headerText: this.translate('Move to Folder', 'labels', 'Email'),
+        }, (view) => {
             view.render();
 
             this.listenToOnce(view, 'select', folderId => {
