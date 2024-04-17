@@ -17,6 +17,7 @@
     },
     "indexes": {
         "userEntity": {
+            "unique": true,
             "columns": ["userId", "entityId", "entityType"]
         }
     }

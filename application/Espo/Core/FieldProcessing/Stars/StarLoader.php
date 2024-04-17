@@ -31,6 +31,7 @@ namespace Espo\Core\FieldProcessing\Stars;
 
 use Espo\Core\FieldProcessing\Loader;
 use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Tools\Stars\StarService;
 
@@ -41,6 +42,7 @@ class StarLoader implements Loader
 {
     public function __construct(
         private StarService $service,
+        private User $user
     ) {}
 
     public function process(Entity $entity, Params $params): void
@@ -52,6 +54,6 @@ class StarLoader implements Loader
             return;
         }
 
-        $entity->set('isStarred', $this->service->checkIsStarred($entity));
+        $entity->set('isStarred', $this->service->isStarred($entity, $this->user));
     }
 }

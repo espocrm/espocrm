@@ -29,30 +29,29 @@
 
 namespace Espo\Tools\Stars;
 
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\StarSubscription;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use PDOException;
 
 class StarService
 {
     public function __construct(
         private EntityManager $entityManager,
-        private User $user,
         private Metadata $metadata,
     ) {}
 
-    public function checkIsStarred(Entity $entity, ?string $userId = null): bool
+    public function isStarred(Entity $entity, User $user): bool
     {
-        $userId ??= $this->user->getId();
-
         return (bool) $this->entityManager
             ->getRDBRepository(StarSubscription::ENTITY_TYPE)
             ->select(['id'])
             ->where([
-                'userId' => $userId,
+                'userId' => $user->getId(),
                 'entityType' => $entity->getEntityType(),
                 'entityId' => $entity->getId(),
             ])
@@ -64,26 +63,44 @@ class StarService
         return (bool) $this->metadata->get("scopes.$entityType.stars");
     }
 
-    public function star(Entity $entity, User $user): bool
-    {
-        if ($this->checkIsStarred($entity, $user->getId())) {
-            return true;
-        }
-
-        $this->entityManager->createEntity(StarSubscription::ENTITY_TYPE, [
-            'entityId' => $entity->getId(),
-            'entityType' => $entity->getEntityType(),
-            'userId' => $user->getId(),
-            'createdAt' => DateTime::getSystemNowString(),
-        ]);
-
-        return true;
-    }
-
-    public function unstar(Entity $entity, User $user): bool
+    /**
+     * @throws Forbidden
+     */
+    public function star(Entity $entity, User $user): void
     {
         if (!$this->isEnabled($entity->getEntityType())) {
-            return false;
+            throw new Forbidden();
+        }
+
+        if ($this->isStarred($entity, $user)) {
+            return;
+        }
+
+        try {
+            $this->entityManager->createEntity(StarSubscription::ENTITY_TYPE, [
+                'entityId' => $entity->getId(),
+                'entityType' => $entity->getEntityType(),
+                'userId' => $user->getId(),
+                'createdAt' => DateTime::getSystemNowString(),
+            ]);
+        }
+        catch (PDOException $e) {
+            if ((int) $e->getCode() === 23000) {
+                // Duplicate.
+                return;
+            }
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    public function unstar(Entity $entity, User $user): void
+    {
+        if (!$this->isEnabled($entity->getEntityType())) {
+            throw new Forbidden();
         }
 
         $delete = $this->entityManager->getQueryBuilder()
@@ -97,7 +114,5 @@ class StarService
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($delete);
-
-        return true;
     }
 }
