@@ -3257,12 +3257,20 @@ a.field-info > span.fa-info-circle {
 .btn-default > .fa-sm.fa-rss {
     position: relative;
     top: -1px;
-    padding-right: 1px;
 }
 
 .btn:not(.btn-icon) > .fa-plus.fa-sm:first-child {
     position: relative;
     top: -1px;
+}
+
+.btn:not(.btn-icon) > .fa-star.fa-sm:first-child {
+    position: relative;
+    top: -1px;
+}
+
+.btn:not(.btn-icon) > .far:first-child:has(+ span),
+.btn:not(.btn-icon) > .fas:first-child:has(+ span) {
     padding-right: 1px;
 }
 
