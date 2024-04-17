@@ -29,7 +29,9 @@
 
 namespace Espo\Tools\Stars;
 
+use Espo\Core\Exceptions\Error\Body;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\StarSubscription;
@@ -43,6 +45,7 @@ class StarService
     public function __construct(
         private EntityManager $entityManager,
         private Metadata $metadata,
+        private Config $config
     ) {}
 
     public function isStarred(Entity $entity, User $user): bool
@@ -75,6 +78,8 @@ class StarService
         if ($this->isStarred($entity, $user)) {
             return;
         }
+
+        $this->checkLimit($entity->getEntityType(), $user);
 
         try {
             $this->entityManager->createEntity(StarSubscription::ENTITY_TYPE, [
@@ -114,5 +119,32 @@ class StarService
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($delete);
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkLimit(string $entityType, User $user): void
+    {
+        $limit = $this->config->get('starsLimit');
+
+        if ($limit === null) {
+            return;
+        }
+
+        $count = $this->entityManager
+            ->getRDBRepositoryByClass(StarSubscription::class)
+            ->where([
+                'userId' => $user->getId(),
+                'entityType' => $entityType,
+            ])
+            ->count();
+
+        if ($count >= $limit) {
+            throw Forbidden::createWithBody(
+                'starsLimitExceeded',
+                Body::create()->withMessageTranslation('starsLimitExceeded')
+            );
+        }
     }
 }

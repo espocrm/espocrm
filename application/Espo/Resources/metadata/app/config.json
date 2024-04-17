@@ -138,6 +138,9 @@
         },
         "customExportManifest": {
             "level": "admin"
+        },
+        "starsLimit": {
+            "level": "admin"
         }
     }
 }

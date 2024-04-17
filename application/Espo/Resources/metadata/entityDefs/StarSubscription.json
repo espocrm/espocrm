@@ -19,6 +19,9 @@
         "userEntity": {
             "unique": true,
             "columns": ["userId", "entityId", "entityType"]
+        },
+        "userEntityType": {
+            "columns": ["userId", "entityType"]
         }
     }
 }

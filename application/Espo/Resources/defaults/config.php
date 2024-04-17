@@ -293,5 +293,6 @@ return [
     'wysiwygCodeEditorDisabled' => false,
     'customPrefixDisabled' => false,
     'listPagination' => true,
+    'starsLimit' => 500,
     'isInstalled' => false,
 ];
