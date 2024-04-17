@@ -24,5 +24,8 @@
     },
     "audit": {
         "className": "Espo\\Classes\\Cleanup\\Audit"
+    },
+    "stars": {
+        "className": "Espo\\Classes\\Cleanup\\Stars"
     }
 }
