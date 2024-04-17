@@ -43,7 +43,7 @@ class TeamsFieldView extends LinkMultipleFieldView {
     }
 
     /** @inheritDoc */
-    getEmptyAutocompleteResult() {
+    getOnEmptyAutocomplete() {
         if (this.autocompleteOnEmpty) {
             return undefined;
         }
@@ -55,12 +55,14 @@ class TeamsFieldView extends LinkMultipleFieldView {
         /** @type {Record} */
         const names = this.getUser().get('teamsNames') || {};
 
-        return this.getUser().getTeamIdList()
+        const list = this.getUser().getTeamIdList()
             .filter(id => !this.ids.includes(id))
             .map(id => ({
                 id: id,
                 name: names[id] || id,
             }));
+
+        return Promise.resolve(list);
     }
 }
 

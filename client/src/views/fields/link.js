@@ -676,10 +676,10 @@ class LinkFieldView extends BaseFieldView {
                     },
                     lookupFunction: query => {
                         if (!this.autocompleteOnEmpty && query.length === 0) {
-                            const emptyResult = this.getEmptyAutocompleteResult();
+                            const onEmptyPromise = this.getOnEmptyAutocomplete();
 
-                            if (emptyResult) {
-                                return Promise.resolve(this._transformAutocompleteResult({list: emptyResult}));
+                            if (onEmptyPromise) {
+                                return onEmptyPromise.then(list => this._transformAutocompleteResult({list: list}));
                             }
 
                             return Promise.resolve([]);
@@ -1269,9 +1269,9 @@ class LinkFieldView extends BaseFieldView {
      * Get an empty autocomplete result.
      *
      * @protected
-     * @return {[{name: ?string, id: string} & Record]}
+     * @return {Promise<[{name: ?string, id: string} & Record]>}
      */
-    getEmptyAutocompleteResult() {
+    getOnEmptyAutocomplete() {
         return undefined;
     }
 
