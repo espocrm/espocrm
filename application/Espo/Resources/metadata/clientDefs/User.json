@@ -56,7 +56,8 @@
             "lastAccess"
         ],
         "edit": [
-            "avatar"
+            "avatar",
+            "avatarColor"
         ],
         "editSmall": [
             "avatar"
@@ -127,6 +128,31 @@
     },
     "iconClass": "fas fa-user-circle",
     "dynamicLogic": {
+        "fields": {
+            "avatarColor": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "equals",
+                            "attribute": "avatarId",
+                            "value": null,
+                            "data": {
+                                "field": "avatar"
+                            }
+                        },
+                        {
+                            "type": "in",
+                            "attribute": "type",
+                            "value": [
+                                "regular",
+                                "admin",
+                                "api"
+                            ]
+                        }
+                    ]
+                }
+            }
+        },
         "options": {
             "authMethod": [
                 {

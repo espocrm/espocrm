@@ -19,6 +19,7 @@
         "newPasswordConfirm": "Confirm New Password",
         "yourPassword": "Your current password",
         "avatar": "Avatar",
+        "avatarColor": "Avatar Color",
         "isActive": "Is Active",
         "isPortalUser": "Is Portal User",
         "contact": "Contact",

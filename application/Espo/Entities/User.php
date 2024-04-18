@@ -272,6 +272,11 @@ class User extends Person
         return $this->get('avatarId');
     }
 
+    public function getAvatarColor(): ?string
+    {
+        return $this->get('avatarColor');
+    }
+
     /**
      * @return ?string
      */

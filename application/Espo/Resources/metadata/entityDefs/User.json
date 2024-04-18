@@ -395,7 +395,14 @@
             "view": "views/user/fields/avatar",
             "layoutDetailDisabled": true,
             "previewSize": "small",
-            "customizationAuditedDisabled": true
+            "customizationAuditedDisabled": true,
+            "defaultAttributes": {
+                "avatarId": null
+            }
+        },
+        "avatarColor": {
+            "type": "colorpicker",
+            "dynamicLogicDisabled": true
         },
         "sendAccessInfo": {
             "type": "bool",

@@ -50,6 +50,10 @@ class Avatar extends Image
     private string $systemColor = '#a4b5bd';
     private string $portalColor = '#c9a3d1';
 
+    private string $lightTextColor = '#FFF';
+    private string $darkTextColor = '#6e6e6e';
+    private int $darkThreshold = 200;
+
     /**
      * @noinspection SpellCheckingInspection
      * @var string[]
@@ -80,6 +84,10 @@ class Avatar extends Image
 
         if ($user->isPortal()) {
             return $this->metadata->get(['app', 'avatars', 'portalColor']) ?? $this->portalColor;
+        }
+
+        if ($user->getAvatarColor()) {
+            return $user->getAvatarColor();
         }
 
         $hash = $user->getId();
@@ -143,8 +151,11 @@ class Avatar extends Image
             return;
         }
 
+        $textColors = $this->getTextColors();
+
         $width = $sizes[0];
         $color = $this->getColor($user);
+        $textColor = $this->isDark($color) ? $textColors[0] : $textColors[1];
 
         $avatar = (new InitialAvatar())
             ->name($user->getName() ?? $user->getUserName() ?? $userId);
@@ -156,7 +167,7 @@ class Avatar extends Image
         $image = $avatar
             ->width($width)
             ->height($width)
-            ->color('#FFF')
+            ->color($textColor)
             ->fontSize(0.56)
             ->preferBold()
             ->font($this->fontFile)
@@ -251,5 +262,29 @@ class Avatar extends Image
         }
 
         return true;
+    }
+
+    private function isDark(string $color): bool
+    {
+        $hex = substr($color, 1);
+
+        $r = hexdec(substr($hex, 0, 2));
+        $g = hexdec(substr($hex, 2, 2));
+        $b = hexdec(substr($hex, 4, 2));
+
+        $value = (($r * 299) + ($g * 587) + ($b * 114)) / 1000;
+
+        return $value < $this->darkThreshold;
+    }
+
+    /**
+     * @return array{string, string}
+     */
+    private function getTextColors(): array
+    {
+        $light = $this->metadata->get("app.avatars.lightTextColor") ?? $this->lightTextColor;
+        $dark = $this->metadata->get("app.avatars.darkTextColor") ?? $this->darkTextColor;
+
+        return [$light, $dark];
     }
 }
