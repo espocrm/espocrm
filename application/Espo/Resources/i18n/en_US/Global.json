@@ -59,7 +59,7 @@
         "WebhookQueueItem": "Webhook Queue Item",
         "Mass Action": "Mass Action",
         "WorkingTimeCalendar": "Working Time Calendar",
-        "WorkingTimeRange": "Working Time Range",
+        "WorkingTimeRange": "Working Time Exception",
         "AuthenticationProvider": "Authentication Provider",
         "GlobalStream": "Global Stream"
     },
@@ -111,7 +111,7 @@
         "Webhook": "Webhooks",
         "WebhookQueueItem": "Webhook Queue Items",
         "WorkingTimeCalendar": "Working Time Calendars",
-        "WorkingTimeRange": "Working Time Ranges",
+        "WorkingTimeRange": "Working Time Exceptions",
         "AuthenticationProvider": "Authentication Providers",
         "GlobalStream": "Global Stream"
     },

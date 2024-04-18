@@ -57,7 +57,7 @@
         "userData": "User Data",
         "dashboardTemplate": "Dashboard Template",
         "workingTimeCalendar": "Working Time Calendar",
-        "workingTimeRanges": "Working Time Ranges",
+        "workingTimeRanges": "Working Time Exceptions",
         "layoutSet": "Layout Set"
     },
     "labels": {
