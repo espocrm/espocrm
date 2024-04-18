@@ -54,6 +54,7 @@ class EnumFieldView extends BaseFieldView {
      * @property {boolean} [required] Required.
      * @property {string} [translation] A translation string. E.g. `Global.scopeNames`.
      * @property {boolean} [displayAsLabel] Display as label.
+     * @property {string|'state'} [labelType] A label type.
      * @property {'regular'|'state'} [labelType] A label type.
      * @property {string} [optionsReference] A reference to options. E.g. `Account.industry`.
      * @property {string} [optionsPath] An options metadata path.

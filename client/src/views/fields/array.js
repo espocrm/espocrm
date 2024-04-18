@@ -34,8 +34,48 @@ import MultiSelect from 'ui/multi-select';
 
 /**
  * An array field.
+ *
+ * @extends BaseFieldView<module:views/fields/array~params>
  */
 class ArrayFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/array~options
+     * @property {
+     *     module:views/fields/array~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/array~params
+     * @property {number} [maxLength] A max length.
+     * @property {string} [translation] A translation string. E.g. `Global.scopeNames`.
+     * @property {string[]} [options] Select options.
+     * @property {boolean} [required] Required.
+     * @property {boolean} [displayAsLabel] Display as label.
+     * @property {string|'state'} [labelType] A label type.
+     * @property {boolean} [noEmptyString] No empty string.
+     * @property {string} [optionsReference] A reference to options. E.g. `Account.industry`.
+     * @property {string} [optionsPath] An options metadata path.
+     * @property {boolean} [isSorted] To sort options.
+     * @property {Object.<string, string>} [translatedOptions] Option translations.
+     * @property {Object.<string, 'warning'|'danger'|'success'|'info'|'primary'>} [style] A style map.
+     * @property {number} [maxCount] A max number of items.
+     * @property {boolean} [allowCustomOptions] Allow custom options.
+     * @property {string} [pattern] A regular expression pattern.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/array~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'array'
 
