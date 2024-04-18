@@ -74,6 +74,7 @@ class ArrayFieldView extends BaseFieldView {
     translatedOptions = null
 
 
+    // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
         const itemHtmlList = [];

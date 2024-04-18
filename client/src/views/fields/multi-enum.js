@@ -56,14 +56,20 @@ class MultiEnumFieldView extends ArrayFieldView {
 
     events = {}
 
+    // noinspection JSCheckFunctionSignatures
     /** @inheritDoc */
     data() {
+        // noinspection JSValidateTypes
         return {
             ...super.data(),
             optionList: this.params.options || [],
         };
     }
 
+    /**
+     * @deprecated As of v8.3.0.
+     * @todo Remove.
+     */
     getTranslatedOptions() {
         return (this.params.options || []).map(item => {
             if (this.translatedOptions !== null) {
@@ -106,12 +112,12 @@ class MultiEnumFieldView extends ArrayFieldView {
         if (this.isEditMode()) {
             this.$element = this.$el.find('[data-name="' + this.name + '"]');
 
-            let items = [];
-            let valueList = Espo.Utils.clone(this.selected);
+            const items = [];
+            const valueList = Espo.Utils.clone(this.selected);
 
-            for (let i in valueList) {
+            for (const i in valueList) {
                 let value = valueList[i];
-                let originalValue = value;
+                const originalValue = value;
 
                 if (value === '') {
                     value = valueList[i] = '__emptystring__';
@@ -128,7 +134,7 @@ class MultiEnumFieldView extends ArrayFieldView {
             this.$element.val(valueList.join(this.itemDelimiter));
 
             (this.params.options || []).forEach(value => {
-                let originalValue = value;
+                const originalValue = value;
 
                 if (value === '') {
                     value = '__emptystring__';
@@ -141,7 +147,7 @@ class MultiEnumFieldView extends ArrayFieldView {
             });
 
             /** @type {module:ui/multi-select~Options} */
-            let multiSelectOptions = {
+            const multiSelectOptions = {
                 items: items,
                 delimiter: this.itemDelimiter,
                 matchAnyWord: this.matchAnyWord,
@@ -166,8 +172,8 @@ class MultiEnumFieldView extends ArrayFieldView {
      */
     createCustomOptionCallback(input) {
         if (input.length > this.MAX_ITEM_LENGTH) {
-            let message = this.translate('arrayItemMaxLength', 'messages')
-                .replace('{max}', this.MAX_ITEM_LENGTH.toString())
+            const message = this.translate('arrayItemMaxLength', 'messages')
+                .replace('{max}', this.MAX_ITEM_LENGTH.toString());
 
             this.showValidationMessage(message, '.selectize-control')
 
@@ -175,9 +181,9 @@ class MultiEnumFieldView extends ArrayFieldView {
         }
 
         if (this.params.pattern) {
-            let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+            const helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
 
-            let result = helper.validate(this.params.pattern, input, this.name, this.entityType);
+            const result = helper.validate(this.params.pattern, input, this.name, this.entityType);
 
             if (result) {
                 this.showValidationMessage(result.message, '.selectize-control')
@@ -203,7 +209,7 @@ class MultiEnumFieldView extends ArrayFieldView {
             list = [];
         }
 
-        for (let i in list) {
+        for (const i in list) {
             if (list[i] === '__emptystring__') {
                 list[i] = '';
             }
@@ -216,7 +222,7 @@ class MultiEnumFieldView extends ArrayFieldView {
             });
         }
 
-        let data = {};
+        const data = {};
 
         data[this.name] = list;
 
@@ -228,10 +234,10 @@ class MultiEnumFieldView extends ArrayFieldView {
             return;
         }
 
-        let value = this.model.get(this.name);
+        const value = this.model.get(this.name);
 
         if (!value || value.length === 0) {
-            let msg = this.translate('fieldIsRequired', 'messages')
+            const msg = this.translate('fieldIsRequired', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg, '.selectize-control');
@@ -245,10 +251,10 @@ class MultiEnumFieldView extends ArrayFieldView {
             return;
         }
 
-        let itemList = this.model.get(this.name) || [];
+        const itemList = this.model.get(this.name) || [];
 
         if (itemList.length > this.params.maxCount) {
-            let msg =
+            const msg =
                 this.translate('fieldExceedsMaxCount', 'messages')
                     .replace('{field}', this.getLabelText())
                     .replace('{maxCount}', this.params.maxCount.toString());
