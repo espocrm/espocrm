@@ -46,7 +46,7 @@ use LogicException;
 class Parser
 {
     /** @var array<int, string[]> */
-    private $priorityList = [
+    private array $priorityList = [
         ['='],
         ['??'],
         ['||'],
@@ -57,7 +57,7 @@ class Parser
     ];
 
     /** @var array<string, string> */
-    private $operatorMap = [
+    private array $operatorMap = [
         '=' => 'assign',
         '??' => 'comparison\\nullCoalescing',
         '||' => 'logical\\or',
@@ -109,7 +109,7 @@ class Parser
                 $variable = substr($firstPart, 1);
 
                 if ($variable === '' || !preg_match($this->variableNameRegExp, $variable)) {
-                    throw new SyntaxError("Bad variable name `{$variable}`.");
+                    throw new SyntaxError("Bad variable name `$variable`.");
                 }
 
                 return new Node('assign', [
@@ -131,7 +131,7 @@ class Parser
         $functionName = $this->operatorMap[$operator];
 
         if ($functionName === '' || !preg_match($this->functionNameRegExp, $functionName)) {
-            throw new SyntaxError("Bad function name `{$functionName}`.");
+            throw new SyntaxError("Bad function name `$functionName`.");
         }
 
         return new Node($functionName, [
@@ -984,7 +984,7 @@ class Parser
             $value = substr($expression, 1);
 
             if ($value === '' || !preg_match($this->variableNameRegExp, $value)) {
-                throw new SyntaxError("Bad variable name `{$value}`.");
+                throw new SyntaxError("Bad variable name `$value`.");
             }
 
             return new Variable($value);
@@ -1034,7 +1034,7 @@ class Parser
                 }
 
                 if ($functionName === '' || !preg_match($this->functionNameRegExp, $functionName)) {
-                    throw new SyntaxError("Bad function name `{$functionName}`.");
+                    throw new SyntaxError("Bad function name `$functionName`.");
                 }
 
                 return new Node($functionName, $argumentSplitList);
