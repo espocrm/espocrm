@@ -33,8 +33,39 @@ import FileUpload from 'helpers/file-upload';
 
 /**
  * An attachment-multiple field.
+ *
+ * @extends BaseFieldView<module:views/fields/attachment-multiple~params>
  */
 class AttachmentMultipleFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/attachment-multiple~options
+     * @property {
+     *     module:views/fields/attachment-multiple~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/attachment-multiple~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [showPreviews] Show previews.
+     * @property {'x-small'|'small'|'medium'|'large'} [previewSize] A preview size.
+     * @property {string[]} [sourceList] A source list.
+     * @property {string[]} [accept] Formats to accept.
+     * @property {number} [maxFileSize] A max file size (in Mb).
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/attachment-multiple~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'attachmentMultiple'
 
@@ -492,7 +523,7 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         if (exceedsMaxFileSize) {
             const msg = this.translate('fieldMaxFileSizeError', 'messages')
                 .replace('{field}', this.getLabelText())
-                .replace('{max}', maxFileSize);
+                .replace('{max}', maxFileSize.toString());
 
             this.showValidationMessage(msg, 'label');
 

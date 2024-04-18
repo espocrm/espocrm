@@ -33,8 +33,40 @@ import FileUpload from 'helpers/file-upload';
 
 /**
  * A file field.
+ *
+ * @extends LinkFieldView<module:views/fields/file~params>
  */
 class FileFieldView extends LinkFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/file~options
+     * @property {
+     *     module:views/fields/file~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/file~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [showPreview] Show preview.
+     * @property {'x-small'|'small'|'medium'|'large'} [previewSize] A preview size.
+     * @property {'x-small'|'small'|'medium'|'large'} [listPreviewSize] A list preview size.
+     * @property {string[]} [sourceList] A source list.
+     * @property {string[]} [accept] Formats to accept.
+     * @property {number} [maxFileSize] A max file size (in Mb).
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/file~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'file'
 
