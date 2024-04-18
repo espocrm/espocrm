@@ -101,7 +101,6 @@ class Stars implements Cleanup
             $userId = $star->get('userId');
 
             if ($userId === null || $entityId === null) {
-                // @todo Cleanup.
                 continue;
             }
 
