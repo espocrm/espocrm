@@ -26,11 +26,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module views/fields/email */
+
 import VarcharFieldView from 'views/fields/varchar';
 import MailtoHelper from 'helpers/misc/mailto';
 import Autocomplete from 'ui/autocomplete';
 
+/**
+ * @extends VarcharFieldView<module:views/fields/email~params>
+ */
 class EmailFieldView extends VarcharFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/email~options
+     * @property {
+     *     module:views/fields/email~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/email~params
+     * @property {boolean} [required] Required.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/email~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'email'
 

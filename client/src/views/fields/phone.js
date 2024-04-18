@@ -26,6 +26,8 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
+/** @module views/fields/phone */
+
 import VarcharFieldView from 'views/fields/varchar';
 import Select from 'ui/select';
 import intlTelInput from 'intl-tel-input';
@@ -34,7 +36,34 @@ import intlTelInputUtils from 'intl-tel-input-utils';
 // noinspection NpmUsedModulesInstalled
 import intlTelInputGlobals from 'intl-tel-input-globals';
 
+/**
+ * @extends VarcharFieldView<module:views/fields/phone~params>
+ */
 class PhoneFieldView extends VarcharFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/phone~options
+     * @property {
+     *     module:views/fields/phone~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/phone~params
+     * @property {boolean} [required] Required.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/phone~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'phone'
 

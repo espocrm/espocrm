@@ -33,8 +33,40 @@ import {init as initSummernoteCustom} from 'helpers/misc/summernote-custom';
 
 /**
  * A wysiwyg field.
+ *
+ * @extends TextFieldView<module:views/fields/wysiwyg~params>
  */
 class WysiwygFieldView extends TextFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/wysiwyg~options
+     * @property {
+     *     module:views/fields/wysiwyg~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/wysiwyg~params
+     * @property {boolean} [required] Required.
+     * @property {number} [maxLength] A max length.
+     * @property {number} [height] A height in pixels.
+     * @property {number} [minHeight] A min height in pixels.
+     * @property {boolean} [useIframe] Use iframe.
+     * @property {Array} [toolbar] A custom toolbar.
+     * @property {string} [attachmentField] An attachment field name.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/wysiwyg~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'wysiwyg'
 

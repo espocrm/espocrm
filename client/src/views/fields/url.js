@@ -30,7 +30,39 @@
 
 import VarcharFieldView from 'views/fields/varchar';
 
+/**
+ * A URL field.
+ *
+ * @extends BaseFieldView<module:views/fields/url~params>
+ */
 class UrlFieldView extends VarcharFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/url~options
+     * @property {
+     *     module:views/fields/varchar~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/url~params
+     * @property {number} [maxLength] A max length.
+     * @property {boolean} [required] Required.
+     * @property {boolean} [copyToClipboard] To display a Copy-to-clipboard button.
+     * @property {boolean} [strip] To strip.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/url~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'url'
 
