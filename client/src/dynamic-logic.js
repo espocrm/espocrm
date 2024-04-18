@@ -95,12 +95,9 @@ class DynamicLogic {
 
                 let methodName;
 
-                if (result) {
-                    methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'True';
-                }
-                else {
-                    methodName = 'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
-                }
+                methodName = result ?
+                    'makeField' + Espo.Utils.upperCaseFirst(type) + 'True' :
+                    'makeField' + Espo.Utils.upperCaseFirst(type) + 'False';
 
                 this[methodName](field);
             });
@@ -224,6 +221,7 @@ class DynamicLogic {
     /**
      * @private
      * @param {string} attribute
+     * @return {*}
      */
     getAttributeValue(attribute) {
         if (attribute.startsWith('$')) {
@@ -234,6 +232,10 @@ class DynamicLogic {
             if (attribute === '$user.teamsIds') {
                 return this.recordView.getUser().getTeamIdList();
             }
+        }
+
+        if (!this.recordView.model.has(attribute)) {
+            return undefined;
         }
 
         return this.recordView.model.get(attribute);
@@ -264,18 +266,10 @@ class DynamicLogic {
         const setValue = this.getAttributeValue(attribute);
 
         if (type === 'equals') {
-            if (!value) {
-                return false;
-            }
-
             return setValue === value;
         }
 
         if (type === 'notEquals') {
-            if (!value) {
-                return false;
-            }
-
             return setValue !== value;
         }
 
