@@ -126,15 +126,15 @@ class FieldManager {
      * Get a list of attributes of an entity type.
      *
      * @param {string} entityType An entity type.
-     * @param {module:field-manager~FieldFilters} [o] Filters.
+     * @param {module:field-manager~FieldFilters} [options] Filters.
      * @returns {string[]}
      */
-    getEntityTypeAttributeList(entityType, o = {}) {
+    getEntityTypeAttributeList(entityType, options) {
         const list = [];
 
         const defs = this.metadata.get(`entityDefs.${entityType}.fields`) || {};
 
-        this.getEntityTypeFieldList(entityType, o).forEach(field => {
+        this.getEntityTypeFieldList(entityType, options).forEach(field => {
             const fieldDefs = /** @type {Record} */defs[field] || {};
 
             this.getAttributeList(fieldDefs.type, field).forEach(attr => {
@@ -334,52 +334,52 @@ class FieldManager {
      * Get a list of fields of a specific entity type.
      *
      * @param {string} entityType An entity type.
-     * @param {module:field-manager~FieldFilters} [o] Filters.
+     * @param {module:field-manager~FieldFilters} [options] Filters.
      * @returns {string[]}
      */
-    getEntityTypeFieldList(entityType, o) {
+    getEntityTypeFieldList(entityType, options) {
         /** @type {Record} */
         const fieldDefs = this.metadata.get(['entityDefs', entityType, 'fields']) || {}
 
         let list = Object.keys(fieldDefs);
 
-        o = o || {};
+        options = options || {};
 
-        let typeList = o.typeList;
+        let typeList = options.typeList;
 
-        if (!typeList && o.type) {
-            typeList = [o.type];
+        if (!typeList && options.type) {
+            typeList = [options.type];
         }
 
         if (typeList) {
             list = list.filter(item => {
                 const type = this.metadata.get(['entityDefs', entityType, 'fields', item, 'type']);
 
-                return ~typeList.indexOf(type);
+                return typeList.includes(type);
             });
         }
 
-        if (o.ignoreTypeList) {
+        if (options.ignoreTypeList) {
             list = list.filter(field => {
                 const type = (fieldDefs[field] || {}).type;
 
-                return !o.ignoreTypeList.includes(type);
+                return !options.ignoreTypeList.includes(type);
             });
         }
 
-        if (o.onlyAvailable || o.acl) {
+        if (options.onlyAvailable || options.acl) {
             list = list.filter(item => {
                 return this.isEntityTypeFieldAvailable(entityType, item);
             });
         }
 
-        if (o.acl) {
-            const level = o.acl || 'read';
+        if (options.acl) {
+            const level = options.acl || 'read';
 
             const forbiddenEditFieldList = this.acl.getScopeForbiddenFieldList(entityType, level);
 
             list = list.filter(item => {
-                return !~forbiddenEditFieldList.indexOf(item);
+                return !forbiddenEditFieldList.includes(item);
             });
         }
 
