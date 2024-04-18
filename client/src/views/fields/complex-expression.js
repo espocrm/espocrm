@@ -262,7 +262,10 @@ class ComplexExpressionFieldView extends TextFieldView {
         }
 
         const attributeList = this.getFieldManager()
-            .getEntityTypeAttributeList(this.targetEntityType)
+            .getEntityTypeAttributeList(this.targetEntityType, {
+                ignoreTypeList: ['map', 'linkMultiple', 'attachmentMultiple'],
+                onlyAvailable: true,
+            })
             .sort();
 
         attributeList.unshift('id');
@@ -288,18 +291,25 @@ class ComplexExpressionFieldView extends TextFieldView {
         linkList.sort();
 
         linkList.forEach(link => {
-            const scope = links[link].entity;
+            /** @type {Record} */
+            const defs = links[link];
+            const scope = defs.entity;
 
             if (!scope) {
                 return;
             }
 
-            if (links[link].disabled) {
+            if (defs.disabled || defs.utility) {
                 return;
             }
 
+            attributeList.push(`${link}.id`);
+
             const linkAttributeList = this.getFieldManager()
-                .getEntityTypeAttributeList(scope)
+                .getEntityTypeAttributeList(scope, {
+                    ignoreTypeList: ['map', 'linkMultiple', 'attachmentMultiple'],
+                    onlyAvailable: true,
+                })
                 .sort();
 
             linkAttributeList.forEach(item => attributeList.push(link + '.' + item));
