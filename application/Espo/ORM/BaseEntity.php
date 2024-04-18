@@ -447,6 +447,7 @@ class BaseEntity implements Entity
 
         switch ($attributeType) {
             case self::VARCHAR:
+                // @todo Convert to string if not null in v9.0.
                 return $value;
 
             case self::BOOL:
