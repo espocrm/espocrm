@@ -126,15 +126,18 @@ class FieldManager {
      * Get a list of attributes of an entity type.
      *
      * @param {string} entityType An entity type.
+     * @param {module:field-manager~FieldFilters} [o] Filters.
      * @returns {string[]}
      */
-    getEntityTypeAttributeList(entityType) {
+    getEntityTypeAttributeList(entityType, o = {}) {
         const list = [];
 
         const defs = this.metadata.get(`entityDefs.${entityType}.fields`) || {};
 
-        Object.keys(defs).forEach(field => {
-            this.getAttributeList(defs[field]['type'], field).forEach(attr => {
+        this.getEntityTypeFieldList(entityType, o).forEach(field => {
+            const fieldDefs = /** @type {Record} */defs[field] || {};
+
+            this.getAttributeList(fieldDefs.type, field).forEach(attr => {
                 if (!list.includes(attr)) {
                     list.push(attr);
                 }
@@ -321,6 +324,7 @@ class FieldManager {
      *
      * @property {string} [type] Only of a specific field type.
      * @property {string[]} [typeList] Only of a specific field types.
+     * @property {string[]} [ignoreTypeList] Ignore field types.
      * @property {boolean} [onlyAvailable] To exclude disabled, admin-only, internal, forbidden fields.
      * @property {'read'|'edit'} [acl] To exclude fields not accessible for a current user over
      *   a specified access level.
@@ -334,7 +338,10 @@ class FieldManager {
      * @returns {string[]}
      */
     getEntityTypeFieldList(entityType, o) {
-        let list = Object.keys(this.metadata.get(['entityDefs', entityType, 'fields']) || {});
+        /** @type {Record} */
+        const fieldDefs = this.metadata.get(['entityDefs', entityType, 'fields']) || {}
+
+        let list = Object.keys(fieldDefs);
 
         o = o || {};
 
@@ -349,6 +356,14 @@ class FieldManager {
                 const type = this.metadata.get(['entityDefs', entityType, 'fields', item, 'type']);
 
                 return ~typeList.indexOf(type);
+            });
+        }
+
+        if (o.ignoreTypeList) {
+            list = list.filter(field => {
+                const type = (fieldDefs[field] || {}).type;
+
+                return !o.ignoreTypeList.includes(type);
             });
         }
 
