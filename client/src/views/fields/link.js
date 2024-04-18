@@ -50,6 +50,7 @@ class LinkFieldView extends BaseFieldView {
 
     /**
      * @typedef {Object} module:views/fields/link~params
+     * @property {boolean} [required] Required.
      * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
      * @property {boolean} [createButton] Show 'Create' button.
      */

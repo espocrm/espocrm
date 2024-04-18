@@ -35,8 +35,36 @@ import Autocomplete from 'ui/autocomplete';
 
 /**
  * A link-parent field (belongs-to-parent relation).
+ *
+ * @extends BaseFieldView<module:views/fields/link-parent~params>
  */
 class LinkParentFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/link-parent~options
+     * @property {
+     *     module:views/fields/link~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/link-parent~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
+     * @property {string[]} [entityList] An entity type list.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/link-parent~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'linkParent'
 

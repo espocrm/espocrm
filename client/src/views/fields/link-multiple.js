@@ -34,8 +34,37 @@ import Autocomplete from 'ui/autocomplete';
 
 /**
  * A link-multiple field (for has-many relations).
+ *
+ * @extends BaseFieldView<module:views/fields/link-multiple~params>
  */
 class LinkMultipleFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/link-multiple~options
+     * @property {
+     *     module:views/fields/link~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/link-multiple~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
+     * @property {boolean} [sortable] Sortable.
+     * @property {boolean} [createButton] Show 'Create' button.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/link-multiple~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'linkMultiple'
 
