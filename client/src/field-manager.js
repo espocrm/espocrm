@@ -131,11 +131,11 @@ class FieldManager {
     getEntityTypeAttributeList(entityType) {
         const list = [];
 
-        const defs = this.metadata.get('entityDefs.' + entityType + '.fields') || {};
+        const defs = this.metadata.get(`entityDefs.${entityType}.fields`) || {};
 
         Object.keys(defs).forEach(field => {
             this.getAttributeList(defs[field]['type'], field).forEach(attr => {
-                if (!~list.indexOf(attr)) {
+                if (!list.includes(attr)) {
                     list.push(attr);
                 }
             });
@@ -373,6 +373,7 @@ class FieldManager {
 
     /**
      * @deprecated Since v5.7.
+     * @todo Remove.
      */
     getScopeFieldList(entityType) {
         return this.getEntityTypeFieldList(entityType);
@@ -408,6 +409,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `getParamList`.
+     * @todo Remove.
      */
     getParams(fieldType) {
         return this.getParamList(fieldType);
@@ -415,6 +417,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `getAttributeList`.
+     * @todo Remove.
      */
     getAttributes(fieldType, fieldName) {
         return this.getAttributeList(fieldType, fieldName);
@@ -422,6 +425,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `getActualAttributeList`.
+     * @todo Remove.
      */
     getActualAttributes(fieldType, fieldName) {
         return this.getActualAttributeList(fieldType, fieldName);
@@ -442,6 +446,7 @@ class FieldManager {
      * @returns {boolean}
      */
     isEntityTypeFieldAvailable(entityType, field) {
+        /** @type {Record} */
         const defs = this.metadata.get(['entityDefs', entityType, 'fields', field]) || {};
 
         if (
@@ -451,6 +456,7 @@ class FieldManager {
             return false;
         }
 
+        /** @type {Record} */
         const aclDefs = this.metadata.get(['entityAcl', entityType, 'fields', field]) || {};
 
         if (
@@ -466,6 +472,7 @@ class FieldManager {
 
     /**
      * @deprecated Use `isEntityTypeFieldAvailable`.
+     * @todo Remove.
      */
     isScopeFieldAvailable(entityType, field) {
         return this.isEntityTypeFieldAvailable(entityType, field);
