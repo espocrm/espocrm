@@ -500,7 +500,7 @@ class Converter
         if ($scopeDefs['stream'] ?? false) {
             if (!isset($entityMetadata['fields']['isFollowed'])) {
                 $ormMetadata[$entityType]['attributes']['isFollowed'] = [
-                    'type' => Entity::VARCHAR,
+                    'type' => Entity::BOOL,
                     'notStorable' => true,
                     'notExportable' => true,
                 ];
