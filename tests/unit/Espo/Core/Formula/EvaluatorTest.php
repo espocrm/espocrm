@@ -123,6 +123,55 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(5 * (2 + 3) * 4 - (5 - 4), $actual);
     }
 
+    public function testEvaluateMathExpression9(): void
+    {
+        $expression = "5 * -2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * -2, $actual);
+    }
+
+    public function testEvaluateMathExpression10(): void
+    {
+        $expression = "5 *  -2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * -2, $actual);
+    }
+
+    public function testEvaluateMathExpression11(): void
+    {
+        $expression = "5 *  - 2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * -2, $actual);
+    }
+
+    public function testEvaluateMathExpression12(): void
+    {
+        $expression = "5 * +2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 * +2, $actual);
+    }
+
+    public function testEvaluateMathExpression13(): void
+    {
+        $expression = "5 + -2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(5 + -2, $actual);
+    }
+
+    public function testEvaluateMathExpression14(): void
+    {
+        $expression = "(5 - 2) + -2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals((5 - 2) + -2, $actual);
+    }
+
+    public function testEvaluateMathExpression15(): void
+    {
+        $expression = "+ -2";
+        $actual = $this->evaluator->process($expression);
+        $this->assertEquals(+ -2, $actual);
+    }
+
     public function testEvaluateList1()
     {
         $expression = "list()";

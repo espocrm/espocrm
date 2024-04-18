@@ -910,6 +910,26 @@ class Parser
                     continue;
                 }
 
+                if ($operator === '+' || $operator === '-') {
+                    $j = $index - 1;
+
+                    while ($j >= 0) {
+                        $char = $expression[$j];
+
+                        if ($this->isWhiteSpace($char)) {
+                            $j--;
+
+                            continue;
+                        }
+
+                        if (array_key_exists($char, $this->operatorMap)) {
+                            continue 2;
+                        }
+
+                        break;
+                    }
+                }
+
                 $firstPart = substr($expression, 0, $index);
                 $secondPart = substr($expression, $index + strlen($operator));
 
