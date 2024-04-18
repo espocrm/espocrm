@@ -32,8 +32,38 @@ import IntFieldView from 'views/fields/int';
 
 /**
  * A float field.
+ *
+ * @extends IntFieldView<module:views/fields/float~params>
  */
 class FloatFieldView extends IntFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/float~options
+     * @property {
+     *     module:views/fields/float~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/float~params
+     * @property {number} [min] A max value.
+     * @property {number} [max] A max value.
+     * @property {boolean} [required] Required.
+     * @property {boolean} [disableFormatting] Disable formatting.
+     * @property {number|null} [decimalPlaces] A number of decimal places.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/float~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'float'
 

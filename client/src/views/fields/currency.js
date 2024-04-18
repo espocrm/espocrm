@@ -33,19 +33,58 @@ import Select from 'ui/select';
 
 /**
  * A currency field.
+ *
+ * @extends IntFieldView<module:views/fields/currency~params>
  */
 class CurrencyFieldView extends FloatFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/currency~options
+     * @property {
+     *     module:views/fields/currency~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/currency~params
+     * @property {number} [min] A max value.
+     * @property {number} [max] A max value.
+     * @property {boolean} [required] Required.
+     * @property {boolean} [disableFormatting] Disable formatting.
+     * @property {number|null} [decimalPlaces] A number of decimal places. @todo
+     * @property {boolean} [onlyDefaultCurrency] Only the default currency.
+     * @property {boolean} [decimal] Stored as decimal.
+     * @property {number} [scale] Scale (for decimal).
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/currency~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'currency'
 
     editTemplate = 'fields/currency/edit'
     detailTemplate = 'fields/currency/detail'
+    // noinspection JSUnusedGlobalSymbols
     detailTemplate1 = 'fields/currency/detail-1'
+    // noinspection JSUnusedGlobalSymbols
     detailTemplate2 = 'fields/currency/detail-2'
+    // noinspection JSUnusedGlobalSymbols
     detailTemplate3 = 'fields/currency/detail-3'
     listTemplate = 'fields/currency/list'
+    // noinspection JSUnusedGlobalSymbols
     listTemplate1 = 'fields/currency/list-1'
+    // noinspection JSUnusedGlobalSymbols
     listTemplate2 = 'fields/currency/list-2'
+    // noinspection JSUnusedGlobalSymbols
     listTemplate3 = 'fields/currency/list-3'
     detailTemplateNoCurrency = 'fields/currency/detail-no-currency'
 

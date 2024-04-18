@@ -33,8 +33,37 @@ import moment from 'moment';
 
 /**
  * A date-time or date.
+ *
+ * @extends DatetimeFieldView<module:views/fields/datetime-optional~params>
  */
 class DatetimeOptionalFieldView extends DatetimeFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/datetime-optional~options
+     * @property {
+     *     module:views/fields/varchar~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/datetime-optional~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [useNumericFormat] Use numeric format.
+     * @property {boolean} [hasSeconds] Display seconds.
+     * @property {number} [minuteStep] A minute step.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/datetime-optional~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'datetimeOptional'
 
@@ -46,7 +75,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
     }
 
     isDate() {
-        let dateValue = this.model.get(this.nameDate);
+        const dateValue = this.model.get(this.nameDate);
 
         if (dateValue && dateValue !== '') {
             return true;
@@ -56,10 +85,10 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
     }
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         if (this.isDate()) {
-            let dateValue = this.model.get(this.nameDate);
+            const dateValue = this.model.get(this.nameDate);
 
             data.date = this.getDateTime().toDisplayDate(dateValue);
             data.time = this.noneOption;
@@ -70,7 +99,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
 
     getDateStringValue() {
         if (this.isDate()) {
-            var dateValue = this.model.get(this.nameDate);
+            const dateValue = this.model.get(this.nameDate);
 
             return this.stringifyDateValue(dateValue);
         }
@@ -83,9 +112,9 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
     }
 
     initTimepicker() {
-        let $time = this.$time;
+        const $time = this.$time;
 
-        let o = {
+        const o = {
             step: this.params.minuteStep || 30,
             scrollDefaultNow: true,
             timeFormat: this.timeFormatMap[this.getDateTime().timeFormat],
@@ -107,10 +136,10 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
     }
 
     fetch() {
-        let data = {};
+        const data = {};
 
-        let date = this.$date.val();
-        let time = this.$time.val();
+        const date = this.$date.val();
+        const time = this.$time.val();
         let value = null;
 
         if (time !== this.noneOption && time !== '') {
@@ -147,26 +176,26 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
     }
 
     validateAfter() {
-        let field = this.model.getFieldParam(this.name, 'after');
+        const field = this.model.getFieldParam(this.name, 'after');
 
         if (!field) {
             return;
         }
 
-        let fieldDate = field + 'Date';
-        let value = this.model.get(this.name) || this.model.get(this.nameDate);
-        let otherValue = this.model.get(field) || this.model.get(fieldDate);
+        const fieldDate = field + 'Date';
+        const value = this.model.get(this.name) || this.model.get(this.nameDate);
+        const otherValue = this.model.get(field) || this.model.get(fieldDate);
 
         if (!(value && otherValue)) {
             return;
         }
 
-        let isNotValid = this.validateAfterAllowSameDay && this.model.get(this.nameDate) ?
+        const isNotValid = this.validateAfterAllowSameDay && this.model.get(this.nameDate) ?
             moment(value).unix() < moment(otherValue).unix() :
             moment(value).unix() <= moment(otherValue).unix();
 
         if (isNotValid) {
-            let msg = this.translate('fieldShouldAfter', 'messages')
+            const msg = this.translate('fieldShouldAfter', 'messages')
                 .replace('{field}', this.getLabelText())
                 .replace('{otherField}', this.translate(field, 'fields', this.entityType));
 
@@ -177,22 +206,22 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
     }
 
     validateBefore() {
-        var field = this.model.getFieldParam(this.name, 'before');
+        const field = this.model.getFieldParam(this.name, 'before');
 
         if (!field) {
             return;
         }
 
-        let fieldDate = field + 'Date';
-        let value = this.model.get(this.name) || this.model.get(this.nameDate);
-        let otherValue = this.model.get(field) || this.model.get(fieldDate);
+        const fieldDate = field + 'Date';
+        const value = this.model.get(this.name) || this.model.get(this.nameDate);
+        const otherValue = this.model.get(field) || this.model.get(fieldDate);
 
         if (!(value && otherValue)) {
             return;
         }
 
         if (moment(value).unix() >= moment(otherValue).unix()) {
-            let msg = this.translate('fieldShouldBefore', 'messages')
+            const msg = this.translate('fieldShouldBefore', 'messages')
                 .replace('{field}', this.getLabelText())
                 .replace('{otherField}', this.translate(field, 'fields', this.entityType));
 
@@ -208,7 +237,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
         }
 
         if (this.model.get(this.name) === null && this.model.get(this.nameDate) === null) {
-            let msg = this.translate('fieldIsRequired', 'messages')
+            const msg = this.translate('fieldIsRequired', 'messages')
                 .replace('{field}', this.getLabelText());
 
             this.showValidationMessage(msg);

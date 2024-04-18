@@ -34,8 +34,35 @@ import Autocomplete from 'ui/autocomplete';
 
 /**
  * A link field (belongs-to relation).
+ *
+ * @extends BaseFieldView<module:views/fields/link~params>
  */
 class LinkFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/link~options
+     * @property {
+     *     module:views/fields/link~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/link~params
+     * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
+     * @property {boolean} [createButton] Show 'Create' button.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/link~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     /** @inheritDoc */
     type = 'link'

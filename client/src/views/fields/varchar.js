@@ -44,7 +44,7 @@ class VarcharFieldView extends BaseFieldView {
      * @property {
      *     module:views/fields/varchar~params &
      *     module:views/fields/base~params &
-     *     Object.<string, *>
+     *     Record
      * } [params] Parameters.
      */
 
@@ -360,7 +360,7 @@ class VarcharFieldView extends BaseFieldView {
     fetchSearch() {
         const type = this.fetchSearchType() || 'startsWith';
 
-        if (~['isEmpty', 'isNotEmpty'].indexOf(type)) {
+        if (['isEmpty', 'isNotEmpty'].includes(type)) {
             if (type === 'isEmpty') {
                 return {
                     type: 'or',
@@ -381,6 +381,7 @@ class VarcharFieldView extends BaseFieldView {
                 };
             }
 
+            /** @type {Record[]} */
             const value = [
                 {
                     type: 'isNotNull',

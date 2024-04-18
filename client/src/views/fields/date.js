@@ -33,8 +33,35 @@ import moment from 'moment';
 
 /**
  * A date field.
+ *
+ * @extends BaseFieldView<module:views/fields/date~params>
  */
 class DateFieldView extends BaseFieldView {
+
+    /**
+     * @typedef {Object} module:views/fields/date~options
+     * @property {
+     *     module:views/fields/date~params &
+     *     module:views/fields/base~params &
+     *     Record
+     * } [params] Parameters.
+     */
+
+    /**
+     * @typedef {Object} module:views/fields/date~params
+     * @property {boolean} [required] Required.
+     * @property {boolean} [useNumericFormat] Use numeric format.
+     */
+
+    /**
+     * @param {
+     *     module:views/fields/date~options &
+     *     module:views/fields/base~options
+     * } options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
 
     type = 'date'
 
@@ -279,8 +306,8 @@ class DateFieldView extends BaseFieldView {
                 // noinspection JSUnresolvedReference
                 this.$el.find('.input-group.additional').datepicker(options);
 
-                this.initDatePickerEventHandlers('input.filter-from', options);
-                this.initDatePickerEventHandlers('input.filter-to', options);
+                this.initDatePickerEventHandlers('input.filter-from');
+                this.initDatePickerEventHandlers('input.filter-to');
             }
 
             this.$element.parent().find('button.date-picker-btn').on('click', () => {
@@ -299,18 +326,9 @@ class DateFieldView extends BaseFieldView {
     /**
      * @private
      * @param {string} selector
-     * @param {Record} options
      */
-    initDatePickerEventHandlers(selector, options) {
+    initDatePickerEventHandlers(selector) {
         const $input = this.$el.find(selector);
-
-        // noinspection JSUnresolvedReference
-        //$input.datepicker(options);
-
-        //$input.parent().find('button.date-picker-btn').on('click', () => {
-            // noinspection JSUnresolvedReference
-        //    $input.datepicker('show');
-        //});
 
         $input.on('change', /** Record */e => {
             this.trigger('change');

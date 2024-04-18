@@ -37,7 +37,7 @@ class DatetimeShortFieldView extends DatetimeFieldView {
     detailTemplate = 'fields/datetime-short/detail'
 
     data() {
-        let data = super.data();
+        const data = super.data();
 
         if (this.mode === this.MODE_LIST || this.mode === this.MODE_DETAIL) {
             data.fullDateValue = super.getDateStringValue();
@@ -51,7 +51,7 @@ class DatetimeShortFieldView extends DatetimeFieldView {
             return super.getDateStringValue();
         }
 
-        let value = this.model.get(this.name)
+        const value = this.model.get(this.name);
 
         if (!value) {
             return super.getDateStringValue();
@@ -63,8 +63,8 @@ class DatetimeShortFieldView extends DatetimeFieldView {
             timeFormat = timeFormat.replace(/:mm/, ':mm:ss');
         }
 
-        let m = this.getDateTime().toMoment(value);
-        let now = moment().tz(this.getDateTime().timeZone || 'UTC');
+        const m = this.getDateTime().toMoment(value);
+        const now = moment().tz(this.getDateTime().timeZone || 'UTC');
 
         if (
             m.unix() > now.clone().startOf('day').unix() &&
@@ -73,7 +73,7 @@ class DatetimeShortFieldView extends DatetimeFieldView {
             return m.format(timeFormat);
         }
 
-        let readableFormat = this.getDateTime().getReadableShortDateFormat();
+        const readableFormat = this.getDateTime().getReadableShortDateFormat();
 
         return m.format('YYYY') === now.format('YYYY') ?
             m.format(readableFormat) :
