@@ -30,6 +30,7 @@
 namespace Espo\Tools\Notification;
 
 use Espo\Core\Acl;
+use Espo\Core\Acl\Permission;
 use Espo\Core\AclManager;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
@@ -128,7 +129,7 @@ class NoteMentionHookProcessor
                 continue;
             }
 
-            if (!$this->acl->checkUserPermission($user, 'assignment')) {
+            if (!$this->acl->checkUserPermission($user, Permission::ASSIGNMENT)) {
                 continue;
             }
 

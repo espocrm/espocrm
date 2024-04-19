@@ -30,6 +30,7 @@
 namespace Espo\Core\Record\Defaults;
 
 use Espo\Core\Acl;
+use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table as AclTable;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Type\FieldType;
@@ -110,7 +111,10 @@ class DefaultPopulator implements Populator
             return false;
         }
 
-        if ($this->acl->getPermissionLevel('assignment') === AclTable::LEVEL_NO && !$this->user->isApi()) {
+        if (
+            $this->acl->getPermissionLevel(Permission::ASSIGNMENT) === AclTable::LEVEL_NO &&
+            !$this->user->isApi()
+        ) {
             return true;
         }
 
@@ -150,7 +154,7 @@ class DefaultPopulator implements Populator
             return false;
         }
 
-        if ($this->acl->getPermissionLevel('assignment') === AclTable::LEVEL_NO) {
+        if ($this->acl->getPermissionLevel(Permission::ASSIGNMENT) === AclTable::LEVEL_NO) {
             return true;
         }
 

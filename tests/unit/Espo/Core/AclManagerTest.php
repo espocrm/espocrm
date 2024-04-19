@@ -30,6 +30,7 @@
 namespace tests\unit\Espo\Core;
 
 use Espo\Core\{
+    Acl\Permission,
     AclManager,
     Acl\Table,
     Acl\AccessChecker\AccessCheckerFactory,
@@ -38,8 +39,7 @@ use Espo\Core\{
     Acl\Table\TableFactory,
     Acl\GlobalRestriction,
     Acl\Map\MapFactory,
-    ORM\EntityManager,
-};
+    ORM\EntityManager};
 
 use Espo\Entities\{
     User,
@@ -117,10 +117,10 @@ class AclManagerTest extends \PHPUnit\Framework\TestCase
         $this->table
             ->expects($this->once())
             ->method('getPermissionLevel')
-            ->with('assignment')
+            ->with(Permission::ASSIGNMENT)
             ->willReturn(Table::LEVEL_YES);
 
-        $this->aclManager->getPermissionLevel($this->user, 'assignment');
+        $this->aclManager->getPermissionLevel($this->user, Permission::ASSIGNMENT);
     }
 
     public function testGetPermissionLevel2(): void
@@ -130,9 +130,9 @@ class AclManagerTest extends \PHPUnit\Framework\TestCase
         $this->table
             ->expects($this->once())
             ->method('getPermissionLevel')
-            ->with('assignment')
+            ->with(Permission::ASSIGNMENT)
             ->willReturn(Table::LEVEL_YES);
 
-        $this->aclManager->getPermissionLevel($this->user, 'assignment');
+        $this->aclManager->getPermissionLevel($this->user, Permission::ASSIGNMENT);
     }
 }

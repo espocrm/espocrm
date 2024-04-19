@@ -99,7 +99,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             return false;
         }
 
-        $assignmentPermission = $this->aclManager->getPermissionLevel($user, 'assignment');
+        $assignmentPermission = $this->aclManager->getPermissionLevel($user, Permission::ASSIGNMENT);
 
         if (
             $assignmentPermission === Table::LEVEL_YES ||
@@ -157,7 +157,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     protected function isPermittedTeams(User $user, Entity $entity): bool
     {
-        $assignmentPermission = $this->aclManager->getPermissionLevel($user, 'assignment');
+        $assignmentPermission = $this->aclManager->getPermissionLevel($user, Permission::ASSIGNMENT);
 
         if (!in_array($assignmentPermission, [Table::LEVEL_TEAM, Table::LEVEL_NO])) {
             return true;
@@ -219,7 +219,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
 
     private function isPermittedTeamsEmpty(User $user, CoreEntity $entity): bool
     {
-        $assignmentPermission = $this->aclManager->getPermissionLevel($user, 'assignment');
+        $assignmentPermission = $this->aclManager->getPermissionLevel($user, Permission::ASSIGNMENT);
 
         if ($assignmentPermission !== Table::LEVEL_TEAM) {
             return true;
@@ -259,7 +259,7 @@ class DefaultAssignmentChecker implements AssignmentChecker
             return false;
         }
 
-        $assignmentPermission = $this->aclManager->getPermissionLevel($user, 'assignment');
+        $assignmentPermission = $this->aclManager->getPermissionLevel($user, Permission::ASSIGNMENT);
 
         if (
             $assignmentPermission === Table::LEVEL_YES ||

@@ -29,6 +29,7 @@
 
 namespace Espo\Core;
 
+use Espo\Core\Acl\Permission;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
@@ -69,7 +70,7 @@ use InvalidArgumentException;
  */
 class AclManager
 {
-    protected const PERMISSION_ASSIGNMENT = 'assignment';
+    protected const PERMISSION_ASSIGNMENT = Permission::ASSIGNMENT;
 
     /** @var array<string, AccessChecker> */
     private $accessCheckerHashMap = [];
