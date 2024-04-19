@@ -38,6 +38,7 @@ use Espo\Core\Utils\FieldUtil;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
+use RuntimeException;
 
 /**
  * @implements Populator<Entity>
@@ -61,14 +62,12 @@ class DefaultPopulator implements Populator
             $entity->set('assignedUserName', $this->user->getName());
         }
 
-        if (
-            !$this->user->isPortal() &&
-            $entity instanceof CoreEntity &&
-            $entity->hasLinkMultipleField('teams') &&
-            $this->user->getDefaultTeam() &&
-            !$this->acl->checkField($entityType, 'teams', AclTable::ACTION_EDIT)
-        ) {
-            $defaultTeamId = $this->user->getDefaultTeam()->getId();
+        if ($this->toAddDetailTeam($entity)) {
+            $defaultTeamId = $this->user->getDefaultTeam()?->getId();
+
+            if (!$defaultTeamId || !$entity instanceof CoreEntity) {
+                throw new RuntimeException();
+            }
 
             $entity->addLinkMultipleId('teams', $defaultTeamId);
 
@@ -107,17 +106,58 @@ class DefaultPopulator implements Populator
 
         $defs = $this->entityManager->getDefs()->getEntity($entityType);
 
-        if (
-            !$defs->hasField('assignedUser') ||
-            $defs->getField('assignedUser')->getType() !== FieldType::LINK
-        ) {
+        if ($defs->tryGetField('assignedUser')?->getType() !== FieldType::LINK) {
             return false;
         }
 
-        if ($this->acl->checkField($entityType, 'assignedUser', AclTable::ACTION_EDIT)) {
+        if ($this->acl->getPermissionLevel('assignment') === AclTable::LEVEL_NO && !$this->user->isApi()) {
+            return true;
+        }
+
+        if (!$this->acl->checkField($entityType, 'assignedUser', AclTable::ACTION_EDIT)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @phpstan-assert-if-true CoreEntity $entity
+     */
+    private function toAddDetailTeam(Entity $entity): bool
+    {
+        if ($this->user->isPortal()) {
             return false;
         }
 
-        return true;
+        if (!$this->user->getDefaultTeam()) {
+            return false;
+        }
+
+        if (!$entity instanceof CoreEntity) {
+            return false;
+        }
+
+        if ($entity->hasLinkMultipleId('teams', $this->user->getDefaultTeam()->getId())) {
+            return false;
+        }
+
+        $entityType = $entity->getEntityType();
+
+        $defs = $this->entityManager->getDefs()->getEntity($entityType);
+
+        if ($defs->tryGetField('teams')?->getType() !== FieldType::LINK_MULTIPLE) {
+            return false;
+        }
+
+        if ($this->acl->getPermissionLevel('assignment') === AclTable::LEVEL_NO) {
+            return true;
+        }
+
+        if (!$this->acl->checkField($entityType, 'teams', AclTable::ACTION_EDIT)) {
+            return true;
+        }
+
+        return false;
     }
 }
