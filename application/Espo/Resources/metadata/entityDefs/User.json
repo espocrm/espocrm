@@ -278,9 +278,11 @@
             "layoutDetailDisabled": true,
             "tooltip": true,
             "customizationAuditedDisabled": true,
+            "customizationAutocompleteOnEmptyDisabled": true,
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\User\\DefaultTeam\\IsUserTeam"
-            ]
+            ],
+            "view": "views/user/fields/default-team"
         },
         "acceptanceStatus": {
             "type": "varchar",
