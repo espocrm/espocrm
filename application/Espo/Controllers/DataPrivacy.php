@@ -42,7 +42,7 @@ class DataPrivacy
 {
     public function __construct(private Erasor $erasor, private Acl $acl)
     {
-        if ($this->acl->getPermissionLevel('dataPrivacyPermission') === Acl\Table::LEVEL_NO) {
+        if ($this->acl->getPermissionLevel('dataPrivacy') === Acl\Table::LEVEL_NO) {
             throw new Forbidden();
         }
     }

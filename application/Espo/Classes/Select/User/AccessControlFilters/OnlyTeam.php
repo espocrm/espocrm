@@ -51,7 +51,7 @@ class OnlyTeam implements Filter
             'id' => $this->user->getId(),
         ];
 
-        if ($this->aclManager->getPermissionLevel($this->user, 'portalPermission') === Table::LEVEL_YES) {
+        if ($this->aclManager->getPermissionLevel($this->user, 'portal') === Table::LEVEL_YES) {
             $orGroup['type'] = User::TYPE_PORTAL;
         }
 

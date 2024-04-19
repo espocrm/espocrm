@@ -133,6 +133,6 @@ class AclManagerTest extends \PHPUnit\Framework\TestCase
             ->with('assignment')
             ->willReturn(Table::LEVEL_YES);
 
-        $this->aclManager->getPermissionLevel($this->user, 'assignmentPermission');
+        $this->aclManager->getPermissionLevel($this->user, 'assignment');
     }
 }

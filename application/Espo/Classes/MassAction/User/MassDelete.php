@@ -70,7 +70,7 @@ class MassDelete implements MassAction
 
         if (
             !$params->hasIds() &&
-            $this->acl->getPermissionLevel('massUpdatePermission') !== Acl\Table::LEVEL_YES
+            $this->acl->getPermissionLevel('massUpdate') !== Acl\Table::LEVEL_YES
         ) {
             throw new Forbidden("No mass-update permission.");
         }

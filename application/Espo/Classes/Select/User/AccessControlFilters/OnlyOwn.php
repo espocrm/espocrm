@@ -43,7 +43,7 @@ class OnlyOwn implements Filter
 
     public function apply(SelectBuilder $queryBuilder): void
     {
-        if ($this->aclManager->getPermissionLevel($this->user, 'portalPermission') === Table::LEVEL_YES) {
+        if ($this->aclManager->getPermissionLevel($this->user, 'portal') === Table::LEVEL_YES) {
             $queryBuilder->where([
                 'OR' => [
                     'id' => $this->user->getId(),

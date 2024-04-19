@@ -51,7 +51,7 @@ use Espo\Tools\MassUpdate\Data as MassUpdateData;
 
 class MassUpdate implements MassAction
 {
-    private const PERMISSION = 'massUpdatePermission';
+    private const PERMISSION = 'massUpdate';
 
     /** @var string[] */
     private array $notAllowedAttributeList = [

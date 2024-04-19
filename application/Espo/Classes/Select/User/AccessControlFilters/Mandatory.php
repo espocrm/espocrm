@@ -51,7 +51,7 @@ class Mandatory implements Filter
             ]);
         }
 
-        if ($this->aclManager->getPermissionLevel($this->user, 'portalPermission') !== Table::LEVEL_YES) {
+        if ($this->aclManager->getPermissionLevel($this->user, 'portal') !== Table::LEVEL_YES) {
             $queryBuilder->where([
                 'OR' => [
                     'type!=' => User::TYPE_PORTAL,

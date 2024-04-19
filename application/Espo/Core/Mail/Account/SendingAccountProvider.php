@@ -59,7 +59,7 @@ class SendingAccountProvider
 
     public function getShared(User $user, string $emailAddress): ?Account
     {
-        $level = $this->aclManager->getPermissionLevel($user, 'groupEmailAccountPermission');
+        $level = $this->aclManager->getPermissionLevel($user, 'groupEmailAccount');
 
         $entity = null;
 

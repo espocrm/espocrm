@@ -334,7 +334,7 @@ class AppService
      */
     private function getUserGroupEmailAddressList(User $user): array
     {
-        $groupEmailAccountPermission = $this->acl->getPermissionLevel('groupEmailAccountPermission');
+        $groupEmailAccountPermission = $this->acl->getPermissionLevel('groupEmailAccount');
 
         if (!$groupEmailAccountPermission || $groupEmailAccountPermission === Acl\Table::LEVEL_NO) {
             return [];
