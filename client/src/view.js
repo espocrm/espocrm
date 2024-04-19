@@ -326,8 +326,8 @@ class View extends BullView {
      * Translate a label.
      *
      * @param {string} label Label.
-     * @param {string} [category] Category.
-     * @param {string} [scope] Scope.
+     * @param {string|'messages'|'labels'|'fields'|'links'|'scopeNames'|'scopeNamesPlural'} [category='labels'] Category.
+     * @param {string} [scope='Global'] Scope.
      * @returns {string}
      */
     translate(label, category, scope) {
