@@ -277,7 +277,10 @@
             "type": "link",
             "layoutDetailDisabled": true,
             "tooltip": true,
-            "customizationAuditedDisabled": true
+            "customizationAuditedDisabled": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\User\\DefaultTeam\\IsUserTeam"
+            ]
         },
         "acceptanceStatus": {
             "type": "varchar",
