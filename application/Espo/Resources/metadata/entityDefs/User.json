@@ -398,11 +398,13 @@
             "customizationAuditedDisabled": true,
             "defaultAttributes": {
                 "avatarId": null
-            }
+            },
+            "layoutAvailabilityList": []
         },
         "avatarColor": {
             "type": "colorpicker",
-            "dynamicLogicDisabled": true
+            "dynamicLogicDisabled": true,
+            "layoutAvailabilityList": []
         },
         "sendAccessInfo": {
             "type": "bool",
