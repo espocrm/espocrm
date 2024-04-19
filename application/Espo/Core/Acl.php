@@ -31,6 +31,7 @@ namespace Espo\Core;
 
 use Espo\Core\Acl\Exceptions\NotImplemented;
 use Espo\Core\Acl\GlobalRestriction;
+use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table;
 
 use Espo\ORM\Entity;
@@ -283,7 +284,7 @@ class Acl
      *
      * @param User|string $target User entity or user ID.
      */
-    public function checkUserPermission($target, string $permissionType = 'user'): bool
+    public function checkUserPermission($target, string $permissionType = Permission::USER): bool
     {
         return $this->aclManager->checkUserPermission($this->user, $target, $permissionType);
     }

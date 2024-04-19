@@ -65,12 +65,12 @@ class MassDelete implements MassAction
         $entityType = $params->getEntityType();
 
         if (!$this->acl->check($entityType, Acl\Table::ACTION_DELETE)) {
-            throw new Forbidden("No delete access for '{$entityType}'.");
+            throw new Forbidden("No delete access for '$entityType'.");
         }
 
         if (
             !$params->hasIds() &&
-            $this->acl->getPermissionLevel('massUpdate') !== Acl\Table::LEVEL_YES
+            $this->acl->getPermissionLevel(Acl\Permission::MASS_UPDATE) !== Acl\Table::LEVEL_YES
         ) {
             throw new Forbidden("No mass-update permission.");
         }

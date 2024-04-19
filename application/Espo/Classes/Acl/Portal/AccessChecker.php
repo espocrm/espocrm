@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Acl\Portal;
 
+use Espo\Core\Acl\Permission;
 use Espo\Entities\Portal;
 use Espo\Entities\User;
 use Espo\Core\Acl\AccessEntityCREDChecker;
@@ -45,18 +46,12 @@ class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
 
-    private DefaultAccessChecker $defaultAccessChecker;
-    private AclManager $aclManager;
-
-    public function __construct(DefaultAccessChecker $defaultAccessChecker, AclManager $aclManager)
-    {
-        $this->defaultAccessChecker = $defaultAccessChecker;
-        $this->aclManager = $aclManager;
-    }
+    public function __construct(private DefaultAccessChecker $defaultAccessChecker, private AclManager $aclManager)
+    {}
 
     public function check(User $user, ScopeData $data): bool
     {
-        $level = $this->aclManager->getPermissionLevel($user, 'portal');
+        $level = $this->aclManager->getPermissionLevel($user, Permission::PORTAL);
 
         return $level === Table::LEVEL_YES;
     }

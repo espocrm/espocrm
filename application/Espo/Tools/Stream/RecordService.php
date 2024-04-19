@@ -100,7 +100,7 @@ class RecordService
             throw new Forbidden();
         }
 
-        if ($this->acl->getPermissionLevel('audit') !== Table::LEVEL_YES) {
+        if ($this->acl->getPermissionLevel(Acl\Permission::AUDIT) !== Table::LEVEL_YES) {
             throw new Forbidden();
         }
 

@@ -573,7 +573,7 @@ class AclManager
      *
      * @param User|string $target User entity or user ID.
      */
-    public function checkUserPermission(User $user, $target, string $permissionType = 'user'): bool
+    public function checkUserPermission(User $user, $target, string $permissionType = Permission::USER): bool
     {
         $permission = $this->getPermissionLevel($user, $permissionType);
 

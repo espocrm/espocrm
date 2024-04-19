@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\DataPrivacy;
 
+use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
@@ -69,7 +70,7 @@ class Erasor implements
      */
     public function erase(string $entityType, string $id, array $fieldList): void
     {
-        if ($this->acl->getPermissionLevel('dataPrivacyPermission') === Table::LEVEL_NO) {
+        if ($this->acl->getPermissionLevel(Permission::DATA_PRIVACY) === Table::LEVEL_NO) {
             throw new Forbidden();
         }
 

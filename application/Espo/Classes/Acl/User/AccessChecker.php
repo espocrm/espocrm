@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Acl\User;
 
+use Espo\Core\Acl\Permission;
 use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\Core\Acl\AccessEntityCREDSChecker;
@@ -60,8 +61,6 @@ class AccessChecker implements AccessEntityCREDSChecker
             return false;
         }
 
-        /** @var User $entity */
-
         if ($entity->isSuperAdmin() && !$user->isSuperAdmin()) {
             return false;
         }
@@ -71,10 +70,8 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
     {
-        /** @var User $entity */
-
         if ($entity->isPortal()) {
-            if ($this->aclManager->getPermissionLevel($user, 'portal') === Table::LEVEL_YES) {
+            if ($this->aclManager->getPermissionLevel($user, Permission::PORTAL) === Table::LEVEL_YES) {
                 return true;
             }
 
@@ -90,8 +87,6 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
     {
-        /** @var User $entity */
-
         if ($entity->isSystem()) {
             return false;
         }
@@ -111,8 +106,6 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
-        /** @var User $entity */
-
         if (!$user->isAdmin()) {
             return false;
         }
@@ -130,8 +123,7 @@ class AccessChecker implements AccessEntityCREDSChecker
 
     public function checkEntityStream(User $user, Entity $entity, ScopeData $data): bool
     {
-        /** @var User $entity */
-
-        return $this->aclManager->checkUserPermission($user, $entity, 'user');
+        /** @noinspection PhpRedundantOptionalArgumentInspection */
+        return $this->aclManager->checkUserPermission($user, $entity, Permission::USER);
     }
 }

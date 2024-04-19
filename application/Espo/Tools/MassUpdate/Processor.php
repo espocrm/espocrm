@@ -56,7 +56,7 @@ use stdClass;
 
 class Processor
 {
-    private const PERMISSION = 'massUpdatePermission';
+    private const PERMISSION = Acl\Permission::MASS_UPDATE;
 
     public function __construct(
         private ValueMapPreparator $valueMapPreparator,

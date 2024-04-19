@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Stream\RecordService;
 
+use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
 use Espo\Core\Exceptions\BadRequest;
@@ -136,7 +137,7 @@ class QueryHelper
     public function buildPostedToPortalQuery(User $user, SelectBuilder $baseBuilder): ?Select
     {
         if (!$user->isPortal()) {
-            if ($this->aclManager->getPermissionLevel($user, 'portal') !== Table::LEVEL_YES) {
+            if ($this->aclManager->getPermissionLevel($user, Permission::PORTAL) !== Table::LEVEL_YES) {
                 return null;
             }
 

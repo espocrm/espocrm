@@ -51,7 +51,7 @@ use Espo\Tools\MassUpdate\Data as MassUpdateData;
 
 class MassUpdate implements MassAction
 {
-    private const PERMISSION = 'massUpdate';
+    private const PERMISSION = Acl\Permission::MASS_UPDATE;
 
     /** @var string[] */
     private array $notAllowedAttributeList = [

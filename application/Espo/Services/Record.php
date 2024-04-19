@@ -29,6 +29,7 @@
 
 namespace Espo\Services;
 
+use Espo\Core\Acl\Permission;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
@@ -265,7 +266,7 @@ class Record extends RecordService implements
      */
     public function exportCollection(array $params, Collection $collection): string
     {
-        if ($this->acl->getPermissionLevel('exportPermission') !== AclTable::LEVEL_YES) {
+        if ($this->acl->getPermissionLevel(Permission::EXPORT) !== AclTable::LEVEL_YES) {
             throw new ForbiddenSilent("No 'export' permission.");
         }
 

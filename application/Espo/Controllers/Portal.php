@@ -29,6 +29,7 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Acl\Permission;
 use Espo\Core\Acl\Table;
 use Espo\Core\Controllers\Record;
 
@@ -36,7 +37,7 @@ class Portal extends Record
 {
     protected function checkAccess(): bool
     {
-        $level = $this->acl->getPermissionLevel('portal');
+        $level = $this->acl->getPermissionLevel(Permission::PORTAL);
 
         return $level === Table::LEVEL_YES;
     }

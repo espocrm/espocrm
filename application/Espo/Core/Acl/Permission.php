@@ -32,4 +32,11 @@ namespace Espo\Core\Acl;
 class Permission
 {
     public const ASSIGNMENT = 'assignment';
+    public const USER = 'user';
+    public const PORTAL = 'portal';
+    public const MASS_UPDATE = 'massUpdate';
+    public const EXPORT = 'export';
+    public const AUDIT = 'audit';
+    public const DATA_PRIVACY = 'dataPrivacy';
+    public const MESSAGE = 'message';
 }

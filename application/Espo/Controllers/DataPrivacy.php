@@ -36,17 +36,26 @@ use Espo\Core\Acl;
 use Espo\Core\Api\Request;
 use Espo\Core\Api\Response;
 
+use Espo\Core\Exceptions\NotFound;
 use Espo\Tools\DataPrivacy\Erasor;
 
 class DataPrivacy
 {
+    /**
+     * @throws Forbidden
+     */
     public function __construct(private Erasor $erasor, private Acl $acl)
     {
-        if ($this->acl->getPermissionLevel('dataPrivacy') === Acl\Table::LEVEL_NO) {
+        if ($this->acl->getPermissionLevel(Acl\Permission::DATA_PRIVACY) === Acl\Table::LEVEL_NO) {
             throw new Forbidden();
         }
     }
 
+    /**
+     * @throws BadRequest
+     * @throws Forbidden
+     * @throws NotFound
+     */
     public function postActionErase(Request $request, Response $response): void
     {
         $data = $request->getParsedBody();

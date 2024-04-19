@@ -29,6 +29,7 @@
 
 namespace Espo\Classes\Select\User\AccessControlFilters;
 
+use Espo\Core\Acl\Permission;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
@@ -51,7 +52,7 @@ class Mandatory implements Filter
             ]);
         }
 
-        if ($this->aclManager->getPermissionLevel($this->user, 'portal') !== Table::LEVEL_YES) {
+        if ($this->aclManager->getPermissionLevel($this->user, Permission::PORTAL) !== Table::LEVEL_YES) {
             $queryBuilder->where([
                 'OR' => [
                     'type!=' => User::TYPE_PORTAL,
