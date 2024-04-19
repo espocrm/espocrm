@@ -830,9 +830,16 @@ class Service implements Crud,
         /** @noinspection PhpDeprecationInspection */
         $this->beforeCreateEntity($entity, $data);
 
-        $this->entityManager->saveEntity($entity, [SaveOption::API => true]);
+        $this->entityManager->saveEntity($entity, [
+            SaveOption::API => true,
+            SaveOption::KEEP_NEW => true,
+        ]);
 
         $this->getRecordHookManager()->processAfterCreate($entity, $params);
+
+        $entity->setAsNotNew();
+        $entity->updateFetchedValues();
+
         /** @noinspection PhpDeprecationInspection */
         $this->afterCreateEntity($entity, $data);
         /** @noinspection PhpDeprecationInspection */
