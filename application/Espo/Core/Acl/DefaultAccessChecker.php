@@ -87,7 +87,7 @@ class DefaultAccessChecker implements
         return $this->scopeChecker->check($data, $action, $checkerData);
     }
 
-    private function checkScope(User $user, ScopeData $data, ?string $action = null): bool
+    private function checkScope(ScopeData $data, ?string $action = null): bool
     {
         $checkerData = ScopeCheckerData
             ::createBuilder()
@@ -100,27 +100,27 @@ class DefaultAccessChecker implements
 
     public function check(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data);
+        return $this->checkScope($data);
     }
 
     public function checkCreate(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data, Table::ACTION_CREATE);
+        return $this->checkScope($data, Table::ACTION_CREATE);
     }
 
     public function checkRead(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data, Table::ACTION_READ);
+        return $this->checkScope($data, Table::ACTION_READ);
     }
 
     public function checkEdit(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data, Table::ACTION_EDIT);
+        return $this->checkScope($data, Table::ACTION_EDIT);
     }
 
     public function checkDelete(User $user, ScopeData $data): bool
     {
-        if ($this->checkScope($user, $data, Table::ACTION_DELETE)) {
+        if ($this->checkScope($data, Table::ACTION_DELETE)) {
             return true;
         }
 
@@ -137,7 +137,7 @@ class DefaultAccessChecker implements
 
     public function checkStream(User $user, ScopeData $data): bool
     {
-        return $this->checkScope($user, $data, Table::ACTION_STREAM);
+        return $this->checkScope($data, Table::ACTION_STREAM);
     }
 
     public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
