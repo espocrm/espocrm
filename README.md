@@ -16,7 +16,7 @@ and release packages are available at [Releases](https://github.com/espocrm/espo
 
 ### Demo
 
-You can try the CRM on the online [demo](https://www.espocrm.com/demo/).
+You can try the CRM on an online [demo](https://www.espocrm.com/demo/).
 
 ### Requirements
 
