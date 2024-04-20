@@ -36,7 +36,7 @@ use Espo\Core\Container;
 use Espo\Core\DataManager;
 use Espo\Core\Api\Request;
 use Espo\Core\Utils\Config;
-use Espo\Core\Utils\AdminNotificationManager;
+use Espo\Tools\AdminNotifications\Manager;
 use Espo\Core\Utils\SystemRequirements;
 use Espo\Core\Utils\ScheduledJob;
 use Espo\Core\Upgrades\UpgradeManager;
@@ -51,7 +51,7 @@ class Admin
         private Container $container,
         private Config $config,
         private User $user,
-        private AdminNotificationManager $adminNotificationManager,
+        private Manager $adminNotificationManager,
         private SystemRequirements $systemRequirements,
         private ScheduledJob $scheduledJob,
         private DataManager $dataManager

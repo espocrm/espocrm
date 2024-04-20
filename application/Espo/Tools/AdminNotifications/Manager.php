@@ -27,15 +27,19 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Core\Utils;
+namespace Espo\Tools\AdminNotifications;
 
+use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Language;
+use Espo\Core\Utils\ScheduledJob;
+use Espo\Core\Utils\Util;
 use Espo\Entities\Extension;
 use Espo\ORM\EntityManager;
 
 /**
  * Notifications on the admin panel.
  */
-class AdminNotificationManager
+class Manager
 {
     public function __construct(
         private EntityManager $entityManager,
@@ -174,7 +178,7 @@ class AdminNotificationManager
     private function getExtensionLatestInstalledVersion(string $extensionName): ?string
     {
         $extension = $this->entityManager
-            ->getRDBRepository('Extension')
+            ->getRDBRepository(Extension::ENTITY_TYPE)
             ->select(['version'])
             ->where([
                 'name' => $extensionName,
