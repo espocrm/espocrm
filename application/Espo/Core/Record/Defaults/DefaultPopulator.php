@@ -142,15 +142,15 @@ class DefaultPopulator implements Populator
             return false;
         }
 
-        if ($entity->hasLinkMultipleId('teams', $this->user->getDefaultTeam()->getId())) {
-            return false;
-        }
-
         $entityType = $entity->getEntityType();
 
         $defs = $this->entityManager->getDefs()->getEntity($entityType);
 
         if ($defs->tryGetField('teams')?->getType() !== FieldType::LINK_MULTIPLE) {
+            return false;
+        }
+
+        if ($entity->hasLinkMultipleId('teams', $this->user->getDefaultTeam()->getId())) {
             return false;
         }
 
