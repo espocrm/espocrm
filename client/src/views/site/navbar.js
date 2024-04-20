@@ -739,10 +739,10 @@ class NavbarSiteView extends View {
 
         $(window).on('resize.navbar', () => {
             updateSizeForSide();
+            this.adjustBodyMinHeight();
         });
 
         updateSizeForSide();
-
         this.adjustBodyMinHeight();
     }
 
