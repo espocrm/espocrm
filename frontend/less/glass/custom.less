@@ -1,8 +1,7 @@
 @backdrop-filter: blur(2px);
 @backdrop-filter-2: blur(4px);
 
-@body-bg-2nd: #254148;
-@body-bg-3rd: #1bb0b726;
+@body-bg-2nd: #3f4157; //#254148;
 
 body[data-navbar="side"].minimized.side-menu-opened {
     #navbar > .navbar {
@@ -33,12 +32,17 @@ body[data-navbar="top"] {
 
 body {
     background:
-        /*radial-gradient(circle at 50px 600px, @body-bg-3rd, transparent 800px),*/
         repeating-linear-gradient(
             354deg,
-                var(--body-bg) -1000px,
-            @body-bg-2nd 1000px,
+                var(--body-bg) 0px,
+            @body-bg-2nd 2000px,
             var(--body-bg) 3000px
+        ),
+        repeating-linear-gradient(
+            354deg,
+            @body-bg-2nd 0px,
+            var(--body-bg) 2000px,
+            @body-bg-2nd 3000px
         );
     background-size: 100% 20000px;
     background-position: top;
