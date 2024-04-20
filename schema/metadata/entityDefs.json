@@ -714,6 +714,13 @@
                     },
                     "description": "A list of sanitizers. Should implement Espo\\Core\\FieldSanitize\\Sanitizer."
                 },
+                "sanitizerSuppressClassNameList": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    },
+                    "description": "A list of sanitizers to be suppressed."
+                },
                 "inlineEditDisabled": {
                     "type": "boolean",
                     "default": "Disable inline edit."

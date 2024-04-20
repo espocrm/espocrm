@@ -120,7 +120,16 @@ class SanitizeManager
 
         /** @var class-string<Sanitizer>[] $fieldClassNameList */
         $fieldClassNameList = $this->metadata->get("entityDefs.$entityType.fields.$field.sanitizerClassNameList") ?? [];
+        $ignoreList = $this->metadata->get("entityDefs.$entityType.fields.$field.sanitizerSuppressClassNameList") ?? [];
 
-        return array_merge($classNameList, $fieldClassNameList);
+        $list = array_merge($classNameList, $fieldClassNameList);
+
+        if ($ignoreList === []) {
+            return $list;
+        }
+
+        $list = array_diff($list, $ignoreList);
+
+        return array_values($list);
     }
 }
