@@ -97,6 +97,10 @@ class AddDashletModalView extends ModalView {
 
             return true;
         });
+
+        this.dashletList = this.dashletList.filter(item => {
+            this.translations[item] = this.translate(item, 'dashlets');
+        });
     }
 
     afterRender() {
@@ -125,6 +129,10 @@ class AddDashletModalView extends ModalView {
         const lowerCaseText = text.toLowerCase();
 
         this.dashletList.forEach(item => {
+            if (!(item in this.translations)) {
+                return;
+            }
+
             const label = this.translations[item].toLowerCase();
 
             for (const word of label.split(' ')) {
