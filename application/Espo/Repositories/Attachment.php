@@ -62,13 +62,13 @@ class Attachment extends Database implements
     protected function processBeforeSaveNew(AttachmentEntity $entity): void
     {
         if ($entity->isBeingUploaded()) {
-            $entity->set('storage', EspoUploadDir::NAME);
+            $entity->setStorage(EspoUploadDir::NAME);
         }
 
         if (!$entity->getStorage()) {
             $defaultStorage = $this->config->get('defaultFileStorage');
 
-            $entity->set('storage', $defaultStorage);
+            $entity->setStorage($defaultStorage);
         }
 
         $contents = $entity->get('contents');
@@ -78,7 +78,7 @@ class Attachment extends Database implements
         }
 
         if (!$entity->isBeingUploaded()) {
-            $entity->set('size', strlen($contents));
+            $entity->setSize(strlen($contents));
         }
 
         $this->fileStorageManager->putContents($entity, $contents);
@@ -89,23 +89,22 @@ class Attachment extends Database implements
      */
     public function getCopiedAttachment(AttachmentEntity $entity, ?string $role = null): AttachmentEntity
     {
-        $attachment = $this->getNew();
+        $new = $this->getNew();
 
-        $attachment->set([
-            'sourceId' => $entity->getSourceId(),
-            'name' => $entity->getName(),
-            'type' => $entity->getType(),
-            'size' => $entity->getSize(),
-            'role' => $entity->getRole(),
-        ]);
+        $new
+            ->setSourceId($entity->getSourceId())
+            ->setName($entity->getName())
+            ->setType($entity->getType())
+            ->setSize($entity->getSize())
+            ->setRole($entity->getRole());
 
         if ($role) {
-            $attachment->set('role', $role);
+            $new->setRole($role);
         }
 
-        $this->save($attachment);
+        $this->save($new);
 
-        return $attachment;
+        return $new;
     }
 
     public function getContents(AttachmentEntity $entity): string
