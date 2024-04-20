@@ -6,6 +6,11 @@
             "default": false
         },
         {
+            "name": "audited",
+            "type": "bool",
+            "tooltip": true
+        },
+        {
             "name": "sourceList",
             "type": "multiEnum",
             "view": "views/admin/field-manager/fields/source-list"
