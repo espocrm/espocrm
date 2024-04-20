@@ -236,6 +236,7 @@
         "rebuildRequired": "Rebuild is required"
     },
     "messages": {
+        "cacheIsDisabled": "Cache is disabled, the application will run slow. Enabled cache in the [settings](#Admin/settings).",
         "formulaFunctions": "More functions can be found in [documentation]({documentationUrl}).",
         "rebuildRequired": "You need to run rebuild from CLI.",
         "upgradeVersion": "EspoCRM will be upgraded to version **{version}**. Please be patient as this may take a while.",
@@ -250,6 +251,7 @@
         "selectExtensionPackage": "Select extension package",
         "extensionInstalled": "Extension {name} {version} has been installed.",
         "installExtension": "Extension {name} {version} is ready for an installation.",
+        "cronIsDisabled": "Cron is disabled, the application is not fully functional. Enable cron in the [settings](#Admin/settings).",
         "cronIsNotConfigured": "Scheduled jobs are not running.  Hence inbound emails, notifications and reminders are not working. Please follow the [instructions](https://www.espocrm.com/documentation/administration/server-configuration/#user-content-setup-a-crontab) to setup cron job.",
         "newVersionIsAvailable": "New EspoCRM version {latestVersion} is available. Please follow the [instructions](https://www.espocrm.com/documentation/administration/upgrading/) to upgrade your instance." ,
         "newExtensionVersionIsAvailable": "New {extensionName} version {latestVersion} is available.",

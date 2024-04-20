@@ -59,7 +59,23 @@ class Manager
             return [];
         }
 
+        if (!$this->config->get('useCache')) {
+            $notificationList[] = [
+                'id' => 'cacheIsDisabled',
+                'type' => 'cacheIsDisabled',
+                'message' => $this->language->translateLabel('cacheIsDisabled', 'messages', 'Admin'),
+            ];
+        }
+
         if ($this->config->get('adminNotificationsCronIsNotConfigured')) {
+            if ($this->config->get('cronDisabled')) {
+                $notificationList[] = [
+                    'id' => 'cronIsDisabled',
+                    'type' => 'cronIsDisabled',
+                    'message' => $this->language->translateLabel('cronIsDisabled', 'messages', 'Admin'),
+                ];
+            }
+
             if (!$this->isCronConfigured()) {
                 $notificationList[] = [
                     'id' => 'cronIsNotConfigured',
