@@ -98,7 +98,7 @@ class AddDashletModalView extends ModalView {
             return true;
         });
 
-        this.dashletList = this.dashletList.filter(item => {
+        this.dashletList.forEach(item => {
             this.translations[item] = this.translate(item, 'dashlets');
         });
     }
