@@ -36,20 +36,17 @@ use Espo\Core\ORM\Entity as CoreEntity;
 
 use stdClass;
 
+/**
+ * @noinspection PhpUnused
+ */
 class LinkMultipleType
 {
-    private Metadata $metadata;
-    private Defs $defs;
-
     private const COLUMN_TYPE_ENUM = 'enum';
     private const COLUMN_TYPE_VARCHAR = 'varchar';
     private const COLUMN_TYPE_BOOL = 'bool';
 
-    public function __construct(Metadata $metadata, Defs $defs)
-    {
-        $this->metadata = $metadata;
-        $this->defs = $defs;
-    }
+    public function __construct(private Metadata $metadata, private Defs $defs)
+    {}
 
     public function checkRequired(Entity $entity, string $field): bool
     {
@@ -63,6 +60,7 @@ class LinkMultipleType
         return count($idList) > 0;
     }
 
+    /** @noinspection PhpUnused */
     public function checkPattern(Entity $entity, string $field): bool
     {
         /** @var ?mixed[] $idList */
@@ -93,6 +91,27 @@ class LinkMultipleType
         return true;
     }
 
+    /** @noinspection PhpUnused */
+    public function checkMaxCount(Entity $entity, string $field, ?int $maxCount): bool
+    {
+        if ($maxCount === null) {
+            return true;
+        }
+
+        $list = $entity->get($field . 'Ids');
+
+        if (!is_array($list)) {
+            return true;
+        }
+
+        if (count($list) > $maxCount) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /** @noinspection PhpUnused */
     public function checkColumnsValid(Entity $entity, string $field): bool
     {
         if (!$entity instanceof CoreEntity) {

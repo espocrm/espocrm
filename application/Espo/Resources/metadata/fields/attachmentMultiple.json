@@ -54,6 +54,12 @@
                 ".txt"
             ],
             "tooltip": "fileAccept"
+        },
+        {
+            "name": "maxCount",
+            "type": "int",
+            "min": 1,
+            "tooltip": true
         }
     ],
     "actualFields": [
@@ -77,7 +83,8 @@
     "personalData": true,
     "validationList": [
         "required",
-        "pattern"
+        "pattern",
+        "maxCount"
     ],
     "mandatoryValidationList": [
         "pattern"

@@ -54,6 +54,7 @@ class LinkMultipleFieldView extends BaseFieldView {
      * @property {boolean} [autocompleteOnEmpty] Autocomplete on empty input.
      * @property {boolean} [sortable] Sortable.
      * @property {boolean} [createButton] Show 'Create' button.
+     * @property {number} [maxCount] A max number of items.
      */
 
     /**
@@ -72,6 +73,11 @@ class LinkMultipleFieldView extends BaseFieldView {
     detailTemplate = 'fields/link-multiple/detail'
     editTemplate = 'fields/link-multiple/edit'
     searchTemplate = 'fields/link-multiple/search'
+
+    validations = [
+        'required',
+        'maxCount',
+    ]
 
     /**
      * A name-hash attribute name.
@@ -829,6 +835,33 @@ class LinkMultipleFieldView extends BaseFieldView {
         }
 
         return false;
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateMaxCount() {
+        const maxCount = this.params.maxCount;
+
+        if (!maxCount) {
+            return false;
+        }
+
+        const idList = this.model.get(this.idsName) || [];
+
+        if (idList.length === 0) {
+            return false;
+        }
+
+        if (idList.length <= maxCount) {
+            return false;
+        }
+
+        const msg = this.translate('fieldExceedsMaxCount', 'messages')
+            .replace('{field}', this.getLabelText())
+            .replace('{maxCount}', maxCount.toString());
+
+        this.showValidationMessage(msg);
+
+        return true;
     }
 
     /** @inheritDoc */

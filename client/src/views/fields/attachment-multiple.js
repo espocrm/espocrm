@@ -55,6 +55,7 @@ class AttachmentMultipleFieldView extends BaseFieldView {
      * @property {string[]} [sourceList] A source list.
      * @property {string[]} [accept] Formats to accept.
      * @property {number} [maxFileSize] A max file size (in Mb).
+     * @property {number} [maxCount] A max number of items.
      */
 
     /**
@@ -81,7 +82,11 @@ class AttachmentMultipleFieldView extends BaseFieldView {
     foreignScope
     showPreviews = true
     accept = null
-    validations = ['ready', 'required']
+    validations = [
+        'ready',
+        'required',
+        'maxCount',
+    ]
     searchTypeList = ['isNotEmpty', 'isEmpty']
 
     events = {
@@ -930,6 +935,33 @@ class AttachmentMultipleFieldView extends BaseFieldView {
 
             return true;
         }
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    validateMaxCount() {
+        const maxCount = this.params.maxCount;
+
+        if (!maxCount) {
+            return false;
+        }
+
+        const idList = this.model.get(this.idsName) || [];
+
+        if (idList.length === 0) {
+            return false;
+        }
+
+        if (idList.length <= maxCount) {
+            return false;
+        }
+
+        const msg = this.translate('fieldExceedsMaxCount', 'messages')
+            .replace('{field}', this.getLabelText())
+            .replace('{maxCount}', maxCount.toString());
+
+        this.showValidationMessage(msg, 'label');
+
+        return true;
     }
 
     fetch() {
