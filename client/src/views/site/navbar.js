@@ -538,6 +538,12 @@ class NavbarSiteView extends View {
         const $more = this.$more;
         const $moreDropdown = this.$moreDropdown;
 
+
+        $window.off('scroll.navbar');
+        $window.off('resize.navbar');
+        this.$moreDropdown.off('shown.bs.dropdown.navbar');
+        this.off('show-more-tabs');
+
         $window.on('resize.navbar', () => updateWidth());
 
         $window.on('scroll.navbar', () => {
@@ -548,7 +554,7 @@ class NavbarSiteView extends View {
             $more.scrollTop($window.scrollTop());
         });
 
-        this.$moreDropdown.on('shown.bs.dropdown', () => {
+        this.$moreDropdown.on('shown.bs.dropdown.navbar', () => {
             $more.scrollTop($window.scrollTop());
         });
 
@@ -569,9 +575,7 @@ class NavbarSiteView extends View {
             }
         };
 
-        $window.on('resize.navbar', () => {
-            updateMoreHeight();
-        });
+        $window.on('resize.navbar', () => updateMoreHeight());
 
         updateMoreHeight();
 
@@ -698,6 +702,11 @@ class NavbarSiteView extends View {
             $more.parent().addClass('hidden');
         }
 
+        $window.off('scroll.navbar');
+        $window.off('resize.navbar');
+        this.$moreDropdown.off('shown.bs.dropdown.navbar');
+        this.off('show-more-tabs');
+
         $window.on('scroll.navbar', () => {
             $window.scrollTop() ?
                 this.$navbarRight.addClass('shadowed') :
@@ -712,7 +721,7 @@ class NavbarSiteView extends View {
             $more.scrollTop($window.scrollTop());
         });
 
-        this.$moreDropdown.on('shown.bs.dropdown', () => {
+        this.$moreDropdown.on('shown.bs.dropdown.navbar', () => {
             $more.scrollTop($window.scrollTop());
         });
 
@@ -737,7 +746,7 @@ class NavbarSiteView extends View {
             $more.css('max-height', windowHeight + 'px');
         };
 
-        $(window).on('resize.navbar', () => {
+        $window.on('resize.navbar', () => {
             updateSizeForSide();
             this.adjustBodyMinHeight();
         });
