@@ -1,6 +1,6 @@
 ---
 name: Feature request
-about: Feature requests are not desired at the moment. Need to polish the system. For high-level features, consider creating feature requests on the forum. For low-level (framework) – here on GitHub.
+about: For high-level features, consider creating feature requests on the forum. For low-level (framework) – here on GitHub.
 title: ''
 labels: ''
 assignees: ''
