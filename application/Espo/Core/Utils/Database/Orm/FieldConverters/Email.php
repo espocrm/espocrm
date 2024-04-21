@@ -166,7 +166,7 @@ class Email implements FieldConverter
                             'whereClause' => [
                                 'deleted' => false,
                                 'entityType' => $entityType,
-                                'emailAddress.lower*' => '{value}',
+                                "LIKE:(emailAddress.lower, LOWER:({value})):" => null,
                             ],
                         ],
                     ],
@@ -189,7 +189,7 @@ class Email implements FieldConverter
                             'whereClause' => [
                                 'deleted' => false,
                                 'entityType' => $entityType,
-                                'emailAddress.lower*' => '{value}',
+                                "LIKE:(emailAddress.lower, LOWER:({value})):" => null,
                             ],
                         ],
                     ],
@@ -197,28 +197,28 @@ class Email implements FieldConverter
                 '=' => [
                     'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        'emailAddressesMultiple.lower=' => '{value}',
+                        "EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
                     ],
                     'distinct' => true,
                 ],
                 '<>' => [
                     'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        'emailAddressesMultiple.lower!=' => '{value}',
+                        "NOT_EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
                     ],
                     'distinct' => true,
                 ],
                 'IN' => [
                     'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        'emailAddressesMultiple.lower=' => '{value}',
+                        "EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
                     ],
                     'distinct' => true,
                 ],
                 'NOT IN' => [
                     'leftJoins' => [['emailAddresses', 'emailAddressesMultiple']],
                     'whereClause' => [
-                        'emailAddressesMultiple.lower!=' => '{value}',
+                        "NOT_EQUAL:(emailAddressesMultiple.lower, LOWER:({value})):" => null,
                     ],
                     'distinct' => true,
                 ],
