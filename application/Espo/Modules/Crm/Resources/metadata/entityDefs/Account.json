@@ -4,7 +4,8 @@
             "type": "varchar",
             "maxLength": 249,
             "required": true,
-            "pattern": "$noBadCharacters"
+            "pattern": "$noBadCharacters",
+            "audited": true
         },
         "website": {
             "type": "url",
