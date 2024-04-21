@@ -1275,7 +1275,13 @@ abstract class BaseQueryComposer implements QueryComposer
         $argument = $attribute;
 
         if (Util::isArgumentString($argument)) {
+            $isSingleQuote = $argument[0] === "'";
+
             $string = substr($argument, 1, -1);
+
+            $string = $isSingleQuote ?
+                str_replace("\\'", "'", $string) :
+                str_replace('\\"', '"', $string);
 
             return $this->quote($string);
         }
@@ -2882,6 +2888,10 @@ abstract class BaseQueryComposer implements QueryComposer
             }
             else if (is_array($right)) {
                 $right = $this->applyValueToCustomWhereClause($right, $value);
+            }
+
+            if (is_string($left) && str_ends_with($left, ':') && str_contains($left, '{value}')) {
+                $left = str_replace('{value}', Expression\Util::stringifyArgument($value), $left);
             }
 
             $modified[$left] = $right;
