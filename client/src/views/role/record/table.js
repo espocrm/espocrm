@@ -193,11 +193,17 @@ class RoleRecordTableView extends View {
 
                     let level = null;
 
+                    const levelList = this.getLevelList(scope, action);
+
                     if (scope in aclData) {
                         if (access === 'enabled') {
                             if (aclData[scope] !== true) {
                                 if (action in aclData[scope]) {
                                     level = aclData[scope][action];
+                                }
+
+                                if (level === null) {
+                                    level = levelList[levelList.length - 1];
                                 }
                             }
                         } else {
@@ -209,7 +215,7 @@ class RoleRecordTableView extends View {
                         level: level,
                         name: scope + '-' + action,
                         action: action,
-                        levelList: this.getLevelList(scope, action),
+                        levelList: levelList,
                     });
                 });
             }
