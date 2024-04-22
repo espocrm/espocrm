@@ -47,7 +47,7 @@ class PortalOnlyAccount implements Filter
         $queryBuilder->distinct();
 
         $orGroup = [
-            Email::ALIAS_INBOX . '.' => $this->user->getId(),
+            Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
         ];
 
         $accountIdList = $this->user->getLinkMultipleIdList('accounts');
