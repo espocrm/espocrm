@@ -51,6 +51,7 @@ class Email extends Entity
     public const STATUS_DRAFT = 'Draft';
 
     public const RELATIONSHIP_EMAIL_USER = 'EmailUser';
+    public const ALIAS_INBOX = 'emailUserInbox';
 
     public const USERS_COLUMN_IS_READ = 'isRead';
     public const USERS_COLUMN_IN_TRASH = 'inTrash';

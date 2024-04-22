@@ -52,15 +52,15 @@ class OnlyTeam implements Filter
                 'entityTeam.entityType' => Email::ENTITY_TYPE,
                 'entityTeam.deleted' => false,
             ])
-            ->leftJoin(Email::RELATIONSHIP_EMAIL_USER, 'emailUser', [
-                'emailUser.emailId:' => 'id',
-                'emailUser.deleted' => false,
-                'emailUser.userId' => $this->user->getId(),
+            ->leftJoin(Email::RELATIONSHIP_EMAIL_USER, Email::ALIAS_INBOX, [
+                Email::ALIAS_INBOX . '.emailId:' => 'id',
+                Email::ALIAS_INBOX . '.deleted' => false,
+                Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
             ])
             ->where([
                 'OR' => [
                     'entityTeam.teamId' => $this->user->getTeamIdList(),
-                    'emailUser.userId' => $this->user->getId(),
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                 ]
             ])
             ->build();

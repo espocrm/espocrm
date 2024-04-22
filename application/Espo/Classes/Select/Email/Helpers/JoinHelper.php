@@ -36,14 +36,14 @@ class JoinHelper
 {
     public function joinEmailUser(QueryBuilder $queryBuilder, string $userId): void
     {
-        if ($queryBuilder->hasLeftJoinAlias('emailUser')) {
+        if ($queryBuilder->hasLeftJoinAlias(Email::ALIAS_INBOX)) {
             return;
         }
 
-        $queryBuilder->leftJoin(Email::RELATIONSHIP_EMAIL_USER, 'emailUser', [
-            'emailUser.emailId:' => 'id',
-            'emailUser.deleted' => false,
-            'emailUser.userId' => $userId,
+        $queryBuilder->leftJoin(Email::RELATIONSHIP_EMAIL_USER, Email::ALIAS_INBOX, [
+            Email::ALIAS_INBOX . '.emailId:' => 'id',
+            Email::ALIAS_INBOX . '.deleted' => false,
+            Email::ALIAS_INBOX . '.userId' => $userId,
         ]);
     }
 }

@@ -97,7 +97,7 @@ class Main implements AdditionalApplier
         ];
 
         foreach ($itemList as $item) {
-            $queryBuilder->select('emailUser.' . $item, $item);
+            $queryBuilder->select(Email::ALIAS_INBOX . '.' . $item, $item);
         }
     }
 

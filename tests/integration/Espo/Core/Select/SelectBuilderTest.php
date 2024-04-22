@@ -34,9 +34,9 @@ use Espo\Core\Container;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
-
 use Espo\Classes\Select\Email\AdditionalAppliers\Main as EmailAdditionalApplier;
 use Espo\Entities\User;
+use Espo\Entities\Email;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Select;
 use tests\integration\Core\BaseTestCase;
@@ -329,18 +329,18 @@ class SelectBuilderTest extends BaseTestCase
                     0 =>
                         [
                             0 => 'EmailUser',
-                            1 => 'emailUser',
+                            1 => Email::ALIAS_INBOX,
                             2 =>
                                 [
-                                    'emailUser.emailId:' => 'id',
-                                    'emailUser.deleted' => false,
-                                    'emailUser.userId' => $userId,
+                                    Email::ALIAS_INBOX . '.emailId:' => 'id',
+                                    Email::ALIAS_INBOX . '.deleted' => false,
+                                    Email::ALIAS_INBOX . '.userId' => $userId,
                                 ],
                         ],
                 ],
             'whereClause' =>
                 [
-                    'emailUser.userId' => $userId,
+                    Email::ALIAS_INBOX . '.userId' => $userId,
                 ]
         ];
 
@@ -397,12 +397,12 @@ class SelectBuilderTest extends BaseTestCase
                                     1 =>
                                         [
                                             0 => 'EmailUser',
-                                            1 => 'emailUser',
+                                            1 => Email::ALIAS_INBOX,
                                             2 =>
                                                 [
-                                                    'emailUser.emailId:' => 'id',
-                                                    'emailUser.deleted' => false,
-                                                    'emailUser.userId' => $userId,
+                                                    Email::ALIAS_INBOX . '.emailId:' => 'id',
+                                                    Email::ALIAS_INBOX . '.deleted' => false,
+                                                    Email::ALIAS_INBOX . '.userId' => $userId,
                                                 ],
                                         ],
                                 ],
@@ -411,7 +411,7 @@ class SelectBuilderTest extends BaseTestCase
                                     'OR' =>
                                         [
                                             'entityTeam.teamId' => [],
-                                            'emailUser.userId' => $userId,
+                                            Email::ALIAS_INBOX . '.userId' => $userId,
                                         ],
                                 ],
                         ]),
@@ -446,17 +446,17 @@ class SelectBuilderTest extends BaseTestCase
             'leftJoins' => [
                 [
                     'EmailUser',
-                    'emailUser',
+                    Email::ALIAS_INBOX,
                     [
-                        'emailUser.emailId:' => 'id',
-                        'emailUser.deleted' => false,
-                        'emailUser.userId' => $this->user->getId(),
+                        Email::ALIAS_INBOX . '.emailId:' => 'id',
+                        Email::ALIAS_INBOX . '.deleted' => false,
+                        Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                     ]
                 ],
             ],
             'whereClause' => [
                 'OR' => [
-                    'emailUser.userId' => $this->user->getId(),
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                     'accountId' => [$this->account->getId()],
                     [
                         'parentType' => 'Contact',
@@ -495,17 +495,17 @@ class SelectBuilderTest extends BaseTestCase
             'leftJoins' => [
                 [
                     'EmailUser',
-                    'emailUser',
+                    Email::ALIAS_INBOX,
                     [
-                        'emailUser.emailId:' => 'id',
-                        'emailUser.deleted' => false,
-                        'emailUser.userId' => $this->user->getId(),
+                        Email::ALIAS_INBOX . '.emailId:' => 'id',
+                        Email::ALIAS_INBOX . '.deleted' => false,
+                        Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                     ]
                 ],
             ],
             'whereClause' => [
                 'OR' => [
-                    'emailUser.userId' => $this->user->getId(),
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                     [
                         'parentType' => 'Contact',
                         'parentId' => $this->contact->getId(),
@@ -628,9 +628,9 @@ class SelectBuilderTest extends BaseTestCase
         $raw = $query->getRaw();
 
         $expectedWhereClause = [
-            'emailUser.inTrash' => false,
-            'emailUser.folderId' => null,
-            'emailUser.userId' => $userId,
+            Email::ALIAS_INBOX . '.inTrash' => false,
+            Email::ALIAS_INBOX . '.folderId' => null,
+            Email::ALIAS_INBOX . '.userId' => $userId,
             [
                 'status' => ['Archived', 'Sent'],
                 'groupFolderId' => null,
@@ -647,21 +647,21 @@ class SelectBuilderTest extends BaseTestCase
         $expectedLeftJoins = [
             [
                 'EmailUser',
-                'emailUser',
+                Email::ALIAS_INBOX,
                 [
-                    'emailUser.emailId:' => 'id',
-                    'emailUser.deleted' => false,
-                    'emailUser.userId' => $this->user->getId(),
+                    Email::ALIAS_INBOX . '.emailId:' => 'id',
+                    Email::ALIAS_INBOX . '.deleted' => false,
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                 ],
             ],
         ];
 
         $expectedSelect = [
             '*',
-            ['emailUser.isRead', 'isRead'],
-            ['emailUser.isImportant', 'isImportant'],
-            ['emailUser.inTrash', 'inTrash'],
-            ['emailUser.folderId', 'folderId'],
+            [Email::ALIAS_INBOX . '.isRead', 'isRead'],
+            [Email::ALIAS_INBOX . '.isImportant', 'isImportant'],
+            [Email::ALIAS_INBOX . '.inTrash', 'inTrash'],
+            [Email::ALIAS_INBOX . '.folderId', 'folderId'],
         ];
 
         $expectedUseIndex = ['dateSent'];
@@ -714,17 +714,17 @@ class SelectBuilderTest extends BaseTestCase
             [
                 'status!=' => 'Draft',
             ],
-            'emailUser.inTrash' => false,
+            Email::ALIAS_INBOX . '.inTrash' => false,
         ];
 
         $expectedLeftJoins = [
             [
                 'EmailUser',
-                'emailUser',
+                Email::ALIAS_INBOX,
                 [
-                    'emailUser.emailId:' => 'id',
-                    'emailUser.deleted' => false,
-                    'emailUser.userId' => $this->user->getId(),
+                    Email::ALIAS_INBOX . '.emailId:' => 'id',
+                    Email::ALIAS_INBOX . '.deleted' => false,
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                 ],
             ],
         ];
@@ -819,7 +819,7 @@ class SelectBuilderTest extends BaseTestCase
         $expectedWhereClause = [
             'OR' => [
                 [
-                    'emailUser.userId' => $this->user->getId(),
+                    Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
                 ],
             ],
         ];

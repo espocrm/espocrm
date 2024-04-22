@@ -31,6 +31,7 @@ namespace Espo\Classes\Select\Email\AccessControlFilters;
 
 use Espo\Core\Select\AccessControl\Filter;
 use Espo\Classes\Select\Email\Helpers\JoinHelper;
+use Espo\Entities\Email;
 use Espo\Entities\User;
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 
@@ -46,10 +47,9 @@ class PortalOnlyAccount implements Filter
         $queryBuilder->distinct();
 
         $orGroup = [
-            'emailUser.userId' => $this->user->getId(),
+            Email::ALIAS_INBOX . '.' => $this->user->getId(),
         ];
 
-        /** @var string[] $accountIdList */
         $accountIdList = $this->user->getLinkMultipleIdList('accounts');
 
         if (count($accountIdList)) {

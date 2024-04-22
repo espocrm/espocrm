@@ -69,9 +69,9 @@ class InFolder implements ItemConverter
         $this->joinEmailUser($queryBuilder);
 
         $whereClause = [
-            'emailUser.inTrash' => false,
-            'emailUser.folderId' => null,
-            'emailUser.userId' => $this->user->getId(),
+            Email::ALIAS_INBOX . '.inTrash' => false,
+            Email::ALIAS_INBOX . '.folderId' => null,
+            Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
             [
                 'status' => [
                     Email::STATUS_ARCHIVED,
@@ -118,7 +118,7 @@ class InFolder implements ItemConverter
             [
                 'status!=' => Email::STATUS_DRAFT,
             ],
-            'emailUser.inTrash' => false,
+            Email::ALIAS_INBOX . '.inTrash' => false,
         ]);
     }
 
@@ -127,8 +127,8 @@ class InFolder implements ItemConverter
         $this->joinEmailUser($queryBuilder);
 
         return WhereClause::fromRaw([
-            'emailUser.userId' => $this->user->getId(),
-            'emailUser.isImportant' => true,
+            Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
+            Email::ALIAS_INBOX . '.isImportant' => true,
         ]);
     }
 
@@ -137,8 +137,8 @@ class InFolder implements ItemConverter
         $this->joinEmailUser($queryBuilder);
 
         return WhereClause::fromRaw([
-            'emailUser.userId' => $this->user->getId(),
-            'emailUser.inTrash' => true,
+            Email::ALIAS_INBOX . '.userId' => $this->user->getId(),
+            Email::ALIAS_INBOX . '.inTrash' => true,
         ]);
     }
 
@@ -164,15 +164,15 @@ class InFolder implements ItemConverter
             return WhereClause::fromRaw([
                 'groupFolderId' => $groupFolderId,
                 'OR' => [
-                    'emailUser.id' => null,
-                    'emailUser.inTrash' => false,
+                    Email::ALIAS_INBOX . '.id' => null,
+                    Email::ALIAS_INBOX . '.inTrash' => false,
                 ]
             ]);
         }
 
         return WhereClause::fromRaw([
-            'emailUser.inTrash' => false,
-            'emailUser.folderId' => $folderId,
+            Email::ALIAS_INBOX . '.inTrash' => false,
+            Email::ALIAS_INBOX . '.folderId' => $folderId,
             'groupFolderId' => null,
         ]);
     }
