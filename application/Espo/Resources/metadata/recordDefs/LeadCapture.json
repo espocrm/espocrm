@@ -12,5 +12,6 @@
     ],
     "beforeCreateHookClassNameList": [
         "Espo\\Classes\\RecordHooks\\LeadCapture\\BeforeCreate"
-    ]
+    ],
+    "loadAdditionalFieldsAfterUpdate": true
 }
