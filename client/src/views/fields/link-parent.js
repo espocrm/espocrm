@@ -536,6 +536,9 @@ class LinkParentFieldView extends BaseFieldView {
             });
 
             if (!this.autocompleteDisabled) {
+                /** @type {module:ajax.AjaxPromise & Promise<any>} */
+                let lastAjaxPromise;
+
                 const autocomplete = new Autocomplete(this.$elementName.get(0), {
                     name: this.name,
                     focusOnSelect: true,
@@ -554,7 +557,15 @@ class LinkParentFieldView extends BaseFieldView {
                     },
                     lookupFunction: query => {
                         return Promise.resolve(this.getAutocompleteUrl(query))
-                            .then(url => Espo.Ajax.getRequest(url, {q: query}))
+                            .then(url => {
+                                if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                                    lastAjaxPromise.abort();
+                                }
+
+                                lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+
+                                return lastAjaxPromise;
+                            })
                             .then(/** {list: Record[]} */response => {
                                 return response.list.map(item => ({
                                     value: item.name,

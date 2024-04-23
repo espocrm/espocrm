@@ -555,6 +555,9 @@ class LinkMultipleFieldView extends BaseFieldView {
             this.$element = this.$el.find('input.main-element');
 
             if (!this.autocompleteDisabled) {
+                /** @type {module:ajax.AjaxPromise & Promise<any>} */
+                let lastAjaxPromise;
+
                 const autocomplete = new Autocomplete(this.$element.get(0), {
                     focusOnSelect: true,
                     handleFocusMode: 3,
@@ -583,7 +586,15 @@ class LinkMultipleFieldView extends BaseFieldView {
                         }
 
                         return Promise.resolve(this.getAutocompleteUrl(query))
-                            .then(url => Espo.Ajax.getRequest(url, {q: query}))
+                            .then(url => {
+                                if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                                    lastAjaxPromise.abort();
+                                }
+
+                                lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+
+                                return lastAjaxPromise;
+                            })
                             .then(/** {list: Record[]} */response => {
                                 return response.list.map(item => ({
                                     value: item.name,

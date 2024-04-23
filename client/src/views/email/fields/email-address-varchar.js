@@ -339,6 +339,9 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                 this.addAddressHtml(item, this.nameHash[item] || '');
             });
 
+            /** @type {module:ajax.AjaxPromise & Promise<any>} */
+            let lastAjaxPromise;
+
             const autocomplete = new Autocomplete(this.$input.get(0), {
                 name: this.name,
                 autoSelectFirst: true,
@@ -361,26 +364,31 @@ class EmailAddressVarcharFieldView extends BaseFieldView {
                         this.getHelper().escapeString(item.id) + '&#62;';
                 },
                 lookupFunction: query => {
-                    return Espo.Ajax
+                    if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                        lastAjaxPromise.abort();
+                    }
+
+                    lastAjaxPromise = Espo.Ajax
                         .getRequest('EmailAddress/search', {
                             q: query,
                             maxSize: this.getAutocompleteMaxCount(),
                             onlyActual: true,
-                        })
-                        .then(/** Record[] */response => {
-                            return response.map(item => {
-                                return {
-                                    id: item.emailAddress,
-                                    name: item.entityName,
-                                    emailAddress: item.emailAddress,
-                                    entityId: item.entityId,
-                                    entityName: item.entityName,
-                                    entityType: item.entityType,
-                                    data: item.emailAddress,
-                                    value: item.emailAddress,
-                                };
-                            });
                         });
+
+                    return lastAjaxPromise.then(/** Record[] */response => {
+                        return response.map(item => {
+                            return {
+                                id: item.emailAddress,
+                                name: item.entityName,
+                                emailAddress: item.emailAddress,
+                                entityId: item.entityId,
+                                entityName: item.entityName,
+                                entityType: item.entityType,
+                                data: item.emailAddress,
+                                value: item.emailAddress,
+                            };
+                        });
+                    });
                 },
             });
 

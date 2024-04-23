@@ -688,6 +688,9 @@ class LinkFieldView extends BaseFieldView {
             const $elementName = this.$elementName;
 
             if (!this.autocompleteDisabled) {
+                /** @type {module:ajax.AjaxPromise & Promise<any>} */
+                let lastAjaxPromise;
+
                 const autocomplete = new Autocomplete(this.$elementName.get(0), {
                     name: this.name,
                     handleFocusMode: 2,
@@ -714,7 +717,15 @@ class LinkFieldView extends BaseFieldView {
                         }
 
                         return Promise.resolve(this.getAutocompleteUrl(query))
-                            .then(url => Espo.Ajax.getRequest(url, {q: query}))
+                            .then(url => {
+                                if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                                    lastAjaxPromise.abort();
+                                }
+
+                                lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+
+                                return lastAjaxPromise;
+                            })
                             .then(response => this._transformAutocompleteResult(response));
                     },
                 });
@@ -723,6 +734,9 @@ class LinkFieldView extends BaseFieldView {
 
                 if (this.isSearchMode()) {
                     const $elementOneOf = this.$el.find('input.element-one-of');
+
+                    /** @type {module:ajax.AjaxPromise & Promise<any>} */
+                    let lastAjaxPromise;
 
                     const autocomplete = new Autocomplete($elementOneOf.get(0), {
                         minChars: 1,
@@ -743,7 +757,15 @@ class LinkFieldView extends BaseFieldView {
                         },
                         lookupFunction: query => {
                             return Promise.resolve(this.getAutocompleteUrl(query))
-                                .then(url => Espo.Ajax.getRequest(url, {q: query}))
+                                .then(url => {
+                                    if (lastAjaxPromise && lastAjaxPromise.getReadyState() < 4) {
+                                        lastAjaxPromise.abort();
+                                    }
+
+                                    lastAjaxPromise = Espo.Ajax.getRequest(url, {q: query});
+
+                                    return lastAjaxPromise;
+                                })
                                 .then(/** {list: Record[]} */response => {
                                     return response.list.map(item => ({
                                         value: item.name,
