@@ -78,7 +78,7 @@ const Ajax = Espo.Ajax = {
      * @param {'GET'|'POST'|'PUT'|'DELETE'|'PATCH'|'OPTIONS'} method An HTTP method.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {AjaxPromise<any, XMLHttpRequest>}
+     * @returns {AjaxPromise<any>}
      */
     request: function (url, method, data, options) {
         options = options || {};
@@ -212,14 +212,14 @@ const Ajax = Espo.Ajax = {
      * @param {string} url An URL.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any, XMLHttpRequest>}
+     * @returns {Promise<any> & AjaxPromise}
      */
     postRequest: function (url, data, options) {
         if (data) {
             data = JSON.stringify(data);
         }
 
-        return /** @type {Promise<any>} */ Ajax.request(url, 'POST', data, options);
+        return /** @type {Promise<any> & AjaxPromise} */ Ajax.request(url, 'POST', data, options);
     },
 
     /**
@@ -228,14 +228,14 @@ const Ajax = Espo.Ajax = {
      * @param {string} url An URL.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any, XMLHttpRequest>}
+     * @returns {Promise<any> & AjaxPromise}
      */
     patchRequest: function (url, data, options) {
         if (data) {
             data = JSON.stringify(data);
         }
 
-        return /** @type {Promise<any>} */ Ajax.request(url, 'PATCH', data, options);
+        return /** @type {Promise<any> & AjaxPromise} */ Ajax.request(url, 'PATCH', data, options);
     },
 
     /**
@@ -244,14 +244,14 @@ const Ajax = Espo.Ajax = {
      * @param {string} url An URL.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any, XMLHttpRequest>}
+     * @returns {Promise<any> & AjaxPromise}
      */
     putRequest: function (url, data, options) {
         if (data) {
             data = JSON.stringify(data);
         }
 
-        return /** @type {Promise<any>} */ Ajax.request(url, 'PUT', data, options);
+        return /** @type {Promise<any> & AjaxPromise} */ Ajax.request(url, 'PUT', data, options);
     },
 
     /**
@@ -260,14 +260,14 @@ const Ajax = Espo.Ajax = {
      * @param {string} url An URL.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any, XMLHttpRequest>}
+     * @returns {Promise<any> & AjaxPromise}
      */
     deleteRequest: function (url, data, options) {
         if (data) {
             data = JSON.stringify(data);
         }
 
-        return /** @type {Promise<any>} */ Ajax.request(url, 'DELETE', data, options);
+        return /** @type {Promise<any> & AjaxPromise} */ Ajax.request(url, 'DELETE', data, options);
     },
 
     /**
@@ -276,10 +276,10 @@ const Ajax = Espo.Ajax = {
      * @param {string} url An URL.
      * @param {*} [data] Data.
      * @param {Espo.Ajax~Options & Object.<string, *>} [options] Options.
-     * @returns {Promise<any, XMLHttpRequest>}
+     * @returns {Promise<any> & AjaxPromise}
      */
     getRequest: function (url, data, options) {
-        return /** @type {Promise<any>} */ Ajax.request(url, 'GET', data, options);
+        return /** @type {Promise<any> & AjaxPromise} */ Ajax.request(url, 'GET', data, options);
     },
 
     /**
