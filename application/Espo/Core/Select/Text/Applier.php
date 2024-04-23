@@ -60,7 +60,8 @@ class Applier
         private User $user,
         private MetadataProvider $metadataProvider,
         private FullTextSearchDataComposerFactory $fullTextSearchDataComposerFactory,
-        private FilterFactory $filterFactory
+        private FilterFactory $filterFactory,
+        private ConfigProvider $config
     ) {}
 
     /** @noinspection PhpUnusedParameterInspection */
@@ -89,6 +90,14 @@ class Applier
                     return !in_array($field, $fullTextSearchFieldList);
                 }
             );
+
+        if (
+            $fullTextWhere &&
+            !$forceFullTextSearch &&
+            $this->toSkipFullText($filter)
+        ) {
+            $fullTextWhere = Expr::value(false);
+        }
 
         $skipWildcards = false;
 
@@ -166,5 +175,20 @@ class Applier
         }
 
         return Expr::notEqual($expression, 0);
+    }
+
+    private function toSkipFullText(string $filter): bool
+    {
+        $min = $this->config->getFullTextSearchMinLength();
+
+        if ($min === null || strlen($filter) >= $min) {
+            return false;
+        }
+
+        return
+            !str_contains($filter, '*') &&
+            !str_contains($filter, '"') &&
+            !str_contains($filter, '+') &&
+            !str_contains($filter, '-');
     }
 }

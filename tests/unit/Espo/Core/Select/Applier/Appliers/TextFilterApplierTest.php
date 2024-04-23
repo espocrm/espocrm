@@ -29,30 +29,29 @@
 
 namespace tests\unit\Espo\Core\Select\Applier\Appliers;
 
-use Espo\Core\{
-    Select\Text\Applier as TextFilterApplier,
-    Utils\Config,
-    Select\Text\MetadataProvider,
-    Select\Text\FilterParams,
-    Select\Text\FullTextSearch\Data as FullTextSearchData,
-    Select\Text\FullTextSearch\DefaultDataComposer as FullTextSearchDataComposer,
-    Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory,
-    Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams,
-    Select\Text\FilterFactory,
-    Select\Text\DefaultFilter,
-    Select\Text\ConfigProvider,
-};
+use Espo\Core\Select\Text\Applier as TextFilterApplier;
+use Espo\Core\Select\Text\ConfigProvider;
+use Espo\Core\Select\Text\DefaultFilter;
+use Espo\Core\Select\Text\FilterFactory;
+use Espo\Core\Select\Text\FilterParams;
+use Espo\Core\Select\Text\FullTextSearch\Data as FullTextSearchData;
+use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams;
+use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
+use Espo\Core\Select\Text\FullTextSearch\DefaultDataComposer as FullTextSearchDataComposer;
+use Espo\Core\Select\Text\MetadataProvider;
+use Espo\Core\Utils\Config;
 
-use Espo\{
-    ORM\Query\SelectBuilder as QueryBuilder,
-    ORM\Query\Part\Where\OrGroup,
-    ORM\Query\Part\Expression as Expr,
-    ORM\Entity,
-    Entities\User,
-};
+use Espo\Entities\User;
+use Espo\ORM\Entity;
+use Espo\ORM\Query\Part\Expression as Expr;
+use Espo\ORM\Query\Part\Where\OrGroup;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use PHPUnit\Framework\TestCase;
 
-class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
+class TextFilterApplierTest extends TestCase
 {
+    private ?ConfigProvider $configProvider = null;
+
     protected function setUp(): void
     {
         $this->user = $this->createMock(User::class);
@@ -63,6 +62,8 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
         $this->fullTextSearchDataComposerFactory = $this->createMock(FullTextSearchDataComposerFactory::class);
         $this->filterFactory = $this->createMock(FilterFactory::class);
 
+        $this->configProvider = $this->createMock(ConfigProvider::class);
+
         $this->entityType = 'Test';
 
         $this->applier = new TextFilterApplier(
@@ -70,7 +71,8 @@ class TextFilterApplierTest extends \PHPUnit\Framework\TestCase
             $this->user,
             $this->metadataProvider,
             $this->fullTextSearchDataComposerFactory,
-            $this->filterFactory
+            $this->filterFactory,
+            $this->configProvider
         );
     }
 
