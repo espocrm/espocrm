@@ -342,7 +342,7 @@ class NavbarSiteView extends View {
             this.getPreferences().get('tabList') :
             this.getConfig().get('tabList');
 
-        if (this.getPreferences().get('addCustomTabs')) {
+        if (this.getPreferences().get('useCustomTabList') && this.getPreferences().get('addCustomTabs')) {
             tabList = [
                 ...tabList,
                 ...(this.getPreferences().get('tabList') || []),
