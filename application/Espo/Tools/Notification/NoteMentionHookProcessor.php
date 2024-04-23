@@ -129,7 +129,7 @@ class NoteMentionHookProcessor
                 continue;
             }
 
-            if (!$this->acl->checkUserPermission($user, Permission::ASSIGNMENT)) {
+            if (!$this->acl->checkUserPermission($user, Permission::MENTION)) {
                 continue;
             }
 

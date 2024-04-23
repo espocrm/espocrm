@@ -27,7 +27,7 @@
             ],
             [
                 {"name": "auditPermission"},
-                false,
+                {"name": "mentionPermission"},
                 false
             ]
         ]

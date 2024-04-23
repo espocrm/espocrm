@@ -166,7 +166,8 @@
         "massUpdatePermission",
         "followerManagementPermission",
         "dataPrivacyPermission",
-        "auditPermission"
+        "auditPermission",
+        "mentionPermission"
     ],
     "valuePermissionHighestLevels": {
         "assignmentPermission": "all",
@@ -178,7 +179,8 @@
         "massUpdatePermission": "yes",
         "followerManagementPermission": "all",
         "dataPrivacyPermission": "yes",
-        "auditPermission": "yes"
+        "auditPermission": "yes",
+        "mentionPermission": "yes"
     },
     "permissionsStrictDefaults": {
         "assignmentPermission": "no",
@@ -190,7 +192,8 @@
         "massUpdatePermission": "no",
         "followerManagementPermission": "no",
         "dataPrivacyPermission": "no",
-        "auditPermission": "no"
+        "auditPermission": "no",
+        "mentionPermission": "no"
     },
     "scopeLevelTypesStrictDefaults": {
         "boolean": false,

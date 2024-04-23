@@ -118,53 +118,58 @@ class NotePostFieldView extends TextFieldView {
             this.$textarea.attr('placeholder', originalPlaceholderText);
         });
 
-        const assignmentPermission = this.getAcl().getPermissionLevel('assignment');
+        this.initMentions();
+    }
+
+    initMentions() {
+        const mentionPermissionLevel = this.getAcl().getPermissionLevel('mention');
 
         const buildUserListUrl = term => {
             let url = 'User?q=' + term + '&' + $.param({'primaryFilter': 'active'}) +
                 '&orderBy=name&maxSize=' + this.getConfig().get('recordsPerPage') +
                 '&select=id,name,userName';
 
-            if (assignmentPermission === 'team') {
+            if (mentionPermissionLevel === 'team') {
                 url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
             }
 
             return url;
         };
 
-        if (assignmentPermission !== 'no' && this.model.isNew()) {
-            // noinspection JSUnresolvedReference
-            this.$element.textcomplete([{
-                match: /(^|\s)@(\w*)$/,
-                search: (term, callback) => {
-                    if (term.length === 0) {
-                        callback([]);
-
-                        return;
-                    }
-
-                    Espo.Ajax
-                        .getRequest(buildUserListUrl(term))
-                        .then(data => {
-                            callback(data.list)
-                        });
-                },
-                template: mention => {
-                    return this.getHelper().escapeString(mention.name) +
-                        ' <span class="text-muted">@' +
-                        this.getHelper().escapeString(mention.userName) + '</span>';
-                },
-                replace: o => {
-                    return '$1@' + o.userName + '';
-                },
-            }], {zIndex: 1100});
-
-            this.once('remove', () => {
-                if (this.$element.length) {
-                    this.$element.textcomplete('destroy');
-                }
-            });
+        if (!(mentionPermissionLevel !== 'no' && this.model.isNew())) {
+            return;
         }
+
+        // noinspection JSUnresolvedReference
+        this.$element.textcomplete([{
+            match: /(^|\s)@(\w*)$/,
+            search: (term, callback) => {
+                if (term.length === 0) {
+                    callback([]);
+
+                    return;
+                }
+
+                Espo.Ajax
+                    .getRequest(buildUserListUrl(term))
+                    .then(data => {
+                        callback(data.list)
+                    });
+            },
+            template: mention => {
+                return this.getHelper().escapeString(mention.name) +
+                    ' <span class="text-muted">@' +
+                    this.getHelper().escapeString(mention.userName) + '</span>';
+            },
+            replace: o => {
+                return '$1@' + o.userName + '';
+            },
+        }], {zIndex: 1100});
+        this.once('remove', () => {
+            if (this.$element.length) {
+                this.$element.textcomplete('destroy');
+            }
+        });
     }
 
     validateRequired() {

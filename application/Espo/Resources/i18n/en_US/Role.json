@@ -12,6 +12,7 @@
         "followerManagementPermission": "Follower Management Permission",
         "dataPrivacyPermission": "Data Privacy Permission",
         "auditPermission": "Audit Permission",
+        "mentionPermission": "Mention Permission",
         "data": "Data",
         "fieldData": "Field Data"
     },
@@ -29,7 +30,8 @@
         "massUpdatePermission": "The ability to perform mass update of records.",
         "followerManagementPermission": "Allows to manage followers of specific records.",
         "dataPrivacyPermission": "Allows to view and erase personal data.",
-        "auditPermission": "Allows to view the audit log."
+        "auditPermission": "Allows to view the audit log.",
+        "mentionPermission": "Allows to mention other users in the Stream.\n\n* all – can mention all\n* team – can mention only teammates\n* no – cannot mention"
     },
     "labels": {
         "Access": "Access",

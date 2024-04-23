@@ -39,4 +39,5 @@ class Permission
     public const AUDIT = 'audit';
     public const DATA_PRIVACY = 'dataPrivacy';
     public const MESSAGE = 'message';
+    public const MENTION = 'mention';
 }
