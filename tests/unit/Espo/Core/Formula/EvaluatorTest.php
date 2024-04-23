@@ -1427,6 +1427,26 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->evaluator->process($expression, null, $vars);
 
-        $this->assertEquals(2, $vars->j);;
+        $this->assertEquals(2, $vars->j);
+    }
+
+    public function testStrings1(): void
+    {
+        $expression = '"\\\\"';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("\\", $result);
+    }
+
+    public function testStrings2(): void
+    {
+        $expression = '"\\""';
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("\"", $result);
     }
 }

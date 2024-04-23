@@ -502,7 +502,7 @@ class ParserTest extends \PHPUnit\Framework\TestCase
         $actual = $this->parse($expression);
         $expected = (object) [
             'type' => 'value',
-            'value' => 'test\" + \"test'
+            'value' => 'test" + "test'
         ];
         $this->assertEquals($expected, $actual);
 

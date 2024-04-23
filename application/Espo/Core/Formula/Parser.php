@@ -140,6 +140,13 @@ class Parser
         ]);
     }
 
+    private static function isNotAfterBackslash(string $string, int $i): bool
+    {
+        return
+            ($string[$i - 1] ?? null) !== "\\" ||
+            ($string[$i - 2] ?? null) === "\\";
+    }
+
     /**
      * @param string $string An expression. Comments will be stripped by the method.
      * @param string $modifiedString A modified expression with removed parentheses and braces inside strings.
@@ -168,17 +175,17 @@ class Parser
             $isLast = $i === strlen($string) - 1;
 
             if (!$isLineComment && !$isComment) {
-                if ($string[$i] === "'" && ($i === 0 || $string[$i - 1] !== "\\")) {
+                if ($string[$i] === "'" && self::isNotAfterBackslash($string, $i)) {
                     if (!$isString) {
                         $isString = true;
-                        $isSingleQuote = true;
                         $isStringStart = true;
+                        $isSingleQuote = true;
                     }
                     else if ($isSingleQuote) {
                         $isString = false;
                     }
                 }
-                else if ($string[$i] === "\"" && ($i === 0 || $string[$i - 1] !== "\\")) {
+                else if ($string[$i] === "\"" && self::isNotAfterBackslash($string, $i)) {
                     if (!$isString) {
                         $isString = true;
                         $isStringStart = true;
@@ -996,6 +1003,7 @@ class Parser
             $expression[0] === "\"" && $expression[strlen($expression) - 1] === "\""
         ) {
             $subExpression = substr($expression, 1, strlen($expression) - 2);
+            $subExpression = str_replace(["\\\\", "\\\""], ["\\", "\""], $subExpression);
 
             return new Value($subExpression);
         }
@@ -1220,7 +1228,7 @@ class Parser
         $braceCounter = 0;
 
         for ($i = 0; $i < strlen($functionContent); $i++) {
-            if ($functionContent[$i] === "'" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
+            if ($functionContent[$i] === "'" && self::isNotAfterBackslash($functionContent, $i)) {
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = true;
@@ -1231,7 +1239,7 @@ class Parser
                     }
                 }
             }
-            else if ($functionContent[$i] === "\"" && ($i === 0 || $functionContent[$i - 1] !== "\\")) {
+            else if ($functionContent[$i] === "\"" && self::isNotAfterBackslash($functionContent, $i)) {
                 if (!$isString) {
                     $isString = true;
                     $isSingleQuote = false;
