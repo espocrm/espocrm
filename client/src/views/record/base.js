@@ -1144,7 +1144,7 @@ class BaseRecordView extends View {
                     },
                 )
                 .then(() => {
-                    this.trigger('save', initialAttributes);
+                    this.trigger('save', initialAttributes, Object.keys(setAttributes));
 
                     this.afterSave();
 

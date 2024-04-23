@@ -96,13 +96,15 @@ class PreferencesEditRecordView extends EditRecordView {
         }
 
         if (this.model.id === this.getUser().id) {
-            this.on('after:save', () => {
+            const preferencesModel = this.getPreferences();
+
+            this.on('save', (a, attributeList) => {
                 const data = this.model.getClonedAttributes();
 
                 delete data['smtpPassword'];
 
-                this.getPreferences().set(data);
-                this.getPreferences().trigger('update');
+                preferencesModel.set(data);
+                preferencesModel.trigger('update', attributeList);
             });
         }
 

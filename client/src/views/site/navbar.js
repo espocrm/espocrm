@@ -402,6 +402,21 @@ class NavbarSiteView extends View {
         this.listenTo(this.getHelper().settings, 'sync', () => update());
         this.listenTo(this.getHelper().language, 'sync', () => update());
 
+        this.listenTo(this.getHelper().preferences, 'update', (/** string[] */attributeList) => {
+            if (!attributeList) {
+                return;
+            }
+
+            if (
+                attributeList.includes('tabList') ||
+                attributeList.includes('addCustomTabs') ||
+                attributeList.includes('useCustomTabList')
+            ) {
+                update();
+            }
+        });
+
+
         this.once('remove', () => {
             $(window).off('resize.navbar');
             $(window).off('scroll.navbar');
