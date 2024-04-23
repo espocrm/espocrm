@@ -338,9 +338,16 @@ class NavbarSiteView extends View {
     }
 
     getTabList() {
-        let tabList = this.getPreferences().get('useCustomTabList') ?
+        let tabList = this.getPreferences().get('useCustomTabList') && !this.getPreferences().get('addCustomTabs') ?
             this.getPreferences().get('tabList') :
             this.getConfig().get('tabList');
+
+        if (this.getPreferences().get('addCustomTabs')) {
+            tabList = [
+                ...tabList,
+                ...(this.getPreferences().get('tabList') || []),
+            ];
+        }
 
         tabList = Espo.Utils.cloneDeep(tabList || []);
 

@@ -135,6 +135,11 @@
             "type": "bool",
             "default": false
         },
+        "addCustomTabs": {
+            "type": "bool",
+            "default": false,
+            "tooltip": true
+        },
         "tabList": {
             "type": "array",
             "view": "views/preferences/fields/tab-list",

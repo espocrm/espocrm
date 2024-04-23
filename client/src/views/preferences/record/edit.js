@@ -58,6 +58,16 @@ class PreferencesEditRecordView extends EditRecordView {
                     ]
                 }
             },
+            'addCustomTabs': {
+                visible: {
+                    conditionGroup: [
+                        {
+                            type: 'isTrue',
+                            attribute: 'useCustomTabList',
+                        }
+                    ]
+                }
+            },
         },
     }
 

@@ -108,7 +108,11 @@
         "rows": [
             [
                 {"name": "useCustomTabList"},
-                {"name": "tabList"}
+                {"name": "addCustomTabs"}
+            ],
+            [
+                {"name": "tabList"},
+                false
             ]
         ]
     },
