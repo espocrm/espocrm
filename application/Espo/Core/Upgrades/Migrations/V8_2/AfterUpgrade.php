@@ -33,11 +33,8 @@ use Espo\Core\Upgrades\Migration\Script;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\Entities\Role;
 use Espo\Entities\Template;
 use Espo\ORM\EntityManager;
-use Espo\ORM\Query\Part\Expression;
-use Espo\ORM\Query\UpdateBuilder;
 use Espo\Tools\Pdf\Template as PdfTemplate;
 
 class AfterUpgrade implements Script
@@ -64,7 +61,6 @@ class AfterUpgrade implements Script
 
         $this->updateTemplates($em, $config);
         $this->updateTargetList($this->metadata);
-        $this->updateRoles();
     }
 
     private function updateTemplates(EntityManager $entityManager, Config $config): void
@@ -125,15 +121,5 @@ class AfterUpgrade implements Script
         }
 
         $metadata->save();
-    }
-
-    private function updateRoles(): void
-    {
-        $query = UpdateBuilder::create()
-            ->in(Role::ENTITY_TYPE)
-            ->set(['mentionPermission' => Expression::column('assignmentPermission')])
-            ->build();
-
-        $this->entityManager->getQueryExecutor()->execute($query);
     }
 }
