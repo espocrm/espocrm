@@ -38,7 +38,7 @@ define('views/email/modals/attachments', ['views/modal'], function (Dep) {
 
         backdrop: true,
 
-        templateContent: `<div class="record">{{{record}}}</div>`,
+        templateContent: `<div class="record no-side-margin">{{{record}}}</div>`,
 
         setup: function () {
             Dep.prototype.setup.call(this);
