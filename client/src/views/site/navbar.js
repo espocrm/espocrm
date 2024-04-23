@@ -338,7 +338,7 @@ class NavbarSiteView extends View {
     }
 
     /**
-     * @return {(Record|string)[]}
+     * @return {(Object|string)[]}
      */
     getTabList() {
         let tabList = this.getPreferences().get('useCustomTabList') && !this.getPreferences().get('addCustomTabs') ?
@@ -1035,67 +1035,68 @@ class NavbarSiteView extends View {
                 return false;
             }
 
-            if (typeof item === 'object') {
-                if (isDivider(item)) {
-                    if (!this.isSide()) {
-                        return false;
-                    }
-
-                    if (i === allTabList.length - 1) {
-                        return false;
-                    }
-
-                    return true;
-                }
-
-                if (isUrl(item)) {
-                    return this.filterTabItem(item);
-                }
-
-                let itemList = (item.itemList || []).filter((item) => {
-                    if (isDivider(item)) {
-                        return true;
-                    }
-
-                    return this.filterTabItem(item);
-                });
-
-                itemList = itemList.filter((item, i) => {
-                    if (!isDivider(item)) {
-                        return true;
-                    }
-
-                    const nextItem = itemList[i + 1];
-
-                    if (!nextItem) {
-                        return true;
-                    }
-
-                    if (isDivider(nextItem)) {
-                        return false;
-                    }
-
-                    return true;
-                });
-
-                itemList = itemList.filter((item, i) => {
-                    if (!isDivider(item)) {
-                        return true;
-                    }
-
-                    if (i === 0 || i === itemList.length - 1) {
-                        return false;
-                    }
-
-                    return true;
-                });
-
-                item.itemList = itemList;
-
-                return !!itemList.length;
+            if (typeof item !== 'object') {
+                return this.filterTabItem(item);
             }
 
-            return this.filterTabItem(item);
+            if (isDivider(item)) {
+                if (!this.isSide()) {
+                    return false;
+                }
+
+                if (i === allTabList.length - 1) {
+                    return false;
+                }
+
+                return true;
+            }
+
+            if (isUrl(item)) {
+                return this.filterTabItem(item);
+            }
+
+            /** @type {(Record|string)[]} */
+            let itemList = (item.itemList || []).filter((item) => {
+                if (isDivider(item)) {
+                    return true;
+                }
+
+                return this.filterTabItem(item);
+            });
+
+            itemList = itemList.filter((item, i) => {
+                if (!isDivider(item)) {
+                    return true;
+                }
+
+                const nextItem = itemList[i + 1];
+
+                if (!nextItem) {
+                    return true;
+                }
+
+                if (isDivider(nextItem)) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            itemList = itemList.filter((item, i) => {
+                if (!isDivider(item)) {
+                    return true;
+                }
+
+                if (i === 0 || i === itemList.length - 1) {
+                    return false;
+                }
+
+                return true;
+            });
+
+            item.itemList = itemList;
+
+            return !!itemList.length;
         });
 
         let moreIsMet = false;
