@@ -115,7 +115,8 @@
         "Group Folders": "Group Folders",
         "No Subject": "No Subject",
         "View Users": "View Users",
-        "Event": "Event"
+        "Event": "Event",
+        "View Attachments": "View Attachments"
     },
     "strings": {
         "sendingFailed": "Email sending failed"
