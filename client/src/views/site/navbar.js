@@ -337,6 +337,9 @@ class NavbarSiteView extends View {
         return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
     }
 
+    /**
+     * @return {(Record|string)[]}
+     */
     getTabList() {
         let tabList = this.getPreferences().get('useCustomTabList') && !this.getPreferences().get('addCustomTabs') ?
             this.getPreferences().get('tabList') :
@@ -1025,7 +1028,9 @@ class NavbarSiteView extends View {
         /** @type {{url: string, name: string}[]} */
         this.urlList = [];
 
-        this.tabList = this.getTabList().filter(item => {
+        const allTabList = this.getTabList();
+
+        this.tabList = allTabList.filter((item, i) => {
             if (!item) {
                 return false;
             }
@@ -1033,6 +1038,10 @@ class NavbarSiteView extends View {
             if (typeof item === 'object') {
                 if (isDivider(item)) {
                     if (!this.isSide()) {
+                        return false;
+                    }
+
+                    if (i === allTabList.length - 1) {
                         return false;
                     }
 
