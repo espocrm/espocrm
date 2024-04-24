@@ -1519,4 +1519,14 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals("\\\"test\\\"", $result);
     }
+
+    public function testStrings10(): void
+    {
+        $expression = "'test \"hello\\''";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $result = $this->evaluator->process($expression);
+
+        $this->assertEquals("test \"hello'", $result);
+    }
 }

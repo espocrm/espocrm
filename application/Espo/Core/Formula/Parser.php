@@ -1292,11 +1292,21 @@ class Parser
     {
         $string = substr($expression, 1, strlen($expression) - 2);
 
+        $isDoubleQuote = $expression[0] === '"';
+
         /** @var array{bool, string}[] $tokens */
         $tokens = [];
 
         $stripList = ["\\\\", "\\\"", "\\n", "\\t", "\\r"];
         $replaceList = ["\\",  "\"", "\n", "\t", "\r"];
+
+        if ($isDoubleQuote) {
+            $stripList[] = "\\\"";
+            $replaceList[] = "\"";
+        } else {
+            $stripList[] = "\\'";
+            $replaceList[] = "'";
+        }
 
         $k = 0;
 
