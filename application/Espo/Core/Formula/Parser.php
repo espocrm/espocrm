@@ -144,7 +144,7 @@ class Parser
     {
         return
             ($string[$i - 1] ?? null) !== "\\" ||
-            ($string[$i - 2] ?? null) === "\\";
+            (($string[$i - 2] ?? null) === "\\" && ($string[$i - 3] ?? null) !== "\\");
     }
 
     /**
