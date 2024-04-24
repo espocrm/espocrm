@@ -1002,7 +1002,7 @@ class Parser
             $expression[0] === "'" && $expression[strlen($expression) - 1] === "'" ||
             $expression[0] === "\"" && $expression[strlen($expression) - 1] === "\""
         ) {
-            return new Value(self::stripStringSlashes($expression));
+            return new Value(self::prepareStringValue($expression));
         }
 
         if ($expression[0] === "$") {
@@ -1288,7 +1288,7 @@ class Parser
         return $argumentList;
     }
 
-    static private function stripStringSlashes(string $expression): string
+    static private function prepareStringValue(string $expression): string
     {
         $string = substr($expression, 1, strlen($expression) - 2);
 
