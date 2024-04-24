@@ -1002,10 +1002,7 @@ class Parser
             $expression[0] === "'" && $expression[strlen($expression) - 1] === "'" ||
             $expression[0] === "\"" && $expression[strlen($expression) - 1] === "\""
         ) {
-            $subExpression = substr($expression, 1, strlen($expression) - 2);
-            $subExpression = str_replace(["\\\\", "\\\""], ["\\", "\""], $subExpression);
-
-            return new Value($subExpression);
+            return new Value(self::stripStringSlashes($expression));
         }
 
         if ($expression[0] === "$") {
@@ -1289,5 +1286,59 @@ class Parser
         }
 
         return $argumentList;
+    }
+
+    static private function stripStringSlashes(string $expression): string
+    {
+        $string = substr($expression, 1, strlen($expression) - 2);
+
+        /** @var array{bool, string}[] $tokens */
+        $tokens = [];
+
+        $stripList = ["\\\\", "\\\"", "\\n", "\\t", "\\r"];
+        $replaceList = ["\\",  "\"", "\n", "\t", "\r"];
+
+        $k = 0;
+
+        for ($i = 0; $i < strlen($string); $i++) {
+            $part = substr($string, $i, 2);
+
+            if (in_array($part, $stripList)) {
+                $len = strlen($part);
+
+                $before = substr($string, $k, $i - $k);
+
+                if (strlen($before)) {
+                    $tokens[] = [false, $before];
+                }
+
+                $tokens[] = [true, $part];
+
+                $i += $len - 1;
+                $k = $i + 1;
+            }
+
+            if ($i >= strlen($string) - 1) {
+                $after = substr($string, $k);
+
+                if (strlen($after)) {
+                    $tokens[] = [false, $after];
+                }
+            }
+        }
+
+        $result = '';
+
+        foreach ($tokens as $token) {
+            if (!$token[0]) {
+                $result .= $token[1];
+
+                continue;
+            }
+
+            $result .= str_replace($stripList, $replaceList, $token[1]);
+        }
+
+        return $result;
     }
 }
