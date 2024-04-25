@@ -144,8 +144,10 @@ class SearchParamsFetcher
                 SearchParams::ORDER_ASC : SearchParams::ORDER_DESC;
         }
 
-        if ($request->getQueryParam('q')) {
-            $params['q'] = trim($request->getQueryParam('q'));
+        $q = $request->getQueryParam('q');
+
+        if ($q && is_string($q)) {
+            $params['q'] = trim($q);
         }
 
         if ($request->getQueryParam('textFilter')) {
@@ -182,20 +184,7 @@ class SearchParamsFetcher
             throw new BadRequest('maxSize must be integer.');
         }
 
-        /** @var ?string $q */
-        $q = $params['q'] ?? null;
-
-        if (
-            $q !== null &&
-            !str_contains($q, '*') &&
-            !str_contains($q, '"') &&
-            !str_contains($q, '+') &&
-            !str_contains($q, '-') &&
-            $this->hasFullTextSearch($request)
-        ) {
-            $params['q'] = $q . '*';
-        }
-
+        $this->handleQ($params, $request);
         $this->handleMaxSize($params);
     }
 
@@ -230,6 +219,33 @@ class SearchParamsFetcher
 
         if ($value > $limit) {
             throw new Forbidden("Max size should not exceed $limit. Use offset and limit.");
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $params
+     * @throws BadRequest
+     */
+    private function handleQ(array &$params, Request $request): void
+    {
+        $q = $params['q'] ?? null;
+
+        if ($q === null) {
+            return;
+        }
+
+        if (!is_string($q)) {
+            throw new BadRequest("q must be string.");
+        }
+
+        if (
+            !str_contains($q, '*') &&
+            !str_contains($q, '"') &&
+            !str_contains($q, '+') &&
+            !str_contains($q, '-') &&
+            $this->hasFullTextSearch($request)
+        ) {
+            $params['q'] = $q . '*';
         }
     }
 }
