@@ -33,12 +33,10 @@ use Espo\Core\Select\Text\FullTextSearch\Data as FullTextSearchData;
 use Espo\Core\Select\Text\FullTextSearch\DataComposerFactory as FullTextSearchDataComposerFactory;
 use Espo\Core\Select\Text\FullTextSearch\DataComposer\Params as FullTextSearchDataComposerParams;
 use Espo\Core\Select\Text\Filter\Data as FilterData;
-
 use Espo\ORM\Query\SelectBuilder as QueryBuilder;
 use Espo\ORM\Query\Part\Order as OrderExpr;
 use Espo\ORM\Query\Part\Expression as Expr;
 use Espo\ORM\Query\Part\WhereItem;
-
 use Espo\Entities\User;
 
 class Applier
@@ -67,54 +65,27 @@ class Applier
     /** @noinspection PhpUnusedParameterInspection */
     public function apply(QueryBuilder $queryBuilder, string $filter, FilterParams $params): void
     {
-        $forceFullTextSearch = false;
+        $forceFullText = false;
+        $skipFullText = false;
 
         if (mb_strpos($filter, 'ft:') === 0) {
             $filter = mb_substr($filter, 3);
-
-            $forceFullTextSearch = true;
+            $forceFullText = true;
         }
 
-        $fullTextSearchData = $this->composeFullTextSearchData($filter);
+        $fullTextData = $this->composeFullTextSearchData($filter);
 
-        $fullTextWhere = $fullTextSearchData ?
-            $this->processFullTextSearch($queryBuilder, $fullTextSearchData) :
-            null;
-
-        $fullTextSearchFieldList = $fullTextSearchData ? $fullTextSearchData->getFieldList() : [];
-
-        $fieldList = $forceFullTextSearch ? [] :
-            array_filter(
-                $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? self::DEFAULT_ATTRIBUTE_LIST,
-                function ($field) use ($fullTextSearchFieldList) {
-                    return !in_array($field, $fullTextSearchFieldList);
-                }
-            );
-
-        if (
-            $fullTextWhere &&
-            !$forceFullTextSearch &&
-            $this->toSkipFullText($filter)
-        ) {
-            $fullTextWhere = Expr::value(false);
+        if ($fullTextData && !$forceFullText && $this->toSkipFullText($filter)) {
+            $skipFullText = true;
         }
 
-        $skipWildcards = false;
+        $fullTextWhere = $fullTextData && !$skipFullText ?
+            $this->processFullTextSearch($queryBuilder, $fullTextData) : null;
 
-        if (mb_strpos($filter, '*') !== false) {
-            $skipWildcards = true;
+        $fieldList = $this->getFieldList($forceFullText, $fullTextData);
+        $filterData = $this->prepareFilterData($filter, $fieldList, $forceFullText, $fullTextWhere);
 
-            $filter = str_replace('*', '%', $filter);
-        }
-
-        $filterData = FilterData::create($filter, $fieldList)
-            ->withSkipWildcards($skipWildcards)
-            ->withForceFullTextSearch($forceFullTextSearch)
-            ->withFullTextSearchWhereItem($fullTextWhere);
-
-        $this->filterFactory
-            ->create($this->entityType, $this->user)
-            ->apply($queryBuilder, $filterData);
+        $this->applyFilter($queryBuilder, $filterData);
     }
 
     private function composeFullTextSearchData(string $filter): ?FullTextSearchData
@@ -190,5 +161,53 @@ class Applier
             !str_contains($filter, '"') &&
             !str_contains($filter, '+') &&
             !str_contains($filter, '-');
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getFieldList(bool $forceFullTextSearch, ?FullTextSearchData $fullTextData): array
+    {
+        if ($forceFullTextSearch) {
+            return [];
+        }
+
+        $fullTextFieldList = $fullTextData ? $fullTextData->getFieldList() : [];
+
+        return array_filter(
+            $this->metadataProvider->getTextFilterAttributeList($this->entityType) ?? self::DEFAULT_ATTRIBUTE_LIST,
+            fn ($field) => !in_array($field, $fullTextFieldList)
+        );
+    }
+
+    /**
+     * @param string[] $fieldList
+     * @param ?WhereItem $fullTextWhere
+     */
+    private function prepareFilterData(
+        string $filter,
+        array $fieldList,
+        bool $forceFullTextSearch,
+        ?WhereItem $fullTextWhere
+    ): FilterData {
+
+        $skipWildcards = false;
+
+        if (mb_strpos($filter, '*') !== false) {
+            $skipWildcards = true;
+            $filter = str_replace('*', '%', $filter);
+        }
+
+        return FilterData::create($filter, $fieldList)
+            ->withSkipWildcards($skipWildcards)
+            ->withForceFullTextSearch($forceFullTextSearch)
+            ->withFullTextSearchWhereItem($fullTextWhere);
+    }
+
+    private function applyFilter(QueryBuilder $queryBuilder, FilterData $filterData): void
+    {
+        $filterObj = $this->filterFactory->create($this->entityType, $this->user);
+
+        $filterObj->apply($queryBuilder, $filterData);
     }
 }
