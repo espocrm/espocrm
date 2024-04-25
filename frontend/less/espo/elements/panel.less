@@ -495,12 +495,23 @@ body {
             border-bottom-right-radius: var(--panel-border-radius);
 
             > table:not(:has(+ .show-more)),
-            > table:not(:has(+ .show-more)) tr:last-child td,
+            > table:has(+ .show-more.hidden),
             > .list-group,
             > .list-group:last-child > .list-group-item:last-child,
             > .show-more > a {
                 border-bottom-left-radius: var(--panel-border-radius);
                 border-bottom-right-radius: var(--panel-border-radius);
+            }
+
+            > table:not(:has(+ .show-more)) tr:last-child,
+            > table:has(+ .show-more.hidden) tr:last-child {
+                > td:first-child {
+                    border-bottom-left-radius: var(--panel-border-radius);
+                }
+
+                > td:last-child {
+                    border-bottom-right-radius: var(--panel-border-radius);
+                }
             }
         }
 
