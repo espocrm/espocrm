@@ -58,7 +58,8 @@
     {
         "label": "Search",
         "rows": [
-            [{"name": "textFilterUseContainsForVarchar"}, {"name": "globalSearchEntityList"}]
+            [{"name": "textFilterUseContainsForVarchar"}, {"name": "globalSearchEntityList"}],
+            [{"name": "quickSearchFullTextAppendWildcard"}, false]
         ]
     },
     {

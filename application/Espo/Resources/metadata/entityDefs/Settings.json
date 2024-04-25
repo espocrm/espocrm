@@ -891,6 +891,10 @@
         "pdfEngine": {
             "type": "enum",
             "view": "views/settings/fields/pdf-engine"
+        },
+        "quickSearchFullTextAppendWildcard": {
+            "type": "bool",
+            "tooltip": true
         }
     }
 }

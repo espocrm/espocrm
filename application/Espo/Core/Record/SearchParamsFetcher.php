@@ -238,6 +238,10 @@ class SearchParamsFetcher
             throw new BadRequest("q must be string.");
         }
 
+        if (!$this->config->get('quickSearchFullTextAppendWildcard')) {
+            return;
+        }
+
         if (
             !str_contains($q, '*') &&
             !str_contains($q, '"') &&

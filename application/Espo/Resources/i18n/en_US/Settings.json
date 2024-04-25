@@ -168,7 +168,8 @@
         "oidcAllowRegularUserFallback": "OIDC Allow fallback login for regular users",
         "oidcAllowAdminUser": "OIDC Allow OIDC login for admin users",
         "oidcLogoutUrl": "OIDC Logout URL",
-        "pdfEngine": "PDF Engine"
+        "pdfEngine": "PDF Engine",
+        "quickSearchFullTextAppendWildcard": "Append wildcard in quick search"
     },
     "options": {
         "authenticationMethod": {
@@ -279,7 +280,8 @@
         "oidcSyncTeams": "Sync user teams (on every login).",
         "oidcUsernameClaim": "A claim to use for a username (for user matching and creation).",
         "oidcTeams": "Espo teams mapped against groups/teams/roles of the identity provider. Teams with an empty mapping value will be always assigned to a user (when creating or syncing).",
-        "oidcLogoutUrl": "An URL the browser will redirect to after logging out from Espo. Intended for clearing the session information in the browser and doing logging out on the provider side. Usually the URL contains a redirect-URL parameter, to return back to Espo.\n\nAvailable placeholders:\n* `{siteUrl}`\n* `{clientId}`"
+        "oidcLogoutUrl": "An URL the browser will redirect to after logging out from Espo. Intended for clearing the session information in the browser and doing logging out on the provider side. Usually the URL contains a redirect-URL parameter, to return back to Espo.\n\nAvailable placeholders:\n* `{siteUrl}`\n* `{clientId}`",
+        "quickSearchFullTextAppendWildcard": "Append a wildcard to an autocomplete search query when Full-Text search is enabled. Reduces search performance."
     },
     "labels": {
         "Group Tab": "Group Tab",

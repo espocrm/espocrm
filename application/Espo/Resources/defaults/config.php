@@ -294,5 +294,6 @@ return [
     'customPrefixDisabled' => false,
     'listPagination' => true,
     'starsLimit' => 500,
+    'quickSearchFullTextAppendWildcard' => false,
     'isInstalled' => false,
 ];
