@@ -643,10 +643,9 @@ class Sender
     }
 
     /**
-     * @return never
      * @throws SendingError
      */
-    private function handleException(Exception $e): void
+    private function handleException(Exception $e): never
     {
         if ($e instanceof ProtocolRuntimeException) {
             $message = "unknownError";
