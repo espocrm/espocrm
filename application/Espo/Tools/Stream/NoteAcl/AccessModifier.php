@@ -64,9 +64,8 @@ class AccessModifier
 
     /**
      * @internal
-     * @param bool $notify Process notifications for notes.
      */
-    public function process(Entity $entity, bool $notify = false): void
+    public function process(Entity $entity): void
     {
         if (!$entity instanceof CoreEntity) {
             return;
@@ -76,7 +75,7 @@ class AccessModifier
             return;
         }
 
-        $this->processor->process($entity, $notify);
+        $this->processor->process($entity);
     }
 
     private function toProcess(CoreEntity $entity): bool

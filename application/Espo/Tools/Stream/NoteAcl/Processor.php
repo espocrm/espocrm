@@ -62,6 +62,9 @@ class Processor
         private AclManager $aclManager,
     ) {}
 
+    /**
+     * @param bool $notify Process notifications for notes.
+     */
     public function process(CoreEntity $entity, bool $notify = false): void
     {
         $entityType = $entity->getEntityType();
