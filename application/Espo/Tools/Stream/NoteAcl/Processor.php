@@ -29,7 +29,9 @@
 
 namespace Espo\Tools\Stream\NoteAcl;
 
+use DateTimeImmutable;
 use Espo\Core\AclManager;
+use Espo\Core\Field\DateTime;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Config;
@@ -39,7 +41,6 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Order;
 
-use DateTime;
 use DateTimeInterface;
 use LogicException;
 
@@ -127,7 +128,6 @@ class Processor
         }
 
         $notificationThreshold = $this->getNotificationThreshold();
-        $aclThreshold = $this->getAclThreshold();
 
         foreach ($this->getNotes($entity) as $note) {
             $this->processNoteAclItem($entity, $note, [
@@ -137,7 +137,6 @@ class Processor
                 'teamIdList' => $teamIdList,
                 'userIdList' => $userIdList,
                 'notificationThreshold' => $notificationThreshold,
-                'aclThreshold' => $aclThreshold,
             ]);
         }
     }
@@ -150,7 +149,6 @@ class Processor
      *   teamIdList: string[],
      *   userIdList: string[],
      *   notificationThreshold: DateTimeInterface,
-     *   aclThreshold: DateTimeInterface,
      * } $params
      */
     private function processNoteAclItem(Entity $entity, Note $note, array $params): void
@@ -163,7 +161,6 @@ class Processor
         $userIdList = $params['userIdList'];
 
         $notificationThreshold = $params['notificationThreshold'];
-        $aclThreshold = $params['aclThreshold'];
 
         $createdAt = $note->getCreatedAt();
 
@@ -171,14 +168,8 @@ class Processor
             return;
         }
 
-        if (!$entity->isNew()) {
-            if ($createdAt->toTimestamp() < $notificationThreshold->getTimestamp()) {
-                $notify = false;
-            }
-
-            if ($createdAt->toTimestamp() < $aclThreshold->getTimestamp()) {
-                return;
-            }
+        if (!$entity->isNew() && $createdAt->toTimestamp() < $notificationThreshold->getTimestamp()) {
+            $notify = false;
         }
 
         if ($teamsAttributeIsChanged || $notify) {
@@ -189,9 +180,7 @@ class Processor
             $note->setUsersIds($userIdList);
         }
 
-        $this->entityManager->saveEntity($note, [
-            'forceProcessNotifications' => $notify,
-        ]);
+        $this->entityManager->saveEntity($note, ['forceProcessNotifications' => $notify]);
     }
 
     /**
@@ -201,6 +190,7 @@ class Processor
     {
         $entityType = $entity->getEntityType();
         $limit = $this->config->get('noteAclLimit', self::NOTE_ACL_LIMIT);
+        $aclThreshold = $this->getAclThreshold();
 
         return $this->entityManager
             ->getRDBRepository(Note::ENTITY_TYPE)
@@ -216,9 +206,10 @@ class Processor
                         'parentType' => $entityType,
                         'superParentId!=' => null,
                         'relatedId' => null,
-                    ]
+                    ],
                 ]
             ])
+            ->where(['createdAt>=' => $aclThreshold->toString()])
             ->select([
                 'id',
                 'parentType',
@@ -235,17 +226,17 @@ class Processor
             ->find();
     }
 
-    private function getNotificationThreshold(): DateTime
+    private function getNotificationThreshold(): DateTimeInterface
     {
         $notificationPeriod = '-' . $this->config->get('noteNotificationPeriod', self::NOTE_NOTIFICATION_PERIOD);
 
-        return (new DateTime())->modify($notificationPeriod);
+        return (new DateTimeImmutable())->modify($notificationPeriod);
     }
 
     private function getAclThreshold(): DateTime
     {
         $aclPeriod = '-' . $this->config->get('noteAclPeriod', self::NOTE_ACL_PERIOD);
 
-        return (new DateTime())->modify($aclPeriod);
+        return DateTime::createNow()->modify($aclPeriod);
     }
 }
