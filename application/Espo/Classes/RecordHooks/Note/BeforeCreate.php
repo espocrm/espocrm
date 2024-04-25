@@ -87,7 +87,7 @@ class BeforeCreate implements SaveHook
                 $entity->clear('usersIds');
                 $entity->clear('teamsIds');
                 $entity->clear('portalsIds');
-                $entity->set('usersIds', [$this->user->getId()]);
+                $entity->setUsersIds([$this->user->getId()]);
                 $entity->set('isForSelf', true);
 
                 break;

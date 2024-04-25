@@ -397,13 +397,13 @@ class Service
 
         $note->setAclIsProcessed();
 
-        $note->set('teamsIds', []);
-        $note->set('usersIds', []);
+        $note->setTeamsIds([]);
+        $note->setUsersIds([]);
 
         if ($entity->hasLinkMultipleField('teams')) {
             $teamIdList = $entity->getLinkMultipleIdList('teams');
 
-            $note->set('teamsIds', $teamIdList);
+            $note->setTeamsIds($teamIdList);
         }
 
         $ownerUserField = $this->aclManager->getReadOwnerUserField($entity->getEntityType());
@@ -447,7 +447,7 @@ class Service
             $userIdList = [$userId];
         }
 
-        $note->set('usersIds', $userIdList);
+        $note->setUsersIds($userIdList);
     }
 
     public function noteEmailReceived(Entity $entity, Email $email, bool $isInitial = false): void
@@ -1349,11 +1349,11 @@ class Service
         }
 
         if ($teamsAttributeIsChanged || $forceProcessNoteNotifications) {
-            $note->set('teamsIds', $teamIdList);
+            $note->setTeamsIds($teamIdList);
         }
 
         if ($usersAttributeIsChanged || $forceProcessNoteNotifications) {
-            $note->set('usersIds', $userIdList);
+            $note->setUsersIds($userIdList);
         }
 
         $this->entityManager->saveEntity($note, [

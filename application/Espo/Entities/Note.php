@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity;
 
@@ -305,5 +306,25 @@ class Note extends Entity
                 }
             }
         }
+    }
+
+    /**
+     * @param string[] $ids
+     */
+    public function setTeamsIds(array $ids): self
+    {
+        $this->set('teamsIds', $ids);
+
+        return $this;
+    }
+
+    /**
+     * @param string[] $ids
+     */
+    public function setUsersIds(array $ids): self
+    {
+        $this->set('usersIds', $ids);
+
+        return $this;
     }
 }
