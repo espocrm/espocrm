@@ -567,8 +567,7 @@ class DefaultImporter implements Importer
                 ->create()
                 ->setClassName(ProcessNoteAcl::class)
                 ->setData(
-                    JobData
-                        ::create()
+                    JobData::create(['notify' => true])
                         ->withTargetId($duplicate->getId())
                         ->withTargetType(Email::ENTITY_TYPE)
                 )
