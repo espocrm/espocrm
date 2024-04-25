@@ -209,6 +209,7 @@ return [
         'phoneNumberEntityLookupDefaultOrder',
         'customPrefixDisabled',
         'noteAclLimit',
+        'noteAclPeriod',
         'latestVersion',
     ],
     'superAdminItems' => [
