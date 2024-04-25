@@ -208,6 +208,7 @@ return [
         'emailAddressEntityLookupDefaultOrder',
         'phoneNumberEntityLookupDefaultOrder',
         'customPrefixDisabled',
+        'noteAclLimit',
         'latestVersion',
     ],
     'superAdminItems' => [
