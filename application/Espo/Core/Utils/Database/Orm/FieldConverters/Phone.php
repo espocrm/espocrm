@@ -210,8 +210,7 @@ class Phone implements FieldConverter
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
                     'whereClause' => [
                         'phoneNumbersMultiple.name=' => '{value}',
-                    ],
-                    'distinct' => true,
+                    ]
                 ],
                 '<>' => [
                     'leftJoins' => [['phoneNumbers', 'phoneNumbersMultiple']],
