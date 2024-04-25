@@ -1001,6 +1001,17 @@ class CalendarView extends View {
                         });
                 });
             },
+            eventAllow: (info, event) => {
+                if (event.allDay && !info.allDay) {
+                    return false;
+                }
+
+                if (!event.allDay && info.allDay) {
+                    return false;
+                }
+
+                return true;
+            }
         };
 
         if (this.teamIdList) {
