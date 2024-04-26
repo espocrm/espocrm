@@ -204,6 +204,8 @@ class Language {
      * @returns {Promise}
      */
     load(callback, disableCache, loadDefault) {
+        this.off('sync');
+
         if (callback) {
             this.once('sync', callback);
         }
