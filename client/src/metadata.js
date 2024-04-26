@@ -67,24 +67,24 @@ class Metadata {
      * @returns {Promise}
      */
     load(callback, disableCache) {
-        this.off('sync');
-
-        if (callback) {
-            this.once('sync', callback);
-        }
-
         if (!disableCache) {
             if (this.loadFromCache()) {
                 this.trigger('sync');
 
-                return new Promise(resolve => resolve());
+                if (callback) {
+                    callback();
+                }
+
+                return Promise.resolve();
             }
         }
 
-        return new Promise(resolve => {
-            this.fetch()
-                .then(() => resolve());
-        });
+        return this.fetch()
+            .then(() => {
+                if (callback) {
+                    callback();
+                }
+            });
     }
 
     /**
