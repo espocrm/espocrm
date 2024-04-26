@@ -63,7 +63,7 @@ class Metadata {
      * Load from cache or the backend (if not yet cached).
      *
      * @param {Function|null} [callback] Deprecated. Use a promise.
-     * @param {boolean} [disableCache=false] Bypass cache.
+     * @param {boolean} [disableCache=false] Deprecated.
      * @returns {Promise}
      */
     load(callback, disableCache) {
