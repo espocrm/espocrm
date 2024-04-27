@@ -33,6 +33,7 @@ use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\DashboardTemplate;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
+use Espo\Entities\EmailAddress;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
 use Espo\Entities\Settings;
 use Espo\Tools\App\SettingsService as SettingsService;
@@ -168,7 +169,7 @@ class AppService
                 $itemParams = $obj->get();
             }
             catch (Throwable $e) {
-                $this->log->error("AppParam {$paramKey}: " . $e->getMessage());
+                $this->log->error("AppParam $paramKey: " . $e->getMessage());
 
                 continue;
             }
@@ -257,7 +258,7 @@ class AppService
         $emailAddressList = [];
         $userEmailAddressList = [];
 
-        /** @var Collection<\Espo\Entities\EmailAddress> $emailAddressCollection */
+        /** @var Collection<EmailAddress> $emailAddressCollection */
         $emailAddressCollection = $this->entityManager
             ->getRDBRepositoryByClass(User::class)
             ->getRelation($user, 'emailAddresses')
@@ -428,22 +429,19 @@ class AppService
             return 0;
         }
 
-        $suffix = substr($size, -1);
+        $suffix = strtoupper(substr($size, -1));
         $value = (int) substr($size, 0, -1);
 
-        switch (strtoupper($suffix)) {
-            case 'P':
-                $value *= 1024;
-            case 'T':
-                $value *= 1024;
-            case 'G':
-                $value *= 1024;
-            case 'M':
-                $value *= 1024;
-            case 'K':
-                $value *= 1024;
-
-                break;
+        if ($suffix == 'P') {
+            $value *= pow(1024, 5);
+        } else if ($suffix == 'T') {
+            $value *= pow(1024, 4);
+        } else if ($suffix == 'G') {
+            $value *= pow(1024, 3);
+        } else if ($suffix == 'M') {
+            $value *= pow(1024, 2);
+        } elseif ($suffix == 'K') {
+            $value *= 1024;
         }
 
         return $value;
