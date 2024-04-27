@@ -33,7 +33,7 @@ class LatestReleaseDataRequester
 {
     /**
      * @param array<string, mixed> $requestData
-     * @return ?array<mixed, mixed>
+     * @return ?array<int|string, mixed>
      */
     public function request(
         ?string $url = null,
@@ -48,7 +48,7 @@ class LatestReleaseDataRequester
         $ch = curl_init();
 
         $requestUrl = $url ? trim($url) : base64_decode('aHR0cHM6Ly9zLmVzcG9jcm0uY29tLw==');
-        $requestUrl = (substr($requestUrl, -1) == '/') ? $requestUrl : $requestUrl . '/';
+        $requestUrl = str_ends_with($requestUrl, '/') ? $requestUrl : $requestUrl . '/';
 
         $requestUrl .= empty($requestData) ?
             $urlPath . '/' :
