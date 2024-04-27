@@ -461,6 +461,22 @@
             "returnType": "string"
         },
         {
+            "name": "log\\info",
+            "insertText": "log\\info(MESSAGE)"
+        },
+        {
+            "name": "log\\notice",
+            "insertText": "log\\notice(MESSAGE)"
+        },
+        {
+            "name": "log\\warning",
+            "insertText": "log\\warning(MESSAGE)"
+        },
+        {
+            "name": "log\\error",
+            "insertText": "log\\error(MESSAGE)"
+        },
+        {
             "name": "json\\retrieve",
             "insertText": "json\\retrieve(JSON, PATH)",
             "returnType": "mixed"
@@ -533,5 +549,12 @@
             "insertText": "ext\\currency\\convert(AMOUNT, FROM_CODE)",
             "returnType": "string"
         }
-    ]
+    ],
+    "functionClassNameMap": {
+        "log\\info": "Espo\\Core\\Formula\\Functions\\LogGroup\\InfoType",
+        "log\\notice": "Espo\\Core\\Formula\\Functions\\LogGroup\\NoticeType",
+        "log\\warning": "Espo\\Core\\Formula\\Functions\\LogGroup\\WarningType",
+        "log\\error": "Espo\\Core\\Formula\\Functions\\LogGroup\\ErrorType"
+
+    }
 }
