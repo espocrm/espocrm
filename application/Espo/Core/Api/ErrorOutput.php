@@ -37,7 +37,6 @@ use Espo\Core\Exceptions\HasBody;
 use Espo\Core\Exceptions\HasLogLevel;
 use Espo\Core\Exceptions\HasLogMessage;
 use Espo\Core\Exceptions\NotFound;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 
 use Throwable;
@@ -80,7 +79,7 @@ class ErrorOutput
         NotFound::class,
     ];
 
-    public function __construct(private Log $log, private Config $config)
+    public function __construct(private Log $log)
     {}
 
     public function process(
@@ -126,26 +125,10 @@ class ErrorOutput
             $exception->getLogLevel() :
             Log::LEVEL_ERROR;
 
-        $logMessageItemList = [];
-
-        if ($message) {
-            $logMessageItemList[] = $message;
-        }
-
-        $logMessageItemList[] = $request->getMethod() . ' ' . $request->getResourcePath();
-
-        // Skip if created with a static constructor.
-        if (!$exception instanceof HasBody || !$exception->getBody()) {
-            $logMessageItemList[] = "line: {$exception->getLine()}, file: {$exception->getFile()}";
-        }
-
-        $logMessage = "($statusCode) " . implode("; ", $logMessageItemList);
-
-        if ($this->toPrintTrace()) {
-            $logMessage .= " :: " . $exception->getTraceAsString();
-        }
-
-        $this->log->log($logLevel, $logMessage);
+        $this->log->log($logLevel, $message, [
+            'exception' => $exception,
+            'request' => $request,
+        ]);
 
         if (!in_array($statusCode, $this->allowedStatusCodeList)) {
             $statusCode = 500;
@@ -250,12 +233,7 @@ class ErrorOutput
 
         $logMessage .= implode("; ", $logMessageItemList);
 
-        $this->log->log('debug', $logMessage);
-    }
-
-    private function toPrintTrace(): bool
-    {
-        return (bool) $this->config->get('logger.printTrace');
+        $this->log->debug($logMessage);
     }
 
     private function toPrintExceptionStatusReason(Throwable $exception): bool

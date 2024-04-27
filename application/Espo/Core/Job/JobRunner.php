@@ -32,7 +32,6 @@ namespace Espo\Core\Job;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\ServiceFactory;
-use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\System;
 use Espo\Core\Job\Job\Data;
@@ -51,7 +50,6 @@ class JobRunner
         private EntityManager $entityManager,
         private ServiceFactory $serviceFactory,
         private Log $log,
-        private Config $config
     ) {}
 
     /**
@@ -139,14 +137,11 @@ class JobRunner
 
             $jobId = $jobEntity->hasId() ? $jobEntity->getId() : null;
 
-            $msg = "JobManager: Failed job running, job '$jobId'. " .
-                $e->getMessage() . "; at " . $e->getFile() . ":" . $e->getLine() . ".";
-
-            if ($this->config->get('logger.printTrace')) {
-                $msg .= " :: " . $e->getTraceAsString();
-            }
-
-            $this->log->error($msg);
+            $this->log->error("Failed job {id}; {message}", [
+                'exception' => $e,
+                'message' => $e->getMessage(),
+                'id' => $jobId,
+            ]);
 
             if ($throwException) {
                 $exception = $e;
