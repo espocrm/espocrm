@@ -55,11 +55,12 @@ class DefaultFormatter extends LineFormatter
     {
         $line = parent::format($record);
 
+        $line = $this->interpolate($record, $line);
         $line = $this->addCode($record, $line);
         $line = $this->addRequest($record, $line);
         $line = $this->addException($record, $line);
 
-        return trim($line);
+        return trim($line) . "\n";
     }
 
     private function addCode(LogRecord $record, string $line): string
@@ -111,5 +112,19 @@ class DefaultFormatter extends LineFormatter
         $requestPart = ":: {$request->getMethod()} {$request->getResourcePath()}";
 
         return str_replace('%request%', $requestPart, $line);
+    }
+
+    private function interpolate(LogRecord $record, mixed $line): string
+    {
+        $replace = [];
+
+        foreach ($record->context as $key => $val) {
+            if (!is_array($val) && (!is_object($val) || method_exists($val, '__toString'))) {
+                $replace['{' . $key . '}'] = $val;
+            }
+        }
+
+        $line = strtr($line, $replace);
+        return $line;
     }
 }
