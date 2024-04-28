@@ -29,7 +29,9 @@
 
 namespace Espo\Core\Upgrades\Migrations\V8_3;
 
+use Espo\Core\Templates\Entities\Event;
 use Espo\Core\Upgrades\Migration\Script;
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\Role;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Expression;
@@ -39,11 +41,13 @@ class AfterUpgrade implements Script
 {
     public function __construct(
         private EntityManager $entityManager,
+        private Metadata $metadata
     ) {}
 
     public function run(): void
     {
         $this->updateRoles();
+        $this->updateMetadata();
     }
 
     private function updateRoles(): void
@@ -54,5 +58,43 @@ class AfterUpgrade implements Script
             ->build();
 
         $this->entityManager->getQueryExecutor()->execute($query);
+    }
+
+    private function updateMetadata(): void
+    {
+        $defs = $this->metadata->get(['scopes']);
+
+        foreach ($defs as $entityType => $item) {
+            $isCustom = $item['isCustom'] ?? false;
+            $type = $item['type'] ?? false;
+
+            if (!$isCustom) {
+                continue;
+            }
+
+            if ($type !== Event::TEMPLATE_TYPE) {
+                continue;
+            }
+
+            $clientDefs = $this->metadata->getCustom('clientDefs', $entityType) ?? (object) [];
+
+            $clientDefs->viewSetupHandlers ??= (object) [];
+
+            $clientDefs->viewSetupHandlers->{'record/detail'} = [
+                "__APPEND__",
+                "crm:handlers/event/reminders-handler"
+            ];
+
+            $clientDefs->viewSetupHandlers->{'record/edit'} = [
+                "__APPEND__",
+                "crm:handlers/event/reminders-handler"
+            ];
+
+            if (isset($clientDefs->dynamicLogic->fields->reminders)) {
+                unset($clientDefs->dynamicLogic->fields->reminders);
+            }
+
+            $this->metadata->saveCustom('clientDefs', $entityType, $clientDefs);
+        }
     }
 }
