@@ -53,7 +53,8 @@
             "validatorClassNameList": [
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
                 "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
-            ]
+            ],
+            "dynamicLogicDisabled": true
         },
         "direction": {
             "type": "enum",

@@ -8,6 +8,16 @@
         "activitiesCreate": true,
         "historyCreate": true
     },
+    "viewSetupHandlers": {
+        "record/detail": [
+            "__APPEND__",
+            "crm:handlers/event/reminders-handler"
+        ],
+        "record/edit": [
+            "__APPEND__",
+            "crm:handlers/event/reminders-handler"
+        ]
+    },
     "bottomPanels": {
         "detail": [
             {
@@ -52,19 +62,6 @@
                         {
                             "type": "isTrue",
                             "attribute": "isAllDay"
-                        }
-                    ]
-                }
-            },
-            "reminders": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type": "isNotEmpty",
-                            "attribute": "assignedUserId",
-                            "data": {
-                                "field": "assignedUser"
-                            }
                         }
                     ]
                 }

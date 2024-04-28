@@ -29,14 +29,12 @@
 
 namespace Espo\Core\FieldProcessing\Reminder;
 
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Reminder;
-use Espo\ORM\Collection;
 use Espo\ORM\Entity;
-
 use Espo\Core\FieldProcessing\Loader as LoaderInterface;
 use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Core\ORM\EntityManager;
-use stdClass;
 
 /**
  * @internal This class should not be removed as it's used by custom entities.
@@ -44,8 +42,10 @@ use stdClass;
  */
 class Loader implements LoaderInterface
 {
-    public function __construct(private EntityManager $entityManager)
-    {}
+    public function __construct(
+        private EntityManager $entityManager,
+        private User $user
+    ) {}
 
     public function process(Entity $entity, Params $params): void
     {
@@ -72,13 +72,14 @@ class Loader implements LoaderInterface
     {
         $list = [];
 
-        /** @var Collection<Reminder> $collection */
+        /** @var iterable<Reminder> $collection */
         $collection = $this->entityManager
             ->getRDBRepository(Reminder::ENTITY_TYPE)
             ->select(['seconds', 'type'])
             ->where([
                 'entityType' => $entity->getEntityType(),
                 'entityId' => $entity->getId(),
+                'userId' => $this->user->getId(),
             ])
             ->distinct()
             ->order('seconds')

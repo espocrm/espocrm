@@ -12,6 +12,16 @@
     "modalViews": {
         "detail":"crm:views/meeting/modals/detail"
     },
+    "viewSetupHandlers": {
+        "record/detail": [
+            "__APPEND__",
+            "crm:handlers/event/reminders-handler"
+        ],
+        "record/edit": [
+            "__APPEND__",
+            "crm:handlers/event/reminders-handler"
+        ]
+    },
     "sidePanels":{
         "detail":[
             {
@@ -113,31 +123,6 @@
     "additionalLayouts": {
         "bottomPanelsEditSmall": {
             "type": "bottomPanelsEditSmall"
-        }
-    },
-    "dynamicLogic":{
-        "fields":{
-            "reminders": {
-                "visible": {
-                    "conditionGroup": [
-                        {
-                            "type":"and",
-                            "value": [
-                                {
-                                    "type":"notEquals",
-                                    "attribute":"status",
-                                    "value":"Held"
-                                },
-                                {
-                                    "type":"notEquals",
-                                    "attribute":"status",
-                                    "value":"Not Held"
-                                }
-                            ]
-                        }
-                    ]
-                }
-            }
         }
     },
     "iconClass": "fas fa-phone"
