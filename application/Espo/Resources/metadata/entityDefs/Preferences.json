@@ -121,7 +121,11 @@
         "defaultReminders": {
             "type": "jsonArray",
             "view": "crm:views/meeting/fields/reminders",
-            "default": []
+            "default": [],
+            "validatorClassNameList": [
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\Valid",
+                "Espo\\Modules\\Crm\\Classes\\FieldValidators\\Event\\Reminders\\MaxCount"
+            ]
         },
         "theme": {
             "type": "enum",
