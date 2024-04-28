@@ -4,69 +4,69 @@ namespace tests\unit\testData\DB;
 
 use Espo\ORM\BaseEntity;
 
-class TEntity extends BaseEntity
+class TestEntity extends BaseEntity
 {
 
 }
 
-class Account extends TEntity
+class Account extends TestEntity
 {
 
 
 }
 
-class Team extends TEntity
+class Team extends TestEntity
 {
 
 }
 
-class EntityTeam extends TEntity
+class EntityTeam extends TestEntity
 {
 
 }
 
-class Contact extends TEntity
+class Contact extends TestEntity
 {
 
 }
 
-class Post extends TEntity
+class Post extends TestEntity
 {
 
 }
 
-class Comment extends TEntity
+class Comment extends TestEntity
 {
 
 }
 
-class PostData extends TEntity
+class PostData extends TestEntity
 {
 
 }
 
-class Tag extends TEntity
+class Tag extends TestEntity
 {
 
 }
 
-class PostTag extends TEntity
+class PostTag extends TestEntity
 {
 
 }
 
-class Note extends TEntity
+class Note extends TestEntity
 {
 
 }
 
 
-class Article extends TEntity
+class Article extends TestEntity
 {
 
 }
 
-class Job extends TEntity
+class Job extends TestEntity
 {
     public function getFromContainerOriginal(string $attribute)
     {
@@ -74,25 +74,25 @@ class Job extends TEntity
     }
 }
 
-class Test extends TEntity
+class Test extends TestEntity
 {
 
 }
 
-class Dependee extends TEntity
+class Dependee extends TestEntity
 {
 
 }
 
-class TestWhere extends TEntity
+class TestWhere extends TestEntity
 {
 
 }
 
-class TestSelect extends TEntity
+class TestSelect extends TestEntity
 {
 }
 
-class TestSelectRight extends TEntity
+class TestSelectRight extends TestEntity
 {
 }
