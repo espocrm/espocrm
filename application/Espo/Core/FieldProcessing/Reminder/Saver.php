@@ -351,6 +351,10 @@ class Saver implements SaverInterface
 
         $remindAt = $start->addSeconds(- $seconds);
 
+        if ($remindAt->isLessThan(DateTime::createNow())) {
+            return;
+        }
+
         $query = $this->entityManager
             ->getQueryBuilder()
             ->insert()
