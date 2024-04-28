@@ -55,7 +55,8 @@ class RemindersHandler  {
         this.listenTo(this.model, 'change', () => {
             if (
                 !this.model.hasChanged('assignedUserId') &&
-                !this.model.hasChanged('usersIds')&&
+                !this.model.hasChanged('usersIds') &&
+                !this.model.hasChanged('assignedUsersIds') &&
                 !this.model.hasChanged('status')
             ) {
                 return;
@@ -67,12 +68,14 @@ class RemindersHandler  {
 
     control() {
         const usersIds = /** @type {string[]} */this.model.get('usersIds') || [];
+        const assignedUsersIds = /** @type {string[]} */this.model.get('assignedUsersIds') || [];
 
         if (
             !this.ignoreStatusList.includes(this.model.get('status')) &&
             (
                 this.model.get('assignedUserId') === this.user.id ||
-                usersIds.includes(this.user.id)
+                usersIds.includes(this.user.id) ||
+                assignedUsersIds.includes(this.user.id)
             )
         ) {
             this.view.showField('reminders');
