@@ -36,6 +36,7 @@ use Espo\ORM\Entity;
 use Espo\Core\FieldProcessing\Loader as LoaderInterface;
 use Espo\Core\FieldProcessing\Loader\Params;
 use Espo\Core\ORM\EntityManager;
+use stdClass;
 
 /**
  * @internal This class should not be removed as it's used by custom entities.
@@ -65,7 +66,7 @@ class Loader implements LoaderInterface
     }
 
     /**
-     * @return \stdClass[]
+     * @return object{seconds: int, type: string}[]
      */
     private function fetchReminderDataList(Entity $entity): array
     {
