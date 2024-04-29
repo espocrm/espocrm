@@ -762,11 +762,10 @@ class FieldManager
 
             $defaultParamValue = null;
 
-            switch ($params[$paramName]['type']) {
-                case 'bool':
-                    $defaultParamValue = false;
+            $paramType = $params[$paramName]['type'] ?? null;
 
-                    break;
+            if ($paramType === FieldType::BOOL) {
+                $defaultParamValue = false;
             }
 
             $actualValue = array_key_exists($paramName, $actualFieldDefs) ?
