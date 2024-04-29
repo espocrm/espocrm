@@ -32,6 +32,7 @@ namespace Espo\Core\ORM\Type;
 class FieldType
 {
     public const VARCHAR = 'varchar';
+    public const BOOL = 'bool';
     public const TEXT = 'text';
     public const INT = 'int';
     public const FLOAT = 'float';
