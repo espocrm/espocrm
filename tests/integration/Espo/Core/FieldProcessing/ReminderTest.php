@@ -29,11 +29,12 @@
 
 namespace tests\integration\Espo\Core\FieldProcessing;
 
-use Espo\Core\{
-    ORM\EntityManager,
-};
+use Espo\Core\Field\DateTime;
+use Espo\Core\ORM\EntityManager;
+use Espo\Modules\Crm\Entities\Reminder;
+use tests\integration\Core\BaseTestCase;
 
-class ReminderTest extends \tests\integration\Core\BaseTestCase
+class ReminderTest extends BaseTestCase
 {
     public function testOne(): void
     {
@@ -41,7 +42,7 @@ class ReminderTest extends \tests\integration\Core\BaseTestCase
         $entityManager = $this->getContainer()->get('entityManager');
 
         $meeting = $entityManager->createEntity('Meeting', [
-            'dateStart' => '2021-10-10 10:00:00',
+            'dateStart' => DateTime::createNow()->modify('+1 day')->toString(),
             'usersIds' => ['1'],
             'reminders' => [
                 (object) [
@@ -56,7 +57,7 @@ class ReminderTest extends \tests\integration\Core\BaseTestCase
         ]);
 
         $reminderList = $entityManager
-            ->getRDBRepository('Reminder')
+            ->getRDBRepository(Reminder::ENTITY_TYPE)
             ->where([
                 'entityId' => $meeting->getId(),
                 'entityType' => $meeting->getEntityType(),
