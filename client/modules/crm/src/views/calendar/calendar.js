@@ -1208,7 +1208,8 @@ class CalendarView extends View {
 
         const event = this.convertToFcEvent(attributes);
 
-        this.calendar.addEvent(event);
+        // true passed to prevent duplicates after re-fetch.
+        this.calendar.addEvent(event, true);
     }
 
     updateModel(model) {
