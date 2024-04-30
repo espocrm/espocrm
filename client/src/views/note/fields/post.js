@@ -124,6 +124,10 @@ class NotePostFieldView extends TextFieldView {
     initMentions() {
         const mentionPermissionLevel = this.getAcl().getPermissionLevel('mention');
 
+        if (mentionPermissionLevel === 'no' || this.model.isNew()) {
+            return;
+        }
+
         const buildUserListUrl = term => {
             let url = 'User?q=' + term + '&' + $.param({'primaryFilter': 'active'}) +
                 '&orderBy=name&maxSize=' + this.getConfig().get('recordsPerPage') +
@@ -135,10 +139,6 @@ class NotePostFieldView extends TextFieldView {
 
             return url;
         };
-
-        if (!(mentionPermissionLevel !== 'no' && this.model.isNew())) {
-            return;
-        }
 
         // noinspection JSUnresolvedReference
         this.$element.textcomplete([{
@@ -165,7 +165,8 @@ class NotePostFieldView extends TextFieldView {
                 return '$1@' + o.userName + '';
             },
         }], {zIndex: 1100});
-        this.once('remove', () => {
+
+        this.on('remove', () => {
             if (this.$element.length) {
                 this.$element.textcomplete('destroy');
             }

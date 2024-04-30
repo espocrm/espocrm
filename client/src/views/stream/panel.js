@@ -462,19 +462,19 @@ class PanelStreamView extends RelationshipPanelView {
             this.once('show', () => collection.fetch());
         }
 
-        const assignmentPermission = this.getAcl().getPermissionLevel('assignmentPermission');
+        const mentionPermission = this.getAcl().getPermissionLevel('mention');
 
         const buildUserListUrl = term => {
             let url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
 
-            if (assignmentPermission === 'team') {
+            if (mentionPermission === 'team') {
                 url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
             }
 
             return url;
         };
 
-        if (assignmentPermission !== 'no') {
+        if (mentionPermission !== 'no') {
             this.$textarea.textcomplete([{
                 match: /(^|\s)@(\w*)$/,
                 index: 2,
