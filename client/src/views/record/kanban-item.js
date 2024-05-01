@@ -39,8 +39,6 @@ class KanbanRecordItem extends View {
         };
     }
 
-    events = {}
-
     setup() {
         this.itemLayout = this.options.itemLayout;
         this.rowActionsView = this.options.rowActionsView;

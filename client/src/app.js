@@ -1409,7 +1409,9 @@ class App {
      * @private
      */
     initDomEventListeners() {
-        $(document).on('keydown.espo.button', e => {
+        const $document = $(document);
+
+        $document.on('keydown.espo.button', e => {
             if (
                 e.code !== 'Enter' ||
                 e.target.tagName !== 'A' ||
@@ -1425,6 +1427,41 @@ class App {
             $(e.target).click();
 
             e.preventDefault();
+        });
+
+        $document.on('show.bs.dropdown', e => {
+            if (!e.target.parentElement.classList.contains('fix-overflow')) {
+                return;
+            }
+
+            const isRight = e.target.classList.contains('pull-right');
+
+            const $ul = $(e.target.parentElement).find('.dropdown-menu');
+            const ul = $ul.get(0);
+
+            const rect = e.target.getBoundingClientRect();
+
+            const parent = $ul.offsetParent().get(0);
+
+            if (!parent) {
+                return;
+            }
+
+            const scrollTop = parent === window.document.documentElement ?
+                (document.documentElement.scrollTop || document.body.scrollTop) :
+                parent.scrollTop;
+
+            const top = rect.top + scrollTop + e.target.getBoundingClientRect().height;
+
+            const left = isRight ?
+                rect.left - $(ul).outerWidth() + rect.width:
+                rect.left
+
+            $ul.css({
+                top: top,
+                left: left,
+                right: 'auto',
+            });
         });
     }
 

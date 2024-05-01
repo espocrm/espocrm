@@ -4,7 +4,7 @@
         <div>
             {{#if isFirst}}
             {{#unless rowActionsDisabled}}
-            <div class="pull-right item-menu-container">{{{../itemMenu}}}</div>
+            <div class="pull-right item-menu-container fix-overflow">{{{../itemMenu}}}</div>
             {{/unless}}
             {{/if}}
             <div class="form-group">
