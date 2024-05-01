@@ -57,6 +57,7 @@ import Ajax from 'ajax';
 import NumberUtil from 'number-util';
 import PageTitle from 'page-title';
 import BroadcastChannel from 'broadcast-channel';
+import uiAppInit from 'ui/app-init';
 
 /**
  * A main application class.
@@ -126,7 +127,7 @@ class App {
         this.initCache(options)
             .then(() => this.init(options, callback));
 
-        this.initDomEventListeners();
+        uiAppInit();
     }
 
     /**
@@ -1402,66 +1403,6 @@ class App {
 
                 this.logout(true);
             }
-        });
-    }
-
-    /**
-     * @private
-     */
-    initDomEventListeners() {
-        const $document = $(document);
-
-        $document.on('keydown.espo.button', e => {
-            if (
-                e.code !== 'Enter' ||
-                e.target.tagName !== 'A' ||
-                e.target.getAttribute('role') !== 'button' ||
-                e.target.getAttribute('href') ||
-                e.ctrlKey ||
-                e.altKey ||
-                e.metaKey
-            ) {
-                return;
-            }
-
-            $(e.target).click();
-
-            e.preventDefault();
-        });
-
-        $document.on('show.bs.dropdown', e => {
-            if (!e.target.parentElement.classList.contains('fix-overflow')) {
-                return;
-            }
-
-            const isRight = e.target.classList.contains('pull-right');
-
-            const $ul = $(e.target.parentElement).find('.dropdown-menu');
-            const ul = $ul.get(0);
-
-            const rect = e.target.getBoundingClientRect();
-
-            const parent = $ul.offsetParent().get(0);
-
-            if (!parent) {
-                return;
-            }
-
-            const scrollTop = parent === window.document.documentElement ?
-                (document.documentElement.scrollTop || document.body.scrollTop) :
-                parent.scrollTop;
-
-            const top = rect.top + scrollTop + e.target.getBoundingClientRect().height;
-
-            const left = isRight ?
-                rect.left - $(ul).outerWidth() + rect.width:
-                rect.left
-
-            $ul.css({
-                top: top,
-                left: left,
-                right: 'auto',
-            });
         });
     }
 
