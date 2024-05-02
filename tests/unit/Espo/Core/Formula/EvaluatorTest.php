@@ -1529,4 +1529,21 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals("test \"hello'", $result);
     }
+
+    public function testBase64(): void
+    {
+        $expression = "util\\base64Encode('1')";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $value = $this->evaluator->process($expression);
+
+        $this->assertEquals(base64_encode('1'), $value);
+
+        $expression = "util\\base64Decode('" . base64_encode('1') . "')";
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $value = $this->evaluator->process($expression);
+
+        $this->assertEquals('1', $value);
+    }
 }

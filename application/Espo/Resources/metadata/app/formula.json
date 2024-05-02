@@ -373,6 +373,16 @@
             "returnType": "string"
         },
         {
+            "name": "util\\base64Encode",
+            "insertText": "util\\base64Encode(STRING)",
+            "returnType": "string"
+        },
+        {
+            "name": "util\\base64Decode",
+            "insertText": "util\\base64Decode(STRING)",
+            "returnType": "string"
+        },
+        {
             "name": "object\\create",
             "insertText": "object\\create()",
             "returnType": "object"
@@ -578,6 +588,8 @@
         "ext\\acl\\checkEntity": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\CheckEntityType",
         "ext\\acl\\checkScope": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\CheckScopeType",
         "ext\\acl\\getLevel": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\GetLevelType",
-        "ext\\acl\\getPermissionLevel": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\GetPermissionLevelType"
+        "ext\\acl\\getPermissionLevel": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\GetPermissionLevelType",
+        "util\\base64Encode": "Espo\\Core\\Formula\\Functions\\UtilGroup\\Base64EncodeType",
+        "util\\base64Decode": "Espo\\Core\\Formula\\Functions\\UtilGroup\\Base64DecodeType"
     }
 }
