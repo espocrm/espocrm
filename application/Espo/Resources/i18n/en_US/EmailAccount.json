@@ -47,6 +47,9 @@
         "Send Test Email": "Send Test Email",
         "SMTP": "SMTP"
     },
+    "presetFilters": {
+        "active": "Active"
+    },
     "messages": {
         "couldNotConnectToImap": "Could not connect to IMAP server",
         "connectionIsOk": "Connection is Ok"

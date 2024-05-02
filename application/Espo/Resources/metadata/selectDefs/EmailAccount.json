@@ -1,5 +1,8 @@
 {
     "accessControlFilterClassNameMap": {
         "mandatory": "Espo\\Classes\\Select\\EmailAccount\\AccessControlFilters\\Mandatory"
+    },
+    "primaryFilterClassNameMap": {
+        "active": "Espo\\Classes\\Select\\EmailAccount\\PrimaryFilters\\Active"
     }
 }

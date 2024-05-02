@@ -40,6 +40,8 @@ class EmailFilter extends Entity
     public const ACTION_MOVE_TO_GROUP_FOLDER = 'Move to Group Folder';
     public const ACTION_NONE = 'None';
 
+    public const STATUS_ACTIVE = 'Active';
+
     /**
      * @return self::ACTION_*|null
      */

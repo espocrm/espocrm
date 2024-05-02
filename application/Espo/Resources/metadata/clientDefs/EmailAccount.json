@@ -84,6 +84,11 @@
             }
         }
     },
+    "filterList": [
+        {
+            "name": "active"
+        }
+    ],
     "relationshipPanels": {
         "filters": {
             "select": false,
