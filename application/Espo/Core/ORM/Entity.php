@@ -31,6 +31,7 @@ namespace Espo\Core\ORM;
 
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Query\Part\Order;
+use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 
 use LogicException;
@@ -64,10 +65,8 @@ class Entity extends BaseEntity
      */
     public function hasLinkParentField(string $field): bool
     {
-        return
-            $this->getAttributeType($field . 'Type') == 'foreignType' &&
-            $this->hasAttribute($field . 'Id') &&
-            $this->hasRelation($field);
+        return $this->getAttributeType($field . 'Type') === AttributeType::FOREIGN_TYPE &&
+            $this->hasAttribute($field . 'Id');
     }
 
     /**

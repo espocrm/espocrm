@@ -79,12 +79,6 @@ class Loader implements LoaderInterface
 
             $name = $fieldDefs->getName();
 
-            if (!$entityDefs->hasRelation($fieldDefs->getName())) {
-                // Otherwise, loadParentNameField produces an error.
-                // @todo Revise.
-                continue;
-            }
-
             $list[] = $name;
         }
 
