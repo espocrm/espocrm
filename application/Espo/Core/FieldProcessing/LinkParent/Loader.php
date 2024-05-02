@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\LinkParent;
 
+use Espo\Core\ORM\Type\FieldType;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\FieldProcessing\Loader as LoaderInterface;
@@ -72,7 +73,7 @@ class Loader implements LoaderInterface
         $entityDefs = $this->ormDefs->getEntity($entityType);
 
         foreach ($entityDefs->getFieldList() as $fieldDefs) {
-            if ($fieldDefs->getType() !== 'linkParent') {
+            if ($fieldDefs->getType() !== FieldType::LINK_PARENT) {
                 continue;
             }
 
