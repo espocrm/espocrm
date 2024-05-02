@@ -548,13 +548,36 @@
             "name": "ext\\currency\\convert",
             "insertText": "ext\\currency\\convert(AMOUNT, FROM_CODE)",
             "returnType": "string"
+        },
+        {
+            "name": "ext\\acl\\checkEntity",
+            "insertText": "ext\\acl\\checkEntity(USER_ID, ENTITY_TYPE, ID, ACTION)",
+            "returnType": "bool"
+        },
+        {
+            "name": "ext\\acl\\checkScope",
+            "insertText": "ext\\acl\\checkScope(USER_ID, SCOPE, ACTION)",
+            "returnType": "bool"
+        },
+        {
+            "name": "ext\\acl\\getLevel",
+            "insertText": "ext\\acl\\getLevel(USER_ID, SCOPE, ACTION)",
+            "returnType": "string"
+        },
+        {
+            "name": "ext\\acl\\getPermissionLevel",
+            "insertText": "ext\\acl\\getPermissionLevel(USER_ID, PERMISSION)",
+            "returnType": "string"
         }
     ],
     "functionClassNameMap": {
         "log\\info": "Espo\\Core\\Formula\\Functions\\LogGroup\\InfoType",
         "log\\notice": "Espo\\Core\\Formula\\Functions\\LogGroup\\NoticeType",
         "log\\warning": "Espo\\Core\\Formula\\Functions\\LogGroup\\WarningType",
-        "log\\error": "Espo\\Core\\Formula\\Functions\\LogGroup\\ErrorType"
-
+        "log\\error": "Espo\\Core\\Formula\\Functions\\LogGroup\\ErrorType",
+        "ext\\acl\\checkEntity": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\CheckEntityType",
+        "ext\\acl\\checkScope": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\CheckScopeType",
+        "ext\\acl\\getLevel": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\GetLevelType",
+        "ext\\acl\\getPermissionLevel": "Espo\\Core\\Formula\\Functions\\ExtGroup\\AclGroup\\GetPermissionLevelType"
     }
 }

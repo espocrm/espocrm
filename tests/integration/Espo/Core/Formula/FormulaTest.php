@@ -29,6 +29,7 @@
 
 namespace tests\integration\Espo\Core\Formula;
 
+use Espo\Core\Acl\Table;
 use Espo\Core\Field\DateTimeOptional;
 use Espo\Core\Formula\Manager;
 use Espo\Entities\User;
@@ -902,5 +903,61 @@ class FormulaTest extends BaseTestCase
 
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertTrue($fm->run($script, $account));
+    }
+
+    public function testAcl(): void
+    {
+        $em = $this->getEntityManager();
+        $fm = $this->getContainer()->getByClass(Manager::class);
+
+        $user = $this->createUser('test', [
+            'massUpdatePermission' => Table::LEVEL_YES,
+            'data' => [
+                Account::ENTITY_TYPE => [
+                    'create' => Table::LEVEL_NO,
+                    'read' => Table::LEVEL_ALL,
+                    'edit' => Table::LEVEL_OWN,
+                    'delete' => Table::LEVEL_NO,
+                ],
+            ],
+        ]);
+
+        $account1 = $em->createEntity(Account::ENTITY_TYPE, [
+            'assignedUserId' => $user->getId(),
+        ]);
+
+        $account2 = $em->createEntity(Account::ENTITY_TYPE);
+
+        $script = "ext\\acl\\checkEntity('{$user->getId()}', 'Account', '{$account2->getId()}')";
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assertTrue($fm->run($script));
+
+        $script = "ext\\acl\\checkEntity('{$user->getId()}', 'Account', '{$account1->getId()}', 'edit')";
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assertTrue($fm->run($script));
+
+        $script = "ext\\acl\\checkEntity('{$user->getId()}', 'Account', '{$account2->getId()}', 'edit')";
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assertFalse($fm->run($script));
+
+        $script = "ext\\acl\\checkScope('{$user->getId()}', 'Account')";
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assertTrue($fm->run($script));
+
+        $script = "ext\\acl\\checkScope('{$user->getId()}', 'Account', 'delete')";
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assertFalse($fm->run($script));
+
+        $script = "ext\\acl\\getLevel('{$user->getId()}', 'Account', 'delete')";
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assertEquals(Table::LEVEL_NO, $fm->run($script));
+
+        $script = "ext\\acl\\getLevel('{$user->getId()}', 'Account', 'read')";
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assertEquals(Table::LEVEL_ALL, $fm->run($script));
+
+        $script = "ext\\acl\\getPermissionLevel('{$user->getId()}', 'massUpdate')";
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->assertEquals(Table::LEVEL_YES, $fm->run($script));
     }
 }
