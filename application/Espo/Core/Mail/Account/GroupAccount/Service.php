@@ -29,12 +29,16 @@
 
 namespace Espo\Core\Mail\Account\GroupAccount;
 
+use Espo\Core\Exceptions\ErrorSilent;
 use Espo\Core\Mail\Account\Account as Account;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Mail\Account\Fetcher;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory;
 
+use Espo\Core\Utils\Log;
+use Exception;
+use Laminas\Mail\Exception\ExceptionInterface;
 use Laminas\Mail\Message;
 
 class Service
@@ -42,7 +46,8 @@ class Service
     public function __construct(
         private Fetcher $fetcher,
         private AccountFactory $accountFactory,
-        private StorageFactory $storageFactory
+        private StorageFactory $storageFactory,
+        private Log $log
     ) {}
 
     /**
@@ -88,9 +93,21 @@ class Service
                 ->withImapHandlerClassName($account->getImapHandlerClassName());
         }
 
-        $storage = $this->storageFactory->createWithParams($params);
+        try {
+            $storage = $this->storageFactory->createWithParams($params);
+            $storage->getFolderNames();
+        }
+        catch (Exception $e) {
+            $this->log->error("IMAP test connection failed; {message}", [
+                'exception' => $e,
+                'message' => $e->getMessage(),
+            ]);
 
-        $storage->getFolderNames();
+            $message = $e instanceof ExceptionInterface ?
+                $e->getMessage() : '';
+
+            throw new ErrorSilent($message);
+        }
     }
 
     private function getPassword(Params $params, Account $account): ?string
