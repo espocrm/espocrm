@@ -29,10 +29,8 @@
 
 namespace Espo\Core\Formula\Functions\EnvGroup;
 
-use Espo\Core\Formula\{
-    Functions\BaseFunction,
-    ArgumentList,
-};
+use Espo\Core\Formula\ArgumentList;
+use Espo\Core\Formula\Functions\BaseFunction;
 
 use Espo\Core\Di;
 
@@ -40,6 +38,13 @@ class UserAttributeType extends BaseFunction implements
     Di\UserAware
 {
     use Di\UserSetter;
+
+    /** @var string[] */
+    private array $forbiddenAttributeList = [
+        'password',
+        'apiKey',
+        'secretKey',
+    ];
 
     public function process(ArgumentList $args)
     {
@@ -51,6 +56,10 @@ class UserAttributeType extends BaseFunction implements
 
         if (!is_string($attribute)) {
             $this->throwBadArgumentType(1, 'string');
+        }
+
+        if (in_array($attribute, $this->forbiddenAttributeList)) {
+            return null;
         }
 
         return $this->user->get($attribute);
