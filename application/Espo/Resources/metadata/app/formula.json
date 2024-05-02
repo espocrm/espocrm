@@ -235,132 +235,160 @@
         {
             "name": "entity\\attribute",
             "insertText": "entity\\attribute(ATTRIBUTE)",
-            "returnType": "mixed"
+            "returnType": "mixed",
+            "unsafe": true
         },
         {
             "name": "entity\\attributeFetched",
             "insertText": "entity\\attributeFetched(ATTRIBUTE)",
-            "returnType": "mixed"
+            "returnType": "mixed",
+            "unsafe": true
         },
         {
             "name": "entity\\setAttribute",
-            "insertText": "entity\\setAttribute(ATTRIBUTE, VALUE)"
+            "insertText": "entity\\setAttribute(ATTRIBUTE, VALUE)",
+            "unsafe": true
         },
         {
             "name": "entity\\clearAttribute",
-            "insertText": "entity\\clearAttribute(ATTRIBUTE)"
+            "insertText": "entity\\clearAttribute(ATTRIBUTE)",
+            "unsafe": true
         },
         {
             "name": "entity\\addLinkMultipleId",
-            "insertText": "entity\\addLinkMultipleId(LINK, ID)"
+            "insertText": "entity\\addLinkMultipleId(LINK, ID)",
+            "unsafe": true
         },
         {
             "name": "entity\\hasLinkMultipleId",
             "insertText": "entity\\hasLinkMultipleId(LINK, ID)",
-            "returnType": "bool"
+            "returnType": "bool",
+            "unsafe": true
         },
         {
             "name": "entity\\removeLinkMultipleId",
-            "insertText": "entity\\removeLinkMultipleId(LINK, ID)"
+            "insertText": "entity\\removeLinkMultipleId(LINK, ID)",
+            "unsafe": true
         },
         {
             "name": "entity\\getLinkColumn",
             "insertText": "entity\\getLinkColumn(LINK, ID, COLUMN)",
-            "returnType": "mixed"
+            "returnType": "mixed",
+            "unsafe": true
         },
         {
             "name": "entity\\setLinkMultipleColumn",
-            "insertText": "entity\\setLinkMultipleColumn(LINK, ID, COLUMN, VALUE)"
+            "insertText": "entity\\setLinkMultipleColumn(LINK, ID, COLUMN, VALUE)",
+            "unsafe": true
         },
         {
             "name": "entity\\isRelated",
             "insertText": "entity\\isRelated(LINK, ID)",
-            "returnType": "bool"
+            "returnType": "bool",
+            "unsafe": true
         },
         {
             "name": "entity\\sumRelated",
             "insertText": "entity\\sumRelated(LINK, FIELD, FILTER)",
-            "returnType": "int|float"
+            "returnType": "int|float",
+            "unsafe": true
         },
         {
             "name": "entity\\countRelated",
             "insertText": "entity\\countRelated(LINK, FILTER)",
-            "returnType": "int"
+            "returnType": "int",
+            "unsafe": true
         },
         {
             "name": "record\\exists",
             "insertText": "record\\exists(ENTITY_TYPE, KEY, VALUE)",
-            "returnType": "bool"
+            "returnType": "bool",
+            "unsafe": true
         },
         {
             "name": "record\\count",
             "insertText": "record\\count(ENTITY_TYPE, KEY, VALUE)",
-            "returnType": "int"
+            "returnType": "int",
+            "unsafe": true
         },
         {
             "name": "record\\attribute",
             "insertText": "record\\attribute(ENTITY_TYPE, ID, ATTRIBUTE)",
-            "returnType": "mixed"
+            "returnType": "mixed",
+            "unsafe": true
         },
         {
             "name": "record\\findOne",
             "insertText": "record\\findOne(ENTITY_TYPE, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)",
-            "returnType": "string"
+            "returnType": "string",
+            "unsafe": true
         },
         {
             "name": "record\\findMany",
             "insertText": "record\\findMany(ENTITY_TYPE, LIMIT, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)",
-            "returnType": "string"
+            "returnType": "string",
+            "unsafe": true
         },
         {
             "name": "record\\findRelatedOne",
             "insertText": "record\\findRelatedOne(ENTITY_TYPE, ID, LINK, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)",
-            "returnType": "string"
+            "returnType": "string",
+            "unsafe": true
         },
         {
             "name": "record\\findRelatedMany",
             "insertText": "record\\findRelatedMany(ENTITY_TYPE, ID, LINK, LIMIT, ORDER_BY, ORDER, KEY1, VALUE1, KEY2, VALUE2)",
-            "returnType": "string[]"
+            "returnType": "string[]",
+            "unsafe": true
         },
         {
             "name": "record\\fetch",
             "insertText": "record\\fetch(ENTITY_TYPE, ID)",
-            "returnType": "?object"
+            "returnType": "?object",
+            "unsafe": true
         },
         {
             "name": "record\\relate",
-            "insertText": "record\\relate(ENTITY_TYPE, ID, LINK, FOREIGN_ID)"
+            "insertText": "record\\relate(ENTITY_TYPE, ID, LINK, FOREIGN_ID)",
+            "unsafe": true
         },
         {
             "name": "record\\unrelate",
-            "insertText": "record\\unrelate(ENTITY_TYPE, ID, LINK, FOREIGN_ID)"
+            "insertText": "record\\unrelate(ENTITY_TYPE, ID, LINK, FOREIGN_ID)",
+            "unsafe": true
         },
         {
             "name": "record\\create",
             "insertText": "record\\create(ENTITY_TYPE, ATTRIBUTE1, VALUE1, ATTRIBUTE2, VALUE2)",
-            "returnType": "string"
+            "returnType": "string",
+            "unsafe": true
         },
         {
             "name": "record\\update",
-            "insertText": "record\\update(ENTITY_TYPE, ID, ATTRIBUTE1, VALUE1, ATTRIBUTE2, VALUE2)"
+            "insertText": "record\\update(ENTITY_TYPE, ID, ATTRIBUTE1, VALUE1, ATTRIBUTE2, VALUE2)",
+            "unsafe": true
         },
         {
             "name": "record\\delete",
-            "insertText": "record\\delete(ENTITY_TYPE, ID)"
+            "insertText": "record\\delete(ENTITY_TYPE, ID)",
+            "unsafe": true
         },
         {
             "name": "record\\relationColumn",
             "insertText": "record\\relationColumn(ENTITY_TYPE, ID, LINK, FOREIGN_ID, COLUMN)",
-            "returnType": "mixed"
+            "returnType": "mixed",
+            "unsafe": true
         },
         {
             "name": "record\\updateRelationColumn",
-            "insertText": "record\\updateRelationColumn(ENTITY_TYPE, ID, LINK, FOREIGN_ID, COLUMN, VALUE)"
+            "insertText": "record\\updateRelationColumn(ENTITY_TYPE, ID, LINK, FOREIGN_ID, COLUMN, VALUE)",
+            "unsafe": true
         },
         {
             "name": "env\\userAttribute",
             "insertText": "env\\userAttribute(ATTRIBUTE)",
-            "returnType": "mixed"
+            "returnType": "mixed",
+            "unsafe": true
         },
         {
             "name": "util\\generateId",
@@ -472,19 +500,23 @@
         },
         {
             "name": "log\\info",
-            "insertText": "log\\info(MESSAGE)"
+            "insertText": "log\\info(MESSAGE)",
+            "unsafe": true
         },
         {
             "name": "log\\notice",
-            "insertText": "log\\notice(MESSAGE)"
+            "insertText": "log\\notice(MESSAGE)",
+            "unsafe": true
         },
         {
             "name": "log\\warning",
-            "insertText": "log\\warning(MESSAGE)"
+            "insertText": "log\\warning(MESSAGE)",
+            "unsafe": true
         },
         {
             "name": "log\\error",
-            "insertText": "log\\error(MESSAGE)"
+            "insertText": "log\\error(MESSAGE)",
+            "unsafe": true
         },
         {
             "name": "json\\retrieve",
@@ -499,21 +531,25 @@
         {
             "name": "ext\\email\\send",
             "insertText": "ext\\email\\send(EMAIL_ID)",
-            "returnType": "bool"
+            "returnType": "bool",
+            "unsafe": true
         },
         {
             "name": "ext\\sms\\send",
             "insertText": "ext\\sms\\send(SMS_ID)",
-            "returnType": "bool"
+            "returnType": "bool",
+            "unsafe": true
         },
         {
             "name": "ext\\email\\applyTemplate",
-            "insertText": "ext\\email\\applyTemplate(EMAIL_ID, EMAIL_TEMPLATE_ID)"
+            "insertText": "ext\\email\\applyTemplate(EMAIL_ID, EMAIL_TEMPLATE_ID)",
+            "unsafe": true
         },
         {
             "name": "ext\\pdf\\generate",
             "insertText": "ext\\pdf\\generate(ENTITY_TYPE, ENTITY_ID, TEMPLATE_ID, FILENAME)",
-            "returnType": "string"
+            "returnType": "string",
+            "unsafe": true
         },
         {
             "name": "ext\\workingTime\\addWorkingDays",
@@ -547,12 +583,14 @@
         },
         {
             "name": "ext\\user\\sendAccessInfo",
-            "insertText": "ext\\user\\sendAccessInfo(USER_ID)"
+            "insertText": "ext\\user\\sendAccessInfo(USER_ID)",
+            "unsafe": true
         },
         {
             "name": "ext\\email\\send",
             "insertText": "ext\\email\\send(EMAIL_ID)",
-            "returnType": "bool"
+            "returnType": "bool",
+            "unsafe": true
         },
         {
             "name": "ext\\currency\\convert",
@@ -562,22 +600,26 @@
         {
             "name": "ext\\acl\\checkEntity",
             "insertText": "ext\\acl\\checkEntity(USER_ID, ENTITY_TYPE, ID, ACTION)",
-            "returnType": "bool"
+            "returnType": "bool",
+            "unsafe": true
         },
         {
             "name": "ext\\acl\\checkScope",
             "insertText": "ext\\acl\\checkScope(USER_ID, SCOPE, ACTION)",
-            "returnType": "bool"
+            "returnType": "bool",
+            "unsafe": true
         },
         {
             "name": "ext\\acl\\getLevel",
             "insertText": "ext\\acl\\getLevel(USER_ID, SCOPE, ACTION)",
-            "returnType": "string"
+            "returnType": "string",
+            "unsafe": true
         },
         {
             "name": "ext\\acl\\getPermissionLevel",
             "insertText": "ext\\acl\\getPermissionLevel(USER_ID, PERMISSION)",
-            "returnType": "string"
+            "returnType": "string",
+            "unsafe": true
         }
     ],
     "functionClassNameMap": {

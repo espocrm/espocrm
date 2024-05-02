@@ -31,6 +31,7 @@ namespace tests\integration\Espo\Core\Formula;
 
 use Espo\Core\Acl\Table;
 use Espo\Core\Field\DateTimeOptional;
+use Espo\Core\Formula\Exceptions\UnsafeFunction;
 use Espo\Core\Formula\Manager;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Account;
@@ -959,5 +960,17 @@ class FormulaTest extends BaseTestCase
         $script = "ext\\acl\\getPermissionLevel('{$user->getId()}', 'massUpdate')";
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->assertEquals(Table::LEVEL_YES, $fm->run($script));
+    }
+
+    public function testSafe(): void
+    {
+        $fm = $this->getContainer()->getByClass(Manager::class);
+
+        $script = "record\\create('Account')";
+
+        $this->expectException(UnsafeFunction::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $fm->runSafe($script);
     }
 }

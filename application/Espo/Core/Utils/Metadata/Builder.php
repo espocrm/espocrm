@@ -40,6 +40,7 @@ class Builder
     /** @var array<int, string[]> */
     private $forceAppendPathList = [
         ['app', 'rebuild', 'actionClassNameList'],
+        ['app', 'formula', 'functionList'],
         ['app', 'fieldProcessing', 'readLoaderClassNameList'],
         ['app', 'fieldProcessing', 'listLoaderClassNameList'],
         ['app', 'fieldProcessing', 'saverClassNameList'],

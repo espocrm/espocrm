@@ -31,14 +31,16 @@ namespace tests\unit\Espo\Core\Formula;
 
 use Espo\Core\Formula\Evaluator;
 use Espo\Core\Formula\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\UnsafeFunction;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Formula\Exceptions\SyntaxError;
 use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
 
+use PHPUnit\Framework\TestCase;
 use tests\unit\ContainerMocker;
 
-class EvaluatorTest extends \PHPUnit\Framework\TestCase
+class EvaluatorTest extends TestCase
 {
     /**
      * @var Evaluator
@@ -59,7 +61,7 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $injectableFactory = new InjectableFactory($container);
 
-        $this->evaluator = new Evaluator($injectableFactory);
+        $this->evaluator = new Evaluator($injectableFactory, [], ['test\\unsafe']);
     }
 
     protected function tearDown() : void
@@ -1545,5 +1547,25 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
         $value = $this->evaluator->process($expression);
 
         $this->assertEquals('1', $value);
+    }
+
+    public function testUnsafe1(): void
+    {
+        $expression = "util\\base64Encode(test\\unsafe());";
+
+        $this->expectException(UnsafeFunction::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->processSafe($expression);
+    }
+
+    public function testUnsafe2(): void
+    {
+        $expression = "test\\unsafe();";
+
+        $this->expectException(UnsafeFunction::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->processSafe($expression);
     }
 }
