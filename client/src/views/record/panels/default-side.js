@@ -55,11 +55,11 @@ class DefaultSidePanelView extends SidePanelView {
         const allFieldList = this.getFieldManager().getEntityTypeFieldList(this.model.entityType);
 
         this.hasComplexCreated =
-            allFieldList.includes('createdAt') &&
+            allFieldList.includes('createdAt') ||
             allFieldList.includes('createdBy');
 
         this.hasComplexModified =
-            allFieldList.includes('modifiedAt') &&
+            allFieldList.includes('modifiedAt') ||
             allFieldList.includes('modifiedBy');
 
         super.setup();
