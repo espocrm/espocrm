@@ -321,6 +321,17 @@ class LinkCheck
      */
     public function processLinkForeign(Entity $entity, string $link, Entity $foreignEntity): void
     {
+        $this->processLinkForeignInternal($entity, $link, $foreignEntity);
+        $this->processLinkAlreadyLinkedCheck($entity, $link, $foreignEntity);
+    }
+
+    /**
+     * Check link access for a specific foreign entity.
+     *
+     * @throws Forbidden
+     */
+    private function processLinkForeignInternal(Entity $entity, string $link, Entity $foreignEntity): void
+    {
         $toSkip = $this->linkForeignAccessCheckMany($entity->getEntityType(), $link, $foreignEntity);
 
         if ($toSkip) {
@@ -337,7 +348,7 @@ class LinkCheck
      */
     public function processUnlinkForeign(Entity $entity, string $link, Entity $foreignEntity): void
     {
-        $this->processLinkForeign($entity, $link, $foreignEntity);
+        $this->processLinkForeignInternal($entity, $link, $foreignEntity);
         $this->processUnlinkForeignRequired($entity, $link, $foreignEntity);
     }
 
@@ -696,5 +707,42 @@ class LinkCheck
         }
 
         return $names;
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function processLinkAlreadyLinkedCheck(Entity $entity, string $link, Entity $foreignEntity): void
+    {
+        if (!$this->getParam($entity->getEntityType(), $link, 'linkOnlyNotLinked')) {
+            return;
+        }
+
+        $entityType = $entity->getEntityType();
+
+        $foreign = $this->ormDefs
+            ->getEntity($entityType)
+            ->tryGetRelation($link)
+            ?->tryGetForeignRelationName();
+
+        if (!$foreign) {
+            return;
+        }
+
+        $one = $this->entityManager
+            ->getRDBRepository($foreignEntity->getEntityType())
+            ->getRelation($foreignEntity, $foreign)
+            ->findOne();
+
+        if (!$one) {
+            return;
+        }
+
+        throw ForbiddenSilent::createWithBody(
+            "Cannot link as the record is already linked ($entityType:$link).",
+            ErrorBody::create()
+                ->withMessageTranslation('cannotLinkAlreadyLinked')
+                ->encode()
+        );
     }
 }

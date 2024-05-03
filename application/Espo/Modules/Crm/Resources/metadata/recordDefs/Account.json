@@ -6,6 +6,9 @@
         },
         "targetLists": {
             "mandatoryAttributeList": ["isOptedOut"]
+        },
+        "opportunities": {
+            "linkOnlyNotLinked": true
         }
     }
 }

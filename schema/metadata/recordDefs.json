@@ -158,6 +158,10 @@
                     "massLink": {
                         "type": "boolean",
                         "default": "Allow mass link. As of v8.2."
+                    },
+                    "linkOnlyNotLinked": {
+                        "type": "boolean",
+                        "description": "Allow linking only if a record is not linked with any. As of v8.3."
                     }
                 }
             }

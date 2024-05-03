@@ -397,6 +397,7 @@
         "cannotRelateNonExisting": "Can't relate with non-existing {foreignEntityType} record.",
         "cannotRelateForbidden": "Can't relate with forbidden {foreignEntityType} record. `{action}` access required.",
         "cannotRelateForbiddenLink": "No access to link '{link}'.",
+        "cannotLinkAlreadyLinked": "Cannot link an already linked record.",
         "error404": "The url you requested can't be handled.",
         "error403": "You don't have an access to this area.",
         "emptyMassUpdate": "No fields available for Mass Update.",
