@@ -53,6 +53,7 @@ return [
         'database',
         'crud',
         'logger',
+        'loggerDatabase',
         'isInstalled',
         'systemUser',
         'defaultPermissions',

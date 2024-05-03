@@ -1,0 +1,11 @@
+[
+    {
+        "rows": [
+            [{"name":"level"}, {"name": "code"}],
+            [{"name": "message"}],
+            [{"name": "exceptionClass"}],
+            [{"name": "file"}],
+            [{"name": "line"}, false]
+        ]
+    }
+]

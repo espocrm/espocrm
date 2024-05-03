@@ -1,0 +1,8 @@
+[
+    "createdAt",
+    "level",
+    "code",
+    "exceptionClass",
+    "file",
+    "line"
+]

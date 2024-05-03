@@ -295,5 +295,6 @@ return [
     'listPagination' => true,
     'starsLimit' => 500,
     'quickSearchFullTextAppendWildcard' => false,
+    'loggerDatabase' => false,
     'isInstalled' => false,
 ];
