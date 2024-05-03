@@ -29,16 +29,14 @@
 
 namespace Espo\Core\Formula\Functions\EnvGroup;
 
-use Espo\Core\Formula\ArgumentList;
-use Espo\Core\Formula\Functions\BaseFunction;
+use Espo\Core\Formula\EvaluatedArgumentList;
+use Espo\Core\Formula\Exceptions\BadArgumentType;
+use Espo\Core\Formula\Exceptions\TooFewArguments;
+use Espo\Core\Formula\Func;
+use Espo\Entities\User;
 
-use Espo\Core\Di;
-
-class UserAttributeType extends BaseFunction implements
-    Di\UserAware
+class UserAttributeType implements Func
 {
-    use Di\UserSetter;
-
     /** @var string[] */
     private array $forbiddenAttributeList = [
         'password',
@@ -46,16 +44,20 @@ class UserAttributeType extends BaseFunction implements
         'secretKey',
     ];
 
-    public function process(ArgumentList $args)
+    public function __construct(
+        private User $user
+    ) {}
+
+    public function process(EvaluatedArgumentList $arguments): mixed
     {
-        if (count($args) < 1) {
-            $this->throwTooFewArguments();
+        if (count($arguments) < 1) {
+            throw TooFewArguments::create(1);
         }
 
-        $attribute = $this->evaluate($args[0]);
+        $attribute = $arguments[0];
 
         if (!is_string($attribute)) {
-            $this->throwBadArgumentType(1, 'string');
+            throw BadArgumentType::create(1, 'string');
         }
 
         if (in_array($attribute, $this->forbiddenAttributeList)) {
