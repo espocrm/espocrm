@@ -35,16 +35,18 @@ namespace Espo\Core\Formula\Exceptions;
 class BadArgumentValue extends Error
 {
     private ?int $position = null;
+    private ?string $logMessage = null;
 
     /**
      * Create.
      *
      * @param int $position An argument position.
      */
-    public static function create(int $position): self
+    public static function create(int $position, ?string $message = null): self
     {
         $obj = new self();
         $obj->position = $position;
+        $obj->logMessage = $message;
 
         return $obj;
     }
@@ -53,6 +55,12 @@ class BadArgumentValue extends Error
     {
         $position = (string) ($this->position ?? '?');
 
-        return "Bad argument value on position {$position}.";
+        $message = "Bad argument value on position $position.";
+
+        if ($this->logMessage) {
+            $message .= " " . $this->logMessage;
+        }
+
+        return $message;
     }
 }
