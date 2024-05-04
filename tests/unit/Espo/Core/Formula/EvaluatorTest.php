@@ -1568,4 +1568,16 @@ class EvaluatorTest extends TestCase
         /** @noinspection PhpUnhandledExceptionInspection */
         $this->evaluator->processSafe($expression);
     }
+
+    public function testStringsWithOperator(): void
+    {
+        $expression = "\$a = '='";
+
+        $vars = (object) [];
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals("=", $vars->a);
+    }
 }
