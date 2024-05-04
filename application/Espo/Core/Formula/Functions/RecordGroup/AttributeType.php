@@ -29,7 +29,7 @@
 
 namespace Espo\Core\Formula\Functions\RecordGroup;
 
-use Espo\Core\Exceptions\Error;
+use Espo\Core\Formula\Exceptions\Error;
 
 use Espo\Core\Di;
 
