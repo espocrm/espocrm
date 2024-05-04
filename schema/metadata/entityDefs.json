@@ -266,6 +266,19 @@
                                     "state"
                                 ],
                                 "description": "A label type."
+                            },
+                            "style": {
+                                "type": "object",
+                                "additionalProperties": {
+                                    "enum": [
+                                        "default",
+                                        "success",
+                                        "info",
+                                        "warning",
+                                        "danger",
+                                        "primary"
+                                    ]
+                                }
                             }
                         }
                     }
