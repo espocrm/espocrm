@@ -29,9 +29,9 @@
 
 namespace Espo\Core\Job;
 
-use Espo\Core\Exceptions\Error;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\ClassFinder;
+use RuntimeException;
 
 class JobFactory
 {
@@ -45,14 +45,13 @@ class JobFactory
      * Create a job by a scheduled job name.
      *
      * @return Job|JobDataLess
-     * @throws Error
      */
     public function create(string $name): object
     {
         $className = $this->getClassName($name);
 
         if (!$className) {
-            throw new Error("Job '$name' not found.");
+            throw new RuntimeException("Job '$name' not found.");
         }
 
         return $this->createByClassName($className);
