@@ -1,4 +1,3 @@
-<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -27,50 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+import ListRecordView from 'views/record/list';
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Controllers\Record;
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use stdClass;
+export default class extends ListRecordView {
 
-class AppLogRecord extends Record
-{
-    protected function checkAccess(): bool
-    {
-        if (!$this->user->isAdmin()) {
-            return false;
-        }
-
-        if (!$this->config->get('restrictedMode')) {
-            return true;
-        }
-
-        if ($this->config->get('appLogAdminAllowed')) {
-            return true;
-        }
-
-        return $this->user->isSuperAdmin();
-    }
-
-    public function postActionCreate(Request $request, Response $response): stdClass
-    {
-        throw new Forbidden();
-    }
-
-    public function putActionUpdate(Request $request, Response $response): stdClass
-    {
-        throw new Forbidden();
-    }
-
-    public function postActionCreateLink(Request $request): bool
-    {
-        throw new Forbidden();
-    }
-
-    public function deleteActionRemoveLink(Request $request): bool
-    {
-        throw new Forbidden();
-    }
+    forceSettings = true
 }
+

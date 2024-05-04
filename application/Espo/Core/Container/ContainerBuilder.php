@@ -36,6 +36,7 @@ use Espo\Core\Binding\BindingContainer;
 use Espo\Core\Binding\BindingLoader;
 use Espo\Core\Binding\EspoBindingLoader;
 
+use Espo\Core\Loaders\ApplicationState as ApplicationStateLoader;
 use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Config\ConfigFileManager;
 use Espo\Core\Utils\Config;
@@ -71,6 +72,7 @@ class ContainerBuilder
         'log' => LogLoader::class,
         'dataManager' => DataManagerLoader::class,
         'metadata' => MetadataLoader::class,
+        'applicationState' => ApplicationStateLoader::class,
     ];
 
     public function withBindingLoader(BindingLoader $bindingLoader): self

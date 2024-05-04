@@ -27,50 +27,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Classes\Select\AppLogRecord\PrimaryFilters;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Controllers\Record;
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use stdClass;
+use Espo\Core\Select\Primary\Filter;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+use Psr\Log\LogLevel;
 
-class AppLogRecord extends Record
+class Errors implements Filter
 {
-    protected function checkAccess(): bool
+    public function apply(QueryBuilder $queryBuilder): void
     {
-        if (!$this->user->isAdmin()) {
-            return false;
-        }
-
-        if (!$this->config->get('restrictedMode')) {
-            return true;
-        }
-
-        if ($this->config->get('appLogAdminAllowed')) {
-            return true;
-        }
-
-        return $this->user->isSuperAdmin();
-    }
-
-    public function postActionCreate(Request $request, Response $response): stdClass
-    {
-        throw new Forbidden();
-    }
-
-    public function putActionUpdate(Request $request, Response $response): stdClass
-    {
-        throw new Forbidden();
-    }
-
-    public function postActionCreateLink(Request $request): bool
-    {
-        throw new Forbidden();
-    }
-
-    public function deleteActionRemoveLink(Request $request): bool
-    {
-        throw new Forbidden();
+        $queryBuilder->where([
+            'level' => [
+                ucfirst(LogLevel::ERROR),
+                ucfirst(LogLevel::EMERGENCY),
+                ucfirst(LogLevel::CRITICAL),
+                ucfirst(LogLevel::ALERT),
+            ]
+        ]);
     }
 }

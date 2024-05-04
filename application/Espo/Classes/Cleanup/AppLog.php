@@ -27,50 +27,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Controllers;
+namespace Espo\Classes\Cleanup;
 
-use Espo\Core\Exceptions\Forbidden;
-use Espo\Core\Controllers\Record;
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use stdClass;
+use Espo\Core\Cleanup\Cleanup;
+use Espo\Core\Field\DateTime;
+use Espo\Core\Utils\Config;
+use Espo\Entities\AppLogRecord;
+use Espo\ORM\EntityManager;
+use Espo\ORM\Query\DeleteBuilder;
 
-class AppLogRecord extends Record
+class AppLog implements Cleanup
 {
-    protected function checkAccess(): bool
+    private const PERIOD = '30 days';
+
+    public function __construct(
+        private EntityManager $entityManager,
+        private Config $config
+    ) {}
+
+    public function process(): void
     {
-        if (!$this->user->isAdmin()) {
-            return false;
-        }
+        $query = DeleteBuilder::create()
+            ->from(AppLogRecord::ENTITY_TYPE)
+            ->where(['createdAt<' => $this->getBefore()->toString()])
+            ->build();
 
-        if (!$this->config->get('restrictedMode')) {
-            return true;
-        }
-
-        if ($this->config->get('appLogAdminAllowed')) {
-            return true;
-        }
-
-        return $this->user->isSuperAdmin();
+        $this->entityManager->getQueryExecutor()->execute($query);
     }
 
-    public function postActionCreate(Request $request, Response $response): stdClass
+    private function getBefore(): DateTime
     {
-        throw new Forbidden();
-    }
+        /** @var string $period */
+        $period = $this->config->get('cleanupAppLogPeriod') ?? self::PERIOD;
 
-    public function putActionUpdate(Request $request, Response $response): stdClass
-    {
-        throw new Forbidden();
-    }
-
-    public function postActionCreateLink(Request $request): bool
-    {
-        throw new Forbidden();
-    }
-
-    public function deleteActionRemoveLink(Request $request): bool
-    {
-        throw new Forbidden();
+        return DateTime::createNow()->modify('-' . $period);
     }
 }

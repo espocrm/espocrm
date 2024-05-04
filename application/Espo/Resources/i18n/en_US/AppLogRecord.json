@@ -5,6 +5,11 @@
         "level": "Level",
         "exceptionClass": "Exception Class",
         "file": "File",
-        "line": "Line"
+        "line": "Line",
+        "requestMethod": "Request Method",
+        "requestResourcePath": "Request Resource Path"
+    },
+    "presetFilters": {
+        "errors": "Errors"
     }
 }

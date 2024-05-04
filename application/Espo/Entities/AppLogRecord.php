@@ -88,4 +88,24 @@ class AppLogRecord extends Entity
 
         return $this;
     }
+
+    public function setRequestMethod(?string $requestMethod): self
+    {
+        $this->set('requestMethod', $requestMethod);
+
+        return $this;
+    }
+
+    public function setRequestResourcePath(?string $requestResourcePath): self
+    {
+        $len = $this->getAttributeParam('requestResourcePath', 'len');
+
+        if ($requestResourcePath && strlen($requestResourcePath) > $len) {
+            $requestResourcePath = substr($requestResourcePath, $len);
+        }
+
+        $this->set('requestResourcePath', $requestResourcePath);
+
+        return $this;
+    }
 }

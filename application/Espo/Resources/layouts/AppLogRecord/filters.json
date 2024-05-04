@@ -4,5 +4,7 @@
     "code",
     "exceptionClass",
     "file",
-    "line"
+    "line",
+    "requestMethod",
+    "requestResourcePath"
 ]

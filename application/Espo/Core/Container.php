@@ -308,7 +308,9 @@ class Container implements ContainerInterface
             return $loader;
         }
 
-        assert($this->configuration !== null);
+        if ($this->configuration === null) {
+            throw new RuntimeException("Container configuration is not ready.");
+        }
 
         return $this->configuration->getLoaderClassName($id);
     }

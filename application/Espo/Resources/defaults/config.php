@@ -236,6 +236,9 @@ return [
     'cleanupSubscribers' => true,
     'cleanupAudit' => true,
     'cleanupAuditPeriod' => '3 months',
+    'cleanupAppLog' => true,
+    'cleanupAppLogPeriod' => '30 days',
+    'appLogAdminAllowed' => false,
     'currencyFormat' => 2,
     'currencyDecimalPlaces' => 2,
     'aclAllowDeleteCreated' => false,
@@ -295,6 +298,5 @@ return [
     'listPagination' => true,
     'starsLimit' => 500,
     'quickSearchFullTextAppendWildcard' => false,
-    'loggerDatabase' => false,
     'isInstalled' => false,
 ];

@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Log\Handler;
 
+use Espo\Core\Api\Request;
+use Espo\Core\ApplicationState;
 use Espo\Core\ORM\EntityManagerProxy;
 use Espo\Entities\AppLogRecord;
 use Monolog\Handler\HandlerInterface;
@@ -40,11 +42,20 @@ class DatabaseHandler implements HandlerInterface
 {
     public function __construct(
         private Level $level,
-        private EntityManagerProxy $entityManager
+        private EntityManagerProxy $entityManager,
+        private ApplicationState $applicationState
     ) {}
 
     public function isHandling(LogRecord $record): bool
     {
+        if (!$this->applicationState->hasUser()) {
+            return false;
+        }
+
+        if ($record->context['isSql'] ?? false) {
+            return false;
+        }
+
         return $record->level->value >= $this->level->value;
     }
 
@@ -65,6 +76,7 @@ class DatabaseHandler implements HandlerInterface
                 ->setMessage($message);
 
             $this->setException($record, $logRecord);
+            $this->setRequest($record, $logRecord);
 
             $this->entityManager->saveEntity($logRecord);
         }
@@ -116,5 +128,18 @@ class DatabaseHandler implements HandlerInterface
             ->setFile($exception->getFile())
             ->setLine($exception->getLine())
             ->setCode($exception->getCode());
+    }
+
+    private function setRequest(LogRecord $record, AppLogRecord $logRecord): void
+    {
+        $request = $record->context['request'] ?? null;
+
+        if (!$request instanceof Request) {
+            return;
+        }
+
+        $logRecord
+            ->setRequestMethod($request->getMethod())
+            ->setRequestResourcePath($request->getResourcePath());
     }
 }

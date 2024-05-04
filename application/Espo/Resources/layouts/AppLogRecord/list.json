@@ -12,5 +12,15 @@
         "name": "file",
         "width": 20,
         "hidden": true
+    },
+    {
+        "name": "requestMethod",
+        "width": 10,
+        "hidden": true
+    },
+    {
+        "name": "requestResourcePath",
+        "width": 20,
+        "hidden": true
     }
 ]

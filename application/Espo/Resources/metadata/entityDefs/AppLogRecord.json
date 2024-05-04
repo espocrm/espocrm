@@ -25,6 +25,15 @@
                 "Alert",
                 "Emergency"
             ],
+            "style": {
+                "Info": "info",
+                "Notice": "primary",
+                "Warning": "warning",
+                "Error": "danger",
+                "Critical": "danger",
+                "Alert": "danger",
+                "Emergency": "danger"
+            },
             "maxLength": 9,
             "readOnly": true,
             "index": true
@@ -45,6 +54,32 @@
         },
         "line": {
             "type": "int",
+            "readOnly": true
+        },
+        "requestMethod": {
+            "type": "enum",
+            "maxLength": 7,
+            "options": [
+                "GET",
+                "POST",
+                "PUT",
+                "UPDATE",
+                "DELETE",
+                "PATCH",
+                "HEAD",
+                "OPTIONS",
+                "TRACE"
+            ],
+            "readOnly": true
+        },
+        "requestResourcePath": {
+            "type": "varchar",
+            "maxLength": 255,
+            "readOnly": true
+        },
+        "requestUrl": {
+            "type": "varchar",
+            "maxLength": 512,
             "readOnly": true
         }
     },
