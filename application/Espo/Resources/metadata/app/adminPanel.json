@@ -331,6 +331,12 @@
                 "label": "Phone Numbers",
                 "iconClass": "fas fa-phone",
                 "description": "phoneNumbers"
+            },
+            {
+                "url": "#Admin/appLog",
+                "label": "App Log",
+                "iconClass": "fas fa-list",
+                "description": "appLog"
             }
         ],
         "order": 25

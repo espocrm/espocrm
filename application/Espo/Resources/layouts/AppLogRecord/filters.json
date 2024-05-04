@@ -1,0 +1,10 @@
+[
+    "createdAt",
+    "level",
+    "code",
+    "exceptionClass",
+    "file",
+    "line",
+    "requestMethod",
+    "requestResourcePath"
+]

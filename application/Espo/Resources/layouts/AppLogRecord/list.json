@@ -1,0 +1,26 @@
+[
+    {"name": "level", "widthPx": 100},
+    {"name": "code", "widthPx": 80},
+    {"name": "message"},
+    {"name": "createdAt", "width": 13},
+    {
+        "name": "exceptionClass",
+        "width": 20,
+        "hidden": true
+    },
+    {
+        "name": "file",
+        "width": 20,
+        "hidden": true
+    },
+    {
+        "name": "requestMethod",
+        "width": 10,
+        "hidden": true
+    },
+    {
+        "name": "requestResourcePath",
+        "width": 20,
+        "hidden": true
+    }
+]

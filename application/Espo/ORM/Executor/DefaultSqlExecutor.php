@@ -59,7 +59,7 @@ class DefaultSqlExecutor implements SqlExecutor
     public function execute(string $sql, bool $rerunIfDeadlock = false): PDOStatement
     {
         if ($this->logAll) {
-            $this->logger?->info("SQL: " . $sql);
+            $this->logger?->info("SQL: " . $sql, ['isSql' => true]);
         }
 
         if (!$rerunIfDeadlock) {
@@ -81,7 +81,7 @@ class DefaultSqlExecutor implements SqlExecutor
 
             if ($counter === 0 || !$this->isExceptionIsDeadlock($e)) {
                 if ($this->logFailed) {
-                    $this->logger?->error("SQL failed: " . $sql);
+                    $this->logger?->error("SQL failed: " . $sql, ['isSql' => true]);
                 }
 
                 /** @var PDOException $e */

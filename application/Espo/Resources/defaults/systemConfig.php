@@ -111,6 +111,8 @@ return [
         'passwordChangeRequestNewUserLifetime',
         'passwordChangeRequestExistingUserLifetime',
         'passwordRecoveryInternalIntervalPeriod',
+        'cleanupAppLog',
+        'cleanupAppLogPeriod',
     ],
     'adminItems' => [
         'devMode',
@@ -219,6 +221,7 @@ return [
         'jobRunInParallel',
         'jobPoolConcurrencyNumber',
         'jobPeriodForActiveProcess',
+        'appLogAdminAllowed',
         'cronMinInterval',
         'daemonInterval',
         'daemonProcessTimeout',

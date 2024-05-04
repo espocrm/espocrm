@@ -27,5 +27,8 @@
     },
     "stars": {
         "className": "Espo\\Classes\\Cleanup\\Stars"
+    },
+    "appLog": {
+        "className": "Espo\\Classes\\Cleanup\\AppLog"
     }
 }

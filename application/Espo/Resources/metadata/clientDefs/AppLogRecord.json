@@ -1,0 +1,14 @@
+{
+    "controller": "controllers/record",
+    "createDisabled": true,
+    "editDisabled": true,
+    "mergeDisabled": true,
+    "recordViews": {
+        "list": "views/admin/app-log-record/record/list"
+    },
+    "filterList": [
+        {
+            "name": "errors"
+        }
+    ]
+}

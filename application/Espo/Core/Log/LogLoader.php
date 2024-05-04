@@ -29,8 +29,11 @@
 
 namespace Espo\Core\Log;
 
+use Espo\Core\ApplicationState;
+use Espo\Core\Log\Handler\DatabaseHandler;
 use Espo\Core\Log\Handler\EspoFileHandler;
 use Espo\Core\Log\Handler\EspoRotatingFileHandler;
+use Espo\Core\ORM\EntityManagerProxy;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Log;
 
@@ -47,7 +50,9 @@ class LogLoader
 
     public function __construct(
         private readonly Config $config,
-        private readonly HandlerListLoader $handlerListLoader
+        private readonly HandlerListLoader $handlerListLoader,
+        private readonly EntityManagerProxy $entityManagerProxy,
+        private readonly ApplicationState $applicationState
     ) {}
 
     public function load(): Log
@@ -63,6 +68,10 @@ class LogLoader
         }
         else {
             $handlerList = [$this->createDefaultHandler()];
+        }
+
+        if ($this->config->get('logger.databaseHandler')) {
+            $handlerList[] = $this->createDatabaseHandler();
         }
 
         foreach ($handlerList as $handler) {
@@ -104,5 +113,16 @@ class LogLoader
     private function printTrace(): bool
     {
         return (bool) $this->config->get('logger.printTrace');
+    }
+
+    private function createDatabaseHandler(): HandlerInterface
+    {
+        $rawLevel = $this->config->get('logger.databaseHandlerLevel') ??
+            $this->config->get('logger.level') ??
+            self::DEFAULT_LEVEL;
+
+        $level = Logger::toMonologLevel($rawLevel);
+
+        return new DatabaseHandler($level, $this->entityManagerProxy, $this->applicationState);
     }
 }

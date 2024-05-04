@@ -1,0 +1,94 @@
+{
+    "fields": {
+        "number": {
+            "type": "autoincrement",
+            "dbType": "bigint"
+        },
+        "createdAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
+        "message": {
+            "type": "text",
+            "readOnly": true,
+            "orderDisabled": true
+        },
+        "level": {
+            "type": "enum",
+            "options": [
+                "Debug",
+                "Info",
+                "Notice",
+                "Warning",
+                "Error",
+                "Critical",
+                "Alert",
+                "Emergency"
+            ],
+            "style": {
+                "Info": "info",
+                "Notice": "primary",
+                "Warning": "warning",
+                "Error": "danger",
+                "Critical": "danger",
+                "Alert": "danger",
+                "Emergency": "danger"
+            },
+            "maxLength": 9,
+            "readOnly": true,
+            "index": true
+        },
+        "code": {
+            "type": "int",
+            "readOnly": true
+        },
+        "exceptionClass": {
+            "type": "varchar",
+            "maxLength": 512,
+            "readOnly": true
+        },
+        "file": {
+            "type": "varchar",
+            "maxLength": 512,
+            "readOnly": true
+        },
+        "line": {
+            "type": "int",
+            "readOnly": true
+        },
+        "requestMethod": {
+            "type": "enum",
+            "maxLength": 7,
+            "options": [
+                "GET",
+                "POST",
+                "PUT",
+                "UPDATE",
+                "DELETE",
+                "PATCH",
+                "HEAD",
+                "OPTIONS",
+                "TRACE"
+            ],
+            "readOnly": true
+        },
+        "requestResourcePath": {
+            "type": "varchar",
+            "maxLength": 255,
+            "readOnly": true
+        },
+        "requestUrl": {
+            "type": "varchar",
+            "maxLength": 512,
+            "readOnly": true
+        }
+    },
+    "links": {},
+    "collection": {
+        "orderBy": "number",
+        "order": "desc",
+        "textFilterFields": ["message"]
+    },
+    "indexes": {},
+    "hooksDisabled": true
+}
