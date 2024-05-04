@@ -39,6 +39,9 @@ use Espo\Core\Exceptions\HasLogMessage;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Utils\Log;
 
+use LogicException;
+use Psr\Log\LogLevel;
+use RuntimeException;
 use Throwable;
 
 /**
@@ -126,11 +129,9 @@ class ErrorOutput
             $this->processRoute($route, $request, $exception);
         }
 
-        $logLevel = $exception instanceof HasLogLevel ?
-            $exception->getLogLevel() :
-            Log::LEVEL_ERROR;
+        $level = $this->getLevel($exception);
 
-        $this->log->log($logLevel, $message, [
+        $this->log->log($level, $message, [
             'exception' => $exception,
             'request' => $request,
         ]);
@@ -256,5 +257,22 @@ class ErrorOutput
         }
 
         return false;
+    }
+
+    private function getLevel(Throwable $exception): string
+    {
+        if ($exception instanceof HasLogLevel) {
+            return $exception->getLogLevel();
+        }
+
+        if ($exception instanceof LogicException) {
+            return LogLevel::ALERT;
+        }
+
+        if ($exception instanceof RuntimeException) {
+            return LogLevel::CRITICAL;
+        }
+
+        return LogLevel::ERROR;
     }
 }
