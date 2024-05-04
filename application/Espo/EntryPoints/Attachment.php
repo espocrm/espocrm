@@ -55,7 +55,7 @@ class Attachment implements EntryPoint
         $id = $request->getQueryParam('id');
 
         if (!$id) {
-            throw new BadRequest();
+            throw new BadRequest("No id.");
         }
 
         $attachment = $this->entityManager
@@ -63,15 +63,15 @@ class Attachment implements EntryPoint
             ->getById($id);
 
         if (!$attachment) {
-            throw new NotFound();
+            throw new NotFound("Attachment not found.");
         }
 
         if (!$this->acl->checkEntity($attachment)) {
-            throw new Forbidden();
+            throw new Forbidden("No access to attachment.");
         }
 
         if (!$this->fileStorageManager->exists($attachment)) {
-            throw new NotFound();
+            throw new NotFound("File not found.");
         }
 
         $fileType = $attachment->getType();

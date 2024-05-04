@@ -65,7 +65,7 @@ class ConfirmOptIn implements EntryPoint
         $id = $request->getQueryParam('id');
 
         if (!$id) {
-            throw new BadRequest();
+            throw new BadRequest("No id.");
         }
 
         $result = $this->service->confirmOptIn($id);

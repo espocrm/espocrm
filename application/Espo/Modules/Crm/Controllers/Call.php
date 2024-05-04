@@ -82,7 +82,7 @@ class Call extends Record
         $id = $request->getParsedBody()->id ?? null;
 
         if (!$id) {
-            throw new BadRequest();
+            throw new BadRequest("No id.");
         }
 
         $invitees = $this->fetchInvitees($request);
@@ -108,21 +108,21 @@ class Call extends Record
         }
 
         if (!is_array($targets)) {
-            throw new BadRequest();
+            throw new BadRequest("No targets.");
         }
 
         $invitees = [];
 
         foreach ($targets as $target) {
             if (!$target instanceof stdClass) {
-                throw new BadRequest();
+                throw new BadRequest("Bad target.");
             }
 
             $targetEntityType = $target->entityType ?? null;
             $targetId = $target->id ?? null;
 
             if (!is_string($targetEntityType) || !is_string($targetId)) {
-                throw new BadRequest();
+                throw new BadRequest("No entityType or id.");
             }
 
             $invitees[] = new Invitee($targetEntityType, $targetId);
@@ -179,7 +179,7 @@ class Call extends Record
         $data = $request->getParsedBody();
 
         if (empty($data->id) || empty($data->status)) {
-            throw new BadRequest();
+            throw new BadRequest("No id or status.");
         }
 
         $this->injectableFactory
@@ -199,7 +199,7 @@ class Call extends Record
         $id = $request->getRouteParam('id');
 
         if (!$id) {
-            throw new BadRequest();
+            throw new BadRequest("No id.");
         }
 
         $collection = $this->injectableFactory

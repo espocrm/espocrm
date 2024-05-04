@@ -84,7 +84,7 @@ class Unsubscribe implements EntryPoint
         }
 
         if (!$id) {
-            throw new BadRequest();
+            throw new BadRequest("No id.");
         }
 
         $queueItemId = $id;
@@ -93,7 +93,7 @@ class Unsubscribe implements EntryPoint
         $queueItem = $this->entityManager->getEntityById(EmailQueueItem::ENTITY_TYPE, $queueItemId);
 
         if (!$queueItem) {
-            throw new NotFound();
+            throw new NotFound("No item.");
         }
 
         $campaign = null;

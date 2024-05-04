@@ -57,15 +57,19 @@ class Pdf implements EntryPoint
         $templateId = $request->getQueryParam('templateId');
 
         if (!$entityId || !$entityType || !$templateId) {
-            throw new BadRequest();
+            throw new BadRequest("No entityId or entityType or templateId.");
         }
 
         $entity = $this->entityManager->getEntityById($entityType, $entityId);
         /** @var ?Template $template */
         $template = $this->entityManager->getEntityById(Template::ENTITY_TYPE, $templateId);
 
-        if (!$entity || !$template) {
-            throw new NotFound();
+        if (!$entity) {
+            throw new NotFound("Record not found.");
+        }
+
+        if (!$template) {
+            throw new NotFound("Template not found.");
         }
 
         $contents = $this->service->generate($entityType, $entityId, $templateId);

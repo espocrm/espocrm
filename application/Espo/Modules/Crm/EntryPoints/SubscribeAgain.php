@@ -81,7 +81,7 @@ class SubscribeAgain implements EntryPoint
         }
 
         if (!$id || !is_string($id)) {
-            throw new BadRequest();
+            throw new BadRequest("No id.");
         }
 
         $queueItemId = $id;
@@ -90,7 +90,7 @@ class SubscribeAgain implements EntryPoint
         $queueItem = $this->entityManager->getEntity(EmailQueueItem::ENTITY_TYPE, $queueItemId);
 
         if (!$queueItem) {
-            throw new NotFound();
+            throw new NotFound("No item.");
         }
 
         $campaign = null;
@@ -116,7 +116,7 @@ class SubscribeAgain implements EntryPoint
             $target = $this->entityManager->getEntityById($targetType, $targetId);
 
             if (!$target) {
-                throw new NotFound();
+                throw new NotFound("Record not found.");
             }
 
             if ($massEmail->get('optOutEntirely')) {

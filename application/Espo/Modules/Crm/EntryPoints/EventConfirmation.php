@@ -76,11 +76,11 @@ class EventConfirmation implements EntryPoint
         $action = $request->getQueryParam('action') ?? null;
 
         if (!$uid) {
-            throw new BadRequest();
+            throw new BadRequest("No uid.");
         }
 
         if (!in_array($action, [self::ACTION_ACCEPT, self::ACTION_DECLINE, self::ACTION_TENTATIVE])) {
-            throw new BadRequest();
+            throw new BadRequest("Bad action.");
         }
 
         /** @var ?UniqueId $uniqueId */
@@ -112,11 +112,11 @@ class EventConfirmation implements EntryPoint
             $link;
 
         if (!$toProcess) {
-            throw new Error();
+            throw new Error("Bad data.");
         }
 
         if ($sentDateStart !== null && !is_string($sentDateStart)) {
-            throw new Error();
+            throw new Error("No date in data.");
         }
 
         $event = $this->entityManager->getEntityById($eventType, $eventId);

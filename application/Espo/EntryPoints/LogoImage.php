@@ -51,7 +51,7 @@ class LogoImage extends Image
         }
 
         if (!$id) {
-            throw new NotFound();
+            throw new NotFound("No id.");
         }
 
         $this->show($response, $id, $size);

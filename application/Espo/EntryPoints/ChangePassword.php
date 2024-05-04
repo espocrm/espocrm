@@ -54,7 +54,7 @@ class ChangePassword implements EntryPoint
         $requestId = $request->getQueryParam('id');
 
         if (!$requestId) {
-            throw new BadRequest();
+            throw new BadRequest("No request ID.");
         }
 
         $passwordChangeRequest = $this->entityManager

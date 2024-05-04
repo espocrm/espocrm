@@ -59,16 +59,16 @@ class CampaignTrackOpened implements EntryPoint
         $id = $request->getQueryParam('id');
 
         if (!$id || !is_string($id)) {
-            throw new BadRequest();
+            throw new BadRequest("No id.");
         }
 
         $queueItemId = $id;
 
         /** @var ?EmailQueueItem $queueItem */
-        $queueItem = $this->entityManager->getEntity(EmailQueueItem::ENTITY_TYPE, $queueItemId);
+        $queueItem = $this->entityManager->getEntityById(EmailQueueItem::ENTITY_TYPE, $queueItemId);
 
         if (!$queueItem) {
-            throw new NotFound();
+            throw new NotFound("Item not found.");
         }
 
         $targetType = $queueItem->getTargetType();
