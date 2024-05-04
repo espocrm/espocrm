@@ -107,8 +107,9 @@ class Authentication
             $method &&
             !$this->configDataProvider->authenticationMethodIsApi($method)
         ) {
-            $this->log
-                ->warning("AUTH: Trying to use not allowed authentication method '$method'.");
+            $this->log->warning("AUTH: Trying to use not allowed authentication method '{method}'.", [
+                'method' => $method,
+            ]);
 
             return $this->processFail(Result::fail(FailReason::METHOD_NOT_ALLOWED), $data, $request);
         }
@@ -157,7 +158,9 @@ class Authentication
 
         if (($byTokenAndUsername || $byTokenOnly) && !$authToken) {
             if ($username) {
-                $this->log->info("AUTH: Trying to login as user '$username' by token but token is not found.");
+                $this->log->info("AUTH: Trying to login as user '{username}' by token but token is not found.", [
+                    'username' => $username,
+                ]);
             }
 
             return $this->processFail(Result::fail(FailReason::TOKEN_NOT_FOUND), $data, $request);
@@ -361,8 +364,9 @@ class Authentication
     private function processUserCheck(User $user, ?AuthLogRecord $authLogRecord): bool
     {
         if (!$user->isActive()) {
-            $this->log
-                ->info("AUTH: Trying to login as user '" . $user->getUserName() . "' which is not active.");
+            $this->log->info("AUTH: Trying to login as user '{username}' which is not active.", [
+                'username' => $user->getUserName(),
+            ]);
 
             $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_INACTIVE_USER);
 
@@ -370,8 +374,9 @@ class Authentication
         }
 
         if ($user->isSystem()) {
-            $this->log
-                ->info("AUTH: Trying to login to crm as a system user '{$user->getUserName()}'.");
+            $this->log->info("AUTH: Trying to login to crm as a system user '{username}'.", [
+                'username' => $user->getUserName(),
+            ]);
 
             $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_IS_SYSTEM_USER);
 
@@ -379,8 +384,9 @@ class Authentication
         }
 
         if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
-            $this->log
-                ->info("AUTH: Trying to login to crm as a portal user '" . $user->getUserName() . "'.");
+            $this->log->info("AUTH: Trying to login to crm as a portal user '{username}'.", [
+                'username' => $user->getUserName(),
+            ]);
 
             $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_IS_PORTAL_USER);
 
@@ -388,8 +394,9 @@ class Authentication
         }
 
         if ($this->isPortal() && !$user->isPortal()) {
-            $this->log->info(
-                "AUTH: Trying to login to portal as user '" . $user->getUserName() . "' which is not portal user.");
+            $this->log->info("AUTH: Trying to login to portal as user '{username}' which is not portal user.", [
+                'username' => $user->getUserName(),
+            ]);
 
             $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_IS_NOT_PORTAL_USER);
 
@@ -403,9 +410,12 @@ class Authentication
                 ->isRelated($user);
 
             if (!$isPortalRelatedToUser) {
-                $this->log->info(
-                    "AUTH: Trying to login to portal as user '" . $user->getUserName() . "' ".
-                    "which is portal user but does not belong to portal.");
+                $msg = "AUTH: Trying to login to portal as user '{username}' " .
+                    "which is portal user but does not belong to portal.";
+
+                $this->log->info($msg, [
+                    'username' => $user->getUserName(),
+                ]);
 
                 $this->logDenied($authLogRecord, AuthLogRecord::DENIAL_REASON_USER_IS_NOT_IN_PORTAL);
 
