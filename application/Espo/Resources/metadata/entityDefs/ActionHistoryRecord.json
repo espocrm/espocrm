@@ -2,7 +2,8 @@
     "fields": {
         "number": {
             "type": "autoincrement",
-            "index": true
+            "index": true,
+            "dbType": "bigint"
         },
         "targetType": {
             "type": "varchar",
