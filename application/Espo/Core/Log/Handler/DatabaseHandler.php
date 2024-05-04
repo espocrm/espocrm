@@ -82,11 +82,9 @@ class DatabaseHandler implements HandlerInterface
         }
         catch (Throwable) {
             // Nowhere to log.
-
-            return false;
         }
 
-        return true;
+        return false;
     }
 
     private function interpolate(LogRecord $record, string $line): string
