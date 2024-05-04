@@ -861,7 +861,7 @@ class Parser
                 $offset = -1;
 
                 while (true) {
-                    $index = strrpos($expression, $operator, $offset);
+                    $index = strrpos($modifiedExpression, $operator, $offset);
 
                     if ($index === false) {
                         break;
@@ -882,7 +882,7 @@ class Parser
 
                 if (strlen($operator) === 1) {
                     if ($index < strlen($expression) - 1) {
-                        $possibleRightOperator = trim($operator . $expression[$index + 1]);
+                        $possibleRightOperator = trim($operator . $modifiedExpression[$index + 1]);
                     }
                 }
 
@@ -898,7 +898,7 @@ class Parser
 
                 if (strlen($operator) === 1) {
                     if ($index > 0) {
-                        $possibleLeftOperator = trim($expression[$index - 1] . $operator);
+                        $possibleLeftOperator = trim($modifiedExpression[$index - 1] . $operator);
                     }
                 }
 

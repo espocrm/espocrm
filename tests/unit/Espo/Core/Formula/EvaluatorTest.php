@@ -1380,4 +1380,16 @@ class EvaluatorTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEquals(2, $vars->j);;
     }
+
+    public function testStringsWithOperator(): void
+    {
+        $expression = "\$a = '='";
+
+        $vars = (object) [];
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression, null, $vars);
+
+        $this->assertEquals("=", $vars->a);
+    }
 }
