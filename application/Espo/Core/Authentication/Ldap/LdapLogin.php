@@ -290,7 +290,10 @@ class LdapLogin implements Login
         if (strtolower($username) !== strtolower($tokenUsername)) {
             $ip = $this->util->obtainIpFromRequest($request);
 
-            $this->log->alert('Unauthorized access attempt for user [' . $username . '] from IP [' . $ip . ']');
+            $this->log->alert("Unauthorized access attempt for user '{username}' from IP '{ip}'.", [
+                'username' => $username,
+                'ip' => $ip,
+            ]);
 
             return null;
         }
