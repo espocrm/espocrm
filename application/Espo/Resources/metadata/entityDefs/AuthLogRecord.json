@@ -91,8 +91,8 @@
         }
     },
     "collection": {
-        "sortBy": "requestTime",
-        "asc": false,
+        "orderBy": "requestTime",
+        "order": "desc",
         "textFilterFields": ["ipAddress", "username"]
     },
     "indexes": {
