@@ -111,6 +111,11 @@ class ErrorOutput
     ): void {
 
         $message = $exception->getMessage();
+
+        if ($exception->getPrevious() && $exception->getPrevious()->getMessage()) {
+            $message .= " " . $exception->getPrevious()->getMessage();
+        }
+
         $statusCode = $exception->getCode();
 
         if ($exception instanceof HasLogMessage) {
@@ -207,6 +212,11 @@ class ErrorOutput
         $requestBodyString = $this->clearPasswords($request->getBodyContents() ?? '');
 
         $message = $exception->getMessage();
+
+        if ($exception->getPrevious() && $exception->getPrevious()->getMessage()) {
+            $message .= " " . $exception->getPrevious()->getMessage();
+        }
+
         $statusCode = $exception->getCode();
 
         $routeParams = $request->getRouteParams();
