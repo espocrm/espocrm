@@ -107,7 +107,7 @@ class Authentication
             $method &&
             !$this->configDataProvider->authenticationMethodIsApi($method)
         ) {
-            $this->log->warning("AUTH: Trying to use not allowed authentication method '{method}'.", [
+            $this->log->warning("Auth: Trying to use not allowed authentication method '{method}'.", [
                 'method' => $method,
             ]);
 
@@ -117,7 +117,7 @@ class Authentication
         $this->hookManager->processBeforeLogin($data, $request);
 
         if (!$method && $password === null) {
-            $this->log->error("AUTH: Trying to login w/o password.");
+            $this->log->error("Auth: Trying to login w/o password.");
 
             return Result::fail(FailReason::NO_PASSWORD);
         }
@@ -158,7 +158,7 @@ class Authentication
 
         if (($byTokenAndUsername || $byTokenOnly) && !$authToken) {
             if ($username) {
-                $this->log->info("AUTH: Trying to login as user '{username}' by token but token is not found.", [
+                $this->log->info("Auth: Trying to login as user '{username}' by token but token is not found.", [
                     'username' => $username,
                 ]);
             }
@@ -347,13 +347,13 @@ class Authentication
     private function processAuthTokenCheck(AuthToken $authToken): bool
     {
         if ($this->isPortal() && $authToken->getPortalId() !== $this->getPortal()->getId()) {
-            $this->log->info("AUTH: Trying to login to portal with a token not related to portal.");
+            $this->log->info("Auth: Trying to login to portal with a token not related to portal.");
 
             return false;
         }
 
         if (!$this->isPortal() && $authToken->getPortalId()) {
-            $this->log->info("AUTH: Trying to login to crm with a token related to portal.");
+            $this->log->info("Auth: Trying to login to crm with a token related to portal.");
 
             return false;
         }
@@ -364,7 +364,7 @@ class Authentication
     private function processUserCheck(User $user, ?AuthLogRecord $authLogRecord): bool
     {
         if (!$user->isActive()) {
-            $this->log->info("AUTH: Trying to login as user '{username}' which is not active.", [
+            $this->log->info("Auth: Trying to login as user '{username}' which is not active.", [
                 'username' => $user->getUserName(),
             ]);
 
@@ -374,7 +374,7 @@ class Authentication
         }
 
         if ($user->isSystem()) {
-            $this->log->info("AUTH: Trying to login to crm as a system user '{username}'.", [
+            $this->log->info("Auth: Trying to login to crm as a system user '{username}'.", [
                 'username' => $user->getUserName(),
             ]);
 
@@ -384,7 +384,7 @@ class Authentication
         }
 
         if (!$user->isAdmin() && !$this->isPortal() && $user->isPortal()) {
-            $this->log->info("AUTH: Trying to login to crm as a portal user '{username}'.", [
+            $this->log->info("Auth: Trying to login to crm as a portal user '{username}'.", [
                 'username' => $user->getUserName(),
             ]);
 
@@ -394,7 +394,7 @@ class Authentication
         }
 
         if ($this->isPortal() && !$user->isPortal()) {
-            $this->log->info("AUTH: Trying to login to portal as user '{username}' which is not portal user.", [
+            $this->log->info("Auth: Trying to login to portal as user '{username}' which is not portal user.", [
                 'username' => $user->getUserName(),
             ]);
 
@@ -410,7 +410,7 @@ class Authentication
                 ->isRelated($user);
 
             if (!$isPortalRelatedToUser) {
-                $msg = "AUTH: Trying to login to portal as user '{username}' " .
+                $msg = "Auth: Trying to login to portal as user '{username}' " .
                     "which is portal user but does not belong to portal.";
 
                 $this->log->info($msg, [

@@ -132,9 +132,8 @@ class LdapLogin implements Login
             if ($user) {
                 return Result::success($user);
             }
-            else {
-                return Result::fail(FailReason::WRONG_CREDENTIALS);
-            }
+
+            return Result::fail(FailReason::WRONG_CREDENTIALS);
         }
 
         if (!$password || $username == '**logout') {
@@ -158,9 +157,10 @@ class LdapLogin implements Login
         catch (Exception $e) {
             $options = $this->utils->getLdapClientOptions();
 
-            $this->log->error(
-                'LDAP: Could not connect to LDAP server [' . $options['host'] . '], details: ' . $e->getMessage()
-            );
+            $this->log->error("LDAP: Could not connect to LDAP server host. {message}", [
+                'host' => $options['host'],
+                'message' => $e->getMessage()
+            ]);
 
             /** @var string $username */
 
@@ -170,7 +170,9 @@ class LdapLogin implements Login
                 return Result::fail();
             }
 
-            $this->log->info('LDAP: Administrator [' . $username . '] was logged in by Espo method.');
+            $this->log->info("LDAP: Administrator '{username}' was logged in by Espo method.", [
+                'username' => $username,
+            ]);
         }
 
         $userDn = null;
@@ -182,15 +184,16 @@ class LdapLogin implements Login
                 $userDn = $this->findLdapUserDnByUsername($username);
             }
             catch (Exception $e) {
-                $this->log->error(
-                    'Error while finding DN for [' . $username . '], details: ' . $e->getMessage() . '.'
-                );
+                $this->log->error("Error while finding DN for '{username}'. {message}", [
+                    'username' => $username,
+                    'message' => $e->getMessage(),
+                ]);
             }
 
             if (!isset($userDn)) {
-                $this->log->error(
-                    'LDAP: Authentication failed for user [' . $username . '], details: user is not found.'
-                );
+                $this->log->error("LDAP: Authentication failed for '{username}'; user is not found.", [
+                    'username' => $username,
+                ]);
 
                 $adminUser = $this->adminLogin($username, $password);
 
@@ -198,18 +201,24 @@ class LdapLogin implements Login
                     return Result::fail();
                 }
 
-                $this->log->info('LDAP: Administrator [' . $username . '] was logged in by Espo method.');
+                $this->log->info("LDAP: Administrator '{username}' was logged in by Espo method.", [
+                    'username' => $username,
+                ]);
             }
 
-            $this->log->debug('User [' . $username . '] is found with this DN ['.$userDn.'].');
+            $this->log->debug("User '{username}' with DN '{dn}' is found .", [
+                'username' => $username,
+                'dn' => $userDn,
+            ]);
 
             try {
                 $ldapClient->bind($userDn, $password);
             }
             catch (Exception $e) {
-                $this->log->error(
-                    'LDAP: Authentication failed for user [' . $username . '], details: ' . $e->getMessage()
-                );
+                $this->log->error("LDAP: Authentication failed for '{username}'. {message}", [
+                    'username' => $username,
+                    'message' => $e->getMessage(),
+                ]);
 
                 return Result::fail();
             }
@@ -229,9 +238,9 @@ class LdapLogin implements Login
 
         if (!isset($user)) {
             if (!$this->utils->getOption('createEspoUser')) {
-                $this->log->warning(
-                    "LDAP: Authentication success for user $username, but user is not created in EspoCRM."
-                );
+                $this->log->warning("LDAP: '{username}' authenticated, but user is not created in Espo.", [
+                    'username' => $username,
+                ]);
 
                 return Result::fail(FailReason::USER_NOT_FOUND);
             }
@@ -259,7 +268,7 @@ class LdapLogin implements Login
                 $this->client = $this->clientFactory->create($options);
             }
             catch (Exception $e) {
-                $this->log->error('LDAP error: ' . $e->getMessage());
+                $this->log->error("LDAP error. {message}", ['message' => $e->getMessage()]);
             }
         }
 
@@ -328,11 +337,11 @@ class LdapLogin implements Login
      */
     private function createUser(array $userData, bool $isPortal = false): ?User
     {
-        $this->log->info('Creating new user...');
+        $this->log->info("LDAP: Creating new user.");
 
         $data = [];
 
-        $this->log->debug('LDAP: user data: ' . print_r($userData, true));
+        $this->log->debug("LDAP: user data: {userData}", ['userData' => print_r($userData, true)]);
 
         $ldapFields = $this->loadFields('ldap');
 
@@ -340,7 +349,10 @@ class LdapLogin implements Login
             $ldap = strtolower($ldap);
 
             if (isset($userData[$ldap][0])) {
-                $this->log->debug('LDAP: Create a user with [' . $espo . '] = [' . $userData[$ldap][0] . '].');
+                $this->log->debug("LDAP: Create a user with [{user1}] = [{user2}].", [
+                    'user1' => $espo,
+                    'user2' => $userData[$ldap][0],
+                ]);
 
                 $data[$espo] = $userData[$ldap][0];
             }
@@ -413,7 +425,7 @@ class LdapLogin implements Login
         /** @noinspection PhpRedundantOptionalArgumentInspection */
         $result = $ldapClient->search($searchString, null, Ldap::SEARCH_SCOPE_SUB);
 
-        $this->log->debug('LDAP: user search string: "' . $searchString . '"');
+        $this->log->debug("LDAP: user search string: {string}.", ['string' => $searchString]);
 
         foreach ($result as $item) {
             return $item["dn"];
