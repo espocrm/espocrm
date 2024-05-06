@@ -27,6 +27,7 @@
  ************************************************************************/
 
 import $ from 'jquery';
+import EditTableModalView from 'views/wysiwyg/modals/edit-table';
 
 /**
  * @type {{
@@ -50,9 +51,175 @@ function init(langSets) {
             icon: '<i class="note-icon-table"/>',
             tooltip: langSets.table.table,
         },
+        popover: {
+            table: [
+                ['custom', ['tableParams']],
+                ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
+                ['delete', ['deleteRow', 'deleteCol', 'deleteTable']],
+            ],
+        },
     });
 
     $.extend($.summernote.plugins, {
+        'tableParams': function (/** Record */context) {
+            const ui = $.summernote.ui;
+
+            const options = context.options;
+            const view = /** @type {import('view').default} */options.espoView;
+
+            context.memo('button.tableParams', () => {
+                return ui.button({
+                    className: '',
+                    contents: '<i class="note-icon-table"/>',
+                    tooltip: langSets.table.table, // @todo
+                    click: () => {
+                        context.invoke('tableParams.show');
+                    },
+                }).render();
+            });
+
+            this.show = function () {
+                const range = context.invoke('editor.getLastRange');
+                const $table = $(range.ec).closest('table');
+                const table = /** @type {HTMLTableElement}*/$table[0];
+
+                let borderWidth = table.style.borderWidth;
+
+                if (borderWidth !== null) { // @todo
+                    for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                        if (cell.style.borderWidth !== borderWidth) {
+                            borderWidth = null;
+
+                            break;
+                        }
+                    }
+                }
+
+                let backgroundColor = table.style.backgroundColor;
+
+                if (backgroundColor === 'transparent') {
+                    backgroundColor = null;
+                }
+
+                let borderColor = table.style.borderColor;
+
+                if (borderColor !== null) { // @todo
+                    for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                        if (cell.style.borderColor !== borderColor) {
+                            borderColor = null;
+
+                            break;
+                        }
+                    }
+                }
+
+                let cellPadding = null;
+
+                for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                    if (cellPadding !== null && cell.style.padding !== cellPadding) {
+                        cellPadding = null;
+
+                        break;
+                    }
+
+                    cellPadding = cell.style.padding;
+                }
+
+                let align = null;
+
+                if (table.style.marginLeft === 'auto' && table.style.marginRight === '0px') {
+                    align = 'right';
+                } else if (table.style.marginLeft === 'auto' && table.style.marginRight === 'auto') {
+                    align = 'center';
+                } else if (table.style.marginLeft === '0px' && table.style.marginRight === 'auto') {
+                    align = 'left';
+                }
+
+                const width = table.style.width;
+
+                const params = {
+                    align,
+                    width,
+                    borderWidth,
+                    borderColor,
+                    cellPadding,
+                    backgroundColor,
+                };
+
+                const prevParams = params;
+
+                const modalView = new EditTableModalView({
+                    params,
+                    headerText: langSets.table.table,
+                    onApply: params => applyParams(params),
+                });
+
+                view.assignView('dialog', modalView)
+                    .then(() => {
+                        modalView.render();
+                    });
+
+                const applyParams =
+                    /** {
+                     *     align: string,
+                     *     width: string,
+                     *     borderWidth: string,
+                     *     borderColor: string,
+                     *     cellPadding: string,
+                     *     backgroundColor: string,
+                     * } */
+                    params => {
+
+                    if (params.align === 'left') {
+                        table.style.marginLeft = '0';
+                        table.style.marginRight = 'auto';
+                    } else if (params.align === 'right') {
+                        table.style.marginLeft = 'auto';
+                        table.style.marginRight = '0';
+                    } else if (params.align === 'center') {
+                        table.style.marginLeft = 'auto';
+                        table.style.marginRight = 'auto';
+                    } else if (params.align === null && prevParams.align !== null) {
+                        table.style.marginLeft = null;
+                        table.style.marginRight = null;
+                    }
+
+                    table.style.backgroundColor = params.backgroundColor;
+                    table.style.width = params.width;
+
+                    if (params.borderWidth !== null || prevParams.borderWidth !== null) {
+                        table.style.borderWidth = params.borderWidth;
+                        table.style.borderStyle = params.borderWidth !== null ? 'solid' : null;
+
+                        for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                            cell.style.borderWidth = params.borderWidth;
+                            cell.style.borderStyle = params.borderWidth !== null ? 'solid' : null;
+                        }
+                    }
+
+                    if (params.borderColor !== null || prevParams.borderColor !== null) {
+                        table.style.borderColor = params.borderColor;
+
+                        for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                            cell.style.borderColor = params.borderColor;
+                        }
+                    }
+
+                    if (params.padding !== null || prevParams.padding !== null) {
+                        for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
+                            cell.style.padding = params.cellPadding;
+                        }
+                    }
+                };
+            };
+
+            this.destroy = function () {
+                if (view) {
+                    view.clearView('dialog');
+                }
+            };
+        },
+
         'aceCodeview': function (/** Record */context) {
             const ui = $.summernote.ui;
             const options = context.options;

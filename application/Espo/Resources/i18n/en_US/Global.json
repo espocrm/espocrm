@@ -920,5 +920,20 @@
         "Support": "Support",
         "CRM": "CRM",
         "Activities": "Activities"
+    },
+    "wysiwygLabels": {
+        "align": "Align",
+        "width": "Width",
+        "borderWidth": "Border Width",
+        "borderColor": "Border Color",
+        "cellPadding": "Cell Padding",
+        "backgroundColor": "Background Color"
+    },
+    "wysiwygOptions": {
+        "align": {
+            "left": "Left",
+            "center": "Center",
+            "right": "Right"
+        }
     }
 }
