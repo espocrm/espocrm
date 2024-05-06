@@ -922,18 +922,26 @@
         "Activities": "Activities"
     },
     "wysiwygLabels": {
+        "cell": "Cell",
         "align": "Align",
         "width": "Width",
+        "height": "Height",
         "borderWidth": "Border Width",
         "borderColor": "Border Color",
         "cellPadding": "Cell Padding",
-        "backgroundColor": "Background Color"
+        "backgroundColor": "Background Color",
+        "verticalAlign": "Vertical Align"
     },
     "wysiwygOptions": {
         "align": {
             "left": "Left",
             "center": "Center",
             "right": "Right"
+        },
+        "verticalAlign": {
+            "top": "Top",
+            "middle": "Middle",
+            "bottom": "Bottom"
         }
     }
 }

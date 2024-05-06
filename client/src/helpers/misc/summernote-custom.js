@@ -28,6 +28,7 @@
 
 import $ from 'jquery';
 import EditTableModalView from 'views/wysiwyg/modals/edit-table';
+import EditCellModalView from 'views/wysiwyg/modals/edit-cell';
 
 /**
  * @type {{
@@ -53,7 +54,7 @@ function init(langSets) {
         },
         popover: {
             table: [
-                ['custom', ['tableParams']],
+                ['custom', ['tableParams', 'cellParams']],
                 ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
                 ['delete', ['deleteRow', 'deleteCol', 'deleteTable']],
             ],
@@ -61,6 +62,81 @@ function init(langSets) {
     });
 
     $.extend($.summernote.plugins, {
+        'cellParams': function (/** Record */context) {
+            const ui = $.summernote.ui;
+
+            const options = context.options;
+            const view = /** @type {import('view').default} */options.espoView;
+
+            context.memo('button.cellParams', () => {
+                return ui.button({
+                    className: '',
+                    contents: '<i class="far fa-square fa-sm"/>',
+                    tooltip: view.translate('cell', 'wysiwygLabels'),
+                    click: () => {
+                        context.invoke('cellParams.show');
+                    },
+                }).render();
+            });
+
+            this.show = function () {
+                const range = context.invoke('editor.getLastRange');
+                const $td = $(range.ec).closest('td,th');
+                const td = /** @type {HTMLTableCellElement} */$td[0];
+
+                const width = td.style.width;
+                const height = td.style.height;
+                const backgroundColor = td.style.backgroundColor;
+                const verticalAlign = td.style.verticalAlign;
+
+                const params = {
+                    width,
+                    height,
+                    backgroundColor,
+                    verticalAlign,
+                };
+
+                //const prevParams = params;
+
+                const modalView = new EditCellModalView({
+                    params,
+                    headerText: view.translate('cell', 'wysiwygLabels'),
+                    onApply: params => applyParams(params),
+                });
+
+                view.assignView('dialog', modalView)
+                    .then(() => {
+                        modalView.render();
+                    });
+
+                /**
+                 * @param {{
+                 *     width: string|null,
+                 *     height: string|null,
+                 *     backgroundColor: string|null,
+                 *     verticalAlign: string|null,
+                 * }} params
+                 */
+                const applyParams = params => {
+                    let backgroundColor = td.style.backgroundColor;
+
+                    if (backgroundColor === 'transparent') {
+                        backgroundColor = null;
+                    }
+
+                    td.style.backgroundColor = params.backgroundColor;
+                    td.style.width = params.width;
+                    td.style.height = params.height;
+                    td.style.verticalAlign = params.verticalAlign;
+                };
+            };
+
+            this.destroy = function () {
+                if (view) {
+                    view.clearView('dialog');
+                }
+            };
+        },
         'tableParams': function (/** Record */context) {
             const ui = $.summernote.ui;
 
@@ -71,7 +147,7 @@ function init(langSets) {
                 return ui.button({
                     className: '',
                     contents: '<i class="note-icon-table"/>',
-                    tooltip: langSets.table.table, // @todo
+                    tooltip: langSets.table.table,
                     click: () => {
                         context.invoke('tableParams.show');
                     },
@@ -81,7 +157,7 @@ function init(langSets) {
             this.show = function () {
                 const range = context.invoke('editor.getLastRange');
                 const $table = $(range.ec).closest('table');
-                const table = /** @type {HTMLTableElement}*/$table[0];
+                const table = /** @type {HTMLTableElement} */$table[0];
 
                 let borderWidth = table.style.borderWidth;
 
@@ -136,10 +212,12 @@ function init(langSets) {
                 }
 
                 const width = table.style.width;
+                const height = table.style.height;
 
                 const params = {
                     align,
                     width,
+                    height,
                     borderWidth,
                     borderColor,
                     cellPadding,
@@ -159,17 +237,18 @@ function init(langSets) {
                         modalView.render();
                     });
 
-                const applyParams =
-                    /** {
-                     *     align: string,
-                     *     width: string,
-                     *     borderWidth: string,
-                     *     borderColor: string,
-                     *     cellPadding: string,
-                     *     backgroundColor: string,
-                     * } */
-                    params => {
-
+                /**
+                 * @param {{
+                 *     align: string|null,
+                 *     width: string|null,
+                 *     height: string|null,
+                 *     borderWidth: string|null,
+                 *     borderColor: string|null,
+                 *     cellPadding: string|null,
+                 *     backgroundColor: string|null,
+                 * }} params
+                 */
+                const applyParams = params => {
                     if (params.align === 'left') {
                         table.style.marginLeft = '0';
                         table.style.marginRight = 'auto';
@@ -186,6 +265,7 @@ function init(langSets) {
 
                     table.style.backgroundColor = params.backgroundColor;
                     table.style.width = params.width;
+                    table.style.height = params.height;
 
                     if (params.borderWidth !== null || prevParams.borderWidth !== null) {
                         table.style.borderWidth = params.borderWidth;
@@ -205,7 +285,7 @@ function init(langSets) {
                         }
                     }
 
-                    if (params.padding !== null || prevParams.padding !== null) {
+                    if (params.cellPadding !== null || prevParams.padding !== null) {
                         for (const /** HTMLTableCellElement */cell of table.querySelectorAll('td, th')) {
                             cell.style.padding = params.cellPadding;
                         }

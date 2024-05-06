@@ -29,11 +29,11 @@
 import ModalView from 'views/modal';
 import EditForModal from 'views/record/edit-for-modal';
 import Model from 'model';
-import EnumFieldView from 'views/fields/enum';
 import VarcharFieldView from 'views/fields/varchar';
 import ColorpickerFieldView from 'views/fields/colorpicker';
+import EnumFieldView from 'views/fields/enum';
 
-class EditTableModalView extends ModalView {
+class EditCellModalView extends ModalView {
 
     templateContent = `
         <div class="record no-side-margin">{{{record}}}</div>
@@ -41,22 +41,16 @@ class EditTableModalView extends ModalView {
     /**
      * @param {{
      *     params: {
-     *         align: null|'left'|'center'|'right',
      *         width: null|string,
-     *         height: null|string,
-     *         borderWidth: null|string,
-     *         borderColor: null|string,
-     *         cellPadding: null|string,
+     *         height: null|height,
      *         backgroundColor: null|string,
+     *         verticalAlign: null|'top'|'middle'|'bottom',
      *    },
      *    onApply: function({
-     *         align: null|'left'|'center'|'right',
      *         width: null|string,
-     *         height: null|string,
-     *         borderWidth: null|string,
-     *         borderColor: null|string,
-     *         cellPadding: null|string,
+     *         height: null|height,
      *         backgroundColor: null|string,
+     *         verticalAlign: null|'top'|'middle'|'bottom',
      *    }),
      * }} options
      */
@@ -86,13 +80,10 @@ class EditTableModalView extends ModalView {
         };
 
         this.model = new Model({
-            align: this.params.align,
             width: this.params.width,
             height: this.params.height,
-            borderWidth: this.params.borderWidth,
-            borderColor: this.params.borderColor,
-            cellPadding: this.params.cellPadding,
             backgroundColor: this.params.backgroundColor,
+            verticalAlign: this.params.verticalAlign,
         });
 
         this.recordView = new EditForModal({
@@ -122,28 +113,17 @@ class EditTableModalView extends ModalView {
                         ],
                         [
                             {
-                                view: new VarcharFieldView({
-                                    name: 'borderWidth',
-                                    labelText: this.translate('borderWidth', 'wysiwygLabels'),
+                                view: new EnumFieldView({
+                                    name: 'verticalAlign',
+                                    labelText: this.translate('verticalAlign', 'wysiwygLabels'),
                                     params: {
-                                        maxLength: 12,
-                                    },
-                                }),
-                            },
-                            {
-                                view: new ColorpickerFieldView({
-                                    name: 'borderColor',
-                                    labelText: this.translate('borderColor', 'wysiwygLabels'),
-                                }),
-                            },
-                        ],
-                        [
-                            {
-                                view: new VarcharFieldView({
-                                    name: 'cellPadding',
-                                    labelText: this.translate('cellPadding', 'wysiwygLabels'),
-                                    params: {
-                                        maxLength: 12,
+                                        options: [
+                                            '',
+                                            'top',
+                                            'middle',
+                                            'bottom',
+                                        ],
+                                        translation: 'Global.wysiwygOptions.verticalAlign',
                                     },
                                 }),
                             },
@@ -153,25 +133,7 @@ class EditTableModalView extends ModalView {
                                     labelText: this.translate('backgroundColor', 'wysiwygLabels'),
                                 }),
                             },
-                        ],
-                        [
-                            {
-                                view: new EnumFieldView({
-                                    name: 'align',
-                                    labelText: this.translate('align', 'wysiwygLabels'),
-                                    params: {
-                                        options: [
-                                            '',
-                                            'left',
-                                            'center',
-                                            'right',
-                                        ],
-                                        translation: 'Global.wysiwygOptions.align',
-                                    },
-                                }),
-                            },
-                            false
-                        ],
+                        ]
                     ],
                 },
             ],
@@ -185,39 +147,27 @@ class EditTableModalView extends ModalView {
             return;
         }
 
-        let borderWidth = this.model.attributes.borderWidth;
-        let cellPadding = this.model.attributes.cellPadding;
         let width = this.model.attributes.width;
-        let height = this.model.attributes.height;
-
-        if (/^\d+$/.test(borderWidth)) {
-            borderWidth += 'px';
-        }
-
-        if (/^\d+$/.test(cellPadding)) {
-            cellPadding += 'px';
-        }
 
         if (/^\d+$/.test(width)) {
             width += 'px';
         }
+
+        let height = this.model.attributes.height;
 
         if (/^\d+$/.test(height)) {
             height += 'px';
         }
 
         this.onApply({
-            align: this.model.attributes.align,
             width: width,
             height: height,
-            borderWidth: borderWidth,
-            borderColor: this.model.attributes.borderColor,
-            cellPadding: cellPadding,
             backgroundColor: this.model.attributes.backgroundColor,
+            verticalAlign: this.model.attributes.verticalAlign,
         });
 
         this.close();
     }
 }
 
-export default EditTableModalView
+export default EditCellModalView
