@@ -54,6 +54,18 @@ class ColorpickerFieldView extends VarcharFieldView {
             this.$element.parent().colorpicker({
                 format: 'hex',
                 container: isModal ? this.$el : false,
+                sliders: {
+                    saturation: {
+                        maxLeft: 200,
+                        maxTop: 200,
+                    },
+                    hue: {
+                        maxTop: 200,
+                    },
+                    alpha: {
+                        maxTop: 200,
+                    },
+                },
             });
 
             if (isModal) {
