@@ -42,6 +42,9 @@ class PostNoteStreamView extends NoteStreamView {
         data.showPost = !!this.model.get('post');
         data.isInternal = this.isInternal;
 
+        data.isPinned = this.isThis && this.model.get('isPinned') && this.model.collection &&
+            !this.model.collection.pinnedList;
+
         return data;
     }
 

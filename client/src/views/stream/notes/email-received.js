@@ -42,6 +42,8 @@ class EmailReceivedNoteStreamView extends NoteStreamView {
             hasPost: this.hasPost,
             hasAttachments: this.hasAttachments,
             emailIconClassName: this.getMetadata().get(['clientDefs', 'Email', 'iconClass']) || '',
+            isPinned: this.isThis && this.model.get('isPinned') && this.model.collection &&
+                !this.model.collection.pinnedList,
         };
     }
 
