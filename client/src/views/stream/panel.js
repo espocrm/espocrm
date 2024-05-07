@@ -461,6 +461,8 @@ class PanelStreamView extends RelationshipPanelView {
                             post: model.attributes.post,
                             attachmentsIds: model.attributes.attachmentsIds,
                             attachmentsNames: model.attributes.attachmentsNames,
+                            attachmentsTypes: model.attributes.attachmentsTypes,
+                            data: model.attributes.data,
                         });
                     });
 
@@ -495,6 +497,8 @@ class PanelStreamView extends RelationshipPanelView {
                             post: model.attributes.post,
                             attachmentsIds: model.attributes.attachmentsIds,
                             attachmentsNames: model.attributes.attachmentsNames,
+                            attachmentsTypes: model.attributes.attachmentsTypes,
+                            data: model.attributes.data,
                         });
                     });
                 }
