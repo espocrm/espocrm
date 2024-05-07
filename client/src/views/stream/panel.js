@@ -226,9 +226,7 @@ class PanelStreamView extends RelationshipPanelView {
 
         this.setupActions();
 
-        this.wait(true);
-
-        this.getModelFactory().create('Note', (model) => {
+        const promise = this.getModelFactory().create('Note', model => {
             this.seed = model;
 
             if (storedAttachments) {
@@ -269,14 +267,14 @@ class PanelStreamView extends RelationshipPanelView {
                 this.initPostEvents(view);
             });
 
-            this.createCollection(() => {
-                this.wait(false);
-            });
+            this.wait(this.createCollection());
 
             this.listenTo(this.seed, 'change:attachmentsIds', () => {
                 this.controlPostButtonAvailability();
             });
         });
+
+        this.wait(promise);
 
         if (!this.defs.hidden) {
             this.subscribeToWebSocket();
@@ -288,7 +286,7 @@ class PanelStreamView extends RelationshipPanelView {
             }
         });
 
-        this.once('remove', () => {
+        this.on('remove', () => {
             if (this.isSubscribedToWebSocket) {
                 this.unsubscribeFromWebSocket();
             }
@@ -384,19 +382,22 @@ class PanelStreamView extends RelationshipPanelView {
         }
     }
 
-    createCollection(callback, context) {
-        this.getCollectionFactory().create('Note', (collection) => {
+    /**
+     * @private
+     * @return {Promise}
+     */
+    createCollection() {
+        return this.getCollectionFactory().create('Note', collection => {
             this.collection = collection;
 
-            collection.url = this.model.entityType + '/' + this.model.id + '/stream';
+            collection.url = `${this.model.entityType}/${this.model.id}/stream`;
             collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
             this.setFilter(this.filter);
-
-            callback.call(context);
         });
     }
 
+    /** @private */
     initPostEvents(view) {
         this.listenTo(view, 'add-files', (files) => {
             this.getAttachmentsFieldView().uploadFiles(files);
@@ -426,12 +427,10 @@ class PanelStreamView extends RelationshipPanelView {
             this.$el.find('.action[data-action="switchInternalMode"]').addClass('enabled');
         }
 
-        const collection = this.collection;
-
-        this.listenToOnce(collection, 'sync', () => {
+        const onSync = () => {
             this.createView('list', 'views/stream/record/list', {
                 selector: '> .list-container',
-                collection: collection,
+                collection: this.collection,
                 model: this.model,
             }, view => {
                 view.render();
@@ -442,30 +441,31 @@ class PanelStreamView extends RelationshipPanelView {
 
             setTimeout(() => {
                 this.listenTo(this.model, 'all', event => {
-                    if (!~['sync', 'after:relate'].indexOf(event)) {
+                    if (!['sync', 'after:relate'].includes(event)) {
                         return;
                     }
 
-                    collection.fetchNew();
+                    this.collection.fetchNew();
                 });
 
                 this.listenTo(this.model, 'destroy', () => {
                     this.stopListening(this.model, 'all');
                 });
             }, 500);
-        });
+        };
 
         if (!this.defs.hidden) {
-            collection.fetch();
-        }
-        else {
-            this.once('show', () => collection.fetch());
+            this.collection.fetch().then(() => onSync());
+        } else {
+            this.once('show', () => {
+                this.collection.fetch().then(() => onSync());
+            });
         }
 
         const mentionPermission = this.getAcl().getPermissionLevel('mention');
 
         const buildUserListUrl = term => {
-            let url = 'User?orderBy=name&limit=7&q=' + term + '&' + $.param({'primaryFilter': 'active'});
+            let url = `User?orderBy=name&limit=7&q=${term}&${$.param({'primaryFilter': 'active'})}`;
 
             if (mentionPermission === 'team') {
                 url += '&' + $.param({'boolFilterList': ['onlyMyTeam']})
@@ -485,19 +485,15 @@ class PanelStreamView extends RelationshipPanelView {
                         return;
                     }
 
-                    Espo.Ajax
-                        .getRequest(buildUserListUrl(term))
+                    Espo.Ajax.getRequest(buildUserListUrl(term))
                         .then(data => callback(data.list));
                 },
                 template: (mention) => {
-                    return this.getHelper()
-                        .escapeString(mention.name) +
+                    return this.getHelper().escapeString(mention.name) +
                         ' <span class="text-muted">@' +
                         this.getHelper().escapeString(mention.userName) + '</span>';
                 },
-                replace: (o) => {
-                    return '$1@' + o.userName + '';
-                },
+                replace: (o) => '$1@' + o.userName + '',
             }]);
 
             this.once('remove', () => {
@@ -729,8 +725,7 @@ class PanelStreamView extends RelationshipPanelView {
     storeFilter(filter) {
         if (filter) {
             this.getStorage().set('state', 'streamPanelFilter' + this.entityType, filter);
-        }
-        else {
+        } else {
             this.getStorage().clear('state', 'streamPanelFilter' + this.entityType);
         }
     }
@@ -759,8 +754,8 @@ class PanelStreamView extends RelationshipPanelView {
 
     preview() {
         this.createView('dialog', 'views/modal', {
-            templateContent: '<div class="complex-text">' +
-                   '{{complexText viewObject.options.text linksInNewTab=true}}</div>',
+            templateContent:
+                `<div class="complex-text">{{complexText viewObject.options.text linksInNewTab=true}}</div>`,
             text: this.$textarea.val(),
             headerText: this.translate('Preview'),
             backdrop: true,
