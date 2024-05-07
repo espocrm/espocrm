@@ -255,6 +255,7 @@ return [
     'recordListMaxSizeLimit' => 200,
     'noteDeleteThresholdPeriod' => '1 month',
     'noteEditThresholdPeriod' => '7 days',
+    'notePinnedMaxCount' => 5,
     'emailForceUseExternalClient' => false,
     'useWebSocket' => false,
     'webSocketMessager' => 'ZeroMQ',

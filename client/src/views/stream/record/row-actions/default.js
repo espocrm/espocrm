@@ -30,6 +30,18 @@ import DefaultRowActionsView from 'views/record/row-actions/default';
 
 class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
 
+    setup() {
+        super.setup();
+
+        /** @type import('model').default */
+        this.parentModel = this.options.parentModel;
+
+        if (this.options.isThis && this.parentModel) {
+            this.listenTo(this.model, 'change:isPinned', () => this.reRender());
+            this.listenToOnce(this.parentModel, 'acl-edit-ready', () => this.reRender());
+        }
+    }
+
     getActionList() {
         const list = [];
 
@@ -40,6 +52,7 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
         }
 
@@ -50,7 +63,33 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
                 data: {
                     id: this.model.id,
                 },
+                groupIndex: 0,
             });
+        }
+
+        if (
+            this.options.isThis &&
+            ['Post', 'EmailReceived', 'EmailSent'].includes(this.model.get('type')) &&
+            this.parentModel &&
+            this.getAcl().checkModel(this.parentModel, 'edit')
+        ) {
+            !this.model.get('isPinned') ?
+                list.push({
+                    action: 'pin',
+                    label: 'Pin',
+                    data: {
+                        id: this.model.id,
+                    },
+                    groupIndex: 1,
+                }) :
+                list.push({
+                    action: 'unpin',
+                    label: 'Unpin',
+                    data: {
+                        id: this.model.id,
+                    },
+                    groupIndex: 1,
+                });
         }
 
         return list;

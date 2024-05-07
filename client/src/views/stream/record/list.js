@@ -49,6 +49,10 @@ class ListStreamRecordView extends ListExpandedRecordView {
 
         this.isRenderingNew = false;
 
+        this.listenTo(this.collection, 'update-sync', () => {
+            this.buildRows(() => this.reRender());
+        });
+
         this.listenTo(this.collection, 'sync', (c, r, options) => {
             if (!options.fetchNew) {
                 return;
@@ -194,6 +198,60 @@ class ListStreamRecordView extends ListExpandedRecordView {
      */
     showNewRecords() {
         return this.collection.fetchNew();
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     * @param {{id: string}} data
+     */
+    actionPin(data) {
+        const collection = /** @type {import('collections/note').default} */this.collection;
+
+        Espo.Ui.notify(' ... ');
+
+        Espo.Ajax.postRequest(`Note/${data.id}/pin`).then(() => {
+            Espo.Ui.notify(false);
+
+            const model = collection.get(data.id);
+
+            if (model) {
+                model.set('isPinned', true);
+            }
+
+            if (collection.pinnedList) {
+                collection.fetchNew();
+            }
+
+            collection.trigger('pin', model.id);
+        });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    /**
+     * @private
+     * @param {{id: string}} data
+     */
+    actionUnpin(data) {
+        const collection = /** @type {import('collections/note').default} */this.collection;
+
+        Espo.Ui.notify(' ... ');
+
+        Espo.Ajax.deleteRequest(`Note/${data.id}/pin`).then(() => {
+            Espo.Ui.notify(false);
+
+            const model = collection.get(data.id);
+
+            if (model) {
+                model.set('isPinned', false);
+            }
+
+            if (collection.pinnedList) {
+                collection.fetchNew();
+            }
+
+            collection.trigger('unpin', model.id);
+        });
     }
 }
 

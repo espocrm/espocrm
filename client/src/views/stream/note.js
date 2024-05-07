@@ -119,6 +119,8 @@ class NoteStreamView extends View {
                 isEditable: this.isEditable,
                 isRemovable: this.isRemovable,
                 listType: this.listType,
+                isThis: this.isThis,
+                parentModel: this.parentModel,
             });
         }
     }

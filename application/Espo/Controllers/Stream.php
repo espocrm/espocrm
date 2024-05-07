@@ -68,19 +68,28 @@ class Stream
             throw new BadRequest();
         }
 
-        if ($id === null && $scope !== UserEntity::ENTITY_TYPE) {
-            throw new BadRequest("No ID.");
-        }
-
         $searchParams = $this->fetchSearchParams($request);
 
-        $result = $scope === UserEntity::ENTITY_TYPE ?
-            $this->userRecordService->find($id, $searchParams) :
-            $this->service->find($scope, $id ?? '', $searchParams);
+        if ($scope === UserEntity::ENTITY_TYPE) {
+            $collection = $this->userRecordService->find($id, $searchParams);
+
+            return (object) [
+                'total' => $collection->getTotal(),
+                'list' => $collection->getValueMapList(),
+            ];
+        }
+
+        if ($id === null) {
+            throw new BadRequest();
+        }
+
+        $collection = $this->service->find($scope, $id, $searchParams);
+        $pinnedCollection = $this->service->getPinned($scope, $id);
 
         return (object) [
-            'total' => $result->getTotal(),
-            'list' => $result->getValueMapList(),
+            'total' => $collection->getTotal(),
+            'list' => $collection->getValueMapList(),
+            'pinnedList' => $pinnedCollection->getValueMapList(),
         ];
     }
 

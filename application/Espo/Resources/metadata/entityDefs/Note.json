@@ -49,12 +49,14 @@
                 "portals"
             ],
             "maxLength": 7,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "readOnlyAfterCreate": true
         },
         "parent": {
             "type": "linkParent",
             "customizationDisabled": true,
-            "view": "views/note/fields/parent"
+            "view": "views/note/fields/parent",
+            "readOnlyAfterCreate": true
         },
         "related": {
             "type": "linkParent",
@@ -81,21 +83,25 @@
         "teams": {
             "type": "linkMultiple",
             "noLoad": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "readOnlyAfterCreate": true
         },
         "portals": {
             "type": "linkMultiple",
             "noLoad": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "readOnlyAfterCreate": true
         },
         "users": {
             "type": "linkMultiple",
             "noLoad": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "readOnlyAfterCreate": true
         },
         "isGlobal": {
             "type": "bool",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "readOnlyAfterCreate": true
         },
         "createdByGender": {
             "type": "foreign",
@@ -107,11 +113,18 @@
             "type": "jsonArray",
             "notStorable": true,
             "utility": true,
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "readOnly": true
         },
         "isInternal": {
             "type": "bool",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "readOnlyAfterCreate": true
+        },
+        "isPinned": {
+            "type": "bool",
+            "customizationDisabled": true,
+            "readOnly": true
         },
         "createdAt": {
             "type": "datetime",

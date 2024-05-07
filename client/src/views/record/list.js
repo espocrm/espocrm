@@ -3260,6 +3260,7 @@ class ListRecordView extends View {
                 .then(() => {
                     Espo.Ui.success(this.translate('Removed'));
 
+                    this.trigger('after:delete', model);
                     this.removeRecordFromList(id);
                 })
                 .catch(() => {

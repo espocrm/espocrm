@@ -29,7 +29,6 @@
 
 namespace Espo\Entities;
 
-use Espo\Core\Field\LinkMultiple;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Entity;
 
@@ -324,6 +323,18 @@ class Note extends Entity
     public function setUsersIds(array $ids): self
     {
         $this->set('usersIds', $ids);
+
+        return $this;
+    }
+
+    public function isPinned(): bool
+    {
+        return (bool) $this->get('isPinned');
+    }
+
+    public function setIsPinned(bool $isPinned): self
+    {
+        $this->set('isPinned', $isPinned);
 
         return $this;
     }

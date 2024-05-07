@@ -31,6 +31,7 @@
         </a>
     </div>
 </div>
-<div class="list-container">
-    {{{list}}}
-</div>
+{{#if hasPinned}}
+    <div class="list-container" data-role="pinned">{{{pinnedList}}}</div>
+{{/if}}
+<div class="list-container" data-role="stream">{{{list}}}</div>

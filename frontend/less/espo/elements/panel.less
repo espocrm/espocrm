@@ -695,3 +695,29 @@ body {
 .panel-group-accordion > .panel {
     overflow: hidden;
 }
+
+.panel > .panel-body > .list-container > {
+    > .list > .list-group {
+        > .list-group-item {
+            border-width: 0;
+            border-bottom-width: 1px;
+        }
+
+        > li.list-group-item:first-child {
+            border-top-width: 1px;
+            border-top-color: transparent;
+        }
+
+        > li.list-group-item:last-child {
+            border-bottom-width: 0;
+        }
+    }
+
+    &:has(+ .list-container) {
+        > .list > .list-group {
+            > li.list-group-item:last-child {
+                border-bottom-width: 1px;
+            }
+        }
+    }
+}

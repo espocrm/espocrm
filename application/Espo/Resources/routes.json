@@ -565,6 +565,16 @@
         }
     },
     {
+        "route": "/:Note/:id/pin",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\PostNotePin"
+    },
+    {
+        "route": "/:Note/:id/pin",
+        "method": "delete",
+        "actionClassName": "Espo\\Tools\\Stream\\Api\\DeleteNotePin"
+    },
+    {
         "route": "/:entityType/:id/starSubscription",
         "method": "put",
         "actionClassName": "Espo\\Tools\\Stars\\Api\\PutStar"

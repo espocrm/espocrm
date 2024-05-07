@@ -45,6 +45,9 @@ class PanelStreamView extends RelationshipPanelView {
     /** @private */
     _justPosted = false
 
+    /** @type {import('collections/note').default} */
+    pinnedCollection
+
     additionalEvents = {
         /** @this PanelStreamView */
         'focus textarea[data-name="post"]': function () {
@@ -102,6 +105,7 @@ class PanelStreamView extends RelationshipPanelView {
         data.postDisabled = this.postDisabled;
         data.placeholderText = this.placeholderText;
         data.allowInternalNotes = this.allowInternalNotes;
+        data.hasPinned = this.hasPinned;
 
         return data;
     }
@@ -204,6 +208,8 @@ class PanelStreamView extends RelationshipPanelView {
             this.allowInternalNotes = this.getMetadata().get(['clientDefs', this.entityType, 'allowInternalNotes']);
         }
 
+        this.hasPinned = this.model.entityType !== 'User';
+
         this.isInternalNoteMode = false;
 
         this.storageTextKey = 'stream-post-' + this.model.entityType + '-' + this.model.id;
@@ -267,7 +273,10 @@ class PanelStreamView extends RelationshipPanelView {
                 this.initPostEvents(view);
             });
 
-            this.wait(this.createCollection());
+            this.wait(
+                this.createCollection()
+                    .then(() => this.setupPinned())
+            );
 
             this.listenTo(this.seed, 'change:attachmentsIds', () => {
                 this.controlPostButtonAvailability();
@@ -319,7 +328,9 @@ class PanelStreamView extends RelationshipPanelView {
                     model.fetch();
                 }
 
-                return;
+                if (!data.pin) {
+                    return;
+                }
             }
 
             this.collection.fetchNew();
@@ -428,12 +439,65 @@ class PanelStreamView extends RelationshipPanelView {
         }
 
         const onSync = () => {
+            if (this.hasPinned) {
+                this.pinnedCollection.add(this.collection.pinnedList);
+
+                this.createView('pinnedList', 'views/stream/record/list', {
+                    selector: '> .list-container[data-role="pinned"]',
+                    collection: this.pinnedCollection,
+                    model: this.model,
+                    noDataDisabled: true,
+                }, view => {
+                    view.render();
+
+                    this.listenTo(view, 'after:save', /** import('model').default */model => {
+                        const cModel = this.collection.get(model.id);
+
+                        if (!cModel) {
+                            return;
+                        }
+
+                        cModel.setMultiple({
+                            post: model.attributes.post,
+                            attachmentsIds: model.attributes.attachmentsIds,
+                            attachmentsNames: model.attributes.attachmentsNames,
+                        });
+                    });
+
+                    this.listenTo(view, 'after:delete', /** import('model').default */model => {
+                        this.collection.remove(model.id);
+                        this.collection.trigger('update-sync');
+                    });
+                });
+            }
+
             this.createView('list', 'views/stream/record/list', {
-                selector: '> .list-container',
+                selector: '> .list-container[data-role="stream"]',
                 collection: this.collection,
                 model: this.model,
             }, view => {
                 view.render();
+
+                if (this.pinnedCollection) {
+                    this.listenTo(view, 'after:delete', /** import('model').default */model => {
+                        this.pinnedCollection.remove(model.id);
+                        this.pinnedCollection.trigger('update-sync');
+                    });
+
+                    this.listenTo(view, 'after:save', /** import('model').default */model => {
+                        const cModel = this.pinnedCollection.get(model.id);
+
+                        if (!cModel) {
+                            return;
+                        }
+
+                        cModel.setMultiple({
+                            post: model.attributes.post,
+                            attachmentsIds: model.attributes.attachmentsIds,
+                            attachmentsNames: model.attributes.attachmentsNames,
+                        });
+                    });
+                }
             });
 
             this.stopListening(this.model, 'all');
@@ -797,6 +861,53 @@ class PanelStreamView extends RelationshipPanelView {
 
     enablePostButton() {
         this.$postButton.removeClass('disabled').removeAttr('disabled');
+    }
+
+    setupPinned() {
+        if (!this.hasPinned) {
+            return;
+        }
+
+        const promise = this.getCollectionFactory().create('Note')
+            .then(/** import('collections/note').default */collection => {
+                this.pinnedCollection = collection;
+
+                this.listenTo(this.collection, 'sync', () => {
+                    if (!this.collection.pinnedList) {
+                        return;
+                    }
+
+                    this.pinnedCollection.reset();
+                    this.pinnedCollection.add(this.collection.pinnedList);
+                    this.pinnedCollection.trigger('sync', this.pinnedCollection, {}, {});
+                });
+
+                this.listenTo(this.pinnedCollection, 'pin unpin', () => {
+                    this.collection.fetchNew();
+                });
+
+                this.listenTo(this.pinnedCollection, 'pin', id => {
+                    const model = this.collection.get(id);
+
+                    if (!model) {
+                        return;
+                    }
+
+                    model.set('isPinned', true);
+                });
+
+                this.listenTo(this.pinnedCollection, 'unpin', id => {
+                    const model = this.collection.get(id);
+
+                    if (!model) {
+                        return;
+                    }
+
+                    model.set('isPinned', false);
+                });
+            });
+
+        this.wait(promise);
     }
 }
 

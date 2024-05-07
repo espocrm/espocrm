@@ -34,6 +34,7 @@ use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Collection;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Entities\Note;
@@ -48,6 +49,8 @@ use Espo\Tools\Stream\RecordService\QueryHelper;
 
 class RecordService
 {
+    private const PINNED_MAX_SIZE = 100;
+
     public function __construct(
         private EntityManager $entityManager,
         private User $user,
@@ -69,19 +72,7 @@ class RecordService
      */
     public function find(string $scope, string $id, SearchParams $searchParams): RecordCollection
     {
-        if ($scope === User::ENTITY_TYPE) {
-            throw new Forbidden();
-        }
-
-        $entity = $this->entityManager->getEntityById($scope, $id);
-
-        if (!$entity) {
-            throw new NotFound();
-        }
-
-        if (!$this->acl->checkEntity($entity, Table::ACTION_STREAM)) {
-            throw new Forbidden();
-        }
+        $this->checkAccess($scope, $id);
 
         return $this->findInternal($scope, $id, $searchParams);
     }
@@ -121,6 +112,53 @@ class RecordService
         $searchParams = $searchParams->withPrimaryFilter('updates');
 
         return $this->findInternal($scope, $id, $searchParams);
+    }
+
+    /**
+     * Get pinned notes.
+     *
+     * @return Collection<Note>
+     * @throws Forbidden
+     * @throws BadRequest
+     * @throws NotFound
+     */
+    public function getPinned(string $scope, string $id): Collection
+    {
+        $this->checkAccess($scope, $id);
+
+        $builder = $this->queryHelper->buildBaseQueryBuilder(SearchParams::create());
+
+        $where = [
+            'parentType' => $scope,
+            'parentId' => $id,
+            'isPinned' => true,
+        ];
+
+        if ($this->user->isPortal()) {
+            $where[] = ['isInternal' => true];
+        }
+
+        $this->applyPortalAccess($builder, $where);
+        $this->applyAccess($builder, $id, $scope, $where);
+        $this->applyIgnore($where);
+        $this->applyStatusIgnore($scope, $where);
+
+        $builder->where($where);
+
+        $builder
+            ->limit(0, self::PINNED_MAX_SIZE)
+            ->order('number', 'DESC');
+
+        $collection = $this->entityManager
+            ->getRDBRepositoryByClass(Note::class)
+            ->clone($builder->build())
+            ->find();
+
+        foreach ($collection as $item) {
+            $this->prepareNote($item, $scope, $id);
+        }
+
+        return $collection;
     }
 
     /**
@@ -400,6 +438,27 @@ class RecordService
 
         if ($note->getType() === Note::TYPE_UPDATE) {
             $this->noteHelper->prepare($note);
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     * @throws NotFound
+     */
+    private function checkAccess(string $scope, string $id): void
+    {
+        if ($scope === User::ENTITY_TYPE) {
+            throw new Forbidden();
+        }
+
+        $entity = $this->entityManager->getEntityById($scope, $id);
+
+        if (!$entity) {
+            throw new NotFound("Record not found.");
+        }
+
+        if (!$this->acl->checkEntity($entity, Table::ACTION_STREAM)) {
+            throw new Forbidden("No stream access.");
         }
     }
 }

@@ -34,6 +34,11 @@ class NoteCollection extends Collection {
 
     paginationByNumber = false
 
+    /**
+     * @type {Record[]}
+     */
+    pinnedList
+
     /** @inheritDoc */
     prepareAttributes(response, params) {
         const total = this.total;
@@ -41,11 +46,12 @@ class NoteCollection extends Collection {
         const list = super.prepareAttributes(response, params);
 
         if (params.data && params.data.after) {
-            if (total >= 0 && response.total >= 0) {
-                this.total = total + response.total;
-            } else {
-                this.total = total;
-            }
+            this.total = total >= 0 && response.total >= 0 ?
+                total + response.total : total;
+        }
+
+        if (response.pinnedList) {
+            this.pinnedList = Espo.Utils.cloneDeep(response.pinnedList);
         }
 
         return list;

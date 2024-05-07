@@ -214,7 +214,7 @@ class Collection {
     /**
      * Add models or a model.
      *
-     * @param {Model[]|Model} models Models ar a model.
+     * @param {Model[]|Model|Record} models Models ar a model.
      * @param {{
      *     merge?: boolean,
      *     at?: number,
@@ -749,7 +749,7 @@ class Collection {
      * Prepare attributes.
      *
      * @protected
-     * @param {*} response A response from the backend.
+     * @param {Object.<string, *>|Record[]} response A response from the backend.
      * @param {Object.<string, *>} options Options.
      * @returns {Object.<string, *>[]}
      */

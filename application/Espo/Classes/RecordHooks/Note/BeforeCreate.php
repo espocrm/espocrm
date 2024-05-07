@@ -70,6 +70,7 @@ class BeforeCreate implements SaveHook
 
         $targetType = $entity->getTargetType();
 
+        $entity->clear('isPinned');
         $entity->clear('isGlobal');
 
         switch ($targetType) {

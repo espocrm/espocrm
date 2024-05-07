@@ -2722,6 +2722,8 @@ class DetailRecordView extends BaseRecordView {
 
         if (editAccess === null) {
             this.listenToOnce(this.model, 'sync', () => {
+                this.model.trigger('acl-edit-ready');
+
                 this.manageAccessEdit(true);
             });
         }
