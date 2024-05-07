@@ -2209,6 +2209,14 @@ div[data-scope="ApiUser"] {
     }
 }
 
+.list-container[data-role="pinned"] .list-group-item:not(.active) .complex-text-container.cut {
+    > .complex-text {
+        &::before {
+            background: linear-gradient(to bottom, transparent, var(--warning-bg));
+        }
+    }
+}
+
 .list-group-item.active .complex-text-container.cut {
     > .complex-text {
         &::before {
