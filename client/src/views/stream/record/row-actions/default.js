@@ -30,6 +30,8 @@ import DefaultRowActionsView from 'views/record/row-actions/default';
 
 class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
 
+    pinnedMaxCount
+
     setup() {
         super.setup();
 
@@ -39,6 +41,8 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
         if (this.options.isThis && this.parentModel) {
             this.listenTo(this.model, 'change:isPinned', () => this.reRender());
             this.listenToOnce(this.parentModel, 'acl-edit-ready', () => this.reRender());
+
+            this.pinnedMaxCount = this.getConfig().get('notePinnedMaxCount');
         }
     }
 
@@ -73,15 +77,7 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
             this.parentModel &&
             this.getAcl().checkModel(this.parentModel, 'edit')
         ) {
-            !this.model.get('isPinned') ?
-                list.push({
-                    action: 'pin',
-                    label: 'Pin',
-                    data: {
-                        id: this.model.id,
-                    },
-                    groupIndex: 1,
-                }) :
+            if (this.model.get('isPinned')) {
                 list.push({
                     action: 'unpin',
                     label: 'Unpin',
@@ -90,6 +86,16 @@ class StreamDefaultNoteRowActionsView extends DefaultRowActionsView {
                     },
                     groupIndex: 1,
                 });
+            } else if (this.pinnedMaxCount > 0) {
+                list.push({
+                    action: 'pin',
+                    label: 'Pin',
+                    data: {
+                        id: this.model.id,
+                    },
+                    groupIndex: 1,
+                });
+            }
         }
 
         return list;
