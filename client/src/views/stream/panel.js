@@ -325,7 +325,8 @@ class PanelStreamView extends RelationshipPanelView {
                 const model = this.collection.get(data.noteId);
 
                 if (model) {
-                    model.fetch();
+                    model.fetch()
+                        .then(() => this.syncPinnedModel(model, true));
                 }
 
                 if (!data.pin) {
@@ -451,19 +452,7 @@ class PanelStreamView extends RelationshipPanelView {
                     view.render();
 
                     this.listenTo(view, 'after:save', /** import('model').default */model => {
-                        const cModel = this.collection.get(model.id);
-
-                        if (!cModel) {
-                            return;
-                        }
-
-                        cModel.setMultiple({
-                            post: model.attributes.post,
-                            attachmentsIds: model.attributes.attachmentsIds,
-                            attachmentsNames: model.attributes.attachmentsNames,
-                            attachmentsTypes: model.attributes.attachmentsTypes,
-                            data: model.attributes.data,
-                        });
+                        this.syncPinnedModel(model, false);
                     });
 
                     this.listenTo(view, 'after:delete', /** import('model').default */model => {
@@ -487,19 +476,7 @@ class PanelStreamView extends RelationshipPanelView {
                     });
 
                     this.listenTo(view, 'after:save', /** import('model').default */model => {
-                        const cModel = this.pinnedCollection.get(model.id);
-
-                        if (!cModel) {
-                            return;
-                        }
-
-                        cModel.setMultiple({
-                            post: model.attributes.post,
-                            attachmentsIds: model.attributes.attachmentsIds,
-                            attachmentsNames: model.attributes.attachmentsNames,
-                            attachmentsTypes: model.attributes.attachmentsTypes,
-                            data: model.attributes.data,
-                        });
+                        this.syncPinnedModel(model, true);
                     });
                 }
             });
@@ -616,6 +593,33 @@ class PanelStreamView extends RelationshipPanelView {
             },
         }, view => {
             view.render();
+        });
+    }
+
+    /**
+     * @private
+     * @param {import('model').default} model
+     * @param {boolean} toPinned
+     */
+    syncPinnedModel(model, toPinned) {
+        if (toPinned && !this.pinnedCollection) {
+            return;
+        }
+
+        const cModel = toPinned ?
+            this.pinnedCollection.get(model.id) :
+            this.collection.get(model.id);
+
+        if (!cModel) {
+            return;
+        }
+
+        cModel.setMultiple({
+            post: model.attributes.post,
+            attachmentsIds: model.attributes.attachmentsIds,
+            attachmentsNames: model.attributes.attachmentsNames,
+            attachmentsTypes: model.attributes.attachmentsTypes,
+            data: model.attributes.data,
         });
     }
 
