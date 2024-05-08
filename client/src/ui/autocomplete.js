@@ -166,11 +166,11 @@ class Autocomplete {
             }
 
             this.$element.autocomplete('onFocus');
-
-            if (options.handleFocusMode === 3) {
-                this.$element.on('change', () => this.$element.val(''));
-            }
         });
+
+        if (options.handleFocusMode === 3) {
+            this.$element.on('change', () => this.$element.val(''));
+        }
     }
 
     /**
