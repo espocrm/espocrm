@@ -57,11 +57,7 @@ class QueueProcessor
             $this->asyncPoolFactory->create() :
             null;
 
-        $pendingJobList = $this->queueUtil->getPendingJobList(
-            $params->getQueue(),
-            $params->getGroup(),
-            $params->getLimit()
-        );
+        $pendingJobList = $this->queueUtil->getPendingJobList($params);
 
         foreach ($pendingJobList as $job) {
             $this->processJob($params, $job, $pool);
@@ -80,6 +76,29 @@ class QueueProcessor
             $this->entityManager->getLocker()->lockExclusive(JobEntity::ENTITY_TYPE);
         }
 
+        $skip = $this->toSkip($noLock, $job);
+
+        if ($skip) {
+            if ($lockTable) {
+                $this->entityManager->getLocker()->rollback();
+            }
+
+            return;
+        }
+
+        $this->prepareJob($job, $pool);
+
+        $this->entityManager->saveEntity($job);
+
+        if ($lockTable) {
+            $this->entityManager->getLocker()->commit();
+        }
+
+        $this->runJob($job, $pool);
+    }
+
+    private function toSkip(bool $noLock, JobEntity $job): bool
+    {
         $skip = !$noLock && !$this->queueUtil->isJobPending($job->getId());
 
         if (
@@ -95,30 +114,25 @@ class QueueProcessor
             $skip = true;
         }
 
-        if ($skip && $lockTable) {
-            $this->entityManager->getLocker()->rollback();
-        }
+        return $skip;
+    }
 
-        if ($skip) {
-            return;
-        }
-
+    private function prepareJob(JobEntity $job, ?AsyncPool $pool): void
+    {
         $job->setStartedAtNow();
 
         if ($pool) {
             $job->setStatus(Status::READY);
-        }
-        else {
-            $job->setStatus(Status::RUNNING);
-            $job->setPid(System::getPid());
+
+            return;
         }
 
-        $this->entityManager->saveEntity($job);
+        $job->setStatus(Status::RUNNING);
+        $job->setPid(System::getPid());
+    }
 
-        if ($lockTable) {
-            $this->entityManager->getLocker()->commit();
-        }
-
+    private function runJob(JobEntity $job, ?AsyncPool $pool): void
+    {
         if (!$pool) {
             $this->jobRunner->run($job);
 

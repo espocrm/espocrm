@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Job;
 
+use Espo\Core\Job\QueueProcessor\Params;
 use Espo\Core\ORM\EntityManager;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
@@ -73,8 +74,12 @@ class QueueUtil
     /**
      * @return Collection<JobEntity>
      */
-    public function getPendingJobList(?string $queue = null, ?string $group = null, int $limit = 0): Collection
+    public function getPendingJobList(Params $params): Collection
     {
+        $queue = $params->getQueue();
+        $group = $params->getGroup();
+        $limit = $params->getLimit();
+
         $builder = $this->entityManager
             ->getRDBRepositoryByClass(JobEntity::class)
             ->select([
