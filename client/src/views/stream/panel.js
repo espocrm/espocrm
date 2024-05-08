@@ -29,6 +29,7 @@
 import RelationshipPanelView from 'views/record/panels/relationship';
 // noinspection ES6UnusedImports
 import Textcomplete from 'jquery-textcomplete';
+import _ from 'underscore';
 
 class PanelStreamView extends RelationshipPanelView {
 
@@ -882,6 +883,15 @@ class PanelStreamView extends RelationshipPanelView {
 
                 this.listenTo(this.collection, 'sync', () => {
                     if (!this.collection.pinnedList) {
+                        return;
+                    }
+
+                    if (
+                        _.isEqual(
+                            this.collection.pinnedList,
+                            this.pinnedCollection.models.map(m => m.attributes)
+                        )
+                    ) {
                         return;
                     }
 
