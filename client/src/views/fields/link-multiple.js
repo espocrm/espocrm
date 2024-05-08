@@ -373,10 +373,7 @@ class LinkMultipleFieldView extends BaseFieldView {
             this.events['click a[data-action="clearLink"]'] = (e) => {
                 const id = $(e.currentTarget).attr('data-id');
 
-                this.deleteLink(id);
-
-                // noinspection JSUnresolvedReference
-                this.$element.get(0).focus({preventScroll: true});
+                this.actionDeleteLink(id);
             };
         }
 
@@ -395,6 +392,23 @@ class LinkMultipleFieldView extends BaseFieldView {
         /** @type {Object.<string, *>} */
         this.panelDefs = this.getMetadata()
             .get(['clientDefs', this.entityType, 'relationshipPanels', this.name]) || {};
+    }
+
+    /**
+     * @private
+     * @param {string} id
+     */
+    actionDeleteLink(id) {
+        this.deleteLink(id);
+
+        // noinspection JSUnresolvedReference
+        this.$element.get(0).focus({preventScroll: true});
+
+        // Timeout prevents autocomplete from disappearing.
+        setTimeout(() => {
+            // noinspection JSUnresolvedReference
+            this.$element.get(0).focus({preventScroll: true});
+        }, 140);
     }
 
     /**
