@@ -215,6 +215,10 @@
                             "optionsPath": {
                                 "type": "string",
                                 "description": "An options path. E.g. `entityDefs.SomeEntityType.fields.someField.options`."
+                            },
+                            "optionsReference": {
+                                "type": "string",
+                                "description": "An options reference. E.g. `SomeEntityType.someField`."
                             }
                         }
                     }
@@ -237,6 +241,26 @@
                             "translation": {
                                 "type": "string",
                                 "description": "A translation path. E.g. `Global.scopeNames`."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "multiEnum"},
+                                    {"const": "array"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "allowCustomOptions": {
+                                "type": "boolean",
+                                "description": "Allow custom options."
                             }
                         }
                     }
