@@ -109,7 +109,7 @@ class FailedAttemptsLimit implements BeforeLogin
             return;
         }
 
-        $this->log->warning("AUTH: Max failed login attempts exceeded for IP {ip}.", ['ip' => $ip]);
+        $this->log->warning("AUTH: Max failed login attempts exceeded for IP {ipAddress}.", ['ipAddress' => $ip]);
 
         throw new Forbidden("Max failed login attempts exceeded.");
     }
