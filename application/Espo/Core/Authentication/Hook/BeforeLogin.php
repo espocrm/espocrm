@@ -36,11 +36,12 @@ use Espo\Core\Exceptions\ServiceUnavailable;
 
 /**
  * Before logging in, before credentials are checked.
- *
- * @throws Forbidden
- * @throws ServiceUnavailable
  */
 interface BeforeLogin
 {
+    /**
+     * @throws Forbidden
+     * @throws ServiceUnavailable
+     */
     public function process(AuthenticationData $data, Request $request): void;
 }
