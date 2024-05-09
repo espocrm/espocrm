@@ -103,7 +103,7 @@ class UrlMultipleFieldView extends ArrayFieldView {
 
     getValueForDisplay() {
         /** @type {JQuery[]} */
-        let $list = this.selected.map(value => {
+        const $list = this.selected.map(value => {
             return $('<a>')
                 .attr('href', this.prepareUrl(value))
                 .attr('target', '_blank')
@@ -121,9 +121,9 @@ class UrlMultipleFieldView extends ArrayFieldView {
     }
 
     getItemHtml(value) {
-        let html = super.getItemHtml(value);
+        const html = super.getItemHtml(value);
 
-        let $item = $(html);
+        const $item = $(html);
 
         $item.find('span.text').html(
             $('<a>')
