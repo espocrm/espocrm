@@ -102,7 +102,7 @@ class UrlFieldView extends VarcharFieldView {
                     return;
                 }
 
-                const decoded = parsedValue ? decodeURI(parsedValue) : '';
+                const decoded = parsedValue ? this.decodeURI(parsedValue) : '';
 
                 this.$element.val(decoded);
             });
@@ -112,7 +112,22 @@ class UrlFieldView extends VarcharFieldView {
     getValueForDisplay() {
         const value = this.model.get(this.name);
 
-        return value ? decodeURI(value) : null;
+        return value ? this.decodeURI(value) : null;
+    }
+
+    /**
+     * @private
+     * @param {string} value
+     * @return {string}
+     */
+    decodeURI(value) {
+        try {
+            return decodeURI(value);
+        } catch (e) {
+            console.warn(`Malformed URI ${value}.`);
+
+            return value;
+        }
     }
 
     /**
@@ -126,8 +141,14 @@ class UrlFieldView extends VarcharFieldView {
             value = this.strip(value);
         }
 
-        if (value === decodeURI(value)) {
-            value = encodeURI(value);
+        try {
+            if (value === decodeURI(value)) {
+                value = encodeURI(value);
+            }
+        } catch (e) {
+            console.warn(`Malformed URI ${value}.`);
+
+            return value;
         }
 
         return value;
