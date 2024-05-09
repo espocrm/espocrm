@@ -250,6 +250,25 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "array"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "noEmptyString": {
+                                "type": "boolean",
+                                "description": "Don't allow empty string."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "multiEnum"},
                                     {"const": "array"}
                                 ]
@@ -560,6 +579,27 @@
                             "autocompleteOnEmpty": {
                                 "type": "boolean",
                                 "description": "Autocomplete on empty input."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "link"},
+                                    {"const": "linkMultiple"},
+                                    {"const": "linkOne"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "entity": {
+                                "type": "string",
+                                "description": "An entity type. To be specified if there's no corresponding link defined."
                             }
                         }
                     }
