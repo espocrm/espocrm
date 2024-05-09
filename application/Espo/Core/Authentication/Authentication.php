@@ -216,15 +216,7 @@ class Authentication
             return $this->processFail(Result::fail(FailReason::DENIED), $data, $request);
         }
 
-        if ($this->isPortal()) {
-            $user->set('portalId', $this->getPortal()->getId());
-        }
-
-        if (!$this->isPortal()) {
-            $user->loadLinkMultipleField('teams');
-        }
-
-        $user->set('ipAddress', $this->util->obtainIpFromRequest($request));
+        $this->prepareUser($user, $request);
 
         [$loggedUser, $anotherUserFailReason] = $this->getLoggedUser($request, $user);
 
@@ -780,5 +772,18 @@ class Authentication
         $loggedUser->loadLinkMultipleField('teams');
 
         return [$loggedUser, null];
+    }
+
+    private function prepareUser(User $user, Request $request): void
+    {
+        if ($this->isPortal()) {
+            $user->set('portalId', $this->getPortal()->getId());
+        }
+
+        if (!$this->isPortal()) {
+            $user->loadLinkMultipleField('teams');
+        }
+
+        $user->set('ipAddress', $this->util->obtainIpFromRequest($request));
     }
 }
