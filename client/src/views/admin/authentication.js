@@ -26,159 +26,160 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/authentication', ['views/settings/record/edit'], function (Dep) {
+import SettingsEditRecordView from 'views/settings/record/edit';
 
-    return Dep.extend({
+class AdminAuthenticationRecordView extends SettingsEditRecordView {
 
-        layoutName: 'authentication',
+    layoutName = 'authentication'
 
-        saveAndContinueEditingAction: false,
+    saveAndContinueEditingAction = false
 
-        setup: function () {
-            this.methodList = [];
+    setup() {
+        this.methodList = [];
 
-            let defs = this.getMetadata().get(['authenticationMethods']) || {};
+        const defs = this.getMetadata().get(['authenticationMethods']) || {};
 
-            for (let method in defs) {
-                if (defs[method].settings && defs[method].settings.isAvailable) {
-                    this.methodList.push(method);
-                }
+        for (const method in defs) {
+            if (defs[method].settings && defs[method].settings.isAvailable) {
+                this.methodList.push(method);
+            }
+        }
+
+        this.authFields = {};
+
+        super.setup();
+
+        this.handlePanelsVisibility();
+
+        this.listenTo(this.model, 'change:authenticationMethod', () => {
+            this.handlePanelsVisibility();
+        });
+
+        this.manage2FAFields();
+
+        this.listenTo(this.model, 'change:auth2FA', () => {
+            this.manage2FAFields();
+        });
+
+        this.managePasswordRecoveryFields();
+
+        this.listenTo(this.model, 'change:passwordRecoveryDisabled', () => {
+            this.managePasswordRecoveryFields();
+        });
+    }
+
+    setupBeforeFinal() {
+        this.dynamicLogicDefs = {
+            fields: {},
+            panels: {},
+        };
+
+        this.methodList.forEach(method => {
+            const fieldList = this.getMetadata().get(['authenticationMethods', method, 'settings', 'fieldList']);
+
+            if (fieldList) {
+                this.authFields[method] = fieldList;
             }
 
-            this.authFields = {};
+            const mDynamicLogicFieldsDefs = this.getMetadata()
+                .get(['authenticationMethods', method, 'settings', 'dynamicLogic', 'fields']);
 
-            Dep.prototype.setup.call(this);
-
-            this.handlePanelsVisibility();
-
-            this.listenTo(this.model, 'change:authenticationMethod', () => {
-                this.handlePanelsVisibility();
-            });
-
-            this.manage2FAFields();
-
-            this.listenTo(this.model, 'change:auth2FA', () => {
-                this.manage2FAFields();
-            });
-
-            this.managePasswordRecoveryFields();
-
-            this.listenTo(this.model, 'change:passwordRecoveryDisabled', () => {
-                this.managePasswordRecoveryFields();
-            });
-        },
-
-        setupBeforeFinal: function () {
-            this.dynamicLogicDefs = {
-                fields: {},
-                panels: {},
-            };
-
-            this.methodList.forEach(method => {
-                let fieldList = this.getMetadata().get(['authenticationMethods', method, 'settings', 'fieldList']);
-
-                if (fieldList) {
-                    this.authFields[method] = fieldList;
+            if (mDynamicLogicFieldsDefs) {
+                for (const f in mDynamicLogicFieldsDefs) {
+                    this.dynamicLogicDefs.fields[f] = Espo.Utils.cloneDeep(mDynamicLogicFieldsDefs[f]);
                 }
+            }
+        });
 
-                let mDynamicLogicFieldsDefs = this.getMetadata()
-                    .get(['authenticationMethods', method, 'settings', 'dynamicLogic', 'fields']);
+        super.setupBeforeFinal();
+    }
 
-                if (mDynamicLogicFieldsDefs) {
-                    for (let f in mDynamicLogicFieldsDefs) {
-                        this.dynamicLogicDefs.fields[f] = Espo.Utils.cloneDeep(mDynamicLogicFieldsDefs[f]);
+    modifyDetailLayout(layout) {
+        this.methodList.forEach(method => {
+            let mLayout = this.getMetadata().get(['authenticationMethods', method, 'settings', 'layout']);
+
+            if (!mLayout) {
+                return;
+            }
+
+            mLayout = Espo.Utils.cloneDeep(mLayout);
+            mLayout.name = method;
+
+            this.prepareLayout(mLayout, method);
+
+            layout.push(mLayout);
+        });
+    }
+
+    prepareLayout(layout, method) {
+        layout.rows.forEach(row => {
+            row
+                .filter(item => !item.noLabel && !item.labelText && item.name)
+                .forEach(item => {
+                    const labelText = this.translate(item.name, 'fields', 'Settings');
+
+                    if (labelText && labelText.toLowerCase().indexOf(method.toLowerCase() + ' ') === 0) {
+                        item.labelText = labelText.substring(method.length + 1);
                     }
-                }
-            });
+                });
+        });
+    }
 
-            Dep.prototype.setupBeforeFinal.call(this);
-        },
+    handlePanelsVisibility() {
+        const authenticationMethod = this.model.get('authenticationMethod');
 
-        modifyDetailLayout: function (layout) {
-            this.methodList.forEach(method => {
-                let mLayout = this.getMetadata().get(['authenticationMethods', method, 'settings', 'layout']);
+        this.methodList.forEach(method => {
+            const fieldList = (this.authFields[method] || []);
 
-                if (!mLayout) {
-                    return;
-                }
-
-                mLayout = Espo.Utils.cloneDeep(mLayout);
-                mLayout.name = method;
-
-                this.prepareLayout(mLayout, method);
-
-                layout.push(mLayout);
-            });
-        },
-
-        prepareLayout: function (layout, method) {
-            layout.rows.forEach(row => {
-                row
-                    .filter(item => !item.noLabel && !item.labelText && item.name)
-                    .forEach(item => {
-                        let labelText = this.translate(item.name, 'fields', 'Settings');
-
-                        if (labelText && labelText.toLowerCase().indexOf(method.toLowerCase() + ' ') === 0) {
-                            item.labelText = labelText.substring(method.length + 1);
-                        }
-                    });
-            });
-        },
-
-        handlePanelsVisibility: function () {
-            var authenticationMethod = this.model.get('authenticationMethod');
-
-            this.methodList.forEach(method => {
-                var fieldList = (this.authFields[method] || []);
-
-                if (method !== authenticationMethod) {
-                    this.hidePanel(method);
-
-                    fieldList.forEach(field => {
-                        this.hideField(field);
-                    });
-
-                    return;
-                }
-
-                this.showPanel(method);
+            if (method !== authenticationMethod) {
+                this.hidePanel(method);
 
                 fieldList.forEach(field => {
-                    this.showField(field);
+                    this.hideField(field);
                 });
 
-                this.processDynamicLogic();
+                return;
+            }
+
+            this.showPanel(method);
+
+            fieldList.forEach(field => {
+                this.showField(field);
             });
-        },
 
-        manage2FAFields: function () {
-            if (this.model.get('auth2FA')) {
-                this.showField('auth2FAForced');
-                this.showField('auth2FAMethodList');
-                this.showField('auth2FAInPortal');
-                this.setFieldRequired('auth2FAMethodList');
+            this.processDynamicLogic();
+        });
+    }
 
-                return;
-            }
+    manage2FAFields() {
+        if (this.model.get('auth2FA')) {
+            this.showField('auth2FAForced');
+            this.showField('auth2FAMethodList');
+            this.showField('auth2FAInPortal');
+            this.setFieldRequired('auth2FAMethodList');
 
-            this.hideField('auth2FAForced');
-            this.hideField('auth2FAMethodList');
-            this.hideField('auth2FAInPortal');
-            this.setFieldNotRequired('auth2FAMethodList');
-        },
+            return;
+        }
 
-        managePasswordRecoveryFields: function () {
-            if (!this.model.get('passwordRecoveryDisabled')) {
-                this.showField('passwordRecoveryForAdminDisabled');
-                this.showField('passwordRecoveryForInternalUsersDisabled');
-                this.showField('passwordRecoveryNoExposure');
+        this.hideField('auth2FAForced');
+        this.hideField('auth2FAMethodList');
+        this.hideField('auth2FAInPortal');
+        this.setFieldNotRequired('auth2FAMethodList');
+    }
 
-                return;
-            }
+    managePasswordRecoveryFields() {
+        if (!this.model.get('passwordRecoveryDisabled')) {
+            this.showField('passwordRecoveryForAdminDisabled');
+            this.showField('passwordRecoveryForInternalUsersDisabled');
+            this.showField('passwordRecoveryNoExposure');
 
-            this.hideField('passwordRecoveryForAdminDisabled');
-            this.hideField('passwordRecoveryForInternalUsersDisabled');
-            this.hideField('passwordRecoveryNoExposure');
-        },
-    });
-});
+            return;
+        }
+
+        this.hideField('passwordRecoveryForAdminDisabled');
+        this.hideField('passwordRecoveryForInternalUsersDisabled');
+        this.hideField('passwordRecoveryNoExposure');
+    }
+}
+
+export default AdminAuthenticationRecordView;
