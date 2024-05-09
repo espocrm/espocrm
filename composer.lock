@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a98b5f556eaf6120fad8b36c44d060bf",
+    "content-hash": "c9ba40700e3c077689a1b222e3b749c1",
     "packages": [
         {
             "name": "async-aws/core",
@@ -6608,6 +6608,59 @@
                 }
             ],
             "time": "2021-03-23T23:28:01+00:00"
+        },
+        {
+            "name": "tholu/php-cidr-match",
+            "version": "0.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tholu/php-cidr-match.git",
+                "reference": "50fadb1e43d865167b3ca705fbdbfff87ea5ab96"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tholu/php-cidr-match/zipball/50fadb1e43d865167b3ca705fbdbfff87ea5ab96",
+                "reference": "50fadb1e43d865167b3ca705fbdbfff87ea5ab96",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "composer/composer": ">2",
+                "phpunit/phpunit": "4.8.36",
+                "squizlabs/php_codesniffer": "3.6.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "CIDRmatch\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Thomas Lutz",
+                    "email": "thomaslutz.de@gmail.com",
+                    "homepage": "https://github.com/tholu",
+                    "role": "Creator, Developer, Maintainer"
+                }
+            ],
+            "description": "CIDRmatch is a library to match an IP to an IP range in CIDR notation (IPv4 and IPv6).",
+            "keywords": [
+                "cidr",
+                "ipv4",
+                "ipv6",
+                "php"
+            ],
+            "support": {
+                "issues": "https://github.com/tholu/php-cidr-match/issues",
+                "source": "https://github.com/tholu/php-cidr-match/tree/0.4"
+            },
+            "time": "2022-05-11T06:48:12+00:00"
         },
         {
             "name": "webmozart/assert",

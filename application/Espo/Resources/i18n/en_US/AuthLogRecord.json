@@ -30,7 +30,9 @@
             "INACTIVE_USER": "Inactive user",
             "IS_PORTAL_USER": "Portal user",
             "IS_NOT_PORTAL_USER": "Not a portal user",
-            "USER_IS_NOT_IN_PORTAL": "User is not related to the portal"
+            "USER_IS_NOT_IN_PORTAL": "User is not related to the portal",
+            "IS_SYSTEM_USER": "Is system user",
+            "FORBIDDEN": "Forbidden"
         }
     }
 }

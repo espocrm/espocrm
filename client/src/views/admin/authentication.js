@@ -34,6 +34,40 @@ class AdminAuthenticationRecordView extends SettingsEditRecordView {
 
     saveAndContinueEditingAction = false
 
+    dynamicLogicDefs = {
+        fields: {
+            authIpAddressWhitelist: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            attribute: 'authIpAddressCheck',
+                            type: 'isTrue'
+                        }
+                    ]
+                },
+                required: {
+                    conditionGroup: [
+                        {
+                            attribute: 'authIpAddressCheck',
+                            type: 'isTrue'
+                        }
+                    ]
+                }
+            },
+            authIpAddressCheckExcludedUsers: {
+                visible: {
+                    conditionGroup: [
+                        {
+                            attribute: 'authIpAddressCheck',
+                            type: 'isTrue'
+                        }
+                    ]
+                }
+            },
+        },
+        panels: {},
+    }
+
     setup() {
         this.methodList = [];
 
@@ -48,6 +82,12 @@ class AdminAuthenticationRecordView extends SettingsEditRecordView {
         this.authFields = {};
 
         super.setup();
+
+        if (this.getHelper().getAppParam('isRestrictedMode') && !this.getUser().isSuperAdmin()) {
+            this.setFieldReadOnly('authIpAddressCheck', true);
+            this.setFieldReadOnly('authIpAddressWhitelist', true);
+            this.setFieldReadOnly('authIpAddressCheckExcludedUsers', true);
+        }
 
         this.handlePanelsVisibility();
 
@@ -69,10 +109,7 @@ class AdminAuthenticationRecordView extends SettingsEditRecordView {
     }
 
     setupBeforeFinal() {
-        this.dynamicLogicDefs = {
-            fields: {},
-            panels: {},
-        };
+        this.dynamicLogicDefs = Espo.Utils.cloneDeep(this.dynamicLogicDefs);
 
         this.methodList.forEach(method => {
             const fieldList = this.getMetadata().get(['authenticationMethods', method, 'settings', 'fieldList']);

@@ -14,6 +14,13 @@
         ]
     },
     {
+        "label": "Access",
+        "rows": [
+            [{"name": "authIpAddressCheck"}, false],
+            [{"name": "authIpAddressWhitelist"}, {"name": "authIpAddressCheckExcludedUsers"}]
+        ]
+    },
+    {
         "label": "Passwords",
         "rows": [
             [{"name": "passwordGenerateLength"}, false],

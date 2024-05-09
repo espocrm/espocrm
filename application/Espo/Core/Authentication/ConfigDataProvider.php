@@ -147,4 +147,25 @@ class ConfigDataProvider
 
         return $list;
     }
+
+    public function ipAddressCheck(): bool
+    {
+        return (bool) $this->config->get('authIpAddressCheck');
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getIpAddressWhitelist(): array
+    {
+        return $this->config->get('authIpAddressWhitelist') ?? [];
+    }
+
+    /**
+     * @return string[]
+     */
+    public function getIpAddressCheckExcludedUserIdList(): array
+    {
+        return $this->config->get('authIpAddressCheckExcludedUsersIds') ?? [];
+    }
 }

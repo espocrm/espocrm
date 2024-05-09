@@ -237,7 +237,9 @@ class Auth
                 $response->writeBody($e->getBody());
             }
 
-            $this->log->notice("Auth exception: {message}", ['message' => $e->getMessage()]);
+            if ($e->getMessage()) {
+                $this->log->notice("Auth exception: {message}", ['message' => $e->getMessage()]);
+            }
 
             return;
         }

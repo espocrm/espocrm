@@ -51,7 +51,8 @@
         "picqer/php-barcode-generator": "^2.4",
         "chillerlan/php-qrcode": "^4.3",
         "ext-ctype": "*",
-        "lasserafn/php-initial-avatar-generator": "^4.3"
+        "lasserafn/php-initial-avatar-generator": "^4.3",
+        "tholu/php-cidr-match": "^0.4.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",

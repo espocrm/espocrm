@@ -895,6 +895,21 @@
         "quickSearchFullTextAppendWildcard": {
             "type": "bool",
             "tooltip": true
+        },
+        "authIpAddressCheck": {
+            "type": "bool"
+        },
+        "authIpAddressWhitelist": {
+            "type": "array",
+            "allowCustomOptions": true,
+            "noEmptyString": true,
+            "validatorClassNameList": [
+                "Espo\\Classes\\FieldValidators\\Settings\\AuthIpAddressWhitelist\\Valid"
+            ]
+        },
+        "authIpAddressCheckExcludedUsers": {
+            "type": "linkMultiple",
+            "entity": "User"
         }
     }
 }

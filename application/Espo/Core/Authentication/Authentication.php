@@ -95,6 +95,7 @@ class Authentication
      * Process logging in.
      *
      * @throws ServiceUnavailable
+     * @throws Forbidden
      */
     public function login(AuthenticationData $data, Request $request, Response $response): Result
     {
@@ -114,7 +115,11 @@ class Authentication
             return $this->processFail(Result::fail(FailReason::METHOD_NOT_ALLOWED), $data, $request);
         }
 
-        $this->hookManager->processBeforeLogin($data, $request);
+        try {
+            $this->hookManager->processBeforeLogin($data, $request);
+        } catch (Forbidden $e) {
+            $this->processForbidden($e);
+        }
 
         if (!$method && $password === null) {
             $this->log->error("Auth: Trying to login w/o password.");
@@ -238,6 +243,12 @@ class Authentication
             if ($result->isFail()) {
                 return $this->processFail($result, $data, $request);
             }
+        }
+
+        try {
+            $this->hookManager->processOnLogin($result, $data, $request);
+        } catch (Forbidden $e) {
+            $this->processForbidden($e, $authLogRecord);
         }
 
         if (
@@ -785,5 +796,26 @@ class Authentication
         }
 
         $user->set('ipAddress', $this->util->obtainIpFromRequest($request));
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function processForbidden(Forbidden $exception, ?AuthLogRecord $authLogRecord = null): never
+    {
+        $this->log->warning('Auth: Forbidden. {message}', [
+            'message' => $exception->getMessage(),
+            'exception' => $exception,
+        ]);
+
+        if ($authLogRecord) {
+            $authLogRecord
+                ->setIsDenied()
+                ->setDenialReason(AuthLogRecord::DENIAL_REASON_FORBIDDEN);
+
+            $this->entityManager->saveEntity($authLogRecord);
+        }
+
+        throw new Forbidden();
     }
 }

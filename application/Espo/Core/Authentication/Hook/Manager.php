@@ -29,6 +29,8 @@
 
 namespace Espo\Core\Authentication\Hook;
 
+use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Utils\Metadata;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Authentication\AuthenticationData;
@@ -41,10 +43,24 @@ class Manager
     public function __construct(private Metadata $metadata, private InjectableFactory $injectableFactory)
     {}
 
+    /**
+     * @throws ServiceUnavailable
+     * @throws Forbidden
+     */
     public function processBeforeLogin(AuthenticationData $data, Request $request): void
     {
         foreach ($this->getBeforeLoginHookList() as $hook) {
             $hook->process($data, $request);
+        }
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    public function processOnLogin(Result $result, AuthenticationData $data, Request $request): void
+    {
+        foreach ($this->getOnLoginHookList() as $hook) {
+            $hook->process($result, $data, $request);
         }
     }
 
@@ -96,6 +112,21 @@ class Manager
 
         foreach ($this->getHookClassNameList('beforeLogin') as $className) {
             /** @var class-string<BeforeLogin> $className */
+            $list[] = $this->injectableFactory->create($className);
+        }
+
+        return $list;
+    }
+
+    /**
+     * @return OnLogin[]
+     */
+    private function getOnLoginHookList(): array
+    {
+        $list = [];
+
+        foreach ($this->getHookClassNameList('onLogin') as $className) {
+            /** @var class-string<OnLogin> $className */
             $list[] = $this->injectableFactory->create($className);
         }
 

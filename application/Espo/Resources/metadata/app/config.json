@@ -141,6 +141,15 @@
         },
         "starsLimit": {
             "level": "admin"
+        },
+        "authIpAddressCheck": {
+            "level": "superAdmin"
+        },
+        "authIpAddressWhitelist": {
+            "level": "superAdmin"
+        },
+        "authIpAddressCheckExcludedUsers": {
+            "level": "superAdmin"
         }
     }
 }

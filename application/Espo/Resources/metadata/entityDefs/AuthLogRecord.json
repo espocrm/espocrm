@@ -40,7 +40,8 @@
                 "IS_PORTAL_USER",
                 "IS_NOT_PORTAL_USER",
                 "USER_IS_NOT_IN_PORTAL",
-                "IS_SYSTEM_USER"
+                "IS_SYSTEM_USER",
+                "FORBIDDEN"
             ],
             "readOnly": true
         },

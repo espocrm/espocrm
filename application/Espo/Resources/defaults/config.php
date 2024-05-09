@@ -299,5 +299,9 @@ return [
     'listPagination' => true,
     'starsLimit' => 500,
     'quickSearchFullTextAppendWildcard' => false,
+    'authIpAddressCheck' => false,
+    'authIpAddressWhitelist' => [],
+    'authIpAddressCheckExcludedUsersIds' => [],
+    'authIpAddressCheckExcludedUsersNames' => (object) [],
     'isInstalled' => false,
 ];

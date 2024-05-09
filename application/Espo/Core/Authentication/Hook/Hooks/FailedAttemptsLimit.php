@@ -35,7 +35,6 @@ use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Api\Request;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Authentication\ConfigDataProvider;
-use Espo\Core\Utils\Log;
 use Espo\ORM\EntityManager;
 use Espo\Entities\AuthLogRecord;
 
@@ -51,7 +50,6 @@ class FailedAttemptsLimit implements BeforeLogin
     public function __construct(
         private ConfigDataProvider $configDataProvider,
         private EntityManager $entityManager,
-        private Log $log,
         private Util $util
     ) {}
 
@@ -82,11 +80,11 @@ class FailedAttemptsLimit implements BeforeLogin
             throw new RuntimeException($e->getMessage());
         }
 
-        $ip = $this->util->obtainIpFromRequest($request);
+        $apAddress = $this->util->obtainIpFromRequest($request);
 
         $where = [
             'requestTime>' => $requestTimeFrom->format('U'),
-            'ipAddress' => $ip,
+            'ipAddress' => $apAddress,
             'isDenied' => true,
         ];
 
@@ -109,8 +107,6 @@ class FailedAttemptsLimit implements BeforeLogin
             return;
         }
 
-        $this->log->warning("AUTH: Max failed login attempts exceeded for IP {ipAddress}.", ['ipAddress' => $ip]);
-
-        throw new Forbidden("Max failed login attempts exceeded.");
+        throw new Forbidden("Max failed login attempts exceeded for IP address $apAddress.");
     }
 }

@@ -169,7 +169,10 @@
         "oidcAllowAdminUser": "OIDC Allow OIDC login for admin users",
         "oidcLogoutUrl": "OIDC Logout URL",
         "pdfEngine": "PDF Engine",
-        "quickSearchFullTextAppendWildcard": "Append wildcard in quick search"
+        "quickSearchFullTextAppendWildcard": "Append wildcard in quick search",
+        "authIpAddressCheck": "Restrict access by IP address",
+        "authIpAddressWhitelist": "IP Address Whitelist",
+        "authIpAddressCheckExcludedUsers": "Users excluded from check"
     },
     "options": {
         "authenticationMethod": {
@@ -308,7 +311,8 @@
         "Passwords": "Passwords",
         "2-Factor Authentication": "2-Factor Authentication",
         "Attachments": "Attachments",
-        "IdP Group": "IdP Group"
+        "IdP Group": "IdP Group",
+        "Access": "Access"
     },
     "messages": {
         "ldapTestConnection": "The connection successfully established."
