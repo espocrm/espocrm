@@ -53,11 +53,30 @@ class UrlMultipleFieldView extends ArrayFieldView {
             value = this.strip(value);
         }
 
-        if (value === decodeURI(value)) {
-            value = encodeURI(value);
+        try {
+            if (value === decodeURI(value)) {
+                value = encodeURI(value);
+            }
+        } catch (e) {
+            console.warn(`Malformed URI ${value}.`);
         }
 
         super.addValueFromUi(value);
+    }
+
+    /**
+     * @private
+     * @param {string} value
+     * @return {string}
+     */
+    decodeURI(value) {
+        try {
+            return decodeURI(value);
+        } catch (e) {
+            console.warn(`Malformed URI ${value}.`);
+
+            return value;
+        }
     }
 
     /**
@@ -88,7 +107,7 @@ class UrlMultipleFieldView extends ArrayFieldView {
             return $('<a>')
                 .attr('href', this.prepareUrl(value))
                 .attr('target', '_blank')
-                .text(decodeURI(value));
+                .text(this.decodeURI(value));
         });
 
         return $list
@@ -111,7 +130,7 @@ class UrlMultipleFieldView extends ArrayFieldView {
                 .attr('href', this.prepareUrl(value))
                 .css('user-drag', 'none')
                 .attr('target', '_blank')
-                .text(decodeURI(value))
+                .text(this.decodeURI(value))
         );
 
         return $item.get(0).outerHTML;
