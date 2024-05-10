@@ -114,7 +114,7 @@ class Fetcher
         catch (Throwable $e) {
             $this->log->error(
                 "{$account->getEntityType()} {$account->getId()}, " .
-                "could not select folder '{$folder}'; [{$e->getCode()}] {$e->getMessage()}"
+                "could not select folder '$folder'; [{$e->getCode()}] {$e->getMessage()}"
             );
 
             return;
@@ -359,7 +359,7 @@ class Fetcher
             );
         }
 
-        return BeforeFetchHookResult::create()->withToSkip(true);
+        return BeforeFetchHookResult::create()->withToSkip();
     }
 
     /**
@@ -412,13 +412,9 @@ class Fetcher
         }
 
         try {
-            $size = $storage->getSize((int) $id);
+            $size = $storage->getSize($id);
         }
-        catch (Throwable $e) {
-            return false;
-        }
-
-        if (!is_int($size)) {
+        catch (Throwable) {
             return false;
         }
 
