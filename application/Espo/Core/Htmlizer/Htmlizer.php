@@ -842,6 +842,10 @@ class Htmlizer
 
     private function handleIteration(string $template): string
     {
+        if ($template === '') {
+            return $template;
+        }
+
         if (!extension_loaded('dom')) {
             $this->log?->warning("Extension 'dom' is not enabled. HTML templating functionality is restricted.");
 
