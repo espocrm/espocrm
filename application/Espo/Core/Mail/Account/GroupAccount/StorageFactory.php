@@ -33,10 +33,15 @@ use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\Account;
 use Espo\Core\Mail\Account\StorageFactory as StorageFactoryInterface;
 use Espo\Core\Mail\Account\Storage\LaminasStorage;
+use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Mail\Mail\Storage\Imap;
 use Espo\Core\Utils\Log;
 use Espo\Core\InjectableFactory;
+
+use Laminas\Mail\Storage\Exception\RuntimeException;
+use Laminas\Mail\Storage\Exception\InvalidArgumentException;
+use Laminas\Mail\Protocol\Exception\RuntimeException as ProtocolRuntimeException;
 
 use Throwable;
 
@@ -47,9 +52,6 @@ class StorageFactory implements StorageFactoryInterface
         private InjectableFactory $injectableFactory
     ) {}
 
-    /**
-     * @throws NoImap
-     */
     public function create(Account $account): LaminasStorage
     {
         $imapParams = $account->getImapParams();
@@ -122,6 +124,13 @@ class StorageFactory implements StorageFactoryInterface
             }
         }
 
-        return new LaminasStorage(new Imap($imapParams));
+        try {
+            $storage = new Imap($imapParams);
+        }
+        catch (RuntimeException|InvalidArgumentException|ProtocolRuntimeException $e) {
+            throw new ImapError($e->getMessage(), 0, $e);
+        }
+
+        return new LaminasStorage($storage);
     }
 }

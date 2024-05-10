@@ -32,6 +32,8 @@ namespace Espo\Core\Mail\Account;
 use Espo\Core\Exceptions\Error;
 
 use Espo\Core\Mail\Account\Storage\Flag;
+use Espo\Core\Mail\Exceptions\ImapError;
+use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Mail\Importer;
 use Espo\Core\Mail\Importer\Data as ImporterData;
 use Espo\Core\Mail\ParserFactory;
@@ -69,6 +71,8 @@ class Fetcher
 
     /**
      * @throws Error
+     * @throws ImapError
+     * @throws NoImap
      */
     public function fetch(Account $account): void
     {

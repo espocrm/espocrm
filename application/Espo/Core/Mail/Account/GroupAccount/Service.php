@@ -36,6 +36,8 @@ use Espo\Core\Mail\Account\Fetcher;
 use Espo\Core\Mail\Account\Storage\Params;
 use Espo\Core\Mail\Account\StorageFactory;
 
+use Espo\Core\Mail\Exceptions\ImapError;
+use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Utils\Log;
 use Exception;
 use Laminas\Mail\Exception\ExceptionInterface;
@@ -53,6 +55,8 @@ class Service
     /**
      * @param string $id Account ID.
      * @throws Error
+     * @throws ImapError
+     * @throws NoImap
      */
     public function fetch(string $id): void
     {
@@ -64,6 +68,7 @@ class Service
     /**
      * @return string[]
      * @throws Error
+     * @throws ImapError
      */
     public function getFolderList(Params $params): array
     {
@@ -103,7 +108,7 @@ class Service
                 'message' => $e->getMessage(),
             ]);
 
-            $message = $e instanceof ExceptionInterface ?
+            $message = $e instanceof ExceptionInterface || $e instanceof ImapError ?
                 $e->getMessage() : '';
 
             throw new ErrorSilent($message);
@@ -126,6 +131,8 @@ class Service
     /**
      * @param string $id Account ID.
      * @throws Error
+     * @throws ImapError
+     * @throws NoImap
      */
     public function storeSentMessage(string $id, Message $message): void
     {

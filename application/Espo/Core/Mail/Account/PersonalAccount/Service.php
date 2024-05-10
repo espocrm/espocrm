@@ -30,6 +30,8 @@
 namespace Espo\Core\Mail\Account\PersonalAccount;
 
 use Espo\Core\Exceptions\ErrorSilent;
+use Espo\Core\Mail\Exceptions\ImapError;
+use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Utils\Log;
 use Exception;
 use Laminas\Mail\Exception\ExceptionInterface;
@@ -56,6 +58,9 @@ class Service
     /**
      * @param string $id Account ID.
      * @throws Error
+     * @throws NoImap
+     * @throws ImapError
+     *
      */
     public function fetch(string $id): void
     {
@@ -68,6 +73,7 @@ class Service
      * @return string[]
      * @throws Forbidden
      * @throws Error
+     * @throws ImapError
      */
     public function getFolderList(Params $params): array
     {
@@ -162,6 +168,8 @@ class Service
     /**
      * @param string $id Account ID.
      * @throws Error
+     * @throws ImapError
+     * @throws NoImap
      */
     public function storeSentMessage(string $id, Message $message): void
     {
