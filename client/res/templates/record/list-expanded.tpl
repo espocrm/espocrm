@@ -37,6 +37,16 @@
             class='list-action-item'
         }}
     {{/each}}
+
+    <div class="sticked-bar hidden">
+        {{#if hasPagination}}
+            {{{paginationSticky}}}
+        {{/if}}
+    </div>
+
+    {{#if hasPagination}}
+        {{{pagination}}}
+    {{/if}}
 </div>
 {{/if}}
 
@@ -49,7 +59,6 @@
     {{/each}}
     </ul>
 
-    {{#unless hasPagination}}
     {{#if showMoreEnabled}}
     {{#if showMoreActive}}
     <div class="show-more{{#unless showMoreActive}} hidden{{/unless}}">
@@ -69,7 +78,6 @@
     </div>
     {{/if}}
     {{/if}}
-    {{/unless}}
 </div>
 
 {{else}}

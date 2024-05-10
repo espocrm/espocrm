@@ -45,6 +45,14 @@ class ListExpandedRecordView extends ListRecordView {
     checkedList = null
     listContainerEl = '.list > ul'
 
+    init() {
+        if (this.options.forcePagination) {
+            this.paginationDisabled = false;
+        }
+
+        super.init();
+    }
+
     setup() {
         super.setup();
 

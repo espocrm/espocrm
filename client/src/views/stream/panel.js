@@ -769,6 +769,7 @@ class PanelStreamView extends RelationshipPanelView {
                 title: this.translate('Stream') +
                     ' @right ' + this.translate('posts', 'filters', 'Note'),
                 forceSelectAllAttributes: true,
+                forcePagination: true,
             },
         };
 
@@ -785,6 +786,7 @@ class PanelStreamView extends RelationshipPanelView {
                 title: this.translate('Stream') + ' @right ' + this.translate('activity', 'filters', 'Note'),
                 forceSelectAllAttributes: true,
                 filtersLayoutName: 'filtersGlobal',
+                forcePagination: true,
             },
         };
 
