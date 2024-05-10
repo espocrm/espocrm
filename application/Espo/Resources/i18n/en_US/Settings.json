@@ -279,7 +279,7 @@
         "daemonProcessTimeout": "Max execution time (in seconds) allocated for a single cron process.",
         "cronDisabled": "Cron will not run.",
         "maintenanceMode": "Only administrators will have access to the system.",
-        "oidcGroupClaim": "A claim to user for team mapping.",
+        "oidcGroupClaim": "A claim to use for team mapping.",
         "oidcFallback": "Allow login by username/password.",
         "oidcCreateUser": "Create a new user in Espo when no matching user found.",
         "oidcSync": "Sync user data (on every login).",
