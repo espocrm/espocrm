@@ -201,6 +201,8 @@
         }
     },
     "tooltips": {
+        "authIpAddressCheckExcludedUsers": "Users that will be able to log in regardless whether their IP address is in the whitelist.",
+        "authIpAddressWhitelist": "A list of IP addresses or ranges in CIDR notation.\n\nPortals are not affected by restriction.",
         "workingTimeCalendar": "A working time calendar that will be applied to all users by default.",
         "displayListViewRecordCount": "A total number of records will be shown on the list view.",
         "currencyList": "What currencies will be available in the system.",

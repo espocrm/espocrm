@@ -905,11 +905,13 @@
             "noEmptyString": true,
             "validatorClassNameList": [
                 "Espo\\Classes\\FieldValidators\\Settings\\AuthIpAddressWhitelist\\Valid"
-            ]
+            ],
+            "tooltip": true
         },
         "authIpAddressCheckExcludedUsers": {
             "type": "linkMultiple",
-            "entity": "User"
+            "entity": "User",
+            "tooltip": true
         }
     }
 }
