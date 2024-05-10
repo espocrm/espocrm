@@ -268,7 +268,7 @@
         "textFilterUseContainsForVarchar": "If not checked then 'starts with' operator is used. You can use the wildcard '%'.",
         "streamEmailNotificationsEntityList": "Email notifications about stream updates of followed records. Users will receive email notifications only for specified entity types.",
         "authTokenPreventConcurrent": "Users won't be able to be logged in on multiple devices simultaneously.",
-        "emailAddressIsOptedOutByDefault": "When creating new record email addess will be marked as opted-out.",
+        "emailAddressIsOptedOutByDefault": "When creating new record email address will be marked as opted-out.",
         "cleanupDeletedRecords": "Removed records will be deleted from database after a while.",
         "jobRunInParallel": "Jobs will be executed in parallel processes.",
         "jobPoolConcurrencyNumber": "Max number of processes run simultaneously.",
