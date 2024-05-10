@@ -43,7 +43,7 @@ use Espo\ORM\EntityManager;
 /**
  * Compatible only with default Espo auth tokens.
  *
- * @todo Use a token-sessionId map to retrieve tokens.
+ * @todo Use a token-sessionId map to retrieve tokens. Send sid claim in id_token.
  */
 class BackchannelLogout
 {
