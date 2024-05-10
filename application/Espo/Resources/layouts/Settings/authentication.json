@@ -1,5 +1,6 @@
 [
     {
+        "tabLabel": "$label:General",
         "label": "Configuration",
         "rows": [
             [{"name": "authenticationMethod"}, {"name": "authTokenLifetime"}],
@@ -21,7 +22,8 @@
         ]
     },
     {
-        "label": "Passwords",
+        "tabBreak": true,
+        "tabLabel": "$label:Passwords",
         "rows": [
             [{"name": "passwordGenerateLength"}, false],
             [{"name": "passwordStrengthLength"}, {"name": "passwordStrengthLetterCount"}],

@@ -140,7 +140,11 @@ class AdminAuthenticationRecordView extends SettingsEditRecordView {
             }
 
             mLayout = Espo.Utils.cloneDeep(mLayout);
+
             mLayout.name = method;
+            mLayout.tabBreak = true;
+            mLayout.tabLabel = mLayout.label;
+            mLayout.label = null;
 
             this.prepareLayout(mLayout, method);
 
