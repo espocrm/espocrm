@@ -168,6 +168,7 @@
         "oidcAllowRegularUserFallback": "OIDC Allow fallback login for regular users",
         "oidcAllowAdminUser": "OIDC Allow OIDC login for admin users",
         "oidcLogoutUrl": "OIDC Logout URL",
+        "oidcAuthorizationPrompt": "OIDC Authorization Prompt",
         "pdfEngine": "PDF Engine",
         "quickSearchFullTextAppendWildcard": "Append wildcard in quick search",
         "authIpAddressCheck": "Restrict access by IP address",

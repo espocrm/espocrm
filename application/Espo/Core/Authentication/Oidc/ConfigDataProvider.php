@@ -214,7 +214,7 @@ class ConfigDataProvider
 
     public function getAuthorizationPrompt(): string
     {
-        return $this->config->get('oidcAuthorizationPrompt') ?? 'consent';
+        return $this->object->get('oidcAuthorizationPrompt') ?? 'consent';
     }
 
     public function getAuthorizationMaxAge(): ?int

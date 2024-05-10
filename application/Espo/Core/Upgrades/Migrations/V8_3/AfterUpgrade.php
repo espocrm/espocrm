@@ -31,7 +31,9 @@ namespace Espo\Core\Upgrades\Migrations\V8_3;
 
 use Espo\Core\Templates\Entities\Event;
 use Espo\Core\Upgrades\Migration\Script;
+use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\AuthenticationProvider;
 use Espo\Entities\Role;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Expression;
@@ -41,13 +43,15 @@ class AfterUpgrade implements Script
 {
     public function __construct(
         private EntityManager $entityManager,
-        private Metadata $metadata
+        private Metadata $metadata,
+        private Config $config
     ) {}
 
     public function run(): void
     {
         $this->updateRoles();
         $this->updateMetadata();
+        $this->updateAuthenticationProviders();
     }
 
     private function updateRoles(): void
@@ -95,6 +99,19 @@ class AfterUpgrade implements Script
             }
 
             $this->metadata->saveCustom('clientDefs', $entityType, $clientDefs);
+        }
+    }
+
+    private function updateAuthenticationProviders(): void
+    {
+        $collection = $this->entityManager->getRDBRepositoryByClass(AuthenticationProvider::class)
+            ->where(['method' => 'Oidc'])
+            ->find();
+
+        foreach ($collection as $entity) {
+            $entity->set('oidcAuthorizationPrompt', $this->config->get('oidcAuthorizationPrompt'));
+
+            $this->entityManager->saveEntity($entity);
         }
     }
 }

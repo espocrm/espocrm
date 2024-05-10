@@ -70,6 +70,16 @@
         "oidcLogoutUrl": {
             "type": "varchar",
             "tooltip": true
+        },
+        "oidcAuthorizationPrompt": {
+            "type": "enum",
+            "options": [
+                "none",
+                "consent",
+                "login",
+                "select_account"
+            ],
+            "maxLength": 14
         }
     }
 }

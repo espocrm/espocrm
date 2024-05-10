@@ -888,6 +888,15 @@
             "type": "varchar",
             "tooltip": true
         },
+        "oidcAuthorizationPrompt": {
+            "type": "enum",
+            "options": [
+                "none",
+                "consent",
+                "login",
+                "select_account"
+            ]
+        },
         "pdfEngine": {
             "type": "enum",
             "view": "views/settings/fields/pdf-engine"

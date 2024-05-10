@@ -287,6 +287,7 @@ return [
     'oidcUsernameClaim' => 'sub',
     'oidcFallback' => true,
     'oidcScopes' => ['profile', 'email', 'phone'],
+    'oidcAuthorizationPrompt' => 'consent',
     'listViewSettingsDisabled' => false,
     'cleanupDeletedRecords' => true,
     'phoneNumberNumericSearch' => true,
