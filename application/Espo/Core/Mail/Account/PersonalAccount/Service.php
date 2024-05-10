@@ -134,7 +134,7 @@ class Service
             $storage->getFolderNames();
         }
         catch (Exception $e) {
-            $this->log->error("IMAP test connection failed; {message}", [
+            $this->log->warning("IMAP test connection failed; {message}", [
                 'exception' => $e,
                 'message' => $e->getMessage(),
             ]);
