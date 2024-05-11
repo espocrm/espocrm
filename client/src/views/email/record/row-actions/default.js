@@ -26,126 +26,128 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/record/row-actions/default', ['views/record/row-actions/default'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+class EmailDefaultRowActionView extends DefaultRowActionsView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-            this.listenTo(this.model, 'change', function (model) {
-                if (model.hasChanged('isImportant') || model.hasChanged('inTrash')) {
-                    setTimeout(function () {
-                        this.reRender();
-                    }.bind(this), 10);
-                }
-            }, this);
-        },
+    setup() {
+        super.setup();
 
-        getActionList: function () {
-            var list = [{
-                action: 'quickView',
-                label: 'View',
+        this.listenTo(this.model, 'change', (model) => {
+            if (model.hasChanged('isImportant') || model.hasChanged('inTrash')) {
+                setTimeout(() => {
+                    this.reRender();
+                }, 10);
+            }
+        });
+    }
+
+    getActionList() {
+        let list = [{
+            action: 'quickView',
+            label: 'View',
+            data: {
+                id: this.model.id
+            },
+            groupIndex: 0,
+        }];
+
+        if (
+            this.model.get('createdById') === this.getUser().id && this.model.get('status') === 'Draft' &&
+            !this.model.get('inTrash')
+        ) {
+            list.push({
+                action: 'send',
+                label: 'Send',
                 data: {
-                    id: this.model.id
+                    id: this.model.id,
                 },
-                groupIndex: 0,
-            }];
+            });
+        }
 
-            if (
-                this.model.get('createdById') === this.getUser().id && this.model.get('status') === 'Draft' &&
-                !this.model.get('inTrash')
-            ) {
-                list.push({
-                    action: 'send',
-                    label: 'Send',
+        if (this.options.acl.edit) {
+            list = list.concat([
+                {
+                    action: 'quickEdit',
+                    label: 'Edit',
                     data: {
-                        id: this.model.id,
+                        id: this.model.id
                     },
-                });
-            }
+                    groupIndex: 0,
+                },
+            ]);
+        }
 
-            if (this.options.acl.edit) {
-                list = list.concat([
-                    {
-                        action: 'quickEdit',
-                        label: 'Edit',
-                        data: {
-                            id: this.model.id
-                        },
-                        groupIndex: 0,
-                    },
-                ]);
-            }
-
-            if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
-                if (!this.model.get('inTrash')) {
-                    list.push({
-                        action: 'moveToTrash',
-                        label: 'Move to Trash',
-                        data: {
-                            id: this.model.id
-                        },
-                        groupIndex: 1,
-                    });
-                } else {
-                    list.push({
-                        action: 'retrieveFromTrash',
-                        label: 'Retrieve from Trash',
-                        data: {
-                            id: this.model.id
-                        },
-                        groupIndex: 1,
-                    });
-                }
-            }
-
-            if (this.model.get('isUsers')) {
-                if (!this.model.get('isImportant')) {
-                    if (!this.model.get('inTrash')) {
-                        list.push({
-                            action: 'markAsImportant',
-                            label: 'Mark as Important',
-                            data: {
-                                id: this.model.id
-                            },
-                            groupIndex: 1,
-                        });
-                    }
-                } else {
-                    list.push({
-                        action: 'markAsNotImportant',
-                        label: 'Unmark Importance',
-                        data: {
-                            id: this.model.id
-                        },
-                        groupIndex: 1,
-                    });
-                }
-            }
-
-            if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
+        if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
+            if (!this.model.get('inTrash')) {
                 list.push({
-                    action: 'moveToFolder',
-                    label: 'Move to Folder',
+                    action: 'moveToTrash',
+                    label: 'Move to Trash',
+                    data: {
+                        id: this.model.id
+                    },
+                    groupIndex: 1,
+                });
+            } else {
+                list.push({
+                    action: 'retrieveFromTrash',
+                    label: 'Retrieve from Trash',
                     data: {
                         id: this.model.id
                     },
                     groupIndex: 1,
                 });
             }
+        }
 
-            if (this.options.acl.delete) {
+        if (this.model.get('isUsers')) {
+            if (!this.model.get('isImportant')) {
+                if (!this.model.get('inTrash')) {
+                    list.push({
+                        action: 'markAsImportant',
+                        label: 'Mark as Important',
+                        data: {
+                            id: this.model.id
+                        },
+                        groupIndex: 1,
+                    });
+                }
+            } else {
                 list.push({
-                    action: 'quickRemove',
-                    label: 'Remove',
+                    action: 'markAsNotImportant',
+                    label: 'Unmark Importance',
                     data: {
                         id: this.model.id
                     },
-                    groupIndex: 0,
+                    groupIndex: 1,
                 });
             }
+        }
 
-            return list;
-        },
-    });
-});
+        if (this.model.get('isUsers') && this.model.get('status') !== 'Draft') {
+            list.push({
+                action: 'moveToFolder',
+                label: 'Move to Folder',
+                data: {
+                    id: this.model.id
+                },
+                groupIndex: 1,
+            });
+        }
+
+        if (this.options.acl.delete) {
+            list.push({
+                action: 'quickRemove',
+                label: 'Remove',
+                data: {
+                    id: this.model.id
+                },
+                groupIndex: 0,
+            });
+        }
+
+        return list;
+    }
+}
+
+export default EmailDefaultRowActionView;
