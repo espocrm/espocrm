@@ -423,6 +423,22 @@ class EmailListRecordView extends ListRecordView {
         });
     }
 
+    /**
+     * @private
+     * @param {{id: string}} data
+     */
+    actionMarkAsRead(data) {
+        const id = data.id;
+
+        const model = this.collection.get(id);
+
+        Espo.Ajax.postRequest('Email/inbox/read', {ids: [id]});
+
+        if (model) {
+            model.set('isRead', true);
+        }
+    }
+
     // noinspection JSUnusedGlobalSymbols
     actionSend(data) {
         const id = data.id;

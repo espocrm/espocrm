@@ -146,6 +146,17 @@ class EmailDefaultRowActionView extends DefaultRowActionsView {
             });
         }
 
+        if (this.model.get('isUsers') && !this.model.get('isRead')) {
+            list.push({
+                action: 'markAsRead',
+                label: 'Mark Read',
+                data: {
+                    id: this.model.id
+                },
+                groupIndex: 1,
+            });
+        }
+
         return list;
     }
 }
