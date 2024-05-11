@@ -33,7 +33,7 @@ class ValidationFailuresFieldView extends BaseFieldView {
     // language=Handlebars
     detailTemplateContent = `
         {{#if itemList.length}}
-        <table class="table">
+        <table class="table table-bordered">
             <thead>
                 <tr>
                     <th style="width: 50%;">{{translate 'Field'}}</th>
@@ -50,7 +50,7 @@ class ValidationFailuresFieldView extends BaseFieldView {
                         <a
                             role="button"
                             tabindex="-1"
-                            class="text-muted popover-anchor"
+                            class="text-danger popover-anchor"
                             data-text="{{popoverText}}"
                         ><span class="fas fa-info-circle"></span></a>
                         {{/if}}
@@ -90,9 +90,7 @@ class ValidationFailuresFieldView extends BaseFieldView {
 
         if (Array.isArray(itemList)) {
             itemList.forEach(item => {
-                /** @var {module:field-manager} */
                 const fieldManager = this.getFieldManager();
-                /** @var {module:language} */
                 const language = this.getLanguage();
 
                 const fieldType = fieldManager.getEntityTypeFieldParam(entityType, item.field, 'type');
@@ -104,6 +102,12 @@ class ValidationFailuresFieldView extends BaseFieldView {
                 const key = fieldType + '_' + item.type;
 
                 if (!language.has(key, 'fieldValidationExplanations', 'Global')) {
+                    if (!language.has(item.type, 'fieldValidationExplanations', 'Global')) {
+                        return;
+                    }
+
+                    item.popoverText = language.translate(item.type, 'fieldValidationExplanations');
+
                     return;
                 }
 
