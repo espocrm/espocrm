@@ -894,12 +894,15 @@
         "phoneNumber": "Valid Phone Number",
         "array": "Array",
         "arrayOfString": "Array of Strings",
-        "valid": "Valid",
+        "valid": "Validity",
         "noEmptyString": "No Empty String",
         "max": "Max Value",
         "min": "Min Value"
     },
     "fieldValidationExplanations": {
+        "valid": "Invalid value.",
+        "maxLength": "Value length exceeds maximum value.",
+        "phone_valid": "Phone number is not valid. May be caused by a wrong or empty country code.",
         "url_valid": "Invalid URL value.",
         "currency_valid": "Invalid amount value.",
         "currency_validCurrency": "The currency code value is invalid or not allowed.",
