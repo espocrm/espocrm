@@ -26,97 +26,94 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/import-error/fields/validation-failures', ['views/fields/base'], (Dep) => {
+import BaseFieldView from 'views/fields/base';
+
+class ValidationFailuresFieldView extends BaseFieldView {
+
+    // language=Handlebars
+    detailTemplateContent = `
+        {{#if itemList.length}}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th style="width: 50%;">{{translate 'Field'}}</th>
+                    <th>{{translateOption 'Validation' scope='ImportError' field='type'}}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each itemList}}
+                <tr>
+                    <td>{{translate field category='fields' scope=entityType}}</td>
+                    <td>
+                        {{translate type category='fieldValidations'}}
+                        {{#if popoverText}}
+                        <a
+                            role="button"
+                            tabindex="-1"
+                            class="text-muted popover-anchor"
+                            data-text="{{popoverText}}"
+                        ><span class="fas fa-info-circle"></span></a>
+                        {{/if}}
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        {{else}}
+        <span class="none-value">{{translate 'None'}}</span>
+        {{/if}}
+    `
+
+    data() {
+        const data = super.data();
+
+        data.itemList = this.getDataList();
+
+        return data;
+    }
+
+    afterRenderDetail() {
+        this.$el.find('.popover-anchor').each((i, /** HTMLElement */el) => {
+            const text = this.getHelper().transformMarkdownText(el.dataset.text).toString();
+
+            Espo.Ui.popover($(el), {content: text}, this);
+        });
+    }
 
     /**
-     * @class
-     * @name Class
-     * @extends module:views/fields/base
-     * @memberOf module:views/import-error/fields/validation-failures
+     * @return {Object[]}
      */
-    return Dep.extend(/** @lends module:views/import-error/fields/validation-failures.Class# */{
+    getDataList() {
+        const itemList = Espo.Utils.cloneDeep(this.model.get(this.name)) || [];
 
-        detailTemplateContent: `
-            {{#if itemList.length}}
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th style="width: 50%;">{{translate 'Field'}}</th>
-                        <th>{{translateOption 'Validation' scope='ImportError' field='type'}}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {{#each itemList}}
-                    <tr>
-                        <td>{{translate field category='fields' scope=entityType}}</td>
-                        <td>
-                            {{translate type category='fieldValidations'}}
-                            {{#if popoverText}}
-                            <a
-                                role="button"
-                                tabindex="-1"
-                                class="text-muted popover-anchor"
-                                data-text="{{popoverText}}"
-                            ><span class="fas fa-info-circle"></span></a>
-                            {{/if}}
-                        </td>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-            {{else}}
-            <span class="none-value">{{translate 'None'}}</span>
-            {{/if}}
-        `,
+        const entityType = this.model.get('entityType');
 
-        data: function () {
-            let data = Dep.prototype.data.call(this);
+        if (Array.isArray(itemList)) {
+            itemList.forEach(item => {
+                /** @var {module:field-manager} */
+                const fieldManager = this.getFieldManager();
+                /** @var {module:language} */
+                const language = this.getLanguage();
 
-            data.itemList = this.getDataList();
+                const fieldType = fieldManager.getEntityTypeFieldParam(entityType, item.field, 'type');
 
-            return data;
-        },
+                if (!fieldType) {
+                    return;
+                }
 
-        afterRenderDetail: function () {
-            this.$el.find('.popover-anchor').each((i, el) => {
-                let text = this.getHelper().transformMarkdownText(el.dataset.text).toString();
+                const key = fieldType + '_' + item.type;
 
-                Espo.Ui.popover($(el), {content: text}, this);
+                if (!language.has(key, 'fieldValidationExplanations', 'Global')) {
+                    return;
+                }
+
+                item.popoverText = language.translate(key, 'fieldValidationExplanations');
             });
-        },
+        }
 
-        /**
-         * @return {Object[]}
-         */
-        getDataList: function () {
-            let itemList = Espo.Utils.cloneDeep(this.model.get(this.name)) || [];
+        return itemList;
+    }
+}
 
-            let entityType = this.model.get('entityType');
-
-            if (Array.isArray(itemList)) {
-                itemList.forEach(item => {
-                    /** @var {module:field-manager} */
-                    let fieldManager = this.getFieldManager();
-                    /** @var {module:language} */
-                    let language = this.getLanguage();
-
-                    let fieldType = fieldManager.getEntityTypeFieldParam(entityType, item.field, 'type');
-
-                    if (!fieldType) {
-                        return;
-                    }
-
-                    let key = fieldType + '_' + item.type;
-
-                    if (!language.has(key, 'fieldValidationExplanations', 'Global')) {
-                        return;
-                    }
-
-                    item.popoverText = language.translate(key, 'fieldValidationExplanations');
-                });
-            }
-
-            return itemList;
-        },
-    });
-});
+// noinspection JSUnusedGlobalSymbols
+export default ValidationFailuresFieldView;
