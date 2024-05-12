@@ -75,6 +75,8 @@ class Service
 
             throw $e;
         }
+
+        $account->updateConnectedAt();
     }
 
     /**

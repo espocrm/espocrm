@@ -85,6 +85,10 @@
         "keepFetchedEmailsUnread": {
             "type": "bool"
         },
+        "connectedAt": {
+            "type": "datetime",
+            "readOnly": true
+        },
         "useImap": {
             "type": "bool",
             "default": true

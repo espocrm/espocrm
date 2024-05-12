@@ -41,6 +41,7 @@ use Espo\ORM\EntityManager;
 class NotificationHelper
 {
     private const PERIOD = '1 day';
+    private const WAIT_PERIOD = '10 minutes';
 
     public function __construct(
         private EntityManager $entityManager,
@@ -54,6 +55,15 @@ class NotificationHelper
         $entityType = $account->getEntityType();
 
         if (!$id) {
+            return;
+        }
+
+        if (
+            $account->getConnectedAt() &&
+            DateTime::createNow()
+                ->modify('-' . self::WAIT_PERIOD)
+                ->isLessThan($account->getConnectedAt())
+        ) {
             return;
         }
 
