@@ -87,6 +87,7 @@
         "Main": "Main"
     },
     "messages": {
-        "couldNotConnectToImap": "Could not connect to IMAP server"
+        "couldNotConnectToImap": "Could not connect to IMAP server",
+        "imapNotConnected": "Could not connect to group [IMAP account](#InboundEmail/view/{id})."
     }
 }

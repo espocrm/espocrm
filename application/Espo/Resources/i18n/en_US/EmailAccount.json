@@ -52,7 +52,8 @@
     },
     "messages": {
         "couldNotConnectToImap": "Could not connect to IMAP server",
-        "connectionIsOk": "Connection is Ok"
+        "connectionIsOk": "Connection is Ok",
+        "imapNotConnected": "Could not connect to [IMAP account](#EmailAccount/view/{id})."
     },
     "tooltips": {
         "useSmtp": "The ability to send emails.",

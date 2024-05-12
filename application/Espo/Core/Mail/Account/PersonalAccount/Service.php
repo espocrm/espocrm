@@ -30,6 +30,7 @@
 namespace Espo\Core\Mail\Account\PersonalAccount;
 
 use Espo\Core\Exceptions\ErrorSilent;
+use Espo\Core\Mail\Account\Util\NotificationHelper;
 use Espo\Core\Mail\Exceptions\ImapError;
 use Espo\Core\Mail\Exceptions\NoImap;
 use Espo\Core\Utils\Log;
@@ -52,7 +53,8 @@ class Service
         private AccountFactory $accountFactory,
         private StorageFactory $storageFactory,
         private User $user,
-        private Log $log
+        private Log $log,
+        private NotificationHelper $notificationHelper
     ) {}
 
     /**
@@ -60,13 +62,19 @@ class Service
      * @throws Error
      * @throws NoImap
      * @throws ImapError
-     *
      */
     public function fetch(string $id): void
     {
         $account = $this->accountFactory->create($id);
 
-        $this->fetcher->fetch($account);
+        try {
+            $this->fetcher->fetch($account);
+        }
+        catch (ImapError $e) {
+            $this->notificationHelper->processImapError($account);
+
+            throw $e;
+        }
     }
 
     /**
