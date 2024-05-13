@@ -27,6 +27,7 @@
         "storeSentEmails": "Store Sent Emails",
         "keepFetchedEmailsUnread": "Keep Fetched Emails Unread",
         "connectedAt": "Connected At",
+        "excludeFromReply": "Exclude from Reply",
         "useImap": "Fetch Emails",
         "useSmtp": "Use SMTP",
         "smtpHost": "SMTP Host",
@@ -56,7 +57,8 @@
         "smtpIsShared": "If checked then users will be able to send emails using this SMTP. Availability is controlled by Roles through the Group Email Account permission.",
         "smtpIsForMassEmail": "If checked then SMTP will be available for Mass Email.",
         "storeSentEmails": "Sent emails will be stored on the IMAP server.",
-        "groupEmailFolder": "Put incoming emails in a group folder."
+        "groupEmailFolder": "Put incoming emails in a group folder.",
+        "excludeFromReply": "When replying on emails sent to this account's email address, its email address won't be added to CC.\n\nNote that by enabling this parameter, the email address of this account will be exposed to users who have access to send Emails."
     },
     "links": {
         "filters": "Filters",

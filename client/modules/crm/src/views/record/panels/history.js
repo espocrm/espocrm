@@ -81,7 +81,7 @@ class HistoryPanelView extends ActivitiesPanelView {
     }
 
     getArchiveEmailAttributes(scope, data, callback) {
-        let attributes = {
+        const attributes = {
             dateSent: this.getDateTime().getNow(15),
             status: 'Archived',
             from: this.model.get('emailAddress'),
@@ -130,7 +130,7 @@ class HistoryPanelView extends ActivitiesPanelView {
 
     // noinspection JSUnusedGlobalSymbols
     actionArchiveEmail(data) {
-        let scope = 'Email';
+        const scope = 'Email';
 
         let relate = null;
 
@@ -143,7 +143,7 @@ class HistoryPanelView extends ActivitiesPanelView {
 
         Espo.Ui.notify(' ... ');
 
-        let viewName = this.getMetadata().get('clientDefs.' + scope + '.modalViews.edit') ||
+        const viewName = this.getMetadata().get(`clientDefs.${scope}.modalViews.edit`) ||
             'views/modals/edit';
 
         this.getArchiveEmailAttributes(scope, data, attributes => {
@@ -165,13 +165,13 @@ class HistoryPanelView extends ActivitiesPanelView {
 
     // noinspection JSUnusedGlobalSymbols
     actionReply(data) {
-        let id = data.id;
+        const id = data.id;
 
         if (!id) {
             return;
         }
 
-        let emailHelper = new EmailHelper(
+        const emailHelper = new EmailHelper(
             this.getLanguage(),
             this.getUser(),
             this.getDateTime(),
@@ -186,11 +186,13 @@ class HistoryPanelView extends ActivitiesPanelView {
 
                 model.fetch()
                     .then(() => {
-                        let attributes = emailHelper
-                            .getReplyAttributes(model, data,
-                                this.getPreferences().get('emailReplyToAllByDefault'));
+                        const attributes = emailHelper.getReplyAttributes(
+                            model,
+                            data,
+                            this.getPreferences().get('emailReplyToAllByDefault')
+                        );
 
-                        let viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
+                        const viewName = this.getMetadata().get('clientDefs.Email.modalViews.compose') ||
                             'views/modals/compose-email';
 
                         return this.createView('quickCreate', viewName, {

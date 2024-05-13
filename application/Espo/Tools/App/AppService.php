@@ -32,6 +32,7 @@ namespace Espo\Tools\App;
 use Espo\Core\Authentication\Util\MethodProvider as AuthenticationMethodProvider;
 use Espo\Core\Utils\SystemUser;
 use Espo\Entities\DashboardTemplate;
+use Espo\Entities\Email;
 use Espo\Entities\EmailAccount as EmailAccountEntity;
 use Espo\Entities\EmailAddress;
 use Espo\Entities\InboundEmail as InboundEmailEntity;
@@ -190,6 +191,7 @@ class AppService
 
         $data->emailAddressList = $emailAddressData['emailAddressList'];
         $data->userEmailAddressList = $emailAddressData['userEmailAddressList'];
+        $data->excludeFromReplyEmailAddressList = $emailAddressData['excludeFromReplyEmailAddressList'];
 
         unset($data->authTokenId);
         unset($data->password);
@@ -246,6 +248,7 @@ class AppService
      * @return array{
      *     emailAddressList: string[],
      *     userEmailAddressList: string[],
+     *     excludeFromReplyEmailAddressList: string[],
      * }
      */
     private function getEmailAddressData(): array
@@ -300,6 +303,7 @@ class AppService
         return [
             'emailAddressList' => $emailAddressList,
             'userEmailAddressList' => $userEmailAddressList,
+            'excludeFromReplyEmailAddressList' => $this->getExcludeFromReplyAddressList(),
         ];
     }
 
@@ -454,5 +458,34 @@ class AppService
         foreach ($passwordFieldList as $field) {
             unset($data->$field);
         }
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getExcludeFromReplyAddressList(): array
+    {
+        if (!$this->acl->checkScope(Email::ENTITY_TYPE, Acl\Table::ACTION_CREATE)) {
+            return [];
+        }
+
+        /** @var iterable<InboundEmailEntity> $accounts */
+        $accounts = $this->entityManager
+            ->getRDBRepositoryByClass(InboundEmailEntity::class)
+            ->select('emailAddress')
+            ->where(['excludeFromReply' => true])
+            ->find();
+
+        $list = [];
+
+        foreach ($accounts as $account) {
+            if (!$account->getEmailAddress()) {
+                continue;
+            }
+
+            $list[] = $account->getEmailAddress();
+        }
+
+        return $list;
     }
 }

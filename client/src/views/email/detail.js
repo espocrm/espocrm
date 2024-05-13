@@ -465,8 +465,10 @@ class EmailDetailView extends DetailView {
             this.getLanguage(),
             this.getUser(),
             this.getDateTime(),
-            this.getAcl()
+            this.getAcl(),
         );
+
+        this.getHelper().getAppParam()
 
         const attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 

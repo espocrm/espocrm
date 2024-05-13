@@ -156,10 +156,17 @@ class EmailHelper {
         if (cc) {
             attributes.cc = model.get('cc') || '';
 
+            /** @type {string[]} */
+            const excludeFromReplyEmailAddressList = this.getUser().get('excludeFromReplyEmailAddressList') || [];
+
             (model.get('to') || '').split(';').forEach(item => {
                 item = item.trim();
 
                 if (item === this.getUser().get('emailAddress')) {
+                    return;
+                }
+
+                if (excludeFromReplyEmailAddressList.includes(item)) {
                     return;
                 }
 

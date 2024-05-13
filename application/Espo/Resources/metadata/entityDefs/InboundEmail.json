@@ -89,6 +89,10 @@
             "type": "datetime",
             "readOnly": true
         },
+        "excludeFromReply": {
+            "type": "bool",
+            "tooltip": true
+        },
         "useImap": {
             "type": "bool",
             "default": true
