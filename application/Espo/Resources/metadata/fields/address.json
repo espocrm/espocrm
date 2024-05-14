@@ -13,28 +13,31 @@
             "dbType": "varchar"
         },
         "city": {
-            "type":"varchar",
+            "type": "varchar",
             "maxLength": 100,
             "view": "views/fields/address-city",
             "customizationOptionsDisabled": true,
+            "customizationOptionsReferenceDisabled": true,
             "pattern": "$noBadCharacters"
         },
         "state": {
-            "type":"varchar",
+            "type": "varchar",
             "maxLength": 100,
             "view": "views/fields/address-state",
             "customizationOptionsDisabled": true,
+            "customizationOptionsReferenceDisabled": true,
             "pattern": "$noBadCharacters"
         },
         "country": {
-            "type":"varchar",
+            "type": "varchar",
             "maxLength": 100,
             "view": "views/fields/address-country",
             "customizationOptionsDisabled": true,
+            "customizationOptionsReferenceDisabled": true,
             "pattern": "$noBadCharacters"
         },
         "postalCode": {
-            "type":"varchar",
+            "type": "varchar",
             "maxLength": 40,
             "pattern": "$noBadCharacters"
         },
