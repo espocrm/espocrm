@@ -40,7 +40,6 @@ use DateTimeZone;
 use Exception;
 use RuntimeException;
 
-
 /**
  * Util for a date-time formatting and conversion.
  * Available as 'dateTime' service.

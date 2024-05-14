@@ -62,7 +62,6 @@ class Crypt
                 throw new RuntimeException("openssl extension is not loaded.");
             }
 
-            /** @var string $iv */
             $iv = openssl_random_pseudo_bytes(16);
 
             $this->iv = $iv;

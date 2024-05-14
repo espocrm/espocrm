@@ -231,7 +231,7 @@ class Language
                     continue;
                 }
 
-                $result &= $this->fileManager->mergeJsonContents($path . "/{$scope}.json", $data);
+                $result &= $this->fileManager->mergeJsonContents($path . "/$scope.json", $data);
             }
         }
 
@@ -241,7 +241,7 @@ class Language
                     continue;
                 }
 
-                $result &= $this->fileManager->unsetJsonContents($path . "/{$scope}.json", $unsetData);
+                $result &= $this->fileManager->unsetJsonContents($path . "/$scope.json", $unsetData);
             }
         }
 
