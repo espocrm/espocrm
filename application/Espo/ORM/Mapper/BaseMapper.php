@@ -48,6 +48,8 @@ use stdClass;
 use LogicException;
 use RuntimeException;
 
+use const JSON_UNESCAPED_UNICODE;
+
 /**
  * Abstraction for DB. Mapping of Entity to DB. Supposed to be used only internally. Use repositories instead.
  *
@@ -211,7 +213,7 @@ class BaseMapper implements RDBMapper
         string $aggregationBy = 'id'
     ): Select {
 
-        $expression = "{$aggregation}:({$aggregationBy})";
+        $expression = "$aggregation:($aggregationBy)";
 
         $raw = $select->getRaw();
 
@@ -237,7 +239,7 @@ class BaseMapper implements RDBMapper
             return $selectAggregation;
         }
 
-        $expression = "{$aggregation}:(asq.{$aggregationBy})";
+        $expression = "$aggregation:(asq.$aggregationBy)";
 
         $subQueryBuilder = SelectBuilder::create()
             ->clone($selectAggregation)
@@ -295,13 +297,13 @@ class BaseMapper implements RDBMapper
 
         if (!$relType) {
             throw new LogicException(
-                "Missing 'type' in definition for relationship '{$relationName}' in {entityType} entity.");
+                "Missing 'type' in definition for relationship '$relationName' in {entityType} entity.");
         }
 
         if ($relType !== Entity::BELONGS_TO_PARENT) {
             if (!$relEntityType) {
                 throw new LogicException(
-                    "Missing 'entity' in definition for relationship '{$relationName}' in {entityType} entity.");
+                    "Missing 'entity' in definition for relationship '$relationName' in {entityType} entity.");
             }
 
             $relEntity = $this->entityFactory->create($relEntityType);
@@ -494,7 +496,7 @@ class BaseMapper implements RDBMapper
         }
 
         throw new LogicException(
-            "Bad type '{$relType}' in definition for relationship '{$relationName}' in '{$entityType}' entity.");
+            "Bad type '$relType' in definition for relationship '$relationName' in '$entityType' entity.");
     }
 
     /**
@@ -621,7 +623,7 @@ class BaseMapper implements RDBMapper
                 return;
         }
 
-        throw new LogicException("Relation type '{$relType}' is not supported.");
+        throw new LogicException("Relation type '$relType' is not supported.");
     }
 
     /**
@@ -724,7 +726,7 @@ class BaseMapper implements RDBMapper
 
         if (!$foreignEntityType || !$relType) {
             throw new LogicException(
-                "Not appropriate definition for relationship '{$relationName}' in '" .
+                "Not appropriate definition for relationship '$relationName' in '" .
                 $entity->getEntityType() . "' entity.");
         }
 
@@ -758,7 +760,7 @@ class BaseMapper implements RDBMapper
                 $selectColumns = [];
 
                 foreach ($valueList as $i => $value) {
-                   $selectColumns[] = ['VALUE:' . $value, 'v' . strval($i)];
+                   $selectColumns[] = ["VALUE:$value", "v$i"];
                 }
 
                 $selectColumns[] = 'id';
@@ -781,7 +783,7 @@ class BaseMapper implements RDBMapper
                 return;
         }
 
-        throw new LogicException("Relation type '{$relType}' is not supported for mass relate.");
+        throw new LogicException("Relation type '$relType' is not supported for mass relate.");
     }
 
     /**
@@ -806,7 +808,7 @@ class BaseMapper implements RDBMapper
         }
 
         if (!$entity->hasRelation($relationName)) {
-            throw new RuntimeException("Relation '{$relationName}' does not exist in '{$entityType}'.");
+            throw new RuntimeException("Relation '$relationName' does not exist in '$entityType'.");
         }
 
         $relType = $entity->getRelationType($relationName);
@@ -819,7 +821,7 @@ class BaseMapper implements RDBMapper
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
             throw new LogicException(
-                "Not appropriate definition for relationship {$relationName} in '{$entityType}' entity.");
+                "Not appropriate definition for relationship $relationName in '$entityType' entity.");
         }
 
         if (is_null($relEntity)) {
@@ -984,7 +986,7 @@ class BaseMapper implements RDBMapper
                 }
 
                 if (!$this->getRelationParam($entity, $relationName, 'relationName')) {
-                    throw new LogicException("Bad relation '{$relationName}' in '{$entityType}'.");
+                    throw new LogicException("Bad relation '$relationName' in '$entityType'.");
                 }
 
                 $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
@@ -1054,7 +1056,7 @@ class BaseMapper implements RDBMapper
                 return true;
         }
 
-        throw new LogicException("Relation type '{$relType}' is not supported.");
+        throw new LogicException("Relation type '$relType' is not supported.");
     }
 
     private function removeRelation(
@@ -1076,7 +1078,7 @@ class BaseMapper implements RDBMapper
         }
 
         if (!$entity->hasRelation($relationName)) {
-            throw new RuntimeException("Relation '{$relationName}' does not exist in '{$entityType}'.");
+            throw new RuntimeException("Relation '$relationName' does not exist in '$entityType'.");
         }
 
         $relType = $entity->getRelationType($relationName);
@@ -1093,7 +1095,7 @@ class BaseMapper implements RDBMapper
 
         if (!$relType || !$foreignEntityType && $relType !== Entity::BELONGS_TO_PARENT) {
             throw new LogicException(
-                "Not appropriate definition for relationship {$relationName} in " .
+                "Not appropriate definition for relationship $relationName in " .
                 $entity->getEntityType() . " entity.");
         }
 
@@ -1122,6 +1124,7 @@ class BaseMapper implements RDBMapper
                     $where[$key] = $id;
                 }
 
+                /** @noinspection PhpRedundantOptionalArgumentInspection */
                 $entity->set($key, null);
                 $entity->setFetched($key, null);
 
@@ -1133,6 +1136,7 @@ class BaseMapper implements RDBMapper
                         $where[$typeKey] = $foreignEntityType;
                     }
 
+                    /** @noinspection PhpRedundantOptionalArgumentInspection */
                     $entity->set($typeKey, null);
                     $entity->setFetched($typeKey, null);
                 }
@@ -1200,7 +1204,7 @@ class BaseMapper implements RDBMapper
                 }
 
                 if (!$this->getRelationParam($entity, $relationName, 'relationName')) {
-                    throw new LogicException("Bad relation '{$relationName}' in '{$entityType}'.");
+                    throw new LogicException("Bad relation '$relationName' in '$entityType'.");
                 }
 
                 $middleName = ucfirst($this->getRelationParam($entity, $relationName, 'relationName'));
@@ -1227,7 +1231,7 @@ class BaseMapper implements RDBMapper
                 return;
         }
 
-        throw new LogicException("Relation type '{$relType}' is not supported for un-relate.");
+        throw new LogicException("Relation type '$relType' is not supported for un-relate.");
     }
 
     /**
@@ -1277,6 +1281,7 @@ class BaseMapper implements RDBMapper
     {
         $id = $this->pdo->lastInsertId();
 
+        /** @noinspection PhpConditionAlreadyCheckedInspection */
         if ($id === '' || $id === null) { /** @phpstan-ignore-line */
             return;
         }
@@ -1294,6 +1299,7 @@ class BaseMapper implements RDBMapper
      */
     public function massInsert(Collection $collection): void
     {
+        /** @noinspection PhpParamsInspection */
         $count = is_countable($collection) ?
             count($collection) :
             iterator_count($collection);
@@ -1434,10 +1440,10 @@ class BaseMapper implements RDBMapper
     private function prepareValueForInsert(?string $type, mixed $value): mixed
     {
         if ($type == Entity::JSON_ARRAY && is_array($value)) {
-            $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         }
         else if ($type == Entity::JSON_OBJECT && (is_array($value) || $value instanceof stdClass)) {
-            $value = json_encode($value, \JSON_UNESCAPED_UNICODE);
+            $value = json_encode($value, JSON_UNESCAPED_UNICODE);
         }
         else {
             if (is_array($value) || is_object($value)) {
@@ -1501,6 +1507,7 @@ class BaseMapper implements RDBMapper
 
     /**
      * @return array<string, mixed>
+     * @noinspection PhpSameParameterValueInspection
      */
     private function toValueMap(Entity $entity, bool $onlyStorable = true): array
     {
@@ -1544,8 +1551,8 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * @param array<mixed> $select
-     * @return array<mixed>
+     * @param array<int|string, mixed> $select
+     * @return array<int|string, mixed>
      */
     private function getModifiedSelectForManyToMany(Entity $entity, string $relationName, array $select): array
     {
@@ -1577,6 +1584,7 @@ class BaseMapper implements RDBMapper
     /**
      * @param array<string, mixed>|null $conditions
      * @return array{string, string, array<string|int, mixed>}
+     * @noinspection PhpSameParameterValueInspection
      */
     private function getManyManyJoin(Entity $entity, string $relationName, ?array $conditions = null): array
     {
@@ -1590,7 +1598,7 @@ class BaseMapper implements RDBMapper
         $distantKey = $keySet['distantKey'] ?? null;
 
         if (!$middleName) {
-            throw new RuntimeException("No 'relationName' parameter for '{$relationName}' relationship.");
+            throw new RuntimeException("No 'relationName' parameter for '$relationName' relationship.");
         }
 
         if ($nearKey === null || $distantKey === null) {
@@ -1603,8 +1611,8 @@ class BaseMapper implements RDBMapper
             ucfirst($middleName),
             $alias,
             [
-                "{$distantKey}:" => $foreignKey,
-                "{$nearKey}" => $entity->get($key),
+                "$distantKey:" => $foreignKey,
+                $nearKey => $entity->get($key),
                 self::ATTR_DELETED => false,
             ],
         ];
