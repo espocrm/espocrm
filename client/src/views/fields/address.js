@@ -623,7 +623,7 @@ class AddressFieldView extends BaseFieldView {
             return list;
         }
 
-        return this.getConfig().get('addressCountryList') || [];
+        return [];
     }
 
     /**

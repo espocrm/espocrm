@@ -49,7 +49,7 @@ class AddressCountryFieldView extends VarcharFieldView {
             return list;
         }
 
-        return this.getConfig().get('addressCountryList') || [];
+        return [];
     }
 
     getAutocompleteLookupFunction() {

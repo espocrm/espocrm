@@ -734,10 +734,6 @@
             "type": "bool",
             "tooltip": true
         },
-        "addressCountryList": {
-            "type": "multiEnum",
-            "tooltip": true
-        },
         "addressCityList": {
             "type": "multiEnum",
             "tooltip": true

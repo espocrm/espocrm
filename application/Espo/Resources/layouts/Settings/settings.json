@@ -39,9 +39,7 @@
     {
         "rows": [
             [{"name": "addressFormat"}, {"name": "addressPreview"}],
-            [{"name": "addressCountryList"}],
-            [{"name": "addressCityList"}],
-            [{"name": "addressStateList"}]
+            [{"name": "addressCityList"}, {"name": "addressStateList"}]
         ]
     },
     {
