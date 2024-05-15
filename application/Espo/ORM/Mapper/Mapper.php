@@ -70,7 +70,7 @@ interface Mapper
     public function update(Entity $entity): void;
 
     /**
-     * Mark an entity as deleted in DB.
+     * Delete an entity from DB or mark as deleted.
      */
     public function delete(Entity $entity): void;
 

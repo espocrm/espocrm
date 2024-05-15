@@ -1500,8 +1500,13 @@ class BaseMapper implements RDBMapper
      */
     public function delete(Entity $entity): void
     {
-        $entity->set(self::ATTR_DELETED, true);
+        if (!$entity->hasAttribute('deleted')) {
+            $this->deleteFromDb($entity->getEntityType(), $entity->getId());
 
+            return;
+        }
+
+        $entity->set(self::ATTR_DELETED, true);
         $this->update($entity);
     }
 
