@@ -1,0 +1,17 @@
+{
+    "controller": "controllers/record",
+    "duplicateDisabled": true,
+    "mergeDisabled": true,
+    "menu": {
+        "list": {
+            "dropdown": [
+                {
+                    "name": "populateDefaults",
+                    "labelTranslation": "AddressCountry.strings.populateDefaults",
+                    "handler": "handlers/admin/address-country/populate-defaults",
+                    "actionFunction": "populate"
+                }
+            ]
+        }
+    }
+}

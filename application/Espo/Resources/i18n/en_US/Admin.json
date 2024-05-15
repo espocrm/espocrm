@@ -80,6 +80,7 @@
         "Working Time Calendars": "Working Time Calendars",
         "Group Email Folders": "Group Email Folders",
         "Authentication Providers": "Authentication Providers",
+        "Address Countries": "Address Countries",
         "Success": "Success",
         "Fail": "Fail",
         "Configuration Instructions": "Configuration Instructions",
@@ -309,7 +310,8 @@
         "jobsSettings": "Job processing settings. Jobs execute tasks in the background.",
         "sms": "SMS settings.",
         "pdfTemplates": "Templates for printing to PDF.",
-        "formulaSandbox": "Write and test formula scripts."
+        "formulaSandbox": "Write and test formula scripts.",
+        "addressCountries": "Countries available for address fields."
     },
     "keywords": {
         "settings": "system",

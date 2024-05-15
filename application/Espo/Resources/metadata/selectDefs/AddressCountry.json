@@ -1,0 +1,5 @@
+{
+    "ordererClassNameMap": {
+        "preferredName": "Espo\\Classes\\Select\\AddressCountry\\PreferredNameOrderer"
+    }
+}

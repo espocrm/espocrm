@@ -220,6 +220,11 @@ class AdminController extends Controller {
     }
 
     // noinspection JSUnusedGlobalSymbols
+    actionAddressCountries() {
+        this.getRouter().dispatch('AddressCountry', 'list', {fromAdmin: true});
+    }
+
+    // noinspection JSUnusedGlobalSymbols
     actionEmailAddresses() {
         this.getRouter().dispatch('EmailAddress', 'list', {fromAdmin: true});
     }

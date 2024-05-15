@@ -1,0 +1,20 @@
+{
+    "labels": {
+        "Create AddressCountry": "Create Address Country",
+        "Populate": "Populate"
+    },
+    "fields": {
+        "code": "Code",
+        "isPreferred": "Is Preferred"
+    },
+    "tooltips": {
+        "code": "ISO 3166-1 alpha-2 code.",
+        "isPreferred": "Preferred counties appear first in the picklist."
+    },
+    "messages": {
+        "confirmPopulateDefaults": "All existing countries will be deleted, the default country list will be created. It won't be possible to revert the operation.\n\nAre you sure?"
+    },
+    "strings": {
+        "populateDefaults": "Populate with default country list"
+    }
+}

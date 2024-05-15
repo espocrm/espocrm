@@ -386,7 +386,7 @@ class AddressFieldView extends BaseFieldView {
             this.$city.on('change', () => this.trigger('change'));
             this.$country.on('change', () => this.trigger('change'));
 
-            const countryList = this.getConfig().get('addressCountryList') || [];
+            const countryList = this.getCountryList();
             const cityList = this.getConfig().get('addressCityList') || [];
             const stateList = this.getConfig().get('addressStateList') || [];
 
@@ -398,6 +398,7 @@ class AddressFieldView extends BaseFieldView {
                     handleFocusMode: 1,
                     focusOnSelect: true,
                     lookup: countryList,
+                    lookupFunction: this.getCountryAutocompleteLookupFunction(countryList),
                     onSelect: () => this.trigger('change'),
                 });
 
@@ -609,6 +610,54 @@ class AddressFieldView extends BaseFieldView {
             model: this.model,
             field: this.name,
         }, view => view.render());
+    }
+
+    /**
+     * @private
+     * @return {string[]}
+     */
+    getCountryList() {
+        const list = (this.getHelper().getAppParam('addressCountryData') || {}).list || [];
+
+        if (list.length) {
+            return list;
+        }
+
+        return this.getConfig().get('addressCountryList') || [];
+    }
+
+    /**
+     * @private
+     * @param {string[]} fullList
+     * @return {function(string): Promise|undefined}
+     */
+    getCountryAutocompleteLookupFunction(fullList) {
+        // noinspection JSUnresolvedReference
+        const list = (this.getHelper().getAppParam('addressCountryData') || {}).preferredList || [];
+
+        if (!list.length) {
+            return undefined;
+        }
+
+        return query => {
+            if (query.length === 0) {
+                const result = list.map(item => ({value: item}));
+
+                return Promise.resolve(result);
+            }
+
+            const queryLowerCase = query.toLowerCase();
+
+            const result = fullList
+                .filter(item => {
+                    if (item.toLowerCase().indexOf(queryLowerCase) === 0) {
+                        return item.length !== queryLowerCase.length;
+                    }
+                })
+                .map(item => ({value: item}));
+
+            return Promise.resolve(result);
+        };
     }
 }
 

@@ -62,7 +62,8 @@
         "WorkingTimeCalendar": "Working Time Calendar",
         "WorkingTimeRange": "Working Time Exception",
         "AuthenticationProvider": "Authentication Provider",
-        "GlobalStream": "Global Stream"
+        "GlobalStream": "Global Stream",
+        "AddressCountry": "Address Country"
     },
     "scopeNamesPlural": {
         "Note": "Notes",
@@ -115,7 +116,8 @@
         "WorkingTimeCalendar": "Working Time Calendars",
         "WorkingTimeRange": "Working Time Exceptions",
         "AuthenticationProvider": "Authentication Providers",
-        "GlobalStream": "Global Stream"
+        "GlobalStream": "Global Stream",
+        "AddressCountry": "Address Countries"
     },
     "labels": {
         "Previous Page": "Previous Page",

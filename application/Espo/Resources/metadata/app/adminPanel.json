@@ -291,6 +291,12 @@
                 "description": "webhooks"
             },
             {
+                "url": "#Admin/addressCountries",
+                "label": "Address Countries",
+                "iconClass": "far fa-flag",
+                "description": "addressCountries"
+            },
+            {
                 "url": "#Admin/authenticationProviders",
                 "label": "Authentication Providers",
                 "iconClass": "fas fa-sign-in-alt",
