@@ -175,6 +175,7 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "varchar"},
                                     {"const": "enum"},
                                     {"const": "multiEnum"},
                                     {"const": "array"},
@@ -344,6 +345,27 @@
                                 "type": "integer",
                                 "minimum": 1,
                                 "description": "The max length of the database column."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "varchar"},
+                                    {"const": "array"},
+                                    {"const": "multiEnum"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "pattern": {
+                                "type": "string",
+                                "description": "A regular expression to check a field value against. If starts with $, a predefined named expression will be used."
                             }
                         }
                     }
