@@ -91,6 +91,8 @@ class Autocomplete {
             } :
             undefined;
 
+        const $modalBody = this.$element.closest('.modal-body');
+
         this.$element.autocomplete({
             beforeRender: $container => {
                 if (options.beforeRender) {
@@ -113,6 +115,8 @@ class Autocomplete {
             minChars: options.minChars || 0,
             noCache: true,
             autoSelectFirst: options.autoSelectFirst,
+            appendTo: $modalBody.length ? $modalBody : 'body',
+            forceFixPosition: true,
             formatResult: item => {
                 if (options.formatResult) {
                     return options.formatResult(item);
