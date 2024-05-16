@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Classes\AclPortal\KnowledgeBaseArticle;
 
+use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\KnowledgeBaseArticle;
 use Espo\ORM\Entity;
@@ -45,8 +46,10 @@ class AccessChecker implements AccessEntityCREDChecker
 {
     use DefaultAccessCheckerDependency;
 
-    public function __construct(DefaultAccessChecker $defaultAccessChecker)
-    {
+    public function __construct(
+        DefaultAccessChecker $defaultAccessChecker,
+        private Metadata $metadata
+    ) {
         $this->defaultAccessChecker = $defaultAccessChecker;
     }
 
@@ -56,7 +59,10 @@ class AccessChecker implements AccessEntityCREDChecker
             return false;
         }
 
-        if ($entity->get('status') !== KnowledgeBaseArticle::STATUS_PUBLISHED) {
+        $statusList = $this->metadata->get("entityDefs.KnowledgeBaseArticle.fields.status.activeOptions") ??
+            [KnowledgeBaseArticle::STATUS_PUBLISHED];
+
+        if (!in_array($entity->getStatus(), $statusList)) {
             return false;
         }
 

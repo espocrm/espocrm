@@ -20,6 +20,13 @@
             },
             "view": "crm:views/knowledge-base-article/fields/status",
             "default": "Draft",
+            "fieldManagerAdditionalParamList": [
+                {
+                    "name": "activeOptions",
+                    "view": "views/admin/field-manager/fields/not-actual-options"
+                }
+            ],
+            "activeOptions": ["Published"],
             "customizationOptionsReferenceDisabled": true
         },
         "language": {
