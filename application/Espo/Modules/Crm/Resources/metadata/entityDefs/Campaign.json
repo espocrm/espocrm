@@ -18,6 +18,7 @@
                 "Inactive": "info",
                 "Complete": "success"
             },
+            "customizationOptionsDisabled": true,
             "customizationOptionsReferenceDisabled": true
         },
         "type": {
