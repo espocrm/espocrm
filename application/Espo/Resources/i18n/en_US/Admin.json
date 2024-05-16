@@ -202,6 +202,7 @@
         "dynamicLogicInvalid": "Conditions making field invalid",
         "probabilityMap": "Stage Probabilities (%)",
         "notActualOptions": "Not Actual Options",
+        "activeOptions": "Active Options",
         "readOnly": "Read-only",
         "readOnlyAfterCreate": "Read-only After Create",
         "maxFileSize": "Max File Size (Mb)",
