@@ -73,6 +73,8 @@ class HookProcessor
             return;
         }
 
+        $force = $this->forceAssignmentNotificator($entityType);
+
         /**
          * No need to process assignment notifications for entity types that have Stream enabled.
          * Users are notified via Stream notifications.
@@ -80,14 +82,14 @@ class HookProcessor
         if (
             $this->checkHasStream($entityType) &&
             !$entity->hasLinkMultipleField('assignedUsers') &&
-            !$this->forceAssignmentNotificator($entityType)
+            !$force
         ) {
             return;
         }
 
         $assignmentNotificationsEntityList = $this->config->get('assignmentNotificationsEntityList') ?? [];
 
-        if (!in_array($entityType, $assignmentNotificationsEntityList)) {
+        if (!$force && !in_array($entityType, $assignmentNotificationsEntityList)) {
             return;
         }
 
