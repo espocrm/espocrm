@@ -1571,7 +1571,7 @@ class ListRecordView extends View {
 
         this.confirm({
             message: confirmMsg,
-            confirmText: this.translate('Unfollow'),
+            confirmText: this.translate('Yes'),
         }, () => {
             Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
@@ -1629,12 +1629,15 @@ class ListRecordView extends View {
         }
 
         if (this.checkedList.length < 2) {
-            Espo.Ui.error(this.translate('Select 2 or more records'));
+            Espo.Ui.error(this.translate('select2OrMoreRecords', 'messages'));
 
             return;
         }
         if (this.checkedList.length > 4) {
-            Espo.Ui.error(this.translate('Select not more than 4 records'));
+            const msg = this.translate('selectNotMoreThanNumberRecords', 'messages')
+                .replace('{number}', '4');
+
+            Espo.Ui.error(msg);
 
             return;
         }
