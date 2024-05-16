@@ -73,6 +73,7 @@ class HookProcessor
             return;
         }
 
+        $hasStream = $this->checkHasStream($entityType);
         $force = $this->forceAssignmentNotificator($entityType);
 
         /**
@@ -80,16 +81,19 @@ class HookProcessor
          * Users are notified via Stream notifications.
          */
         if (
-            $this->checkHasStream($entityType) &&
-            !$entity->hasLinkMultipleField('assignedUsers') &&
-            !$force
+            $hasStream &&
+            !$force &&
+            !$entity->hasLinkMultipleField('assignedUsers')
         ) {
             return;
         }
 
         $assignmentNotificationsEntityList = $this->config->get('assignmentNotificationsEntityList') ?? [];
 
-        if (!$force && !in_array($entityType, $assignmentNotificationsEntityList)) {
+        if (
+            (!$force || !$hasStream) &&
+            !in_array($entityType, $assignmentNotificationsEntityList)
+        ) {
             return;
         }
 
