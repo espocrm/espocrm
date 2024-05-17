@@ -1,10 +1,4 @@
-<div class="page-header">
-    <h3><a href='#Lead'>{{translate scope category='scopeNamesPlural'}}</a>
-    <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
-    <a href='#Lead/view/{{this.model.id}}'>{{get this.model 'name'}}</a>
-    <span class="breadcrumb-separator"><span class="chevron-right"></span></span>
-    {{translate 'convert' scope='Lead'}}</h3>
-</div>
+<div class="header page-header">{{{header}}}</div>
 
 {{#each scopeList}}
 <div class="record">

@@ -26,20 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import View from 'view';
+import ManinView from 'views/main';
 
-class ConvertLeadView extends View {
+class ConvertLeadView extends ManinView {
 
     template = 'crm:lead/convert'
 
     data() {
         return {
             scopeList: this.scopeList,
-            scope: this.model.entityType,
+            scope: this.scope,
         };
     }
 
     setup() {
+        this.scope = 'Lead';
+
         this.addHandler('change', 'input.check-scope', (e, /** HTMLInputElement */target) => {
             const scope = target.dataset.scope;
             const $div = this.$el.find(`.edit-container-${Espo.Utils.toDom(scope)}`);
@@ -55,6 +57,13 @@ class ConvertLeadView extends View {
 
         this.addActionHandler('cancel', () => {
             this.getRouter().navigate(`#Lead/view/${this.id}`, {trigger: true});
+        });
+
+        this.createView('header', 'views/header', {
+            model: this.model,
+            fullSelector: '#main > .header',
+            scope: this.scope,
+            fontSizeFlexible: true,
         });
 
         this.wait(true);
@@ -233,6 +242,38 @@ class ConvertLeadView extends View {
         }
 
         process(data);
+    }
+
+    getHeader() {
+        const headerIconHtml = this.getHeaderIconHtml();
+        const scopeLabel = this.getLanguage().translate(this.model.entityType, 'scopeNamesPlural');
+
+        const $root =
+            $('<span>')
+                .append(
+                    $('<a>')
+                        .attr('href', '#Lead')
+                        .text(scopeLabel)
+                );
+
+        if (headerIconHtml) {
+            $root.prepend(headerIconHtml);
+        }
+
+        const name = this.model.get('name') || this.model.id;
+        const url = `#${this.model.entityType}/view/${this.model.id}`;
+
+        const $name =
+            $('<a>')
+                .attr('href', url)
+                .addClass('action')
+                .append($('<span>').text(name));
+
+        return this.buildHeaderHtml([
+            $root,
+            $name,
+            $('<span>').text(this.translate('convert', 'labels', 'Lead'))
+        ]);
     }
 }
 
