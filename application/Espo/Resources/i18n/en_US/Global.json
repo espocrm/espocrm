@@ -409,7 +409,8 @@
         "confirmRestoreFromAudit": "The previous values will be set in a form. Then you can save the record to restore the previous values.",
         "starsLimitExceeded": "The number of stars exceeded the limit.",
         "select2OrMoreRecords": "Select 2 or more records",
-        "selectNotMoreThanNumberRecords": "Select not more than {number} records"
+        "selectNotMoreThanNumberRecords": "Select not more than {number} records",
+        "selectAtLeastOneRecord": "Select at least one record"
     },
     "boolFilters": {
         "onlyMy": "Only My",
