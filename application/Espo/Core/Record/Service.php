@@ -338,7 +338,7 @@ class Service implements Crud,
         }
 
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No read access.");
         }
 
         $entity = $this->getEntity($id);
@@ -826,7 +826,7 @@ class Service implements Crud,
     public function create(stdClass $data, CreateParams $params): Entity
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_CREATE)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No create access.");
         }
 
         $entity = $this->getRepository()->getNew();
@@ -888,7 +888,7 @@ class Service implements Crud,
     public function update(string $id, stdClass $data, UpdateParams $params): Entity
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_EDIT)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No edit access.");
         }
 
         if (!$id) {
@@ -971,7 +971,7 @@ class Service implements Crud,
     public function delete(string $id, DeleteParams $params): void
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_DELETE)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No delete access.");
         }
 
         if (!$id) {
@@ -1010,7 +1010,7 @@ class Service implements Crud,
     public function find(SearchParams $searchParams, ?FindParams $params = null): RecordCollection
     {
         if (!$this->acl->check($this->entityType, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No read access.");
         }
 
         if (!$params) {
@@ -1153,7 +1153,7 @@ class Service implements Crud,
         }
 
         if (!$this->acl->check($entity, AclTable::ACTION_READ)) {
-            throw new ForbiddenSilent();
+            throw new ForbiddenSilent("No read access.");
         }
 
         $this->processForbiddenLinkReadCheck($link);
