@@ -10,9 +10,8 @@
         <meta name="description" content="{{applicationDescription}}">
         <meta name="mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-capable" content="yes">
-        <link rel="shortcut icon" sizes="196x196" href="{{basePath}}{{favicon196Path}}">
-        <link rel="icon" href="{{basePath}}{{faviconPath}}" type="image/x-icon">
-        <link rel="shortcut icon" href="{{basePath}}{{faviconPath}}" type="image/x-icon">
+        <link rel="alternate icon" href="{{basePath}}{{faviconAlternate}}" type="image/x-icon">
+        <link rel="icon" href="{{basePath}}{{favicon}}" type="{{faviconType}}">
         <script type="text/javascript" nonce="{{nonce}}">
             window.addEventListener('DOMContentLoaded', () => {
                 require('{{appClientClassName}}', App => {

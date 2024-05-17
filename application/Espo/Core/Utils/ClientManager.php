@@ -45,8 +45,8 @@ class ClientManager
 {
     private string $mainHtmlFilePath = 'html/main.html';
     private string $runScript = 'app.start();';
-    private string $favicon = 'client/img/favicon.ico';
-    private string $favicon196 = 'client/img/favicon196x196.png';
+    private string $faviconAlternate = 'client/img/favicon.ico';
+    private string $favicon = 'client/img/favicon.svg';
     private string $basePath = '';
     private string $apiUrl = 'api/v1';
     private string $applicationId = 'espocrm';
@@ -170,8 +170,8 @@ class ClientManager
 
         $cssFileList = $this->metadata->get(['app', 'client', 'cssList'], []);
         $linkList = $this->metadata->get(['app', 'client', 'linkList'], []);
-        $favicon196Path = $this->metadata->get(['app', 'client', 'favicon196']) ?? $this->favicon196;
-        $faviconPath = $this->metadata->get(['app', 'client', 'favicon']) ?? $this->favicon;
+        $faviconAlternate = $this->metadata->get('app.client.favicon') ?? $this->faviconAlternate;
+        [$favicon, $faviconType] = $this->getFaviconData();
 
         $scriptsHtml = implode('',
             array_map(fn ($file) => $this->getScriptItemHtml($file, $appTimestamp), $jsFileList)
@@ -205,8 +205,9 @@ class ClientManager
             'scriptsHtml' => $scriptsHtml,
             'additionalStyleSheetsHtml' => $additionalStyleSheetsHtml,
             'linksHtml' => $linksHtml,
-            'favicon196Path' => $favicon196Path,
-            'faviconPath' => $faviconPath,
+            'faviconAlternate' => $faviconAlternate,
+            'favicon' => $favicon,
+            'faviconType' => $faviconType,
             'ajaxTimeout' => $this->config->get('ajaxTimeout') ?? 60000,
             'internalModuleList' => Json::encode($internalModuleList),
             'bundledModuleList' => Json::encode($this->getBundledModuleList()),
@@ -389,5 +390,16 @@ class ClientManager
     public function setApplicationId(string $applicationId): void
     {
         $this->applicationId = $applicationId;
+    }
+
+    /**
+     * @return array{string, string}
+     */
+    private function getFaviconData(): array
+    {
+        $faviconSvgPath = $this->metadata->get('app.client.faviconSvg') ?? $this->favicon;
+        $faviconType = str_ends_with($faviconSvgPath, '.svg') ? 'image/svg+xml' : 'image/png';
+
+        return [$faviconSvgPath, $faviconType];
     }
 }
