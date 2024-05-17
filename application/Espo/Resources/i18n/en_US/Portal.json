@@ -20,7 +20,9 @@
         "layoutSet": "Layout Set",
         "authenticationProvider": "Authentication Provider",
         "customUrl": "Custom URL",
-        "customId": "Custom ID"
+        "customId": "Custom ID",
+        "authTokenLifetime": "Auth Token Lifetime (hours)",
+        "authTokenMaxIdleTime": "Auth Token Max Idle Time (hours)"
     },
     "links": {
         "users": "Users",
