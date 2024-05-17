@@ -718,7 +718,7 @@ class ViewHelper {
         }
 
         text = text.replace(
-            /<a href="mailto:(.*)"/gm,
+            /<a href="mailto:([^"]*)"/gm,
             '<a role="button" class="selectable" data-email-address="$1" data-action="mailTo"'
         );
 
