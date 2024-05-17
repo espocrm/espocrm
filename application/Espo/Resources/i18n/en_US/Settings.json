@@ -314,7 +314,9 @@
         "2-Factor Authentication": "2-Factor Authentication",
         "Attachments": "Attachments",
         "IdP Group": "IdP Group",
-        "Access": "Access"
+        "Access": "Access",
+        "Strength": "Strength",
+        "Recovery": "Recovery"
     },
     "messages": {
         "ldapTestConnection": "The connection successfully established."

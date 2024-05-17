@@ -24,10 +24,16 @@
     {
         "tabBreak": true,
         "tabLabel": "$label:Passwords",
+        "label": "Strength",
         "rows": [
             [{"name": "passwordGenerateLength"}, false],
             [{"name": "passwordStrengthLength"}, {"name": "passwordStrengthLetterCount"}],
-            [{"name": "passwordStrengthBothCases"}, {"name": "passwordStrengthNumberCount"}],
+            [{"name": "passwordStrengthBothCases"}, {"name": "passwordStrengthNumberCount"}]
+        ]
+    },
+    {
+        "label": "Recovery",
+        "rows": [
             [{"name": "passwordRecoveryDisabled"}, {"name": "passwordRecoveryForAdminDisabled"}],
             [{"name": "passwordRecoveryNoExposure"}, {"name": "passwordRecoveryForInternalUsersDisabled"}]
         ]
