@@ -26,9 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import ManinView from 'views/main';
+import MainView from 'views/main';
 
-class ConvertLeadView extends ManinView {
+class ConvertLeadView extends MainView {
 
     template = 'crm:lead/convert'
 
