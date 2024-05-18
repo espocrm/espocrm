@@ -148,7 +148,7 @@ class Builder
             $entityDefs = EntityDefs::fromRaw($modifiedEntityDefs->toAssoc(), $entityType);
         }
 
-        $this->log->debug("Schema\Builder: Entity {$entityType}");
+        $this->log->debug("Schema\Builder: Entity $entityType");
 
         $tableName = Util::toUnderScore($entityType);
 
@@ -308,7 +308,7 @@ class Builder
 
         $tableName = Util::toUnderScore($relationshipName);
 
-        $this->log->debug("Schema\Builder: ManyMany for {$entityType}.{$relationDefs->getName()}");
+        $this->log->debug("Schema\Builder: ManyMany for $entityType.{$relationDefs->getName()}");
 
         if ($schema->hasTable($tableName)) {
             $this->log->debug('Schema\Builder: Table [' . $tableName . '] exists.');
