@@ -49,7 +49,7 @@ class StreamController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionPosts() {
-        const key = 'posts';
+        const key = 'index';
         const isReturn = this.getRouter().backProcessed;
 
         if (!isReturn) {
@@ -64,7 +64,7 @@ class StreamController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionUpdates() {
-        const key = 'updates';
+        const key = 'index';
         const isReturn = this.getRouter().backProcessed;
 
         if (!isReturn) {
