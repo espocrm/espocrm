@@ -78,7 +78,7 @@ class DiffModifier
         /**
          * @todo Leave only for MariaDB?
          * MariaDB supports RENAME INDEX as of v10.5.
-         * Find out how long does it take to rename fo different databases.
+         * Find out how long does it take to rename for different databases.
          */
 
         if (!$isHard) {
