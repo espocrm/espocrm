@@ -448,11 +448,10 @@ class Controller {
     }
 
     /**
-     * @param {module:views/site/master} masterView
+     * @param {import('views/site/master').default} masterView
      * @private
      */
     _unchainMainView(masterView) {
-        // noinspection JSUnresolvedReference
         if (
             !masterView.currentViewKey ||
             !this.hasStoredMainView(masterView.currentViewKey)
@@ -460,7 +459,7 @@ class Controller {
             return;
         }
 
-        const currentMainView = masterView.getView('main');
+        const currentMainView = masterView.getMainView();
 
         if (!currentMainView) {
             return;
@@ -567,8 +566,8 @@ class Controller {
     }
 
     /**
-     * @param {module:view} mainView
-     * @param {module:views/site/master} masterView
+     * @param {import('view').default} mainView
+     * @param {import('views/site/master').default} masterView
      * @param {{
      *     isCanceled: boolean,
      *     key?: string,
