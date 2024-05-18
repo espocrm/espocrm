@@ -13,8 +13,9 @@
                 "options": [0, 0.5, 1, 2, 5, 10]
             },
             "displayRecords": {
-                "type": "enumInt",
-                "options": [3,4,5,7,10,15]
+                "type": "int",
+                "min": 1,
+                "max": 20
             },
             "expandedLayout": {
                 "type": "base",
