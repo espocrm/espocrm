@@ -256,11 +256,14 @@ class Controller {
 
     /**
      * @param {string} key
+     * @param {string} [name]
      * @return {string}
      * @private
      */
-    _composeScrollKey(key) {
-        return `scrollTop-${this.name}-${key}`;
+    _composeScrollKey(key, name) {
+        name = name || this.name;
+
+        return `scrollTop-${name}-${key}`;
     }
 
     /**
@@ -453,8 +456,8 @@ class Controller {
      */
     _unchainMainView(masterView) {
         if (
-            !masterView.currentViewKey ||
-            !this.hasStoredMainView(masterView.currentViewKey)
+            !masterView.currentViewKey /*||
+            !this.hasStoredMainView(masterView.currentViewKey)*/
         ) {
             return;
         }
@@ -596,7 +599,9 @@ class Controller {
         mainView.listenToOnce(this.baseController, 'action', onAction);
 
         if (masterView.currentViewKey) {
-            this.set(this._composeScrollKey(masterView.currentViewKey), $(window).scrollTop());
+            const scrollKey = this._composeScrollKey(masterView.currentViewKey, masterView.currentName);
+
+            this.set(scrollKey, $(window).scrollTop());
 
             if (!dto.isSet) {
                 this._unchainMainView(masterView);
@@ -604,6 +609,7 @@ class Controller {
         }
 
         masterView.currentViewKey = key;
+        masterView.currentName = this.name;
 
         if (!dto.isSet) {
             masterView.setView('main', mainView);

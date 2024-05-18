@@ -55,6 +55,11 @@ class MasterSiteView extends View {
      */
     currentViewKey
 
+    /**
+     * @type {string}
+     */
+    currentName
+
     showLoadingNotification() {
         Espo.Ui.notify(' ... ');
     }
