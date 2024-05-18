@@ -259,6 +259,15 @@ class Controller {
      * @return {string}
      * @private
      */
+    _composeScrollKey(key) {
+        return `scrollTop-${this.name}-${key}`;
+    }
+
+    /**
+     * @param {string} key
+     * @return {string}
+     * @private
+     */
     _composeMainViewKey(key) {
         return `mainView-${this.name}-${key}`;
     }
@@ -293,6 +302,7 @@ class Controller {
             view.remove(true);
         }
 
+        this.unset(this._composeScrollKey(key));
         this.unset(this._composeMainViewKey(key));
     }
 
@@ -587,7 +597,7 @@ class Controller {
         mainView.listenToOnce(this.baseController, 'action', onAction);
 
         if (masterView.currentViewKey) {
-            this.set('storedScrollTop-' + masterView.currentViewKey, $(window).scrollTop());
+            this.set(this._composeScrollKey(masterView.currentViewKey), $(window).scrollTop());
 
             if (!dto.isSet) {
                 this._unchainMainView(masterView);
@@ -605,8 +615,10 @@ class Controller {
 
             mainView.updatePageTitle();
 
-            if (dto.useStored && this.has('storedScrollTop-' + key)) {
-                $(window).scrollTop(this.get('storedScrollTop-' + key));
+            const scrollKey = this._composeScrollKey(key);
+
+            if (dto.useStored && this.has(scrollKey)) {
+                $(window).scrollTop(this.get(scrollKey));
 
                 return;
             }
