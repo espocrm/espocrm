@@ -53,7 +53,7 @@ class AdminIndexView extends View {
     }
 
     afterRender() {
-        let $quickSearch = this.$el.find('input[data-name="quick-search"]');
+        const $quickSearch = this.$el.find('input[data-name="quick-search"]');
 
         if (this.quickSearchText) {
             $quickSearch.val(this.quickSearchText);
@@ -68,10 +68,10 @@ class AdminIndexView extends View {
     setup() {
         this.panelDataList = [];
 
-        let panels = this.getMetadata().get('app.adminPanel') || {};
+        const panels = this.getMetadata().get('app.adminPanel') || {};
 
-        for (let name in panels) {
-            let panelItem = Espo.Utils.cloneDeep(panels[name]);
+        for (const name in panels) {
+            const panelItem = Espo.Utils.cloneDeep(panels[name]);
 
             panelItem.name = name;
             panelItem.itemList = panelItem.itemList || [];
@@ -115,7 +115,7 @@ class AdminIndexView extends View {
             return v1.order - v2.order;
         });
 
-        let iframeParams = [
+        const iframeParams = [
             'version=' + encodeURIComponent(this.getConfig().get('version')),
             'css=' + encodeURIComponent(this.getConfig().get('siteUrl') +
                 '/' + this.getThemeManager().getStylesheet())
@@ -141,7 +141,7 @@ class AdminIndexView extends View {
 
         this.quickSearchText = text;
 
-        let $noData = this.$noData || this.$el.find('.no-data');
+        const $noData = this.$noData || this.$el.find('.no-data');
 
         $noData.addClass('hidden');
 
@@ -184,7 +184,7 @@ class AdminIndexView extends View {
                 }
 
                 if (!matched) {
-                    let wordList = row.label.split(' ');
+                    const wordList = row.label.split(' ');
 
                     wordList.forEach((word) => {
                         if (word.toLowerCase().indexOf(text) === 0) {
