@@ -468,6 +468,7 @@ class Builder
      * This logic can be removed in the future. Usage of table files in not recommended.
      *
      * @return array<string, array<string, mixed>>
+     * @todo Remove in v9.0.
      */
     private function getCustomTables(): array
     {
@@ -490,7 +491,7 @@ class Builder
 
         if ($customTables !== []) {
             trigger_error(
-                'Definitions in Database\\Schema\\tables are deprecated and will be remove in v8.0.',
+                'Definitions in Database\\Schema\\tables are deprecated and will be remove in v9.0.',
                 E_USER_DEPRECATED
             );
         }
