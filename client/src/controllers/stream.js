@@ -34,30 +34,46 @@ class StreamController extends Controller {
 
     // noinspection JSUnusedGlobalSymbols
     actionIndex() {
-        this.main('views/stream', {
-            displayTitle: true,
-        }, view => {
-            view.render();
+        const key = 'index';
+        const isReturn = this.getRouter().backProcessed;
+
+        if (!isReturn) {
+            this.clearStoredMainView(key);
+        }
+
+        this.main('views/stream', {displayTitle: true}, undefined, {
+            key: key,
+            useStored: isReturn,
         });
     }
 
     // noinspection JSUnusedGlobalSymbols
     actionPosts() {
-        this.main('views/stream', {
-            displayTitle: true,
-            filter: 'posts',
-        }, view => {
-            view.render();
+        const key = 'posts';
+        const isReturn = this.getRouter().backProcessed;
+
+        if (!isReturn) {
+            this.clearStoredMainView(key);
+        }
+
+        this.main('views/stream', {displayTitle: true, filter: 'posts'}, undefined, {
+            key: key,
+            useStored: isReturn,
         });
     }
 
     // noinspection JSUnusedGlobalSymbols
     actionUpdates() {
-        this.main('views/stream', {
-            displayTitle: true,
-            filter: 'updates',
-        }, view => {
-            view.render();
+        const key = 'updates';
+        const isReturn = this.getRouter().backProcessed;
+
+        if (!isReturn) {
+            this.clearStoredMainView(key);
+        }
+
+        this.main('views/stream', {displayTitle: true, filter: 'updates'}, undefined, {
+            key: key,
+            useStored: isReturn,
         });
     }
 }
