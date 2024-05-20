@@ -624,8 +624,8 @@ class CalendarView extends View {
         if (this.allDayScopeList.includes(event.scope)) {
             event.allDay = event.allDayCopy = true;
 
-            if (!notInitial && end) {
-                start = end;
+            if (/*!notInitial &&*/ end) {
+                start = end.clone();
 
                 if (
                     !event.dateEndDate &&
@@ -634,6 +634,10 @@ class CalendarView extends View {
                 ) {
                     start.add(-1, 'days');
                 }
+            }
+
+            if (start.isSame(end)) {
+                end.add(1, 'days');
             }
 
             if (start) {
