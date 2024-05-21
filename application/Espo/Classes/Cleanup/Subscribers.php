@@ -33,7 +33,7 @@ use Espo\Core\Cleanup\Cleanup;
 use Espo\Core\Field\DateTime;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\Entities\Subscription;
+use Espo\Entities\StreamSubscription;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Condition as Cond;
 
@@ -97,7 +97,7 @@ class Subscribers implements Cleanup
         $query = $this->entityManager
             ->getQueryBuilder()
             ->delete()
-            ->from(Subscription::ENTITY_TYPE, 'subscription')
+            ->from(StreamSubscription::ENTITY_TYPE, 'subscription')
             ->join(
                 $entityType,
                 'entity',

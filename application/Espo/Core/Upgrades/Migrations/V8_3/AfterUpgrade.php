@@ -29,9 +29,11 @@
 
 namespace Espo\Core\Upgrades\Migrations\V8_3;
 
+use Doctrine\DBAL\Exception as DbalException;
 use Espo\Core\Templates\Entities\Event;
 use Espo\Core\Upgrades\Migration\Script;
 use Espo\Core\Utils\Config;
+use Espo\Core\Utils\Database\Helper;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\AuthenticationProvider;
 use Espo\Entities\Role;
@@ -44,14 +46,19 @@ class AfterUpgrade implements Script
     public function __construct(
         private EntityManager $entityManager,
         private Metadata $metadata,
-        private Config $config
+        private Config $config,
+        private Helper $helper
     ) {}
 
+    /**
+     * @throws DbalException
+     */
     public function run(): void
     {
         $this->updateRoles();
         $this->updateMetadata();
         $this->updateAuthenticationProviders();
+        $this->renameSubscription();
     }
 
     private function updateRoles(): void
@@ -113,5 +120,29 @@ class AfterUpgrade implements Script
 
             $this->entityManager->saveEntity($entity);
         }
+    }
+
+    /**
+     * @throws DbalException
+     */
+    private function renameSubscription(): void
+    {
+        $connection = $this->helper->getDbalConnection();
+        $schemaManager = $connection->createSchemaManager();
+
+        if (!$schemaManager->tablesExist('subscription')) {
+            return;
+        }
+
+        if ($schemaManager->tablesExist('stream_subscription')) {
+            try {
+                $schemaManager->dropTable('stream_subscription');
+            }
+            catch (DbalException) {
+                $schemaManager->renameTable('stream_subscription', 'stream_subscription_waste');
+            }
+        }
+
+        $schemaManager->renameTable('subscription', 'stream_subscription');
     }
 }

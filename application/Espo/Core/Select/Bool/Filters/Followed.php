@@ -30,7 +30,7 @@
 namespace Espo\Core\Select\Bool\Filters;
 
 use Espo\Core\Select\Bool\Filter;
-use Espo\Entities\Subscription;
+use Espo\Entities\StreamSubscription;
 use Espo\Entities\User;
 use Espo\ORM\Query\Part\Where\OrGroupBuilder;
 use Espo\ORM\Query\Part\WhereClause;
@@ -46,7 +46,7 @@ class Followed implements Filter
         $alias = 'subscriptionFollowedBoolFilter';
 
         $queryBuilder->leftJoin(
-            Subscription::ENTITY_TYPE,
+            StreamSubscription::ENTITY_TYPE,
             $alias,
             [
                 $alias . '.entityType' => $this->entityType,

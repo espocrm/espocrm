@@ -32,7 +32,7 @@ namespace Espo\Tools\Stream;
 use Espo\Core\Field\LinkParent;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\ORM\Type\FieldType;
-use Espo\Entities\Subscription;
+use Espo\Entities\StreamSubscription;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Repositories\EmailAddress as EmailAddressRepository;
 
@@ -165,7 +165,7 @@ class Service
         }
 
         return (bool) $this->entityManager
-            ->getRDBRepository(Subscription::ENTITY_TYPE)
+            ->getRDBRepository(StreamSubscription::ENTITY_TYPE)
             ->select(['id'])
             ->where([
                 'userId' => $userId,
@@ -240,7 +240,7 @@ class Service
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from(Subscription::ENTITY_TYPE)
+            ->from(StreamSubscription::ENTITY_TYPE)
             ->where([
                 'userId' => $userIdList,
                 'entityId' => $entity->getId(),
@@ -253,7 +253,7 @@ class Service
         $collection = new EntityCollection();
 
         foreach ($userIdList as $userId) {
-            $subscription = $this->entityManager->getNewEntity(Subscription::ENTITY_TYPE);
+            $subscription = $this->entityManager->getNewEntity(StreamSubscription::ENTITY_TYPE);
 
             $subscription->set([
                 'userId' => $userId,
@@ -305,7 +305,7 @@ class Service
             return true;
         }
 
-        $this->entityManager->createEntity(Subscription::ENTITY_TYPE, [
+        $this->entityManager->createEntity(StreamSubscription::ENTITY_TYPE, [
             'entityId' => $entity->getId(),
             'entityType' => $entity->getEntityType(),
             'userId' => $userId,
@@ -322,7 +322,7 @@ class Service
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from(Subscription::ENTITY_TYPE)
+            ->from(StreamSubscription::ENTITY_TYPE)
             ->where([
                 'userId' => $userId,
                 'entityId' => $entity->getId(),
@@ -343,7 +343,7 @@ class Service
 
         $delete = $this->entityManager->getQueryBuilder()
             ->delete()
-            ->from(Subscription::ENTITY_TYPE)
+            ->from(StreamSubscription::ENTITY_TYPE)
             ->where([
                 'entityId' => $entity->getId(),
                 'entityType' => $entity->getEntityType(),
@@ -978,7 +978,7 @@ class Service
             ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id'])
             ->join(
-                Subscription::ENTITY_TYPE,
+                StreamSubscription::ENTITY_TYPE,
                 'subscription',
                 [
                     'subscription.userId=:' => 'user.id',
@@ -1021,7 +1021,7 @@ class Service
         }
 
         $builder->join(
-            Subscription::ENTITY_TYPE,
+            StreamSubscription::ENTITY_TYPE,
             'subscription',
             [
                 'subscription.userId=:' => 'user.id',
@@ -1069,7 +1069,7 @@ class Service
             ->getRDBRepository(User::ENTITY_TYPE)
             ->select(['id', 'name'])
             ->join(
-                Subscription::ENTITY_TYPE,
+                StreamSubscription::ENTITY_TYPE,
                 'subscription',
                 [
                     'subscription.userId=:' => 'user.id',
@@ -1126,7 +1126,7 @@ class Service
         $builder = $this->entityManager
             ->getQueryBuilder()
             ->select()
-            ->from(Subscription::ENTITY_TYPE)
+            ->from(StreamSubscription::ENTITY_TYPE)
             ->select('userId')
             ->where([
                 'entityId' => $parentId,

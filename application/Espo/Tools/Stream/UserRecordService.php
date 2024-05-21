@@ -35,7 +35,7 @@ use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SearchParams;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\ORM\EntityManager;
-use Espo\Entities\Subscription;
+use Espo\Entities\StreamSubscription;
 use Espo\Entities\User;
 use Espo\Entities\Note;
 use Espo\Entities\Email;
@@ -317,7 +317,7 @@ class UserRecordService
 
         $builder
             ->join(
-                Subscription::ENTITY_TYPE,
+                StreamSubscription::ENTITY_TYPE,
                 'subscription',
                 [
                     'entityType:' => 'parentType',
@@ -371,7 +371,7 @@ class UserRecordService
 
         $builder
             ->join(
-                Subscription::ENTITY_TYPE,
+                StreamSubscription::ENTITY_TYPE,
                 'subscription',
                 [
                     // Improves performance significantly.
@@ -383,7 +383,7 @@ class UserRecordService
             )
             // NOT EXISTS sub-query would perform very slow.
             ->leftJoin(
-                Subscription::ENTITY_TYPE,
+                StreamSubscription::ENTITY_TYPE,
                 'subscriptionExclude',
                 [
                     'entityType:' => 'parentType',

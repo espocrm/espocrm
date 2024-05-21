@@ -40,6 +40,7 @@ use Espo\Core\Utils\Config;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Metadata;
 
+use Espo\Entities\StreamSubscription;
 use Espo\ORM\Entity;
 use Espo\ORM\Query\Select as SelectQuery;
 use Espo\ORM\QueryComposer\BaseQueryComposer as QueryComposer;
@@ -2740,7 +2741,7 @@ class SelectManager
     protected function filterFollowed(&$result)
     {
         $this->addJoin([
-            'Subscription',
+            StreamSubscription::ENTITY_TYPE,
             'subscription',
             [
                 'subscription.entityType' => $this->getEntityType(),
@@ -2753,7 +2754,7 @@ class SelectManager
     protected function boolFilterFollowed(&$result)
     {
         $this->addLeftJoin([
-            'Subscription',
+            StreamSubscription::ENTITY_TYPE,
             'subscription',
             [
                 'subscription.entityType' => $this->getEntityType(),

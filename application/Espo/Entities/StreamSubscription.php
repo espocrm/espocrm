@@ -31,7 +31,7 @@ namespace Espo\Entities;
 
 use Espo\Core\ORM\Entity;
 
-class Subscription extends Entity
+class StreamSubscription extends Entity
 {
-    public const ENTITY_TYPE = 'Subscription';
+    public const ENTITY_TYPE = 'StreamSubscription';
 }
