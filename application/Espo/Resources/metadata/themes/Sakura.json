@@ -1,6 +1,7 @@
 {
     "stylesheet": "client/css/espo/sakura.css",
     "stylesheetIframe": "client/css/espo/sakura-iframe.css",
+    "logo": "client/img/logo.svg",
     "textColor": "#424242",
     "chartGridColor": "#ddd",
     "chartTickColor": "#e8eced",

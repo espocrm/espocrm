@@ -67,6 +67,12 @@
                 background-color: var(--dropdown-link-hover-bg);
                 color: var(--dropdown-link-hover-color);
             }
+
+            &.open {
+                > a#nav-more-tabs-dropdown {
+                    background-color: var(--navbar-inverse-link-active-bg);
+                }
+            }
         }
 
         li.in-more.dropdown {
@@ -280,6 +286,90 @@
                 ul {
                     > li.tab-divider {
                         display: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+#navbar > .navbar {
+
+    .tabs {
+        > li {
+            > a {
+                .short-label,
+                .more-icon {
+                    color: var(--navbar-inverse-link-icon-color);
+                }
+
+                &:hover,
+                &:focus {
+                    .short-label,
+                    .more-icon {
+                        color: var(--navbar-inverse-link-icon-hover-color);
+                    }
+                }
+            }
+
+            &.active > a {
+                .short-label,
+                .more-icon {
+                    color: var(--navbar-inverse-link-icon-hover-color);
+                }
+            }
+        }
+
+        .more-dropdown-menu {
+            .short-label,
+            .more-icon {
+                color: var(--navbar-link-icon-color);
+            }
+        }
+    }
+}
+
+body[data-navbar="top"] {
+    #navbar {
+        .navbar-right {
+            > li {
+                .icon {
+                    color: var(--navbar-link-icon-color); // @todo Check.
+                }
+            }
+        }
+    }
+}
+
+body[data-navbar="side"] {
+    #navbar > .navbar {
+        .minimizer {
+            color: var(--navbar-inverse-link-icon-color) !important;
+        }
+    }
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    #navbar {
+        .navbar-inverse .navbar-nav {
+            > li > a {
+                > .fas,
+                > .far {
+                    color: var(--navbar-inverse-link-icon-color);
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: (@screen-sm-min - 1px)) {
+    body[data-navbar="top"] {
+        #navbar {
+            .navbar-inverse .navbar-nav {
+                > li > a {
+                    > .fas,
+                    > .far {
+                        color: var(--navbar-inverse-link-icon-color);
                     }
                 }
             }
