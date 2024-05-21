@@ -41,19 +41,11 @@ class Subscribers implements Cleanup
 {
     private const PERIOD = '2 months';
 
-    private Metadata $metadata;
-    private EntityManager $entityManager;
-    private Config $config;
-
     public function __construct(
-        Metadata $metadata,
-        EntityManager $entityManager,
-        Config $config
-    ) {
-        $this->metadata = $metadata;
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-    }
+        private Metadata $metadata,
+        private EntityManager $entityManager,
+        private Config $config
+    ) {}
 
     public function process(): void
     {
