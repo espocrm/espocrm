@@ -26,8 +26,9 @@
                     data-action="toggleScopeFilter"
                     data-name="{{scope}}"
                 >
-                    <span class="fas fa-check filter-check-icon pull-right{{#if disabled}} hidden{{/if}}"></span>
-                    {{translate scope category='scopeNamesPlural'}}
+                    <span class="fas fa-check filter-check-icon check-icon pull-right{{#if disabled}} hidden{{/if}}"></span>
+                    <div>{{translate scope category='scopeNamesPlural'}}</div>
+
                 </a>
             </li>
         {{/each}}
