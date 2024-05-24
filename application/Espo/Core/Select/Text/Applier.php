@@ -101,7 +101,7 @@ class Applier
     {
         $expression = $data->getExpression();
 
-        $fullTextOrderType = self::DEFAULT_FT_ORDER;
+        $orderType = self::DEFAULT_FT_ORDER;
 
         $orderTypeMap = [
             'combined' => self::FT_ORDER_COMBINED,
@@ -112,19 +112,19 @@ class Applier
         $mOrderType = $this->metadataProvider->getFullTextSearchOrderType($this->entityType);
 
         if ($mOrderType) {
-            $fullTextOrderType = $orderTypeMap[$mOrderType];
+            $orderType = $orderTypeMap[$mOrderType];
         }
 
         $previousOrderBy = $queryBuilder->build()->getOrder();
 
         $hasOrderBy = !empty($previousOrderBy);
 
-        if (!$hasOrderBy || $fullTextOrderType === self::FT_ORDER_RELEVANCE) {
+        if (!$hasOrderBy || $orderType === self::FT_ORDER_RELEVANCE) {
             $queryBuilder->order([
                 OrderExpr::create($expression)->withDesc()
             ]);
         }
-        else if ($fullTextOrderType === self::FT_ORDER_COMBINED) {
+        else if ($orderType === self::FT_ORDER_COMBINED) {
             $orderExpression =
                 Expr::round(
                     Expr::divide($expression, $this->fullTextOrderRelevanceDivider)
