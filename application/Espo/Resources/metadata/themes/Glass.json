@@ -2,7 +2,7 @@
     "stylesheet": "client/css/espo/glass.css",
     "stylesheetIframe": "client/css/espo/glass-iframe.css",
     "stylesheetIframeFallback": "client/css/espo/hazyblue-iframe.css",
-    "logo": "client/img/logo.svg",
+    "logo": "client/img/logo-espo.svg",
     "textColor": "#dedede",
     "chartGridColor": "#646060",
     "chartTickColor": "#575454",
