@@ -169,6 +169,7 @@ class UserDetailRecordView extends DetailRecordView {
             'password',
             'portals',
             'portalRoles',
+            'defaultTeam',
             'contact',
             'accounts',
             'type',
