@@ -264,8 +264,15 @@ class LinkManagerEditModalView extends ModalView {
                 name: 'linkType',
                 params: {
                     required: true,
-                    options: ['', 'oneToMany', 'manyToOne', 'manyToMany',
-                        'oneToOneRight', 'oneToOneLeft', 'childrenToParent']
+                    options: [
+                        '',
+                        'oneToMany',
+                        'manyToOne',
+                        'manyToMany',
+                        'oneToOneRight',
+                        'oneToOneLeft',
+                        'childrenToParent',
+                    ]
                 }
             },
             readOnly: !isNew,
@@ -281,6 +288,7 @@ class LinkManagerEditModalView extends ModalView {
                     required: true,
                     trim: true,
                     maxLength: 61,
+                    noSpellCheck: true,
                 },
             },
             readOnly: !isNew,
@@ -296,6 +304,7 @@ class LinkManagerEditModalView extends ModalView {
                     required: true,
                     trim: true,
                     maxLength: 61,
+                    noSpellCheck: true,
                 },
             },
             readOnly: !isNew,
@@ -338,6 +347,7 @@ class LinkManagerEditModalView extends ModalView {
                         required: true,
                         trim: true,
                         maxLength: 61,
+                        noSpellCheck: true,
                     },
                 },
                 readOnly: !isNew,
