@@ -116,8 +116,8 @@ table.table-panel {
         border-bottom: 0;
     }
 
-    &.table-striped {
-        tbody > tr:last-child {
+    tbody {
+        > tr:nth-last-child(1 of :not(.hidden)) {
             > td:first-child {
                 border-bottom-left-radius: var(--panel-border-radius);
             }
