@@ -9,14 +9,19 @@ of the type. People, companies or opportunities – all in an easy and intuitive
 It's a web application with a frontend designed as a single page application and a REST API
 backend written in PHP.
 
-[Download](https://www.espocrm.com/download/) the latest release from our website. Release notes
-and release packages are available at [Releases](https://github.com/espocrm/espocrm/releases) on GitHub.
-
 ![Screenshot](https://user-images.githubusercontent.com/1006792/226094559-995dfd2a-a18f-4619-a21b-79a4e671990a.png)
 
 ### Demo
 
 You can try the CRM on an online [demo](https://www.espocrm.com/demo/).
+
+### Download
+
+[Download](https://www.espocrm.com/download/) the lastest release from our website. You can also download the latest and previous release packages from GitHub [releases](https://github.com/espocrm/espocrm/releases).
+
+### Release notes
+
+Release notes are available at GitHub [releases](https://github.com/espocrm/espocrm/releases).
 
 ### Requirements
 
