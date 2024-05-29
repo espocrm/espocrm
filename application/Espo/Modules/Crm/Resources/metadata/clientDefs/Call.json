@@ -70,7 +70,7 @@
                 "name": "scheduler",
                 "label": "Scheduler",
                 "view": "crm:views/meeting/record/panels/scheduler",
-                "disabled": true,
+                "disabled": false,
                 "order": 3
             }
         ],
@@ -79,7 +79,7 @@
                 "name": "scheduler",
                 "label": "Scheduler",
                 "view": "crm:views/meeting/record/panels/scheduler",
-                "disabled": true,
+                "disabled": false,
                 "order": 1
             }
         ],
@@ -88,7 +88,7 @@
                 "name": "scheduler",
                 "label": "Scheduler",
                 "view": "crm:views/meeting/record/panels/scheduler",
-                "disabled": true,
+                "disabled": false,
                 "order": 1
             }
         ]
