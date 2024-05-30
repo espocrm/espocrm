@@ -42,6 +42,15 @@ For more information about server configuration, see [this article](https://docs
 * **Developers & tech enthusiasts**. You can extend functionalities, build extensions, and create custom integrations.
 * **Anyone seeking a free CRM**. If you're looking for a user-friendly and secure CRM platform, it can be a good option.
 
+### Installing stable version
+
+See installation instructions:
+
+* [Manual installation](https://docs.espocrm.com/administration/installation/)
+* [Installation by script](https://docs.espocrm.com/administration/installation-by-script/)
+* [Installation with Docker](https://docs.espocrm.com/administration/docker/installation/)
+* [Installation with Traefik](https://docs.espocrm.com/administration/docker/traefik/)
+
 ### Release notes
 
 Release notes are available at GitHub [releases](https://github.com/espocrm/espocrm/releases).
@@ -53,15 +62,6 @@ See the [documentation](https://docs.espocrm.com) for administrators, users and 
 ### Bug reporting
 
 Create a [GitHub issue](https://github.com/espocrm/espocrm/issues/new/choose) or post on our [forum](https://forum.espocrm.com/forum/bug-reports).
-
-### Installing stable version
-
-See installation instructions:
-
-* [Manual installation](https://docs.espocrm.com/administration/installation/)
-* [Installation by script](https://docs.espocrm.com/administration/installation-by-script/)
-* [Installation with Docker](https://docs.espocrm.com/administration/docker/installation/)
-* [Installation with Traefik](https://docs.espocrm.com/administration/docker/traefik/)
 
 ### Development
 
