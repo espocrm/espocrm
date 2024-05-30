@@ -6,12 +6,12 @@
 It provides a wide range of tools to store, organize, and manage leads, contacts, sales opportunities, marketing campaigns, 
 support cases, and more – all business information in a simple and intuitive interface.
 
+![Screenshot](https://user-images.githubusercontent.com/1006792/226094559-995dfd2a-a18f-4619-a21b-79a4e671990a.png)
+
 ### Architecture
 
 EspoCRM is a web application with a frontend designed as a single-page application and a REST API
 backend written in PHP.
-
-![Screenshot](https://user-images.githubusercontent.com/1006792/226094559-995dfd2a-a18f-4619-a21b-79a4e671990a.png)
 
 ### Demo
 
