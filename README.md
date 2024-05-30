@@ -33,7 +33,7 @@ For more information about server configuration, see [this article](https://docs
 
 * **Open-source transparency**. EspoCRM’s source code is open and accessible, so anyone can inspect it and see how data is being managed within the CRM.
 * **Customization freedom**. You can develop features, create custom entities, fields, relationships, buttons to make the CRM fit your specific needs.
-* **Clean user interface**. EspoCRM has a clean, uncluttered, minimalist user inteface that is easy to navigate and has a short learning curve.
+* **Clean user interface**. EspoCRM has a uncluttered, minimalist and very fast user inteface that is easy to navigate and has a short learning curve.
 * **Straightforward REST API**. It can be easily integrated with other applications using a REST API.
 
 ### Who is EspoCRM for?
