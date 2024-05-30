@@ -86,11 +86,11 @@
         "rows": [
             [
                 {"name": "calendarSlotDuration"},
-                {"name": "defaultReminders"}
+                {"name": "calendarScrollHour"}
             ],
             [
-                {"name": "calendarScrollHour"},
-                false
+                {"name": "defaultReminders"},
+                {"name": "defaultRemindersTask"}
             ]
         ]
     },

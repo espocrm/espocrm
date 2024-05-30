@@ -35,6 +35,7 @@ use Espo\Core\Utils\Metadata;
 use Espo\Entities\Preferences;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Reminder;
+use Espo\Modules\Crm\Entities\Task;
 use Espo\ORM\Entity;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
@@ -112,7 +113,7 @@ class Saver implements SaverInterface
         foreach ($userIdList as $userId) {
             $reminderList = $userId === $this->user->getId() ?
                 $this->getReminderList($entity, $typeList) :
-                $this->getPreferencesReminderList($typeList, $userId);
+                $this->getPreferencesReminderList($typeList, $userId, $entityType);
 
             foreach ($reminderList as $item) {
                 $this->createReminder($entity, $userId, $start, $item);
@@ -296,7 +297,7 @@ class Saver implements SaverInterface
      * @param string[] $typeList
      * @return object{seconds: int, type: string}[]
      */
-    private function getPreferencesReminderList(array $typeList, string $userId): array
+    private function getPreferencesReminderList(array $typeList, string $userId, string $entityType): array
     {
         $preferences = $this->entityManager->getRepositoryByClass(Preferences::class)->getById($userId);
 
@@ -304,8 +305,15 @@ class Saver implements SaverInterface
             return [];
         }
 
+        $param = 'defaultReminders';
+
+        // @todo Refactor.
+        if ($entityType === Task::ENTITY_TYPE) {
+            $param = 'defaultRemindersTask';
+        }
+
         /** @var stdClass[] $list */
-        $list = $preferences->get('defaultReminders') ?? [];
+        $list = $preferences->get($param) ?? [];
 
         return $this->sanitizeList($list, $typeList);
     }

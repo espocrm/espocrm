@@ -51,6 +51,8 @@ class CalenderEditModalView extends EditModalView {
         'change .scope-switcher input[name="scope"]': function () {
             Espo.Ui.notify(' ... ');
 
+            const prevScope = this.scope;
+
             const scope = $('.scope-switcher input[name="scope"]:checked').val();
             this.scope = scope;
 
@@ -61,7 +63,7 @@ class CalenderEditModalView extends EditModalView {
 
                 attributes = {...attributes, ...this.getRecordView().model.getClonedAttributes()};
 
-                this.filterAttributesForEntityType(attributes, scope);
+                this.filterAttributesForEntityType(attributes, scope, prevScope);
 
                 model.set(attributes);
 
@@ -77,7 +79,16 @@ class CalenderEditModalView extends EditModalView {
         },
     }
 
-    filterAttributesForEntityType(attributes, entityType) {
+    /**
+     * @param {Record} attributes
+     * @param {string} entityType
+     * @param {string} previousEntityType
+     */
+    filterAttributesForEntityType(attributes, entityType, previousEntityType) {
+        if (entityType === 'Task' || previousEntityType === 'Task') {
+            delete attributes.reminders;
+        }
+
         this.getHelper()
             .fieldManager
             .getEntityTypeFieldList(entityType, {type: 'enum'})

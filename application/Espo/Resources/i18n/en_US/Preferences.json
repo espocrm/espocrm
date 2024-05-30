@@ -19,6 +19,7 @@
         "signature": "Email Signature",
         "dashboardTabList": "Tab List",
         "defaultReminders": "Default Reminders",
+        "defaultRemindersTask": "Default Reminders for Tasks",
         "theme": "Theme",
         "useCustomTabList": "Custom Tab List",
         "addCustomTabs": "Add Custom Tabs",

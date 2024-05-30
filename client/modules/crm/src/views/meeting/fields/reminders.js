@@ -74,13 +74,7 @@ class MeetingRemindersField extends BaseFieldView {
     }
 
     setup() {
-        if (this.model.isNew() && !this.model.get(this.name) && this.model.entityType !== 'Preferences') {
-            this.reminderList = this.getPreferences().get('defaultReminders') || [];
-        } else {
-            this.reminderList = this.model.get(this.name) || [];
-        }
-
-        this.reminderList = Espo.Utils.cloneDeep(this.reminderList);
+        this.setupReminderList();
 
         this.listenTo(this.model, 'change:' + this.name, () => {
             this.reminderList = Espo.Utils
@@ -99,6 +93,22 @@ class MeetingRemindersField extends BaseFieldView {
                 this.reRender();
             }
         });
+    }
+
+    setupReminderList() {
+        if (this.model.isNew() && !this.model.get(this.name) && this.model.entityType !== 'Preferences') {
+            let param = 'defaultReminders';
+
+            if (this.model.entityType === 'Task') {
+                param = 'defaultRemindersTask';
+            }
+
+            this.reminderList = this.getPreferences().get(param) || [];
+        } else {
+            this.reminderList = this.model.get(this.name) || [];
+        }
+
+        this.reminderList = Espo.Utils.cloneDeep(this.reminderList);
     }
 
     afterRender() {
