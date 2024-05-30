@@ -19,7 +19,7 @@ You can try the CRM on an online [demo](https://www.espocrm.com/demo/).
 
 ### Download
 
-[Download](https://www.espocrm.com/download/) the lastest release from our website. You can also download the latest and previous release packages from GitHub [releases](https://github.com/espocrm/espocrm/releases).
+[Download](https://www.espocrm.com/download/) the latest release from our website. You can also download the latest and previous release packages from GitHub [releases](https://github.com/espocrm/espocrm/releases).
 
 ### Requirements
 
