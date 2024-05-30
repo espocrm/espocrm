@@ -2,11 +2,13 @@
 
 [![PHPStan level 8](https://img.shields.io/badge/PHPStan-level%208-brightgreen)](#espocrm)
 
-[EspoCRM is an Open Source CRM](https://www.espocrm.com) (Customer Relationship Management)
-software that allows you to see, enter and evaluate all your company relationships regardless
-of the type. People, companies or opportunities – all in an easy and intuitive interface.
+[EspoCRM](https://www.espocrm.com) is a free, open-source CRM platform designed to help organizations build and maintain strong customer relationships. 
+It provides a wide range of tools to store, organize, and manage leads, contacts, sales opportunities, marketing campaigns, 
+support cases, and more – all business information in a simple and intuitive interface.
 
-It's a web application with a frontend designed as a single page application and a REST API
+### Architecture
+
+EspoCRM is a web application with a frontend designed as a single-page application and a REST API
 backend written in PHP.
 
 ![Screenshot](https://user-images.githubusercontent.com/1006792/226094559-995dfd2a-a18f-4619-a21b-79a4e671990a.png)
@@ -19,10 +21,6 @@ You can try the CRM on an online [demo](https://www.espocrm.com/demo/).
 
 [Download](https://www.espocrm.com/download/) the lastest release from our website. You can also download the latest and previous release packages from GitHub [releases](https://github.com/espocrm/espocrm/releases).
 
-### Release notes
-
-Release notes are available at GitHub [releases](https://github.com/espocrm/espocrm/releases).
-
 ### Requirements
 
 * PHP 8.1 - 8.3;
@@ -30,6 +28,23 @@ Release notes are available at GitHub [releases](https://github.com/espocrm/espo
 * PostgreSQL 15 (and later) (beta, official support soon).
 
 For more information about server configuration see [this article](https://docs.espocrm.com/administration/server-configuration/).
+
+### Why EspoCRM?
+
+* **Open-source transparency**. EspoCRM’s source code is open and accessible, so anyone can inspect it and see how data is being managed within the CRM.
+* **Customization freedom**. You can develop features and create custom fields, layouts, and buttons to make the CRM fit your specific needs.
+* **Clean interface**. EspoCRM has a clean and minimalistic design that is easy to navigate and has a short learning curve.
+* **Straightforward REST API**. It can be easily integrated with other applications using a well-documented REST API.
+
+### Who is EspoCRM for?
+
+* **Startups, small & medium-sized businesses**. It’s an affordable solution that is flexible and fully customizable.
+* **Developers & tech enthusiasts**. You can extend functionalities, build extensions, and create custom integrations.
+* **Anyone seeking a free CRM**. If you're looking for a user-friendly and secure CRM platform, it can be a good option.
+
+### Release notes
+
+Release notes are available at GitHub [releases](https://github.com/espocrm/espocrm/releases).
 
 ### Documentation
 
