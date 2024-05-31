@@ -58,7 +58,7 @@ class EntityProvider
      * @since 8.1.0
      * @noinspection PhpDocSignatureInspection
      */
-    public function get(string $className, string $id): Entity
+    public function getByClass(string $className, string $id): Entity
     {
         $entity = $this->entityManager
             ->getRDBRepositoryByClass($className)
@@ -73,5 +73,21 @@ class EntityProvider
         }
 
         return $entity;
+    }
+
+    /**
+     * @deprecated As of v8.3.
+     * @todo Remove in v8.4. Change $className to $entityType.
+     *
+     * @template T of Entity
+     * @param class-string<T> $className
+     * @return T
+     * @throws NotFound
+     * @throws Forbidden
+     * @noinspection PhpDocSignatureInspection
+     */
+    public function get(string $className, string $id): Entity
+    {
+        return $this->getByClass($className, $id);
     }
 }

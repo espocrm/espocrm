@@ -43,7 +43,7 @@ class EntityProviderTest extends BaseTestCase
         $provider = $this->getInjectableFactory()->create(EntityProvider::class);
 
         /** @noinspection PhpUnhandledExceptionInspection */
-        $account = $provider->get(Account::class, $account->getId());
+        $account = $provider->getByClass(Account::class, $account->getId());
 
         $this->assertEquals($id, $account->getId());
     }

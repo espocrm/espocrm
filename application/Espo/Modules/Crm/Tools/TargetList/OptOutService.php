@@ -61,7 +61,7 @@ class OptOutService
      */
     public function optOut(string $id, string $targetType, string $targetId): void
     {
-        $targetList = $this->entityProvider->get(TargetList::class, $id);
+        $targetList = $this->entityProvider->getByClass(TargetList::class, $id);
 
         $target = $this->entityManager->getEntityById($targetType, $targetId);
 
@@ -99,7 +99,7 @@ class OptOutService
      */
     public function cancelOptOut(string $id, string $targetType, string $targetId): void
     {
-        $targetList = $this->entityProvider->get(TargetList::class, $id);
+        $targetList = $this->entityProvider->getByClass(TargetList::class, $id);
 
         $target = $this->entityManager->getEntityById($targetType, $targetId);
 
@@ -251,6 +251,6 @@ class OptOutService
      */
     private function checkEntity(string $id): void
     {
-        $this->entityProvider->get(TargetList::class, $id);
+        $this->entityProvider->getByClass(TargetList::class, $id);
     }
 }
