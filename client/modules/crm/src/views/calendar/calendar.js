@@ -615,16 +615,16 @@ class CalendarView extends View {
 
     /**
      * @param {EventImpl} event
-     * @param {boolean} [notInitial]
+     * @param {boolean} [afterDrop]
      */
-    handleAllDay(event, notInitial) {
+    handleAllDay(event, afterDrop) {
         let start = event.start ? this.dateToMoment(event.start) : null;
         const end = event.end ? this.dateToMoment(event.end) : null;
 
         if (this.allDayScopeList.includes(event.scope)) {
             event.allDay = event.allDayCopy = true;
 
-            if (/*!notInitial &&*/ end) {
+            if (!afterDrop && end) {
                 start = end.clone();
 
                 if (
@@ -655,7 +655,7 @@ class CalendarView extends View {
             event.allDay = true;
             event.allDayCopy = event.allDay;
 
-            if (!notInitial) {
+            if (!afterDrop) {
                 end.add(1, 'days')
             }
 
