@@ -125,6 +125,10 @@ class LaminasStorage implements Storage
 
     public function appendMessage(string $content, ?string $folder = null): void
     {
+        if ($folder !== null) {
+            $folder = mb_convert_encoding($folder, 'UTF7-IMAP', 'UTF-8');
+        }
+
         $this->imap->appendMessage($content, $folder);
     }
 }
