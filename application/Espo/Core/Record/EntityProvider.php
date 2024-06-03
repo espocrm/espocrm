@@ -55,7 +55,7 @@ class EntityProvider
      * @return T
      * @throws NotFound A record not found.
      * @throws Forbidden Read is forbidden for a current user.
-     * @since 8.1.0
+     * @since 8.3.0
      * @noinspection PhpDocSignatureInspection
      */
     public function getByClass(string $className, string $id): Entity
