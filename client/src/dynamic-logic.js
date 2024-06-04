@@ -389,7 +389,7 @@ class DynamicLogic {
             }
 
             if (setValue.length > 10) {
-                return dateTime.toMoment(setValue).isAfter(dateTime.getNowMoment(), 'day');
+                return dateTime.toMoment(setValue).isAfter(dateTime.getNowMoment(), 'second');
             }
 
             return dateTime.toMomentDate(setValue).isAfter(dateTime.getNowMoment(), 'day');
@@ -402,9 +402,8 @@ class DynamicLogic {
                 return false;
             }
 
-
             if (setValue.length > 10) {
-                return dateTime.toMoment(setValue).isBefore(dateTime.getNowMoment(), 'day');
+                return dateTime.toMoment(setValue).isBefore(dateTime.getNowMoment(), 'second');
             }
 
             return dateTime.toMomentDate(setValue).isBefore(dateTime.getNowMoment(), 'day');
