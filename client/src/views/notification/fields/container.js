@@ -97,17 +97,15 @@ class NotificationContainerFieldView extends BaseFieldView {
 
             let viewName = this.getMetadata().get(`clientDefs.Note.itemViews.${data.type}`);
 
-
             if (!viewName) {
                 // @todo Check if type exists.
                 viewName = 'views/stream/notes/' + Espo.Utils.camelCaseToHyphen(data.type);
             }
 
-
             this.createView('notification', viewName, {
                 model: model,
                 isUserStream: true,
-                fullSelector: this.options.containerSelector  + ' li[data-id="' + this.model.id + '"]',
+                fullSelector: `${this.options.containerSelector} li[data-id="${this.model.id}"] .cell[data-name="data"]`,
                 onlyContent: true,
                 isNotification: true,
             });
