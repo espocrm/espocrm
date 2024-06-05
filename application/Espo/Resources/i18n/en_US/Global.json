@@ -322,6 +322,7 @@
         "fieldNotMatchingPattern$latinLettersWhitespace": "{field} can contain only latin letters and whitespace",
         "fieldNotMatchingPattern$digits": "{field} can contain only digits",
         "fieldNotMatchingPattern$uriOptionalProtocol": "{field} must be a valid URL",
+        "fieldNotMatchingPattern$phoneNumberLoose": "{field} contains characters not allowed in a phone number",
         "fieldInvalid": "{field} is invalid",
         "fieldIsRequired": "{field} is required",
         "fieldPhoneInvalid": "{field} is invalid",
