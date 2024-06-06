@@ -1,13 +1,16 @@
 [
     {
-        "label": "",
         "rows": [
-            [{"name":"name", "fullWidth": true}],
-            [{"name":"userName", "fullWidth": true}],
-            [{"name":"emailAddress", "fullWidth": true}],
-            [{"name":"phoneNumber", "fullWidth": true}],
-            [{"name":"teams", "fullWidth": true}],
-            [{"name":"type"}, {"name":"isActive"}]
+            [{"name": "name"}],
+            [{"name": "userName"}],
+            [{"name": "emailAddress"}],
+            [{"name": "phoneNumber"}]
+        ]
+    },
+    {
+        "rows": [
+            [{"name": "type"}, {"name": "isActive"}],
+            [{"name": "teams"}]
         ]
     }
 ]
