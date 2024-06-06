@@ -326,11 +326,15 @@ class UserDetailRecordView extends DetailRecordView {
         this.getHelper().layoutManager.get(this.model.entityType, layoutName, simpleLayout => {
             const layout = Espo.Utils.cloneDeep(simpleLayout);
 
+            const hasTab = layout.find(it => it.tabBreak) !== undefined;
+
             if (!this.getUser().isPortal()) {
                 layout.push({
-                    "label": "Teams and Access Control",
-                    "name": "accessControl",
-                    "rows": [
+                    label: "Teams and Access Control",
+                    name: "accessControl",
+                    tabBreak: hasTab,
+                    tabLabel: this.translate('Settings', 'scopeNames'),
+                    rows: [
                         [{"name":"type"}, {"name":"isActive"}],
                         [{"name":"teams"}, {"name":"defaultTeam"}],
                         [{"name":"roles"}, false],
@@ -378,6 +382,8 @@ class UserDetailRecordView extends DetailRecordView {
                     ]
                 });
             }
+
+            this.detailLayout = layout;
 
             const gridLayout = {
                 type: 'record',
