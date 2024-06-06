@@ -874,7 +874,10 @@ class Parser
                         break;
                     }
 
-                    if ($expressionOutOfParenthesisList[$index]) {
+                    if (
+                        $expressionOutOfParenthesisList[$index] &&
+                        !$this->isAtAnotherOperator($index, $operator, $modifiedExpression)
+                    ) {
                         break;
                     }
 
@@ -882,38 +885,6 @@ class Parser
                 }
 
                 if ($index === false) {
-                    continue;
-                }
-
-                $possibleRightOperator = null;
-
-                if (strlen($operator) === 1) {
-                    if ($index < strlen($expression) - 1) {
-                        $possibleRightOperator = trim($operator . $modifiedExpression[$index + 1]);
-                    }
-                }
-
-                if (
-                    $possibleRightOperator &&
-                    $possibleRightOperator != $operator &&
-                    !empty($this->operatorMap[$possibleRightOperator])
-                ) {
-                    continue;
-                }
-
-                $possibleLeftOperator = null;
-
-                if (strlen($operator) === 1) {
-                    if ($index > 0) {
-                        $possibleLeftOperator = trim($modifiedExpression[$index - 1] . $operator);
-                    }
-                }
-
-                if (
-                    $possibleLeftOperator &&
-                    $possibleLeftOperator != $operator &&
-                    !empty($this->operatorMap[$possibleLeftOperator])
-                ) {
                     continue;
                 }
 
@@ -1079,6 +1050,43 @@ class Parser
         }
 
         return new Attribute($expression);
+    }
+
+    private function isAtAnotherOperator(int $index, string $operator, string $expression): bool
+    {
+        $possibleRightOperator = null;
+
+        if (strlen($operator) === 1) {
+            if ($index < strlen($expression) - 1) {
+                $possibleRightOperator = trim($operator . $expression[$index + 1]);
+            }
+        }
+
+        if (
+            $possibleRightOperator &&
+            $possibleRightOperator != $operator &&
+            !empty($this->operatorMap[$possibleRightOperator])
+        ) {
+            return true;
+        }
+
+        $possibleLeftOperator = null;
+
+        if (strlen($operator) === 1) {
+            if ($index > 0) {
+                $possibleLeftOperator = trim($expression[$index - 1] . $operator);
+            }
+        }
+
+        if (
+            $possibleLeftOperator &&
+            $possibleLeftOperator != $operator &&
+            !empty($this->operatorMap[$possibleLeftOperator])
+        ) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

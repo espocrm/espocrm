@@ -1580,4 +1580,34 @@ class EvaluatorTest extends TestCase
 
         $this->assertEquals("=", $vars->a);
     }
+
+    public function testAssignAndLogical1(): void
+    {
+        $expression = "\$a = 'a' == 'a'";
+
+        $vars = (object) [];
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression, null, $vars);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+
+        $this->assertTrue($vars->a);
+    }
+
+    public function testAssignAndLogical2(): void
+    {
+        $expression = "\$a = 'a' == 'a' && 'b' == 'b'";
+
+        $vars = (object) [];
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression, null, $vars);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->evaluator->process($expression);
+
+        $this->assertTrue($vars->a);
+    }
 }
