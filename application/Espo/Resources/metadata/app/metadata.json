@@ -42,5 +42,8 @@
     ],
     "frontendNonAdminHiddenPathList": [
         ["recordDefs"]
+    ],
+    "additionalBuilderClassNameList": [
+        "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\Fields"
     ]
 }

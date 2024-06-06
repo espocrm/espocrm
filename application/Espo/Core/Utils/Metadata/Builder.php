@@ -29,7 +29,6 @@
 
 namespace Espo\Core\Utils\Metadata;
 
-use Espo\Core\Utils\DataUtil;
 use Espo\Core\Utils\Resource\Reader as ResourceReader;
 use Espo\Core\Utils\Resource\Reader\Params as ResourceReaderParams;
 use Espo\Core\Utils\Util;
@@ -39,6 +38,7 @@ class Builder
 {
     /** @var array<int, string[]> */
     private $forceAppendPathList = [
+        ['app', 'metadata', 'additionalBuilderClassNameList'],
         ['app', 'rebuild', 'actionClassNameList'],
         ['app', 'formula', 'functionList'],
         ['app', 'fieldProcessing', 'readLoaderClassNameList'],
@@ -76,10 +76,7 @@ class Builder
 
     private const ANY_KEY = '__ANY__';
 
-    public function __construct(
-        private ResourceReader $resourceReader,
-        private BuilderHelper $builderHelper
-    ) {}
+    public function __construct(private ResourceReader $resourceReader) {}
 
     public function build(): stdClass
     {
@@ -88,109 +85,24 @@ class Builder
 
         $data = $this->resourceReader->read('metadata', $readerParams);
 
-        $this->addAdditionalField($data);
+        $this->applyAdditional($data);
 
         return $data;
     }
 
-    private function addAdditionalField(stdClass $data): void
+    private function applyAdditional(stdClass $data): void
     {
-        if (!isset($data->entityDefs)) {
-            return;
-        }
+        /** @var class-string<AdditionalBuilder>[] $builderClassNameList */
+        $builderClassNameList = Util::getValueByKey($data, 'app.metadata.additionalBuilderClassNameList') ?? [];
 
-        $fieldDefinitionList = Util::objectToArray($data->fields);
+        /** @var AdditionalBuilder[] $builderList */
+        $builderList = array_map(
+            fn ($className) => new $className(),
+            $builderClassNameList
+        );
 
-        foreach (get_object_vars($data->entityDefs) as $entityType => $entityDefsItem) {
-            if (isset($data->entityDefs->$entityType->collection)) {
-                /** @var stdClass $collectionItem */
-                $collectionItem = $data->entityDefs->$entityType->collection;
-
-                if (isset($collectionItem->orderBy)) {
-                    $collectionItem->sortBy = $collectionItem->orderBy;
-                }
-                else if (isset($collectionItem->sortBy)) {
-                    $collectionItem->orderBy = $collectionItem->sortBy;
-                }
-
-                if (isset($collectionItem->order)) {
-                    $collectionItem->asc = $collectionItem->order === 'asc';
-                }
-                else if (isset($collectionItem->asc)) {
-                    $collectionItem->order = $collectionItem->asc === true ? 'asc' : 'desc';
-                }
-            }
-
-            if (!isset($entityDefsItem->fields)) {
-                continue;
-            }
-
-            foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefsItem) {
-                $additionalFields = $this->builderHelper->getAdditionalFieldList(
-                    $field,
-                    Util::objectToArray($fieldDefsItem),
-                    $fieldDefinitionList
-                );
-
-                if (!$additionalFields) {
-                    continue;
-                }
-
-                foreach ($additionalFields as $subFieldName => $subFieldParams) {
-                    $item = Util::arrayToObject($subFieldParams);
-
-                    if (isset($entityDefsItem->fields->$subFieldName)) {
-                        $data->entityDefs->$entityType->fields->$subFieldName =
-                            DataUtil::merge(
-                                $item,
-                                $entityDefsItem->fields->$subFieldName
-                            );
-
-                        continue;
-                    }
-
-                    $data->entityDefs->$entityType->fields->$subFieldName = $item;
-                }
-            }
+        foreach ($builderList as $builder) {
+            $builder->build($data);
         }
     }
-
-    /*private function setMissingFieldDefaults(stdClass $data): void
-    {
-        if (!isset($data->entityDefs) || !isset($data->fields)) {
-            return;
-        }
-
-        foreach (get_object_vars($data->entityDefs) as $entityDefsItem) {
-            if (!isset($entityDefsItem->fields)) {
-                continue;
-            }
-
-            foreach (get_object_vars($entityDefsItem->fields) as $field => $fieldDefs) {
-                $oFieldDefs = FieldDefs::fromRaw(Util::objectToArray($fieldDefs), $field);
-
-                $type = $oFieldDefs->getType();
-
-                $typeDefs = $data->fields->$type ?? null;
-
-                if (!$typeDefs) {
-                    continue;
-                }
-
-                if (!property_exists($typeDefs, 'default')) {
-                    continue;
-                }
-
-                if (
-                    $oFieldDefs->getParam('utility') ||
-                    $oFieldDefs->getParam('disabled') ||
-                    $oFieldDefs->hasParam('default')
-                ) {
-                    continue;
-                }
-
-                $fieldDefs->default = $typeDefs->default;
-            }
-        }
-    }*/
 }

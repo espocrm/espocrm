@@ -35,6 +35,13 @@
                 ]
             }
         },
+        "additionalBuilderClassNameList": {
+            "type": "array",
+            "description": "Additional builders. Allows adding conditional metadata. Should implement Espo\\Core\\Utils\\Metadata\\AdditionalBuilder. As of v8.4.",
+            "items": {
+                "type": "string"
+            }
+        },
         "aclDependencies": {
             "type": "object",
             "description": "Rules making a metadata sections available for a user when they don't have access to a scope.",
