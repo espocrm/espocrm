@@ -321,12 +321,12 @@ class UserDetailRecordView extends DetailRecordView {
     }
 
     getGridLayout(callback) {
-        this.getHelper().layoutManager
-            .get(this.model.entityType, this.options.layoutName || this.layoutName, (simpleLayout) => {
+        const layoutName = this.options.layoutName || this.layoutName;
 
-                const layout = Espo.Utils.cloneDeep(simpleLayout);
+        this.getHelper().layoutManager.get(this.model.entityType, layoutName, simpleLayout => {
+            const layout = Espo.Utils.cloneDeep(simpleLayout);
 
-                if (!this.getUser().isPortal()) {
+            if (!this.getUser().isPortal()) {
                 layout.push({
                     "label": "Teams and Access Control",
                     "name": "accessControl",
@@ -379,12 +379,12 @@ class UserDetailRecordView extends DetailRecordView {
                 });
             }
 
-                const gridLayout = {
-                    type: 'record',
-                    layout: this.convertDetailLayout(layout),
-                };
+            const gridLayout = {
+                type: 'record',
+                layout: this.convertDetailLayout(layout),
+            };
 
-                callback(gridLayout);
+            callback(gridLayout);
         });
     }
 
