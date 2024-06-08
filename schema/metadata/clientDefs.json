@@ -70,6 +70,16 @@
                 "type": "string"
             }
         },
+        "listViewModeList": {
+            "type": "array",
+            "items": {
+                "anyOf": [
+                    {"type": "string"},
+                    {"enum": ["__APPEND__", "list", "kanban"]}
+                ]
+            },
+            "description": "A list view mode list."
+        },
         "saveErrorHandlers": {
             "description": "Save error handlers. https://docs.espocrm.com/development/frontend/save-error-handlers/",
             "type": "object",
