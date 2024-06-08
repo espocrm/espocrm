@@ -80,6 +80,13 @@
             },
             "description": "A list view mode list."
         },
+        "viewModeIconClassMap": {
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            },
+            "description": "View mode icon classes. mode => class map."
+        },
         "saveErrorHandlers": {
             "description": "Save error handlers. https://docs.espocrm.com/development/frontend/save-error-handlers/",
             "type": "object",

@@ -112,6 +112,11 @@ class SearchView extends View {
         this.filtersLayoutName = this.options.filtersLayoutName || this.filtersLayoutName;
         this.primaryFiltersDisabled = this.options.primaryFiltersDisabled || this.primaryFiltersDisabled;
 
+        this.viewModeIconClassMap = {
+            ...this.viewModeIconClassMap,
+            ...this.getMetadata().get(`clientDefs.${this.scope}.viewModeIconClassMap`),
+        };
+
         /** @type {module:search-manager} */
         this.searchManager = this.options.searchManager;
 
