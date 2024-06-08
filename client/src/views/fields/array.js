@@ -120,7 +120,7 @@ class ArrayFieldView extends BaseFieldView {
         const itemHtmlList = [];
 
         (this.selected || []).forEach(value => {
-            itemHtmlList.push(this.getItemHtml(value));
+            itemHtmlList.push(this.getItemHtml(value || ''));
         });
 
         // noinspection JSValidateTypes
