@@ -247,7 +247,7 @@ class BaseEntity implements Entity
             );
         }
 
-        // @todo Remove support in v9.0.
+        // @todo Remove support in v10.0.
         if ($this->hasRelation($attribute) && $this->id && $this->entityManager) {
             trigger_error(
                 "Accessing related records with Entity::get is deprecated. " .
