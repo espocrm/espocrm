@@ -337,7 +337,7 @@ class BaseEntity implements Entity
         $value = $this->fetchedValuesContainer[$attribute] ?? null;
 
         if ($value === null) {
-            return $value;
+            return null;
         }
 
         $type = $this->getAttributeType($attribute);
