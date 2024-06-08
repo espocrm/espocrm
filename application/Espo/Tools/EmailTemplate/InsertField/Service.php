@@ -116,6 +116,7 @@ class Service
 
             $recordService = $this->recordServiceContainer->get($entityType);
 
+            $recordService->loadAdditionalFields($e);
             $recordService->prepareEntityForOutput($e);
 
             $ignoreTypeList = [
