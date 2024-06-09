@@ -40,7 +40,7 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
     primaryLink
 
     switchPrimary(id) {
-        let $switch = this.$el.find(`[data-id="${id}"][data-action="switchPrimary"]`);
+        const $switch = this.$el.find(`[data-id="${id}"][data-action="switchPrimary"]`);
 
         if (!$switch.hasClass('active')) {
             this.$el.find('button[data-action="switchPrimary"]')
@@ -84,8 +84,8 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
         });
 
         this.events['click [data-action="switchPrimary"]'] = e => {
-            let $target = $(e.currentTarget);
-            let id = $target.data('id');
+            const $target = $(e.currentTarget);
+            const id = $target.data('id');
 
             this.switchPrimary(id);
         };
@@ -124,7 +124,7 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
      */
     getValueForDisplay() {
         if (this.isDetailMode() || this.isListMode()) {
-            let itemList = [];
+            const itemList = [];
 
             if (this.primaryId) {
                 itemList.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
@@ -178,17 +178,17 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
             return super.addLinkHtml(id, name);
         }
 
-        let $container = this.$el.find('.link-container');
+        const $container = this.$el.find('.link-container');
 
-        let $el = $('<div>')
+        const $el = $('<div>')
             .addClass('form-inline clearfix ')
             .addClass('list-group-item link-with-role link-group-item-with-primary')
             .addClass('link-' + id)
             .attr('data-id', id);
 
-        let $name = $('<div>').text(name).append('&nbsp;');
+        const $name = $('<div>').text(name).append('&nbsp;');
 
-        let $remove = $('<a>')
+        const $remove = $('<a>')
             .attr('role', 'button')
             .attr('tabindex', '0')
             .attr('data-id', id)
@@ -198,8 +198,8 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
                 $('<span>').addClass('fas fa-times')
             );
 
-        let $left = $('<div>');
-        let $right = $('<div>');
+        const $left = $('<div>');
+        const $right = $('<div>');
 
         $left.append($name);
         $right.append($remove);
@@ -207,13 +207,13 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
         $el.append($left);
         $el.append($right);
 
-        let isPrimary = (id === this.primaryId);
+        const isPrimary = (id === this.primaryId);
 
-        let $star = $('<span>')
+        const $star = $('<span>')
             .addClass('fas fa-star fa-sm')
-            .addClass(!isPrimary ? 'text-muted' : '')
+            .addClass(!isPrimary ? 'text-muted' : '');
 
-        let $button = $('<button>')
+        const $button = $('<button>')
             .attr('type', 'button')
             .addClass('btn btn-link btn-sm pull-right hidden')
             .attr('title', this.translate('Primary'))
@@ -234,7 +234,7 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
      * @protected
      */
     managePrimaryButton() {
-        let $primary = this.$el.find('button[data-action="switchPrimary"]');
+        const $primary = this.$el.find('button[data-action="switchPrimary"]');
 
         if ($primary.length > 1) {
             $primary.removeClass('hidden');
@@ -244,7 +244,7 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
         }
 
         if ($primary.filter('.active').length === 0) {
-            let $first = $primary.first();
+            const $first = $primary.first();
 
             if ($first.length) {
                 $first.addClass('active').children().removeClass('text-muted');
