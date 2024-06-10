@@ -51,6 +51,8 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
             $switch.addClass('active').children().removeClass('text-muted');
 
             this.setPrimaryId(id);
+
+            this.trigger('change');
         }
     }
 
@@ -100,8 +102,6 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
 
         this.primaryName = id ?
             this.nameHash[id] : null;
-
-        this.trigger('change');
     }
 
     /**
@@ -249,7 +249,13 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
             if ($first.length) {
                 $first.addClass('active').children().removeClass('text-muted');
 
-                this.setPrimaryId($first.data('id'));
+                const id = $first.data('id');
+
+                this.setPrimaryId(id);
+
+                if (id !== this.primaryId) {
+                    this.trigger('change');
+                }
             }
         }
     }

@@ -61,7 +61,7 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
             const $target = $(e.currentTarget);
             const id = $target.data('id');
 
-            LinkMultipleWithPrimaryFieldView.prototype.switchPrimary.call(this, id);
+            this.switchPrimary(id);
         };
 
         this.primaryId = this.model.get(this.primaryIdAttribute);
@@ -78,8 +78,23 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
 
         this.primaryName = id ?
             this.nameHash[id] : null;
+    }
 
-        this.trigger('change');
+    switchPrimary(id) {
+        const $switch = this.$el.find(`[data-id="${id}"][data-action="switchPrimary"]`);
+
+        if (!$switch.hasClass('active')) {
+            this.$el.find('button[data-action="switchPrimary"]')
+                .removeClass('active')
+                .children()
+                .addClass('text-muted');
+
+            $switch.addClass('active').children().removeClass('text-muted');
+
+            this.setPrimaryId(id);
+
+            this.trigger('change');
+        }
     }
 
     renderLinks() {
@@ -184,7 +199,14 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
 
             if ($first.length) {
                 $first.addClass('active').children().removeClass('text-muted');
-                this.setPrimaryId($first.data('id'));
+
+                const id = $first.data('id');
+
+                this.setPrimaryId(id);
+
+                if (id !== this.primaryId) {
+                    this.trigger('change');
+                }
             }
         }
     }
