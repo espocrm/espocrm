@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Select\Bool\Filters\OnlyMy;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Metadata;
@@ -192,7 +193,7 @@ class UpcomingService
             ->create()
             ->from($entityType)
             ->forUser($user)
-            ->withBoolFilter('onlyMy')
+            ->withBoolFilter(OnlyMy::NAME)
             ->withStrictAccessControl();
 
         $primaryFilter = Planned::NAME;
