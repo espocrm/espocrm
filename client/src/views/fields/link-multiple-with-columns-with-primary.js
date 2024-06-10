@@ -41,7 +41,7 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
     primaryLink
 
     getAttributeList() {
-        let list = super.getAttributeList();
+        const list = super.getAttributeList();
 
         list.push(this.primaryIdAttribute);
         list.push(this.primaryNameAttribute);
@@ -58,10 +58,10 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
         super.setup();
 
         this.events['click [data-action="switchPrimary"]'] = e => {
-            let $target = $(e.currentTarget);
-            let id = $target.data('id');
+            const $target = $(e.currentTarget);
+            const id = $target.data('id');
 
-            LinkMultipleWithPrimaryFieldView.prototype.switchPrimary.call(this, id);
+            this.switchPrimary(id);
         };
 
         this.primaryId = this.model.get(this.primaryIdAttribute);
@@ -78,8 +78,23 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
 
         this.primaryName = id ?
             this.nameHash[id] : null;
+    }
 
-        this.trigger('change');
+    switchPrimary(id) {
+        const $switch = this.$el.find(`[data-id="${id}"][data-action="switchPrimary"]`);
+
+        if (!$switch.hasClass('active')) {
+            this.$el.find('button[data-action="switchPrimary"]')
+                .removeClass('active')
+                .children()
+                .addClass('text-muted');
+
+            $switch.addClass('active').children().removeClass('text-muted');
+
+            this.setPrimaryId(id);
+
+            this.trigger('change');
+        }
     }
 
     renderLinks() {
@@ -96,7 +111,7 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
 
     getValueForDisplay() {
         if (this.isDetailMode() || this.isListMode()) {
-            let itemList = [];
+            const itemList = [];
 
             if (this.primaryId) {
                 itemList.push(
@@ -147,15 +162,15 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
             return LinkMultipleWithPrimaryFieldView.prototype.addLinkHtml.call(this, id, name);
         }
 
-        let $el = super.addLinkHtml(id, name);
+        const $el = super.addLinkHtml(id, name);
 
-        let isPrimary = (id === this.primaryId);
+        const isPrimary = (id === this.primaryId);
 
-        let $star = $('<span>')
+        const $star = $('<span>')
             .addClass('fas fa-star fa-sm')
-            .addClass(!isPrimary ? 'text-muted' : '')
+            .addClass(!isPrimary ? 'text-muted' : '');
 
-        let $button = $('<button>')
+        const $button = $('<button>')
             .attr('type', 'button')
             .addClass('btn btn-link btn-sm pull-right hidden')
             .attr('title', this.translate('Primary'))
@@ -171,7 +186,7 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
     }
 
     managePrimaryButton() {
-        let $primary = this.$el.find('button[data-action="switchPrimary"]');
+        const $primary = this.$el.find('button[data-action="switchPrimary"]');
 
         if ($primary.length > 1) {
             $primary.removeClass('hidden');
@@ -180,11 +195,18 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
         }
 
         if ($primary.filter('.active').length === 0) {
-            let $first = $primary.first();
+            const $first = $primary.first();
 
             if ($first.length) {
                 $first.addClass('active').children().removeClass('text-muted');
-                this.setPrimaryId($first.data('id'));
+
+                const id = $first.data('id');
+
+                this.setPrimaryId(id);
+
+                if (id !== this.primaryId) {
+                    this.trigger('change');
+                }
             }
         }
     }

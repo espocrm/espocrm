@@ -86,7 +86,7 @@ class BaseEntity implements Entity
         $this->entityType = $entityType;
         $this->entityManager = $entityManager;
 
-        $this->attributes = $defs['attributes'] /*?? $defs['fields']*/ ?? $this->attributes;
+        $this->attributes = $defs['attributes'] ?? $this->attributes;
         $this->relations = $defs['relations'] ?? $this->relations;
 
         if ($valueAccessorFactory) {
@@ -247,7 +247,7 @@ class BaseEntity implements Entity
             );
         }
 
-        // @todo Remove support in v9.0.
+        // @todo Remove support in v10.0.
         if ($this->hasRelation($attribute) && $this->id && $this->entityManager) {
             trigger_error(
                 "Accessing related records with Entity::get is deprecated. " .
@@ -337,7 +337,7 @@ class BaseEntity implements Entity
         $value = $this->fetchedValuesContainer[$attribute] ?? null;
 
         if ($value === null) {
-            return $value;
+            return null;
         }
 
         $type = $this->getAttributeType($attribute);
