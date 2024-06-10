@@ -952,5 +952,8 @@
             "middle": "Middle",
             "bottom": "Bottom"
         }
+    },
+    "detailViewModes": {
+        "detail": "Detail"
     }
 }

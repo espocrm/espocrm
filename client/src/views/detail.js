@@ -29,6 +29,7 @@
 /** @module module:views/detail */
 
 import MainView from 'views/main';
+import DetailModesView from 'views/detail/modes';
 
 /**
  * A detail view.
@@ -93,6 +94,42 @@ class DetailView extends MainView {
      */
     entityType
 
+    /**
+     * A default view mode.
+     *
+     * @protected
+     */
+    defaultViewMode = 'detail'
+
+    /**
+     * A view mode.
+     *
+     * @protected
+     * @type {string}
+     */
+    viewMode
+
+    /**
+     * @private
+     * @type {string}
+     */
+    viewModeIsStorable
+
+    /**
+     * @private
+     * @type {boolean}
+     */
+    hasMultipleModes = false
+
+    /** @private */
+    modesView
+
+    /**
+     * A 'detail' view mode.
+     * @const
+     */
+    MODE_DETAIL = 'detail'
+
     /** @inheritDoc */
     setup() {
         super.setup();
@@ -105,6 +142,7 @@ class DetailView extends MainView {
         this.rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
         this.isReturn = this.options.isReturn || this.options.params.isReturn || false;
 
+        this.setupModes();
         this.setupHeader();
         this.setupRecord();
         this.setupPageTitle();
@@ -184,7 +222,73 @@ class DetailView extends MainView {
     }
 
     /**
+     * Set up modes.
+     */
+    setupModes() {
+        // @todo Add parameters to schema.
+
+        this.defaultViewMode = this.options.defaultViewMode ||
+            this.getMetadata().get([`clientDefs.${this.scope}.detailDefaultViewMode`]) ||
+            this.defaultViewMode;
+
+        this.viewMode = this.viewMode || this.defaultViewMode;
+
+        const viewModeList = this.options.viewModeList || this.viewModeList ||
+            this.getMetadata().get([`clientDefs.${this.scope}.detailViewModeList`]);
+
+        this.viewModeList = viewModeList ? viewModeList : [this.MODE_DETAIL];
+
+        this.viewModeIsStorable = this.viewModeIsStorable !== undefined ?
+            this.viewModeIsStorable :
+            this.getMetadata().get([`clientDefs.${this.scope}.detailViewModeIsStorable`]);
+
+        this.hasMultipleModes = this.viewModeList.length > 1;
+
+        if (this.viewModeIsStorable && this.hasMultipleModes) {
+            let viewMode = null;
+
+            const modeKey = this.getViewModeKey();
+
+            if (this.getStorage().has('state', modeKey)) {
+                const storedViewMode = this.getStorage().get('state', modeKey);
+
+                if (storedViewMode && this.viewModeList.includes(storedViewMode)) {
+                    viewMode = storedViewMode;
+                }
+            }
+
+            if (!viewMode) {
+                viewMode = this.defaultViewMode;
+            }
+
+            this.viewMode = /** @type {string} */viewMode;
+        }
+
+        if (this.hasMultipleModes) {
+            this.addActionHandler('switchMode', (e, target) => this.switchViewMode(target.dataset.value));
+
+            this.modesView = new DetailModesView({
+                mode: this.viewMode,
+                modeList: this.viewModeList,
+                scope: this.scope,
+            });
+
+            this.assignView('modes', this.modesView, '.modes');
+        }
+    }
+
+    /**
+     * @private
+     * @return {string}
+     */
+    getViewModeKey() {
+        return `detailViewMode-${this.scope}-${this.model.id}}`;
+    }
+
+    /**
      * Set up a record.
+     *
+     * @return {Promise<import('view').default>}
      */
     setupRecord() {
         const o = {
@@ -209,6 +313,11 @@ class DetailView extends MainView {
 
         return this.createView('record', this.getRecordViewName(), o, view => {
             this.listenTo(view, 'after:mode-change', () => this.getHeaderView().reRender());
+
+            if (this.modesView) {
+                this.listenTo(view, 'after:set-detail-mode', () => this.modesView.enable());
+                this.listenTo(view, 'after:set-edit-mode', () => this.modesView.disable());
+            }
         });
     }
 
@@ -218,8 +327,40 @@ class DetailView extends MainView {
      * @returns {string}
      */
     getRecordViewName() {
-        return this.getMetadata()
-            .get('clientDefs.' + this.scope + '.recordViews.detail') || this.recordView;
+        return this.getMetadata().get(`clientDefs.${this.scope}.recordViews.${this.viewMode}`) || this.recordView;
+    }
+
+    /**
+     * Switch a view mode.
+     *
+     * @param {string} mode
+     */
+    switchViewMode(mode) {
+        this.clearView('record');
+        this.setViewMode(mode, true);
+
+        Espo.Ui.notify(' ... ');
+
+        this.setupRecord().then(view => {
+            view.render()
+                .then(() => Espo.Ui.notify(false));
+        });
+    }
+
+    /**
+     * Set a view mode.
+     *
+     * @param {string} mode A mode.
+     * @param {boolean} [toStore=false] To preserve a mode being set.
+     */
+    setViewMode(mode, toStore) {
+        this.viewMode = mode;
+
+        if (toStore && this.viewModeIsStorable) {
+            const modeKey = this.getViewModeKey();
+
+            this.getStorage().set('state', modeKey, mode);
+        }
     }
 
     /** @private */
