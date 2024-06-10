@@ -146,6 +146,8 @@ class UpcomingService
         $maxSize = $params->maxSize ?? 0;
 
         $unionQuery = $builder
+            ->order('dateEndIsNull')
+            ->order('order')
             ->order('dateStart')
             ->order('dateEnd')
             ->order('name')
@@ -196,9 +198,11 @@ class UpcomingService
             ->withBoolFilter(OnlyMy::NAME)
             ->withStrictAccessControl();
 
+        $orderField = 'dateStart';
         $primaryFilter = Planned::NAME;
 
         if ($entityType === Task::ENTITY_TYPE) {
+            $orderField = 'dateEnd';
             $primaryFilter = Actual::NAME;
         }
 
@@ -214,6 +218,8 @@ class UpcomingService
             'dateStart',
             'dateEnd',
             ['"' . $entityType . '"', 'entityType'],
+            ['IS_NULL:(dateEnd)', 'dateEndIsNull'],
+            [$orderField, 'order'],
         ]);
 
         return $queryBuilder->build();
