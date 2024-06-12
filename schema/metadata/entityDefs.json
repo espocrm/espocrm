@@ -395,6 +395,31 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "date"},
+                                    {"const": "datetime"},
+                                    {"const": "datetimeOptional"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "before": {
+                                "type": "string",
+                                "description": "Before a field. To validate that the date should be before the date specified in another field."
+                            },
+                            "after": {
+                                "type": "string",
+                                "description": "After a field. To validate that the date should be after the date specified in another field."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "varchar"},
                                     {"const": "text"},
                                     {"const": "url"},
@@ -874,7 +899,7 @@
                 },
                 "orderDisabled": {
                     "type": "boolean",
-                    "default": "Disables the ability to order by the field."
+                    "description": "Disables the ability to order by the field."
                 },
                 "textFilterDisabled": {
                     "type": "boolean",
