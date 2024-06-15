@@ -161,6 +161,8 @@ class ActivitiesPanelView extends RelationshipPanelView {
         this.collection.order = this.order;
         this.collection.maxSize = this.getConfig().get('recordsPerPageSmall') || 5;
 
+        this.listenTo(this.model, 'update-all', () => this.collection.fetch());
+
         this.setFilter(this.filter);
 
         this.once('show', () => {
