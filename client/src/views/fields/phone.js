@@ -250,7 +250,7 @@ class PhoneFieldView extends VarcharFieldView {
                 if (element) {
                     const obj = this.intlTelInputMap.get(element);
 
-                    const isPossible = obj.isPossibleNumber();
+                    const isPossible = obj && obj.isPossibleNumber();
 
                     if (obj && !isPossible) {
                         notValid = true;
@@ -290,7 +290,7 @@ class PhoneFieldView extends VarcharFieldView {
 
             const numberClean = String(number).replace(/[\s+]/g, '');
 
-            if (~numberList.indexOf(numberClean)) {
+            if (numberList.includes(numberClean)) {
                 this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
                     .toString() + ') input.phone-number');
 
