@@ -1033,7 +1033,7 @@ class Import
                     return Json::decode($value);
                 }
 
-                return explode(',', $value);
+                return array_map(fn ($it) => trim($it), explode(',', $value));
         }
 
         return $this->prepareAttributeValue($entity, $attribute, $value);
