@@ -837,6 +837,8 @@ class BaseMapper implements RDBMapper
                 $key = $relationName . 'Id';
                 $foreignRelationName = $this->getRelationParam($entity, $relationName, 'foreign');
 
+                // @todo Check 'deleted' attribute exists. Apply for all usages further.
+
                 if (
                     $foreignRelationName &&
                     $this->getRelationParam($relEntity, $foreignRelationName, 'type') === Entity::HAS_ONE
@@ -1425,13 +1427,16 @@ class BaseMapper implements RDBMapper
             return;
         }
 
+        $where = [self::ATTR_ID => $entity->getId()];
+
+        if ($entity->hasAttribute(self::ATTR_DELETED)) {
+            $where[self::ATTR_DELETED] = false;
+        }
+
         $query = UpdateBuilder::create()
             ->in($entity->getEntityType())
             ->set($valueMap)
-            ->where([
-                self::ATTR_ID => $entity->getId(),
-                self::ATTR_DELETED => false,
-            ])
+            ->where($where)
             ->build();
 
         $this->queryExecutor->execute($query);
@@ -1500,7 +1505,7 @@ class BaseMapper implements RDBMapper
      */
     public function delete(Entity $entity): void
     {
-        if (!$entity->hasAttribute('deleted')) {
+        if (!$entity->hasAttribute(self::ATTR_DELETED)) {
             $this->deleteFromDb($entity->getEntityType(), $entity->getId());
 
             return;
