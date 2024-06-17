@@ -27,12 +27,14 @@
  ************************************************************************/
 
 import ImageFieldView from 'views/fields/image';
+import Model from 'model';
+import ColorpickerFieldView from 'views/fields/colorpicker';
 
 class UserAvatarFieldView extends ImageFieldView {
 
     getAttributeList() {
         if (this.isEditMode()) {
-            return super.getAttributeList();
+            return [...super.getAttributeList(), 'avatarColor'];
         }
 
         return [];
@@ -46,6 +48,89 @@ class UserAvatarFieldView extends ImageFieldView {
 
             this.reRender();
         });
+
+        this.setupSub();
+    }
+
+    setupSub() {
+        this.subModel = new Model();
+
+        const syncModels = () => {
+            this.subModel.set({color: this.model.attributes.avatarColor});
+        };
+
+        syncModels();
+
+        this.listenTo(this.model, 'change:avatarColor', (m, v, o) => {
+            if (!o.ui) {
+                syncModels();
+            }
+        });
+
+        this.listenTo(this.subModel, 'change', (m, o) => {
+            if (o.ui) {
+                this.trigger('change');
+            }
+        });
+    }
+
+    onEditModeSet() {
+        if (!this.hasColor()) {
+            return;
+        }
+
+        this.colorView = new ColorpickerFieldView({
+            name: 'color',
+            model: this.subModel,
+            labelText: this.translate('avatarColor', 'fields', 'User'),
+            mode: 'edit',
+        });
+
+        return this.assignView('colorField', this.colorView, '[data-sub-field="color"]')
+    }
+
+    afterRender() {
+        super.afterRender();
+
+        if (this.isEditMode()) {
+            const colorEl = document.createElement('div');
+            colorEl.setAttribute('data-sub-field', 'color');
+            colorEl.classList.add('avatar-field-color');
+
+            // noinspection JSCheckFunctionSignatures
+            this.element.appendChild(colorEl);
+
+            if (this.colorView) {
+                this.colorView.reRender()
+                    .then(() => {
+                        const el = this.colorView.element.querySelector('input');
+
+                        el.placeholder = this.translate('avatarColor', 'fields', 'User');
+                    });
+            }
+        }
+    }
+
+    hasColor() {
+        const userType = this.model.get('type');
+
+        return [
+            'regular',
+            'admin',
+            'api',
+        ].includes(userType);
+    }
+
+    fetch() {
+        if (!this.hasColor()) {
+            return super.fetch();
+        }
+
+        // noinspection JSValidateTypes
+        return {
+            ...super.fetch(),
+            avatarColor: this.subModel.attributes.color,
+        };
     }
 
     /**
