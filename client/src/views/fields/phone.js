@@ -589,7 +589,7 @@ class PhoneFieldView extends VarcharFieldView {
         this.dataFieldName = this.name + 'Data';
         this.defaultType = this.defaultType ||
             this.getMetadata()
-                .get('entityDefs.' + this.model.entityType + '.fields.' + this.name + '.defaultType');
+                .get(`entityDefs.${this.model.entityType}.fields.${this.name}.defaultType`);
 
         this.isOptedOutFieldName = this.name + 'IsOptedOut';
         this.isInvalidFieldName = this.name + 'IsInvalid';
@@ -623,9 +623,7 @@ class PhoneFieldView extends VarcharFieldView {
         }
 
         this.erasedPlaceholder = 'ERASED:';
-
-        this.itemMaxLength = this.getMetadata()
-            .get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']);
+        this.itemMaxLength = this.getMetadata().get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']);
 
         this.intlTelInputMap = new Map();
 
@@ -635,7 +633,7 @@ class PhoneFieldView extends VarcharFieldView {
             }
 
             this.intlTelInputMap.clear();
-        })
+        });
     }
 
     /**
