@@ -108,7 +108,8 @@
     "No Subject": "Kein Betreff",
     "Insert Field": "Feld einfügen",
     "Moving to folder": "Verschiebe in Ordner",
-    "Group Folders": "Gruppenordner"
+    "Group Folders": "Gruppenordner",
+    "View Attachments": "Anhänge anzeigen"
   },
   "messages": {
     "testEmailSent": "Eine Test E-Mail wurde gesendet",

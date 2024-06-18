@@ -29,6 +29,7 @@
 import $ from 'jquery';
 import EditTableModalView from 'views/wysiwyg/modals/edit-table';
 import EditCellModalView from 'views/wysiwyg/modals/edit-cell';
+import Handlebars from 'handlebars';
 
 /**
  * @type {{
@@ -721,6 +722,7 @@ function init(langSets) {
             };
         },
 
+        // Not used?
         'linkDialog': function (context) {
             const options = context.options;
             const self = options.espoView;
@@ -745,6 +747,8 @@ function init(langSets) {
                     view.render();
 
                     self.listenToOnce(view, 'insert', (data) => {
+                        data.text = Handlebars.Utils.escapeExpression(data.text);
+
                         self.$summernote.summernote('createLink', data);
                     });
 
@@ -814,6 +818,8 @@ function init(langSets) {
                         const scrollY = ('scrollY' in container) ?
                             container.scrollY :
                             container.scrollTop;
+
+                        data.text = Handlebars.Utils.escapeExpression(data.text);
 
                         self.$summernote.summernote('createLink', data);
 

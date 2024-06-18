@@ -35,6 +35,10 @@
             "additionalProperties": {
                 "type": "string"
             }
+        },
+        "link": {
+            "type": "string",
+            "description": "A link name to check access to a related record instead of an actual record. Actual if access checker is Espo\\Core\\Acl\\AccessChecker\\AccessCheckers\\Foreign."
         }
     }
 }

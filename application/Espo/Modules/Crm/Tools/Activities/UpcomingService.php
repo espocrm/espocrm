@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Select\Bool\Filters\OnlyMy;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Metadata;
@@ -145,6 +146,8 @@ class UpcomingService
         $maxSize = $params->maxSize ?? 0;
 
         $unionQuery = $builder
+            ->order('dateEndIsNull')
+            ->order('order')
             ->order('dateStart')
             ->order('dateEnd')
             ->order('name')
@@ -192,12 +195,14 @@ class UpcomingService
             ->create()
             ->from($entityType)
             ->forUser($user)
-            ->withBoolFilter('onlyMy')
+            ->withBoolFilter(OnlyMy::NAME)
             ->withStrictAccessControl();
 
+        $orderField = 'dateStart';
         $primaryFilter = Planned::NAME;
 
         if ($entityType === Task::ENTITY_TYPE) {
+            $orderField = 'dateEnd';
             $primaryFilter = Actual::NAME;
         }
 
@@ -213,6 +218,8 @@ class UpcomingService
             'dateStart',
             'dateEnd',
             ['"' . $entityType . '"', 'entityType'],
+            ['IS_NULL:(dateEnd)', 'dateEndIsNull'],
+            [$orderField, 'order'],
         ]);
 
         return $queryBuilder->build();

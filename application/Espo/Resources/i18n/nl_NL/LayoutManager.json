@@ -10,7 +10,9 @@
     "hidden": "Verborgen",
     "dynamicLogicStyled": "Voorwaarden voor toegepaste stijl",
     "noLabel": "Geen label",
-    "width": "Breedte"
+    "width": "Breedte",
+    "noteText": "Noot tekst",
+    "noteStyle": "Noot stijl"
   },
   "options": {
     "align": {
@@ -39,7 +41,8 @@
     "tabBreak": "Een apart tabblad voor het paneel en alle volgende panelen tot de volgende tab-break.",
     "noLabel": "Toon geen kolomlabel in de kop.",
     "notSortable": "Schakelt de mogelijkheid uit om te sorteren op de kolom.",
-    "width": "Een kolombreedte. Het is aanbevolen om één kolom te hebben zonder gespecificeerde breedte, meestal moet dit het veld *Name* zijn."
+    "width": "Een kolombreedte. Het is aanbevolen om één kolom te hebben zonder gespecificeerde breedte, meestal moet dit het veld *Name* zijn.",
+    "noteText": "Een tekst die moet worden weergegeven in het paneel. Markdown wordt ondersteund."
   },
   "messages": {
     "cantBeEmpty": "Lay-out kan niet leeg zijn.",

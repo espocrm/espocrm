@@ -31,7 +31,9 @@
     "assignmentNotificationsIgnoreEntityTypeList": "Kennisgevingen van toewijzing in de applicatie",
     "assignmentEmailNotificationsIgnoreEntityTypeList": "Kennisgevingen van e-mailtoewijzingen",
     "dashboardLocked": "Dashboard vergrendelen",
-    "textSearchStoringDisabled": "Tekstfilter opslaan uitschakelen"
+    "textSearchStoringDisabled": "Tekstfilter opslaan uitschakelen",
+    "calendarSlotDuration": "Kalender duur",
+    "calendarScrollHour": "Kalender blader naar uur"
   },
   "options": {
     "weekStart": {
@@ -51,5 +53,9 @@
     "doNotFillAssignedUserIfNotRequired": "Bij het aanmaken van een record toegewezen gebruiker zal de gebruiker niet worden ingevuld met een eigen gebruikersnaam, tenzij het veld verplicht is.",
     "followCreatedEntities": "Bij het aanmaken van nieuwe records worden deze automatisch gevolgd, zelfs als ze aan een andere gebruiker worden toegewezen.",
     "followCreatedEntityTypeList": "Wanneer nieuwe records van geselecteerde entiteittypes worden aanmaakt, worden deze automatisch gevolgd zelfs als ze aan een andere gebruiker worden toegewezen."
+  },
+  "tabFields": {
+    "iconClass": "Icoon",
+    "color": "Kleur"
   }
 }

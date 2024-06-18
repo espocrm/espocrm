@@ -11,7 +11,8 @@
     "related": "Correlato",
     "createdByGender": "Creato da genere",
     "data": "Dati",
-    "number": "Numero"
+    "number": "Numero",
+    "isPinned": "è Fissato"
   },
   "filters": {
     "all": "Tutti",
@@ -50,6 +51,9 @@
   },
   "labels": {
     "View Posts": "Vedi Post",
-    "View Activity": "Vedi Attività"
+    "View Activity": "Vedi Attività",
+    "Pin": "Fissa",
+    "Unpin": "Stacca",
+    "Pinned": "Fissato"
   }
 }

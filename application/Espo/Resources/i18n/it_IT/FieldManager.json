@@ -143,7 +143,7 @@
     "attachmentMultiple": "Consente il caricamento di più file.",
     "number": "Un numero autoincrementante di tipo stringa con un possibile prefisso e una lunghezza specifica.",
     "autoincrement": "Un numero intero di sola lettura e autoincrementante.",
-    "barcode": "Un codice a barre. Può essere stampato in PDF.",
+    "barcode": "Un codice a barre. Può essere stampato in un PDF.",
     "email": "Un insieme di indirizzi email con i relativi parametri: Escluso, Invalido, Primario.",
     "phone": "Un insieme di numeri di telefono con i relativi parametri: Tipo, Escluso, Invalido, Primario.",
     "foreign": "Campo di un record correlato. Di Sola Lettura.",

@@ -71,6 +71,7 @@
         "ccEmailAddresses": "CC EmailAddresses",
         "bccEmailAddresses": "BCC EmailAddresses",
         "replyToEmailAddresses": "Reply-To EmailAddresses",
+        "createdEvent": "Created Event",
         "groupFolder": "Group Folder"
     },
     "options": {

@@ -18,7 +18,7 @@
     "useCustomTabList": "Elenco Schede Personalizzato",
     "receiveAssignmentEmailNotifications": "Notifiche via email al momento dell' assegnazione",
     "receiveMentionEmailNotifications": "Notifiche via email in caso di menzioni nei post",
-    "receiveStreamEmailNotifications": "Notifiche via email per i messaggi e gli aggiornamenti di stato",
+    "receiveStreamEmailNotifications": "Notifiche email per i messaggi e gli aggiornamenti di stato",
     "dashboardLayout": "Layout Dashboard",
     "emailReplyForceHtml": "Email di Risposta in HTML",
     "autoFollowEntityTypeList": "Auto-follow globale",

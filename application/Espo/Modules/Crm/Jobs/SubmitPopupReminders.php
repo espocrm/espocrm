@@ -120,14 +120,14 @@ class SubmitPopupReminders implements JobDataLess
                 }
             }
 
-            $dateAttribute = 'dateStart';
+            $dateField = 'dateStart';
 
             $entityDefs = $this->entityManager->getDefs()->getEntity($entityType);
 
             if ($entityDefs->hasField('reminders')) {
-                $dateAttribute = $entityDefs
+                $dateField = $entityDefs
                     ->getField('reminders')
-                    ->getParam('dateField') ?? $dateAttribute;
+                    ->getParam('dateField') ?? $dateField;
             }
 
             $submitData[$userId] ??= [];
@@ -137,8 +137,12 @@ class SubmitPopupReminders implements JobDataLess
                 'data' => (object) [
                     'id' => $entity->getId(),
                     'entityType' => $entityType,
-                    $dateAttribute => $entity->get($dateAttribute),
                     'name' => $entity->get('name'),
+                    'dateField' => $dateField,
+                    'attributes' => (object) [
+                        $dateField => $entity->get($dateField),
+                        $dateField . 'Date' => $entity->get($dateField . 'Date'),
+                    ],
                 ],
             ];;
 

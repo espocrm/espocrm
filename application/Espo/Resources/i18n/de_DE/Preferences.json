@@ -32,7 +32,9 @@
     "dashboardLocked": "Dashboard sperren",
     "textSearchStoringDisabled": "Textfilterspeicherung deaktivieren",
     "calendarSlotDuration": "Kalender - Dauer des Zeitfensters",
-    "calendarScrollHour": "Kalender - Zur Stunde springen"
+    "calendarScrollHour": "Kalender - Zur Stunde springen",
+    "defaultRemindersTask": "Standard-Erinnerungen für Aufgaben",
+    "addCustomTabs": "Benutzerdefinierte Registerkarten hinzufügen"
   },
   "options": {
     "weekStart": {
@@ -51,7 +53,8 @@
     "autoFollowEntityTypeList": "Der Benutzer abonniert automatisch alle neuen Einträge der gewählten Entitätstypen, sieht Neuigkeiten im Ereignisverlauf und erhält Benachrichtigungen.",
     "doNotFillAssignedUserIfNotRequired": "Beim Erstellen eines Datensatzes wird der zugewiesene Benutzer nicht mit dem eigenen Benutzer ausgefüllt, es sei denn, das Feld ist erforderlich.",
     "followCreatedEntities": "Wenn neue Datensätze erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind.",
-    "followCreatedEntityTypeList": "Wenn neue Datensätze von ausgewählten Entitätstypen erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind."
+    "followCreatedEntityTypeList": "Wenn neue Datensätze von ausgewählten Entitätstypen erstellt werden, werden diese automatisch gefolgt, auch wenn sie einem anderen Benutzer zugewiesen sind.",
+    "addCustomTabs": "Wenn diese Option aktiviert ist, werden benutzerdefinierte Registerkarten an die Standardregisterkarten angehängt. Andernfalls werden benutzerdefinierte Registerkarten anstelle der Standardregisterkarten verwendet."
   },
   "tabFields": {
     "label": "Bezeichnung",

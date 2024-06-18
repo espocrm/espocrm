@@ -36,7 +36,8 @@
     "auth2FAMethod": "Metodo 2FA",
     "auth2FATotpSecret": "2FA TOTP Secret\n",
     "workingTimeCalendar": "Calendario Lavorativo",
-    "layoutSet": "Layout"
+    "layoutSet": "Layout",
+    "avatarColor": "Colore Avatar"
   },
   "links": {
     "teams": "Team",
@@ -52,7 +53,6 @@
     "dashboardTemplate": "Modello Dashboard",
     "userData": "Dati Utente",
     "workingTimeCalendar": "Calendario Lavorativo",
-    "workingTimeRanges": "Intervalli di Lavoro",
     "layoutSet": "Layout"
   },
   "labels": {

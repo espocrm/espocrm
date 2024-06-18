@@ -75,6 +75,12 @@ class PhoneFieldView extends VarcharFieldView {
 
     maxExtensionLength = 6
 
+    /**
+     * @private
+     * @type {RegExp}
+     */
+    validationRegExp
+
     events = {
         /** @this PhoneFieldView */
         'click [data-action="switchPhoneProperty"]': function (e) {
@@ -221,76 +227,25 @@ class PhoneFieldView extends VarcharFieldView {
         }
 
         /** @var {string} */
-        const pattern = '^' + this.getMetadata().get(['app', 'regExpPatterns', 'phoneNumberLoose', 'pattern']) + '$';
-        const regExp = new RegExp(pattern);
+        const pattern = '^' + this.getMetadata().get('app.regExpPatterns.phoneNumberLoose.pattern') + '$';
+        this.validationRegExp = new RegExp(pattern);
 
         const numberList = [];
         let notValid = false;
 
         data.forEach((row, i) => {
-            const msg = this.translate('fieldValueDuplicate', 'messages')
-                .replace('{field}', this.getLabelText());
             const number = row.phoneNumber;
 
-            const n = (i + 1).toString();
-            const selector = `div.phone-number-block:nth-child(${n}) input.phone-number`;
-
-            if (!regExp.test(number)) {
+            if (this.itemValidate(row, i)) {
                 notValid = true;
-
-                const msg = this.translate('fieldPhoneInvalidCharacters', 'messages')
-                    .replace('{field}', this.getLabelText());
-
-                this.showValidationMessage(msg, selector);
-            }
-
-            if (this.useInternational) {
-                const element = this.$el.find(selector).get(0);
-
-                if (element) {
-                    const obj = this.intlTelInputMap.get(element);
-
-                    const isPossible = obj.isPossibleNumber();
-
-                    if (obj && !isPossible) {
-                        notValid = true;
-
-                        const code = obj.getValidationError();
-
-                        const key = [
-                            'fieldPhoneInvalid',
-                            'fieldPhoneInvalidCode',
-                            'fieldPhoneTooShort',
-                            'fieldPhoneTooLong',
-                        ][code || 0] || 'fieldPhoneInvalid';
-
-                        const msg = this.translate(key, 'messages')
-                            .replace('{field}', this.getLabelText());
-
-                        this.showValidationMessage(msg, selector);
-                    }
-
-                    if (
-                        obj &&
-                        isPossible &&
-                        this.allowExtensions &&
-                        obj.getExtension() &&
-                        obj.getExtension().length > this.maxExtensionLength
-                    ) {
-                        const msg = this.translate('fieldPhoneExtensionTooLong', 'messages')
-                            .replace('{maxLength}', this.maxExtensionLength.toString())
-                            .replace('{field}', this.getLabelText());
-
-                        this.showValidationMessage(msg, selector);
-
-                        notValid = true;
-                    }
-                }
             }
 
             const numberClean = String(number).replace(/[\s+]/g, '');
 
-            if (~numberList.indexOf(numberClean)) {
+            if (numberList.includes(numberClean)) {
+                const msg = this.translate('fieldValueDuplicate', 'messages')
+                    .replace('{field}', this.getLabelText());
+
                 this.showValidationMessage(msg, 'div.phone-number-block:nth-child(' + (i + 1)
                     .toString() + ') input.phone-number');
 
@@ -302,9 +257,82 @@ class PhoneFieldView extends VarcharFieldView {
             numberList.push(numberClean);
         });
 
-        if (notValid) {
-            return true;
+        return notValid;
+    }
+
+    /**
+     * @protected
+     * @param {{number: string, type: string}} item A data item.
+     * @param {number} i An index.
+     * @return {boolean}
+     * @internal Called in an extension. Do not change the signature.
+     */
+    itemValidate(item, i) {
+        const number = item.number;
+
+        const n = (i + 1).toString();
+        const selector = `div.phone-number-block:nth-child(${n}) input.phone-number`;
+
+        let notValid = false;
+
+        if (!this.validationRegExp.test(number)) {
+            notValid = true;
+
+            const msg = this.translate('fieldPhoneInvalidCharacters', 'messages')
+                .replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg, selector);
         }
+
+        if (!this.useInternational) {
+            return notValid;
+        }
+
+        const element = this.$el.find(selector).get(0);
+
+        if (!element) {
+            return notValid;
+        }
+
+        const intlObj = this.intlTelInputMap.get(element);
+
+        const isPossible = intlObj && intlObj.isPossibleNumber();
+
+        if (intlObj && !isPossible) {
+            notValid = true;
+
+            const code = intlObj.getValidationError();
+
+            const key = [
+                'fieldPhoneInvalid',
+                'fieldPhoneInvalidCode',
+                'fieldPhoneTooShort',
+                'fieldPhoneTooLong',
+            ][code || 0] || 'fieldPhoneInvalid';
+
+            const msg = this.translate(key, 'messages')
+                .replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg, selector);
+        }
+
+        if (
+            intlObj &&
+            isPossible &&
+            this.allowExtensions &&
+            intlObj.getExtension() &&
+            intlObj.getExtension().length > this.maxExtensionLength
+        ) {
+            const msg = this.translate('fieldPhoneExtensionTooLong', 'messages')
+                .replace('{maxLength}', this.maxExtensionLength.toString())
+                .replace('{field}', this.getLabelText());
+
+            this.showValidationMessage(msg, selector);
+
+            notValid = true;
+        }
+
+        return notValid;
     }
 
     data() {
@@ -589,7 +617,7 @@ class PhoneFieldView extends VarcharFieldView {
         this.dataFieldName = this.name + 'Data';
         this.defaultType = this.defaultType ||
             this.getMetadata()
-                .get('entityDefs.' + this.model.entityType + '.fields.' + this.name + '.defaultType');
+                .get(`entityDefs.${this.model.entityType}.fields.${this.name}.defaultType`);
 
         this.isOptedOutFieldName = this.name + 'IsOptedOut';
         this.isInvalidFieldName = this.name + 'IsInvalid';
@@ -623,9 +651,7 @@ class PhoneFieldView extends VarcharFieldView {
         }
 
         this.erasedPlaceholder = 'ERASED:';
-
-        this.itemMaxLength = this.getMetadata()
-            .get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']);
+        this.itemMaxLength = this.getMetadata().get(['entityDefs', 'PhoneNumber', 'fields', 'name', 'maxLength']);
 
         this.intlTelInputMap = new Map();
 
@@ -635,7 +661,7 @@ class PhoneFieldView extends VarcharFieldView {
             }
 
             this.intlTelInputMap.clear();
-        })
+        });
     }
 
     /**

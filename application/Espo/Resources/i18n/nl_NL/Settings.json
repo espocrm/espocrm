@@ -97,7 +97,6 @@
     "ldapPortalUserLdapAuth": "Gebruik LDAP-authenticatie voor gebruikers van het portaal",
     "ldapPortalUserPortals": "Standaardportalen voor een portaalgebruiker",
     "ldapPortalUserRoles": "Standaard functies voor een portaalgebruiker",
-    "addressCountryList": "Automatisch aanvullen land lijst",
     "fiscalYearShift": "Start financieel jaar",
     "jobRunInParallel": "Parallel gelijktijdige opdrachten",
     "jobMaxPortion": "Opdrachten Max. portie",
@@ -156,7 +155,8 @@
     "phoneNumberNumericSearch": "Numeriek telefoonnummer zoeken",
     "phoneNumberInternational": "Internationale telefoonnummers",
     "phoneNumberPreferredCountryList": "Voorkeur telefoon landcodes",
-    "jobForceUtc": "UTC-tijdzone afdwingen"
+    "jobForceUtc": "UTC-tijdzone afdwingen",
+    "emailAddressSelectEntityTypeList": "Bereik voor selecteren e-mailadres"
   },
   "tooltips": {
     "recordsPerPage": "Aantal zichtbare records in lijsten.",
@@ -194,7 +194,6 @@
     "textFilterUseContainsForVarchar": "Indien niet aangevinkt, dan wordt de 'begint met'-operator gebruikt. U kunt het jokerteken '%' gebruiken.",
     "streamEmailNotificationsEntityList": "E-mailnotificaties over stream-updates van gevolgde records. Gebruikers ontvangen alleen e-mailberichten voor specifieke typen entiteiten.",
     "authTokenPreventConcurrent": "Gebruikers kunnen niet op meerdere apparaten tegelijk worden ingelogd.",
-    "emailAddressIsOptedOutByDefault": "Bij het creëren van een nieuw record zal e-mailadres worden gemarkeerd als niet-aangemeld.",
     "cleanupDeletedRecords": "Verwijderde records worden na een tijdje uit de database verwijderd.",
     "ldapPortalUserLdapAuth": "Sta gebruikers van het portaal toe om LDAP-authenticatie te gebruiken in plaats van Espo-authenticatie.",
     "ldapPortalUserPortals": "Standaardportalen voor gemaakte portalen voor de gebruiker",
@@ -231,7 +230,6 @@
     "busyRangesEntityList": "Waarmee rekening wordt gehouden bij het tonen van bezette tijden in planner en tijdlijn.",
     "recordsPerPageSelect": "Aantal records dat aanvankelijk wordt weergegeven bij het selecteren van records.",
     "workingTimeCalendar": "Een werktijd kalender die standaard op alle gebruikers wordt toegepast.",
-    "oidcGroupClaim": "Een claim naar de gebruiker voor team mapping.",
     "oidcFallback": "Aanmelding met gebruikersnaam/wachtwoord toestaan.",
     "oidcCreateUser": "Maak een nieuwe gebruiker aan in Espo als er geen overeenkomende gebruiker is gevonden.",
     "oidcSync": "Gebruikersgegevens synchroniseren (bij elke aanmelding).",
@@ -240,7 +238,8 @@
     "oidcTeams": "Espo-teams gemapt tegen groepen/teams/rollen van de identity provider. Teams met een lege mapping waarde worden altijd toegewezen aan een gebruiker (bij het aanmaken of synchroniseren).",
     "oidcLogoutUrl": "Een URL waarnaar de browser zal doorverwijzen na het afmelden bij Espo. Bedoeld voor het wissen van de sessiegegevens in de browser en het afmelden aan de providerzijde. Meestal bevat de URL een redirect-URL parameter, om terug te keren naar Espo.\n\nBeschikbare plaatshouders:\n* `{siteUrl}`\n* `{clientId}`",
     "recordsPerPageKanban": "Aantal records dat aanvankelijk in kanban-kolommen wordt weergegeven.",
-    "jobForceUtc": "Gebruik de UTC-tijdzone voor geplande taken. Anders wordt de tijdzone gebruikt die is ingesteld in de instellingen."
+    "jobForceUtc": "Gebruik de UTC-tijdzone voor geplande taken. Anders wordt de tijdzone gebruikt die is ingesteld in de instellingen.",
+    "emailAddressSelectEntityTypeList": "Beschikbare entiteittypes bij het zoeken naar een e-mailadres vanuit een formulier."
   },
   "labels": {
     "System": "Systeem",

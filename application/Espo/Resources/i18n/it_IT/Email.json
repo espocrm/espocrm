@@ -90,7 +90,7 @@
     "Original message": "Messaggio originale",
     "Forwarded message": "Messaggio inoltrato",
     "Email Accounts": "Account Email Personali",
-    "Inbound Emails": "Gruppi Account Email",
+    "Inbound Emails": "Account Email di Gruppo",
     "Email Templates": "Modelli Email",
     "Send Test Email": "Invia Email di Prova",
     "Send": "Invia",
@@ -101,18 +101,19 @@
     "Mark all as read": "Segna Tutte Come Lette",
     "Show Plain Text": "Visualizza Testo Normale",
     "Mark as Important": "Segna Come Importante",
-    "Unmark Importance": "Deseleziona come Importante",
+    "Unmark Importance": "Rimuovi Importante",
     "Move to Trash": "Sposta nel Cestino",
     "Retrieve from Trash": "Ripristina da Cestino",
     "Move to Folder": "Sposta nella Cartella",
     "Filters": "Filtri",
     "Folders": "Cartelle",
-    "View Users": "Visualizza utenti",
+    "View Users": "Visualizza Utenti",
     "No Subject": "Nessun Oggetto",
     "Insert Field": "Inserisci Campo",
     "Event": "Evento",
     "Moving to folder": "Sposta in una Cartella",
-    "Group Folders": "Cartelle di Gruppo"
+    "Group Folders": "Cartelle di Gruppo",
+    "View Attachments": "Vedi Allegati"
   },
   "messages": {
     "testEmailSent": "L'email di prova è stata inviata",
@@ -139,10 +140,10 @@
     "markAsRead": "Segna Come Letto",
     "markAsNotRead": "Segna Come Non Letto",
     "markAsImportant": "Segna Come Importante",
-    "markAsNotImportant": "Deseleziona come Importante",
+    "markAsNotImportant": "Rimuovi Importante",
     "moveToTrash": "Sposta nel Cestino",
     "moveToFolder": "Sposta nella Cartella",
-    "retrieveFromTrash": "Recupera dal cestino"
+    "retrieveFromTrash": "Recupera dal Cestino"
   },
   "strings": {
     "sendingFailed": "Invio email fallito"

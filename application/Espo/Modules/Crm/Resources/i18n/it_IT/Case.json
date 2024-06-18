@@ -9,7 +9,7 @@
     "type": "Tipo",
     "description": "Descrizione",
     "attachments": "Allegati",
-    "inboundEmail": "Gruppo Account Email",
+    "inboundEmail": "Account Email di Gruppo",
     "originalEmail": "Email Originale"
   },
   "links": {
@@ -21,7 +21,7 @@
     "emails": "Email",
     "articles": "Articoli della Base di Conoscenza",
     "attachments": "Allegati",
-    "inboundEmail": "Gruppo Account Email"
+    "inboundEmail": "Account Email di Gruppo"
   },
   "options": {
     "status": {
