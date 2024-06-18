@@ -87,7 +87,13 @@ class ArrayFieldView extends BaseFieldView {
 
     searchTypeList = ['anyOf', 'noneOf', 'allOf', 'isEmpty', 'isNotEmpty']
     maxItemLength = null
+
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = ['required', 'maxCount']
+
     MAX_ITEM_LENGTH = 100
 
     /**

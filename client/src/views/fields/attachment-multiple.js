@@ -82,11 +82,17 @@ class AttachmentMultipleFieldView extends BaseFieldView {
     foreignScope
     showPreviews = true
     accept = null
+
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'ready',
         'required',
         'maxCount',
     ]
+
     searchTypeList = ['isNotEmpty', 'isEmpty']
 
     events = {

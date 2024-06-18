@@ -71,6 +71,10 @@ class DateFieldView extends BaseFieldView {
     editTemplate = 'fields/date/edit'
     searchTemplate = 'fields/date/search'
 
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'required',
         'date',

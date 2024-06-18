@@ -90,6 +90,10 @@ class CurrencyFieldView extends FloatFieldView {
 
     maxDecimalPlaces = 3
 
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'required',
         'number',

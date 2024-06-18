@@ -58,7 +58,10 @@ class AddressFieldView extends BaseFieldView {
     stateField
     countryField
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'required',
         'pattern',

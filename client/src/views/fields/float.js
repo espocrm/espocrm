@@ -70,8 +70,13 @@ class FloatFieldView extends IntFieldView {
     editTemplate = 'fields/float/edit'
 
     decimalMark = '.'
-    validations = ['required', 'float', 'range']
     decimalPlacesRawValue = 10
+
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
+    validations = ['required', 'float', 'range']
 
     /** @inheritDoc */
     setup() {

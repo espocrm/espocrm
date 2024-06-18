@@ -88,7 +88,10 @@ class VarcharFieldView extends BaseFieldView {
         'isNotEmpty',
     ]
 
-    /** @inheritDoc */
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'required',
         'pattern',

@@ -71,6 +71,11 @@ class IntFieldView extends BaseFieldView {
     detailTemplate = 'fields/int/detail'
     editTemplate = 'fields/int/edit'
     searchTemplate = 'fields/int/search'
+
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = ['required', 'int', 'range']
 
     thousandSeparator = ','

@@ -69,7 +69,16 @@ class DatetimeFieldView extends DateFieldView {
 
     editTemplate = 'fields/datetime/edit'
 
-    validations = ['required', 'datetime', 'after', 'before']
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
+    validations = [
+        'required',
+        'datetime',
+        'after',
+        'before',
+    ]
 
     searchTypeList = [
         'lastSevenDays',
