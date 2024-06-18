@@ -140,7 +140,7 @@ class BaseFieldView extends View {
      * A validation list. A function returning true if non-valid, or a name.
      * For the latter, there should be a `validate{Name}` method in the class.
      *
-     * Functions are supported as of v8.4.
+     * Functions are supported as of v8.3.
      *
      * @type {Array<(function (): boolean)|string>}
      */
