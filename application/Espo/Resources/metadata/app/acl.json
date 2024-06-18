@@ -119,7 +119,11 @@
         },
         "scopeFieldLevel": {
             "User": {
-                "gender": false
+                "gender": false,
+                "avatarColor": {
+                    "read": "yes",
+                    "edit": "no"
+                }
             }
         }
     },

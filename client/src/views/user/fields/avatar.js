@@ -112,6 +112,10 @@ class UserAvatarFieldView extends ImageFieldView {
     }
 
     hasColor() {
+        if (this.recordHelper && this.recordHelper.getFieldStateParam('avatarColor', 'readOnly')) {
+            return false;
+        }
+
         const userType = this.model.get('type');
 
         return [
