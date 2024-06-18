@@ -39,7 +39,9 @@
     "duplicateCheckFieldList": "Duplicaat controlevelden",
     "layout": "Lay-out",
     "author": "Auteur",
-    "version": "Versie"
+    "version": "Versie",
+    "selectFilter": "Select filter",
+    "primaryFilters": "Primaire filters"
   },
   "options": {
     "type": {
@@ -63,6 +65,9 @@
     "sortDirection": {
       "asc": "Oplopend",
       "desc": "Aflopend"
+    },
+    "module": {
+      "Custom": "Aangepast"
     }
   },
   "messages": {
@@ -75,7 +80,8 @@
     "nameIsAlreadyUsed": "Naam '{name}' wordt al gebruikt.",
     "nameIsNotAllowed": "Naam '{name}' is niet toegestaan.",
     "nameIsTooLong": "Naam is te lang.",
-    "confirmRemoveLink": "Weet je zeker dat je de *{link}* relatie wilt verwijderen?"
+    "confirmRemoveLink": "Weet je zeker dat je de *{link}* relatie wilt verwijderen?",
+    "urlHashCopiedToClipboard": "Een URL-fragment voor de *{name}* filter wordt gekopieerd naar het klembord. Je kunt het toevoegen aan de navigatiebalk."
   },
   "tooltips": {
     "statusField": "Updates van dit veld zijn gelogd in stream.",
@@ -89,6 +95,7 @@
     "countDisabled": "Het totale aantal wordt niet weergegeven in de lijstweergave. Kan de laadtijd verkorten wanneer de DB-tabel groot is.",
     "optimisticConcurrencyControl": "Voorkomt schrijfconflicten.",
     "duplicateCheckFieldList": "Welke velden te controleren bij het controleren op duplicaten.",
-    "updateDuplicateCheck": "Controleren op duplicaten bij het bijwerken van een record."
+    "updateDuplicateCheck": "Controleren op duplicaten bij het bijwerken van een record.",
+    "linkSelectFilter": "Een primair filter dat standaard wordt toegepast bij het selecteren van een record."
   }
 }

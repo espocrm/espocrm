@@ -28,7 +28,9 @@
       "INACTIVE_USER": "Inaktiver Benutzer",
       "IS_PORTAL_USER": "Portal Benutzer",
       "IS_NOT_PORTAL_USER": "Kein Portalbenutzer",
-      "USER_IS_NOT_IN_PORTAL": "Der Benutzer ist nicht mit dem Portal verbunden"
+      "USER_IS_NOT_IN_PORTAL": "Der Benutzer ist nicht mit dem Portal verbunden",
+      "IS_SYSTEM_USER": "Ist Systembenutzer",
+      "FORBIDDEN": "Verboten"
     }
   }
 }

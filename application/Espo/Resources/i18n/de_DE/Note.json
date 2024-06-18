@@ -11,7 +11,8 @@
     "related": "Verbunden",
     "createdByGender": "Erstellt von Geschlecht",
     "data": "Daten",
-    "number": "Nummer"
+    "number": "Nummer",
+    "isPinned": "Ist angeheftet"
   },
   "filters": {
     "all": "Alle",
@@ -19,7 +20,8 @@
     "activity": "Aktivität"
   },
   "messages": {
-    "writeMessage": "Schreiben Sie hier Ihre Nachricht"
+    "writeMessage": "Schreiben Sie hier Ihre Nachricht",
+    "pinnedMaxCountExceeded": "Es können nicht mehr Notizen angeheftet werden. Die maximal zulässige Anzahl ist {count}."
   },
   "options": {
     "targetType": {
@@ -49,6 +51,9 @@
   },
   "labels": {
     "View Posts": "Nachrichten anzeigen",
-    "View Activity": "Aktivitäten anzeigen"
+    "View Activity": "Aktivitäten anzeigen",
+    "Pin": "Anheften",
+    "Unpin": "Lösen",
+    "Pinned": "Angeheftet"
   }
 }

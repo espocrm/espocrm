@@ -36,7 +36,8 @@
     "auth2FAMethod": "2FA Methode",
     "auth2FATotpSecret": "2FA TOTP Geheimnis",
     "workingTimeCalendar": "Arbeitszeitkalender",
-    "layoutSet": "Layout-Satz"
+    "layoutSet": "Layout-Satz",
+    "avatarColor": "Farbe des Avatars"
   },
   "links": {
     "roles": "Rollen",
@@ -51,8 +52,8 @@
     "dashboardTemplate": "Dashboard-Vorlage",
     "userData": "Benutzerdaten",
     "workingTimeCalendar": "Arbeitszeitkalender",
-    "workingTimeRanges": "Arbeitszeitzeiträume",
-    "layoutSet": "Layout-Satz"
+    "layoutSet": "Layout-Satz",
+    "workingTimeRanges": "Arbeitszeitausnahmen"
   },
   "labels": {
     "Create User": "Benutzer erstellen",
@@ -126,7 +127,8 @@
     "loginAs": "Öffnen Sie den Anmeldelink in einem Inkognito-Fenster, um Ihre aktuelle Sitzung beizubehalten. Melden Sie sich mit Ihren Administrator-Anmeldedaten an.",
     "failedToLogIn": "Anmeldung fehlgeschlagen",
     "2faMethodNotConfigured": "Die 2FA-Methode ist im System nicht vollständig konfiguriert.",
-    "loginError": "Ein Fehler ist aufgetreten"
+    "loginError": "Ein Fehler ist aufgetreten",
+    "defaultTeamIsNotUsers": "Das Standardteam sollte eines der Teams des Benutzers sein"
   },
   "boolFilters": {
     "onlyMyTeam": "Nur mein Team"

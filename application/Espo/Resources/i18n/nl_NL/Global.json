@@ -51,10 +51,10 @@
     "Note": "Opmerking",
     "ImportError": "Importfout",
     "WorkingTimeCalendar": "Werktijd Kalender",
-    "WorkingTimeRange": "Werktijdbereik",
     "GroupEmailFolder": "Groep e-mail map",
     "AuthenticationProvider": "Authenticatie aanbieder",
-    "GlobalStream": "Globale stroming"
+    "GlobalStream": "Globale stroming",
+    "WebhookQueueItem": "Webhook wachtrij item"
   },
   "scopeNamesPlural": {
     "Email": "E-mails",
@@ -97,10 +97,10 @@
     "Note": "Opmerkingen",
     "ImportError": "Importfouten",
     "WorkingTimeCalendar": "Werktijd kalenders",
-    "WorkingTimeRange": "Werktijdbereiken",
     "GroupEmailFolder": "Groep e-mailmappen",
     "AuthenticationProvider": "Authenticatie aanbieders",
-    "GlobalStream": "Globale stroming"
+    "GlobalStream": "Globale stroming",
+    "WebhookQueueItem": "Webhook wachtrij items"
   },
   "labels": {
     "Misc": "Overig",
@@ -258,7 +258,14 @@
     "Show Navigation Panel": "Toon navigatiepaneel",
     "Hide Navigation Panel": "Verberg navigatiepaneel",
     "Copy to Clipboard": "Kopiëren naar klembord",
-    "Copied to clipboard": "Gekopieerd naar klembord"
+    "Copied to clipboard": "Gekopieerd naar klembord",
+    "Audit Log": "Controlelog",
+    "View Audit Log": "Bekijk controlelog",
+    "Previous Page": "Vorige pagina",
+    "Next Page": "Volgende pagina",
+    "First Page": "Eerste pagina",
+    "Last Page": "Laatste pagina",
+    "Page": "Pagina"
   },
   "messages": {
     "pleaseWait": "Even geduld...",
@@ -359,7 +366,9 @@
     "fieldPhoneTooLong": "{field} is te lang",
     "barcodeInvalid": "{field} is ongeldig {type}",
     "noLinkAccess": "Kan geen relatie leggen met {foreignEntityType} record via de link '{link}'. Geen toegang.",
-    "attemptIntervalFailure": "De bewerking is niet toegestaan tijdens een bepaald tijdsinterval. Wacht enige tijd voor de volgende poging."
+    "attemptIntervalFailure": "De bewerking is niet toegestaan tijdens een bepaald tijdsinterval. Wacht enige tijd voor de volgende poging.",
+    "confirmRestoreFromAudit": "De vorige waarden worden ingesteld in een formulier. Daarna kun je het record opslaan om de vorige waarden te herstellen.",
+    "pageNumberIsOutOfBound": "Paginanummer buiten limiet"
   },
   "boolFilters": {
     "onlyMy": "Alleen mijn",
@@ -417,7 +426,9 @@
     "types": "Typen",
     "middleName": "Tussenvoegsel",
     "emailAddressIsInvalid": "E-mailadres is ongeldig",
-    "phoneNumberIsInvalid": "Telefoonnummer is ongeldig"
+    "phoneNumberIsInvalid": "Telefoonnummer is ongeldig",
+    "users": "Gebruikers",
+    "childList": "Sublijst"
   },
   "links": {
     "assignedUser": "Toegewezen gebruiker",
@@ -765,7 +776,6 @@
     "phoneNumber": "Geldig telefoonnummer",
     "array": "Reeks",
     "arrayOfString": "Reeks tekens",
-    "valid": "Geldig",
     "noEmptyString": "Geen lege string",
     "max": "Max. waarde",
     "min": "Min. waarde"

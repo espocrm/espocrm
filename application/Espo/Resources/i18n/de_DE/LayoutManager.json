@@ -12,7 +12,8 @@
     "tabBreak": "Registerkartenumbruch",
     "width": "Breite",
     "noteText": "Notiztext",
-    "noteStyle": "Notizstil"
+    "noteStyle": "Notizstil",
+    "isMuted": "Gedeckte Farbe"
   },
   "options": {
     "align": {

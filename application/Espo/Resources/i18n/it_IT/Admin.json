@@ -21,7 +21,7 @@
     "Portals": "Portali",
     "Portal Roles": "Ruoli Portale",
     "Outbound Emails": "Email in Uscita",
-    "Group Email Accounts": "Gruppi Account Email",
+    "Group Email Accounts": "Account Email di Gruppo",
     "Personal Email Accounts": "Account Email PersonalI",
     "Inbound Emails": "Email in Entrata",
     "Email Templates": "Modelli Email",
@@ -175,7 +175,7 @@
     "isPersonalData": "Sono dati personali",
     "useIframe": "Usa Iframe",
     "useNumericFormat": "Usa formato numerico",
-    "strip": "Striscia",
+    "strip": "Rimuovi Protocollo",
     "cutHeight": "Altezza di taglio (px)",
     "minuteStep": "Minuti Step",
     "inlineEditDisabled": "Disabilita modifica in linea",
@@ -315,5 +315,11 @@
     "templateManager": "notifiche",
     "authentication": "password,sicurezza,ldap",
     "labelManager": "lingua,traduzione"
+  },
+  "options": {
+    "labelType": {
+      "state": "Stato",
+      "regular": "Regolare"
+    }
   }
 }

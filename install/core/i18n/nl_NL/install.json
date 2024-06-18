@@ -40,7 +40,10 @@
     "extension is missing": "extensie ontbreekt",
     "headerTitle": "EspoCRM-installatie",
     "Crontab setup instructions": "Zonder het uitvoeren van geplande taken zullen inkomende e-mails, meldingen en herinneringen niet werken. Hier kunt u {SETUP_INSTRUCTIONS} lezen.",
-    "Setup instructions": "setup-instructies"
+    "Setup instructions": "setup-instructies",
+    "requiredMysqlVersion": "MySQL Versie",
+    "requiredMariadbVersion": "MariaDB versie",
+    "requiredPostgresqlVersion": "PostgreSQL versie"
   },
   "fields": {
     "Choose your language": "Kies uw taal",

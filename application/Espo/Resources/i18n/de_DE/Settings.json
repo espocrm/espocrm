@@ -91,14 +91,13 @@
     "tabColorsDisabled": "Tabfarben deaktivieren",
     "tabIconsDisabled": "Tab Icon deaktivieren",
     "textFilterUseContainsForVarchar": "Verwenden Sie den Operator 'enthält', wenn Sie Varchar-Felder filtern",
-    "emailAddressIsOptedOutByDefault": "Neue E-Mail-Adressen als Opt-Out markieren",
+    "emailAddressIsOptedOutByDefault": "Neue E-Mail-Adressen als Opted-Out markieren",
     "outboundEmailBccAddress": "BCC-Adresse für externe Clients",
     "adminNotificationsNewExtensionVersion": "Benachrichtigung anzeigen, wenn neue Versionen von Erweiterungen verfügbar sind",
     "cleanupDeletedRecords": "Gelöschte Datensätze aufräumen",
     "ldapPortalUserLdapAuth": "LDAP-Authentifizierung für Portalbenutzer verwenden",
     "ldapPortalUserPortals": "Standardportale für einen Portalbenutzer",
     "ldapPortalUserRoles": "Standardrollen für einen Portalbenutzer",
-    "addressCountryList": "Adresse Land Autovervollständigungsliste",
     "fiscalYearShift": "Beginn des Geschäftsjahres",
     "jobRunInParallel": "Jobs werden parallel ausgeführt",
     "jobMaxPortion": "Maximale Anzahl von Jobs",
@@ -160,7 +159,13 @@
     "phoneNumberInternational": "Internationale Telefonnummern",
     "phoneNumberPreferredCountryList": "Bevorzugte Ländervorwahlen",
     "jobForceUtc": "UTC-Zeitzone erzwingen",
-    "emailAddressSelectEntityTypeList": "Auswahlbereiche für E-Mail-Adressen"
+    "emailAddressSelectEntityTypeList": "Auswahlbereiche für E-Mail-Adressen",
+    "phoneNumberExtensions": "Telefonnummer mit Nebenstellen",
+    "oidcAuthorizationPrompt": "OIDC-Autorisierungsanfrage",
+    "quickSearchFullTextAppendWildcard": "Platzhalter in der Schnellsuche einfügen",
+    "authIpAddressCheck": "Zugriff nach IP-Adresse einschränken",
+    "authIpAddressWhitelist": "IP-Adressen-Whitelist",
+    "authIpAddressCheckExcludedUsers": "Von der Überprüfung ausgeschlossene Benutzer"
   },
   "tooltips": {
     "recordsPerPage": "Anzahl Sätze In Listenansichten (Standard) ",
@@ -198,7 +203,6 @@
     "textFilterUseContainsForVarchar": "Wenn nicht aktiviert, wird der Operator \"beginnt mit\" verwendet. Sie können den Platzhalter '%' verwenden.",
     "streamEmailNotificationsEntityList": "E-Mail-Benachrichtigungen über neuen Ereignisse von gefolgten Datensätzen. Benutzer erhalten E-Mail-Benachrichtigungen nur für bestimmte Entitätstypen.",
     "authTokenPreventConcurrent": "Benutzer können nicht gleichzeitig auf mehreren Geräten angemeldet sein.",
-    "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opt-Out  markiert.",
     "cleanupDeletedRecords": "Gelöschte Datensätze werden nach einiger Zeit aus der Datenbank gelöscht.",
     "ldapPortalUserLdapAuth": "Zulassen, dass Portalbenutzer die LDAP-Authentifizierung anstelle der Espo-Authentifizierung verwenden.",
     "ldapPortalUserPortals": "Standardportale für erstellte Portalbenutzer",
@@ -235,7 +239,6 @@
     "busyRangesEntityList": "Was wird bei der Anzeige belegter Zeitbereiche in Scheduler & Timeline berücksichtigt.",
     "recordsPerPageSelect": "Anzahl der Datensätze, die initial bei der Auswahl von Datensätzen angezeigt werden.",
     "workingTimeCalendar": "Ein Arbeitszeitkalender, der standardmäßig auf alle Benutzer angewendet wird.",
-    "oidcGroupClaim": "Ein Claim an den Benutzer für Team-Zuordnung.",
     "oidcFallback": "Anmeldung mit Benutzernamen/Passwort erlauben.",
     "oidcCreateUser": "Erstellen Sie einen neuen Benutzer in Espo, wenn kein passender Benutzer gefunden wurde.",
     "oidcSync": "Benutzerdaten synchronisieren (bei jeder Anmeldung).",
@@ -245,7 +248,12 @@
     "oidcLogoutUrl": "Eine URL, an die der Browser nach der Abmeldung von Espo weitergeleitet wird. Sie dient dazu, die Sitzungsinformationen im Browser zu löschen und die Abmeldung auf der Anbieterseite durchzuführen. Normalerweise enthält die URL einen redirect-URL Parameter, um zu Espo zurückzukehren.\n\nVerfügbare Platzhalter:\n* `{siteUrl}`\n* `{clientId}`",
     "recordsPerPageKanban": "Anzahl der Datensätze, die initial in den Kanban-Spalten angezeigt werden.",
     "jobForceUtc": "Verwenden Sie die UTC-Zeitzone für geplante Jobs. Andernfalls wird die in den Einstellungen festgelegte Zeitzone verwendet.",
-    "emailAddressSelectEntityTypeList": "Entitätstypen, die bei der Suche nach einer E-Mail-Adresse in einem Modal verfügbar sind."
+    "emailAddressSelectEntityTypeList": "Entitätstypen, die bei der Suche nach einer E-Mail-Adresse in einem Modal verfügbar sind.",
+    "authIpAddressCheckExcludedUsers": "Benutzer, die sich unabhängig davon anmelden können, ob ihre IP-Adresse auf der Whitelist steht.",
+    "authIpAddressWhitelist": "Eine Liste von IP-Adressen oder Bereichen in CIDR-Notation.\n\nPortale sind von der Einschränkung nicht betroffen.",
+    "emailAddressIsOptedOutByDefault": "Beim Erstellen eines neuen Datensatzes wird die E-Mail-Adresse als Opted-Out markiert.",
+    "oidcGroupClaim": "Ein Claim, der für die Teamzuordnung genutzt wird.",
+    "quickSearchFullTextAppendWildcard": "Fügen Sie einen Platzhalter an eine Autovervollständigung-Suchanfrage an, wenn die Volltextsuche aktiviert ist. Verringert die Suchleistung."
   },
   "labels": {
     "Locale": "Lokale Einstellungen",
@@ -269,7 +277,10 @@
     "Divider": "Trenner",
     "General": "Allgemein",
     "Navbar": "Navigationsleiste",
-    "Phone Numbers": "Telefonnummern"
+    "Phone Numbers": "Telefonnummern",
+    "Access": "Zugriff",
+    "Strength": "Stärke",
+    "Recovery": "Wiederherstellung"
   },
   "messages": {
     "ldapTestConnection": "Die Verbindung wurde erfolgreich hergestellt."

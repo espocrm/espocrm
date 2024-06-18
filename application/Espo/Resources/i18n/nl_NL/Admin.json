@@ -202,7 +202,9 @@
     "readOnlyAfterCreate": "Alleen lezen na aanmaken",
     "createButton": "Knop aanmaken",
     "autocompleteOnEmpty": "Autoaanvullen bij lege invoer",
-    "relateOnImport": "Relateer op import"
+    "relateOnImport": "Relateer op import",
+    "aclScope": "ACL Toepassing",
+    "onlyAdmin": "Alleen voor Admin"
   },
   "messages": {
     "selectEntityType": "Selecteer de eenheid soort in het linker menu.",

@@ -1,7 +1,6 @@
 {
   "labels": {
-    "Create WorkingTimeCalendar": "Crea Calendario",
-    "Ranges": "Intervalli"
+    "Create WorkingTimeCalendar": "Crea Calendario"
   },
   "fields": {
     "timeZone": "Fuso Orario",
@@ -20,8 +19,5 @@
     "weekday4TimeRanges": "Orario Gio",
     "weekday5TimeRanges": "Orario Ven",
     "weekday6TimeRanges": "Orario Sab"
-  },
-  "links": {
-    "ranges": "Intervalli"
   }
 }

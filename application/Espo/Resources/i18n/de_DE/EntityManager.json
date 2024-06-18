@@ -41,7 +41,8 @@
     "author": "Autor",
     "module": "Modul",
     "selectFilter": "Filter auswählen",
-    "primaryFilters": "Primäre Filter"
+    "primaryFilters": "Primäre Filter",
+    "stars": "Sterne"
   },
   "options": {
     "type": {
@@ -95,6 +96,7 @@
     "optimisticConcurrencyControl": "Verhindert Schreibkonflikte.",
     "duplicateCheckFieldList": "Welche Felder bei der Überprüfung auf Duplikate zu prüfen sind.",
     "updateDuplicateCheck": "Prüfung auf Duplikate beim Aktualisieren eines Datensatzes.",
-    "linkSelectFilter": "Ein primärer Filter, der standardmäßig bei der Auswahl eines Datensatzes angewendet wird."
+    "linkSelectFilter": "Ein primärer Filter, der standardmäßig bei der Auswahl eines Datensatzes angewendet wird.",
+    "stars": "Die Möglichkeit, Datensätze mit Sternen zu versehen. Sterne können von Benutzern als Lesezeichen für Datensätze verwendet werden."
   }
 }

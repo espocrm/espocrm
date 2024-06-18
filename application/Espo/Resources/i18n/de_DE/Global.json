@@ -46,11 +46,13 @@
     "Note": "Notiz",
     "ImportError": "Fehler beim Importieren",
     "WorkingTimeCalendar": "Arbeitszeitkalender",
-    "WorkingTimeRange": "Arbeitszeitzeitraum",
     "GroupEmailFolder": "E-Mail Gruppenordner",
     "AuthenticationProvider": "Authentifizierungsanbieter",
     "GlobalStream": "Globales Ereignis",
-    "WebhookQueueItem": "Webhook-Warteschlangeelement"
+    "WebhookQueueItem": "Webhook-Warteschlangeelement",
+    "AppLogRecord": "App Log Datensatz",
+    "WorkingTimeRange": "Arbeitszeitausnahme",
+    "AddressCountry": "Adresse Land"
   },
   "scopeNamesPlural": {
     "Email": "E-Mails",
@@ -92,11 +94,12 @@
     "Note": "Notiz",
     "ImportError": "Fehler beim Importieren",
     "WorkingTimeCalendar": "Arbeitszeitkalender",
-    "WorkingTimeRange": "Arbeitszeitzeiträume",
     "GroupEmailFolder": "E-Mail Gruppenordner",
     "AuthenticationProvider": "Authentifizierungsanbieter",
     "GlobalStream": "Globale Ereignisse",
-    "WebhookQueueItem": "Webhook-Warteschlangenelemente"
+    "WebhookQueueItem": "Webhook-Warteschlangenelemente",
+    "WorkingTimeRange": "Arbeitszeitausnahmen",
+    "AddressCountry": "Adresse Länder"
   },
   "labels": {
     "Misc": "Verschiedenes",
@@ -235,8 +238,8 @@
     "Manage Categories": "Kategorien verwalten",
     "Manage Folders": "Ordner verwalten",
     "Convert to": "Umgewandelt zu",
-    "View Personal Data": "Persönliche Daten anzeigen",
-    "Personal Data": "Persönliche Daten",
+    "View Personal Data": "Personenbezogene Daten anzeigen",
+    "Personal Data": "Personenbezogene Daten",
     "Erase": "Löschen",
     "Move Over": "Verschiebe nach",
     "Restore": "Wiederherstellen",
@@ -269,7 +272,10 @@
     "Next Page": "Nächste Seite",
     "First Page": "Erste Seite",
     "Last Page": "Letzte Seite",
-    "Page": "Seite"
+    "Page": "Seite",
+    "Star": "Stern setzen",
+    "Unstar": "Stern entfernen",
+    "Starred": "Mit Stern markiert"
   },
   "messages": {
     "pleaseWait": "Bitte warten...",
@@ -372,7 +378,13 @@
     "noLinkAccess": "Kann nicht mit dem Datensatz {foreignEntityType} über den Link '{link}' verknüpft werden. Kein Zugriff.",
     "attemptIntervalFailure": "Der Vorgang ist während eines bestimmten Zeitintervalls nicht erlaubt. Warten Sie vor dem nächsten Versuch einige Zeit.",
     "confirmRestoreFromAudit": "Die vorherigen Werte werden in ein Formular eingetragen. Dann können Sie den Datensatz speichern, um die vorherigen Werte wiederherzustellen.",
-    "pageNumberIsOutOfBound": "Die Seitenzahl liegt außerhalb des Bereichs"
+    "pageNumberIsOutOfBound": "Die Seitenzahl liegt außerhalb des Bereichs",
+    "fieldPhoneExtensionTooLong": "Die Durchwahl sollte nicht länger sein als {maxLength}",
+    "cannotLinkAlreadyLinked": "Ein bereits verknüpfter Datensatz kann nicht verknüpft werden.",
+    "starsLimitExceeded": "Die Anzahl der Sterne hat das Limit überschritten.",
+    "select2OrMoreRecords": "Wählen Sie 2 oder mehr Datensätze",
+    "selectNotMoreThanNumberRecords": "Wählen Sie nicht mehr als {number} Datensätze aus",
+    "selectAtLeastOneRecord": "Wählen Sie mindestens einen Datensatz aus"
   },
   "boolFilters": {
     "onlyMy": "Nur meine",
@@ -381,7 +393,8 @@
   },
   "presetFilters": {
     "followed": "Abonniert",
-    "all": "Alle"
+    "all": "Alle",
+    "starred": "Mit Stern markiert"
   },
   "massActions": {
     "remove": "Löschen",
@@ -423,10 +436,10 @@
     "emailAddressData": "E-Mail-Adressdaten",
     "phoneNumberData": "Telefonnummer Daten",
     "names": "Namen",
-    "emailAddressIsOptedOut": "E-Mail-Adresse ist Opt-Out gesetzt",
+    "emailAddressIsOptedOut": "E-Mail-Adresse ist Opted-Out gesetzt",
     "targetListIsOptedOut": "Ist Opt-Out gesetzt (Kontaktliste)",
     "type": "Typ",
-    "phoneNumberIsOptedOut": "Telefonnummer ist Opt-Out gesetzt",
+    "phoneNumberIsOptedOut": "Telefonnummer ist Opted-Out gesetzt",
     "types": "Typen",
     "middleName": "Zweiter Vorname",
     "emailAddressIsInvalid": "E-Mail-Adresse ist ungültig",
@@ -789,10 +802,10 @@
     "emailAddress": "Gültige E-Mail-Adresse",
     "phoneNumber": "Gültige Telefonnummer",
     "arrayOfString": "Array von Zeichenketten",
-    "valid": "Gültig",
     "noEmptyString": "Keine leere Zeichenkette",
     "max": "Maximal Wert",
-    "min": "Minimal Wert"
+    "min": "Minimal Wert",
+    "valid": "Gültigkeit"
   },
   "fieldValidationExplanations": {
     "url_valid": "Ungültige URL.",
@@ -807,9 +820,35 @@
     "enum_valid": "Ungültiger Auswahlwert. Der Wert muss eine der definierten Auswahloptionen sein. Ein leerer Wert ist nur zulässig, wenn das Feld eine leere Option hat.",
     "multiEnum_valid": "Ungültiger Mehrfachauswahlwert. Werte müssen einer der definierten Feldoptionen entsprechen.",
     "int_valid": "Ungültiger ganzzahliger Zahlenwert.",
-    "float_valid": "Ungültiger Zahlenwert."
+    "float_valid": "Ungültiger Zahlenwert.",
+    "valid": "Ungültiger Wert.",
+    "maxLength": "Die Länge des Wertes überschreitet den Maximalwert.",
+    "phone_valid": "Die Telefonnummer ist ungültig. Dies kann durch eine falsche oder leere Landesvorwahl verursacht werden."
   },
   "navbarTabs": {
     "Activities": "Aktivitäten"
+  },
+  "wysiwygLabels": {
+    "cell": "Zelle",
+    "align": "Ausrichtung",
+    "width": "Breite",
+    "height": "Höhe",
+    "borderWidth": "Randbreite",
+    "borderColor": "Randfarbe",
+    "cellPadding": "Zelleninnenabstand",
+    "backgroundColor": "Hintergrundfarbe",
+    "verticalAlign": "Vertikale Ausrichtung"
+  },
+  "wysiwygOptions": {
+    "align": {
+      "left": "Links",
+      "center": "Zentriert",
+      "right": "Rechts"
+    },
+    "verticalAlign": {
+      "top": "Oben",
+      "middle": "Mitte",
+      "bottom": "Unten"
+    }
   }
 }

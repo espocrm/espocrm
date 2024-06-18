@@ -9,7 +9,7 @@
     "ScheduledJob": "Lavoro programmato",
     "ExternalAccount": "Account Esterno",
     "Extension": "Estensione",
-    "InboundEmail": "Gruppo Account Email",
+    "InboundEmail": "Account Email di Gruppo",
     "Stream": "Flusso Attività",
     "Import": "Importa",
     "Template": "Modello",
@@ -52,7 +52,6 @@
     "Note": "Nota",
     "ImportError": "Errore di importazione",
     "WorkingTimeCalendar": "Calendario Lavorativo",
-    "WorkingTimeRange": "Intervallo di Lavoro",
     "GroupEmailFolder": "Cartella Email di Gruppo",
     "AuthenticationProvider": "Provider di Autenticazione",
     "GlobalStream": "Flusso Attività Globale",
@@ -64,13 +63,13 @@
     "Team": "Team",
     "Role": "Ruoli",
     "EmailTemplate": "Modelli Email",
-    "EmailAccount": "Account Email Personale",
-    "EmailAccountScope": "Account Email Personale",
+    "EmailAccount": "Account Email Personali",
+    "EmailAccountScope": "Account Email Personali",
     "OutboundEmail": "Email in Uscita",
     "ScheduledJob": "Lavori Pianificati",
     "ExternalAccount": "Account Esterni",
     "Extension": "Estensioni",
-    "InboundEmail": "Gruppi Account Email",
+    "InboundEmail": "Account Email di Gruppo",
     "Stream": "Flusso Attività",
     "Template": "Modelli",
     "Job": "Lavori",
@@ -102,7 +101,6 @@
     "Note": "Note",
     "ImportError": "Errori di importazione",
     "WorkingTimeCalendar": "Calendari Lavorativi",
-    "WorkingTimeRange": "Intervalli di Lavoro",
     "GroupEmailFolder": "Cartelle Email di Gruppo",
     "AuthenticationProvider": "Provider di Autenticazione",
     "GlobalStream": "Flusso Attività Globale",
@@ -793,10 +791,10 @@
     "emailAddress": "Indirizzo Email Valido",
     "phoneNumber": "Numero di Telefono Valido",
     "arrayOfString": "Array di Stringhe",
-    "valid": "Valido",
     "noEmptyString": "Nessuna Stringa Vuota",
     "max": "Valore Max",
-    "min": "Valore Min"
+    "min": "Valore Min",
+    "valid": "Validità"
   },
   "fieldValidationExplanations": {
     "url_valid": "Valore URL non valido.",
@@ -811,10 +809,32 @@
     "enum_valid": "Valore enum non valido. Il valore deve essere una delle opzioni enum definite. Un valore vuoto è consentito solo se il campo ha un'opzione vuota.",
     "multiEnum_valid": "Valore multi-enum non valido. I valori devono rientrare tra le opzioni di campo stabilite.",
     "int_valid": "Valore numerico intero non valido.",
-    "float_valid": "Valore numerico non valido."
+    "float_valid": "Valore numerico non valido.",
+    "valid": "Valore non valido."
   },
   "navbarTabs": {
     "Support": "Supporto",
     "Activities": "Attività"
+  },
+  "wysiwygLabels": {
+    "align": "Allinea",
+    "width": "Larghezza",
+    "height": "Altezza",
+    "borderWidth": "Larghezza Bordo",
+    "borderColor": "Colore Bordo",
+    "backgroundColor": "Colore Sfondo",
+    "verticalAlign": "Allineamento Verticale"
+  },
+  "wysiwygOptions": {
+    "align": {
+      "left": "Sinistra",
+      "center": "Centro",
+      "right": "Destra"
+    },
+    "verticalAlign": {
+      "top": "Superiore",
+      "middle": "Medio",
+      "bottom": "Inferiore"
+    }
   }
 }

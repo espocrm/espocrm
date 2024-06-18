@@ -10,7 +10,8 @@
     "excludingActionList": "Exclusief",
     "optedOutCount": "Afgemeld aantal",
     "targetStatus": "Doel status",
-    "isOptedOut": "Is afgemeld"
+    "isOptedOut": "Is afgemeld",
+    "sourceCampaign": "Bron Campagne"
   },
   "links": {
     "accounts": "Relaties",

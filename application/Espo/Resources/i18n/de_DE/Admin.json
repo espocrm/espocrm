@@ -75,7 +75,8 @@
     "Working Time Calendars": "Arbeitszeitkalender",
     "Group Email Folders": "E-Mail Gruppenordner",
     "Authentication Providers": "Authentifizierungsanbieter",
-    "Setup": "Einrichtung"
+    "Setup": "Einrichtung",
+    "Address Countries": "Adresse Länder"
   },
   "layouts": {
     "list": "Liste",
@@ -175,7 +176,7 @@
     "readOnly": "Schreibgeschützt",
     "noEmptyString": "Keine leere Zeichenkette",
     "maxFileSize": "Max. Dateigröße (Mb)",
-    "isPersonalData": "Ist Persönliche Daten",
+    "isPersonalData": "Enthält personenbezogene Daten",
     "useIframe": "Iframe verwenden",
     "useNumericFormat": "Verwenden Sie das numerische Format",
     "cutHeight": "Höhe abkürzen",
@@ -206,7 +207,9 @@
     "autocompleteOnEmpty": "Autovervollständigung bei leerer Eingabe",
     "relateOnImport": "Beim Import verknüpfen",
     "aclScope": "ACL Geltungsbereich",
-    "onlyAdmin": "Nur für Administrator"
+    "onlyAdmin": "Nur für Administrator",
+    "activeOptions": "Aktive Optionen",
+    "labelType": "Bezeichnungstyp"
   },
   "messages": {
     "selectEntityType": "Entitätstyp im linken Menü auswählen.",
@@ -228,7 +231,9 @@
     "upgradeRecommendation": "Diese Art der Aktualisierung wird nicht empfohlen. Es ist besser, ein Upgrade per CLI durchzuführen.",
     "newVersionIsAvailable": "Es ist eine neue EspoCRM-Version {latestVersion} verfügbar. Bitte folgen Sie den [Instruktionen](https://www.espocrm.com/documentation/administration/upgrading/), um Ihre Instanz zu aktualisieren.",
     "formulaFunctions": "Weitere Funktionen finden Sie in [documentation]({documentationUrl}).",
-    "rebuildRequired": "Sie müssen Rebuild aus CLI ausführen."
+    "rebuildRequired": "Sie müssen Rebuild aus CLI ausführen.",
+    "cacheIsDisabled": "Wenn der Cache deaktiviert ist, wird die Anwendung langsam laufen. Aktivieren Sie den Cache in den [settings](#Admin/settings).",
+    "cronIsDisabled": "Cron ist deaktiviert, die Anwendung ist nicht voll funktionsfähig. Aktivieren Sie Cron in den [settings](#Admin/settings)."
   },
   "descriptions": {
     "settings": "Systemeinstellungen der Applikation.",
@@ -278,7 +283,9 @@
     "formulaSandbox": "Schreibe und teste Formula Skripte",
     "workingTimeCalendars": "Arbeitszeitpläne",
     "groupEmailFolders": "E-Mail Ordner, die mit Teams geteilt sind.",
-    "authenticationProviders": "Zusätzliche Authentifizierungsanbieter für Portale."
+    "authenticationProviders": "Zusätzliche Authentifizierungsanbieter für Portale.",
+    "appLog": "Anwendungsprotokoll.",
+    "addressCountries": "Verfügbare Länder für Adressfelder."
   },
   "options": {
     "previewSize": {
@@ -287,6 +294,10 @@
       "medium": "Mittel",
       "large": "Groß",
       "": "Standardmäßig"
+    },
+    "labelType": {
+      "state": "Zustand",
+      "regular": "Normalerweise"
     }
   },
   "systemRequirements": {
