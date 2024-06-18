@@ -404,6 +404,9 @@
             "defaultAttributes": {
                 "avatarId": null
             },
+            "additionalAttributeList": [
+                "avatarColor"
+            ],
             "layoutAvailabilityList": []
         },
         "avatarColor": {
