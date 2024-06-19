@@ -82,15 +82,19 @@ class EmailSentNoteStreamView extends NoteStreamView {
 
         this.messageData['email'] =
             $('<a>')
-                .attr('href', '#Email/view/' + data.emailId)
-                .text(data.emailName);
+                .attr('href', `#Email/view/${data.emailId}`)
+                .text(data.emailName)
+                .attr('data-scope', 'Email')
+                .attr('data-id', data.emailId);
 
         this.messageName = 'emailSent';
 
         this.messageData['by'] =
             $('<a>')
-                .attr('href', '#' + data.personEntityType + '/view/' + data.personEntityId)
-                .text(data.personEntityName);
+                .attr('href', `#${data.personEntityType}/view/${data.personEntityId}`)
+                .text(data.personEntityName)
+                .attr('data-scope', data.personEntityType)
+                .attr('data-id', data.personEntityId);
 
         if (this.isThis) {
             this.messageName += 'This';

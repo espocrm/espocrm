@@ -60,8 +60,10 @@ class CreateRelatedNoteStreamView extends NoteStreamView {
 
         this.messageData['relatedEntity'] =
             $('<a>')
-                .attr('href', '#' + this.entityType + '/view/' + this.entityId)
-                .text(this.entityName);
+                .attr('href', `#${this.entityType}/view/${this.entityId}`)
+                .text(this.entityName)
+                .attr('data-scope', this.entityType)
+                .attr('data-id', this.entityId);
 
         this.createMessage();
     }
