@@ -2962,8 +2962,26 @@ class DetailRecordView extends BaseRecordView {
             }
         }
 
-        if (this.isRendered()) {
-            this.$el.find('.detail-button-container .action[data-action="'+name+'"]').remove();
+        if (!this.isRendered()) {
+            return;
+        }
+
+        const $container = this.$el.find('.detail-button-container');
+
+        const $action = $container.find(`ul > li > a.action[data-action="${name}"]`);
+
+        if ($action.length) {
+            $action.parent().remove();
+
+            $container.find(`ul > .divider:last-child`).remove();
+
+            return;
+        }
+
+        const $button = $container.find(`button.action[data-action="${name}"]`);
+
+        if ($button.length) {
+            $button.remove();
         }
     }
 
