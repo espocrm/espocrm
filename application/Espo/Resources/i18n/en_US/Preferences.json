@@ -53,7 +53,7 @@
         "Reset Dashboard to Default": "Reset Dashboard to Default"
     },
     "tooltips": {
-        "addCustomTabs": "If checked, custom tabs will be appended to standard tabs. Otherwise, custom tabs will be used instead of standard tabs.",
+        "addCustomTabs": "If checked, custom tabs will be appended to default tabs. Otherwise, custom tabs will be used instead of default tabs.",
         "autoFollowEntityTypeList": "Automatically follow ALL new records (created by any user) of the selected entity types. To be able to see information in the stream and receive notifications about all records in the system.",
         "doNotFillAssignedUserIfNotRequired": "When create record assigned user won't be filled with own user unless the field is required.",
         "followCreatedEntities": "When create new records, they will be automatically followed even if assigned to another user.",

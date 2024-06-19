@@ -70,6 +70,10 @@ class UrlFieldView extends VarcharFieldView {
     detailTemplate = 'fields/url/detail'
     defaultProtocol = 'https:'
 
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'required',
         'valid',

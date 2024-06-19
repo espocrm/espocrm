@@ -74,6 +74,10 @@ class LinkMultipleFieldView extends BaseFieldView {
     editTemplate = 'fields/link-multiple/edit'
     searchTemplate = 'fields/link-multiple/search'
 
+    /**
+     * @inheritDoc
+     * @type {Array<(function (): boolean)|string>}
+     */
     validations = [
         'required',
         'maxCount',

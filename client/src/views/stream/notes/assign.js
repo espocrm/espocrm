@@ -56,8 +56,10 @@ class AssignNoteStreamView extends NoteStreamView {
 
         this.messageData['assignee'] =
             $('<a>')
-                .attr('href', '#User/view/' + data.assignedUserId)
-                .text(this.assignedUserName);
+                .attr('href', `#User/view/${data.assignedUserId}`)
+                .text(this.assignedUserName)
+                .attr('data-scope', 'User')
+                .attr('data-id', data.assignedUserId);
 
         if (this.isUserStream) {
             if (this.assignedUserId) {
