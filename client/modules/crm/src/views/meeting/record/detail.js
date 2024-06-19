@@ -46,6 +46,15 @@ class MeetingDetailRecordView extends DetailRecordView {
             return;
         }
 
+        const historyStatusList = this.getMetadata().get(`scopes.${this.entityType}.historyStatusList`) || [];
+
+        if (
+            !historyStatusList.includes('Held') ||
+            !historyStatusList.includes('Not Held')
+        ) {
+            return;
+        }
+
         this.dropdownItemList.push({
             'label': 'Set Held',
             'name': 'setHeld',
