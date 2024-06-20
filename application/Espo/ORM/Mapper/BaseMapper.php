@@ -43,6 +43,7 @@ use Espo\ORM\CollectionFactory;
 use Espo\ORM\Metadata;
 use Espo\ORM\Query\Select;
 
+use Espo\ORM\Type\AttributeType;
 use PDO;
 use stdClass;
 use LogicException;
@@ -837,19 +838,22 @@ class BaseMapper implements RDBMapper
                 $key = $relationName . 'Id';
                 $foreignRelationName = $this->getRelationParam($entity, $relationName, 'foreign');
 
-                // @todo Check 'deleted' attribute exists. Apply for all usages further.
-
                 if (
                     $foreignRelationName &&
                     $this->getRelationParam($relEntity, $foreignRelationName, 'type') === Entity::HAS_ONE
                 ) {
+                    $where = [
+                        self::ATTR_ID . '!=' => $entity->getId(),
+                        $key => $id,
+                    ];
+
+                    if (self::hasDeletedAttribute($entity)) {
+                        $where[self::ATTR_DELETED] = false;
+                    }
+
                     $query0 = UpdateBuilder::create()
                         ->in($entityType)
-                        ->where([
-                            self::ATTR_ID . '!=' => $entity->getId(),
-                            $key => $id,
-                            self::ATTR_DELETED => false,
-                        ])
+                        ->where($where)
                         ->set([$key => null])
                         ->build();
 
@@ -859,12 +863,15 @@ class BaseMapper implements RDBMapper
                 $entity->set($key, $relEntity->getId());
                 $entity->setFetched($key, $relEntity->getId());
 
+                $where = [self::ATTR_ID => $entity->getId()];
+
+                if (self::hasDeletedAttribute($entity)) {
+                    $where[self::ATTR_DELETED] = false;
+                }
+
                 $query = UpdateBuilder::create()
                     ->in($entityType)
-                    ->where([
-                        self::ATTR_ID => $entity->getId(),
-                        self::ATTR_DELETED => false,
-                    ])
+                    ->where($where)
                     ->set([$key => $relEntity->getId()])
                     ->build();
 
@@ -881,12 +888,15 @@ class BaseMapper implements RDBMapper
                 $entity->setFetched($key, $relEntity->getId());
                 $entity->setFetched($typeKey, $relEntity->getEntityType());
 
+                $where = [self::ATTR_ID => $entity->getId()];
+
+                if (self::hasDeletedAttribute($entity)) {
+                    $where[self::ATTR_DELETED] = false;
+                }
+
                 $query = UpdateBuilder::create()
                     ->in($entityType)
-                    ->where([
-                        self::ATTR_ID => $entity->getId(),
-                        self::ATTR_DELETED => false,
-                    ])
+                    ->where($where)
                     ->set([
                         $key => $relEntity->getId(),
                         $typeKey => $relEntity->getEntityType(),
@@ -909,21 +919,23 @@ class BaseMapper implements RDBMapper
                     return false;
                 }
 
+                $where1 = [$foreignKey => $entity->getId()];
+                $where2 = [self::ATTR_ID => $id];
+
+                if (self::hasDeletedAttribute($relEntity)) {
+                    $where1[self::ATTR_DELETED] = false;
+                    $where2[self::ATTR_DELETED] = false;
+                }
+
                 $query1 = UpdateBuilder::create()
                     ->in($relEntity->getEntityType())
-                    ->where([
-                        $foreignKey => $entity->getId(),
-                        self::ATTR_DELETED => false,
-                    ])
+                    ->where($where1)
                     ->set([$foreignKey => null])
                     ->build();
 
                 $query2 = UpdateBuilder::create()
                     ->in($relEntity->getEntityType())
-                    ->where([
-                        self::ATTR_ID => $id,
-                        self::ATTR_DELETED => false,
-                    ])
+                    ->where($where2)
                     ->set([$foreignKey => $entity->getId()])
                     ->build();
 
@@ -957,12 +969,15 @@ class BaseMapper implements RDBMapper
                     $set[$foreignType] = $entity->getEntityType();
                 }
 
+                $where = [self::ATTR_ID => $id];
+
+                if (self::hasDeletedAttribute($relEntity)) {
+                    $where[self::ATTR_DELETED] = false;
+                }
+
                 $query = UpdateBuilder::create()
                     ->in($relEntity->getEntityType())
-                    ->where([
-                        self::ATTR_ID => $id,
-                        self::ATTR_DELETED => false,
-                    ])
+                    ->where($where)
                     ->set($set)
                     ->build();
 
@@ -1143,7 +1158,9 @@ class BaseMapper implements RDBMapper
                     $entity->setFetched($typeKey, null);
                 }
 
-                $where[self::ATTR_DELETED] = false;
+                if (self::hasDeletedAttribute($entity)) {
+                    $where[self::ATTR_DELETED] = false;
+                }
 
                 $query = UpdateBuilder::create()
                     ->in($entityType)
@@ -1183,9 +1200,11 @@ class BaseMapper implements RDBMapper
                     $update[$foreignType] = null;
                 }
 
-                $where[self::ATTR_DELETED] = false;
-
                 /** @var Entity $relEntity */
+
+                if (self::hasDeletedAttribute($relEntity)) {
+                    $where[self::ATTR_DELETED] = false;
+                }
 
                 $query = UpdateBuilder::create()
                     ->in($relEntity->getEntityType())
@@ -1429,7 +1448,7 @@ class BaseMapper implements RDBMapper
 
         $where = [self::ATTR_ID => $entity->getId()];
 
-        if ($entity->hasAttribute(self::ATTR_DELETED)) {
+        if (self::hasDeletedAttribute($entity)) {
             $where[self::ATTR_DELETED] = false;
         }
 
@@ -1505,7 +1524,7 @@ class BaseMapper implements RDBMapper
      */
     public function delete(Entity $entity): void
     {
-        if (!$entity->hasAttribute(self::ATTR_DELETED)) {
+        if (!self::hasDeletedAttribute($entity)) {
             $this->deleteFromDb($entity->getEntityType(), $entity->getId());
 
             return;
@@ -1617,14 +1636,10 @@ class BaseMapper implements RDBMapper
 
         $alias = lcfirst($middleName);
 
-        $join = [
-            ucfirst($middleName),
-            $alias,
-            [
-                "$distantKey:" => $foreignKey,
-                $nearKey => $entity->get($key),
-                self::ATTR_DELETED => false,
-            ],
+        $where = [
+            "$distantKey:" => $foreignKey,
+            $nearKey => $entity->get($key),
+            self::ATTR_DELETED => false, // @todo Check 'deleted' exists.
         ];
 
         $conditions = $conditions ?? [];
@@ -1635,9 +1650,9 @@ class BaseMapper implements RDBMapper
             $conditions = array_merge($conditions, $relationConditions);
         }
 
-        $join[2] = array_merge($join[2], $conditions);
+        $where = array_merge($where, $conditions);
 
-        return $join;
+        return [ucfirst($middleName), $alias, $where];
     }
 
     /**
@@ -1705,5 +1720,11 @@ class BaseMapper implements RDBMapper
         }
 
         return $entityDefs->getRelation($relation)->getParam($param);
+    }
+
+    private static function hasDeletedAttribute(Entity $entity): bool
+    {
+        return $entity->hasAttribute(self::ATTR_DELETED) &&
+            $entity->getAttributeType(self::ATTR_DELETED) === AttributeType::BOOL;
     }
 }
