@@ -54,11 +54,11 @@ class HistoryPanelView extends ActivitiesPanelView {
                         soft: true
                     },
                     {
-                        name: 'hasAttachment',
-                        view: 'views/email/fields/has-attachment'
+                        name: 'status',
                     },
                     {
-                        name: 'status',
+                        name: 'hasAttachment',
+                        view: 'views/email/fields/has-attachment'
                     },
                 ],
             ]
