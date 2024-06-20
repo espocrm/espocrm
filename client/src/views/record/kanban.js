@@ -1114,13 +1114,13 @@ class KanbanRecordView extends ListRecordView {
 
             this.listenToOnce(view, 'after:save', () => {
                 if (this.orderDisabled) {
-                    this.collection.fetch();
+                    this.collection.fetch({maxSize: this.collection.maxSize});
 
                     return;
                 }
 
                 this.storeGroupOrder(group, view.model.id)
-                    .then(() => this.collection.fetch());
+                    .then(() => this.collection.fetch({maxSize: this.collection.maxSize}));
             });
         });
     }
