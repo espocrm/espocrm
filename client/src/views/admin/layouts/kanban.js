@@ -37,6 +37,7 @@ class LayoutKanbanView extends LayoutListView {
         'view',
         'isLarge',
         'isMuted',
+        'hidden',
     ]
 
     dataAttributesDefs = {
@@ -55,6 +56,9 @@ class LayoutKanbanView extends LayoutListView {
         name: {
             type: 'varchar',
             readOnly: true,
+        },
+        hidden: {
+            type: 'bool',
         },
     }
 

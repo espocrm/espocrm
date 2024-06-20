@@ -51,7 +51,6 @@ class KanbanRecordView extends ListRecordView {
     showMore = true
     quickDetailDisabled = false
     quickEditDisabled = false
-    listLayout = null
     _internalLayout = null
     buttonsDisabled = false
     backDragStarted = true
@@ -174,11 +173,15 @@ class KanbanRecordView extends ListRecordView {
 
     // noinspection JSCheckFunctionSignatures
     data() {
+        const topBar = this.displayTotalCount ||
+            this.buttonList.length && !this.buttonsDisabled ||
+            !!this._listSettingsHelper;
+
         // noinspection JSValidateTypes
         return {
             scope: this.scope,
             header: this.header,
-            topBar: this.displayTotalCount || this.buttonList.length && !this.buttonsDisabled,
+            topBar: topBar,
             showCount: this.showCount && this.collection.total > 0,
             buttonList: this.buttonList,
             displayTotalCount: this.displayTotalCount && this.collection.total >= 0,
@@ -193,6 +196,7 @@ class KanbanRecordView extends ListRecordView {
     }
 
     init() {
+        /** @type {module:views/record/list~columnDefs[]|null} */
         this.listLayout = this.options.listLayout || this.listLayout;
         this.type = this.options.type || this.type;
 
@@ -286,6 +290,7 @@ class KanbanRecordView extends ListRecordView {
         this.seedCollection.order = this.collection.defaultOrder;
 
         this.setupRowActionDefs();
+        this.setupSettings();
 
         this.listenTo(this.collection, 'sync', () => {
             if (this.hasView('modal') && this.getView('modal').isRendered()) {
@@ -833,10 +838,31 @@ class KanbanRecordView extends ListRecordView {
     buildRow(i, model, callback) {
         const key = model.id;
 
+        const hiddenMap = this._listSettingsHelper ?
+            this._listSettingsHelper.getHiddenColumnMap() : {};
+
+        const itemLayout = this.listLayout.filter(item => {
+            const name = item.name;
+
+            if (!name) {
+                return true;
+            }
+
+            if (hiddenMap[name]) {
+                return false;
+            }
+
+            if (item.hidden && !(name in hiddenMap)) {
+                return false;
+            }
+
+            return true;
+        });
+
         this.createView(key, this.itemViewName, {
             model: model,
-            selector: '.item[data-id="'+model.id+'"]',
-            itemLayout: this.listLayout,
+            selector: `.item[data-id="${model.id}"]`,
+            itemLayout:  itemLayout,
             rowActionsDisabled: this.rowActionsDisabled,
             rowActionsView: this.rowActionsView,
             rowActionHandlers: this._rowActionHandlers || {},
@@ -1232,6 +1258,14 @@ class KanbanRecordView extends ListRecordView {
         if (!isLeft && !isRight) {
             this.sortWasCentered = true;
         }
+    }
+
+    /** @protected */
+    afterSettingsChange() {
+        Espo.Ui.notify(' ... ');
+
+        this.collection.fetch({maxSize: this.collection.maxSize})
+            .then(() => Espo.Ui.notify(false));
     }
 }
 

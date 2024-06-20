@@ -3438,7 +3438,7 @@ class ListRecordView extends View {
         handler.process(model, action);
     }
 
-    /** @private */
+    /** @protected */
     setupSettings() {
         if (!this.options.settingsEnabled || !this.collection.entityType || !this.layoutName) {
             return;
@@ -3472,14 +3472,19 @@ class ListRecordView extends View {
             onChange: () => {
                 this._internalLayout = null;
 
-                Espo.Ui.notify(' ... ');
-
-                this.collection.fetch()
-                    .then(() => Espo.Ui.notify(false));
+                this.afterSettingsChange();
             },
         });
 
         this.assignView('settings', view, '.settings-container');
+    }
+
+    /** @protected */
+    afterSettingsChange() {
+        Espo.Ui.notify(' ... ');
+
+        this.collection.fetch()
+            .then(() => Espo.Ui.notify(false));
     }
 
     /**
