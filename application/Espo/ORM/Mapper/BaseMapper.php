@@ -34,6 +34,7 @@ use Espo\ORM\BaseEntity;
 use Espo\ORM\Collection;
 use Espo\ORM\Query\DeleteBuilder;
 use Espo\ORM\Query\InsertBuilder;
+use Espo\ORM\Query\Part\Selection;
 use Espo\ORM\Query\SelectBuilder;
 use Espo\ORM\Executor\QueryExecutor;
 use Espo\ORM\Query\UpdateBuilder;
@@ -285,8 +286,12 @@ class BaseMapper implements RDBMapper
 
         $params = [];
 
+        $builder = new SelectBuilder();
+
         if ($select) {
             $params = $select->getRaw();
+
+            $builder->clone($select);
         }
 
         $entityType = $entity->getEntityType();
@@ -321,13 +326,14 @@ class BaseMapper implements RDBMapper
             case Entity::BELONGS_TO:
                 /** @var Entity $relEntity */
 
-                $params['whereClause'][] = [$foreignKey =>$entity->get($key)];
-                $params['offset'] = 0;
-                $params['limit'] = 1;
-                $params['from'] = $relEntity->getEntityType();
-                $params['fromAlias'] ??= lcfirst($relEntity->getEntityType());
+                $alias = $select?->getFromAlias() ?? lcfirst($relEntityType);
 
-                $select = Select::fromRaw($params);
+                $builder
+                    ->from($relEntityType, $alias)
+                    ->limit(0, 1)
+                    ->where([$foreignKey => $entity->get($key)]);
+
+                $select = $builder->build();
 
                 if ($returnTotalCount) {
                     $select = $this->convertSelectQueryToAggregation($select, self::FUNC_COUNT);
@@ -359,9 +365,11 @@ class BaseMapper implements RDBMapper
             case Entity::HAS_ONE:
                 /** @var Entity $relEntity */
 
-                $params['from'] = $relEntity->getEntityType();
-                $params['fromAlias'] ??= lcfirst($relEntity->getEntityType());
-                $params['whereClause'][] = [$foreignKey => $entity->get($key)];
+                $alias = $select?->getFromAlias() ?? lcfirst($relEntityType);
+
+                $builder
+                    ->from($relEntityType, $alias)
+                    ->where([$foreignKey => $entity->get($key)]);
 
                 if ($relType == Entity::HAS_CHILDREN) {
                     $foreignType = $keySet['foreignType'] ?? null;
@@ -370,21 +378,20 @@ class BaseMapper implements RDBMapper
                         throw new RuntimeException("Bad relation key.");
                     }
 
-                    $params['whereClause'][] = [$foreignType => $entity->getEntityType()];
+                    $builder->where([$foreignType => $entity->getEntityType()]);
                 }
 
                 $relConditions = $this->getRelationParam($entity, $relationName, 'conditions');
 
                 if ($relConditions) {
-                    $params['whereClause'][] = $relConditions;
+                    $builder->where($relConditions);
                 }
 
                 if ($relType == Entity::HAS_ONE) {
-                    $params['offset'] = 0;
-                    $params['limit'] = 1;
+                    $builder->limit(0, 1);
                 }
 
-                $select = Select::fromRaw($params);
+                $select = $builder->build();
 
                 if ($returnTotalCount) {
                     $select = $this->convertSelectQueryToAggregation($select, self::FUNC_COUNT);
@@ -418,17 +425,22 @@ class BaseMapper implements RDBMapper
             case Entity::MANY_MANY:
                 /** @var Entity $relEntity */
 
-                $params['from'] = $relEntity->getEntityType();
-                $params['fromAlias'] ??= lcfirst($relEntity->getEntityType());
-                $params['joins'] ??= [];
-                $params['joins'][] = $this->getManyManyJoin($entity, $relationName);
-                $params['select'] = $this->getModifiedSelectForManyToMany(
+                $alias = $select?->getFromAlias() ?? lcfirst($relEntityType);
+
+                $join = $this->getManyManyJoin($entity, $relationName);
+
+                $selections = $this->getModifiedSelectForManyToMany(
                     $entity,
                     $relationName,
-                    $params['select'] ?? []
+                    $select ? $select->getSelect() : []
                 );
 
-                $select = Select::fromRaw($params);
+                $builder
+                    ->from($relEntityType, $alias)
+                    ->join($join[0], $join[1], $join[2])
+                    ->select($selections);
+
+                $select = $builder->build();
 
                 if ($returnTotalCount) {
                     $select = $this->convertSelectQueryToAggregation($select, self::FUNC_COUNT);
@@ -459,16 +471,16 @@ class BaseMapper implements RDBMapper
                     return null;
                 }
 
-                $params['whereClause'][] = [$foreignKey => $foreignEntityId];
-                $params['offset'] = 0;
-                $params['limit'] = 1;
+                $alias = $select?->getFromAlias() ?? lcfirst($foreignEntityType);
+
+                $builder
+                    ->from($foreignEntityType, $alias)
+                    ->limit(0, 1)
+                    ->where([$foreignKey => $foreignEntityId]);
 
                 $relEntity = $this->entityFactory->create($foreignEntityType);
 
-                $params['from'] = $foreignEntityType;
-                $params['fromAlias'] ??= lcfirst($foreignEntityType);
-
-                $select = Select::fromRaw($params);
+                $select = $builder->build();
 
                 if ($returnTotalCount) {
                     $select = $this->convertSelectQueryToAggregation($select, self::FUNC_COUNT);
@@ -1580,27 +1592,38 @@ class BaseMapper implements RDBMapper
     }
 
     /**
-     * @param array<int|string, mixed> $select
-     * @return array<int|string, mixed>
+     * @param Selection[] $select
+     * @return array<int, Selection|array{string, string}>
      */
     private function getModifiedSelectForManyToMany(Entity $entity, string $relationName, array $select): array
     {
         $additionalSelect = $this->getManyManyAdditionalSelect($entity, $relationName);
 
-        if (!count($additionalSelect)) {
+        if ($additionalSelect === []) {
             return $select;
         }
 
-        if (empty($select)) {
-            $select = ['*'];
+        if ($select === []) {
+            $select[] = Selection::fromString('*');
         }
 
-        if ($select[0] === '*') {
+        if ($select[0]->getExpression()->getValue() === '*') {
             return array_merge($select, $additionalSelect);
         }
 
         foreach ($additionalSelect as $item) {
-            $index = array_search($item[1], $select);
+            $index = false;
+
+            foreach ($select as $i => $it) {
+                if (
+                    $it instanceof Selection &&
+                    $it->getExpression()->getValue() === $item[1]
+                ) {
+                    $index = $i;
+
+                    break;
+                }
+            }
 
             if ($index !== false) {
                 $select[$index] = $item;

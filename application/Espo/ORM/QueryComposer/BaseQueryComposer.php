@@ -1735,7 +1735,7 @@ abstract class BaseQueryComposer implements QueryComposer
 
         $selectNotSpecified = !count($itemList);
 
-        if (!$selectNotSpecified && $itemList[0] === '*' && $entity) {
+        if (!$selectNotSpecified && self::isSelectAll($itemList) && $entity) {
             array_shift($itemList);
 
             foreach (array_reverse($entity->getAttributeList()) as $item) {
@@ -1819,6 +1819,10 @@ abstract class BaseQueryComposer implements QueryComposer
 
         if (!is_array($attribute) && !is_string($attribute)) { /** @phpstan-ignore-line */
             throw new RuntimeException("ORM Query: Bad select item.");
+        }
+
+        if (is_array($attribute) && count($attribute) === 1) {
+            $attribute = $attribute[0];
         }
 
         if (is_string($attribute) && $entity) {
@@ -2134,7 +2138,7 @@ abstract class BaseQueryComposer implements QueryComposer
     }
 
     /**
-     * @param array<string[]|string> $select
+     * @param array<int, string[]|string> $select
      */
     protected static function isSelectAll(array $select): bool
     {
@@ -2142,7 +2146,7 @@ abstract class BaseQueryComposer implements QueryComposer
             return true;
         }
 
-        return $select[0] === '*';
+        return $select[0] === '*' || $select[0][0] === '*';
     }
 
     /**
