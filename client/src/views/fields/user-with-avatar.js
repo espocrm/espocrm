@@ -34,14 +34,14 @@ class UserWithAvatarFieldView extends UserFieldView {
     detailTemplate = 'fields/user-with-avatar/detail'
 
     data() {
-        let o = super.data();
+        const data = super.data();
 
         if (this.mode === this.MODE_DETAIL) {
-            o.avatar = this.getAvatarHtml();
-            o.isOwn = this.model.get(this.idName) === this.getUser().id;
+            data.avatar = this.getAvatarHtml();
+            data.isOwn = this.model.get(this.idName) === this.getUser().id;
         }
 
-        return o;
+        return data;
     }
 
     getAvatarHtml() {
