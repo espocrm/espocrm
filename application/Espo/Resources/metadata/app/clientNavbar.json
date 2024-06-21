@@ -3,7 +3,7 @@
         "globalSearch": {
             "view": "views/global-search/global-search",
             "class": "navbar-form global-search-container",
-            "order": 0,
+            "order": 5,
             "disabled": false
         },
         "quickCreate": {
