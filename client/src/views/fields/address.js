@@ -51,6 +51,7 @@ class AddressFieldView extends BaseFieldView {
     // noinspection JSUnusedGlobalSymbols
     editTemplate4 = 'fields/address/edit-4'
     searchTemplate = 'fields/address/search'
+    listLinkTemplate = 'fields/address/list-link'
 
     postalCodeField
     streetField
@@ -88,7 +89,7 @@ class AddressFieldView extends BaseFieldView {
             data[item + 'Value'] = this.model.get(this[item + 'Field']);
         });
 
-        if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
+        if (this.isReadMode()) {
             data.formattedAddress = this.getFormattedAddress();
 
             data.isNone = data.formattedAddress === null;
