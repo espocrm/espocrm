@@ -9,13 +9,13 @@
         "quickCreate": {
             "view": "views/site/navbar/quick-create",
             "class": "dropdown hidden-xs quick-create-container",
-            "order": 1,
+            "order": 10,
             "disabled": false
         },
         "notificationBadge": {
             "view": "views/notification/badge",
             "class": "dropdown notifications-badge-container",
-            "order": 2,
+            "order": 15,
             "disabled": false
         }
     }
