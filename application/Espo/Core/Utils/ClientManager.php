@@ -170,7 +170,7 @@ class ClientManager
 
         $cssFileList = $this->metadata->get(['app', 'client', 'cssList'], []);
         $linkList = $this->metadata->get(['app', 'client', 'linkList'], []);
-        $faviconAlternate = $this->metadata->get('app.client.favicon') ?? $this->faviconAlternate;
+        $faviconAlternate = $this->metadata->get('app.client.faviconAlternate') ?? $this->faviconAlternate;
         [$favicon, $faviconType] = $this->getFaviconData();
 
         $scriptsHtml = implode('',
@@ -397,7 +397,7 @@ class ClientManager
      */
     private function getFaviconData(): array
     {
-        $faviconSvgPath = $this->metadata->get('app.client.faviconSvg') ?? $this->favicon;
+        $faviconSvgPath = $this->metadata->get('app.client.favicon') ?? $this->favicon;
         $faviconType = str_ends_with($faviconSvgPath, '.svg') ? 'image/svg+xml' : 'image/png';
 
         return [$faviconSvgPath, $faviconType];
