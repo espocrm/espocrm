@@ -1367,21 +1367,6 @@ class NavbarSiteView extends View {
             view.render();
 
             Espo.Ui.notify(false);
-
-            this.listenToOnce(view, 'close', () => {
-                this.clearView('dialog');
-            });
-        });
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    actionShowHistory() {
-        this.createView('dialog', 'views/modals/action-history', {}, (view) => {
-            view.render();
-
-            this.listenTo(view, 'close', () => {
-                this.clearView('dialog');
-            });
         });
     }
 
