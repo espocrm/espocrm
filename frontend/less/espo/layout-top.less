@@ -194,6 +194,20 @@ body:not([data-navbar="side"]) {
             .global-search-button {
                 margin-top: -1px;
             }
+
+            .navbar-right {
+                a.global-search-button,
+                > li > a {
+                    color: var(--navbar-inverse-link-icon-color);
+
+                    &:hover {
+                        color: var(--navbar-inverse-link-icon-hover-color);
+                    }
+                }
+                > li.dropdown .open > a {
+                    color: var(--navbar-inverse-link-icon-hover-color);
+                }
+            }
         }
     }
 
