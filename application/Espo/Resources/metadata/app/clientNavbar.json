@@ -18,5 +18,46 @@
             "order": 15,
             "disabled": false
         }
+    },
+    "menuItems": {
+        "admin": {
+            "order": 0,
+            "groupIndex": 1,
+            "link": "#Admin",
+            "labelTranslation": "Global.labels.Administration",
+            "accessDataList": [
+                {
+                    "isAdminOnly": true
+                }
+            ]
+        },
+        "preferences": {
+            "order": 1,
+            "groupIndex": 1,
+            "link": "#Preferences",
+            "labelTranslation": "Global.labels.Preferences"
+        },
+        "lastViewed": {
+            "order": 0,
+            "groupIndex": 5,
+            "link": "#LastViewed",
+            "labelTranslation": "Global.scopeNamesPlural.LastViewed",
+            "configCheck": "!actionHistoryDisabled",
+            "handler": "handlers/navbar-menu",
+            "actionFunction": "lastViewed"
+        },
+        "about": {
+            "order": 0,
+            "groupIndex": 10,
+            "link": "#LastViewed",
+            "labelTranslation": "Global.labels.About"
+        },
+        "logout": {
+            "order": 1,
+            "groupIndex": 10,
+            "labelTranslation": "Global.labels.Log Out",
+            "handler": "handlers/navbar-menu",
+            "actionFunction": "logout"
+        }
     }
 }

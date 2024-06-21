@@ -195,11 +195,11 @@
                     {{#each menuDataList}}
                         {{#unless divider}}
                             <li><a
-                                    {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
-                                    tabindex="0"
-                                    class="nav-link{{#if action}} action{{/if}}"{{#if action}}
-                                    data-action="{{action}}"{{/if}}
-                                >{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
+                                {{#if name}}data-name="{{name}}"{{/if}}
+                                {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
+                                tabindex="0"
+                                class="nav-link{{#if handler}} action{{/if}}"
+                            >{{#if html}}{{{html}}}{{else}}{{label}}{{/if}}</a></li>
                         {{else}}
                             <li class="divider"></li>
                         {{/unless}}

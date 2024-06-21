@@ -64,10 +64,6 @@ class NavbarSiteView extends View {
             this.switchSideMenu();
         },
         /** @this NavbarSiteView */
-        'click a.action': function (e) {
-            Espo.Utils.handleAction(this, e.originalEvent, e.currentTarget);
-        },
-        /** @this NavbarSiteView */
         'click [data-action="toggleCollapsable"]': function () {
             this.toggleCollapsable();
         },
@@ -91,7 +87,7 @@ class NavbarSiteView extends View {
             tabDefsList1: this.tabDefsList.filter(item => !item.isInMore),
             tabDefsList2: this.tabDefsList.filter(item => item.isInMore),
             title: this.options.title,
-            menuDataList: this.getMenuDataList(),
+            menuDataList: this.menuDataList,
             userId: this.getUser().id,
             logoSrc: this.getLogoSrc(),
             itemDataList: this.getItemDataList(),
@@ -362,6 +358,24 @@ class NavbarSiteView extends View {
     }
 
     setup() {
+        this.addHandler('click', 'a.action', (/** MouseEvent */event, target) => {
+            let actionData;
+            const name = target.dataset.name;
+
+            if (name) {
+                const item = this.menuDataList.find(it => it.name === name);
+
+                if (item.handler && item.actionFunction) {
+                    actionData = {
+                        handler: item.handler,
+                        actionFunction: item.actionFunction,
+                    };
+                }
+            }
+
+            Espo.Utils.handleAction(this, event, target, actionData);
+        });
+
         this.getRouter().on('routed', (e) => {
             if (e.controller) {
                 this.selectTab(e.controller);
@@ -424,6 +438,8 @@ class NavbarSiteView extends View {
 
             this.$body.removeClass('has-navbar');
         });
+
+        this.setupMenu();
     }
 
     getItemDataList() {
@@ -1292,82 +1308,96 @@ class NavbarSiteView extends View {
     /**
      * @typedef {Object} MenuDataItem
      * @property {string} [link]
+     * @property {string} [name]
      * @property {string} [html]
+     * @property {string} [handler]
+     * @property {string} [actionFunction]
      * @property {true} [divider]
      */
 
-    /**
-     * @return {MenuDataItem[]}
-     */
-    getMenuDataList() {
+
+    setupMenu() {
         let avatarHtml = this.getHelper().getAvatarHtml(this.getUser().id, 'small', 20, 'avatar-link');
 
         if (avatarHtml) {
             avatarHtml += ' ';
         }
 
-        /** @type {MenuDataItem[]}*/
-        let list = [
+        /** @type {MenuDataItem[]} */
+        this.menuDataList = [
             {
-                link: '#User/view/' + this.getUser().id,
+                link: `#User/view/${this.getUser().id}`,
                 html: avatarHtml + this.getHelper().escapeString(this.getUser().get('name')),
             },
             {divider: true}
         ];
 
-        if (this.getUser().isAdmin()) {
-            list.push({
-                link: '#Admin',
-                label: this.getLanguage().translate('Administration'),
-            });
-        }
+        /**
+         * @type {Record<string, {
+         *     order?: number,
+         *     groupIndex?: number,
+         *     link?: string,
+         *     labelTranslation?: string,
+         *     configCheck?: string,
+         *     disabled:? boolean,
+         *     handler?: string,
+         *     actionFunction?: string,
+         *     accessDataList?: module:utils~AccessDefs[],
+         * }>} items
+         */
+        const items = this.getMetadata().get('app.clientNavbar.menuItems') || {};
 
-        list.push({
-            link: '#Preferences',
-            label: this.getLanguage().translate('Preferences'),
+        const nameList = Object.keys(items).sort((n1, n2) => {
+            const o1 = items[n1].order;
+            const o2 = items[n2].order;
+
+            const g1 = items[n1].groupIndex;
+            const g2 = items[n2].groupIndex;
+
+            if (g2 === g1) {
+                return o1 - o2;
+            }
+
+            return g1 - g2;
         });
 
-        if (!this.getConfig().get('actionHistoryDisabled')) {
-            list.push({divider: true});
+        let currentGroup = 0;
 
-            list.push({
-                action: 'showLastViewed',
-                link: '#LastViewed',
-                label: this.getLanguage().translate('LastViewed', 'scopeNamesPlural'),
+        for (const name of nameList) {
+            const item = items[name];
+
+            if (item.groupIndex !== currentGroup) {
+                currentGroup = item.groupIndex;
+
+                this.menuDataList.push({divider: true});
+            }
+
+            if (item.disabled) {
+                continue;
+            }
+
+            if (
+                item.configCheck &&
+                !Espo.Utils.checkActionAvailability(this.getHelper(), item)
+            ) {
+                continue;
+            }
+
+            if (
+                item.accessDataList &&
+                !Espo.Utils.checkAccessDataList(item.accessDataList, this.getAcl(), this.getUser())
+            ) {
+                continue;
+            }
+
+            this.menuDataList.push({
+                name: name,
+                link: item.link,
+                label: this.getLanguage().translatePath(item.labelTranslation),
+                handler: item.handler,
+                actionFunction: item.actionFunction,
             });
         }
-
-        list = list.concat([
-            {
-                divider: true
-            },
-            {
-                link: '#About',
-                label: this.getLanguage().translate('About')
-            },
-            {
-                action: 'logout',
-                label: this.getLanguage().translate('Log Out')
-            },
-        ]);
-
-        return list;
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    actionLogout() {
-        this.getRouter().logout();
-    }
-
-    // noinspection JSUnusedGlobalSymbols
-    actionShowLastViewed() {
-        Espo.Ui.notify(' ... ');
-
-        this.createView('dialog', 'views/modals/last-viewed', {}, (view) => {
-            view.render();
-
-            Espo.Ui.notify(false);
-        });
     }
 
     showMoreTabs() {
