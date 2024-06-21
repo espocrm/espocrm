@@ -155,9 +155,33 @@ img.image-preview {
     }
 
     @media screen and (max-width: (@screen-sm-min - 1px)) {
-    .header-title,
+        .header-title,
         > h3 {
             font-size: 21px;
+        }
+
+        .header-buttons {
+            > .btn {
+                max-width: 280px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            &:has(:nth-child(3)) {
+                > .btn {
+                    max-width: 240px;
+                }
+            }
+
+            &:has(:nth-child(4)) {
+                > .btn {
+                    max-width: 170px;
+                }
+            }
+
+            .dropdown-group:last-child {
+                float: right;
+            }
         }
     }
 
