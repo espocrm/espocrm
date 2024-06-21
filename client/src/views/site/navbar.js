@@ -334,7 +334,7 @@ class NavbarSiteView extends View {
             return this.getBasePath() + (this.getThemeManager().getParam('logo') || 'client/img/logo.svg');
         }
 
-        return this.getBasePath() + '?entryPoint=LogoImage&id='+companyLogoId;
+        return `${this.getBasePath()}?entryPoint=LogoImage&id=${companyLogoId}`;
     }
 
     /**
@@ -372,7 +372,7 @@ class NavbarSiteView extends View {
             this.selectTab(false);
         });
 
-        const itemDefs = this.getMetadata().get(['app', 'clientNavbar', 'items']) || {};
+        const itemDefs = this.getMetadata().get('app.clientNavbar.items') || {};
 
         /** @type {string[]} */
         this.itemList = Object.keys(itemDefs)
@@ -384,9 +384,7 @@ class NavbarSiteView extends View {
                 return order1 - order2;
             });
 
-        this.createView('notificationsBadge', 'views/notification/badge', {
-            selector: '.notifications-badge-container',
-        });
+        this.setupGlobalSearch();
 
         const setup = () => {
             this.setupTabDefsList();
@@ -399,7 +397,6 @@ class NavbarSiteView extends View {
             setup().then(() => this.reRender());
         };
 
-        this.setupGlobalSearch();
         setup();
 
         this.listenTo(this.getHelper().settings, 'sync', () => update());
@@ -534,23 +531,24 @@ class NavbarSiteView extends View {
     }
 
     setupGlobalSearch() {
-        this.globalSearchAvailable = false;
+        let isAvailable = false;
 
-        (this.getConfig().get('globalSearchEntityList') || []).forEach(scope => {
-            if (this.globalSearchAvailable) {
-                return;
+        /** @type {string[]} */
+        const entityTypeList = this.getConfig().get('globalSearchEntityList') || [];
+
+        for (const it of entityTypeList) {
+            if (this.getAcl().checkScope(it)) {
+                isAvailable = true;
+
+                break;
             }
-
-            if (this.getAcl().checkScope(scope)) {
-                this.globalSearchAvailable = true;
-            }
-        });
-
-        if (this.globalSearchAvailable) {
-            this.createView('globalSearch', 'views/global-search/global-search', {
-                selector: '.global-search-container',
-            });
         }
+
+        if (isAvailable) {
+            return;
+        }
+
+        this.itemList = this.itemList.filter(it => it !== 'globalSearch');
     }
 
     adjustTop() {

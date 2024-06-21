@@ -1,9 +1,21 @@
 {
     "items": {
+        "globalSearch": {
+            "view": "views/global-search/global-search",
+            "class": "navbar-form global-search-container",
+            "order": 0,
+            "disabled": false
+        },
         "quickCreate": {
             "view": "views/site/navbar/quick-create",
             "class": "dropdown hidden-xs quick-create-container",
-            "order": 0,
+            "order": 1,
+            "disabled": false
+        },
+        "notificationBadge": {
+            "view": "views/notification/badge",
+            "class": "dropdown notifications-badge-container",
+            "order": 2,
             "disabled": false
         }
     }

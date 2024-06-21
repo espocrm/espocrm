@@ -179,15 +179,9 @@
         </ul>
         <div class="navbar-right-container">
         <ul class="nav navbar-nav navbar-right">
-            <li class="nav navbar-nav navbar-form global-search-container">
-                {{{globalSearch}}}
-            </li>
             {{#each itemDataList}}
                 <li class="{{class}}" data-item="{{name}}">{{{var key ../this}}}</li>
             {{/each}}
-            <li class="dropdown notifications-badge-container">
-                {{{notificationsBadge}}}
-            </li>
             <li class="dropdown menu-container">
                 <a
                     id="nav-menu-dropdown"
