@@ -26,59 +26,70 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/task/fields/date-end', ['views/fields/datetime-optional'], function (Dep) {
+import DatetimeOptionalFieldView from 'views/fields/datetime-optional';
+import moment from 'moment';
 
-    return Dep.extend({
+class TaskDateEndFieldView extends DatetimeOptionalFieldView {
 
-        detailTemplate: 'crm:task/fields/date-end/detail',
-        listTemplate: 'crm:task/fields/date-end/detail',
+    detailTemplate = 'crm:task/fields/date-end/detail'
+    listTemplate = 'crm:task/fields/date-end/detail'
 
-        isEnd: true,
+    isEnd = true
 
-        data: function () {
-            var data = Dep.prototype.data.call(this);
+    data() {
+        const data = super.data();
 
-            if (this.model.get('status') && !~['Completed', 'Canceled'].indexOf(this.model.get('status'))) {
-                if (this.mode === 'list' || this.mode === 'detail') {
-                    if (!this.isDate()) {
-                        let value = this.model.get(this.name);
+        const status = this.model.get('status');
 
-                        if (value) {
-                            let d = this.getDateTime().toMoment(value);
-                            let now = moment().tz(this.getDateTime().timeZone || 'UTC');
+        if (!status || this.notActualStatusList.includes(status)) {
+            return data;
+        }
 
-                            if (d.unix() < now.unix()) {
-                                data.isOverdue = true;
-                            }
-                        }
-                    } else {
-                        let value = this.model.get(this.nameDate);
+        if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
+            if (this.isDate()) {
+                const value = this.model.get(this.nameDate);
 
-                        if (value) {
-                            let d = moment.utc(value + ' 23:59', this.getDateTime().internalDateTimeFormat);
-                            let now = this.getDateTime().getNowMoment();
+                if (value) {
+                    const d = moment.utc(value + ' 23:59', this.getDateTime().internalDateTimeFormat);
+                    const now = this.getDateTime().getNowMoment();
 
-                            if (d.unix() < now.unix()) {
-                                data.isOverdue = true;
-                            }
-                        }
+                    if (d.unix() < now.unix()) {
+                        data.isOverdue = true;
+                    }
+                }
+            } else {
+                const value = this.model.get(this.name);
+
+                if (value) {
+                    const d = this.getDateTime().toMoment(value);
+                    const now = moment().tz(this.getDateTime().timeZone || 'UTC');
+
+                    if (d.unix() < now.unix()) {
+                        data.isOverdue = true;
                     }
                 }
             }
+        }
 
-            return data;
-        },
+        return data;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.listenTo(this, 'change', () => {
-                if (!this.model.get('dateEnd')) {
-                    if (this.model.get('reminders')) {
-                        this.model.set('reminders', []);
-                    }
+        this.notActualStatusList = [
+            ...(this.getMetadata().get(`scopes.${this.entityType}.completedStatusList`) || []),
+            ...(this.getMetadata().get(`scopes.${this.entityType}.canceledStatusList`) || []),
+        ];
+
+        if (this.isEditMode() || this.isDetailMode()) {
+            this.on('change', () => {
+                if (!this.model.get('dateEnd') && this.model.get('reminders')) {
+                    this.model.set('reminders', []);
                 }
             });
-        },
-    });
-});
+        }
+    }
+}
+
+export default TaskDateEndFieldView;
