@@ -448,16 +448,16 @@ class EmailHelper {
 
         const dateSent = model.get('dateSent');
 
-        let dateSentSting = null;
+        let dateSentString = null;
 
         if (dateSent) {
             const dateSentMoment = this.getDateTime().toMoment(dateSent);
 
-            dateSentSting = dateSentMoment.format(format);
+            dateSentString = dateSentMoment.format(format);
         }
 
         let replyHeadString =
-            (dateSentSting || this.getLanguage().translate('Original message', 'labels', 'Email'));
+            (dateSentString || this.getLanguage().translate('Original message', 'labels', 'Email'));
 
         let fromName = model.get('fromName');
 
@@ -472,28 +472,27 @@ class EmailHelper {
         replyHeadString += ':';
 
         if (model.get('isHtml')) {
-            let body = model.get('body');
+            const body = model.get('body');
 
-            body = '<p>&nbsp;</p><p>' +  replyHeadString + '</p><blockquote>' +  body + '</blockquote>';
+            attributes['body'] = `<p>&nbsp;</p><p>${replyHeadString}</p><blockquote>${body}</blockquote>`;
 
-            attributes['body'] = body;
+            return;
         }
-        else {
-            let bodyPlain = model.get('body') || model.get('bodyPlain') || '';
 
-            let b = '\n\n';
+        let bodyPlain = model.get('body') || model.get('bodyPlain') || '';
 
-            b += replyHeadString + '\n';
+        let b = '\n\n';
 
-            bodyPlain.split('\n').forEach(line => {
-                b += '> ' + line + '\n';
-            });
+        b += replyHeadString + '\n';
 
-            bodyPlain = b;
+        bodyPlain.split('\n').forEach(line => {
+            b += '> ' + line + '\n';
+        });
 
-            attributes['body'] = bodyPlain;
-            attributes['bodyPlain'] = bodyPlain;
-        }
+        bodyPlain = b;
+
+        attributes['body'] = bodyPlain;
+        attributes['bodyPlain'] = bodyPlain;
     }
 }
 
