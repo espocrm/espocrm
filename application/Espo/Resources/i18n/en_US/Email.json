@@ -87,6 +87,7 @@
     "labels": {
         "Create Email": "Archive Email",
         "Archive Email": "Archive Email",
+        "Import EML": "Import EML",
         "Compose": "Compose",
         "Reply": "Reply",
         "Reply to All": "Reply to All",
@@ -151,5 +152,8 @@
         "moveToTrash": "Move to Trash",
         "moveToFolder": "Move to Folder",
         "retrieveFromTrash": "Retrieve from Trash"
+    },
+    "otherFields": {
+        "file": "File"
     }
 }

@@ -1,0 +1,8 @@
+{
+    "fields": {
+        "file": {
+            "type": "file"
+        }
+    },
+    "skipRebuild": true
+}

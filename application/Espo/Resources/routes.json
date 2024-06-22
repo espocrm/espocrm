@@ -335,6 +335,11 @@
         "actionClassName": "Espo\\Tools\\Email\\Api\\PostAttachmentsCopy"
     },
     {
+        "route": "/Email/importEml",
+        "method": "post",
+        "actionClassName": "Espo\\Tools\\Email\\Api\\PostImportEml"
+    },
+    {
         "route": "/Email/sendTest",
         "method": "post",
         "actionClassName": "Espo\\Tools\\Email\\Api\\PostSendTest"

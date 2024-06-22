@@ -61,6 +61,7 @@
             "Role": false,
             "PortalRole": false,
             "ImportError": "Import",
+            "ImportEml": "Import",
             "WorkingTimeRange": "WorkingTimeCalendar",
             "Stream": true
         },
@@ -153,7 +154,8 @@
                 "edit": "no",
                 "delete": "all"
             },
-            "Stream": true
+            "Stream": true,
+            "ImportEml": "Import"
         }
     },
     "valuePermissionList": [

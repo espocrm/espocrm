@@ -49,6 +49,13 @@
                     "link":"#Email/create",
                     "acl":"create"
                 },
+                {
+                    "name": "importEml",
+                    "label": "Import EML",
+                    "handler": "handlers/email/list-actions",
+                    "checkVisibilityFunction": "checkImportEml",
+                    "actionFunction": "importEml"
+                },
                 false,
                 {
                     "label":"Email Templates",
