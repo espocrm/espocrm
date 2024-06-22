@@ -431,6 +431,10 @@ function init(langSets) {
 
                 $codable.removeClass('hidden');
 
+                if ($editor.hasClass('fullscreen')) {
+                    $codable.css('height', $editable.css('height'));
+                }
+
                 requireAce().then(() => {
                     const html = prepareHtml($editable.html());
 
