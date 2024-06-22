@@ -925,6 +925,7 @@ function init(langSets) {
                     }
 
                     this.$editable.css('maxHeight', this.$editable.css('orgMaxHeight'));
+                    this.$editable.css('height', '');
 
                     if (this.isInModal) {
                         this.$modal.css('overflow-y', '');
