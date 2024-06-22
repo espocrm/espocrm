@@ -431,6 +431,10 @@ function init(langSets) {
 
                 $codable.removeClass('hidden');
 
+                if ($editor.hasClass('fullscreen')) {
+                    $codable.css('height', $editable.css('height'));
+                }
+
                 requireAce().then(() => {
                     const html = prepareHtml($editable.html());
 
@@ -439,7 +443,7 @@ function init(langSets) {
                     aceEditor.setValue(html);
 
                     aceEditor.setOptions({
-                        maxLines: !$editor.hasClass('fullscreen') ? 34: null,
+                        maxLines: !$editor.hasClass('fullscreen') ? 100000: null,
                         enableLiveAutocompletion: true,
                         tabSize: 2,
                         useSoftTabs: true,
@@ -925,6 +929,7 @@ function init(langSets) {
                     }
 
                     this.$editable.css('maxHeight', this.$editable.css('orgMaxHeight'));
+                    this.$editable.css('height', '');
 
                     if (this.isInModal) {
                         this.$modal.css('overflow-y', '');
@@ -936,7 +941,7 @@ function init(langSets) {
                     this._isFullscreen = false;
 
                     if (aceEditor) {
-                        aceEditor.setOptions({maxLines: maxLines});
+                        aceEditor.setOptions({maxLines: 100000});
                         aceEditor.resize();
                     }
                 }
