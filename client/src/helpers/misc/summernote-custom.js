@@ -443,7 +443,7 @@ function init(langSets) {
                     aceEditor.setValue(html);
 
                     aceEditor.setOptions({
-                        maxLines: !$editor.hasClass('fullscreen') ? 34: null,
+                        maxLines: !$editor.hasClass('fullscreen') ? 100000: null,
                         enableLiveAutocompletion: true,
                         tabSize: 2,
                         useSoftTabs: true,
@@ -941,7 +941,7 @@ function init(langSets) {
                     this._isFullscreen = false;
 
                     if (aceEditor) {
-                        aceEditor.setOptions({maxLines: maxLines});
+                        aceEditor.setOptions({maxLines: 100000});
                         aceEditor.resize();
                     }
                 }
