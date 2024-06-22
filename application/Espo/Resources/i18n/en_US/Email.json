@@ -124,6 +124,7 @@
         "sendingFailed": "Email sending failed"
     },
     "messages": {
+        "alreadyImported": "The [email]({link}) already exists in the system.",
         "invalidCredentials": "Invalid credentials.",
         "unknownError": "Unknown error.",
         "recipientAddressRejected": "Recipient address rejected.",

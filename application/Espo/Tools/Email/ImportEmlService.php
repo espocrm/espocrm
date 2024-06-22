@@ -29,6 +29,7 @@
 
 namespace Espo\Tools\Email;
 
+use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\FileStorage\Manager;
@@ -44,6 +45,7 @@ class ImportEmlService
 {
     public function __construct(
         private Importer $importer,
+        private Importer\DuplicateFinder $duplicateFinder,
         private EntityManager $entityManager,
         private Manager $fileStorageManager,
         private MailMimeParser $parser,
@@ -57,6 +59,7 @@ class ImportEmlService
      * @return Email An Email.
      * @throws NotFound
      * @throws Error
+     * @throws Conflict
      */
     public function import(string $fileId, ?string $userId = null): Email
     {
@@ -64,6 +67,8 @@ class ImportEmlService
         $contents = $this->fileStorageManager->getContents($attachment);
 
         $message = new MessageWrapper(1, null, $this->parser, $contents);
+
+        $this->checkDuplicate($message);
 
         $email = $this->importer->import($message, Data::create());
 
@@ -94,5 +99,34 @@ class ImportEmlService
         }
 
         return $attachment;
+    }
+
+    /**
+     * @throws Conflict
+     */
+    private function checkDuplicate(MessageWrapper $message): void
+    {
+        $messageId = $this->parser->getMessageId($message);
+
+        if (!$messageId) {
+            return;
+        }
+
+        $email = $this->entityManager->getRDBRepositoryByClass(Email::class)->getNew();
+        $email->setMessageId($messageId);
+
+        $duplicate = $this->duplicateFinder->find($email, $message);
+
+        if (!$duplicate) {
+            return;
+        }
+
+        throw Conflict::createWithBody(
+            'Email is already imported.',
+            Error\Body::create()->withMessageTranslation('alreadyImported', Email::ENTITY_TYPE, [
+                'id' => $duplicate->getId(),
+                'link' => '#Email/view/' . $duplicate->getId(),
+            ])
+        );
     }
 }
