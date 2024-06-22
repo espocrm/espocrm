@@ -60,7 +60,7 @@ class CreateNoteStreamView extends NoteStreamView {
 
         this.messageData['assignee'] =
             $('<span>')
-                .addClass('nowrap')
+                .addClass('nowrap name-avatar')
                 .append(
                     this.getHelper().getAvatarHtml(data.assignedUserId, 'small', 16, 'avatar-link'),
                     $('<a>')
