@@ -4,10 +4,16 @@ When reporting a possible bug, provide detail steps so that we will be able
 to reproduce the issue. Try not to use phrases like "very big bug",
 "huge issue", "useless feature", etc. No need to use exclamation marks as well.
 
-Steps to reproduce should be clear and unambiguous.
+**Steps to reproduce** an issue should be clear and unambiguous.
 
 Note that we don't provide developer help or any kind of support on GitHub.
 For this, please use our [forum](https://forum.espocrm.com).
+
+If you are very new to EspoCRM, it's probable that an issue you ran into is not a bug.
+Condider creating a topic on our [forum](https://forum.espocrm.com/forum/general) instead.
+
+The issue tracker is for the benefit of the EspoCRM project. The project maintainers are going to handle issues in the project's best interest.
+The maintainers have right to close issues without explanation.
 
 ## Pull Requests
 
