@@ -829,7 +829,7 @@ class WysiwygFieldView extends TextFieldView {
             const offset = $buttonContainer.offset();
 
             if (offset) {
-                edgeTop = offset.top + $buttonContainer.height();
+                edgeTop = offset.top + $buttonContainer.outerHeight();
                 edgeTopAbsolute = edgeTop - $(window).scrollTop();
             }
         }
