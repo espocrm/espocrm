@@ -117,7 +117,9 @@
         "No Subject": "No Subject",
         "View Users": "View Users",
         "Event": "Event",
-        "View Attachments": "View Attachments"
+        "View Attachments": "View Attachments",
+        "Moved to Trash": "Moved to Trash",
+        "Retrieved from Trash": "Retrieved from Trash"
     },
     "strings": {
         "sendingFailed": "Email sending failed"
