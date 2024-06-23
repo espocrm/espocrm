@@ -49,7 +49,7 @@
         "about": {
             "order": 0,
             "groupIndex": 10,
-            "link": "#LastViewed",
+            "link": "#About",
             "labelTranslation": "Global.labels.About"
         },
         "logout": {
