@@ -56,11 +56,13 @@
     "Note": "Коментар",
     "ImportError": "Грешка при импортиране",
     "WorkingTimeCalendar": "Календар на работно време",
-    "WorkingTimeRange": "Диапазон на работното време",
     "GroupEmailFolder": "Групова имейл папка",
     "AuthenticationProvider": "Доставчик на удостоверяване",
     "GlobalStream": "Глобална активност",
-    "WebhookQueueItem": "Обект в опашка на Webhook"
+    "WebhookQueueItem": "Обект в опашка на Webhook",
+    "AppLogRecord": "Логове на приложението",
+    "WorkingTimeRange": "Изключение от работното време",
+    "AddressCountry": "Адрес Държава"
   },
   "scopeNamesPlural": {
     "Email": "Имейли",
@@ -106,11 +108,13 @@
     "Note": "Коментари",
     "ImportError": "Грешки при импортиране",
     "WorkingTimeCalendar": "Календари на работното време",
-    "WorkingTimeRange": "Диапазони на работно време",
     "GroupEmailFolder": "Групови имейл папки",
     "AuthenticationProvider": "Доставчици на удостоверяване",
     "GlobalStream": "Глобална активност",
-    "WebhookQueueItem": "Обекти в опашка на Webhook"
+    "WebhookQueueItem": "Обекти в опашка на Webhook",
+    "AppLogRecord": "Логове на приложението",
+    "WorkingTimeRange": "Изключения от работното време",
+    "AddressCountry": "Адрес Държави"
   },
   "labels": {
     "Misc": "Разни",
@@ -290,7 +294,10 @@
     "Next Page": "Следваща страница",
     "First Page": "Първа страница",
     "Last Page": "Последна страница",
-    "Page": "Страница"
+    "Page": "Страница",
+    "Star": "Добави в любими",
+    "Unstar": "Махни от любими",
+    "Starred": "Добавено в любими"
   },
   "messages": {
     "pleaseWait": "Моля изчакайте...",
@@ -393,7 +400,14 @@
     "noLinkAccess": "Не може да свържете със запис {foreignEntityType} чрез връзката „{link}“. Нямате достъп.",
     "attemptIntervalFailure": "Операцията не е разрешена през определен интервал от време. Изчакайте известно време преди следващия опит.",
     "confirmRestoreFromAudit": "Предишните стойности ще бъдат зададени във формуляр. След това можете да запишете записа, за да възстановите предишните стойности.",
-    "pageNumberIsOutOfBound": "Номер на страницата е невалиден"
+    "pageNumberIsOutOfBound": "Номер на страницата е невалиден",
+    "fieldPhoneExtensionTooLong": "Разширението не трябва да е по-дълго от {maxLength}",
+    "cannotLinkAlreadyLinked": "Не може да се свърже вече свързан запис.",
+    "starsLimitExceeded": "Броят на 'любими' надхвърли лимита.",
+    "select2OrMoreRecords": "Изберете 2 или повече записа",
+    "selectNotMoreThanNumberRecords": "Изберете не повече от {number} записа",
+    "selectAtLeastOneRecord": "Изберете поне един запис",
+    "fieldNotMatchingPattern$phoneNumberLoose": "{field} съдържа знаци, които не са разрешени в телефонен номер"
   },
   "boolFilters": {
     "onlyMy": "Само мои",
@@ -402,7 +416,8 @@
   },
   "presetFilters": {
     "followed": "Следвани",
-    "all": "Всички"
+    "all": "Всички",
+    "starred": "Добавено в любими"
   },
   "massActions": {
     "remove": "Премахване",
@@ -715,7 +730,7 @@
         "providers": "(YouTube, Vimeo, лоза, Instagram, или DailyMotion)"
       },
       "table": {
-        "table": "маса"
+        "table": "Таблица"
       },
       "hr": {
         "insert": "Поставете на хоризонтална линия"
@@ -788,10 +803,10 @@
     "phoneNumber": "Валиден телефонен номер",
     "array": "Масив",
     "arrayOfString": "Масив от текстове",
-    "valid": "Валиден",
     "noEmptyString": "Без празен текст",
     "max": "Макс. стойност",
-    "min": "Мин. стойност"
+    "min": "Мин. стойност",
+    "valid": "Валидност"
   },
   "fieldValidationExplanations": {
     "url_valid": "Невалидна URL стойност.",
@@ -806,7 +821,10 @@
     "enum_valid": "Невалидна стойност на падащо меню. Стойността трябва да бъде една от дефинираните опции за изброяване. Празна стойност е разрешена само ако полето има празна опция.",
     "multiEnum_valid": "Невалидна стойност за множество изброявания. Стойностите трябва да са една от дефинираните опции на полето.",
     "int_valid": "Невалидна стойност на цяло число.",
-    "float_valid": "Невалидна стойност на число."
+    "float_valid": "Невалидна стойност на число.",
+    "valid": "Невалидна стойност",
+    "maxLength": "Дължината на стойността надвишава максималния лимит.",
+    "phone_valid": "Телефонният номер не е валиден. Може да се дължи на грешен или празен код на държавата."
   },
   "navbarTabs": {
     "Business": "Бизнес",
@@ -816,5 +834,28 @@
   },
   "themes": {
     "Light": "Светла"
+  },
+  "wysiwygLabels": {
+    "cell": "Клетка",
+    "align": "Подравняване",
+    "width": "Ширина",
+    "height": "Височина",
+    "borderWidth": "Ширина на контура",
+    "borderColor": "Цвят на контура",
+    "cellPadding": "Отстояние на клетката",
+    "backgroundColor": "Цвят на фона",
+    "verticalAlign": "Вертикално подравняване"
+  },
+  "wysiwygOptions": {
+    "align": {
+      "left": "Ляво",
+      "center": "Център",
+      "right": "Дясно"
+    },
+    "verticalAlign": {
+      "top": "Горе",
+      "middle": "В средата",
+      "bottom": "Долу"
+    }
   }
 }

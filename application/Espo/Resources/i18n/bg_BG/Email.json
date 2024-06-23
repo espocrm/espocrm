@@ -68,7 +68,8 @@
     "ccEmailAddresses": "CC имейл адреси",
     "bccEmailAddresses": "BCC имейл адреси",
     "replyToEmailAddresses": "Reply-To имейл адреси",
-    "groupFolder": "Групова папка"
+    "groupFolder": "Групова папка",
+    "createdEvent": "Създадено събитие"
   },
   "options": {
     "status": {
@@ -112,7 +113,8 @@
     "Insert Field": "Добавяне на поле",
     "Event": "Събитие",
     "Moving to folder": "Преместване в папка",
-    "Group Folders": "Групови папки"
+    "Group Folders": "Групови папки",
+    "View Attachments": "Преглед на прикачените файлове"
   },
   "messages": {
     "testEmailSent": "Тестовия имейл е изпратен",

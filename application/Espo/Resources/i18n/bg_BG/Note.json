@@ -12,7 +12,8 @@
     "related": "Свързани",
     "createdByGender": "Създаден по пол",
     "data": "Данни",
-    "number": "Номер"
+    "number": "Номер",
+    "isPinned": "Закачено е"
   },
   "filters": {
     "all": "Всички",
@@ -21,7 +22,8 @@
     "activity": "Активност"
   },
   "messages": {
-    "writeMessage": "Напишете съобщението си тук"
+    "writeMessage": "Напишете съобщението си тук",
+    "pinnedMaxCountExceeded": "Не могат да се закачат повече бележки. Максималният разрешен брой е {count}."
   },
   "options": {
     "targetType": {
@@ -52,6 +54,9 @@
   },
   "labels": {
     "View Posts": "Преглед на коментарите",
-    "View Activity": "Преглед на активността"
+    "View Activity": "Преглед на активността",
+    "Pin": "Закачане",
+    "Unpin": "Откачане",
+    "Pinned": "Закачено"
   }
 }

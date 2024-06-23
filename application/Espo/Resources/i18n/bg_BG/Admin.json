@@ -83,7 +83,9 @@
     "Working Time Calendars": "Календари на работното време",
     "Group Email Folders": "Групови имейл папки",
     "Authentication Providers": "Доставчици на удостоверяване",
-    "Setup": "Инсталация"
+    "Setup": "Инсталация",
+    "App Log": "Логове на приложението",
+    "Address Countries": "Списък с държави"
   },
   "layouts": {
     "list": "Лист",
@@ -204,7 +206,9 @@
     "autocompleteOnEmpty": "Автоматично довършване при натискане",
     "relateOnImport": "Релации при импорт",
     "aclScope": "ACL обхват",
-    "onlyAdmin": "Само за администратори"
+    "onlyAdmin": "Само за администратори",
+    "activeOptions": "Активни опции",
+    "labelType": "Тип заглавие"
   },
   "messages": {
     "selectEntityType": "Изберете вида обект от лявото меню.",
@@ -226,7 +230,9 @@
     "upgradeRecommendation": "Този начин на обновяване не се препоръчва. По-добре е да обновите от CLI.",
     "newVersionIsAvailable": "Налична е нова версия на EspoCRM {latestVersion}. Моля, следвайте [инструкциите](https://www.espocrm.com/documentation/administration/upgrading/), за да обновите вашата инстанция.",
     "formulaFunctions": "Още функции можете да намерите в [документацията]({documentationUrl}).",
-    "rebuildRequired": "Трябва да регенерирате кеша на системата от CLI."
+    "rebuildRequired": "Трябва да регенерирате кеша на системата от CLI.",
+    "cacheIsDisabled": "Кешът е деактивиран, приложението ще работи бавно. Активирайте кеширането в [настройки](#Admin/settings).",
+    "cronIsDisabled": "Cron е деактивиран, приложението не работи напълно. Активирайте cron в [настройки](#Admin/settings)."
   },
   "descriptions": {
     "settings": "Системни настройки на платформата.",
@@ -276,7 +282,9 @@
     "formulaSandbox": "Може да пишете и тествате скриптове за формули, преди да ги приложите в системата.",
     "workingTimeCalendars": "Управление на работно време.",
     "groupEmailFolders": "Споделени имейл акаунти с другите потребители.",
-    "authenticationProviders": "Допълнителни доставчици на удостоверяване за порталите."
+    "authenticationProviders": "Допълнителни доставчици на удостоверяване за порталите.",
+    "appLog": "Логове на приложението.",
+    "addressCountries": "Държави, налични в адресни полета."
   },
   "options": {
     "previewSize": {
@@ -285,6 +293,10 @@
       "medium": "Среден",
       "large": "Голям",
       "": "По подразбиране"
+    },
+    "labelType": {
+      "state": "Област",
+      "regular": "Основен"
     }
   },
   "logicalOperators": {
