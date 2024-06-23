@@ -4,7 +4,8 @@
     "roles": "Роли и права",
     "positionList": "Списък с позиции",
     "layoutSet": "Оформление",
-    "workingTimeCalendar": "Календар на работно време"
+    "workingTimeCalendar": "Календар на работно време",
+    "userRole": "Потребителска роля"
   },
   "links": {
     "users": "Потребители",
