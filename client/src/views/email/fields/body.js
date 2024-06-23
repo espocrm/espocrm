@@ -31,6 +31,14 @@ import WysiwygFieldView from 'views/fields/wysiwyg';
 class EmailBodyFieldView extends WysiwygFieldView {
 
     useIframe = true
+    hasBodyPlainField = true
+    toShowQuotePart = false;
+
+    /**
+     * @type {string}
+     * @private
+     */
+    replyPart
 
     getAttributeList() {
         return ['body', 'bodyPlain'];
@@ -73,10 +81,20 @@ class EmailBodyFieldView extends WysiwygFieldView {
         });
     }
 
+    onEditModeSet() {
+        this.toShowQuotePart = false;
+
+        return super.onEditModeSet();
+    }
+
     afterRender() {
         super.afterRender();
 
         this.controlInsertFieldButton();
+
+        if (this.isReadMode() && this.replyPart) {
+            this.element.appendChild(this.createShowQuotePartButton());
+        }
     }
 
     controlInsertFieldButton() {
@@ -129,6 +147,123 @@ class EmailBodyFieldView extends WysiwygFieldView {
                 this.clearView('insertFieldDialog');
             });
         });
+    }
+
+    getValueForIframe() {
+        let contents = super.getValueForIframe();
+
+        if (this.toShowQuotePart) {
+            this.replyPart = undefined;
+
+            return contents;
+        }
+
+        this.replyPart = undefined;
+
+        contents = this.processQuotePart(contents);
+
+        if (!this.replyPart) {
+            return contents;
+        }
+
+        return contents
+    }
+
+    getValueForEdit() {
+        this.replyPart = undefined;
+        const contents = super.getValueForEdit();
+
+        return this.processQuotePart(contents, true);
+    }
+
+    /**
+     * @private
+     * @param {string} contents
+     * @param {boolean} [isEdit=false]
+     * @return {string}
+     */
+    processQuotePart(contents, isEdit) {
+        const container = document.createElement('div');
+        container.innerHTML = contents;
+
+        let selector = `:scope > [data-quote-start="true"]`;
+
+        if (!isEdit) {
+            selector +=
+                ', :scope > blockquote:last-child' +
+                ', :scope > div:last-child > blockquote:last-child';
+        }
+
+        let element = container.querySelector(selector);
+
+        if (!element) {
+            return contents;
+        }
+
+        container.querySelectorAll('style, link[ref="stylesheet"]').forEach(element => {
+            element.parentElement.removeChild(element);
+        });
+
+        this.replyPart = '';
+        /** @type {HTMLElement[]} */
+        const removeList = [];
+
+        while (element) {
+            this.replyPart += element.outerHTML;
+
+            removeList.push(element);
+            element = element.nextElementSibling;
+        }
+
+        removeList.forEach(element => element.parentElement.removeChild(element));
+
+        if (isEdit) {
+            this.element.appendChild(this.createShowQuotePartButton());
+        }
+
+        return container.innerHTML;
+    }
+
+    /**
+     * @private
+     * @return {HTMLAnchorElement}
+     */
+    createShowQuotePartButton() {
+        const a = this.showQuoteButtonElement = document.createElement('a');
+
+        a.setAttribute('role', 'button');
+        a.innerHTML = '...';
+        a.classList.add('show-quote-button', 'btn', 'btn-default', 'btn-sm');
+        a.addEventListener('click', () => this.showQuotePart());
+
+        return a;
+    }
+
+    /** @private */
+    showQuotePart() {
+        if (this.isReadMode()) {
+            this.toShowQuotePart = true;
+            this.reRender();
+
+            return;
+        }
+
+        const value = this.$summernote.summernote('code') + this.replyPart;
+
+        this.replyPart = undefined;
+        this.showQuoteButtonElement.parentElement.removeChild(this.showQuoteButtonElement);
+
+        this.$summernote.summernote('code', value);
+    }
+
+    fetch() {
+        const data = super.fetch();
+
+        if (this.model.attributes.isHtml && this.replyPart) {
+            data[this.name] += this.replyPart;
+        }
+
+        return data;
     }
 }
 

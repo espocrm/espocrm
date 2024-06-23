@@ -474,7 +474,8 @@ class EmailHelper {
         if (model.get('isHtml')) {
             const body = model.get('body');
 
-            attributes['body'] = `<p>&nbsp;</p><p>${replyHeadString}</p><blockquote>${body}</blockquote>`;
+            attributes['body'] = `<p data-quote-start="true"><br></p>` +
+                `<p>${replyHeadString}</p><blockquote>${body}</blockquote>`;
 
             return;
         }

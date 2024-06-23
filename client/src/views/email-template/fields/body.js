@@ -26,7 +26,11 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-template/fields/body', ['views/fields/wysiwyg'], function (Dep) {
+import WysiwygFieldView from 'views/fields/wysiwyg';
 
-    return Dep.extend({});
-});
+class EmailTemplateBodyFieldView extends WysiwygFieldView {
+
+    hasBodyPlainField = true
+}
+
+export default EmailTemplateBodyFieldView;
