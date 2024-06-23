@@ -31,6 +31,7 @@ namespace tests\integration\Espo\Record;
 
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Field\Date;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Record\UpdateParams;
@@ -43,6 +44,7 @@ use Espo\Modules\Crm\Entities\Lead;
 use Espo\Modules\Crm\Entities\Opportunity;
 use Espo\Modules\Crm\Entities\Task;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Type\RelationType;
 use tests\integration\Core\BaseTestCase;
 
 class LinkTest extends BaseTestCase
@@ -437,6 +439,65 @@ class LinkTest extends BaseTestCase
                 $contact1->getId() => $contact1->get('name'),
             ],
             $case->get('contactsNames')
+        );
+    }
+
+    public function testOneToOne(): void
+    {
+        $metadata = $this->getContainer()->getByClass(Metadata::class);
+
+        $metadata->set('entityDefs', CaseObj::ENTITY_TYPE, [
+            'links' => [
+                'task' => [
+                    'foreign' => 'case',
+                    'type' => RelationType::BELONGS_TO,
+                    'entity' => Task::ENTITY_TYPE,
+                ],
+            ]
+        ]);
+
+        $metadata->set('entityDefs', Task::ENTITY_TYPE, [
+            'fields' => [
+                'case' => [
+                    'type' => FieldType::LINK_ONE,
+                ],
+            ],
+            'links' => [
+                'case' => [
+                    'foreign' => 'task',
+                    'type' => RelationType::HAS_ONE,
+                    'entity' => CaseObj::ENTITY_TYPE,
+                ],
+            ]
+        ]);
+
+        $metadata->save();
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->getDataManager()->rebuild();
+        $this->reCreateApplication();
+
+        $em = $this->getEntityManager();
+
+        $task = $em->getRDBRepositoryByClass(Task::class)->getNew();
+        $task->setMultiple(['name' => 'Task']);
+        $em->saveEntity($task);
+
+        $case = $em->getRDBRepositoryByClass(CaseObj::class)->getNew();
+        $case->setMultiple(['name' => 'Case']);
+        $em->saveEntity($case);
+
+        $service = $this->getContainer()->getByClass(ServiceContainer::class)->getByClass(Task::class);
+
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $service->update($task->getId(), (object) [
+            'caseId' => $case->getId(),
+        ], UpdateParams::create());
+
+        $this->assertTrue(
+            $em->getRDBRepositoryByClass(Task::class)
+                ->getRelation($task, 'case')
+                ->isRelatedById($case->getId())
         );
     }
 }

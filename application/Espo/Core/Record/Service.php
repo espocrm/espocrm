@@ -603,6 +603,14 @@ class Service implements Crud,
                 continue;
             }
 
+            if (
+                // link-one
+                $attributeDefs->getType() === AttributeType::FOREIGN &&
+                $attributeDefs->getParam('attributeRole') === 'id'
+            ) {
+                continue;
+            }
+
             $attribute = $attributeDefs->getName();
 
             unset($data->$attribute);
