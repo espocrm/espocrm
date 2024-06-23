@@ -30,6 +30,7 @@
 namespace Espo\Classes\MassAction\Email;
 
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\MassAction\Data;
 use Espo\Core\MassAction\MassAction;
@@ -44,11 +45,10 @@ use Espo\ORM\EntityManager;
 use Espo\Tools\Email\Folder;
 use Espo\Tools\Email\InboxService as EmailService;
 use Exception;
+use RuntimeException;
 
 class MoveToFolder implements MassAction
 {
-    private const FOLDER_INBOX = Folder::INBOX;
-
     public function __construct(
         private QueryBuilder $queryBuilder,
         private EntityManager $entityManager,
@@ -68,7 +68,7 @@ class MoveToFolder implements MassAction
             throw new BadRequest("No folder ID.");
         }
 
-        if ($folderId !== self::FOLDER_INBOX && !str_starts_with($folderId, 'group:')) {
+        if ($folderId !== Folder::INBOX && !str_starts_with($folderId, 'group:')) {
             $folder = $this->entityManager
                 ->getRDBRepositoryByClass(EmailFolder::class)
                 ->where([
@@ -93,7 +93,12 @@ class MoveToFolder implements MassAction
             }
         }
 
-        $query = $this->queryBuilder->build($params);
+        try {
+            $query = $this->queryBuilder->build($params);
+        }
+        catch (BadRequest|Forbidden $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $collection = $this->entityManager
             ->getRDBRepositoryByClass(Email::class)

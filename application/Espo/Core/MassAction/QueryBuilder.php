@@ -30,7 +30,6 @@
 namespace Espo\Core\MassAction;
 
 use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\ORM\Query\Select;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -44,7 +43,6 @@ class QueryBuilder
     /**
      * @throws BadRequest
      * @throws Forbidden
-     * @throws Error
      */
     public function build(Params $params): Select
     {

@@ -31,6 +31,7 @@ namespace Espo\Classes\MassAction\User;
 
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Error;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\MassAction\Actions\MassDelete as MassDeleteOriginal;
 use Espo\Core\MassAction\Data;
@@ -59,6 +60,7 @@ class MassDelete implements MassAction
     /**
      * @throws Forbidden
      * @throws BadRequest
+     * @throws Error
      */
     public function process(Params $params, Data $data): Result
     {

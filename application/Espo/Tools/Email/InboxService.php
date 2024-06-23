@@ -31,6 +31,7 @@ namespace Espo\Tools\Email;
 
 use Espo\Core\Acl\Table;
 use Espo\Core\AclManager;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SelectBuilderFactory;
@@ -43,12 +44,10 @@ use Espo\Entities\Notification;
 use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Exception;
+use RuntimeException;
 
 class InboxService
 {
-    private const FOLDER_INBOX = Folder::INBOX;
-    private const FOLDER_DRAFTS = Folder::DRAFTS;
-
     public function __construct(
         private User $user,
         private EntityManager $entityManager,
@@ -78,7 +77,7 @@ class InboxService
     {
         $userId = $userId ?? $this->user->getId();
 
-        if ($folderId === self::FOLDER_INBOX) {
+        if ($folderId === Folder::INBOX) {
             $folderId = null;
         }
 
@@ -441,7 +440,7 @@ class InboxService
             ])
         );
 
-        $folderIdList = [self::FOLDER_INBOX, self::FOLDER_DRAFTS];
+        $folderIdList = [Folder::INBOX, Folder::DRAFTS];
 
         $emailFolderList = $this->entityManager
             ->getRDBRepository(EmailFolder::ENTITY_TYPE)
@@ -472,7 +471,7 @@ class InboxService
         foreach ($folderIdList as $folderId) {
             $itemSelectBuilder = clone $selectBuilder;
 
-            if ($folderId === self::FOLDER_DRAFTS) {
+            if ($folderId === Folder::DRAFTS) {
                 $itemSelectBuilder = clone $draftsSelectBuilder;
             }
 
@@ -484,10 +483,15 @@ class InboxService
                 ])
             );
 
-            $data[$folderId] = $this->entityManager
-                ->getRDBRepository(Email::ENTITY_TYPE)
-                ->clone($itemSelectBuilder->build())
-                ->count();
+            try {
+                $data[$folderId] = $this->entityManager
+                    ->getRDBRepository(Email::ENTITY_TYPE)
+                    ->clone($itemSelectBuilder->build())
+                    ->count();
+            }
+            catch (BadRequest|Forbidden $e) {
+                throw new RuntimeException($e->getMessage());
+            }
         }
 
         return $data;

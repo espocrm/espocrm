@@ -30,7 +30,6 @@
 namespace Espo\Core\MassAction\Actions;
 
 use Espo\Core\Record\ActionHistory\Action;
-use Espo\Entities\ActionHistoryRecord;
 use Espo\Entities\User;
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\Forbidden;
