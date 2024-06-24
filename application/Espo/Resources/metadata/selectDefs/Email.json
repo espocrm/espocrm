@@ -4,6 +4,7 @@
         "emailAddress_equals": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\EmailAddressEquals",
         "from_equals": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\FromEquals",
         "to_equals": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\ToEquals",
+        "cc_equals": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\CcEquals",
         "isNotReplied_isTrue": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsNotRepliedIsTrue",
         "isNotReplied_isFalse": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsNotRepliedIsFalse",
         "isNotRead_isTrue": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsNotReadIsTrue",

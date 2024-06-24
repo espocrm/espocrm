@@ -116,7 +116,8 @@
             "customizationDisabled": true,
             "textFilterDisabled": true,
             "layoutAvailabilityList": [
-                "detail"
+                "detail",
+                "filters"
             ]
         },
         "bcc": {
