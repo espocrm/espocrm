@@ -35,7 +35,10 @@ class EmailListRecordView extends ListRecordView {
 
     rowActionsView = 'views/email/record/row-actions/default'
 
-    massActionList = ['remove', 'massUpdate']
+    massActionList = [
+        'remove',
+        'massUpdate',
+    ]
 
     setup() {
         super.setup();
@@ -43,6 +46,7 @@ class EmailListRecordView extends ListRecordView {
         if (this.collection.url === this.entityType) {
             this.addMassAction('retrieveFromTrash', false, true);
             this.addMassAction('moveToFolder', true, true);
+            this.addMassAction('moveToArchive', true, true);
             this.addMassAction('markAsNotImportant', false, true);
             this.addMassAction('markAsImportant', false, true);
             this.addMassAction('markAsNotRead', false, true);
@@ -75,6 +79,18 @@ class EmailListRecordView extends ListRecordView {
             }
 
             if (this.collection.selectedFolderId === 'trash') {
+                this.removeRecordFromList(id);
+            }
+        });
+
+        this.listenTo(this.collection, 'moving-to-archive', id => {
+            const model = this.collection.get(id);
+
+            if (model) {
+                model.set('inArchive', true);
+            }
+
+            if (this.collection.selectedFolderId !== 'archive') {
                 this.removeRecordFromList(id);
             }
         });
@@ -225,22 +241,31 @@ class EmailListRecordView extends ListRecordView {
                 Espo.Ui.notify(false);
 
                 if (result.id) {
-                    helper
-                        .process(result.id, 'moveToFolder')
+                    helper.process(result.id, 'moveToFolder')
                         .then(view => {
                             this.listenToOnce(view, 'close:success', () => {
-                                this.collection.fetch().then(() => {
-                                    Espo.Ui.success(this.translate('Done'));
-                                });
+                                this.collection.fetch()
+                                    .then(() => Espo.Ui.success(this.translate('Done')));
                             });
                         });
 
                     return;
                 }
 
-                this.collection.fetch().then(() => {
-                    Espo.Ui.success(this.translate('Done'));
-                });
+                if (folderId === 'archive') {
+                    [...this.checkedList].forEach(id => {
+                        this.collection.trigger('moving-to-archive', id, this.collection.get(id));
+
+                        this.uncheckRecord(id, null, true);
+                    });
+
+                    Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
+
+                    return;
+                }
+
+                this.collection.fetch()
+                    .then(() => Espo.Ui.success(this.translate('Done')));
             });
     }
 
@@ -257,6 +282,11 @@ class EmailListRecordView extends ListRecordView {
                 this.massMoveToFolder(folderId);
             });
         });
+    }
+
+    // noinspection JSUnusedGlobalSymbols
+    massActionMoveToArchive() {
+        this.massMoveToFolder('archive');
     }
 
     actionMarkAsImportant(data) {
@@ -395,9 +425,16 @@ class EmailListRecordView extends ListRecordView {
 
             this.moveToFolder(id, folderId)
                 .then(() => {
-                    this.collection.fetch().then(() => {
-                        Espo.Ui.success(this.translate('Done'));
-                    });
+                    if (folderId === 'archive') {
+                        this.collection.trigger('moving-to-archive', id, this.collection.get(id));
+
+                        Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
+
+                        return;
+                    }
+
+                    this.collection.fetch()
+                        .then(() => Espo.Ui.success(this.translate('Done')));
                 });
 
             return;
@@ -423,6 +460,7 @@ class EmailListRecordView extends ListRecordView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * @private
      * @param {{id: string}} data

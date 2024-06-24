@@ -100,17 +100,7 @@ class InboxService
         $previousFolderLink = $email->getGroupFolder();
 
         if ($previousFolderLink) {
-            $previousFolderId = $previousFolderLink->getId();
-
-            $previousFolder = $this->entityManager->getEntityById(GroupEmailFolder::ENTITY_TYPE, $previousFolderId);
-
-            if ($previousFolder && !$this->aclManager->checkEntityRead($user, $previousFolder)) {
-                throw new Forbidden("No access to current group folder.");
-            }
-
-            if (!$this->aclManager->checkField($user, Email::ENTITY_TYPE, 'groupFolder', Table::ACTION_EDIT)) {
-                throw new Forbidden("No access to `groupFolder` field.");
-            }
+            $this->checkCurrentGroupFolder($previousFolderLink->getId(), $user);
         }
 
         if ($folderId && str_starts_with($folderId, 'group:')) {
@@ -118,7 +108,7 @@ class InboxService
                 $this->moveToGroupFolder($email, substr($folderId, 6), $user);
             }
             catch (Exception $e) {
-                $this->log->debug("Move to group folder exception: " . $e->getMessage());
+                $this->log->debug("Could not move email to group folder. " . $e->getMessage());
 
                 throw $e;
             }
@@ -126,8 +116,14 @@ class InboxService
             return;
         }
 
+        if ($folderId === Folder::ARCHIVE) {
+            $this->moveToArchive($email, $user);
+
+            return;
+        }
+
         if ($previousFolderLink) {
-            $email->set('groupFolderId', null);
+            $email->setGroupFolderId(null);
 
             if (!$this->aclManager->checkEntityRead($user, $email)) {
                 throw new Forbidden("No read access to email to unset group folder.");
@@ -143,6 +139,7 @@ class InboxService
             ->set([
                 'folderId' => $folderId,
                 'inTrash' => false,
+                'inArchive' => false,
             ])
             ->where([
                 'deleted' => false,
@@ -178,9 +175,10 @@ class InboxService
             throw new Forbidden("No access to `groupFolder` field.");
         }
 
-        $email->set('groupFolderId', $folderId);
-
+        $email->setGroupFolderId($folderId);
         $this->entityManager->saveEntity($email);
+
+        $this->retrieveFromArchive($email, $user);
     }
 
     /**
@@ -495,5 +493,69 @@ class InboxService
         }
 
         return $data;
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    public function moveToArchive(Email $email, User $user): void
+    {
+        if (!$this->aclManager->checkEntityRead($user, $email)) {
+            throw new Forbidden("No 'read' access");
+        }
+
+        $update = $this->entityManager
+            ->getQueryBuilder()
+            ->update()
+            ->in(Email::RELATIONSHIP_EMAIL_USER)
+            ->set([
+                'folderId' => null,
+                'inArchive' => true,
+                'inTrash' => false,
+            ])
+            ->where([
+                'deleted' => false,
+                'userId' => $user->getId(),
+                'emailId' => $email->getId(),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($update);
+    }
+
+    public function retrieveFromArchive(Email $email, User $user): void
+    {
+        $update = $this->entityManager
+            ->getQueryBuilder()
+            ->update()
+            ->in(Email::RELATIONSHIP_EMAIL_USER)
+            ->set([
+                'folderId' => null,
+                'inArchive' => false,
+            ])
+            ->where([
+                'deleted' => false,
+                'userId' => $user->getId(),
+                'emailId' => $email->getId(),
+            ])
+            ->build();
+
+        $this->entityManager->getQueryExecutor()->execute($update);
+    }
+
+    /**
+     * @throws Forbidden
+     */
+    private function checkCurrentGroupFolder(string $folderId, User $user): void
+    {
+        $folder = $this->entityManager->getEntityById(GroupEmailFolder::ENTITY_TYPE, $folderId);
+
+        if ($folder && !$this->aclManager->checkEntityRead($user, $folder)) {
+            throw new Forbidden("No access to current group folder.");
+        }
+
+        if (!$this->aclManager->checkField($user, Email::ENTITY_TYPE, 'groupFolder', Table::ACTION_EDIT)) {
+            throw new Forbidden("No access to `groupFolder` field.");
+        }
     }
 }

@@ -117,7 +117,11 @@ class EmailDetailView extends DetailView {
                 return;
             }
 
-            if (!this.model.hasChanged('isImportant') && !this.model.hasChanged('inTrash')) {
+            if (
+                !this.model.hasChanged('isImportant') &&
+                !this.model.hasChanged('inTrash') &&
+                !this.model.hasChanged('inArchive')
+            ) {
                 return;
             }
 
@@ -127,6 +131,23 @@ class EmailDetailView extends DetailView {
                 headerView.reRender();
             }
         });
+
+        this.shortcutKeys['Control+Backspace'] = e => {
+            if ($(e.target).hasClass('note-editable')) {
+                return;
+            }
+
+            const recordView = /** @type {module:views/email/record/detail} */ this.getRecordView();
+
+            if (!this.model.get('isUsers') || this.model.get('inArchive')) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            recordView.actionMoveToArchive();
+        };
 
         this.shortcutKeys['Control+Delete'] = e => {
             if ($(e.target).hasClass('note-editable')) {
@@ -541,6 +562,7 @@ class EmailDetailView extends DetailView {
 
         const isImportant = this.model.get('isImportant');
         const inTrash = this.model.get('inTrash');
+        const inArchive = this.model.get('inArchive');
 
         const rootUrl = this.options.rootUrl || this.options.params.rootUrl || '#' + this.scope;
 
@@ -560,12 +582,21 @@ class EmailDetailView extends DetailView {
                 .get(0).innerHTML;
         }
 
+        let styleClass = '';
+
+        if (isImportant) {
+            styleClass = 'text-warning'
+        } else if (inTrash) {
+            styleClass = 'text-muted';
+        } else if (inArchive) {
+            styleClass = 'text-info';
+        }
+
         return this.buildHeaderHtml([
             $root,
             $('<span>')
                 .addClass('font-size-flexible title')
-                .addClass(isImportant ? 'text-warning' : '')
-                .addClass(inTrash ? 'text-muted' : '')
+                .addClass(styleClass)
                 .text(name),
         ]);
     }

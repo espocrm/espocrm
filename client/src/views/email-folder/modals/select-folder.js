@@ -46,10 +46,10 @@ define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep
 
         events: {
             'click a[data-action="selectFolder"]': function (e) {
-                let $target = $(e.currentTarget);
+                const $target = $(e.currentTarget);
 
-                let id = $target.attr('data-id');
-                let name = $target.attr('data-name');
+                const id = $target.attr('data-id');
+                const name = $target.attr('data-name');
 
                 this.trigger('select', id, name);
                 this.close();
@@ -75,7 +75,14 @@ define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep
 
                         this.folderDataList = data.list
                             .filter(item => {
-                                return ['inbox', 'important', 'sent', 'drafts', 'trash'].indexOf(item.id) === -1;
+                                return [
+                                    'inbox',
+                                    'important',
+                                    'sent',
+                                    'drafts',
+                                    'trash',
+                                    'archive',
+                                ].indexOf(item.id) === -1;
                             })
                             .map(item => {
                                 return {
@@ -88,7 +95,12 @@ define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep
                         this.folderDataList.unshift({
                             id: 'inbox',
                             name: this.translate('inbox', 'presetFilters', 'Email'),
-                        })
+                        });
+
+                        this.folderDataList.push({
+                            id: 'archive',
+                            name: this.translate('archive', 'presetFilters', 'Email'),
+                        });
                     })
             );
         },

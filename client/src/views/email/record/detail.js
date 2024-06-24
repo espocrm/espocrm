@@ -157,6 +157,14 @@ class EmailDetailRecordView extends DetailRecordView {
             });
 
             this.addDropdownItem({
+                labelTranslation: 'Email.actions.moveToArchive',
+                name: 'moveToArchive',
+                groupIndex: 2,
+                hidden: this.model.get('inArchive'),
+                onClick: () => this.actionMoveToArchive(),
+            });
+
+            this.addDropdownItem({
                 label: 'Move to Folder',
                 name: 'moveToFolder',
                 groupIndex: 2,
@@ -193,6 +201,14 @@ class EmailDetailRecordView extends DetailRecordView {
             } else {
                 this.hideActionItem('retrieveFromTrash');
                 this.showActionItem('moveToTrash');
+            }
+        });
+
+        this.listenTo(this.model, 'change:inArchive', () => {
+            if (this.model.get('inArchive')) {
+                this.hideActionItem('moveToArchive');
+            } else {
+                this.showActionItem('moveToArchive');
             }
         });
 
@@ -312,7 +328,9 @@ class EmailDetailRecordView extends DetailRecordView {
 
                 Espo.Ajax.postRequest(`Email/inbox/folders/${folderId}`, {id: this.model.id})
                     .then(() => {
-                        if (folderId === 'inbox') {
+                        this.model.set('inArchive', folderId === 'archive');
+
+                        if (folderId === 'inbox' || folderId === 'archive') {
                             folderId = null;
                         }
 
@@ -322,6 +340,21 @@ class EmailDetailRecordView extends DetailRecordView {
                     });
             });
         });
+    }
+
+    actionMoveToArchive() {
+        Espo.Ui.notify(' ... ');
+
+        Espo.Ajax.postRequest(`Email/inbox/folders/archive`, {id: this.model.id})
+            .then(() => {
+                this.model.set('inArchive', true);
+
+                Espo.Ui.info(this.translate('Moved to Archive', 'labels', 'Email'));
+
+                if (this.model.collection) {
+                    this.model.collection.trigger('moving-to-archive', this.model.id);
+                }
+            });
     }
 
     // noinspection JSUnusedGlobalSymbols

@@ -144,6 +144,20 @@
                         }
                     ]
                 }
+            },
+            "folderString": {
+                "visible": {
+                    "conditionGroup": [
+                        {
+                            "type": "isTrue",
+                            "attribute": "isUsers"
+                        },
+                        {
+                            "type": "isFalse",
+                            "attribute": "isUsersSent"
+                        }
+                    ]
+                }
             }
         },
         "panels": {

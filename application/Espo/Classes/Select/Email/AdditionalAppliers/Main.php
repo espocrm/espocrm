@@ -93,6 +93,7 @@ class Main implements AdditionalApplier
             Email::USERS_COLUMN_IS_READ,
             Email::USERS_COLUMN_IS_IMPORTANT,
             Email::USERS_COLUMN_IN_TRASH,
+            Email::USERS_COLUMN_IN_ARCHIVE,
             Email::USERS_COLUMN_FOLDER_ID,
         ];
 

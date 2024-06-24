@@ -27,15 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Email;
+namespace Espo\Classes\Select\Email\Where\ItemConverters;
 
-class Folder
+use Espo\Core\Select\Where\Item;
+use Espo\Core\Select\Where\ItemConverter;
+use Espo\Classes\Select\Email\Helpers\JoinHelper;
+use Espo\Entities\Email;
+use Espo\Entities\User;
+use Espo\ORM\Query\Part\WhereClause;
+use Espo\ORM\Query\Part\WhereItem as WhereClauseItem;
+use Espo\ORM\Query\SelectBuilder as QueryBuilder;
+
+class InArchiveIsFalse implements ItemConverter
 {
-    public const ALL = 'all';
-    public const INBOX = 'inbox';
-    public const SENT = 'sent';
-    public const DRAFTS = 'drafts';
-    public const IMPORTANT = 'important';
-    public const ARCHIVE = 'archive';
-    public const TRASH = 'trash';
+    public function __construct(private User $user, private JoinHelper $joinHelper)
+    {}
+
+    public function convert(QueryBuilder $queryBuilder, Item $item): WhereClauseItem
+    {
+        $this->joinHelper->joinEmailUser($queryBuilder, $this->user->getId());
+
+        return WhereClause::fromRaw([
+            Email::ALIAS_INBOX . '.inArchive' => false,
+        ]);
+    }
 }

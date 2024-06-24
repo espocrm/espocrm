@@ -27,15 +27,40 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Email;
+namespace Espo\Classes\FieldProcessing\Email;
 
-class Folder
+use Espo\Core\FieldProcessing\Loader;
+use Espo\Core\FieldProcessing\Loader\Params;
+use Espo\Entities\Email;
+use Espo\Entities\EmailFolder;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityManager;
+
+/**
+ * @implements Loader<Email>
+ */
+class FolderDataLoader implements Loader
 {
-    public const ALL = 'all';
-    public const INBOX = 'inbox';
-    public const SENT = 'sent';
-    public const DRAFTS = 'drafts';
-    public const IMPORTANT = 'important';
-    public const ARCHIVE = 'archive';
-    public const TRASH = 'trash';
+    public function __construct(private EntityManager $entityManager) {}
+
+    public function process(Entity $entity, Params $params): void
+    {
+        $folderId = $entity->get(Email::USERS_COLUMN_FOLDER_ID);
+
+        if (!$folderId) {
+            return;
+        }
+
+        $folder = $this->entityManager
+            ->getRDBRepositoryByClass(EmailFolder::class)
+            ->select(['id', 'name'])
+            ->where(['id' => $folderId])
+            ->findOne();
+
+        if (!$folder) {
+            return;
+        }
+
+        $entity->set('folderName', $folder->getName());
+    }
 }

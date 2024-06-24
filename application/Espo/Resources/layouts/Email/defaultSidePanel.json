@@ -6,6 +6,9 @@
         "name": "status"
     },
     {
+        "name": "folderString"
+    },
+    {
         "name": "replied"
     },
     {

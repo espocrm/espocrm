@@ -13,6 +13,8 @@
         "isRead_isFalse": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsNotReadIsTrue",
         "inTrash_isTrue": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\InTrashIsFalse",
         "inTrash_isFalse": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\InTrashIsTrue",
+        "inArchive_isTrue": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\InArchiveIsFalse",
+        "inArchive_isFalse": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\InArchiveIsTrue",
         "isImportant_isTrue": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsImportantIsTrue",
         "isImportant_isFalse": "Espo\\Classes\\Select\\Email\\Where\\ItemConverters\\IsImportantIsFalse"
     },

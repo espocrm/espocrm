@@ -3,6 +3,7 @@
     "readLoaderClassNameList": [
         "Espo\\Classes\\FieldProcessing\\Email\\AddressDataLoader",
         "Espo\\Classes\\FieldProcessing\\Email\\UserColumnsLoader",
+        "Espo\\Classes\\FieldProcessing\\Email\\FolderDataLoader",
         "Espo\\Classes\\FieldProcessing\\Email\\IcsDataLoader"
     ],
     "listLoaderClassNameList": [

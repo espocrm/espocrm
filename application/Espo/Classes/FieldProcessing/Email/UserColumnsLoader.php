@@ -41,14 +41,10 @@ use Espo\Entities\User;
  */
 class UserColumnsLoader implements Loader
 {
-    private EntityManager $entityManager;
-    private User $user;
-
-    public function __construct(EntityManager $entityManager, User $user)
-    {
-        $this->entityManager = $entityManager;
-        $this->user = $user;
-    }
+    public function __construct(
+        private EntityManager $entityManager,
+        private User $user
+    ) {}
 
     public function process(Entity $entity, Params $params): void
     {
@@ -58,6 +54,7 @@ class UserColumnsLoader implements Loader
                 Email::USERS_COLUMN_IS_READ,
                 Email::USERS_COLUMN_IS_IMPORTANT,
                 Email::USERS_COLUMN_IN_TRASH,
+                Email::USERS_COLUMN_IN_ARCHIVE,
             ])
             ->where([
                 'deleted' => false,
@@ -70,6 +67,7 @@ class UserColumnsLoader implements Loader
             $entity->set(Email::USERS_COLUMN_IS_READ, null);
             $entity->clear(Email::USERS_COLUMN_IS_IMPORTANT);
             $entity->clear(Email::USERS_COLUMN_IN_TRASH);
+            $entity->clear(Email::USERS_COLUMN_IN_ARCHIVE);
 
             return;
         }
@@ -78,6 +76,8 @@ class UserColumnsLoader implements Loader
             Email::USERS_COLUMN_IS_READ => $emailUser->get(Email::USERS_COLUMN_IS_READ),
             Email::USERS_COLUMN_IS_IMPORTANT => $emailUser->get(Email::USERS_COLUMN_IS_IMPORTANT),
             Email::USERS_COLUMN_IN_TRASH => $emailUser->get(Email::USERS_COLUMN_IN_TRASH),
+            Email::USERS_COLUMN_IN_ARCHIVE => $emailUser->get(Email::USERS_COLUMN_IN_ARCHIVE),
+            'isUsersSent' => $entity->getSentBy()?->getId() === $this->user->getId(),
         ]);
     }
 }

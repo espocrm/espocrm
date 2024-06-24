@@ -30,7 +30,9 @@
         "isReplied": "Is Replied",
         "isNotReplied": "Is Not Replied",
         "isUsers": "Is User's",
+        "isUsersSent": "Is User's Sent",
         "inTrash": "In Trash",
+        "inArchive": "In Archive",
         "folder": "Folder",
         "inboundEmails": "Group Accounts",
         "emailAccounts": "Personal Accounts",
@@ -44,6 +46,7 @@
         "messageId": "Message Id",
         "messageIdInternal": "Message Id (Internal)",
         "folderId": "Folder Id",
+        "folderString": "Folder",
         "fromName": "From Name",
         "fromString": "From String",
         "fromAddress": "From Address",
@@ -79,7 +82,7 @@
             "Draft": "Draft",
             "Sending": "Sending",
             "Sent": "Sent",
-            "Archived": "Archived",
+            "Archived": "Imported",
             "Received": "Received",
             "Failed": "Failed"
         }
@@ -111,7 +114,7 @@
         "Move to Trash": "Move to Trash",
         "Retrieve from Trash": "Retrieve from Trash",
         "Move to Folder": "Move to Folder",
-        "Moving to folder": "Moving to Folder",
+        "Moved to Archive": "Moved to Archive",
         "Filters": "Filters",
         "Folders": "Folders",
         "Group Folders": "Group Folders",
@@ -141,11 +144,15 @@
     },
     "presetFilters": {
         "sent": "Sent",
-        "archived": "Archived",
+        "archived": "Imported",
         "inbox": "Inbox",
         "drafts": "Drafts",
         "trash": "Trash",
+        "archive": "Archive",
         "important": "Important"
+    },
+    "actions": {
+        "moveToArchive": "Archive"
     },
     "massActions": {
         "markAsRead": "Mark as Read",
@@ -154,6 +161,7 @@
         "markAsNotImportant": "Unmark Importance",
         "moveToTrash": "Move to Trash",
         "moveToFolder": "Move to Folder",
+        "moveToArchive": "Archive",
         "retrieveFromTrash": "Retrieve from Trash"
     },
     "otherFields": {

@@ -51,6 +51,8 @@ class EmailListView extends ListView {
     FOLDER_DRAFTS = 'drafts'
     /** @const */
     FOLDER_TRASH = 'trash'
+    /** @const */
+    FOLDER_ARCHIVE = 'archive'
 
     noDropFolderIdList = [
         'sent',
@@ -227,7 +229,7 @@ class EmailListView extends ListView {
                 return true;
             }
 
-            if (folderId === this.FOLDER_TRASH) {
+            if (folderId === this.FOLDER_TRASH || folderId === this.FOLDER_ARCHIVE) {
                 return false;
             }
 
@@ -319,6 +321,17 @@ class EmailListView extends ListView {
             e.stopPropagation();
 
             this.getEmailRecordView().massActionMoveToTrash();
+        };
+
+        this.shortcutKeys['Control+Backspace'] = e => {
+            if (!this.hasSelectedRecords()) {
+                return;
+            }
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            this.getEmailRecordView().massActionMoveToArchive();
         };
 
         this.shortcutKeys['Control+KeyI'] = e => {
@@ -418,6 +431,7 @@ class EmailListView extends ListView {
             this.FOLDER_INBOX,
             this.FOLDER_IMPORTANT,
             this.FOLDER_SENT,
+            this.FOLDER_ARCHIVE,
         ];
 
         this.getFolderCollection(collection => {
@@ -462,7 +476,7 @@ class EmailListView extends ListView {
                         .then(() => Espo.Ui.notify(false));
 
                     if (id !== this.defaultFolderId) {
-                        this.getRouter().navigate('#Email/list/folder=' + id);
+                        this.getRouter().navigate(`#Email/list/folder=${id}`);
                     } else {
                         this.getRouter().navigate('#Email');
                     }

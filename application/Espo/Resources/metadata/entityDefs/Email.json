@@ -198,6 +198,13 @@
             "customizationDisabled": true,
             "layoutMassUpdateDisabled": true
         },
+        "inArchive": {
+            "type": "bool",
+            "notStorable": true,
+            "default": false,
+            "customizationDisabled": true,
+            "layoutMassUpdateDisabled": true
+        },
         "folderId": {
             "type": "varchar",
             "notStorable": true,
@@ -213,13 +220,32 @@
             "customizationDisabled": true,
             "layoutMassUpdateDisabled": true
         },
+        "isUsersSent": {
+            "type": "bool",
+            "notStorable": true,
+            "readOnly": true,
+            "utility": true
+        },
         "folder": {
             "type": "link",
             "notStorable": true,
             "orderDisabled": true,
             "readOnly": true,
             "entity": "EmailFolder",
-            "customizationDisabled": true
+            "customizationDisabled": true,
+            "layoutAvailabilityList": []
+        },
+        "folderString": {
+            "type": "link",
+            "notStorable": true,
+            "orderDisabled": true,
+            "readOnly": true,
+            "entity": "EmailFolder",
+            "customizationDisabled": true,
+            "view": "views/email/fields/folder-string",
+            "layoutAvailabilityList": [
+                "defaultSidePanel"
+            ]
         },
         "nameHash": {
             "type": "text",
@@ -320,7 +346,8 @@
                 "tooltipText"
             ],
             "inlineEditDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutMassUpdateDisabled": true,
+            "layoutDefaultSidePanelDisabled": true
         },
         "status": {
             "type": "enum",
@@ -582,6 +609,10 @@
                     "default": false
                 },
                 "inTrash": {
+                    "type": "bool",
+                    "default": false
+                },
+                "inArchive": {
                     "type": "bool",
                     "default": false
                 },

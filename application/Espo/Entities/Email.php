@@ -55,6 +55,7 @@ class Email extends Entity
 
     public const USERS_COLUMN_IS_READ = 'isRead';
     public const USERS_COLUMN_IN_TRASH = 'inTrash';
+    public const USERS_COLUMN_IN_ARCHIVE = 'inArchive';
     public const USERS_COLUMN_FOLDER_ID = 'folderId';
     public const USERS_COLUMN_IS_IMPORTANT = 'isImportant';
 

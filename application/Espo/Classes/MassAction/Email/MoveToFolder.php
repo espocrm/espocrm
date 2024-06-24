@@ -68,7 +68,11 @@ class MoveToFolder implements MassAction
             throw new BadRequest("No folder ID.");
         }
 
-        if ($folderId !== Folder::INBOX && !str_starts_with($folderId, 'group:')) {
+        if (
+            $folderId !== Folder::INBOX &&
+            $folderId !== Folder::ARCHIVE &&
+            !str_starts_with($folderId, 'group:')
+        ) {
             $folder = $this->entityManager
                 ->getRDBRepositoryByClass(EmailFolder::class)
                 ->where([
