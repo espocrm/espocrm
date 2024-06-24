@@ -629,6 +629,7 @@ class SelectBuilderTest extends BaseTestCase
 
         $expectedWhereClause = [
             Email::ALIAS_INBOX . '.inTrash' => false,
+            Email::ALIAS_INBOX . '.inArchive' => false,
             Email::ALIAS_INBOX . '.folderId' => null,
             Email::ALIAS_INBOX . '.userId' => $userId,
             [
