@@ -149,6 +149,8 @@ function init(langSets) {
             const view = /** @type {import('view').default} */options.espoView;
 
             if (!view) {
+                // Prevents an issue with a collapsed modal.
+                // @todo Revise.
                 return;
             }
 
