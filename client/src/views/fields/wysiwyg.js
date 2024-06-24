@@ -262,6 +262,10 @@ class WysiwygFieldView extends TextFieldView {
     }
 
     getValueForDisplay() {
+        if (!this.isReadMode()) {
+            return undefined;
+        }
+
         const value = super.getValueForDisplay();
 
         if (!this.isHtml()) {
