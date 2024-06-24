@@ -69,6 +69,10 @@ function init(langSets) {
             const options = context.options;
             const view = /** @type {import('view').default} */options.espoView;
 
+            if (!view) {
+                return;
+            }
+
             context.memo('button.cellParams', () => {
                 return ui.button({
                     className: '',
@@ -143,6 +147,12 @@ function init(langSets) {
 
             const options = context.options;
             const view = /** @type {import('view').default} */options.espoView;
+
+            if (!view) {
+                // Prevents an issue with a collapsed modal.
+                // @todo Revise.
+                return;
+            }
 
             context.memo('button.tableParams', () => {
                 return ui.button({
