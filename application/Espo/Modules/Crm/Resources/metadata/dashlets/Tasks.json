@@ -40,6 +40,9 @@
                         },
                         {
                             "name": "dateEnd"
+                        },
+                        {
+                            "name": "parent"
                         }
                     ]
                 ]

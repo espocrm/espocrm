@@ -33,6 +33,7 @@ use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\Select\Bool\Filters\OnlyMy;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
@@ -173,6 +174,13 @@ class UpcomingService
                 $entity = $this->entityManager->getNewEntity($itemEntityType);
 
                 $entity->set('id', $itemId);
+            }
+
+            if (
+                $entity instanceof CoreEntity &&
+                $entity->hasLinkParentField('parent')
+            ) {
+                $entity->loadParentNameField('parent');
             }
 
             $collection->append($entity);
