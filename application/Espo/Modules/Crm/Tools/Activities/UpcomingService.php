@@ -34,6 +34,7 @@ use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Select\Bool\Filters\OnlyMy;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime as DateTimeUtil;
@@ -69,7 +70,8 @@ class UpcomingService
         private Config $config,
         private Metadata $metadata,
         private Acl $acl,
-        private EntityManager $entityManager
+        private EntityManager $entityManager,
+        private ServiceContainer $serviceContainer
     ) {}
 
     /**
@@ -182,6 +184,8 @@ class UpcomingService
             ) {
                 $entity->loadParentNameField('parent');
             }
+
+            $this->serviceContainer->get($itemEntityType)->prepareEntityForOutput($entity);
 
             $collection->append($entity);
         }
