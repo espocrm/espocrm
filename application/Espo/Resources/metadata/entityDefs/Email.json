@@ -81,8 +81,10 @@
             "view": "views/email/fields/from-address-varchar",
             "textFilterDisabled": true,
             "customizationDisabled": true,
-            "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutAvailabilityList": [
+                "detail",
+                "filters"
+            ]
         },
         "to": {
             "type": "varchar",
@@ -97,8 +99,10 @@
             ],
             "textFilterDisabled": true,
             "customizationDisabled": true,
-            "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutAvailabilityList": [
+                "detail",
+                "filters"
+            ]
         },
         "cc": {
             "type": "varchar",
@@ -111,8 +115,9 @@
             ],
             "customizationDisabled": true,
             "textFilterDisabled": true,
-            "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutAvailabilityList": [
+                "detail"
+            ]
         },
         "bcc": {
             "type": "varchar",
@@ -125,8 +130,9 @@
             ],
             "customizationDisabled": true,
             "textFilterDisabled": true,
-            "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutAvailabilityList": [
+                "detail"
+            ]
         },
         "replyTo": {
             "type": "varchar",
@@ -135,8 +141,9 @@
             "view": "views/email/fields/email-address-varchar",
             "textFilterDisabled": true,
             "customizationDisabled": true,
-            "layoutDefaultSidePanelDisabled": true,
-            "layoutMassUpdateDisabled": true
+            "layoutAvailabilityList": [
+                "detail"
+            ]
         },
         "personStringData": {
             "type": "varchar",
