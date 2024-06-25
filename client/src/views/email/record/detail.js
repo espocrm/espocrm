@@ -132,14 +132,14 @@ class EmailDetailRecordView extends DetailRecordView {
                 label: 'Mark as Important',
                 name: 'markAsImportant',
                 hidden: this.model.get('isImportant'),
-                groupIndex: 2,
+                groupIndex: 1,
             });
 
             this.addDropdownItem({
                 label: 'Unmark Importance',
                 name: 'markAsNotImportant',
                 hidden: !this.model.get('isImportant'),
-                groupIndex: 2,
+                groupIndex: 1,
             });
 
             this.addDropdownItem({
