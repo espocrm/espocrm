@@ -1068,11 +1068,9 @@ class ListRecordView extends View {
         this.$selectAllCheckbox.prop('checked', true);
 
         this.massActionList.forEach(item => {
-            if (!~this.checkAllResultMassActionList.indexOf(item)) {
+            if (!this.checkAllResultMassActionList.includes(item)) {
                 this.$el
-                    .find(
-                        'div.list-buttons-container .actions-menu li a.mass-action[data-action="'+item+'"]'
-                    )
+                    .find(`div.list-buttons-container .actions-menu li a.mass-action[data-action="${item}"]`)
                     .parent()
                     .addClass('hidden');
             }
@@ -1097,10 +1095,9 @@ class ListRecordView extends View {
         this.$selectAllCheckbox.prop('checked', false);
 
         this.massActionList.forEach(item => {
-            if (!~this.checkAllResultMassActionList.indexOf(item)) {
+            if (!this.checkAllResultMassActionList.includes(item)) {
                 this.$el
-                    .find('div.list-buttons-container .actions-menu ' +
-                        'li a.mass-action[data-action="'+item+'"]')
+                    .find(`div.list-buttons-container .actions-menu li a.mass-action[data-action="${item}"]`)
                     .parent()
                     .removeClass('hidden');
             }
@@ -1163,10 +1160,10 @@ class ListRecordView extends View {
         const idle = this.allResultIsChecked && helper.checkIsIdle(this.collection.total);
 
         const proceedDownload = (attachmentId) => {
-            window.location = this.getBasePath() + '?entryPoint=download&id=' + attachmentId;
+            window.location = `${this.getBasePath()}?entryPoint=download&id=${attachmentId}`;
         };
 
-        this.createView('dialogExport', 'views/export/modals/export', o, (view) => {
+        this.createView('dialogExport', 'views/export/modals/export', o, view => {
             view.render();
 
             this.listenToOnce(view, 'proceed', (dialogData) => {
@@ -1181,8 +1178,7 @@ class ListRecordView extends View {
 
                 Espo.Ui.notify(this.translate('pleaseWait', 'messages'));
 
-                Espo.Ajax
-                    .postRequest(url, data, {timeout: 0})
+                Espo.Ajax.postRequest(url, data, {timeout: 0})
                     .then(/** Object.<string, *> */response => {
                         Espo.Ui.notify(false);
 
@@ -1190,9 +1186,7 @@ class ListRecordView extends View {
                             helper
                                 .process(response.exportId)
                                 .then(view => {
-                                    this.listenToOnce(view, 'download', id => {
-                                        proceedDownload(id);
-                                    });
+                                    this.listenToOnce(view, 'download', id => proceedDownload(id));
                                 });
 
                             return;
@@ -1281,8 +1275,7 @@ class ListRecordView extends View {
                 .then(/** Object.<string, *> */result => {
                     const successMessage = result.successMessage || defs.successMessage || 'done';
 
-                    this.collection
-                        .fetch()
+                    this.collection.fetch()
                         .then(() => {
                             let message = this.translate(successMessage, 'messages', this.scope);
 
@@ -1297,8 +1290,7 @@ class ListRecordView extends View {
 
         if (!bypassConfirmation) {
             this.confirm(this.translate(confirmationMsg, 'messages', this.scope), proceed, this);
-        }
-        else {
+        } else {
             proceed.call(this);
         }
     }
@@ -1343,12 +1335,13 @@ class ListRecordView extends View {
             const helper = new MassActionHelper(this);
             const idle = !!params.searchParams && helper.checkIsIdle(this.collection.total);
 
-            Espo.Ajax.postRequest('MassAction', {
-                entityType: this.entityType,
-                action: 'recalculateFormula',
-                params: params,
-                idle: idle,
-            })
+            Espo.Ajax
+                .postRequest('MassAction', {
+                    entityType: this.entityType,
+                    action: 'recalculateFormula',
+                    params: params,
+                    idle: idle,
+                })
                 .then(result => {
                     result = result || {};
 
@@ -1743,8 +1736,7 @@ class ListRecordView extends View {
                             }
 
                             Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                        }
-                        else {
+                        } else {
                             Espo.Ui.warning(this.translate('noRecordsUpdated', 'messages'));
                         }
 
@@ -3134,8 +3126,7 @@ class ListRecordView extends View {
                 id: id,
                 scope: scope,
                 model: model,
-                rootUrl: this.options.keepCurrentRootUrl ?
-                    this.getRouter().getCurrentUrl() : null,
+                rootUrl: this.options.keepCurrentRootUrl ? this.getRouter().getCurrentUrl() : null,
                 editDisabled: this.quickEditDisabled,
             })
             .then(view => {
