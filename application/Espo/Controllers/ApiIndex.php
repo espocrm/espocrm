@@ -29,10 +29,14 @@
 
 namespace Espo\Controllers;
 
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Utils\Json;
+
 class ApiIndex
 {
-    public function getActionIndex(): string
+    public function getActionIndex(Request $request, Response $response): void
     {
-        return "EspoCRM REST API";
+        $response->writeBody(Json::encode("EspoCRM REST API"));
     }
 }
