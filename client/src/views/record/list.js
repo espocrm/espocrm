@@ -531,10 +531,29 @@ class ListRecordView extends View {
     $selectAllCheckbox = null
 
     /**
-     * @protected
-     * @type {?Object.<string, Object.<string, *>>}
+     * Mass-action definitions.
+     *
+     * @typedef {Object} module:views/record/list~massActionItem
+     * @property {string} [name] A name.
+     * @property {number} [groupIndex] A group index.
+     * @property {string} [handler] A handler.
+     * @property {string} [initFunction] An init function.
+     * @property {string} [actionFunction] An action function.
+     * @property {string} [configCheck] A config check.
+     * @property {string} [aclScope] An ACL scope to check.
+     * @property {string} [acl] An access action to check.
+     * @property {string} [url]
+     * @property {boolean} [bypassConfirmation] To skip confirmation.
+     * @property {string} [confirmationMessage] A confirmation message.
+     * @property {string} [waitMessage] A wait message.
+     * @property {string} [successMessage] A success message.
      */
-    massActionDefs = null
+
+    /**
+     * @private
+     * @type {Object.<string, module:views/record/list~massActionItem>}
+     */
+    massActionDefs
 
     /** @private */
     _additionalRowActionList
@@ -955,7 +974,7 @@ class ListRecordView extends View {
             showCount: this.showCount && this.collection.total > 0,
             moreCount: moreCount,
             checkboxes: this.checkboxes,
-            massActionList: this.massActionList,
+            massActionList: this.getMassActionDataList(),
             rowList: this.rowList,
             topBar: topBar,
             checkAllResultDisabled: checkAllResultDisabled,
@@ -1848,11 +1867,19 @@ class ListRecordView extends View {
      * Add a mass action.
      *
      * @protected
-     * @param {string} item An action.
+     * @param {string|module:views/record/list~massActionItem} item An action.
      * @param {boolean} [allResult] To make available for all-result.
      * @param {boolean} [toBeginning] Add to the beginning of the list.
      */
     addMassAction(item, allResult, toBeginning) {
+        if (typeof item !== 'string') {
+            const name = item.name;
+
+            this.massActionDefs[name] = {...this.massActionDefs[name], ...item};
+
+            item = name;
+        }
+
         toBeginning ?
             this.massActionList.unshift(item) :
             this.massActionList.push(item);
@@ -2137,6 +2164,14 @@ class ListRecordView extends View {
         }
 
         this.massActionDefs = {
+            remove: {groupIndex: 0},
+            merge: {groupIndex: 0},
+            massUpdate: {groupIndex: 0},
+            export: {groupIndex: 2},
+            follow: {groupIndex: 4},
+            unfollow: {groupIndex: 4},
+            convertCurrency: {groupIndex: 6},
+            printToPdf: {groupIndex: 8},
             ...this.getMetadata().get(['clientDefs', 'Global', 'massActionDefs']) || {},
             ...this.getMetadata().get(['clientDefs', this.scope, 'massActionDefs']) || {},
         };
@@ -3494,6 +3529,42 @@ class ListRecordView extends View {
      */
     hasPagination() {
         return this.pagination;
+    }
+
+    /**
+     * @private
+     * @return {Array<string|false>}
+     */
+    getMassActionDataList() {
+        /** @type {string[][]} */
+        const groups = [];
+
+        this.massActionList.forEach(action => {
+            const item = this.massActionDefs[action];
+
+            // For bc.
+            if (item === false) {
+                return;
+            }
+
+            const index = (!item || item.groupIndex === undefined ? 9999 : item.groupIndex) + 100;
+
+            if (groups[index] === undefined) {
+                groups[index] = [];
+            }
+
+            groups[index].push(action);
+        });
+
+        const list = [];
+
+        groups.forEach(subList => {
+            subList.forEach(it => list.push(it));
+
+            list.push(false);
+        });
+
+        return list;
     }
 }
 

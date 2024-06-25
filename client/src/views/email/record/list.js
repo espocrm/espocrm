@@ -44,14 +44,16 @@ class EmailListRecordView extends ListRecordView {
         super.setup();
 
         if (this.collection.url === this.entityType) {
-            this.addMassAction('retrieveFromTrash', false, true);
-            this.addMassAction('moveToFolder', true, true);
-            this.addMassAction('moveToArchive', true, true);
-            this.addMassAction('markAsNotImportant', false, true);
-            this.addMassAction('markAsImportant', false, true);
-            this.addMassAction('markAsNotRead', false, true);
-            this.addMassAction('markAsRead', false, true);
-            this.addMassAction('moveToTrash', false, true);
+            this.addMassAction({name: 'moveToTrash', groupIndex: -5}, false);
+            this.addMassAction({name: 'moveToArchive', groupIndex: -5}, false);
+            this.addMassAction({name: 'moveToFolder', groupIndex: -5}, true);
+
+            this.addMassAction({name: 'markAsImportant', groupIndex: -4}, false);
+            this.addMassAction({name: 'markAsNotImportant', groupIndex: -4}, false);
+            this.addMassAction({name: 'markAsRead', groupIndex: -3}, false);
+            this.addMassAction({name: 'markAsNotRead', groupIndex: -3}, false);
+
+            this.addMassAction({name: 'retrieveFromTrash', groupIndex: -1}, false);
 
             this.dropdownItemList.push({
                 name: 'markAllAsRead',
