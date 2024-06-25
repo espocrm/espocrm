@@ -662,6 +662,7 @@ class SelectBuilderTest extends BaseTestCase
             [Email::ALIAS_INBOX . '.isRead', 'isRead'],
             [Email::ALIAS_INBOX . '.isImportant', 'isImportant'],
             [Email::ALIAS_INBOX . '.inTrash', 'inTrash'],
+            [Email::ALIAS_INBOX . '.inArchive', 'inArchive'],
             [Email::ALIAS_INBOX . '.folderId', 'folderId'],
         ];
 
