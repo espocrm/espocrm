@@ -547,6 +547,7 @@ class ListRecordView extends View {
      * @property {string} [confirmationMessage] A confirmation message.
      * @property {string} [waitMessage] A wait message.
      * @property {string} [successMessage] A success message.
+     * @property {boolean} [hidden] Is hidden.
      */
 
     /**
@@ -974,7 +975,7 @@ class ListRecordView extends View {
             showCount: this.showCount && this.collection.total > 0,
             moreCount: moreCount,
             checkboxes: this.checkboxes,
-            massActionList: this.getMassActionDataList(),
+            massActionDataList: this.getMassActionDataList(),
             rowList: this.rowList,
             topBar: topBar,
             checkAllResultDisabled: checkAllResultDisabled,
@@ -1095,7 +1096,10 @@ class ListRecordView extends View {
         this.$selectAllCheckbox.prop('checked', false);
 
         this.massActionList.forEach(item => {
-            if (!this.checkAllResultMassActionList.includes(item)) {
+            if (
+                !this.checkAllResultMassActionList.includes(item) &&
+                !(this.massActionDefs[item] || {}).hidden
+            ) {
                 this.$el
                     .find(`div.list-buttons-container .actions-menu li a.mass-action[data-action="${item}"]`)
                     .parent()
@@ -3523,8 +3527,38 @@ class ListRecordView extends View {
     }
 
     /**
+     * Hide a mass action. Requires re-render.
+     *
+     * @protected
+     * @param {string} name An action name.
+     * @since 8.4.0
+     */
+    hideMassAction(name) {
+        if (!this.massActionDefs[name]) {
+            this.massActionDefs[name] = {};
+        }
+
+        this.massActionDefs[name].hidden = true;
+    }
+
+    /**
+     * Show a mass action. Requires re-render.
+     *
+     * @protected
+     * @param {string} name An action name.
+     * @since 8.4.0
+     */
+    showMassAction(name) {
+        if (!this.massActionDefs[name]) {
+            this.massActionDefs[name] = {};
+        }
+
+        this.massActionDefs[name].hidden = false;
+    }
+
+    /**
      * @private
-     * @return {Array<string|false>}
+     * @return {Array<{name: string, hidden: boolean}|false>}
      */
     getMassActionDataList() {
         /** @type {string[][]} */
@@ -3555,7 +3589,16 @@ class ListRecordView extends View {
             list.push(false);
         });
 
-        return list;
+        return list.map(name => {
+            if (name === false) {
+                return false;
+            }
+
+            return {
+                name,
+                hidden: (this.massActionDefs[name] || {}).hidden,
+            };
+        });
     }
 }
 

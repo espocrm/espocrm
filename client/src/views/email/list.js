@@ -489,6 +489,7 @@ class EmailListView extends ListView {
 
     applyFolder() {
         this.collection.selectedFolderId = this.selectedFolderId;
+        this.collection.trigger('select-folder');
 
         if (!this.selectedFolderId) {
             this.collection.whereFunction = null;

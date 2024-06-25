@@ -2,7 +2,7 @@
     <div class="list-buttons-container clearfix">
         {{#if displayActionsButtonGroup}}
             <div class="btn-group actions">
-                {{#if massActionList}}
+                {{#if massActionDataList}}
                     <button
                         type="button"
                         class="btn btn-default btn-xs-wide dropdown-toggle actions-button hidden"
@@ -52,17 +52,17 @@
                     {{/if}}
                 </div>
 
-                {{#if massActionList}}
+                {{#if massActionDataList}}
                     <ul class="dropdown-menu actions-menu">
-                        {{#each massActionList}}
+                        {{#each massActionDataList}}
                             {{#if this}}
-                                <li>
+                                <li {{#if hidden}}class="hidden"{{/if}}>
                                     <a
                                         role="button"
                                         tabindex="0"
-                                        data-action="{{./this}}"
-                                        class='mass-action'
-                                    >{{translate this category="massActions" scope=../scope}}</a></li>
+                                        data-action="{{name}}"
+                                        class="mass-action"
+                                    >{{translate name category="massActions" scope=../scope}}</a></li>
                             {{else}}
                                 {{#unless @first}}
                                     {{#unless @last}}
@@ -84,15 +84,15 @@
                     >{{translate 'Actions'}} <span class="caret"></span>
                     </button>
                     <ul class="dropdown-menu actions-menu">
-                        {{#each massActionList}}
+                        {{#each massActionDataList}}
                             {{#if this}}
-                                <li>
+                                <li {{#if hidden}}class="hidden"{{/if}}>
                                     <a
                                         role="button"
                                         tabindex="0"
-                                        data-action="{{./this}}"
-                                        class='mass-action'
-                                    >{{translate this category="massActions" scope=../scope}}</a>
+                                        data-action="{{name}}"
+                                        class="mass-action"
+                                    >{{translate name category="massActions" scope=../scope}}</a>
                                 </li>
                             {{else}}
                                 {{#unless @first}}

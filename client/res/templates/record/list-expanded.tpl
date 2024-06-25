@@ -2,26 +2,25 @@
 {{#if topBar}}
 <div class="list-buttons-container clearfix">
     {{#if checkboxes}}
-    {{#if massActionList}}
+    {{#if massActionDataList}}
     <div class="btn-group actions">
         <button
             type="button"
             class="btn btn-default dropdown-toggle actions-button"
             data-toggle="dropdown"
             disabled
-        >
-            {{translate 'Actions'}}
-            <span class="caret"></span>
+        >{{translate 'Actions'}} <span class="caret"></span>
         </button>
         <ul class="dropdown-menu">
-            {{#each massActionList}}
-            <li>
-                <a
-                    role="button"
-                    tabindex="0"
-                    data-action="{{./this}}"
-                    class='mass-action'
-                >{{translate this category="massActions" scope=../scope}}</a></li>
+            {{#each massActionDataList}}
+                <li {{#if hidden}}class="hidden"{{/if}}>
+                    <a
+                        role="button"
+                        tabindex="0"
+                        data-action="{{name}}"
+                        class="mass-action"
+                    >{{translate name category="massActions" scope=../scope}}</a>
+                </li>
             {{/each}}
         </ul>
     </div>

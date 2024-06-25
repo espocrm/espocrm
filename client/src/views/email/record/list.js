@@ -44,6 +44,8 @@ class EmailListRecordView extends ListRecordView {
         super.setup();
 
         if (this.collection.url === this.entityType) {
+            this.addMassAction({name: 'retrieveFromTrash', groupIndex: -6}, false);
+
             this.addMassAction({name: 'moveToTrash', groupIndex: -5}, false);
             this.addMassAction({name: 'moveToArchive', groupIndex: -5}, false);
             this.addMassAction({name: 'moveToFolder', groupIndex: -5}, true);
@@ -53,12 +55,13 @@ class EmailListRecordView extends ListRecordView {
             this.addMassAction({name: 'markAsRead', groupIndex: -3}, false);
             this.addMassAction({name: 'markAsNotRead', groupIndex: -3}, false);
 
-            this.addMassAction({name: 'retrieveFromTrash', groupIndex: -1}, false);
-
             this.dropdownItemList.push({
                 name: 'markAllAsRead',
                 label: 'Mark all as read',
             });
+
+            this.controlEmailMassActionsVisibility();
+            this.listenTo(this.collection, 'select-folder', () => this.controlEmailMassActionsVisibility());
         }
 
         this.listenTo(this.collection, 'moving-to-trash', (id) => {
@@ -525,6 +528,33 @@ class EmailListRecordView extends ListRecordView {
         }
 
         this.massActionMarkAsImportant();
+    }
+
+    /**
+     * @private
+     */
+    controlEmailMassActionsVisibility() {
+        const moveToArchive =
+            this.collection.selectedFolderId !== 'trash' &&
+            this.collection.selectedFolderId !== 'archive'
+
+        moveToArchive ?
+            this.showMassAction('moveToArchive') :
+            this.hideMassAction('moveToArchive');
+
+        if (this.collection.selectedFolderId === 'trash') {
+            this.hideMassAction('moveToTrash');
+            this.showMassAction('retrieveFromTrash');
+        } else {
+            this.showMassAction('moveToTrash');
+            this.hideMassAction('retrieveFromTrash');
+        }
+
+        if (this.collection.selectedFolderId === 'important') {
+            this.hideMassAction('markAsImportant');
+        } else {
+            this.showMassAction('markAsImportant');
+        }
     }
 }
 
