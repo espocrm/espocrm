@@ -27,6 +27,7 @@
     "options": {
         "denialReason": {
             "CREDENTIALS": "Invalid credentials",
+            "WRONG_CODE": "Wrong code",
             "INACTIVE_USER": "Inactive user",
             "IS_PORTAL_USER": "Portal user",
             "IS_NOT_PORTAL_USER": "Not a portal user",

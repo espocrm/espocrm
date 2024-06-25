@@ -241,7 +241,7 @@ class Authentication
             $result = $this->processTwoFactor($result, $request);
 
             if ($result->isFail()) {
-                return $this->processFail($result, $data, $request);
+                return $this->processTwoFactorFail($result, $data, $request, $authLogRecord);
             }
         }
 
@@ -817,5 +817,23 @@ class Authentication
         }
 
         throw new Forbidden();
+    }
+
+    private function processTwoFactorFail(
+        Result $result,
+        AuthenticationData $data,
+        Request $request,
+        ?AuthLogRecord $authLogRecord
+    ): Result {
+
+        if ($authLogRecord) {
+            $authLogRecord
+                ->setIsDenied()
+                ->setDenialReason(AuthLogRecord::DENIAL_REASON_WRONG_CODE);
+
+            $this->entityManager->saveEntity($authLogRecord);
+        }
+
+        return $this->processFail($result, $data, $request);
     }
 }

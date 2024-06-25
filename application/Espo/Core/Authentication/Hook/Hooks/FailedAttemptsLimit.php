@@ -68,6 +68,8 @@ class FailedAttemptsLimit implements BeforeLogin
             return;
         }
 
+        $isSecondStep = $request->getHeader('Espo-Authorization-Code') !== null;
+
         $failedAttemptsPeriod = $this->configDataProvider->getFailedAttemptsPeriod();
         $maxFailedAttempts = $this->configDataProvider->getMaxFailedAttemptNumber();
 
@@ -80,13 +82,20 @@ class FailedAttemptsLimit implements BeforeLogin
             throw new RuntimeException($e->getMessage());
         }
 
-        $apAddress = $this->util->obtainIpFromRequest($request);
+        $ipAddress = $this->util->obtainIpFromRequest($request);
 
         $where = [
             'requestTime>' => $requestTimeFrom->format('U'),
-            'ipAddress' => $apAddress,
             'isDenied' => true,
         ];
+
+        if ($isSecondStep) {
+            $where['username'] = $data->getUsername();
+        }
+
+        if (!$isSecondStep) {
+            $where['ipAddress'] = $ipAddress;
+        }
 
         $wasFailed = (bool) $this->entityManager
             ->getRDBRepository(AuthLogRecord::ENTITY_TYPE)
@@ -107,6 +116,12 @@ class FailedAttemptsLimit implements BeforeLogin
             return;
         }
 
-        throw new Forbidden("Max failed login attempts exceeded for IP address $apAddress.");
+        if ($isSecondStep) {
+            $username = $data->getUsername() ?? '';
+
+            throw new Forbidden("Max failed 2FA login attempts exceeded for username '$username'.");
+        }
+
+        throw new Forbidden("Max failed login attempts exceeded for IP address $ipAddress.");
     }
 }
