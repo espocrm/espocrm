@@ -195,8 +195,12 @@ class Auth
             throw new BadRequest("Auth: Bad authorization string provided.");
         }
 
-        /** @var array{string, string} */
-        return explode(':', $stringDecoded, 2);
+        [$username, $password] = explode(':', $stringDecoded, 2);
+
+        $username = trim($username);
+        $password = trim($password);
+
+        return [$username, $password];
     }
 
     private function handleSecondStepRequired(Response $response, Result $result): void
@@ -315,6 +319,14 @@ class Auth
         ) {
             $username = $request->getServerParam('PHP_AUTH_USER');
             $password = $request->getServerParam('PHP_AUTH_PW');
+
+            if (is_string($username)) {
+                $username = trim($username);
+            }
+
+            if (is_string($password)) {
+                $password = trim($password);
+            }
 
             return [$username, $password];
         }

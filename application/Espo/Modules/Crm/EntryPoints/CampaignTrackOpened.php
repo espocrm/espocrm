@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\EntryPoints;
 
+use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\EmailQueueItem;
 use Espo\Modules\Crm\Entities\MassEmail;
@@ -47,7 +48,8 @@ class CampaignTrackOpened implements EntryPoint
 
     public function __construct(
         private EntityManager $entityManager,
-        private LogService $service
+        private LogService $service,
+        private User $user,
     ) {}
 
     /**
@@ -105,7 +107,9 @@ class CampaignTrackOpened implements EntryPoint
             return;
         }
 
-        $this->service->logOpened($campaignId, $queueItem);
+        if ($this->user->isSystem()) {
+            $this->service->logOpened($campaignId, $queueItem);
+        }
 
         header('Content-Type: image/png');
 

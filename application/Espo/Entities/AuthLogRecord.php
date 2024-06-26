@@ -36,6 +36,7 @@ class AuthLogRecord extends Entity
     public const ENTITY_TYPE = 'AuthLogRecord';
 
     public const DENIAL_REASON_CREDENTIALS = 'CREDENTIALS';
+    public const DENIAL_REASON_WRONG_CODE = 'WRONG_CODE';
     public const DENIAL_REASON_INACTIVE_USER = 'INACTIVE_USER';
     public const DENIAL_REASON_IS_PORTAL_USER = 'IS_PORTAL_USER';
     public const DENIAL_REASON_IS_NOT_PORTAL_USER = 'IS_NOT_PORTAL_USER';

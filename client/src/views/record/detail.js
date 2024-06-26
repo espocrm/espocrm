@@ -2085,7 +2085,10 @@ class DetailRecordView extends BaseRecordView {
                         return;
                     }
 
-                    view.inlineEdit();
+                    const initialAttributes = {...view.initialAttributes};
+
+                    view.inlineEdit()
+                        .then(() => view.initialAttributes = initialAttributes);
                 }
             });
     }
