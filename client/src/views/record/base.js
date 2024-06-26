@@ -1126,7 +1126,10 @@ class BaseRecordView extends View {
                 });
 
             this.afterSaveError();
-            this.setModelAttributes(beforeSaveAttributes);
+
+            if (!options.bypassClose) {
+                this.setModelAttributes(beforeSaveAttributes);
+            }
 
             this.lastSaveCancelReason = 'error';
 

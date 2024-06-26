@@ -1391,6 +1391,7 @@ class BaseFieldView extends View {
                     if (key === 'Control+Enter') {
                         e.stopPropagation();
 
+                        this.fetchToModel();
                         this.inlineEditSave();
 
                         setTimeout(() => {
@@ -1415,6 +1416,7 @@ class BaseFieldView extends View {
                         e.preventDefault();
                         e.stopPropagation();
 
+                        this.fetchToModel();
                         this.inlineEditSave({bypassClose: true});
                     }
                 });
