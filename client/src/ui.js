@@ -505,7 +505,7 @@ class Dialog {
             $main.append($button);
         });
 
-        const allDdItemsHidden = this.dropdownItemList.filter(o => !o.hidden).length === 0;
+        const allDdItemsHidden = this.dropdownItemList.filter(o => o && !o.hidden).length === 0;
 
         const $dropdown = $('<div>')
             .addClass('btn-group')
