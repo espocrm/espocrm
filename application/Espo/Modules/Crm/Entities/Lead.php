@@ -136,4 +136,11 @@ class Lead extends \Espo\Core\Entities\Person
         /** @var ?DateTime */
         return $this->getValueObject('convertedAt');
     }
+
+    public function setStatus(string $status): self
+    {
+        $this->set('status', $status);
+
+        return $this;
+    }
 }
