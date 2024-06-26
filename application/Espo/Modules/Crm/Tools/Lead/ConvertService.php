@@ -101,6 +101,8 @@ class ConvertService
             $account
         );
 
+        $account ??= $this->getSelectedAccount($contact);
+
         $opportunity = $this->processOpportunity(
             $lead,
             $records,
@@ -573,5 +575,26 @@ class ConvertService
         if ($contact && $contact->hasId()) {
             $this->streamService->followEntity($contact, $this->user->getId());
         }
+    }
+
+    private function getSelectedAccount(?Contact $contact): ?Account
+    {
+        if (!$contact) {
+            return null;
+        }
+
+        if (!$contact->getAccount()) {
+            return null;
+        }
+
+        $account = $this->entityManager
+            ->getRDBRepositoryByClass(Account::class)
+            ->getById($contact->getAccount()->getId());
+
+        if ($account && !$this->acl->checkEntityRead($account)) {
+            return null;
+        }
+
+        return $account;
     }
 }
