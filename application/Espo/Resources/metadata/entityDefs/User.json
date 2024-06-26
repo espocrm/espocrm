@@ -492,6 +492,24 @@
             "default": "0",
             "utility": true,
             "customizationDisabled": true
+        },
+        "emailAddressList": {
+            "type": "array",
+            "utility": true,
+            "notStorable": true,
+            "readOnly": true
+        },
+        "userEmailAddressList": {
+            "type": "array",
+            "utility": true,
+            "notStorable": true,
+            "readOnly": true
+        },
+        "excludeFromReplyEmailAddressList": {
+            "type": "array",
+            "utility": true,
+            "notStorable": true,
+            "readOnly": true
         }
     },
     "links": {
