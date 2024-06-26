@@ -82,7 +82,11 @@
         },
         "noDeletedAttribute": {
             "type": "boolean",
-            "description": "Do not add the `deleted` attribute."
+            "description": "Do not add the `deleted` attribute. Soft-deletes will be impossible."
+        },
+        "deleteId": {
+            "type": "boolean",
+            "description": "Adds `deletedId` attribute. An random ID is written there on soft-deletes. As of v8.4."
         },
         "hooksDisabled": {
             "type": "boolean",

@@ -1115,10 +1115,23 @@ class Service implements Crud,
         }
 
         if (!$entity->get('deleted')) {
-            throw new Forbidden();
+            throw new Forbidden("No 'deleted' attribute.");
         }
 
-        $this->getRepository()->restoreDeleted($entity->getId());
+        $this->entityManager->getTransactionManager()
+            ->run(function () use ($entity) {
+                $this->getRepository()->restoreDeleted($entity->getId());
+
+                if (
+                    $entity->hasAttribute('deleteId') &&
+                    $this->metadata->get("entityDefs.$this->entityType.deleteId")
+                ) {
+                    $this->entityManager->refreshEntity($entity);
+
+                    $entity->set('deleteId', '0');
+                    $this->getRepository()->save($entity, [SaveOption::SILENT => true]);
+                }
+            });
     }
 
     public function getMaxSelectTextAttributeLength(): ?int

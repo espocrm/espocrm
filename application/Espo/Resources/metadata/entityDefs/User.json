@@ -484,15 +484,6 @@
             "directAccessDisabled": true,
             "exportDisabled": true
         },
-        "deleteId": {
-            "type": "varchar",
-            "maxLength": 17,
-            "readOnly": true,
-            "notNull": true,
-            "default": "0",
-            "utility": true,
-            "customizationDisabled": true
-        },
         "emailAddressList": {
             "type": "array",
             "utility": true,
@@ -636,5 +627,6 @@
                 "deleteId"
             ]
         }
-    }
+    },
+    "deleteId": true
 }

@@ -55,6 +55,7 @@ class FieldManager
     private $forbiddenFieldNameList = [
         'id',
         'deleted',
+        'deleteId',
         'skipDuplicateCheck',
         'isFollowed',
         'isStarred',

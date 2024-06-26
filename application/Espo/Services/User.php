@@ -257,14 +257,6 @@ class User extends Record
         }
 
         parent::restoreDeleted($id);
-
-        $entity = $this->getRepository()->getById($id);
-
-        if ($entity) {
-            $entity->set('deleteId', '0');
-
-            $this->getRepository()->save($entity);
-        }
     }
 
     private function createPasswordChecker(): PasswordChecker

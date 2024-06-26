@@ -27,35 +27,58 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Hooks\User;
+namespace Espo\Hooks\Common;
 
 use Espo\Core\Hook\Hook\BeforeRemove;
-use Espo\Core\Hook\Hook\BeforeSave;
+use Espo\Core\Utils\Metadata;
 use Espo\Core\Utils\Util;
-use Espo\Entities\User;
 use Espo\ORM\Entity;
 use Espo\ORM\Repository\Option\RemoveOptions;
 use Espo\ORM\Repository\Option\SaveOptions;
+use Espo\Core\Hook\Hook\BeforeSave;
 
 /**
- * @implements BeforeRemove<User>
- * @implements BeforeSave<User>
+ * Handles 'deleteId' on soft-deletes.
+ *
+ * @implements BeforeSave<Entity>
+ * @implements BeforeRemove<Entity>
  */
-class DeleteId implements BeforeRemove, BeforeSave
+class DeleteId implements BeforeSave, BeforeRemove
 {
+    private const ID_ATTR = 'deleteId';
+    private const DELETED_ATTR = 'deleted';
+
+    public function __construct(
+        private Metadata $metadata,
+    ) {}
+
     public function beforeRemove(Entity $entity, RemoveOptions $options): void
     {
-        $entity->set('deleteId', Util::generateId());
+        if (!$this->hasDeleteId($entity)) {
+            return;
+        }
+
+        $entity->set(self::ID_ATTR, Util::generateId());
     }
 
     public function beforeSave(Entity $entity, SaveOptions $options): void
     {
-        if (!$entity->isAttributeChanged('deleted')) {
+        if (!$this->hasDeleteId($entity)) {
             return;
         }
 
-        $deleteId = $entity->get('deleted') ? Util::generateId() : '0';
+        if (!$entity->isAttributeChanged(self::DELETED_ATTR)) {
+            return;
+        }
 
-        $entity->set('deleteId', $deleteId);
+        $deleteId = $entity->get(self::DELETED_ATTR) ? Util::generateId() : '0';
+
+        $entity->set(self::ID_ATTR, $deleteId);
+    }
+
+    private function hasDeleteId(Entity $entity): bool
+    {
+        return $entity->hasAttribute(self::DELETED_ATTR) &&
+            $this->metadata->get("entityDefs.{$entity->getEntityType()}.deleteId");
     }
 }

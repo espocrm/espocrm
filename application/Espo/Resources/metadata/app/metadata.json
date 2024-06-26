@@ -44,6 +44,7 @@
         ["recordDefs"]
     ],
     "additionalBuilderClassNameList": [
-        "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\Fields"
+        "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\Fields",
+        "Espo\\Core\\Utils\\Metadata\\AdditionalBuilder\\DeleteIdField"
     ]
 }
