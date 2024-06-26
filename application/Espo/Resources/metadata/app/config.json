@@ -52,6 +52,9 @@
             "level": "admin",
             "readOnly": true
         },
+        "userNameRegularExpression": {
+            "readOnly": true
+        },
         "workingTimeCalendar": {
             "level": "admin"
         },
