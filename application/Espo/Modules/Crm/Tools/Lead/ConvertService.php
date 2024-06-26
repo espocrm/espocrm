@@ -274,6 +274,7 @@ class ConvertService
 
     /**
      * @param Entity[] $duplicateList
+     * @throws Forbidden
      */
     private function processAccount(
         Lead $lead,
@@ -285,6 +286,10 @@ class ConvertService
 
         if (!$records->has(Account::ENTITY_TYPE)) {
             return null;
+        }
+
+        if (!$this->acl->checkScope(Account::ENTITY_TYPE, Acl\Table::ACTION_CREATE)) {
+            throw new Forbidden("No 'create' access for Account.");
         }
 
         $account = $this->entityManager->getRDBRepositoryByClass(Account::class)->getNew();
@@ -318,6 +323,7 @@ class ConvertService
 
     /**
      * @param Entity[] $duplicateList
+     * @throws Forbidden
      */
     private function processContact(
         Lead $lead,
@@ -330,6 +336,10 @@ class ConvertService
 
         if (!$records->has(Contact::ENTITY_TYPE)) {
             return null;
+        }
+
+        if (!$this->acl->checkScope(Contact::ENTITY_TYPE, Acl\Table::ACTION_CREATE)) {
+            throw new Forbidden("No 'create' access for Contact.");
         }
 
         $contact = $this->entityManager->getRDBRepositoryByClass(Contact::class)->getNew();
@@ -367,6 +377,7 @@ class ConvertService
 
     /**
      * @param Entity[] $duplicateList
+     * @throws Forbidden
      */
     private function processOpportunity(
         Lead $lead,
@@ -380,6 +391,10 @@ class ConvertService
 
         if (!$records->has(Opportunity::ENTITY_TYPE)) {
             return null;
+        }
+
+        if (!$this->acl->checkScope(Opportunity::ENTITY_TYPE, Acl\Table::ACTION_CREATE)) {
+            throw new Forbidden("No 'create' access for Opportunity.");
         }
 
         $opportunity = $this->entityManager->getRDBRepositoryByClass(Opportunity::class)->getNew();

@@ -93,7 +93,7 @@ class ConvertLeadView extends MainView {
                 return
             }
 
-            if (this.getAcl().check(scope, 'edit')) {
+            if (this.getAcl().check(scope, 'create')) {
                 scopeList.push(scope);
             }
         });
