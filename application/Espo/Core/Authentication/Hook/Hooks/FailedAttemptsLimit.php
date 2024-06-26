@@ -91,6 +91,7 @@ class FailedAttemptsLimit implements BeforeLogin
 
         if ($isSecondStep) {
             $where['username'] = $data->getUsername();
+            $where['denialReason'] = AuthLogRecord::DENIAL_REASON_WRONG_CODE;
         }
 
         if (!$isSecondStep) {
