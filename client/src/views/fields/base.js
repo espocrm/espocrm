@@ -1253,6 +1253,7 @@ class BaseFieldView extends View {
         if (isInvalid) {
             Espo.Ui.error(this.translate('Not valid'));
 
+            // @todo Revise.
             model.set(prev, {silent: true});
 
             return;
@@ -1273,6 +1274,7 @@ class BaseFieldView extends View {
             .catch(() => {
                 Espo.Ui.error(this.translate('Error occurred'));
 
+                // @todo Revise.
                 model.set(prev, {silent: true});
 
                 this.reRender();
