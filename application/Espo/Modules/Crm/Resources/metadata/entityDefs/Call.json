@@ -20,7 +20,8 @@
             "type": "datetime",
             "required": true,
             "default": "javascript: return this.dateTime.getNow(15);",
-            "audited": true
+            "audited": true,
+            "view": "crm:views/call/fields/date-start"
         },
         "dateEnd": {
             "type": "datetime",

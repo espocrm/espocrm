@@ -26,17 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import DatetimeOptionalFieldView from 'views/fields/datetime-optional';
+import DatetimeFieldView from 'views/fields/datetime';
 import moment from 'moment';
 
-class DateStartMeetingFieldView extends DatetimeOptionalFieldView {
-
-    emptyTimeInInlineEditDisabled = true
+class DateStartCallFieldView extends DatetimeFieldView {
 
     setup() {
         super.setup();
-
-        this.noneOption = this.translate('All-Day', 'labels', 'Meeting');
 
         this.notActualStatusList = [
             ...(this.getMetadata().get(`scopes.${this.entityType}.completedStatusList`) || []),
@@ -48,7 +44,6 @@ class DateStartMeetingFieldView extends DatetimeOptionalFieldView {
         return [
             ...super.getAttributeList(),
             'dateEnd',
-            'dateEndDate',
             'status',
         ];
     }
@@ -65,7 +60,7 @@ class DateStartMeetingFieldView extends DatetimeOptionalFieldView {
         ) {
             if (this.isDateInPast('dateEnd')) {
                 style = 'danger';
-            } else if (this.isDateInPast('dateStart', true)) {
+            } else if (this.isDateInPast('dateStart')) {
                 style = 'warning';
             }
         }
@@ -80,27 +75,9 @@ class DateStartMeetingFieldView extends DatetimeOptionalFieldView {
     /**
      * @private
      * @param {string} field
-     * @param {boolean} [isFrom]
      * @return {boolean}
      */
-    isDateInPast(field, isFrom) {
-        if (this.isDate()) {
-            const value = this.model.get(field + 'Date');
-
-            if (value) {
-                const timeValue = isFrom ? value + ' 00:00' : value + ' 23:59';
-
-                const d = moment.tz(timeValue, this.getDateTime().getTimeZone());
-                const now = this.getDateTime().getNowMoment();
-
-                if (d.unix() < now.unix()) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
+    isDateInPast(field) {
         const value = this.model.get(field);
 
         if (value) {
@@ -114,44 +91,6 @@ class DateStartMeetingFieldView extends DatetimeOptionalFieldView {
 
         return false;
     }
-
-    afterRender() {
-        super.afterRender();
-
-        if (this.isEditMode()) {
-            this.controlTimePartVisibility();
-        }
-    }
-
-    fetch() {
-        const data = super.fetch();
-
-        if (data[this.nameDate]) {
-            data.isAllDay = true;
-        } else {
-            data.isAllDay = false;
-        }
-
-        return data;
-    }
-
-    controlTimePartVisibility() {
-        if (!this.isEditMode()) {
-            return;
-        }
-
-        if (!this.isInlineEditMode()) {
-            return;
-        }
-
-        if (this.model.get('isAllDay')) {
-            this.$time.addClass('hidden');
-            this.$el.find('.time-picker-btn').addClass('hidden');
-        } else {
-            this.$time.removeClass('hidden');
-            this.$el.find('.time-picker-btn').removeClass('hidden');
-        }
-    }
 }
 
-export default DateStartMeetingFieldView;
+export default DateStartCallFieldView;

@@ -47,7 +47,7 @@ class TaskDateEndFieldView extends DatetimeOptionalFieldView {
                 const value = this.model.get(this.nameDate);
 
                 if (value) {
-                    const d = moment.utc(value + ' 23:59', this.getDateTime().internalDateTimeFormat);
+                    const d = moment.tz(value + ' 23:59', this.getDateTime().getTimeZone());
                     const now = this.getDateTime().getNowMoment();
 
                     if (d.unix() < now.unix()) {
