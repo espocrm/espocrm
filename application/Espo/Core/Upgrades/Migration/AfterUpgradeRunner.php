@@ -51,6 +51,13 @@ class AfterUpgradeRunner
             throw new RuntimeException("No after-upgrade script $step.");
         }
 
+        try {
+            $this->dataManager->rebuild();
+        }
+        catch (Error $e) {
+            throw new RuntimeException("Error while rebuild: " . $e->getMessage());
+        }
+
         /** @var Script $script */
         $script = $this->injectableFactory->createWith($className, ['isUpgrade' => false]);
         $script->run();
