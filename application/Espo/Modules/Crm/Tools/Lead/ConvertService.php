@@ -30,10 +30,13 @@
 namespace Espo\Modules\Crm\Tools\Lead;
 
 use Espo\Core\Acl;
+use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Conflict;
 use Espo\Core\Exceptions\ConflictSilent;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\NotFound;
+use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Record\CreateParams;
 use Espo\Core\Record\ServiceContainer;
 use Espo\Core\Utils\FieldUtil;
 use Espo\Core\Utils\Json;
@@ -55,6 +58,7 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Tools\Stream\Service as StreamService;
+use RuntimeException;
 
 class ConvertService
 {
@@ -155,7 +159,7 @@ class ConvertService
         $convertFieldsDefs = $this->metadata->get('entityDefs.Lead.convertFields', []);
 
         foreach ($entityList as $entityType) {
-            if (!$this->acl->checkScope($entityType, 'edit')) {
+            if (!$this->acl->checkScope($entityType, Acl\Table::ACTION_CREATE)) {
                 continue;
             }
 
@@ -166,7 +170,7 @@ class ConvertService
             $fieldList = array_keys($this->metadata->get('entityDefs.Lead.fields', []));
 
             foreach ($fieldList as $field) {
-                if (!$this->metadata->get('entityDefs.' . $entityType . '.fields.' . $field)) {
+                if (!$this->metadata->get("entityDefs.$entityType.fields.$field")) {
                     continue;
                 }
 
@@ -205,7 +209,8 @@ class ConvertService
 
                     continue;
                 }
-                else if ($type === 'attachmentMultiple') {
+
+                if ($type === FieldType::ATTACHMENT_MULTIPLE) {
                     $attachmentList = $lead->get($leadField);
 
                     if (count($attachmentList)) {
@@ -229,7 +234,8 @@ class ConvertService
 
                     continue;
                 }
-                else if ($type === 'linkMultiple') {
+
+                if ($type === FieldType::LINK_MULTIPLE) {
                     $attributes[$field . 'Ids'] = $lead->get($leadField . 'Ids');
                     $attributes[$field . 'Names'] = $lead->get($leadField . 'Names');
                     $attributes[$field . 'Columns'] = $lead->get($leadField . 'Columns');
@@ -292,16 +298,15 @@ class ConvertService
             throw new Forbidden("No 'create' access for Account.");
         }
 
-        $account = $this->entityManager->getRDBRepositoryByClass(Account::class)->getNew();
+        $values = $records->get(Account::ENTITY_TYPE);
 
-        $account->set($records->get(Account::ENTITY_TYPE));
+        $service = $this->recordServiceContainer->getByClass(Account::class);
+
+        $account = $this->entityManager->getRDBRepositoryByClass(Account::class)->getNew();
+        $account->set($values);
 
         if ($duplicateCheck) {
-            $itemDuplicateList = $this->recordServiceContainer
-                ->getByClass(Account::class)
-                ->findDuplicates($account) ?? [];
-
-            foreach ($itemDuplicateList as $e) {
+            foreach ($service->findDuplicates($account) ?? [] as $e) {
                 $duplicateList[] = (object) [
                     'id' => $e->getId(),
                     'name' => $e->getName(),
@@ -312,11 +317,18 @@ class ConvertService
             }
         }
 
-        if (!$skipSave) {
-            $this->entityManager->saveEntity($account);
-
-            $lead->set('createdAccountId', $account->getId());
+        if ($skipSave) {
+            return null;
         }
+
+        try {
+            $account = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
+        }
+        catch (BadRequest|Conflict $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+
+        $lead->set('createdAccountId', $account->getId());
 
         return $account;
     }
@@ -342,20 +354,19 @@ class ConvertService
             throw new Forbidden("No 'create' access for Contact.");
         }
 
-        $contact = $this->entityManager->getRDBRepositoryByClass(Contact::class)->getNew();
+        $values = $records->get(Contact::ENTITY_TYPE);
 
-        $contact->set($records->get(Contact::ENTITY_TYPE));
-
-        if ($account && $account->hasId()) {
-            $contact->set('accountId', $account->getId());
+        if ($account) {
+            $values->accountId = $account->getId();
         }
 
-        if ($duplicateCheck) {
-            $itemDuplicateList = $this->recordServiceContainer
-                ->getByClass(Contact::class)
-                ->findDuplicates($contact) ?? [];
+        $service = $this->recordServiceContainer->getByClass(Contact::class);
 
-            foreach ($itemDuplicateList as $e) {
+        $contact = $this->entityManager->getRDBRepositoryByClass(Contact::class)->getNew();
+        $contact->set($values);
+
+        if ($duplicateCheck) {
+            foreach ($service->findDuplicates($contact) ?? [] as $e) {
                 $duplicateList[] = (object) [
                     'id' => $e->getId(),
                     'name' => $e->getName(),
@@ -366,11 +377,18 @@ class ConvertService
             }
         }
 
-        if (!$skipSave) {
-            $this->entityManager->saveEntity($contact);
-
-            $lead->set('createdContactId', $contact->getId());
+        if ($skipSave) {
+            return null;
         }
+
+        try {
+            $contact = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
+        }
+        catch (BadRequest|Conflict $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+
+        $lead->set('createdContactId', $contact->getId());
 
         return $contact;
     }
@@ -397,25 +415,24 @@ class ConvertService
             throw new Forbidden("No 'create' access for Opportunity.");
         }
 
+        $values = $records->get(Opportunity::ENTITY_TYPE);
+
+        if ($account) {
+            $values->accountId = $account->getId();
+        }
+
+        if ($contact) {
+            $values->contactId = $contact->getId();
+        }
+
+        $service = $this->recordServiceContainer->getByClass(Opportunity::class);
+
         $opportunity = $this->entityManager->getRDBRepositoryByClass(Opportunity::class)->getNew();
-
-        $opportunity->set($records->get(Opportunity::ENTITY_TYPE));
-
-        if ($account && $account->hasId()) {
-            $opportunity->set('accountId', $account->getId());
-        }
-
-        if ($contact && $contact->hasId()) {
-            $opportunity->set('contactId', $contact->getId());
-        }
+        $opportunity->set($values);
 
         if ($duplicateCheck) {
-            $itemDuplicateList = $this->recordServiceContainer
-                ->getByClass(Opportunity::class)
-                ->findDuplicates($opportunity) ?? [];
-
-            foreach ($itemDuplicateList as $e) {
-                $duplicateList[] = (object)[
+            foreach ($service->findDuplicates($opportunity) ?? [] as $e) {
+                $duplicateList[] = (object) [
                     'id' => $e->getId(),
                     'name' => $e->getName(),
                     '_entityType' => $e->getEntityType(),
@@ -425,18 +442,25 @@ class ConvertService
             }
         }
 
-        if (!$skipSave) {
-            $this->entityManager->saveEntity($opportunity);
-
-            if ($contact && $contact->hasId()) {
-                $this->entityManager
-                    ->getRDBRepository(Contact::ENTITY_TYPE)
-                    ->getRelation($contact, 'opportunities')
-                    ->relate($opportunity);
-            }
-
-            $lead->set('createdOpportunityId', $opportunity->getId());
+        if ($skipSave) {
+            return null;
         }
+
+        try {
+            $opportunity = $service->create($values, CreateParams::create()->withSkipDuplicateCheck());
+        }
+        catch (BadRequest|Conflict $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+
+        if ($contact) {
+            $this->entityManager
+                ->getRDBRepository(Contact::ENTITY_TYPE)
+                ->getRelation($contact, 'opportunities')
+                ->relate($opportunity);
+        }
+
+        $lead->set('createdOpportunityId', $opportunity->getId());
 
         return $opportunity;
     }

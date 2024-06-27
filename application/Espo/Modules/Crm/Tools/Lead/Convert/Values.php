@@ -61,7 +61,7 @@ class Values
             throw new UnexpectedValueException();
         }
 
-        return $data;
+        return ObjectUtil::clone($data);
     }
 
     public function with(string $entityType, stdClass $data): self
