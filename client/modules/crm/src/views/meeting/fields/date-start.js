@@ -26,52 +26,55 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/meeting/fields/date-start', ['views/fields/datetime-optional'], function (Dep) {
+import DatetimeOptionalFieldView from 'views/fields/datetime-optional';
 
-    return Dep.extend({
+class DateStartMeetingFieldView extends DatetimeOptionalFieldView {
 
-        emptyTimeInInlineEditDisabled: true,
+    emptyTimeInInlineEditDisabled = true
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.noneOption = this.translate('All-Day', 'labels', 'Meeting');
-        },
+        this.noneOption = this.translate('All-Day', 'labels', 'Meeting');
+    }
 
-        fetch: function () {
-            var data = Dep.prototype.fetch.call(this);
+    fetch() {
+        const data = super.data();
 
-            if (data[this.nameDate]) {
-                data.isAllDay = true;
-            } else {
-                data.isAllDay = false;
-            }
+        if (data[this.nameDate]) {
+            data.isAllDay = true;
+        } else {
+            data.isAllDay = false;
+        }
 
-            return data;
-        },
+        return data;
+    }
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
+    afterRender() {
+        super.afterRender();
 
-            if (this.isEditMode()) {
-                this.controlTimePartVisibility();
-            }
-        },
+        if (this.isEditMode()) {
+            this.controlTimePartVisibility();
+        }
+    }
 
-        controlTimePartVisibility: function () {
-            if (!this.isEditMode()) {
-                return;
-            }
+    controlTimePartVisibility() {
+        if (!this.isEditMode()) {
+            return;
+        }
 
-            if (this.isInlineEditMode()) {
-                if (this.model.get('isAllDay')) {
-                    this.$time.addClass('hidden');
-                    this.$el.find('.time-picker-btn').addClass('hidden');
-                } else {
-                    this.$time.removeClass('hidden');
-                    this.$el.find('.time-picker-btn').removeClass('hidden');
-                }
-            }
-        },
-    });
-});
+        if (!this.isInlineEditMode()) {
+            return;
+        }
+
+        if (this.model.get('isAllDay')) {
+            this.$time.addClass('hidden');
+            this.$el.find('.time-picker-btn').addClass('hidden');
+        } else {
+            this.$time.removeClass('hidden');
+            this.$el.find('.time-picker-btn').removeClass('hidden');
+        }
+    }
+}
+
+export default DateStartMeetingFieldView;

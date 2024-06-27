@@ -31,9 +31,6 @@ import moment from 'moment';
 
 class TaskDateEndFieldView extends DatetimeOptionalFieldView {
 
-    detailTemplate = 'crm:task/fields/date-end/detail'
-    listTemplate = 'crm:task/fields/date-end/detail'
-
     isEnd = true
 
     data() {
@@ -69,6 +66,10 @@ class TaskDateEndFieldView extends DatetimeOptionalFieldView {
                     }
                 }
             }
+        }
+
+        if (data.isOverdue) {
+            data.style = 'danger';
         }
 
         return data;
