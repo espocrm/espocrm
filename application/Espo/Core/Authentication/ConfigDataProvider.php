@@ -37,6 +37,7 @@ use Espo\Core\Utils\Metadata;
 class ConfigDataProvider
 {
     private const FAILED_ATTEMPTS_PERIOD =  '60 seconds';
+    private const FAILED_CODE_ATTEMPTS_PERIOD =  '5 minutes';
     private const MAX_FAILED_ATTEMPT_NUMBER = 10;
 
     public function __construct(private Config $config, private Metadata $metadata)
@@ -48,6 +49,14 @@ class ConfigDataProvider
     public function getFailedAttemptsPeriod(): string
     {
         return $this->config->get('authFailedAttemptsPeriod', self::FAILED_ATTEMPTS_PERIOD);
+    }
+
+    /**
+     * A period for max failed 2FA code attempts checking.
+     */
+    public function getFailedCodeAttemptsPeriod(): string
+    {
+        return $this->config->get('authFailedCodeAttemptsPeriod', self::FAILED_CODE_ATTEMPTS_PERIOD);
     }
 
     /**

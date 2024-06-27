@@ -104,6 +104,7 @@ return [
         'authLogDisabled',
         'authApiUserLogDisabled',
         'authFailedAttemptsPeriod',
+        'authFailedCodeAttemptsPeriod',
         'authMaxFailedAttemptNumber',
         'ipAddressServerParam',
         'jobNoTableLocking',

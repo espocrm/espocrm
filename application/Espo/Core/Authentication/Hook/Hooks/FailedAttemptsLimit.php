@@ -61,32 +61,20 @@ class FailedAttemptsLimit implements BeforeLogin
     {
         $isByTokenOnly = !$data->getMethod() && $request->getHeader(HeaderKey::AUTHORIZATION_BY_TOKEN) === 'true';
 
-        if ($isByTokenOnly) {
-            return;
-        }
-
-        if ($this->configDataProvider->isAuthLogDisabled()) {
+        if ($isByTokenOnly || $this->configDataProvider->isAuthLogDisabled()) {
             return;
         }
 
         $isSecondStep = $request->getHeader(HeaderKey::AUTHORIZATION_CODE) !== null;
 
-        $failedAttemptsPeriod = $this->configDataProvider->getFailedAttemptsPeriod();
-        $maxFailedAttempts = $this->configDataProvider->getMaxFailedAttemptNumber();
-
-        $requestTime = intval($request->getServerParam('REQUEST_TIME_FLOAT'));
-
-        try {
-            $requestTimeFrom = (new DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
-        }
-        catch (Exception $e) {
-            throw new RuntimeException($e->getMessage());
-        }
+        $failedAttemptsPeriod = $isSecondStep ?
+            $this->configDataProvider->getFailedCodeAttemptsPeriod() :
+            $this->configDataProvider->getFailedAttemptsPeriod();
 
         $ipAddress = $this->util->obtainIpFromRequest($request);
 
         $where = [
-            'requestTime>' => $requestTimeFrom->format('U'),
+            'requestTime>' => $this->getTimeFrom($request, $failedAttemptsPeriod)->format('U'),
             'isDenied' => true,
         ];
 
@@ -113,7 +101,7 @@ class FailedAttemptsLimit implements BeforeLogin
             ->where($where)
             ->count();
 
-        if ($failAttemptCount <= $maxFailedAttempts) {
+        if ($failAttemptCount <= $this->configDataProvider->getMaxFailedAttemptNumber()) {
             return;
         }
 
@@ -124,5 +112,19 @@ class FailedAttemptsLimit implements BeforeLogin
         }
 
         throw new Forbidden("Max failed login attempts exceeded for IP address $ipAddress.");
+    }
+
+    private function getTimeFrom(Request $request, string $failedAttemptsPeriod): DateTime
+    {
+        $requestTime = intval($request->getServerParam('REQUEST_TIME_FLOAT'));
+
+        try {
+            $requestTimeFrom = (new DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+
+        return $requestTimeFrom;
     }
 }
