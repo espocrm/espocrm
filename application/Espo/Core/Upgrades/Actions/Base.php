@@ -77,8 +77,8 @@ abstract class Base
     ];
 
     private ZipArchive $zipUtil;
-    private ?DatabaseHelper $databaseHelper;
-    private ?Helper $helper;
+    private ?DatabaseHelper $databaseHelper = null;
+    private ?Helper $helper = null;
 
     public function __construct(
         private Container $container,
