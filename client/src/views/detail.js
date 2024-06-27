@@ -312,7 +312,12 @@ class DetailView extends MainView {
         }
 
         return this.createView('record', this.getRecordViewName(), o, view => {
-            this.listenTo(view, 'after:mode-change', () => this.getHeaderView().reRender());
+            this.listenTo(view, 'after:mode-change', mode => {
+                // Mode change should also re-render the header what the methods do.
+                mode === 'edit' ?
+                    this.hideAllHeaderActionItems() :
+                    this.showAllHeaderActionItems();
+            });
 
             if (this.modesView) {
                 this.listenTo(view, 'after:set-detail-mode', () => this.modesView.enable());
@@ -944,6 +949,28 @@ class DetailView extends MainView {
 
                 this.getRouter().navigate(url, {trigger: false});
             });
+    }
+
+    /**
+     * @protected
+     */
+    hideAllHeaderActionItems() {
+        if (!this.getHeaderView()) {
+            return;
+        }
+
+        this.getHeaderView().hideAllMenuItems();
+    }
+
+    /**
+     * @protected
+     */
+    showAllHeaderActionItems() {
+        if (!this.getHeaderView()) {
+            return;
+        }
+
+        this.getHeaderView().showAllActionItems();
     }
 }
 

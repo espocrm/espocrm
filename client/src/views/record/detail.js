@@ -1500,7 +1500,7 @@ class DetailRecordView extends BaseRecordView {
             this.mode = this.MODE_EDIT;
 
             this.trigger('after:set-edit-mode');
-            this.trigger('after:mode-change');
+            this.trigger('after:mode-change', this.MODE_EDIT);
 
             Promise.all(promiseList).then(() => resolve());
         });
@@ -1540,7 +1540,7 @@ class DetailRecordView extends BaseRecordView {
             this.mode = this.MODE_DETAIL;
 
             this.trigger('after:set-detail-mode');
-            this.trigger('after:mode-change');
+            this.trigger('after:mode-change', this.MODE_DETAIL);
 
             Promise.all(promiseList).then(() => resolve());
         });

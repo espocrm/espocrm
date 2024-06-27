@@ -55,8 +55,8 @@ class HeaderView extends View {
         });
 
         data.noBreakWords = this.options.fontSizeFlexible;
-
         data.isXsSingleRow = this.options.isXsSingleRow;
+        data.menuItemsHidden = this.menuItemsHidden;
 
         if ((data.items.buttons || []).length < 2) {
             data.isHeaderAdditionalSpace = true;
@@ -79,6 +79,27 @@ class HeaderView extends View {
         this.wasRendered = false;
     }
 
+    /**
+     * Hide all menu items.
+     *
+     * @return {Promise}
+     */
+    hideAllMenuItems() {
+        this.menuItemsHidden = true;
+
+        return this.reRender();
+    }
+
+    /**
+     * Show all menu items.
+     *
+     * @return {Promise}
+     */
+    showAllActionItems() {
+        this.menuItemsHidden = false;
+
+        return this.reRender();
+    }
 
     afterRender() {
         if (this.options.fontSizeFlexible) {

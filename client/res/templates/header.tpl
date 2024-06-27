@@ -3,7 +3,7 @@
         <h3 class="header-title">{{{header}}}</h3>
     </div>
     <div class="page-header-column-2">
-        <div class="header-buttons btn-group pull-right">
+        <div class="header-buttons btn-group pull-right{{#if menuItemsHidden}} hidden{{/if}}">
             {{#each items.buttons}}
                 <a
                     {{#if link}}href="{{link}}"{{else}}role="button"{{/if}}
