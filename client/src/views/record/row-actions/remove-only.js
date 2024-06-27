@@ -43,6 +43,8 @@ class RemoveOnlyRowActionsView extends DefaultRowActionsView {
                 }
             ];
         }
+
+        return [];
     }
 }
 
