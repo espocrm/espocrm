@@ -29,6 +29,7 @@
 
 namespace Espo\Entities;
 
+use Espo\Core\Field\DateTime;
 use Espo\Core\ORM\Entity;
 
 class WebhookQueueItem extends Entity
@@ -43,4 +44,46 @@ class WebhookQueueItem extends Entity
     {
         return $this->get('attempts') ?? 0;
     }
+
+    public function setStatus(string $status): self
+    {
+        $this->set('status', $status);
+
+        return $this;
+    }
+
+    public function setAttempts(?int $attempts): self
+    {
+        $this->set('attempts', $attempts);
+
+        return $this;
+    }
+
+    public function setProcessAt(?DateTime $processAt): self
+    {
+        if (!$processAt) {
+            $this->set('processAt', $processAt);
+
+            return $this;
+        }
+
+        $this->set('processAt', $processAt->toString());
+
+        return $this;
+    }
+
+    public function setProcessedAt(?DateTime $processedAt): self
+    {
+        if (!$processedAt) {
+            $this->set('processedAt', $processedAt);
+
+            return $this;
+        }
+
+        $this->set('processedAt', $processedAt->toString());
+
+        return $this;
+    }
+
+
 }
