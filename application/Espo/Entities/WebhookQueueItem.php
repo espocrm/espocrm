@@ -84,6 +84,4 @@ class WebhookQueueItem extends Entity
 
         return $this;
     }
-
-
 }
