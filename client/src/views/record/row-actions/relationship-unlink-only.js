@@ -43,6 +43,8 @@ class RelationshipUnlinkOnlyActionsView extends RelationshipActionsView {
                 },
             ];
         }
+
+        return [];
     }
 }
 
