@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Api;
 
+use Espo\Core\Authentication\HeaderKey;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\ServiceUnavailable;
 use Espo\Core\Exceptions\Forbidden;
@@ -47,8 +48,6 @@ use Exception;
  */
 class Auth
 {
-    private const HEADER_ESPO_AUTHORIZATION = 'Espo-Authorization';
-
     public function __construct(
         private Log $log,
         private Authentication $authentication,
@@ -275,7 +274,7 @@ class Auth
 
     private function obtainAuthenticationMethodFromRequest(Request $request): ?string
     {
-        if ($request->hasHeader(self::HEADER_ESPO_AUTHORIZATION)) {
+        if ($request->hasHeader(HeaderKey::AUTHORIZATION)) {
             return null;
         }
 
@@ -305,12 +304,10 @@ class Auth
      */
     private function obtainUsernamePasswordFromRequest(Request $request): array
     {
-        if ($request->hasHeader(self::HEADER_ESPO_AUTHORIZATION)) {
-            [$username, $password] = $this->decodeAuthorizationString(
-                $request->getHeader(self::HEADER_ESPO_AUTHORIZATION) ?? ''
-            );
+        if ($request->hasHeader(HeaderKey::AUTHORIZATION)) {
+            $headerValue = $request->getHeader(HeaderKey::AUTHORIZATION) ?? '';
 
-            return [$username, $password];
+            return $this->decodeAuthorizationString($headerValue);
         }
 
         if (

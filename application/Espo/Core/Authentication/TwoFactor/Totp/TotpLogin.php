@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Authentication\TwoFactor\Totp;
 
+use Espo\Core\Authentication\HeaderKey;
 use Espo\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Entities\UserData;
@@ -55,7 +56,7 @@ class TotpLogin implements Login
 
     public function login(Result $result, Request $request): Result
     {
-        $code = $request->getHeader('Espo-Authorization-Code');
+        $code = $request->getHeader(HeaderKey::AUTHORIZATION_CODE);
 
         $user = $result->getUser();
 

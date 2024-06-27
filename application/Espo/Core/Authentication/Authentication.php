@@ -67,9 +67,7 @@ class Authentication
 {
     private const LOGOUT_USERNAME = '**logout';
 
-    private const HEADER_ESPO_AUTHORIZATION = 'Espo-Authorization';
     private const HEADER_CREATE_TOKEN_SECRET = 'Espo-Authorization-Create-Token-Secret';
-    private const HEADER_BY_TOKEN = 'Espo-Authorization-By-Token';
     private const HEADER_ANOTHER_USER = 'X-Another-User';
     private const HEADER_LOGOUT_REDIRECT_URL = 'X-Logout-Redirect-Url';
 
@@ -155,7 +153,7 @@ class Authentication
             }
         }
 
-        $byTokenAndUsername = $request->getHeader(self::HEADER_BY_TOKEN) === 'true';
+        $byTokenAndUsername = $request->getHeader(HeaderKey::AUTHORIZATION_BY_TOKEN) === 'true';
 
         if ($method && $byTokenAndUsername) {
             return Result::fail(FailReason::DISCREPANT_DATA);
@@ -253,7 +251,7 @@ class Authentication
 
         if (
             !$result->isSecondStepRequired() &&
-            $request->getHeader(self::HEADER_ESPO_AUTHORIZATION)
+            $request->getHeader(HeaderKey::AUTHORIZATION)
         ) {
             $authToken = $this->processAuthTokenFinal(
                 $authToken,

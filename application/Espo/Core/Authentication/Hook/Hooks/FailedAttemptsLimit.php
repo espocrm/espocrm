@@ -30,6 +30,7 @@
 namespace Espo\Core\Authentication\Hook\Hooks;
 
 use Espo\Core\Api\Util;
+use Espo\Core\Authentication\HeaderKey;
 use Espo\Core\Authentication\Hook\BeforeLogin;
 use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Api\Request;
@@ -58,7 +59,7 @@ class FailedAttemptsLimit implements BeforeLogin
      */
     public function process(AuthenticationData $data, Request $request): void
     {
-        $isByTokenOnly = !$data->getMethod() && $request->getHeader('Espo-Authorization-By-Token') === 'true';
+        $isByTokenOnly = !$data->getMethod() && $request->getHeader(HeaderKey::AUTHORIZATION_BY_TOKEN) === 'true';
 
         if ($isByTokenOnly) {
             return;
@@ -68,7 +69,7 @@ class FailedAttemptsLimit implements BeforeLogin
             return;
         }
 
-        $isSecondStep = $request->getHeader('Espo-Authorization-Code') !== null;
+        $isSecondStep = $request->getHeader(HeaderKey::AUTHORIZATION_CODE) !== null;
 
         $failedAttemptsPeriod = $this->configDataProvider->getFailedAttemptsPeriod();
         $maxFailedAttempts = $this->configDataProvider->getMaxFailedAttemptNumber();
