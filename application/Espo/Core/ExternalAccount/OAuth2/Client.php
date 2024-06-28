@@ -66,6 +66,9 @@ class Client
     /** @noinspection PhpUnused */
     const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
 
+    private const REFRESH_TOKEN_TIMEOUT = 10;
+    private const DEFAULT_TIMEOUT = 3600 * 2;
+
     /** @var ?string */
     protected $clientId = null;
     /** @var ?string */
@@ -208,8 +211,13 @@ class Client
      * }
      * @throws Exception
      */
-    public function request($url, $params = null, $httpMethod = self::HTTP_METHOD_GET, array $httpHeaders = [])
-    {
+    public function request(
+        $url,
+        $params = null,
+        $httpMethod = self::HTTP_METHOD_GET,
+        array $httpHeaders = []
+    ) {
+
         if ($this->accessToken) {
             switch ($this->tokenType) {
                 case self::TOKEN_TYPE_URI:
@@ -252,12 +260,19 @@ class Client
      * }
      * @throws Exception
      */
-    private function execute($url, $params, $httpMethod, array $httpHeaders = [])
-    {
+    private function execute(
+        $url,
+        $params,
+        $httpMethod,
+        array $httpHeaders = [],
+        ?int $timeout = null
+    ) {
+
         $curlOptions = [
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_SSL_VERIFYPEER => true,
             CURLOPT_CUSTOMREQUEST => $httpMethod,
+            CURLOPT_TIMEOUT => $timeout ?: self::DEFAULT_TIMEOUT,
         ];
 
         switch ($httpMethod) {
@@ -319,7 +334,6 @@ class Client
         curl_setopt_array($ch, $curlOptions);
 
         curl_setopt($ch, CURLOPT_HEADER, 1);
-
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
         curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
 
@@ -409,6 +423,6 @@ class Client
                 throw new LogicException("Bad auth type.");
         }
 
-        return $this->execute($url, $params, self::HTTP_METHOD_POST, $httpHeaders);
+        return $this->execute($url, $params, self::HTTP_METHOD_POST, $httpHeaders, self::REFRESH_TOKEN_TIMEOUT);
     }
 }
