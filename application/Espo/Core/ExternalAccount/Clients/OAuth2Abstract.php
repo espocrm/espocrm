@@ -492,6 +492,8 @@ abstract class OAuth2Abstract implements IClient
         catch (Exception $e) {
             $this->unlock();
 
+            // @todo Increment refreshAttempt. If exceeds a limit and period, then set disabled.
+
             throw new Error("Oauth: Error while refreshing token: " . $e->getMessage());
         }
 
@@ -501,7 +503,7 @@ abstract class OAuth2Abstract implements IClient
                     $data = $this->getAccessTokenDataFromResponseResult($response['result']);
 
                     $this->setParams($data);
-                    $this->afterTokenRefreshed($data);
+                    $this->afterTokenRefreshed($data); // @todo Reset refreshAttempt to 0.
                     $this->unlock();
 
                     return true;
@@ -510,6 +512,8 @@ abstract class OAuth2Abstract implements IClient
         }
 
         $this->unlock();
+
+        // @todo Increment refreshAttempt. If exceeds a limit and period, then set disabled.
 
         $this->log->error("Oauth: Refreshing token failed for client $this->clientId: " . json_encode($response));
 
