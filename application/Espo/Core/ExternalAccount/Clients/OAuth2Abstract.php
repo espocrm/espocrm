@@ -531,7 +531,8 @@ abstract class OAuth2Abstract implements IClient
 
             return ['action' => 'renew'];
         }
-        else if ($response['code'] == 400 && !empty($response['result'])) {
+
+        if ($response['code'] == 400 && !empty($response['result'])) {
             if ($response['result']['error'] == 'invalid_token') {
                 return ['action' => 'refreshToken'];
             }
