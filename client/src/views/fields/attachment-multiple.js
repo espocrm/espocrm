@@ -762,11 +762,12 @@ class AttachmentMultipleFieldView extends BaseFieldView {
         if (this.isDetailMode() || this.isListMode()) {
             const nameHash = this.nameHash;
             const typeHash = this.model.get(this.typeHashName) || {};
+            const ids = /** @type {string[]} */this.model.get(this.idsName) || [];
 
             const previews = [];
             const names = [];
 
-            for (const id in nameHash) {
+            for (const id of ids) {
                 const type = typeHash[id] || false;
                 const name = nameHash[id];
 
