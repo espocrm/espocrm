@@ -59,5 +59,11 @@
         "route": "/TargetList/:id/optedOut",
         "method": "get",
         "actionClassName": "Espo\\Modules\\Crm\\Tools\\TargetList\\Api\\GetOptedOut"
+    },
+    {
+        "route": "/Campaign/unsubscribe/:id",
+        "method": "post",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\MassEmail\\Api\\PostUnsubscribe",
+        "noAuth": true
     }
 ]

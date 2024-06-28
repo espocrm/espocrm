@@ -27,40 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Modules\Crm\Tools\MassEmail;
+namespace Espo\Modules\Crm\Tools\MassEmail\Api;
 
-use Espo\Core\Mail\Mail\Header\XQueueItemId;
-use Espo\Core\Utils\Config;
-use Espo\Modules\Crm\Tools\MassEmail\MessagePreparator\Data;
-use Laminas\Mail\Headers;
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Modules\Crm\Tools\MassEmail\UnsubscribeService;
 
-class DefaultMessageHeadersPreparator implements MessageHeadersPreparator
+/** @noinspection PhpUnused */
+class PostUnsubscribe implements Action
 {
-    public function __construct(private Config $config)
-    {}
+    public function __construct(private UnsubscribeService $service) {}
 
-    public function prepare(Headers $headers, Data $data): void
+    public function process(Request $request): Response
     {
-        $id = $data->getId();
+        $id = $request->getRouteParam('id');
 
-        $header = new XQueueItemId();
-        $header->setId($id);
-
-        $headers->addHeader($header);
-        $headers->addHeaderLine('Precedence', 'bulk');
-
-        if (!$this->config->get('massEmailDisableMandatoryOptOutLink')) {
-            $url = "{$this->getSiteUrl()}/api/v1/Campaign/unsubscribe/$id";
-
-            $headers->addHeaderLine('List-Unsubscribe-Post', 'List-Unsubscribe=One-Click');
-            $headers->addHeaderLine('List-Unsubscribe', "<$url>");
+        if (!$id) {
+            throw new BadRequest();
         }
-    }
 
-    private function getSiteUrl(): string
-    {
-        $url = $this->config->get('massEmailSiteUrl') ?? $this->config->get('siteUrl');
+        $this->service->unsubscribe($id);
 
-        return rtrim($url, '/');
+        return ResponseComposer::json(true);
     }
 }
