@@ -309,13 +309,13 @@ abstract class OAuth2Abstract implements IClient
 
         $this->log->debug("Oauth: Refreshing expired token for client $this->clientId.");
 
-        $until = microtime(true) + $this::LOCK_TIMEOUT;
-
         if (!$this->isLocked()) {
             $this->refreshToken();
 
             return;
         }
+
+        $until = microtime(true) + $this::LOCK_TIMEOUT;
 
         while (true) {
             usleep($this::LOCK_CHECK_STEP * 1000000);
