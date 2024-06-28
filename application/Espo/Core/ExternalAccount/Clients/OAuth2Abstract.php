@@ -30,6 +30,7 @@
 namespace Espo\Core\ExternalAccount\Clients;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Utils\DateTime as DateTimeUtil;
 use Espo\Core\Utils\Json;
 use Espo\Core\ExternalAccount\ClientManager;
 use Espo\Core\ExternalAccount\OAuth2\Client;
@@ -164,9 +165,7 @@ abstract class OAuth2Abstract implements IClient
      */
     protected function afterTokenRefreshed(array $data): void
     {
-        if ($this->manager) {
-            $this->manager->storeAccessToken(spl_object_hash($this), $data);
-        }
+        $this->manager?->storeAccessToken(spl_object_hash($this), $data);
     }
 
     /**
@@ -184,7 +183,6 @@ abstract class OAuth2Abstract implements IClient
 
         $data['accessToken'] = $result['access_token'] ?? null;
         $data['tokenType'] = $result['token_type'] ?? null;
-
         $data['expiresAt'] = null;
 
         if (isset($result['refresh_token']) && $result['refresh_token'] !== $this->refreshToken) {
@@ -194,7 +192,7 @@ abstract class OAuth2Abstract implements IClient
         if (isset($result['expires_in']) && is_numeric($result['expires_in'])) {
             $data['expiresAt'] = (new DateTime())
                 ->modify('+' . $result['expires_in'] . ' seconds')
-                ->format('Y-m-d H:i:s');
+                ->format(DateTimeUtil::SYSTEM_DATE_TIME_FORMAT);
         }
 
         /**
@@ -228,36 +226,34 @@ abstract class OAuth2Abstract implements IClient
             ]
         );
 
-        if ($response['code'] == 200) {
-            if (!empty($response['result'])) {
-                /** @var array<string, mixed> $result */
-                $result = $response['result'];
-
-                $data = $this->getAccessTokenDataFromResponseResult($result);
-
-                $data['refreshToken'] = $result['refresh_token'] ?? null;
-
-                /**
-                 * @var ?array{
-                 *   accessToken: ?string,
-                 *   tokenType: ?string,
-                 *   expiresAt: ?string,
-                 *   refreshToken: ?string,
-                 * }
-                 */
-                return $data;
-            }
-            else {
-                $this->log->debug("OAuth getAccessTokenFromAuthorizationCode; Response: " . Json::encode($response));
-
-                return null;
-            }
-        }
-        else {
+        if ($response['code'] != 200) {
             $this->log->debug("OAuth getAccessTokenFromAuthorizationCode; Response: " . Json::encode($response));
+
+            return null;
         }
 
-        return null;
+        if (empty($response['result'])) {
+            $this->log->debug("OAuth getAccessTokenFromAuthorizationCode; Response: " . Json::encode($response));
+
+            return null;
+        }
+
+        /** @var array<string, mixed> $result */
+        $result = $response['result'];
+
+        $data = $this->getAccessTokenDataFromResponseResult($result);
+
+        $data['refreshToken'] = $result['refresh_token'] ?? null;
+
+        /**
+         * @var ?array{
+         *   accessToken: ?string,
+         *   tokenType: ?string,
+         *   expiresAt: ?string,
+         *   refreshToken: ?string,
+         * }
+         */
+        return $data;
     }
 
     /**
@@ -281,7 +277,7 @@ abstract class OAuth2Abstract implements IClient
 
             return true;
         }
-        catch (Exception $e) {
+        catch (Exception) {
             return false;
         }
     }
@@ -299,8 +295,8 @@ abstract class OAuth2Abstract implements IClient
         try {
             $dt = new DateTime($this->getParam('expiresAt'));
         }
-        catch (Exception $e) {
-            $this->log->debug("Oauth: Bad expires-at parameter stored for client {$this->clientId}.");
+        catch (Exception) {
+            $this->log->debug("Oauth: Bad expires-at parameter stored for client $this->clientId.");
 
             return;
         }
@@ -311,7 +307,7 @@ abstract class OAuth2Abstract implements IClient
             return;
         }
 
-        $this->log->debug("Oauth: Refreshing expired token for client {$this->clientId}.");
+        $this->log->debug("Oauth: Refreshing expired token for client $this->clientId.");
 
         $until = microtime(true) + $this::LOCK_TIMEOUT;
 
@@ -324,8 +320,8 @@ abstract class OAuth2Abstract implements IClient
         while (true) {
             usleep($this::LOCK_CHECK_STEP * 1000000);
 
-            if (!$this->isLocked()) { /** @phpstan-ignore-line */
-                $this->log->debug("Oauth: Waited until unlocked for client {$this->clientId}.");
+            if (!$this->isLocked()) {
+                $this->log->debug("Oauth: Waited until unlocked for client $this->clientId.");
 
                 $this->reFetch();
 
@@ -333,7 +329,7 @@ abstract class OAuth2Abstract implements IClient
             }
 
             if (microtime(true) > $until) {
-                $this->log->debug("Oauth: Waited until unlocked but timed out for client {$this->clientId}.");
+                $this->log->debug("Oauth: Waited until unlocked but timed out for client $this->clientId.");
 
                 $this->unlock();
 
@@ -344,6 +340,10 @@ abstract class OAuth2Abstract implements IClient
         $this->refreshToken();
     }
 
+    /**
+     * @throws Error
+     * @phpstan-impure
+     */
     protected function isLocked(): bool
     {
         if (!$this->manager) {
@@ -353,6 +353,9 @@ abstract class OAuth2Abstract implements IClient
         return $this->manager->isClientLocked($this);
     }
 
+    /**
+     * @throws Error
+     */
     protected function lock(): void
     {
         if (!$this->manager) {
@@ -362,6 +365,9 @@ abstract class OAuth2Abstract implements IClient
         $this->manager->lockClient($this);
     }
 
+    /**
+     * @throws Error
+     */
     protected function unlock(): void
     {
         if (!$this->manager) {
@@ -371,6 +377,9 @@ abstract class OAuth2Abstract implements IClient
         $this->manager->unlockClient($this);
     }
 
+    /**
+     * @throws Error
+     */
     protected function reFetch(): void
     {
         if (!$this->manager) {
@@ -387,7 +396,6 @@ abstract class OAuth2Abstract implements IClient
      * @param ?string $contentType
      * @param bool $allowRenew
      * @return mixed
-     *
      * @throws Error
      */
     public function request(
@@ -406,14 +414,8 @@ abstract class OAuth2Abstract implements IClient
             $httpHeaders['Content-Type'] = $contentType;
 
             switch ($contentType) {
-                case Client::CONTENT_TYPE_MULTIPART_FORM_DATA:
-                    if (is_string($params)) {
-                        $httpHeaders['Content-Length'] = (string) strlen($params);
-                    }
-
-                    break;
-
                 case Client::CONTENT_TYPE_APPLICATION_JSON:
+                case Client::CONTENT_TYPE_MULTIPART_FORM_DATA:
                     if (is_string($params)) {
                         $httpHeaders['Content-Length'] = (string) strlen($params);
                     }
@@ -422,7 +424,12 @@ abstract class OAuth2Abstract implements IClient
             }
         }
 
-        $response = $this->client->request($url, $params, $httpMethod, $httpHeaders);
+        try {
+            $response = $this->client->request($url, $params, $httpMethod, $httpHeaders);
+        }
+        catch (Exception $e) {
+            throw new Error($e->getMessage(), 0, $e);
+        }
 
         $code = null;
 
@@ -443,8 +450,7 @@ abstract class OAuth2Abstract implements IClient
                 if ($this->refreshToken()) {
                     return $this->request($url, $params, $httpMethod, $contentType, false);
                 }
-            }
-            else if ($handledData['action'] === 'renew') {
+            } else if ($handledData['action'] === 'renew') {
                 return $this->request($url, $params, $httpMethod, $contentType, false);
             }
         }
@@ -453,14 +459,12 @@ abstract class OAuth2Abstract implements IClient
 
         if (
             is_array($result) &&
-            isset($result['error']) &&
-            is_array($result['error']) &&
             isset($result['error']['message'])
         ) {
             $reasonPart = '; Reason: ' . $result['error']['message'];
         }
 
-        throw new Error("Oauth: Error after requesting {$httpMethod} {$url}{$reasonPart}.", (int) $code);
+        throw new Error("Oauth: Error after requesting $httpMethod $url$reasonPart.", (int) $code);
     }
 
     /**
@@ -471,14 +475,15 @@ abstract class OAuth2Abstract implements IClient
     {
         if (empty($this->refreshToken)) {
             throw new Error(
-                "Oauth: Could not refresh token for client {$this->clientId}, because refreshToken is empty."
-            );
+                "Oauth: Could not refresh token for client $this->clientId, because refreshToken is empty.");
         }
 
         $this->lock();
 
+        assert(is_string($this->refreshToken));
+
         try {
-            $r = $this->client->getAccessToken(
+            $response = $this->client->getAccessToken(
                 $this->getParam('tokenEndpoint'),
                 Client::GRANT_TYPE_REFRESH_TOKEN,
                 ['refresh_token' => $this->refreshToken]
@@ -490,14 +495,13 @@ abstract class OAuth2Abstract implements IClient
             throw new Error("Oauth: Error while refreshing token: " . $e->getMessage());
         }
 
-        if ($r['code'] == 200) {
-            if (is_array($r['result'])) {
-                if (!empty($r['result']['access_token'])) {
-                    $data = $this->getAccessTokenDataFromResponseResult($r['result']);
+        if ($response['code'] == 200) {
+            if (is_array($response['result'])) {
+                if (!empty($response['result']['access_token'])) {
+                    $data = $this->getAccessTokenDataFromResponseResult($response['result']);
 
                     $this->setParams($data);
                     $this->afterTokenRefreshed($data);
-
                     $this->unlock();
 
                     return true;
@@ -507,36 +511,29 @@ abstract class OAuth2Abstract implements IClient
 
         $this->unlock();
 
-        $this->log->error("Oauth: Refreshing token failed for client {$this->clientId}: " . json_encode($r));
+        $this->log->error("Oauth: Refreshing token failed for client $this->clientId: " . json_encode($response));
 
         return false;
     }
 
     /**
-     * @param array<string, mixed> $r
+     * @param array<string, mixed> $response
      * @return ?array{
      *   action: string,
      * }
      */
-    protected function handleErrorResponse($r)
+    protected function handleErrorResponse($response)
     {
-        if ($r['code'] == 401 && !empty($r['result'])) {
-            if (strpos($r['header'], 'error=invalid_token') !== false) {
-                return [
-                    'action' => 'refreshToken'
-                ];
+        if ($response['code'] == 401 && !empty($response['result'])) {
+            if (str_contains($response['header'], 'error=invalid_token')) {
+                return ['action' => 'refreshToken'];
             }
-            else {
-                return [
-                    'action' => 'renew'
-                ];
-            }
+
+            return ['action' => 'renew'];
         }
-        else if ($r['code'] == 400 && !empty($r['result'])) {
-            if ($r['result']['error'] == 'invalid_token') {
-                return [
-                    'action' => 'refreshToken'
-                ];
+        else if ($response['code'] == 400 && !empty($response['result'])) {
+            if ($response['result']['error'] == 'invalid_token') {
+                return ['action' => 'refreshToken'];
             }
         }
 

@@ -325,7 +325,7 @@ class ClientManager
             ->findOne();
 
         if (!$e) {
-            throw new Error("External Account Client Manager: Client '{$id}' not found in DB.");
+            throw new Error("External Account Client Manager: Client '$id' not found in DB.");
         }
 
         return $e->get('isLocked');

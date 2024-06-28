@@ -43,6 +43,10 @@ class Client
     const TOKEN_TYPE_BEARER = 'Bearer';
     const TOKEN_TYPE_OAUTH = 'OAuth';
 
+    /**
+     * @noinspection PhpUnused
+     * @noinspection SpellCheckingInspection
+     */
     const CONTENT_TYPE_APPLICATION_X_WWW_FORM_URLENENCODED = 'application/x-www-form-urlencoded';
     const CONTENT_TYPE_MULTIPART_FORM_DATA = 'multipart/form-data';
     const CONTENT_TYPE_APPLICATION_JSON = 'application/json';
@@ -57,57 +61,30 @@ class Client
 
     const GRANT_TYPE_AUTHORIZATION_CODE = 'authorization_code';
     const GRANT_TYPE_REFRESH_TOKEN = 'refresh_token';
+    /** @noinspection PhpUnused */
     const GRANT_TYPE_PASSWORD = 'password';
+    /** @noinspection PhpUnused */
     const GRANT_TYPE_CLIENT_CREDENTIALS = 'client_credentials';
 
-    /**
-     * @var ?string
-     */
+    /** @var ?string */
     protected $clientId = null;
-
-    /**
-     * @var ?string
-     */
+    /** @var ?string */
     protected $clientSecret = null;
-
-    /**
-     * @var ?string
-     */
+    /** @var ?string */
     protected $accessToken = null;
-
-    /**
-     * @var ?string
-     */
+    /** @var ?string */
     protected $expiresAt = null;
-
-    /**
-     * @var int
-     */
+    /** @var int */
     protected $authType = self::AUTH_TYPE_URI;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $tokenType = self::TOKEN_TYPE_URI;
-
-    /**
-     * @var ?string
-     */
+    /** @var ?string */
     protected $accessTokenSecret = null;
-
-    /**
-     * @var string
-     */
+    /** @var string */
     protected $accessTokenParamName = 'access_token';
-
-    /**
-     * @var ?string
-     */
+    /** @var ?string */
     protected $certificateFile = null;
-
-    /**
-     * @var array<string, mixed>
-     */
+    /** @var array<string, mixed> */
     protected $curlOptions = [];
 
     public function __construct()
@@ -120,6 +97,7 @@ class Client
     /**
      * @param string $clientId
      * @return void
+     * @noinspection PhpUnused
      */
     public function setClientId($clientId)
     {
@@ -129,6 +107,7 @@ class Client
     /**
      * @param ?string $clientSecret
      * @return void
+     * @noinspection PhpUnused
      */
     public function setClientSecret($clientSecret)
     {
@@ -138,6 +117,7 @@ class Client
     /**
      * @param ?string $accessToken
      * @return void
+     * @noinspection PhpUnused
      */
     public function setAccessToken($accessToken)
     {
@@ -147,6 +127,7 @@ class Client
     /**
      * @param int $authType
      * @return void
+     * @noinspection PhpUnused
      */
     public function setAuthType($authType)
     {
@@ -156,6 +137,7 @@ class Client
     /**
      * @param string $certificateFile
      * @return void
+     * @noinspection PhpUnused
      */
     public function setCertificateFile($certificateFile)
     {
@@ -166,6 +148,7 @@ class Client
      * @param string $option
      * @param mixed $value
      * @return void
+     * @noinspection PhpUnused
      */
     public function setCurlOption($option, $value)
     {
@@ -175,6 +158,7 @@ class Client
     /**
      * @param array<string, mixed> $options
      * @return void
+     * @noinspection PhpUnused
      */
     public function setCurlOptions($options)
     {
@@ -184,6 +168,7 @@ class Client
     /**
      * @param string $tokenType
      * @return void
+     * @noinspection PhpUnused
      */
     public function setTokenType($tokenType)
     {
@@ -193,6 +178,7 @@ class Client
     /**
      * @param ?string $value
      * @return void
+     * @noinspection PhpUnused
      */
     public function setExpiresAt($value)
     {
@@ -202,6 +188,7 @@ class Client
     /**
      * @param ?string $accessTokenSecret
      * @return void
+     * @noinspection PhpUnused
      */
     public function setAccessTokenSecret($accessTokenSecret)
     {
@@ -274,6 +261,7 @@ class Client
         ];
 
         switch ($httpMethod) {
+            /** @noinspection PhpMissingBreakStatementInspection */
             case self::HTTP_METHOD_POST:
                 $curlOptions[CURLOPT_POST] = true;
 
@@ -289,13 +277,14 @@ class Client
 
                 break;
 
+            /** @noinspection PhpMissingBreakStatementInspection */
             case self::HTTP_METHOD_HEAD:
                 $curlOptions[CURLOPT_NOBODY] = true;
 
             case self::HTTP_METHOD_DELETE:
             case self::HTTP_METHOD_GET:
 
-                if (strpos($url, '?') === false) {
+                if (!str_contains($url, '?')) {
                     $url .= '?';
                 }
 
@@ -320,7 +309,7 @@ class Client
                 continue;
             }
 
-            $curlOptHttpHeader[] = "{$key}: {$value}";
+            $curlOptHttpHeader[] = "$key: $value";
         }
 
         $curlOptions[CURLOPT_HTTPHEADER] = $curlOptHttpHeader;
@@ -381,8 +370,11 @@ class Client
      * @param string $url
      * @param string $grantType
      * @param array{
-     *   client_id?: string,
-     *   client_secret?: string,
+     *     client_id?: string,
+     *     client_secret?: string,
+     *     redirect_uri?: string,
+     *     code?: string,
+     *     refresh_token?: string,
      * } $params
      * @return array{
      *   result: array<string, mixed>|string,
