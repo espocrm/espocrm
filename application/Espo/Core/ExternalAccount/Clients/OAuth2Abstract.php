@@ -165,7 +165,7 @@ abstract class OAuth2Abstract implements IClient
      */
     protected function afterTokenRefreshed(array $data): void
     {
-        $this->manager?->storeAccessToken(spl_object_hash($this), $data);
+        $this->manager?->storeAccessToken($this, $data);
     }
 
     /**

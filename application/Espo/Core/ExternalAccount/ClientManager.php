@@ -39,12 +39,11 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
-use Espo\ORM\Entity;
 use RuntimeException;
 
 class ClientManager
 {
-    /** @var array<string, array<string, mixed>> */
+    /** @var array<string, (array<string, mixed> & array{externalAccountEntity: ExternalAccount})> */
     protected $clientMap = [];
 
     public function __construct(
@@ -63,44 +62,41 @@ class ClientManager
      * } $data
      * @throws Error
      */
-    public function storeAccessToken(string $hash, array $data): void
+    public function storeAccessToken(object $client, array $data): void
     {
-        if (
-            empty($this->clientMap[$hash]) ||
-            empty($this->clientMap[$hash]['externalAccountEntity'])
-        ) {
+        try {
+            $account = $this->getClientRecord($client);
+        }
+        catch (Error) {
+            // @todo Revise.
             return;
         }
 
-        /** @var ExternalAccount $account */
-        $account = $this->clientMap[$hash]['externalAccountEntity'];
-
-        $account->set('accessToken', $data['accessToken']);
-        $account->set('tokenType', $data['tokenType']);
-        $account->set('expiresAt', $data['expiresAt'] ?? null);
+        $account->setAccessToken($data['accessToken']);
+        $account->setTokenType($data['tokenType']);
+        $account->setExpiresAt($data['expiresAt'] ?? null);
 
         if ($data['refreshToken'] ?? null) {
-            $account->set('refreshToken', $data['refreshToken']);
+            $account->setRefreshToken($data['refreshToken']);
         }
 
-        // @todo Revise. Use refreshEntity?
-
+        /** @var ?ExternalAccount $account */
         $account = $this->entityManager->getEntityById(ExternalAccount::ENTITY_TYPE, $account->getId());
 
         if (!$account) {
             throw new Error("External Account: Account removed.");
         }
 
-        if (!$account->get('enabled')) {
+        if (!$account->isEnabled()) {
             throw new Error("External Account: Account disabled.");
         }
 
-        $account->set('accessToken', $data['accessToken']);
-        $account->set('tokenType', $data['tokenType']);
-        $account->set('expiresAt', $data['expiresAt'] ?? null);
+        $account->setAccessToken($data['accessToken']);
+        $account->setTokenType($data['tokenType']);
+        $account->setExpiresAt($data['expiresAt'] ?? null);
 
         if ($data['refreshToken'] ?? null) {
-            $account->set('refreshToken', $data['refreshToken'] ?? null);
+            $account->setRefreshToken($data['refreshToken'] ?? null);
         }
 
         $this->entityManager->saveEntity($account, [
@@ -133,19 +129,14 @@ class ClientManager
         /** @var ?Integration $integrationEntity */
         $integrationEntity = $this->entityManager->getEntityById(Integration::ENTITY_TYPE, $integration);
 
-        /** @var ?ExternalAccount $externalAccountEntity */
-        $externalAccountEntity = $this->entityManager
-            ->getEntityById(ExternalAccount::ENTITY_TYPE, "{$integration}__$userId");
+        /** @var ?ExternalAccount $account */
+        $account = $this->entityManager->getEntityById(ExternalAccount::ENTITY_TYPE, "{$integration}__$userId");
 
-        if (!$externalAccountEntity) {
+        if (!$account) {
             throw new Error("External Account $integration not found for $userId.");
         }
 
-        if (
-            !$integrationEntity ||
-            !$integrationEntity->get('enabled') ||
-            !$externalAccountEntity->get('enabled')
-        ) {
+        if (!$integrationEntity || !$integrationEntity->isEnabled() || !$account->isEnabled()) {
             return null;
         }
 
@@ -161,11 +152,11 @@ class ClientManager
         $client->setup(
             $userId,
             $integrationEntity,
-            $externalAccountEntity,
+            $account,
             $this
         );
 
-        $this->addToClientMap($client, $integrationEntity, $externalAccountEntity, $userId);
+        $this->addToClientMap($client, $integrationEntity, $account, $userId);
 
         return $client;
     }
@@ -175,32 +166,29 @@ class ClientManager
      */
     protected function createOAuth2(string $integration, string $userId): ?object
     {
-        /** @var Integration|null $integrationEntity */
-        $integrationEntity = $this->entityManager->getEntity(Integration::ENTITY_TYPE, $integration);
+        /** @var ?Integration $integrationEntity */
+        $integrationEntity = $this->entityManager->getEntityById(Integration::ENTITY_TYPE, $integration);
 
-        /** @var ExternalAccount|null $externalAccountEntity */
-        $externalAccountEntity = $this->entityManager
-            ->getEntity(ExternalAccount::ENTITY_TYPE, $integration . '__' . $userId);
+        /** @var ?ExternalAccount $account */
+        $account = $this->entityManager->getEntityById(ExternalAccount::ENTITY_TYPE, "{$integration}__$userId");
 
         /** @var class-string $className */
         $className = $this->metadata->get("integrations.$integration.clientClassName");
-
         $redirectUri = $this->config->get('siteUrl') . '?entryPoint=oauthCallback';
-
         $redirectUriPath = $this->metadata->get(['integrations', $integration, 'params', 'redirectUriPath']);
 
         if ($redirectUriPath) {
             $redirectUri = rtrim($this->config->get('siteUrl'), '/') . '/' . $redirectUriPath;
         }
 
-        if (!$externalAccountEntity) {
+        if (!$account) {
             throw new Error("External Account $integration not found for '$userId'.");
         }
 
         if (
             !$integrationEntity ||
-            !$integrationEntity->get('enabled') ||
-            !$externalAccountEntity->get('enabled')
+            !$integrationEntity->isEnabled() ||
+            !$account->isEnabled()
         ) {
             return null;
         }
@@ -213,10 +201,10 @@ class ClientManager
             'clientId' => $integrationEntity->get('clientId'),
             'clientSecret' => $integrationEntity->get('clientSecret'),
             'redirectUri' => $redirectUri,
-            'accessToken' => $externalAccountEntity->get('accessToken'),
-            'refreshToken' => $externalAccountEntity->get('refreshToken'),
-            'tokenType' => $externalAccountEntity->get('tokenType'),
-            'expiresAt' => $externalAccountEntity->get('expiresAt'),
+            'accessToken' => $account->get('accessToken'),
+            'refreshToken' => $account->get('refreshToken'),
+            'tokenType' => $account->get('tokenType'),
+            'expiresAt' => $account->get('expiresAt'),
         ];
 
         foreach (get_object_vars($integrationEntity->getValueMap()) as $k => $v) {
@@ -244,7 +232,7 @@ class ClientManager
             $client = new $className($oauth2Client, $params, $this);
         }
 
-        $this->addToClientMap($client, $integrationEntity, $externalAccountEntity, $userId);
+        $this->addToClientMap($client, $integrationEntity, $account, $userId);
 
         return $client;
     }
@@ -255,16 +243,16 @@ class ClientManager
      */
     protected function addToClientMap(
         $client,
-        Integration $integrationEntity,
-        ExternalAccount $externalAccountEntity,
+        Integration $integration,
+        ExternalAccount $account,
         string $userId
     ) {
         $this->clientMap[spl_object_hash($client)] = [
             'client' => $client,
             'userId' => $userId,
-            'integration' => $integrationEntity->getId(),
-            'integrationEntity' => $integrationEntity,
-            'externalAccountEntity' => $externalAccountEntity,
+            'integration' => $integration->getId(),
+            'integrationEntity' => $integration,
+            'externalAccountEntity' => $account,
         ];
     }
 
@@ -272,12 +260,16 @@ class ClientManager
      * @param object $client
      * @throws Error
      */
-    protected function getClientRecord($client): Entity
+    protected function getClientRecord($client): ExternalAccount
     {
-        $data = $this->clientMap[spl_object_hash($client)];
+        $data = $this->clientMap[spl_object_hash($client)] ?? null;
 
         if (!$data) {
             throw new Error("External Account: Client not found in hash.");
+        }
+
+        if (!isset($data['externalAccountEntity'])) {
+            throw new Error("External Account: Account not found in hash.");
         }
 
         return $data['externalAccountEntity'];
@@ -289,13 +281,11 @@ class ClientManager
      */
     public function isClientLocked($client): bool
     {
-        $externalAccountEntity = $this->getClientRecord($client);
+        $accountSet = $this->getClientRecord($client);
 
-        $id = $externalAccountEntity->getId();
+        $account = $this->fetchAccountOnlyWithIsLocked($accountSet->getId());
 
-        $account = $this->fetchAccountOnlyWithIsLocked($id);
-
-        return $account->get('isLocked');
+        return $account->isLocked();
     }
 
     /**
@@ -303,12 +293,10 @@ class ClientManager
      */
     public function lockClient(object $client): void
     {
-        $externalAccountEntity = $this->getClientRecord($client);
+        $accountSet = $this->getClientRecord($client);
 
-        $id = $externalAccountEntity->getId();
-
-        $account = $this->fetchAccountOnlyWithIsLocked($id);
-        $account->set('isLocked', true);
+        $account = $this->fetchAccountOnlyWithIsLocked($accountSet->getId());
+        $account->setIsLocked(true);
 
         $this->entityManager->saveEntity($account, [
             SaveOption::SKIP_HOOKS => true,
@@ -321,14 +309,12 @@ class ClientManager
      */
     public function unlockClient(object $client): void
     {
-        $externalAccountEntity = $this->getClientRecord($client);
+        $accountSet = $this->getClientRecord($client);
 
-        $id = $externalAccountEntity->getId();
+        $accountSet = $this->fetchAccountOnlyWithIsLocked($accountSet->getId());
+        $accountSet->setIsLocked(false);
 
-        $account = $this->fetchAccountOnlyWithIsLocked($id);
-        $account->set('isLocked', false);
-
-        $this->entityManager->saveEntity($account, [
+        $this->entityManager->saveEntity($accountSet, [
             SaveOption::SKIP_HOOKS => true,
             SaveOption::SILENT => true,
         ]);
@@ -340,9 +326,9 @@ class ClientManager
      */
     public function reFetchClient($client): void
     {
-        $externalAccountEntity = $this->getClientRecord($client);
+        $accountSet = $this->getClientRecord($client);
 
-        $id = $externalAccountEntity->getId();
+        $id = $accountSet->getId();
 
         $account = $this->entityManager->getEntityById(ExternalAccount::ENTITY_TYPE, $id);
 
@@ -352,7 +338,7 @@ class ClientManager
 
         $data = $account->getValueMap();
 
-        $externalAccountEntity->set($data);
+        $accountSet->set($data);
 
         $client->setParams(get_object_vars($data));
     }
