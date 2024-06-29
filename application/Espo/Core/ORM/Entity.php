@@ -29,6 +29,7 @@
 
 namespace Espo\Core\ORM;
 
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\ORM\BaseEntity;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\AttributeType;
@@ -49,7 +50,7 @@ class Entity extends BaseEntity
     {
         return
             $this->hasRelation($field) &&
-            $this->getAttributeParam($field . 'Ids', 'isLinkMultipleIdList');
+            $this->getAttributeParam($field . 'Ids', AttributeParam::IS_LINK_MULTIPLE_ID_LIST);
     }
 
     /**

@@ -29,6 +29,7 @@
 
 namespace Espo\Core\Utils\Database\Orm\FieldConverters;
 
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\Utils\Database\Orm\Defs\AttributeDefs;
 use Espo\Core\Utils\Database\Orm\Defs\EntityDefs;
 use Espo\Core\Utils\Database\Orm\Defs\RelationDefs;
@@ -61,7 +62,7 @@ class Email implements FieldConverter
             ->withType(AttributeType::JSON_ARRAY)
             ->withNotStorable()
             ->withParamsMerged([
-                'notExportable' => true,
+                AttributeParam::NOT_EXPORTABLE => true,
                 'isEmailAddressData' => true,
                 'field' => $name,
             ]);

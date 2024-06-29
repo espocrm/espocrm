@@ -40,6 +40,7 @@ use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Exceptions\NotFoundSilent;
 use Espo\Core\FieldSanitize\SanitizeManager;
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Repository\Option\SaveOption;
 use Espo\Core\Record\Access\LinkCheck;
@@ -598,7 +599,7 @@ class Service implements Crud,
         foreach ($entityDefs->getAttributeList() as $attributeDefs) {
             if (
                 $attributeDefs->getType() !== AttributeType::FOREIGN &&
-                !$attributeDefs->getParam('isLinkMultipleNameMap')
+                !$attributeDefs->getParam(AttributeParam::IS_LINK_MULTIPLE_NAME_MAP)
             ) {
                 continue;
             }

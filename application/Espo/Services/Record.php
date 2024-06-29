@@ -30,6 +30,7 @@
 namespace Espo\Services;
 
 use Espo\Core\Acl\Permission;
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
@@ -305,7 +306,7 @@ class Record extends RecordService implements
         }
 
         foreach ($selectAttributeList as $attribute) {
-            if (!$entity->getAttributeParam($attribute, 'isLinkMultipleIdList')) {
+            if (!$entity->getAttributeParam($attribute, AttributeParam::IS_LINK_MULTIPLE_ID_LIST)) {
                 continue;
             }
 

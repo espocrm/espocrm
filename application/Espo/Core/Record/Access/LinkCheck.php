@@ -37,6 +37,7 @@ use Espo\Core\Exceptions\Error\Body as ErrorBody;
 use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\Exceptions\ForbiddenSilent;
 use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\ORM\Type\FieldType;
 use Espo\Core\Utils\Metadata;
 use Espo\Entities\User;
@@ -159,7 +160,7 @@ class LinkCheck
                 }
             }
 
-            if (!$entityDefs->tryGetAttribute($namesAttribute)?->getParam('isLinkMultipleNameMap')) {
+            if (!$entityDefs->tryGetAttribute($namesAttribute)?->getParam(AttributeParam::IS_LINK_MULTIPLE_NAME_MAP)) {
                 continue;
             }
 

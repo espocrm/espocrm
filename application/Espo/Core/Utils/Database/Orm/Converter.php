@@ -31,6 +31,7 @@ namespace Espo\Core\Utils\Database\Orm;
 
 use Doctrine\DBAL\Types\Types;
 use Espo\Core\InjectableFactory;
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\Core\Utils\Database\ConfigDataProvider;
 use Espo\Core\Utils\Database\MetadataProvider;
 use Espo\Core\Utils\Util;
@@ -70,7 +71,7 @@ class Converter
         'maxLength' => 'len',
         'len' => 'len',
         'notNull' => 'notNull',
-        'exportDisabled' => 'notExportable',
+        'exportDisabled' => AttributeParam::NOT_EXPORTABLE,
         'autoincrement' => 'autoincrement',
         'entity' => 'entity',
         'notStorable' => 'notStorable',
@@ -502,19 +503,19 @@ class Converter
                 $ormMetadata[$entityType]['attributes']['isFollowed'] = [
                     'type' => Entity::BOOL,
                     'notStorable' => true,
-                    'notExportable' => true,
+                    AttributeParam::NOT_EXPORTABLE => true,
                 ];
 
                 $ormMetadata[$entityType]['attributes']['followersIds'] = [
                     'type' => Entity::JSON_ARRAY,
                     'notStorable' => true,
-                    'notExportable' => true,
+                    AttributeParam::NOT_EXPORTABLE => true,
                 ];
 
                 $ormMetadata[$entityType]['attributes']['followersNames'] = [
                     'type' => Entity::JSON_OBJECT,
                     'notStorable' => true,
-                    'notExportable' => true,
+                    AttributeParam::NOT_EXPORTABLE => true,
                 ];
             }
         }
@@ -525,7 +526,7 @@ class Converter
                 $ormMetadata[$entityType]['attributes']['isStarred'] = [
                     'type' => Entity::BOOL,
                     'notStorable' => true,
-                    'notExportable' => true,
+                    AttributeParam::NOT_EXPORTABLE => true,
                     'readOnly' => true,
                 ];
             }
@@ -536,7 +537,7 @@ class Converter
             $ormMetadata[$entityType]['attributes']['versionNumber'] = [
                 'type' => Entity::INT,
                 'dbType' => Types::BIGINT,
-                'notExportable' => true,
+                AttributeParam::NOT_EXPORTABLE => true,
             ];
         }
 
