@@ -125,6 +125,7 @@ class LinkCheck
             }
 
             $attribute = $name . 'Ids';
+            $namesAttribute = $name . 'Names';
 
             if (
                 !$entityDefs->hasAttribute($attribute) ||
@@ -148,12 +149,6 @@ class LinkCheck
 
             $this->processCheckLinkWithoutField($entityDefs, $name, $this->manyFieldTypeList);
 
-            if ($ids === []) {
-                continue;
-            }
-
-            $namesAttribute = $name . 'Names';
-
             $names = $this->prepareNames($entity, $namesAttribute, $setIds);
 
             foreach ($ids as $id) {
@@ -164,9 +159,7 @@ class LinkCheck
                 }
             }
 
-            $namesAttributeDefs = $entityDefs->tryGetAttribute($namesAttribute);
-
-            if (!$namesAttributeDefs || !$namesAttributeDefs->getParam('isLinkMultipleNameMap')) {
+            if (!$entityDefs->tryGetAttribute($namesAttribute)?->getParam('isLinkMultipleNameMap')) {
                 continue;
             }
 
