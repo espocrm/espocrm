@@ -48,6 +48,13 @@ class ExternalAccount extends Integration
         return $this;
     }
 
+    public function unsetData(): self
+    {
+        $this->set(['data' => null]);
+
+        return $this;
+    }
+
     public function setIsLocked(bool $isLocked): self
     {
         $this->set('isLocked', $isLocked);

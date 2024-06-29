@@ -357,6 +357,7 @@ class ClientManager
                 ->isGreaterThan(DateTime::createNow())
         ) {
             $account->setIsEnabled(false);
+            $account->unsetData();
         }
 
         $this->entityManager->saveEntity($account, [
