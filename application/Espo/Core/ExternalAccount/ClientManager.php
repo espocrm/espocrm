@@ -30,8 +30,12 @@
 namespace Espo\Core\ExternalAccount;
 
 use Espo\Core\Exceptions\Error;
+use Espo\Core\Field\DateTime;
+use Espo\Core\Utils\Language;
 use Espo\Entities\Integration;
 use Espo\Entities\ExternalAccount;
+use Espo\Entities\Notification;
+use Espo\Entities\User;
 use Espo\ORM\EntityManager;
 use Espo\Core\ExternalAccount\Clients\IClient;
 use Espo\Core\ExternalAccount\OAuth2\Client as OAuth2Client;
@@ -43,6 +47,9 @@ use RuntimeException;
 
 class ClientManager
 {
+    private const REFRESH_TOKEN_ATTEMPTS_LIMIT = 20;
+    private const REFRESH_TOKEN_ATTEMPTS_PERIOD = '1 day';
+
     /** @var array<string, (array<string, mixed> & array{externalAccountEntity: ExternalAccount})> */
     protected $clientMap = [];
 
@@ -50,7 +57,8 @@ class ClientManager
         protected EntityManager $entityManager,
         protected Metadata $metadata,
         protected Config $config,
-        protected ?InjectableFactory $injectableFactory = null
+        protected ?InjectableFactory $injectableFactory = null,
+        private ?Language $language = null
     ) {}
 
     /**
@@ -75,6 +83,7 @@ class ClientManager
         $account->setAccessToken($data['accessToken']);
         $account->setTokenType($data['tokenType']);
         $account->setExpiresAt($data['expiresAt'] ?? null);
+        $account->setRefreshTokenAttempts(null);
 
         if ($data['refreshToken'] ?? null) {
             $account->setRefreshToken($data['refreshToken']);
@@ -94,6 +103,7 @@ class ClientManager
         $account->setAccessToken($data['accessToken']);
         $account->setTokenType($data['tokenType']);
         $account->setExpiresAt($data['expiresAt'] ?? null);
+        $account->setRefreshTokenAttempts(null);
 
         if ($data['refreshToken'] ?? null) {
             $account->setRefreshToken($data['refreshToken'] ?? null);
@@ -201,10 +211,10 @@ class ClientManager
             'clientId' => $integrationEntity->get('clientId'),
             'clientSecret' => $integrationEntity->get('clientSecret'),
             'redirectUri' => $redirectUri,
-            'accessToken' => $account->get('accessToken'),
-            'refreshToken' => $account->get('refreshToken'),
-            'tokenType' => $account->get('tokenType'),
-            'expiresAt' => $account->get('expiresAt'),
+            'accessToken' => $account->getAccessToken(),
+            'refreshToken' => $account->getRefreshToken(),
+            'tokenType' => $account->getTokenType(),
+            'expiresAt' => $account->getExpiresAt() ? $account->getExpiresAt()->toString() : null,
         ];
 
         foreach (get_object_vars($integrationEntity->getValueMap()) as $k => $v) {
@@ -321,6 +331,45 @@ class ClientManager
     }
 
     /**
+     * @throws Error
+     */
+    public function controlRefreshTokenAttempts(object $client): void
+    {
+        $accountSet = $this->getClientRecord($client);
+
+        $account = $this->entityManager
+            ->getRDBRepositoryByClass(ExternalAccount::class)
+            ->getById($accountSet->getId());
+
+        if (!$account) {
+            return;
+        }
+
+        $attempts = $account->getRefreshTokenAttempts();
+
+        $account->setRefreshTokenAttempts($attempts + 1);
+
+        if (
+            $attempts >= self::REFRESH_TOKEN_ATTEMPTS_LIMIT &&
+            $account->getExpiresAt() &&
+            $account->getExpiresAt()
+                ->modify('+' . self::REFRESH_TOKEN_ATTEMPTS_PERIOD)
+                ->isGreaterThan(DateTime::createNow())
+        ) {
+            $account->setIsEnabled(false);
+        }
+
+        $this->entityManager->saveEntity($account, [
+            SaveOption::SKIP_HOOKS => true,
+            SaveOption::SILENT => true,
+        ]);
+
+        if (!$account->isEnabled()) {
+            $this->createDisableNotification($account);
+        }
+    }
+
+    /**
      * @param IClient $client
      * @throws Error
      */
@@ -359,5 +408,34 @@ class ClientManager
         }
 
         return $account;
+    }
+
+    private function createDisableNotification(ExternalAccount $account): void
+    {
+        if (!str_contains($account->getId(), '__'))    {
+            return;
+        }
+
+        [$integration, $userId] = explode('__', $account->getId());
+
+        if (!$this->entityManager->getEntityById(User::ENTITY_TYPE, $userId)) {
+            return;
+        }
+
+        if (!$this->language) {
+            return;
+        }
+
+        $message = $this->language->translateLabel('externalAccountNoConnectDisabled', 'messages', 'ExternalAccount');
+        $message = str_replace('{integration}', $integration, $message);
+
+        $notification = $this->entityManager->getRDBRepositoryByClass(Notification::class)->getNew();
+
+        $notification
+            ->setType(Notification::TYPE_MESSAGE)
+            ->setMessage($message)
+            ->setUserId($userId);
+
+        $this->entityManager->saveEntity($notification);
     }
 }

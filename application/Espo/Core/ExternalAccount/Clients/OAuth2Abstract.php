@@ -380,6 +380,18 @@ abstract class OAuth2Abstract implements IClient
     /**
      * @throws Error
      */
+    private function controlRefreshTokenAttempts(): void
+    {
+        if (!$this->manager) {
+            return;
+        }
+
+        $this->manager->controlRefreshTokenAttempts($this);
+    }
+
+    /**
+     * @throws Error
+     */
     protected function reFetch(): void
     {
         if (!$this->manager) {
@@ -491,29 +503,25 @@ abstract class OAuth2Abstract implements IClient
         }
         catch (Exception $e) {
             $this->unlock();
-
-            // @todo Increment refreshAttempt. If exceeds a limit and period, then set disabled.
+            $this->controlRefreshTokenAttempts();
 
             throw new Error("Oauth: Error while refreshing token: " . $e->getMessage());
         }
 
         if ($response['code'] == 200) {
-            if (is_array($response['result'])) {
-                if (!empty($response['result']['access_token'])) {
-                    $data = $this->getAccessTokenDataFromResponseResult($response['result']);
+            if (is_array($response['result']) && !empty($response['result']['access_token'])) {
+                $data = $this->getAccessTokenDataFromResponseResult($response['result']);
 
-                    $this->setParams($data);
-                    $this->afterTokenRefreshed($data); // @todo Reset refreshAttempt to 0.
-                    $this->unlock();
+                $this->setParams($data);
+                $this->afterTokenRefreshed($data);
+                $this->unlock();
 
-                    return true;
-                }
+                return true;
             }
         }
 
         $this->unlock();
-
-        // @todo Increment refreshAttempt. If exceeds a limit and period, then set disabled.
+        $this->controlRefreshTokenAttempts();
 
         $this->log->error("Oauth: Refreshing token failed for client $this->clientId: " . json_encode($response));
 
