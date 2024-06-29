@@ -66,14 +66,9 @@ class ExternalAccount extends Record implements Di\HookManagerAware
             throw new Error("$integration is disabled.");
         }
 
-        $factory = new ClientManager(
-            $this->entityManager,
-            $this->metadata,
-            $this->config,
-            $this->injectableFactory
-        );
-
-        return $factory->create($integration, $id);
+        return $this->injectableFactory
+            ->create(ClientManager::class)
+            ->create($integration, $id);
     }
 
     /**
