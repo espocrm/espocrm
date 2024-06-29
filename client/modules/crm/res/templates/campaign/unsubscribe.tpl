@@ -5,12 +5,12 @@
                 <p>
                     {{#if isSubscribed}}
                         <a
-                            class="btn btn-primary"
+                            class="btn btn-primary{{#if inProcess}} disabled{{/if}}"
                             data-action="unsubscribe"
                         >{{translate 'Unsubscribe' scope='Campaign'}}</a>
                     {{else}}
                         <a
-                            class="btn btn-default"
+                            class="btn btn-default{{#if inProcess}} disabled{{/if}}"
                             data-action="subscribe"
                         >{{translate 'Subscribe again' scope='Campaign'}}</a>
                     {{/if}}

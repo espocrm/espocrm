@@ -35,6 +35,7 @@ class CampaignUnsubscribeView extends View {
     data() {
         return {
             isSubscribed: this.isSubscribed,
+            inProcess: this.inProcess,
         };
     }
 
@@ -44,6 +45,7 @@ class CampaignUnsubscribeView extends View {
         this.actionData = /** @type {Record} */this.options.actionData;
 
         this.isSubscribed = this.actionData.isSubscribed;
+        this.inProcess = false;
 
         const endpointUrl = this.actionData.hash && this.actionData.emailAddress ?
             `Campaign/unsubscribe/${this.actionData.emailAddress}/${this.actionData.hash}`:
@@ -52,30 +54,48 @@ class CampaignUnsubscribeView extends View {
         this.addActionHandler('subscribe', () => {
             Espo.Ui.notify(' ... ');
 
+            this.inProcess = true;
+            this.reRender();
+
             Espo.Ajax.deleteRequest(endpointUrl)
                 .then(() => {
                     this.isSubscribed = true;
+                    this.inProcess = false;
+
                     this.reRender().then(() => {
                         const message = this.translate('subscribedAgain', 'messages', 'Campaign');
 
                         Espo.Ui.notify(message, 'success', 0, {closeButton: true});
                     });
+                })
+                .catch(() => {
+                    this.inProcess = false;
+                    this.reRender();
                 });
         });
 
         this.addActionHandler('unsubscribe', () => {
             Espo.Ui.notify(' ... ');
 
+            this.inProcess = true;
+            this.reRender();
+
             Espo.Ajax.postRequest(endpointUrl)
                 .then(() => {
                     Espo.Ui.success(this.translate('unsubscribed', 'messages', 'Campaign'), {closeButton: true});
 
                     this.isSubscribed = false;
+                    this.inProcess = false;
+
                     this.reRender().then(() => {
                         const message = this.translate('unsubscribed', 'messages', 'Campaign');
 
                         Espo.Ui.notify(message, 'success', 0, {closeButton: true});
                     });
+                })
+                .catch(() => {
+                    this.inProcess = false;
+                    this.reRender();
                 });
         });
     }
