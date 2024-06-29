@@ -354,7 +354,7 @@ class ClientManager
             $account->getExpiresAt() &&
             $account->getExpiresAt()
                 ->modify('+' . self::REFRESH_TOKEN_ATTEMPTS_PERIOD)
-                ->isGreaterThan(DateTime::createNow())
+                ->isLessThan(DateTime::createNow())
         ) {
             $account->setIsEnabled(false);
             $account->unsetData();
