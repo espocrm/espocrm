@@ -26,24 +26,59 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/campaign/unsubscribe', ['view'], function (Dep) {
+import View from 'view';
 
-    return Dep.extend({
+class CampaignUnsubscribeView extends View {
 
-        template: 'crm:campaign/unsubscribe',
+    template = 'crm:campaign/unsubscribe'
 
-        data: function () {
-            var revertUrl;
+    data() {
+        return {
+            isSubscribed: this.isSubscribed,
+        };
+    }
 
-            var actionData = this.options.actionData;
+    setup() {
+        super.setup();
 
-            revertUrl = actionData.hash && actionData.emailAddress ?
-                '?entryPoint=subscribeAgain&emailAddress=' + actionData.emailAddress + '&hash=' + actionData.hash :
-                '?entryPoint=subscribeAgain&id=' + actionData.queueItemId;
+        this.actionData = /** @type {Record} */this.options.actionData;
 
-            return {
-                revertUrl: revertUrl,
-            };
-        },
-    });
-});
+        this.isSubscribed = this.actionData.isSubscribed;
+
+        const endpointUrl = this.actionData.hash && this.actionData.emailAddress ?
+            `Campaign/unsubscribe/${this.actionData.emailAddress}/${this.actionData.hash}`:
+            `Campaign/unsubscribe/${this.actionData.queueItemId}`;
+
+        this.addActionHandler('subscribe', () => {
+            Espo.Ui.notify(' ... ');
+
+            Espo.Ajax.deleteRequest(endpointUrl)
+                .then(() => {
+                    this.isSubscribed = true;
+                    this.reRender().then(() => {
+                        const message = this.translate('subscribedAgain', 'messages', 'Campaign');
+
+                        Espo.Ui.notify(message, 'success', 0, {closeButton: true});
+                    });
+                });
+        });
+
+        this.addActionHandler('unsubscribe', () => {
+            Espo.Ui.notify(' ... ');
+
+            Espo.Ajax.postRequest(endpointUrl)
+                .then(() => {
+                    Espo.Ui.success(this.translate('unsubscribed', 'messages', 'Campaign'), {closeButton: true});
+
+                    this.isSubscribed = false;
+                    this.reRender().then(() => {
+                        const message = this.translate('unsubscribed', 'messages', 'Campaign');
+
+                        Espo.Ui.notify(message, 'success', 0, {closeButton: true});
+                    });
+                });
+        });
+    }
+}
+
+export default CampaignUnsubscribeView;

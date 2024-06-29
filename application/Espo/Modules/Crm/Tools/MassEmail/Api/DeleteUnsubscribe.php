@@ -1,3 +1,4 @@
+<?php
 /************************************************************************
  * This file is part of EspoCRM.
  *
@@ -26,27 +27,38 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/campaign/subscribe-again', ['view'], function (Dep) {
+namespace Espo\Modules\Crm\Tools\MassEmail\Api;
 
-    return Dep.extend({
+use Espo\Core\Api\Action;
+use Espo\Core\Api\Request;
+use Espo\Core\Api\Response;
+use Espo\Core\Api\ResponseComposer;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Modules\Crm\Tools\MassEmail\UnsubscribeService;
 
-        template: 'crm:campaign/subscribe-again',
+/** @noinspection PhpUnused */
+class DeleteUnsubscribe implements Action
+{
+    public function __construct(private UnsubscribeService $service) {}
 
-        data: function () {
-            var revertUrl;
+    public function process(Request $request): Response
+    {
+        $id = $request->getRouteParam('id');
+        $hash = $request->getRouteParam('hash');
+        $emailAddress = $request->getRouteParam('emailAddress');
 
-            var actionData = this.options.actionData;
+        if ($hash && $emailAddress) {
+            $this->service->subscribeAgainWithHash($emailAddress, $hash);
 
-            if (actionData.hash && actionData.emailAddress) {
-                revertUrl = '?entryPoint=unsubscribe&emailAddress=' + actionData.emailAddress +
-                    '&hash=' + actionData.hash;
-            } else {
-                revertUrl = '?entryPoint=unsubscribe&id=' + actionData.queueItemId;
-            }
+            return ResponseComposer::json(true);
+        }
 
-            return {
-                revertUrl: revertUrl,
-            };
-        },
-    });
-});
+        if (!$id) {
+            throw new BadRequest();
+        }
+
+        $this->service->subscribeAgain($id);
+
+        return ResponseComposer::json(true);
+    }
+}

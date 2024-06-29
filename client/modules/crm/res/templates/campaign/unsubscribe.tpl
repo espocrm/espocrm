@@ -3,10 +3,17 @@
         <div class="panel panel-default">
             <div class="panel-body">
                 <p>
-                    {{translate 'unsubscribed' category='messages' scope='Campaign'}}
-                </p>
-                <p>
-                    <a class="btn btn-default btn-sm" href="{{revertUrl}}">{{translate 'Subscribe again' scope='Campaign'}}</a>
+                    {{#if isSubscribed}}
+                        <a
+                            class="btn btn-primary"
+                            data-action="unsubscribe"
+                        >{{translate 'Unsubscribe' scope='Campaign'}}</a>
+                    {{else}}
+                        <a
+                            class="btn btn-default"
+                            data-action="subscribe"
+                        >{{translate 'Subscribe again' scope='Campaign'}}</a>
+                    {{/if}}
                 </p>
             </div>
         </div>

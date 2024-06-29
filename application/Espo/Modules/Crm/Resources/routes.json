@@ -65,5 +65,23 @@
         "method": "post",
         "actionClassName": "Espo\\Modules\\Crm\\Tools\\MassEmail\\Api\\PostUnsubscribe",
         "noAuth": true
+    },
+    {
+        "route": "/Campaign/unsubscribe/:id",
+        "method": "delete",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\MassEmail\\Api\\DeleteUnsubscribe",
+        "noAuth": true
+    },
+    {
+        "route": "/Campaign/unsubscribe/:emailAddress/:hash",
+        "method": "post",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\MassEmail\\Api\\PostUnsubscribe",
+        "noAuth": true
+    },
+    {
+        "route": "/Campaign/unsubscribe/:emailAddress/:hash",
+        "method": "delete",
+        "actionClassName": "Espo\\Modules\\Crm\\Tools\\MassEmail\\Api\\DeleteUnsubscribe",
+        "noAuth": true
     }
 ]

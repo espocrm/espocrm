@@ -72,9 +72,10 @@ class Unsubscribe implements EntryPoint
             throw new BadRequest("No id.");
         }
 
-        $this->unsubscribeService->unsubscribe($id);
-
-        $this->display($response, ['queueItemId' => $id]);
+        $this->display($response, [
+            'queueItemId' => $id,
+            'isSubscribed' => $this->unsubscribeService->isSubscribed($id),
+        ]);
     }
 
     /**
@@ -98,11 +99,10 @@ class Unsubscribe implements EntryPoint
      */
     private function processWithHash(Response $response, string $emailAddress, string $hash): void
     {
-        $this->unsubscribeService->unsubscribeWithHash($emailAddress, $hash);
-
-        $this->display($response,[
+        $this->display($response, [
             'emailAddress' => $emailAddress,
             'hash' => $hash,
+            'isSubscribed' => $this->unsubscribeService->isSubscribedWithHash($emailAddress, $hash),
         ]);
     }
 }

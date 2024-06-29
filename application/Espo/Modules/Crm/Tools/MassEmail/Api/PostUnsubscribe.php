@@ -44,6 +44,14 @@ class PostUnsubscribe implements Action
     public function process(Request $request): Response
     {
         $id = $request->getRouteParam('id');
+        $hash = $request->getRouteParam('hash');
+        $emailAddress = $request->getRouteParam('emailAddress');
+
+        if ($hash && $emailAddress) {
+            $this->service->unsubscribeWithHash($emailAddress, $hash);
+
+            return ResponseComposer::json(true);
+        }
 
         if (!$id) {
             throw new BadRequest();
