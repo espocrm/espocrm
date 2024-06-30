@@ -411,7 +411,8 @@
         "starsLimitExceeded": "The number of stars exceeded the limit.",
         "select2OrMoreRecords": "Select 2 or more records",
         "selectNotMoreThanNumberRecords": "Select not more than {number} records",
-        "selectAtLeastOneRecord": "Select at least one record"
+        "selectAtLeastOneRecord": "Select at least one record",
+        "duplicateConflict": "A record already exists."
     },
     "boolFilters": {
         "onlyMy": "Only My",
