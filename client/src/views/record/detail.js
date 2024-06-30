@@ -639,7 +639,10 @@ class DetailRecordView extends BaseRecordView {
 
         const promise = this.save(data.options)
             .catch(reason => {
-                if (modeBeforeSave === this.MODE_EDIT && reason === 'error') {
+                if (
+                    modeBeforeSave === this.MODE_EDIT &&
+                    ['error', 'cancel'].includes(reason)
+                ) {
                     this.setEditMode();
                 }
 
@@ -2532,12 +2535,12 @@ class DetailRecordView extends BaseRecordView {
                             'X-Skip-Duplicate-Check': 'true',
                         }
                     }
-                }).then(() => resolve());
+                })
+                    .then(() => resolve())
+                    .catch(() => reject('error'))
             });
 
-            this.listenToOnce(view, 'cancel', () => {
-                reject();
-            });
+            this.listenToOnce(view, 'cancel', () => reject('cancel'));
         });
 
         return true;
