@@ -29,15 +29,13 @@
 
 namespace Espo\Core\Authentication\Hook\Hooks;
 
-use Espo\Core\Api\Util;
-use Espo\Core\Authentication\HeaderKey;
-use Espo\Core\Authentication\Hook\BeforeLogin;
-use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Api\Request;
-use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Authentication\AuthenticationData;
 use Espo\Core\Authentication\ConfigDataProvider;
-use Espo\ORM\EntityManager;
+use Espo\Core\Authentication\Hook\BeforeLogin;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Entities\AuthLogRecord;
+use Espo\ORM\EntityManager;
 
 use DateTime;
 use Exception;
@@ -46,12 +44,12 @@ use RuntimeException;
 /**
  * @noinspection PhpUnused
  */
-class FailedAttemptsLimit implements BeforeLogin
+class FailedCodeAttemptsLimit implements BeforeLogin
 {
+
     public function __construct(
         private ConfigDataProvider $configDataProvider,
         private EntityManager $entityManager,
-        private Util $util
     ) {}
 
     /**
@@ -59,20 +57,36 @@ class FailedAttemptsLimit implements BeforeLogin
      */
     public function process(AuthenticationData $data, Request $request): void
     {
-        $isByTokenOnly = !$data->getMethod() && $request->getHeader(HeaderKey::AUTHORIZATION_BY_TOKEN) === 'true';
-
-        if ($isByTokenOnly || $this->configDataProvider->isAuthLogDisabled()) {
+        if (
+            $request->getHeader('Espo-Authorization-Code') === null ||
+            $this->configDataProvider->isAuthLogDisabled()
+        ) {
             return;
         }
 
-        $failedAttemptsPeriod = $this->configDataProvider->getFailedAttemptsPeriod();
+        $isByTokenOnly = !$data->getMethod() && $request->getHeader('Espo-Authorization-By-Token') === 'true';
 
-        $ipAddress = $this->util->obtainIpFromRequest($request);
+        if ($isByTokenOnly) {
+            return;
+        }
+
+        $failedAttemptsPeriod = $this->configDataProvider->getFailedCodeAttemptsPeriod();
+        $maxFailedAttempts = $this->configDataProvider->getMaxFailedAttemptNumber();
+
+        $requestTime = intval($request->getServerParam('REQUEST_TIME_FLOAT'));
+
+        try {
+            $requestTimeFrom = (new DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $where = [
-            'requestTime>' => $this->getTimeFrom($request, $failedAttemptsPeriod)->format('U'),
+            'requestTime>' => $requestTimeFrom->format('U'),
             'isDenied' => true,
-            'ipAddress' => $ipAddress,
+            'username' => $data->getUsername(),
+            'denialReason' => AuthLogRecord::DENIAL_REASON_WRONG_CODE,
         ];
 
         $wasFailed = (bool) $this->entityManager
@@ -90,24 +104,12 @@ class FailedAttemptsLimit implements BeforeLogin
             ->where($where)
             ->count();
 
-        if ($failAttemptCount <= $this->configDataProvider->getMaxFailedAttemptNumber()) {
+        if ($failAttemptCount <= $maxFailedAttempts) {
             return;
         }
 
-        throw new Forbidden("Max failed login attempts exceeded for IP address $ipAddress.");
-    }
+        $username = $data->getUsername() ?? '';
 
-    private function getTimeFrom(Request $request, string $failedAttemptsPeriod): DateTime
-    {
-        $requestTime = intval($request->getServerParam('REQUEST_TIME_FLOAT'));
-
-        try {
-            $requestTimeFrom = (new DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
-        }
-        catch (Exception $e) {
-            throw new RuntimeException($e->getMessage());
-        }
-
-        return $requestTimeFrom;
+        throw new Forbidden("Max failed 2FA login attempts exceeded for username '$username'.");
     }
 }
