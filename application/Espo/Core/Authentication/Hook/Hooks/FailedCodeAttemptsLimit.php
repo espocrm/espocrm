@@ -46,7 +46,6 @@ use RuntimeException;
  */
 class FailedCodeAttemptsLimit implements BeforeLogin
 {
-
     public function __construct(
         private ConfigDataProvider $configDataProvider,
         private EntityManager $entityManager,
@@ -71,19 +70,9 @@ class FailedCodeAttemptsLimit implements BeforeLogin
         }
 
         $failedAttemptsPeriod = $this->configDataProvider->getFailedCodeAttemptsPeriod();
-        $maxFailedAttempts = $this->configDataProvider->getMaxFailedAttemptNumber();
-
-        $requestTime = intval($request->getServerParam('REQUEST_TIME_FLOAT'));
-
-        try {
-            $requestTimeFrom = (new DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
-        }
-        catch (Exception $e) {
-            throw new RuntimeException($e->getMessage());
-        }
 
         $where = [
-            'requestTime>' => $requestTimeFrom->format('U'),
+            'requestTime>' => $this->getTimeFrom($request, $failedAttemptsPeriod)->format('U'),
             'isDenied' => true,
             'username' => $data->getUsername(),
             'denialReason' => AuthLogRecord::DENIAL_REASON_WRONG_CODE,
@@ -104,12 +93,26 @@ class FailedCodeAttemptsLimit implements BeforeLogin
             ->where($where)
             ->count();
 
-        if ($failAttemptCount <= $maxFailedAttempts) {
+        if ($failAttemptCount <= $this->configDataProvider->getMaxFailedAttemptNumber()) {
             return;
         }
 
         $username = $data->getUsername() ?? '';
 
         throw new Forbidden("Max failed 2FA login attempts exceeded for username '$username'.");
+    }
+
+    private function getTimeFrom(Request $request, string $failedAttemptsPeriod): DateTime
+    {
+        $requestTime = intval($request->getServerParam('REQUEST_TIME_FLOAT'));
+
+        try {
+            $requestTimeFrom = (new DateTime('@' . $requestTime))->modify('-' . $failedAttemptsPeriod);
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
+
+        return $requestTimeFrom;
     }
 }
