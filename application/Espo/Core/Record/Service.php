@@ -863,6 +863,7 @@ class Service implements Crud,
         $this->entityManager->saveEntity($entity, [
             SaveOption::API => true,
             SaveOption::KEEP_NEW => true,
+            SaveOption::DUPLICATE_SOURCE_ID => $params->getDuplicateSourceId(),
         ]);
 
         $this->getRecordHookManager()->processAfterCreate($entity, $params);
