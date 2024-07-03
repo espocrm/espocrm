@@ -228,19 +228,19 @@ class DetailView extends MainView {
         // @todo Add parameters to schema.
 
         this.defaultViewMode = this.options.defaultViewMode ||
-            this.getMetadata().get([`clientDefs.${this.scope}.detailDefaultViewMode`]) ||
+            this.getMetadata().get(`clientDefs.${this.scope}.detailDefaultViewMode`) ||
             this.defaultViewMode;
 
         this.viewMode = this.viewMode || this.defaultViewMode;
 
         const viewModeList = this.options.viewModeList || this.viewModeList ||
-            this.getMetadata().get([`clientDefs.${this.scope}.detailViewModeList`]);
+            this.getMetadata().get(`clientDefs.${this.scope}.detailViewModeList`);
 
         this.viewModeList = viewModeList ? viewModeList : [this.MODE_DETAIL];
 
         this.viewModeIsStorable = this.viewModeIsStorable !== undefined ?
             this.viewModeIsStorable :
-            this.getMetadata().get([`clientDefs.${this.scope}.detailViewModeIsStorable`]);
+            this.getMetadata().get(`clientDefs.${this.scope}.detailViewModeIsStorable`);
 
         this.hasMultipleModes = this.viewModeList.length > 1;
 
