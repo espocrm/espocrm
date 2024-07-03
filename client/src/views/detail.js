@@ -121,7 +121,10 @@ class DetailView extends MainView {
      */
     hasMultipleModes = false
 
-    /** @private */
+    /**
+     * @private
+     * @type {import('views/detail/modes').default}
+     */
     modesView
 
     /**
@@ -345,6 +348,10 @@ class DetailView extends MainView {
         this.setViewMode(mode, true);
 
         Espo.Ui.notify(' ... ');
+
+        if (this.modesView) {
+            this.modesView.changeMode(mode);
+        }
 
         this.setupRecord().then(view => {
             view.render()

@@ -81,6 +81,18 @@ class DetailModesView extends View {
     }
 
     /**
+     * Change mode.
+     *
+     * @param {string} mode
+     * @return {Promise}
+     */
+    changeMode(mode) {
+        this.mode = mode;
+
+        return this.reRender();
+    }
+
+    /**
      * Disable.
      *
      * @return {Promise}
