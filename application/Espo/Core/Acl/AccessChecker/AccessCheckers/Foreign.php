@@ -113,7 +113,7 @@ class Foreign implements
             return false;
         }
 
-        return $this->defaultAccessChecker->checkEntityCreate($user, $entity, $data);
+        return $this->defaultAccessChecker->checkEntityCreate($user, $foreign, $data);
     }
 
     public function checkEntityRead(User $user, Entity $entity, ScopeData $data): bool
@@ -124,7 +124,7 @@ class Foreign implements
             return false;
         }
 
-        return $this->defaultAccessChecker->checkEntityRead($user, $entity, $data);
+        return $this->defaultAccessChecker->checkEntityRead($user, $foreign, $data);
     }
 
     public function checkEntityEdit(User $user, Entity $entity, ScopeData $data): bool
@@ -135,7 +135,7 @@ class Foreign implements
             return false;
         }
 
-        return $this->defaultAccessChecker->checkEntityEdit($user, $entity, $data);
+        return $this->defaultAccessChecker->checkEntityEdit($user, $foreign, $data);
     }
 
     public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
@@ -150,7 +150,7 @@ class Foreign implements
             return false;
         }
 
-        return $this->defaultAccessChecker->checkEntityDelete($user, $entity, $data);
+        return $this->defaultAccessChecker->checkEntityDelete($user, $foreign, $data);
     }
 
     public function checkEntityStream(User $user, Entity $entity, ScopeData $data): bool
@@ -161,6 +161,6 @@ class Foreign implements
             return false;
         }
 
-        return $this->defaultAccessChecker->checkEntityStream($user, $entity, $data);
+        return $this->defaultAccessChecker->checkEntityStream($user, $foreign, $data);
     }
 }
