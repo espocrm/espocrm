@@ -1831,7 +1831,7 @@ class DetailRecordView extends BaseRecordView {
         }
 
         this.recordHelper = this.options.recordHelper ||
-            new ViewRecordHelper(this.defaultFieldStates, this.defaultFieldStates);
+            new ViewRecordHelper(this.defaultFieldStates, this.defaultPanelStates);
 
         this._initInlineEditSave();
 

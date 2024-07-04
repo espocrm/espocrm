@@ -398,6 +398,7 @@ class DetailModalView extends ModalView {
             inlineEditDisabled: true,
             sideDisabled: this.sideDisabled,
             bottomDisabled: this.bottomDisabled,
+            recordHelper: this.options.recordHelper,
             exit: function () {
             },
         };
