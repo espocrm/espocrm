@@ -493,7 +493,8 @@ class LinkMultipleFieldView extends BaseFieldView {
 
         const notSelectedFilter = this.ids && this.ids.length ?
             {
-                id: {
+                // Prefix to prevent conflict when the 'id' field is in filters.
+                _id: {
                     type: 'notIn',
                     attribute: 'id',
                     value: this.ids,
