@@ -51,6 +51,8 @@ class DateFieldView extends BaseFieldView {
      * @typedef {Object} module:views/fields/date~params
      * @property {boolean} [required] Required.
      * @property {boolean} [useNumericFormat] Use numeric format.
+     * @property {string} [after] Validate to be after another date field.
+     * @property {string} [before] Validate to be before another date field.
      */
 
     /**
@@ -109,7 +111,7 @@ class DateFieldView extends BaseFieldView {
     initialSearchIsNotIdle = true
 
     setup() {
-       super.setup();
+        super.setup();
 
         if (this.getConfig().get('fiscalYearShift')) {
             this.searchTypeList = Espo.Utils.clone(this.searchTypeList);
@@ -490,7 +492,7 @@ class DateFieldView extends BaseFieldView {
 
     // noinspection JSUnusedGlobalSymbols
     validateAfter() {
-        const field = this.model.getFieldParam(this.name, 'after');
+        const field = this.params.after;
 
         if (!field) {
             return false;
@@ -516,7 +518,7 @@ class DateFieldView extends BaseFieldView {
 
     // noinspection JSUnusedGlobalSymbols
     validateBefore() {
-        const field = this.model.getFieldParam(this.name, 'before');
+        const field = this.params.before;
 
         if (!field) {
             return false;

@@ -53,6 +53,8 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
      * @property {boolean} [useNumericFormat] Use numeric format.
      * @property {boolean} [hasSeconds] Display seconds.
      * @property {number} [minuteStep] A minute step.
+     * @property {string} [after] Validate to be after another date field.
+     * @property {string} [before] Validate to be before another date field.
      */
 
     /**
@@ -176,7 +178,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
     }
 
     validateAfter() {
-        const field = this.model.getFieldParam(this.name, 'after');
+        const field = this.params.after;
 
         if (!field) {
             return;
@@ -206,7 +208,7 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
     }
 
     validateBefore() {
-        const field = this.model.getFieldParam(this.name, 'before');
+        const field = this.params.before;
 
         if (!field) {
             return;
