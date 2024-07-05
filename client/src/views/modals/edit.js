@@ -165,6 +165,11 @@ class EditModalView extends ModalView {
                 model
                     .fetch()
                     .then(() => {
+                        const {id, ...attributes} = this.options.attributes || {};
+                        if (attributes) {
+                            model.set(attributes);
+                        }
+
                         this.createRecordView(model);
                     });
 
