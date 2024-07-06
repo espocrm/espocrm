@@ -5,5 +5,8 @@
     },
     "boolFilterClassNameMap": {
         "open": "Espo\\Modules\\Crm\\Classes\\Select\\CaseObj\\BoolFilters\\Open"
+    },
+    "selectAttributesDependencyMap": {
+        "contactsIds": ["contactId"]
     }
 }
