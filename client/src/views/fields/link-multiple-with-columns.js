@@ -214,7 +214,14 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
                 );
             });
 
-            return itemList.join('');
+            return itemList
+                .map(item => {
+                    return $('<div>')
+                        .addClass('link-multiple-item')
+                        .html(item)
+                        .get(0).outerHTML;
+                })
+                .join('');
         }
     }
 

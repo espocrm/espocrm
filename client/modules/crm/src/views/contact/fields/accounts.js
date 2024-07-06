@@ -109,19 +109,26 @@ class AccountsFieldView extends LinkMultipleWithColumnsFieldView {
 
     getValueForDisplay() {
         if (this.isDetailMode() || this.isListMode()) {
-            const names = [];
+            const itemList = [];
 
             if (this.primaryId) {
-                names.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
+                itemList.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
             }
 
             this.ids.forEach(id => {
                 if (id !== this.primaryId) {
-                    names.push(this.getDetailLinkHtml(id));
+                    itemList.push(this.getDetailLinkHtml(id));
                 }
             });
 
-            return names.join('');
+            return itemList
+                .map(item => {
+                    return $('<div>')
+                        .addClass('link-multiple-item')
+                        .html(item)
+                        .get(0).outerHTML;
+                })
+                .join('');
         }
     }
 
@@ -129,11 +136,11 @@ class AccountsFieldView extends LinkMultipleWithColumnsFieldView {
         const html = super.getDetailLinkHtml(id, name);
 
         if (this.getColumnValue(id, 'isInactive')) {
-            const $el = $(html);
+            const $el = $('<div>').html(html);
 
             $el.find('a').css('text-decoration', 'line-through');
 
-            return $el.prop('outerHTML');
+            return $el.get(0).innerHTML;
         }
 
         return html;
