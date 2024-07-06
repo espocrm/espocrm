@@ -155,13 +155,16 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
 
         name = name || this.nameHash[id] || id;
 
-        const $el = $('<div>')
-            .append(
-                $('<a>')
-                    .attr('href', '#' + this.foreignScope + '/view/' + id)
-                    .attr('data-id', id)
-                    .text(name)
-            );
+        const $a = $('<a>')
+            .attr('href', '#' + this.foreignScope + '/view/' + id)
+            .attr('data-id', id)
+            .text(name);
+
+        if (this.mode === this.MODE_LIST) {
+            $a.addClass('text-default');
+        }
+
+        const $el = $('<div>').append($a);
 
         if (this.isDetailMode()) {
             const iconHtml = this.getIconHtml(id);
