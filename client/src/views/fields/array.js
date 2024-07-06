@@ -65,6 +65,7 @@ class ArrayFieldView extends BaseFieldView {
      * @property {number} [maxCount] A max number of items.
      * @property {boolean} [allowCustomOptions] Allow custom options.
      * @property {string} [pattern] A regular expression pattern.
+     * @property {boolean} [keepItems] Disable the ability to add or remove items. Reordering is allowed.
      */
 
     /**
@@ -134,7 +135,8 @@ class ArrayFieldView extends BaseFieldView {
             ...super.data(),
             selected: this.selected,
             translatedOptions: this.translatedOptions,
-            hasOptions: !!this.params.options,
+            hasAdd: !!this.params.options && !this.params.keepItems,
+            keepItems: this.params.keepItems,
             itemHtmlList: itemHtmlList,
             isEmpty: (this.selected || []).length === 0,
             valueIsSet: this.model.has(this.name),
@@ -169,7 +171,7 @@ class ArrayFieldView extends BaseFieldView {
 
         this.selected = Espo.Utils.clone(this.model.get(this.name) || []);
 
-        if (Object.prototype.toString.call(this.selected) !== '[object Array]')    {
+        if (Object.prototype.toString.call(this.selected) !== '[object Array]') {
             this.selected = [];
         }
 
@@ -634,15 +636,17 @@ class ArrayFieldView extends BaseFieldView {
             .attr('data-value', value)
             .css('cursor', 'default')
             .append(
-                $('<a>')
-                    .attr('role', 'button')
-                    .attr('tabindex', '0')
-                    .addClass('pull-right')
-                    .attr('data-value', value)
-                    .attr('data-action', 'removeValue')
-                    .append(
-                        $('<span>').addClass('fas fa-times')
-                    )
+                !this.params.keepItems ?
+                    $('<a>')
+                        .attr('role', 'button')
+                        .attr('tabindex', '0')
+                        .addClass('pull-right')
+                        .attr('data-value', value)
+                        .attr('data-action', 'removeValue')
+                        .append(
+                            $('<span>').addClass('fas fa-times')
+                        ) :
+                    undefined
             )
             .append(
                 $('<span>')
