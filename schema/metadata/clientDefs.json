@@ -895,7 +895,7 @@
         "dynamicLogicItem": {
             "type": "object",
             "description": "A logic node.",
-            "allOf": [
+            "anyOf": [
                 {
                     "if": {
                         "properties": {
