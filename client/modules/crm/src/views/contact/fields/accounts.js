@@ -26,209 +26,207 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/contact/fields/accounts', ['views/fields/link-multiple-with-columns'], function (Dep) {
+import LinkMultipleWithColumnsFieldView from 'views/fields/link-multiple-with-columns';
 
-    return Dep.extend({
+class AccountsFieldView extends LinkMultipleWithColumnsFieldView {
 
-        getAttributeList: function () {
-            var list = Dep.prototype.getAttributeList.call(this);
+    getAttributeList() {
+        const list = super.getAttributeList();
 
-            list.push('accountId');
-            list.push('accountName');
-            list.push('title');
+        list.push('accountId');
+        list.push('accountName');
+        list.push('title');
 
-            return list;
-        },
+        return list;
+    }
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.events['click [data-action="switchPrimary"]'] = e => {
-                let $target = $(e.currentTarget);
-                let id = $target.data('id');
+        this.events['click [data-action="switchPrimary"]'] = e => {
+            const $target = $(e.currentTarget);
+            const id = $target.data('id');
 
-                if (!$target.hasClass('active')) {
-                    this.$el.find('button[data-action="switchPrimary"]')
-                        .removeClass('active')
-                        .children()
-                        .addClass('text-muted');
+            if (!$target.hasClass('active')) {
+                this.$el.find('button[data-action="switchPrimary"]')
+                    .removeClass('active')
+                    .children()
+                    .addClass('text-muted');
 
-                    $target.addClass('active')
-                        .children()
-                        .removeClass('text-muted');
+                $target.addClass('active')
+                    .children()
+                    .removeClass('text-muted');
 
-                    this.setPrimaryId(id);
-                }
-            };
+                this.setPrimaryId(id);
+            }
+        };
 
-            this.primaryIdFieldName = 'accountId';
-            this.primaryNameFieldName = 'accountName';
-            this.primaryRoleFieldName = 'title';
+        this.primaryIdFieldName = 'accountId';
+        this.primaryNameFieldName = 'accountName';
+        this.primaryRoleFieldName = 'title';
 
+        this.primaryId = this.model.get(this.primaryIdFieldName);
+        this.primaryName = this.model.get(this.primaryNameFieldName);
+
+        this.listenTo(this.model, 'change:' + this.primaryIdFieldName, () => {
             this.primaryId = this.model.get(this.primaryIdFieldName);
             this.primaryName = this.model.get(this.primaryNameFieldName);
+        });
 
-            this.listenTo(this.model, 'change:' + this.primaryIdFieldName, () => {
-                this.primaryId = this.model.get(this.primaryIdFieldName);
-                this.primaryName = this.model.get(this.primaryNameFieldName);
-            });
+        if (this.isEditMode() || this.isDetailMode()) {
+            this.events['click a[data-action="setPrimary"]'] = (e) => {
+                const id = $(e.currentTarget).data('id');
 
-            if (this.isEditMode() || this.isDetailMode()) {
-                this.events['click a[data-action="setPrimary"]'] = (e) => {
-                    let id = $(e.currentTarget).data('id');
-
-                    this.setPrimaryId(id);
-                    this.reRender();
-                }
+                this.setPrimaryId(id);
+                this.reRender();
             }
-        },
+        }
+    }
 
-        setPrimaryId: function (id) {
-            this.primaryId = id;
+    setPrimaryId(id) {
+        this.primaryId = id;
 
-            if (id) {
-                this.primaryName = this.nameHash[id];
-            } else {
-                this.primaryName = null;
+        if (id) {
+            this.primaryName = this.nameHash[id];
+        } else {
+            this.primaryName = null;
+        }
+
+        this.trigger('change');
+    }
+
+    renderLinks() {
+        if (this.primaryId) {
+            this.addLinkHtml(this.primaryId, this.primaryName);
+        }
+
+        this.ids.forEach(id => {
+            if (id !== this.primaryId) {
+                this.addLinkHtml(id, this.nameHash[id]);
             }
+        });
+    }
 
-            this.trigger('change');
-        },
+    getValueForDisplay() {
+        if (this.isDetailMode() || this.isListMode()) {
+            const names = [];
 
-        renderLinks: function () {
             if (this.primaryId) {
-                this.addLinkHtml(this.primaryId, this.primaryName);
+                names.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
             }
 
             this.ids.forEach(id => {
                 if (id !== this.primaryId) {
-                    this.addLinkHtml(id, this.nameHash[id]);
+                    names.push(this.getDetailLinkHtml(id));
                 }
             });
-        },
 
-        getValueForDisplay: function () {
-            if (this.isDetailMode() || this.isListMode()) {
-                let names = [];
+            return names.join('');
+        }
+    }
 
-                if (this.primaryId) {
-                    names.push(this.getDetailLinkHtml(this.primaryId, this.primaryName));
-                }
+    getDetailLinkHtml(id, name) {
+        const html = super.getDetailLinkHtml(id, name);
 
-                this.ids.forEach(id => {
-                    if (id !== this.primaryId) {
-                        names.push(this.getDetailLinkHtml(id));
-                    }
-                });
+        if (this.getColumnValue(id, 'isInactive')) {
+            const $el = $(html);
 
-                return names.join('');
-            }
-        },
+            $el.find('a').css('text-decoration', 'line-through');
 
-        getDetailLinkHtml: function (id, name) {
-            let html = Dep.prototype.getDetailLinkHtml.call(this, id, name);
+            return $el.prop('outerHTML');
+        }
 
-            if (this.getColumnValue(id, 'isInactive')) {
-                let $el = $(html);
+        return html;
+    }
 
-                $el.find('a').css('text-decoration', 'line-through');
+    afterAddLink(id) {
+        super.afterAddLink(id);
 
-                return $el.prop('outerHTML');
-            }
+        if (this.ids.length === 1) {
+            this.primaryId = id;
+            this.primaryName = this.nameHash[id];
+        }
 
-            return html;
-        },
+        this.controlPrimaryAppearance();
+    }
 
-        afterAddLink: function (id) {
-            Dep.prototype.afterAddLink.call(this, id);
+    afterDeleteLink(id) {
+        super.afterDeleteLink(id);
 
-            if (this.ids.length === 1) {
-                this.primaryId = id;
-                this.primaryName = this.nameHash[id];
-            }
+        if (this.ids.length === 0) {
+            this.primaryId = null;
+            this.primaryName = null;
 
-            this.controlPrimaryAppearance();
-        },
+            return;
+        }
 
-        afterDeleteLink: function (id) {
-            Dep.prototype.afterDeleteLink.call(this, id);
+        if (id === this.primaryId) {
+            this.primaryId = this.ids[0];
+            this.primaryName = this.nameHash[this.primaryId];
+        }
 
-            if (this.ids.length === 0) {
-                this.primaryId = null;
-                this.primaryName = null;
+        this.controlPrimaryAppearance();
+    }
 
-                return;
-            }
+    controlPrimaryAppearance() {
+        this.$el.find('li.set-primary-list-item').removeClass('hidden');
 
-            if (id === this.primaryId) {
-                this.primaryId = this.ids[0];
-                this.primaryName = this.nameHash[this.primaryId];
-            }
+        if (this.primaryId) {
+            this.$el.find('li.set-primary-list-item[data-id="'+this.primaryId+'"]').addClass('hidden');
+        }
+    }
 
-            this.controlPrimaryAppearance();
-        },
+    addLinkHtml(id, name) {
+        name = name || id;
 
-        controlPrimaryAppearance: function () {
-            this.$el.find('li.set-primary-list-item').removeClass('hidden');
+        if (this.isSearchMode()) {
+            return super.addLinkHtml(id, name);
+        }
 
-            if (this.primaryId) {
-                this.$el.find('li.set-primary-list-item[data-id="'+this.primaryId+'"]').addClass('hidden');
-            }
-        },
+        const $el = super.addLinkHtml(id, name);
 
-        addLinkHtml: function (id, name) {
-            name = name || id;
+        const isPrimary = id === this.primaryId;
 
-            if (this.isSearchMode()) {
-                return Dep.prototype.addLinkHtml.call(this, id, name);
-            }
+        const $a = $('<a>')
+            .attr('role', 'button')
+            .attr('tabindex', '0')
+            .attr('data-action', 'setPrimary')
+            .attr('data-id', id)
+            .text(this.translate('Set Primary', 'labels', 'Account'));
 
-            let $el = Dep.prototype.addLinkHtml.call(this, id, name);
+        const $li = $('<li>')
+            .addClass('set-primary-list-item')
+            .attr('data-id', id)
+            .append($a);
 
-            let isPrimary = id === this.primaryId;
+        if (isPrimary || this.ids.length === 1) {
+            $li.addClass('hidden');
+        }
 
-            let $a = $('<a>')
-                .attr('role', 'button')
-                .attr('tabindex', '0')
-                .attr('data-action', 'setPrimary')
-                .attr('data-id', id)
-                .text(this.translate('Set Primary', 'labels', 'Account'));
+        $el.find('ul.dropdown-menu').append($li);
 
-            let $li = $('<li>')
-                .addClass('set-primary-list-item')
-                .attr('data-id', id)
-                .append($a);
+        if (this.getColumnValue(id, 'isInactive')) {
+            $el.find('div.link-item-name').css('text-decoration', 'line-through');
+        }
+    }
 
-            if (isPrimary || this.ids.length === 1) {
-                $li.addClass('hidden');
-            }
+    fetch() {
+        const data = super.fetch();
 
-            $el.find('ul.dropdown-menu').append($li);
+        data[this.primaryIdFieldName] = this.primaryId;
+        data[this.primaryNameFieldName] = this.primaryName;
+        data[this.primaryRoleFieldName] = (this.columns[this.primaryId] || {}).role || null;
 
-            if (this.getColumnValue(id, 'isInactive')) {
-                $el.find('div.link-item-name').css('text-decoration', 'line-through');
-            }
-        },
+        // noinspection JSUnresolvedReference
+        data.accountIsInactive = (this.columns[this.primaryId] || {}).isInactive || false;
 
-        afterRender: function () {
-            Dep.prototype.afterRender.call(this);
-        },
+        if (!this.primaryId) {
+            data[this.primaryRoleFieldName] = null;
+            data.accountIsInactive = null;
+        }
 
-        fetch: function () {
-            let data = Dep.prototype.fetch.call(this);
+        return data;
+    }
+}
 
-            data[this.primaryIdFieldName] = this.primaryId;
-            data[this.primaryNameFieldName] = this.primaryName;
-            data[this.primaryRoleFieldName] = (this.columns[this.primaryId] || {}).role || null;
-
-            data.accountIsInactive = (this.columns[this.primaryId] || {}).isInactive || false;
-
-            if (!this.primaryId) {
-                data[this.primaryRoleFieldName] = null;
-                data.accountIsInactive = null;
-            }
-
-            return data;
-        },
-    });
-});
+export default AccountsFieldView;
