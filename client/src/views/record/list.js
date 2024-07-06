@@ -1894,7 +1894,6 @@ class ListRecordView extends View {
     /**
      * Remove a mass action.
      *
-     * @protected
      * @param {string} item An action.
      */
     removeMassAction(item) {
@@ -1914,7 +1913,6 @@ class ListRecordView extends View {
     /**
      * Remove an all-result mass action.
      *
-     * @protected
      * @param {string} item An action.
      */
     removeAllResultMassAction(item) {
