@@ -49,7 +49,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
     setup() {
         super.setup();
 
-        let columnsDefsInitial = this.columnsDefs || {};
+        const columnsDefsInitial = this.columnsDefs || {};
 
         this.validations.push('columnPattern');
 
@@ -64,7 +64,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
             this.columns = Espo.Utils.cloneDeep(this.model.get(this.columnsName) || {});
         });
 
-        let columns = this.getMetadata()
+        const columns = this.getMetadata()
             .get(['entityDefs', this.model.entityType, 'fields', this.name, 'columns']) || {};
 
         /** @type {string[]} */
@@ -78,9 +78,9 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
             }
 
             if (column in columns) {
-                let field = columns[column];
+                const field = columns[column];
 
-                let o = {};
+                const o = {};
 
                 o.field = field;
                 o.scope = this.foreignScope;
@@ -92,7 +92,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
                     o.scope = this.model.entityType;
                 }
 
-                let fieldDefs = this.getMetadata().get(['entityDefs', o.scope, 'fields', field]) || {};
+                const fieldDefs = this.getMetadata().get(['entityDefs', o.scope, 'fields', field]) || {};
 
                 o.type = fieldDefs.type;
 
@@ -118,8 +118,8 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
 
         if (this.isEditMode() || this.isDetailMode()) {
             this.events['click a[data-action="toggleBoolColumn"]'] = (e) => {
-                let id = $(e.currentTarget).data('id');
-                let column = $(e.currentTarget).data('column');
+                const id = $(e.currentTarget).data('id');
+                const column = $(e.currentTarget).data('column');
 
                 this.toggleBoolColumn(id, column);
             };
@@ -155,7 +155,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
 
         name = name || this.nameHash[id] || id;
 
-        let $el = $('<div>')
+        const $el = $('<div>')
             .append(
                 $('<a>')
                     .attr('href', '#' + this.foreignScope + '/view/' + id)
@@ -164,7 +164,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
             );
 
         if (this.isDetailMode()) {
-            let iconHtml = this.getIconHtml(id);
+            const iconHtml = this.getIconHtml(id);
 
             if (iconHtml) {
                 $el.prepend(iconHtml);
@@ -172,10 +172,10 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
         }
 
         this.columnList.forEach(column => {
-            let value = (this.columns[id] || {})[column] || '';
-            let type = this.columnsDefs[column].type;
-            let field = this.columnsDefs[column].field;
-            let scope = this.columnsDefs[column].scope;
+            const value = (this.columns[id] || {})[column] || '';
+            const type = this.columnsDefs[column].type;
+            const field = this.columnsDefs[column].field;
+            const scope = this.columnsDefs[column].scope;
 
             if (value === '' || !value) {
                 return;
@@ -185,7 +185,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
                 return;
             }
 
-            let text = type === this.COLUMN_TYPE_ENUM ?
+            const text = type === this.COLUMN_TYPE_ENUM ?
                 this.getLanguage().translateOption(value, field, scope) :
                 value;
 
@@ -203,7 +203,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
     /** @inheritDoc */
     getValueForDisplay() {
         if (this.isDetailMode() || this.isListMode()) {
-            let itemList = [];
+            const itemList = [];
 
             this.ids.forEach(id => {
                 itemList.push(
@@ -222,7 +222,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
 
         this.deleteLinkHtml(id);
 
-        let index = this.ids.indexOf(id);
+        const index = this.ids.indexOf(id);
 
         if (index > -1) {
             this.ids.splice(index, 1);
@@ -281,19 +281,19 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
     getJQSelect(column, id, value) {
         // Do not use the `html` method to avoid XSS.
 
-        let field = this.columnsDefs[column].field;
-        let scope = this.columnsDefs[column].scope;
-        let options = this.columnsDefs[column].options || [];
+        const field = this.columnsDefs[column].field;
+        const scope = this.columnsDefs[column].scope;
+        const options = this.columnsDefs[column].options || [];
 
-        let $select = $('<select>')
+        const $select = $('<select>')
             .addClass('role form-control input-sm')
             .attr('data-id', id)
             .attr('data-column', column);
 
         options.forEach(itemValue => {
-            let text = this.getLanguage().translateOption(itemValue, field, scope);
+            const text = this.getLanguage().translateOption(itemValue, field, scope);
 
-            let $option = $('<option>')
+            const $option = $('<option>')
                 .val(itemValue)
                 .text(text);
 
@@ -316,13 +316,13 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
     getJQInput(column, id, value) {
         // Do not use the `html` method to avoid XSS.
 
-        let field = this.columnsDefs[column].field;
-        let scope = this.columnsDefs[column].scope;
-        let maxLength = this.columnsDefs[column].maxLength;
+        const field = this.columnsDefs[column].field;
+        const scope = this.columnsDefs[column].scope;
+        const maxLength = this.columnsDefs[column].maxLength;
 
-        let text = this.translate(field, 'fields', scope);
+        const text = this.translate(field, 'fields', scope);
 
-        let $input = $('<input>')
+        const $input = $('<input>')
             .addClass('role form-control input-sm')
             .attr('data-column', column)
             .attr('placeholder', text)
@@ -345,10 +345,10 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
     getJQLi(column, id, value) {
         // Do not use the `html` method to avoid XSS.
 
-        let field = this.columnsDefs[column].field;
-        let scope = this.columnsDefs[column].scope;
+        const field = this.columnsDefs[column].field;
+        const scope = this.columnsDefs[column].scope;
 
-        let text = this.translate(field, 'fields', scope);
+        const text = this.translate(field, 'fields', scope);
 
         return $('<li>')
             .append(
@@ -377,14 +377,14 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
 
         // Do not use the `html` method to avoid XSS.
 
-        let $container = this.$el.find('.link-container');
+        const $container = this.$el.find('.link-container');
 
-        let $el = $('<div>')
+        const $el = $('<div>')
             .addClass('form-inline clearfix')
             .addClass('list-group-item link-with-role link-group-item-with-columns')
             .addClass('link-' + id);
 
-        let $remove = $('<a>')
+        const $remove = $('<a>')
             .attr('role', 'button')
             .attr('tabindex', '0')
             .attr('data-id', id)
@@ -394,18 +394,18 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
                 $('<span>').addClass('fas fa-times')
             );
 
-        let $name = $('<div>')
+        const $name = $('<div>')
             .addClass('link-item-name')
             .text(name)
-            .append('&nbsp;')
+            .append('&nbsp;');
 
-        let $columnList = [];
-        let $liList = [];
+        const $columnList = [];
+        const $liList = [];
 
         this.columnList.forEach(column => {
-            let value = (this.columns[id] || {})[column];
+            const value = (this.columns[id] || {})[column];
 
-            let type = this.columnsDefs[column].type;
+            const type = this.columnsDefs[column].type;
 
             if (type === this.COLUMN_TYPE_ENUM) {
                 $columnList.push(
@@ -430,8 +430,8 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
             }
         });
 
-        let $left = $('<div>');
-        let $right = $('<div>');
+        const $left = $('<div>');
+        const $right = $('<div>');
 
         $columnList.forEach($item => $left.append(
             $('<span>')
@@ -441,7 +441,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
         ));
 
         if ($liList.length) {
-            let $ul = $('<ul>').addClass('dropdown-menu');
+            const $ul = $('<ul>').addClass('dropdown-menu');
 
             $liList.forEach($item => $ul.append($item));
 
@@ -476,14 +476,14 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
                     Select.init($column);
                 }
 
-                let fetch = ($target) => {
+                const fetch = ($target) => {
                     if (!$target || !$target.length) {
                         return;
                     }
 
-                    let column = $target.data('column');
+                    const column = $target.data('column');
                     let value = $target.val().toString().trim();
-                    let id = $target.data('id');
+                    const id = $target.data('id');
 
                     if (value === '') {
                         value = null;
@@ -494,7 +494,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
                 };
 
                 $column.on('change', e => {
-                    let $target = $(e.currentTarget);
+                    const $target = $(e.currentTarget);
 
                     fetch($target);
                     this.trigger('change');
@@ -567,13 +567,13 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
     validateColumnPattern() {
         let result = false;
 
-        let columnList = this.columnList
+        const columnList = this.columnList
             .filter(column => this.columnsDefs[column].type === this.COLUMN_TYPE_VARCHAR)
             .filter(column => this.columnsDefs[column].pattern);
 
-        for (let column of columnList) {
-            for (let id of this.ids) {
-                let value = this.getColumnValue(id, column);
+        for (const column of columnList) {
+            for (const id of this.ids) {
+                const value = this.getColumnValue(id, column);
 
                 if (!value) {
                     continue;
@@ -589,13 +589,13 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
     }
 
     validateColumnPatternValue(id, column, value) {
-        let pattern = this.columnsDefs[column].pattern;
-        let field = this.columnsDefs[column].field;
-        let scope = this.columnsDefs[column].scope;
+        const pattern = this.columnsDefs[column].pattern;
+        const field = this.columnsDefs[column].field;
+        const scope = this.columnsDefs[column].scope;
 
-        let helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
+        const helper = new RegExpPattern(this.getMetadata(), this.getLanguage());
 
-        let result = helper.validate(pattern, value, field, scope);
+        const result = helper.validate(pattern, value, field, scope);
 
         if (!result) {
             return false;
@@ -607,7 +607,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
     }
 
     fetch() {
-        let data = super.fetch();
+        const data = super.fetch();
 
         data[this.columnsName] = Espo.Utils.cloneDeep(this.columns);
 
