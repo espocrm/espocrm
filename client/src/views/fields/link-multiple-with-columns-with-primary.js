@@ -132,7 +132,7 @@ class LinkMultipleWithColumnsWithPrimaryFieldView extends LinkMultipleWithColumn
             });
 
             return itemList
-                .map(item => $('<div>').append(item).get(0).outerHTML)
+                .map(item => $('<div>').append(item).addClass('link-multiple-item').get(0).outerHTML)
                 .join('');
         }
     }

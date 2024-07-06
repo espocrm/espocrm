@@ -200,7 +200,7 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
             );
         });
 
-        return $el.get(0).outerHTML;
+        return $el.get(0).innerHTML;
     }
 
     /** @inheritDoc */

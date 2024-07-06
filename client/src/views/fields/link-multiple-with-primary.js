@@ -141,7 +141,9 @@ class LinkMultipleWithPrimaryFieldView extends LinkMultipleFieldView {
             });
 
             return itemList
-                .map(item => $('<div>').append(item).get(0).outerHTML)
+                .map(item => $('<div>')
+                    .addClass('link-multiple-item')
+                    .append(item).get(0).outerHTML)
                 .join('');
         }
     }
