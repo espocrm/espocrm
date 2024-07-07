@@ -2186,7 +2186,7 @@ class ListRecordView extends View {
 
             if (
                 !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
-                !Espo.Utils.checkActionAccess(this.getAcl(), null, defs)
+                !Espo.Utils.checkActionAccess(this.getAcl(), this.entityType, defs)
             ) {
                 return;
             }
@@ -2208,7 +2208,7 @@ class ListRecordView extends View {
 
                 if (
                     !Espo.Utils.checkActionAvailability(this.getHelper(), defs) ||
-                    !Espo.Utils.checkActionAccess(this.getAcl(), null, defs)
+                    !Espo.Utils.checkActionAccess(this.getAcl(), this.entityType, defs)
                 ) {
                     return;
                 }
