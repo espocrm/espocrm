@@ -61,6 +61,8 @@ class DefaultRowActionsView extends View {
         this.additionalActionDataList = [];
 
         this.setupAdditionalActions();
+
+        this.listenTo(this.model, 'change', () => this.reRender());
     }
 
     afterRender() {
