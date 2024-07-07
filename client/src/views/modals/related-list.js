@@ -103,7 +103,7 @@ class RelatedListModalView extends ModalView {
             }
         ];
 
-        this.scope = this.options.scope || this.scope;
+        this.scope = this.options.scope || this.options.entityType || this.scope;
 
         this.defaultOrderBy = this.options.defaultOrderBy;
         this.defaultOrder = this.options.defaultOrder;
