@@ -89,7 +89,7 @@ class Processor
 
         $service = $this->serviceFactory->create($entityType);
 
-        $filteredData = $this->filterData($data, $service);
+        $filteredData = $this->filterData($entityType, $data, $service);
 
         if ($filteredData->getAttributeList() === []) {
             return new Result(0, []);
@@ -125,7 +125,7 @@ class Processor
     /**
      * @param Service<Entity> $service
      */
-    private function filterData(Data $data, Service $service): Data
+    private function filterData(string $entityType, Data $data, Service $service): Data
     {
         $filteredData = $data;
 
@@ -133,6 +133,7 @@ class Processor
 
         $service->filterUpdateInput($values);
         $service->sanitizeInput($values);
+        $this->filterDisabledFields($entityType, $values);
 
         foreach ($data->getAttributeList() as $attribute) {
             if (!property_exists($values, $attribute)) {
@@ -330,5 +331,22 @@ class Processor
         }
 
         return $resultFieldList;
+    }
+
+    private function filterDisabledFields(string $entityType, stdClass $values): void
+    {
+        $fieldDefsList = array_filter(
+            $this->entityManager
+                ->getDefs()
+                ->getEntity($entityType)
+                ->getFieldList(),
+            fn ($it) => $it->getParam('massUpdateDisabled')
+        );
+
+        foreach ($fieldDefsList as $fieldDefs) {
+            foreach ($this->fieldUtil->getActualAttributeList($entityType, $fieldDefs->getName()) as $attribute) {
+                unset($values->$attribute);
+            }
+        }
     }
 }

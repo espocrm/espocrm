@@ -932,6 +932,10 @@
                     "type": "boolean",
                     "description": "Disables the ability to export the field."
                 },
+                "massUpdateDisabled": {
+                    "type": "boolean",
+                    "description": "Disables the ability perform mass-update on the field. As of v8.4."
+                },
                 "isPersonalData": {
                     "type": "boolean",
                     "description": "Whether the field may contain personal data."
