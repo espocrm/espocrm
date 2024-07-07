@@ -557,7 +557,7 @@ class ModalView extends View {
                 return;
             }
 
-            const index = item.groupIndex === undefined ? 9999 : item.groupIndex;
+            const index = (item.groupIndex === undefined ? 9999 : item.groupIndex) + 100;
 
             if (dropdownGroups[index] === undefined) {
                 dropdownGroups[index] = [];
