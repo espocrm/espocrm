@@ -48,6 +48,10 @@ class RowActionHandler {
         this.collection = this.view.collection;
     }
 
+    /**
+     * @param {module:model} model A model.
+     * @param {string} action An action.
+     */
     isAvailable(model, action) {
         return true;
     }
