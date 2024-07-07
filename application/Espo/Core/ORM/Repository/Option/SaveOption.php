@@ -86,4 +86,10 @@ class SaveOption
      * @since 8.4.0
      */
     public const DUPLICATE_SOURCE_ID = 'duplicateSourceId';
+
+    /**
+     * When saved in Mass-Update.
+     * @since 8.4.0
+     */
+    public const MASS_UPDATE = 'massUpdate';
 }
