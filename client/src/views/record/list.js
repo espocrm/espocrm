@@ -1419,90 +1419,90 @@ class ListRecordView extends View {
             const params = this.getMassActionSelectionPostData();
             const idle = !!params.searchParams && helper.checkIsIdle(this.collection.total);
 
-            Espo.Ajax.postRequest('MassAction', {
-                entityType: this.entityType,
-                action: 'delete',
-                params: params,
-                idle: idle,
-            })
-            .then(result => {
-                result = result || {};
+            Espo.Ajax
+                .postRequest('MassAction', {
+                    entityType: this.entityType,
+                    action: 'delete',
+                    params: params,
+                    idle: idle,
+                })
+                .then(result => {
+                    result = result || {};
 
-                const afterAllResult = count => {
+                    const afterAllResult = count => {
+                        if (!count) {
+                            Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
+
+                            return;
+                        }
+
+                        this.unselectAllResult();
+
+                        this.collection.fetch()
+                            .then(() => {
+                                const msg = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
+
+                                Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
+                            });
+
+                        this.collection.trigger('after:mass-remove');
+
+                        Espo.Ui.notify(false);
+                    };
+
+                    if (result.id) {
+                        helper
+                            .process(result.id, 'delete')
+                            .then(view => {
+                                this.listenToOnce(view, 'close:success', result => afterAllResult(result.count));
+                            });
+
+                        return;
+                    }
+
+                    const count = result.count;
+
+                    if (this.allResultIsChecked) {
+                        afterAllResult(count);
+
+                        return;
+                    }
+
+                    const idsRemoved = result.ids || [];
+
                     if (!count) {
                         Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
 
                         return;
                     }
 
-                    this.unselectAllResult();
+                    idsRemoved.forEach(id => {
+                        Espo.Ui.notify(false);
 
-                    this.collection
-                        .fetch()
-                        .then(() => {
-                            const msg = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
+                        this.collection.trigger('model-removing', id);
+                        this.removeRecordFromList(id);
+                        this.uncheckRecord(id, null, true);
+                    });
 
-                            Espo.Ui.success(this.translate(msg, 'messages').replace('{count}', count));
-                        });
+                    if (this.$selectAllCheckbox.prop('checked')) {
+                        this.$selectAllCheckbox.prop('checked', false);
+
+                        if (this.collection.hasMore()) {
+                            this.showMoreRecords({skipNotify: true});
+                        }
+                    }
 
                     this.collection.trigger('after:mass-remove');
 
-                    Espo.Ui.notify(false);
-                };
+                    const showSuccess = () => {
+                        const msgKey = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
+                        const msg = this.translate(msgKey, 'messages').replace('{count}', count);
 
-                if (result.id) {
-                    helper
-                        .process(result.id, 'delete')
-                        .then(view => {
-                            this.listenToOnce(view, 'close:success', result => afterAllResult(result.count));
-                        });
-
-                    return;
-                }
-
-                const count = result.count;
-
-                if (this.allResultIsChecked) {
-                    afterAllResult(count);
-
-                    return;
-                }
-
-                const idsRemoved = result.ids || [];
-
-                if (!count) {
-                    Espo.Ui.warning(this.translate('noRecordsRemoved', 'messages'));
-
-                    return;
-                }
-
-                idsRemoved.forEach(id => {
-                    Espo.Ui.notify(false);
-
-                    this.collection.trigger('model-removing', id);
-                    this.removeRecordFromList(id);
-                    this.uncheckRecord(id, null, true);
-                });
-
-                if (this.$selectAllCheckbox.prop('checked')) {
-                    this.$selectAllCheckbox.prop('checked', false);
-
-                    if (this.collection.hasMore()) {
-                        this.showMoreRecords({skipNotify: true});
+                        Espo.Ui.success(msg);
                     }
-                }
 
-                this.collection.trigger('after:mass-remove');
-
-                const showSuccess = () => {
-                    const msgKey = count === 1 ? 'massRemoveResultSingle' : 'massRemoveResult';
-                    const msg = this.translate(msgKey, 'messages').replace('{count}', count);
-
-                    Espo.Ui.success(msg);
-                }
-
-                showSuccess();
-            });
+                    showSuccess();
+                });
         });
     }
 
