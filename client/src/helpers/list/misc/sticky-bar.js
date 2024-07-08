@@ -135,8 +135,8 @@ class StickyBarHelper {
         }
 
         if (scrollTop >= edge) {
-            this.$bar.removeClass('hidden');
-            this.$navbarRight.addClass('has-sticked-bar');
+            this.$bar.addClass('hidden');
+            this.$navbarRight.removeClass('has-sticked-bar');
 
             return;
         }
