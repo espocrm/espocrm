@@ -90,6 +90,7 @@ class ListRecordView extends View {
      * @property {Record} [rowActionsOptions] Row-actions options.
      * @property {string[]} [additionalRowActionList] Additional row-action list.
      * @property {boolean} [settingsEnabled] Enable settings dropdown.
+     * @property {import('helpers/list/settings').default} [settingsHelper] A settings helper.
      */
 
     /**
@@ -3527,7 +3528,7 @@ class ListRecordView extends View {
             return;
         }
 
-        this._listSettingsHelper = new ListSettingsHelper(
+        this._listSettingsHelper = this.options.settingsHelper || new ListSettingsHelper(
             this.entityType,
             this.layoutName,
             this.getUser().id,
