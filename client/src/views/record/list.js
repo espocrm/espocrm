@@ -538,6 +538,9 @@ class ListRecordView extends View {
      */
     $selectAllCheckbox = null
 
+    /** @private */
+    _disabledCheckboxes = false
+
     /**
      * Mass-action definitions.
      *
@@ -689,8 +692,11 @@ class ListRecordView extends View {
          * @this ListRecordView
          */
         'click input.record-checkbox': function (e) {
-            const $target = $(e.currentTarget);
+            if (this._disabledCheckboxes) {
+                return;
+            }
 
+            const $target = $(e.currentTarget);
             const $from = this._$focusedCheckbox;
 
             if (e.shiftKey && $from) {
@@ -716,6 +722,10 @@ class ListRecordView extends View {
          * @this module:views/record/list
          */
         'click .select-all': function (e) {
+            if (this._disabledCheckboxes) {
+                return;
+            }
+
             // noinspection JSUnresolvedReference
             this.selectAllHandler(e.currentTarget.checked);
         },
@@ -728,6 +738,10 @@ class ListRecordView extends View {
         },
         /** @this ListRecordView */
         'click .checkbox-dropdown [data-action="selectAllResult"]': function () {
+            if (this._disabledCheckboxes) {
+                return;
+            }
+
             this.selectAllResult();
         },
         /**
@@ -2133,6 +2147,10 @@ class ListRecordView extends View {
 
         if (this.pagination && this.$el.find('.list-buttons-container').length) {
             this.initStickyBar();
+        }
+
+        if (this._disabledCheckboxes) {
+            this.disableCheckboxes();
         }
     }
 
@@ -3618,6 +3636,53 @@ class ListRecordView extends View {
                 hidden: (this.massActionDefs[name] || {}).hidden,
             };
         });
+    }
+
+    /**
+     * Uncheck all.
+     *
+     * @since 8.4.0
+     */
+    uncheckAll() {
+        if (this.allResultIsChecked) {
+            this.unselectAllResult();
+        }
+
+        this.checkedList.forEach(id => this.uncheckRecord(id));
+    }
+
+    /**
+     * To temporarily disable checkboxes.
+     *
+     * @since 8.4.0
+     */
+    disableCheckboxes() {
+        if (!this.checkboxes) {
+            return;
+        }
+
+        this._disabledCheckboxes = true;
+
+        this.uncheckAll();
+
+        this.$el.find('input.record-checkbox').attr('disabled', 'disabled');
+        this.$selectAllCheckbox.attr('disabled', 'disabled');
+    }
+
+    /**
+     * To enabled temporarily disabled checkboxes.
+     *
+     * @since 8.4.0
+     */
+    enableCheckboxes() {
+        if (!this.checkboxes) {
+            return;
+        }
+
+        this._disabledCheckboxes = false;
+
+        this.$el.find('input.record-checkbox').removeAttr('disabled');
+        this.$selectAllCheckbox.removeAttr('disabled');
     }
 }
 
