@@ -3345,11 +3345,13 @@ class ListRecordView extends View {
      * @param {string} id An ID.
      */
     removeRecordFromList(id) {
-        this.collection.remove(id);
-
         if (this.collection.total > 0) {
             this.collection.total--;
+
+            this.collection.trigger('update-total');
         }
+
+        this.collection.remove(id);
 
         this.$el.find('.total-count-span').text(this.collection.total.toString());
 
