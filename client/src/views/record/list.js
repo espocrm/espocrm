@@ -3687,6 +3687,20 @@ class ListRecordView extends View {
         this.$el.find('input.record-checkbox').removeAttr('disabled');
         this.$selectAllCheckbox.removeAttr('disabled');
     }
+
+    /**
+     * Rebuild the internal layout.
+     *
+     * @return {Promise}
+     * @since 8.4.0
+     */
+    rebuild() {
+        return new Promise(resolve => {
+            this._internalLayout = null;
+
+            this.buildRows(() => resolve());
+        })
+    }
 }
 
 export default ListRecordView;
