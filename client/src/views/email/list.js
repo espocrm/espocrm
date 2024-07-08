@@ -253,6 +253,10 @@ class EmailListView extends ListView {
             });
         }
 
+        if (!this.getAcl().checkScope('Import')) {
+            this.hideHeaderActionItem('archiveEmail');
+        }
+
         if (this.getUser().isAdmin()) {
             this.addMenuItem('dropdown', {
                 link: '#InboundEmail',

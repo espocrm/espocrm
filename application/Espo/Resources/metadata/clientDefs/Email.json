@@ -45,6 +45,7 @@
             ],
             "dropdown":[
                 {
+                    "name": "archiveEmail",
                     "label":"Archive Email",
                     "link":"#Email/create",
                     "acl":"create"
