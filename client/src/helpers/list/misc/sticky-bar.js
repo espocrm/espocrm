@@ -200,7 +200,6 @@ class StickyBarHelper {
     }
 
     hide() {
-        console.log(1);
         this.$bar.addClass('hidden');
     }
 
