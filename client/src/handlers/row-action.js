@@ -51,6 +51,7 @@ class RowActionHandler {
     /**
      * @param {module:model} model A model.
      * @param {string} action An action.
+     * @return {boolean}
      */
     isAvailable(model, action) {
         return true;
