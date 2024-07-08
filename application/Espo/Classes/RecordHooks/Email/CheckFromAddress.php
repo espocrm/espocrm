@@ -58,7 +58,7 @@ class CheckFromAddress implements SaveHook
         }
 
         if (!$entity->getFromAddress()) {
-            throw new BadRequest("No 'from' address");
+            throw new BadRequest("No 'from' address.");
         }
 
         if ($this->acl->checkScope('Import')) {
