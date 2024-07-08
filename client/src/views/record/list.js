@@ -77,6 +77,7 @@ class ListRecordView extends View {
      * @property {boolean} [showMore] The show-more button.
      * @property {boolean} [keepCurrentRootUrl] Keep a current root URL.
      * @property {boolean} [stickyBarDisabled] Disable the sticky bar.
+     * @property {boolean} [forceStickyBar] To make bar sticky regardless of scrolling.
      * @property {boolean} [massActionsDisabled] Disable mass actions.
      * @property {module:views/record/list~dropdownItem[]} [dropdownItemList] Dropdown items.
      * @property {string[]} [mandatorySelectAttributeList] Mandatory select attributes. Attributes to be selected
@@ -464,6 +465,13 @@ class ListRecordView extends View {
      * @protected
      */
     stickyBarDisabled = false
+
+    /**
+     * To show sticky bar regardless of scrolling.
+     *
+     * @protected
+     */
+    forceStickyBar = false
 
     /**
      * Disable the follow/unfollow mass action.
@@ -880,7 +888,9 @@ class ListRecordView extends View {
 
     /** @private */
     initStickyBar() {
-        this._stickyBarHelper = new StickyBarHelper(this);
+        this._stickyBarHelper = new StickyBarHelper(this, {
+            force: this.forceStickyBar,
+        });
     }
 
     /** @protected */
@@ -902,7 +912,7 @@ class ListRecordView extends View {
     hideActions() {
         this.$el.find('.actions-button').addClass('hidden');
 
-        if (this._stickyBarHelper && !this.pagination) {
+        if (this._stickyBarHelper && (!this.pagination || this.forceStickyBar)) {
             this._stickyBarHelper.hide();
         }
     }
@@ -961,6 +971,15 @@ class ListRecordView extends View {
             topBar = true;
         }
 
+        if (this.forceStickyBar) {
+            topBar = false;
+        }
+
+        const displayActionsButtonGroup = this.checkboxes || this.massActionList || this.buttonList.length ||
+            this.dropdownItemList.length;
+
+        const hasStickyBar = this.forceStickyBar || displayActionsButtonGroup;
+
         const noDataDisabled = this.noDataDisabled || this._renderEmpty;
 
         return {
@@ -982,12 +1001,12 @@ class ListRecordView extends View {
             buttonList: this.buttonList,
             dropdownItemList: this.dropdownItemList,
             displayTotalCount: displayTotalCount,
-            displayActionsButtonGroup: this.checkboxes ||
-                this.massActionList || this.buttonList.length || this.dropdownItemList.length,
+            displayActionsButtonGroup: displayActionsButtonGroup,
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
             moreCountFormatted: this.getNumberUtil().formatInt(moreCount),
             checkboxColumnWidth: this.checkboxColumnWidth + 'px',
             noDataDisabled: noDataDisabled,
+            hasStickyBar: hasStickyBar,
         };
     }
 
@@ -1941,6 +1960,8 @@ class ListRecordView extends View {
         this.mandatorySelectAttributeList = Espo.Utils.clone(
             this.options.mandatorySelectAttributeList || this.mandatorySelectAttributeList || []
         );
+
+        this.forceStickyBar = this.options.forceStickyBar || this.forceStickyBar;
 
         this.editDisabled = this.options.editDisabled || this.editDisabled ||
             this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']);

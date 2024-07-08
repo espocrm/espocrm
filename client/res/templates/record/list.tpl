@@ -1,3 +1,42 @@
+{{#if hasStickyBar}}
+    <div class="sticked-bar list-sticky-bar hidden">
+        {{#if displayActionsButtonGroup}}
+            <div class="btn-group">
+                <button
+                    type="button"
+                    class="btn btn-default btn-xs-wide dropdown-toggle actions-button hidden"
+                    data-toggle="dropdown"
+                >{{translate 'Actions'}} <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu actions-menu">
+                    {{#each massActionDataList}}
+                        {{#if this}}
+                            <li {{#if hidden}}class="hidden"{{/if}}>
+                                <a
+                                    role="button"
+                                    tabindex="0"
+                                    data-action="{{name}}"
+                                    class="mass-action"
+                                >{{translate name category="massActions" scope=../scope}}</a>
+                            </li>
+                        {{else}}
+                            {{#unless @first}}
+                                {{#unless @last}}
+                                    <li class="divider"></li>
+                                {{/unless}}
+                            {{/unless}}
+                        {{/if}}
+                    {{/each}}
+                </ul>
+            </div>
+        {{/if}}
+
+        {{#if hasPagination}}
+            {{{paginationSticky}}}
+        {{/if}}
+    </div>
+{{/if}}
+
 {{#if topBar}}
     <div class="list-buttons-container clearfix">
         {{#if displayActionsButtonGroup}}
@@ -74,41 +113,6 @@
                     </ul>
                 {{/if}}
             </div>
-
-            <div class="sticked-bar hidden">
-                <div class="btn-group">
-                    <button
-                        type="button"
-                        class="btn btn-default btn-xs-wide dropdown-toggle actions-button hidden"
-                        data-toggle="dropdown"
-                    >{{translate 'Actions'}} <span class="caret"></span>
-                    </button>
-                    <ul class="dropdown-menu actions-menu">
-                        {{#each massActionDataList}}
-                            {{#if this}}
-                                <li {{#if hidden}}class="hidden"{{/if}}>
-                                    <a
-                                        role="button"
-                                        tabindex="0"
-                                        data-action="{{name}}"
-                                        class="mass-action"
-                                    >{{translate name category="massActions" scope=../scope}}</a>
-                                </li>
-                            {{else}}
-                                {{#unless @first}}
-                                    {{#unless @last}}
-                                        <li class="divider"></li>
-                                    {{/unless}}
-                                {{/unless}}
-                            {{/if}}
-                        {{/each}}
-                    </ul>
-                </div>
-
-                {{#if hasPagination}}
-                    {{{paginationSticky}}}
-                {{/if}}
-            </div>
         {{/if}}
 
         {{#if hasPagination}}
@@ -129,6 +133,8 @@
         {{/if}}
     </div>
 {{/if}}
+
+
 
 {{#if collectionLength}}
     <div

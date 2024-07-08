@@ -51,11 +51,15 @@ class StickyBarHelper {
 
     /**
      * @param {import('views/record/list').default} view
+     * @param {{force?: boolean}} options
      */
-    constructor(view) {
+    constructor(view, options = {}) {
         this.view = view;
         this.themeManager = this.view.getThemeManager();
         this.$el = view.$el;
+
+        /** @private */
+        this.force = options.force || false;
 
         this.init();
     }
@@ -81,11 +85,13 @@ class StickyBarHelper {
             this.$navbarRight = this.$scrollable.parent().find('.modal-footer');
         }
 
-        this.$scrollable.off(`scroll.list-${this.view.cid}`);
-        this.$scrollable.on(`scroll.list-${this.view.cid}`, () => this._controlSticking());
+        if (!this.force) {
+            this.$scrollable.off(`scroll.list-${this.view.cid}`);
+            this.$scrollable.on(`scroll.list-${this.view.cid}`, () => this._controlSticking());
 
-        this.$window.off(`resize.list-${this.view.cid}`);
-        this.$window.on(`resize.list-${this.view.cid}`, () => this._controlSticking());
+            this.$window.off(`resize.list-${this.view.cid}`);
+            this.$window.on(`resize.list-${this.view.cid}`, () => this._controlSticking());
+        }
 
         this.listenTo(this.view, 'check', () => {
             if (this.view.getCheckedIds().length === 0 && !this.view.isAllResultChecked()) {
@@ -126,30 +132,37 @@ class StickyBarHelper {
             return;
         }
 
-        const scrollTop = this.$scrollable.scrollTop();
-        const stickTop = this._getButtonsTop();
-        const edge = this._getMiddleTop() + this.$middle.outerHeight(true);
-
         if (this.isSmallWindow && $('#navbar .navbar-body').hasClass('in')) {
             return;
         }
 
-        if (scrollTop >= edge) {
+        const scrollTop = this.$scrollable.scrollTop();
+        const stickTop = !this.force ? this._getButtonsTop() : 0;
+        const edge = this._getMiddleTop() + this.$middle.outerHeight(true);
+
+        const hide = () => {
             this.$bar.addClass('hidden');
             this.$navbarRight.removeClass('has-sticked-bar');
+        };
 
-            return;
-        }
-
-        if (scrollTop > stickTop) {
+        const show = () => {
             this.$bar.removeClass('hidden');
             this.$navbarRight.addClass('has-sticked-bar');
+        };
+
+        if (scrollTop >= edge) {
+            hide();
 
             return;
         }
 
-        this.$bar.addClass('hidden');
-        this.$navbarRight.removeClass('has-sticked-bar');
+        if (scrollTop > stickTop || this.force) {
+            show();
+
+            return;
+        }
+
+        hide();
     }
 
     /**
@@ -187,6 +200,7 @@ class StickyBarHelper {
     }
 
     hide() {
+        console.log(1);
         this.$bar.addClass('hidden');
     }
 

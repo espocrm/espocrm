@@ -409,7 +409,8 @@ body[data-navbar="side"] {
             }
 
             .stick-sub,
-            .sticked-bar {
+            .sticked-bar,
+            .list-sticky-bar {
                 visibility: hidden;
             }
         }
@@ -706,14 +707,14 @@ body[data-navbar="side"] {
         left: @navbar-minimized-width;
     }
 
-    .list-buttons-container .sticked-bar {
+    .list-sticky-bar {
         width: calc(~"100% - " @navbar-width);
         left: @navbar-width;
         top: @tob-bar-height;
         padding-left: @container-padding;
     }
 
-    &.minimized .list-buttons-container .sticked-bar {
+    &.minimized .list-sticky-bar {
         width: calc(~"100% - " @navbar-minimized-width);
         left: @navbar-minimized-width;
     }
@@ -724,8 +725,8 @@ body[data-navbar="side"] {
             left: 0;
         }
 
-        .list-buttons-container .sticked-bar,
-        &.minimized .list-buttons-container .sticked-bar {
+        .list-sticky-bar,
+        &.minimized .list-sticky-bar {
             width: 100%;
             top: 0;
             left: 0;
