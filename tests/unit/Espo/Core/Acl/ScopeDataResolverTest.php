@@ -101,6 +101,6 @@ class ScopeDataResolverTest extends TestCase
             ->with('Test')
             ->willReturn(ScopeData::fromRaw((object) ['create' => 'no', 'edit' => 'no']));
 
-        $this->assertTrue($resolver->resolve('boolean:Test')->isFalse());
+        $this->assertTrue($resolver->resolve('boolean:Test')->isTrue());
     }
 }

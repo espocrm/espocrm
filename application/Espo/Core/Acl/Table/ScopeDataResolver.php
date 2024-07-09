@@ -58,7 +58,7 @@ class ScopeDataResolver
         $scopeData = $this->table->getScopeData($foreignScope);
 
         if ($isBoolean && !$scopeData->isBoolean()) {
-            return ScopeData::fromRaw($scopeData->hasNotNo());
+            return ScopeData::fromRaw(true);
         }
 
         return $scopeData;
