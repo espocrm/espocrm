@@ -28,18 +28,6 @@
 
 import EditRecordView from 'views/record/edit';
 
-class OpportunityEditRecordView extends EditRecordView {
-
-    populateDefaults() {
-        super.populateDefaults();
-
-        const probabilityMap = this.getMetadata().get('entityDefs.Opportunity.fields.stage.probabilityMap') || {};
-        const stage = this.model.get('stage');
-
-        if (stage in probabilityMap) {
-            this.model.set('probability', probabilityMap[stage], {silent: true});
-        }
-    }
-}
+class OpportunityEditRecordView extends EditRecordView {}
 
 export default OpportunityEditRecordView;

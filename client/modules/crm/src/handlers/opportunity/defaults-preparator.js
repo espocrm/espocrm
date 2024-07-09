@@ -26,8 +26,23 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import EditSmallRecordView from 'views/record/edit-small';
+import DefaultsPreparator from 'handlers/model/defaults-preparator';
 
-class OpportunityEditSmallRecordView extends EditSmallRecordView {}
+class OpportunityDefaultsPreparator extends DefaultsPreparator {
 
-export default OpportunityEditSmallRecordView;
+    prepare(model) {
+        const probabilityMap = this.viewHelper.metadata.get('entityDefs.Opportunity.fields.stage.probabilityMap') || {};
+        const stage = model.attributes.stage;
+
+        const attributes = {};
+
+        if (stage in probabilityMap) {
+            attributes.probability = probabilityMap[stage];
+        }
+
+        return Promise.resolve(attributes);
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default OpportunityDefaultsPreparator;

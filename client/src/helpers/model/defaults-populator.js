@@ -36,18 +36,23 @@ class DefaultsPopulator {
      * @param {module:models/preferences} preferences
      * @param {module:acl-manager} acl
      * @param {module:models/settings} config
+     * @param {module:metadata} metadata
+     * @param {module:view-helper} viewHelper
      */
-    constructor(user, preferences, acl, config) {
+    constructor(user, preferences, acl, config, metadata, viewHelper) {
         this.user = user;
         this.preferences = preferences;
         this.acl = acl;
         this.config = config;
+        this.metadata = metadata;
+        this.viewHelper = viewHelper;
     }
 
     /**
      * Populate default values.
      *
      * @param {module:model} model A model.
+     * @return {Promise|undefined}
      */
     populate(model) {
         model.populateDefaults();
@@ -71,6 +76,23 @@ class DefaultsPopulator {
         }
 
         model.set(defaultHash, {silent: true});
+
+        const preparatorClass = this.metadata.get(`clientDefs.${model.entityType}.modelDefaultsPreparator`);
+
+        if (!preparatorClass) {
+            return undefined;
+        }
+
+        return Espo.loader.requirePromise(preparatorClass)
+            .then(Class => {
+                /** @type {import('handlers/model/defaults-preparator').default} */
+                const preparator = new Class(this.viewHelper);
+
+                return preparator.prepare(model)
+            })
+            .then(attributes => {
+                model.set(attributes, {silent: true});
+            });
     }
 
     /**

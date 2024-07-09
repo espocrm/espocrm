@@ -26,8 +26,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-import EditSmallRecordView from 'views/record/edit-small';
+/**
+ * @abstract
+ */
+class DefaultsPreparator {
 
-class OpportunityEditSmallRecordView extends EditSmallRecordView {}
+    /**
+     * @param {import('view-helper').default} viewHelper
+     */
+    constructor(viewHelper) {
+        /** @protected */
+        this.viewHelper = viewHelper;
+    }
 
-export default OpportunityEditSmallRecordView;
+    // noinspection JSUnusedLocalSymbols
+    /**
+     * Prepare default attributes.
+     *
+     * @param {import('model').default} model A model.
+     * @return {Promise<Record>}
+     */
+    prepare(model) {
+        return Promise.resolve({});
+    }
+}
+
+// noinspection JSUnusedGlobalSymbols
+export default DefaultsPreparator;

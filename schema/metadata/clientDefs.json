@@ -17,6 +17,10 @@
             "description": "Defines a client model class.",
             "type": "string"
         },
+        "modelDefaultsPreparator": {
+            "description": "Default attributes preparator for a model. Should extend `handlers/model/defaults-preparator`. As of v8.4.",
+            "type": "string"
+        },
         "acl": {
             "description": "Defines a client ACL class.",
             "type": "string"

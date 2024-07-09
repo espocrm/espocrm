@@ -124,11 +124,21 @@ class EditRecordView extends DetailRecordView {
 
     /** @inheritDoc */
     setupBeforeFinal() {
+        /** @type {Promise|undefined} */
+        let promise = undefined;
+
         if (this.model.isNew()) {
-            this.populateDefaults();
+            promise = this.populateDefaults();
         }
 
-        super.setupBeforeFinal();
+        if (!promise) {
+            super.setupBeforeFinal();
+        }
+
+        if (promise) {
+            // @todo Revise. Possible race condition issues.
+            promise.then(() => super.setupBeforeFinal());
+        }
 
         if (this.model.isNew()) {
             this.once('after:render', () => {
