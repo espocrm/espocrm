@@ -33,7 +33,7 @@
             },
             "preRebuildActionClassNameList": {
                 "type": "array",
-                "description": "Pre-prebuild actions. Should implement Espo\\Core\\Utils\\Database\\Schema\\RebuildAction.",
+                "description": "Pre-rebuild actions. Should implement Espo\\Core\\Utils\\Database\\Schema\\RebuildAction.",
                 "items": {
                     "anyOf": [
                         {"enum": ["__APPEND__"]},
@@ -43,7 +43,7 @@
             },
             "postRebuildActionClassNameList": {
                 "type": "array",
-                "description": "Pre-prebuild actions. Should implement Espo\\Core\\Utils\\Database\\Schema\\RebuildAction.",
+                "description": "Post-rebuild actions. Should implement Espo\\Core\\Utils\\Database\\Schema\\RebuildAction.",
                 "items": {
                     "anyOf": [
                         {"enum": ["__APPEND__"]},
