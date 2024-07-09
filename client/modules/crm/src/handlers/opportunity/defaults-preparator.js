@@ -28,7 +28,8 @@
 
 import DefaultsPreparator from 'handlers/model/defaults-preparator';
 
-class OpportunityDefaultsPreparator extends DefaultsPreparator {
+// noinspection JSUnusedGlobalSymbols
+export default class extends DefaultsPreparator {
 
     prepare(model) {
         const probabilityMap = this.viewHelper.metadata.get('entityDefs.Opportunity.fields.stage.probabilityMap') || {};
@@ -44,5 +45,3 @@ class OpportunityDefaultsPreparator extends DefaultsPreparator {
     }
 }
 
-// noinspection JSUnusedGlobalSymbols
-export default OpportunityDefaultsPreparator;
