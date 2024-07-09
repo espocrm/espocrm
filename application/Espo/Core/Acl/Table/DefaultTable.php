@@ -52,9 +52,7 @@ class DefaultTable implements Table
     protected string $type = 'acl';
     protected string $defaultAclType = 'recordAllTeamOwnNo';
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $actionList = [
         self::ACTION_READ,
         self::ACTION_STREAM,
@@ -63,16 +61,12 @@ class DefaultTable implements Table
         self::ACTION_CREATE,
     ];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $booleanActionList = [
         self::ACTION_CREATE,
     ];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $levelList = [
         self::LEVEL_YES,
         self::LEVEL_ALL,
@@ -81,30 +75,23 @@ class DefaultTable implements Table
         self::LEVEL_NO,
     ];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[]  */
     private $fieldActionList = [
         self::ACTION_READ,
         self::ACTION_EDIT,
     ];
 
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     protected $fieldLevelList = [
         self::LEVEL_YES,
         self::LEVEL_NO,
     ];
 
     private stdClass $data;
-
     private string $cacheKey;
-
-    /**
-     * @var string[]
-     */
+    /** @var string[] */
     private $valuePermissionList = [];
+    private ScopeDataResolver $scopeDataResolver;
 
     public function __construct(
         private RoleListProvider $roleListProvider,
@@ -112,7 +99,7 @@ class DefaultTable implements Table
         protected User $user,
         Config $config,
         protected Metadata $metadata,
-        DataCache $dataCache
+        DataCache $dataCache,
     ) {
 
         $this->data = (object) [
@@ -135,14 +122,15 @@ class DefaultTable implements Table
             $cachedData = $dataCache->get($this->cacheKey);
 
             $this->data = $cachedData;
-        }
-        else {
+        } else {
             $this->load();
 
             if ($config->get('useCache')) {
                 $dataCache->store($this->cacheKey, $this->data);
             }
         }
+
+        $this->scopeDataResolver = new ScopeDataResolver($this);
     }
 
     /**
@@ -156,11 +144,7 @@ class DefaultTable implements Table
 
         $data = $this->data->scopes->$scope;
 
-        if (is_string($data)) {
-            return $this->getScopeData($data);
-        }
-
-        return ScopeData::fromRaw($data);
+        return $this->scopeDataResolver->resolve($data);
     }
 
     /**

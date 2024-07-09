@@ -96,7 +96,7 @@
             "type": "object",
             "description": "A scope level.",
             "additionalProperties": {
-                "description": "A scope. True enables access to scopes that don't have actions. False fully restricts access to a scope. A string value makes the framework to use roles from another scope and apply it to our scope. It can be useful to have roles only for one parent scope, when child scopes uses roles of the parent scope.",
+                "description": "A scope. True enables access to scopes that don't have actions. False fully restricts access to a scope. A string value makes the framework to use roles from another scope and apply it to our scope. It can be useful to have roles only for one parent scope, when child scopes uses roles of the parent scope. `boolean:{scope}` format will convert a foreign scope data to the boolean type.",
                 "anyOf": [
                     {
                         "type": "object",
