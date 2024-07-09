@@ -3259,7 +3259,7 @@ class ListRecordView extends View {
                     const model = this.collection.get(m.id);
 
                     if (model) {
-                        model.set(m.getClonedAttributes());
+                        model.set(m.getClonedAttributes(), {sync: true});
                     }
 
                     this.trigger('after:save', m);
