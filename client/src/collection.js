@@ -148,6 +148,13 @@ class Collection {
     lastSyncPromise = null
 
     /**
+     * A parent model. To be used for own purposes. E.g. to have access to a parent from related models.
+     *
+     * @type {import('model').default}
+     */
+    parentModel
+
+    /**
      * @param {Model[]|null} [models] Models.
      * @param {{
      *     entityType?: string,
@@ -934,6 +941,7 @@ class Collection {
         collection.maxSize = this.maxSize;
         collection.maxMaxSize = this.maxMaxSize;
         collection.whereFunction = this.whereFunction;
+        collection.parentModel = this.parentModel;
 
         return collection;
     }
