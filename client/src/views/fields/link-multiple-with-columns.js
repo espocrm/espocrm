@@ -40,9 +40,9 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
 
     /** @const */
     COLUMN_TYPE_VARCHAR = 'varchar'
-     /** @const */
+    /** @const */
     COLUMN_TYPE_ENUM = 'enum'
-     /** @const */
+    /** @const */
     COLUMN_TYPE_BOOL = 'bool'
 
     /** @inheritDoc */
@@ -180,10 +180,6 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
             const field = this.columnsDefs[column].field;
             const scope = this.columnsDefs[column].scope;
 
-            if (value === '' || !value) {
-                return;
-            }
-
             if (type !== this.COLUMN_TYPE_ENUM && type !== this.COLUMN_TYPE_VARCHAR) {
                 return;
             }
@@ -191,6 +187,10 @@ class LinkMultipleWithColumnsFieldView extends LinkMultipleFieldView {
             const text = type === this.COLUMN_TYPE_ENUM ?
                 this.getLanguage().translateOption(value, field, scope) :
                 value;
+
+            if (!text) {
+                return;
+            }
 
             $el.append(
                 $('<span>').text(' '),
