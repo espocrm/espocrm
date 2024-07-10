@@ -17,7 +17,8 @@
         "internal": "Espo\\Classes\\Select\\User\\PrimaryFilters\\Internal"
     },
     "boolFilterClassNameMap": {
-        "onlyMyTeam": "Espo\\Classes\\Select\\User\\BoolFilters\\OnlyMyTeam"
+        "onlyMyTeam": "Espo\\Classes\\Select\\User\\BoolFilters\\OnlyMyTeam",
+        "onlyMe": "Espo\\Classes\\Select\\User\\BoolFilters\\OnlyMe"
     },
     "orderItemConverterClassNameMap": {
         "userNameOwnFirst": "Espo\\Classes\\Select\\User\\OrderItemConverters\\UserNameOwnFirst"
