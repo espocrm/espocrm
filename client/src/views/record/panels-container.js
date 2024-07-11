@@ -400,7 +400,7 @@ class PanelsContainerRecordView extends View {
                     this.applyAccessToActions(p.buttonList);
 
                     // noinspection JSUnresolvedReference
-                    if (p.actionList.find(it => it.hiddenByAclSoft)) {
+                    if (p.buttonList.find(it => it.hiddenByAclSoft)) {
                         hasSoftHidden = true;
                     }
                 }
