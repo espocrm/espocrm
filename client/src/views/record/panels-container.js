@@ -65,13 +65,16 @@ class PanelsContainerRecordView extends View {
      *
      * @typedef {Object} module:views/record/panels-container~button
      *
-     * @property {string} action An action.
+     * @property {string} [action] An action.
+     * @property {string} [name] A name. Required if a handler is used.
      * @property {boolean} [hidden] Hidden.
      * @property {string} [label] A label. Translatable.
      * @property {string} [html] A HTML.
      * @property {string} [text] A text.
      * @property {string} [title] A title (on hover). Translatable.
      * @property {Object.<string, (string|number|boolean)>} [data] Data attributes.
+     * @property {string} [handler] A handler.
+     * @property {string} [actionFunction] An action function.
      * @property {function()} [onClick] A click event.
      */
 
@@ -81,12 +84,15 @@ class PanelsContainerRecordView extends View {
      * @typedef {Object} module:views/record/panels-container~action
      *
      * @property {string} [action] An action.
+     * @property {string} [name] A name. Required if a handler is used.
      * @property {string} [link] A link URL.
      * @property {boolean} [hidden] Hidden.
      * @property {string} [label] A label. Translatable.
      * @property {string} [html] A HTML.
      * @property {string} [text] A text.
      * @property {Object.<string, (string|number|boolean)>} [data] Data attributes.
+     * @property {string} [handler] A handler.
+     * @property {string} [actionFunction] An action function.
      * @property {function()} [onClick] A click event.
      */
 
@@ -497,7 +503,7 @@ class PanelsContainerRecordView extends View {
             return;
         }
 
-         this.panelList.filter(item => item.name === name).forEach(item => {
+        this.panelList.filter(item => item.name === name).forEach(item => {
             item.hidden = true;
 
             if (typeof item.tabNumber !== 'undefined') {

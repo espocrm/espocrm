@@ -123,6 +123,12 @@ class BottomPanelView extends View {
         this.buttonList = Espo.Utils.cloneDeep(this.defs.buttonList || this.buttonList || []);
         this.actionList = Espo.Utils.cloneDeep(this.defs.actionList || this.actionList || []);
 
+        this.actionList.forEach(it => {
+            if (it.name) {
+                it.action = it.name;
+            }
+        });
+
         this.fieldList = this.options.fieldList || this.fieldList || [];
 
         this.recordViewObject = this.options.recordViewObject;
@@ -251,7 +257,7 @@ class BottomPanelView extends View {
                 }
             }
             else {
-               field = item;
+                field = item;
             }
 
             if (!(field in this.model.defs.fields)) {
