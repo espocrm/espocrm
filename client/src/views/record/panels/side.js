@@ -140,8 +140,8 @@ class SidePanelView extends View {
             this.disabled = this.options.disabled;
         }
 
-        this.buttonList = _.clone(this.defs.buttonList || this.buttonList || []);
-        this.actionList = _.clone(this.defs.actionList || this.actionList || []);
+        this.buttonList = Espo.Utils.clone(this.defs.buttonList || this.buttonList || []);
+        this.actionList = Espo.Utils.clone(this.defs.actionList || this.actionList || []);
 
         this.fieldList = this.options.fieldList || this.fieldList || this.defs.fieldList || [];
 
@@ -321,7 +321,7 @@ class SidePanelView extends View {
                 }
             }
             else {
-               field = item;
+                field = item;
             }
 
             if (!item.isAdditional && !(field in this.model.defs.fields)) {

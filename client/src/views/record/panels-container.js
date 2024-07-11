@@ -304,20 +304,20 @@ class PanelsContainerRecordView extends View {
     setNotReadOnly(onlyNotSetAsReadOnly) {
         this.readOnly = false;
 
-        if (onlyNotSetAsReadOnly) {
-            this.panelList.forEach(item => {
-                this.applyAccessToActions(item.buttonList);
-                this.applyAccessToActions(item.actionList);
-
-                if (this.isRendered()) {
-                    const actionsView = this.getView(item.actionsViewKey);
-
-                    if (actionsView) {
-                        actionsView.reRender();
-                    }
-                }
-            });
+        if (!onlyNotSetAsReadOnly) {
+            return;
         }
+
+        this.panelList.forEach(item => {
+            this.applyAccessToActions(item.buttonList);
+            this.applyAccessToActions(item.actionList);
+
+            this.whenRendered().then(() => {
+                if (this.getPanelActionsView(item.name)) {
+                    this.getPanelActionsView(item.name).reRender();
+                }
+            })
+        });
     }
 
     /**
@@ -336,16 +336,21 @@ class PanelsContainerRecordView extends View {
                 return;
             }
 
-            if (Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true)) {
+            const access = Espo.Utils.checkActionAccess(this.getAcl(), this.model, item, true);
+
+            if (access) {
                 if (item.isHiddenByAcl) {
                     item.isHiddenByAcl = false;
                     item.hidden = false;
+                    delete item.hiddenByAclSoft;
                 }
-            }
-            else {
-                if (!item.hidden) {
-                    item.isHiddenByAcl = true;
-                    item.hidden = true;
+            } else if (!item.hidden) {
+                item.isHiddenByAcl = true;
+                item.hidden = true;
+                delete item.hiddenByAclSoft;
+
+                if (access === null) {
+                    item.hiddenByAclSoft = true;
                 }
             }
         });
@@ -377,15 +382,40 @@ class PanelsContainerRecordView extends View {
             options = _.extend(options, p.options);
 
             this.createView(name, p.view, options, (view) => {
+                let hasSoftHidden = false;
+
                 if ('getActionList' in view) {
                     p.actionList = view.getActionList();
 
                     this.applyAccessToActions(p.actionList);
+
+                    // noinspection JSUnresolvedReference
+                    if (p.actionList.find(it => it.hiddenByAclSoft)) {
+                        hasSoftHidden = true;
+                    }
                 }
 
                 if ('getButtonList' in view) {
                     p.buttonList = view.getButtonList();
                     this.applyAccessToActions(p.buttonList);
+
+                    // noinspection JSUnresolvedReference
+                    if (p.actionList.find(it => it.hiddenByAclSoft)) {
+                        hasSoftHidden = true;
+                    }
+                }
+
+                if (hasSoftHidden) {
+                    this.listenToOnce(this.model, 'sync', () => {
+                        this.applyAccessToActions(p.actionList);
+                        this.applyAccessToActions(p.buttonList);
+
+                        view.whenRendered().then(() => {
+                            if (this.getPanelActionsView(name)) {
+                                this.getPanelActionsView(name).reRender();
+                            }
+                        })
+                    });
                 }
 
                 if (view.titleHtml) {
@@ -400,6 +430,7 @@ class PanelsContainerRecordView extends View {
                     }
                 }
 
+                // @todo Use name_Actions.
                 this.createView(name + 'Actions', 'views/record/panel-actions', {
                     selector: '.panel[data-name="' + p.name + '"] > .panel-heading > .panel-actions-container',
                     model: this.model,
@@ -409,6 +440,14 @@ class PanelsContainerRecordView extends View {
                 });
             });
         });
+    }
+
+    /**
+     * @param {string} name
+     * @return {import('views/record/panel-actions')}
+     */
+    getPanelActionsView(name) {
+        return this.getView(name + 'Actions');
     }
 
     /**

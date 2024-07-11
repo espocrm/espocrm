@@ -120,8 +120,8 @@ class BottomPanelView extends View {
         this.readOnly = this.readOnly || this.options.readOnly;
         this.inlineEditDisabled = this.inlineEditDisabled || this.options.inlineEditDisabled;
 
-        this.buttonList = Espo.Utils.cloneDeep(this.defs.buttonList || this.buttonList || []);
-        this.actionList = Espo.Utils.cloneDeep(this.defs.actionList || this.actionList || []);
+        this.buttonList = Espo.Utils.clone(this.defs.buttonList || this.buttonList || []);
+        this.actionList = Espo.Utils.clone(this.defs.actionList || this.actionList || []);
 
         this.actionList.forEach(it => {
             if (it.name) {
