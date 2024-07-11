@@ -53,6 +53,7 @@ class MultiEnumFieldView extends ArrayFieldView {
      * @property {string[]} [options] Select options.
      * @property {boolean} [required] Required.
      * @property {boolean} [displayAsLabel] Display as label.
+     * @property {boolean} [displayAsList] Display as list (line breaks).
      * @property {string|'state'} [labelType] A label type.
      * @property {string} [optionsReference] A reference to options. E.g. `Account.industry`.
      * @property {string} [optionsPath] An options metadata path.

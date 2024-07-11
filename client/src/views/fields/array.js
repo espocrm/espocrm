@@ -54,6 +54,7 @@ class ArrayFieldView extends BaseFieldView {
      * @property {string} [translation] A translation string. E.g. `Global.scopeNames`.
      * @property {string[]} [options] Select options.
      * @property {boolean} [required] Required.
+     * @property {boolean} [displayAsList] Display as list (line breaks).
      * @property {boolean} [displayAsLabel] Display as label.
      * @property {string|'state'} [labelType] A label type.
      * @property {boolean} [noEmptyString] No empty string.
