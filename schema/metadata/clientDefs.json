@@ -521,6 +521,75 @@
                             "type": "string"
                         },
                         "description": "Attributes to carry over to a related record when creating. Mapping Parent => Related."
+                    },
+                    "buttonList": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "default": "A name."
+                            },
+                            "acl": {
+                                "description": "An ACL action access to which is required for the action.",
+                                "type": "string",
+                                "enum": [
+                                    "create",
+                                    "read",
+                                    "edit",
+                                    "delete",
+                                    "stream"
+                                ]
+                            },
+                            "label": {
+                                "type": "string",
+                                "description": "A translatable label."
+                            },
+                            "handler": {
+                                "type": "string",
+                                "description": "A frontend handler. A view is passed to the constructor."
+                            },
+                            "actionFunction": {
+                                "type": "string",
+                                "description": "An action method in the handler."
+                            }
+                        },
+                        "description": "Header buttons. As of v8.4."
+                    },
+                    "actionList": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "default": "A name."
+                                },
+                                "acl": {
+                                    "description": "An ACL action access to which is required for the action.",
+                                    "type": "string",
+                                    "enum": [
+                                        "create",
+                                        "read",
+                                        "edit",
+                                        "delete",
+                                        "stream"
+                                    ]
+                                },
+                                "label": {
+                                    "type": "string",
+                                    "description": "A translatable label."
+                                },
+                                "handler": {
+                                    "type": "string",
+                                    "description": "A frontend handler. A view is passed to the constructor."
+                                },
+                                "actionFunction": {
+                                    "type": "string",
+                                    "description": "An action method in the handler."
+                                }
+                            }
+                        },
+                        "description": "Header dropdown actions. As of v8.4."
                     }
                 }
             }
