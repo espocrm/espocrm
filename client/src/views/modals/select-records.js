@@ -124,7 +124,7 @@ class SelectRecordsModalView extends ModalView {
             });
         }
 
-        this.scope = this.entityType = this.options.scope || this.scope;
+        this.scope = this.entityType = this.options.scope || this.scope || this.options.entityType;
 
         const orderBy = this.options.orderBy ||
             this.getMetadata().get(['clientDefs', this.scope, 'selectRecords', 'orderBy']);
