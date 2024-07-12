@@ -78,7 +78,21 @@ class LayoutProvider
             return $this->fileReader->read($path, $params);
         }
 
-        return $this->getDefault($scope, $name);
+        $default = $this->getDefault($scope, $name);
+
+        if ($default) {
+            return $default;
+        }
+
+        foreach (array_reverse($this->metadata->getModuleList()) as $module) {
+            $params = FileReaderParams::create()->withModuleName($module);
+
+            if ($this->fileReader->exists($path, $params)) {
+                return $this->fileReader->read($path, $params);
+            }
+        }
+
+        return null;
     }
 
     private function getLayoutLocationModule(string $scope, string $name): ?string
