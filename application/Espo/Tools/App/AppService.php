@@ -170,7 +170,7 @@ class AppService
                 $itemParams = $obj->get();
             }
             catch (Throwable $e) {
-                $this->log->error("AppParam $paramKey: " . $e->getMessage());
+                $this->log->error("AppParam $paramKey: " . $e->getMessage(), ['exception' => $e]);
 
                 continue;
             }
