@@ -33,10 +33,10 @@ class DetailModesView extends View {
     // language=Handlebars
     templateContent = `
         <div class="button-container clearfix">
-            <div class="btn-group pull-right">
+            <div class="btn-group">
                 {{#each modeDataList}}
                     <button
-                        class="btn btn-text {{#if active}} active{{/if}}"
+                        class="btn btn-text btn-xs-wide{{#if active}} active{{/if}}"
                         data-action="switchMode"
                         data-value="{{name}}"
                         {{#if ../disabled}}disabled="disabled"{{/if}}
