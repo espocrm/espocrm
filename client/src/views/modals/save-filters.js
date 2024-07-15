@@ -68,6 +68,7 @@ class SaveFiltersModalView extends ModalView {
             },
             mode: 'edit',
             model: model,
+            labelText: this.translate('name', 'fields'),
         });
     }
 

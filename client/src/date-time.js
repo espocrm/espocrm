@@ -263,20 +263,22 @@ class DateTime {
     }
 
     /**
-     * Convert a date to a moment.
+     * Convert a system-formatted date to a moment.
      *
      * @param {string} string A date value in a system representation.
      * @returns {moment.Moment}
+     * @internal
      */
     toMomentDate(string) {
-        return moment.utc(string, this.internalDateFormat);
+        return moment.tz(string, this.internalDateFormat, this.timeZone);
     }
 
     /**
-     * Convert a date-time to a moment.
+     * Convert a system-formatted date-time to a moment.
      *
      * @param {string} string A date-time value in a system representation.
      * @returns {moment.Moment}
+     * @internal
      */
     toMoment(string) {
         let m = moment.utc(string, this.internalDateTimeFullFormat);
