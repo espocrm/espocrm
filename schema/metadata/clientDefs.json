@@ -1113,7 +1113,13 @@
                 "data": {
                     "type": "object",
                     "description": "Additional data. Not used for logic.",
-                    "additionalProperties": true
+                    "additionalProperties": true,
+                    "properties": {
+                        "field": {
+                            "type": "string",
+                            "description": "A field."
+                        }
+                    }
                 }
             },
             "required": ["type"]
