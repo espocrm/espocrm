@@ -246,7 +246,7 @@ class Kanban
             $repository->clone($query)->count() :
             ($hasMore ? Collection::TOTAL_HAS_MORE : Collection::TOTAL_HAS_NO_MORE);
 
-        return new Result($collection, $total, $groupList);
+        return new Result($groupList, $total);
     }
 
     /**
