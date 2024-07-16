@@ -144,10 +144,6 @@ class Kanban
             ->withSearchParams($searchParams)
             ->build();
 
-        $collection = $this->entityManager
-            ->getCollectionFactory()
-            ->create($this->entityType);
-
         $statusField = $this->getStatusField();
         $statusList = $this->getStatusList();
         $statusIgnoreList = $this->getStatusIgnoreList();
@@ -232,8 +228,6 @@ class Kanban
                 $this->listLoadProcessor->process($e, $loadProcessorParams);
 
                 $recordService->prepareEntityForOutput($e);
-
-                $collection[] = $e;
             }
 
             /** @var Collection<Entity> $itemRecordCollection */
