@@ -65,11 +65,25 @@ class KanbanRecordView extends ListRecordView {
     buttonList = []
 
     /**
+     * Layout item definitions.
+     *
+     * @typedef module:views/record/kanban~layoutItemDefs
+     * @type {Object}
+     * @property {string} name A name (usually a field name).
+     * @property {string} [view] An overridden field view name.
+     * @property {boolean} [link] To use `listLink` mode (link to the detail view).
+     * @property {'left'|'right'} [align] An alignment.
+     * @property {boolean} [isLarge] Large.
+     * @property {boolean} [isMuted] Muted.
+     * @property {boolean} [hidden] Hidden by default.
+     */
+
+    /**
      * Kanban view options.
      *
      * @typedef {Record} module:views/record/kanban~options
      * @property {import('collection').default} collection A collection.
-     * @property {module:views/record/list~columnDefs[]} [listLayout] A layout.
+     * @property {module:views/record/kanban~layoutItemDefs[]} [listLayout] A layout.
      * @property {boolean} [keepCurrentRootUrl] Keep a current root URL.
      * @property {string|'kanban'} [type] A type.
      * @property {boolean} [rowActionsDisabled] Disable row actions.
