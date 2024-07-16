@@ -41,6 +41,8 @@ class GroupItem
     public function __construct(
         readonly public string $name,
         readonly public Collection $collection,
+        readonly public ?string $label = null,
+        readonly public ?string $style = null,
     ) {}
 
     public function toRaw(): stdClass
@@ -49,6 +51,8 @@ class GroupItem
             'name' => $this->name,
             'total' => $this->collection->getTotal(),
             'list' => $this->collection->getValueMapList(),
+            'label' => $this->label,
+            'style' => $this->style,
         ];
     }
 }
