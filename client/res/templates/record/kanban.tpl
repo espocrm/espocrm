@@ -86,8 +86,8 @@
 </div>
 
 
-{{#if isEmptyList}}
-<div class="margin-top no-data">
-    {{translate 'No Data'}}
-</div>
-{{/if}}
+{{#if isEmptyList}}{{#unless noDataDisabled}}
+    <div class="margin-top no-data">
+        {{translate 'No Data'}}
+    </div>
+{{/unless}}{{/if}}

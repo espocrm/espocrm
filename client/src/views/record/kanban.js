@@ -125,7 +125,7 @@ class KanbanRecordView extends ListRecordView {
     }
 
     events = {
-         /** @this KanbanRecordView */
+        /** @this KanbanRecordView */
         'click a.link': function (e) {
             if (e.ctrlKey || e.metaKey || e.shiftKey) {
                 return;
@@ -244,13 +244,14 @@ class KanbanRecordView extends ListRecordView {
             topBar: topBar,
             showCount: this.showCount && this.collection.total > 0,
             buttonList: this.buttonList,
-            displayTotalCount: this.displayTotalCount && this.collection.total >= 0,
+            displayTotalCount: this.displayTotalCount && this.collection.total >= 0 && !this._renderEmpty,
             totalCount: this.collection.total,
             groupDataList: this.groupDataList,
             minTableWidthPx: this.minColumnWidthPx * this.groupDataList.length,
             isEmptyList: this.collection.models.length === 0,
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
             isCreatable: this.isCreatable,
+            noDataDisabled: this._renderEmpty,
         };
     }
 
@@ -347,6 +348,8 @@ class KanbanRecordView extends ListRecordView {
         this.setupSettings();
 
         this.listenTo(this.collection, 'sync', () => {
+            this._renderEmpty = false;
+
             if (this.hasView('modal') && this.getView('modal').isRendered()) {
                 return;
             }
@@ -393,6 +396,8 @@ class KanbanRecordView extends ListRecordView {
         if ('moveOverRowAction' in this.options) {
             this.moveOverRowAction = this.options.moveOverRowAction;
         }
+
+        this._renderEmpty = this.options.skipBuildRows;
 
         this.wait(
             this.getHelper().processSetupHandlers(this, 'record/kanban')
