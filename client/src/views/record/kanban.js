@@ -385,7 +385,7 @@ class KanbanRecordView extends ListRecordView {
         }
 
         if ('canCreate' in this.options) {
-            this.isCreatable = this.options.isCreatable;
+            this.isCreatable = this.options.canCreate;
         } else {
             this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
         }
