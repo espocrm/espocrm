@@ -105,6 +105,7 @@ class KanbanRecordView extends ListRecordView {
      * @property {boolean} [showCount] To show a record count.
      * @property {function(string, string[]): Promise} [onGroupOrder] On group order function.
      * @property {function(string): Promise<Record>} [getCreateAttributes] Get create attributes function.
+     * @property {function(string)} [createActionHandler] A create handler.
      * @property {string} [statusField] A status field.
      * @property {boolean} [canChangeGroup] Can change group.
      * @property {boolean} [canCreate] Can create.
@@ -122,6 +123,8 @@ class KanbanRecordView extends ListRecordView {
         this.onGroupOrder = options.onGroupOrder;
         /** @private */
         this.getCreateAttributes = options.getCreateAttributes;
+        /** @private */
+        this.createActionHandler = options.createActionHandler;
     }
 
     events = {
@@ -1175,6 +1178,12 @@ class KanbanRecordView extends ListRecordView {
      * @param {string} group
      */
     async actionCreateInGroup(group) {
+        if (this.createActionHandler) {
+            this.createActionHandler(group);
+
+            return;
+        }
+
         const viewName = this.getMetadata().get(`clientDefs.${this.scope}.modalViews.edit`) ||
             'views/modals/edit';
 
