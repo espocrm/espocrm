@@ -27,39 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\Tools\Kanban\Api;
+namespace Espo\Tools\Kanban;
 
-use Espo\Core\Api\Action as ActionAlias;
-use Espo\Core\Api\Request;
-use Espo\Core\Api\Response;
-use Espo\Core\Api\ResponseComposer;
-use Espo\Core\Exceptions\BadRequest;
-use Espo\Core\Record\SearchParamsFetcher;
-use Espo\Tools\Kanban\KanbanService;
+use Espo\Core\Record\Collection;
+use Espo\ORM\Entity;
+use stdClass;
 
-class GetData implements ActionAlias
+class GroupItem
 {
+    /**
+     * @param Collection<Entity> $collection
+     */
     public function __construct(
-        private KanbanService $service,
-        private SearchParamsFetcher $searchParamsFetcher
+        readonly public string $name,
+        readonly public Collection $collection,
     ) {}
 
-    public function process(Request $request): Response
+    public function toRaw(): stdClass
     {
-        $entityType = $request->getRouteParam('entityType');
-
-        if (!$entityType) {
-            throw new BadRequest();
-        }
-
-        $searchParams = $this->searchParamsFetcher->fetch($request);
-
-        $result = $this->service->getData($entityType, $searchParams);
-
-        return ResponseComposer::json([
-            'total' => $result->getTotal(),
-            'list' => $result->getCollection()->getValueMapList(),
-            'groups' => array_map(fn ($it) => $it->toRaw(), $result->getGroupList()),
-        ]);
+        return (object) [
+            'name' => $this->name,
+            'total' => $this->collection->getTotal(),
+            'list' => $this->collection->getValueMapList(),
+        ];
     }
 }

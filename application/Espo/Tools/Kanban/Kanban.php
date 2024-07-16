@@ -39,6 +39,7 @@ use Espo\Core\Record\ServiceContainer as RecordServiceContainer;
 use Espo\Core\Select\SearchParams;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Metadata;
+use Espo\ORM\Entity;
 use Espo\ORM\EntityManager;
 
 class Kanban
@@ -151,9 +152,7 @@ class Kanban
         $statusList = $this->getStatusList();
         $statusIgnoreList = $this->getStatusIgnoreList();
 
-        $additionalData = (object) [
-            'groupList' => [],
-        ];
+        $groupList = [];
 
         $repository = $this->entityManager->getRDBRepository($this->entityType);
 
@@ -176,10 +175,6 @@ class Kanban
             $itemSelectBuilder->where([
                 $statusField => $status,
             ]);
-
-            $groupData = (object) [
-                'name' => $status,
-            ];
 
             $itemQuery = $itemSelectBuilder->build();
 
@@ -241,17 +236,17 @@ class Kanban
                 $collection[] = $e;
             }
 
-            $groupData->total = $totalSub;
-            $groupData->list = $collectionSub->getValueMapList();
+            /** @var Collection<Entity> $itemRecordCollection */
+            $itemRecordCollection = new Collection($collectionSub, $totalSub);
 
-            $additionalData->groupList[] = $groupData;
+            $groupList[] = new GroupItem($status, $itemRecordCollection);
         }
 
         $total = !$this->countDisabled ?
             $repository->clone($query)->count() :
             ($hasMore ? Collection::TOTAL_HAS_MORE : Collection::TOTAL_HAS_NO_MORE);
 
-        return new Result($collection, $total, $additionalData);
+        return new Result($collection, $total, $groupList);
     }
 
     /**

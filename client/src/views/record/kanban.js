@@ -57,6 +57,12 @@ class KanbanRecordView extends ListRecordView {
     paginationDisabled = true
 
     /**
+     * @private
+     * @type {Record[]}
+     */
+    groupRawDataList
+
+    /**
      * A button list.
      *
      * @protected
@@ -280,6 +286,11 @@ class KanbanRecordView extends ListRecordView {
         if (typeof this.collection === 'undefined') {
             throw new Error('Collection has not been injected into Record.List view.');
         }
+
+        this.listenTo(this.collection, 'sync', (c, response) => {
+            // noinspection JSUnresolvedReference
+            this.groupRawDataList = response.groups;
+        });
 
         this.layoutLoadCallbackList = [];
 
@@ -779,8 +790,7 @@ class KanbanRecordView extends ListRecordView {
     }
 
     buildRows(callback) {
-        // noinspection JSUnresolvedReference
-        const groupList = (this.collection.dataAdditional || {}).groupList || [];
+        const groupList = this.groupRawDataList || [];
 
         this.collection.reset();
 
