@@ -85,6 +85,7 @@ class KanbanRecordView extends ListRecordView {
      * @property {boolean} [showCount] To show a record count.
      * @property {function(string, string[]): Promise} [onGroupOrder] On group order function.
      * @property {function(string): Promise<Record>} [getCreateAttributes] Get create attributes function.
+     * @property {string} [statusField] A status field.
      */
 
     /**
@@ -93,7 +94,9 @@ class KanbanRecordView extends ListRecordView {
     constructor(options) {
         super(options);
 
+        /** @private */
         this.onGroupOrder = options.onGroupOrder;
+        /** @private */
         this.getCreateAttributes = options.getCreateAttributes;
     }
 
@@ -219,9 +222,8 @@ class KanbanRecordView extends ListRecordView {
             buttonList: this.buttonList,
             displayTotalCount: this.displayTotalCount && this.collection.total >= 0,
             totalCount: this.collection.total,
-            statusList: this.statusList,
             groupDataList: this.groupDataList,
-            minTableWidthPx: this.minColumnWidthPx * this.statusList.length,
+            minTableWidthPx: this.minColumnWidthPx * this.groupDataList.length,
             isEmptyList: this.collection.models.length === 0,
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
             isCreatable: this.isCreatable,
@@ -295,24 +297,11 @@ class KanbanRecordView extends ListRecordView {
             this.orderDisabled = true;
         }
 
-        this.statusField = this.getMetadata().get(['scopes', this.scope, 'statusField']);
+        this.statusField = this.options.statusField || this.getMetadata().get(['scopes', this.scope, 'statusField']);
 
         if (!this.statusField) {
-            throw new Error("No status field for entity type '" + this.scope + "'.");
+            throw new Error(`No status field for entity type '${this.scope}'.`);
         }
-
-        this.statusList = this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.statusField}.options`) || [];
-        this.statusList = [...this.statusList];
-
-        const statusIgnoreList = this.getMetadata().get(['scopes', this.scope, 'kanbanStatusIgnoreList']) || [];
-
-        this.statusList = this.statusList.filter(item => {
-            if (statusIgnoreList.includes(item)) {
-                return;
-            }
-
-            return true;
-        });
 
         this.seedCollection = this.collection.clone();
         this.seedCollection.reset();
@@ -390,11 +379,10 @@ class KanbanRecordView extends ListRecordView {
 
         this.plusElementMap = {};
 
-        this.statusList.forEach(status => {
-            const value = status.replace(/"/g, '\\"');
+        this.groupDataList.forEach(item => {
+            const value = item.name.replace(/"/g, '\\"');
 
-            this.plusElementMap[status] = this.$el
-                .find('.kanban-head .create-button[data-group="' + value + '"]');
+            this.plusElementMap[item.name] = this.$el.find(`.kanban-head .create-button[data-group="${value}"]`);
         });
     }
 
@@ -765,15 +753,25 @@ class KanbanRecordView extends ListRecordView {
 
         this.wait(true);
 
+        /**
+         * @type {{
+         *     name: string,
+         *     label: string,
+         *     style: string,
+         *     hasShowMore: boolean,
+         *     collection: import('collection').default,
+         *     dataList: Record[],
+         * }[]}
+         */
         this.groupDataList = [];
 
         let count = 0;
         let loadedCount = 0;
 
-        this.getListLayout((listLayout) => {
+        this.getListLayout(listLayout => {
             this.listLayout = listLayout;
 
-            groupList.forEach((item, i) => {
+            groupList.forEach(item => {
                 const collection = this.seedCollection.clone();
 
                 this.listenTo(collection, 'destroy', (model, attributes, o) => {
@@ -785,10 +783,8 @@ class KanbanRecordView extends ListRecordView {
                 });
 
                 collection.total = item.total;
-
                 collection.url = this.collection.url;
                 collection.where = this.collection.where;
-
                 collection.entityType = this.seedCollection.entityType;
                 collection.maxSize = this.seedCollection.maxSize;
                 collection.orderBy = this.seedCollection.orderBy;
@@ -819,24 +815,19 @@ class KanbanRecordView extends ListRecordView {
                     });
                 });
 
-                let nextStyle = null;
+                const style = item.style ||
+                    this.getMetadata().get(`entityDefs.${this.scope}.fields.${this.statusField}.style.${item.name}`);
 
-                if (i < groupList.length - 1) {
-                    nextStyle = this.getMetadata()
-                        .get(['entityDefs', this.scope, 'fields', this.statusField,
-                            'style', groupList[i + 1].name]);
-                }
+                const label = item.label ||
+                    this.getLanguage().translateOption(item.name, this.statusField, this.scope);
 
                 const o = {
                     name: item.name,
-                    label: this.getLanguage().translateOption(item.name, this.statusField, this.scope),
+                    label: label,
                     dataList: itemDataList,
                     collection: collection,
-                    isLast: i === groupList.length - 1,
                     hasShowMore: collection.total > collection.length || collection.total === -1,
-                    style: this.getMetadata()
-                        .get(['entityDefs', this.scope, 'fields', this.statusField, 'style', item.name]),
-                    nextStyle: nextStyle,
+                    style: style,
                 };
 
                 this.groupDataList.push(o);
