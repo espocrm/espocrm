@@ -56,9 +56,16 @@ class GetData implements ActionAlias
 
         $result = $this->service->getData($entityType, $searchParams);
 
+        $list = [];
+
+        foreach ($result->getGroups() as $group) {
+            $list = [...$list, ...$group->collection->getValueMapList()];
+        }
+
         return ResponseComposer::json([
             'total' => $result->getTotal(),
             'groups' => array_map(fn ($it) => $it->toRaw(), $result->getGroups()),
+            'list' => $list,
         ]);
     }
 }
