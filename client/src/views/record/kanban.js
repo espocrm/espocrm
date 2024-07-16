@@ -86,6 +86,9 @@ class KanbanRecordView extends ListRecordView {
      * @property {function(string, string[]): Promise} [onGroupOrder] On group order function.
      * @property {function(string): Promise<Record>} [getCreateAttributes] Get create attributes function.
      * @property {string} [statusField] A status field.
+     * @property {boolean} [canChangeGroup] Can change group.
+     * @property {boolean} [canCreate] Can create.
+     * @property {boolean} [canReOrder] Can re-order.
      */
 
     /**
@@ -282,19 +285,22 @@ class KanbanRecordView extends ListRecordView {
             this.displayTotalCount = this.options.displayTotalCount;
         }
 
-        if (this.getUser().isPortal() && !this.portalLayoutDisabled) {
-            if (
-                this.getMetadata()
-                    .get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])
-            ) {
-                this.layoutName += 'Portal';
-            }
+        if (
+            this.getUser().isPortal() &&
+            !this.portalLayoutDisabled &&
+            this.getMetadata().get(['clientDefs', this.scope, 'additionalLayouts', this.layoutName + 'Portal'])
+        ) {
+            this.layoutName += 'Portal';
         }
 
-        this.orderDisabled = this.getMetadata().get(['scopes', this.scope, 'kanbanOrderDisabled']);
+        if ('canReOrder' in this.options) {
+            this.orderDisabled = !this.options.canReOrder;
+        } else {
+            this.orderDisabled = this.getMetadata().get(['scopes', this.scope, 'kanbanOrderDisabled']);
 
-        if (this.getUser().isPortal()) {
-            this.orderDisabled = true;
+            if (this.getUser().isPortal()) {
+                this.orderDisabled = true;
+            }
         }
 
         this.statusField = this.options.statusField || this.getMetadata().get(['scopes', this.scope, 'statusField']);
@@ -339,13 +345,21 @@ class KanbanRecordView extends ListRecordView {
             $(window).off('resize.kanban-' + this.cid);
         });
 
-        this.statusFieldIsEditable =
-            this.getAcl().checkScope(this.entityType, 'edit') &&
-            !this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').includes(this.statusField) &&
-            !this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) &&
-            !this.getMetadata().get(['entityDefs', this.entityType, 'fields', this.statusField, 'readOnly']);
+        if ('canChangeGroup' in this.options) {
+            this.statusFieldIsEditable = this.options.canChangeGroup;
+        } else {
+            this.statusFieldIsEditable =
+                this.getAcl().checkScope(this.entityType, 'edit') &&
+                !this.getAcl().getScopeForbiddenFieldList(this.entityType, 'edit').includes(this.statusField) &&
+                !this.getMetadata().get(['clientDefs', this.scope, 'editDisabled']) &&
+                !this.getMetadata().get(['entityDefs', this.entityType, 'fields', this.statusField, 'readOnly']);
+        }
 
-        this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
+        if ('canCreate' in this.options) {
+            this.isCreatable = this.options.isCreatable;
+        } else {
+            this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
+        }
 
         this.wait(
             this.getHelper().processSetupHandlers(this, 'record/kanban')
