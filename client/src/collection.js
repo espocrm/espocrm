@@ -205,6 +205,15 @@ class Collection {
         /** @type {module:model~defs} */
         this.defs = options.defs || {};
 
+        /**
+         * @type {{
+         *     primaryFilter?: string,
+         *     boolFilterList?: string[],
+         *     textFilter?: string,
+         *     select?: string,
+         *     q?: string,
+         * } | Record<string, *>}
+         */
         this.data = {};
 
         /**
