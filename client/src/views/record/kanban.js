@@ -751,7 +751,8 @@ class KanbanRecordView extends ListRecordView {
 
         this.collection.reset();
 
-        this.collection.subCollectionList = [];
+        /** @type {import('collection').default[]} */
+        this.subCollectionList = [];
 
         this.wait(true);
 
@@ -792,11 +793,10 @@ class KanbanRecordView extends ListRecordView {
                     }
                 ];
 
-                collection.groupName = item.name;
+                collection.data.groupName = item.name;
                 collection.set(item.list);
 
-                this.collection.subCollectionList.push(collection);
-
+                this.subCollectionList.push(collection);
                 this.collection.add(collection.models);
 
                 const itemDataList = [];
@@ -916,7 +916,7 @@ class KanbanRecordView extends ListRecordView {
 
         this.$el.find('.item[data-id="'+id+'"]').remove();
 
-        this.collection.subCollectionList.forEach(collection => {
+        this.subCollectionList.forEach(collection => {
             if (collection.get(id)) {
                 collection.remove(id);
             }
@@ -948,7 +948,7 @@ class KanbanRecordView extends ListRecordView {
         const id = model.id;
         const group = model.get(this.statusField);
 
-        this.collection.subCollectionList.forEach((collection) => {
+        this.subCollectionList.forEach((collection) => {
             if (collection.get(id)) {
                 collection.remove(id);
 
@@ -1084,8 +1084,8 @@ class KanbanRecordView extends ListRecordView {
     getGroupCollection(group) {
         let collection = null;
 
-        this.collection.subCollectionList.forEach(itemCollection => {
-            if (itemCollection.groupName === group) {
+        this.subCollectionList.forEach(itemCollection => {
+            if (itemCollection.data.groupName === group) {
                 collection = itemCollection;
             }
         });
