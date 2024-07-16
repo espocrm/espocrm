@@ -762,6 +762,11 @@ class Collection {
      */
     prepareAttributes(response, options) {
         this.total = response.total;
+
+        // noinspection JSUnusedGlobalSymbols
+        /**
+         * @deprecated As of v8.4. Use 'sync' event to obtain any additional data from a response.
+         */
         this.dataAdditional = response.additionalData || null;
 
         return response.list;
