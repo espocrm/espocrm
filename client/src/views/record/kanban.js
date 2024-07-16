@@ -64,6 +64,34 @@ class KanbanRecordView extends ListRecordView {
      */
     buttonList = []
 
+    /**
+     * Kanban view options.
+     *
+     * @typedef {Record} module:views/record/kanban~options
+     * @property {import('collection').default} collection A collection.
+     * @property {module:views/record/list~columnDefs[]} [listLayout] A layout.
+     * @property {boolean} [keepCurrentRootUrl] Keep a current root URL.
+     * @property {string|'kanban'} [type] A type.
+     * @property {boolean} [rowActionsDisabled] Disable row actions.
+     * @property {boolean} [buttonsDisabled] Disable buttons.
+     * @property {Record} [rowActionsOptions] Row-actions options.
+     * @property {string[]} [additionalRowActionList] Additional row-action list.
+     * @property {import('helpers/list/settings').default} [settingsHelper] A settings helper.
+     * @property {string} [layoutName] A layout name.
+     * @property {boolean} [skipBuildRows] Do not build rows on initialization. Use when the collection will be fetched
+     *    afterward.
+     * @property {boolean} [rowActionsDisabled] Disable row actions.
+     * @property {boolean} [displayTotalCount] Display total count.
+     * @property {boolean} [showCount] To show a record count.
+     */
+
+    /**
+     * @param {module:views/record/kanban~options} options Options.
+     */
+    constructor(options) {
+        super(options);
+    }
+
     events = {
          /** @this KanbanRecordView */
         'click a.link': function (e) {

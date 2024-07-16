@@ -91,6 +91,7 @@ class ListRecordView extends View {
      * @property {string[]} [additionalRowActionList] Additional row-action list.
      * @property {boolean} [settingsEnabled] Enable settings dropdown.
      * @property {import('helpers/list/settings').default} [settingsHelper] A settings helper.
+     * @property {boolean} [displayTotalCount] Display total count.
      */
 
     /**
@@ -3672,6 +3673,7 @@ class ListRecordView extends View {
         this.$selectAllCheckbox.attr('disabled', 'disabled');
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * To enabled temporarily disabled checkboxes.
      *
