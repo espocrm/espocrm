@@ -41,7 +41,7 @@ class DefaultKanbanRowActionsView extends DefaultRowActionsView {
             groupIndex: 0,
         }];
 
-        if (this.options.statusFieldIsEditable) {
+        if (this.options.moveOverRowAction && this.options.statusFieldIsEditable) {
             list.push({
                 action: 'moveOver',
                 label: 'Move Over',

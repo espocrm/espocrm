@@ -94,6 +94,7 @@ class KanbanRecordItem extends View {
                 selector: '.item-menu-container',
                 model: this.model,
                 acl: acl,
+                moveOverRowAction: this.options.moveOverRowAction,
                 statusFieldIsEditable: this.options.statusFieldIsEditable,
                 rowActionHandlers: this.options.rowActionHandlers || {},
                 additionalActionList: this.options.additionalRowActionList,

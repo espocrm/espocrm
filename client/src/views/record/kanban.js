@@ -89,6 +89,7 @@ class KanbanRecordView extends ListRecordView {
      * @property {boolean} [canChangeGroup] Can change group.
      * @property {boolean} [canCreate] Can create.
      * @property {boolean} [canReOrder] Can re-order.
+     * @property {boolean} [moveOverRowAction] Enable a move-over row action.
      */
 
     /**
@@ -359,6 +360,13 @@ class KanbanRecordView extends ListRecordView {
             this.isCreatable = this.options.isCreatable;
         } else {
             this.isCreatable = this.statusFieldIsEditable && this.getAcl().check(this.entityType, 'create');
+        }
+
+        /** @private */
+        this.moveOverRowAction = true;
+
+        if ('moveOverRowAction' in this.options) {
+            this.moveOverRowAction = this.options.moveOverRowAction;
         }
 
         this.wait(
@@ -910,6 +918,7 @@ class KanbanRecordView extends ListRecordView {
             rowActionHandlers: this._rowActionHandlers || {},
             setViewBeforeCallback: this.options.skipBuildRows && !this.isRendered(),
             statusFieldIsEditable: this.statusFieldIsEditable,
+            moveOverRowAction: this.moveOverRowAction,
             additionalRowActionList: this._additionalRowActionList,
             scope: this.scope,
         }, callback);
