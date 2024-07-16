@@ -83,6 +83,8 @@ class KanbanRecordView extends ListRecordView {
      * @property {boolean} [rowActionsDisabled] Disable row actions.
      * @property {boolean} [displayTotalCount] Display total count.
      * @property {boolean} [showCount] To show a record count.
+     * @property {function(string, string[]): Promise} [onGroupOrder] On group order function.
+     * @property {function(string): Promise<Record>} [getCreateAttributes] Get create attributes function.
      */
 
     /**
@@ -90,6 +92,9 @@ class KanbanRecordView extends ListRecordView {
      */
     constructor(options) {
         super(options);
+
+        this.onGroupOrder = options.onGroupOrder;
+        this.getCreateAttributes = options.getCreateAttributes;
     }
 
     events = {
@@ -610,6 +615,10 @@ class KanbanRecordView extends ListRecordView {
             ids.unshift(id);
         }
 
+        if (this.onGroupOrder) {
+            return this.onGroupOrder(group, ids);
+        }
+
         return Espo.Ajax.putRequest('Kanban/order', {
             entityType: this.entityType,
             group: group,
@@ -1122,35 +1131,42 @@ class KanbanRecordView extends ListRecordView {
     /**
      * @param {string} group
      */
-    actionCreateInGroup(group) {
-        const attributes = {};
-
-        attributes[this.statusField] = group;
-
-        const viewName = this.getMetadata().get('clientDefs.' + this.scope + '.modalViews.edit') ||
+    async actionCreateInGroup(group) {
+        const viewName = this.getMetadata().get(`clientDefs.${this.scope}.modalViews.edit`) ||
             'views/modals/edit';
+
+        const getCreateAttributes = () => {
+            if (this.getCreateAttributes) {
+                return this.getCreateAttributes(group);
+            }
+
+            return Promise.resolve({[this.statusField]: group});
+        };
+
+        const attributes = await getCreateAttributes();
 
         const options = {
             attributes: attributes,
             scope: this.scope,
         };
 
-        this.createView('quickCreate', viewName, options, /** module:views/modals/edit */view => {
-            view.getRecordView().setFieldReadOnly(this.statusField, true);
+        const view = /** @type {module:views/modals/edit} */
+            await this.createView('quickCreate', viewName, options);
 
-            view.render();
+        view.getRecordView().setFieldReadOnly(this.statusField, true);
 
-            this.listenToOnce(view, 'after:save', () => {
-                if (this.orderDisabled) {
-                    this.collection.fetch({maxSize: this.collection.maxSize});
+        this.listenToOnce(view, 'after:save', () => {
+            if (this.orderDisabled) {
+                this.collection.fetch({maxSize: this.collection.maxSize});
 
-                    return;
-                }
+                return;
+            }
 
-                this.storeGroupOrder(group, view.model.id)
-                    .then(() => this.collection.fetch({maxSize: this.collection.maxSize}));
-            });
+            this.storeGroupOrder(group, view.model.id)
+                .then(() => this.collection.fetch({maxSize: this.collection.maxSize}));
         });
+
+        await view.render();
     }
 
     initBackDrag(e) {
