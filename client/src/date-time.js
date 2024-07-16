@@ -80,6 +80,13 @@ class DateTime {
     timeZone = null
 
     /**
+     * A system time zone.
+     *
+     * @type {string}
+     */
+    systemTimeZone
+
+    /**
      * A week start for a current user.
      *
      * @type {Number}
@@ -270,7 +277,7 @@ class DateTime {
      * @internal
      */
     toMomentDate(string) {
-        return moment.tz(string, this.internalDateFormat, this.timeZone);
+        return moment.tz(string, this.internalDateFormat, this.systemTimeZone);
     }
 
     /**
@@ -394,6 +401,8 @@ class DateTime {
 
         if (settings.has('timeZone')) {
             this.timeZone = settings.get('timeZone') || null;
+
+            this.systemTimeZone = this.timeZone || 'UTC';
 
             if (this.timeZone === 'UTC') {
                 this.timeZone = null;
