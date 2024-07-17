@@ -176,6 +176,10 @@ class KanbanRecordView extends ListRecordView {
         },
         /** @this KanbanRecordView */
         'mouseenter th.group-header': function (e) {
+            if (!this.isCreatable) {
+                return;
+            }
+
             const group = $(e.currentTarget).attr('data-name');
 
             this.showPlus(group);
@@ -253,7 +257,6 @@ class KanbanRecordView extends ListRecordView {
             minTableWidthPx: this.minColumnWidthPx * this.groupDataList.length,
             isEmptyList: this.collection.models.length === 0,
             totalCountFormatted: this.getNumberUtil().formatInt(this.collection.total),
-            isCreatable: this.isCreatable,
             noDataDisabled: this._renderEmpty,
         };
     }
@@ -1362,6 +1365,26 @@ class KanbanRecordView extends ListRecordView {
 
         this.collection.fetch({maxSize: this.collection.maxSize})
             .then(() => Espo.Ui.notify(false));
+    }
+
+    /**
+     * Set can create.
+     *
+     * @param {boolean} canCreate
+     * @sinc 8.4.0
+     */
+    setCanCreate(canCreate) {
+        this.isCreatable = canCreate;
+    }
+
+    /**
+     * Set can re-order.
+     *
+     * @param {boolean} canReOrder
+     * @sinc 8.4.0
+     */
+    setCanReOrder(canReOrder) {
+        this.orderDisabled = !canReOrder;
     }
 }
 

@@ -39,7 +39,6 @@
                     >
                         <div>
                             <span class="kanban-group-label">{{label}}</span>
-                            {{#if ../isCreatable}}
                             <a
                                 role="button"
                                 tabindex="0"
@@ -50,7 +49,6 @@
                             >
                                 <span class="fas fa-plus fa-sm"></span>
                             </a>
-                            {{/if}}
                         </div>
                     </th>
                 {{/each}}
