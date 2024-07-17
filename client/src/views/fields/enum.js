@@ -201,8 +201,8 @@ class EnumFieldView extends BaseFieldView {
             this.params.options = Espo.Utils.clone(this.params.options) || [];
 
             this.params.options = this.params.options.sort((v1, v2) => {
-                 return (this.translatedOptions[v1] || v1)
-                     .localeCompare(this.translatedOptions[v2] || v2);
+                return (this.translatedOptions[v1] || v1)
+                    .localeCompare(this.translatedOptions[v2] || v2);
             });
         }
 
@@ -271,6 +271,16 @@ class EnumFieldView extends BaseFieldView {
      * Set up options.
      */
     setupOptions() {}
+
+    /**
+     * Set translated options.
+     *
+     * @param {Record} translatedOptions
+     * @since 8.4.0
+     */
+    setTranslatedOptions(translatedOptions) {
+        this.translatedOptions = translatedOptions;
+    }
 
     /**
      * Set an option list.
