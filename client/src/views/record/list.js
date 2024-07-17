@@ -1991,7 +1991,7 @@ class ListRecordView extends View {
             this.events['click .list a.link'] = (e) => {
                 e.preventDefault();
 
-                const id = $(e.target).attr('data-id');
+                const id = $(e.currentTarget).attr('data-id');
 
                 if (id) {
                     this.selectModel(id);
