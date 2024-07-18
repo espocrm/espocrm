@@ -963,12 +963,17 @@ class KanbanRecordView extends ListRecordView {
         }, callback);
     }
 
+    /**
+     * @param {string} id
+     */
     removeRecordFromList(id) {
         this.collection.remove(id);
 
         if (this.collection.total > 0) {
             this.collection.total--;
         }
+
+        this.collection.trigger('update-total');
 
         this.totalCount = this.collection.total;
 
