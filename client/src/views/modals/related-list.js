@@ -366,6 +366,10 @@ class RelatedListModalView extends ModalView {
 
         let filterList = Espo.Utils.clone(this.getMetadata().get(['clientDefs', this.scope, 'filterList']) || []);
 
+        if (this.options.noDefaultFilters) {
+            filterList = [];
+        }
+
         if (this.filterList) {
             this.filterList.forEach(item1 => {
                 let isFound = false;
