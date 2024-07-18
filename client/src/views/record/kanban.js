@@ -103,6 +103,7 @@ class KanbanRecordView extends ListRecordView {
      * @property {boolean} [rowActionsDisabled] Disable row actions.
      * @property {boolean} [displayTotalCount] Display total count.
      * @property {boolean} [showCount] To show a record count.
+     * @property {boolean} [topBarDisabled] Disable the top bar.
      * @property {function(string, string[]): Promise} [onGroupOrder] On group order function.
      * @property {function(string): Promise<Record>} [getCreateAttributes] Get create attributes function.
      * @property {function(string)} [createActionHandler] A create handler.
@@ -240,9 +241,12 @@ class KanbanRecordView extends ListRecordView {
 
     // noinspection JSCheckFunctionSignatures
     data() {
-        const topBar = this.displayTotalCount ||
-            this.buttonList.length && !this.buttonsDisabled ||
-            !!this._listSettingsHelper;
+        const topBar = !this.options.topBarDisabled && (
+            this.displayTotalCount ||
+            this.buttonList.length &&
+            !this.buttonsDisabled ||
+            !!this._listSettingsHelper
+        );
 
         // noinspection JSValidateTypes
         return {
