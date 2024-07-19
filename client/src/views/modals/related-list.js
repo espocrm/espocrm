@@ -294,6 +294,7 @@ class RelatedListModalView extends ModalView {
             collection.url = this.url;
 
             collection.setOrder(this.defaultOrderBy, this.defaultOrder, true);
+            collection.parentModel = this.model;
 
             this.collection = collection;
 
