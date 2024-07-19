@@ -30,6 +30,30 @@ table.table,
             }
         }
     }
+
+    &:has(> tbody > tr.border-top-highlighted:first-child) {
+        > thead > tr:last-child {
+            > th {
+                border-bottom: 3px solid var(--brand-info) !important;
+            }
+        }
+    }
+
+    > tbody {
+        > tr {
+            &.border-bottom-highlighted {
+                > td {
+                    border-bottom: 3px solid var(--brand-info) !important;
+                }
+            }
+
+            &.border-top-highlighted {
+                > td {
+                    border-top: 3px solid var(--brand-info) !important;
+                }
+            }
+        }
+    }
 }
 
 table.table > thead th > a {
