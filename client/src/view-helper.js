@@ -879,17 +879,18 @@ class ViewHelper {
     /**
      * Calculate a content container height.
      *
-     * @param {JQuery} $el Element.
+     * @param {HTMLElement|JQuery} element An element.
      * @returns {number}
      */
-    calculateContentContainerHeight($el) {
+    calculateContentContainerHeight(element) {
         const smallScreenWidth = this.themeManager.getParam('screenWidthXs');
 
         const $window = $(window);
 
         const footerHeight = $('#footer').height() || 26;
         let top = 0;
-        const element = $el.get(0);
+
+        element = $(element).get(0);
 
         if (element) {
             top = element.getBoundingClientRect().top;
