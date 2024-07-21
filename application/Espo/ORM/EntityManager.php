@@ -374,6 +374,7 @@ class EntityManager
      * Get an access point for a specific relation of a record.
      *
      * @return RDBRelation<Entity>
+     * @since 8.4.0
      */
     public function getRelation(Entity $entity, string $relationName): RDBRelation
     {
