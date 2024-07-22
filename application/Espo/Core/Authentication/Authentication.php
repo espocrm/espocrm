@@ -236,7 +236,8 @@ class Authentication
         if (
             !$result->isSecondStepRequired() &&
             !$authToken &&
-            $this->configDataProvider->isTwoFactorEnabled()
+            $this->configDataProvider->isTwoFactorEnabled() &&
+            $username !== '**oidc'
         ) {
             $result = $this->processTwoFactor($result, $request);
 
