@@ -59,7 +59,7 @@ class AfterUpgrade implements Script
                 $type = $linkDefs['type'] ?? null;
                 $foreignEntityType = $linkDefs['entity'] ?? null;
                 $midKeys = $linkDefs['midKeys'] ?? null;
-                //$isCustom = $relationDefs['isCustom'] ?? false;
+                $isCustom = $relationDefs['isCustom'] ?? false;
 
                 if ($type !== RelationType::HAS_MANY) {
                     continue;
@@ -73,9 +73,9 @@ class AfterUpgrade implements Script
                     continue;
                 }
 
-                /*if ($isCustom) {
+                if (!$isCustom) {
                     continue;
-                }*/
+                }
 
                 if ($linkDefs['_keysSwappedAfterUpgrade'] ?? false) {
                     continue;
