@@ -1193,6 +1193,30 @@
                             }
                         }
                     }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "hasMany"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "midKeys": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "minLength": 2,
+                                "maxLength": 2,
+                                "description": "Middle keys. The second is the foreign middle key."
+                            }
+                        }
+                    }
                 }
             ]
         },
