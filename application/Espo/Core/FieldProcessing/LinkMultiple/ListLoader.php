@@ -74,6 +74,10 @@ class ListLoader implements LoaderInterface
                 ->getField($field)
                 ->getParam('columns');
 
+            if ($entity->has($field . 'Ids') && $entity->has($field . 'Names')) {
+                continue;
+            }
+
             $entity->loadLinkMultipleField($field, $columns);
         }
     }
