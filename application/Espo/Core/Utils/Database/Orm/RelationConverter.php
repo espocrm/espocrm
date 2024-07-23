@@ -50,11 +50,10 @@ class RelationConverter
     private const DEFAULT_VARCHAR_LENGTH = 255;
 
     /** @var string[] */
-    private $allowedParams = [
+    private $mergeParams = [
         'relationName',
         'conditions',
         'additionalColumns',
-        'midKeys',
         'noJoin',
         'indexes',
     ];
@@ -111,7 +110,7 @@ class RelationConverter
         $raw = $convertedEntityDefs->toAssoc();
 
         if (isset($raw['relations'][$name])) {
-            $this->mergeAllowedParams($raw['relations'][$name], $params, $foreignParams ?? []);
+            $this->mergeParams($raw['relations'][$name], $params, $foreignParams ?? []);
             $this->correct($raw['relations'][$name]);
         }
 
@@ -171,10 +170,10 @@ class RelationConverter
      * @param array<string, mixed> $params
      * @param array<string, mixed> $foreignParams
      */
-    private function mergeAllowedParams(array &$relationDefs, array $params, array $foreignParams): void
+    private function mergeParams(array &$relationDefs, array $params, array $foreignParams): void
     {
-        foreach ($this->allowedParams as $name) {
-            $additionalParam = $this->getAllowedParam($name, $params, $foreignParams);
+        foreach ($this->mergeParams as $name) {
+            $additionalParam = $this->getMergedParam($name, $params, $foreignParams);
 
             if ($additionalParam === null) {
                 continue;
@@ -189,7 +188,7 @@ class RelationConverter
      * @param array<string, mixed> $foreignParams
      * @return array<string, mixed>|scalar|null
      */
-    private function getAllowedParam(string $name, array $params, array $foreignParams): mixed
+    private function getMergedParam(string $name, array $params, array $foreignParams): mixed
     {
         $value = $params[$name] ?? null;
         $foreignValue = $foreignParams[$name] ?? null;
