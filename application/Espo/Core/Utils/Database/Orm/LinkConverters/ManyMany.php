@@ -66,8 +66,6 @@ class ManyMany implements LinkConverter
             }
         }
 
-        echo $key1 . ' ' . $key2 . "\n";
-
         $relationDefs = RelationDefs::create($name)
             ->withType(RelationType::MANY_MANY)
             ->withForeignEntityType($foreignEntityType)
