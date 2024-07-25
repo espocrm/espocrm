@@ -80,6 +80,10 @@ class PortalUserListView extends ListView {
 
                 attributes.userName = attributes.emailAddress;
 
+                if (attributes.userName) {
+                    attributes.userName = attributes.userName.toLowerCase();
+                }
+
                 attributes.type = 'portal';
 
                 const router = this.getRouter();
