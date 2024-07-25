@@ -204,16 +204,23 @@ class EmailHelper {
             attributes.to = toList.join(';');
         }
 
+        /** @type {string[]} */
+        const personalAddresses = this.getUser().get('userEmailAddressList') || [];
+        const lcPersonalAddresses = personalAddresses.map(it => it.toLowerCase());
+
         if (attributes.cc) {
-            let ccList = attributes.cc.split(';');
+            const ccList = attributes.cc.split(';')
+                .filter(item => {
+                    if (lcPersonalAddresses.includes(item.toLowerCase())) {
+                        return false;
+                    }
 
-            ccList = ccList.filter(item => {
-                if (item.indexOf(this.erasedPlaceholder) === 0) {
-                    return false;
-                }
+                    if (item.indexOf(this.erasedPlaceholder) === 0) {
+                        return false;
+                    }
 
-                return true;
-            });
+                    return true;
+                });
 
             attributes.cc = ccList.join(';');
         }
@@ -235,21 +242,19 @@ class EmailHelper {
                 attributes.teamsNames[this.user.get('defaultTeamId')] = this.user.get('defaultTeamName');
             }
 
-            attributes.teamsIds = attributes.teamsIds.filter(teamId => {
-                return this.acl.checkTeamAssignmentPermission(teamId);
-            });
+            attributes.teamsIds = attributes.teamsIds
+                .filter(teamId => this.acl.checkTeamAssignmentPermission(teamId));
         }
 
         attributes.nameHash = nameHash;
         attributes.repliedId = model.id;
         attributes.inReplyTo = model.get('messageId');
 
+        /** @type {string[]} */
+        const lcToAddresses = (model.attributes.to || '').split(';').map(it => it.toLowerCase());
 
-        const toAddressList = (model.get('to') || '').split(';');
-        const userPersonalEmailAddressList = this.getUser().get('userEmailAddressList') || [];
-
-        for (const address of userPersonalEmailAddressList) {
-            if (toAddressList.includes(address)) {
+        for (const address of personalAddresses) {
+            if (lcToAddresses.includes(address.toLowerCase())) {
                 attributes.from = address;
 
                 break;
