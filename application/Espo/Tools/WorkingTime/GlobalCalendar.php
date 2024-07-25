@@ -38,17 +38,15 @@ use Espo\ORM\Query\Part\Expression;
 use Espo\ORM\Query\Part\Where\OrGroup;
 use Espo\Tools\WorkingTime\Calendar\WorkingWeekday;
 use Espo\Tools\WorkingTime\Calendar\WorkingDate;
-
 use Espo\Core\Field\Date;
+use Espo\Tools\WorkingTime\Util\CalendarUtil;
 
 use DateTimeZone;
-use Espo\Tools\WorkingTime\Util\CalendarUtil;
+use Exception;
+use RuntimeException;
 
 class GlobalCalendar implements Calendar
 {
-    private EntityManager $entityManager;
-    private Config $config;
-
     private ?WorkingTimeCalendar $workingTimeCalendar = null;
     private ?CalendarUtil $util = null;
 
@@ -57,16 +55,16 @@ class GlobalCalendar implements Calendar
     private ?string $cacheKey = null;
     private DateTimeZone $timezone;
 
-    /**
-     * @param EntityManager $entityManager
-     * @param Config $config
-     */
-    public function __construct(EntityManager $entityManager, Config $config)
-    {
-        $this->entityManager = $entityManager;
-        $this->config = $config;
-
-        $this->timezone = new DateTimeZone($config->get('timeZone'));
+    public function __construct(
+        private EntityManager $entityManager,
+        private Config $config
+    ) {
+        try {
+            $this->timezone = new DateTimeZone($config->get('timeZone'));
+        }
+        catch (Exception $e) {
+            throw new RuntimeException($e->getMessage());
+        }
 
         $this->initDefault();
 
