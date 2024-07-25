@@ -36,16 +36,10 @@ use Espo\Entities\User;
 
 class CalendarUtilityFactory
 {
-    private InjectableFactory $injectableFactory;
-    private CalendarFactory $calendarFactory;
-
     public function __construct(
-        InjectableFactory $injectableFactory,
-        CalendarFactory $calendarFactory
-    ) {
-        $this->injectableFactory = $injectableFactory;
-        $this->calendarFactory = $calendarFactory;
-    }
+        private InjectableFactory $injectableFactory,
+        private CalendarFactory $calendarFactory
+    ) {}
 
     public function create(Calendar $calendar): CalendarUtility
     {
