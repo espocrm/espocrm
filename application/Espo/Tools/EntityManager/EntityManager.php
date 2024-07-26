@@ -701,6 +701,7 @@ class EntityManager
             'iconClass',
             'statusField',
             'kanbanViewMode',
+            'color',
         ]);
 
         $this->metadata->delete('entityDefs', $name, [
