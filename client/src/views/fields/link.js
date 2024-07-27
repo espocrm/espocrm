@@ -435,13 +435,13 @@ class LinkFieldView extends BaseFieldView {
         this.controlCreateButtonVisibility();
 
         for (const [, field] of Object.entries(this.getDependantForeignMap())) {
-            this.model.unset(field)
+            this.model.unset(field, {fromField: this.name})
         }
 
         this.getSelectFieldHandler().then(handler => {
             handler.getClearAttributes()
                 .then(attributes => {
-                    this.model.set(attributes);
+                    this.model.set(attributes, {fromField: this.name});
                 });
         });
     }

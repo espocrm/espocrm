@@ -873,6 +873,10 @@ class BaseFieldView extends View {
                     return;
                 }
 
+                if (options.fromField === this.name) {
+                    return;
+                }
+
                 if (options.skipReRenderInEditMode && this.isEditMode()) {
                     return;
                 }
