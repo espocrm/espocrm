@@ -147,6 +147,11 @@ class EditModalView extends ModalView {
 
         this.headerHtml = this.composeHeaderHtml();
 
+        if (this.options.headerText !== undefined) {
+            this.headerHtml = undefined;
+            this.headerText = this.options.headerText;
+        }
+
         this.sourceModel = this.model;
 
         this.waitForView('edit');
