@@ -90,7 +90,12 @@ define('views/admin/layouts/bottom-panels-detail', ['views/admin/layouts/side-pa
                 panelListAll.push(item.name);
 
                 if (item.labelText) {
+                    // @todo Revise.
                     labels[item.name] = item.labelText;
+                }
+
+                if (item.label) {
+                    labels[item.name] = item.label;
                 }
 
                 params[item.name] = Espo.Utils.clone(item);
