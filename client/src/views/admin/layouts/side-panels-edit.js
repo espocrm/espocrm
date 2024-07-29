@@ -26,10 +26,9 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/admin/layouts/side-panels-edit', ['views/admin/layouts/side-panels-detail'], function (Dep) {
+import LayoutSidePanelsDetailView from 'views/admin/layouts/side-panels-detail';
 
-    return Dep.extend({
+export default class extends LayoutSidePanelsDetailView {
 
-        viewType: 'edit',
-    });
-});
+    viewType = 'edit'
+}

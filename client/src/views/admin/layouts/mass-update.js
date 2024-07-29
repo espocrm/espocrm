@@ -31,11 +31,8 @@ import LayoutRowsView from 'views/admin/layouts/rows';
 class LayoutMassUpdateView extends LayoutRowsView {
 
     dataAttributeList = ['name']
-
     editable = false
-
     ignoreList = []
-
     ignoreTypeList = ['duration']
 
     dataAttributesDefs = {
