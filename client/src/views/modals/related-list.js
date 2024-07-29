@@ -535,6 +535,9 @@ class RelatedListModalView extends ModalView {
         });
     }
 
+    /**
+     * @private
+     */
     actionCreateRelated() {
         // noinspection JSUnresolvedReference
         const actionName = this.defs.createAction || 'createRelated';
