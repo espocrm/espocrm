@@ -36,7 +36,7 @@ class UserWithAvatarFieldView extends UserFieldView {
     data() {
         const data = super.data();
 
-        if (this.mode === this.MODE_DETAIL) {
+        if (this.mode === this.MODE_DETAIL || this.mode === this.MODE_LIST) {
             data.avatar = this.getAvatarHtml();
             data.isOwn = this.model.get(this.idName) === this.getUser().id;
         }
@@ -45,7 +45,9 @@ class UserWithAvatarFieldView extends UserFieldView {
     }
 
     getAvatarHtml() {
-        return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', 18, 'avatar-link');
+        const size = this.mode === this.MODE_DETAIL ? 18: 16;
+
+        return this.getHelper().getAvatarHtml(this.model.get(this.idName), 'small', size, 'avatar-link');
     }
 }
 
