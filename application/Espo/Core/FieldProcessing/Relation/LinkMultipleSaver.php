@@ -94,6 +94,8 @@ class LinkMultipleSaver
             $columns = $defs->getField($name)->getParam('columns');
         }
 
+        $allColumns = $columns;
+
         if (is_array($columns)) {
             $additionalColumns = $defs->getRelation($name)->getParam('additionalColumns') ?? [];
 
@@ -114,7 +116,7 @@ class LinkMultipleSaver
             foreach ($foreignEntityList as $foreignEntity) {
                 $existingIdList[] = $foreignEntity->getId();
 
-                if (empty($columns)) {
+                if (empty($allColumns)) {
                     continue;
                 }
 
@@ -122,7 +124,7 @@ class LinkMultipleSaver
 
                 $foreignId = $foreignEntity->getId();
 
-                foreach ($columns as $columnName => $columnField) {
+                foreach ($allColumns as $columnName => $columnField) {
                     $data->$columnName = $foreignEntity->get($columnField);
                 }
 
@@ -139,7 +141,7 @@ class LinkMultipleSaver
                 $entity->setFetched($idListAttribute, $existingIdList);
             }
 
-            if ($entity->has($columnsAttribute) && !empty($columns)) {
+            if ($entity->has($columnsAttribute) && !empty($allColumns)) {
                 $entity->setFetched($columnsAttribute, $existingColumnsData);
             }
         }
