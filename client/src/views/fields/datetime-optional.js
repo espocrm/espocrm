@@ -247,6 +247,25 @@ class DatetimeOptionalFieldView extends DatetimeFieldView {
             return true;
         }
     }
+
+    /**
+     * @protected
+     * @return {string|undefined}
+     */
+    getStartDateForDatePicker() {
+        if (!this.isEditMode() || !this.params.after) {
+            return undefined;
+        }
+
+        /** @type {string} */
+        const date = this.model.attributes[this.params.after + 'Date'];
+
+        if (date) {
+            return this.getDateTime().toDisplayDate(date);
+        }
+
+        return super.getStartDateForDatePicker();
+    }
 }
 
 // noinspection JSUnusedGlobalSymbols

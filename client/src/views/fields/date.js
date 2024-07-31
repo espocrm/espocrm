@@ -124,6 +124,15 @@ class DateFieldView extends BaseFieldView {
             this.searchTypeList.push('currentFiscalYear');
             this.searchTypeList.push('lastFiscalYear');
         }
+
+        if (this.params.after) {
+            this.listenTo(this.model, `change:${this.params.after}`, async () => {
+                await this.whenRendered();
+
+                // noinspection JSUnresolvedReference
+                this.$element.datepicker('setStartDate', this.getStartDateForDatePicker());
+            });
+        }
     }
 
     // noinspection JSCheckFunctionSignatures
@@ -239,6 +248,32 @@ class DateFieldView extends BaseFieldView {
         return this.stringifyDateValue(value);
     }
 
+    /**
+     * @protected
+     * @return {string|undefined}
+     */
+    getStartDateForDatePicker() {
+        if (!this.isEditMode() || !this.params.after) {
+            return undefined;
+        }
+
+        /** @type {string} */
+        let date = this.model.attributes[this.params.after];
+
+        if (date == null) {
+            return undefined;
+        }
+
+        if (date.length > 10) {
+            date = this.getDateTime().toDisplay(date);
+            [date,] = date.split(' ');
+
+            return date;
+        }
+
+        return this.getDateTime().toDisplayDate(date);
+    }
+
     afterRender() {
         if (this.mode === this.MODE_EDIT || this.mode === this.MODE_SEARCH) {
             this.$element = this.$el.find('[data-name="' + this.name + '"]');
@@ -282,6 +317,7 @@ class DateFieldView extends BaseFieldView {
                 container: this.$el.closest('.modal-body').length ?
                     this.$el.closest('.modal-body') :
                     'body',
+                startDate: this.getStartDateForDatePicker(),
             };
 
             const language = this.getConfig().get('language');
