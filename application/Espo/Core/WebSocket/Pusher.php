@@ -29,6 +29,8 @@
 
 namespace Espo\Core\WebSocket;
 
+use GuzzleHttp\Psr7\Query;
+
 use Ratchet\ConnectionInterface;
 use Ratchet\Wamp\Topic;
 use Ratchet\Wamp\WampServerInterface;
@@ -385,7 +387,7 @@ class Pusher implements WampServerInterface
 
         $query = $httpRequest->getUri()->getQuery();
 
-        $params = \GuzzleHttp\Psr7\parse_query($query ?: '');
+        $params = Query::parse($query ?: '');
 
         if (empty($params['userId']) || empty($params['authToken'])) {
             $this->closeConnection($connection);

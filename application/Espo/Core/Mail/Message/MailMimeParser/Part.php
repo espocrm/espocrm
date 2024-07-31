@@ -31,13 +31,13 @@ namespace Espo\Core\Mail\Message\MailMimeParser;
 
 use Espo\Core\Mail\Message\Part as PartInterface;
 
-use ZBateson\MailMimeParser\Message\Part\MessagePart;
+use ZBateson\MailMimeParser\Message\IMessagePart;
 
 class Part implements PartInterface
 {
-    private MessagePart $part;
+    private IMessagePart $part;
 
-    public function __construct(MessagePart $part)
+    public function __construct(IMessagePart $part)
     {
         $this->part = $part;
     }
