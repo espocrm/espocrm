@@ -152,7 +152,7 @@ class Login implements LoginInterface
             return Result::fail(FailReason::USER_NOT_FOUND);
         }
 
-        return Result::success($user);
+        return Result::success($user)->withBypassSecondStep();
     }
 
     private function loginFallback(Data $data, Request $request): Result

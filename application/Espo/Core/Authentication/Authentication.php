@@ -232,6 +232,7 @@ class Authentication
         $this->applicationUser->setUser($loggedUser);
 
         if (
+            !$result->bypassSecondStep() &&
             !$result->isSecondStepRequired() &&
             !$authToken &&
             $this->configDataProvider->isTwoFactorEnabled()
