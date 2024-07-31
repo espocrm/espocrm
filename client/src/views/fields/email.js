@@ -405,7 +405,7 @@ class EmailFieldView extends VarcharFieldView {
         this.manageButtonsVisibility();
         this.manageAddButton();
 
-        if (this.mode === this.MODE_SEARCH && this.getAcl().check('Email', 'create')) {
+        if (this.mode === this.MODE_SEARCH) {
             const autocomplete = new Autocomplete(this.$element.get(0), {
                 name: this.name,
                 autoSelectFirst: true,
@@ -426,6 +426,7 @@ class EmailFieldView extends VarcharFieldView {
                         .getRequest('EmailAddress/search', {
                             q: query,
                             maxSize: this.getAutocompleteMaxCount(),
+                            entityType: this.entityType,
                         })
                         .then(/** Record[] */response => {
                             return response.map(item => {

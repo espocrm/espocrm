@@ -32,6 +32,7 @@ namespace Espo\Tools\Email;
 use Espo\Core\Acl;
 use Espo\Core\Exceptions\BadRequest;
 use Espo\Core\Exceptions\Forbidden;
+use Espo\Core\Exceptions\NotFound;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Select\Text\MetadataProvider as TextMetadataProvider;
 use Espo\Core\Templates\Entities\Company;
@@ -62,6 +63,32 @@ class AddressService
         private User $user,
         private TextMetadataProvider $textMetadataProvider
     ) {}
+
+    /**
+     * @return array<int, array<string, mixed>>
+     * @throws NotFound
+     * @throws Forbidden
+     */
+    public function searchInEntityType(string $entityType, string $query, int $limit): array
+    {
+        if (!in_array($entityType, $this->getHavingEmailAddressEntityTypeList())) {
+            throw new NotFound("No 'email' field.");
+        }
+
+        if (!$this->acl->checkScope($entityType, Acl\Table::ACTION_READ)) {
+            throw new Forbidden("No access to $entityType.");
+        }
+
+        if (!$this->acl->checkField($entityType, 'email')) {
+            throw new Forbidden("No access to field 'email' in $entityType.");
+        }
+
+        $result = [];
+
+        $this->findInAddressBookByEntityType($query, $limit, $entityType, $result);
+
+        return $result;
+    }
 
     /**
      * @return array<int, array<string, mixed>>
