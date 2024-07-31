@@ -155,7 +155,7 @@ class Service
                 'message' => $e->getMessage(),
             ]);
 
-            $message = $e instanceof ExceptionInterface ?
+            $message = $e instanceof ExceptionInterface || $e instanceof ImapError ?
                 $e->getMessage() : '';
 
             throw new ErrorSilent($message);
