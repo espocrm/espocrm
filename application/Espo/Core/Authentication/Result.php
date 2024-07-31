@@ -196,7 +196,9 @@ class Result
     }
 
     /**
-     * Clone with bypass the second step.
+     * Clone with bypass second step.
+     *
+     * @since 8.4.0
      */
     public function withBypassSecondStep(bool $bypassSecondStep = true): self
     {
