@@ -629,7 +629,7 @@ class LinkManagerEditModalView extends ModalView {
             this.model.set('link', 'parent');
             this.model.set('label', 'Parent');
 
-            linkForeign = this.toPlural(Espo.Utils.lowerCaseFirst(this.scope));
+            linkForeign = this.entityTypeToLink(this.scope, true);
 
             if (this.getMetadata().get(['entityDefs', this.scope, 'links', 'parent'])) {
                 this.model.set('link', 'parentAnother');
@@ -659,41 +659,35 @@ class LinkManagerEditModalView extends ModalView {
 
         switch (linkType) {
             case 'oneToMany':
-                linkForeign = Espo.Utils.lowerCaseFirst(this.scope);
-                link = this.toPlural(Espo.Utils.lowerCaseFirst(entityForeign));
+                linkForeign = this.entityTypeToLink(this.scope);
+                link = this.entityTypeToLink(entityForeign, true);
 
                 if (entityForeign === this.scope) {
-
-                    if (linkForeign === Espo.Utils.lowerCaseFirst(this.scope)) {
-                        linkForeign = linkForeign + 'Parent';
-                    }
+                    linkForeign = linkForeign + 'Parent';
                 }
 
                 break;
 
             case 'manyToOne':
-                linkForeign = this.toPlural(Espo.Utils.lowerCaseFirst(this.scope));
-                link = Espo.Utils.lowerCaseFirst(entityForeign);
+                linkForeign = this.entityTypeToLink(this.scope, true);
+                link = this.entityTypeToLink(entityForeign);
 
                 if (entityForeign === this.scope) {
-                    if (link === Espo.Utils.lowerCaseFirst(this.scope)) {
-                        link = link + 'Parent';
-                    }
+                    link = link + 'Parent';
                 }
+
                 break;
 
             case 'manyToMany':
-                linkForeign = this.toPlural(Espo.Utils.lowerCaseFirst(this.scope));
-                link = this.toPlural(Espo.Utils.lowerCaseFirst(entityForeign));
+                linkForeign =  this.entityTypeToLink(this.scope, true);
+                link = this.entityTypeToLink(entityForeign, true);
 
                 if (link === linkForeign) {
                     link = link + 'Right';
                     linkForeign = linkForeign + 'Left';
                 }
 
-                let relationName;
-
-                relationName = this.scope.localeCompare(entityForeign) ?
+                const relationName = this.scope.localeCompare(entityForeign) ?
                     Espo.Utils.lowerCaseFirst(this.scope) + entityForeign :
                     Espo.Utils.lowerCaseFirst(entityForeign) + this.scope;
 
@@ -702,8 +696,8 @@ class LinkManagerEditModalView extends ModalView {
                 break;
 
             case 'oneToOneLeft':
-                linkForeign = Espo.Utils.lowerCaseFirst(this.scope);
-                link = Espo.Utils.lowerCaseFirst(entityForeign);
+                linkForeign = this.entityTypeToLink(this.scope);
+                link = this.entityTypeToLink(entityForeign);
 
                 if (entityForeign === this.scope) {
                     if (linkForeign === Espo.Utils.lowerCaseFirst(this.scope)) {
@@ -714,8 +708,8 @@ class LinkManagerEditModalView extends ModalView {
                 break;
 
             case 'oneToOneRight':
-                linkForeign = Espo.Utils.lowerCaseFirst(this.scope);
-                link = Espo.Utils.lowerCaseFirst(entityForeign);
+                linkForeign = this.entityTypeToLink(this.scope);
+                link = this.entityTypeToLink(entityForeign);
 
                 if (entityForeign === this.scope) {
                     if (linkForeign === Espo.Utils.lowerCaseFirst(this.scope)) {
@@ -760,6 +754,31 @@ class LinkManagerEditModalView extends ModalView {
 
         this.model.set('label', label || null);
         this.model.set('labelForeign', labelForeign || null);
+    }
+
+    /**
+     * @private
+     * @param {string} entityType
+     * @param {boolean} plural
+     * @return {string}
+     */
+    entityTypeToLink(entityType, plural = false) {
+        let string = Espo.Utils.lowerCaseFirst(entityType);
+
+        if (
+            this.getMetadata().get(`scopes.${entityType}.isCustom`) &&
+            entityType[0] === 'C' && /[A-Z]/.test(entityType[1])
+        ) {
+            string = Espo.Utils.lowerCaseFirst(string.substring(1));
+        }
+
+        if (plural) {
+            string = this.toPlural(string);
+        }
+
+
+
+        return string;
     }
 
     handleLinkChange(field) {
