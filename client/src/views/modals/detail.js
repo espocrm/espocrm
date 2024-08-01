@@ -93,6 +93,27 @@ class DetailModalView extends ModalView {
         },
     }
 
+    /**
+     * @typedef {Record} module:views/modals/detail~options
+     *
+     * @property {string} entityType An entity type.
+     * @property {string} [id] An ID.
+     * @property {string} [layoutName] A layout name.
+     * @property {import('view-record-helper')} [recordHelper] A record helper.
+     * @property {boolean} [editDisabled] Disable edit.
+     * @property {boolean} [removeDisabled] Disable remove.
+     * @property {boolean} [fullFormDisabled] Disable full-form.
+     * @property {boolean} [quickEditDisabled] Disable quick edit.
+     * @property {string} [rootUrl] A root URL.
+     */
+
+    /**
+     * @param {module:views/modals/detail~options} options
+     */
+    constructor(options) {
+        super(options);
+    }
+
     setup() {
         this.scope = this.scope || this.options.scope || this.options.entityType;
         this.entityType = this.options.entityType || this.scope;
@@ -285,6 +306,7 @@ class DetailModalView extends ModalView {
         }, true);
     }
 
+    // noinspection JSUnusedGlobalSymbols
     removeEditButton() {
         this.removeButton('edit');
     }
@@ -297,6 +319,7 @@ class DetailModalView extends ModalView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     removeRemoveButton() {
         this.removeButton('remove');
     }
@@ -367,15 +390,14 @@ class DetailModalView extends ModalView {
             const removeAccess = this.getAcl().check(model, 'delete', true);
 
             if (removeAccess) {
-                this.showButton('remove');
-            }
-            else {
-                this.hideButton('remove');
+                this.showActionItem('remove');
+            } else {
+                this.hideActionItem('remove');
 
                 if (removeAccess === null) {
                     this.listenToOnce(model, 'sync', () => {
                         if (this.getAcl().check(model, 'delete')) {
-                            this.showButton('remove');
+                            this.showActionItem('remove');
                         }
                     });
                 }
@@ -383,7 +405,6 @@ class DetailModalView extends ModalView {
         }
 
         const viewName =
-            this.detailViewName ||
             this.detailView ||
             this.getMetadata().get(['clientDefs', model.entityType, 'recordViews', 'detailSmall']) ||
             this.getMetadata().get(['clientDefs', model.entityType, 'recordViews', 'detailQuick']) ||
@@ -417,7 +438,7 @@ class DetailModalView extends ModalView {
         super.afterRender();
 
         setTimeout(() => {
-            this.$el.children(0).scrollTop(0);
+            this.$el.children().first().scrollTop(0);
         }, 50);
 
         if (!this.navigateButtonsDisabled) {
@@ -648,6 +669,7 @@ class DetailModalView extends ModalView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionRemove() {
         const model = this.getRecordView().model;
 
@@ -667,6 +689,7 @@ class DetailModalView extends ModalView {
         });
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionFullForm() {
         let url;
         const router = this.getRouter();
@@ -700,6 +723,7 @@ class DetailModalView extends ModalView {
         this.dialog.close();
     }
 
+    // noinspection JSUnusedGlobalSymbols
     actionDuplicate() {
         Espo.Ui.notify(' ... ');
 
