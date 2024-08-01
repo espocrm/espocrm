@@ -38,6 +38,8 @@ use ReflectionClass;
 use RuntimeException;
 
 /**
+ * @internal
+ *
  * @phpstan-type DefaultHandlerLoaderData array{
  *     className?: ?class-string<HandlerInterface>,
  *     params?: ?array<string, mixed>,
@@ -82,9 +84,10 @@ class DefaultHandlerLoader
     }
 
     /**
+     * @internal
      * @param DefaultHandlerLoaderData $data
      */
-    private function loadFormatter(array $data): ?FormatterInterface
+    public function loadFormatter(array $data): ?FormatterInterface
     {
         $formatterData = $data['formatter'] ?? null;
 
