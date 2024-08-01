@@ -687,9 +687,13 @@ class LinkManagerEditModalView extends ModalView {
                     linkForeign = linkForeign + 'Left';
                 }
 
-                const relationName = this.scope.localeCompare(entityForeign) ?
-                    Espo.Utils.lowerCaseFirst(this.scope) + entityForeign :
-                    Espo.Utils.lowerCaseFirst(entityForeign) + this.scope;
+                const entityStripped = this.stripPrefixFromCustomEntityType(this.scope);
+                const entityForeignStripped = this.stripPrefixFromCustomEntityType(entityForeign);
+
+
+                const relationName = entityStripped.localeCompare(entityForeignStripped) ?
+                    Espo.Utils.lowerCaseFirst(entityStripped) + entityForeignStripped :
+                    Espo.Utils.lowerCaseFirst(entityForeignStripped) + entityStripped;
 
                 this.model.set('relationName', relationName);
 
@@ -763,20 +767,31 @@ class LinkManagerEditModalView extends ModalView {
      * @return {string}
      */
     entityTypeToLink(entityType, plural = false) {
-        let string = Espo.Utils.lowerCaseFirst(entityType);
+        let string = this.stripPrefixFromCustomEntityType(entityType);
 
-        if (
-            this.getMetadata().get(`scopes.${entityType}.isCustom`) &&
-            entityType[0] === 'C' && /[A-Z]/.test(entityType[1])
-        ) {
-            string = Espo.Utils.lowerCaseFirst(string.substring(1));
-        }
+        string = Espo.Utils.lowerCaseFirst(string);
 
         if (plural) {
             string = this.toPlural(string);
         }
 
+        return string;
+    }
 
+    /**
+     * @private
+     * @param {string} entityType
+     * @return {string}
+     */
+    stripPrefixFromCustomEntityType(entityType) {
+        let string = entityType;
+
+        if (
+            this.getMetadata().get(`scopes.${entityType}.isCustom`) &&
+            entityType[0] === 'C' && /[A-Z]/.test(entityType[1])
+        ) {
+            string = string.substring(1);
+        }
 
         return string;
     }
