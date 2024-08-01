@@ -493,6 +493,10 @@ input.global-search-input {
     border-bottom-right-radius: var(--border-radius);
 }
 
+.button-container[tabindex="-1"]:focus-visible {
+    outline: none;
+}
+
 .list-container .list-buttons-container {
     margin-bottom: @padding-large-vertical;
     min-height: 35px;

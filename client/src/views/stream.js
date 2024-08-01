@@ -69,6 +69,7 @@ class StreamView extends View {
         this.filter = this.options.filter || this.filter;
 
         this.addActionHandler('createPost', () => this.actionCreatePost());
+        this.addHandler('keydown.stream', '', /** KeyboardEvent */event => this.onKeyDown(event));
     }
 
     afterRender() {
@@ -95,6 +96,8 @@ class StreamView extends View {
                 });
             });
         });
+
+        this.element.querySelector('.button-container').focus({preventScroll: true});
     }
 
     /**
@@ -183,6 +186,21 @@ class StreamView extends View {
 
         this.getRecordView().showNewRecords()
             .then(() => Espo.Ui.notify(false));
+    }
+
+    /**
+     * @private
+     * @param {KeyboardEvent} event
+     */
+    onKeyDown(event) {
+        const key = Espo.Utils.getKeyFromKeyEvent(event);
+
+        if (key === 'Control+Space') {
+            event.stopPropagation();
+            event.preventDefault();
+
+            this.actionCreatePost();
+        }
     }
 }
 

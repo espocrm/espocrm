@@ -35,7 +35,7 @@
 
 <div class="row">
     <div class="col-md-8">
-        <div class="button-container clearfix">
+        <div class="button-container clearfix" tabindex="-1">
             <div class="btn-group">
                 {{#each filterList}}
                     <button
