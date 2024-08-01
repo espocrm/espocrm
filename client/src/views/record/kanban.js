@@ -58,7 +58,11 @@ class KanbanRecordView extends ListRecordView {
 
     /**
      * @private
-     * @type {Record[]}
+     * @type {{
+     *     list: Record[],
+     *     total: number,
+     *     name: string,
+     * }[]}
      */
     groupRawDataList
 
@@ -69,6 +73,12 @@ class KanbanRecordView extends ListRecordView {
      * @type {module:views/record/list~button[]}
      */
     buttonList = []
+
+    /**
+     * @private
+     * @type {import('collection').default}
+     */
+    seedCollection
 
     /**
      * Layout item definitions.
@@ -860,7 +870,7 @@ class KanbanRecordView extends ListRecordView {
                 ];
 
                 collection.data.groupName = item.name;
-                collection.set(item.list);
+                collection.add(item.list);
 
                 this.subCollectionList.push(collection);
                 this.collection.add(collection.models);
@@ -1376,6 +1386,7 @@ class KanbanRecordView extends ListRecordView {
             .then(() => Espo.Ui.notify(false));
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Set can create.
      *
@@ -1386,6 +1397,7 @@ class KanbanRecordView extends ListRecordView {
         this.isCreatable = canCreate;
     }
 
+    // noinspection JSUnusedGlobalSymbols
     /**
      * Set can re-order.
      *

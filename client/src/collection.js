@@ -110,7 +110,7 @@ class Collection {
     /**
      * A where clause.
      *
-     * @type {Array.<Object>|null}
+     * @type {module:search-manager~whereItem[]|null}
      */
     where = null
 
@@ -230,7 +230,7 @@ class Collection {
     /**
      * Add models or a model.
      *
-     * @param {Model[]|Model|Record} models Models ar a model.
+     * @param {Model[]|Model|Record[]|Record} models Models ar a model.
      * @param {{
      *     merge?: boolean,
      *     at?: number,
@@ -279,7 +279,7 @@ class Collection {
 
     /**
      * @protected
-     * @param {Model[]|Model} models Models ar a model.
+     * @param {Model[]|Model|Record[]} models Models ar a model.
      * @param {{
      *     silent?: boolean,
      *     at?: number,
@@ -931,7 +931,7 @@ class Collection {
     /**
      * Clone.
      *
-     * @return {Collection}
+     * @return {import('collection').default}
      */
     clone() {
         const collection = new this.constructor(this.models, {
