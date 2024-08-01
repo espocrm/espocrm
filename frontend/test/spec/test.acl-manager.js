@@ -26,22 +26,21 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-describe('acl-manager', function () {
-	var acl;
+describe('acl-manager', () => {
+    let acl;
 
-	beforeEach(function (done) {
-		require('acl-manager', function (Acl) {
+    beforeEach(function (done) {
+		require('acl-manager', Acl => {
 			acl = new Acl();
+
 			acl.user = {
-				isAdmin: function () {
-					return false;
-				}
-			};
+				isAdmin: () => false
+            };
 			done();
 		});
 	});
 
-	it("should check an access properly", function () {
+	it("should check an access properly", () => {
 		acl.set({
 			table: {
 				Lead: {
@@ -71,6 +70,4 @@ describe('acl-manager', function () {
 		expect(acl.check('Opportunity', 'edit')).toBe(false);
 		expect(acl.check('Meeting', 'edit')).toBe(true);
 	});
-
-
 });

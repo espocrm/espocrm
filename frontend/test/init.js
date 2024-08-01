@@ -26,7 +26,7 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-let scriptEl = document.createElement('script');
+const scriptEl = document.createElement('script');
 
 scriptEl.setAttribute('type', 'application/json');
 scriptEl.setAttribute('data-name', 'loader-params');
@@ -60,15 +60,26 @@ scriptEl.textContent = JSON.stringify({
         "moment": {
             "exportsTo": "window",
             "exportsAs": "moment"
+        },
+        "jquery-ui": {
+            "exportsTo": "$",
+            "exportsAs": "ui"
+        },
+        "jquery-ui-touch-punch": {
+            "exportsTo": "$",
+            "exportsAs": "ui"
         }
     },
     aliasMap: {
         "jquery": "lib!jquery",
+        "jquery-ui": "lib!jquery-ui",
+        "jquery-ui-touch-punch": "lib!jquery-ui-touch-punch",
         "underscore": "lib!underscore",
         "cronstrue": "lib!cronstrue",
         "exif-js": "lib!exif-js",
         "moment": "lib!moment",
         "js-base64": "lib!base64",
+        "handlebars": "lib!handlebars",
         "bullbone": "lib!bullbone",
         "backbone": "lib!backbone"
     }

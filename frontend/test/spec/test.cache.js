@@ -26,17 +26,17 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-describe('cache', function () {
-	var cache;
+describe('cache', () => {
+    let cache;
 
-	beforeEach(function (done) {
-        require('cache', function (Cache) {
+    beforeEach(function (done) {
+        require('cache', Cache => {
 		  cache = new Cache();
           done();
         });
 	});
 
-	it('should have \'cache\' prefix', function () {
+	it('should have \'cache\' prefix', () => {
 		expect(cache.prefix).toBe('cache');
 	});
 });

@@ -26,15 +26,15 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-describe('controller', function () {
-	var controller;
-	var viewFactory;
-	var view;
+describe('controller', () => {
+    let controller;
+    let viewFactory;
+    let view;
 
-	var ControllerClass;
+    let ControllerClass;
 
-	beforeEach(function (done) {
-		Espo.loader.require('controller', function (Controller) {
+    beforeEach(done => {
+		Espo.loader.require('controller', Controller => {
 			ControllerClass = Controller;
 
 			viewFactory = {
@@ -55,20 +55,20 @@ describe('controller', function () {
 		});
 	});
 
-	it ('#set should set param', function () {
+	it ('#set should set param', () => {
 		controller.set('some', 'test');
 		expect(controller.params['some']).toBe('test');
 	});
 
-	it ('#get should get param', function () {
+	it ('#get should get param', () => {
 		controller.set('some', 'test');
 		expect(controller.get('some')).toBe('test');
 	});
 
-	it ("different controllers should use same param set", function () {
-		var someController = new ControllerClass(controller.params, {viewFactory: viewFactory});
+	it ("different controllers should use same param set", () => {
+        const someController = new ControllerClass(controller.params, {viewFactory: viewFactory});
 
-		someController.set('some', 'test');
+        someController.set('some', 'test');
 		expect(controller.get('some')).toBe(someController.get('some'));
 	});
 });
