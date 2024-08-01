@@ -29,28 +29,48 @@
 
 namespace Espo\Modules\Crm\Classes\Acl\MassEmail;
 
+use Espo\Core\Acl\AccessEntityCREDChecker;
+use Espo\Core\Acl\DefaultAccessChecker;
+use Espo\Core\Acl\ScopeData;
+use Espo\Core\Acl\Traits\DefaultAccessCheckerDependency;
+use Espo\Core\AclManager;
+use Espo\Core\ORM\EntityManager;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Campaign;
 use Espo\Modules\Crm\Entities\MassEmail;
 use Espo\ORM\Entity;
-use Espo\Core\Acl\OwnershipOwnChecker;
-use Espo\Core\Acl\OwnershipTeamChecker;
-use Espo\Core\AclManager;
-use Espo\Core\ORM\EntityManager;
 
 /**
- * @implements OwnershipOwnChecker<MassEmail>
- * @implements OwnershipTeamChecker<MassEmail>
+ * @implements AccessEntityCREDChecker<MassEmail>
  */
-class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
+class AccessChecker implements AccessEntityCREDChecker
 {
-    public function __construct(
-        private AclManager $aclManager,
-        private EntityManager $entityManager
-    ) {}
+    use DefaultAccessCheckerDependency;
 
-    public function checkOwn(User $user, Entity $entity): bool
+    public function __construct(
+        DefaultAccessChecker $defaultAccessChecker,
+        private AclManager $aclManager,
+        private EntityManager $entityManager,
+    ) {
+        $this->defaultAccessChecker = $defaultAccessChecker;
+    }
+
+    public function checkCreate(User $user, ScopeData $data): bool
     {
+        return $this->checkEdit($user, $data);
+    }
+
+    public function checkDelete(User $user, ScopeData $data): bool
+    {
+        return $this->checkEdit($user, $data) || $this->defaultAccessChecker->checkDelete($user, $data);
+    }
+
+    public function checkEntityCreate(User $user, Entity $entity, ScopeData $data): bool
+    {
+        if ($this->defaultAccessChecker->checkEntityCreate($user, $entity, $data)) {
+            return true;
+        }
+
         $campaignId = $entity->getCampaignId();
 
         if (!$campaignId) {
@@ -59,15 +79,19 @@ class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 
         $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignId);
 
-        if ($campaign && $this->aclManager->checkOwnershipOwn($user, $campaign)) {
+        if ($campaign && $this->aclManager->checkEntityEdit($user, $campaign)) {
             return true;
         }
 
         return false;
     }
 
-    public function checkTeam(User $user, Entity $entity): bool
+    public function checkEntityDelete(User $user, Entity $entity, ScopeData $data): bool
     {
+        if ($this->defaultAccessChecker->checkEntityDelete($user, $entity, $data)) {
+            return true;
+        }
+
         $campaignId = $entity->getCampaignId();
 
         if (!$campaignId) {
@@ -76,7 +100,7 @@ class OwnershipChecker implements OwnershipOwnChecker, OwnershipTeamChecker
 
         $campaign = $this->entityManager->getEntityById(Campaign::ENTITY_TYPE, $campaignId);
 
-        if ($campaign && $this->aclManager->checkOwnershipTeam($user, $campaign)) {
+        if ($campaign && $this->aclManager->checkEntityEdit($user, $campaign)) {
             return true;
         }
 

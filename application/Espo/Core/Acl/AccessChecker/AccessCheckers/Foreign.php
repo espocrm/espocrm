@@ -113,6 +113,8 @@ class Foreign implements
             return false;
         }
 
+        // @todo Check parent 'edit' access.
+
         return $this->defaultAccessChecker->checkEntityCreate($user, $foreign, $data);
     }
 

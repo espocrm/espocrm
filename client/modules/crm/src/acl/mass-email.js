@@ -30,6 +30,14 @@ import Acl from 'acl';
 
 class MassEmailAcl extends Acl {
 
+    checkScope(data, action, precise, entityAccessData) {
+        if (action === 'create') {
+            return super.checkScope(data, 'edit', precise, entityAccessData);
+        }
+
+        return super.checkScope(data, action, precise, entityAccessData);
+    }
+
     checkIsOwner(model) {
         if (model.has('campaignId')) {
             return true;
