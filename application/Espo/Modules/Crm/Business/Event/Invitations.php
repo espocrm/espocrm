@@ -137,7 +137,8 @@ class Invitations
             ->addToAddress($emailAddress)
             ->setSubject($subject)
             ->setBody($body)
-            ->setIsHtml();
+            ->setIsHtml()
+            ->setParent(LinkParent::createFromEntity($entity));
 
         $attachmentName = ucwords($this->language->translateLabel($entity->getEntityType(), 'scopeNames')) . '.ics';
 
