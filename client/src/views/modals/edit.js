@@ -39,12 +39,17 @@ class EditModalView extends ModalView {
     template = 'modals/edit'
 
     cssName = 'edit-modal'
+    /** @protected */
     saveDisabled = false
+    /** @protected */
     fullFormDisabled = false
+    /** @protected */
     editView = null
     escapeDisabled = true
     className = 'dialog dialog-record'
+    /** @protected */
     sideDisabled = false
+    /** @protected */
     bottomDisabled = false
 
     shortcutKeys = {
@@ -106,6 +111,31 @@ class EditModalView extends ModalView {
         'Control+Backslash': function (e) {
             this.getRecordView().handleShortcutKeyControlBackslash(e);
         },
+    }
+
+    /**
+     * @typedef {Record} module:views/modals/edit~options
+     *
+     * @property {string} entityType An entity type.
+     * @property {string} [id] An ID.
+     * @property {string} [layoutName] A layout name.
+     * @property {Record} [attributes] Attributes.
+     * @property {model:model~setRelateItem | model:model~setRelateItem[]} relate A relate data.
+     * @property {import('view-record-helper')} [recordHelper] A record helper.
+     * @property {boolean} [saveDisabled] Disable save.
+     * @property {boolean} [fullFormDisabled] Disable full-form.
+     * @property {string} [headerText] A header text.
+     * @property {boolean} [focusForCreate] Focus for create.
+     * @property {string} [rootUrl] A root URL.
+     * @property {string} [returnUrl] A return URL.
+     * @property {Record} [returnDispatchParams] Return dispatch params.
+     */
+
+    /**
+     * @param {module:views/modals/edit~options} options
+     */
+    constructor(options) {
+        super(options);
     }
 
     setup() {
@@ -217,7 +247,7 @@ class EditModalView extends ModalView {
         this.handleRecordViewOptions(options);
 
         this.createView('edit', viewName, options, callback)
-            .then(view => {
+            .then(/** import('views/fields/base').default */view => {
                 this.listenTo(view, 'before:save', () => this.trigger('before:save', model));
 
                 if (this.options.relate && ('link' in this.options.relate)) {

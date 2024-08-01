@@ -781,8 +781,8 @@ class Model {
 
     /**
      * @typedef {Object} model:model~setRelateItem
-     * @property {string} link
-     * @property {import('model').default} model
+     * @property {string} link A link.
+     * @property {import('model').default} model A model.
      */
 
     /**
