@@ -100,10 +100,10 @@ class RangeCurrencyFieldView extends RangeFloatFieldView {
         fromValue = isNaN(fromValue) ? null : fromValue;
         toValue = isNaN(toValue) ? null : toValue;
 
-        let currencyValue = this.model.get(this.fromCurrencyField) ||
+        const currencyValue = this.model.get(this.fromCurrencyField) ||
             this.model.get(this.toCurrencyField);
 
-        let symbol = this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || currencyValue;
+        const symbol = this.getMetadata().get(['app', 'currency', 'symbolMap', currencyValue]) || currencyValue;
 
         if (fromValue !== null && toValue !== null) {
             return this.formatNumber(fromValue) + ' &#8211 ' +
@@ -124,7 +124,7 @@ class RangeCurrencyFieldView extends RangeFloatFieldView {
     fetch() {
         const data = super.fetch();
 
-        let currencyValue = this.$currency.val();
+        const currencyValue = this.$currency.val();
 
         if (data[this.fromField] !== null) {
             data[this.fromCurrencyField] = currencyValue;
