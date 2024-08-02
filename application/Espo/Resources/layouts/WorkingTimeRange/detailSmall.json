@@ -10,10 +10,12 @@
                 {"name": "dateEnd"}
             ],
             [
-                {"name": "timeRanges"}
+                {"name": "timeRanges"},
+                false
             ],
             [
-                {"name": "calendars"}
+                {"name": "calendars"},
+                {"name": "users"}
             ],
             [
                 {"name": "description"}

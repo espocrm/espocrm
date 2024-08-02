@@ -31,11 +31,13 @@
             "type": "text"
         },
         "calendars": {
-            "type": "linkMultiple"
+            "type": "linkMultiple",
+            "tooltip": true
         },
         "users": {
             "type": "linkMultiple",
-            "view": "views/working-time-range/fields/users"
+            "view": "views/working-time-range/fields/users",
+            "tooltip": true
         },
         "createdAt": {
             "type": "datetime",
