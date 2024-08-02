@@ -424,6 +424,25 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
+                                    {"const": "date"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "afterOrEqual": {
+                                "type": "boolean",
+                                "description": "Allow an equal date for 'after' validation."
+                            }
+                        }
+                    }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
                                     {"const": "varchar"},
                                     {"const": "text"},
                                     {"const": "url"},

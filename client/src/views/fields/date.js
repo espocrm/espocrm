@@ -53,6 +53,7 @@ class DateFieldView extends BaseFieldView {
      * @property {boolean} [useNumericFormat] Use numeric format.
      * @property {string} [after] Validate to be after another date field.
      * @property {string} [before] Validate to be before another date field.
+     * @property {boolean} [afterOrEqual] Allow an equal date for 'after' validation.
      */
 
     /**
@@ -538,10 +539,17 @@ class DateFieldView extends BaseFieldView {
         const otherValue = this.model.get(field);
 
         if (!(value && otherValue)) {
-            return;
+            return false;
         }
 
-        if (moment(value).unix() <= moment(otherValue).unix()) {
+        const unix = moment(value).unix();
+        const otherUnix = moment(otherValue).unix();
+
+        if (this.params.afterOrEqual && unix === otherUnix) {
+            return false;
+        }
+
+        if (unix <= otherUnix) {
             const msg = this.translate('fieldShouldAfter', 'messages')
                 .replace('{field}', this.getLabelText())
                 .replace('{otherField}', this.translate(field, 'fields', this.entityType));
@@ -550,6 +558,8 @@ class DateFieldView extends BaseFieldView {
 
             return true;
         }
+
+        return false;
     }
 
     // noinspection JSUnusedGlobalSymbols

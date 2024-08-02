@@ -52,6 +52,11 @@
         },
         {
             "type": "bool",
+            "name": "afterOrEqual",
+            "hidden": true
+        },
+        {
+            "type": "bool",
             "name": "useNumericFormat"
         },
         {

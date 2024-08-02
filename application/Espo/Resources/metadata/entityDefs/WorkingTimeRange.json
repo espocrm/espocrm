@@ -12,7 +12,9 @@
         "dateEnd": {
             "type": "date",
             "required": true,
-            "view": "views/working-time-range/fields/date-end"
+            "view": "views/working-time-range/fields/date-end",
+            "after": "dateStart",
+            "afterOrEqual": true
         },
         "type": {
             "type": "enum",
