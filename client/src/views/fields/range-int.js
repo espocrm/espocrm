@@ -270,7 +270,7 @@ class RangeIntFieldView extends BaseFieldView {
     }
 
     formatNumber(value) {
-        if (this.params.disableFomatting) {
+        if (this.params.disableFormatting) {
             return value.toString();
         }
 
