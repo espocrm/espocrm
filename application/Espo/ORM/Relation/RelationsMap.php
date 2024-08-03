@@ -27,24 +27,28 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+namespace Espo\ORM\Relation;
 
-use Espo\ORM\Value\ValueAccessorFactory;
+use Espo\ORM\Entity;
+use WeakMap;
 
-interface EntityFactory
+class RelationsMap
 {
-    /**
-     * Create an entity.
-     */
-    public function create(string $entityType): Entity;
+    /** @var WeakMap<Entity, Relations> */
+    private WeakMap $map;
 
-    /**
-     * @internal
-     */
-    public function setEntityManager(EntityManager $entityManager): void;
+    public function __construct()
+    {
+        $this->map = new WeakMap();
+    }
 
-    /**
-     * @internal
-     */
-    public function setValueAccessorFactory(ValueAccessorFactory $valueAccessorFactory): void;
+    public function get(Entity $entity): ?Relations
+    {
+        return $this->map[$entity] ?? null;
+    }
+
+    public function set(Entity $entity, Relations $relations): void
+    {
+        $this->map[$entity] = $relations;
+    }
 }

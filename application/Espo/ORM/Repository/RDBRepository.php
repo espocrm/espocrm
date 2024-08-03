@@ -32,6 +32,7 @@ namespace Espo\ORM\Repository;
 use Espo\ORM\EntityManager;
 use Espo\ORM\EntityFactory;
 use Espo\ORM\Collection;
+use Espo\ORM\Relation\RelationsMap;
 use Espo\ORM\Repository\Deprecation\RDBRepositoryDeprecationTrait;
 use Espo\ORM\Repository\Option\SaveOption;
 use Espo\ORM\SthCollection;
@@ -66,7 +67,8 @@ class RDBRepository implements Repository
         protected string $entityType,
         protected EntityManager $entityManager,
         protected EntityFactory $entityFactory,
-        ?HookMediator $hookMediator = null
+        ?HookMediator $hookMediator = null,
+        private ?RelationsMap $relationsMap = null,
     ) {
         $this->hookMediator = $hookMediator ?? (new EmptyHookMediator());
         $this->transactionManager = new RDBTransactionManager($entityManager->getTransactionManager());
@@ -179,6 +181,8 @@ class RDBRepository implements Repository
         if ($entity instanceof BaseEntity) {
             $entity->setAsNotBeingSaved();
         }
+
+        $this->relationsMap?->get($entity)?->reset();
     }
 
     /**

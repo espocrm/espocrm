@@ -29,6 +29,8 @@
 
 namespace Espo\ORM;
 
+use Espo\ORM\Relation\EmptyRelations;
+use Espo\ORM\Relation\Relations;
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\ORM\Value\ValueAccessor;
 
@@ -51,13 +53,14 @@ class BaseEntity implements Entity
 
     protected ?EntityManager $entityManager;
     private ?ValueAccessor $valueAccessor = null;
+    readonly protected ?Relations $relations;
 
     /** @var array<string, bool> */
     private array $writtenMap = [];
     /** @var array<string, array<string, mixed>> */
-    private array $attributes = [];
+    private array $attributesDefs = [];
     /** @var array<string, array<string, mixed>> */
-    private array $relations = [];
+    private array $relationsDefs = [];
     /** @var array<string, mixed> */
     private array $fetchedValuesContainer = [];
     /** @var array<string, mixed> */
@@ -81,17 +84,20 @@ class BaseEntity implements Entity
         string $entityType,
         array $defs,
         ?EntityManager $entityManager = null,
-        ?ValueAccessorFactory $valueAccessorFactory = null
+        ?ValueAccessorFactory $valueAccessorFactory = null,
+        ?Relations $relations = null,
     ) {
         $this->entityType = $entityType;
         $this->entityManager = $entityManager;
 
-        $this->attributes = $defs['attributes'] ?? $this->attributes;
-        $this->relations = $defs['relations'] ?? $this->relations;
+        $this->attributesDefs = $defs['attributes'] ?? $this->attributesDefs;
+        $this->relationsDefs = $defs['relations'] ?? $this->relationsDefs;
 
         if ($valueAccessorFactory) {
             $this->valueAccessor = $valueAccessorFactory->create($this);
         }
+
+        $this->relations = $relations ?? new EmptyRelations();
     }
 
     /**
@@ -632,7 +638,7 @@ class BaseEntity implements Entity
      */
     public function hasAttribute(string $attribute): bool
     {
-        return isset($this->attributes[$attribute]);
+        return isset($this->attributesDefs[$attribute]);
     }
 
     /**
@@ -640,7 +646,7 @@ class BaseEntity implements Entity
      */
     public function hasRelation(string $relation): bool
     {
-        return isset($this->relations[$relation]);
+        return isset($this->relationsDefs[$relation]);
     }
 
     /**
@@ -648,7 +654,7 @@ class BaseEntity implements Entity
      */
     public function getAttributeList(): array
     {
-        return array_keys($this->attributes);
+        return array_keys($this->attributesDefs);
     }
 
     /**
@@ -656,7 +662,7 @@ class BaseEntity implements Entity
      */
     public function getRelationList(): array
     {
-        return array_keys($this->relations);
+        return array_keys($this->relationsDefs);
     }
 
     /**
@@ -700,11 +706,11 @@ class BaseEntity implements Entity
      */
     public function getAttributeType(string $attribute): ?string
     {
-        if (!isset($this->attributes[$attribute])) {
+        if (!isset($this->attributesDefs[$attribute])) {
             return null;
         }
 
-        return $this->attributes[$attribute]['type'] ?? null;
+        return $this->attributesDefs[$attribute]['type'] ?? null;
     }
 
     /**
@@ -712,11 +718,11 @@ class BaseEntity implements Entity
      */
     public function getRelationType(string $relation): ?string
     {
-        if (!isset($this->relations[$relation])) {
+        if (!isset($this->relationsDefs[$relation])) {
             return null;
         }
 
-        return $this->relations[$relation]['type'] ?? null;
+        return $this->relationsDefs[$relation]['type'] ?? null;
     }
 
     /**
@@ -726,11 +732,11 @@ class BaseEntity implements Entity
      */
     public function getAttributeParam(string $attribute, string $name)
     {
-        if (!isset($this->attributes[$attribute])) {
+        if (!isset($this->attributesDefs[$attribute])) {
             return null;
         }
 
-        return $this->attributes[$attribute][$name] ?? null;
+        return $this->attributesDefs[$attribute][$name] ?? null;
     }
 
     /**
@@ -740,11 +746,11 @@ class BaseEntity implements Entity
      */
     public function getRelationParam(string $relation, string $name)
     {
-        if (!isset($this->relations[$relation])) {
+        if (!isset($this->relationsDefs[$relation])) {
             return null;
         }
 
-        return $this->relations[$relation][$name] ?? null;
+        return $this->relationsDefs[$relation][$name] ?? null;
     }
 
     /**
@@ -968,7 +974,7 @@ class BaseEntity implements Entity
      */
     public function populateDefaults(): void
     {
-        foreach ($this->attributes as $attribute => $defs) {
+        foreach ($this->attributesDefs as $attribute => $defs) {
             if (!array_key_exists('default', $defs)) {
                 continue;
             }

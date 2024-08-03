@@ -40,6 +40,7 @@ use Espo\ORM\QueryComposer\QueryComposerWrapper;
 use Espo\ORM\Mapper\Mapper;
 use Espo\ORM\Mapper\MapperFactory;
 use Espo\ORM\Mapper\BaseMapper;
+use Espo\ORM\Relation\RelationsMap;
 use Espo\ORM\Repository\RDBRelation;
 use Espo\ORM\Repository\RepositoryFactory;
 use Espo\ORM\Repository\Repository;
@@ -91,9 +92,10 @@ class EntityManager
         AttributeExtractorFactory $attributeExtractorFactory,
         EventDispatcher $eventDispatcher,
         private PDOProvider $pdoProvider,
+        private RelationsMap $relationsMap,
         private ?MapperFactory $mapperFactory = null,
         ?QueryExecutor $queryExecutor = null,
-        ?SqlExecutor $sqlExecutor = null
+        ?SqlExecutor $sqlExecutor = null,
     ) {
         if (!$this->databaseParams->getPlatform()) {
             throw new RuntimeException("No 'platform' parameter.");
@@ -278,6 +280,8 @@ class EntityManager
         if (!$fetchedEntity) {
             throw new RuntimeException("Can't refresh a non-existent entity.");
         }
+
+        $this->relationsMap->get($entity)?->reset();
 
         $entity->set($fetchedEntity->getValueMap());
         $entity->setAsFetched();

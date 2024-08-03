@@ -27,24 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+namespace Espo\ORM\Relation;
 
-use Espo\ORM\Value\ValueAccessorFactory;
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
-interface EntityFactory
+class EmptyRelations implements Relations
 {
-    /**
-     * Create an entity.
-     */
-    public function create(string $entityType): Entity;
+    public function __construct() {}
 
-    /**
-     * @internal
-     */
-    public function setEntityManager(EntityManager $entityManager): void;
+    public function reset(): void
+    {}
 
-    /**
-     * @internal
+    public function getOne(string $relation): ?Entity
+    {
+        return null;
+    }
+
+    /***
+     * @return Collection<Entity>
      */
-    public function setValueAccessorFactory(ValueAccessorFactory $valueAccessorFactory): void;
+    public function getMany(string $relation): Collection
+    {
+        /** @var EntityCollection<Entity> */
+        return new EntityCollection();
+    }
 }

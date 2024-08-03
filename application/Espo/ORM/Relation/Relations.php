@@ -27,24 +27,30 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+namespace Espo\ORM\Relation;
 
-use Espo\ORM\Value\ValueAccessorFactory;
+use Espo\ORM\Collection;
+use Espo\ORM\Entity;
 
-interface EntityFactory
+/**
+ * @internal
+ */
+interface Relations
 {
     /**
-     * Create an entity.
+     * Reset.
      */
-    public function create(string $entityType): Entity;
+    public function reset(): void;
 
     /**
-     * @internal
+     * Get one related record. For has-one, belongs-to.
      */
-    public function setEntityManager(EntityManager $entityManager): void;
+    public function getOne(string $relation): ?Entity;
 
     /**
-     * @internal
+     * Get a collection of related records. For has-many, many-many, has-children.
+     *
+     * @return Collection<Entity>
      */
-    public function setValueAccessorFactory(ValueAccessorFactory $valueAccessorFactory): void;
+    public function getMany(string $relation): Collection;
 }
