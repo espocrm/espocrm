@@ -26,51 +26,50 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/dashlets/fields/records/sort-by', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.listenTo(this.model, 'change:entityType', () => {
-                this.setupOptions();
-                this.reRender();
-            });
-        },
+        this.listenTo(this.model, 'change:entityType', () => {
+            this.setupOptions();
+            this.reRender();
+        });
+    }
 
-        setupOptions: function () {
-            var entityType = this.model.get('entityType');
-            var scope = entityType;
+    setupOptions() {
+        const entityType = this.model.get('entityType');
+        const scope = entityType;
 
-            if (!entityType) {
-                this.params.options = [];
+        if (!entityType) {
+            this.params.options = [];
 
-                return;
-            }
+            return;
+        }
 
-            var fieldDefs = this.getMetadata().get('entityDefs.' + scope + '.fields') || {};
+        const fieldDefs = this.getMetadata().get(`entityDefs.${scope}.fields`) || {};
 
-            var orderableFieldList = Object.keys(fieldDefs)
-                .filter(item => {
-                    if (fieldDefs[item].orderDisabled) {
-                        return false;
-                    }
+        const orderableFieldList = Object.keys(fieldDefs)
+            .filter(item => {
+                if (fieldDefs[item].orderDisabled) {
+                    return false;
+                }
 
-                    return true;
-                })
-                .sort((v1, v2) => {
-                    return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
-                });
-
-            var translatedOptions = {};
-
-            orderableFieldList.forEach(item => {
-                translatedOptions[item] = this.translate(item, 'fields', scope);
+                return true;
+            })
+            .sort((v1, v2) => {
+                return this.translate(v1, 'fields', scope).localeCompare(this.translate(v2, 'fields', scope));
             });
 
-            this.params.options = orderableFieldList;
-            this.translatedOptions = translatedOptions;
-        },
-    });
-});
+        const translatedOptions = {};
+
+        orderableFieldList.forEach(item => {
+            translatedOptions[item] = this.translate(item, 'fields', scope);
+        });
+
+        this.params.options = orderableFieldList;
+        this.translatedOptions = translatedOptions;
+    }
+}
