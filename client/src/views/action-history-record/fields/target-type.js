@@ -26,13 +26,14 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/action-history-record/fields/target-type', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        setupOptions: function () {
-            Dep.prototype.setupOptions.call(this);
-            this.params.options = this.getMetadata().getScopeEntityList();
-        },
-    });
-});
+    setupOptions() {
+        super.setupOptions();
+
+        this.params.options = this.getMetadata().getScopeEntityList();
+    }
+}
+

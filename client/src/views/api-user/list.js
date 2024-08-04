@@ -26,18 +26,13 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/api-user/list', ['views/list'], function (Dep) {
+import ListView from 'views/list';
 
-    return Dep.extend({
+export default class extends ListView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
-        },
-
-        getCreateAttributes: function () {
-            return {
-                type: 'api',
-            };
-        },
-    });
-});
+    getCreateAttributes() {
+        return {
+            type: 'api',
+        };
+    }
+}

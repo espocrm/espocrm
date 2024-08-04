@@ -202,6 +202,12 @@ class LinkParentFieldView extends BaseFieldView {
      */
     displayScopeColorInListMode = true
 
+    /**
+     * @protected
+     * @type {boolean}
+     */
+    displayEntityType
+
     /** @inheritDoc */
     events = {
         /** @this LinkParentFieldView */

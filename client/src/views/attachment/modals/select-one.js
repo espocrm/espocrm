@@ -26,31 +26,39 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/attachment/modals/select-one', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        backdrop: true,
+    backdrop = true
 
-        // language=Handlebars
-        templateContent:
-            '<ul class="list-group no-side-margin">{{#each viewObject.options.dataList}}'+
-            '<li class="list-group-item">'+
-            '<a role="button" class="action" data-action="select" data-id="{{id}}">{{name}}</a>'+
-            '</li>'+
-            '{{/each}}</ul>',
+    // language=Handlebars
+    templateContent =
+        `<ul class="list-group no-side-margin">
+            {{#each viewObject.options.dataList}}
+                <li class="list-group-item"
+                ><a
+                    role="button"
+                    class="action"
+                    data-action="select"
+                    data-id="{{id}}"
+                >{{name}}</a></li>
+            {{/each}}
+            </ul>
+        `
 
-        setup: function () {
-            this.headerText = this.translate('Select');
+    setup() {
+        this.headerText = this.translate('Select');
 
-            if (this.options.fieldLabel) {
-                this.headerText += ': ' + this.options.fieldLabel;
-            }
-        },
+        if (this.options.fieldLabel) {
+            this.headerText += ': ' + this.options.fieldLabel;
+        }
+    }
 
-        actionSelect: function (data) {
-            this.trigger('select', data.id);
-            this.remove();
-        },
-    });
-});
+    // noinspection JSUnusedGlobalSymbols
+    actionSelect(data) {
+        this.trigger('select', data.id);
+
+        this.remove();
+    }
+}

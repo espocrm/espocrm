@@ -26,38 +26,43 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/action-history-record/fields/target', ['views/fields/link-parent'], function (Dep) {
+import LinkParentFieldView from 'views/fields/link-parent';
 
-    return Dep.extend({
+class ActionHistoryRecordTargetFieldView extends LinkParentFieldView
+{
+    displayScopeColorInListMode = true
 
-        displayScopeColorInListMode: true,
+    ignoreScopeList = [
+        'Preferences',
+        'ExternalAccount',
+        'Notification',
+        'Note',
+        'ArrayValue',
+    ]
 
-        ignoreScopeList: ['Preferences', 'ExternalAccount', 'Notification', 'Note', 'ArrayValue'],
+    setup() {
+        super.setup();
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        this.foreignScopeList = this.getMetadata().getScopeEntityList().filter(item => {
+            if (!this.getUser().isAdmin() && !this.getAcl().checkScopeHasAcl(item)) {
+                return false;
+            }
 
-            this.foreignScopeList = this.getMetadata().getScopeEntityList().filter(item => {
-                if (!this.getUser().isAdmin()) {
-                    if (!this.getAcl().checkScopeHasAcl(item)) {
-                        return;
-                    }
-                }
+            if (this.ignoreScopeList.includes(item)) {
+                return false;
+            }
 
-                if (~this.ignoreScopeList.indexOf(item)) {
-                    return;
-                }
+            if (!this.getAcl().checkScope(item)) {
+                return false;
+            }
 
-                if (!this.getAcl().checkScope(item)) {
-                    return;
-                }
+            return true;
+        });
 
-                return true;
-            });
+        this.getLanguage().sortEntityList(this.foreignScopeList);
 
-            this.getLanguage().sortEntityList(this.foreignScopeList);
+        this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
+    }
+}
 
-            this.foreignScope = this.model.get(this.typeName) || this.foreignScopeList[0];
-        },
-    });
-});
+export default ActionHistoryRecordTargetFieldView;
