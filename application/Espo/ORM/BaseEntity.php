@@ -31,6 +31,7 @@ namespace Espo\ORM;
 
 use Espo\ORM\Relation\EmptyRelations;
 use Espo\ORM\Relation\Relations;
+use Espo\ORM\Type\RelationType;
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\ORM\Value\ValueAccessor;
 
@@ -53,7 +54,7 @@ class BaseEntity implements Entity
 
     protected ?EntityManager $entityManager;
     private ?ValueAccessor $valueAccessor = null;
-    readonly protected ?Relations $relations;
+    readonly protected Relations $relations;
 
     /** @var array<string, bool> */
     private array $writtenMap = [];
@@ -248,19 +249,28 @@ class BaseEntity implements Entity
         // @todo Remove support in v9.0.
         if (!empty($params)) {
             trigger_error(
-                'Second parameter will be removed from the method Entity::get.',
+                'Second parameter will be removed from the method Entity::get.' .
+                "Use `\$entityManager->getRelation(...)->where(...)->find()`.",
                 E_USER_DEPRECATED
             );
         }
 
+        // @todo Remove $this->id check when relation setting is implemented.
+        if ($this->hasRelation($attribute) && $this->id && !$params) {
+            $isMany = in_array($this->getRelationType($attribute), [
+                RelationType::MANY_MANY,
+                RelationType::HAS_MANY,
+                RelationType::HAS_CHILDREN,
+            ]);
+
+            return $isMany ?
+                $this->relations->getMany($attribute) :
+                $this->relations->getOne($attribute);
+        }
+
+        // @todo Revise. Remove?
         // @todo Remove support in v10.0.
         if ($this->hasRelation($attribute) && $this->id && $this->entityManager) {
-            trigger_error(
-                "Accessing related records with Entity::get is deprecated. " .
-                "Use \$repository->getRelation(...)->find()",
-                E_USER_DEPRECATED
-            );
-
             /** @phpstan-ignore-next-line */
             return $this->entityManager
                 ->getRepository($this->getEntityType())
