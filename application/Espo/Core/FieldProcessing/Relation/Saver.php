@@ -29,6 +29,7 @@
 
 namespace Espo\Core\FieldProcessing\Relation;
 
+use Espo\Core\ORM\Defs\AttributeParam;
 use Espo\ORM\Entity;
 
 use Espo\Core\FieldProcessing\Saver as SaverInterface;
@@ -77,10 +78,10 @@ class Saver implements SaverInterface
 
     private function processManyItem(Entity $entity, string $name, Params $params): void
     {
-        $idListAttribute = $name . 'Ids';
+        $idsAttribute = $name . 'Ids';
         $columnsAttribute = $name . 'Columns';
 
-        if (!$entity->has($idListAttribute) && !$entity->has($columnsAttribute)) {
+        if (!$entity->has($idsAttribute) && !$entity->has($columnsAttribute)) {
             return;
         }
 
@@ -221,7 +222,12 @@ class Saver implements SaverInterface
                 continue;
             }
 
-            if (!$defs->hasAttribute($name . 'Ids')) {
+            $idsAttribute = $name . 'Ids';
+
+            if (
+                !$defs->hasAttribute($idsAttribute) ||
+                !$defs->getAttribute($idsAttribute)->getParam(AttributeParam::IS_LINK_MULTIPLE_ID_LIST)
+            ) {
                 continue;
             }
 
