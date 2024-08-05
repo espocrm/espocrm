@@ -31,6 +31,7 @@ namespace Espo\ORM\Relation;
 
 use Espo\ORM\Collection;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Type\RelationType;
 use LogicException;
@@ -74,25 +75,25 @@ class RDBRelations implements Relations
     }
 
     /**
-     * @return Collection<Entity>
+     * @return EntityCollection<Entity>
      */
-    public function getMany(string $relation): Collection
+    public function getMany(string $relation): EntityCollection
     {
         $collection = $this->get($relation);
 
-        if (!$collection instanceof Collection) {
+        if (!$collection instanceof EntityCollection) {
             throw new LogicException("Not a collection. Use `getOne` instead.");
         }
 
-        /** @var Collection<Entity> */
+        /** @var EntityCollection<Entity> */
         return $collection;
     }
 
     /**
      * @param string $relation
-     * @return Entity|Collection<Entity>|null
+     * @return Entity|EntityCollection<Entity>|null
      */
-    private function get(string $relation): Entity|Collection|null
+    private function get(string $relation): Entity|EntityCollection|null
     {
         if (!array_key_exists($relation, $this->data)) {
             if (!$this->entity) {
@@ -112,7 +113,14 @@ class RDBRelations implements Relations
                 $relationRepository->findOne();
         }
 
-        return $this->data[$relation];
+        $object = $this->data[$relation];
+
+        if ($object instanceof Collection) {
+            /** @var EntityCollection<Entity> $object */
+            $object = new EntityCollection(iterator_to_array($object));
+        }
+
+        return $object;
     }
 
     private function getRelationType(string $relation): string
