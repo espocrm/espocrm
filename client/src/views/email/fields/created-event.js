@@ -26,34 +26,33 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/created-event', ['views/fields/link-parent'], function (Dep) {
+import LinkParentFieldView from 'views/fields/link-parent';
 
-    return class extends Dep {
+export default class extends LinkParentFieldView {
 
-        data() {
-            let data = super.data();
+    data() {
+        const data = super.data();
 
-            let icsEventData = this.model.get('icsEventData') || {};
+        const icsEventData = this.model.get('icsEventData') || {};
 
-            if (
-                this.isReadMode() &&
-                !data.idValue &&
-                icsEventData.createdEvent
-            ) {
-                data.idValue = icsEventData.createdEvent.id;
-                data.typeValue = icsEventData.createdEvent.entityType;
-                data.nameValue = icsEventData.createdEvent.name;
-            }
-
-            return data;
+        if (
+            this.isReadMode() &&
+            !data.idValue &&
+            icsEventData.createdEvent
+        ) {
+            data.idValue = icsEventData.createdEvent.id;
+            data.typeValue = icsEventData.createdEvent.entityType;
+            data.nameValue = icsEventData.createdEvent.name;
         }
 
-        getAttributeList() {
-            let list = super.getAttributeList();
+        return data;
+    }
 
-            list.push('icsEventData');
+    getAttributeList() {
+        const list = super.getAttributeList();
 
-            return list;
-        }
-    };
-});
+        list.push('icsEventData');
+
+        return list;
+    }
+}

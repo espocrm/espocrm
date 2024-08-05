@@ -26,63 +26,60 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/select-template', ['views/fields/link'], function (Dep) {
+import LinkFieldView from 'views/fields/link';
 
-    return Dep.extend({
+export default class extends LinkFieldView {
 
-        type: 'link',
+    editTemplate = 'email/fields/select-template/edit'
 
-        foreignScope: 'EmailTemplate',
+    foreignScope = 'EmailTemplate'
 
-        editTemplate: 'email/fields/select-template/edit',
+    setup() {
+        super.setup();
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+        this.on('change', () => {
+            const id = this.model.get(this.idName);
 
-            this.on('change', () => {
-                let id = this.model.get(this.idName);
-
-                if (id) {
-                    this.loadTemplate(id);
-                }
-            });
-        },
-
-        getSelectPrimaryFilterName: function () {
-            return 'actual';
-        },
-
-        loadTemplate: function (id) {
-            let to = this.model.get('to') || '';
-            let emailAddress = null;
-
-            to = to.trim();
-
-            if (to) {
-                emailAddress = to.split(';')[0].trim();
+            if (id) {
+                this.loadTemplate(id);
             }
+        });
+    }
 
-            Espo.Ajax
-                .postRequest(`EmailTemplate/${id}/prepare`, {
-                    emailAddress: emailAddress,
-                    parentType: this.model.get('parentType'),
-                    parentId: this.model.get('parentId'),
-                    relatedType: this.model.get('relatedType'),
-                    relatedId: this.model.get('relatedId'),
-                })
-                .then(data => {
-                    this.model.trigger('insert-template', data);
+    getSelectPrimaryFilterName() {
+        return 'actual';
+    }
 
-                    this.emptyField();
-                })
-                .catch(() => {
-                    this.emptyField();
-                });
-        },
+    loadTemplate(id) {
+        let to = this.model.get('to') || '';
+        let emailAddress = null;
 
-        emptyField: function () {
-            this.model.set(this.idName, null);
-            this.model.set(this.nameName, '');
-        },
-    });
-});
+        to = to.trim();
+
+        if (to) {
+            emailAddress = to.split(';')[0].trim();
+        }
+
+        Espo.Ajax
+            .postRequest(`EmailTemplate/${id}/prepare`, {
+                emailAddress: emailAddress,
+                parentType: this.model.get('parentType'),
+                parentId: this.model.get('parentId'),
+                relatedType: this.model.get('relatedType'),
+                relatedId: this.model.get('relatedId'),
+            })
+            .then(data => {
+                this.model.trigger('insert-template', data);
+
+                this.emptyField();
+            })
+            .catch(() => {
+                this.emptyField();
+            });
+    }
+
+    emptyField() {
+        this.model.set(this.idName, null);
+        this.model.set(this.nameName, '');
+    }
+}

@@ -26,11 +26,10 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/fields/person-string-data-for-expanded', ['views/email/fields/person-string-data'], function (Dep) {
+import PersonStringData from 'views/email/fields/person-string-data';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends PersonStringData {
 
-        listTemplate: 'email/fields/person-string-data/list-for-expanded',
-
-    });
-});
+    listTemplate = 'email/fields/person-string-data/list-for-expanded'
+}
