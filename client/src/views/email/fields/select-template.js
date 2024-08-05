@@ -78,8 +78,11 @@ export default class extends LinkFieldView {
             });
     }
 
+    /**
+     * @private
+     */
     emptyField() {
         this.model.set(this.idName, null);
-        this.model.set(this.nameName, '');
+        this.model.set(this.nameName, null);
     }
 }
