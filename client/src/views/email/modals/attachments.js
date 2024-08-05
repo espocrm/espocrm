@@ -26,51 +26,44 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email/modals/attachments', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    /**
-     * @class
-     * @name Class
-     * @extends module:views/modal
-     * @memberOf module:views/email/modals/attachments
-     */
-    return Dep.extend(/** @lends module:views/email/modals/attachments.Class# */{
+export default class extends ModalView {
 
-        backdrop: true,
+    backdrop = true
 
-        templateContent: `<div class="record no-side-margin">{{{record}}}</div>`,
+    templateContent = `<div class="record no-side-margin">{{{record}}}</div>`
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.headerText = this.translate('attachments', 'fields', 'Email');
+        this.headerText = this.translate('attachments', 'fields', 'Email');
 
-            this.createView('record', 'views/record/detail', {
-                model: this.model,
-                selector: '.record',
-                readOnly: true,
-                sideView: null,
-                buttonsDisabled: true,
-                detailLayout: [
-                    {
-                        rows: [
-                            [
-                                {
-                                    name: 'attachments',
-                                    noLabel: true,
-                                },
-                                false,
-                            ]
+        this.createView('record', 'views/record/detail', {
+            model: this.model,
+            selector: '.record',
+            readOnly: true,
+            sideView: null,
+            buttonsDisabled: true,
+            detailLayout: [
+                {
+                    rows: [
+                        [
+                            {
+                                name: 'attachments',
+                                noLabel: true,
+                            },
+                            false,
                         ]
-                    }
-                ],
-            });
+                    ]
+                }
+            ],
+        });
 
-            if (!this.model.has('attachmentsIds')) {
-                this.wait(
-                    this.model.fetch()
-                );
-            }
-        },
-    });
-});
+        if (!this.model.has('attachmentsIds')) {
+            this.wait(
+                this.model.fetch()
+            );
+        }
+    }
+}

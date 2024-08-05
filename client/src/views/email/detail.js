@@ -489,8 +489,6 @@ class EmailDetailView extends DetailView {
             this.getAcl(),
         );
 
-        this.getHelper().getAppParam()
-
         const attributes = emailHelper.getReplyAttributes(this.model, data, cc);
 
         Espo.Ui.notify(' ... ');

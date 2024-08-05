@@ -284,6 +284,9 @@ class DetailModalView extends ModalView {
         }
     }
 
+    /**
+     * @protected
+     */
     controlRecordButtonsVisibility() {
         if (this.getAcl().check(this.model, 'edit')) {
             this.showButton('edit');
