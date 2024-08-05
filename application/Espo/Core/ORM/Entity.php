@@ -152,6 +152,19 @@ class Entity extends BaseEntity
             return $defs;
         }
 
+        if ($this->getRelationParam($link, 'orderBy')) {
+            $defs = [
+                'orderBy' => $this->getRelationParam($link, 'orderBy'),
+                'order' => Order::ASC,
+            ];
+
+            if ($this->getRelationParam($link, 'order')) {
+                $defs['order'] = strtoupper($this->getRelationParam($link, 'order'));
+            }
+
+            return $defs;
+        }
+
         if (!$foreignEntityType || !$this->entityManager) {
             return null;
         }

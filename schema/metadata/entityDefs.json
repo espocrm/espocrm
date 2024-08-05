@@ -1237,6 +1237,30 @@
                             }
                         }
                     }
+                },
+                {
+                    "if": {
+                        "properties": {
+                            "type": {
+                                "anyOf": [
+                                    {"const": "hasMany"},
+                                    {"const": "hasChildren"}
+                                ]
+                            }
+                        }
+                    },
+                    "then": {
+                        "properties": {
+                            "orderBy": {
+                                "type": "string",
+                                "description": "An attribute or expression to order by. Applied when getting related entities from an entity. As of v8.5."
+                            },
+                            "order": {
+                                "enum": ["asc", "desc"],
+                                "description": "An order."
+                            }
+                        }
+                    }
                 }
             ]
         },

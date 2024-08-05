@@ -33,6 +33,7 @@ use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
+use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\RelationType;
 use LogicException;
 
@@ -109,7 +110,7 @@ class RDBRelations implements Relations
             ]);
 
             $this->data[$relation] = $isMany ?
-                $relationRepository->find() :
+                $this->findMany($relation) :
                 $relationRepository->findOne();
         }
 
@@ -121,6 +122,47 @@ class RDBRelations implements Relations
         }
 
         return $object;
+    }
+
+    /**
+     * @return EntityCollection<Entity>
+     */
+    private function findMany(string $relation): EntityCollection
+    {
+        if (!$this->entity) {
+            throw new LogicException();
+        }
+
+        $relationDefs = $this->entityManager
+            ->getDefs()
+            ->getEntity($this->entity->getEntityType())
+            ->getRelation($relation);
+
+        $orderBy = null;
+        $order = null;
+
+        if ($relationDefs->getParam('orderBy')) {
+            $orderBy = $relationDefs->getParam('orderBy');
+
+            if ($relationDefs->getParam('order')) {
+                $order = strtoupper($relationDefs->getParam('order')) === Order::DESC ? Order::DESC : Order::ASC;
+            }
+        }
+
+        $builder = $this->entityManager->getRelation($this->entity, $relation);
+
+        if ($orderBy) {
+            $builder->order($orderBy, $order);
+        }
+
+        $collection = $builder->find();
+
+        if (!$collection instanceof EntityCollection) {
+            $collection = new EntityCollection(iterator_to_array($collection));
+        }
+
+        /** @var EntityCollection<Entity> */
+        return $collection;
     }
 
     private function getRelationType(string $relation): string
