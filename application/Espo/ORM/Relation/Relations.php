@@ -29,8 +29,8 @@
 
 namespace Espo\ORM\Relation;
 
-use Espo\ORM\Collection;
 use Espo\ORM\Entity;
+use Espo\ORM\EntityCollection;
 
 /**
  * @internal
@@ -50,7 +50,7 @@ interface Relations
     /**
      * Get a collection of related records. For has-many, many-many, has-children.
      *
-     * @return Collection<Entity>
+     * @return EntityCollection<Entity>
      */
-    public function getMany(string $relation): Collection;
+    public function getMany(string $relation): EntityCollection;
 }
