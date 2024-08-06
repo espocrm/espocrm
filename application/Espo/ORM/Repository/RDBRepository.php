@@ -182,7 +182,7 @@ class RDBRepository implements Repository
             $entity->setAsNotBeingSaved();
         }
 
-        $this->relationsMap?->get($entity)?->reset();
+        $this->relationsMap?->get($entity)?->resetAll();
     }
 
     /**

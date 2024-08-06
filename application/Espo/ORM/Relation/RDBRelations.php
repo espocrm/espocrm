@@ -29,22 +29,32 @@
 
 namespace Espo\ORM\Relation;
 
-use Espo\ORM\Collection;
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 use Espo\ORM\EntityManager;
 use Espo\ORM\Query\Part\Order;
 use Espo\ORM\Type\RelationType;
+use InvalidArgumentException;
 use LogicException;
+use RuntimeException;
 
 /**
  * @internal
  */
 class RDBRelations implements Relations
 {
-    /** @var array<string, Entity|Collection<Entity>|null> */
+    /** @var array<string, Entity|EntityCollection<Entity>|null> */
     private array $data = [];
+    /** @var array<string, Entity|EntityCollection<Entity>|null> */
+    private array $setData = [];
     private ?Entity $entity = null;
+
+    /** @var string[] */
+    private array $manyTypeList = [
+        RelationType::MANY_MANY,
+        RelationType::HAS_MANY,
+        RelationType::HAS_CHILDREN,
+    ];
 
     public function __construct(
         private EntityManager $entityManager,
@@ -59,16 +69,68 @@ class RDBRelations implements Relations
         $this->entity = $entity;
     }
 
-    public function reset(): void
+    public function reset(string $relation): void
+    {
+        unset($this->data[$relation]);
+        unset($this->setData[$relation]);
+    }
+
+    public function resetAll(): void
     {
         $this->data = [];
+        $this->setData = [];
+    }
+
+    public function isSet(string $relation): bool
+    {
+        return array_key_exists($relation, $this->setData);
+    }
+
+    /**
+     * @return Entity|EntityCollection<Entity>|null
+     */
+    public function getSet(string $relation): Entity|EntityCollection|null
+    {
+        if (!array_key_exists($relation, $this->setData)) {
+            throw new RuntimeException("Relation '$relation' is not set.");
+        }
+
+        return $this->setData[$relation];
+    }
+
+    /**
+     * @param Entity|EntityCollection<Entity>|null $related
+     */
+    public function set(string $relation, Entity|EntityCollection|null $related): void
+    {
+        $type = $this->getRelationType($relation);
+
+        if (!$type) {
+            throw new LogicException("Relation '$relation' does not exist.");
+        }
+
+        if (in_array($type, $this->manyTypeList) && !$related instanceof EntityCollection) {
+            throw new InvalidArgumentException("Non-collection passed for relation '$relation'.");
+        }
+
+        if (
+            !in_array($type, [
+                RelationType::BELONGS_TO,
+                RelationType::BELONGS_TO_PARENT,
+                RelationType::HAS_ONE,
+            ])
+        ) {
+            throw new LogicException("Relation type '$type' is not supported for setting.");
+        }
+
+        $this->setData[$relation] = $related;
     }
 
     public function getOne(string $relation): ?Entity
     {
         $entity = $this->get($relation);
 
-        if ($entity instanceof Collection) {
+        if ($entity instanceof EntityCollection) {
             throw new LogicException("Not an entity. Use `getMany` instead.");
         }
 
@@ -96,16 +158,16 @@ class RDBRelations implements Relations
      */
     private function get(string $relation): Entity|EntityCollection|null
     {
+        if (array_key_exists($relation, $this->setData)) {
+            return $this->setData[$relation];
+        }
+
         if (!array_key_exists($relation, $this->data)) {
             if (!$this->entity) {
                 throw new LogicException("No entity set.");
             }
 
-            $isMany = in_array($this->getRelationType($relation), [
-                RelationType::MANY_MANY,
-                RelationType::HAS_MANY,
-                RelationType::HAS_CHILDREN,
-            ]);
+            $isMany = in_array($this->getRelationType($relation), $this->manyTypeList);
 
             $this->data[$relation] = $isMany ?
                 $this->findMany($relation) :
@@ -114,7 +176,7 @@ class RDBRelations implements Relations
 
         $object = $this->data[$relation];
 
-        if ($object instanceof Collection) {
+        if ($object instanceof EntityCollection) {
             /** @var EntityCollection<Entity> $object */
             $object = new EntityCollection(iterator_to_array($object));
         }
@@ -183,7 +245,7 @@ class RDBRelations implements Relations
         return $collection;
     }
 
-    private function getRelationType(string $relation): string
+    private function getRelationType(string $relation): ?string
     {
         if (!$this->entity) {
             throw new LogicException();
@@ -192,7 +254,7 @@ class RDBRelations implements Relations
         return $this->entityManager
             ->getDefs()
             ->getEntity($this->entity->getEntityType())
-            ->getRelation($relation)
-            ->getType();
+            ->tryGetRelation($relation)
+            ?->getType();
     }
 }

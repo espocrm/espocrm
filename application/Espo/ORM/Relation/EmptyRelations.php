@@ -31,17 +31,60 @@ namespace Espo\ORM\Relation;
 
 use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
+use LogicException;
+use RuntimeException as RuntimeExceptionAlias;
 
 class EmptyRelations implements Relations
 {
+    /** @var array<string, Entity|EntityCollection<Entity>|null> */
+    private array $setData = [];
+
     public function __construct() {}
 
-    public function reset(): void
-    {}
+    public function resetAll(): void
+    {
+        $this->setData = [];
+    }
+
+    public function reset(string $relation): void
+    {
+        unset($this->setData[$relation]);
+    }
+
+    /**
+     * @param Entity|EntityCollection<Entity>|null $related
+     */
+    public function set(string $relation, Entity|EntityCollection|null $related): void
+    {
+        $this->setData[$relation] = $related;
+    }
+
+    public function isSet(string $relation): bool
+    {
+        return array_key_exists($relation, $this->setData);
+    }
+
+    /**
+     * @return Entity|EntityCollection<Entity>|null
+     */
+    public function getSet(string $relation): Entity|EntityCollection|null
+    {
+        if (!array_key_exists($relation, $this->setData)) {
+            throw new RuntimeExceptionAlias("Relation '$relation' is not set.");
+        }
+
+        return $this->setData[$relation];
+    }
 
     public function getOne(string $relation): ?Entity
     {
-        return null;
+        $entity = $this->setData[$relation] ?? null;
+
+        if ($entity instanceof EntityCollection) {
+            throw new LogicException("Not an entity.");
+        }
+
+        return $entity;
     }
 
     /***
@@ -49,7 +92,13 @@ class EmptyRelations implements Relations
      */
     public function getMany(string $relation): EntityCollection
     {
+        $collection = $this->setData[$relation] ?? new EntityCollection();
+
+        if (!$collection instanceof EntityCollection) {
+            throw new LogicException("Not a collection.");
+        }
+
         /** @var EntityCollection<Entity> */
-        return new EntityCollection();
+        return $collection;
     }
 }
