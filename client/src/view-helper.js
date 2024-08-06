@@ -657,7 +657,7 @@ class ViewHelper {
             return '';
         }
 
-        const t = this.cache ? this.cache.get('app', 'timestamp') : Date.now();
+        const t = this.cache ? this.cache.get('app', 'timestamp') : this.settings.get('cacheTimestamp');
 
         const basePath = this.basePath || '';
         size = size || 'small';
