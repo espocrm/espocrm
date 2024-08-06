@@ -26,30 +26,27 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-account/modals/select-folder', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        cssName: 'select-folder-modal',
+    cssName = 'select-folder-modal'
 
-        template: 'email-account/modals/select-folder',
+    template = 'email-account/modals/select-folder'
 
-        data: function () {
-            return {
-                folders: this.options.folders,
-            };
-        },
+    data() {
+        return {
+            folders: this.options.folders,
+        };
+    }
 
-        events: {
-            'click [data-action="select"]': function (e) {
-                var value = $(e.currentTarget).data('value');
+    setup() {
+        this.headerText = this.translate('Select');
 
-                this.trigger('select', value);
-            },
-        },
+        this.addActionHandler('select', (event, target) => {
+            const value = target.dataset.value;
 
-        setup: function () {
-            this.headerText = this.translate('Select');
-        },
-    });
-});
+            this.trigger('select', value);
+        });
+    }
+}
