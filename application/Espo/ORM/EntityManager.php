@@ -281,7 +281,7 @@ class EntityManager
             throw new RuntimeException("Can't refresh a non-existent entity.");
         }
 
-        $this->relationsMap->get($entity)?->reset();
+        $this->relationsMap->get($entity)?->resetAll();
 
         $entity->set($fetchedEntity->getValueMap());
         $entity->setAsFetched();

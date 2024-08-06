@@ -33,14 +33,31 @@ use Espo\ORM\Entity;
 use Espo\ORM\EntityCollection;
 
 /**
- * @internal
+ * @internal Not ready for production.
  */
 interface Relations
 {
     /**
-     * Reset.
+     * Reset a specific relation.
      */
-    public function reset(): void;
+    public function reset(string $relation): void;
+
+    /**
+     * Reset all.
+     */
+    public function resetAll(): void;
+
+    /**
+     * @param Entity|EntityCollection<Entity>|null $related
+     */
+    public function set(string $relation, Entity|EntityCollection|null $related): void;
+
+    public function isSet(string $relation): bool;
+
+    /**
+     * @return Entity|EntityCollection<Entity>|null
+     */
+    public function getSet(string $relation): Entity|EntityCollection|null;
 
     /**
      * Get one related record. For has-one, belongs-to.

@@ -31,6 +31,7 @@ namespace Espo\ORM;
 
 use Espo\ORM\Relation\EmptyRelations;
 use Espo\ORM\Relation\Relations;
+use Espo\ORM\Type\AttributeType;
 use Espo\ORM\Type\RelationType;
 use Espo\ORM\Value\ValueAccessorFactory;
 use Espo\ORM\Value\ValueAccessor;
@@ -139,6 +140,8 @@ class BaseEntity implements Entity
     public function reset(): void
     {
         $this->valuesContainer = [];
+
+        $this->relations->resetAll();
     }
 
     /**
@@ -458,6 +461,29 @@ class BaseEntity implements Entity
         }
 
         $this->setInContainer($attribute, $preparedValue);
+
+        $type = $this->getAttributeType($attribute);
+
+        if (
+            $type === AttributeType::FOREIGN_ID ||
+            $type === AttributeType::FOREIGN &&
+            $this->isAttributeHasOneForeignId($attribute)
+            // @todo Move the logic for hasOne to Espo\Core\ORM\Entity ?
+        ) {
+            $this->relations->reset(substr($attribute, 0, -2));
+        } else if ($type === AttributeType::FOREIGN_TYPE) {
+            $this->relations->reset(substr($attribute, 0, -4));
+        }
+    }
+
+    private function isAttributeHasOneForeignId(string $attribute): bool
+    {
+        $type = $this->getAttributeType($attribute);
+
+        return $type === AttributeType::FOREIGN &&
+            $this->getAttributeParam($attribute, 'relation') === substr($attribute, 0, -2) &&
+            $this->getAttributeParam($attribute, 'foreign') === 'id' &&
+            str_ends_with($attribute, 'Id');
     }
 
     protected function prepareAttributeValue(string $attribute, mixed $value): mixed
@@ -945,7 +971,7 @@ class BaseEntity implements Entity
     }
 
     /**
-     * Copy all current values to fetched values. All current attribute values will beset as those
+     * Copy all current values to fetched values. All current attribute values will be set as those
      * that are fetched from DB.
      */
     public function updateFetchedValues(): void
@@ -1117,12 +1143,13 @@ class BaseEntity implements Entity
                 continue;
             }
 
-            if ($attribute == 'id') {
+            if ($attribute === 'id') {
                 $this->id = $data[$attribute];
 
                 continue;
             }
 
+            // @todo Revise. To remove?
             if ($onlyAccessible && $this->getAttributeParam($attribute, 'notAccessible')) {
                 continue;
             }
