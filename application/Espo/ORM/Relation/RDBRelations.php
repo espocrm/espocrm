@@ -101,8 +101,6 @@ class RDBRelations implements Relations
                 throw new LogicException("No entity set.");
             }
 
-            $relationRepository = $this->entityManager->getRelation($this->entity, $relation);
-
             $isMany = in_array($this->getRelationType($relation), [
                 RelationType::MANY_MANY,
                 RelationType::HAS_MANY,
@@ -111,7 +109,7 @@ class RDBRelations implements Relations
 
             $this->data[$relation] = $isMany ?
                 $this->findMany($relation) :
-                $relationRepository->findOne();
+                $this->findOne($relation);
         }
 
         $object = $this->data[$relation];
@@ -124,6 +122,21 @@ class RDBRelations implements Relations
         return $object;
     }
 
+    private function findOne(string $relation): ?Entity
+    {
+        if (!$this->entity) {
+            throw new LogicException();
+        }
+
+        if (!$this->entity->hasId()) {
+            return null;
+        }
+
+        return $this->entityManager
+            ->getRelation($this->entity, $relation)
+            ->findOne();
+    }
+
     /**
      * @return EntityCollection<Entity>
      */
@@ -131,6 +144,11 @@ class RDBRelations implements Relations
     {
         if (!$this->entity) {
             throw new LogicException();
+        }
+
+        if (!$this->entity->hasId()) {
+            /** @var EntityCollection<Entity> */
+            return new EntityCollection();
         }
 
         $relationDefs = $this->entityManager

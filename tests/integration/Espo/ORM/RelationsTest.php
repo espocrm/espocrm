@@ -33,26 +33,42 @@ use Espo\ORM\EntityCollection;
 use Espo\Modules\Crm\Entities\Account;
 use Espo\Modules\Crm\Entities\Opportunity;
 use tests\integration\Core\BaseTestCase;
+use tests\integration\testClasses\Entities\Account as AccountExtended;
+use tests\integration\testClasses\Entities\Opportunity as OpportunityExtended;
 
 class RelationsTest extends BaseTestCase
 {
     public function testGetOne(): void
     {
+        $metadata = $this->getMetadata();
+        $metadata->set('entityDefs', Opportunity::ENTITY_TYPE, [
+            'entityClassName' => OpportunityExtended::class,
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication();
+
         $em = $this->getEntityManager();
+
+        $opp = $em->getEntity(Opportunity::ENTITY_TYPE);
+        $this->assertInstanceOf(OpportunityExtended::class, $opp);
+        $this->assertNull($opp->getRelatedAccount());
 
         $account = $em->createEntity(Account::ENTITY_TYPE);
         $opp = $em->createEntity(Opportunity::ENTITY_TYPE, [
             'accountId' => $account->getId(),
         ]);
 
-        $account1 = $opp->get('account');
+        $this->assertInstanceOf(OpportunityExtended::class, $opp);
+
+        $account1 = $opp->getRelatedAccount();
 
         $this->assertInstanceOf(Account::class, $account1);
         $this->assertEquals($account->getId(), $account1->getId());
 
         $em->refreshEntity($opp);
 
-        $account2 = $opp->get('account');
+        $account2 = $opp->getRelatedAccount();
 
         $this->assertInstanceOf(Account::class, $account2);
         $this->assertNotSame($account1, $account2);
@@ -60,7 +76,7 @@ class RelationsTest extends BaseTestCase
 
         $em->saveEntity($opp);
 
-        $account3 = $opp->get('account');
+        $account3 = $opp->getRelatedAccount();
 
         $this->assertInstanceOf(Account::class, $account3);
         $this->assertNotSame($account1, $account3);
@@ -69,14 +85,28 @@ class RelationsTest extends BaseTestCase
 
     public function testGetMany(): void
     {
+        $metadata = $this->getMetadata();
+        $metadata->set('entityDefs', Account::ENTITY_TYPE, [
+            'entityClassName' => AccountExtended::class,
+        ]);
+        $metadata->save();
+
+        $this->reCreateApplication();
+
         $em = $this->getEntityManager();
 
+        $account = $em->getEntity(Account::ENTITY_TYPE);
+        $this->assertInstanceOf(AccountExtended::class, $account);
+        $this->assertInstanceOf(EntityCollection::class, $account->getRelatedOpportunities());
+
         $account = $em->createEntity(Account::ENTITY_TYPE);
+        $this->assertInstanceOf(AccountExtended::class, $account);
+
         $em->createEntity(Opportunity::ENTITY_TYPE, ['accountId' => $account->getId()]);
         $em->createEntity(Opportunity::ENTITY_TYPE, ['accountId' => $account->getId()]);
         $em->createEntity(Opportunity::ENTITY_TYPE);
 
-        $collection = $account->get('opportunities');
+        $collection = $account->getRelatedOpportunities();
 
         $this->assertInstanceOf(EntityCollection::class, $collection);
         $items = iterator_to_array($collection);

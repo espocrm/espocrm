@@ -255,8 +255,14 @@ class BaseEntity implements Entity
             );
         }
 
-        // @todo Remove $this->id check when relation setting is implemented.
+        // @todo Remove support in v10.0.
         if ($this->hasRelation($attribute) && $this->id && !$params) {
+            trigger_error(
+                "Accessing related records with Entity::get is deprecated. " .
+                "Use `\$entityManager->getRelation(...)->find()`.",
+                E_USER_DEPRECATED
+            );
+
             $isMany = in_array($this->getRelationType($attribute), [
                 RelationType::MANY_MANY,
                 RelationType::HAS_MANY,
@@ -268,9 +274,14 @@ class BaseEntity implements Entity
                 $this->relations->getOne($attribute);
         }
 
-        // @todo Revise. Remove?
         // @todo Remove support in v10.0.
         if ($this->hasRelation($attribute) && $this->id && $this->entityManager) {
+            trigger_error(
+                "Accessing related records with Entity::get is deprecated. " .
+                "Use `\$entityManager->getRelation(...)->find()`.",
+                E_USER_DEPRECATED
+            );
+
             /** @phpstan-ignore-next-line */
             return $this->entityManager
                 ->getRepository($this->getEntityType())
