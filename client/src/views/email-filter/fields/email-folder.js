@@ -26,29 +26,25 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-filter/fields/email-folder', ['views/fields/link'], function (Dep) {
+import LinkFieldView from 'views/fields/link';
 
-    return Dep.extend({
+export default class extends LinkFieldView {
 
-        createDisabled: true,
+    createDisabled = true
+    autocompleteDisabled = true
 
-        autocompleteDisabled: true,
-
-        getSelectFilters: function () {
-            if (this.getUser().isAdmin()) {
-                if (this.model.get('parentType') === 'User' && this.model.get('parentId')) {
-                    return {
-                        assignedUser: {
-                            type: 'equals',
-                            attribute: 'assignedUserId',
-                            value: this.model.get('parentId'),
-                            data: {
-                                nameValue: this.model.get('parentName'),
-                            },
-                        }
-                    };
+    getSelectFilters() {
+        if (this.getUser().isAdmin() && this.model.get('parentType') === 'User' && this.model.get('parentId')) {
+            return {
+                assignedUser: {
+                    type: 'equals',
+                    attribute: 'assignedUserId',
+                    value: this.model.get('parentId'),
+                    data: {
+                        nameValue: this.model.get('parentName'),
+                    },
                 }
-            }
-        },
-    });
-});
+            };
+        }
+    }
+}
