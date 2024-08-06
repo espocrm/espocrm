@@ -49,6 +49,12 @@ class LinkMultipleSaver
         $idListAttribute = $name . 'Ids';
         $columnsAttribute = $name . 'Columns';
 
+        $isChanged = $entity->isAttributeChanged($idListAttribute) || $entity->isAttributeChanged($columnsAttribute);
+
+        if (!$isChanged) {
+            return;
+        }
+
         $defs = $this->entityManager->getDefs()->getEntity($entityType);
 
         $skipCreate = $params->getOption('skipLinkMultipleCreate') ?? false;
