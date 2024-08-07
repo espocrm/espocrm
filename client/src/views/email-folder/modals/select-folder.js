@@ -26,83 +26,78 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/email-folder/modals/select-folder', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        cssName: 'select-folder',
+    template = 'email-folder/modals/select-folder'
 
-        template: 'email-folder/modals/select-folder',
+    cssName = 'select-folder'
+    fitHeight = true
+    backdrop = true
 
-        fitHeight: true,
+    data() {
+        return {
+            folderDataList: this.folderDataList,
+        };
+    }
 
-        backdrop: true,
+    setup() {
+        this.addActionHandler('selectFolder', () => {
+            const $target = $(e.currentTarget);
 
-        data: function () {
-            return {
-                folderDataList: this.folderDataList,
-            };
-        },
+            const id = $target.attr('data-id');
+            const name = $target.attr('data-name');
 
-        events: {
-            'click a[data-action="selectFolder"]': function (e) {
-                const $target = $(e.currentTarget);
+            this.trigger('select', id, name);
+            this.close();
+        });
 
-                const id = $target.attr('data-id');
-                const name = $target.attr('data-name');
+        this.headerText = this.options.headerText || '';
 
-                this.trigger('select', id, name);
-                this.close();
-            },
-        },
+        if (this.headerText === '') {
+            this.buttonList.push({
+                name: 'cancel',
+                label: 'Cancel',
+            });
+        }
 
-        setup: function () {
-            this.headerText = this.options.headerText || '';
+        Espo.Ui.notify(' ... ');
 
-            if (this.headerText === '') {
-                this.buttonList.push({
-                    name: 'cancel',
-                    label: 'Cancel',
-                });
-            }
+        this.wait(
+            Espo.Ajax.getRequest('EmailFolder/action/listAll')
+                .then(data => {
+                    Espo.Ui.notify(false);
 
-            Espo.Ui.notify(' ... ');
-
-            this.wait(
-                Espo.Ajax.getRequest('EmailFolder/action/listAll')
-                    .then(data => {
-                        Espo.Ui.notify(false);
-
-                        this.folderDataList = data.list
-                            .filter(item => {
-                                return [
-                                    'inbox',
-                                    'important',
-                                    'sent',
-                                    'drafts',
-                                    'trash',
-                                    'archive',
-                                ].indexOf(item.id) === -1;
-                            })
-                            .map(item => {
-                                return {
-                                    id: item.id,
-                                    name: item.name,
-                                    isGroup: item.id.indexOf('group:') === 0,
-                                };
-                            });
-
-                        this.folderDataList.unshift({
-                            id: 'inbox',
-                            name: this.translate('inbox', 'presetFilters', 'Email'),
+                    this.folderDataList = data.list
+                        .filter(item => {
+                            return [
+                                'inbox',
+                                'important',
+                                'sent',
+                                'drafts',
+                                'trash',
+                                'archive',
+                            ].indexOf(item.id) === -1;
+                        })
+                        .map(item => {
+                            return {
+                                id: item.id,
+                                name: item.name,
+                                isGroup: item.id.indexOf('group:') === 0,
+                            };
                         });
 
-                        this.folderDataList.push({
-                            id: 'archive',
-                            name: this.translate('archive', 'presetFilters', 'Email'),
-                        });
-                    })
-            );
-        },
-    });
-});
+                    this.folderDataList.unshift({
+                        id: 'inbox',
+                        name: this.translate('inbox', 'presetFilters', 'Email'),
+                    });
+
+                    this.folderDataList.push({
+                        id: 'archive',
+                        name: this.translate('archive', 'presetFilters', 'Email'),
+                    });
+                })
+        );
+    }
+}
