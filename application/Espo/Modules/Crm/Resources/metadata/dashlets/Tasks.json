@@ -23,7 +23,7 @@
             }
         },
         "defaults": {
-            "orderBy": "dateEnd",
+            "orderBy": "dateUpcoming",
             "order": "asc",
             "displayRecords": 5,
             "expandedLayout": {
