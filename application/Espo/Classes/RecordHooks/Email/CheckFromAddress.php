@@ -57,7 +57,14 @@ class CheckFromAddress implements SaveHook
             return;
         }
 
-        if (!$entity->getFromAddress()) {
+        $fromAddress = $entity->getFromAddress();
+
+        // Should be after 'getFromAddress'.
+        if (!$entity->isAttributeChanged('from')) {
+            return;
+        }
+
+        if (!$fromAddress) {
             throw new BadRequest("No 'from' address");
         }
 
@@ -65,7 +72,7 @@ class CheckFromAddress implements SaveHook
             return;
         }
 
-        $fromAddress = strtolower($entity->getFromAddress());
+        $fromAddress = strtolower($fromAddress);
 
         foreach ($this->user->getEmailAddressGroup()->getAddressList() as $address) {
             if ($fromAddress === strtolower($address)) {
