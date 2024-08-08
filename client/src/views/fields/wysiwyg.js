@@ -939,6 +939,16 @@ class WysiwygFieldView extends TextFieldView {
 
         return false;
     }
+
+    /**
+     * @param {string} text
+     * @since 8.4.0
+     */
+    insertText(text) {
+        if (this.isHtml()) {
+            this.$summernote.summernote('insertText', text);
+        }
+    }
 }
 
 export default WysiwygFieldView;
