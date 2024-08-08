@@ -84,6 +84,8 @@ class AdminIndexView extends View {
                     if (item.description) {
                         item.keywords = (this.getLanguage().get('Admin', 'keywords', item.description) || '')
                             .split(',');
+                        
+                        item.keywords = item.keywords.map(keyword => keyword.trim().toLowerCase());
                     } else {
                         item.keywords = [];
                     }
