@@ -26,43 +26,42 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/extension/record/row-actions', ['views/record/row-actions/default'], function (Dep) {
+import DefaultRowActionsView from 'views/record/row-actions/default';
 
-    return Dep.extend({
+export default class extends DefaultRowActionsView {
 
-        getActionList: function () {
-            if (!this.options.acl.edit) {
-                return [];
-            }
+    getActionList() {
+        if (!this.options.acl.edit) {
+            return [];
+        }
 
-            if (this.model.get('isInstalled')) {
-                return [
-                    {
-                        action: 'uninstall',
-                        label: 'Uninstall',
-                        data: {
-                            id: this.model.id,
-                        },
-                    },
-                ];
-            }
-
+        if (this.model.get('isInstalled')) {
             return [
                 {
-                    action: 'install',
-                    label: 'Install',
-                    data: {
-                        id: this.model.id,
-                    },
-                },
-                {
-                    action: 'quickRemove',
-                    label: 'Remove',
+                    action: 'uninstall',
+                    label: 'Uninstall',
                     data: {
                         id: this.model.id,
                     },
                 },
             ];
-        },
-    });
-});
+        }
+
+        return [
+            {
+                action: 'install',
+                label: 'Install',
+                data: {
+                    id: this.model.id,
+                },
+            },
+            {
+                action: 'quickRemove',
+                label: 'Remove',
+                data: {
+                    id: this.model.id,
+                },
+            },
+        ];
+    }
+}
