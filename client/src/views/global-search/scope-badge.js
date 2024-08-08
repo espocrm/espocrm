@@ -39,4 +39,5 @@ class GlobalSearchScopeBadgeView extends View {
     }
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default GlobalSearchScopeBadgeView;

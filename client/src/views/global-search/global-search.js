@@ -37,7 +37,7 @@ class GlobalSearchView extends View {
         this.addHandler('focus', 'input.global-search-input', 'onFocus');
         this.addHandler('click', '[data-action="search"]', () => this.runSearch());
 
-        let promise = this.getCollectionFactory().create('GlobalSearch', collection => {
+        const promise = this.getCollectionFactory().create('GlobalSearch', collection => {
             this.collection = collection;
             this.collection.url = 'GlobalSearch';
         });
@@ -51,7 +51,7 @@ class GlobalSearchView extends View {
      * @param {MouseEvent} e
      */
     onFocus(e) {
-        let inputElement = /** @type {HTMLInputElement} */e.target;
+        const inputElement = /** @type {HTMLInputElement} */e.target;
 
         inputElement.select();
     }
@@ -60,7 +60,7 @@ class GlobalSearchView extends View {
      * @param {KeyboardEvent} e
      */
     onKeydown(e) {
-        let key = Espo.Utils.getKeyFromKeyEvent(e);
+        const key = Espo.Utils.getKeyFromKeyEvent(e);
 
         if (e.code === 'Enter' || key === 'Enter' || key === 'Control+Enter') {
             this.runSearch();
@@ -77,20 +77,30 @@ class GlobalSearchView extends View {
         this.$input = this.$el.find('input.global-search-input');
     }
 
+    /**
+     * @private
+     */
     runSearch() {
-        let text = this.$input.val().trim();
+        const text = this.$input.val().trim();
 
         if (text !== '' && text.length >= 2) {
             this.search(text);
         }
     }
 
+    /**
+     * @private
+     * @param {string} text
+     */
     search(text) {
         this.collection.url = this.collection.urlRoot = 'GlobalSearch?q=' + encodeURIComponent(text);
 
         this.showPanel();
     }
 
+    /**
+     * @private
+     */
     showPanel() {
         this.closePanel();
 
@@ -98,7 +108,7 @@ class GlobalSearchView extends View {
             this.$el.closest('.navbar-body').removeClass('in');
         }
 
-        let $container = $('<div>').attr('id', 'global-search-panel');
+        const $container = $('<div>').attr('id', 'global-search-panel');
 
         $container.appendTo(this.$el.find('.global-search-panel-container'));
 
@@ -111,7 +121,7 @@ class GlobalSearchView extends View {
             this.listenToOnce(view, 'close', this.closePanel);
         });
 
-        let $document = $(document);
+        const $document = $(document);
 
         $document.on('mouseup.global-search', (e) => {
             if (e.which !== 1) {
@@ -134,12 +144,15 @@ class GlobalSearchView extends View {
         });
     }
 
+    /**
+     * @private
+     */
     closePanel() {
-        let $container = $('#global-search-panel');
+        const $container = $('#global-search-panel');
 
         $container.remove();
 
-        let $document = $(document);
+        const $document = $(document);
 
         if (this.hasView('panel')) {
             this.getView('panel').remove();
