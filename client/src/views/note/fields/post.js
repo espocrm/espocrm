@@ -142,7 +142,7 @@ class NotePostFieldView extends TextFieldView {
 
         // noinspection JSUnresolvedReference
         this.$element.textcomplete([{
-            match: /(^|\s)@(\w*)$/,
+            match: /(^|\s)@(\w[\w@.-]*)$/,
             search: (term, callback) => {
                 if (term.length === 0) {
                     callback([]);

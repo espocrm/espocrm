@@ -522,7 +522,7 @@ class PanelStreamView extends RelationshipPanelView {
 
         if (mentionPermission !== 'no') {
             this.$textarea.textcomplete([{
-                match: /(^|\s)@(\w*)$/,
+                match: /(^|\s)@(\w[\w@.-]*)$/,
                 index: 2,
                 search: (term, callback) => {
                     if (term.length === 0) {
