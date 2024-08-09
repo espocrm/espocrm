@@ -30,5 +30,6 @@ import FoldersView from 'views/email-account/fields/folders';
 
 export default class extends FoldersView {
 
+    // noinspection JSUnusedGlobalSymbols
     getFoldersUrl = 'InboundEmail/action/getFolders'
 }

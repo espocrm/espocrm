@@ -26,48 +26,47 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/inbound-email/record/edit', ['views/record/edit', 'views/inbound-email/record/detail'],
-function (Dep, Detail) {
+import EditRecordView from 'views/record/edit';
+import Detail from 'views/inbound-email/record/detail';
 
-    return Dep.extend({
+export default class extends EditRecordView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            Detail.prototype.setupFieldsBehaviour.call(this);
-            Detail.prototype.initSslFieldListening.call(this);
+        Detail.prototype.setupFieldsBehaviour.call(this);
+        Detail.prototype.initSslFieldListening.call(this);
 
-            if (Detail.prototype.wasFetched.call(this)) {
-                this.setFieldReadOnly('fetchSince');
-            }
-        },
+        if (Detail.prototype.wasFetched.call(this)) {
+            this.setFieldReadOnly('fetchSince');
+        }
+    }
 
-        modifyDetailLayout: function (layout) {
-            Detail.prototype.modifyDetailLayout.call(this, layout);
-        },
+    modifyDetailLayout(layout) {
+        Detail.prototype.modifyDetailLayout.call(this, layout);
+    }
 
-        controlStatusField: function () {
-            Detail.prototype.controlStatusField.call(this);
-        },
+    controlStatusField() {
+        Detail.prototype.controlStatusField.call(this);
+    }
 
-        initSmtpFieldsControl: function () {
-            Detail.prototype.initSmtpFieldsControl.call(this);
-        },
+    initSmtpFieldsControl() {
+        Detail.prototype.initSmtpFieldsControl.call(this);
+    }
 
-        controlSmtpFields: function () {
-            Detail.prototype.controlSmtpFields.call(this);
-        },
+    controlSmtpFields() {
+        Detail.prototype.controlSmtpFields.call(this);
+    }
 
-        controlSentFolderField: function () {
-            Detail.prototype.controlSentFolderField.call(this);
-        },
+    controlSentFolderField() {
+        Detail.prototype.controlSentFolderField.call(this);
+    }
 
-        controlSmtpAuthField: function () {
-            Detail.prototype.controlSmtpAuthField.call(this);
-        },
+    controlSmtpAuthField() {
+        Detail.prototype.controlSmtpAuthField.call(this);
+    }
 
-        wasFetched: function () {
-            Detail.prototype.wasFetched.call(this);
-        },
-    });
-});
+    wasFetched() {
+        Detail.prototype.wasFetched.call(this);
+    }
+}

@@ -44,6 +44,9 @@ export default class extends BaseFieldView {
         return {};
     }
 
+    /**
+     * @protected
+     */
     checkAvailability() {
         if (this.model.get('smtpServer')) {
             this.$el.find('button').removeClass('hidden');
@@ -62,6 +65,10 @@ export default class extends BaseFieldView {
         });
     }
 
+    /**
+     * @protected
+     * @return {Record}
+     */
     getSmtpData() {
         return {
             'server': this.model.get('smtpServer'),
@@ -76,14 +83,23 @@ export default class extends BaseFieldView {
         };
     }
 
+    /**
+     * @protected
+     */
     enableButton() {
         this.$el.find('button').removeClass('disabled').removeAttr('disabled');
     }
 
+    /**
+     * @protected
+     */
     disabledButton() {
         this.$el.find('button').addClass('disabled').attr('disabled', 'disabled');
     }
 
+    /**
+     * @private
+     */
     send() {
         const data = this.getSmtpData();
 
