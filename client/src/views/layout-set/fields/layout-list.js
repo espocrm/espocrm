@@ -68,7 +68,7 @@ export default class extends MultiEnumFieldView {
 
                 this.params.options.push(item);
 
-                this.translatedOptions[item] = this.translate(item1.scope, 'scopeNames') + '.' +
+                this.translatedOptions[item] = this.translate(item1.scope, 'scopeNames') + ' . ' +
                     this.translate(type, 'layouts', 'Admin');
             });
         });
