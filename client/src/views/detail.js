@@ -314,6 +314,7 @@ class DetailView extends MainView {
             o.readOnly = true;
         }
 
+        // noinspection JSValidateTypes
         return this.createView('record', this.getRecordViewName(), o, view => {
             this.listenTo(view, 'after:mode-change', mode => {
                 // Mode change should also re-render the header what the methods do.
