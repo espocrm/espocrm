@@ -77,6 +77,14 @@ class HeaderView extends View {
         }
 
         this.wasRendered = false;
+
+        if (this.options.fontSizeFlexible) {
+            this.on('action-item-update', () => {
+                if (this.isRendered()) {
+                    this.adjustFontSize();
+                }
+            });
+        }
     }
 
     /**

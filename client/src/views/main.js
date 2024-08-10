@@ -683,6 +683,10 @@ class MainView extends View {
 
         this.controlMenuDropdownVisibility();
         this.adjustButtons();
+
+        if (this.getHeaderView()) {
+            this.getHeaderView().trigger('action-item-update');
+        }
     }
 
     /**
@@ -703,6 +707,10 @@ class MainView extends View {
 
             this.controlMenuDropdownVisibility();
             this.adjustButtons();
+
+            if (this.getHeaderView()) {
+                this.getHeaderView().trigger('action-item-update');
+            }
         };
 
         if (!this.isRendered()) {
