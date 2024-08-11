@@ -120,7 +120,7 @@ class EditModalView extends ModalView {
      * @property {string} [id] An ID.
      * @property {string} [layoutName] A layout name.
      * @property {Record} [attributes] Attributes.
-     * @property {model:model~setRelateItem | model:model~setRelateItem[]} relate A relate data.
+     * @property {model:model~setRelateItem | model:model~setRelateItem[]} [relate] A relate data.
      * @property {import('view-record-helper')} [recordHelper] A record helper.
      * @property {boolean} [saveDisabled] Disable save.
      * @property {boolean} [fullFormDisabled] Disable full-form.
