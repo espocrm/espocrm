@@ -395,8 +395,8 @@ class Pusher implements WampServerInterface
             return;
         }
 
-        $authToken = preg_replace('/[^a-zA-Z0-9]+/', '', $params['authToken']);
-        $userId = preg_replace('/[^a-zA-Z0-9]+/', '', $params['userId']);
+        $authToken = preg_replace('/[^a-zA-Z0-9\-]+/', '', $params['authToken']);
+        $userId = preg_replace('/[^a-zA-Z0-9\-]+/', '', $params['userId']);
 
         $result = $this->getUserIdByAuthToken($authToken);
 
