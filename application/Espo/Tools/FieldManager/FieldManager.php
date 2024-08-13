@@ -490,6 +490,17 @@ class FieldManager
 
         $type = $this->metadata->get(['entityDefs', $scope, 'fields', $name, 'type']);
 
+        if (
+            in_array($type, [
+                FieldType::LINK_MULTIPLE,
+                FieldType::LINK,
+                FieldType::LINK_ONE,
+                FieldType::LINK_PARENT,
+            ])
+        ) {
+            throw new Error("Field type $type cannot be removed.");
+        }
+
         $this->processHook('beforeRemove', $type, $scope, $name);
 
         $unsets = [
