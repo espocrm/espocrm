@@ -60,7 +60,7 @@ class TabListFieldView extends ArrayFieldView {
     setupOptions() {
         this.params.options = Object.keys(this.getMetadata().get('scopes'))
             .filter(scope => {
-                if (this.getMetadata().get('scopes.' + scope + '.disabled')) {
+                if (this.getMetadata().get(`scopes.${scope}.disabled`)) {
                     return false;
                 }
 
@@ -68,7 +68,7 @@ class TabListFieldView extends ArrayFieldView {
                     return false;
                 }
 
-                return this.getMetadata().get('scopes.' + scope + '.tab');
+                return this.getMetadata().get(`scopes.${scope}.tab`);
             })
             .sort((v1, v2) => {
                 return this.translate(v1, 'scopeNamesPlural')
@@ -113,7 +113,7 @@ class TabListFieldView extends ArrayFieldView {
         const index = this.getGroupIndexById(value);
 
         if (~index) {
-            this.$list.children('[data-value="' + value + '"]').remove();
+            this.$list.children(`[data-value="${value}"]`).remove();
 
             this.selected.splice(index, 1);
             this.trigger('change');

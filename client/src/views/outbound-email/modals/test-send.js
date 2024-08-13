@@ -26,47 +26,46 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/outbound-email/modals/test-send', ['views/modal'], function (Dep) {
+import ModalView from 'views/modal';
 
-    return Dep.extend({
+export default class extends ModalView {
 
-        cssName: 'test-send',
+    cssName = 'test-send'
 
-        templateContent: `
-            <label class="control-label">{{translate \'Email Address\' scope=\'Email\'}}</label>
-            <input type="text" name="emailAddress" value="{{emailAddress}}" class="form-control">
-        `,
+    templateContent = `
+        <label class="control-label">{{translate \'Email Address\' scope=\'Email\'}}</label>
+        <input type="text" name="emailAddress" value="{{emailAddress}}" class="form-control">
+    `
 
-        data: function () {
-            return {
-                emailAddress: this.options.emailAddress,
-            };
-        },
+    data() {
+        return {
+            emailAddress: this.options.emailAddress,
+        };
+    }
 
-        setup: function () {
-            this.buttonList = [
-                {
-                    name: 'send',
-                    text: this.translate('Send', 'labels', 'Email'),
-                    style: 'primary',
-                    onClick: () => {
-                        var emailAddress = this.$el.find('input').val();
+    setup() {
+        this.buttonList = [
+            {
+                name: 'send',
+                text: this.translate('Send', 'labels', 'Email'),
+                style: 'primary',
+                onClick: () => {
+                    const emailAddress = this.$el.find('input').val();
 
-                        if (emailAddress === '') {
-                            return;
-                        }
+                    if (emailAddress === '') {
+                        return;
+                    }
 
-                        this.trigger('send', emailAddress);
-                    },
+                    this.trigger('send', emailAddress);
                 },
-                {
-                    name: 'cancel',
-                    label: 'Cancel',
-                    onClick: dialog =>{
-                        dialog.close();
-                    },
-                }
-            ];
-        },
-    });
-});
+            },
+            {
+                name: 'cancel',
+                label: 'Cancel',
+                onClick: dialog =>{
+                    dialog.close();
+                },
+            }
+        ];
+    }
+}

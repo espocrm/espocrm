@@ -26,25 +26,24 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/portal/fields/custom-id', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+export default class extends VarcharFieldView {
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.listenTo(this, 'change', () => {
-                var value = this.model.get('customId');
+        this.listenTo(this, 'change', () => {
+            let value = this.model.get('customId');
 
-                if (!value || value === '') {
-                    return;
-                }
+            if (!value || value === '') {
+                return;
+            }
 
-                value = value.replace(/ /i, '-').toLowerCase();
-                value = encodeURIComponent(value);
+            value = value.replace(/ /i, '-').toLowerCase();
+            value = encodeURIComponent(value);
 
-                this.model.set('customId', value);
-            });
-        },
-    });
-});
+            this.model.set('customId', value);
+        });
+    }
+}
