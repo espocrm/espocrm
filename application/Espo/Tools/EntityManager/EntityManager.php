@@ -398,6 +398,11 @@ class EntityManager
 
         if (array_key_exists('statusField', $params)) {
             $this->metadata->set('scopes', $name, ['statusField' => $params['statusField']]);
+
+            if (!$params['statusField'] && $this->metadata->get("clientDefs.$name.kanbanViewMode")) {
+                $params['kanbanViewMode'] = false;
+                $params['kanbanStatusIgnoreList'] = null;
+            }
         }
 
         if (isset($params['sortBy'])) {
