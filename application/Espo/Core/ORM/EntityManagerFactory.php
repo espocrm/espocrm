@@ -66,12 +66,18 @@ class EntityManagerFactory
 
     public function create(): EntityManager
     {
-        $entityFactory = $this->injectableFactory->create(EntityFactory::class);
+        $entityFactory = $this->injectableFactory->createWithBinding(
+            EntityFactory::class,
+            BindingContainerBuilder::create()
+                ->bindInstance(EventDispatcher::class, $this->eventDispatcher)
+                ->build()
+        );
 
         $repositoryFactory = $this->injectableFactory->createWithBinding(
             RepositoryFactory::class,
             BindingContainerBuilder::create()
                 ->bindInstance(EntityFactoryInterface::class, $entityFactory)
+                ->bindInstance(EventDispatcher::class, $this->eventDispatcher)
                 ->build()
         );
 
