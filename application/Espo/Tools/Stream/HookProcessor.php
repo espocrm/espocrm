@@ -493,6 +493,7 @@ class HookProcessor
             (
                 !method_exists($entity, $methodName) &&
                 (
+                    // @todo Introduce a metadata parameter.
                     $entity->isAttributeChanged('assignedUserId') ||
                     $entity->isAttributeChanged('teamsIds') ||
                     $entity->isAttributeChanged('assignedUsersIds')
