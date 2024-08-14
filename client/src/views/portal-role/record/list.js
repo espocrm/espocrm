@@ -26,7 +26,6 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/portal-role/record/list', ['views/role/record/list'], function (Dep) {
+import RoleListRecordView from 'views/role/record/list';
 
-    return Dep.extend({});
-});
+export default class extends RoleListRecordView {}
