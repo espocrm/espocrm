@@ -80,8 +80,11 @@ class AttachmentMultipleFieldView extends BaseFieldView {
     idsName
     nameHash
     foreignScope
-    showPreviews = true
     accept = null
+    /** @protected */
+    showPreviews = true
+    /** @protected */
+    showPreviewsInListMode = false
 
     /**
      * @inheritDoc

@@ -26,29 +26,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/stream/fields/post', ['views/fields/text'], function (Dep) {
+import TextFieldView from 'views/fields/text';
 
-    return Dep.extend({
+export default class StreamPostFieldView extends TextFieldView {
 
-        getValueForDisplay: function () {
-            let text = Dep.prototype.getValueForDisplay.call(this);
+    getValueForDisplay() {
+        let text = super.getValueForDisplay();
 
-            if (this.isDetailMode() || this.isListMode()) {
-                let mentionData = (this.model.get('data') || {}).mentions || {};
+        if (this.isDetailMode() || this.isListMode()) {
+            /** @type {Record} */
+            const data = this.model.get('data') || {};
 
-                Object
-                    .keys(mentionData)
-                    .sort((a, b) => {
-                        return a.length < b.length;
-                    })
-                    .forEach(item => {
-                        var part = '[' + mentionData[item].name + '](#User/view/'+mentionData[item].id + ')';
+            /** @type {Record} */
+            const mentionData = data.mentions || {};
 
-                        text = text.replace(new RegExp(item, 'g'), part);
-                    });
-            }
+            Object.keys(mentionData)
+                .sort((a, b) => b.length - a.length)
+                .forEach(item => {
+                    const part = `[${mentionData[item].name}](#User/view/${mentionData[item].id})`;
 
-            return text;
-        },
-    });
-});
+                    text = text.replace(new RegExp(item, 'g'), part);
+                });
+        }
+
+        return text;
+    }
+}
