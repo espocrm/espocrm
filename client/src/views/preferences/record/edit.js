@@ -31,7 +31,6 @@ import EditRecordView from 'views/record/edit';
 class PreferencesEditRecordView extends EditRecordView {
 
     sideView = null
-
     saveAndContinueEditingAction = false
 
     buttonList = [
@@ -79,12 +78,12 @@ class PreferencesEditRecordView extends EditRecordView {
         this.addDropdownItem({
             name: 'reset',
             text: this.getLanguage().translate('Reset to Default', 'labels', 'Admin'),
-            style: 'danger'
+            style: 'danger',
         });
 
         const forbiddenEditFieldList = this.getAcl().getScopeForbiddenFieldList('Preferences', 'edit');
 
-        if (!~forbiddenEditFieldList.indexOf('dashboardLayout') && !model.isPortal()) {
+        if (!forbiddenEditFieldList.includes('dashboardLayout') && !model.isPortal()) {
             this.addDropdownItem({
                 name: 'resetDashboard',
                 text: this.getLanguage().translate('Reset Dashboard to Default', 'labels', 'Preferences')
@@ -214,8 +213,8 @@ class PreferencesEditRecordView extends EditRecordView {
     actionReset() {
         this.confirm(this.translate('resetPreferencesConfirmation', 'messages'), () => {
             Espo.Ajax
-                .deleteRequest('Preferences/' + this.model.id)
-                .then(() => {
+                .deleteRequest(`Preferences/${this.model.id}`)
+                .then(data => {
                     Espo.Ui.success(this.translate('resetPreferencesDone', 'messages'));
 
                     this.model.set(data);

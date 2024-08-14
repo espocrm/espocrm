@@ -26,108 +26,112 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/dashboard-tab-list', ['views/fields/array'], function (Dep) {
+import ArrayFieldView from 'views/fields/array';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends ArrayFieldView {
 
-        maxItemLength: 36,
+    maxItemLength = 36
 
-        setup: function () {
-            Dep.prototype.setup.call(this);
+    setup() {
+        super.setup();
 
-            this.translatedOptions = {};
+        this.translatedOptions = {};
 
-            let list = this.model.get(this.name) || [];
+        const list = this.model.get(this.name) || [];
 
-            list.forEach(value => {
-                this.translatedOptions[value] = value;
-            });
+        list.forEach(value => {
+            this.translatedOptions[value] = value;
+        });
 
-            this.validations.push('uniqueLabel');
-        },
+        this.validations.push('uniqueLabel');
+    }
 
-        getItemHtml: function (value) {
-            value = value.toString();
+    getItemHtml(value) {
+        value = value.toString();
 
-            let translatedValue = this.translatedOptions[value] || value;
+        const translatedValue = this.translatedOptions[value] || value;
 
-            return $('<div>')
-                .addClass('list-group-item link-with-role form-inline')
-                .attr('data-value', value)
-                .append(
-                    $('<div>')
-                        .addClass('pull-left')
-                        .css('width', '92%')
-                        .css('display', 'inline-block')
-                        .append(
-                            $('<input>')
-                                .attr('maxLength', this.maxItemLength)
-                                .attr('data-name', 'translatedValue')
-                                .attr('data-value', value)
-                                .addClass('role form-control input-sm')
-                                .attr('value', translatedValue)
-                                .css('width', '65%')
-                        )
-                )
-                .append(
-                    $('<div>')
-                        .css('width', '8%')
-                        .css('display', 'inline-block')
-                        .css('vertical-align', 'top')
-                        .append(
-                            $('<a>')
-                                .attr('role', 'button')
-                                .attr('tabindex', '0')
-                                .addClass('pull-right')
-                                .attr('data-value', value)
-                                .attr('data-action', 'removeValue')
-                                .append(
-                                    $('<span>').addClass('fas fa-times')
-                                )
-                        )
-                )
-                .append(
-                    $('<br>').css('clear', 'both')
-                )
-                .get(0).outerHTML;
-        },
+        return $('<div>')
+            .addClass('list-group-item link-with-role form-inline')
+            .attr('data-value', value)
+            .append(
+                $('<div>')
+                    .addClass('pull-left')
+                    .css('width', '92%')
+                    .css('display', 'inline-block')
+                    .append(
+                        $('<input>')
+                            .attr('maxLength', this.maxItemLength)
+                            .attr('data-name', 'translatedValue')
+                            .attr('data-value', value)
+                            .addClass('role form-control input-sm')
+                            .attr('value', translatedValue)
+                            .css('width', '65%')
+                    )
+            )
+            .append(
+                $('<div>')
+                    .css('width', '8%')
+                    .css('display', 'inline-block')
+                    .css('vertical-align', 'top')
+                    .append(
+                        $('<a>')
+                            .attr('role', 'button')
+                            .attr('tabindex', '0')
+                            .addClass('pull-right')
+                            .attr('data-value', value)
+                            .attr('data-action', 'removeValue')
+                            .append(
+                                $('<span>').addClass('fas fa-times')
+                            )
+                    )
+            )
+            .append(
+                $('<br>').css('clear', 'both')
+            )
+            .get(0).outerHTML;
+    }
 
-        validateUniqueLabel: function () {
-            let keyList = this.model.get(this.name) || [];
-            let labels = this.model.get('translatedOptions') || {};
-            let metLabelList = [];
+    /**
+     * @private
+     * @return {boolean}
+     */
+    validateUniqueLabel() {
+        const keyList = this.model.get(this.name) || [];
+        const labels = this.model.get('translatedOptions') || {};
+        const metLabelList = [];
 
-            for (let key of keyList) {
-                let label = labels[key];
+        for (const key of keyList) {
+            const label = labels[key];
 
-                if (!label) {
-                    return true;
-                }
-
-                if (metLabelList.indexOf(label) !== -1) {
-                    return true;
-                }
-
-                metLabelList.push(label);
+            if (!label) {
+                return true;
             }
 
-            return false;
-        },
+            if (metLabelList.indexOf(label) !== -1) {
+                return true;
+            }
 
-        fetch: function () {
-            let data = Dep.prototype.fetch.call(this);
+            metLabelList.push(label);
+        }
 
-            data.translatedOptions = {};
+        return false;
+    }
 
-            (data[this.name] || []).forEach(value => {
-                let valueInternal = value.replace(/"/g, '\\"');
+    fetch() {
+        const data = super.fetch();
 
-                data.translatedOptions[value] = this.$el
-                    .find('input[data-name="translatedValue"][data-value="'+valueInternal+'"]')
-                    .val() || value;
-            });
+        data.translatedOptions = {};
 
-            return data;
-        },
-    });
-});
+        (data[this.name] || []).forEach(value => {
+            const valueInternal = value.replace(/"/g, '\\"');
+
+            data.translatedOptions[value] = this.$el
+                .find(`input[data-name="translatedValue"][data-value="${valueInternal}"]`)
+                .val() || value;
+        });
+
+        return data;
+    }
+}

@@ -89,6 +89,8 @@ class WysiwygFieldView extends TextFieldView {
     handlebars = false
 
     /** @protected */
+    toolbar
+    /** @protected */
     hasBodyPlainField = false
 
     events = {

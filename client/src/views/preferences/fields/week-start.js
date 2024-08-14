@@ -26,28 +26,22 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/preferences/fields/week-start', ['views/fields/enum-int'], function (Dep) {
+import EnumIntFieldView from 'views/fields/enum-int';
 
-    return Dep.extend({
+export default class extends EnumIntFieldView {
 
-        setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.params.options);
+    setupOptions() {
+        this.params.options = Espo.Utils.clone(this.params.options);
+        this.params.options.unshift(-1);
 
-            this.params.options.unshift(-1);
+        this.translatedOptions = {};
 
-            this.translatedOptions = {};
+        const dayList = this.getLanguage().get('Global', 'lists', 'dayNames') || [];
 
-            var dayList = this.getLanguage().get('Global', 'lists', 'dayNames') || [];
+        dayList.forEach((item, i) => this.translatedOptions[i] = item);
 
-            dayList.forEach((item, i) => {
-                this.translatedOptions[i] = item;
-            });
+        const defaultWeekStart = this.getConfig().get('weekStart');
 
-            var defaultWeekStart = this.getConfig().get('weekStart');
-
-            this.translatedOptions[-1] = this.translate('Default') +
-                ' (' + dayList[defaultWeekStart] +
-                ')';
-        },
-    });
-});
+        this.translatedOptions[-1] = `${this.translate('Default')} (${dayList[defaultWeekStart]})`;
+    }
+}
