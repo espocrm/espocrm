@@ -3670,7 +3670,10 @@ class ListRecordView extends View {
         this.uncheckAll();
 
         this.$el.find('input.record-checkbox').attr('disabled', 'disabled');
-        this.$selectAllCheckbox.attr('disabled', 'disabled');
+
+        if (this.$selectAllCheckbox) {
+            this.$selectAllCheckbox.attr('disabled', 'disabled');
+        }
     }
 
     // noinspection JSUnusedGlobalSymbols
@@ -3687,7 +3690,10 @@ class ListRecordView extends View {
         this._disabledCheckboxes = false;
 
         this.$el.find('input.record-checkbox').removeAttr('disabled');
-        this.$selectAllCheckbox.removeAttr('disabled');
+
+        if (this.$selectAllCheckbox) {
+            this.$selectAllCheckbox.removeAttr('disabled');
+        }
     }
 
     /**
