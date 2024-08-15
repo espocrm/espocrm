@@ -29,13 +29,15 @@
 
 namespace Espo\ORM;
 
+use Closure;
+
 /**
  * Event dispatcher.
  */
 class EventDispatcher
 {
-    /** @var array{'metadataUpdate': callable[]} */
-    private $data;
+    /** @var array{'metadataUpdate': Closure[]} */
+    private array $data;
 
     private const METADATA_UPDATE = 'metadataUpdate';
 
@@ -46,7 +48,7 @@ class EventDispatcher
         ];
     }
 
-    public function subscribeToMetadataUpdate(callable $callback): void
+    public function subscribeToMetadataUpdate(Closure $callback): void
     {
         $this->data[self::METADATA_UPDATE][] = $callback;
     }
