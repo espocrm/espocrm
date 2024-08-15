@@ -27,53 +27,51 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-namespace Espo\ORM;
+namespace tests\unit\Espo\ORM;
 
-use Closure;
+use Espo\ORM\EventDispatcher;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Event dispatcher.
- */
-class EventDispatcher
+class EntityDispatcherTest extends TestCase
 {
-    /** @var array{'metadataUpdate': Closure[]} */
-    private array $data;
-
-    private const METADATA_UPDATE = 'metadataUpdate';
-
-    public function __construct()
+    public function testSubscribe(): void
     {
-        $this->data = [
-            self::METADATA_UPDATE => [],
-        ];
+        $eventDispatcher = new EventDispatcher();
+
+        $dispatched = false;
+
+        $eventDispatcher->subscribeToMetadataUpdate(function () use (&$dispatched) {
+            $dispatched = true;
+        });
+
+        $eventDispatcher->dispatchMetadataUpdate();
+
+        $this->assertTrue($dispatched);
     }
 
-    public function subscribeToMetadataUpdate(Closure $callback): void
+    public function testUnsubscribe(): void
     {
-        $this->data[self::METADATA_UPDATE][] = $callback;
-    }
+        $eventDispatcher = new EventDispatcher();
 
-    /**
-     * @internal
-     * @since 8.4.0
-     */
-    public function unsubscribeFromMetadataUpdate(Closure $closure): void
-    {
-        $list = &$this->data[self::METADATA_UPDATE];
+        $dispatched1 = false;
 
-        $index = array_search($closure, $list);
+        $closure1 = function () use (&$dispatched1) {
+            $dispatched1 = true;
+        };
 
-        if ($index !== false) {
-            unset($list[$index]);
+        $dispatched2 = false;
 
-            $list = array_values($list);
-        }
-    }
+        $closure2 = function () use (&$dispatched2) {
+            $dispatched2 = true;
+        };
 
-    public function dispatchMetadataUpdate(): void
-    {
-        foreach ($this->data[self::METADATA_UPDATE] as $callback) {
-            $callback();
-        }
+        $eventDispatcher->subscribeToMetadataUpdate($closure1);
+        $eventDispatcher->subscribeToMetadataUpdate($closure2);
+        $eventDispatcher->unsubscribeFromMetadataUpdate($closure1);
+
+        $eventDispatcher->dispatchMetadataUpdate();
+
+        $this->assertFalse($dispatched1);
+        $this->assertTrue($dispatched2);
     }
 }
