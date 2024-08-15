@@ -26,29 +26,35 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('crm:views/call/fields/date-end', ['views/fields/datetime'], function (Dep) {
+import DatetimeFieldView from 'views/fields/datetime';
+import moment from 'moment';
 
-    return Dep.extend({
+export default class extends DatetimeFieldView {
 
-        validateAfter: function () {
-            var field = this.model.getFieldParam(this.name, 'after');
+    validateAfter() {
+        const field = this.params.after;
 
-            if (field) {
-                var value = this.model.get(this.name);
-                var otherValue = this.model.get(field);
+        if (!field) {
+            return false;
+        }
 
-                if (value && otherValue) {
-                    if (moment(value).unix() < moment(otherValue).unix()) {
-                        var msg = this.translate('fieldShouldAfter', 'messages')
-                            .replace('{field}', this.getLabelText())
-                            .replace('{otherField}', this.translate(field, 'fields', this.entityType));
+        const value = this.model.get(this.name);
+        const otherValue = this.model.get(field);
 
-                        this.showValidationMessage(msg);
+        if (!(value && otherValue)) {
+            return false;
+        }
 
-                        return true;
-                    }
-                }
-            }
-        },
-    });
-});
+        if (moment(value).unix() <= moment(otherValue).unix()) {
+            const msg = this.translate('fieldShouldAfter', 'messages')
+                .replace('{field}', this.getLabelText())
+                .replace('{otherField}', this.translate(field, 'fields', this.entityType));
+
+            this.showValidationMessage(msg);
+
+            return true;
+        }
+
+        return false;
+    }
+}
