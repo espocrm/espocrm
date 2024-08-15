@@ -26,8 +26,8 @@
         "dateEnd": {
             "type": "datetime",
             "required": true,
-            "view": "crm:views/call/fields/date-end",
-            "after": "dateStart"
+            "after": "dateStart",
+            "afterOrEqual": true
         },
         "duration": {
             "type": "duration",

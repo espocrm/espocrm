@@ -424,7 +424,8 @@
                         "properties": {
                             "type": {
                                 "anyOf": [
-                                    {"const": "date"}
+                                    {"const": "date"},
+                                    {"const": "datetime"}
                                 ]
                             }
                         }

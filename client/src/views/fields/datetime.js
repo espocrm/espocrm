@@ -55,6 +55,7 @@ class DatetimeFieldView extends DateFieldView {
      * @property {number} [minuteStep] A minute step.
      * @property {string} [after] Validate to be after another date field.
      * @property {string} [before] Validate to be before another date field.
+     * @property {boolean} [afterOrEqual] Allow an equal date for 'after' validation.
      */
 
     /**
