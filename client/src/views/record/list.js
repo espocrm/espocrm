@@ -2170,6 +2170,7 @@ class ListRecordView extends View {
         if (this.massActionsDisabled) {
             this.massActionList = [];
             this.checkAllResultMassActionList = [];
+            this.massActionDefs = {};
 
             return;
         }
