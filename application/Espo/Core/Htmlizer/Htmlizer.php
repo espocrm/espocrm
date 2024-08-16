@@ -48,7 +48,6 @@ use Espo\Core\InjectableFactory;
 use Espo\Core\ServiceFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\DateTime;
-use Espo\Core\Utils\File\Manager as FileManager;
 use Espo\Core\Utils\Language;
 use Espo\Core\Utils\Log;
 use Espo\Core\Utils\Metadata;
@@ -76,19 +75,18 @@ class Htmlizer
     private const LINK_LIMIT = 100;
 
     public function __construct(
-        private FileManager $fileManager, /** @phpstan-ignore-line */
         private DateTime $dateTime,
         private NumberUtil $number,
         private SelectBuilderFactory $selectBuilderFactory,
         private User $user,
+        private EntityManager $entityManager,
+        private Metadata $metadata,
+        private Language $language,
+        private Config $config,
+        private Log $log,
+        private InjectableFactory $injectableFactory,
         private ?Acl $acl = null,
-        private ?EntityManager $entityManager = null,
-        private ?Metadata $metadata = null,
-        private ?Language $language = null,
-        private ?Config $config = null,
         private ?ServiceFactory $serviceFactory = null,
-        private ?Log $log = null,
-        private ?InjectableFactory $injectableFactory = null,
     ) {}
 
     /**
@@ -161,7 +159,7 @@ class Htmlizer
             $html = str_replace('?entryPoint=attachment&amp;', '?entryPoint=attachment&', $html);
         }
 
-        if (!$skipInlineAttachmentHandling && $this->entityManager) {
+        if (!$skipInlineAttachmentHandling) {
             /** @var string $html */
             $html = preg_replace_callback(
                 '/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/',
@@ -171,8 +169,6 @@ class Htmlizer
                     if (!$id) {
                         return '';
                     }
-
-                    assert($this->entityManager !== null);
 
                     /** @var Attachment $attachment */
                     $attachment = $this->entityManager->getEntityById(Attachment::ENTITY_TYPE, $id);
@@ -256,7 +252,6 @@ class Htmlizer
         if (
             !$skipLinks &&
             $level === 0 &&
-            $this->entityManager &&
             $entity->hasId()
         ) {
             $this->loadRelatedCollections($entity, $template, $data);
@@ -368,7 +363,6 @@ class Htmlizer
 
             if (
                 $fieldType === FieldType::CURRENCY &&
-                $this->metadata &&
                 $entity instanceof CoreEntity &&
                 $entity->getAttributeParam($attribute, 'attributeRole') === 'currency'
             ) {
@@ -390,19 +384,15 @@ class Htmlizer
                 $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
 
                 if ($fieldType === FieldType::ENUM) {
-                    if ($this->language) {
-                        $data[$attribute] = $this->language->translateOption(
-                            $data[$attribute], $attribute, $entity->getEntityType()
-                        );
+                    $data[$attribute] = $this->language->translateOption(
+                        $data[$attribute], $attribute, $entity->getEntityType()
+                    );
 
-                        if ($this->metadata) {
-                            $translationPath = $this->metadata
-                                ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']);
+                    $translationPath = $this->metadata
+                        ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']);
 
-                            if ($translationPath) {
-                                $data[$attribute] = $this->language->get($translationPath . '.' . $attribute, $data[$attribute]);
-                            }
-                        }
+                    if ($translationPath) {
+                        $data[$attribute] = $this->language->get($translationPath . '.' . $attribute, $data[$attribute]);
                     }
                 }
 
@@ -410,7 +400,7 @@ class Htmlizer
             }
         }
 
-        if (!$skipLinks && $this->entityManager) {
+        if (!$skipLinks) {
             foreach ($entity->getRelationList() as $relation) {
                 if (in_array($relation, $forbiddenLinkList)) {
                     continue;
@@ -464,11 +454,7 @@ class Htmlizer
      */
     private function loadRelatedCollection(Entity $entity, string $relation, ?string $template): ?Collection
     {
-        assert($this->entityManager !== null);
-
-        $limit = $this->config ?
-            $this->config->get('htmlizerLinkLimit', self::LINK_LIMIT) :
-            self::LINK_LIMIT;
+        $limit = $this->config->get('htmlizerLinkLimit', self::LINK_LIMIT);
 
         $orderData = $this->getRelationOrder($entity->getEntityType(), $relation);
 
@@ -552,10 +538,14 @@ class Htmlizer
                     return '';
                 }
 
+                /** @noinspection PhpUndefinedClassInspection */
+                /** @noinspection PhpUndefinedNamespaceInspection */
                 /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString("?entryPoint=attachment&id=" . $id);
             },
             'pagebreak' => function () {
+                /** @noinspection PhpUndefinedClassInspection, HtmlUnknownAttribute */
+                /** @noinspection PhpUndefinedNamespaceInspection */
                 /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString('<br pagebreak="true">');
             },
@@ -585,15 +575,18 @@ class Htmlizer
                 $attributesPart = "";
 
                 if ($width) {
-                    $attributesPart .= " width=\"" .strval($width) . "\"";
+                    $attributesPart .= " width=\"$width\"";
                 }
 
                 if ($height) {
-                    $attributesPart .= " height=\"" .strval($height) . "\"";
+                    $attributesPart .= " height=\"$height\"";
                 }
 
-                $html = "<img src=\"?entryPoint=attachment&id={$id}\"{$attributesPart}>";
+                /** @noinspection HtmlRequiredAltAttribute */
+                $html = "<img src=\"?entryPoint=attachment&id=$id\"$attributesPart>";
 
+                /** @noinspection PhpUndefinedNamespaceInspection */
+                /** @noinspection PhpUndefinedClassInspection */
                 /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString($html);
             },
@@ -666,8 +659,10 @@ class Htmlizer
                 /** @phpstan-ignore-next-line */
                 $paramsString = urlencode(json_encode($params));
 
+                /** @noinspection PhpUndefinedNamespaceInspection */
+                /** @noinspection PhpUndefinedClassInspection */
                 /** @phpstan-ignore-next-line */
-                return new LightnCandy\SafeString("<barcodeimage data=\"{$paramsString}\"/>");
+                return new LightnCandy\SafeString("<barcodeimage data=\"$paramsString\"/>");
             },
             'ifEqual' => function () {
                 $args = func_get_args();
@@ -739,7 +734,7 @@ class Htmlizer
                     return null;
                 }
 
-                $css = "font-family: zapfdingbats; color: {$color}";
+                $css = "font-family: zapfdingbats; color: $color";
 
                 if (in_array($option, $list)) {
                     $html =
@@ -749,6 +744,8 @@ class Htmlizer
                     $html = '<input type="checkbox" name="1" readonly="true" value="1" style="color: '.$css.'">';
                 }
 
+                /** @noinspection PhpUndefinedNamespaceInspection */
+                /** @noinspection PhpUndefinedClassInspection */
                 /** @phpstan-ignore-next-line */
                 return new LightnCandy\SafeString($html);
             },
@@ -788,6 +785,7 @@ class Htmlizer
 
             $value = $result->getValue();
 
+            /** @noinspection PhpFullyQualifiedNameUsageInspection */
             if ($value instanceof \Espo\Core\Htmlizer\Helper\SafeString) {
                 return $value->getWrappee();
             }
@@ -795,28 +793,26 @@ class Htmlizer
             return $value;
         };
 
-        if ($this->metadata) {
-            $additionalHelpers = array_filter(
+        $additionalHelpers = array_filter(
+            $this->metadata->get(['app', 'templateHelpers']) ?? [],
+            function (string $item) {
+                return str_contains($item, '::');
+            }
+        );
+
+        $helpers = array_merge($helpers, $additionalHelpers);
+
+        $additionalHelper2NameList = array_keys(
+            array_filter(
                 $this->metadata->get(['app', 'templateHelpers']) ?? [],
                 function (string $item) {
-                    return str_contains($item, '::');
+                    return !str_contains($item, '::');
                 }
-            );
+            )
+        );
 
-            $helpers = array_merge($helpers, $additionalHelpers);
-
-            $additionalHelper2NameList = array_keys(
-                array_filter(
-                    $this->metadata->get(['app', 'templateHelpers']) ?? [],
-                    function (string $item) {
-                        return !str_contains($item, '::');
-                    }
-                )
-            );
-
-            foreach ($additionalHelper2NameList as $name) {
-                $helpers[$name] = $customHelper;
-            }
+        foreach ($additionalHelper2NameList as $name) {
+            $helpers[$name] = $customHelper;
         }
 
         return $helpers;
@@ -824,10 +820,6 @@ class Htmlizer
 
     private function getFieldType(string $entityType, string $field): ?string
     {
-        if (!$this->metadata) {
-            return null;
-        }
-
         return $this->metadata->get(['entityDefs', $entityType, 'fields', $field, 'type']);
     }
 
@@ -836,10 +828,6 @@ class Htmlizer
      */
     private function getRelationOrder(string $entityType, string $relation): array
     {
-        if (!$this->entityManager) {
-            return [];
-        }
-
         $relationDefs = $this->entityManager
             ->getDefs()
             ->getEntity($entityType)
@@ -877,7 +865,7 @@ class Htmlizer
         }
 
         if (!extension_loaded('dom')) {
-            $this->log?->warning("Extension 'dom' is not enabled. HTML templating functionality is restricted.");
+            $this->log->warning("Extension 'dom' is not enabled. HTML templating functionality is restricted.");
 
             return $template;
         }
@@ -887,7 +875,7 @@ class Htmlizer
         $loadResult = $xml->loadHTML($template);
 
         if ($loadResult === false) {
-            $this->log?->warning("HTML template parsing error.");
+            $this->log->warning("HTML template parsing error.");
 
             return $template;
         }
@@ -947,7 +935,7 @@ class Htmlizer
         $newTemplate = $xml->saveXML();
 
         if ($newTemplate === false || !is_string($newTemplate)) {
-            $this->log?->warning("DOM save error.");
+            $this->log->warning("DOM save error.");
 
             return $template;
         }
