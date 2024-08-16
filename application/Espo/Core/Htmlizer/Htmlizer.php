@@ -413,26 +413,26 @@ class Htmlizer
                 $relationType = $entity->getRelationType($relation);
 
                 if (
-                    $relationType === Entity::BELONGS_TO ||
-                    $relationType === Entity::BELONGS_TO_PARENT
+                    $relationType !== Entity::BELONGS_TO &&
+                    $relationType !== Entity::BELONGS_TO_PARENT
                 ) {
-                    $relatedEntity = $this->entityManager
-                        ->getRDBRepository($entity->getEntityType())
-                        ->getRelation($entity, $relation)
-                        ->findOne();
-
-                    if (!$relatedEntity) {
-                        continue;
-                    }
-
-                    if ($this->acl) {
-                        if (!$this->acl->checkEntityRead($relatedEntity)) {
-                            continue;
-                        }
-                    }
-
-                    $data[$relation] = $this->getDataFromEntity($relatedEntity, true, $level + 1);
+                    continue;
                 }
+
+                $relatedEntity = $this->entityManager
+                    ->getRDBRepository($entity->getEntityType())
+                    ->getRelation($entity, $relation)
+                    ->findOne();
+
+                if (!$relatedEntity) {
+                    continue;
+                }
+
+                if ($this->acl && !$this->acl->checkEntityRead($relatedEntity)) {
+                    continue;
+                }
+
+                $data[$relation] = $this->getDataFromEntity($relatedEntity, true, $level + 1);
             }
         }
 
