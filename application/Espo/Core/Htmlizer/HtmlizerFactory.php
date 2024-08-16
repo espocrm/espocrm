@@ -32,7 +32,6 @@ namespace Espo\Core\Htmlizer;
 use Espo\Core\InjectableFactory;
 use Espo\Core\Utils\DateTime\DateTimeFactory;
 use Espo\Core\AclManager;
-
 use Espo\Entities\User;
 
 /**
@@ -41,21 +40,12 @@ use Espo\Entities\User;
  */
 class HtmlizerFactory
 {
-    private $injectableFactory;
-
-    private $dateTimeFactory;
-
-    private $aclManager;
 
     public function __construct(
-        InjectableFactory $injectableFactory,
-        DateTimeFactory $dateTimeFactory,
-        AclManager $aclManager
-    ) {
-        $this->injectableFactory = $injectableFactory;
-        $this->dateTimeFactory = $dateTimeFactory;
-        $this->aclManager = $aclManager;
-    }
+        private InjectableFactory $injectableFactory,
+        private DateTimeFactory $dateTimeFactory,
+        private AclManager $aclManager
+    ) {}
 
     public function create(bool $skipAcl = false, ?string $timeZone = null): Htmlizer
     {
