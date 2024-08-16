@@ -34,9 +34,13 @@ use DOMDocument;
 use DOMElement;
 use DOMException;
 use DOMXPath;
+use Espo\Core\Exceptions\BadRequest;
+use Espo\Core\Exceptions\Forbidden;
 use Espo\Core\ORM\Entity as CoreEntity;
 use Espo\Core\ORM\Type\FieldType;
+use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Entities\Attachment;
+use Espo\Entities\User;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Core\Utils\Json;
 use Espo\Core\Acl;
@@ -72,9 +76,11 @@ class Htmlizer
     private const LINK_LIMIT = 100;
 
     public function __construct(
-        private FileManager $fileManager, /** @phpstan-ignore-line  */
+        private FileManager $fileManager, /** @phpstan-ignore-line */
         private DateTime $dateTime,
         private NumberUtil $number,
+        private SelectBuilderFactory $selectBuilderFactory,
+        private User $user,
         private ?Acl $acl = null,
         private ?EntityManager $entityManager = null,
         private ?Metadata $metadata = null,
@@ -82,7 +88,7 @@ class Htmlizer
         private ?Config $config = null,
         private ?ServiceFactory $serviceFactory = null,
         private ?Log $log = null,
-        private ?InjectableFactory $injectableFactory = null
+        private ?InjectableFactory $injectableFactory = null,
     ) {}
 
     /**
@@ -496,9 +502,33 @@ class Htmlizer
             ) &&
             mb_stripos($template, '{{#each ' . $relation . '}}') !== false
         ) {
+            $foreignEntityType = $this->entityManager
+                ->getDefs()
+                ->getEntity($entity->getEntityType())
+                ->getRelation($relation)
+                ->getForeignEntityType();
+
+            $selectBuilder = $this->selectBuilderFactory->create();
+
+            $selectBuilder->from($foreignEntityType);
+
+            if ($this->acl) {
+                $selectBuilder
+                    ->forUser($this->user)
+                    ->withAccessControlFilter();
+            }
+
+            try {
+                $query = $selectBuilder->build();
+            }
+            catch (BadRequest|Forbidden $e) {
+                throw new RuntimeException($e->getMessage(), 0, $e);
+            }
+
             return $this->entityManager
                 ->getRDBRepository($entity->getEntityType())
                 ->getRelation($entity, $relation)
+                ->clone($query)
                 ->limit(0, $limit)
                 ->order($orderData)
                 ->find();

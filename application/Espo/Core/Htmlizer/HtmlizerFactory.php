@@ -40,7 +40,6 @@ use Espo\Entities\User;
  */
 class HtmlizerFactory
 {
-
     public function __construct(
         private InjectableFactory $injectableFactory,
         private DateTimeFactory $dateTimeFactory,
@@ -83,6 +82,7 @@ class HtmlizerFactory
 
         if ($params->applyAcl) {
             $deps['acl'] = $this->aclManager->createUserAcl($user);
+            $deps['user'] = $user;
         }
 
         return $this->injectableFactory->createWith(Htmlizer::class, $deps);
