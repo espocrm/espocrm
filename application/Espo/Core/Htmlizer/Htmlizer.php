@@ -162,7 +162,7 @@ class Htmlizer
         if (!$skipInlineAttachmentHandling) {
             /** @var string $html */
             $html = preg_replace_callback(
-                '/\?entryPoint=attachment\&id=([A-Za-z0-9]*)/',
+                '/\?entryPoint=attachment&id=([A-Za-z0-9]*)/',
                 function ($matches) {
                     $id = $matches[1];
 
