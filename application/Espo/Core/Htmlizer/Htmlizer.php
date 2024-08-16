@@ -35,6 +35,7 @@ use DOMElement;
 use DOMException;
 use DOMXPath;
 use Espo\Core\ORM\Entity as CoreEntity;
+use Espo\Core\ORM\Type\FieldType;
 use Espo\Entities\Attachment;
 use Espo\Repositories\Attachment as AttachmentRepository;
 use Espo\Core\Utils\Json;
@@ -360,7 +361,7 @@ class Htmlizer
             }
 
             if (
-                $fieldType === 'currency' &&
+                $fieldType === FieldType::CURRENCY &&
                 $this->metadata &&
                 $entity instanceof CoreEntity &&
                 $entity->getAttributeParam($attribute, 'attributeRole') === 'currency'
@@ -382,16 +383,15 @@ class Htmlizer
 
                 $fieldType = $this->getFieldType($entity->getEntityType(), $attribute);
 
-                if ($fieldType === 'enum') {
+                if ($fieldType === FieldType::ENUM) {
                     if ($this->language) {
                         $data[$attribute] = $this->language->translateOption(
                             $data[$attribute], $attribute, $entity->getEntityType()
                         );
 
                         if ($this->metadata) {
-                            $translationPath = $this->metadata->get(
-                                ['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']
-                            );
+                            $translationPath = $this->metadata
+                                ->get(['entityDefs', $entity->getEntityType(), 'fields', $attribute, 'translation']);
 
                             if ($translationPath) {
                                 $data[$attribute] = $this->language->get($translationPath . '.' . $attribute, $data[$attribute]);
