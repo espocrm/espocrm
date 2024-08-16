@@ -466,9 +466,7 @@ class CalendarView extends View {
     }
 
     /**
-     * @private
-     * @param {Object.<string, *>} o
-     * @return {{
+     * @typedef {{
      *     recordId,
      *     dateStart?: string,
      *     originalColor?: string,
@@ -480,7 +478,16 @@ class CalendarView extends View {
      *     title: string,
      *     dateEndDate?: ?string,
      *     status?: string,
-     * }}
+     *     allDay?: boolean,
+     *     start?: Date,
+     *     end?: Date,
+     * }} module:modules/crm/views/calendar/calendar~FcEvent
+     */
+
+    /**
+     * @private
+     * @param {Object.<string, *>} o
+     * @return {module:modules/crm/views/calendar/calendar~FcEvent}
      */
     convertToFcEvent(o) {
         const event = {
@@ -1315,7 +1322,7 @@ class CalendarView extends View {
     /**
      * @private
      * @param {EventImpl} event
-     * @return {Object.<string, *>}
+     * @return {module:modules/crm/views/calendar/calendar~FcEvent}
      */
     obtainPropsFromEvent(event) {
         const props = {};
@@ -1337,10 +1344,19 @@ class CalendarView extends View {
     /**
      * @private
      * @param {EventImpl} event
-     * @param {Object.<string, *>} props
+     * @param {{start?: Date, end?: Date, allDay: boolean} & Record} props
      */
     applyPropsToEvent(event, props) {
         if ('start' in props) {
+            if (
+                !props.allDay &&
+                props.end &&
+                props.end.getTime() === props.start.getTime()
+            ) {
+                // Otherwise, 0-duration event would disappear.
+                props.end = moment(props.end).add(1, 'hour').toDate();
+            }
+
             event.setDates(props.start, props.end, {allDay: props.allDay});
         }
 
