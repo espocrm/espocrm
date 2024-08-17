@@ -83,6 +83,7 @@ return [
         'rotation' => true,
         'maxFileNumber' => 30,
         'printTrace' => false,
+        'databaseHandler' => false,
     ],
     'authenticationMethod' => 'Espo',
     'globalSearchEntityList' => [
