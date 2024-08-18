@@ -43,12 +43,13 @@ class PhoneNumberTest extends BaseTestCase
 {
     public function testPhoneNumber1(): void
     {
-        /* @var $entityManager EntityManager */
-        $entityManager = $this->getContainer()->get('entityManager');
+        $entityManager = $this->getContainer()->getByClass(EntityManager::class);
 
-        $contact = $entityManager->createEntity('Contact', [
-            'phoneNumber' => '+1',
-        ]);
+        $contact = $entityManager->getEntity(Contact::ENTITY_TYPE);
+        $contact->set('phoneNumber', '+1');
+        $entityManager->saveEntity($contact);
+
+        $this->assertEquals('+1', $contact->get('phoneNumber'));
 
         $contact = $entityManager->getEntity('Contact', $contact->getId());
 
