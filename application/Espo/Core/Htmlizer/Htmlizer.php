@@ -105,11 +105,13 @@ class Htmlizer
         bool $skipInlineAttachmentHandling = false
     ): string {
 
-        $template = $this->prepare($template);
+        $helpers = $this->getHelpers();
+
+        $template = $this->prepare($template, array_keys($helpers));
 
         $code = LightnCandy::compile($template, [
             'flags' => Flags::FLAG_HANDLEBARSJS | Flags::FLAG_ERROR_EXCEPTION,
-            'helpers' => $this->getHelpers(),
+            'helpers' => $helpers,
         ]);
 
         if ($code === false) {
@@ -915,7 +917,10 @@ class Htmlizer
         return [[$orderBy, $order]];
     }
 
-    private function handleIteration(string $template): string
+    /**
+     * @param string[] $helpers
+     */
+    private function handleAttributeHelper(string $template, string $attribute, string $helper, array $helpers): string
     {
         if ($template === '') {
             return $template;
@@ -941,7 +946,7 @@ class Htmlizer
 
         $found = false;
 
-        $elements = $xpath->query("//*[@iterate]");
+        $elements = $xpath->query("//*[@$attribute]");
 
         if (!$elements) {
             return $template;
@@ -953,13 +958,13 @@ class Htmlizer
             }
 
             try {
-                $wrapperElement = $xml->createElement('iteration-wrapper');
+                $wrapperElement = $xml->createElement("$attribute-wrapper");
 
                 if (!$wrapperElement) {
                     throw new LogicException();
                 }
 
-                $wrapperElement->setAttribute('v', $element->getAttribute('iterate'));
+                $wrapperElement->setAttribute('v', $element->getAttribute($attribute));
             }
             catch (DOMException $e) {
                 throw new LogicException($e->getMessage());
@@ -977,7 +982,7 @@ class Htmlizer
                 throw new LogicException();
             }
 
-            $newElement->removeAttribute('iterate');
+            $newElement->removeAttribute($attribute);
 
             $wrapperElement->appendChild($newElement);
             $parentNode->replaceChild($wrapperElement, $element);
@@ -997,20 +1002,49 @@ class Htmlizer
             return $template;
         }
 
-        $newTemplate = str_replace('</iteration-wrapper>', '{{/each}}', $newTemplate);
+        $newTemplate = str_replace("</$attribute-wrapper>", "{{/$helper}}", $newTemplate);
 
         $from = strpos($newTemplate,'<body>') + 6;
         $to = strrpos($newTemplate, '</body>') - strlen($newTemplate);
 
         $newTemplate = substr($newTemplate, $from, $to);
 
-        return preg_replace('/<iteration-wrapper v="{{(.*)}}">/', '{{#each $1}}', $newTemplate) ?? '';
+        $regExp = '/<' . $attribute . '-wrapper v="{{(.*?)}}">/';
+
+        $newTemplate = preg_replace_callback($regExp, function ($matches) use ($helpers, $helper) {
+            $expression = trim($matches[1]);
+
+            $isHelper = false;
+
+            foreach ($helpers as $it) {
+                if (str_starts_with($expression, $it . ' ')) {
+                    $isHelper = true;
+
+                    break;
+                }
+            }
+
+            if ($isHelper) {
+                $expression = "($expression)";
+            }
+
+            return "{{#$helper $expression}}";
+        }, $newTemplate);
+
+        return $newTemplate ?? '';
     }
 
-    private function prepare(string $template): string
+    /**
+     * @param string[] $helpers
+     */
+    private function prepare(string $template, array $helpers): string
     {
         $template = str_replace('<tcpdf ', '', $template);
 
-        return $this->handleIteration($template);
+        $template = $this->handleAttributeHelper($template, 'iterate', 'each', $helpers);
+        /** @noinspection PhpUnnecessaryLocalVariableInspection */
+        $template = $this->handleAttributeHelper($template, 'x-if', 'if', $helpers);
+
+        return $template;
     }
 }

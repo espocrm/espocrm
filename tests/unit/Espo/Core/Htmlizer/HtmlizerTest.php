@@ -220,7 +220,7 @@ class HtmlizerTest extends TestCase
     public function testIterate(): void
     {
         /** @noinspection HtmlUnknownAttribute */
-        $template = "<ul><li iterate=\"{{items}}\">{{name}}</li></ul>";
+        $template = "<ul><li iterate=\"{{items}}\">{{name}}</li></ul><ul><li iterate=\"{{items}}\">{{name}}</li></ul>";
 
         $html = $this->htmlizer->render(null, $template, null, [
             'items' => [
@@ -230,7 +230,21 @@ class HtmlizerTest extends TestCase
         ]);
 
         /** @noinspection HtmlUnknownAttribute */
-        $expected = "<ul><li>1</li><li>2</li></ul>";
+        $expected = "<ul><li>1</li><li>2</li></ul><ul><li>1</li><li>2</li></ul>";
+
+        $this->assertEquals($expected, $html);
+    }
+
+    public function testIf(): void
+    {
+        /** @noinspection HtmlUnknownAttribute */
+        $template = "<ul><li x-if=\"{{and (equal 1 1) true}}\">1</li><li x-if=\"{{false}}\">2</li>".
+            "<li x-if=\"{{1}}\">true</li></ul>";
+
+        $html = $this->htmlizer->render(null, $template, null, []);
+
+        /** @noinspection HtmlUnknownAttribute */
+        $expected = "<ul><li>1</li><li>true</li></ul>";
 
         $this->assertEquals($expected, $html);
     }
