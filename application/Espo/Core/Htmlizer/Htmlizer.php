@@ -529,6 +529,63 @@ class Htmlizer
     private function getHelpers(): array
     {
         $helpers = [
+            'and' => function () {
+                $args = func_get_args();
+
+                if (count($args) === 1) {
+                    return false;
+                }
+
+                for ($i = 0; $i < count($args) - 1; $i++) {
+                    $arg = $args[$i];
+
+                    if (!$arg) {
+                        return false;
+                    }
+                }
+
+                return true;
+            },
+            'or' => function () {
+                $args = func_get_args();
+
+                for ($i = 0; $i < count($args) - 1; $i++) {
+                    $arg = $args[$i];
+
+                    if (!$arg) {
+                        return true;
+                    }
+                }
+
+                return false;
+            },
+            'not' => function () {
+                $args = func_get_args();
+
+                if (count($args) !== 2) {
+                    return false;
+                }
+
+                $arg = $args[0];
+
+                return !$arg;
+            },
+            'equal' => function () {
+                $args = func_get_args();
+
+                $arg1 = $args[0] ?? null;
+                $arg2 = $args[1] ?? null;
+
+                return $arg1 === $arg2;
+            },
+            'notEqual' => function () {
+                $args = func_get_args();
+
+                $arg1 = $args[0] ?? null;
+                $arg2 = $args[1] ?? null;
+
+                return $arg1 !== $arg2;
+            },
             'file' => function () {
                 $args = func_get_args();
 
