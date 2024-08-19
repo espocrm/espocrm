@@ -98,6 +98,11 @@ class RelationshipPanelView extends BottomPanelView {
      */
     viewModalView = null
 
+    /**
+     * @protected
+     */
+    listLayoutName
+
     setup() {
         super.setup();
 
