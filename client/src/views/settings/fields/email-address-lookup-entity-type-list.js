@@ -26,33 +26,32 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/email-address-lookup-entity-type-list',
-['views/fields/entity-type-list'], function (Dep) {
+import EntityTypeListFieldView from 'views/fields/entity-type-list';
 
-    return Dep.extend({
+// noinspection JSUnusedGlobalSymbols
+export default class extends EntityTypeListFieldView {
 
-        setupOptions: function () {
-            Dep.prototype.setupOptions.call(this);
+    setupOptions() {
+        super.setupOptions();
 
-            this.params.options = this.params.options.filter(scope => {
-                if (this.getMetadata().get(['scopes', scope, 'disabled'])) {
-                    return;
-                }
+        this.params.options = this.params.options.filter(scope => {
+            if (this.getMetadata().get(['scopes', scope, 'disabled'])) {
+                return;
+            }
 
-                if (!this.getMetadata().get(['scopes', scope, 'object'])) {
-                    return;
-                }
+            if (!this.getMetadata().get(['scopes', scope, 'object'])) {
+                return;
+            }
 
-                if (~['User', 'Contact', 'Lead', 'Account'].indexOf(scope)) {
-                    return true;
-                }
+            if (['User', 'Contact', 'Lead', 'Account'].includes(scope)) {
+                return true;
+            }
 
-                var type = this.getMetadata().get(['scopes', scope, 'type']);
+            const type = this.getMetadata().get(['scopes', scope, 'type']);
 
-                if (type === 'Company' || type === 'Person') {
-                    return true;
-                }
-            })
-        },
-    });
-});
+            if (type === 'Company' || type === 'Person') {
+                return true;
+            }
+        })
+    }
+}

@@ -26,13 +26,12 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/language', ['views/fields/enum'], function (Dep) {
+import EnumFieldView from 'views/fields/enum';
 
-    return Dep.extend({
+export default class extends EnumFieldView {
 
-        setupOptions: function () {
-            this.params.options = Espo.Utils.clone(this.getMetadata().get(['app', 'language', 'list']) || []);
-            this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
-        },
-    });
-});
+    setupOptions() {
+        this.params.options = Espo.Utils.clone(this.getMetadata().get(['app', 'language', 'list']) || []);
+        this.translatedOptions = Espo.Utils.clone(this.getLanguage().translate('language', 'options') || {});
+    }
+}
