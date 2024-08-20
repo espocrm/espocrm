@@ -58,10 +58,11 @@ class SelectRelatedHelper {
         }
 
         const scope = options.foreignEntityType || model.defs['links'][link].entity;
-        const massRelateEnabled = options.massSelect;
 
         /** @var {Object.<string, *>} */
         const panelDefs = this.metadata.get(['clientDefs', model.entityType, 'relationshipPanels', link]) || {};
+
+        const massRelateEnabled = options.massSelect || panelDefs.massSelect;
 
         let advanced = {};
 
