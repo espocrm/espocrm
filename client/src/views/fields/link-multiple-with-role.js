@@ -60,6 +60,10 @@ class LinkMultipleWithRoleFieldView extends LinkMultipleFieldView {
      * @protected
      */
     roleMaxLength = 50
+    /**
+     * @protected
+     */
+    forceRoles = false
 
     /** @const */
     ROLE_TYPE_ENUM = 'enum'

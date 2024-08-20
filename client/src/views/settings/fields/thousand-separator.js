@@ -26,29 +26,29 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/thousand-separator', ['views/fields/varchar'], function (Dep) {
+import VarcharFieldView from 'views/fields/varchar';
 
-    return Dep.extend({
+export default class extends VarcharFieldView {
 
-        validations: ['required', 'thousandSeparator'],
+    validations = ['required', 'thousandSeparator']
 
-        validateThousandSeparator: function () {
-            if (this.model.get('thousandSeparator') === this.model.get('decimalMark')) {
-                var msg = this.translate('thousandSeparatorEqualsDecimalMark', 'messages', 'Admin');
+    // noinspection JSUnusedGlobalSymbols
+    validateThousandSeparator() {
+        if (this.model.get('thousandSeparator') === this.model.get('decimalMark')) {
+            const msg = this.translate('thousandSeparatorEqualsDecimalMark', 'messages', 'Admin');
 
-                this.showValidationMessage(msg);
+            this.showValidationMessage(msg);
 
-                return true;
-            }
-        },
+            return true;
+        }
+    }
 
-        fetch: function () {
-            var data = {};
-            var value = this.$element.val();
+    fetch() {
+        const data = {};
+        const value = this.$element.val();
 
-            data[this.name] = value || '';
+        data[this.name] = value || '';
 
-            return data;
-        },
-    });
-});
+        return data;
+    }
+}
