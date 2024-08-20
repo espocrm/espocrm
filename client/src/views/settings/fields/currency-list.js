@@ -26,27 +26,26 @@
  * these Appropriate Legal Notices must retain the display of the "EspoCRM" word.
  ************************************************************************/
 
-define('views/settings/fields/currency-list', ['views/fields/multi-enum'], function (Dep) {
+import MultiEnumFieldView from 'views/fields/multi-enum';
 
-    return Dep.extend({
+export default class extends MultiEnumFieldView {
 
-        matchAnyWord: true,
+    matchAnyWord = true
 
-        setupOptions: function () {
-            this.params.options = this.getMetadata().get(['app', 'currency', 'list']) || [];
-            this.translatedOptions = {};
+    setupOptions() {
+        this.params.options = this.getMetadata().get(['app', 'currency', 'list']) || [];
+        this.translatedOptions = {};
 
-            this.params.options.forEach(item => {
-                var value = item
+        this.params.options.forEach(item => {
+            let value = item;
 
-                var name = this.getLanguage().get('Currency', 'names', item);
+            const name = this.getLanguage().get('Currency', 'names', item);
 
-                if (name) {
-                    value += ' - ' + name;
-                }
+            if (name) {
+                value += ' - ' + name;
+            }
 
-                this.translatedOptions[item] = value;
-            });
-        },
-    });
-});
+            this.translatedOptions[item] = value;
+        });
+    }
+}
