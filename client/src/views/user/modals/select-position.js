@@ -113,4 +113,12 @@ export default class UserSelectPositionModalView extends ModalView {
         this.props.onApply(this.model.attributes.position);
         this.close();
     }
+
+    onBackdropClick() {
+        if (this.recordView.isChanged) {
+            return;
+        }
+
+        this.close();
+    }
 }
