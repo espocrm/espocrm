@@ -166,5 +166,8 @@
         "active": "Active",
         "activePortal": "Portal Active",
         "activeApi": "API Active"
+    },
+    "actions": {
+        "changePosition": "Change Position"
     }
 }

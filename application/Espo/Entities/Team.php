@@ -49,4 +49,12 @@ class Team extends \Espo\Core\ORM\Entity
         /** @var ?Link */
         return $this->getValueObject('layoutSet');
     }
+
+    /**
+     * @return string[]
+     */
+    public function getPositionList(): array
+    {
+        return $this->get('positionList') ?? [];
+    }
 }

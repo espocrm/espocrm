@@ -437,6 +437,11 @@
         "noAuth": true
     },
     {
+        "route": "/Team/:id/userPosition",
+        "method": "put",
+        "actionClassName": "Espo\\Tools\\User\\Api\\PutTeamUserPosition"
+    },
+    {
         "route": "/Oidc/authorizationData",
         "method": "get",
         "params": {
