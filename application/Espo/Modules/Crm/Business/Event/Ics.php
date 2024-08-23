@@ -71,7 +71,7 @@ class Ics
 
         foreach ($attributes as $key => $value) {
             if (!property_exists($this, $key)) {
-                throw new RuntimeException("Bad attribute '{$key}'.");
+                throw new RuntimeException("Bad attribute '$key'.");
             }
 
             $this->$key = $value;
@@ -88,6 +88,7 @@ class Ics
         return $this->output;
     }
 
+    /** @noinspection SpellCheckingInspection */
     private function generate(): void
     {
         $this->output =
@@ -126,7 +127,7 @@ class Ics
         }
 
         /** @var string */
-        return preg_replace('/([\,;])/', '\\\$1', $string);
+        return preg_replace('/([,;])/', '\\\$1', $string);
     }
 
     private function formatMultiline(?string $string): string
