@@ -35,6 +35,10 @@ use Espo\Core\Mail\Exceptions\SendingError;
 use Espo\Entities\Attachment;
 use Espo\Entities\Email;
 use Espo\Entities\UniqueId;
+use Espo\Modules\Crm\Entities\Call;
+use Espo\Modules\Crm\Entities\Contact;
+use Espo\Modules\Crm\Entities\Lead;
+use Espo\Modules\Crm\Entities\Meeting;
 use Espo\ORM\Entity;
 use Espo\Entities\User;
 use Espo\Core\Utils\Util;
@@ -197,12 +201,18 @@ class Invitations
             ->getRelation($entity, 'assignedUser')
             ->findOne();
 
-        $who = '';
-        $email = '';
+        $addressList = [];
+
+        $organizerName = null;
+        $organizerAddress = null;
 
         if ($user) {
-            $who = $user->getName();
-            $email = $user->getEmailAddress();
+            $organizerName = $user->getName();
+            $organizerAddress = $user->getEmailAddress();
+
+            if ($organizerAddress) {
+                $addressList[] = $organizerAddress;
+            }
         }
 
         $status = $type === self::TYPE_CANCELLATION ?
@@ -213,6 +223,12 @@ class Invitations
             Ics::METHOD_CANCEL :
             Ics::METHOD_REQUEST;
 
+        $attendees = [];
+
+        if ($entity instanceof Meeting || $entity instanceof Call) {
+            $attendees = $this->getAttendees($entity, $addressList);
+        }
+
         $ics = new Ics('//EspoCRM//EspoCRM Calendar//EN', [
             'method' => $method,
             'status' => $status,
@@ -220,8 +236,8 @@ class Invitations
             'endDate' => strtotime($entity->get('dateEnd')),
             'uid' => $entity->getId(),
             'summary' => $entity->get('name'),
-            'who' => $who,
-            'email' => $email,
+            'organizer' => $organizerAddress ? [$organizerAddress, $organizerName] : null,
+            'attendees' => $attendees,
             'description' => $entity->get('description'),
         ]);
 
@@ -256,5 +272,52 @@ class Invitations
         $data['entityTypeLowerFirst'] = Util::mbLowerCaseFirst($data['entityType']);
 
         return $data;
+    }
+
+    /**
+     * @param string[] $addressList
+     * @return array{string, ?string}[]
+     */
+    private function getAttendees(Meeting|Call $entity, array $addressList): array
+    {
+        $attendees = [];
+
+        /** @var iterable<User> $users */
+        $users = $this->entityManager->getRelation($entity, 'users')->find();
+
+        foreach ($users as $it) {
+            $address = $it->getEmailAddress();
+
+            if ($address && !in_array($address, $addressList)) {
+                $addressList[] = $address;
+                $attendees[] = [$address, $it->getName()];
+            }
+        }
+
+        /** @var iterable<Contact> $contacts */
+        $contacts = $this->entityManager->getRelation($entity, 'contacts')->find();
+
+        foreach ($contacts as $it) {
+            $address = $it->getEmailAddress();
+
+            if ($address && !in_array($address, $addressList)) {
+                $addressList[] = $address;
+                $attendees[] = [$address, $it->getName()];
+            }
+        }
+
+        /** @var iterable<Lead> $leads */
+        $leads = $this->entityManager->getRelation($entity, 'leads')->find();
+
+        foreach ($leads as $it) {
+            $address = $it->getEmailAddress();
+
+            if ($address && !in_array($address, $addressList)) {
+                $addressList[] = $address;
+                $attendees[] = [$address, $it->getName()];
+            }
+        }
+
+        return $attendees;
     }
 }

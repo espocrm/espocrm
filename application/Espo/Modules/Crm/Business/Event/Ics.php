@@ -48,22 +48,24 @@ class Ics
     private ?int $endDate = null;
     private ?string $summary = null;
     private ?string $address = null;
-    private ?string $email = null;
-    private ?string $who = null;
     private ?string $description = null;
     private ?string $uid = null;
     /** @var self::STATUS_* string */
     private string $status;
     private ?int $stamp = null;
+    /** @var array{string, ?string}|null  */
+    private ?array $organizer = null;
+    /** @var array{string, ?string}[]  */
+    private array $attendees = [];
 
     /**
      * @param array{
+     *     organizer?: array{string, ?string}|null,
+     *     attendees?: array{string, ?string}[],
      *     startDate?: ?int,
      *     endDate?: ?int,
      *     summary?: ?string,
      *     address?: ?string,
-     *     email?: ?string,
-     *     who?: ?string,
      *     description?: ?string,
      *     uid?: ?string,
      *     status?: self::STATUS_CONFIRMED|self::STATUS_TENTATIVE|self::STATUS_CANCELLED,
@@ -80,7 +82,6 @@ class Ics
         $this->status = self::STATUS_CONFIRMED;
         $this->method = self::METHOD_REQUEST;
         $this->prodid = $prodid;
-
 
         foreach ($attributes as $key => $value) {
             if (!property_exists($this, $key)) {
@@ -111,23 +112,38 @@ class Ics
             "METHOD:$this->method\r\n" .
             "BEGIN:VEVENT\r\n";
 
+        $organizerPart = '';
+
+        if ($this->organizer) {
+            $organizerPart = "ORGANIZER;{$this->preparePerson($this->organizer[0], $this->organizer[1])}";
+        }
+
         $body =
-            "DTSTART:{$this->formatTimestamp($this->startDate)}\r\n".
-            "DTEND:{$this->formatTimestamp($this->endDate)}\r\n".
-            "SUMMARY:{$this->escapeString($this->summary)}\r\n".
-            "LOCATION:{$this->escapeString($this->address)}\r\n".
-            "ORGANIZER;CN={$this->escapeString($this->who)}:MAILTO:{$this->escapeString($this->email)}\r\n".
-            "DESCRIPTION:{$this->escapeString($this->formatMultiline($this->description))}\r\n".
-            "UID:$this->uid\r\n".
-            "SEQUENCE:0\r\n".
-            "DTSTAMP:{$this->formatTimestamp($this->stamp ?? time())}\r\n".
+            "DTSTART:{$this->formatTimestamp($this->startDate)}\r\n" .
+            "DTEND:{$this->formatTimestamp($this->endDate)}\r\n" .
+            "SUMMARY:{$this->escapeString($this->summary)}\r\n" .
+            "LOCATION:{$this->escapeString($this->address)}\r\n" .
+            $organizerPart .
+            "DESCRIPTION:{$this->escapeString($this->formatMultiline($this->description))}\r\n" .
+            "UID:$this->uid\r\n" .
+            "SEQUENCE:0\r\n" .
+            "DTSTAMP:{$this->formatTimestamp($this->stamp ?? time())}\r\n" .
             "STATUS:$this->status\r\n";
+
+        foreach ($this->attendees as $attendee) {
+            $body .= "ATTENDEE;{$this->preparePerson($attendee[0], $attendee[1])}";
+        }
 
         $end =
             "END:VEVENT\r\n".
             "END:VCALENDAR";
 
         $this->output = $start . $body . $end;
+    }
+
+    private function preparePerson(string $address, ?string $name): string
+    {
+        return "CN={$this->escapeString($name)}:MAILTO:{$this->escapeString($address)}\r\n";
     }
 
     private function formatTimestamp(?int $timestamp): string
