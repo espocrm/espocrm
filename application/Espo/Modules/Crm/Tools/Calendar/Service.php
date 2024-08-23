@@ -29,6 +29,7 @@
 
 namespace Espo\Modules\Crm\Tools\Calendar;
 
+use DateTimeZone;
 use Espo\Core\Acl;
 use Espo\Core\Acl\Table;
 use Espo\Core\Exceptions\BadRequest;
@@ -39,6 +40,7 @@ use Espo\Core\Field\DateTime as DateTimeField;
 use Espo\Core\Select\SelectBuilderFactory;
 use Espo\Core\Utils\Config;
 use Espo\Core\Utils\Metadata;
+use Espo\Entities\Preferences;
 use Espo\Entities\Team;
 use Espo\Entities\User;
 use Espo\Modules\Crm\Entities\Call;
@@ -891,18 +893,21 @@ class Service
         $from = $fetchParams->getFrom();
         $to = $fetchParams->getTo();
 
+        $timezone = !$fetchParams->isAgenda() ?
+            $this->getCurrentUserTimezone() : null;
+
         $extractor = new Extractor();
 
         $itemList = $fetchParams->workingTimeRangesInverted() ?
             (
             $fetchParams->isAgenda() ?
                 $extractor->extractInversion($calendar, $from, $to) :
-                $extractor->extractAllDayInversion($calendar, $from, $to)
+                $extractor->extractAllDayInversion($calendar, $from, $to, $timezone)
             ) :
             (
             $fetchParams->isAgenda() ?
                 $extractor->extract($calendar, $from, $to) :
-                $extractor->extractAllDay($calendar, $from, $to)
+                $extractor->extractAllDay($calendar, $from, $to, $timezone)
             );
 
         $list = [];
@@ -1014,5 +1019,30 @@ class Service
         }
 
         return $result;
+    }
+
+    private function getCurrentUserTimezone(): DateTimeZone
+    {
+        try {
+            return new DateTimeZone($this->getCurrentUserTimezoneString());
+        } catch (Exception $e) {
+            throw new RuntimeException($e->getMessage(), 0, $e);
+        }
+    }
+
+    /**
+     * @todo Move to a separate class.
+     */
+    private function getCurrentUserTimezoneString(): string
+    {
+        $preferences = $this->entityManager
+            ->getRepositoryByClass(Preferences::class)
+            ->getById($this->user->getId());
+
+        if ($preferences && $preferences->getTimeZone()) {
+            return $preferences->getTimeZone();
+        }
+
+        return $this->config->get('timeZone') ?? 'UTC';
     }
 }
