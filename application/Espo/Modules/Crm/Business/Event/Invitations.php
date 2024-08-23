@@ -215,6 +215,7 @@ class Invitations
 
         $ics = new Ics('//EspoCRM//EspoCRM Calendar//EN', [
             'method' => $method,
+            'status' => $status,
             'startDate' => strtotime($entity->get('dateStart')),
             'endDate' => strtotime($entity->get('dateEnd')),
             'uid' => $entity->getId(),
@@ -222,7 +223,6 @@ class Invitations
             'who' => $who,
             'email' => $email,
             'description' => $entity->get('description'),
-            'status' => $status,
         ]);
 
         return $ics->get();

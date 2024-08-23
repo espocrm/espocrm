@@ -54,10 +54,22 @@ class Ics
     private ?string $uid = null;
     /** @var self::STATUS_* string */
     private string $status;
+    private ?int $stamp = null;
 
     /**
-     * @param array<string, string|int|null> $attributes
-     * @throws RuntimeException
+     * @param array{
+     *     startDate?: ?int,
+     *     endDate?: ?int,
+     *     summary?: ?string,
+     *     address?: ?string,
+     *     email?: ?string,
+     *     who?: ?string,
+     *     description?: ?string,
+     *     uid?: ?string,
+     *     status?: self::STATUS_CONFIRMED|self::STATUS_TENTATIVE|self::STATUS_CANCELLED,
+     *     method?: self::METHOD_REQUEST|self::METHOD_CANCEL,
+     *     stamp?: ?int,
+     * } $attributes
      */
     public function __construct(string $prodid, array $attributes = [])
     {
@@ -68,6 +80,7 @@ class Ics
         $this->status = self::STATUS_CONFIRMED;
         $this->method = self::METHOD_REQUEST;
         $this->prodid = $prodid;
+
 
         foreach ($attributes as $key => $value) {
             if (!property_exists($this, $key)) {
@@ -91,24 +104,30 @@ class Ics
     /** @noinspection SpellCheckingInspection */
     private function generate(): void
     {
-        $this->output =
-            "BEGIN:VCALENDAR\r\n".
-            "VERSION:2.0\r\n".
-            "PRODID:-" . $this->prodid . "\r\n".
-            "METHOD:" . $this->method . "\r\n".
-            "BEGIN:VEVENT\r\n".
-            "DTSTART:" . $this->formatTimestamp($this->startDate) . "\r\n".
-            "DTEND:" . $this->formatTimestamp($this->endDate) . "\r\n".
-            "SUMMARY:" . $this->escapeString($this->summary) . "\r\n".
-            "LOCATION:" . $this->escapeString($this->address) . "\r\n".
-            "ORGANIZER;CN=" . $this->escapeString($this->who) . ":MAILTO:" . $this->escapeString($this->email) . "\r\n".
-            "DESCRIPTION:" . $this->escapeString($this->formatMultiline($this->description)) . "\r\n".
-            "UID:" . $this->uid . "\r\n".
+        $start =
+            "BEGIN:VCALENDAR\r\n" .
+            "VERSION:2.0\r\n" .
+            "PRODID:-$this->prodid\r\n" .
+            "METHOD:$this->method\r\n" .
+            "BEGIN:VEVENT\r\n";
+
+        $body =
+            "DTSTART:{$this->formatTimestamp($this->startDate)}\r\n".
+            "DTEND:{$this->formatTimestamp($this->endDate)}\r\n".
+            "SUMMARY:{$this->escapeString($this->summary)}\r\n".
+            "LOCATION:{$this->escapeString($this->address)}\r\n".
+            "ORGANIZER;CN={$this->escapeString($this->who)}:MAILTO:{$this->escapeString($this->email)}\r\n".
+            "DESCRIPTION:{$this->escapeString($this->formatMultiline($this->description))}\r\n".
+            "UID:$this->uid\r\n".
             "SEQUENCE:0\r\n".
-            "DTSTAMP:" . $this->formatTimestamp(time()) . "\r\n".
-            "STATUS:" . $this->status . "\r\n" .
+            "DTSTAMP:{$this->formatTimestamp($this->stamp ?? time())}\r\n".
+            "STATUS:$this->status\r\n";
+
+        $end =
             "END:VEVENT\r\n".
             "END:VCALENDAR";
+
+        $this->output = $start . $body . $end;
     }
 
     private function formatTimestamp(?int $timestamp): string
