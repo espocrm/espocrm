@@ -12,5 +12,8 @@
     ],
     "updateInputFilterClassNameList": [
         "Espo\\Classes\\Record\\InboundEmail\\PasswordsInputFilter"
+    ],
+    "readLoaderClassNameList": [
+        "Espo\\Classes\\FieldProcessing\\InboundEmail\\IsSystemLoader"
     ]
 }

@@ -16,6 +16,10 @@
             [
                 {"name":"addAllTeamUsers"},
                 {"name": "excludeFromReply"}
+            ],
+            [
+                {"name":"isSystem"},
+                false
             ]
         ],
         "tabBreak": true,

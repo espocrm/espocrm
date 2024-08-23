@@ -73,6 +73,13 @@
             "tooltip": true,
             "default": true
         },
+        "isSystem": {
+            "type": "bool",
+            "notStorable": true,
+            "readOnly": true,
+            "directAccessDisabled": true,
+            "tooltip": true
+        },
         "sentFolder": {
             "type": "varchar",
             "view": "views/inbound-email/fields/folder",
